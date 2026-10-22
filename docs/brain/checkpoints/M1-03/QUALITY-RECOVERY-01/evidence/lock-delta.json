@@ -1,0 +1,156 @@
+{
+  "generator": "npm11.20.0",
+  "direct_patches": {
+    "expo": [
+      "~57.0.30",
+      "~57.0.31"
+    ],
+    "expo-network": [
+      "~57.0.2",
+      "~57.0.3"
+    ]
+  },
+  "changed_entries": [
+    {
+      "path": "apps/mobile",
+      "before": "0.1.0",
+      "after": "0.1.0",
+      "before_integrity": null,
+      "after_integrity": null
+    },
+    {
+      "path": "node_modules/@expo/cli",
+      "before": "57.0.31",
+      "after": "57.0.32",
+      "before_integrity": "sha512-NPTMPGQ9i3KzULyP1bzp8hMggoe3QlkfICw388zJuj0UhqfGHEZURkJFuHBksb/ndTjfrCrCBOO0HQz/9QzXIw==",
+      "after_integrity": "sha512-3p1qL/pvWblGNwDE1bt2wh/NUiGpSer61s5GKKFfpEpBkZTYnqve0pdK1UvEFzJGT6PW9vX2RofQQ2LP6MgvDQ=="
+    },
+    {
+      "path": "node_modules/@expo/cli/node_modules/picomatch",
+      "before": "4.0.5",
+      "after": "4.0.7",
+      "before_integrity": "sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==",
+      "after_integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="
+    },
+    {
+      "path": "node_modules/@expo/config-plugins",
+      "before": "57.0.10",
+      "after": "57.0.11",
+      "before_integrity": "sha512-XFcj01blofSohoOxibrPsrsFPt2gAigrcWE3s6Vg+rSHvP9QVEfnyfmJNVsuIVT0EjY/1rZVJ4SajNDR5cJjpA==",
+      "after_integrity": "sha512-lnNF0cNXqLQPpQVeb/AAu7O0KhdwMFx99rJkO11mrd0IbQDhnOVObpgaR/Ja2D1jAOoKuqk55jwS4l+ZD1j7aw=="
+    },
+    {
+      "path": "node_modules/@expo/metro-config/node_modules/picomatch",
+      "before": "4.0.5",
+      "after": "4.0.7",
+      "before_integrity": "sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==",
+      "after_integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="
+    },
+    {
+      "path": "node_modules/@expo/metro/node_modules/metro-runtime",
+      "before": "0.84.5",
+      "after": null,
+      "before_integrity": "sha512-U1m2+d1Pr+JO2/iVXBB2OfXXityz7tqwIorxfrT15IEgaHvpJBq/OHiqnOWPKJbUl3JcxjcdviZZOKk85oK4Qg==",
+      "after_integrity": null
+    },
+    {
+      "path": "node_modules/@expo/osascript",
+      "before": "2.7.1",
+      "after": "2.8.1",
+      "before_integrity": "sha512-Zn03EX6In7ts2lPUW2ESUSkEhEWQN1qqsiXjadtZMJOuZRkMiAg1ZQHuvz9DjByDWNJ2pBwAGyrts9lj9k389g==",
+      "after_integrity": "sha512-SCi+6q6uOkGhiAn6AIP/OPFgaIq/iKD2oYpnAOg2rShHStJ8ey7wyT127RbOaZXmlcY/62rHOX1WiiMnD8u/BA=="
+    },
+    {
+      "path": "node_modules/@expo/package-manager",
+      "before": "1.13.1",
+      "after": "1.14.2",
+      "before_integrity": "sha512-y/K+CaYYpZpNGZhSX4HyLT/vyIunFjNfyoxNysPBCefeLKI/VCx6f9LNPzrxayr3rCYO5bl9O8H+HRQK265Nkg==",
+      "after_integrity": "sha512-sftl0eRVVCarI6grMdjAB3jX2pX1Mt3cdSnajlXS4QyeDkaKRM/ntBy6dcagj1VL0+cEfEqctlyvinmlZdNubg=="
+    },
+    {
+      "path": "node_modules/@expo/package-manager/node_modules/@expo/json-file",
+      "before": null,
+      "after": "11.2.1",
+      "before_integrity": null,
+      "after_integrity": "sha512-UPhKoFCj8BcwgLB1rKQ1CuR/REITnZLiqxHEHOeH1tPsdXcHGtUDh0P5bLbr7oU0nKVdtJ5rzyKx8jniMQdESQ=="
+    },
+    {
+      "path": "node_modules/@expo/router-server",
+      "before": "57.0.13",
+      "after": "57.0.14",
+      "before_integrity": "sha512-A25869lSp6916GiYjz1y1S/Kfi5qn7S1xepycFv8x8VOrulLBbv0byXl6o3BSLh5nLBx5RiMTjBFM2u+K7JsrA==",
+      "after_integrity": "sha512-8776d+wDmkGCg0KqefAb/zwu5s2ieRg5UK3CbltrplhdzIXf+BDBlttu9p9R+fBOxg+Rrf0HKedInjn83yEeFg=="
+    },
+    {
+      "path": "node_modules/@expo/xcpretty",
+      "before": "4.4.6",
+      "after": "4.4.7",
+      "before_integrity": "sha512-uRaZZ/IsX1WkFW69xxTZtMeRvI5ziD9yoian+FMqdhITkU6NGvIWd5uRMh2Gbo/6xstpQ4v0GtF1V5YatTwzDA==",
+      "after_integrity": "sha512-EbxYllZ7/ozONVZd425cm4XnolfW+AmSFT5aP7Jdno6oc3WrYQcHz2CO20z/2rwWwYgztmV2PXvYH+BQ8YFjqg=="
+    },
+    {
+      "path": "node_modules/expo",
+      "before": "57.0.30",
+      "after": "57.0.31",
+      "before_integrity": "sha512-dpNWbsqiAHkgInOBClv5PxKCSMAly1n0oBVoIjS/yv8LQtRgDqSkWAnJq16cExndKrgONxdItY+O3J8u6MNYlw==",
+      "after_integrity": "sha512-+9AJvHZMLIY/Tv6r5Tpu84vWfI75FBTnineYqjjlHAU138IPg2gYQKn9FQFetCB9YScwyc7STk7WGHSCHAdTiQ=="
+    },
+    {
+      "path": "node_modules/expo-modules-core",
+      "before": "57.0.23",
+      "after": "57.0.24",
+      "before_integrity": "sha512-vZQoSlhqU6me5K4KCl42yXB0x3zqAiG2FAjzHmbuez77CslJJQ+82cmJoHC3tN5X8o/KxRArJejKNQIeciyoXA==",
+      "after_integrity": "sha512-2AY+JgjZiWXIx1zXVhx2JaLEsZOH2NDAqJCSnPQyoCcUa9QEHAzpn2++omq+OvrsmsQCJcVrHe6cKz8FSnpLLQ=="
+    },
+    {
+      "path": "node_modules/expo-modules-jsi",
+      "before": "57.1.2",
+      "after": "57.1.3",
+      "before_integrity": "sha512-DYhBwO0fqcKIUma4jF16zRDP/m6ZbawEZbo4eX3gdekREIFqrrz8HKWXydgNUqOyOQcUkdrkZatxi2I9+V6E8g==",
+      "after_integrity": "sha512-pwVO1gvObX2tpIjfJzGn86yBOmOBhMLxAD81n2SHnfZk6lvbbqQhag64MHEeh29E/8vg23/Dzmf3JTmJSwbQYQ=="
+    },
+    {
+      "path": "node_modules/expo-network",
+      "before": "57.0.2",
+      "after": "57.0.3",
+      "before_integrity": "sha512-BfK1kdftZcM6o9o1FAG7/y0l6vWX0n8td0M5lwkvaMeRXZ9LkRwOi9CQXwvsMTQGQiPwtQXgwiAze13cqjt75g==",
+      "after_integrity": "sha512-sxBTB5VS24GASXMFMpcgg4jZB4VVELl/b3TCR0joLfzp4g/PkFhQwvKnyAahuheykw605wZe6YGBDyR8Ixa7mA=="
+    },
+    {
+      "path": "node_modules/metro-config/node_modules/metro-runtime",
+      "before": "0.84.5",
+      "after": null,
+      "before_integrity": "sha512-U1m2+d1Pr+JO2/iVXBB2OfXXityz7tqwIorxfrT15IEgaHvpJBq/OHiqnOWPKJbUl3JcxjcdviZZOKk85oK4Qg==",
+      "after_integrity": null
+    },
+    {
+      "path": "node_modules/metro-runtime",
+      "before": "0.84.4",
+      "after": "0.84.5",
+      "before_integrity": "sha512-Jibypds4g7AhzdRKY+kDoj51s5EXMwgyp5ddtlreDAsWefMdOx+agWqgm0H2XSZ/ueanHHVM89fnf5OJnlxa8Q==",
+      "after_integrity": "sha512-U1m2+d1Pr+JO2/iVXBB2OfXXityz7tqwIorxfrT15IEgaHvpJBq/OHiqnOWPKJbUl3JcxjcdviZZOKk85oK4Qg=="
+    },
+    {
+      "path": "node_modules/metro/node_modules/metro-runtime",
+      "before": "0.84.5",
+      "after": null,
+      "before_integrity": "sha512-U1m2+d1Pr+JO2/iVXBB2OfXXityz7tqwIorxfrT15IEgaHvpJBq/OHiqnOWPKJbUl3JcxjcdviZZOKk85oK4Qg==",
+      "after_integrity": null
+    },
+    {
+      "path": "node_modules/uuid",
+      "before": "11.1.1",
+      "after": null,
+      "before_integrity": "sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==",
+      "after_integrity": null
+    },
+    {
+      "path": "node_modules/xcode",
+      "before": "3.0.1",
+      "after": "4.0.0",
+      "before_integrity": "sha512-kCz5k7J7XbJtjABOvkc5lJmkiDh8VhjVCGNiqdKCscmVpdVUpEAyXv1xmCLkQJ5dsHqx3IPO4XW+NTDhU/fatA==",
+      "after_integrity": "sha512-dDaoWzc9EP2fp9FS9PVZUkyvFxY4y1TOV9pcKaKLk++Ei/qb97XDFEVP7GnW7Osii/TzVABJ0jq2F+9/lq0TVA=="
+    }
+  ],
+  "root_package_unchanged": true
+}

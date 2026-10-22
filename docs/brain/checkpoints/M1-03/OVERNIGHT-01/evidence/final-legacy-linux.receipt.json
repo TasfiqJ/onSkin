@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B -m unittest discover -s scripts/brain -p test_m103_cont01_profile.py -v",
+  "working_directory": "/root/onskin-overnight01-native",
+  "environment": "Linux x86_64/Python3.12.3; actual final Git snapshot",
+  "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+  "source_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-legacy-linux.txt",
+    "sha256": "247e09ba6c3920fa21db7cb62ef5d7110d270b507f4dae74c63a9c2a225bc6de"
+  },
+  "counts": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  }
+}

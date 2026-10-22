@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B verify_packet.py --expected-manifest-sha256 c86be8cb7055c5784b8739531cab897508708e61a23dc094a7b63262456e0a46",
+  "working_directory": "/workspace/sc03-runtime-recovery/measured-repo/docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/inputs/runtime-recovery",
+  "environment": "Same Codex Cloud Linux x86_64; Python 3.12.14; Node 22.23.4/npm 10.9.9 for npm commands; independent no-hardlinks clone, no alternates",
+  "source_commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+  "source_tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/results/clean-packet-verify.log",
+    "sha256": "c71bf0b8a5154fb824e3a495658d7916854d3d5e9ffcd017b9bdc2750af836ab"
+  }
+}

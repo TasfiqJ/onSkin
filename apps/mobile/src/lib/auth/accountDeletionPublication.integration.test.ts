@@ -167,6 +167,7 @@ vi.mock('@/lib/query/queryClient', () => ({
 }));
 vi.mock('@/lib/storage/privateKV', () => ({
   beginPrivateKVAccountBoundary: vi.fn(),
+  clearRoutineWidgetActionPrivateItems: vi.fn(async () => {}),
   endPrivateKVAccountBoundary: vi.fn(),
   removePrivateItem: vi.fn(async () => {}),
   waitForPrivateKVWritesToSettle: vi.fn(async () => {}),

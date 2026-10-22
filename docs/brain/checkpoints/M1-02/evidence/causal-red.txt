@@ -1,0 +1,73 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/features/notifications/deliver.test.ts (33 tests | 3 failed) 113ms
+     × rejects queued owner-A scheduling after a completed account boundary 6ms
+     × reports cancel failure while retaining independent billing reconciliation 3ms
+     × reports schedule failure while retaining independent billing reconciliation 1ms
+ ❯ src/features/photos/encryptedStorage.test.ts (45 tests | 2 failed) 50ms
+     × removes a restore destination after native commit-then-reject and withdrawal 7ms
+     × removes a reconcile destination after native commit-then-reject and withdrawal 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > rejects queued owner-A scheduling after a completed account boundary
+AssertionError: expected undefined to be an instance of Error
+ ❯ src/features/notifications/deliver.test.ts:321:26
+    319|     release();
+    320|     expect(await first).toBeInstanceOf(Error);
+    321|     expect(await queued).toBeInstanceOf(Error);
+       |                          ^
+    322|     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    323|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > reports cancel failure while retaining independent billing reconciliation
+ FAIL  src/features/notifications/deliver.test.ts > rescheduleReminders > reports schedule failure while retaining independent billing reconciliation
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/features/notifications/deliver.test.ts:329:45
+    327|     if (failure === 'cancel') mocks.cancelAllScheduledNotificationsAsy…
+    328|     else mocks.scheduleNotificationAsync.mockRejectedValueOnce(new Err…
+    329|     await expect(rescheduleReminders(prefs)).rejects.toThrow(`${failur…
+       |                                             ^
+    330|     expect(mocks.loadEntitlement).toHaveBeenCalledOnce();
+    331|     await expect(rescheduleReminders(prefs)).resolves.toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/features/photos/encryptedStorage.test.ts > encrypted photo storage > removes a restore destination after native commit-then-reject and withdrawal
+ FAIL  src/features/photos/encryptedStorage.test.ts > encrypted photo storage > removes a reconcile destination after native commit-then-reject and withdrawal
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/photos/encryptedStorage.test.ts:504:42
+    502|       : reconcileEncryptedPhotoStorage([originalUri]);
+    503|     await expect(operation).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSI…
+    504|     expect(mocks.files.has(originalUri)).toBe(false);
+       |                                          ^
+    505|     expect(mocks.files.has(quarantinedUri)).toBe(false);
+    506|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 73 passed (78)
+   Start at  16:08:25
+   Duration  479ms (transform 368ms, setup 0ms, import 407ms, tests 163ms, environment 0ms)
+

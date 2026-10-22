@@ -1,0 +1,1258 @@
+{
+  "evidence_class": "AUTHENTICATED_PROVIDER_OBSERVED",
+  "main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "observed_utc": "2026-10-21T12:07:49.625696+00:00",
+  "pull_request": {
+    "draft": true,
+    "html_url": "https://github.com/TasfiqJ/onSkin/pull/9",
+    "merge_commit_sha": "d29e75a9d2b41d0775fd3a8db251a9bc372c7399",
+    "merged": false,
+    "number": 9,
+    "state": "open"
+  },
+  "runs": [
+    {
+      "artifacts": [],
+      "conclusion": null,
+      "created_at": "2026-10-21T12:02:07Z",
+      "event": "pull_request",
+      "head_branch": "stage/m1-retained-safety",
+      "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417892",
+      "id": 39596417892,
+      "jobs": [
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:05:23Z",
+          "conclusion": "success",
+          "failure_codes": [],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417892/job/119210325871",
+          "id": 119210325871,
+          "log_sha256": "cfa8505a8b0ae42dc4e15adf8cd66304e8839991f15a9e49b6e790b60440df09",
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "started_at": "2026-10-21T12:03:34Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:03:36Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:03:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:48Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:03:36Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:20Z",
+              "conclusion": "success",
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "number": 3,
+              "started_at": "2026-10-21T12:03:48Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:20Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 6,
+              "started_at": "2026-10-21T12:05:20Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:20Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 7,
+              "started_at": "2026-10-21T12:05:20Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": []
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417892/job/119210325938",
+          "id": 119210325938,
+          "name": "Repository quality gates",
+          "started_at": "2026-10-21T12:03:34Z",
+          "status": "in_progress",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:03:37Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:03:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:57Z",
+              "conclusion": "success",
+              "name": "Initialize containers",
+              "number": 2,
+              "started_at": "2026-10-21T12:03:37Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:11Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 3,
+              "started_at": "2026-10-21T12:03:57Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:21Z",
+              "conclusion": "success",
+              "name": "Setup Node",
+              "number": 4,
+              "started_at": "2026-10-21T12:04:11Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:24Z",
+              "conclusion": "success",
+              "name": "Setup Deno",
+              "number": 5,
+              "started_at": "2026-10-21T12:04:21Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:27Z",
+              "conclusion": "success",
+              "name": "Use reviewed npm",
+              "number": 6,
+              "started_at": "2026-10-21T12:04:24Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:47Z",
+              "conclusion": "success",
+              "name": "Install from lockfile",
+              "number": 7,
+              "started_at": "2026-10-21T12:04:27Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:48Z",
+              "conclusion": "success",
+              "name": "Verify tooling security backports",
+              "number": 8,
+              "started_at": "2026-10-21T12:04:47Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:57Z",
+              "conclusion": "success",
+              "name": "Verify installed iOS native sources",
+              "number": 9,
+              "started_at": "2026-10-21T12:04:48Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:57Z",
+              "conclusion": "success",
+              "name": "Verify store-only client delivery",
+              "number": 10,
+              "started_at": "2026-10-21T12:04:57Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:08Z",
+              "conclusion": "success",
+              "name": "Verify governed release provenance",
+              "number": 11,
+              "started_at": "2026-10-21T12:04:57Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:08Z",
+              "conclusion": "success",
+              "name": "Verify iOS Simulator compile workflow contract",
+              "number": 12,
+              "started_at": "2026-10-21T12:05:08Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:09Z",
+              "conclusion": "success",
+              "name": "Check Expo dependency compatibility",
+              "number": 13,
+              "started_at": "2026-10-21T12:05:08Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:15Z",
+              "conclusion": "success",
+              "name": "Run Expo Doctor",
+              "number": 14,
+              "started_at": "2026-10-21T12:05:09Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:15Z",
+              "conclusion": "success",
+              "name": "Check export statistics analyzer",
+              "number": 15,
+              "started_at": "2026-10-21T12:05:15Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:15Z",
+              "conclusion": "success",
+              "name": "Check deterministic optimization fixtures",
+              "number": 16,
+              "started_at": "2026-10-21T12:05:15Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:37Z",
+              "conclusion": "success",
+              "name": "Check local Edge Function contracts",
+              "number": 17,
+              "started_at": "2026-10-21T12:05:15Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:50Z",
+              "conclusion": "success",
+              "name": "Check catalog promotion, curation, and receipt contracts",
+              "number": 18,
+              "started_at": "2026-10-21T12:05:37Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:50Z",
+              "conclusion": "success",
+              "name": "Execute account service scrub migration rehearsal",
+              "number": 19,
+              "started_at": "2026-10-21T12:06:50Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:06Z",
+              "conclusion": "success",
+              "name": "Typecheck",
+              "number": 20,
+              "started_at": "2026-10-21T12:06:50Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:43Z",
+              "conclusion": "success",
+              "name": "Lint",
+              "number": 21,
+              "started_at": "2026-10-21T12:07:06Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Test",
+              "number": 22,
+              "started_at": "2026-10-21T12:07:43Z",
+              "status": "in_progress"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Check performance readiness docs",
+              "number": 23,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Check device support source contract",
+              "number": 24,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Check source packet",
+              "number": 25,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Post Setup Deno",
+              "number": 47,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Post Setup Node",
+              "number": 48,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Post Checkout",
+              "number": 49,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Stop containers",
+              "number": 50,
+              "started_at": null,
+              "status": "pending"
+            }
+          ]
+        },
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:05:11Z",
+          "conclusion": "success",
+          "failure_codes": [],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417892/job/119210326031",
+          "id": 119210326031,
+          "log_sha256": "a6f5ac2f427e8cd37d14edca559eb365ec715d71d99b549cda82d94a33937cd2",
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "started_at": "2026-10-21T12:03:34Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:03:36Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:03:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:48Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:03:36Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:08Z",
+              "conclusion": "success",
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "number": 3,
+              "started_at": "2026-10-21T12:03:48Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:08Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 6,
+              "started_at": "2026-10-21T12:05:08Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:08Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 7,
+              "started_at": "2026-10-21T12:05:08Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": []
+        },
+        {
+          "completed_at": null,
+          "conclusion": null,
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417892/job/119210326128",
+          "id": 119210326128,
+          "name": "Credential-free Supabase reset and database tests",
+          "started_at": "2026-10-21T12:03:34Z",
+          "status": "in_progress",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:03:36Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:03:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:47Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:03:36Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:56Z",
+              "conclusion": "success",
+              "name": "Setup Node",
+              "number": 3,
+              "started_at": "2026-10-21T12:03:47Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:59Z",
+              "conclusion": "success",
+              "name": "Use reviewed npm",
+              "number": 4,
+              "started_at": "2026-10-21T12:03:56Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:18Z",
+              "conclusion": "success",
+              "name": "Install from lockfile",
+              "number": 5,
+              "started_at": "2026-10-21T12:03:59Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:35Z",
+              "conclusion": "success",
+              "name": "Check local-only database contract",
+              "number": 6,
+              "started_at": "2026-10-21T12:04:18Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Reset twice, test, lint, and prove zero drift",
+              "number": 7,
+              "started_at": "2026-10-21T12:04:35Z",
+              "status": "in_progress"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Retain generated public types for parity diagnosis",
+              "number": 8,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Post Setup Node",
+              "number": 15,
+              "started_at": null,
+              "status": "pending"
+            },
+            {
+              "completed_at": null,
+              "conclusion": null,
+              "name": "Post Checkout",
+              "number": 16,
+              "started_at": null,
+              "status": "pending"
+            }
+          ]
+        }
+      ],
+      "name": "Quality",
+      "run_attempt": 1,
+      "status": "in_progress",
+      "updated_at": "2026-10-21T12:03:35Z",
+      "workflow_id": 312030668
+    },
+    {
+      "artifacts": [
+        {
+          "digest": "sha256:ef16998f5efdfb7390609d885cf36d2bb887514960f84fec8fe1849135e9cb87",
+          "expired": false,
+          "id": 12344416264,
+          "name": "static-scanner-evidence-39596418044",
+          "size_in_bytes": 5754
+        },
+        {
+          "digest": "sha256:57a669c321ab093aba78c2adbaca2f018a13d0e857a262492e4f5b588aedc013",
+          "expired": false,
+          "id": 12344158252,
+          "name": "secret-scanner-evidence-39596418044",
+          "size_in_bytes": 1415043
+        },
+        {
+          "digest": "sha256:fb34faf25fcdc03393517320a062dd1d76a661cddb514fcb9e083b6852190897",
+          "expired": false,
+          "id": 12343594820,
+          "name": "g97-security-decision-39596418044",
+          "size_in_bytes": 252
+        },
+        {
+          "digest": "sha256:c84fbcdea1f5e069a1bc70d31e9fb37157f525d32eefb24423ff82800121da3e",
+          "expired": false,
+          "id": 12343284505,
+          "name": "code-security-evidence-39596418044",
+          "size_in_bytes": 38740
+        }
+      ],
+      "conclusion": "failure",
+      "created_at": "2026-10-21T12:02:07Z",
+      "event": "pull_request",
+      "head_branch": "stage/m1-retained-safety",
+      "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596418044",
+      "id": 39596418044,
+      "jobs": [
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:05:45Z",
+          "conclusion": "failure",
+          "failure_codes": [],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596418044/job/119209726999",
+          "id": 119209726999,
+          "log_sha256": "5336f1587b722141c753ccfa9fec1ad0a080421d4e25c2fd8b280da0850773df",
+          "name": "Code security gates",
+          "started_at": "2026-10-21T12:02:11Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:02:14Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:02:12Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:27Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:02:14Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:38Z",
+              "conclusion": "success",
+              "name": "Setup Node",
+              "number": 3,
+              "started_at": "2026-10-21T12:02:27Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:40Z",
+              "conclusion": "success",
+              "name": "Setup Deno",
+              "number": 4,
+              "started_at": "2026-10-21T12:02:38Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:44Z",
+              "conclusion": "success",
+              "name": "Use reviewed npm",
+              "number": 5,
+              "started_at": "2026-10-21T12:02:40Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:07Z",
+              "conclusion": "success",
+              "name": "Install",
+              "number": 6,
+              "started_at": "2026-10-21T12:02:44Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:33Z",
+              "conclusion": "success",
+              "name": "Phase 9 verification",
+              "number": 7,
+              "started_at": "2026-10-21T12:03:07Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:37Z",
+              "conclusion": "success",
+              "name": "Dependency SBOM with audit metadata",
+              "number": 8,
+              "started_at": "2026-10-21T12:05:33Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:39Z",
+              "conclusion": "success",
+              "name": "Capture high or critical npm advisories",
+              "number": 9,
+              "started_at": "2026-10-21T12:05:37Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:40Z",
+              "conclusion": "success",
+              "name": "Test reviewed security exceptions",
+              "number": 10,
+              "started_at": "2026-10-21T12:05:39Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:40Z",
+              "conclusion": "success",
+              "name": "Enforce reviewed npm advisory exceptions",
+              "number": 11,
+              "started_at": "2026-10-21T12:05:40Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:40Z",
+              "conclusion": "success",
+              "name": "Write code-gate evidence manifest",
+              "number": 12,
+              "started_at": "2026-10-21T12:05:40Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:41Z",
+              "conclusion": "success",
+              "name": "Upload code-gate evidence",
+              "number": 13,
+              "started_at": "2026-10-21T12:05:40Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:41Z",
+              "conclusion": "failure",
+              "name": "Enforce code-gate results",
+              "number": 14,
+              "started_at": "2026-10-21T12:05:41Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:41Z",
+              "conclusion": "success",
+              "name": "Post Setup Deno",
+              "number": 26,
+              "started_at": "2026-10-21T12:05:41Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:41Z",
+              "conclusion": "skipped",
+              "name": "Post Setup Node",
+              "number": 27,
+              "started_at": "2026-10-21T12:05:41Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:42Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 28,
+              "started_at": "2026-10-21T12:05:41Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:05:42Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 29,
+              "started_at": "2026-10-21T12:05:42Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": []
+        },
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:04:04Z",
+          "conclusion": "failure",
+          "failure_codes": [
+            "SECRET_CURRENT_SOURCE_FINDINGS_UNREVIEWED"
+          ],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596418044/job/119209727268",
+          "id": 119209727268,
+          "log_sha256": "00f344a53b562a21c4d4325bdad95732bcc087c8624a28c5ca891d9c9dfc18b0",
+          "name": "Secret scanning",
+          "started_at": "2026-10-21T12:02:11Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:02:12Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:02:11Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:21Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:02:12Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:25Z",
+              "conclusion": "success",
+              "name": "Test original secret scope and receipt refusals",
+              "number": 3,
+              "started_at": "2026-10-21T12:02:21Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:27Z",
+              "conclusion": "success",
+              "name": "Acquire exact original secret executables",
+              "number": 4,
+              "started_at": "2026-10-21T12:02:25Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:53Z",
+              "conclusion": "success",
+              "name": "Scan complete local refs and exact committed current source",
+              "number": 5,
+              "started_at": "2026-10-21T12:02:27Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:53Z",
+              "conclusion": "success",
+              "name": "Gitleaks",
+              "number": 6,
+              "started_at": "2026-10-21T12:03:53Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:53Z",
+              "conclusion": "success",
+              "name": "TruffleHog verified secrets",
+              "number": 7,
+              "started_at": "2026-10-21T12:03:53Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:53Z",
+              "conclusion": "success",
+              "name": "Write secret scanner evidence manifest",
+              "number": 8,
+              "started_at": "2026-10-21T12:03:53Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:55Z",
+              "conclusion": "success",
+              "name": "Upload secret scanner evidence",
+              "number": 9,
+              "started_at": "2026-10-21T12:03:53Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:01Z",
+              "conclusion": "failure",
+              "name": "Enforce secret scanner results",
+              "number": 10,
+              "started_at": "2026-10-21T12:03:55Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:01Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 20,
+              "started_at": "2026-10-21T12:04:01Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:04:01Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 21,
+              "started_at": "2026-10-21T12:04:01Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": [
+            "12"
+          ]
+        },
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:06:39Z",
+          "conclusion": "failure",
+          "failure_codes": [
+            "SOURCE_INVENTORY_DRIFT"
+          ],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596418044/job/119209727309",
+          "id": 119209727309,
+          "log_sha256": "a4b58d6f64746269991d5e6acf2f54e1eab4e16d545b83365b6d790f7b6732d9",
+          "name": "Static analysis and OSV",
+          "started_at": "2026-10-21T12:02:11Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:02:14Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:02:12Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:23Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:02:14Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:32Z",
+              "conclusion": "success",
+              "name": "Setup Node",
+              "number": 3,
+              "started_at": "2026-10-21T12:02:23Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:33Z",
+              "conclusion": "success",
+              "name": "Setup Python",
+              "number": 4,
+              "started_at": "2026-10-21T12:02:32Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:52Z",
+              "conclusion": "success",
+              "name": "Prepare exact Linux scanners and npm",
+              "number": 5,
+              "started_at": "2026-10-21T12:02:33Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:13Z",
+              "conclusion": "success",
+              "name": "Install",
+              "number": 6,
+              "started_at": "2026-10-21T12:02:52Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:32Z",
+              "conclusion": "success",
+              "name": "Semgrep OWASP/TypeScript/React/secrets",
+              "number": 7,
+              "started_at": "2026-10-21T12:03:13Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:32Z",
+              "conclusion": "success",
+              "name": "Prepare OSV evidence directory",
+              "number": 8,
+              "started_at": "2026-10-21T12:06:32Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:34Z",
+              "conclusion": "success",
+              "name": "OSV scanner",
+              "number": 9,
+              "started_at": "2026-10-21T12:06:32Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:34Z",
+              "conclusion": "success",
+              "name": "Enforce reviewed OSV advisory exceptions",
+              "number": 10,
+              "started_at": "2026-10-21T12:06:34Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:34Z",
+              "conclusion": "success",
+              "name": "Write static scanner evidence manifest",
+              "number": 11,
+              "started_at": "2026-10-21T12:06:34Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:34Z",
+              "conclusion": "success",
+              "name": "Stage verified technical receipt after all source checks",
+              "number": 12,
+              "started_at": "2026-10-21T12:06:34Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:35Z",
+              "conclusion": "success",
+              "name": "Upload static scanner evidence",
+              "number": 13,
+              "started_at": "2026-10-21T12:06:34Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:35Z",
+              "conclusion": "failure",
+              "name": "Enforce static scanner results",
+              "number": 14,
+              "started_at": "2026-10-21T12:06:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:35Z",
+              "conclusion": "skipped",
+              "name": "Post Setup Python",
+              "number": 26,
+              "started_at": "2026-10-21T12:06:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:35Z",
+              "conclusion": "skipped",
+              "name": "Post Setup Node",
+              "number": 27,
+              "started_at": "2026-10-21T12:06:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:36Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 28,
+              "started_at": "2026-10-21T12:06:35Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:36Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 29,
+              "started_at": "2026-10-21T12:06:36Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": [
+            "70"
+          ]
+        },
+        {
+          "completed_at": "2026-10-21T12:02:08Z",
+          "conclusion": "skipped",
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596418044/job/119209729397",
+          "id": 119209729397,
+          "name": "Live Supabase adversarial evidence",
+          "started_at": "2026-10-21T12:02:08Z",
+          "status": "completed",
+          "steps": []
+        },
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:07:29Z",
+          "conclusion": "failure",
+          "failure_codes": [],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596418044/job/119211689292",
+          "id": 119211689292,
+          "log_sha256": "da7257efecd0a3ad74e380fcb36ef916585c87e553b47a628735648ba72fb42a",
+          "name": "Automated single-owner source-only Security acceptance",
+          "started_at": "2026-10-21T12:06:41Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:06:44Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:06:42Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:54Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:06:44Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:02Z",
+              "conclusion": "success",
+              "name": "Setup Node",
+              "number": 3,
+              "started_at": "2026-10-21T12:06:54Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:02Z",
+              "conclusion": "success",
+              "name": "Setup Python",
+              "number": 4,
+              "started_at": "2026-10-21T12:07:02Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:06Z",
+              "conclusion": "success",
+              "name": "Use reviewed npm",
+              "number": 5,
+              "started_at": "2026-10-21T12:07:02Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:24Z",
+              "conclusion": "success",
+              "name": "Install exact application dependencies",
+              "number": 6,
+              "started_at": "2026-10-21T12:07:06Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:24Z",
+              "conclusion": "success",
+              "name": "Download original code evidence",
+              "number": 7,
+              "started_at": "2026-10-21T12:07:24Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:25Z",
+              "conclusion": "success",
+              "name": "Download original secret evidence",
+              "number": 8,
+              "started_at": "2026-10-21T12:07:24Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:25Z",
+              "conclusion": "success",
+              "name": "Download original static evidence",
+              "number": 9,
+              "started_at": "2026-10-21T12:07:25Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:26Z",
+              "conclusion": "failure",
+              "name": "Require complete original and exact-source technical evidence",
+              "number": 10,
+              "started_at": "2026-10-21T12:07:25Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:26Z",
+              "conclusion": "success",
+              "name": "Publish automated source-only decision descriptor",
+              "number": 11,
+              "started_at": "2026-10-21T12:07:26Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:26Z",
+              "conclusion": "skipped",
+              "name": "Post Setup Python",
+              "number": 20,
+              "started_at": "2026-10-21T12:07:26Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:26Z",
+              "conclusion": "skipped",
+              "name": "Post Setup Node",
+              "number": 21,
+              "started_at": "2026-10-21T12:07:26Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:26Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 22,
+              "started_at": "2026-10-21T12:07:26Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:07:26Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 23,
+              "started_at": "2026-10-21T12:07:26Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": []
+        }
+      ],
+      "name": "Security",
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-10-21T12:07:29Z",
+      "workflow_id": 308213475
+    },
+    {
+      "artifacts": [],
+      "conclusion": "success",
+      "created_at": "2026-10-21T12:02:07Z",
+      "event": "pull_request",
+      "head_branch": "stage/m1-retained-safety",
+      "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+      "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417543",
+      "id": 39596417543,
+      "jobs": [
+        {
+          "checkout_hash_lines": [
+            "d29e75a9d2b41d0775fd3a8db251a9bc372c7399"
+          ],
+          "completed_at": "2026-10-21T12:06:10Z",
+          "conclusion": "success",
+          "failure_codes": [],
+          "head_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/39596417543/job/119209725582",
+          "id": 119209725582,
+          "log_sha256": "4050fd42076fddb12a7e42b22e5812e521cb37c6307aa41f73b3e428e0c35e2f",
+          "name": "iOS all-features contract",
+          "started_at": "2026-10-21T12:02:10Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completed_at": "2026-10-21T12:02:12Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "started_at": "2026-10-21T12:02:11Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:23Z",
+              "conclusion": "success",
+              "name": "Checkout",
+              "number": 2,
+              "started_at": "2026-10-21T12:02:12Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:30Z",
+              "conclusion": "success",
+              "name": "Setup Node",
+              "number": 3,
+              "started_at": "2026-10-21T12:02:23Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:32Z",
+              "conclusion": "success",
+              "name": "Setup Deno",
+              "number": 4,
+              "started_at": "2026-10-21T12:02:30Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:02:54Z",
+              "conclusion": "success",
+              "name": "Install",
+              "number": 5,
+              "started_at": "2026-10-21T12:02:32Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:57Z",
+              "conclusion": "success",
+              "name": "Validate launch contract",
+              "number": 6,
+              "started_at": "2026-10-21T12:02:54Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:03:58Z",
+              "conclusion": "success",
+              "name": "Validate execution baseline",
+              "number": 7,
+              "started_at": "2026-10-21T12:03:57Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:08Z",
+              "conclusion": "success",
+              "name": "Run safe repository checks",
+              "number": 8,
+              "started_at": "2026-10-21T12:03:58Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:08Z",
+              "conclusion": "success",
+              "name": "Post Setup Deno",
+              "number": 14,
+              "started_at": "2026-10-21T12:06:08Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:09Z",
+              "conclusion": "success",
+              "name": "Post Setup Node",
+              "number": 15,
+              "started_at": "2026-10-21T12:06:08Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:09Z",
+              "conclusion": "success",
+              "name": "Post Checkout",
+              "number": 16,
+              "started_at": "2026-10-21T12:06:09Z",
+              "status": "completed"
+            },
+            {
+              "completed_at": "2026-10-21T12:06:09Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 17,
+              "started_at": "2026-10-21T12:06:09Z",
+              "status": "completed"
+            }
+          ],
+          "test_counts": []
+        }
+      ],
+      "name": "iOS launch contract",
+      "run_attempt": 1,
+      "status": "completed",
+      "updated_at": "2026-10-21T12:06:11Z",
+      "workflow_id": 312030667
+    }
+  ],
+  "source_commit": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d",
+  "stage_sha": "45cf259b86d0d2c2f6160ffa77c8755cc3dff52d"
+}

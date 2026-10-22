@@ -1,0 +1,6 @@
+command: git diff --exit-code c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c dabb6c280e0c89f841337f97f14704ed957fd48d --
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c
+snapshot_tree: d60d4a591653b141964680f153a8d82937d2984f
+exit_code: 0
+CI temporary merge dabb6c280e0c89f841337f97f14704ed957fd48d tree independently fetched and matched d60d4a591653b141964680f153a8d82937d2984f; parents main bbc28dc3d1f945191a81be56945b8bda7bb6ef73 and measured stage c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c.

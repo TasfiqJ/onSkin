@@ -1,3 +1,5 @@
+import { notificationPreferenceRetryPatch } from '@/features/notifications/applyPreferences';
+import { NotificationPreferenceSaveNotice, NotificationPreferenceSavedNotice } from '@/features/notifications/NotificationPreferenceSaveNotice';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
@@ -189,6 +191,15 @@ export default function TimingScreen() {
             Timing
           </Text>
         </View>
+
+        {update.isSuccess && update.data ? <NotificationPreferenceSavedNotice scheduling={update.data.scheduling} /> : null}
+        {update.isError ? (
+          <NotificationPreferenceSaveNotice
+            pending={update.isPending}
+            error={update.error}
+            onRetry={() => update.mutate(notificationPreferenceRetryPatch(update.error, update.variables))}
+          />
+        ) : null}
 
         {/* time pickers */}
         <View className="rounded-[18px] bg-paper-raised px-[18px]">

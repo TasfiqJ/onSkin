@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/features/today src/features/routine/orderStore.test.ts src/features/routine/reorder.g2.test.ts src/features/scheduler/cyclePersistence.regression.test.ts src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/notifications src/lib/storage/privateKV.test.ts src/lib/storage/plaintextStagingCore.test.ts src/lib/offline/completionQueue.test.ts src/lib/offline/OfflineSync.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+
+ Test Files  41 passed (41)
+      Tests  718 passed (718)
+   Start at  17:47:51
+   Duration  20.74s (transform 9.68s, setup 0ms, import 16.43s, tests 25.20s, environment 7ms)
+

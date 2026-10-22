@@ -1,0 +1,25 @@
+import argparse, datetime, hashlib, json, os, pathlib, platform, re, subprocess, sys
+P=pathlib.Path(__file__).parent
+STAGE=pathlib.Path('C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety')
+EVID=STAGE/'docs/brain/checkpoints/M1-03/CONT-01/evidence'
+def git(root,*args):return subprocess.check_output(['git','-C',str(root),*args]).decode('utf-8').strip()
+def run(name,args,root,extra=None,axis='source'):
+ EVID.mkdir(parents=True,exist_ok=True); output=EVID/(name+'.txt'); receipt=EVID/(name+'.receipt.json')
+ assert not output.exists() and not receipt.exists(),name
+ head=git(root,'rev-parse','HEAD'); tree=git(root,'rev-parse','HEAD^{tree}')
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); env={**os.environ,**(extra or {})}
+ actual=['cmd.exe','/d','/c',*args] if args[0].endswith('.cmd') else args
+ with output.open('wb') as f: code=subprocess.run(actual,cwd=root,env=env,stdout=f,stderr=subprocess.STDOUT).returncode
+ raw=output.read_bytes(); txt=re.sub(r'\x1b\[[0-9;]*m','',raw.decode('utf-8',errors='replace')); counts=None
+ summaries=re.findall(r'Tests\s+([^\r\n]+)',txt)
+ if summaries:
+  counts={k:sum(int(n) for s in summaries for n,t in re.findall(r'(\d+)\s+(passed|failed|skipped)',s) if t==k) for k in ['passed','failed','skipped']}
+ elif re.search(r'^# pass \d+',txt,re.M):counts={k:int(re.findall(r'^# '+n+r' (\d+)',txt,re.M)[-1]) for k,n in [('passed','pass'),('failed','fail'),('skipped','skipped')]}
+ elif re.search(r'Ran (\d+) tests',txt):
+  total=int(re.search(r'Ran (\d+) tests',txt)[1]); skips=re.search(r'skipped=(\d+)',txt); skips=int(skips[1]) if skips else 0
+  if code==0:counts=dict(passed=total-skips,failed=0,skipped=skips)
+ value=dict(schema_version=1,kind='LOCAL_EXECUTION',claim_origin='CODEX_REPORTED_EXECUTION',command=subprocess.list2cmdline(args),working_directory=str(root),environment='Windows x64 Python '+platform.python_version()+'; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations',source_commit=head,source_tree=tree,status='PASS' if code==0 else 'FAIL',exit_code=code,output=dict(path=output.relative_to(STAGE).as_posix(),sha256=hashlib.sha256(raw).hexdigest()),counts=counts,started_at_utc=start,finished_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),extra_environment=extra or {},argv=args,count_semantics='Overlapping focused and broad counts are never added; failures retained')
+ receipt.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8'); print(json.dumps(dict(id=name,exit=code,source=head,counts=counts)),flush=True); print(txt[-1100:].encode('ascii',errors='backslashreplace').decode(),flush=True)
+ return code
+if __name__=='__main__':
+ p=argparse.ArgumentParser();p.add_argument('name');p.add_argument('--root',default=str(P/'m103c1-isolated'));p.add_argument('--env',default='{}');p.add_argument('args',nargs=argparse.REMAINDER);a=p.parse_args();args=a.args[1:] if a.args[:1]==['--'] else a.args;sys.exit(run(a.name,args,pathlib.Path(a.root),json.loads(a.env)))

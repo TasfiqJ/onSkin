@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: actual Security includes mandatory automated single-owner source-only admission
+ok 1 - actual Security includes mandatory automated single-owner source-only admission
+  ---
+  duration_ms: 15.5991
+  type: 'test'
+  ...
+# Subtest: cannot omit an original job or its mandatory automated admission dependency
+ok 2 - cannot omit an original job or its mandatory automated admission dependency
+  ---
+  duration_ms: 33.658
+  type: 'test'
+  ...
+# Subtest: cannot skip decision after a scanner or ignore a failed acceptance
+ok 3 - cannot skip decision after a scanner or ignore a failed acceptance
+  ---
+  duration_ms: 25.8521
+  type: 'test'
+  ...
+# Subtest: unrelated checks remain hard gates
+ok 4 - unrelated checks remain hard gates
+  ---
+  duration_ms: 19.7967
+  type: 'test'
+  ...
+# Subtest: expired original policy execution is retained
+ok 5 - expired original policy execution is retained
+  ---
+  duration_ms: 18.5495
+  type: 'test'
+  ...
+# Subtest: automated admission cannot regain an external approval dependency or ignore failure
+ok 6 - automated admission cannot regain an external approval dependency or ignore failure
+  ---
+  duration_ms: 23.3201
+  type: 'test'
+  ...
+# Subtest: all three raw original artifacts are mandatory
+ok 7 - all three raw original artifacts are mandatory
+  ---
+  duration_ms: 7.2165
+  type: 'test'
+  ...
+# Subtest: full reviewed collector cannot be replaced by a version-only scanner
+ok 8 - full reviewed collector cannot be replaced by a version-only scanner
+  ---
+  duration_ms: 14.9372
+  type: 'test'
+  ...
+# Subtest: manual technical workflow supplies no automated acceptance route
+ok 9 - manual technical workflow supplies no automated acceptance route
+  ---
+  duration_ms: 2.7156
+  type: 'test'
+  ...
+# Subtest: actual source-generated audited SBOM has only the two unchanged expired-policy refusals
+ok 10 - actual source-generated audited SBOM has only the two unchanged expired-policy refusals
+  ---
+  duration_ms: 27.7721
+  type: 'test'
+  ...
+# Subtest: historical SBOM rejects the current lock and missing/corrupt historical bytes
+ok 11 - historical SBOM rejects the current lock and missing/corrupt historical bytes
+  ---
+  duration_ms: 40.4447
+  type: 'test'
+  ...
+# Subtest: original audited command, raw exit, packet capture and mandatory structural decision cannot be omitted
+ok 12 - original audited command, raw exit, packet capture and mandatory structural decision cannot be omitted
+  ---
+  duration_ms: 28.2859
+  type: 'test'
+  ...
+# Subtest: audited SBOM cannot add or hide a non-policy blocker or substitute an execution exit
+ok 13 - audited SBOM cannot add or hide a non-policy blocker or substitute an execution exit
+  ---
+  duration_ms: 97.5038
+  type: 'test'
+  ...
+# Subtest: SBOM provenance cannot claim an offline, missing or incomplete registry audit
+ok 14 - SBOM provenance cannot claim an offline, missing or incomplete registry audit
+  ---
+  duration_ms: 19.9174
+  type: 'test'
+  ...
+# Subtest: audited SBOM preserves exact typed advisory counts and every summary record
+ok 15 - audited SBOM preserves exact typed advisory counts and every summary record
+  ---
+  duration_ms: 39.0089
+  type: 'test'
+  ...
+# Subtest: audited SBOM preserves every source-lock package and install-script provenance
+ok 16 - audited SBOM preserves every source-lock package and install-script provenance
+  ---
+  duration_ms: 51.9967
+  type: 'test'
+  ...
+# Subtest: SBOM cannot fabricate signoff, omit fields or change the expired policy
+ok 17 - SBOM cannot fabricate signoff, omit fields or change the expired policy
+  ---
+  duration_ms: 24.1936
+  type: 'test'
+  ...
+# Subtest: audited SBOM rejects future, stale, malformed timestamps and changed raw findings
+ok 18 - audited SBOM rejects future, stale, malformed timestamps and changed raw findings
+  ---
+  duration_ms: 24.3984
+  type: 'test'
+  ...
+# Subtest: original OSV uses the verified exact binary and captures its real numeric exit
+ok 19 - original OSV uses the verified exact binary and captures its real numeric exit
+  ---
+  duration_ms: 24.931
+  type: 'test'
+  ...
+# Subtest: actual original exception CLI refusals bind source-bound scanner bytes and no approval
+ok 20 - actual original exception CLI refusals bind source-bound scanner bytes and no approval
+  ---
+  duration_ms: 29.706
+  type: 'test'
+  ...
+# Subtest: legacy fetch errors, newer releases, crashes, missing errors or invented stdout cannot be waived
+ok 21 - legacy fetch errors, newer releases, crashes, missing errors or invented stdout cannot be waived
+  ---
+  duration_ms: 713.3732
+  type: 'test'
+  ...
+# Subtest: Gitleaks actual executable identity remains a mandatory original-job artifact
+ok 22 - Gitleaks actual executable identity remains a mandatory original-job artifact
+  ---
+  duration_ms: 14.4154
+  type: 'test'
+  ...
+# Subtest: complete history, current snapshot, exact acquisition and source/run proof cannot be omitted
+ok 23 - complete history, current snapshot, exact acquisition and source/run proof cannot be omitted
+  ---
+  duration_ms: 70.0056
+  type: 'test'
+  ...
+# Subtest: automated admission cannot omit exact commit/run or actual original outcomes
+ok 24 - automated admission cannot omit exact commit/run or actual original outcomes
+  ---
+  duration_ms: 41.1419
+  type: 'test'
+  ...
+# Subtest: automated admission cannot be replaced by a separate green collection job
+ok 25 - automated admission cannot be replaced by a separate green collection job
+  ---
+  duration_ms: 12.1455
+  type: 'test'
+  ...
+# Subtest: single-owner route contains no protected reviewer, signer, key or receipt dependency
+ok 26 - single-owner route contains no protected reviewer, signer, key or receipt dependency
+  ---
+  duration_ms: 0.131
+  type: 'test'
+  ...
+# Subtest: collection stays outside source until verified and then stages the full original artifact
+ok 27 - collection stays outside source until verified and then stages the full original artifact
+  ---
+  duration_ms: 20.7497
+  type: 'test'
+  ...
+# Subtest: reviewed source pins must come from owner repository configuration, never the current commit itself
+ok 28 - reviewed source pins must come from owner repository configuration, never the current commit itself
+  ---
+  duration_ms: 13.5294
+  type: 'test'
+  ...
+# Subtest: missing or self-computed source pin arguments cannot replace owner-configured pins
+ok 29 - missing or self-computed source pin arguments cannot replace owner-configured pins
+  ---
+  duration_ms: 13.4536
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2643.288

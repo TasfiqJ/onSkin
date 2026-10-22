@@ -1,0 +1,23 @@
+You are the autonomous senior implementation engineer for onSkin. Start in a NEW Codex chat. Use the attached onSkin_Codex_M0-02_STAGE_BRANCH_Context.zip, not the old M0-01 package. Read 00_READ_FIRST.md, TASK.md, STAGE_BRANCH_PROTOCOL.md and BRAIN_STATE/AUDIT_M0-01.md, then the applicable canonical inputs and current repository instructions.
+
+Execute exactly M0-02: install the unified V2 planning authority, complete identity-preserving crosswalks, durable Brain state, stage-aware handoff/report contracts, and tested deterministic validation/context-packaging tooling. Own this complete non-runtime subsystem end to end; do not deliver only placeholder documents or ask the founder for technical preferences.
+
+Repository: https://github.com/TasfiqJ/onSkin
+Working branch: stage/m0-baseline
+Reviewed task base: b9a6b093f392ced340c156f2e7dcaefc72ed58e1
+Reviewed tree: ed42b889912e3fb383cfbafe413e7a66dd558221
+Original stage/main base: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+
+Fetch and inspect current main, stage, ancestry, instructions and dirty work before editing. Reuse the existing stage branch; do not recreate it from main. Preserve the founder checkout and all other work. Only one writer. All safe commits/pushes go to stage/m0-baseline. Main stays read-only; draft PR #8 stays unmerged. No force push, destructive reset or shared-history rewrite.
+
+M0-01 is ACCEPTED ONLY for diagnosis, its fail-closed regression test and the sanitized checkpoint. The full CI baseline remains BLOCKED. Final Quality39366256422 fails canonical ECR Postgres acquisition with Data limit exceeded; Security39366256806 rejects source inventory drift and also reports OSV review-date/advisory refusals. iOS39366256375 is a source-only pass. A local database pass is not a CI fix. This diagnostic acceptance is NOT G97 BRAIN source GO and authorizes no Security pin, manifest, date or scanner-policy change. Observe the actual 2026-10-21T00:00:00Z proposal expiry; never renew it mechanically.
+
+Install docs/v2 and durable docs/brain state with provenance, preserve every original identity/status/evidence reference across 376 granular items plus 20 families/12 surfaces, 202 legacy dispositions, 25 active gates and 38 feature crosswalk rows. Preserve all 47 roadmap IDs/dependencies and all 27 module IDs/order/dependencies. Commit the approved Brain snapshot and audit without upgrading runtime, external, research, commercial or release statuses.
+
+Deliver real standalone validators, consistent generated mirrors, versioned report contracts and a safe allowlisted task ZIP builder with positive and adversarial tests. Cover duplicate/missing identities, altered hashes, dependency cycles, false gate upgrades, traversal/link/private-input rejection, context bounds and deterministic ZIP integrity. Use supplied full data files programmatically; do not copy all historical/research archives into context. Keep measured test snapshot identities distinct from the live final delivery HEAD.
+
+No app/runtime/schema/database-type changes, package or workflow upgrades, protected DB06/DB08/R2B changes, Security inventory/owner-pin/expiry/exception modifications, registry authentication, J05 implementation, spending, deployment, signing or release. Do not start M1. Document the still-open baseline/security problems and one precise proposal-only remediation packet; do not execute protected work or ask for owner actions that this independent task does not need.
+
+At the end of EVERY session, commit and push all safe authorized work plus tracked root ONSKIN_BRAIN_HANDOFF.txt to origin/stage/m0-baseline, even when PARTIAL, BLOCKED or red. Put detailed sanitized evidence and the structured report under docs/brain/checkpoints/M0-02 so the Brain can inspect them directly on GitHub. Never push secrets, personal photos, patient reports or raw clinical data. If push fails, report PUSH_BLOCKED honestly without forcing it.
+
+Run the task's real acceptance checks and relevant existing checks; record exact commands, environments, tested SHAs/trees, exits, artifacts and honest CI outcomes. NOT_RUN/BLOCKED is not PASS. Do not self-accept. Your final reply can be concise: branch, push status, latest measured stage SHA, handoff path, top blocker and context health. Then stop for Brain review.

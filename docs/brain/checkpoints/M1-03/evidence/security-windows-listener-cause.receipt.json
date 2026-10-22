@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/listener_m103.py",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.12.14; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+  "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/evidence/security-windows-listener-cause.txt",
+    "sha256": "a81a33184890d18d1e3a5d3e2d1312afc6e88e40cae7be154e0d66518c6ea581"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T23:37:42.552744+00:00",
+  "finished_at_utc": "2026-10-20T23:37:42.762112+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "-B",
+    "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/listener_m103.py"
+  ]
+}

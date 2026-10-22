@@ -2,7 +2,8 @@ import { router, useSegments } from 'expo-router';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState, Pressable, View, type AppStateStatus } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { Button, Screen, Text } from '@/components/ui';
+import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import { queryClient } from '@/lib/query/queryClient';
 import { colors } from '@/theme/tokens';
 
@@ -27,12 +28,16 @@ import {
 export function AgePolicyGate({
   bootstrap,
   children,
+  recovery,
 }: {
   bootstrap: ReactNode;
   children: ReactNode;
+  recovery?: ReactNode;
 }) {
   const segments = useSegments();
   const [retrying, setRetrying] = useState(false);
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [receiptPublicationRevision, setReceiptPublicationRevision] = useState(0);
   const [receiptStatus, setReceiptStatus] = useState<AgePolicyReceiptStatus | 'checking'>(
     'checking',
   );
@@ -49,7 +54,10 @@ export function AgePolicyGate({
 
   const readActiveReceipt = useCallback(async (preserveUnavailableView = false) => {
     const readGeneration = ++readGenerationRef.current;
-    if (!preserveUnavailableView) setReceiptStatus('checking');
+    if (!preserveUnavailableView) {
+      clearActiveHealthProcessingEpoch();
+      setReceiptStatus('checking');
+    }
 
     let nextStatus: AgePolicyReceiptStatus;
     try {
@@ -88,6 +96,7 @@ export function AgePolicyGate({
         // Invalidate every pending read and synchronously close protected
         // providers before the app can later foreground with a stale receipt.
         readGenerationRef.current += 1;
+        clearActiveHealthProcessingEpoch();
         setRetrying(false);
         setReceiptStatus('checking');
         return;
@@ -123,8 +132,12 @@ export function AgePolicyGate({
       // while that overwrite is pending or has failed. Incrementing the
       // generation also prevents an older receipt read from reopening them.
       readGenerationRef.current += 1;
+      if (publishedStatus !== 'current') clearActiveHealthProcessingEpoch();
       setRetrying(false);
       setReceiptStatus(publishedStatus);
+      // A successful re-confirmation can publish current -> current. It still
+      // owns a new post-age navigation after the durable write/owner commit.
+      setReceiptPublicationRevision((revision) => revision + 1);
     });
 
     return () => {
@@ -144,12 +157,35 @@ export function AgePolicyGate({
       return;
     }
     router.replace('/onboarding/age');
-  }, [receiptStatus, routeAllowedWithoutReceipt, unavailable]);
+  }, [receiptStatus, receiptPublicationRevision, routeAllowedWithoutReceipt, unavailable]);
 
   function retryReceiptRead() {
     if (retrying || appStateRef.current !== 'active') return;
     setRetrying(true);
     void readActiveReceipt(true);
+  }
+
+  const recoveryButton = recovery ? (
+    <Button
+      label="Privacy & account"
+      variant="ghost"
+      onPress={() => {
+        clearActiveHealthProcessingEpoch();
+        setShowRecovery(true);
+      }}
+    />
+  ) : null;
+  if (receiptStatus !== 'current' && showRecovery && recovery) {
+    return (
+      <View className="flex-1">
+        {recovery}
+        <Button
+          label="Back to age confirmation"
+          variant="ghost"
+          onPress={() => setShowRecovery(false)}
+        />
+      </View>
+    );
   }
 
   if (unavailable) {
@@ -177,13 +213,21 @@ export function AgePolicyGate({
               {retrying ? 'Trying again…' : 'Try again'}
             </Text>
           </Pressable>
+          {recoveryButton}
         </View>
       </Screen>
     );
   }
 
   if (receiptStatus === 'current') return <>{children}</>;
-  if (receiptStatus !== 'checking' && routeAllowedWithoutReceipt) return <>{bootstrap}</>;
+  if (receiptStatus !== 'checking' && routeAllowedWithoutReceipt) {
+    return (
+      <View className="flex-1">
+        {bootstrap}
+        {recoveryButton}
+      </View>
+    );
+  }
 
   return (
     <Screen>

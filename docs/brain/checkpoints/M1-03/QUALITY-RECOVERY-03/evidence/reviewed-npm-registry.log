@@ -1,0 +1,20 @@
+{
+  "version": "11.20.0",
+  "dist": {
+    "shasum": "6326d796fe2eff2cc0427e21940443df812a729a",
+    "tarball": "https://registry.npmjs.org/npm/-/npm-11.20.0.tgz",
+    "fileCount": 1943,
+    "integrity": "sha512-dF3EDFwbYN+N5RUip+ZYDe0NeURK5BgqKOcvT1iNtUYhTMTl0FwWhBuXrS7KtXyduqyTMS5aaQaregnHDAxNgw==",
+    "signatures": [
+      {
+        "sig": "MEQCIFgmpcvvgpV6IWP6SDooHeB60Kl7AjNkVFHOWGZnlCBuAiAOxgzwNwdamWSrua+6ApFBDSOTvP8eGSBbJ3xxfXu5kQ==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEQCIB+BdVMiYmw3GjeD0BEgTJLFe5ZR9m+tEiXftEBVmFyEAiAXaAdvQIpzi2vpa7eH8H7uq2ht/WbmsdHLdzJ4nW8rzQ==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 12232392
+  }
+}

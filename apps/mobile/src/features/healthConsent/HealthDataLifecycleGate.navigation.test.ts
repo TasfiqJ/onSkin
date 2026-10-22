@@ -4,8 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PausedHealthDataShell } from './HealthDataLifecycleGate';
 import type { HealthDataLifecycleRecord } from './lifecycleStore';
+import { readHealthDataLifecycle } from './lifecycleStore';
 
 const mocks = vi.hoisted(() => ({
+  pausedWithdraw: vi.fn(),
   grant: vi.fn(),
   reconcile: vi.fn(),
   replace: vi.fn(),
@@ -70,6 +72,7 @@ vi.mock('@/lib/legal/policyLinks', () => ({
 }));
 vi.mock('@/lib/navigation/externalOpen', () => ({ openExternalHttpsUrl: vi.fn() }));
 vi.mock('./lifecycle', () => ({
+  beginPausedHealthDataConsentWithdrawal: mocks.pausedWithdraw,
   completeHealthDataActivationRoute: vi.fn(),
   grantAuthoritativeHealthDataConsent: mocks.grant,
   LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER: 'local-device-unclaimed',
@@ -116,6 +119,7 @@ beforeEach(() => {
     globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
   ).IS_REACT_ACT_ENVIRONMENT = true;
   mocks.grant.mockReset();
+  mocks.pausedWithdraw.mockReset();
   mocks.reconcile.mockReset();
   mocks.replace.mockReset();
   mocks.resume.mockReset();
@@ -127,6 +131,59 @@ afterEach(async () => {
 });
 
 describe('paused health-data shell navigation ownership', () => {
+  it('starts one paused withdrawal for two same-turn confirmation presses', async () => {
+    let release!: (record: HealthDataLifecycleRecord) => void;
+    mocks.pausedWithdraw.mockReturnValue(
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+    );
+    const onRecord = vi.fn();
+    await act(async () => {
+      renderer = create(
+        createElement(PausedHealthDataShell, {
+          record: lifecycleRecord({ state: 'active' }),
+          onRecord,
+          rightsOnly: true,
+        }),
+      );
+    });
+    await act(async () =>
+      renderer!.root.findByProps({ label: 'Withdraw health-data consent' }).props.onPress(),
+    );
+    await act(async () => {
+      const confirm = renderer!.root.findByProps({ label: 'Confirm withdrawal' }).props.onPress;
+      confirm();
+      confirm();
+    });
+    expect(mocks.pausedWithdraw).toHaveBeenCalledExactlyOnceWith('owner-a');
+    await act(async () => release(baseRecord));
+    await flush();
+    expect(onRecord).toHaveBeenCalledExactlyOnceWith(baseRecord);
+  });
+  it('keeps reconsent absent and status retry read-only in the isolated rights shell', async () => {
+    const onRecord = vi.fn();
+    const active = lifecycleRecord({ state: 'active', processingEpoch: 3 });
+    vi.mocked(readHealthDataLifecycle).mockResolvedValueOnce(active);
+    await act(async () => {
+      renderer = create(
+        createElement(PausedHealthDataShell, { record: active, onRecord, rightsOnly: true }),
+      );
+    });
+    await act(async () =>
+      renderer!.root.findByProps({ label: 'Retry / check status' }).props.onPress(),
+    );
+    await flush();
+    expect(onRecord).toHaveBeenCalledExactlyOnceWith(active);
+    expect(mocks.reconcile).not.toHaveBeenCalled();
+    expect(mocks.grant).not.toHaveBeenCalled();
+    await act(async () =>
+      renderer!.update(
+        createElement(PausedHealthDataShell, { record: baseRecord, onRecord, rightsOnly: true }),
+      ),
+    );
+    expect(renderer!.root.findAllByProps({ label: 'Review fresh consent' })).toHaveLength(0);
+  });
   it('publishes reconsent once and leaves its pending activation route to the gate', async () => {
     const onRecord = vi.fn();
     const activated = lifecycleRecord({

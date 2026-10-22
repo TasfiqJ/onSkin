@@ -1,0 +1,1109 @@
+{
+  "schema_version": 3,
+  "task_id": "M1-02",
+  "iteration": "CONT-01",
+  "branch": "stage/m1-retained-safety",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "measured": {
+    "commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+    "tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "id": "measured-root-tests",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd run test -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-tests.receipt.json",
+      "sha256": "7de3b12d1f6ee73a7e9bd2615ff6d174e3a599650e5f45978853bb40c7a0255f"
+    },
+    {
+      "id": "measured-root-typecheck",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd run typecheck -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-typecheck.receipt.json",
+      "sha256": "2eea4ec212ef7968b8d8116f1c6004e8cd6d63b0bd878abfb1ce90dd03f45f9a"
+    },
+    {
+      "id": "measured-root-lint",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd run lint -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-lint.receipt.json",
+      "sha256": "17ed929a36f645d80659c5462e411a0a9e7eb585a5a7048d236b2c36f9ca9e8f"
+    },
+    {
+      "id": "measured-governance",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-governance.receipt.json",
+      "sha256": "c0ba5e4a71d7da247c7efebdcd2245b915af86a1c7e1116297fa9d4869633f0b"
+    },
+    {
+      "id": "measured-source-contracts",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "FAIL",
+      "exit_code": 1,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-source-contracts.receipt.json",
+      "sha256": "6a718e696988b68289ead76c82cccd0e593e3f3a178664556a150472891e7652"
+    },
+    {
+      "id": "clock-toronto",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "TZ=America/Toronto npm.cmd --workspace apps/mobile run test -- --run src/features/today/routineClock.cont01.test.ts src/features/today/useRoutineClock.test.ts src/features/today/useToday.test.ts",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-toronto.receipt.json",
+      "sha256": "d3f64b4e3fbdebe23de0f06babe4d76943a8a8dc0f3c9ae8d690fb1961a9de0a"
+    },
+    {
+      "id": "clock-auckland",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "TZ=Pacific/Auckland npm.cmd --workspace apps/mobile run test -- --run src/features/today/routineClock.cont01.test.ts src/features/today/useRoutineClock.test.ts src/features/today/useToday.test.ts",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "49f7b4dd202f7e59254cfcefce9e3686e4460d0e",
+      "source_tree": "7a71a077ef30579f3f8394341f6f1a92142526ea",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-auckland.receipt.json",
+      "sha256": "a1ea5ddc0b23a2cbb00bf18d7571c21fc5ab35cf505a979de96427651cd928f2"
+    },
+    {
+      "id": "measured-focused",
+      "axis": "integration",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "npm.cmd --workspace apps/mobile run test -- --run src/features/today src/features/routine/orderStore.test.ts src/features/routine/reorder.g2.test.ts src/features/scheduler/cyclePersistence.regression.test.ts src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/notifications src/lib/storage/privateKV.test.ts src/lib/storage/plaintextStagingCore.test.ts src/lib/offline/completionQueue.test.ts src/lib/offline/OfflineSync.test.ts",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-focused.receipt.json",
+      "sha256": "9720d7dbd4cfc6a03846d91c32134db8bb36fdf9b24e4befb554857925b67628"
+    },
+    {
+      "id": "daily390-sealed",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_PORT=8365 ONBOARDING_E2E_DEBUG_PORT=9465 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily390-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed.receipt.json",
+      "sha256": "79307aaa4b5e2a7e4c2ce298635be1e71269b89ce1b625e863fd162c676c8141"
+    },
+    {
+      "id": "daily375-sealed",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_PORT=8366 ONBOARDING_E2E_DEBUG_PORT=9466 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily375-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "4e6804316ce04eef0a96120353906be8765de708",
+      "source_tree": "9c5eb61efa71862a28045173f29683e2fdb2314a",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed.receipt.json",
+      "sha256": "33dfaeb424143a10f3d606bab7c9c200b4fb98c1251daa41f706ff702abd372f"
+    },
+    {
+      "id": "daily430-sealed",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_PORT=8367 ONBOARDING_E2E_DEBUG_PORT=9467 ONBOARDING_E2E_VIEWPORT_WIDTH=430 ONBOARDING_E2E_VIEWPORT_HEIGHT=932 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-daily430-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed.receipt.json",
+      "sha256": "ba343bc0484afaa8854a9c7155eb99d972f781674e772818a228ca5f0d016f28"
+    },
+    {
+      "id": "cross-daily390-sealed",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_PORT=8368 ONBOARDING_E2E_DEBUG_PORT=9468 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-cross-daily390-sealed node scripts/e2e/onboarding-first-session.mjs --daily-loop --cross-owner",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed.receipt.json",
+      "sha256": "4c2f7d0313cf704966bc4c4c322e91baba757dbc138d2519c824fd53f6b834b6"
+    },
+    {
+      "id": "signout390-sealed",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_PORT=8369 ONBOARDING_E2E_DEBUG_PORT=9469 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-signout390-sealed node scripts/e2e/onboarding-first-session.mjs --account-isolation",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed.receipt.json",
+      "sha256": "b4b8f43b1586e40546b5d3303df46c61a11999489fb6a29a2a53e70f923bf89d"
+    },
+    {
+      "id": "retained390-sealed",
+      "axis": "surface",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "command": "ONBOARDING_E2E_PORT=8370 ONBOARDING_E2E_DEBUG_PORT=9470 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m102c1-retained390-sealed node scripts/e2e/onboarding-first-session.mjs --retained-safety",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "source_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "status": "PASS",
+      "exit_code": 0,
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed.receipt.json",
+      "sha256": "8ee2047396ec33cbb6741dc327c0e5d21e1459342a673f9570832b6f5791ad03"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/ACCEPTANCE_CLOSEOUT.md",
+      "sha256": "17556e18254173006a41a7118f32504b13df6de9a8734505475c3067805e04ad"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
+      "sha256": "d4e9cea68d19ab39de9dece635ff607bfab9e2cab40c3ae08f246e6266217941"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/ci/candidate-39503019220-ios-lint-failure.log",
+      "sha256": "fd7019b984e89e3ac278a5370aa0700005d57cbecc7c97c3ad5d5ffe690983b0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/ci/quality-39504417954-db-118910283042.log",
+      "sha256": "f759fae17a9abf332e975b328549c6eba00527492e2a4536004b4baa5d2d4cb8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/ci/security-39504417794-118909643304.log",
+      "sha256": "c886e32f4614bb096c42050454b972ba4bb01f9bbc2a4173db5f54eebf79c4fc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/ci/security-39504417794-118909643418.log",
+      "sha256": "7bc8674890fc95fd21eb1127555164f150be19070c5fbbdfc070f3f6ae1acf0e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/ci/security-39504417794-118911778942.log",
+      "sha256": "20c0beef15d3cc31b0a087496c9fc72104cec6409821079bd976fd12b9a7f82d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-auckland.receipt.json",
+      "sha256": "a1ea5ddc0b23a2cbb00bf18d7571c21fc5ab35cf505a979de96427651cd928f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-auckland.txt",
+      "sha256": "1fb851fb5abc8d115b7e4dc4b5227feff58e0a8e5989d5f4d0499d0861de9cd6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-toronto.receipt.json",
+      "sha256": "d3f64b4e3fbdebe23de0f06babe4d76943a8a8dc0f3c9ae8d690fb1961a9de0a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/clock-toronto.txt",
+      "sha256": "d606c15db4660a1bbc9f34fb3a8ddb346cd44ca50ff5e9c4ad07c8728c43e3ce"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-final.receipt.json",
+      "sha256": "d8d0d76b67ed8598fafdf1d49d06bdf1436b12eb3d173521f0a80226f8e4155c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-final.txt",
+      "sha256": "83370f341aa63bb8b2b8beec62faf2505b6c9a6aea16e5d93d2f9d5a2c0e2d19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/browser-warn-error-logs.json",
+      "sha256": "d03c9f9e0f226e0ae9d80899fe4f4f379abdaa0c4c7b5fd79c8a213d96c8ce4c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-01-owner-a.json",
+      "sha256": "546ff526f7037736190f6763ae98832d4f60eded2fdc2e607aa4e29e34056e67"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-02-draining-old-owner.json",
+      "sha256": "9f7c8730b0016c4b0cdf30bb7eeca3a67188bd56874d7778c10daa5cfb0a19cf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-09-b-usable-shelf.json",
+      "sha256": "3c8b46be024883ccbbe36e0afa38557805f4fdb487215044ff3bcf67b9650569"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-09-b-usable-shelf.png",
+      "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-09b-b-product-detail.json",
+      "sha256": "c015226655cad409c3c5ed7e42941005ca65cdb8f07a77fc831307d1d4c76619"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-09b-b-product-detail.png",
+      "sha256": "2c86630570c766a3abd4d1a0930635d8872485cf428ae090f36b32e473a8fd2b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-11-b-identity.json",
+      "sha256": "ef04b585c1f22e40f88a6430acd7c02e53fd401ab4f154ef8f7722cbedefcab2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-11-b-identity.png",
+      "sha256": "04849537d4583d28cb9ae41b6d81665c9ce53478ce2b6b77dfa3bf9cb207aed6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-12-b-document-relaunch.json",
+      "sha256": "651d9e232683c6964aab857f596a6260ec1840fc0d4d9c69e620da61d065b12e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-14-return-a-relaunch-closed.json",
+      "sha256": "4141abfd0d170aab1e8bfb377997268d6cf0015bb95b8a68d3754d82d7239bf5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/CO-b-relaunch-boundaries.json",
+      "sha256": "03d8acf695827fe49c4f503db2b672da68bac8d9b6540b18346ea42517fe9a47"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/M102-daily-loop.json",
+      "sha256": "b147c4334a5ed39bb13571555658c445c912e8d738feff45655e53538a540bd8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed/summary.json",
+      "sha256": "fb3edecb5b981f80375e4082b4b6636bc040006afedc469be10bde7d71e33bf2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed.receipt.json",
+      "sha256": "4c2f7d0313cf704966bc4c4c322e91baba757dbc138d2519c824fd53f6b834b6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/cross-daily390-sealed.txt",
+      "sha256": "9a88883fbdf9324ecc291eca77a970ad186463d960f0554c20228eb4b0e45c5b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily-390.receipt.json",
+      "sha256": "0c2a57b884061cca225b486c93ce88d71609f8a674c5fee16680b924f997a12d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily-390.txt",
+      "sha256": "a8938c70f28b786932320ee401888498124a40b8d2e30cc9b25a0e1b45f55657"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-final.receipt.json",
+      "sha256": "44004a744d7327cf9ed6d1e7554c97c423bbb1fa7299be56520f2294ec233972"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-final.txt",
+      "sha256": "4935ce35e7933573d3be1de67f4a195a2b46ea2bb5a9bea84254012de1acf2c9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/browser-warn-error-logs.json",
+      "sha256": "c37857c191f6df53f38bf85937d60828874198254be3498844f02016b8a860d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-02-rejected-write-recovery.json",
+      "sha256": "227cd6ea7ea6c93a7900135021b77e12c49d6e564da6ac81d693a6833b017a8f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-02-rejected-write-recovery.png",
+      "sha256": "88246d2a5e35e60241f4923378d0a4341d690bc9455c67f54724f7153982658b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-05-reloaded-am.json",
+      "sha256": "40e17576e5ecb668dbdcb63b874eea5325497d03a03ec4d912d1e4492e2aa415"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-05-reloaded-am.png",
+      "sha256": "d568a0af2a518efb220fce7ea10c11d3c2b6c252b22333a7e9f7518e0a82ce68"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-06-pm.json",
+      "sha256": "8fc9fd7cf34ade8900c2c5bc4d61d4349dea53e738261019b01adef5fe80236d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-06-pm.png",
+      "sha256": "f404a757737a1ab7c748613817b801a6b0f85ac678b64730c1255ab3b84f8de1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/M102-daily-loop.json",
+      "sha256": "b147c4334a5ed39bb13571555658c445c912e8d738feff45655e53538a540bd8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/report.md",
+      "sha256": "f682139730a2aea7c179d7154480ef25c9096260c974b5769f9e4abe4a95082f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed/summary.json",
+      "sha256": "58aa32a721fe66e4707e373431614bd948d303300075448404c4165d159e75e1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed.receipt.json",
+      "sha256": "33dfaeb424143a10f3d606bab7c9c200b4fb98c1251daa41f706ff702abd372f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily375-sealed.txt",
+      "sha256": "57194492bb281b81b64039d697712f7109ec905ec717d1d3ddd7b7cc772b10f3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-final.receipt.json",
+      "sha256": "f0052cabab4cc9dc94cd37b82373c7869786590d186ed07c1ba34fe99d889e4b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-final.txt",
+      "sha256": "956419e38c42981db77409efc776d4cc30643014a50160fe21b5c0bb4e5d7122"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/browser-warn-error-logs.json",
+      "sha256": "9816f1b17cebdd940be0d13a039124de82e91cc5eb12152dc03a01f12ea924e9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-01-am-ready.json",
+      "sha256": "67e029861c5744a09b1822addbef6489179b8a441c93f26e1d0edf22b4792466"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-01-am-ready.png",
+      "sha256": "202de292bf822337b8d975ca3833e00b044aa9d8fa515a4beab05d8682bee1b0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-02-rejected-write-recovery.json",
+      "sha256": "5f50d5f64bbdd7bc41a833d5e7caaa832f202e065e8eb89f224645407152a761"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-02-rejected-write-recovery.png",
+      "sha256": "de4694ad098ddfa6b3452a99aa363cad824337ca8026cc4dfb87c715914ae687"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-03-offline-duplicate-append-only.json",
+      "sha256": "74702355217f85b301657249f43d151d7f1d376603dfdada95269aae6ab98de5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-03-offline-duplicate-append-only.png",
+      "sha256": "3f5ecf816fab23992581185279aaabcbf985d698483a5992179070fa26421205"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-04-offline-timing.json",
+      "sha256": "b4f406477be8bfd407b21bd6cbe31630254487eec67375f4a2b2d1fb8aba0c86"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-04-offline-timing.png",
+      "sha256": "4e2416d2430991cd983250a16f6b5023cf653dae5df27d903c012b360ea46aa5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-04a-offline-reminder-recovery.json",
+      "sha256": "d4da8adfba13b674e7c20ff12ceede0a511894ad9407ec69727f7e7404be54ce"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-04a-offline-reminder-recovery.png",
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-05-reloaded-am.json",
+      "sha256": "74702355217f85b301657249f43d151d7f1d376603dfdada95269aae6ab98de5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-05-reloaded-am.png",
+      "sha256": "ef14fbf5f7fd35092c0193f38b04d5272a40441d959bcd51d216774449de0864"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-06-pm.json",
+      "sha256": "d353aba028ff5d1dbe3419db043f1dc80af6bbd2bbe0acf7a7cb4d74652fad46"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-06-pm.png",
+      "sha256": "c91a0cb99d8d9682bee0e217ac995cefb5ffaf558cfea5444b466e023c4acb3d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/M102-daily-loop.json",
+      "sha256": "b147c4334a5ed39bb13571555658c445c912e8d738feff45655e53538a540bd8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/report.md",
+      "sha256": "a45ebc45f2c36423fa15342de30c7bfc3083324916fa2b21b996961d9485dcdb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed/summary.json",
+      "sha256": "d8368408e6c6d204ca46f9f2d7f9e6b3e78875c221e5c210610a9f11bb8cd380"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed.receipt.json",
+      "sha256": "79307aaa4b5e2a7e4c2ce298635be1e71269b89ce1b625e863fd162c676c8141"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily390-sealed.txt",
+      "sha256": "bfaa9533e27f1db5ee72c9024f16423c07a2cf1befebee638733dfb664eaf24c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-final.receipt.json",
+      "sha256": "69e6bac069070671100e8ccfe67d3ad3c3dabd0173b0425497541f02e720f860"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-final.txt",
+      "sha256": "daefa2e1bdb095d201bb5767fa99928a626dfd914a69b9c632337c538dae5d2e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/browser-warn-error-logs.json",
+      "sha256": "8a15b3726e99db6b8762587dce13405d54cb37d628431e581283485487353f57"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-02-rejected-write-recovery.json",
+      "sha256": "69b88a1a5905d328aca46d6b96b856c2c0f4f42597df6bae446fdd608cf43540"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-02-rejected-write-recovery.png",
+      "sha256": "629a25a5148c4876566d2d0ea45cb1c8ec7771e3dcb7e9b63fbca4313a8c3d3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-05-reloaded-am.json",
+      "sha256": "0311317e8b1e6cc859104e9f28d73e3c5144ba03a14561bc85d523a96917c810"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-05-reloaded-am.png",
+      "sha256": "fab031f1f1aa76881436fb8a6be4a5b0954d81f393d89314e7ce096c4f169871"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-06-pm.json",
+      "sha256": "492d130ab3fc70b5659d93ea4fd0da3cbe3c00d942ae2053df00eec6b357faac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-06-pm.png",
+      "sha256": "b5f610440ca9b72deefd365c31773bc7551ddfa94f8d0dbe85a3b6095421cc0f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/M102-daily-loop.json",
+      "sha256": "b147c4334a5ed39bb13571555658c445c912e8d738feff45655e53538a540bd8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/report.md",
+      "sha256": "fb5d0c5999eac6a1d3fd600f19759610e1ab7fdbeaf538d24ed676d42dbd5a6f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed/summary.json",
+      "sha256": "77f70346538a7852120bbf4617042e375cc5cffd998a5d15a02c36919fa09002"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed.receipt.json",
+      "sha256": "ba343bc0484afaa8854a9c7155eb99d972f781674e772818a228ca5f0d016f28"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/daily430-sealed.txt",
+      "sha256": "ab4526767b1e76284b375a8401dffa578873da79c1320e4492e4a074a54f1ed3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-causal-base-red.txt",
+      "sha256": "46e36266cc70e5b96b92074726b96a4db95947fba8d7d5a1a6948a5e82c194e9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-cross-daily390-final-FAILURE.json",
+      "sha256": "bd12e24d130afe34ad4c7ad34800aeeb5be7bf1e48343592c4687dfd2c11b26f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-cross-daily390-final-FAILURE.png",
+      "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-daily390-explore-FAILURE.json",
+      "sha256": "5d673449f87b1a6af20e196d1c90e11a56a602212ee97dd36e2534188005e4b6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-daily390-explore-FAILURE.png",
+      "sha256": "f7fd43effb34eb991a4d095edbf435c41b06bab2c1e163a2dc0c88450e303b79"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-daily390-explore.txt",
+      "sha256": "9bdd3fc937a0b481d92e066a52a136fbad7405f66a3d566b7dbc218245da44a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-governance-explore.txt",
+      "sha256": "161b3eedb4ec3d6dc123b12d70d0a8994af45a0490dc23ea9ae8943b1971f730"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-initial-tests.txt",
+      "sha256": "aedeabd8bef90e875066b563446907d6f19e7587811dbefdffa0c529a0ad992a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-notifications-explore.txt",
+      "sha256": "e12c9c5a3a53937c532a772283b9d03753e14c647da7b4fce9e3ffccc9b50c0d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-targeted-explore.txt",
+      "sha256": "3975dcde99b462fd39c62d932bf967b962f494b01cffecc35864d946b5ad52e3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-typecheck-explore.txt",
+      "sha256": "54a2a51278cf48a16b13b9b7ad1f6b43fb463c4229fabeba881489d25287aa30"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/m102c1-typecheck-explore2.txt",
+      "sha256": "53582fc0329c97113ed2cfbf97b28402af3f5444d021bd3659e6adea170f30a5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/diagnostics/README.json",
+      "sha256": "502173ea8b1c695bb7173b2159011083f8eb7acc404925ba6940de1cbdde9cad"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-lint.receipt.json",
+      "sha256": "47563dbcc0b6f5994d103f0d1933d0d31fb7d90356b9465da706f948dc650b77"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-lint.txt",
+      "sha256": "284d6c0005fce7ae489279cbd643da9fbbf57ffb0ef6e4687441bd0c5d670759"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-tests.receipt.json",
+      "sha256": "11f89d14e9518013cfadaaebaa9bd7d3eb6759f5b2fc2de4052e0c10141172cf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-tests.txt",
+      "sha256": "1357f0a9e42bafc036f484d1c2c09be3dcf6af13b8b46f0d9eb2ab3f257b88a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-typecheck.receipt.json",
+      "sha256": "b4118fc51d2e2e1d0958c766cd82942e3021ad8ad3baf70416983fb1f0b9a193"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/final-root-typecheck.txt",
+      "sha256": "746dd0d386bb34f87605824a1975cf692c2b250d8a57e6ffd38c83c61bf18276"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/focused.receipt.json",
+      "sha256": "103b3e9e11617dec4cb7b74d5bf87767a2cdf108c3c5d895578c5112271e203c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/focused.txt",
+      "sha256": "ffa5696766921ddb174c28758532b68fab72375f3b554c55f8517763b438e6a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/governance.receipt.json",
+      "sha256": "d77f8750a4bc65bb007582a58e02fa28755b61060d32d0fc78bf2abf43fc5421"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/governance.txt",
+      "sha256": "0c43354e03a10f6fbe0727a7750e0e4e6f545d1d6de68c95c0a76edfb1088edc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/input-verifier.receipt.json",
+      "sha256": "8a67fbefcf501777f0bd021aa2326ff1c32168df9ba951a1ec3331148a961be5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/input-verifier.txt",
+      "sha256": "94d55c023e583f67fe6d3c906ec90ed7e025342d023db32a7a09858b3ae7144a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-focused.receipt.json",
+      "sha256": "9720d7dbd4cfc6a03846d91c32134db8bb36fdf9b24e4befb554857925b67628"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-focused.txt",
+      "sha256": "b173db12b25175a8fec843e121bea8144ef72416f0d5049029dcd29c051dedbc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-governance.receipt.json",
+      "sha256": "c0ba5e4a71d7da247c7efebdcd2245b915af86a1c7e1116297fa9d4869633f0b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-governance.txt",
+      "sha256": "fe504db9751b21c31e55656543a1aac21ef5a92641f3fdb82bcb8178a7b4d335"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-lint.receipt.json",
+      "sha256": "17ed929a36f645d80659c5462e411a0a9e7eb585a5a7048d236b2c36f9ca9e8f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-lint.txt",
+      "sha256": "ddf6f1a7c607f5f334d7078a5328d3391e09813868525bf5a50964cab274a8fe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-tests.receipt.json",
+      "sha256": "7de3b12d1f6ee73a7e9bd2615ff6d174e3a599650e5f45978853bb40c7a0255f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-tests.txt",
+      "sha256": "4ee0a618b2c5674a9b1e1e481f264ab315bfb583022021e4e48dffd8844ac946"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-typecheck.receipt.json",
+      "sha256": "2eea4ec212ef7968b8d8116f1c6004e8cd6d63b0bd878abfb1ce90dd03f45f9a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-root-typecheck.txt",
+      "sha256": "2773ee4604160f9fec6d745e03933025bfb601ffeb8b00809123d515d452b966"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-source-contracts.receipt.json",
+      "sha256": "6a718e696988b68289ead76c82cccd0e593e3f3a178664556a150472891e7652"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/measured-source-contracts.txt",
+      "sha256": "c5828b3110b98550352b3087e6c88fd3ca92d3fee2aa0cf546fa6613244b8022"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/26-age-reverification-blocked.png",
+      "sha256": "32a60ee3aabc00ed420ed4c0c831c55cf7d3e221acc1000465c4f59fcbce737e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/27-age-reverification-direct-today-blocked.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/browser-warn-error-logs.json",
+      "sha256": "3881bc1eefa3ace7980b5d9556a3688de949c43dea0f916583ffdf6cf6b551dc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-03b-write-failure-intent-retained.png",
+      "sha256": "32c7f9e4a3077c4507d4ad903ebd6daa4ba72f4a0b72e69359682d3e6c9cb6d7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-05b-remove-failure.png",
+      "sha256": "877445627a1d1cf9464820e7ab2f910ef0d22ceae721d661263e025052a25bc4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11-age-closed-withdrawal.json",
+      "sha256": "3eb0dc60d5690487a27b455f81a73e9ad27104cd27c1d04b0d0a51f04a2ac706"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11-age-closed-withdrawal.png",
+      "sha256": "af3c3d770602ded791804a2fa7188b68af9354c88a7bcd85082ea48d60115e3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11a-withdrawal-cleanup-refused.json",
+      "sha256": "cae9d5765f69e0a9254ebe4913a9258fa5e93e25e2100cc54afccff2ded9bf34"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11a-withdrawal-cleanup-refused.png",
+      "sha256": "992b56ed043b40ad92435b421b4ffffe81ef218e0277a30ce135b22719f677ff"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11b-withdrawal-repeated-refusal.json",
+      "sha256": "81af5cc9f11b9e35de6703e5cf478ab7bac48cf5ccbef42a7108cf9f3bfa86cf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11b-withdrawal-repeated-refusal.png",
+      "sha256": "ef9487f1da978af6f39cf620c23266da0bb82f5b834ce2f18522b4c06c497cf3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11c-withdrawal-relaunch-paused.json",
+      "sha256": "40cc8499ffd0c6d654524fba014a8f5e6bc4b8caff8177734cf07cb10d24e24a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-11c-withdrawal-relaunch-paused.png",
+      "sha256": "e84a99e8e0bacb265d045426550e91e16aebb7453dbe2c170495f81d86542ded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/M1-offline-durable-read.json",
+      "sha256": "1b7a4e9535bb6e240769324f7db4c95f7f2ed63886e6ed8355d356f4be9f9899"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/report.md",
+      "sha256": "158f56a4d22796a17e777048e3c36c07d4c86c6d2641db812fe6d807e7ac1e27"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed/summary.json",
+      "sha256": "beef6736f53a2faaf75dc3442cdf2deaa2054114f3c996d303077875b054f66c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed.receipt.json",
+      "sha256": "8ee2047396ec33cbb6741dc327c0e5d21e1459342a673f9570832b6f5791ad03"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/retained390-sealed.txt",
+      "sha256": "03499eafa87491d819351f4a509a8e2d1084c8bc4c8623bffc41be285dfb26c7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-lint-final.receipt.json",
+      "sha256": "47e2af55869d775334e7bdb8c6710af6cfb9c04473f0d4477f07655aaa9d6c0f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-lint-final.txt",
+      "sha256": "6a62928f565427f618ad2f5a2c833e4ecfcbb459c48379c14e8e2d4dfa5743d5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-lint.receipt.json",
+      "sha256": "ac66b3fc119e9905253b6faabaaee97483a2a49c94a08846cd817223f253e7b8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-lint.txt",
+      "sha256": "9586b033069af62568bd734bd744512fead72e553a0d5ddf0a8bf3a05f076b4a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-tests-final.receipt.json",
+      "sha256": "add55666fc72788aa93394da637196b9fc4da1c0b8f3d9bf9c869694d5aa089c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-tests-final.txt",
+      "sha256": "f145321ca372438fcd290bc2266c3ead14fd174cf7ab239df74ec71cf9d61d7f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-tests.receipt.json",
+      "sha256": "a9f44de852ff431e1d0505fa9e4f902bd6951028a48ac323fa14a9139b0778ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-tests.txt",
+      "sha256": "b56282575eb50fdbaee28349797a9adc43caa210eee320ddc4d407caa92d28ba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-typecheck-final.receipt.json",
+      "sha256": "a6d68cc6bedc5cb4a7bb363f5a5bfbf5bf9ee5a50b57fdbbdaa53fc0e04cc3ac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-typecheck-final.txt",
+      "sha256": "9ad864352e2d7295b4fe64c148194071d6f8467e9d629d9f30cd3efc7faa374c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-typecheck.receipt.json",
+      "sha256": "12e48bda3cb4f41c1514641c71b4f5ff3ed53301c8085d64d831ed875ab69a71"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/root-typecheck.txt",
+      "sha256": "0c577d6283e65e8e6367080b5f168b4272bcb62fcb7b168b1682e7f244892f7a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-focused.receipt.json",
+      "sha256": "56a3dc0449ec3e8c8df4125d0b7c7aaa6a5b2b05205ab70aa0072a5554e88e86"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-focused.txt",
+      "sha256": "dcead65b7e9bc6a12560c0e12f1011c274f742a77870f9a0686805428436192b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-lint.receipt.json",
+      "sha256": "52a5fb85a7e64dae1c65cac65330aa1490af8191225a0dde87e0a3c9891291b2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-lint.txt",
+      "sha256": "0241f4d5f644638082807f7dd51fa5668cc32df8ecc7dc4a5b90d2d915912ccc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-tests.receipt.json",
+      "sha256": "3e5ea12186b7696bc3ef3c5f4d6c43c3da418e77aca3619b68a4572117773f27"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-tests.txt",
+      "sha256": "12c874db010687e2bc4f3944a380f5202cdbb94edf24d069fd95906e4210c28f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-typecheck.receipt.json",
+      "sha256": "185533408c144c1cc1f9b792ca3a864eb939aae152517ea853b241e7b5015e7b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-root-typecheck.txt",
+      "sha256": "b78e483f8a94168ba75727ee4536f1a8755a50d5d1574bcfc71234ab5e71fee2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/26-account-boundary-clear-failure.json",
+      "sha256": "3a82f274a05a0d6b2048d0e5211b2952085cf8a1625306c122ffdc2c62c52c7b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/26-account-boundary-clear-failure.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/27-account-boundary-repeated-failure.json",
+      "sha256": "3a82f274a05a0d6b2048d0e5211b2952085cf8a1625306c122ffdc2c62c52c7b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/27-account-boundary-repeated-failure.png",
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/28-signed-out-welcome.png",
+      "sha256": "e84a99e8e0bacb265d045426550e91e16aebb7453dbe2c170495f81d86542ded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/29-signed-out-shelf-age-closed.json",
+      "sha256": "b7b31a85fc29c1c36f12fedac32c2e6f598531ddced81f4a10f96dc94d00e3e9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/29-signed-out-shelf-age-closed.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/30-signed-out-today-age-closed.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/31-signed-out-cold-relaunch.png",
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/browser-warn-error-logs.json",
+      "sha256": "cf3c687ba926356082f7bec82ee47c050b2044f5637156793c2f7e1bdb38d922"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/report.md",
+      "sha256": "3a12f94c3bb32f7fdf9a842989f84b71931828bfd6bb580a760f8bf0257ad758"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed/summary.json",
+      "sha256": "e4a62217979a81ebfd51ea7c360ca51329a95f78db28d95c96ad835dbad8df75"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed.receipt.json",
+      "sha256": "b4b8f43b1586e40546b5d3303df46c61a11999489fb6a29a2a53e70f923bf89d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/signout390-sealed.txt",
+      "sha256": "efede0b5d47dabcfdb7ecdfd6dcc8ec4604e6c97c928dedbded58474ce8330ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/source-contracts.receipt.json",
+      "sha256": "7b567450395a4caf900eeea849a851ccc387033c3ae88dcdc0bdb28f5e777a65"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/source-contracts.txt",
+      "sha256": "f804e49eae187d4c2a034b8be4d335171b6941a2bd8e2c51317d4cdd4df0a4f8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/worklist-check.receipt.json",
+      "sha256": "906ceab40c1bf03fa334725acd523e53679c3b274813841f8b03dd49107f7def"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/worklist-check.txt",
+      "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/execution-inventory.json",
+      "sha256": "1c913281e56b61ea5842e66d39c0d31f937aa93fb8115ee1244409c9f774d103"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/README.md",
+      "sha256": "19db6cb8a47c172288cb838e64aa1c43ce68ed20a9ca3e327fcafcb8617c9043"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/source-custody.json",
+      "sha256": "b22d7a677e46870f3c637d592e1c77e977f11c67e2aa4a69f71dad013d188735"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/surface-evidence-index.json",
+      "sha256": "f865e2ae2fa34ceee30ffb094dc382fd05c3b63983748dd374dc48e724ad3279"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/surface-impact.json",
+      "sha256": "7eebe7b86181be626038ff8d607765a2e7489c268b8cc67689e80861864dee91"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01/worklist-custody.json",
+      "sha256": "dcf6ecbe7e4c54468a77a09367aac91af2195f96b2c2d066551cfcd8718d53d3"
+    }
+  ],
+  "scope_matrix": [
+    {
+      "id": "M102-R1-F1",
+      "status": "PASS",
+      "evidence": [
+        "measured-focused",
+        "measured-root-tests"
+      ],
+      "limit": "Local actual-module transaction with controlled external/native ports; scheduling acknowledgement is not OS delivery."
+    },
+    {
+      "id": "M102-R1-F2",
+      "status": "PASS",
+      "evidence": [
+        "measured-focused",
+        "measured-root-tests"
+      ],
+      "limit": "Single-flight, ready reuse, refailure/recovery, partial native drain, stale authority, compensation and current durable intent tested; no physical OS claim."
+    },
+    {
+      "id": "M102-R1-F3",
+      "status": "PASS",
+      "evidence": [
+        "daily390-sealed",
+        "daily375-sealed",
+        "daily430-sealed",
+        "cross-daily390-sealed",
+        "clock-toronto",
+        "clock-auckland"
+      ],
+      "limit": "Available web daily matrix only. First390/375 actual source4e680; later cross-only helper fix9f140 leaves production and daily helper blobs identical. No URL-as-phase proof, fake authority or native cold-start claim."
+    },
+    {
+      "id": "M102-CORRECTION",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "measured-focused",
+        "daily390-sealed"
+      ],
+      "undo": "UNAVAILABLE_RETAINED_APPEND_ONLY",
+      "future_requirement": {
+        "contracts_adapters": "M2-01",
+        "correction_ui": "M2-02",
+        "required_before": [
+          "M2-03",
+          "M2-04"
+        ],
+        "status": "PLANNED_NOT_AUTHORIZED"
+      },
+      "limit": "ADR038 preserves append-only history. Truthful disabled recorded control/copy/hints and duplicate idempotency tested; undo itself is not PASS."
+    },
+    {
+      "id": "M102-PRIVACY",
+      "status": "PASS",
+      "evidence": [
+        "measured-focused",
+        "cross-daily390-sealed",
+        "signout390-sealed",
+        "retained390-sealed"
+      ],
+      "limit": "Local synthetic owner/withdrawal/deletion/recovery and crypto/cleanup boundaries only. Positive paid, camera/Keychain/real provider behavior stays NOT_RUN."
+    },
+    {
+      "id": "M102-EVIDENCE",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "measured-governance",
+        "measured-root-tests"
+      ],
+      "limit": "Guarded consistency is not independent acceptance; inherited source and CI refusals remain visible. Worklist/report delivery checks have separate receipts."
+    },
+    {
+      "id": "M102-PROTECTED",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "measured-governance",
+        "measured-root-tests"
+      ],
+      "limit": "Protected source/count/hash/workflow/dependency/scanner/date targets unchanged; raw source-contract and CI failures remain failures, not waived."
+    }
+  ],
+  "axes": {
+    "source": "FAIL",
+    "integration": "PASS",
+    "surface": "PARTIAL_TESTED_NOT_COMPLETE",
+    "physical_device": "NOT_RUN",
+    "live_provider": "NOT_RUN",
+    "qualified_review": "NOT_RUN",
+    "clinical": "NOT_ADMITTED",
+    "commercial": "NOT_ADMITTED",
+    "release": "BLOCKED"
+  },
+  "blockers": [
+    {
+      "id": "CORE05-INHERITED",
+      "status": "FAIL",
+      "reason": "148/149 selected contracts pass; unchanged exact94 source refusal remains M1-03."
+    },
+    {
+      "id": "CI-CANONICAL-DB",
+      "status": "FAIL",
+      "reason": "Measured-head canonical DB118910283042 fails ECR Data limit exceeded before SQL; no image/auth bypass."
+    },
+    {
+      "id": "CI-SECURITY",
+      "status": "FAIL",
+      "reason": "Measured-head Security39504417794 code/static/source-only inventory/review/advisory gates fail. Protected controls unchanged."
+    },
+    {
+      "id": "RETAINED-CORRECTION",
+      "status": "UNAVAILABLE_RETAINED_APPEND_ONLY",
+      "reason": "Additive owner-bound correction remains required in M2-01/M2-02 before M2-03/M2-04; M2 not issued."
+    },
+    {
+      "id": "PAID-NATIVE-PROVIDER-QUALIFIED",
+      "status": "NOT_RUN",
+      "reason": "Actual paid denial is not positive feature proof. Controlled ports are not physical camera/Keychain/OS delivery or authentic provider/qualified evidence."
+    },
+    {
+      "id": "DELIVERY-CI-READBACK",
+      "status": "NOT_RUN",
+      "reason": "Evidence-only delivery descendants require actual fresh CI readback; measured9f results are not borrowed as delivery green."
+    }
+  ],
+  "context_health": {
+    "level": "HIGH",
+    "compaction_observed": false,
+    "observed_compactions": 0,
+    "claim_origin": "CODEX_REPORTED_CONTEXT",
+    "closing_reconciliation": "Read task/Brain findings, re-established source/branch/manifest custody, ran final forced roots and composed/available-surface checks, retained adverse diagnostics. Independent review required."
+  },
+  "ci": [
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
+      "run_id": 39504417954,
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
+      "run_id": 39504417796,
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-02/CONT-01/ci-observation.json",
+      "run_id": 39504417794,
+      "name": "Security",
+      "workflow_id": 308213475,
+      "head_commit": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ]
+}

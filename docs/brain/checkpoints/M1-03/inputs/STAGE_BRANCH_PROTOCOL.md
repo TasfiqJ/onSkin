@@ -1,0 +1,4 @@
+# Stage branch and delivery
+Use existing `stage/m1-retained-safety`; fetch current origin/main and stage, inspect ancestry and all dirty work before editing and before pushing. Never recreate from old main, reset, overwrite another writer or rewrite history. One writer; use an isolated worktree only when needed to preserve work.
+Every session ends with safe commits pushed normally to this stage and updated root `ONSKIN_BRAIN_HANDOFF.txt`, even partial/red/blocked. Status-only push is valid when no safe source change is justified. Unsafe personal/credential/protected content is never pushed. Failed push is PUSH_BLOCKED; never force it.
+PR9 remains draft/unmerged. Preserve M0 stage/PR8. Main read-only; Brain alone issues a later exact-head promotion decision after the gates. Task acceptance is not merge authorization. Founder spending/public-release/qualified approvals remain separate. No unseen audit or nonexistent background monitoring.

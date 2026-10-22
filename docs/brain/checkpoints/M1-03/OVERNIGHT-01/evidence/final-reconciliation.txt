@@ -1,0 +1,1 @@
+{"admission": "NONE", "current": 1110, "history": 4329, "proposed": 0, "unknown": 5439}

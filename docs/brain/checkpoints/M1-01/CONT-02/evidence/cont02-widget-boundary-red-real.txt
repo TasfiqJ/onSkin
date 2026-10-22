@@ -1,0 +1,45 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/lib/storage/privateKV.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/lib/storage/privateKV.test.ts (56 tests | 1 failed) 56ms
+   × removes only widget action capabilities while the real account write boundary stays closed 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/storage/privateKV.test.ts > removes only widget action capabilities while the real account write boundary stays closed
+AssertionError: promise rejected "Error: PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_B…" instead of resolving
+ ❯ src/lib/storage/privateKV.test.ts:76:46
+     74|   beginPrivateKVAccountBoundary();
+     75|   try {
+     76|     await expect(clearRoutineWidgetActions()).resolves.toBeUndefined();
+       |                                              ^
+     77|     expect(mocks.asyncStorage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY))…
+     78|     expect(mocks.asyncStorage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTR…
+
+Caused by: Error: PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY
+ ❯ runAccountScopedPrivateOperation src/lib/storage/privateKV.ts:74:11
+ ❯ src/lib/storage/privateKV.ts:806:5
+ ❯ withOperationTiming src/lib/observability/operationTiming.ts:99:26
+ ❯ removePrivateItem src/lib/storage/privateKV.ts:805:10
+ ❯ Module.clearRoutineWidgetActions src/features/widgets/actionRegistry.ts:595:5
+ ❯ src/lib/storage/privateKV.test.ts:76:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 55 passed (56)
+   Start at  13:12:33
+   Duration  446ms (transform 152ms, setup 0ms, import 201ms, tests 56ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run src/lib/storage/privateKV.test.ts

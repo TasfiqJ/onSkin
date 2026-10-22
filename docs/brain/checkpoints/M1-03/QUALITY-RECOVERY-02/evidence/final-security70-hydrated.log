@@ -1,0 +1,420 @@
+test_OSV_scanner_dependency_lock_cannot_be_omitted_or_substituted (test_contract.ContractTests.test_OSV_scanner_dependency_lock_cannot_be_omitted_or_substituted) ... ok
+test_OSV_unknown_or_missing_root_rejected (test_contract.ContractTests.test_OSV_unknown_or_missing_root_rejected) ... ok
+test_SAST_diagnostics_reject_even_with_current_version_and_exact_paths (test_contract.ContractTests.test_SAST_diagnostics_reject_even_with_current_version_and_exact_paths) ... ok
+test_SAST_engine_substitution_or_skipped_rules_rejects (test_contract.ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects) ... ok
+test_SAST_finding_empty_coverage_and_version_drift_rejected (test_contract.ContractTests.test_SAST_finding_empty_coverage_and_version_drift_rejected) ... ok
+test_SBOM_component_and_dependency_edge_omissions_rejected (test_contract.ContractTests.test_SBOM_component_and_dependency_edge_omissions_rejected) ... ok
+test_all_3264_dispositions_reproduced_from_Git (test_contract.ContractTests.test_all_3264_dispositions_reproduced_from_Git) ... ok
+test_automated_policy_refuses_absent_extra_or_false_typed_scope (test_contract.ContractTests.test_automated_policy_refuses_absent_extra_or_false_typed_scope) ... ok
+test_automated_reviewed_source_pins_are_required_exact_and_typed (test_contract.ContractTests.test_automated_reviewed_source_pins_are_required_exact_and_typed) ... ok
+test_changed_primary_advisory_and_unrooted_propagation_rejected (test_contract.ContractTests.test_changed_primary_advisory_and_unrooted_propagation_rejected) ... ok
+test_collector_refuses_outputs_inside_reviewed_source_before_creating_files (test_contract.ContractTests.test_collector_refuses_outputs_inside_reviewed_source_before_creating_files) ... ok
+test_coverage_exclusion_manifest_source_identity_and_partition_drift_rejected (test_contract.ContractTests.test_coverage_exclusion_manifest_source_identity_and_partition_drift_rejected) ... ok
+test_current_QA_digest_cannot_borrow_an_unrelated_historical_source_reference (test_contract.ContractTests.test_current_QA_digest_cannot_borrow_an_unrelated_historical_source_reference) ... ok
+test_current_history_includes_new_source_recomputed_ruleset_digest (test_contract.ContractTests.test_current_history_includes_new_source_recomputed_ruleset_digest) ... ok
+test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA (test_contract.ContractTests.test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA) ... fatal: git cat-file 569a16d07c0103e0c019f35e384a278671f2a76f:scripts/phase9/security_acceptance/proposal.json: bad file
+ERROR
+test_current_source_report_rejects_path_range_redaction_duplicate_and_findings_drift (test_contract.ContractTests.test_current_source_report_rejects_path_range_redaction_duplicate_and_findings_drift) ... ok
+test_deleted_advisory_with_live_references_rejected (test_contract.ContractTests.test_deleted_advisory_with_live_references_rejected) ... ok
+test_duplicate_JSON_fields_are_not_normalized_away (test_contract.ContractTests.test_duplicate_JSON_fields_are_not_normalized_away) ... ok
+test_engine_archive_paths_links_duplicates_omissions_bytes_and_size_reject (test_contract.ContractTests.test_engine_archive_paths_links_duplicates_omissions_bytes_and_size_reject) ... ok
+test_engine_install_preserves_original_and_rejects_source_drift_before_move (test_contract.ContractTests.test_engine_install_preserves_original_and_rejects_source_drift_before_move) ... ok
+test_envelope_cannot_hide_changed_raw_scanner_output (test_contract.ContractTests.test_envelope_cannot_hide_changed_raw_scanner_output) ... ok
+test_every_scanner_omission_rejected (test_contract.ContractTests.test_every_scanner_omission_rejected) ... ok
+test_exact_record_projection_positive_with_synthetic_SAST_only (test_contract.ContractTests.test_exact_record_projection_positive_with_synthetic_SAST_only) ... ok
+test_graph_nested_copy_peer_problem_and_omission_rejected (test_contract.ContractTests.test_graph_nested_copy_peer_problem_and_omission_rejected) ... ok
+test_hardlinked_evidence_rejected (test_contract.ContractTests.test_hardlinked_evidence_rejected) ... ok
+test_history_GitHub_links_are_source_bound_and_raw_records_stay_unchanged (test_contract.ContractTests.test_history_GitHub_links_are_source_bound_and_raw_records_stay_unchanged) ... ok
+test_history_GitHub_links_reject_forged_targets_coordinates_queries_and_types (test_contract.ContractTests.test_history_GitHub_links_reject_forged_targets_coordinates_queries_and_types) ... ok
+test_history_forged_blob_hash_or_disposition_rejected (test_contract.ContractTests.test_history_forged_blob_hash_or_disposition_rejected) ... ok
+test_history_link_projection_preserves_unknown_fields_and_schema_refusals (test_contract.ContractTests.test_history_link_projection_preserves_unknown_fields_and_schema_refusals) ... ok
+test_history_values_must_be_redacted (test_contract.ContractTests.test_history_values_must_be_redacted) ... ok
+test_initial_audit_cannot_hide_new_changed_or_missing_primary_records (test_contract.ContractTests.test_initial_audit_cannot_hide_new_changed_or_missing_primary_records) ... ok
+test_initial_audit_may_be_a_source_bound_subset_but_keeps_all_primary_roots (test_contract.ContractTests.test_initial_audit_may_be_a_source_bound_subset_but_keeps_all_primary_roots) ... ok
+test_metadata_count_cannot_hide_record_omission (test_contract.ContractTests.test_metadata_count_cannot_hide_record_omission) ... ok
+test_modified_existing_advisory_rejected (test_contract.ContractTests.test_modified_existing_advisory_rejected) ... ok
+test_new_changed_missing_duplicate_history_records_rejected (test_contract.ContractTests.test_new_changed_missing_duplicate_history_records_rejected) ... ok
+test_new_high_vulnerability_rejected (test_contract.ContractTests.test_new_high_vulnerability_rejected) ... ok
+test_new_ruleset_digest_cannot_authorize_changed_rule_bytes (test_contract.ContractTests.test_new_ruleset_digest_cannot_authorize_changed_rule_bytes) ... ok
+test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) ... 
+  test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='version', value='8.0.0') ... FAIL
+  test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='version', value='8.24.2') ... FAIL
+  test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='sha256', value='0000000000000000000000000000000000000000000000000000000000000000') ... FAIL
+  test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='exit', value=127) ... FAIL
+  test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='exit', value=True) ... FAIL
+test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject (test_contract.ContractTests.test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject) ... FAIL
+test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) ... 
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.stderr') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.stderr') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.exit-code') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.stdout') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.stderr') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.stderr') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.exit-code') ... FAIL
+  test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.stdout') ... FAIL
+test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject (test_contract.ContractTests.test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject) ... ok
+test_original_workflow_omitted_added_or_linked_artifacts_reject (test_contract.ContractTests.test_original_workflow_omitted_added_or_linked_artifacts_reject) ... FAIL
+test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) ... 
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='0') ... FAIL
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='2') ... FAIL
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='127') ... FAIL
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='137') ... FAIL
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='143') ... FAIL
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='true') ... FAIL
+  test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='') ... FAIL
+test_original_workflow_sbom_execution_exit_cannot_be_waived (test_contract.ContractTests.test_original_workflow_sbom_execution_exit_cannot_be_waived) ... ok
+test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects (test_contract.ContractTests.test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects) ... ok
+test_original_workflow_unknown_npm_or_osv_finding_rejects (test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects) ... FAIL
+test_original_workflow_valid_known_artifacts_are_technical_only (test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only) ... ERROR
+test_original_workflow_wrong_source_run_schema_or_unrelated_check_rejects (test_contract.ContractTests.test_original_workflow_wrong_source_run_schema_or_unrelated_check_rejects) ... ok
+test_oversize_text_is_scanned_and_bounded_not_excluded (test_contract.ContractTests.test_oversize_text_is_scanned_and_bounded_not_excluded) ... ok
+test_owner_decision_digest_changes_for_any_original_raw_byte_change (test_contract.ContractTests.test_owner_decision_digest_changes_for_any_original_raw_byte_change) ... ERROR
+test_owner_receipt_loader_rejects_duplicate_nonfinite_oversize_and_links (test_contract.ContractTests.test_owner_receipt_loader_rejects_duplicate_nonfinite_oversize_and_links) ... ok
+test_owner_receipt_requires_exact_binding_signature_and_time (test_contract.ContractTests.test_owner_receipt_requires_exact_binding_signature_and_time) ... ok
+test_physical_evidence_extra_missing_link_and_hardlink_reject (test_contract.ContractTests.test_physical_evidence_extra_missing_link_and_hardlink_reject) ... ok
+test_recomputed_source_manifest_or_policy_cannot_rebind_owner_pins (test_contract.ContractTests.test_recomputed_source_manifest_or_policy_cannot_rebind_owner_pins) ... ok
+test_registry_remediation_suggestions_are_preserved_but_not_authority (test_contract.ContractTests.test_registry_remediation_suggestions_are_preserved_but_not_authority) ... ok
+test_regression_skip_cancel_todo_and_rewritten_summary_rejected (test_contract.ContractTests.test_regression_skip_cancel_todo_and_rewritten_summary_rejected) ... ok
+test_retained_Semgrep_warning_fixture_is_not_accepted (test_contract.ContractTests.test_retained_Semgrep_warning_fixture_is_not_accepted) ... ok
+test_scanner_commands_reject_scope_omissions (test_contract.ContractTests.test_scanner_commands_reject_scope_omissions) ... ok
+test_scanner_execution_errors_are_not_findings (test_contract.ContractTests.test_scanner_execution_errors_are_not_findings) ... ok
+test_scanner_network_listener_guard_rejects_real_IP_bind_and_allows_Unix_engine_socket (test_contract.ContractTests.test_scanner_network_listener_guard_rejects_real_IP_bind_and_allows_Unix_engine_socket) ... ok
+test_scanner_startup_ignores_actual_ambient_module_injection (test_contract.ContractTests.test_scanner_startup_ignores_actual_ambient_module_injection) ... ok
+test_scanner_strictness_and_bounded_size_cannot_be_removed (test_contract.ContractTests.test_scanner_strictness_and_bounded_size_cannot_be_removed) ... ok
+test_semgrep_dependency_or_executable_pth_substitution_rejected (test_contract.ContractTests.test_semgrep_dependency_or_executable_pth_substitution_rejected) ... ok
+test_source_drift_extra_missing_and_expired_policy_tamper (test_contract.ContractTests.test_source_drift_extra_missing_and_expired_policy_tamper) ... ok
+test_standalone_accept_and_external_approval_options_are_retired (test_contract.ContractTests.test_standalone_accept_and_external_approval_options_are_retired) ... ok
+test_unreviewed_scanner_extra_rejected (test_contract.ContractTests.test_unreviewed_scanner_extra_rejected) ... ok
+test_unsafe_paths_rejected (test_contract.ContractTests.test_unsafe_paths_rejected) ... ok
+test_untrusted_semgrep_package_rejected_before_running_a_scanner (test_contract.ContractTests.test_untrusted_semgrep_package_rejected_before_running_a_scanner) ... ok
+test_valid_history_link_cannot_authorize_changed_finding_payload (test_contract.ContractTests.test_valid_history_link_cannot_authorize_changed_finding_payload) ... ok
+test_verified_credential_cannot_be_waived_by_history_dispositions (test_contract.ContractTests.test_verified_credential_cannot_be_waived_by_history_dispositions) ... ok
+
+======================================================================
+ERROR: test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA (test_contract.ContractTests.test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 520, in test_current_source_findings_reproduce_typed_proofs_without_refreshing_retained_QA
+    result,refs,witnesses=h.verify_current(c.ROOT,raw,prefix,'569a16d07c0103e0c019f35e384a278671f2a76f',c.load(c.HERE,'history.json.gz'),c.safe(c.HERE,'gitleaks.toml').decode(),self.policy['rules'])
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/history.py", line 215, in verify_current
+    data = blob(commit, path)
+           ^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/history.py", line 203, in blob
+    return subprocess.check_output(['git', 'cat-file', 'blob', revision + ':' + path], cwd=root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'cat-file', 'blob', '569a16d07c0103e0c019f35e384a278671f2a76f:scripts/phase9/security_acceptance/proposal.json']' returned non-zero exit status 128.
+
+======================================================================
+ERROR: test_original_workflow_valid_known_artifacts_are_technical_only (test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 332, in test_original_workflow_valid_known_artifacts_are_technical_only
+    result=w.original_jobs(root,needs,commit,run_id,fresh)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/workflow_admission.py", line 95, in original_jobs
+    c.require(sbom.returncode == 0, 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT')
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/contract.py", line 17, in require
+    if not ok:raise Rejected(code)
+              ^^^^^^^^^^^^^^^^^^^^
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+======================================================================
+ERROR: test_owner_decision_digest_changes_for_any_original_raw_byte_change (test_contract.ContractTests.test_owner_decision_digest_changes_for_any_original_raw_byte_change)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 389, in test_owner_decision_digest_changes_for_any_original_raw_byte_change
+    w,root,needs,commit,run_id,fresh=self.workflow_fixture();before=w.original_jobs(root,needs,commit,run_id,fresh)
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/workflow_admission.py", line 95, in original_jobs
+    c.require(sbom.returncode == 0, 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT')
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/contract.py", line 17, in require
+    if not ok:raise Rejected(code)
+              ^^^^^^^^^^^^^^^^^^^^
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+======================================================================
+FAIL: test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='version', value='8.0.0')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 328, in test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder
+    with self.assertRaisesRegex(c.Rejected,'GITLEAKS_TOOL_IDENTITY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "GITLEAKS_TOOL_IDENTITY_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='version', value='8.24.2')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 328, in test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder
+    with self.assertRaisesRegex(c.Rejected,'GITLEAKS_TOOL_IDENTITY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "GITLEAKS_TOOL_IDENTITY_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='sha256', value='0000000000000000000000000000000000000000000000000000000000000000')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 328, in test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder
+    with self.assertRaisesRegex(c.Rejected,'GITLEAKS_TOOL_IDENTITY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "GITLEAKS_TOOL_IDENTITY_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='exit', value=127)
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 328, in test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder
+    with self.assertRaisesRegex(c.Rejected,'GITLEAKS_TOOL_IDENTITY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "GITLEAKS_TOOL_IDENTITY_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) (field='exit', value=True)
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 328, in test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder
+    with self.assertRaisesRegex(c.Rejected,'GITLEAKS_TOOL_IDENTITY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "GITLEAKS_TOOL_IDENTITY_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject (test_contract.ContractTests.test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject)
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 387, in test_original_workflow_gitleaks_errors_new_duplicate_or_forged_findings_reject
+    with self.assertRaisesRegex(c.Rejected,'EXECUTION_ERROR'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "EXECUTION_ERROR" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.stderr')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.stderr')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.exit-code')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='npm', suffix='.stdout')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.stderr')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.stderr')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.exit-code')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) (mode='osv', suffix='.stdout')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 321, in test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived
+    with self.assertRaisesRegex(c.Rejected,'LEGACY_POLICY_REFUSAL_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "LEGACY_POLICY_REFUSAL_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_omitted_added_or_linked_artifacts_reject (test_contract.ContractTests.test_original_workflow_omitted_added_or_linked_artifacts_reject)
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 361, in test_original_workflow_omitted_added_or_linked_artifacts_reject
+    with self.assertRaisesRegex(c.Rejected,'INVENTORY_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "INVENTORY_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='0')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_(EXECUTION_ERROR|EXIT_DRIFT)" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='2')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_(EXECUTION_ERROR|EXIT_DRIFT)" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='127')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_(EXECUTION_ERROR|EXIT_DRIFT)" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='137')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_(EXECUTION_ERROR|EXIT_DRIFT)" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='143')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_(EXECUTION_ERROR|EXIT_DRIFT)" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='true')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_(EXECUTION_ERROR|EXIT_DRIFT)" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) (exit='')
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 314, in test_original_workflow_osv_execution_error_with_known_json_rejects
+    with self.assertRaisesRegex(c.Rejected,'NONREGULAR_INPUT' if exit=='' else 'OSV_(EXECUTION_ERROR|EXIT_DRIFT)'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "NONREGULAR_INPUT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+======================================================================
+FAIL: test_original_workflow_unknown_npm_or_osv_finding_rejects (test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects)
+----------------------------------------------------------------------
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery02-source/scripts/phase9/security_acceptance/test_contract.py", line 371, in test_original_workflow_unknown_npm_or_osv_finding_rejects
+    with self.assertRaisesRegex(c.Rejected,'OSV_FINDING_DRIFT'):w.original_jobs(root,needs,commit,run_id,fresh)
+AssertionError: "OSV_FINDING_DRIFT" does not match "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT"
+
+----------------------------------------------------------------------
+Ran 70 tests in 155.355s
+
+FAILED (failures=23, errors=3)

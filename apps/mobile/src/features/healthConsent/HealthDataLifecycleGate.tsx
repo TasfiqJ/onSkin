@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { AppState, Platform, ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
+import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import { deleteAccount, exportData } from '@/features/settings/actions';
 import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
@@ -31,6 +31,7 @@ import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 
 import {
   completeHealthDataActivationRoute,
+  beginPausedHealthDataConsentWithdrawal,
   grantAuthoritativeHealthDataConsent,
   LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER,
   reconcileHealthDataLifecycle,
@@ -109,9 +110,11 @@ function lifecycleMessage(record: HealthDataLifecycleRecord): string {
 export function PausedHealthDataShell({
   record,
   onRecord,
+  rightsOnly = false,
 }: {
   record: HealthDataLifecycleRecord;
   onRecord: (record: HealthDataLifecycleRecord) => void;
+  rightsOnly?: boolean;
 }) {
   const { signOut } = useAuth();
   const entitlement = useEntitlement();
@@ -120,6 +123,8 @@ export function PausedHealthDataShell({
   const [feedback, setFeedback] = useState<string | null>(null);
   const [reviewingConsent, setReviewingConsent] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+  const withdrawalInFlight = useRef(false);
 
   async function retry() {
     setBusy('retry');
@@ -132,7 +137,9 @@ export function PausedHealthDataShell({
               expectedInterruptedProcessingEpoch:
                 record.state === 'withdrawing' ? record.processingEpoch : undefined,
             })
-          : await reconcileHealthDataLifecycle(record.ownerUserId);
+          : rightsOnly
+            ? ((await readHealthDataLifecycle(record.ownerUserId)) ?? record)
+            : await reconcileHealthDataLifecycle(record.ownerUserId);
       // Publishing the record sets the activation-route epoch atomically.
       // The global gate is the only goals navigator for every fresh epoch;
       // exact same-epoch outage recovery intentionally preserves its route.
@@ -147,6 +154,22 @@ export function PausedHealthDataShell({
         'Could not finish the privacy request. Your health features remain safely paused.',
       );
     } finally {
+      setBusy(null);
+    }
+  }
+
+  async function withdrawWhilePaused() {
+    if (withdrawalInFlight.current) return;
+    withdrawalInFlight.current = true;
+    setBusy('withdraw');
+    setFeedback(null);
+    try {
+      onRecord(await beginPausedHealthDataConsentWithdrawal(record.ownerUserId));
+      setConfirmWithdraw(false);
+    } catch {
+      setFeedback('Withdrawal has not finished. Keep this pause and retry / check status.');
+    } finally {
+      withdrawalInFlight.current = false;
       setBusy(null);
     }
   }
@@ -257,19 +280,21 @@ export function PausedHealthDataShell({
     record.state === 'verification_required' &&
     verificationRequiresLocalCleanup(record) &&
     record.localCleanupComplete;
-  const mayReviewConsent = terminal || localOnlyVerificationReady;
+  const mayReviewConsent = !rightsOnly && (terminal || localOnlyVerificationReady);
   return (
     <Screen edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
         <Text variant="eyebrow" tone="clay" className="mt-2">
-          HEALTH DATA PAUSED
+          {rightsOnly ? 'PRIVACY & ACCOUNT' : 'HEALTH DATA PAUSED'}
         </Text>
         <Text variant="title" className="mt-2">
           Your account is still here.
         </Text>
         <Text variant="body" tone="muted" className="mt-3">
-          {lifecycleMessage(record)} Billing does not stop automatically; use Manage subscription
-          below whenever you need it.
+          {rightsOnly
+            ? 'Age confirmation is still required for health features. Your existing data rights remain available.'
+            : lifecycleMessage(record)}{' '}
+          Billing does not stop automatically; use Manage subscription below whenever you need it.
         </Text>
 
         {feedback ? (
@@ -300,6 +325,38 @@ export function PausedHealthDataShell({
             />
           ) : null}
         </Card>
+
+        {rightsOnly &&
+        (record.state === 'active' ||
+          (record.state === 'verification_required' &&
+            record.verificationResumeState === 'active')) ? (
+          <Card className="mt-4">
+            <Text variant="bodySm">{HEALTH_DATA_WITHDRAWAL.fullText}</Text>
+            {confirmWithdraw ? (
+              <>
+                <Button
+                  className="mt-3"
+                  label="Confirm withdrawal"
+                  disabled={busy !== null}
+                  onPress={() => void withdrawWhilePaused()}
+                />
+                <Button
+                  label="Cancel"
+                  variant="ghost"
+                  disabled={busy !== null}
+                  onPress={() => setConfirmWithdraw(false)}
+                />
+              </>
+            ) : (
+              <Button
+                className="mt-3"
+                label="Withdraw health-data consent"
+                disabled={busy !== null}
+                onPress={() => setConfirmWithdraw(true)}
+              />
+            )}
+          </Card>
+        ) : null}
 
         {mayReviewConsent ? (
           <Card className="mt-4">

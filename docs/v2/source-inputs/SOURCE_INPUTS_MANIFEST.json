@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "original_archive_sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f",
+  "verification": "Each included immutable source matched the actual uploaded ZIP and its manifest; no claim of rereading all historical archives.",
+  "files": [
+    {
+      "context_path": "source_pack/01_Executive/EXECUTIVE_BLUEPRINT.md",
+      "source_pack_path": "01_Executive/EXECUTIVE_BLUEPRINT.md",
+      "bytes": 15762,
+      "sha256": "409fc5d899463238c38debc819ae9b5c5fe0523f11ba7b7c32582ab26a361627",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/01_Executive/AUTHORITY_AND_DECISIONS.md",
+      "source_pack_path": "01_Executive/AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/02_Current_State/BASELINE_AND_RECONCILIATION.md",
+      "source_pack_path": "02_Current_State/BASELINE_AND_RECONCILIATION.md",
+      "bytes": 7336,
+      "sha256": "5469fb1d95d49e84fc035640455b1b693c7163a6164ac2c276244546b61405e2",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/02_Current_State/known_state.json",
+      "source_pack_path": "02_Current_State/known_state.json",
+      "bytes": 1696,
+      "sha256": "5d7166bf652e2bbb9a58c976ee31a7500db7618a741731cf801a7efec1e2be7c",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/02_Current_State/legacy_feature_crosswalk.json",
+      "source_pack_path": "02_Current_State/legacy_feature_crosswalk.json",
+      "bytes": 281477,
+      "sha256": "ca64bfda2a15e7341b71e6568ea32959f95c158fdc86d962885a99c47eccea2e",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/02_Current_State/legacy_task_crosswalk.json",
+      "source_pack_path": "02_Current_State/legacy_task_crosswalk.json",
+      "bytes": 123982,
+      "sha256": "3f38119da179a178f92c0361724b5caefaadd3474896a7e8ddcf0795353a2e40",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/02_Current_State/v2_feature_crosswalk.csv",
+      "source_pack_path": "02_Current_State/v2_feature_crosswalk.csv",
+      "bytes": 20337,
+      "sha256": "888a093a76d8a73ecfaf4c9b96fe7e1e70ce3ff70a938fd01138be1ba2effabe",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/03_Architecture/CORE_CONTRACT.md",
+      "source_pack_path": "03_Architecture/CORE_CONTRACT.md",
+      "bytes": 11753,
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/03_Architecture/CLINICAL_PLATFORM_CONTRACT.md",
+      "source_pack_path": "03_Architecture/CLINICAL_PLATFORM_CONTRACT.md",
+      "bytes": 9151,
+      "sha256": "d08ccb978726e8f8204ff794011a34b42a6efa8beb3d574acf2ed38d52eac47d",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/03_Architecture/ACCEPTANCE_AND_MIGRATION.md",
+      "source_pack_path": "03_Architecture/ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/03_Architecture/adopted_v2_contract_tables.json",
+      "source_pack_path": "03_Architecture/adopted_v2_contract_tables.json",
+      "bytes": 46280,
+      "sha256": "d3eba8c7c38c8ed876e1d25bc351b09e75b67a9d4e514a5c5daafbe78d0927f3",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/04_Clinical/module_registry.json",
+      "source_pack_path": "04_Clinical/module_registry.json",
+      "bytes": 31459,
+      "sha256": "cb24fab9126b14e23c72c8c7df9f6baa452e95fea26ae0b35a88654e0b9867b1",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/04_Clinical/module_registry.csv",
+      "source_pack_path": "04_Clinical/module_registry.csv",
+      "bytes": 8459,
+      "sha256": "a360d4bb1de1fb32e2a4286ddd57b1e52c30bc9a8afb6caf4e0635010ff097ba",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/04_Clinical/RESEARCH_INTAKE_AND_SEQUENCE.md",
+      "source_pack_path": "04_Clinical/RESEARCH_INTAKE_AND_SEQUENCE.md",
+      "bytes": 3827,
+      "sha256": "b0ce2cdaf5ef469e4b961f1b7f824d130a84caec46e10ac55a37654b3909cb2b",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/04_Clinical/RESEARCH_REQUEST_TEMPLATE.md",
+      "source_pack_path": "04_Clinical/RESEARCH_REQUEST_TEMPLATE.md",
+      "bytes": 916,
+      "sha256": "e027acf344f388166dcc461fcd2eb2fec6dcf290f61b8ea5629670a330f6df2e",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/05_Execution/roadmap.json",
+      "source_pack_path": "05_Execution/roadmap.json",
+      "bytes": 43307,
+      "sha256": "1aaf129dddcb73403ca49b8a047674704bc2ff927d16ff54b0e54ee8e2e8b7df",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/06_Operations/BRAIN_CODEX_PROTOCOL.md",
+      "source_pack_path": "06_Operations/BRAIN_CODEX_PROTOCOL.md",
+      "bytes": 7781,
+      "sha256": "365d0e1254440e237138c04a3249fb73b4132972382193f231273f4e065af20a",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/06_Operations/COMPLETION_REPORT_TEMPLATE.md",
+      "source_pack_path": "06_Operations/COMPLETION_REPORT_TEMPLATE.md",
+      "bytes": 1054,
+      "sha256": "2a986fdf3e8527cc12625862baf9d8cafd581fab617b44ef6f5afbee2b415212",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/06_Operations/completion_report.schema.json",
+      "source_pack_path": "06_Operations/completion_report.schema.json",
+      "bytes": 4143,
+      "sha256": "6832fcc47736e49d5800fa2d3db99235b9f41d9ebf2982d82a90249a40ce5e12",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/07_Finance/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "source_pack_path": "07_Finance/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "bytes": 9856,
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/07_Finance/observed_gate_state.json",
+      "source_pack_path": "07_Finance/observed_gate_state.json",
+      "bytes": 288,
+      "sha256": "59f8bd201c3853180a8c15bdcfd5f40efe6830b5d5da7635f044e7c2c4df930a",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/08_Bootstrap/PACKAGING_NEXT_TASKS.md",
+      "source_pack_path": "08_Bootstrap/PACKAGING_NEXT_TASKS.md",
+      "bytes": 1454,
+      "sha256": "074b463bac635f31d41a962f2d193c2c464c27c5ab04c1d23c72ffbee1a5f0e6",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/08_Bootstrap/M0-01_TASK.md",
+      "source_pack_path": "08_Bootstrap/M0-01_TASK.md",
+      "bytes": 4278,
+      "sha256": "9c2255cfb33887e3f642f43929bcfad3e03bc4aa9751cf194030bcc0627bbb92",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/tools/build_codex_context.py",
+      "source_pack_path": "tools/build_codex_context.py",
+      "bytes": 3409,
+      "sha256": "e5c5096933eeaf4000de7d2becf6fd64ffd6f6ca2549be1e63fb526d8b9edfee",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "source_pack/08_Bootstrap/task_pack_allowlists.json",
+      "source_pack_path": "08_Bootstrap/task_pack_allowlists.json",
+      "bytes": 903,
+      "sha256": "9a335f2ae24fa834f2b9b16f8bf6e7e2954f274fe568753943c435a086a60bc9",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "reference_legacy/ACTIVE_EXECUTION_STATUS_RAW.json",
+      "source_pack_path": "90_Provenance/V1_Oct19/ACTIVE_EXECUTION_STATUS_RAW.json",
+      "bytes": 8997,
+      "sha256": "83b50fa38b4da4d9f0cf3db644d9d90f456686fec30b4377fd8e3667524f2ad0",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "reference_legacy/ACTIVE_TASK_GRAPH_RAW.json",
+      "source_pack_path": "90_Provenance/V1_Oct19/ACTIVE_TASK_GRAPH_RAW.json",
+      "bytes": 11616,
+      "sha256": "38376e5abfdbd53175079f5f944b8baeff6085f4b4a0510fed9c148d35126cdb",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "reference_legacy/LAUNCH_CONTRACT_RAW.json",
+      "source_pack_path": "90_Provenance/V1_Oct19/LAUNCH_CONTRACT_RAW.json",
+      "bytes": 7437,
+      "sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    },
+    {
+      "context_path": "reference_legacy/README_SOURCE_INTEGRITY.txt",
+      "source_pack_path": "90_Provenance/V1_Oct19/README_SOURCE_INTEGRITY.txt",
+      "bytes": 2370,
+      "sha256": "5ab7b838a90e6d864f74c6109f8f67f055922eba21fcc9c8076d23e3ca8b0ca7",
+      "authority_role": "adopted_contract_or_historical_snapshot_as_labeled; stage override remains higher for execution"
+    }
+  ]
+}

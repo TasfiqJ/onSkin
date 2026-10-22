@@ -1,0 +1,1246 @@
+{
+  "schema_version": 2,
+  "status": "ADOPTED_SPECIFICATION_NOT_RUNTIME_OR_COMMERCIAL_ADMISSION",
+  "metrics": [
+    {
+      "id": "M01_pilot",
+      "name": "Directional professional pilot",
+      "clock": "Initial cleared monthly invoice plus exactly two scheduled monthly renewals; observe >=60 days",
+      "eligibility": "First20eligibleworkspaceswithinitialclearedpayment;alllaterrefunds/disputes/churn/faileduseremaindenominator;noreplacement",
+      "numerator": "Workspaces paying initial invoice and both renewals, using >=2 completed reconciliations in each renewal month",
+      "denominator": "20 initial workspaces",
+      "threshold": ">=17/20 (85%)",
+      "hard": false,
+      "uncertainty": "Report Wilson95% interval; does not establish2% churn or annual survival",
+      "action": "Continue only bounded pilot; no scaling or mature-retention claim",
+      "owner": "commercial_owner",
+      "active_paid_capacity_cap": 20,
+      "cohort_rule": "first20initialclearedpaymentsfixedforever;replacementacquisitionmayfillactivecapacitybutneverreplaceM01failures;cumulativegrossacquiredreportedseparately"
+    },
+    {
+      "id": "M02_controlled_expand",
+      "name": "Controlled expansion",
+      "clock": ">=3 complete operating months and >=100 paid workspace-months",
+      "eligibility": "All paid active opening-period workspaces; refunds/disputes terminal service loss counted once",
+      "numerator": "Churned workspaces in observed months",
+      "denominator": "Sum of opening active paid workspaces over same months",
+      "threshold": "Pooled monthly churn<=3%; M04/M05/M06/M07 also pass",
+      "hard": true,
+      "uncertainty": "Report counts, interval, voluntary/involuntary churn separately; no claim this proves model2%",
+      "action": "If fail hold acquisition at pilot cap; repair or funded exception reviewed",
+      "owner": "commercial_owner",
+      "active_paid_capacity_cap": 60
+    },
+    {
+      "id": "M03_scale",
+      "name": "Scaling admission",
+      "clock": ">=6 complete operating months and >=300 paid workspace-months",
+      "eligibility": "All eligible paid workspaces; no excluding failed payers",
+      "numerator": "Same churn numerator as M02",
+      "denominator": "Same exposure method as M02",
+      "threshold": "Pooled monthly churn<=3%, actual fully loaded CAC payback<=6 months, M04/M05/M06/M07 pass and cashreserve intact",
+      "hard": true,
+      "uncertainty": "Early exposure is directional; six-month counts do not prove multiyear retention",
+      "action": "No paid scale if any hard gate fails; explicit separately funded longer-payback exception is not default",
+      "owner": "commercial_owner",
+      "active_paid_capacity_cap": 120
+    },
+    {
+      "id": "M04_roi",
+      "name": "Buyer absolute practice-staff ROI",
+      "clock": "Per buyer each complete measured month; initial staff onboarding amortized over6 months",
+      "eligibility": "Comparable old/new cases including nonparticipating client followup and all practice-staff handoff/duplicateentry/setup/admincost;clientworkmeasuredseparately",
+      "numerator": "OldpracticeSTAFFminutesminusnewSTAFFminutesminusalladditionalstaffcostandamortizedstaffsetup,valuedatUSD30/hour;clienttimesavingsNEVERautomaticallycreditedatpracticewage",
+      "denominator": "Monthly subscription fee49Solo or99Studio",
+      "threshold": "Net PRACTICE-STAFF time value>=2x subscription: Solo>=196 net staff min/month; Studio>=396 net staff min/month",
+      "hard": true,
+      "reference": {
+        "old_staff_minutes": 16,
+        "new_reported_staff_minutes": 4.5,
+        "monthly_staff_admin_minutes": 60,
+        "initial_staff_setup_minutes": 120,
+        "setup_amortization_months": 6,
+        "unreported_extra_staff_minutes": 1,
+        "base_cases": 40,
+        "base_case_coverage": 0.72,
+        "base_net_staff_minutes": 240,
+        "base_staff_time_value_usd": 120,
+        "full40_net_staff_minutes": 380,
+        "full40_staff_value_usd": 190,
+        "combined_stakeholder_base_minutes": 302,
+        "combined_stakeholder_base_value_usd": 151
+      },
+      "uncertainty": "Practice-timevalueisnotcashsavings/incrementalrevenue;buyerconfirmsredeployability;clientbenefitisaseparateunmonetizedstakeholderoutcomeunlessindependentlydemonstratedbuyercredit,notdefaultM04",
+      "action": "Do not admit/renew a buyer under modeled ROI claim if hurdle fails; offer data exit and decline unsuitable segment",
+      "owner": "commercial_owner"
+    },
+    {
+      "id": "M05_workload",
+      "name": "Relative workload and tail",
+      "clock": "At least30 completed comparable cases across>=5 practices; monthly practice review thereafter",
+      "eligibility": "Include invitations, client entry, review, re-entry, messages, exception handling and closure; missing reports stay unknown",
+      "numerator": "Case baseline totalminutes minus new totalminutes",
+      "denominator": "Case baseline totalminutes",
+      "threshold": "Median net reduction>=20%; P90(new_total/baseline_total)<=1.25; no practice monthly newwork>110%baseline for2 consecutive months",
+      "hard": true,
+      "uncertainty": "Paired cases, no pooled improvement hiding worsening practice; record all client/staff minutes",
+      "action": "Pause new activations at affected practice and paid acquisition expansion; reduce queue/friction; no safety gate relaxation",
+      "owner": "product_ops"
+    },
+    {
+      "id": "M06_payback",
+      "name": "Fully loaded acquisition payback",
+      "clock": "Measured payer acquisition cohort, monthly discounted only if disclosed; no hypothetical renewals credited",
+      "eligibility": "Acquisition includes prospecting/demos/onboarding/content/paid media labor once; grants and linked clients not payers",
+      "numerator": "Cumulative observed recurring contribution after directdelivery, payment, refunds, retaineddata costs",
+      "denominator": "Actual fully loaded cohort acquisition cost",
+      "threshold": "Workspace cumulative contribution>=CAC within6months; consumer first-term contribution-CAC>=0 before paid expansion",
+      "hard": true,
+      "uncertainty": "Modeled payback separately labeled; pilot billing alone cannot establish future payback",
+      "action": "Pause failing channel; no lowering CAC inputs to force pass",
+      "owner": "finance_owner"
+    },
+    {
+      "id": "M07_cash_capacity",
+      "name": "Cash and capacity stop",
+      "clock": "Weekly forward13week forecast, monthly staff capacity",
+      "eligibility": "All committed build/operating cash, taxed/refunded/settlement obligations and staffed hours",
+      "numerator": "Unrestricted cash netcommitted obligations",
+      "denominator": "Selected reserve floorUSD50000",
+      "threshold": "No new build/acquisition/onboarding commitment unless forecast preserves50000 and service/backlog limits pass",
+      "hard": true,
+      "uncertainty": "Conditional funding is not committed capital",
+      "preservation_exception": "Separatelyapprovedcontrolledpreservation/exitmayconsumeearmarkedreserveforrights/security/lawfulclosure,nevernegativecashorcontinuedfullbuild/expansion;suchstressrowsnotexecutablefullhorizon",
+      "action": "Stop discretionary build/acquisition/onboarding beforebreach; preserve security/rights/support",
+      "owner": "finance_owner"
+    },
+    {
+      "id": "M08_consumer_repeat",
+      "name": "Independent consumer paid utility",
+      "clock": "First50independent payers; firsttask7days and repeatoccasion60days",
+      "eligibility": "No practice-sponsored conversions; refunds and failed tasks in denominator; no forced routinechanges",
+      "numerator": "First sold task completed; then distinct relevant advanced decision occasion",
+      "denominator": "50eligible independent payers",
+      "threshold": ">=45/50 firsttask; >=25/50 repeatoccasion",
+      "hard": false,
+      "uncertainty": "Task use is not annual renewal",
+      "action": "If fail usefree or episodic offer; keepnativePlusoptional and no paidscale",
+      "owner": "product_ops"
+    },
+    {
+      "id": "M09_annual_maturity",
+      "name": "Annual consumer renewal",
+      "clock": ">=13months elapsed and >=100eligible annual first-renewal opportunities",
+      "eligibility": "All initialannual terms whose renewaldate+30days passed; refunds/churn counted asfailures",
+      "numerator": "Verified firstannual renewal still nonrefunded30days later",
+      "denominator": "Eligible renewal opportunities",
+      "threshold": ">=50% firstannual renewal AND firsttermcontribution-CAC>=0; report95%interval",
+      "hard": true,
+      "uncertainty": "No earlyuse substitution; secondrenewal separately measured after25months",
+      "action": "No annual-retention marketing or paidconsumer expansion before mature evidence",
+      "owner": "finance_owner"
+    },
+    {
+      "id": "M10_participation",
+      "name": "Client participation funnel",
+      "clock": "Invitation acceptance7days; planview7daysafteraccept; materialupdate30daysafterview",
+      "eligibility": "Invitations to eligible consented prospectclients; retriesdeduplicated; denominator includesignored/refused",
+      "numerator": "Invited ->acceptedvalidgrant ->viewedplan ->contributingclients ->reviewedcases",
+      "denominator": "Each immediately precedingstage plus originalinvites retained",
+      "case_report_coverage": "reviewedcases/eligiblecasesinthecomparablesamepracticeperiod;eligibledenominatorincludesunreported/nonparticipatingopportunities;acceptedaccounts/planviewsarenotcoverage",
+      "case_denominator_rule": "Prospectivelyrecordcomparableeligiblehomecarefollowup/reconciliationopportunitiesfrompracticebaseline/scheduleBEFOREresponses;notallunobservedskinchanges;nonresponseunknownnotassumedreaction;unknowndenominator=>coverageunknown",
+      "threshold": "Planning assumption60%accept,80%viewofaccepted,60%contributeofviewed; no hardclaim; M04absoluteROI still governs",
+      "hard": false,
+      "uncertainty": "A linkedclient is not contributingclient;0report=unknown; coverage is explicit",
+      "action": "Pause unsuitablepractice onboarding if insufficient cases/ROI; no reminder coercion",
+      "owner": "product_ops"
+    },
+    {
+      "id": "M11_durable",
+      "name": "Gross milestone and durable operating success",
+      "clock": "6consecutivecomplete months",
+      "eligibility": "Verifiedrecurringpayers; normalizedannualMRR; excludeone-timefees/tax/refunds",
+      "numerator": "GrossnormalizedMRR",
+      "denominator": "Monthlyperiod",
+      "threshold": "Requestedgrossmilestone>=USD10000eachmonth;durableOPERATINGsuccessalsooperatingprofit>=0afterallocatedowner/stafflabor,positivedeliverycontribution,affordableCAC,reserve+staffcapacityintact",
+      "hard": true,
+      "uncertainty": "GrossmilestoneisnotoperatingprofitandnotUSD10000ownerincome; no forecastguarantee",
+      "action": "Treatsinglehighmonthasinsufficient;grosswithoperatinglossfailsdurableoperatingcriterion;stopifcashorhardgatefails",
+      "owner": "finance_owner"
+    }
+  ],
+  "entitlements": {
+    "schema_version": 2,
+    "status": "proposed_inactive",
+    "offers": {
+      "free": {
+        "price": 0
+      },
+      "plus": {
+        "annual_usd": 49.99,
+        "monthly_usd": 6.99
+      },
+      "solo": {
+        "monthly_usd": 49,
+        "staff_seats": 1,
+        "active_client_plans": 20
+      },
+      "studio": {
+        "monthly_usd": 99,
+        "staff_seats": 3,
+        "active_client_plans": 60
+      }
+    },
+    "actions": [
+      {
+        "action": "ordinary_shelf_routine_edit_logging_history",
+        "free": true,
+        "plus": true,
+        "linked_client": true,
+        "after_expiry": true
+      },
+      {
+        "action": "basic_role_ingredient_side_by_side",
+        "free": "unlimited",
+        "plus": "unlimited",
+        "linked_client": "unlimited",
+        "after_expiry": "unlimited"
+      },
+      {
+        "action": "advanced_compare_or_what_if",
+        "free": "3distinctdecisionoperationspercalendar_month",
+        "plus": "unlimitedlocaldeterministic",
+        "linked_client": "samefree3unlessindependentlyPlus",
+        "after_expiry": "samefree3"
+      },
+      {
+        "action": "read_export_saved_advanced_output",
+        "free": true,
+        "plus": true,
+        "linked_client": true,
+        "after_expiry": true
+      },
+      {
+        "action": "save_new_advanced_scenario",
+        "free": "withinthe3decisionlimit",
+        "plus": true,
+        "linked_client": "samefreelimit",
+        "after_expiry": "withinthe3decisionlimit"
+      },
+      {
+        "action": "standard_brief_rights_export_delete",
+        "free": true,
+        "plus": true,
+        "linked_client": true,
+        "after_expiry": true
+      },
+      {
+        "action": "private_local_photos",
+        "free": true,
+        "plus": true,
+        "linked_client": true,
+        "after_expiry": true
+      },
+      {
+        "action": "acknowledge_plan_submit_bounded_update_revoke",
+        "free": "whenactivegrant",
+        "plus": "whenactivegrant",
+        "linked_client": "includedcompanionworkflow",
+        "after_expiry": "grantindependentofPlus"
+      },
+      {
+        "action": "professional_author_queue_template",
+        "free": false,
+        "plus": false,
+        "linked_client": false,
+        "after_expiry": "workspaceonlycurrentpaidverifiedauthority"
+      }
+    ],
+    "comparison_meter": {
+      "timezone": "ownerIANAtimezonefixedatthefirstoperationofmonth; timezonechangesapplynextmonth",
+      "unit": "oneconfirmedcandidate+baseplan+inputcutoffdecisionID; compare+preview+saveinsideoperationcountsonce",
+      "reservation": "reserveatomicallybeforeadvancedcompute; failedbeforepublicationorfullyabstained/noadvancedresultreleasesquota; uncertainpublishedresultreceiptresumeswithoutdoublecount",
+      "history": "publishedsavedoutputsreadexportfreeforeverunderaccountretention",
+      "rate_protection": "max30advancedcomputations/minute/owner; pauseandclearretrytime,nochargeorsilentupsell;Plusnotbillingmetered"
+    },
+    "legacy": {
+      "current_provider_SKU_price": "retainwhileuninterruptedverifiedprovidersubscription",
+      "notice_days": 30,
+      "migration": "optinnewSKUonlyaftercurrentterm;neverautochargeoverlap",
+      "refunded_or_lapsed": "currentpaidbenefitsendatverifiedauthority;freeand3comparisonallowancecontinue",
+      "duplicate": "blocksecondunresolvednativepurchase;showmanage/restore;neverpromiseautomaticApplecancellation",
+      "failure": "retainoldverifiedbenefitsuntilsuccessfullymigratedororiginalexpiry;rollbackmappingnotpersonaldata"
+    },
+    "workspace_membership": "companionaccessonly;neverPlus",
+    "external_approval": "allnewpricing/packaginginactivependingapproval;preservecurrentV1runtimegates"
+  },
+  "roles": {
+    "schema_version": 2,
+    "status": "proposed_inactive",
+    "roles": [
+      "consumer_owner",
+      "workspace_owner",
+      "billing_admin",
+      "assigned_practitioner",
+      "restricted_assistant",
+      "software_support"
+    ],
+    "default": "denyanyactionnotexplicitlyallowed;workspaceowner/billingadminnotcontentauthority",
+    "actions": {
+      "personal_read_write_export_delete": [
+        "consumer_owner"
+      ],
+      "workspace_membership_role_assign": [
+        "workspace_owner"
+      ],
+      "workspace_billing_manage": [
+        "workspace_owner",
+        "billing_admin"
+      ],
+      "workspace_owner_transfer": [
+        "workspace_owner"
+      ],
+      "template_author_issue": [
+        "assigned_practitioner"
+      ],
+      "client_projection_read": [
+        "assigned_practitioner"
+      ],
+      "client_plan_issue_respond_export": [
+        "assigned_practitioner"
+      ],
+      "task_assign": [
+        "workspace_owner",
+        "assigned_practitioner"
+      ],
+      "task_alias_status": [
+        "workspace_owner",
+        "restricted_assistant",
+        "assigned_practitioner"
+      ],
+      "task_reassignment_request": [
+        "restricted_assistant",
+        "assigned_practitioner"
+      ],
+      "task_health_details": [
+        "assigned_practitioner"
+      ],
+      "content_free_support_metadata": [
+        "software_support"
+      ]
+    },
+    "predicates": {
+      "assigned_practitioner": "currentmembership+verifiedCAlicence+explicitclientassignment+livegrantfields/purpose/epoch+healthlifecycle;paidwritealsoworkspaceauthority",
+      "workspace_owner": "maycombinepractitionerroleonlyexplicitly;selfassignmentaudited;nocontentbyownershipalone",
+      "restricted_assistant": "clientalias/taskstatus/due/assigneeonly;noingredients/routine/concern/photos/notes",
+      "software_support": "nohealthcontentbydefault;exceptionrequiresownerconsent,purpose,timeboundapprovalandindependentaudit"
+    },
+    "auth": {
+      "staff": "TOTP_MFA_AAL2allstaffroles",
+      "idle_minutes": 15,
+      "absolute_hours": 8,
+      "stepup_max_age_minutes": 5,
+      "stepup_actions": [
+        "export",
+        "rolechange",
+        "ownertransfer",
+        "billingchange",
+        "recovery"
+      ],
+      "staff_recovery": "twoindependentauthorizedoperatorssecurityandqualifiedreviewverifyestablishedbusinesscontact+billingrecord,72hholdwithgenericnotices,revokeallsessions,rebindMFA;norecoverybyemailalone",
+      "recovery_capacity": "upto2recoveries/month;1securityhour+1qualifiedreviewhour/casewithinexistingsecurity4h/monthandqualified4h/month;noextraduplicatedcost",
+      "recovery_fallback": "operatorsnotactuallyapproved/availableorallowanceexceeded->recoveryblockedandnewintakepaused;independentconsumerOTP/rightscontinue;additionalcapacityrequiresseparatelyfundedapproval",
+      "client": "independentowneremailOTP,6digits10min,5attempts/15min;noMFAmandatoryforbasicclientrights;nativeApple/emailexistingprotectionsretained",
+      "revocation": "serverdenynewrequestsandfinalpublicationimmediately;epochbump+multitabhide+no-store;oldintentionaldownloadcannotberecalled"
+    },
+    "licence": {
+      "initial": "CaliforniaBoardlicenceverificationbeforeclientcontentauthority",
+      "recheck": "atexpiryandatleastannually;stale/expiredblocksnewpaidclientwork",
+      "meaning": "identity/scopeeligibilityonly,notappclinicalcertification"
+    },
+    "seats": "allactivehumanstaffincludingownerandbillingonlycount;Solo1explicitowner+practitionercombined,Studio3;removedmembershipnocontentcache"
+  },
+  "queue": {
+    "schema_version": 2,
+    "status": "proposed_inactive",
+    "taxonomy_version": 1,
+    "triggers": [
+      "product_started",
+      "product_stopped",
+      "product_substituted",
+      "concern_reported",
+      "plan_declined",
+      "clarification_requested",
+      "scheduled_confirmation_difference",
+      "formula_correction_affects_plan"
+    ],
+    "nontriggers": [
+      "ordinary_completion_tap",
+      "missing_checkin",
+      "app_open",
+      "reminder_delivered",
+      "no_response"
+    ],
+    "idempotency": "owner_eventUUID+eventversion+payloadhash;exactretryoneevent;differentpayloadsameIDrejected",
+    "grouping": {
+      "key": "workspace+consumer+grantversion+referencedplanversion+category(change,concern,clarification)",
+      "window_hours": 24,
+      "anchor": "firsteventfixedwindow;notextendforever",
+      "concerns": "separateconcerncategory,neverclinicalseverityclassification;preserveeveryoriginalepisode"
+    },
+    "reopen": {
+      "days": 7,
+      "rule": "samecategory+sameplanversionnewmaterialeventwithin7daysclosedreopenssamecasewithnewrevision;otherwisecreatenewlinkedcase;ackofnewplanisnotoldreportretraction"
+    },
+    "states": [
+      "new",
+      "assigned",
+      "awaiting_information",
+      "in_review",
+      "awaiting_client_ack",
+      "resolved",
+      "declined_referred",
+      "relationship_closed"
+    ],
+    "close_rule": "recordeddisposition+clientcommunication+exactplanackifchanged;explicitnonackclosurebypractitionerrequiresreason,neverimplicitclinicalresolution",
+    "silent_days_followup": 21,
+    "silent_rule": "21daystafffollowup/reviewremainsunresolved;neverautocloseorassumeadherence",
+    "notifications": {
+      "client_digest_max_per_day": 1,
+      "client_overdue_max_per_7days": 2,
+      "staff_digest_max_per_day": 2,
+      "content": "genericnohealthdetails;optoutquiettime;no24/7promise"
+    },
+    "service": {
+      "default_hours": "09:00-17:00Monday-FridayworkspaceIANAtimezone",
+      "response_business_days": 2,
+      "warning": "oldestunassigned>1businessday OR>10opentasks/practitioner",
+      "pause_new_client_activation": "oldestunassigned>5businessdays OR>20opentasks/practitioner",
+      "handover": "ownerassignstoauthorizedpractitioner;absentcoverageexplicitunavailablebeforeclientsubmit",
+      "urgent": "noemergencytriageorclinicalseverity;reviewedappropriatecarecopy"
+    },
+    "workload_metrics": [
+      "M04_roi",
+      "M05_workload",
+      "M10_participation"
+    ]
+  },
+  "billing": {
+    "schema_version": 2,
+    "status": "proposed_inactive",
+    "jurisdiction": "California-residentadults18+andCalifornia-licensednonmedicalestheticians/studios;USstorefrontonly;noinitialCanada/WANV/EUexpansion",
+    "entity": "hypotheticalUSLLCmerchant;CAforeignqualification/nexusreviewifrequired;actualentityunconfirmedandnofilingauthorized",
+    "currency": "USD",
+    "consumer": {
+      "primary": "nativeStoreKit/RevenueCatmonthlyorannualPlus",
+      "web": "freecompanionhasnopaidPluscheckoutinthefirstrelease",
+      "authorities": "existingverifiedexactownerreceipts/providerordering;journalanddeletionbarriersunchanged",
+      "join_exit": "nograntofPlus,noautocharge,noApplecancellationpromise",
+      "storefront": "USexternalpurchaseCTAlegalitynotuniversallyprohibited;productchoicenoWorkspacepurchaseCTAinnativependingexactclassification"
+    },
+    "workspace": {
+      "provider": "StripeUSwebmonthlycardsproposedsubjectmerchantapproval",
+      "states": [
+        "incomplete",
+        "active",
+        "cancel_at_period_end",
+        "past_due_grace",
+        "suspended",
+        "expired",
+        "refunded",
+        "disputed"
+      ],
+      "grace_days": 3,
+      "readonly_offboard_days": 30,
+      "cancel": "activeuntilverifiedpaidperiodend;thennoauthor/newpublication",
+      "refund": "fullrefund/chargebackclosespaidauthorityuponverifiedevent;personalrecordandrightsremain",
+      "capacity": "20Solo/60Studioacceptedactiveplans;pendinginvitesandarchiveexcluded;atomicreservation;noautomaticoverage",
+      "downgrade": "30daynotice/selectactivesetbeforeeffectiveend;otherwiseblocknewpaidactivationandnewoverlimitpublication,neverdeletehistory",
+      "webhook": "verifiedsignature+providerretrieve+monotonicwatermark/idempotency;unknownpastduecannotmintpositive"
+    },
+    "fallback": "IfApplecompanionclassificationrejected,releaseprofessionalclientworkflowweb-only;nativekeepsindependentfreepersonalrecord+IAPPlus,professionalnativeentrycloseduntilapproved;enterprise/readerexceptionsnotassumed",
+    "tax": "pricesbeforeapplicabletax;processorcalculatesonlyafterreviewedregistrations;taxcollectedliabilitynotrevenue",
+    "approvals": "qualifiedplatform/privacy/legal/taxreview+merchantapproval+actualAppledecisionremainexternalblocked;proposalnotcompliance"
+  },
+  "storage_operations_catalog": {
+    "schema_version": 2,
+    "status": "proposed_inactive",
+    "authority": {
+      "personal_actual": "consumerownedversionCAS;professionalsnevermutateactualroutine",
+      "practice_intended": "immutableworkspaceauthoredplanversions;acknowledgeintendeddoesnotapplypersonalroutine",
+      "active_grants": 1,
+      "switch": "singletransactionrevokeoldepochandacceptnewgrant;onfailurebothunchanged/noadditionalactivegrant;retainedreceivedplansnevermerged"
+    },
+    "native": {
+      "local": "encryptedownerprivateledger/text/photosusingexistingSecureStorewrappedkeysandbackup-exclusioncontracts",
+      "recovery": "unbackedlocaldataandphotosunrecoverableafterlostdevice,keylossoruninstall;explicitonboarding/exportdisclosure",
+      "text_sync": "optionalexplicitowneroptin;serverencryptedatrestnotendtoendclaim;syncimmutableevents+CASmutableplan+deletionwins",
+      "photos": "neversynced/backedupunderboundedcore;manualownerexportatowndiscretion"
+    },
+    "web": {
+      "owner": "independentemailOTPowneraccount,hostedprivateconsentedtextrecord;afterpracticeexitread/editordinarylogs/export/deletefree",
+      "professional": "onlineonly,nohealthserviceworker/localStorage/IndexedDBcache,Cache-Controlno-store,epochcheckeveryrequest",
+      "link": "provedsameowneridentity;previewconflictsandexplicitmergeexistingeventIDs;noemailmatchalone,noautomaticotherownerjoin"
+    },
+    "quotas": {
+      "owner_text_events": 50000,
+      "owner_text_storage_mb": 100,
+      "brief_max_pages": 100,
+      "brief_max_photos": 20,
+      "brief_temp_mb": 25,
+      "web_export_jobs_per_day": 5,
+      "server_export_max_mb": 100,
+      "quota_rule": "warnat80%;capacityexhaustionneverdeletesrecordorblocksread/export/rights;newwritesrequirecleanuporreviewedcapacityextensionnotforcedPlus"
+    },
+    "retention": {
+      "owner_text": "untilownerdeleteor24monthdormancyafter60/30daynotices;loginoresponseresetsclock;activepaid/activelysharedaccountsexcludeddormancy;freeaccessnotpaymentconditional",
+      "practice_authored": "3yearsafterrelationshipendinitialproposal;qualifiedcounselhold/overridewithpurpose/accessminimization",
+      "revoked_projection_days": 30,
+      "content_free_logs_days": 30,
+      "minimal_audit_days": 365,
+      "backups_days": 35,
+      "delete": "livepublicationstopsimmediately;activepurgewithin30days;backupagedout35days;restoreappliestombstonesbeforetraffic"
+    },
+    "operations": {
+      "company_hours": "09:00-17:00America/New_YorkMonday-Friday",
+      "ordinary_first_response_business_days": 1,
+      "P1_contain_staffed_hours": 4,
+      "availability_slo": "99.5%monthlyhostedtextserviceexcludingannouncedmaintenance<=4h/month;reportalloutagesseparately",
+      "RPO_hours": 24,
+      "RTO": "1businessday",
+      "restore_drill": "quarterlyandbeforeadmission;deletion/revocationtombstonesappliedbeforeopening",
+      "incident": "P0automatedpublicationstopimmediatelywhereimplemented;namedoncallresponseonlyduringstaffedcoverage;no24/7humanpromise",
+      "staff_trigger": "supportforecast>80%FUNDEDcontractedcapacityORfirstresponsebacklog>2businessdaysORP1coverageunfilled->pausenewonboarding;fundedsupportmax120h/monthmeansactualheadroommax96h;backlogqueuerulesalsoapply"
+    },
+    "catalog": {
+      "global_public_admitted_products": 0,
+      "initial_private_label_records": 500,
+      "firstmarket": "USlabelconfirmedowner-privateformula-textrecords;manualfallbackallproducts",
+      "operator_minutes_per_record": 8,
+      "doublecheck_fraction": 0.1,
+      "doublecheck_minutes": 4,
+      "initial_operator_cash": 2200,
+      "monthly_new_or_changed_records": 100,
+      "monthly_operator_hours": 13.3333333333,
+      "monthly_doublecheck_hours": 0.6666666667,
+      "cost_allocation": "initial2200additionalcatalogoperationallowance;monthlyoperatorinsidefoundercatalog16h/monthanddoublecheckinsidecontractQA8h/month;neverdoublecharge440",
+      "quality": "10%randomdoublecheckplusallflaggederrors;anyidentity/formulaerrorquarantineaffectedcomparison;sampleerror>2%stopsourcebatchandreview100%",
+      "correction": "ack1businessday;quarantineimmediate;targetcorrectwithin3businessdays;unresolvedunknown/manual",
+      "rights": "userconfirmedlabeltextpersonalpurpose/licensedtestdataonlysubjectreview;noOBFglobalserving,sourceimagesorscraping;rights3000setuplineonce",
+      "reformulation": "newmarket/formulaversion;neverrewritehistoricbottle;ownerconfirmsnewvariant"
+    }
+  },
+  "effort": {
+    "schema_version": 2,
+    "status": "planningestimatesnotquotesorstaffcommitments",
+    "rows": [
+      {
+        "epic": "EP-V2-00",
+        "name": "protected_baseline",
+        "role": "engineering",
+        "low_hours": 48,
+        "base_hours": 80,
+        "high_hours": 128,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-00",
+        "name": "protected_baseline",
+        "role": "QA",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-00",
+        "name": "protected_baseline",
+        "role": "security_DB",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-00",
+        "name": "protected_baseline",
+        "role": "product_program",
+        "low_hours": 4,
+        "base_hours": 8,
+        "high_hours": 16,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-00",
+        "name": "protected_baseline",
+        "role": "qualified_review",
+        "low_hours": 0,
+        "base_hours": 0,
+        "high_hours": 0,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-01",
+        "name": "governance",
+        "role": "engineering",
+        "low_hours": 8,
+        "base_hours": 12,
+        "high_hours": 20,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-01",
+        "name": "governance",
+        "role": "QA",
+        "low_hours": 4,
+        "base_hours": 8,
+        "high_hours": 16,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-01",
+        "name": "governance",
+        "role": "security_DB",
+        "low_hours": 4,
+        "base_hours": 4,
+        "high_hours": 8,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-01",
+        "name": "governance",
+        "role": "product_program",
+        "low_hours": 24,
+        "base_hours": 40,
+        "high_hours": 64,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-01",
+        "name": "governance",
+        "role": "qualified_review",
+        "low_hours": 4,
+        "base_hours": 8,
+        "high_hours": 16,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-02",
+        "name": "ledger",
+        "role": "engineering",
+        "low_hours": 104,
+        "base_hours": 160,
+        "high_hours": 256,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-02",
+        "name": "ledger",
+        "role": "QA",
+        "low_hours": 40,
+        "base_hours": 64,
+        "high_hours": 104,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-02",
+        "name": "ledger",
+        "role": "security_DB",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-02",
+        "name": "ledger",
+        "role": "product_program",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-02",
+        "name": "ledger",
+        "role": "qualified_review",
+        "low_hours": 4,
+        "base_hours": 8,
+        "high_hours": 16,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-03",
+        "name": "today_exceptions",
+        "role": "engineering",
+        "low_hours": 56,
+        "base_hours": 88,
+        "high_hours": 144,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-03",
+        "name": "today_exceptions",
+        "role": "QA",
+        "low_hours": 32,
+        "base_hours": 48,
+        "high_hours": 80,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-03",
+        "name": "today_exceptions",
+        "role": "security_DB",
+        "low_hours": 8,
+        "base_hours": 12,
+        "high_hours": 20,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-03",
+        "name": "today_exceptions",
+        "role": "product_program",
+        "low_hours": 12,
+        "base_hours": 16,
+        "high_hours": 28,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-03",
+        "name": "today_exceptions",
+        "role": "qualified_review",
+        "low_hours": 4,
+        "base_hours": 8,
+        "high_hours": 16,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-04",
+        "name": "formula_intake",
+        "role": "engineering",
+        "low_hours": 64,
+        "base_hours": 104,
+        "high_hours": 176,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-04",
+        "name": "formula_intake",
+        "role": "QA",
+        "low_hours": 32,
+        "base_hours": 48,
+        "high_hours": 80,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-04",
+        "name": "formula_intake",
+        "role": "security_DB",
+        "low_hours": 12,
+        "base_hours": 16,
+        "high_hours": 28,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-04",
+        "name": "formula_intake",
+        "role": "product_program",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 32,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-04",
+        "name": "formula_intake",
+        "role": "qualified_review",
+        "low_hours": 8,
+        "base_hours": 12,
+        "high_hours": 24,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-05",
+        "name": "decision_tools",
+        "role": "engineering",
+        "low_hours": 72,
+        "base_hours": 120,
+        "high_hours": 200,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-05",
+        "name": "decision_tools",
+        "role": "QA",
+        "low_hours": 36,
+        "base_hours": 56,
+        "high_hours": 96,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-05",
+        "name": "decision_tools",
+        "role": "security_DB",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 36,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-05",
+        "name": "decision_tools",
+        "role": "product_program",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-05",
+        "name": "decision_tools",
+        "role": "qualified_review",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 36,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-06",
+        "name": "local_brief",
+        "role": "engineering",
+        "low_hours": 48,
+        "base_hours": 80,
+        "high_hours": 136,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-06",
+        "name": "local_brief",
+        "role": "QA",
+        "low_hours": 36,
+        "base_hours": 56,
+        "high_hours": 96,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-06",
+        "name": "local_brief",
+        "role": "security_DB",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 36,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-06",
+        "name": "local_brief",
+        "role": "product_program",
+        "low_hours": 12,
+        "base_hours": 16,
+        "high_hours": 28,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-06",
+        "name": "local_brief",
+        "role": "qualified_review",
+        "low_hours": 8,
+        "base_hours": 12,
+        "high_hours": 24,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-07",
+        "name": "consumer_billing",
+        "role": "engineering",
+        "low_hours": 48,
+        "base_hours": 80,
+        "high_hours": 136,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-07",
+        "name": "consumer_billing",
+        "role": "QA",
+        "low_hours": 32,
+        "base_hours": 48,
+        "high_hours": 80,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-07",
+        "name": "consumer_billing",
+        "role": "security_DB",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-07",
+        "name": "consumer_billing",
+        "role": "product_program",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 32,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-07",
+        "name": "consumer_billing",
+        "role": "qualified_review",
+        "low_hours": 8,
+        "base_hours": 12,
+        "high_hours": 24,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-08",
+        "name": "workspace_grants_web",
+        "role": "engineering",
+        "low_hours": 128,
+        "base_hours": 200,
+        "high_hours": 336,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-08",
+        "name": "workspace_grants_web",
+        "role": "QA",
+        "low_hours": 56,
+        "base_hours": 88,
+        "high_hours": 152,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-08",
+        "name": "workspace_grants_web",
+        "role": "security_DB",
+        "low_hours": 36,
+        "base_hours": 56,
+        "high_hours": 96,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-08",
+        "name": "workspace_grants_web",
+        "role": "product_program",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-08",
+        "name": "workspace_grants_web",
+        "role": "qualified_review",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 44,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-09",
+        "name": "professional_plans",
+        "role": "engineering",
+        "low_hours": 76,
+        "base_hours": 120,
+        "high_hours": 200,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-09",
+        "name": "professional_plans",
+        "role": "QA",
+        "low_hours": 36,
+        "base_hours": 56,
+        "high_hours": 96,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-09",
+        "name": "professional_plans",
+        "role": "security_DB",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-09",
+        "name": "professional_plans",
+        "role": "product_program",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-09",
+        "name": "professional_plans",
+        "role": "qualified_review",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 36,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-10",
+        "name": "queue_reconciliation",
+        "role": "engineering",
+        "low_hours": 100,
+        "base_hours": 160,
+        "high_hours": 272,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-10",
+        "name": "queue_reconciliation",
+        "role": "QA",
+        "low_hours": 44,
+        "base_hours": 72,
+        "high_hours": 124,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-10",
+        "name": "queue_reconciliation",
+        "role": "security_DB",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 44,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-10",
+        "name": "queue_reconciliation",
+        "role": "product_program",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-10",
+        "name": "queue_reconciliation",
+        "role": "qualified_review",
+        "low_hours": 12,
+        "base_hours": 16,
+        "high_hours": 28,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-11",
+        "name": "workspace_billing",
+        "role": "engineering",
+        "low_hours": 64,
+        "base_hours": 104,
+        "high_hours": 176,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-11",
+        "name": "workspace_billing",
+        "role": "QA",
+        "low_hours": 36,
+        "base_hours": 56,
+        "high_hours": 96,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-11",
+        "name": "workspace_billing",
+        "role": "security_DB",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-11",
+        "name": "workspace_billing",
+        "role": "product_program",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-11",
+        "name": "workspace_billing",
+        "role": "qualified_review",
+        "low_hours": 12,
+        "base_hours": 20,
+        "high_hours": 36,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-12",
+        "name": "integrated_quality_operations",
+        "role": "engineering",
+        "low_hours": 72,
+        "base_hours": 120,
+        "high_hours": 208,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-12",
+        "name": "integrated_quality_operations",
+        "role": "QA",
+        "low_hours": 76,
+        "base_hours": 120,
+        "high_hours": 208,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-12",
+        "name": "integrated_quality_operations",
+        "role": "security_DB",
+        "low_hours": 40,
+        "base_hours": 64,
+        "high_hours": 112,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-12",
+        "name": "integrated_quality_operations",
+        "role": "product_program",
+        "low_hours": 32,
+        "base_hours": 48,
+        "high_hours": 80,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-12",
+        "name": "integrated_quality_operations",
+        "role": "qualified_review",
+        "low_hours": 24,
+        "base_hours": 40,
+        "high_hours": 72,
+        "usd_per_hour": 200
+      },
+      {
+        "epic": "EP-V2-13",
+        "name": "release_commercial_preparation",
+        "role": "engineering",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 90
+      },
+      {
+        "epic": "EP-V2-13",
+        "name": "release_commercial_preparation",
+        "role": "QA",
+        "low_hours": 16,
+        "base_hours": 24,
+        "high_hours": 40,
+        "usd_per_hour": 60
+      },
+      {
+        "epic": "EP-V2-13",
+        "name": "release_commercial_preparation",
+        "role": "security_DB",
+        "low_hours": 12,
+        "base_hours": 16,
+        "high_hours": 28,
+        "usd_per_hour": 140
+      },
+      {
+        "epic": "EP-V2-13",
+        "name": "release_commercial_preparation",
+        "role": "product_program",
+        "low_hours": 20,
+        "base_hours": 32,
+        "high_hours": 56,
+        "usd_per_hour": 75
+      },
+      {
+        "epic": "EP-V2-13",
+        "name": "release_commercial_preparation",
+        "role": "qualified_review",
+        "low_hours": 8,
+        "base_hours": 16,
+        "high_hours": 28,
+        "usd_per_hour": 200
+      }
+    ],
+    "rates": {
+      "engineering": 90,
+      "QA": 60,
+      "security_DB": 140,
+      "product_program": 75,
+      "qualified_review": 200
+    },
+    "months": {
+      "low": 12,
+      "base": 18,
+      "high": 27
+    },
+    "monthly_role_capacity_hours": {
+      "engineering": 100,
+      "QA": 60,
+      "security_DB": 30,
+      "product_program": 30,
+      "qualified_review": 20
+    },
+    "uncertainty": "Sourcegroundedreuse/newscopeestimates,notmeasuredvelocity;protectedEP00canstopbeforeanyV2work;fullreviews/reworkincluded;20%unplannedcashcontingencyseparateonce",
+    "totals": {
+      "low": {
+        "hours": 2008,
+        "labor_usd": 188880,
+        "role_hours": {
+          "engineering": 908,
+          "QA": 496,
+          "security_DB": 240,
+          "product_program": 232,
+          "qualified_review": 132
+        }
+      },
+      "base": {
+        "hours": 3180,
+        "labor_usd": 299680,
+        "role_hours": {
+          "engineering": 1460,
+          "QA": 776,
+          "security_DB": 368,
+          "product_program": 360,
+          "qualified_review": 216
+        }
+      },
+      "high": {
+        "hours": 5416,
+        "labor_usd": 514600,
+        "role_hours": {
+          "engineering": 2444,
+          "QA": 1324,
+          "security_DB": 640,
+          "product_program": 608,
+          "qualified_review": 400
+        }
+      }
+    },
+    "nonlabor_setup": {
+      "devices_Mac_iPhones": 6000,
+      "license_security_tools": 3000,
+      "insurance_filing_account_setup": 7000,
+      "initial_catalog_ops": 2200,
+      "monthly_build_services": 250
+    },
+    "cost_formula": "labor*1.20+6000+3000+7000+2200+months*250;reserveandpostlaunchoperationseparate;noadditionalduplicatedreviewfee"
+  },
+  "unified_overrides": {
+    "source": "01_Executive/AUTHORITY_AND_DECISIONS.md",
+    "positive_paid_authority": "Exact-owner verified current receipt/paid workspace authority only. Free quota is never paid authority.",
+    "hosted_media": "Not required or permitted in the initial professional or consumer core; local owner images/export remain separate.",
+    "commercial_model": "Diagnostic only; NO_GO on funding/scale until observed gates pass. Original $50000 reserve is a scenario input, not actual cash.",
+    "research_admission": "Separate per-feature/profile/pipeline/claim approval; no blanket AI switch.",
+    "jurisdiction": "Initial closed cohorts California adult18+; no legal clearance inferred.",
+    "prices": "Preserved experiment hypotheses only; no live SKU mutation.",
+    "support": "Named funded coverage required before promising the proposed hours/SLO.",
+    "retention": "3-year practice retention is a proposal pending qualified review; price/fund full run-off plus deletion/backups and holds before incurring it.",
+    "catalog": "No forced 500-record/$2200 prepopulation expenditure; user-owned manual records first, licensed fixtures only. Catalog budget remains historical scenario.",
+    "gate_truth": "Unknown evidence fails admission; model time alone never changes observed business gate state.",
+    "initial_professional_paid_candidate": "Studio99USD only after measured buyer qualification; new Solo commercial admission withheld; source capacity code retained. See ADR-021 in finance."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "node": "v24.19.0",
+  "npm": "11.20.0",
+  "npm_binary": "/root/onskin-quality-recovery01-tools/bin/npm",
+  "ci": "true",
+  "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+  "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+  "installed": {
+    "expo": "57.0.31",
+    "expo-network": "57.0.3",
+    "@expo/cli": "57.0.32",
+    "@expo/config-plugins": "57.0.11",
+    "expo-modules-core": "57.0.24",
+    "expo-modules-jsi": "57.1.3",
+    "@expo/ui": "57.0.25",
+    "expo-router": "57.0.28",
+    "expo-sharing": "57.0.23",
+    "expo-widgets": "57.0.26",
+    "react-native": "0.86.3",
+    "xcode": "4.0.0",
+    "metro-runtime": "0.84.5"
+  },
+  "package_count": 878,
+  "sha256": {
+    "apps/mobile/package.json": "7c00e764f0b8ee6f8654c3bbcb635041bee7e2e04c20b7f8f3adfe17ad40ce73",
+    "package.json": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+    "package-lock.json": "ce1992c391d8b1c533ab9596b00d0f14dfc4c39d51256ed90619ca4351654782"
+  },
+  "official_check": "npx expo install --check",
+  "doctor": "npx --yes expo-doctor@1.21.5",
+  "reference": "https://docs.expo.dev/more/expo-cli/#install",
+  "admission": "NONE"
+}

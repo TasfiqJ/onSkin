@@ -1,0 +1,16 @@
+UNAUTHORIZED_PROPOSAL — inert text; do not apply without a separate exact-source Brain task.
+Base 2de9ef75a1a1d539b0520ca22160abd6171c9c3b; source hashes in evidence/protected-source-hashes.json.
+
+Preserve raw scanner exit1, every advisory root and all expired/unknown refusals. This changes classification, not acceptance.
+
+--- a/scripts/phase9/security-advisory-exceptions.mjs
++++ b/scripts/phase9/security-advisory-exceptions.mjs
+@@ -121,7 +121,7 @@
+           continue;
+         }
+         const id = advisoryId(via);
+-        if (!id || via.name !== current || !['high', 'critical'].includes(via.severity)) {
++        if (!id || via.name !== current || !['info', 'low', 'moderate', 'high', 'critical'].includes(via.severity)) {
+           throw new Error(`npm audit advisory is malformed: ${current}`);
+         }
+         const versions = finding.nodes.map((path) => lock.packages?.[path]?.version);

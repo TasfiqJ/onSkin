@@ -1,0 +1,19 @@
+{
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm ci --no-audit --no-fund",
+  "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {}",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-21T11:43:18.221966+00:00",
+  "kind": "LOCAL_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/npm-ci-2.txt",
+    "sha256": "03961d044959c9b9a9e997ebcd5fd6d3f8c6e46e1340de7c2ade28e34823d9d6"
+  },
+  "schema_version": 1,
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_reported_scope": "Actual committed snapshot; external/provider/expert axes remain separate",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "started_at_utc": "2026-10-21T11:43:00.676978+00:00",
+  "status": "PASS",
+  "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+}

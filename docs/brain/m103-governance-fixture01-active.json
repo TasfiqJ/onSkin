@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "GOVERNANCE-FIXTURE-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "base_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "input_manifest_sha256": "6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+  "authorization_id": "M103-GOVERNANCE-FIXTURE01-SOURCE-EDIT-01",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "active_writers": 1,
+  "incremental_spend_usd": 0,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "clinical_research_or_release_authorized": false,
+  "source_edit_union_permitted": false,
+  "prior_reviews_mutable": false,
+  "protected_security_and_db_admission": "CLOSED",
+  "next_task": null,
+  "original_security_proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "roadmap_tasks_count": 47,
+  "module_identities_count": 27,
+  "prior_adr_count": 51,
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED"
+}

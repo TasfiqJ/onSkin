@@ -1,0 +1,1 @@
+{"admission": "NONE", "synthetic_compatibility": true, "raw_exit": 0}

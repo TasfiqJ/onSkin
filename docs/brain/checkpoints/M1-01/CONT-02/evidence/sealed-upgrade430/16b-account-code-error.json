@@ -1,0 +1,69 @@
+{
+  "bodyText": "Protect your plan, keep it private. Create an account for sign-in, subscription, and privacy controls. Routine checks stay local-first on this device for this beta, and photos still stay on this device. Enter the 6-digit code we sent to tas.account.e2e@example.com. Verify Resend code in 59s Use a different method That code did not work. Request a new code and try again. Not now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 66,
+      "hitOk": true,
+      "label": "Verification code",
+      "role": "input",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 382.5
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Verify",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 460.5
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Resend code in 59s",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 528.5
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Use a different method",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 596.5
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 868
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8445/onboarding/account",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

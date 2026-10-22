@@ -1,0 +1,46 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "base_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "base_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "branch": "stage/m1-retained-safety",
+  "canonical_db_blocker": "ECR original immutable image acquisition: Data limit exceeded",
+  "final_head_ci": {
+    "Quality": {
+      "canonical_db_conclusion": "failure",
+      "canonical_db_job": 119951746554,
+      "conclusion": "failure",
+      "run": 39815179883,
+      "source_conclusion": "success",
+      "source_job": 119951746155,
+      "status": "completed"
+    },
+    "Security": {
+      "conclusion": "failure",
+      "run": 39815179834,
+      "status": "completed"
+    },
+    "iOS launch contract": {
+      "conclusion": "success_source_only",
+      "run": 39815180069,
+      "status": "completed"
+    }
+  },
+  "final_pr": 9,
+  "full_m1_03_accepted": false,
+  "hosted_db_authority": false,
+  "implementation_anchor": "30bbe8b5b75d1708aabcf630711767a1cb84506c",
+  "main_commit": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "main_promotion_authorized": false,
+  "module_count": 27,
+  "original_security_blockers": "original unresolved source findings/advisories/SBOM/coverage, owner not approved, 2026-10-21 expiry",
+  "prior_adr_count": 51,
+  "qr03_measured_source": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+  "qr03_report": "PARTIAL_ACCEPTED_SOURCE_COMPATIBILITY_ONLY",
+  "roadmap_task_count": 47,
+  "source_security_go": false
+}

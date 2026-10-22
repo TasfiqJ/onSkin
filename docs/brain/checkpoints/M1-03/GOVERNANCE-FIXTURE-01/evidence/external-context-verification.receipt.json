@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "kind": "CONTEXT_VERIFICATION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B verify_context.py --expected-manifest-sha256 6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+  "working_directory": "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/governance-fixture01-context",
+  "exit_code": 0,
+  "verified_members": 13,
+  "output": "VERIFIED 13 members and manifest SHA256 6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+  "authority_origin": "LITERAL_USER_PROMPT_EXTERNAL_SHA256",
+  "admission": "NONE"
+}

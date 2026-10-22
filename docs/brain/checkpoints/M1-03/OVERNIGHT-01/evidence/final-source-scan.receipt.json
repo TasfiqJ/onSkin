@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B /mnt/c/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/security_readiness/m103/source_scan.py --candidate /root/onskin-overnight01-candidate05 --repo /mnt/c/Users/jasim/Desktop/onSkin --commit 3c063dfe47d887e7aa3e27d05da41658b69a59dc --work /root/onskin-overnight01-source-final --rules /root/g97-finish-r1-20261018/packet/retained-raw/rules --pins /mnt/c/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-03/OVERNIGHT-01/inputs/BRAIN_STATE/CANDIDATE_TOOL_INPUTS.json",
+  "working_directory": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code",
+  "environment": "Linux x86_64/Python3.12.3; candidate05; clean child environment and seccomp network denial",
+  "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+  "source_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-source-scan.txt",
+    "sha256": "ed2e85bd28c5fb6ab36cdb42fa2d81519d05efdcdbf1348a78754c4a055c10de"
+  }
+}

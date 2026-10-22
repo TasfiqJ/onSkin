@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm run test -- --force",
+  "working_directory": "/root/onskin-overnight01-native",
+  "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/root-test.txt",
+    "sha256": "a953218326cad2ebc780465eaf086e05d8a8633edf2989e098a3283094432a02"
+  },
+  "counts": {
+    "passed": 6067,
+    "failed": 0,
+    "skipped": 0
+  }
+}

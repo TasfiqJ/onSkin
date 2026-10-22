@@ -1,0 +1,8 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "exit": 1
+}

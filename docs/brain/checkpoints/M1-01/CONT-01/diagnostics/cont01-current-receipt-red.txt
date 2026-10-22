@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+stderr | src/features/onboarding/AgePolicyGate.lifecycle.test.ts > AgePolicyGate foreground receipt lifecycle > consumes a fresh durable publication even when the receipt was already current
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/onboarding/AgePolicyGate.lifecycle.test.ts (10 tests | 1 failed) 40ms
+     × consumes a fresh durable publication even when the receipt was already current 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/onboarding/AgePolicyGate.lifecycle.test.ts > AgePolicyGate foreground receipt lifecycle > consumes a fresh durable publication even when the receipt was already current
+AssertionError: expected "vi.fn()" to be called once with arguments: [ '/onboarding/consent' ]
+
+Number of calls: 0
+
+ ❯ src/features/onboarding/AgePolicyGate.lifecycle.test.ts:191:27
+    189|     await act(async () => mocks.setQueryData(['agePolicyReceiptStatus'…
+    190|     await flush();
+    191|     expect(mocks.replace).toHaveBeenCalledExactlyOnceWith('/onboarding…
+       |                           ^
+    192|   });
+    193|   it('closes protected providers on background and keeps them closed t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  11:42:52
+   Duration  425ms (transform 101ms, setup 0ms, import 186ms, tests 40ms, environment 0ms)
+

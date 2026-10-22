@@ -129,6 +129,26 @@ describe('age-policy receipt', () => {
     await expect(getAgePolicyReceiptStatus()).resolves.toBe('current');
   });
 
+  it('requires fresh adult eligibility for an actual former 16+ receipt without deleting data', async () => {
+    const oldReceipt = JSON.stringify({
+      receipt_version: 1,
+      policy_sha256: '213a9fa27a479d336ca74edb858d780d568abf4166a43b586dd8bdc48f62fb1e',
+      eligible: true,
+    });
+    mocks.privateKV.set(AGE_POLICY_RECEIPT_KEY, oldReceipt);
+    mocks.privateKV.set('layerwell.shelf.v1', 'preserved owner data');
+
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('policy_mismatch');
+    await expect(getAgeVerified()).resolves.toBe(false);
+    expect(mocks.privateKV.get(AGE_POLICY_RECEIPT_KEY)).toBe(oldReceipt);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
+
+    await setAgeVerified(true);
+    await expect(getAgePolicyReceiptStatus()).resolves.toBe('current');
+    expect(mocks.privateKV.get('layerwell.shelf.v1')).toBe('preserved owner data');
+  });
+
   it('stores only a minimized re-verification tombstone for a non-affirmative evaluation', async () => {
     await setAgeVerified(false);
 

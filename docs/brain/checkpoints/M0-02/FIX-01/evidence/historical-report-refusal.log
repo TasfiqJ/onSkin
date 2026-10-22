@@ -1,0 +1,13 @@
+{
+  "name": "historical-report-refusal",
+  "command": "python -B scripts/brain/brain.py report docs/brain/checkpoints/M0-02/completion-report.json",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Python3.9.13",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "exit_code": 1,
+  "status": "FAIL",
+  "expected_exit": 1,
+  "seconds": 0.468
+}
+REJECTED: Historical report format; current submissions require v3

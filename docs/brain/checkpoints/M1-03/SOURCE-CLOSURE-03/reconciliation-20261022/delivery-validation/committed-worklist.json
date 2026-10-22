@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "node",
+    "scripts/phase4/build-source-worklist.mjs",
+    "--strict",
+    "--check"
+  ],
+  "exit": 0,
+  "source_commit": "89c40f1008e60f4b5cf4266c7331532dd75d7679",
+  "source_tree": "eec12f6f13a1f62735e63229e5df3ccc4bc7870c",
+  "log_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+  "observed_utc": "2026-10-22T03:13:45.704972+00:00"
+}

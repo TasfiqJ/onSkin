@@ -1,0 +1,5 @@
+Error: Could not find visible clickable text: Continue
+    at assert (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:76:25)
+    at clickByText (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:491:3)
+    at async crossOwnerFlow (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:921:3)
+    at async run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:1573:7)

@@ -1,0 +1,5 @@
+command: git diff origin/main c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c --exit-code -- apps packages supabase package.json package-lock.json .github scripts/phase2/local-supabase-reset.mjs scripts/phase2/local-supabase-reset-retry.mjs scripts/phase2/staging-deployment-evidence-lib.mjs scripts/phase9 docs/phase-9
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c
+snapshot_tree: d60d4a591653b141964680f153a8d82937d2984f
+exit_code: 0

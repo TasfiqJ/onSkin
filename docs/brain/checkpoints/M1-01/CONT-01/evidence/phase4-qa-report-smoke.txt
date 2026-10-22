@@ -1,0 +1,21 @@
+
+> layerwell@0.1.0 phase4:qa-report-smoke
+> node scripts/phase4/catalog-qa-report-smoke.mjs
+
+OK OBF fixture QA validates exact transform/source hashes
+OK CosIng fixture QA validates provenance and glossary scope
+OK QA report records dirty-worktree provenance without clearing launch
+OK missing transformed-payload contract is a hard nonzero QA blocker
+OK snapshot-date enrichment remains separately bound outside the payload digest
+OK missing OBF source-record date is a hard provenance blocker
+OK invalid calendar OBF source-record date is a hard provenance blocker
+OK OBF source-record date after its snapshot is a hard provenance blocker
+OK OBF field bounds are independently enforced by QA
+OK duplicate OBF barcode is a hard nonzero QA blocker
+OK checksum-invalid and noncanonical OBF GTINs are hard QA blockers
+OK fixed-length GTIN-14 aliases are canonical duplicate QA blockers
+OK unsigned candidate manifest is a hard nonzero promotion blocker
+OK forged approved status is revalidated against current trust and release scope
+OK prototype-like source names become blockers instead of inherited contracts
+OK malformed CosIng record shapes become blockers instead of crashing QA
+OK CosIng field bounds and normalized synonym collisions are QA blockers

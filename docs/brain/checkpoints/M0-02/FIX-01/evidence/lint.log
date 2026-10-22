@@ -1,0 +1,42 @@
+{
+  "name": "lint",
+  "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:/Users/jasim/AppData/Roaming/npm/node_modules/npm/bin/npm-cli.js run lint",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Node20.20.2/root npm11.20.0",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "exit_code": 0,
+  "status": "PASS",
+  "expected_exit": 0,
+  "seconds": 0.467
+}
+
+> layerwell@0.1.0 lint
+> turbo run lint
+
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/types
+   • Running lint in 3 packages
+   • Remote caching disabled, using shared worktree cache
+
+@layerwell/types:lint: cache hit, replaying logs 675f5d1aa091756f
+@layerwell/types:lint: 
+@layerwell/types:lint: > @layerwell/types@0.1.0 lint
+@layerwell/types:lint: > echo "(no lint configured for @layerwell/types)"
+@layerwell/types:lint: 
+@layerwell/types:lint: "(no lint configured for @layerwell/types)"
+@layerwell/catalog-operator-console:lint: cache hit, replaying logs 0dbf4d7a0b7d2e2e
+@layerwell/catalog-operator-console:lint: 
+@layerwell/catalog-operator-console:lint: > @layerwell/catalog-operator-console@0.1.0 lint
+@layerwell/catalog-operator-console:lint: > tsc --noEmit
+@layerwell/catalog-operator-console:lint: 
+@layerwell/mobile:lint: cache hit, replaying logs f51d962c6cdae93e
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: > @layerwell/mobile@0.1.0 lint
+@layerwell/mobile:lint: > eslint . --max-warnings=0
+@layerwell/mobile:lint: 
+
+ Tasks:    3 successful, 3 total
+Cached:    3 cached, 3 total
+  Time:    134ms >>> FULL TURBO
+

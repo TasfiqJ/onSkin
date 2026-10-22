@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_EVIDENCE_DIR=docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-invalid ONBOARDING_E2E_PORT=8429 ONBOARDING_E2E_DEBUG_PORT=9529 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 ONBOARDING_E2E_DELETION_RECOVERY=invalid node scripts/e2e/onboarding-first-session.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+  "source_tree": "8c38e82f86b595eae9ac64c5409a75763c8f1c37",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-invalid.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T17:38:03.378920+00:00",
+  "finished_at_utc": "2026-10-20T17:38:32.617943+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_EVIDENCE_DIR": "docs/brain/checkpoints/M1-01/CONT-02/evidence/final-safe-deletion375-invalid",
+    "ONBOARDING_E2E_PORT": "8429",
+    "ONBOARDING_E2E_DEBUG_PORT": "9529",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+    "ONBOARDING_E2E_DELETION_RECOVERY": "invalid"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs"
+  ]
+}

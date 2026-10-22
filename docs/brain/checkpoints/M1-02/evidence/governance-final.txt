@@ -1,0 +1,57 @@
+test_approved_state_and_audit_are_immutable (test_brain.InstalledControls) ... ok
+test_closed_axes_admissions_scope_and_skipped_pass (test_brain.InstalledControls) ... ok
+test_duplicate_json_keys_and_csv_identity_substitution (test_brain.InstalledControls) ... ok
+test_f1_observation_cli_positive_and_bound_negative_cases (test_brain.InstalledControls) ... ok
+test_f2_report_cli_ci_relationships_and_git_identities (test_brain.InstalledControls) ... ok
+test_f3_pack_cli_cannot_repoint_its_own_issuance (test_brain.InstalledControls) ... ok
+test_f4_dangling_and_existing_directory_junctions_do_not_create_targets (test_brain.InstalledControls) ... ok
+test_f4_hardlinked_mirror_rejected_without_modification (test_brain.InstalledControls) ... ok
+test_f4_real_dangling_mirror_file_and_existing_symlink_no_side_effects (test_brain.InstalledControls) ... skipped "Real symbolic links unavailable: [WinError 1314] A required privilege is not held by the client: 'C:\\\\Users\\\\jasim\\\\AppData\\\\Local\\\\Temp\\\\onskin-brain-tests-yxbbp2m2\\\\outside.json' -> 'C:\\\\Users\\\\jasim\\\\AppData\\\\Local\\\\Temp\\\\onskin-brain-tests-yxbbp2m2\\\\repo\\\\docs\\\\v2\\\\mirrors\\\\compatibility.json'"
+test_generated_false_gate_upgrade_and_mirror_drift (test_brain.InstalledControls) ... ok
+test_installed_positive_and_nonwriting_check (test_brain.InstalledControls) ... ok
+test_live_closed_launch_contract_cannot_upgrade (test_brain.InstalledControls) ... ok
+test_missing_duplicate_substitution_and_extra_id (test_brain.InstalledControls) ... ok
+test_preserves_every_supplied_field_and_original_field (test_brain.InstalledControls) ... ok
+test_report_positive_schema_hash_git_binding_and_adversarial_payloads (test_brain.InstalledControls) ... warning: in the working copy of 'docs/brain/contracts/completion-report.v3.schema.json', LF will be replaced by CRLF the next time Git touches it
+ok
+test_selection_does_not_issue_followup (test_brain.InstalledControls) ... ok
+test_snapshot_hash_and_manifest_anchor (test_brain.InstalledControls) ... ok
+test_unknown_parent_cycles_and_order (test_brain.InstalledControls) ... ok
+test_unknown_task_cli_nonzero (test_brain.InstalledControls) ... ok
+test_git_reads_disable_lazy_fetch_and_fsmonitor (test_brain.ReportContracts) ... ok
+test_schema_types_required_extra_unsupported_and_bounds (test_brain.ReportContracts) ... ok
+test_versioned_report_rejects_legacy_shape_and_self_acceptance (test_brain.ReportContracts) ... ok
+test_allowlist_and_bound_booleans_cannot_stand_in_for_integers (test_brain.SyntheticPackaging) ... ok
+test_case_collision_reserved_manifest_and_duplicate_paths (test_brain.SyntheticPackaging) ... ok
+test_code_requires_explicit_issue_review (test_brain.SyntheticPackaging) ... ok
+test_crc_corruption_and_trailing_bytes_rejected (test_brain.SyntheticPackaging) ... ok
+test_hardlink_rejected (test_brain.SyntheticPackaging) ... ok
+test_hash_length_approval_and_allowlist_tampering (test_brain.SyntheticPackaging) ... ok
+test_output_inside_input_and_overwrite_rejected (test_brain.SyntheticPackaging) ... ok
+test_positive_roundtrip_determinism_crc_all_hashes (test_brain.SyntheticPackaging) ... ok
+test_private_binary_archives_nontext_and_secret_material (test_brain.SyntheticPackaging) ... ok
+test_symlink_escape_and_inside_link_rejected (test_brain.SyntheticPackaging) ... skipped "Symlink creation unavailable: [WinError 1314] A required privilege is not held by the client: 'C:\\\\Users\\\\jasim\\\\AppData\\\\Local\\\\Temp\\\\onskin-synthetic-issue-_jqp_4b5\\\\outside.md' -> 'C:\\\\Users\\\\jasim\\\\AppData\\\\Local\\\\Temp\\\\onskin-synthetic-issue-_jqp_4b5\\\\source\\\\inputs\\\\TASK.md'"
+test_total_context_and_file_bounds (test_brain.SyntheticPackaging) ... ok
+test_traversal_absolute_drive_unc_ads_alias_and_backslash (test_brain.SyntheticPackaging) ... ok
+test_unissued_unknown_and_writer_conflict (test_brain.SyntheticPackaging) ... ok
+test_windows_junction_input_and_output_rejected (test_brain.SyntheticPackaging) ... ok
+test_immutable_issuance_successor_and_no_self_acceptance (test_m102_profile.M102Report) ... ok
+test_old_base_wrong_branch_and_evidence_tail (test_m102_profile.M102Report) ... ok
+test_valid_and_all_axis_evidence_refusals (test_m102_profile.M102Report) ... ok
+test_cont02_manifest_review_and_overlay_remain_bound_to_the_external_digest (test_m1_profile.M1Profile) ... ok
+test_cont03_manifest_review_and_overlay_remain_bound_to_external_digest (test_m1_profile.M1Profile) ... ok
+test_explicit_successor_and_historical_profile_both_validate (test_m1_profile.M1Profile) ... ok
+test_refuses_changed_successor_review (test_m1_profile.M1Profile) ... ok
+test_refuses_mutable_spec_and_replacement_manifest (test_m1_profile.M1Profile) ... ok
+test_refuses_self_acceptance_extra_task_writer_and_expiry_extension (test_m1_profile.M1Profile) ... ok
+test_refuses_wrong_branch (test_m1_profile.M1Profile) ... ok
+test_ci_exact_head_run_workflow_and_pending_semantics (test_m1_report_cli.M1ReportCLI) ... ok
+test_cont02_report_binds_iteration_location_and_reviewed_base (test_m1_report_cli.M1ReportCLI) ... ok
+test_cont03_report_binds_exact_issued_base_and_location (test_m1_report_cli.M1ReportCLI) ... ok
+test_future_execution_and_dirty_untracked_committed_runtime_drift (test_m1_report_cli.M1ReportCLI) ... ok
+test_positive_partial_and_failure_then_evidence_and_type_attacks (test_m1_report_cli.M1ReportCLI) ... ok
+
+----------------------------------------------------------------------
+Ran 51 tests in 359.197s
+
+OK (skipped=2)

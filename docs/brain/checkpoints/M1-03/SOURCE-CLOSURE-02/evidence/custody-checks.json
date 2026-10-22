@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "NON_EXECUTING_CUSTODY_CHECKS",
+  "admission": "NONE",
+  "input_verification": {
+    "command": "python -B docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/verify_context.py --expected-manifest-sha256 dde42dff63522aa0620d188f5d9051f06e138e8c43abb1ec6160fb8d918cfe97",
+    "raw_exit": 0,
+    "files": 12,
+    "manifest_sha256": "dde42dff63522aa0620d188f5d9051f06e138e8c43abb1ec6160fb8d918cfe97"
+  },
+  "input_and_review_bytes_identical": true,
+  "preimages_matched": 10,
+  "roadmap_tasks_preserved": 47,
+  "module_identities_preserved": 27,
+  "adr_collections_preserved": {
+    "records": 51
+  },
+  "original_governance_state": "UNCHANGED",
+  "executable_files_changed": [],
+  "tests_started": 0,
+  "administrative_files": [
+    ".gitattributes (freeze new review bytes only)",
+    "ONSKIN_BRAIN_HANDOFF.txt"
+  ],
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0
+}

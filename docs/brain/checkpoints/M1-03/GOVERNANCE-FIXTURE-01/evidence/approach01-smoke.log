@@ -1,0 +1,8 @@
+test_exact_report_and_predecessor_default_refusals (test_m103_governance_fixture01_profile.GovernanceFixture01.test_exact_report_and_predecessor_default_refusals) ... ok
+test_exact_report_and_false_authority_refusals (test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals) ... ok
+test_widget_guard_hash_and_payload_path_changes_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_widget_guard_hash_and_payload_path_changes_refuse) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 79.549s
+
+OK

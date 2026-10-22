@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "scope": "No self hash or future delivery identity",
+  "files": [
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/advisory-contract.log",
+      "sha256": "cc1de1828883c169ad765598e77554a75af3c32b9e32824c6de4f3b8b82b89b7",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/advisory-contract.receipt.json",
+      "sha256": "360607a9aac40b71fc947312f86b630213736c1e001753e5b60c1118a0edf5d7",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/authored-whitespace.log",
+      "sha256": "ac213da076e6f3d6e88f9c1c47df5ddd582abf7d71c9c535c538dec6bbc76833",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/authored-whitespace.receipt.json",
+      "sha256": "06c6c19427803d8d22d9f96767ce9f91ee22046fdea0a3c1a89d5409dbd2fe86",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/base-reproductions.json",
+      "sha256": "0e209334c41ea92a23fbebf2f74116076a5d6d9a82de896c103403ed4326489c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/canonical-regression.log",
+      "sha256": "c6956964433869aed1913f5593d2dd8104ac039ace93149097335d2eeeb98019",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/canonical-regression.receipt.json",
+      "sha256": "5b701a5f91c4804965b3924ffbcc8f9fb4a146b65b0942880b680deefe4f2c1e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation-latest.json",
+      "sha256": "53c26dccbdf97166970775a62a30d646fc3dd1bd8cfabf465bb21bdba58c0c0e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/ci-observation.json",
+      "sha256": "68d98e22f9182c941b4b9b71874bd2f33fb0f4ef0bebb09bf0126150c558b0a1",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/cumulative-scope.log",
+      "sha256": "247980b2d908cdf4df2cbd599775b14c1fd403efefc12ba150e3d76be40067dc",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/cumulative-scope.receipt.json",
+      "sha256": "998c5b4502276faba68c6015cfa72c9fc11477f335db0df628bc73e20c62b08c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/execution-baseline.log",
+      "sha256": "11edb10590113d2dcd7daf498d65409f6487277b119c8a83ee5f03d9ea70f014",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/execution-baseline.receipt.json",
+      "sha256": "856716c0d9c1eddf548aa6a15e5f7ffa17bff8db98871ae40d0cab99cc701d91",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/historical-report-refusal.log",
+      "sha256": "cf335a606b9c6f912c29efb176a9eac5a93e7507b3cbdaae5d1366b0aaf0e93d",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/historical-report-refusal.receipt.json",
+      "sha256": "acee80fb9b6d52af30bdf63bb6dc4ac8776baf64e6fa61a5207ab612fec4944e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/lint.log",
+      "sha256": "c7c91131994267f449797513a151dff4b32e25f75e5e96f387f5c8ac0ffe887f",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/lint.receipt.json",
+      "sha256": "b3c249a0710228bf80e4cceef8b45a736a83a003a2d1e8f39f3b3c3e7c709585",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.log",
+      "sha256": "843ecc008b98908e025c943e1ced3a89444135e32090a5ab3db14e5d8bb7caee",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.receipt.json",
+      "sha256": "54976a61fb1731f3346abd1492685f3ff88bd812b2784a80dbe4452c31aee0b8",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py39.log",
+      "sha256": "3d6ad5a5796c22cc6052026309c2301a4567dfcecd6acc4d902b9cc3b6ef2989",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py39.receipt.json",
+      "sha256": "d7396d0c23f4c173bc9fb06850a3020649a2a54da5988665f67c872d539844fb",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-check.log",
+      "sha256": "ae25b4e7ac59fa5eb62a65435160a46068eb344f7113f535d66f10c4a382472c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-check.receipt.json",
+      "sha256": "a22463c664815ab6cebe784b4e88eb74b8f3001ca9b1207bb4ca46cf610a842e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-generate.log",
+      "sha256": "7711a8c58ab7d792699ca78b531a2a7f8037e1a9e787ad4d4c5ab79aa9dbfd11",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-mirror-generate.receipt.json",
+      "sha256": "5d3eeead81eb4e8ea4b5a447f23e7c83521b720ddb8101fed2ebbc3a28e3f162",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-a.log",
+      "sha256": "2a9a390e7bbdf481d6b3822c485cd24870d45efb539a061c08b4e41a3cf1886a",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-a.receipt.json",
+      "sha256": "94a4ba7374deca174ac18873ba55af044f194ec0916db69d78fb17546c8939f6",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-b.log",
+      "sha256": "84a6b5709486f5c03f23cda64951c90fe0384d94143b17bb5c227c987be0bcd2",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-pack-b.receipt.json",
+      "sha256": "a3057863337a8a3436d7679edee61a8e825ea61f86e783249643c9bfd7826176",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-validate.log",
+      "sha256": "d5bb91c760b75dac8770fa87b065cd5ee655a69e174e5d8361c77731b30b29b6",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-validate.receipt.json",
+      "sha256": "12e33976b8ddacf01f569bf6fc56614c24027fa5cb00da0c07d9b4facaf54751",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-verify.log",
+      "sha256": "c559bfe15a5bee34408d33343699f741d5e7ed723028e4b72c4f519301089157",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-verify.receipt.json",
+      "sha256": "4e1a6c10a846f3d8bf90cfa441e0c4dfec7445ff3d1f66c7a44b5ab199ada1ea",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/protected-preservation.log",
+      "sha256": "dc36485e9364dda3c799ddbcd6c1e3dea8673f77314afa914b84ba3ccca3334a",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/protected-preservation.receipt.json",
+      "sha256": "0d38ade6868d0348959804703b1abd41aa3ded1406f85ac6f027d7cbddb6c7e0",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/release-inventory.log",
+      "sha256": "1a7e536987206333732bccb5f8526eaa6cf03f8040d97bcc9db8fcb87e1aec8f",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/release-inventory.receipt.json",
+      "sha256": "486f96ee33d7d3c9a6b76ef587d421ed348b5dbceb21e86c54d7511f29949e9d",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/repair-scope.log",
+      "sha256": "b55148f7b1a021af6eb3301a4b44d318173031c89b4621d4049f6f078aea0d87",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/repair-scope.receipt.json",
+      "sha256": "7b70fe1b9c09188ca34d20af5602c8ef9649574f5fd5c14d9b6e4ff9c92326f2",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/source-packet.log",
+      "sha256": "99468956731705dfe2ec553774d2ab8f4a2f63d74831f8675d96cc60ca72f13e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/source-packet.receipt.json",
+      "sha256": "661a2039dc823b82b1829fd87b172ed2f517c6290c1660dbd0a28db7fe67405b",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/task-scope.log",
+      "sha256": "0e88a14b8e19ee22a39a90b05556f740df0b76e5527194cef9283f34cee69738",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/task-scope.receipt.json",
+      "sha256": "9267e9bb3a6da0196ad9f2adce246777776cc59cf1f76cfd13868557cea2344c",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/test.log",
+      "sha256": "7fff75552e6f51361ce090c134fbacb9b888724ebe47a59ee5cb6fdbc50ecc9d",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/test.receipt.json",
+      "sha256": "ebd31afd5c4b14e4da348b528000eb65230955c519adcf70fe51fc3f837abf0e",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/typecheck.log",
+      "sha256": "6e3a40d0d6717767f2b3f536e54aeacfb27550b5e263f117c756d2d46a947696",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/typecheck.receipt.json",
+      "sha256": "127256fa8056b40738955e80c6ff36b956d38b19b007b21612fbe547df890f89",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/workflow-contract.log",
+      "sha256": "d383ca23cb36b69d1da50ea7302d4735e5894de5d78efe18ca57a4969cfc4492",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/workflow-contract.receipt.json",
+      "sha256": "4a5312b796c11faaaa0e4fc0bc508416d1054a0cb0ffde86d9cf58e0bb34200a",
+      "scope": "Sanitized attributed execution/CI evidence; offline consistency only"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/REVIEW_EVIDENCE.md",
+      "sha256": "c7d81c1875514fa7ad6be877f9469f6d09f3ea2da241728080ec907326ce29b4",
+      "scope": "Repair narrative/provenance; historical claims not upgraded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/INTAKE.json",
+      "sha256": "d4f468be6fc298d63b7bac6d24fbdff8ebaa908aee82f5ddf56b5c4c263fe0c5",
+      "scope": "Repair narrative/provenance; historical claims not upgraded"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02/FIX-01/legacy-current.v2.json",
+      "sha256": "f969c92ea47d1aa97f9d1ae9b29e0defd71f75468d5ba12f9f0ec6565334d8fb",
+      "scope": "Repair narrative/provenance; historical claims not upgraded"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B -m unittest discover -s scripts/security_readiness/m103 -p test_diagnostics.py -v",
+  "working_directory": "/root/onskin-overnight01-native",
+  "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/diagnostics.txt",
+    "sha256": "40eb1603caa20bf8cb7a8c82c8db618f710570a8fb7f05082ac42bfdec87cbda"
+  },
+  "counts": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  }
+}

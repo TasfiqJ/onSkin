@@ -1,0 +1,29 @@
+test_exact_report_and_false_authority_refusals (test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals) ... ERROR
+
+======================================================================
+ERROR: test_exact_report_and_false_authority_refusals (test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery03-source/scripts/brain/test_m103_quality_recovery02_profile.py", line 61, in test_exact_report_and_false_authority_refusals
+    p.report(self.root, self.name)
+  File "/root/onskin-quality-recovery03-source/scripts/brain/m103_profile.py", line 936, in report
+    return report_quality_recovery03(root, name) if name.startswith(QR03_INPUT.rsplit('/', 1)[0] + '/') else _report_before_qr03(root, name)
+                                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery03-source/scripts/brain/m103_profile.py", line 78, in report
+    return report_quality_recovery02(root, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery03-source/scripts/brain/m103_profile.py", line 758, in report_quality_recovery02
+    value = m1_profile.report(root, name, task='M1-03', base=QR02_BASE,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-quality-recovery03-source/scripts/brain/m1_profile.py", line 92, in report
+    validator(root)
+  File "/root/onskin-quality-recovery03-source/scripts/brain/m103_profile.py", line 747, in validate_quality_recovery02
+    brain.require(actual_attributes == attributes + QR02_ATTRIBUTES,
+  File "/root/onskin-quality-recovery03-source/scripts/brain/brain.py", line 50, in require
+    raise ValueError(message)
+ValueError: QR02 attributes must freeze only R1 input and review
+
+----------------------------------------------------------------------
+Ran 1 test in 10.425s
+
+FAILED (errors=1)

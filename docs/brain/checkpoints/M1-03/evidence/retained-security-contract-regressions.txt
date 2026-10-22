@@ -1,0 +1,23 @@
+test_contract (unittest.loader._FailedTest) ... ERROR
+
+======================================================================
+ERROR: test_contract (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_contract
+Traceback (most recent call last):
+  File "C:\Python39\lib\unittest\loader.py", line 436, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "C:\Python39\lib\unittest\loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\scripts\phase9\security_acceptance\test_contract.py", line 9, in <module>
+    import history as h
+  File "C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\scripts\phase9\security_acceptance\history.py", line 189
+    if not isinstance(item, dict) or item.get('Secret') != 'REDACTED' or item.get('Commit') != '' or (not isinstance(item.get('File'), str)) or (type(item.get('StartLine')) is not int) or (type(item.get('EndLine')) is not int) or (not 0 < item['StartLine'] <= item['EndLine']) or (item.get('Fingerprint') != f'{item['File']}:{item['RuleID']}:{item['StartLine']}'):
+                                                                                                                                                                                                                                                                                                                             ^
+SyntaxError: f-string: unmatched '['
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

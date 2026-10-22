@@ -1,0 +1,14 @@
+# Root TXT handoff content
+
+TASK: M1-03 / OVERNIGHT-01
+STATUS: IN_PROGRESS / PARTIAL / BLOCKED / SUBMITTED_REVIEW_REQUIRED
+BRANCH / BASE / MEASURED HEAD+TREE / DELIVERY REF:
+WORKSTREAM A integration and committed publication:
+WORKSTREAM B actual candidate preparation/compatibility:
+WORKSTREAM C real coverage and findings/unresolved counts:
+WORKSTREAM D DB/CI custody and exact next prerequisite:
+ORIGINAL CI (not candidate admission):
+FRESH PUSHED-CLONE VERIFICATION:
+TOP BLOCKER / READY WORK REMAINING:
+CONTEXT HEALTH / COMPACTIONS / DIRTY-WORK CUSTODY:
+NO MAIN PROMOTION; NO G97 RENEWAL; NO M2; STOP FOR BRAIN REVIEW.

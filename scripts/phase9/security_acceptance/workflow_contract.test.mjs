@@ -48,13 +48,32 @@ const readFixture = name => JSON.parse(gunzipSync(readFileSync(new URL(name, imp
 const actualSbomExecution = readFixture('./legacy-sbom-fixture.json.gz');
 const actualAuditedSbom = actualSbomExecution.packet;
 const actualNpmAudit = actualSbomExecution.audit;
-const sbomLock = JSON.parse(readFileSync(new URL('../../../package-lock.json', import.meta.url)));
+import { createHash } from 'node:crypto';
+const historicalLockUrl = new URL('./fixtures/m103-pre-vite-package-lock.json.gz', import.meta.url);
+function historicalLock(read = readFileSync) {
+  const archive = read(historicalLockUrl);
+  assert.equal(createHash('sha256').update(archive).digest('hex'), '947de598d95a5093fe2a13fb5b0390ad3eb61124e4f44bb3aa180fdacbbf14d0');
+  const raw = gunzipSync(archive);
+  assert.equal(raw.length, 574165);
+  assert.equal(createHash('sha256').update(raw).digest('hex'), '474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223');
+  return JSON.parse(raw);
+}
+const sbomLock = historicalLock();
 const legacyPolicy = JSON.parse(readFileSync(new URL('../../../docs/phase-9/security-advisory-exceptions.json', import.meta.url)));
 const sbomInputs = () => ({ packet: structuredClone(actualAuditedSbom), audit: structuredClone(actualNpmAudit), lock: structuredClone(sbomLock), policy: structuredClone(legacyPolicy), auditExit: 1, sbomExit: 1, now: new Date(Date.parse(actualAuditedSbom.generatedAt) + 1000) });
 const rejectSbom = change => { const value = sbomInputs(); change(value); assert.throws(() => assertLegacyAuditedSbom(value)); };
 test('actual source-generated audited SBOM has only the two unchanged expired-policy refusals', () => {
   const result = assertLegacyAuditedSbom(sbomInputs());
   assert.equal(result.rawScannerPass, false); assert.equal(result.approval, false); assert.equal(result.expiredBlockers, 2);
+});
+
+test('historical SBOM rejects the current lock and missing/corrupt historical bytes', () => {
+  rejectSbom(v => v.lock = JSON.parse(readFileSync(new URL('../../../package-lock.json', import.meta.url))));
+  assert.throws(() => historicalLock(() => { throw new Error('missing fixture'); }));
+  assert.throws(() => historicalLock(() => Buffer.from('corrupt')));
+  const source = readFileSync(new URL('./workflow_contract.test.mjs', import.meta.url), 'utf8');
+  assert.equal(/(?:execFileSync|execSync|spawnSync)\s*\(/.test(source), false);
+  assert.deepEqual(historicalLock(), sbomLock);
 });
 test('original audited command, raw exit, packet capture and mandatory structural decision cannot be omitted', () => {
   reject(w => w.jobs['code-gates'].steps.find(s => s.id === 'dependency_sbom').env.PHASE9_RUN_NPM_AUDIT = 'false');
@@ -113,8 +132,23 @@ test('legacy fetch errors, newer releases, crashes, missing errors or invented s
 });
 
 test('Gitleaks actual executable identity remains a mandatory original-job artifact', () => {
-  reject(w => w.jobs['secret-scan'].steps = w.jobs['secret-scan'].steps.filter(s => s.name !== 'Bind actual Gitleaks executable'));
-  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Bind actual Gitleaks executable')['continue-on-error'] = true);
+  reject(w => w.jobs['secret-scan'].steps = w.jobs['secret-scan'].steps.filter(s => s.name !== 'Acquire exact original secret executables'));
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Acquire exact original secret executables')['continue-on-error'] = true);
+});
+
+test('complete history, current snapshot, exact acquisition and source/run proof cannot be omitted', () => {
+  for (const token of ['--tools', '--work', '--commit', '--run-id', '--source-ref']) {
+    reject(w => { const s=w.jobs['secret-scan'].steps.find(s => s.name === 'Scan complete local refs and exact committed current source'); s.run=s.run.replaceAll(token,'--omitted'); });
+  }
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Checkout').with['fetch-depth']=30);
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.id === 'trufflehog').run += ' --version latest');
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.id === 'gitleaks').run = 'true');
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Enforce secret scanner results').run = 'test "${G97_TRUFFLEHOG_OUTCOME}" = "success"');
+  reject(w => w.jobs['secret-scan'].steps.find(s => s.name === 'Scan complete local refs and exact committed current source').run += '\ntrue || true');
+  const helper=readFileSync(new URL('./secret_scan.py', import.meta.url),'utf8');
+  for (const pin of ['8.24.3','3.99.3','e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad','f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61']) assert.ok(helper.includes(pin));
+  const frozen=JSON.parse(readFileSync(new URL('./proposal.json', import.meta.url)));
+  assert.equal(frozen.toolBytes.trufflehog.includes('f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61'),false);
 });
 
 test('automated admission cannot omit exact commit/run or actual original outcomes', () => {

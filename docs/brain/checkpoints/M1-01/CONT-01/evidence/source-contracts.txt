@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: Metro watches both dependency targets, linked=false
+ok 1 - Metro watches both dependency targets, linked=false
+  ---
+  duration_ms: 2.3456
+  type: 'test'
+  ...
+# Subtest: Metro watches both dependency targets, linked=true
+ok 2 - Metro watches both dependency targets, linked=true
+  ---
+  duration_ms: 0.6046
+  type: 'test'
+  ...
+# Subtest: CORE01 local module inventory is exact and contains no binary or privacy manifest
+ok 3 - CORE01 local module inventory is exact and contains no binary or privacy manifest
+  ---
+  duration_ms: 4.7628
+  type: 'test'
+  ...
+# Subtest: CORE01 Expo registration is iOS-only and autolinks one first-party module
+ok 4 - CORE01 Expo registration is iOS-only and autolinks one first-party module
+  ---
+  duration_ms: 325.2931
+  type: 'test'
+  ...
+# Subtest: CORE01 native config declares the Apple age-range entitlement
+ok 5 - CORE01 native config declares the Apple age-range entitlement
+  ---
+  duration_ms: 0.4481
+  type: 'test'
+  ...
+# Subtest: CORE01 pod has no third-party or bundled executable dependency
+ok 6 - CORE01 pod has no third-party or bundled executable dependency
+  ---
+  duration_ms: 1.0956
+  type: 'test'
+  ...
+# Subtest: CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+ok 7 - CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+  ---
+  duration_ms: 0.9414
+  type: 'test'
+  ...
+# Subtest: CORE01 maps every known declaration and communication-limit control
+ok 8 - CORE01 maps every known declaration and communication-limit control
+  ---
+  duration_ms: 1.1805
+  type: 'test'
+  ...
+# Subtest: CORE01 native response is deterministic, request-bound, and contains no exact age
+ok 9 - CORE01 native response is deterministic, request-bound, and contains no exact age
+  ---
+  duration_ms: 1.4776
+  type: 'test'
+  ...
+# Subtest: CORE01 source performs no logging, networking, or persistence
+ok 10 - CORE01 source performs no logging, networking, or persistence
+  ---
+  duration_ms: 0.897
+  type: 'test'
+  ...
+# Subtest: CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+ok 11 - CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+  ---
+  duration_ms: 1.9267
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 425.451

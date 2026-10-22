@@ -1,0 +1,14 @@
+pack	b3eceee0cb8c4e0d5df4e6cecbe83a21268ba371
+{
+  "admission": "NONE",
+  "pack_sha256": "5391562b0faab1959d5849ecbc26d5fbe17c8f85a63d4efd9b8535ff1b89d4f4",
+  "pack_bytes": 255525372,
+  "original_witnesses": 3264,
+  "current_witnesses": 3265,
+  "verified_references": 112,
+  "verified_endpoints": 55,
+  "refs_unchanged_sha256": "9fa25b67cbdabb132ae5c293a3bc8144b58bec6db2beb5d856479161fee6d8eb",
+  "source": "/root/onskin-brain-custody-source-6c9c",
+  "pack": "/root/onskin-reconciliation-custody-66ba3219-20261022/complete-endpoints-recovered.pack",
+  "network": "NO_LAZY_FETCH; authentic local pack only"
+}

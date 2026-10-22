@@ -1,6 +1,10 @@
 # Normalize line endings to LF across platforms.
 * text=auto eol=lf
 
+# Preserve independently issued M1-03 inputs, acceptance and raw receipts.
+docs/brain/checkpoints/M1-03/** -text
+docs/brain/reviews/M1-02/ACCEPTANCE/** -text
+
 # Binary assets — never normalize.
 *.png binary
 *.jpg binary
@@ -11,3 +15,57 @@
 *.jks binary
 *.ttf binary
 *.otf binary
+
+# Exact issued inputs and hashed raw Windows observations for this continuation.
+docs/brain/checkpoints/M1-01/CONT-01/** -text
+
+# Exact CONT-02 issuance, review and raw observations.
+docs/brain/checkpoints/M1-01/CONT-02/** -text
+docs/brain/reviews/M1-01/REVIEW-02/** -text
+
+# Exact CONT-03 issuance, review and raw observations.
+docs/brain/checkpoints/M1-01/CONT-03/** -text
+docs/brain/reviews/M1-01/REVIEW-03/** -text
+
+# Exact M1-02 issuance, accepted successor and raw execution bytes.
+docs/brain/checkpoints/M1-02/** -text
+docs/brain/reviews/M1-01/ACCEPTANCE/** -text
+
+# Exact independent M1-02 continuation review.
+docs/brain/reviews/M1-02/REVIEW-01/** -text
+
+# Exact M1-03 CONT-01 issuance and independent review.
+docs/brain/checkpoints/M1-03/CONT-01/** -text
+docs/brain/reviews/M1-03/REVIEW-01/** -text
+
+# Exact OVERNIGHT-01 independent authority.
+docs/brain/reviews/M1-03/OVERNIGHT-AUTHORIZATION/** -text
+
+# Exact SECURITY-HARDEN-01 issuance and immutable Brain review.
+docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/** -text
+docs/brain/reviews/M1-03/OVERNIGHT-REVIEW01/** -text
+
+# Exact SOURCE-CLOSURE-01 independent review bytes.
+docs/brain/reviews/M1-03/SH01-REVIEW01/** -text
+
+# Immutable SOURCE-CLOSURE-02 Brain review input.
+docs/brain/reviews/M1-03/SC01-REVIEW01/** -text
+
+# Immutable SC03 recovery Brain input.
+docs/brain/reviews/M1-03/SC02-REVIEW01/** -text
+
+# Immutable QUALITY-RECOVERY-01 issuance and independent SC03 review.
+docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/** -text
+docs/brain/reviews/M1-03/SC03-REVIEW01/** -text
+
+# Immutable QUALITY-RECOVERY-02 R1 issuance and independent QR01 review.
+docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/inputs/** -text
+docs/brain/reviews/M1-03/QR01-REVIEW01/** -text
+
+# Immutable QUALITY-RECOVERY-03 issuance and independent QR02 review.
+docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/inputs/** -text
+docs/brain/reviews/M1-03/QR02-REVIEW01/** -text
+
+# Immutable GOVERNANCE-FIXTURE-01 issuance and independent QR03 review.
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/inputs/** -text
+docs/brain/reviews/M1-03/QR03-REVIEW01/** -text

@@ -1,0 +1,27 @@
+test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips (test_cloud_history_custody.CloudHistory.test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips) ... ERROR
+
+======================================================================
+ERROR: test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips (test_cloud_history_custody.CloudHistory.test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/onSkin/scripts/security_readiness/m103/test_cloud_history_custody.py", line 73, in test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips
+    self.hydrate(object_source=SOURCE)
+  File "/workspace/onSkin/scripts/security_readiness/m103/test_cloud_history_custody.py", line 68, in hydrate
+    hydrate_history.hydrate(self.repo, self.output, self.receipt, **kwargs)
+  File "/workspace/sc03-runtime-recovery/original_hydrate_history.py", line 31, in hydrate
+    raw = git('cat-file', 'blob', key)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/sc03-runtime-recovery/original_hydrate_history.py", line 16, in git
+    return subprocess.check_output(['git', '-C', str(repo), *args], env=env, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-C', '/tmp/sc03-real-history-0eztil6q/tmps4uxgiqd/repo', 'cat-file', 'blob', 'f1e9a970bbceb803271c8bca41e3a090f93ceefe:scripts/phase2/staging-deployment-evidence-lib.mjs']' returned non-zero exit status 128.
+
+----------------------------------------------------------------------
+Ran 1 test in 11.969s
+
+FAILED (errors=1)

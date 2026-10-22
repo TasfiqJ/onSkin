@@ -1,0 +1,7 @@
+test_anchors_authority_types_and_separate_intervals (test_m103_overnight01_profile.Overnight) ... ok
+test_committed_regular_artifacts_and_identical_local_only_refusal (test_m103_overnight01_profile.Overnight) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 114.730s
+
+OK

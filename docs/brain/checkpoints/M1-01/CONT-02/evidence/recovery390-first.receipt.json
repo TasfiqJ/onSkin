@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node scripts/e2e/onboarding-first-session.mjs --account-isolation",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "f4f5345aebaf7f0d49b1427b2f91d81d9960f783",
+  "source_tree": "b4500ff0b0b022181e166023924618463afb4b26",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/recovery390-first.txt",
+    "sha256": "44b8c2282042a7ff3749741038dbc5a72926259351aa5762c93275e8cfc6eba1"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T17:05:58.224557+00:00",
+  "finished_at_utc": "2026-10-20T17:07:12.231144+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--account-isolation"
+  ]
+}

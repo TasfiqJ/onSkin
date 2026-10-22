@@ -1,0 +1,17 @@
+{
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "head_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+  "run_id": 39370706322,
+  "job_id": 118457832604,
+  "job_conclusion": "failure",
+  "scope": "Original completed job log allowlisted sanitized excerpts; full workflow may still be running",
+  "excerpts": [
+    "2026-10-20T04:40:52.8667078Z # tests 171",
+    "2026-10-20T04:40:52.8667737Z # pass 171",
+    "2026-10-20T04:40:55.3143475Z       throw new Error(`H01_SQL_PROBE_FAILED: ${error.originReason}. ${error.diagnostic ?? ''}`, {",
+    "2026-10-20T04:40:55.3144847Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+    "2026-10-20T04:40:55.3155133Z     diagnostic: 'Error response from daemon: toomanyrequests: Data limit exceeded'",
+    "2026-10-20T04:40:55.3357986Z ##[error]Process completed with exit code 1.",
+    "2026-10-20T04:40:55.5288068Z No files were found with the provided path: /home/runner/work/_temp/db05-generated-public-types.ts. No artifacts will be uploaded."
+  ]
+}

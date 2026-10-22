@@ -1,0 +1,51 @@
+
+> @layerwell/mobile@0.1.0 web
+> expo start --web --port 8363 --host localhost
+
+[33m› [1m[@sentry/react-native/expo][22m Missing config for [1morganization, project[22m. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/[0m
+Starting project at C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8363
+
+Logs for your project will appear below.
+λ Bundled 3302ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (2623 modules)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 4092ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (2559 modules)
+λ Bundled 85ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\@expo\router-server\node\render.js (1 module)
+[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web Bundled 462ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (1 module)
+Web Bundled 813ms ..\..\..\..\..\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage\node_modules\expo-router\entry.js (2513 modules)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
+Web  WARN  props.pointerEvents is deprecated. Use style.pointerEvents
+Web Bundled 238ms apps\mobile\src\features\notifications\NotificationPreferenceScheduleReconciler.tsx (305 modules)
+Web  WARN  [auth] local account isolation failed during session transition {"kind": "error", "name": "Error"}
+Web  ERROR  [Error: EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE] 
+
+Code: AuthProvider.tsx
+[0m [90m 2308 |[39m         setSessionBoundaryError([36mtrue[39m)[33m;[39m
+ [90m 2309 |[39m         [36mthrow[39m [36mnew[39m [33mError[39m([32m'EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE'[39m)[33m;[39m
+[31m[1m>[22m[39m[90m 2310 |[39m       }
+ [90m      |[39m       [31m[1m^[22m[39m
+ [90m 2311 |[39m
+ [90m 2312 |[39m       [36mif[39m (isSupabaseConfigured [33m&&[39m [33m![39maccountIsolationE2EFixture) {
+ [90m 2313 |[39m         [36mtry[39m {[0m
+Call Stack
+  completeExplicitSignOut (apps\mobile\src\lib\auth\AuthProvider.tsx:2310:7)
+Could not open editor.
+You can set an editor for Expo to open by defining the $EXPO_EDITOR or $VISUAL environment variable (e.g. "vscode" or "atom")

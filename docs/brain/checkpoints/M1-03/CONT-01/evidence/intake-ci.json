@@ -1,0 +1,74 @@
+{
+  "pr": {
+    "url": "https://github.com/TasfiqJ/onSkin/pull/9",
+    "number": 9,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "M1-03 repairs the inherited CORE05 source contract after independently proving the unchanged frozen 97-migration history through 20261010000081. The ordinary JavaScript test now checks the actual history assertions and retains server-owned/consent/export protections; 14 negative fixtures and one description-only case bring selected contracts to 164 passes. The independently anchored M1-03 lifecycle preserves all historical reports, 47 tasks, 27 modules, 14 worklist meanings and 414 fingerprints.\n\n[Exact delivery review packet](https://github.com/TasfiqJ/onSkin/tree/c14a3105640034a9d7a47d34533f9bd40faa4cc4/docs/brain/checkpoints/M1-03) contains the strict report, 27 execution receipts, 177 bound artifact hashes, original CI/scanner outputs, DB06/DB08/R2B/Security custody matrix, seven-advisory exposure map, inert remedies and one pending content/privacy/native/provider packet plus one consolidated owner-action packet. Delivery c14a3105640034a9d7a47d34533f9bd40faa4cc4; measured report snapshot ec74d4044991ba1a6887b765dd04ca36f7cb8894. Independent issuance digest e580ae55c3aa97fe18a8b4e8782b1887ee503b3fec88df0034aa82cc2edee95f verified.\n\nValidation: selected contracts164/0; governance56 passes plus2 genuine Windows skips; forced typecheck/lint passed with0 cached tasks; DB source guards171 passes; existing mitigation20 and exception7 passes. One guarded disposable canonical DB verifier completed exit0 with both resets, frozen history, structural SQL, lint, empty drift, CAT08, exact7381-line type parity and awaited cleanup. Independent read-only queries found no owned containers/volumes or sandbox. This is local source evidence only.\n\nThe baseline remains red: fresh root6066 passes/1 observer-publication timing failure, with a different focused9/1 failure retained; disposable controls/candidate10/10 do not change active notification source. Windows Security diagnostics preserve Python3.9 import failure and the Python3.12 result70 cases/51 top-level OK/19 nonpassing (21 failure entries/8 errors including subtests,0 skips). Original supported Linux70-test evidence remains separate. Security investigation distinguishes source/SAST inventory refusal, real advisory records, mixed-severity classification, expired reviews, Gitleaks first30-commit truncation and floating TruffleHog latest/3.99.3 provenance. Every protected/dependency/tool/workflow remedy remains an unauthorized proposal; no replacement scanner was executed.\n\nOriginal accepted-head Quality39506203149 genuinely succeeded, including canonical DB118915844992; Security39506203186 failed; iOS39506203634 passed source-only. Later actual runs and their exact PR checkout bindings are recorded with finite observation times; final-delivery runs are refreshed at closeout, with pending/cancelled never treated as green.\n\nSUBMITTED_REVIEW_REQUIRED. M1-02 is accepted only for retained client/local continuity; M1-03 cannot accept itself. DB06 still refuses, DB08 linked parity is missing and R2B issuer/receipt remains unknown. Native/provider/paid-positive/qualified/clinical/research/commercial/release axes remain closed; retained undo is unavailable and ADR038 corrections remain due in M2-01/M2-02. PR9 stays draft/unmerged. All503 protected paths, main/M0/PR8, other worktrees and shared dependency payloads are preserved. No SQL/types/Edge, policy/scanner/inventory/pin/exception/date, dependency/lock/toolchain/workflow changes, registry authentication, spend, real provider mutation, signing/deployment/release or main promotion. Original expiry2026-10-21T00:00:00Z is unchanged.",
+    "title": "M1-03: reconcile retained history and baseline custody",
+    "base": "main",
+    "base_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "head": "stage/m1-retained-safety",
+    "head_sha": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "head_repo_id": 1267954179,
+    "head_repo_full_name": "TasfiqJ/onSkin",
+    "merge_commit_sha": "d36d00677be4536a0dc190fa64e1055f6bd307ec",
+    "user": {
+      "login": "TasfiqJ",
+      "name": "TasfiqJ",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/73043409?v=4",
+      "id": 73043409
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-20T14:01:17Z",
+    "updated_at": "2026-10-20T23:50:00Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 86,
+    "changed_files": 5982,
+    "additions": 896357,
+    "deletions": 525,
+    "display_url": "https://github.com/TasfiqJ/onSkin/pull/9",
+    "display_title": "M1-03: reconcile retained history and baseline custody"
+  },
+  "runs": {
+    "workflow_runs": [
+      {
+        "id": 39517479335,
+        "name": "iOS launch contract",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 369,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479335/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479335/logs",
+        "workflow_id": 312030667
+      },
+      {
+        "id": 39517479326,
+        "name": "Security",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_number": 901,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479326/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479326/logs",
+        "workflow_id": 308213475
+      },
+      {
+        "id": 39517479330,
+        "name": "Quality",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 369,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479330/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479330/logs",
+        "workflow_id": 312030668
+      }
+    ]
+  }
+}

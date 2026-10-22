@@ -1,0 +1,43 @@
+{
+  "kind": "CODEX_LOCAL_GIT_OBSERVATION",
+  "recorded_at_utc": "2026-10-20T16:20:20.653985+00:00",
+  "measured": {
+    "commit": "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+    "tree": "cb99e875b03fb364979a38197d37e24ec3d9e2e4"
+  },
+  "broad_tested": {
+    "commit": "1155128a71e0d2d91a38b85a0402f92c2970a70e",
+    "tree": "6d0c1bd36cbd17821f729273b1db62e9a300acee"
+  },
+  "runtime_comparison_command": [
+    "git",
+    "diff",
+    "--name-only",
+    "1155128a71e0d2d91a38b85a0402f92c2970a70e",
+    "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+    "--",
+    "apps",
+    "scripts/brain",
+    "scripts/core01/metro-linked-dependencies.test.cjs"
+  ],
+  "runtime_comparison_exit": 0,
+  "runtime_changed_paths": [],
+  "protected_comparison_base": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+  "protected_paths": [
+    ".github",
+    "package.json",
+    "package-lock.json",
+    "apps/mobile/package.json",
+    "supabase",
+    "scripts/phase9",
+    "docs/phase-9",
+    "docs/brain/state",
+    "docs/brain/checkpoints/M0-02",
+    "docs/brain/reviews/M0-02",
+    "docs/brain/checkpoints/M1-01/inputs",
+    "docs/brain/checkpoints/M1-01/completion-report.json",
+    "PROGRESS.md"
+  ],
+  "protected_changed_paths": [],
+  "limits": "Local source conservation and receipt attribution only; no Brain acceptance, native or provider proof."
+}

@@ -1,0 +1,7 @@
+{
+  "task_id": "M0-02",
+  "files": 49,
+  "input_bytes": 860347,
+  "archive_bytes": 876597,
+  "sha256": "b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547"
+}

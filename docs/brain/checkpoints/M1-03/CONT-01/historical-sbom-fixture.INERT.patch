@@ -1,0 +1,22 @@
+INERT EXACT PROPOSAL — NOT APPLIED. Requires new Brain source permission for this unrelated test purpose.
+Current file SHA256 is recorded in source custody.
+
+--- a/scripts/phase9/security_acceptance/workflow_contract.test.mjs
++++ b/scripts/phase9/security_acceptance/workflow_contract.test.mjs
+@@ -2,6 +2,7 @@
+ import { readFileSync } from 'node:fs';
+ import { test } from 'node:test';
+ import YAML from 'yaml';
++import { execFileSync } from 'node:child_process';
+ import { validateWorkflowAdmission } from './workflow_contract.mjs';
+ const text = readFileSync(new URL('../../../.github/workflows/security.yml', import.meta.url), 'utf8');
+ const original = YAML.parse(text);
+@@ -48,7 +49,7 @@
+ const actualSbomExecution = readFixture('./legacy-sbom-fixture.json.gz');
+ const actualAuditedSbom = actualSbomExecution.packet;
+ const actualNpmAudit = actualSbomExecution.audit;
+-const sbomLock = JSON.parse(readFileSync(new URL('../../../package-lock.json', import.meta.url)));
++const sbomLock = JSON.parse(execFileSync('git', ['show', 'c14a3105640034a9d7a47d34533f9bd40faa4cc4:package-lock.json'], { cwd: new URL('../../../', import.meta.url), encoding: 'utf8' }));
+ const legacyPolicy = JSON.parse(readFileSync(new URL('../../../docs/phase-9/security-advisory-exceptions.json', import.meta.url)));
+ const sbomInputs = () => ({ packet: structuredClone(actualAuditedSbom), audit: structuredClone(actualNpmAudit), lock: structuredClone(sbomLock), policy: structuredClone(legacyPolicy), auditExit: 1, sbomExit: 1, now: new Date(Date.parse(actualAuditedSbom.generatedAt) + 1000) });
+ const rejectSbom = change => { const value = sbomInputs(); change(value); assert.throws(() => assertLegacyAuditedSbom(value)); };

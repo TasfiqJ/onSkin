@@ -1,0 +1,6 @@
+# Brain delta — M1-01 REVIEW-02
+Review `6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a` / `7105fceff7fbaa0190ea0813471adac0a0b7d066`: **FIX_REQUIRED**, not completed M1 or main promotion.
+Independent Windows root6001/typecheck/lint passed, focused225 overlap, source11 and governance42+2 genuine skips. Real retained390 flow passed; actual sign-out cleanup recovery failed with an Expo uncaught-error overlay. Verify record hashes in REVIEW_OBSERVATIONS.json; raw logs remain indexed on the owner's device.
+Resolve the prior exact-head startup/report/worklist findings at their stated evidence scopes; keep the integrated recovery matrix open. Preserve newly working local age-closed rights access while completing error-boundary/owner recovery. Issue only CONT-02, not another roadmap task.
+Final Quality source gates/export jobs passed but DB failed ECR acquisition before SQL. Security failed inventory and raw OSV refusals. This reopens the observed ECR CI failure; it does not renew/waive anything. Proposal notAfter remains2026-10-21T00:00:00Z.
+ADR-032 grants ordinary caller/recovery/harness closure within M1 and requires the high-context/compacted predecessor to yield. No vendor spend, schema, protected source GO, release or main permission.

@@ -311,6 +311,20 @@ describe('G2 routine reorder editor behavior', () => {
     assert.deepEqual(mocks.invalidateQueries.mock.calls[0]![0], { queryKey: expectedKey, exact: true });
   });
 
+  it('a stale same-phase conflict keeps the draft and requires reopening the current saved order', async () => {
+    mocks.save.mockRejectedValueOnce(new Error('ROUTINE_ORDER_CONFLICT'));
+    await mount();
+    await reverseAM();
+    await press('Save');
+    assert.deepEqual(visibleOrder(), ['b', 'a']);
+    assert.ok(renderer!.root.findAll((node) => node.type === 'Pressable' && node.props.disabled === true).length > 0);
+    assert.equal(button('Save').props.disabled, true);
+    assert.equal(mocks.save.mock.calls.length, 1);
+    noSuccess();
+    await press('Cancel');
+    assert.equal(mocks.back.mock.calls.length, 1);
+  });
+
   it('a failed recovery read neither saves nor discards an existing draft', async () => {
     mocks.save.mockRejectedValueOnce(new Error('WRITE_FAILED'));
     mocks.refetchQueries.mockRejectedValueOnce(new Error('READ_FAILED'));

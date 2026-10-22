@@ -1,0 +1,71 @@
+{
+  "state_version": "brain-m1-02-partial-reviewed-cont01-issued-10",
+  "files": [
+    {
+      "path": "ACCEPTANCE_LEDGER.json",
+      "bytes": 15823,
+      "sha256": "535a521c80d8a922894ef76d5aafc6ef7b549a6c77be9726503358e2e4dbfe7a"
+    },
+    {
+      "path": "ACCEPTANCE_SCOPE.md",
+      "bytes": 551,
+      "sha256": "642cbb89cecdbdb2dca2190b5f29930b13946d9df8acda654a0b7df3903f5dc6"
+    },
+    {
+      "path": "ADR_REGISTRY.json",
+      "bytes": 20996,
+      "sha256": "f18986844f9e6fdd721207891ca6c98183b3a425be79e797a801cf556016fb63"
+    },
+    {
+      "path": "AUDIT_M1-02_REVIEW01.md",
+      "bytes": 9114,
+      "sha256": "4f5799bef4c64d871894118d27311e4b2f341a565de8c8289ece97a5244f391a"
+    },
+    {
+      "path": "BLOCKERS.json",
+      "bytes": 32192,
+      "sha256": "275517deff6e2d8b3e9a1ac822d06915f537c6112da3781ad0a20197350bd2ca"
+    },
+    {
+      "path": "BLOCKERS.md",
+      "bytes": 860,
+      "sha256": "40e8b3b4bd6f3ca67b8fc9dcf18e86003ae2edaaaed9df3b90e8497e892b28f6"
+    },
+    {
+      "path": "BRAIN_RESUME_PROMPT.md",
+      "bytes": 1500,
+      "sha256": "d7b83ce31b91149039d612dba7bbf036853dd5f035c4eccf994c7707b624c797"
+    },
+    {
+      "path": "CI_OBSERVATIONS.md",
+      "bytes": 2429,
+      "sha256": "863feb32ed46675983ecd1de733654f07699a70eee0bd0845abdee2cd78e731f"
+    },
+    {
+      "path": "DECISIONS_DELTA.md",
+      "bytes": 1616,
+      "sha256": "fa07a749f1439f80aecfadb053a7cba2ab0455ddc1d08fdb76a042bcbf086dd9"
+    },
+    {
+      "path": "REVIEW_OBSERVATIONS.md",
+      "bytes": 7234,
+      "sha256": "a5aef12368b91bb65a1b3ca7e628c6d62877208f77a015f6db7272a2a1baced9"
+    },
+    {
+      "path": "STATE_AT_GLANCE.md",
+      "bytes": 1055,
+      "sha256": "df100c85ee839e9ce64a5847f61f2133f6a088cda32574b32c9706e7cd4d360f"
+    },
+    {
+      "path": "brain_state.json",
+      "bytes": 46628,
+      "sha256": "7aca9861787da7c8f9980c067844e0e0d06f5a2f5e16ca058824b4d26c6951a0"
+    },
+    {
+      "path": "roadmap.json",
+      "bytes": 48645,
+      "sha256": "679787c75c60de6d6cdb46f72ea4d430a4957958ba035224d5a9bf2638fd0431"
+    }
+  ],
+  "limitations": "Identity index, not independent validation or release admission. No recursive self-hash."
+}

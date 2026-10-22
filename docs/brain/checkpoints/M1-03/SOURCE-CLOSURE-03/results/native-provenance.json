@@ -1,0 +1,90 @@
+[
+  {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so",
+    "is_symlink": false,
+    "resolved": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so",
+    "commands": [
+      {
+        "argv": [
+          "readelf",
+          "-d",
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so"
+        ],
+        "exit": 0,
+        "stdout": "\nDynamic section at offset 0xe828 contains 31 entries:\n  Tag        Type                         Name/Value\n 0x0000000000000001 (NEEDED)             Shared library: [libtcl9tk9.0.so]\n 0x0000000000000001 (NEEDED)             Shared library: [libpthread.so.0]\n 0x0000000000000001 (NEEDED)             Shared library: [libtcl9.0.so]\n 0x0000000000000001 (NEEDED)             Shared library: [libdl.so.2]\n 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]\n 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]\n 0x000000000000000c (INIT)               0x4000\n 0x000000000000000d (FINI)               0xb548\n 0x0000000000000019 (INIT_ARRAY)         0xe818\n 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)\n 0x000000000000001a (FINI_ARRAY)         0xe820\n 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)\n 0x000000006ffffef5 (GNU_HASH)           0x260\n 0x0000000000000005 (STRTAB)             0x13b8\n 0x0000000000000006 (SYMTAB)             0x290\n 0x000000000000000a (STRSZ)              3176 (bytes)\n 0x000000000000000b (SYMENT)             24 (bytes)\n 0x0000000000000003 (PLTGOT)             0xea58\n 0x0000000000000002 (PLTRELSZ)           3792 (bytes)\n 0x0000000000000014 (PLTREL)             RELA\n 0x0000000000000017 (JMPREL)             0x3040\n 0x0000000000000007 (RELA)               0x21d0\n 0x0000000000000008 (RELASZ)             3696 (bytes)\n 0x0000000000000009 (RELAENT)            24 (bytes)\n 0x0000000000000018 (BIND_NOW)           \n 0x000000006ffffffb (FLAGS_1)            Flags: NOW\n 0x000000006ffffffe (VERNEED)            0x2190\n 0x000000006fffffff (VERNEEDNUM)         2\n 0x000000006ffffff0 (VERSYM)             0x2020\n 0x000000006ffffff9 (RELACOUNT)          133\n 0x0000000000000000 (NULL)               0x0\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "dpkg",
+          "-S",
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "dpkg-query: no path found matching pattern /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so\n"
+      }
+    ]
+  },
+  {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libcasadi_linsol_ma27.so",
+    "is_symlink": false,
+    "resolved": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libcasadi_linsol_ma27.so",
+    "commands": [
+      {
+        "argv": [
+          "readelf",
+          "-d",
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libcasadi_linsol_ma27.so"
+        ],
+        "exit": 0,
+        "stdout": "\nDynamic section at offset 0x10070 contains 33 entries:\n  Tag        Type                         Name/Value\n 0x000000000000000f (RPATH)              Library rpath: [$ORIGIN:$ORIGIN/.]\n 0x0000000000000001 (NEEDED)             Shared library: [libcasadi.so.3.7]\n 0x0000000000000001 (NEEDED)             Shared library: [libhsl.so]\n 0x0000000000000001 (NEEDED)             Shared library: [libdl.so.2]\n 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]\n 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]\n 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]\n 0x0000000000000001 (NEEDED)             Shared library: [libpthread.so.0]\n 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]\n 0x000000000000000e (SONAME)             Library soname: [libcasadi_linsol_ma27.so.3.7]\n 0x000000000000000c (INIT)               0x3000\n 0x000000000000000d (FINI)               0x8200\n 0x0000000000000019 (INIT_ARRAY)         0xbb98\n 0x000000000000001b (INIT_ARRAYSZ)       24 (bytes)\n 0x000000000000001a (FINI_ARRAY)         0xbbb0\n 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)\n 0x000000006ffffef5 (GNU_HASH)           0xd028\n 0x0000000000000005 (STRTAB)             0xd110\n 0x0000000000000006 (SYMTAB)             0x348\n 0x000000000000000a (STRSZ)              3936 (bytes)\n 0x000000000000000b (SYMENT)             24 (bytes)\n 0x0000000000000003 (PLTGOT)             0xc000\n 0x0000000000000002 (PLTRELSZ)           1632 (bytes)\n 0x0000000000000014 (PLTREL)             RELA\n 0x0000000000000017 (JMPREL)             0x2550\n 0x0000000000000007 (RELA)               0x1f38\n 0x0000000000000008 (RELASZ)             1560 (bytes)\n 0x0000000000000009 (RELAENT)            24 (bytes)\n 0x000000006ffffffe (VERNEED)            0x1e78\n 0x000000006fffffff (VERNEEDNUM)         4\n 0x000000006ffffff0 (VERSYM)             0x1d8e\n 0x000000006ffffff9 (RELACOUNT)          18\n 0x0000000000000000 (NULL)               0x0\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "dpkg",
+          "-S",
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libcasadi_linsol_ma27.so"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "dpkg-query: no path found matching pattern /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libcasadi_linsol_ma27.so\n"
+      }
+    ]
+  },
+  {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libgfortran-040039e1.so.5.0.0",
+    "is_symlink": false,
+    "resolved": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libgfortran-040039e1.so.5.0.0",
+    "commands": [
+      {
+        "argv": [
+          "readelf",
+          "-d",
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libgfortran-040039e1.so.5.0.0"
+        ],
+        "exit": 0,
+        "stdout": "\nDynamic section at offset 0x275d78 contains 31 entries:\n  Tag        Type                         Name/Value\n 0x0000000000000001 (NEEDED)             Shared library: [libquadmath-96973f99.so.0.0.0]\n 0x0000000000000001 (NEEDED)             Shared library: [libz.so.1]\n 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]\n 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]\n 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]\n 0x000000000000000e (SONAME)             Library soname: [libgfortran-040039e1.so.5.0.0]\n 0x000000000000000c (INIT)               0x19a88\n 0x000000000000000d (FINI)               0x246838\n 0x0000000000000019 (INIT_ARRAY)         0x475310\n 0x000000000000001b (INIT_ARRAYSZ)       24 (bytes)\n 0x000000000000001a (FINI_ARRAY)         0x475328\n 0x000000000000001c (FINI_ARRAYSZ)       24 (bytes)\n 0x000000006ffffef5 (GNU_HASH)           0x478028\n 0x0000000000000005 (STRTAB)             0x484000\n 0x0000000000000006 (SYMTAB)             0x2b68\n 0x000000000000000a (STRSZ)              35947 (bytes)\n 0x000000000000000b (SYMENT)             24 (bytes)\n 0x0000000000000003 (PLTGOT)             0x476000\n 0x0000000000000002 (PLTRELSZ)           11400 (bytes)\n 0x0000000000000014 (PLTREL)             RELA\n 0x0000000000000017 (JMPREL)             0x16e00\n 0x0000000000000007 (RELA)               0x15d68\n 0x0000000000000008 (RELASZ)             4248 (bytes)\n 0x0000000000000009 (RELAENT)            24 (bytes)\n 0x000000006ffffffc (VERDEF)             0x15bd8\n 0x000000006ffffffd (VERDEFNUM)          4\n 0x000000006ffffffe (VERNEED)            0x15c48\n 0x000000006fffffff (VERNEEDNUM)         4\n 0x000000006ffffff0 (VERSYM)             0x14f30\n 0x000000006ffffff9 (RELACOUNT)          165\n 0x0000000000000000 (NULL)               0x0\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "dpkg",
+          "-S",
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libgfortran-040039e1.so.5.0.0"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "dpkg-query: no path found matching pattern /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/casadi/libgfortran-040039e1.so.5.0.0\n"
+      }
+    ]
+  },
+  {
+    "ldconfig_exit": 0,
+    "relevant_lines": [
+      "\tlibtcl8.6.so (libc6,x86-64) => /lib/x86_64-linux-gnu/libtcl8.6.so",
+      "\tlibquadmath.so.0 (libc6,x86-64) => /lib/x86_64-linux-gnu/libquadmath.so.0"
+    ]
+  }
+]

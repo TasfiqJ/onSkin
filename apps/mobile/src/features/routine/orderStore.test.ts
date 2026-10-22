@@ -312,6 +312,19 @@ describe('routine order persistence', () => {
     });
   });
 
+  it('rejects a stale changed phase without overwriting a newer order, but accepts exact retries', async () => {
+    const first = { schemaVersion: 1 as const, am: ['cleanser', 'serum'], pm: [] };
+    await saveOverrides(first);
+    const committed = mocks.storage.get(KEY);
+    await expect(saveOverrides({ ...first, am: ['serum', 'cleanser'] }, EMPTY_OVERRIDES))
+      .rejects.toThrow('ROUTINE_ORDER_CONFLICT');
+    expect(mocks.storage.get(KEY)).toBe(committed);
+    await expect(saveOverrides(first, EMPTY_OVERRIDES)).resolves.toEqual(first);
+    const latest = await loadRoutineOrderOverrides();
+    await expect(saveOverrides({ ...latest, am: ['serum', 'cleanser'] }, latest))
+      .resolves.toMatchObject({ am: ['serum', 'cleanser'] });
+  });
+
   it('merges concurrent independent AM and PM edits against the latest serialized value', async () => {
     const previous = { ...EMPTY_OVERRIDES };
 

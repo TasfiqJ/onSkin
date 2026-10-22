@@ -1,0 +1,32 @@
+{
+  "source_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+  "test_scope": "Full real M1 report CLI in disposable governance/Git fixtures; real source and refs untouched. Positive control passed first.",
+  "cases": [
+    {
+      "id": "M1-GOV-POSITIVE",
+      "change": "Original submitted report unchanged",
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "id": "M1-GOV-EMPTY",
+      "change": "executions=[]; artifacts=[]; axes.source=PASS; axes.surface=PASS",
+      "expected": "reject unsupported success",
+      "actual_exit": 0
+    },
+    {
+      "id": "M1-GOV-ORDER",
+      "change": "Declared measured=6aa accepted base while execution receipts remain newer71f",
+      "expected": "reject tests newer than measurement",
+      "actual_exit": 0
+    },
+    {
+      "id": "M1-GOV-DRIFT",
+      "change": "Original report unchanged; add synthetic unmeasured source comment to fixture apps/mobile/src/features/onboarding/ageGate.ts",
+      "expected": "reject implementation different from measured snapshot",
+      "actual_exit": 0
+    }
+  ],
+  "stdout_on_all_cases": "PASS: M1 issued profile; evidence binding is not independent acceptance",
+  "meaning": "Validator defects; not evidence that the actual Codex PARTIAL report was fabricated."
+}

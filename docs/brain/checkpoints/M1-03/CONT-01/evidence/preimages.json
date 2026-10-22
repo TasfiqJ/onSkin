@@ -1,0 +1,68 @@
+[
+  {
+    "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+    "bytes": 12733,
+    "sha256": "b00042e9dea1a0cf9781cb2beae104324fe69d51c296fb45ea2eaaa7132da729",
+    "matches": true
+  },
+  {
+    "path": "apps/catalog-operator-console/package.json",
+    "bytes": 539,
+    "sha256": "8080c0c75e699c27e2dd48197b49a52dea74e1d8c04024cec3dfe0bd67012ed5",
+    "matches": true
+  },
+  {
+    "path": "package-lock.json",
+    "bytes": 574165,
+    "sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+    "matches": true
+  },
+  {
+    "path": "scripts/phase9/security-advisory-exceptions.mjs",
+    "bytes": 11055,
+    "sha256": "543e6c07e390d0375b808e9d5eafdceb620126441f23b8939eff83eca30d1f80",
+    "matches": true
+  },
+  {
+    "path": "scripts/phase9/security-advisory-exceptions.test.mjs",
+    "bytes": 6925,
+    "sha256": "7b3c47d5024be8c31149296c8b149b8008e41caae3c88e3e24275b0fee69dec2",
+    "matches": true
+  },
+  {
+    "path": ".github/workflows/security.yml",
+    "bytes": 28425,
+    "sha256": "20c98df5976fcdd782f5cf0f695fe2386afbf47253aef02d808bf3e5e5cacf09",
+    "matches": true
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+    "bytes": 16845,
+    "sha256": "789b374f7cd469d4735f5deabdaab062a977b62d87587a784fbaf992cecb1ed8",
+    "matches": true
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+    "bytes": 13854,
+    "sha256": "cebc3867c3235d1d36683da4b8568e128718f1e68987133b113411110c27d07f",
+    "matches": true
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+    "bytes": 12870,
+    "sha256": "7b38564e16a605e9c263b6fa6cee51f15f9498c079ad46787b099e41acef8b30",
+    "matches": true
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/test_contract.py",
+    "bytes": 47953,
+    "sha256": "b4539e7ec87ea7e81be5c47e1076f56f4e4e520c39295ff1b5165bdf72af4a08",
+    "matches": true
+  },
+  {
+    "path": "scripts/brain/m103_profile.py",
+    "bytes": 3967,
+    "sha256": "2c90c930463b701270c94981f1939e9993a6cd531b7ae9a5c1a31a5b8600df45",
+    "matches": true
+  }
+]

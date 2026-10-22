@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "purpose": "Historical M0/M1 artifacts remain in place at exact accepted Git identities. No copied historical artifact bulk or borrowed current-head PASS.",
+  "references": [
+    {
+      "commit": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/completion-report.json",
+      "sha256": "d2d6acd2d56fb7ef916976e50b62d90552b036d953c8fb52031be38c466b5fd2",
+      "bytes": 239601,
+      "unchanged_at_measured": true
+    },
+    {
+      "commit": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/historical-references.json",
+      "sha256": "7416121096fb755ea7040aa2f535c4c60c356dc96bbcbdcb23418823f7d51b1c",
+      "bytes": 8421,
+      "unchanged_at_measured": true
+    },
+    {
+      "commit": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "path": "docs/brain/checkpoints/M1-01/CONT-03/README.md",
+      "sha256": "a70c6176643d561912b34bbe05b5df7e76d0c201ce10f1221b3072cba3862bc8",
+      "bytes": 5980,
+      "unchanged_at_measured": true
+    },
+    {
+      "commit": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "path": "docs/brain/active.json",
+      "sha256": "854fb8e48370e1247c3645a93c32fcb0ac824bd573dfebeca82931fc8ec866f0",
+      "bytes": 861,
+      "unchanged_at_measured": true
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "retainedSafetyMode": false,
+  "accountIsolationMode": true,
+  "accountIsolation": {
+    "accountAEmail": "tas.account-a.e2e@example.com",
+    "cleanupFailureStayedGated": true,
+    "privateNamesHiddenAfterSignOut": true,
+    "signedOutShelfAgeClosed": true,
+    "signedOutTodayAgeClosed": true,
+    "repeatedFailureStayedGated": true,
+    "signedOutReloadAgeClosed": true,
+    "terminalWelcome": true,
+    "noUncaughtRuntimeExceptions": true
+  },
+  "accountUpgradeMode": false,
+  "accountUpgrade": null,
+  "browserProblemLogCount": 7,
+  "date": "2026-10-20",
+  "endUrl": "http://localhost:8441/onboarding/age",
+  "evidenceFiles": [
+    "01-welcome.png",
+    "01a-direct-protected-age-gate.png",
+    "03-age-filled.png",
+    "06-goals-selected.png",
+    "09-products-empty.png",
+    "12-products-after-3.png",
+    "14-reveal-insight.png",
+    "15-notifications.png",
+    "16-account.png",
+    "17-paywall-current.png",
+    "18-paywall-free-path-visible.png",
+    "19-today-free-current.png",
+    "20-shelf-after-onboarding.png",
+    "21-progress-after-onboarding.png",
+    "22-you-after-onboarding.png",
+    "23-today-after-tab-round-trip.png",
+    "25-account-before-signout.png",
+    "26-account-boundary-clear-failure.png",
+    "27-account-boundary-repeated-failure.png",
+    "28-signed-out-welcome.png",
+    "29-signed-out-shelf-age-closed.png",
+    "30-signed-out-today-age-closed.png"
+  ],
+  "flowResult": "Completed onboarding on the free plan, failed two account cleanups behind usable recovery, retried successfully, signed out, and proved direct Shelf and Today routes could not expose account A data.",
+  "overflowXByStep": {
+    "welcome": 0,
+    "reveal": 0,
+    "account": 0,
+    "paywall": 0,
+    "paywallFreePath": 0,
+    "todayFree": 0,
+    "accountBeforeSignOut": 0,
+    "accountBoundaryFailure": 0,
+    "accountBoundaryRetry": 0,
+    "signedOutWelcome": 0,
+    "signedOutShelf": 0,
+    "signedOutToday": 0
+  },
+  "productNames": [
+    "Retinol 0.3% serum",
+    "Glycolic 7% toner",
+    "Mineral SPF 50"
+  ],
+  "reveal": {
+    "hasContinue": true,
+    "hasDerivedInsightBody": false,
+    "hasFirstInsightLabel": false,
+    "hasPendingReview": true,
+    "hasRoutinePreviewFallback": false,
+    "hasSeeMyRoutine": false,
+    "hasTimingHandled": false,
+    "text": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined INTERACTION CHECKING Pair review in progress We won't show a compatibility result for these products until that review is complete. Continue"
+  },
+  "freePlan": {
+    "hasContinueAction": true,
+    "hasProActiveCopy": false,
+    "text": "TUESDAY, OCTOBER 20 Good morning. 1 step left in your morning routine. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT ✦ A few honest suggestions 2 things we’d gently suggest › Today Progress Shelf You",
+    "url": "http://localhost:8441/today"
+  },
+  "keyTabs": {
+    "progressUrl": "http://localhost:8441/progress",
+    "shelfRetainedProducts": true,
+    "shelfUrl": "http://localhost:8441/shelf",
+    "todayRoundTripUrl": "http://localhost:8441/today",
+    "youUrl": "http://localhost:8441/you"
+  },
+  "routeCheck": {
+    "accountLedToPaywall": true,
+    "accountUpgradeErrorRecovered": true,
+    "freePlanLedToToday": true,
+    "freePlanDidNotGrantPro": true,
+    "keyTabRoundTripPassed": true,
+    "notificationSkipLedToAccount": true,
+    "ageReverificationClosedProtectedProviders": true,
+    "ageReverificationDirectTodayStayedClosed": true,
+    "ageReverificationReloadStayedClosed": true,
+    "signedOutShelfIsAgeClosed": true,
+    "signedOutTodayIsAgeClosed": true,
+    "revealContinueLedToNotifications": true,
+    "revealRoute": "http://localhost:8441/onboarding/reveal"
+  },
+  "startCommand": "EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port 8441 --host localhost",
+  "startUrl": "http://localhost:8441/?e2eReset=local",
+  "steps": [
+    "Reset local private state with dev-only fixture.",
+    "Verified direct protected-route entry failed closed to the age gate before any private Today content mounted.",
+    "Began onboarding and entered a valid adult DOB.",
+    "Granted explicit health-data collection consent before health-purpose inputs mounted.",
+    "Selected Clear skin and Barrier repair.",
+    "Answered 12-question quiz with visible option buttons.",
+    "Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.",
+    "Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.",
+    "Used Continue with the free plan and reached Today without granting or implying Pro authority.",
+    "Opened the signed-in account surface and initiated sign-out with account A private queries already populated.",
+    "Verified first and repeated cleanup failures exposed usable recovery with no uncaught overlay, then retried successfully.",
+    "Verified Welcome, direct Shelf, and direct Today routes contain no account A product names after cleanup."
+  ],
+  "surface": "Headless Chrome Expo web",
+  "today": {
+    "text": "TUESDAY, OCTOBER 20 Good morning. 1 step left in your morning routine. Morning routine 0 of 1 Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT ✦ A few honest suggestions 2 things we’d gently suggest › Today Progress Shelf You",
+    "url": "http://localhost:8441/today"
+  },
+  "verdict": "pass",
+  "viewport": {
+    "height": 667,
+    "width": 375,
+    "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+  }
+}

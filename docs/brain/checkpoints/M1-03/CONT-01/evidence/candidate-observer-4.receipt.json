@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd --workspace apps/mobile run test -- src/features/notifications/transaction.cont01.test.ts",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "a284020c7785757842c0c07b5010e412c00af895",
+  "source_tree": "51a9126a140ba3be9226b580f9a100a9f106e1b8",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-4.txt",
+    "sha256": "3e0f7966a5efd67d7b1877889941b87cc2092db78ae87b1c88793fb16cd4cef4"
+  },
+  "counts": {
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-21T01:08:15.990983+00:00",
+  "finished_at_utc": "2026-10-21T01:08:17.633810+00:00",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/notifications/transaction.cont01.test.ts"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

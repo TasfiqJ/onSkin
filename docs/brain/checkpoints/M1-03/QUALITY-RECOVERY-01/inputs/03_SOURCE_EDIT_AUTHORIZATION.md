@@ -1,0 +1,11 @@
+# Finite authorization, NOT a previous-issuance union
+
+Source edits require **both** a matching SHA256 and real Git blob at `6c9c280669ccce07cab0b57f7b2118ec7bbd3a35` for every allowed existing path. Refer to exact machine-readable `SOURCE_EDIT_AUTHORIZATION.json` before writing. No edits to an old source file merely because a prior engineer permission once listed it.
+
+**Existing editable (with preimages):** `apps/mobile/package.json`, `package-lock.json`; `package.json` only if needed to resolve the exact Expo patch without a broad override (document why); `scripts/brain/m103_profile.py` only to add the exact new governance interval while preserving prior negative tests; `.gitattributes` only to freeze exact newly issued input/review bytes; `ONSKIN_BRAIN_HANDOFF.txt` only for truthful final handoff. `docs/phase-4/generated/source-worklist.json` and `.md` may be regenerated **only** by canonical generator, never manually altered. All other pre-existing code and policies are read-only.
+
+**New additive-only paths:** `docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/**`, `docs/brain/reviews/M1-03/SC03-REVIEW01/**`, `docs/brain/m103-quality-recovery01-active.json`, and `scripts/brain/test_m103_quality_recovery01_profile.py`. Repeated entries in the 2 markdown trees must be hash-identical to the supplied context/reference where applicable. Do not overwrite earlier checkpoints or reviews.
+
+**Unconditional exclusions:** `.github/**`, `supabase/**`, SQL migrations, RLS/trigger/RPC/default ACL, hosted operations, generated DB types, `apps/mobile/src/**`, `apps/mobile/ios/**`, `apps/mobile/android/**`, `.expo/**`, `scripts/phase9/**`, `scripts/phase2/**`, `scripts/security_readiness/**`, original scanner pins/capsules/rules, provider configuration, signatures, license exceptions, advisory waivers, owner records, Security freeze/expiry, `docs/brain/state/**` and other unlisted files. Never add a script to disable/skip a gate, relax a check or suppress a finding. No active Security or DB source GO.
+
+Zero added spend, one writer, no main mutation/merge/force push, no credential testing or data uploads. If expected source changed, return `STALE_ISSUANCE` and stop any source edit.

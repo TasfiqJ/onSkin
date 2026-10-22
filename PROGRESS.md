@@ -1,5 +1,16 @@
 # Build Progress
 
+## 2026-10-19 - M0-01 stage baseline investigation (review required)
+
+Fresh main remains `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`.
+Work is isolated on `stage/m0-baseline`, with no main push or merge.
+Draft PR #8 independently reproduced canonical ECR Postgres preparation failing
+with `toomanyrequests: Data limit exceeded` before SQL. The added regression
+preserves existing fail-closed handling; no runtime repair or upstream quota
+cause is claimed. DB06/DB08/R2B, canonical image and source-only Security
+acceptance boundaries remain unchanged. See `ONSKIN_BRAIN_HANDOFF.txt` and
+`docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md` for exact checks and blockers.
+
 
 ## 2026-10-19 — G97 single-owner source-only Security correction (not integrated)
 
@@ -7898,3 +7909,13 @@ workflow digest in the generated catalog worklist and adds adversarial link
 regressions. No worklist disposition, expired exception, proposal window,
 SDK/native/backport, Component A, DB06 or release gate is relaxed. Fresh local
 verification and exact-source review remain required before any further push.
+
+
+## M0-02 — additive V2 planning controls (2026-10-20)
+
+The adopted planning entrypoint is [docs/v2/README.md](docs/v2/README.md); durable approved Brain state and Codex observations are indexed in [docs/brain/README.md](docs/brain/README.md). M0-02 is submitted for independent review, not self-accepted. Runtime/protected/external statuses are unchanged; the baseline remains blocked. Detailed measured checks and submission live under docs/brain/checkpoints/M0-02. No M1 work is issued.
+
+
+## M0-02 / FIX-01 (2026-10-20)
+
+Brain REVIEW-01 is FIX_REQUIRED. Repair scope is governance evidence, CI/Git bindings, anchored task issuance and mirror write containment only. Versioned review: docs/brain/reviews/M0-02/REVIEW-01; separate repair evidence/report: docs/brain/checkpoints/M0-02/FIX-01. Original submitted report/inputs/state are preserved. No runtime, protected gate, M1 or main promotion is authorized.

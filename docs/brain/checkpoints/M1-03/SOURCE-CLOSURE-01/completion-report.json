@@ -1,0 +1,389 @@
+{
+  "schema_version": 3,
+  "task_id": "M1-03",
+  "iteration": "SOURCE-CLOSURE-01",
+  "branch": "stage/m1-retained-safety",
+  "status": "BLOCKED",
+  "measured": {
+    "commit": "9cc9a1245a1defedcba095254e0eca495f4f4438",
+    "tree": "ae619db20e0d7742b76ee3e87bd6ddb83a702bb8"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "command": "npm.cmd run lint -- --force",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "forced-root-lint",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-lint.receipt.json",
+      "sha256": "4b270e9b53074df48050b59e4367cca7ba354e02f91fc1e8f0d1cc47e6789a1d"
+    },
+    {
+      "command": "npm.cmd test -- --force",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "forced-root-test",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-test.receipt.json",
+      "sha256": "d868272c6c0aa5619813c0f091152b751d5b6d5e2d553e5033547a53d94cb93e"
+    },
+    {
+      "command": "npm.cmd run typecheck -- --force",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "forced-root-typecheck",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-typecheck.receipt.json",
+      "sha256": "743eea1b2262349b00462b4a78f45be00cf5e87b36143f90ff8195e869da959c"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py --profile M1-03 validate",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "9cc9a1245a1defedcba095254e0eca495f4f4438",
+      "source_tree": "ae619db20e0d7742b76ee3e87bd6ddb83a702bb8",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "source-closure-profile-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile-final.receipt.json",
+      "sha256": "2597898df10c2f51ff8d27662cbcbbdba569ed99b14daa1e7b70ea5520e34286"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py --profile M1-03 validate",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "source-closure-profile",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile.receipt.json",
+      "sha256": "d187262811d8f8baa68372234a0181b7f2489291469ab0b99a5caf22979b92a1"
+    },
+    {
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\closure-windows-measured",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+      "status": "FAIL",
+      "exit_code": 4294967295,
+      "id": "windows-governance-68",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/windows-governance-68.receipt.json",
+      "sha256": "8a319a4772e1f9bf0fab06f117d1a686444a91dc440da287331be90ba72536d0"
+    },
+    {
+      "command": "npm.cmd run phase4:source-worklist:check",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "9cc9a1245a1defedcba095254e0eca495f4f4438",
+      "source_tree": "ae619db20e0d7742b76ee3e87bd6ddb83a702bb8",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "worklist-check-final",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check-final.receipt.json",
+      "sha256": "7d09f0e5861acad80a78721dc198e95d54766f72758124b77329b53ce4d5d589"
+    },
+    {
+      "command": "npm.cmd run phase4:source-worklist:check",
+      "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+      "environment": "Windows; Python3.9.13; Node v22.21.0",
+      "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "worklist-check",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check.receipt.json",
+      "sha256": "01472d2df0b196b7fe4ce4795a81242829d9fbc1d710a4ae4533f2e9941e6eb8"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/ACCEPTANCE_MATRIX.md",
+      "sha256": "546f2d3428928ea3b73ab225e8d2f2d931c56fadf9336940465d4c5671e8cac3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/BLOCKERS.md",
+      "sha256": "4b13adec9c9604f492eaaf9982097d6673fa21de9bbf5af8e3cd4b38279657b4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/diagnostics/closure_checks.py.txt",
+      "sha256": "ed55911fc6f86091a2f59e47698f0689a84ecec671115d1011aa220a025c4856"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/diagnostics/closure_evidence.py.txt",
+      "sha256": "24f885865ad6692b7c548a3488541081de6677e87e3f757b788ce41d3c4aeaa2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/diagnostics/closure_intake.py.txt",
+      "sha256": "df82f5f221668d5e3432d82be411ee0a7e707764286045dc39e9e350c8f14e5a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/diagnostics/closure_linux.py.txt",
+      "sha256": "acdacf2550098200c959b86999a0d1677a98171bdd161e2ae9033d2b2fb972b0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/diagnostics/closure_verify_witness.py.txt",
+      "sha256": "59dfd7085e0d13a6a45a89a52fa670417ba77cbe35e5c091072f26eb9c570ece"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/ci-observation.json",
+      "sha256": "fa7896c66471881ad26c1d9600aa052e93c85a3849f04abf089f9d55b0579649"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/derived-preimages.json",
+      "sha256": "c81b1d4be4577f33e739d84209f7e33d22d8d07797e0e2f625f6b7dfe9c7e96f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/environment-failure.json",
+      "sha256": "f4498ae6e6b7e5e97150cf47c826b28f94b54589888b0344b337592f386e6e1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/exploratory-cont01-first.log",
+      "sha256": "f2039ea10e2b8a8203b32efe656aa8205fb8330bf573b82121c58955458f1666"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/exploratory-cont01-repaired.log",
+      "sha256": "921f894ead217107bbed9337ec081c7293a3c82ba615aa00d9a50f83bd3519f9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/exploratory-governance-before.log",
+      "sha256": "51356806ab45a2378421880a9f0eca9435e1a7919f19cf89bb46f7ebc15722ab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/exploratory-sh01-repaired.log",
+      "sha256": "313458ae8dc8c7b8cc3edddb23c5023f7df4078d347eebb2de81bd0f5862274c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-lint.log",
+      "sha256": "ba664f8df1224a6337efcccecdd701ba2066cc9d24493d464341aa426ce15f7f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-lint.receipt.json",
+      "sha256": "4b270e9b53074df48050b59e4367cca7ba354e02f91fc1e8f0d1cc47e6789a1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-test.log",
+      "sha256": "dbcbc25542e257cf84b579ac1bfdd6d6c17a077d5d6ad88dbfd2f166a1335249"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-test.receipt.json",
+      "sha256": "d868272c6c0aa5619813c0f091152b751d5b6d5e2d553e5033547a53d94cb93e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-typecheck.log",
+      "sha256": "475477450866313530ffd1da68f3cfaa370f594e84f17751b35f6171822c8583"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-typecheck.receipt.json",
+      "sha256": "743eea1b2262349b00462b4a78f45be00cf5e87b36143f90ff8195e869da959c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/historical-export-incomplete.log",
+      "sha256": "296bbe3c63282672be158c9f41aa32b336d90da925ce22f4f206b3488e6c4cfd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/intake.json",
+      "sha256": "1dabaaf4e612a33a2e401d317c21aeccae22d11863a8dc5cfaee54de61e29e27"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/primary-history-witnesses.json",
+      "sha256": "dfcd9efe982d37d4557a76c310a922c22f781f7ed3ff8f731fdd6f844ae536df"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/protected-integrity.json",
+      "sha256": "fa601a4de05421cd06c73a326385b601c12fe9257b2b967d7fda70c1cbf59782"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile-final.log",
+      "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile-final.receipt.json",
+      "sha256": "2597898df10c2f51ff8d27662cbcbbdba569ed99b14daa1e7b70ea5520e34286"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile.log",
+      "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/source-closure-profile.receipt.json",
+      "sha256": "d187262811d8f8baa68372234a0181b7f2489291469ab0b99a5caf22979b92a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/supplemental-executions.json",
+      "sha256": "6a1155bcbbf4c621673ca682d3bc49096d26fd5b67bd8b9975d8c2fe08782e77"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/windows-governance-68.log",
+      "sha256": "860a151548255c0a47b7dfebe5671bda3311ed60bc45f02253b39a6ada7698fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/windows-governance-68.receipt.json",
+      "sha256": "8a319a4772e1f9bf0fab06f117d1a686444a91dc440da287331be90ba72536d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/windows-secret-12.log",
+      "sha256": "106907eec7f7950c26f79c8d149d88587a3044afc8548b9433f32e2fb42b4f58"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check-final.log",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check-final.receipt.json",
+      "sha256": "7d09f0e5861acad80a78721dc198e95d54766f72758124b77329b53ce4d5d589"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check.log",
+      "sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/worklist-check.receipt.json",
+      "sha256": "01472d2df0b196b7fe4ce4795a81242829d9fbc1d710a4ae4533f2e9941e6eb8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/README.md",
+      "sha256": "5fa9e3c158c3f2c37011b60f6f9d9950f6e11bc3bec59c8a3538b8a0cc10f433"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/RESULTS.md",
+      "sha256": "0b1dddb17d8d26338b430360f6551a6d15150a630e5e985cfd139449a1110831"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/ci-measured-source.json",
+      "sha256": "526dd4a30fbe9d19da82d211fca59ca2fc3ed2c16756f61c1ffb8f019df1e1f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/strict-report-validation.json",
+      "sha256": "9addef451d3a4fbc8e21729308822d2a342e80f4014c88b8f84707187f112418"
+    }
+  ],
+  "scope_matrix": [
+    {
+      "id": "C1",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "C2",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "C3",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "C4",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "C5",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "C6",
+      "status": "BLOCKED",
+      "evidence": []
+    },
+    {
+      "id": "C7",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "source-closure-profile-final",
+        "worklist-check-final"
+      ]
+    }
+  ],
+  "ci": [
+    {
+      "head_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39624910233,
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39624910311,
+      "status": "completed",
+      "conclusion": "success",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/ci-observation.json"
+    },
+    {
+      "head_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39624910291,
+      "status": "completed",
+      "conclusion": "failure",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/ci-observation.json"
+    }
+  ],
+  "axes": {
+    "source": "PARTIAL_TESTED_NOT_COMPLETE",
+    "integration": "NOT_RUN",
+    "surface": "NOT_RUN",
+    "physical_device": "NOT_RUN",
+    "live_provider": "NOT_RUN",
+    "qualified_review": "NOT_RUN",
+    "clinical": "NOT_RUN",
+    "commercial": "NOT_RUN",
+    "release": "NOT_RUN"
+  },
+  "blockers": [
+    "Host disk0; WSL I/O/E_FAIL prevents supported execution",
+    "Overnight test exact preimage mismatch",
+    "Full65+3 and supported70 incomplete; candidate9/new four-bundle scan NOT_RUN",
+    "Forced root/type/lint did not execute tests; current Quality/Security red or pending",
+    "Original/candidate findings unreviewed; expired Security; DB06/08/R2B issuer/receipt closed"
+  ],
+  "context_health": {
+    "level": "MEDIUM"
+  }
+}

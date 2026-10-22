@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "INITIAL",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "base_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+  "state_version": "brain-m1-02-accepted-m1-03-issued-11",
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1026,
+      "sha256": "9af6a11c710a8b10915d28e0434ddac8cde7c9d41e69674c54140c25824aef82"
+    },
+    {
+      "path": "ACCEPTANCE_MATRIX.md",
+      "bytes": 1978,
+      "sha256": "b4654c137c7b7b150d8a855ce7dbbc3030c86d97cd9ccc2b4cd5318a9552ed67"
+    },
+    {
+      "path": "BRAIN_STATE/ACCEPTANCE_LEDGER.json",
+      "bytes": 18010,
+      "sha256": "1fbccd2d99e6eecaecd6c2bec78594d719597c069e2a87e2bebc686098b7ea6a"
+    },
+    {
+      "path": "BRAIN_STATE/ACCEPTANCE_SCOPE.md",
+      "bytes": 518,
+      "sha256": "af18fdaea91e1df44ada7bdf0b3fbdc92dc3ce7143743f8672e07e4e8bcb857b"
+    },
+    {
+      "path": "BRAIN_STATE/ADR_DECISIONS.md",
+      "bytes": 1364,
+      "sha256": "52dc9084e2f951119342ad487205b68e9cefed5feef242d55fec09c349a3612d"
+    },
+    {
+      "path": "BRAIN_STATE/ADR_REGISTRY.json",
+      "bytes": 22557,
+      "sha256": "2a8f2f279d1e8348f68446238be02ae511aead2bcc224ce3cb1cef5f1fa7c645"
+    },
+    {
+      "path": "BRAIN_STATE/AUDIT_M1-02_ACCEPTANCE.md",
+      "bytes": 5859,
+      "sha256": "455f98c8ba57f3d69081f3c9a4fd77f9b81487ea8428db3db9f4e6b0e3a50092"
+    },
+    {
+      "path": "BRAIN_STATE/BLOCKERS.json",
+      "bytes": 35132,
+      "sha256": "3af629fce1d560348b9fd818f72f3d29cba7d4542bbc3c4dcd55639852a852b0"
+    },
+    {
+      "path": "BRAIN_STATE/BLOCKERS.md",
+      "bytes": 780,
+      "sha256": "c46d374e124bb05f4a657889651e85bb5213869fa8a14ebe50c106f865425433"
+    },
+    {
+      "path": "BRAIN_STATE/BRAIN_RESUME_PROMPT.md",
+      "bytes": 1346,
+      "sha256": "7297a4a1542f731e916b22242371d30d8edeac07226025e4c48537a291589d44"
+    },
+    {
+      "path": "BRAIN_STATE/CI_OBSERVATIONS.json",
+      "bytes": 1829,
+      "sha256": "dfc2982b3b0c2aee9dde61f906991b33274d6158d74dba56b27e6efce76c7d1f"
+    },
+    {
+      "path": "BRAIN_STATE/CI_OBSERVATIONS.md",
+      "bytes": 714,
+      "sha256": "64c32f4e44cceb9920bde4a6c163b6733c1318bf715a4a9851c425a39537fc1c"
+    },
+    {
+      "path": "BRAIN_STATE/DECISIONS_DELTA.md",
+      "bytes": 737,
+      "sha256": "a754ddc78ba02c54735b140e512da5c7e354701e98a3f9f493dbd1ca505669eb"
+    },
+    {
+      "path": "BRAIN_STATE/EXECUTION_EVIDENCE.json",
+      "bytes": 11235,
+      "sha256": "3eef3ec95495a3ef48b57224becd7b9a31c61912e8641f39a9c4864d5addc461"
+    },
+    {
+      "path": "BRAIN_STATE/REVIEW_OBSERVATIONS.md",
+      "bytes": 876,
+      "sha256": "d9f40d063dbe39417436af15011d6f0cd025fc4e35df3e59950de7cfa532817d"
+    },
+    {
+      "path": "BRAIN_STATE/ROADMAP_STATUS.md",
+      "bytes": 2948,
+      "sha256": "89daa4d1077bcacf560eed44fe677b664f9e8e2713aa865db72e9b65db4ce680"
+    },
+    {
+      "path": "BRAIN_STATE/STATE_AT_GLANCE.md",
+      "bytes": 789,
+      "sha256": "82d2ee5d1e5633bcb7673f0c9278c7ad4b8f313f46ac3e0bb6cec16178a3a7ba"
+    },
+    {
+      "path": "BRAIN_STATE/STATE_MANIFEST.json",
+      "bytes": 2788,
+      "sha256": "088fca5556bc84129ea014852b37f72ddacdc07523bfc942eb264a2315be35b1"
+    },
+    {
+      "path": "BRAIN_STATE/brain_state.json",
+      "bytes": 51126,
+      "sha256": "373d8439dfec1862ea224351896ed30606f959b396ac0123d4711fd718cfb5ae"
+    },
+    {
+      "path": "BRAIN_STATE/roadmap.json",
+      "bytes": 49424,
+      "sha256": "3e91c1c710b5b9488ac659d53ecd7a87133bc095f1a152df4ffe4611d6a20951"
+    },
+    {
+      "path": "CI_REFRESH_CHECKLIST.md",
+      "bytes": 1016,
+      "sha256": "2b99a0ebceb94868efcd13012dea2349f7964d838b6e3d69564dfc406b935e2f"
+    },
+    {
+      "path": "GOVERNANCE_TRANSITION.md",
+      "bytes": 1330,
+      "sha256": "e49fa55d3b12fdfa1af8fb64c8c063dafe4ee52a83c939687aab46ffe4e05406"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF_TEMPLATE.md",
+      "bytes": 779,
+      "sha256": "082dffcf6e8fe5fe3706705fc12c405a614b4d1f4eb7a5479f65f7f8bedee349"
+    },
+    {
+      "path": "OWNER_ACTION_PACKET.md",
+      "bytes": 1063,
+      "sha256": "cdec2beaed07445fa5e5e419f8afb6b7d50fdf44054ad3d7f9717e9f19b332d0"
+    },
+    {
+      "path": "PROTECTED_CHANGE_BOUNDARY.md",
+      "bytes": 2641,
+      "sha256": "f5f7878cb2a7dfd42e4e3804ac7b5569339d136f5f749e98017c66a4ae240f5c"
+    },
+    {
+      "path": "REPORT_CONTRACT.md",
+      "bytes": 1422,
+      "sha256": "ff3edc3a141c03886df77b7b60abb66d178ceab7c7ed4aad9138f0ad9f9594f3"
+    },
+    {
+      "path": "SOURCE_ORIENTATION.md",
+      "bytes": 1716,
+      "sha256": "454a39793f50c60f51e60fb3bc0d48e2c09b9fcecc599fc4284e108d230576f8"
+    },
+    {
+      "path": "STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 951,
+      "sha256": "9a1721d021022060bd48eb4b8cbd2ba0689377b36de96fa1a1d7295a8afccc61"
+    },
+    {
+      "path": "SUCCESS_CRITERIA.md",
+      "bytes": 685,
+      "sha256": "287dcaae27991ba6ec8d23d8325afbdf95b3295d1b393e6efdd2ed6cd06e84b5"
+    },
+    {
+      "path": "TASK.md",
+      "bytes": 5829,
+      "sha256": "e0d3ce0a9676d8d211987d33e23ca7ee2822886ef12a618273158e06aa9284fd"
+    },
+    {
+      "path": "contracts/ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "path": "contracts/AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "path": "contracts/CORE_CONTRACT.md",
+      "bytes": 11753,
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+    },
+    {
+      "path": "contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "bytes": 9856,
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d"
+    },
+    {
+      "path": "verify_context.py",
+      "bytes": 2736,
+      "sha256": "6c0f16fa0e7bb148bc1cf11b8856ea296256c614d8358a25e98b4676871aba19"
+    }
+  ],
+  "actual_input_bytes": 266696,
+  "max_input_bytes": 524288,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "vendor_spend_authorized_usd": 0
+}

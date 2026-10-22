@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node --test scripts/phase9/security-advisory-exceptions.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+  "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/evidence/existing-exception-refusal-tests.txt",
+    "sha256": "0bef2c947256ea4282e8ecc04793bd334eb4845d82aa2786f4b4623ae653af2a"
+  },
+  "counts": {
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T23:22:35.801564+00:00",
+  "finished_at_utc": "2026-10-20T23:22:35.938893+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "--test",
+    "scripts/phase9/security-advisory-exceptions.test.mjs"
+  ]
+}

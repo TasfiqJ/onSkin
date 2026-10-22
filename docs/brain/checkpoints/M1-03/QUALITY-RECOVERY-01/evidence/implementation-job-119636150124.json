@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "kind": "PROVIDER_LOG_EXCERPT",
+  "repository": "TasfiqJ/onSkin",
+  "head_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+  "run_id": 39721621804,
+  "job_id": 119636150124,
+  "selection": "Exact source/DB failure lines only; no raw secret logs fetched",
+  "lines": [
+    "2026-10-22T04:19:34.4666769Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: error from registry: Data limit exceeded",
+    "2026-10-22T04:19:34.4677989Z     diagnostic: 'Error response from daemon: error from registry: Data limit exceeded'",
+    "2026-10-22T04:19:34.4855799Z ##[error]Process completed with exit code 1."
+  ]
+}

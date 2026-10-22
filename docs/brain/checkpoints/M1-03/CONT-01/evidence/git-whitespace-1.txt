@@ -1,0 +1,1748 @@
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:8: trailing whitespace.
++    "commit": "676bde2e3d6865fa7d51180209d7f64fee2ee789",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:9: trailing whitespace.
++    "tree": "09a772fb17d074b22549f1ee263aaa108bb8f6cc"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3286: trailing whitespace.
++      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3287: trailing whitespace.
++      "sha256": "ff5f1acfc606fa63a9be16605f04cdcc16f57b9ee149c6b06bb0ad865228ef7b"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3288: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3289: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3298: trailing whitespace.
++      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/clean-worklist-generation.txt",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3299: trailing whitespace.
++      "sha256": "ac809e7dd4777816fdf7746026d0928c846810600d471b5affe29dd276c7f747"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3300: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3301: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3730: trailing whitespace.
++      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3731: trailing whitespace.
++      "sha256": "e8bbc5db86526842a6a92d88660c927ded7a23f2c4859e02737a5c4673f18874"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3732: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:3733: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4103: trailing whitespace.
++  "ci": [
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4104: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4105: trailing whitespace.
++      "run_id": 39517479335,
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4106: trailing whitespace.
++      "workflow_id": 312030667,
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4107: trailing whitespace.
++      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4108: trailing whitespace.
++      "name": "iOS launch contract",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4109: trailing whitespace.
++      "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4110: trailing whitespace.
++      "conclusion": "success",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4111: trailing whitespace.
++      "repository": "TasfiqJ/onSkin",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4112: trailing whitespace.
++      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4113: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4114: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4115: trailing whitespace.
++      "run_id": 39517479326,
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4116: trailing whitespace.
++      "workflow_id": 308213475,
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4117: trailing whitespace.
++      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4118: trailing whitespace.
++      "name": "Security",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4119: trailing whitespace.
++      "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4120: trailing whitespace.
++      "conclusion": "failure",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4121: trailing whitespace.
++      "repository": "TasfiqJ/onSkin",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4122: trailing whitespace.
++      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4123: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4124: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4125: trailing whitespace.
++      "run_id": 39517479330,
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4126: trailing whitespace.
++      "workflow_id": 312030668,
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4127: trailing whitespace.
++      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4128: trailing whitespace.
++      "name": "Quality",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4129: trailing whitespace.
++      "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4130: trailing whitespace.
++      "conclusion": "success",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4131: trailing whitespace.
++      "repository": "TasfiqJ/onSkin",
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4132: trailing whitespace.
++      "artifact": "docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json"
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4133: trailing whitespace.
++    }
+docs/brain/checkpoints/M1-03/CONT-01/completion-report.json:4134: trailing whitespace.
++  ]
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:1: trailing whitespace.
++{
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:2: trailing whitespace.
++  "schema_version": 1,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:3: trailing whitespace.
++  "kind": "CI_OBSERVATION",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:4: trailing whitespace.
++  "evidence_class": "INDEPENDENTLY_OBSERVED",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:5: trailing whitespace.
++  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:6: trailing whitespace.
++  "recorded_at_utc": "2026-10-21T02:02:45Z",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:7: trailing whitespace.
++  "repository": "TasfiqJ/onSkin",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:8: trailing whitespace.
++  "runs": [
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:9: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:10: trailing whitespace.
++      "run_id": 39517479335,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:11: trailing whitespace.
++      "workflow_id": 312030667,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:12: trailing whitespace.
++      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:13: trailing whitespace.
++      "name": "iOS launch contract",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:14: trailing whitespace.
++      "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:15: trailing whitespace.
++      "conclusion": "success"
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:16: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:17: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:18: trailing whitespace.
++      "run_id": 39517479326,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:19: trailing whitespace.
++      "workflow_id": 308213475,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:20: trailing whitespace.
++      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:21: trailing whitespace.
++      "name": "Security",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:22: trailing whitespace.
++      "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:23: trailing whitespace.
++      "conclusion": "failure"
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:24: trailing whitespace.
++    },
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:25: trailing whitespace.
++    {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:26: trailing whitespace.
++      "run_id": 39517479330,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:27: trailing whitespace.
++      "workflow_id": 312030668,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:28: trailing whitespace.
++      "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:29: trailing whitespace.
++      "name": "Quality",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:30: trailing whitespace.
++      "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:31: trailing whitespace.
++      "conclusion": "success"
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:32: trailing whitespace.
++    }
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:33: trailing whitespace.
++  ],
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:34: trailing whitespace.
++  "raw_provider": {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:35: trailing whitespace.
++    "workflow_runs": [
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:36: trailing whitespace.
++      {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:37: trailing whitespace.
++        "id": 39517479335,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:38: trailing whitespace.
++        "name": "iOS launch contract",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:39: trailing whitespace.
++        "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:40: trailing whitespace.
++        "conclusion": "success",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:41: trailing whitespace.
++        "run_number": 369,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:42: trailing whitespace.
++        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479335/jobs",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:43: trailing whitespace.
++        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479335/logs",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:44: trailing whitespace.
++        "workflow_id": 312030667
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:45: trailing whitespace.
++      },
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:46: trailing whitespace.
++      {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:47: trailing whitespace.
++        "id": 39517479326,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:48: trailing whitespace.
++        "name": "Security",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:49: trailing whitespace.
++        "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:50: trailing whitespace.
++        "conclusion": "failure",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:51: trailing whitespace.
++        "run_number": 901,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:52: trailing whitespace.
++        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479326/jobs",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:53: trailing whitespace.
++        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479326/logs",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:54: trailing whitespace.
++        "workflow_id": 308213475
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:55: trailing whitespace.
++      },
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:56: trailing whitespace.
++      {
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:57: trailing whitespace.
++        "id": 39517479330,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:58: trailing whitespace.
++        "name": "Quality",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:59: trailing whitespace.
++        "status": "completed",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:60: trailing whitespace.
++        "conclusion": "success",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:61: trailing whitespace.
++        "run_number": 369,
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:62: trailing whitespace.
++        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479330/jobs",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:63: trailing whitespace.
++        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39517479330/logs",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:64: trailing whitespace.
++        "workflow_id": 312030668
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:65: trailing whitespace.
++      }
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:66: trailing whitespace.
++    ]
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:67: trailing whitespace.
++  },
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:68: trailing whitespace.
++  "observation_limit": "Provider metadata at this finite observation; unfinished stays pending. Stage head and actual PR checkout/tree/parents are distinct bindings."
+docs/brain/checkpoints/M1-03/CONT-01/evidence/ci-intake.observation.json:69: trailing whitespace.
++}
+docs/brain/checkpoints/M1-03/CONT-01/evidence/clean-worklist-generation.txt:1: trailing whitespace.
++Wrote docs/phase-4/generated/source-worklist.json
+docs/brain/checkpoints/M1-03/CONT-01/evidence/clean-worklist-generation.txt:2: trailing whitespace.
++Wrote docs/phase-4/generated/source-worklist.md
+docs/brain/checkpoints/M1-03/CONT-01/evidence/clean-worklist-generation.txt:3: trailing whitespace.
++Phase 4 source worklist passed.
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:1: trailing whitespace.
++{
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:2: trailing whitespace.
++  "measured_commit": "676bde2e3d6865fa7d51180209d7f64fee2ee789",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:3: trailing whitespace.
++  "measured_tree": "09a772fb17d074b22549f1ee263aaa108bb8f6cc",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:4: trailing whitespace.
++  "root_tested_commit": "20cd7d8f95bf889362a56620f9945190c571d5a1",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:5: trailing whitespace.
++  "root_runtime_and_dependency_delta": [],
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:6: trailing whitespace.
++  "governance_tested_commit": "207d7aadf828080a64f3a62fb655e6cba70d55c7",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:7: trailing whitespace.
++  "governance_authority_and_code_delta": [],
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:8: trailing whitespace.
++  "last_code_commit": "e04c77b2fc1975139aaa5f240968f9d8d3f72792",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:9: trailing whitespace.
++  "since_last_code_paths": [
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:10: trailing whitespace.
++    "ONSKIN_BRAIN_HANDOFF.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:11: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/IMPLEMENTATION.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:12: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/INERT_PROPOSALS.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:13: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/README.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:14: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/VALIDATION.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:15: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/completion-report.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:16: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/baseline-install.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:17: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/baseline-install.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:18: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:19: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:20: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/01-retained-owner-age-closed.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:21: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/01-retained-owner-age-closed.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:22: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/02-age-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:23: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/02-age-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:24: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/03-age-filled.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:25: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/03-age-filled.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:26: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/03a-after-age-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:27: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/03a-after-age-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:28: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/04-consent.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:29: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/04-consent.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:30: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/05-goals.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:31: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/05-goals.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:32: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/06-goals-selected.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:33: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/06-goals-selected.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:34: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:35: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:36: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:37: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:38: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:39: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:40: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:41: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:42: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/09-products-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:43: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/09-products-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:44: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/10-products-after-1.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:45: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/10-products-after-1.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:46: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/11-products-after-2.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:47: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/11-products-after-2.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:48: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/12-products-after-3.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:49: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/12-products-after-3.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:50: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/13-post-products-continue-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:51: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/13-post-products-continue-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:52: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/14-reveal-checks.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:53: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/14-reveal-checks.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:54: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/14-reveal-insight.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:55: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/15-notifications.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:56: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/15-notifications.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:57: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/16-account.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:58: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/16-account.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:59: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/17-paywall-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:60: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/17-paywall-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:61: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/17-paywall.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:62: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/17-paywall.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:63: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/18-paywall-free-path-visible.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:64: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/18-paywall-free-path-visible.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:65: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/19-today-free-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:66: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/19-today-free-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:67: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/20-shelf-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:68: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/20-shelf-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:69: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-01-owner-a.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:70: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-01-owner-a.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:71: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-02-draining-old-owner.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:72: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-02-draining-old-owner.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:73: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-03-cleanup-refused.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:74: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-03-cleanup-refused.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:75: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-04-repeated-refusal.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:76: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-04-repeated-refusal.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:77: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-05-b-age-required.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:78: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-05-b-age-required.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:79: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-06-b-consent-required.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:80: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-06-b-consent-required.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:81: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-07-b-empty-shelf.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:82: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-07-b-empty-shelf.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:83: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-08-b-manual-created.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:84: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-08-b-manual-created.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:85: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-09-b-usable-shelf.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:86: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-09-b-usable-shelf.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:87: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-09b-b-product-detail.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:88: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-09b-b-product-detail.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:89: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-10-b-usable-edit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:90: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-10-b-usable-edit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:91: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-11-b-identity.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:92: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-11-b-identity.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:93: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-12-b-document-relaunch.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:94: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-12-b-document-relaunch.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:95: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-13-return-a-age-closed.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:96: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-13-return-a-age-closed.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:97: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-14-return-a-relaunch-closed.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:98: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-14-return-a-relaunch-closed.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:99: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:100: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:101: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:102: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:103: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:104: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:105: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:106: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-B-08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:107: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-b-boundaries.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:108: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-b-relaunch-boundaries.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:109: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/CO-immediate-authority-closure.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:110: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-00-manual-plan-input.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:111: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-00-manual-plan-input.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:112: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-01-am-ready.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:113: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-01-am-ready.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:114: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-02-rejected-write-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:115: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-02-rejected-write-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:116: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-03-offline-duplicate-append-only.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:117: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-03-offline-duplicate-append-only.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:118: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04-offline-timing.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:119: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04-offline-timing.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:120: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04a-offline-reminder-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:121: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04a-offline-reminder-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:122: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04b-cycle-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:123: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04b-cycle-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:124: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04c-reorder-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:125: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-04c-reorder-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:126: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-05-reloaded-am.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:127: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-05-reloaded-am.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:128: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-06-pm.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:129: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-06-pm.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:130: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-07-plan-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:131: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-07-plan-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:132: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-09-web-reminder-availability.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:133: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-09-web-reminder-availability.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:134: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/M102-daily-loop.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:135: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/browser-warn-error-logs.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:136: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/bundle-crypto-provenance.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:137: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/cross-owner-races.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:138: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:139: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:140: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:141: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/01-welcome.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:142: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/01-welcome.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:143: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/01a-direct-protected-age-gate.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:144: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/01a-direct-protected-age-gate.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:145: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/02-age-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:146: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/02-age-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:147: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/03-age-filled.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:148: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/03-age-filled.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:149: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/03a-after-age-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:150: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/03a-after-age-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:151: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/04-consent.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:152: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/04-consent.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:153: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/05-goals.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:154: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/05-goals.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:155: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/06-goals-selected.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:156: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/06-goals-selected.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:157: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:158: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:159: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:160: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:161: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:162: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:163: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:164: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:165: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/09-products-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:166: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/09-products-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:167: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/10-products-after-1.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:168: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/10-products-after-1.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:169: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/11-products-after-2.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:170: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/11-products-after-2.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:171: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/12-products-after-3.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:172: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/12-products-after-3.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:173: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/13-post-products-continue-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:174: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/13-post-products-continue-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:175: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/14-reveal-checks.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:176: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/14-reveal-checks.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:177: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/14-reveal-insight.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:178: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/15-notifications.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:179: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/15-notifications.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:180: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/16-account.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:181: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/16-account.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:182: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/17-paywall-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:183: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/17-paywall-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:184: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/17-paywall.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:185: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/17-paywall.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:186: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/18-paywall-free-path-visible.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:187: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/18-paywall-free-path-visible.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:188: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/19-today-free-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:189: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/19-today-free-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:190: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/20-shelf-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:191: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/20-shelf-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:192: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/21-progress-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:193: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/21-progress-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:194: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/22-you-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:195: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/22-you-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:196: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/23-today-after-tab-round-trip.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:197: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/23-today-after-tab-round-trip.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:198: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/25-age-reverification-before-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:199: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/25-age-reverification-before-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:200: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/26-age-reverification-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:201: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/26-age-reverification-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:202: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/27-age-reverification-direct-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:203: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/27-age-reverification-direct-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:204: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/28-age-reverification-reload-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:205: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/28-age-reverification-reload-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:206: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-00-manual-plan-input.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:207: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-00-manual-plan-input.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:208: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-01-am-ready.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:209: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-01-am-ready.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:210: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-02-rejected-write-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:211: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-02-rejected-write-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:212: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-03-offline-duplicate-append-only.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:213: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-03-offline-duplicate-append-only.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:214: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04-offline-timing.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:215: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04-offline-timing.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:216: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04a-offline-reminder-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:217: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04a-offline-reminder-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:218: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04b-cycle-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:219: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04b-cycle-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:220: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04c-reorder-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:221: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-04c-reorder-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:222: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-05-reloaded-am.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:223: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-05-reloaded-am.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:224: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-06-pm.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:225: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-06-pm.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:226: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-07-plan-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:227: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-07-plan-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:228: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-09-web-reminder-availability.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:229: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-09-web-reminder-availability.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:230: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/M102-daily-loop.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:231: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/browser-warn-error-logs.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:232: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/bundle-crypto-provenance.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:233: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/report.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:234: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:235: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:236: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:237: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/01-welcome.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:238: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/01-welcome.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:239: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/01a-direct-protected-age-gate.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:240: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/01a-direct-protected-age-gate.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:241: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/02-age-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:242: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/02-age-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:243: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/03-age-filled.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:244: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/03-age-filled.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:245: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/03a-after-age-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:246: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/03a-after-age-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:247: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/04-consent.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:248: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/04-consent.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:249: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/05-goals.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:250: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/05-goals.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:251: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/06-goals-selected.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:252: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/06-goals-selected.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:253: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:254: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:255: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:256: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:257: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:258: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:259: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:260: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:261: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/09-products-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:262: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/09-products-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:263: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/10-products-after-1.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:264: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/10-products-after-1.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:265: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/11-products-after-2.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:266: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/11-products-after-2.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:267: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/12-products-after-3.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:268: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/12-products-after-3.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:269: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/13-post-products-continue-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:270: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/13-post-products-continue-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:271: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/14-reveal-checks.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:272: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/14-reveal-checks.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:273: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/14-reveal-insight.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:274: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/15-notifications.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:275: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/15-notifications.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:276: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/16-account.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:277: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/16-account.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:278: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/17-paywall-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:279: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/17-paywall-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:280: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/17-paywall.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:281: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/17-paywall.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:282: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/18-paywall-free-path-visible.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:283: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/18-paywall-free-path-visible.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:284: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/19-today-free-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:285: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/19-today-free-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:286: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/20-shelf-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:287: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/20-shelf-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:288: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/21-progress-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:289: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/21-progress-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:290: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/22-you-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:291: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/22-you-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:292: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/23-today-after-tab-round-trip.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:293: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/23-today-after-tab-round-trip.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:294: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/25-age-reverification-before-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:295: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/25-age-reverification-before-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:296: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/26-age-reverification-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:297: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/26-age-reverification-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:298: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/27-age-reverification-direct-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:299: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/27-age-reverification-direct-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:300: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/28-age-reverification-reload-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:301: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/28-age-reverification-reload-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:302: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-00-manual-plan-input.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:303: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-00-manual-plan-input.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:304: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-01-am-ready.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:305: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-01-am-ready.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:306: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-02-rejected-write-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:307: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-02-rejected-write-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:308: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-03-offline-duplicate-append-only.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:309: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-03-offline-duplicate-append-only.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:310: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04-offline-timing.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:311: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04-offline-timing.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:312: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04a-offline-reminder-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:313: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04a-offline-reminder-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:314: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04b-cycle-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:315: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04b-cycle-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:316: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04c-reorder-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:317: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-04c-reorder-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:318: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-05-reloaded-am.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:319: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-05-reloaded-am.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:320: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-06-pm.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:321: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-06-pm.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:322: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-07-plan-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:323: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-07-plan-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:324: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-09-web-reminder-availability.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:325: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-09-web-reminder-availability.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:326: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/M102-daily-loop.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:327: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/browser-warn-error-logs.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:328: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/bundle-crypto-provenance.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:329: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/report.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:330: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:331: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:332: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:333: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/01-welcome.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:334: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/01-welcome.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:335: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/01a-direct-protected-age-gate.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:336: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/01a-direct-protected-age-gate.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:337: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/02-age-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:338: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/02-age-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:339: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/03-age-filled.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:340: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/03-age-filled.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:341: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/03a-after-age-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:342: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/03a-after-age-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:343: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/04-consent.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:344: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/04-consent.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:345: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/05-goals.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:346: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/05-goals.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:347: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/06-goals-selected.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:348: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/06-goals-selected.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:349: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:350: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:351: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:352: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:353: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:354: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:355: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:356: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:357: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/09-products-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:358: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/09-products-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:359: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/10-products-after-1.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:360: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/10-products-after-1.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:361: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/11-products-after-2.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:362: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/11-products-after-2.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:363: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/12-products-after-3.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:364: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/12-products-after-3.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:365: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/13-post-products-continue-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:366: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/13-post-products-continue-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:367: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/14-reveal-checks.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:368: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/14-reveal-checks.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:369: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/14-reveal-insight.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:370: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/15-notifications.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:371: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/15-notifications.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:372: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/16-account.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:373: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/16-account.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:374: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/17-paywall-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:375: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/17-paywall-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:376: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/17-paywall.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:377: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/17-paywall.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:378: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/18-paywall-free-path-visible.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:379: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/18-paywall-free-path-visible.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:380: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/19-today-free-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:381: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/19-today-free-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:382: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/20-shelf-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:383: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/20-shelf-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:384: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/21-progress-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:385: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/21-progress-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:386: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/22-you-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:387: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/22-you-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:388: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/23-today-after-tab-round-trip.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:389: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/23-today-after-tab-round-trip.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:390: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/25-age-reverification-before-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:391: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/25-age-reverification-before-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:392: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/26-age-reverification-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:393: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/26-age-reverification-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:394: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/27-age-reverification-direct-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:395: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/27-age-reverification-direct-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:396: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/28-age-reverification-reload-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:397: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/28-age-reverification-reload-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:398: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-00-manual-plan-input.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:399: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-00-manual-plan-input.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:400: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-01-am-ready.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:401: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-01-am-ready.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:402: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-02-rejected-write-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:403: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-02-rejected-write-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:404: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-03-offline-duplicate-append-only.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:405: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-03-offline-duplicate-append-only.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:406: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04-offline-timing.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:407: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04-offline-timing.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:408: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04a-offline-reminder-recovery.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:409: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04a-offline-reminder-recovery.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:410: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04b-cycle-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:411: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04b-cycle-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:412: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04c-reorder-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:413: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-04c-reorder-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:414: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-05-reloaded-am.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:415: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-05-reloaded-am.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:416: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-06-pm.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:417: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-06-pm.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:418: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-07-plan-paid-boundary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:419: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-07-plan-paid-boundary.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:420: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-09-web-reminder-availability.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:421: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-09-web-reminder-availability.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:422: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/M102-daily-loop.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:423: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/browser-warn-error-logs.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:424: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/bundle-crypto-provenance.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:425: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/report.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:426: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:427: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:428: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:429: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/01-welcome.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:430: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/01-welcome.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:431: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/01a-direct-protected-age-gate.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:432: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/01a-direct-protected-age-gate.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:433: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/02-age-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:434: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/02-age-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:435: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/03-age-filled.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:436: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/03-age-filled.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:437: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/03a-after-age-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:438: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/03a-after-age-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:439: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/04-consent.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:440: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/04-consent.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:441: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/05-goals.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:442: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/05-goals.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:443: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/06-goals-selected.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:444: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/06-goals-selected.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:445: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:446: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:447: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:448: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:449: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:450: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:451: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:452: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:453: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/09-products-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:454: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/09-products-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:455: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/10-products-after-1.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:456: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/10-products-after-1.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:457: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/11-products-after-2.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:458: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/11-products-after-2.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:459: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/12-products-after-3.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:460: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/12-products-after-3.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:461: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/13-post-products-continue-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:462: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/13-post-products-continue-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:463: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/14-reveal-checks.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:464: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/14-reveal-checks.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:465: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/14-reveal-insight.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:466: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/15-notifications.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:467: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/15-notifications.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:468: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/16-account.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:469: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/16-account.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:470: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/17-paywall-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:471: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/17-paywall-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:472: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/17-paywall.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:473: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/17-paywall.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:474: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/18-paywall-free-path-visible.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:475: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/18-paywall-free-path-visible.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:476: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/19-today-free-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:477: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/19-today-free-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:478: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/20-shelf-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:479: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/20-shelf-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:480: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/21-progress-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:481: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/21-progress-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:482: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/22-you-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:483: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/22-you-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:484: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/23-today-after-tab-round-trip.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:485: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/23-today-after-tab-round-trip.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:486: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/25-age-reverification-before-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:487: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/25-age-reverification-before-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:488: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/26-age-reverification-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:489: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/26-age-reverification-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:490: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/27-age-reverification-direct-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:491: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/27-age-reverification-direct-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:492: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/28-age-reverification-reload-today-blocked.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:493: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/28-age-reverification-reload-today-blocked.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:494: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-01-manual-fallback.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:495: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-01-manual-fallback.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:496: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-01b-manual-ready.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:497: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-01b-manual-ready.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:498: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-01c-after-double-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:499: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-01c-after-double-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:500: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-02-offline-double-save.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:501: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-02-offline-double-save.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:502: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-03-offline-edit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:503: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-03-offline-edit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:504: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-03b-write-failure-intent-retained.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:505: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-03b-write-failure-intent-retained.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:506: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-03c-write-retry.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:507: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-03c-write-retry.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:508: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-04-offline-archive.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:509: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-04-offline-archive.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:510: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-05-archive-relaunch.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:511: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-05-archive-relaunch.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:512: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-05b-remove-failure.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:513: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-05b-remove-failure.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:514: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-06-remove.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:515: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-06-remove.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:516: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-07-corruption-preserved.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:517: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-07-corruption-preserved.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:518: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-08-storage-recovered.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:519: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-08-storage-recovered.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:520: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-09-verified-owner-rights.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:521: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-09-verified-owner-rights.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:522: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-10-delete-cancel.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:523: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-10-delete-cancel.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:524: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11-age-closed-withdrawal.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:525: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11-age-closed-withdrawal.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:526: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11a-withdrawal-cleanup-refused.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:527: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11a-withdrawal-cleanup-refused.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:528: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11b-withdrawal-repeated-refusal.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:529: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11b-withdrawal-repeated-refusal.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:530: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11c-withdrawal-relaunch-paused.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:531: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-11c-withdrawal-relaunch-paused.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:532: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/M1-offline-durable-read.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:533: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/browser-warn-error-logs.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:534: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/bundle-crypto-provenance.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:535: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/report.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:536: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:537: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:538: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:539: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/01-retained-owner-age-closed.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:540: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/01-retained-owner-age-closed.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:541: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/02-age-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:542: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/02-age-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:543: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/03-age-filled.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:544: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/03-age-filled.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:545: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/03a-after-age-submit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:546: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/03a-after-age-submit.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:547: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/04-consent.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:548: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/04-consent.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:549: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/05-goals.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:550: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/05-goals.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:551: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/06-goals-selected.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:552: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/06-goals-selected.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:553: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/07-quiz-01.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:554: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/07-quiz-01.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:555: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/08-quiz-after-04.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:556: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/08-quiz-after-04.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:557: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/08-quiz-after-09.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:558: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/08-quiz-after-09.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:559: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/08-quiz-after-11.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:560: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/08-quiz-after-11.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:561: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/09-products-empty.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:562: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/09-products-empty.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:563: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/10-products-after-1.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:564: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/10-products-after-1.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:565: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/11-products-after-2.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:566: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/11-products-after-2.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:567: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/12-products-after-3.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:568: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/12-products-after-3.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:569: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/13-post-products-continue-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:570: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/13-post-products-continue-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:571: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/14-reveal-checks.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:572: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/14-reveal-checks.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:573: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/14-reveal-insight.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:574: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/15-notifications.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:575: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/15-notifications.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:576: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/16-account.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:577: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/16-account.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:578: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/17-paywall-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:579: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/17-paywall-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:580: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/17-paywall.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:581: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/17-paywall.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:582: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/18-paywall-free-path-visible.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:583: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/18-paywall-free-path-visible.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:584: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/19-today-free-current.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:585: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/19-today-free-current.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:586: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/20-shelf-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:587: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/20-shelf-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:588: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/21-progress-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:589: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/21-progress-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:590: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/22-you-after-onboarding.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:591: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/22-you-after-onboarding.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:592: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/23-today-after-tab-round-trip.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:593: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/23-today-after-tab-round-trip.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:594: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/25-account-before-signout.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:595: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/25-account-before-signout.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:596: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/26-account-boundary-clear-failure.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:597: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/26-account-boundary-clear-failure.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:598: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/27-account-boundary-repeated-failure.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:599: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/27-account-boundary-repeated-failure.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:600: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/28-signed-out-welcome.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:601: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/28-signed-out-welcome.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:602: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/29-signed-out-shelf-age-closed.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:603: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/29-signed-out-shelf-age-closed.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:604: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/30-signed-out-today-age-closed.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:605: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/30-signed-out-today-age-closed.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:606: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/31-signed-out-cold-relaunch.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:607: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/31-signed-out-cold-relaunch.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:608: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/browser-warn-error-logs.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:609: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/bundle-crypto-provenance.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:610: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/report.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:611: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:612: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-wrapper-launch-failure.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:613: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-install.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:614: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-install.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:615: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-1.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:616: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-1.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:617: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-2.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:618: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-2.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:619: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-3.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:620: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-3.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:621: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-4.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:622: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-4.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:623: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-5.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:624: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-observer-5.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:625: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/classifier.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:626: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/classifier.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:627: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:628: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:629: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser/screen.png",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:630: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser/summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:631: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-build.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:632: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-build.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:633: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-tests.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:634: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-tests.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:635: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/current-sbom/dependency-inventory.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:636: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/current-sbom/dependency-inventory.md",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:637: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/current-sbom/dependency-sbom-audit.exit-code",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:638: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/current-sbom/dependency-sbom-audit.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:639: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/custody.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:640: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/custody.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:641: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/dependency-sbom.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:642: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/dependency-sbom.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:643: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-compatibility.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:644: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-compatibility.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:645: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-doctor.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:646: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-doctor.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:647: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-export-android.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:648: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-export-android.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:649: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-export-ios.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:650: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/expo-export-ios.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:651: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-custody.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:652: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-custody.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:653: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-lint.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:654: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-lint.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:655: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-linux-contracts.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:656: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-linux-contracts.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:657: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-root.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:658: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-root.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:659: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-security-regressions.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:660: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-security-regressions.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:661: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-typecheck.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:662: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-typecheck.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:663: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/governance.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:664: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/governance.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:665: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_browsers.py.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:666: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_checks.py.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:667: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_console.mjs.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:668: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_custody.py.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:669: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_linux_driver.py.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:670: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_repetitions.py.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:671: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/inert-harnesses/m103c1_run.py.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:672: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/intake-ci.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:673: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/isolated-installation.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:674: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/lint.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:675: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/lint.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:676: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-contract-tests.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:677: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-contract-tests.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:678: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-final-secret-tests.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:679: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-final-secret-tests.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:680: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-independent-install.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:681: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-independent-install.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:682: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-installed-contract-tests.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:683: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-installed-contract-tests.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:684: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-acquisition-and-scan.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:685: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-acquisition-and-scan.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:686: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-final.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:687: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-final.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:688: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-receipt-contracts.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:689: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-receipt-contracts.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:690: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-scans-v2.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:691: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/linux-secret-scans-v2.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:692: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/maintained-daily390.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:693: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/npm-audit-high.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:694: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/npm-audit-high.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:695: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:696: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:697: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current/osv-scan.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:698: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current/receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:699: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current/stderr",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:700: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/osv-current/stdout",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:701: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/postinstall-check.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:702: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/postinstall-check.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:703: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/preimages.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:704: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/preserved-security.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:705: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/preserved-security.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:706: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/publisher-comparison.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:707: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/root-tests.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:708: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/root-tests.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:709: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-actual-context.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:710: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-actual-context.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:711: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound-summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:712: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound/gitleaks-results.sarif.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:713: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound/gitleaks-tool.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:714: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound/secret-scan-proof.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:715: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-ci-context-tests.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:716: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-ci-context-tests.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:717: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final-summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:718: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final/gitleaks-results.sarif.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:719: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final/gitleaks-tool.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:720: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final/secret-scan-proof.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:721: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial-summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:722: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial/gitleaks-results.sarif.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:723: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial/gitleaks-tool.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:724: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial/secret-scan-proof.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:725: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge-summary.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:726: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge/gitleaks-results.sarif.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:727: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge/gitleaks-tool.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:728: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge/secret-scan-proof.json.gz",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:729: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-tool-acquisition.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:730: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-workflow-contracts.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:731: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-workflow-contracts.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:732: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/source-custody.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:733: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/typecheck.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:734: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/typecheck.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:735: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-1.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:736: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-1.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:737: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-2.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:738: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-2.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:739: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-3.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:740: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-3.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:741: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-4.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:742: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-4.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:743: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-5.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:744: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unchanged-observer-5.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:745: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/unreviewed-current-locations.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:746: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/vite-closure-publisher-metadata.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:747: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/vite-lock-diff.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:748: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/vite-lock-resolution.receipt.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:749: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/vite-lock-resolution.txt",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:750: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/evidence/vite-publisher-metadata.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:751: trailing whitespace.
++    "docs/brain/checkpoints/M1-03/CONT-01/historical-sbom-fixture.INERT.patch",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:752: trailing whitespace.
++    "docs/phase-4/generated/source-worklist.json",
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:753: trailing whitespace.
++    "docs/phase-4/generated/source-worklist.md"
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:754: trailing whitespace.
++  ],
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:755: trailing whitespace.
++  "limit": "Byte equivalence supports component attribution only; it is not exact-head CI, a current-source scanner pass, G97 admission or release."
+docs/brain/checkpoints/M1-03/CONT-01/evidence/tested-byte-equivalence.json:756: trailing whitespace.
++}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "recorded_at_utc": "2026-10-22T03:10:59Z",
+  "repository": "TasfiqJ/onSkin",
+  "runs": [
+    {
+      "head_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39696518375,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "head_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39696518413,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "head_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39696518372,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ]
+}

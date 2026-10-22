@@ -1,0 +1,3 @@
+# Review delta
+CORE05 is closed at `c14a3105640034a9d7a47d34533f9bd40faa4cc4`; exact Quality/canonical database CI is successful. M1-03 is partially accepted, not complete. CONT-01 source changes are limited to SOURCE_EDIT_AUTHORIZATION.json. Prior task's inert proposals were compliant, not an omitted authorized repair. Security/source acceptance, old expiry, owner pins and external gates remain blocked. M2 does not start.
+The prior successor's stale `roadmap.current_task=M1-02` and M1-02 partial gate-overlay label are corrected here to reflect its already recorded M1-02 scoped acceptance and current M1-03 task. No immutable historical state or47 task identities/dependencies were edited.

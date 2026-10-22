@@ -1,0 +1,7 @@
+{
+  "expected_failure": true,
+  "tests_run": 1,
+  "failures": 0,
+  "errors": 1,
+  "preimage_commit": "aa598d0c93fcc416ba02cbda9333953430bb2ede"
+}

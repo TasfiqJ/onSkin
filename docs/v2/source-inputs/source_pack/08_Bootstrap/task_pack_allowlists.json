@@ -1,0 +1,23 @@
+{
+  "M0-01": {
+    "max_input_bytes": 180000,
+    "files": [
+      "01_Executive/AUTHORITY_AND_DECISIONS.md",
+      "02_Current_State/BASELINE_AND_RECONCILIATION.md",
+      "02_Current_State/known_state.json",
+      "03_Architecture/ACCEPTANCE_AND_MIGRATION.md",
+      "06_Operations/BRAIN_CODEX_PROTOCOL.md",
+      "06_Operations/completion_report.schema.json",
+      "06_Operations/COMPLETION_REPORT_TEMPLATE.md",
+      "08_Bootstrap/M0-01_TASK.md",
+      "08_Bootstrap/FIRST_CODEX_PROMPT.txt",
+      "90_Provenance/external_sources.json",
+      "90_Provenance/V1_Oct19/README_SOURCE_INTEGRITY.txt",
+      "90_Provenance/V1_Oct19/LAUNCH_CONTRACT_RAW.json",
+      "90_Provenance/V1_Oct19/ACTIVE_EXECUTION_STATUS_RAW.json",
+      "90_Provenance/V1_Oct19/ACTIVE_TASK_GRAPH_RAW.json"
+    ],
+    "task_source": "08_Bootstrap/M0-01_TASK.md",
+    "prompt_source": "08_Bootstrap/FIRST_CODEX_PROMPT.txt"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd run typecheck -- --force",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+  "source_tree": "4cea1646e99dcfde95b19a1a9596ae30c3917725",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/current-typecheck.txt",
+    "sha256": "65c05f117808b94e2e8ceb215d7574e9e711a0a55d472145b99e84e7ee86d4d1"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T17:24:00.740131+00:00",
+  "finished_at_utc": "2026-10-20T17:24:17.184931+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ]
+}

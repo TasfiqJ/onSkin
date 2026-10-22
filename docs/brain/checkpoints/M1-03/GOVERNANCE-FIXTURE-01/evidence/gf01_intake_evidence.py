@@ -1,0 +1,20 @@
+import pathlib,json,hashlib,subprocess,datetime,shutil,sys
+sys.path.insert(0,str(pathlib.Path(__file__).parent))
+from gf01_run import ROOT,CP,EVIDENCE,write_json,digest
+EVIDENCE.mkdir(parents=True,exist_ok=True)
+base=pathlib.Path(__file__).parent
+for file in ['gf01_run.py','gf01_suite.py','gf01_preflight.py','gf01_install.py','gf01_commit_source.py']:
+ shutil.copyfile(base/file,EVIDENCE/file)
+shutil.copyfile(base/'gf01_live_preflight.json',EVIDENCE/'live-preflight.json')
+for source,target in [('/tmp/gf01-baseline-governance.log','baseline-governance.log'),('/tmp/gf01-preflight.log','preflight.log'),('/tmp/gf01-approach01-smoke.log','approach01-smoke.log'),('/tmp/gf01-source-worklist-check.log','source-worklist-check.log'),('/tmp/gf01-first-profile.log','precommit-profile.log')]:shutil.copyfile(source,EVIDENCE/target)
+sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip();tree=subprocess.check_output(['git','rev-parse','HEAD^{tree}'],cwd=ROOT).decode().strip()
+environment='Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; fresh no-hardlink full clone; admission NONE'
+for label,argv,exit_code,commit,source_tree in [('baseline-governance',['python3.12','-B','-m','unittest','discover','-s','scripts/brain','-p','test_*.py','-v'],1,'dbcfce9770850d4655221bd3d4c3b5799553aed2','93d9a5789c1ce443cf0bcd86696fff044ff2fd64'),('source-worklist-check',['npm','run','phase4:source-worklist:check'],0,sha,tree)]:
+ log=EVIDENCE/(label+'.log')
+ receipt=dict(schema_version=1,kind='LOCAL_EXECUTION',claim_origin='CODEX_REPORTED_EXECUTION',command=json.dumps(argv),working_directory=str(ROOT),environment=environment,source_commit=commit,source_tree=source_tree,status='PASS' if exit_code==0 else 'FAIL',exit_code=exit_code,output=dict(path=CP+'evidence/'+log.name,sha256=digest(log.read_bytes())),counts=None,argv=argv)
+ if label=='baseline-governance':receipt['observed_inventory']=dict(tests_run=93,failure_events=3,errors=1,skipped=2)
+ if label=='source-worklist-check':receipt['clean_worktree_before_command']=True;receipt['generated_outputs_changed']=False
+ write_json(EVIDENCE/(label+'.receipt.json'),receipt)
+write_json(EVIDENCE/'precommit-diagnostics.json',dict(schema_version=1,kind='PRECOMMIT_DIAGNOSTIC',admission='NONE',source_snapshot_kind='UNCOMMITTED_AUTHORIZED_DIFF',base_commit='dbcfce9770850d4655221bd3d4c3b5799553aed2',commands=[dict(command='python3.12 -B gf01_install.py',exit_code=1,outcome='Guard rejected its baseline-summary string check before creating the writer lock or editing any repository file; corrected the orchestration guard and reran successfully.'),dict(command='python3.12 -B gf01_install.py',exit_code=0),dict(command='python3.12 -B scripts/brain/brain.py --profile M1-03 validate',exit_code=0,output='precommit-profile.log'),dict(command='python3.12 -B -m unittest test_m103_governance_fixture01_profile.GovernanceFixture01.test_exact_report_and_predecessor_default_refusals test_m103_quality_recovery02_profile.QualityRecovery02.test_exact_report_and_false_authority_refusals test_m103_quality_recovery02_profile.QualityRecovery02.test_widget_guard_hash_and_payload_path_changes_refuse -v',working_directory=str(ROOT/'scripts/brain'),exit_code=0,output='approach01-smoke.log',tests_run=3)],fixture_repair_approaches=1))
+write_json(EVIDENCE/'external-context-verification.receipt.json',dict(schema_version=1,kind='CONTEXT_VERIFICATION',claim_origin='CODEX_REPORTED_EXECUTION',command='python -B verify_context.py --expected-manifest-sha256 6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f',working_directory='C:/Users/jasim/Documents/ChatGPT/MasterV2Code/governance-fixture01-context',exit_code=0,verified_members=13,output='VERIFIED 13 members and manifest SHA256 6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f',authority_origin='LITERAL_USER_PROMPT_EXTERNAL_SHA256',admission='NONE'))
+print('Preserved baseline, preflight, clean worklist, exact verification and precommit diagnostics; no claim that precommit diagnostics measure the committed source.')

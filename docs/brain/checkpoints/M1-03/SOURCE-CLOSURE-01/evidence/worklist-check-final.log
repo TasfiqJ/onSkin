@@ -1,0 +1,6 @@
+
+> layerwell@0.1.0 phase4:source-worklist:check
+> node scripts/phase4/build-source-worklist.mjs --strict --check
+
+Phase 4 source worklist is current.
+Phase 4 source worklist passed.

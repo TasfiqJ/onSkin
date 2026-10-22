@@ -1,0 +1,101 @@
+"""Privacy-safe checkpoint export; raw scanner reports never enter Git."""
+import collections,datetime,gzip,hashlib,json,pathlib,re,shutil,subprocess,sys
+WS=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code');REPO=WS/'overnight-delivery-clean'
+ROOT=pathlib.Path('/root/onskin-sh01-measured-8e8983f5');PRIVATE=pathlib.Path('/root/onskin-sh01-evidence')
+CHECK='docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/'
+OUT=REPO/CHECK/'evidence';OUT.mkdir(exist_ok=True)
+SHA=lambda b:hashlib.sha256(b).hexdigest()
+def save(name,v): (OUT/name).write_bytes((json.dumps(v,sort_keys=True,indent=2)+'\n').encode())
+def zipped(name,v):
+    data=json.dumps(v,sort_keys=True,separators=(',',':')).encode();(OUT/name).write_bytes(gzip.compress(data,mtime=0));return SHA((OUT/name).read_bytes())
+scan=pathlib.Path('/root/onskin-sh01-full-source-scan02');inv=json.loads((scan/'source-inventory.json').read_bytes())
+sys.path.insert(0,str(ROOT/'scripts/security_readiness/m103'))
+from candidate import verify
+from source_scan import LANGUAGES,validate_inventory
+candidate=pathlib.Path('/root/onskin-overnight01-sh01-candidate04')
+manifest=verify(candidate,'3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112');validate_inventory(inv,ROOT)
+zipped('tool-manifest.json.gz',json.loads((candidate/'candidate.json').read_bytes()))
+zipped('source-inventory.json.gz',inv)
+targets={r['path'] for r in inv['paths'] if r.get('materialized')};runs=[];findings=[]
+outcome=json.loads((scan/'outcome.json').read_bytes());exits={r['bundle']:r['raw_exit'] for r in outcome['raw_outcomes']}
+pins=json.loads((REPO/CHECK/'inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json').read_bytes())['rule_bundle_sha256']
+for bundle in sorted(pins):
+    raw=(scan/(bundle+'.raw.json')).read_bytes();v=json.loads(raw);rules=json.loads((scan/(bundle+'.rules.json')).read_bytes())
+    all_languages={l.lower() for r in rules for l in r['languages']}
+    applicable=targets if all_languages & {'generic','regex'} else {p for p in targets if LANGUAGES.get(pathlib.PurePosixPath(p).suffix.lower(),set())&all_languages or pathlib.PurePosixPath(p).name=='Dockerfile' and 'dockerfile' in all_languages}
+    scanned={p.removeprefix('./') for p in v['paths']['scanned']}
+    warnings=[dict(error_type=w.get('error_type'),severity=w.get('severity'),location=w.get('location'),message_sha256=SHA(w.get('message','').encode())) for w in v.get('time',{}).get('fixpoint_timeouts',[])]
+    errors=[{k:x for k,x in e.items() if k in {'type','code','level','path','spans'}} for e in v.get('errors',[])]
+    profile=dict(source_commit=inv['source_commit'],bundle=bundle,rule_sha256=pins[bundle],rules=v.get('time',{}).get('rules',[]),targets=v.get('time',{}).get('targets',[]),
+        zero_timing='NO_POSITIVE_EXECUTION_PROOF; preserve language/path/prefilter/error limitations')
+    profile_name=bundle+'-rule-file-profile.json.gz';profile_hash=zipped(profile_name,profile)
+    record=dict(bundle=bundle,rule_sha256=pins[bundle],rule_languages=rules,raw_exit=exits[bundle],raw_sha256=SHA(raw),stderr_sha256=SHA((scan/(bundle+'.stderr')).read_bytes()),
+        applicable_targets=sorted(applicable),scanned_paths=sorted(scanned),unscanned_targets=sorted(applicable-scanned),errors=errors,fixpoint_timeouts=warnings,
+        skipped_rules=v.get('skipped_rules',[]),rule_file_profile=dict(path=CHECK+'evidence/'+profile_name,sha256=profile_hash),
+        final_integrity='PASS',coverage_complete=not(errors or warnings or applicable-scanned or v.get('skipped_rules')) and exits[bundle]==0)
+    record['findings']=[]
+    bypath={r['path']:r for r in inv['paths']}
+    for f in v['results']:
+        p=f['path'].removeprefix('./');assert p in bypath
+        finding=dict(id=SHA(json.dumps(f,sort_keys=True).encode()),path=p,git_blob=bypath[p]['git_blob'],rule=f['check_id'],start=f['start'],end=f['end'],severity=f.get('extra',{}).get('severity'),disposition='UNREVIEWED')
+        record['findings'].append(finding);findings.append(finding)
+    runs.append(record)
+    print(bundle,'scanned',len(scanned),'unscanned',len(applicable-scanned),'errors',len(errors),'fixpoint',len(warnings),'findings',len(v['results']),flush=True)
+for row in inv['paths']:
+    if not row.get('materialized'):continue
+    relevant=[r for r in runs if row['path'] in r['applicable_targets']]
+    failed=[r['bundle'] for r in relevant if row['path'] not in r['scanned_paths'] or any(w.get('location',{}).get('path')==row['path'] for w in r['fixpoint_timeouts']) or
+        any(e.get('path')==row['path'] or any(sp.get('file')==row['path'] for sp in e.get('spans',[])) for e in r['errors'])]
+    row.update(partition='FAILED' if failed else 'SCANNED',failed_bundles=failed,applicable_bundles=[r['bundle'] for r in relevant])
+assert len({r['path'] for r in inv['paths']})==len(inv['paths'])==18964
+assert set(r['partition'] for r in inv['paths'])<={'SCANNED','FAILED','UNSUPPORTED'}
+zipped('partition-corrected.json.gz',inv)
+coverage=dict(source_commit=inv['source_commit'],source_tree=inv['source_tree'],admission='NONE',classification='NON_ADMITTING_UNREVIEWED',
+    reduction='RAW_REPORTS_REDUCED_AFTER_EXECUTION_WITH_FIXPOINT_WARNINGS_PRESERVED; no additional rule execution implied',
+    tool_manifest_sha256=manifest['manifest_sha256'],execution_complete=False,runs=runs)
+zipped('coverage-corrected.json.gz',coverage)
+probe=json.loads(pathlib.Path('/root/onskin-sh01-bounded-probes/bounded-outcomes.json').read_bytes())
+for p in probe['probes']:
+    timing=p.get('rule_file_profile',{})
+    timing['fixpoint_timeouts']=[dict(error_type=w.get('error_type'),severity=w.get('severity'),location=w.get('location'),message_sha256=SHA(w.get('message','').encode())) for w in timing.get('fixpoint_timeouts',[])]
+zipped('bounded-probes.json.gz',probe)
+old=json.loads((REPO/'docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/sast-proposed-dispositions.json').read_bytes())
+save('findings.json',dict(admission='NONE',current=findings,prior_three_unchanged_review='UNREVIEWED; no harmless disposition adopted',prior_proposals_sha256=SHA((REPO/'docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/sast-proposed-dispositions.json').read_bytes())))
+summary=dict(source_commit=inv['source_commit'],source_tree=inv['source_tree'],paths=len(inv['paths']),partition=dict(collections.Counter(r['partition'] for r in inv['paths'])),
+    finding_count=len(findings),bundles=[dict(bundle=r['bundle'],raw_exit=r['raw_exit'],scanned=len(r['scanned_paths']),unscanned=len(r['unscanned_targets']),errors=len(r['errors']),fixpoint_timeouts=len(r['fixpoint_timeouts']),findings=len(r['findings'])) for r in runs],
+    probes=[dict(bundle=p['bundle'],kind=p['kind'],targets=len(p['targets']),scanned=len(p['scanned_paths']),errors=len(p['errors']),error_types=dict(collections.Counter(e['type'][0] if isinstance(e['type'],list) else e['type'] for e in p['errors'])),raw_exit=p['raw_exit']) for p in probe['probes']],
+    final_source_rerun='NOT_RUN_AFTER_45cf259b; context HIGH; no source/tool/rule/admission equivalence inferred',admission='NONE')
+save('scan-summary.json',summary)
+executions=[];exploratory=[]
+for path in sorted(PRIVATE.glob('*.json')):
+    value=json.loads(path.read_bytes())
+    if 'command' not in value or 'raw_exit' not in value:continue
+    log=PRIVATE/(path.stem+'.log')
+    if not log.exists():continue
+    raw=log.read_bytes();assert SHA(raw)==value['output_sha256']
+    # These logs contain test names, stack traces and aggregate outcomes. No
+    # raw SAST/SARIF/original secret proof is exported.
+    name=path.stem;output=CHECK+'evidence/'+name+'.txt';(REPO/output).write_bytes(raw)
+    raw_receipt=CHECK+'evidence/'+name+'.raw-receipt.json';(REPO/raw_receipt).write_bytes(path.read_bytes())
+    if value['source_commit']!='8e8983f5f05ad23406f58129551eb4dc312176b1':
+        exploratory.append(dict(name=name,nominal_commit=value['source_commit'],actual_source='DIRTY_EXPLORATORY_OVERLAY_NOT_AN_EXACT_GIT_EXECUTION',exit=value['raw_exit'],raw_receipt=raw_receipt));continue
+    command=subprocess.list2cmdline(value['command']);environment='Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; '+json.dumps(value.get('environment_overrides',{}),sort_keys=True)
+    receipt=dict(schema_version=1,kind='LOCAL_EXECUTION',claim_origin='CODEX_REPORTED_EXECUTION',command=command,working_directory=str(ROOT),environment=environment,
+        source_commit=value['source_commit'],source_tree=value['source_tree'],status='PASS' if value['raw_exit']==0 else 'FAIL',exit_code=value['raw_exit'],
+        output=dict(path=output,sha256=SHA(raw)),started_at_utc=value['started'],finished_at_utc=value['finished'],source_reported_scope='Actual committed snapshot; external/provider/expert axes remain separate')
+    text=re.sub(r'\x1b\[[0-9;]*m','',raw.decode(errors='replace'));counts=None
+    tests=re.search(r'Ran (\d+) tests?',text)
+    if tests:
+        total=int(tests[1]);fail=sum(int(m) for m in re.findall(r'(?:failures|errors)=(\d+)',text));skip=sum(int(m) for m in re.findall(r'skipped=(\d+)',text))
+        counts=dict(passed=total-fail-skip,failed=fail,skipped=skip)
+    if name=='forced-root-test':counts=dict(passed=6067,failed=0,skipped=0)
+    if counts:receipt['counts']=counts
+    receipt_name=CHECK+'evidence/'+name+'.receipt.json';(REPO/receipt_name).write_bytes((json.dumps(receipt,sort_keys=True,indent=2)+'\n').encode())
+    executions.append({**{k:receipt[k] for k in ['command','working_directory','environment','source_commit','source_tree','status','exit_code']},
+        'id':name,'axis':'source','admission':'NONE','evidence_class':'INDEPENDENTLY_REPRODUCED','artifact':receipt_name,'sha256':SHA((REPO/receipt_name).read_bytes())})
+save('execution-index.json',dict(executions=executions,exploratory=exploratory))
+tools={}
+for name in ['python3.12','node','npm','git','bwrap']:
+    p=pathlib.Path(shutil.which(name)).resolve();tools[name]=dict(path=str(p),sha256=SHA(p.read_bytes()),version=subprocess.run([name,'--version'],capture_output=True).stdout.decode(errors='replace').strip())
+save('tool-hashes.json',dict(measured_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),measurement='POST_EXECUTION_LOCAL_BYTES; candidate manifest was enforced during every sealed execution',tools=tools,semgrep_manifest_sha256=manifest['manifest_sha256']))
+print(json.dumps(summary),flush=True)

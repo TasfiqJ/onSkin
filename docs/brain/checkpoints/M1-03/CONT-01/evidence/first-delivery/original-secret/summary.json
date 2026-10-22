@@ -1,0 +1,44 @@
+{
+  "artifact_id": 12315635408,
+  "zip_sha256": "2b8eba601a37c3f2095100f8af3aa70a0c79d920f06272e024384eb47d4e25fe",
+  "files": [
+    "gitleaks-results.sarif",
+    "gitleaks-tool.json",
+    "secret-scan-outcomes.json",
+    "secret-scan-proof.json"
+  ],
+  "context": {
+    "attempt": "1",
+    "job": "secret-scan",
+    "kind": "ORIGINAL_SECRET_GITHUB_ACTIONS",
+    "repository": "TasfiqJ/onSkin",
+    "workflow": "Security"
+  },
+  "sha": "5278d2cd9b36c8079e8c9c9024c0976694ef48b7",
+  "tree": "0f96770f4603383695a8b6cd4afb738ef6c77ba6",
+  "refs": [
+    "refs/pull/9/merge 5278d2cd9b36c8079e8c9c9024c0976694ef48b7",
+    "refs/remotes/origin/ai-v1-finish 551a6f40a3bb95f12e008c3f51445dac7698ad7a",
+    "refs/remotes/origin/c07a-cycle-route-readiness 1ddeea2e38ef646d09a29bbdff40cc7b12768a37",
+    "refs/remotes/origin/c08a1-progress-data-authority f1668a46beb46450beb1da5605ca63652c65407f",
+    "refs/remotes/origin/c08a2-progress-lock-authority bb1ac1076149e77edd1bf9746ffe926e70401e9e",
+    "refs/remotes/origin/codex/ci-q-h01-diagnostic-20261012 eb286b237a782454df6e529c74c72dcbe50a2719",
+    "refs/remotes/origin/codex/core-loop-first-insight-gate 0c9601d6787fe76995b1cd1c5a92b41d5d72c177",
+    "refs/remotes/origin/codex/ios-privacy-source fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49",
+    "refs/remotes/origin/main bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "refs/remotes/origin/progress-authority-render-warning 862c7601a18434024612100a4b49f9e779b00fd2",
+    "refs/remotes/origin/stage/m0-baseline 6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+    "refs/remotes/origin/stage/m1-retained-safety 9f8f99e7b48e0f7ce92fbf74ddb80a0a7d9e8562",
+    "refs/remotes/pull/9/merge 5278d2cd9b36c8079e8c9c9024c0976694ef48b7"
+  ],
+  "reachable_commits": 2571,
+  "snapshot_files": 18640,
+  "raw_exits": {
+    "gitleaks-current": 2,
+    "gitleaks-history": 2,
+    "trufflehog-current": 0,
+    "trufflehog-history": 0
+  },
+  "current_records": 1108,
+  "history_records": 4325
+}

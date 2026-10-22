@@ -1,0 +1,157 @@
+{
+  "state_version": "brain-m1-03-sh01-review01-source-closure01-issued-16",
+  "generated_at_utc": "2026-10-21T13:06:13+00:00",
+  "authority": "Independent Brain SH01 review and stage-only next issuance; not G97 approval or main promotion",
+  "files": [
+    {
+      "path": "ACCEPTANCE_LEDGER.json",
+      "bytes": 24999,
+      "sha256": "2ffdaddc30af7e74bf92a5ffcc87a2197eeed59117adc1e1004677492b73c4f2"
+    },
+    {
+      "path": "ACCEPTANCE_SCOPE.md",
+      "bytes": 428,
+      "sha256": "3180049139836947e9b539d8d894d6caa34c9a285043a0028d734d0b46d608e3"
+    },
+    {
+      "path": "ADR_DECISIONS.md",
+      "bytes": 1849,
+      "sha256": "e86c4de0a9b9761700c3c56653fa0f286b32be770b54547f27067c5e68a86a3d"
+    },
+    {
+      "path": "ADR_REGISTRY.json",
+      "bytes": 28659,
+      "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+    },
+    {
+      "path": "AUDIT_M1-02_ACCEPTANCE.md",
+      "bytes": 5859,
+      "sha256": "455f98c8ba57f3d69081f3c9a4fd77f9b81487ea8428db3db9f4e6b0e3a50092"
+    },
+    {
+      "path": "AUDIT_M1-03_OVERNIGHT01.md",
+      "bytes": 7057,
+      "sha256": "302d2494c5b4abb5b4b034165755e3c86897a1cb737f9c757c246404b22c2e39"
+    },
+    {
+      "path": "AUDIT_M1-03_REVIEW01.md",
+      "bytes": 10089,
+      "sha256": "c72847b7b704b584da2869662c907b414557481eb57d3b35054332d4a1ef7c75"
+    },
+    {
+      "path": "AUDIT_M1-03_REVIEW02.md",
+      "bytes": 10167,
+      "sha256": "8f7bc1cf439cdb5ebe1d7e6e218170c16905d9bb9c747f44f1730d566329e676"
+    },
+    {
+      "path": "BLOCKERS.json",
+      "bytes": 50941,
+      "sha256": "8ba970d7d94cd26a680f7c36ac892584898f9f3013d0ec5c82072aba232ce396"
+    },
+    {
+      "path": "BLOCKERS.md",
+      "bytes": 685,
+      "sha256": "3db87feacd949d99f793535140eceb1f4b10668d94c7ff7c5fe5a45992c0acd2"
+    },
+    {
+      "path": "BRAIN_RESUME_PROMPT.md",
+      "bytes": 804,
+      "sha256": "77099a1d031d9c68a3a1a6e7f70ebbfaa99f240d13a56726ad234e0200503c5e"
+    },
+    {
+      "path": "CANDIDATE_TOOL_INPUTS.json",
+      "bytes": 2995,
+      "sha256": "fdc62dc234dff65e091cb44e6bdea414c76d08e4406211f44ccd885b40858685"
+    },
+    {
+      "path": "CI_ARTIFACT_REVIEW.json",
+      "bytes": 11280,
+      "sha256": "c28855cfb705a99fce3801fd252bf04d68e65491361093e6af5b87df1eebf862"
+    },
+    {
+      "path": "CI_EXACT_HEAD.md",
+      "bytes": 850,
+      "sha256": "b1f76dcbbb137ccb208ceef724c7395fa9238998edf66809ac870e274ce9060b"
+    },
+    {
+      "path": "CI_OBSERVATIONS.json",
+      "bytes": 2119,
+      "sha256": "3bfa73f2f51466a5e2b337a86548e677d15a125a9ce2a5a465ee11f315f9e7c3"
+    },
+    {
+      "path": "CI_OBSERVATIONS.md",
+      "bytes": 389,
+      "sha256": "c1d43fcf80440ad0837942620d87696b2c92f375163d36c40380bdfe68d8dd0e"
+    },
+    {
+      "path": "DECISIONS_DELTA.md",
+      "bytes": 936,
+      "sha256": "e80ffae6498ab24a91faa795d8d177a1617bfbf8e34ae9d5b2152ded585a0a20"
+    },
+    {
+      "path": "EXECUTION_EVIDENCE.json",
+      "bytes": 13762,
+      "sha256": "e463ad9cec0d6380cf625cb7d48ccff1cd16a0ea2ef291cdf759aa70bcf99d22"
+    },
+    {
+      "path": "NATIVE_AND_FIXTURE_BINDINGS.json",
+      "bytes": 2714,
+      "sha256": "78ebca127cf21c4421e5b1aca827db5006f17eed2dfb3bbf33b0e14e8a91dcb2"
+    },
+    {
+      "path": "OPEN_BLOCKERS.md",
+      "bytes": 985,
+      "sha256": "c9a3c786cf59d405f0dd743db8f66bb84dee4886c7e7212c14c6fae79cbb3600"
+    },
+    {
+      "path": "OVERNIGHT_ISSUANCE_OBSERVATION.json",
+      "bytes": 1514,
+      "sha256": "ecfbdf232d8a1bc4ede13cda56be831fecb6b1b21923049c98a42d0efb4171a3"
+    },
+    {
+      "path": "PUBLICATION_RECOVERY_INPUTS.json",
+      "bytes": 5891,
+      "sha256": "3efd5d7a1cdaee8f8d25659a30fb664b55a9e39a742c06b48aa23a91eacecec9"
+    },
+    {
+      "path": "REVIEWED_SOURCE_HASHES.json",
+      "bytes": 4557,
+      "sha256": "b1d997938155f01cae1cd4ec29d2ca104ec51ba1593b4707d8f09c01da73be92"
+    },
+    {
+      "path": "REVIEW_OBSERVATIONS.md",
+      "bytes": 414,
+      "sha256": "a177a552cc3d43b56799e35d40f1addade883019550285bb453369664b00b7a9"
+    },
+    {
+      "path": "ROADMAP_STATUS.md",
+      "bytes": 560,
+      "sha256": "cf4cc9aeac3875aa32e9bf5b0ad5211e15a9ce078b70bad58d39dcc0b4de9f44"
+    },
+    {
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 5001,
+      "sha256": "7149daa8a784c7c6768c57b8da64b0e44f575a6bc17a3a78f81f3ea0a51ddfe6"
+    },
+    {
+      "path": "STATE_AT_GLANCE.md",
+      "bytes": 1152,
+      "sha256": "6487659fffb48532e5fe34beb0f83afe944c200f660f9e5740954a389e4570dc"
+    },
+    {
+      "path": "TRUFFLEHOG_BYTE_WITNESS.json",
+      "bytes": 2236,
+      "sha256": "52ff6165602d80d71b9918c6f24ab7b9dedb1e0f2fc899d22bc315362cf44257"
+    },
+    {
+      "path": "brain_state.json",
+      "bytes": 63217,
+      "sha256": "5998dc9eba2300d01f347fc3aa89e142604b1c9d08a821d0a7b57f00504c0273"
+    },
+    {
+      "path": "roadmap.json",
+      "bytes": 50565,
+      "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+
+> layerwell@0.1.0 phase9:dependency-sbom
+> node scripts/phase9/dependency-sbom.mjs
+
+Phase 9 dependency SBOM
+WARN Missing registry-backed dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true after reviewing the exact RC scanner artifacts.
+FAIL braces: review is expired or dates are invalid
+FAIL node-forge: review is expired or dates are invalid
+
+Phase 9 dependency SBOM has 2 blockers.

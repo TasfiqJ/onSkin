@@ -1,0 +1,674 @@
+{
+  "actor": "CODEX",
+  "attribution": "Local reproduction by Codex, never an independent Brain rerun. Legacy evidence_class vocabulary retained by guarded report family.",
+  "counts_policy": "Per command; nested/filtered/fixture and overlapping checks are not added. Null counts mean not emitted or not safely reducible; raw summaries retained.",
+  "executions": [
+    {
+      "id": "clean-worklist",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:27:47.964896+00:00",
+      "finished_at_utc": "2026-10-20T23:27:48.220530+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/clean-worklist.txt",
+        "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "current-db06-static-refusal",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node --input-type=module -e \"import { assertPinnedMigrationRunnerCompatibility } from \\\"./scripts/phase2/staging-deployment-evidence-lib.mjs\\\"; assertPinnedMigrationRunnerCompatibility(process.cwd(), \\\"2.117.0\\\");\"",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:23:25.535561+00:00",
+      "finished_at_utc": "2026-10-20T23:23:25.867555+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/current-db06-static-refusal.txt",
+        "sha256": "ad496ae8932190c1b8559fbdd61f324335255ddaf04451fc5d32bcdffedf01f3"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "current-security-source-refusal",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B scripts/phase9/security_acceptance/contract.py source",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:23:25.090128+00:00",
+      "finished_at_utc": "2026-10-20T23:23:25.332641+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/current-security-source-refusal.txt",
+        "sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "db-local-source-guards",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd run phase2:db-local-contract",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:22:14.666706+00:00",
+      "finished_at_utc": "2026-10-20T23:22:31.201472+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/db-local-source-guards.txt",
+        "sha256": "8593023b851a970f3182c7582b2b8d626aa844a218173e502a5648afef981391"
+      },
+      "raw_test_summaries": [
+        "# tests 171",
+        "# pass 171",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0"
+      ]
+    },
+    {
+      "id": "dependency-paths",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd explain braces node-forge vite --json",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+      "source_tree": "7bf9730be830e56e19116408e5b9b9675e76c255",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:08:50.547110+00:00",
+      "finished_at_utc": "2026-10-20T23:09:02.049994+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/dependency-paths.txt",
+        "sha256": "ec4d768987c444a3b7c8fd25ce470f473ea00033a69adaac88208d3db35c4d2e"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "existing-exception-refusal-tests",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node --test scripts/phase9/security-advisory-exceptions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:22:35.801564+00:00",
+      "finished_at_utc": "2026-10-20T23:22:35.938893+00:00",
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/existing-exception-refusal-tests.txt",
+        "sha256": "0bef2c947256ea4282e8ecc04793bd334eb4845d82aa2786f4b4623ae653af2a"
+      },
+      "raw_test_summaries": [
+        "# tests 7",
+        "# pass 7",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0"
+      ]
+    },
+    {
+      "id": "existing-security-backports",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd run phase9:tooling-security:test",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:22:34.161152+00:00",
+      "finished_at_utc": "2026-10-20T23:22:35.598236+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/existing-security-backports.txt",
+        "sha256": "3efac364ed83e7015915863dd8cab0595ebfc2c5bad3e1d06459aecb3a398413"
+      },
+      "raw_test_summaries": [
+        "# tests 20",
+        "# pass 20",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0"
+      ]
+    },
+    {
+      "id": "final-custody",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/custody_m103.py",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:30:02.706716+00:00",
+      "finished_at_utc": "2026-10-20T23:30:05.892519+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/final-custody.txt",
+        "sha256": "848c02237cb72b9e0278355873363440be62c1b0ef4ef41db51f43afa8920383"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "final-profile",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B scripts/brain/brain.py --profile M1-03 validate",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:27:46.118337+00:00",
+      "finished_at_utc": "2026-10-20T23:27:47.756695+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/final-profile.txt",
+        "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "final-source-contracts",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:11:58.835917+00:00",
+      "finished_at_utc": "2026-10-20T23:12:49.859506+00:00",
+      "counts": {
+        "passed": 164,
+        "failed": 0,
+        "skipped": 0
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/final-source-contracts.txt",
+        "sha256": "f9b02328918372f3d0aa5617b6d3c8b7dff5e5f43877d7c4ea369cb89e6fb6a2"
+      },
+      "raw_test_summaries": [
+        "# tests 164",
+        "# pass 164",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0"
+      ]
+    },
+    {
+      "id": "installed-context",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B docs/brain/checkpoints/M1-03/inputs/verify_context.py --expected-manifest-sha256 e580ae55c3aa97fe18a8b4e8782b1887ee503b3fec88df0034aa82cc2edee95f",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "ec74d4044991ba1a6887b765dd04ca36f7cb8894",
+      "source_tree": "97b5250584f306dd014b92a3746e476c7914017b",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:42:40.366928+00:00",
+      "finished_at_utc": "2026-10-20T23:42:40.564092+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/installed-context.txt",
+        "sha256": "1e176a8481be1d7ae362469e8cea530af8aa116051f8acaa5ef060d5ed787e50"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "measured-governance",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+      "source_tree": "7bf9730be830e56e19116408e5b9b9675e76c255",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:08:50.534583+00:00",
+      "finished_at_utc": "2026-10-20T23:18:30.434493+00:00",
+      "counts": {
+        "passed": 56,
+        "failed": 0,
+        "skipped": 2
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/measured-governance.txt",
+        "sha256": "f3984dad0ea50e2a25657891ab8e5e1bd9ca7824eb7c07019cc663f7caa81276"
+      },
+      "raw_test_summaries": [
+        "Ran 58 tests in 579.632s",
+        "OK (skipped=2)"
+      ]
+    },
+    {
+      "id": "measured-lint",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd run lint -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:12:37.761030+00:00",
+      "finished_at_utc": "2026-10-20T23:13:35.528773+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/measured-lint.txt",
+        "sha256": "5a305292156d3879b7bb27dcd5948d2970bc786d00623e341a14b86948ad5ac9"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "measured-local-verifier",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "integration",
+      "command": "PATH=C:/Program Files/Docker/Docker/resources/bin;C:/Program Files/nodejs;C:/Windows/System32;C:/Windows;C:/Python39;C:/Program Files/Git/cmd node scripts/phase2/local-supabase-reset.mjs --verify",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+      "source_tree": "7bf9730be830e56e19116408e5b9b9675e76c255",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:08:26.780825+00:00",
+      "finished_at_utc": "2026-10-20T23:42:50.351685+00:00",
+      "counts": null,
+      "extra_environment": {
+        "PATH": "C:/Program Files/Docker/Docker/resources/bin;C:/Program Files/nodejs;C:/Windows/System32;C:/Windows;C:/Python39;C:/Program Files/Git/cmd"
+      },
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/measured-local-verifier.txt",
+        "sha256": "a60dfe5701dc246447d5906edf60accf255476be7c7a5d9c729eed681800396b"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "measured-root-tests",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd run test -- --force -- --cache=false",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:11:58.822415+00:00",
+      "finished_at_utc": "2026-10-20T23:12:42.056664+00:00",
+      "counts": {
+        "passed": 6066,
+        "failed": 1,
+        "skipped": 0
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/measured-root-tests.txt",
+        "sha256": "165a7ead831605693db07d72e3b7d5f333519be6cbf23179aa1c714b4c906d79"
+      },
+      "raw_test_summaries": [
+        "@layerwell/catalog-operator-console:test:  Test Files  7 passed (7)",
+        "@layerwell/catalog-operator-console:test:       Tests  24 passed (24)",
+        "@layerwell/mobile:test:  Test Files  1 failed | 464 passed (465)",
+        "@layerwell/mobile:test:       Tests  1 failed | 6042 passed (6043)"
+      ]
+    },
+    {
+      "id": "measured-source-contracts",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+      "source_tree": "7bf9730be830e56e19116408e5b9b9675e76c255",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:08:50.541595+00:00",
+      "finished_at_utc": "2026-10-20T23:09:29.859880+00:00",
+      "counts": {
+        "passed": 164,
+        "failed": 0,
+        "skipped": 0
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/measured-source-contracts.txt",
+        "sha256": "4ae32884e61536b8d462082610fe16b5f39c797062a47611a7e56e2b7e9589b3"
+      },
+      "raw_test_summaries": [
+        "# tests 164",
+        "# pass 164",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0"
+      ]
+    },
+    {
+      "id": "measured-typecheck",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd run typecheck -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:11:58.858970+00:00",
+      "finished_at_utc": "2026-10-20T23:12:37.417785+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/measured-typecheck.txt",
+        "sha256": "f99c7753035170f75072b0e73776cc5865e051e47691f612c885da22a25aca64"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "notification-failure-isolation",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "npm.cmd --workspace apps/mobile run test -- --run src/features/notifications/transaction.cont01.test.ts --cache=false",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:14:02.833300+00:00",
+      "finished_at_utc": "2026-10-20T23:14:04.898431+00:00",
+      "counts": {
+        "passed": 9,
+        "failed": 1,
+        "skipped": 0
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/notification-failure-isolation.txt",
+        "sha256": "fa0233d2ca1f75eeb50ca7f11f51f5a1aebff7ce24f86ecada0880dd2c4e4621"
+      },
+      "raw_test_summaries": [
+        " Test Files  1 failed (1)",
+        "      Tests  1 failed | 9 passed (10)"
+      ]
+    },
+    {
+      "id": "observer-fixture-diagnostic-corrected",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/probe_m103_observer.py",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:16:38.186914+00:00",
+      "finished_at_utc": "2026-10-20T23:16:55.533319+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/observer-fixture-diagnostic-corrected.txt",
+        "sha256": "9201ffac62b7c315b4c0eb399eb29f6a8edb18024dc9dcd4f8863c078c587c35"
+      },
+      "raw_test_summaries": [
+        " Test Files  1 passed (1)",
+        "      Tests  10 passed (10)",
+        " Test Files  1 passed (1)",
+        "      Tests  10 passed (10)"
+      ]
+    },
+    {
+      "id": "observer-fixture-diagnostic",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/probe_m103_observer.py",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "fc6541adadb9abcdea725cfeee34923a3902f2f0",
+      "source_tree": "0a0d2ee5dc633f20d3469c857d5231fc1bf7e205",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:15:24.287541+00:00",
+      "finished_at_utc": "2026-10-20T23:15:40.058384+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/observer-fixture-diagnostic.txt",
+        "sha256": "9f726ef8be1c8b1c96034e7d5a08330ff4e36ca0f1cb1e8d993972008fe98939"
+      },
+      "raw_test_summaries": [
+        " Test Files  1 passed (1)",
+        "      Tests  10 passed (10)"
+      ]
+    },
+    {
+      "id": "original-source-contracts",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "source_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:03:49.389193+00:00",
+      "finished_at_utc": "2026-10-20T23:04:15.112865+00:00",
+      "counts": {
+        "passed": 148,
+        "failed": 1,
+        "skipped": 0
+      },
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/original-source-contracts.txt",
+        "sha256": "9827e1904d92eee794302d1e17b0a8ee539059e7d81e81523d64eda75b23311a"
+      },
+      "raw_test_summaries": [
+        "# tests 149",
+        "# pass 148",
+        "# fail 1",
+        "# cancelled 0",
+        "# skipped 0",
+        "# todo 0"
+      ]
+    },
+    {
+      "id": "post-database-cleanup",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/postdb_m103.py",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "ec74d4044991ba1a6887b765dd04ca36f7cb8894",
+      "source_tree": "97b5250584f306dd014b92a3746e476c7914017b",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:43:34.506573+00:00",
+      "finished_at_utc": "2026-10-20T23:43:35.271117+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/post-database-cleanup.txt",
+        "sha256": "ac380861b8c91f572ddfe003b5ad11f585dbc0de8250c992f170f0a14b26b93b"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "retained-security-contract-regressions-py312",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.12.14; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:28:54.604774+00:00",
+      "finished_at_utc": "2026-10-20T23:36:00.825398+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/retained-security-contract-regressions-py312.txt",
+        "sha256": "a74cc3f898dd1695275b331f00202784e4ba5cec175c3e35ee8c10fa6258c5a0"
+      },
+      "raw_test_summaries": [
+        "Ran 70 tests in 425.745s",
+        "FAILED (failures=21, errors=8)"
+      ]
+    },
+    {
+      "id": "retained-security-contract-regressions",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:27:46.107817+00:00",
+      "finished_at_utc": "2026-10-20T23:27:46.247121+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/retained-security-contract-regressions.txt",
+        "sha256": "5d5237943ddc7712a0f7e24b255dca76e4400d18d2e2fa58c0d0433f60e739c2"
+      },
+      "raw_test_summaries": [
+        "Ran 1 test in 0.000s",
+        "FAILED (errors=1)"
+      ]
+    },
+    {
+      "id": "security-windows-fixture-cause",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B scripts/phase9/security_acceptance/test_contract.py ContractTests.test_SAST_engine_substitution_or_skipped_rules_rejects -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.12.14; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at_utc": "2026-10-20T23:31:17.556451+00:00",
+      "finished_at_utc": "2026-10-20T23:31:18.214958+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/security-windows-fixture-cause.txt",
+        "sha256": "6d5cd0dd202da282a8a3e75925596849ad38bb1d661214b348a6fb81873c615e"
+      },
+      "raw_test_summaries": [
+        "Ran 1 test in 0.411s",
+        "FAILED (failures=2)"
+      ]
+    },
+    {
+      "id": "security-windows-listener-cause",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/listener_m103.py",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.12.14; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "8670b5b1e0ff80f24e79d0146006d848ec6f6a07",
+      "source_tree": "dc188e496bfb7335604cf0beabf55b247a362a6a",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:37:42.552744+00:00",
+      "finished_at_utc": "2026-10-20T23:37:42.762112+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/security-windows-listener-cause.txt",
+        "sha256": "a81a33184890d18d1e3a5d3e2d1312afc6e88e40cae7be154e0d66518c6ea581"
+      },
+      "raw_test_summaries": []
+    },
+    {
+      "id": "worklist-final-clean",
+      "claim_origin": "CODEX_REPORTED_EXECUTION",
+      "axis": "source",
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+      "source_commit": "ec74d4044991ba1a6887b765dd04ca36f7cb8894",
+      "source_tree": "97b5250584f306dd014b92a3746e476c7914017b",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-20T23:41:49.660529+00:00",
+      "finished_at_utc": "2026-10-20T23:41:50.096711+00:00",
+      "counts": null,
+      "extra_environment": {},
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/evidence/worklist-final-clean.txt",
+        "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+      },
+      "raw_test_summaries": []
+    }
+  ]
+}

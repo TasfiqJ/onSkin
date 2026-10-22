@@ -1,0 +1,6 @@
+Original provider run 39543844814; job 119037719258; submitted source 3c063dfe47d887e7aa3e27d05da41658b69a59dc.
+Selected decoded log lines only; no new local verifier run; admission NONE.
+2026-10-21T04:26:16.2005360Z       throw new Error(`H01_SQL_PROBE_FAILED: ${error.originReason}. ${error.diagnostic ?? ''}`, {
+2026-10-21T04:26:16.2006035Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded
+2026-10-21T04:26:16.2010933Z     diagnostic: 'Error response from daemon: toomanyrequests: Data limit exceeded'
+2026-10-21T04:26:16.2156633Z ##[error]Process completed with exit code 1.

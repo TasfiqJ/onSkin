@@ -1,0 +1,24 @@
+{
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python3.12 -B -m unittest discover -s scripts/security_readiness/m103 -p test_*.py -v",
+  "counts": {
+    "failed": 0,
+    "passed": 9,
+    "skipped": 0
+  },
+  "environment": "Linux x86_64; Python 3.12.3; Node v24.19.0; npm 11.20.0; {\"ONSKIN_TEST_CANDIDATE\": \"/root/onskin-overnight01-sh01-candidate04\"}",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-21T11:46:27.091722+00:00",
+  "kind": "LOCAL_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/candidate-nine.txt",
+    "sha256": "c61087f8193e3758a3809cccffe9ed8a168ae1afc74c0f080ef4c2070e0febdf"
+  },
+  "schema_version": 1,
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_reported_scope": "Actual committed snapshot; external/provider/expert axes remain separate",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "started_at_utc": "2026-10-21T11:46:06.564308+00:00",
+  "status": "PASS",
+  "working_directory": "/root/onskin-sh01-measured-8e8983f5"
+}

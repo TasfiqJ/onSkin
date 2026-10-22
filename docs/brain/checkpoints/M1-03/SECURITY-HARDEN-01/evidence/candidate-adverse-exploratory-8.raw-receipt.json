@@ -1,0 +1,25 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/security_readiness/m103",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "started": "2026-10-21T11:39:34.711116+00:00",
+  "finished": "2026-10-21T11:39:55.886517+00:00",
+  "raw_exit": 0,
+  "output_sha256": "908f6177d35a69c51734fcd0f47dbf1549e0bb5781ef79af02aeca4fcae3cbf7",
+  "output_bytes": 1668,
+  "environment_overrides": {
+    "ONSKIN_TEST_CANDIDATE": "/root/onskin-overnight01-sh01-candidate04"
+  },
+  "source_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "source_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "admission": "NONE"
+}

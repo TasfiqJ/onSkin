@@ -1,0 +1,142 @@
+{
+  "base_commit": "b74c0efa23828bcdaa3fbe49e43177dcc69331b9",
+  "base_tree": "675e93e9b1636d169d45cc532a4a1f7daf2509cb",
+  "clean_before_edits": true,
+  "writable_matched": 11,
+  "protected_matched": 8,
+  "preimages": [
+    {
+      "path": ".gitattributes",
+      "git_blob": "b0c223e48ff07d9ad681412530461162ee405811",
+      "sha256": "79e55a7c4b93102a4d1700acfba025887f5ff10ed9603ddf1d7f25dd31232243",
+      "bytes": 1942,
+      "worktree_exact": true
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "git_blob": "b5679a58fff0839ee3efc79c8806381974c7b963",
+      "sha256": "f6fdb4ad155937d89044f5159196c297f453d27f097b76178c19e27fc15645cb",
+      "bytes": 3347,
+      "worktree_exact": true
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "git_blob": "0cecb642af0545f6ddc051a59e96de6eb0f3f422",
+      "sha256": "7c00e764f0b8ee6f8654c3bbcb635041bee7e2e04c20b7f8f3adfe17ad40ce73",
+      "bytes": 3007,
+      "worktree_exact": true
+    },
+    {
+      "path": "package-lock.json",
+      "git_blob": "7b7369c5d14f4befda14a545b4c0ddaf280e0c0d",
+      "sha256": "ce1992c391d8b1c533ab9596b00d0f14dfc4c39d51256ed90619ca4351654782",
+      "bytes": 572796,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "git_blob": "b5abc71a232f76c22b81b0286ff6a4de961e1871",
+      "sha256": "6f51f8fa5a7fc0abed168c4a0e89531ccbd1d33924e38cbbca284762ee09c246",
+      "bytes": 16969,
+      "worktree_exact": true
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "git_blob": "bfe90a49fff74e25d7b53738e0c4d42bedd2afb4",
+      "sha256": "ca660645ed45c986ddc7711b8896018d05dd530585086f78f82ed94bb2968f56",
+      "bytes": 8350,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "git_blob": "ac9304c21ef9e094232e27d39f5ca9d8cbd225b2",
+      "sha256": "b304d306050886f396e5b2ad931b45006f41fe06735cc73be82f86cd30808259",
+      "bytes": 38878,
+      "worktree_exact": true
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "git_blob": "6173257dce9d77591b95ea1b01bfa8b4ddae821a",
+      "sha256": "21942c6c32b791a5013f2a468acb2270f6d7f0fb336e30ea2fa7ff2c426f1a32",
+      "bytes": 137486,
+      "worktree_exact": true
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "git_blob": "ad7b296c082d56d8bf838b627e21eb47c6aa8e62",
+      "sha256": "1118334ce7647edcd692db72207c8bd38e68bca53fcbc3fb45a5a18c517bf7b7",
+      "bytes": 81878,
+      "worktree_exact": true
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "git_blob": "9edb38354134590e5544cf460a6cc85ec42263ac",
+      "sha256": "2001e2330293f2fce45d55553ef5b58f9e8e7dd07a8f4dd5cf75d8fd752044e6",
+      "bytes": 247820,
+      "worktree_exact": true
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "git_blob": "ab4228d139ac3efddaedb016c5fa7cfb5bb8d9fe",
+      "sha256": "3f619d918084e765827292b6ffab6cd40461c2153ff3f47448b622154074f6f6",
+      "bytes": 19517,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
+      "git_blob": "1bf1038828720ea749145cbebed351c870ade0c5",
+      "sha256": "e120caae4c8b367bb1e2bdb69f652ed355a7e25ade21fe8e67ad743723a5149f",
+      "bytes": 22589,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
+      "git_blob": "5b6e69a633dd067e8d2e8e9450faec919677743b",
+      "sha256": "764d4e1ae88747600b3e35b3ed1bced181465052a0a6c4ff8889a3ca3b572c1c",
+      "bytes": 10192,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "git_blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c",
+      "sha256": "aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510",
+      "bytes": 78932,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "bytes": 38158,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "bytes": 13797,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "bytes": 2327707,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
+      "git_blob": "e169484d968c9270ae2dbaa5eb113069025281db",
+      "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655",
+      "bytes": 574209,
+      "worktree_exact": true
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "git_blob": "69123bd77b7af0c97f55d9e47b3bad975498cbd7",
+      "sha256": "1c2e05e245db33ed7635de68e73488f568fc0ace2a7b35f52a7b4ebc1e061552",
+      "bytes": 912,
+      "worktree_exact": true
+    }
+  ]
+}

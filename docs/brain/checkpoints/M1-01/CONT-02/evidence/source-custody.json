@@ -1,0 +1,42 @@
+{
+  "kind": "CODEX_LOCAL_GIT_OBSERVATION",
+  "admission": "NONE",
+  "recorded_at_utc": "2026-10-20T17:25:26.440534+00:00",
+  "measured": {
+    "commit": "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+    "tree": "4cea1646e99dcfde95b19a1a9596ae30c3917725"
+  },
+  "continuation_base": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+  "per_commit_protected_paths_unchanged": [
+    ".github",
+    "package.json",
+    "package-lock.json",
+    "apps/mobile/package.json",
+    "supabase",
+    "scripts/phase9",
+    "docs/phase-9",
+    "docs/brain/state",
+    "docs/brain/checkpoints/M0-02",
+    "docs/brain/reviews/M0-02",
+    "docs/brain/checkpoints/M1-01/inputs",
+    "docs/brain/checkpoints/M1-01/completion-report.json",
+    "docs/brain/checkpoints/M1-01/CONT-01",
+    "docs/brain/reviews/M1-01/REVIEW-01",
+    "docs/v2",
+    "PROGRESS.md"
+  ],
+  "checked_commits": [
+    "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+    "a42f575995fe6559791ff593c977aa92c52a609f",
+    "b3b61425e6380f986035bdadd30a37b88741556a",
+    "56c4b2d6ea3684a49c3fe0d765f10df3a82b8823",
+    "3c10b5e9a9d165fc477b19effdd51176866761c0",
+    "968e0e490a82e50af18c3c9eddff4cffd0b15534",
+    "f4f5345aebaf7f0d49b1427b2f91d81d9960f783"
+  ],
+  "immutable_input_files_verified": 29,
+  "review02_matches_issued_bytes": true,
+  "runtime_and_governance_identical_since": "a42f575995fe6559791ff593c977aa92c52a609f",
+  "runtime_difference": [],
+  "limits": "Source conservation and local execution attribution only; no Brain acceptance or provider/device admission."
+}

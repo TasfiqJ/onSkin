@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "QUALITY-RECOVERY-03",
+  "authorization_id": "M103-QUALITY-RECOVERY03-SOURCE-EDIT-01",
+  "external_manifest_sha256": "658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200",
+  "status": "PARTIAL_SAFE_SOURCE_PATCH; SUBMITTED_REVIEW_REQUIRED",
+  "admission": "NONE",
+  "implementation": {
+    "commit": "30bbe8b5b75d1708aabcf630711767a1cb84506c",
+    "tree": "c3402d39118af4eca3873128c867f81dd2dab43b"
+  },
+  "measured": {
+    "commit": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+    "tree": "db1c3db6f93e2d341a6bd85de2ad9d87db76d0af"
+  },
+  "counts": {
+    "root_passed": 6067,
+    "root_failed": 0,
+    "cached_tasks": 0,
+    "new_adverse": 8,
+    "secret_passed": 12,
+    "security_ran": 70,
+    "security_outcome": "failures=23, errors=2",
+    "widget_passed": 25,
+    "extension_passed": 42,
+    "privacy_passed": 77,
+    "archive_privacy_fixtures_passed": 238,
+    "doctor_passed": 21,
+    "doctor_total": 21,
+    "frozen_endpoint_governance_ran": 93,
+    "frozen_endpoint_governance_passed": 91,
+    "frozen_endpoint_governance_skipped": 2,
+    "ordinary_governance_ran": 93
+  },
+  "lock_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+  "changed_lock_entries": 2,
+  "mapped_entries_preserved": 4,
+  "source_pins_preserved": 10,
+  "mapping_digest_fields_changed": 3,
+  "ordinary_governance_outcome": "failures=3, errors=1, skipped=2",
+  "ordinary_governance": "FAIL; separate frozen-endpoint success does not replace ordinary discovery",
+  "original_security": "RED",
+  "canonical_db": "BLOCKED_ECR_DATA_LIMIT_EXCEEDED",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "incremental_spend_usd": 0,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "context_health": {
+    "level": "MODERATE",
+    "compaction_observed": true
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "final_ci_note": "Committed observation binds measured head only. Final delivery observation is fetched after final push and retained outside Git to avoid self-reference."
+}

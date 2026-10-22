@@ -1,0 +1,106 @@
+[
+  {
+    "log": "clean-governance.log",
+    "total": 71,
+    "passed": 69,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 2
+  },
+  {
+    "log": "clean-history-adverse.log",
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "clean-secret12.log",
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "clean-security70.log",
+    "total": 70,
+    "passed": 70,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "governance-baseline.log",
+    "total": 68,
+    "passed": 61,
+    "failed": 3,
+    "errors": 2,
+    "skipped": 2
+  },
+  {
+    "log": "governance-final.log",
+    "total": 71,
+    "passed": 69,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 2
+  },
+  {
+    "log": "governance-five-repair.log",
+    "total": 5,
+    "passed": 3,
+    "failed": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "history-adverse-final.log",
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "history-adverse.log",
+    "total": 8,
+    "passed": 7,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "history-preimage-regression.log",
+    "total": 1,
+    "passed": 0,
+    "failed": 0,
+    "errors": 1,
+    "skipped": 0
+  },
+  {
+    "log": "sc03-profile-tests.log",
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "secret12.log",
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "log": "security70.log",
+    "total": 70,
+    "passed": 70,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+]

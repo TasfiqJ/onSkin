@@ -1,0 +1,586 @@
+{
+  "schema_version": 1,
+  "admission": "NONE",
+  "objects": [
+    {
+      "path": ".gitattributes",
+      "sha256": "79e55a7c4b93102a4d1700acfba025887f5ff10ed9603ddf1d7f25dd31232243"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "sha256": "7c00e764f0b8ee6f8654c3bbcb635041bee7e2e04c20b7f8f3adfe17ad40ce73"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/BLOCKERS.md",
+      "sha256": "2dea47f00ca17a6ea032e3676ef2123cfe7b70eba0d65cecab505d3f69d66995"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/archive-privacy-fixtures.log",
+      "sha256": "64319908115d75137dc18efe6347755058e4db6bcfadace131bf3cc144c99fa1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/archive-privacy-fixtures.receipt.json",
+      "sha256": "71b7ac6a2ae838a783e4a83aa90f93c0cc544a594cefefec0fda25b6bae78a02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-clean.log",
+      "sha256": "5ebaf8c27650e2cb40cdec03828a91f2723c48fee09f14e58ee0c40fa2638245"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-clean.receipt.json",
+      "sha256": "9cde0084b12f9687a61518656133891fc09c8023790bde2baade55b04660e176"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-reviewed.log",
+      "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-reviewed.receipt.json",
+      "sha256": "b2e5f7b091960a4572490dfaf8392094dffc80c4c507d97718b79273ff88b9cd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci.log",
+      "sha256": "ca77d18801c629d89f78d4546071cadaf843c9369e74fa31bebbfc252ffa5232"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci.receipt.json",
+      "sha256": "6a33576e8a046c5c0b3f1e06d2a96ad8b0bd1a7a25730a3c00adfb3786e5f564"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-expo-check.log",
+      "sha256": "c0a3503596ce257d134bd942388c53911886d34bba0b80f152034e19403d983d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-expo-check.receipt.json",
+      "sha256": "e8e098b5f6790951024f76374afd0c9f23a99cf4d4ae74b1fee3b0decf68f0c2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/build_report.py",
+      "sha256": "9a75fa114ec2a194bb24a42f8fe19ad980229460e53a9ba22a19bf491c187e10"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-delivery-observed.json",
+      "sha256": "ad9b94fc6670d3284588126c38dff2fdb0db1d0a0272db5a83104df15f4834fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-implementation.json",
+      "sha256": "234f44cf93615744b2f1a59c6bef04a1113d11b69d5e7d30cb4398d6777e13a9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-measured-final.json",
+      "sha256": "a8e7fa72c4740480b12cc3d20cd5f7859d3ececb134751094476b5cd00da432e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-measured.json",
+      "sha256": "bf11b19fb1bb3c79cb4cac886458561dbbb46c083701e9b664f69f539a7b1588"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/committed-artifact-verification.json",
+      "sha256": "9312c6366cf0efb7bd39f7b2becea1c30a97c0d9ea61b7a12174aa522f1a261c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/context-verification.json",
+      "sha256": "618ba2334438ebfd7d7737d003e126fec43863225a969a0b140aa61e42c51c8b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/delivery-report-check.json",
+      "sha256": "5dbfd9d902f3d6e2e4dff2c1a94181c9e43bb4906d1b19fa8015fa9d2484dc2b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/environment.log",
+      "sha256": "9af2c00300bf814b2d173cff344f58c1aaba71ea5de7905fcfa3783f0948c09c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/environment.receipt.json",
+      "sha256": "277682c123ae237ef27b977978be9b88088925c7e02ab82937f25988094b7f90"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/expo-compatibility.log",
+      "sha256": "75bc0562158f22eca1daead940e59625bb3ee6327b29956ab852db4717ea442a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/expo-compatibility.receipt.json",
+      "sha256": "16bb98658b4a8f82bc5bc288b64d1aac9e8ee9a1471728ba0f73a3e1b9e57228"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/expo-doctor.log",
+      "sha256": "74606bfd8dd7df5aa281ee0edc3ebb60e6a3680a04797531a4bfe7aa2f3acfbf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/expo-doctor.receipt.json",
+      "sha256": "5b9f1d398db21a7707760c58f1642eb5e5b9a217c2cfcb36be683de8b9534d50"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-ci.log",
+      "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-ci.receipt.json",
+      "sha256": "85ae0e1aaffb7b0cd08d752114b932d55618e6f0f90313b66710eac156f12dfa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-lint.log",
+      "sha256": "f776275dc7eab74476c3b070fa91508923c620fea0cd1858ac5b2b57ede8b29c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-lint.receipt.json",
+      "sha256": "41f7eb796d8fa310e5e1fbf47ae498e40bd08cb46c93a9e54d7a0947a04875ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-test.log",
+      "sha256": "43ac592e20f3b370d1992e34cb4ee3ffa7b94dc686e650451b903dc4f24010e6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-test.receipt.json",
+      "sha256": "1522afa6a8e5a0467beaacbbb31aa3de0f1fd254eaa6958b9f4dd9b3954b375b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-typecheck.log",
+      "sha256": "2d6a4042fd484b7a455e2e021925f1c62990b1085a36a1f3258009939f59fa09"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-forced-typecheck.receipt.json",
+      "sha256": "b75d2f7c8643ff75ff2ad447b4ea8d5f6b38ae01660b5ac6c296b2b2209da2b4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-source-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-source-profile.receipt.json",
+      "sha256": "be42f134e8ee47f5c7fa3798ba0f54e5f2c08b1725baa10185bb42095cea69aa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-worklist-check.log",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/final-worklist-check.receipt.json",
+      "sha256": "957fde98a26a111dcf17083dd46e47cf8463f87f2b6377137dc0ca2e96399d30"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-lint.log",
+      "sha256": "70b9ed24e4e62c1e45963a88a1f48c7ce2110fb71de7d922136e288414215576"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-lint.receipt.json",
+      "sha256": "b55cc11cc5ec7f011d4c51eb1a796c069e0b5773e392201e1d4a6f3ec310a322"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-test.log",
+      "sha256": "fa0a1f33b6fe8880c75f88307f5efba7b6d456f55388d78de770125ee5aabacb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-test.receipt.json",
+      "sha256": "8086b0d50b7329f081d6428ec11c958624a76a1de06c25d88546a4b3e0f0c85b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-typecheck.log",
+      "sha256": "998745137b14f9a4f488a41294cc733f06f368100ae634bdf58fcfc40f2c9338"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/forced-typecheck.receipt.json",
+      "sha256": "70d1bc4035e6c79da375d26914ab7378dfe1958f07d0dc9bc7baf90b918d7f43"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/fresh-ci.log",
+      "sha256": "bbb7807adeb42d207ab132ce0b466e4bea379985890a96ce376498e0d7cb6523"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/fresh-ci.receipt.json",
+      "sha256": "8a65cfc97fcc861265fd1e66c6a280459623d72d22cd2e903f533f65c2f0059f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/governance.log",
+      "sha256": "e4a21b529b66fcde92dc71151273f209da5455066fb2b9909f9d1711004aab95"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/governance.receipt.json",
+      "sha256": "53faff8439959d885ddb691075eeb12ebbe167afa81408cbfff748cc5fcacbce"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/historical-custody.log",
+      "sha256": "3911dbeb470b24e225372d134c83bc2a0fde243387b73b60db794a47a6159ae6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/historical-custody.receipt.json",
+      "sha256": "aeff1e4db0eaeff403a95ff5185f798ffefd7518f922cf568f87d9fd051bb1f1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/implementation-job-119636150124.json",
+      "sha256": "2d4e262cebd3c0d2b8913be16d3f623fe3c01134cd96c3b2fe80eaa27c635d2b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/implementation-job-119636150261.json",
+      "sha256": "8bf6ca8db176175fd3d641407378a793ecf34bf27d65e2f5cb3839ad9917023a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/inspect_environment.py",
+      "sha256": "2da280cbe4ef11ae60b95965cd06f360c2bcbe7bcf80e79a24979ef04524448b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/installed-native.log",
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/installed-native.receipt.json",
+      "sha256": "ee919a657f05b9ed2d895b60ef082fe17f9cea44f02e406a8c51814f027506fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-privacy-check.log",
+      "sha256": "b131dad9faaa5bdddacf38686b23df9544d44660b6165c73f9aa210dbfc8f290"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-privacy-check.receipt.json",
+      "sha256": "1ec45fe6f6b920d66c8c457284ad648569f92caf2eea97f9643aef89df77469e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-privacy-fixtures.log",
+      "sha256": "0e3874ac44f7bf58ca3dc4d1c453a0d0f7dda73533e5a27d3411dfdc98ef818c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-privacy-fixtures.receipt.json",
+      "sha256": "ecf8c456ad01f52a53eac0c4ed64bfacab88ad05b4bd969bed63528e4adabba2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-workflow-contract.log",
+      "sha256": "ee6ef213a3d4f0595e969cf98cf312ef1613064b02d8f5581a9e8323a9c1e56a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ios-workflow-contract.receipt.json",
+      "sha256": "f802e10a0b97d1d85b2e8932fdd29034d4bed820750ab59e91cc934e3c8da7ab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-delta.json",
+      "sha256": "286ec95e54eb4cd579e45d777e29c2b9e3ec47fdab88654f6991e18c9fd9be44"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate-linux.log",
+      "sha256": "97ac6b678d01232a4b4c6e7e48192ff745351980bc0aaff39ac935d00fb3144d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate-linux.receipt.json",
+      "sha256": "37fd407b4a7a6cbca35d27a17892c8a0af5e402cdb79bcd8d7a9d8292b9d6967"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate.log",
+      "sha256": "6313db14c24852fb644518a22e529ef34df22340399b9d4a3265675bbe432195"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/lock-regenerate.receipt.json",
+      "sha256": "10d4fa196413c53bdd0c523734eedbce214a494cf1f2045d539aedb70f2255b1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-linux.log",
+      "sha256": "24bc61bf49c1b9327ed6222de7ce53246a063735db508044919a86c657389b1a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-linux.receipt.json",
+      "sha256": "e265e6d5b98750cb79a7457fd29dcaf0ac3cc5bdd0a68ec126a0262623a87201"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-precheck.log",
+      "sha256": "e6a95b62f182de4fe8a0350d02754cd2f5bfaeab1619c0b5e5315ee9b1fdd968"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/new-governance-precheck.receipt.json",
+      "sha256": "e37b6d027576c0f7d811dd87c550137e312ff1e71c797ce188ba84e5c7a93baf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-db-excerpt.json",
+      "sha256": "8c3c542422bdaa6b75171dca19e963720db7e20c1b538044a3654a608e23bbcf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-quality-excerpt.json",
+      "sha256": "6b74a3958472ed5800e1e9cc5ab559698f4c73e77a808fe815f0b428b3a24fcc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-secret-fixtures.log",
+      "sha256": "1c89c51c7a89a16cbeafe1b4341777e4346775889e999d679bfbbbfe5ce7bee4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-secret-fixtures.receipt.json",
+      "sha256": "b7a31e0ef3ceab7757e86f87822ffb0ea9235e198bcc82c411504a6e8d7d1606"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-security-contracts.log",
+      "sha256": "9bde318d7c5a822906aa24e296ba96e7ba45f692ab2bea5f0dd79581859ad3f6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-security-contracts.receipt.json",
+      "sha256": "fc0798707168bd4752287d1ddcc5bdb978ab8e3d79932e7a5692e265165feaec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-security-jobs.json",
+      "sha256": "9c4752db966ffe6d2b897ff25119378c7123ebba5668b156befb8dd746b27794"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/patched-ci-precheck.log",
+      "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/patched-ci-precheck.receipt.json",
+      "sha256": "a01814af46f8c59e46a220f6472e55e2760ab1e9bc9028ea8cef3ff228083d05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/preflight.json",
+      "sha256": "692dadd953d55109d6895037f021a4c75bb03cc59f4052e8608a3690906afe17"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/preparation-independent-local-clone.txt",
+      "sha256": "71e7c5518cb56d6583f1d80f7a4d3c37a25cd818a0d255463846dcba687199b9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/preparation-no-local-clone.txt",
+      "sha256": "fe89196be0595187868bcf7750b1b323a7b21b83488bffd1198a526c482f797f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/registry-expo.log",
+      "sha256": "2f44537e53f03948dd2781438510990cefd5da0cf1d66b345acc86c572ef657a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/registry-expo.receipt.json",
+      "sha256": "36409997fb137b3a41a5e8ce08299e6ad2d9e7e681e2b172d539b70dc3fb66ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/registry-network.log",
+      "sha256": "c45b7db948fc7c709dd3b776363a477474d52e57b8b39d4b4bf7bf3792d99a39"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/registry-network.receipt.json",
+      "sha256": "e7bace227f0db6615f17552a5607ca593839fa383e3a2f4efb22bfd8f54a0735"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/release-git-fixtures.log",
+      "sha256": "e325d7037461ddc86e86da9701814939194a487a8a80027482c25ec7b1eae769"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/release-git-fixtures.receipt.json",
+      "sha256": "89c2cb2f3df5ec85eb7372603b4dc348da7ff5e27cea88bd1f83e11c4b5aec05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/run_command.py",
+      "sha256": "b13a991f9e3d51fa2a90fc5b9c429512127fb0f5bf706be651b9f6a341dc0dbb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/run_linux_checks.py",
+      "sha256": "b1338a1a1edc8ea4fbb40d73221a2bf2f2f7e89b65ccd24f5a72be6af30ae3db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/scope-integrity.json",
+      "sha256": "477845322ead72449b3b4a02b4f4b3192631c4eed1ab25f408fd62f66402eed2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/store-source-contract.log",
+      "sha256": "06fe918d5b64c70a551769f8e59febfaf2efa5444374b376067d24a1900ba83c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/store-source-contract.receipt.json",
+      "sha256": "c3cde925b6dbe1b20ad45a873dca68aa6074b37aaee792c137ecbeb64a6a1534"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-report-postcommit.log",
+      "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-report-postcommit.receipt.json",
+      "sha256": "a41eed81f4e9252c74534f59f674cc4405875731f9fbc5e93ed238633b76cd4e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-source-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-source-profile.receipt.json",
+      "sha256": "3447c91e24666d1f0acbf5520464c2ed4bca67743f59390c82675c9bdbde9f19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/summary.json",
+      "sha256": "8ecd7e2eb1f275f65c9fec4a7e51fdeab89f4e9d1a174572cb9d144a65f51498"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/tooling-fixtures.log",
+      "sha256": "8a2cc65fa4810e0047ba49c37a3f5d9c9ba731f4d191aded2dc5c7aed38f6fdf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/tooling-fixtures.receipt.json",
+      "sha256": "8ce4fe64668660039eeac1b58421f1bb565a24d688410c8276dc71c169144d1a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/verify_history.py",
+      "sha256": "6f001dc37f0de660333c8adc86e9d81f6a618e8863726ed1b5681f7cc60c9c87"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/view-shot-fixtures.log",
+      "sha256": "d912356b2524e2b2375c1317fb04503785a0d7238f27a88774c2f27e72a8e16d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/view-shot-fixtures.receipt.json",
+      "sha256": "c4296ac0ac959b75babe669576bafca79a0671ae9a106d0508512542f17ea27b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/widgets-contract.log",
+      "sha256": "0426e06c017d783b82f2f780fbbb178d836fc4ca4f20ea88d6bb14429f6f9502"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/widgets-contract.receipt.json",
+      "sha256": "8b570dc986b86237a0e0454c1fe217e5420db830aad8cfc6693d07eae2eab57a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/wiring-fixtures.log",
+      "sha256": "2e345478848f8762929d270c70c7beb10c7223e7db15643a85fe35cfb625c9e6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/wiring-fixtures.receipt.json",
+      "sha256": "9d786511b3678e23d79f973bd3ffb16412865a9af5cff5836e3db59b81ae99f0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-check.log",
+      "sha256": "5f9071c14af7ecce70b5a08754b3a6e8b59cdea197727989795f861317bee149"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-check.receipt.json",
+      "sha256": "019960031729b0b4e39d34f6d236306623c9f543a7ca1750520d0b2ae5e04c49"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-clean-generate.log",
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-clean-generate.receipt.json",
+      "sha256": "bf79019ba09c2fe3086c3a3988cd3053a33230cca3fd505aa9287a544f66c6c5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-generate.log",
+      "sha256": "a935b14c3d93614831424b6679cc6d17bb636688edd8d15a8c900df377d4c6a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/worklist-generate.receipt.json",
+      "sha256": "8f028b739933bcb35198f1d1d1bb8cb455c593dfe4512ec59c1779bbe016e817"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/write_summary.py",
+      "sha256": "08e25895758b27a6d3906a3f55ba7bfcd9159b03b2dfbf1482a410366c95d5d7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/00_READ_FIRST.md",
+      "sha256": "8c63b748441166cb00d2aaf9aabf4de3a4d2b1922478fc60560844a6218b0094"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/01_BRAIN_AUDIT.md",
+      "sha256": "97419628cdcbd38061dc383b165d07c7502ee6ff35f24eabe013f2aa7c33ba1c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/02_TASK.md",
+      "sha256": "4e4545113ad490526770ebbd517d7985eb587b6e7eaa1dd937c197b7401fc2b9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/03_SOURCE_EDIT_AUTHORIZATION.md",
+      "sha256": "3cbe5aa49f79f67ed47f67a64fa266cd6f5584d557c2ff37dec55b12d748a933"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/04_REPRODUCERS.md",
+      "sha256": "a00522b9ae946cb3a9ce7501e85a487ef1ffd69ea845d830688551ea92624a82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/05_ACCEPTANCE_MATRIX.md",
+      "sha256": "4ff65097fce95fc5a7fa78b929908f6fce6cbfb5c9cad99cd09451f7402521eb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/06_TEST_PLAN.md",
+      "sha256": "85e852fcfc9b4d0b3bba1e1c53b890edb25ab451b33557d3ef2cc0c5c27cc4bc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/07_PROTECTED_GATES_AND_OWNER_PACKET.md",
+      "sha256": "9dd542f307aa0aa49d70e133117dce92901a95a3be02b48b374f05baec528cc8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/08_DELIVERY_PROTOCOL.md",
+      "sha256": "04de779cf638b445a4f4f0340f38936b9ba1467c89bfa7a2fe92f204201a8c84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/09_STOP_RULES.md",
+      "sha256": "cd64ef7c452531a449310882b891dc6ae91e9076bc85960510046abf890df1f6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/10_BRANCH_AUTHORITY.md",
+      "sha256": "b561547e77354725a607ebb223d69bb50df54be1fc99658f025bd921788431fd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/11_SOURCE_ORIENTATION.md",
+      "sha256": "1251033f37947f7223c2c2fde214549b4243b19b6dfe6cab586a34ccd11bac09"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/12_EVIDENCE_INDEX.md",
+      "sha256": "cb19d50df44685b5ac7272af3bb0992a9e9e6cfb8f00ba537408cfe6566f77c9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "b5069554ea1c01dec0c0d3885774f5f36413b5e3d7f9ccc680b30504b6d4c6f4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/TASK_MANIFEST.json",
+      "sha256": "99985ffc1dbe1fa0a94fe0af092bf42ccfb12ed7d48cdc30d12fca47ed1f634d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/TASK_STATE.json",
+      "sha256": "4cae3b5c8637e2f89d8f4abf7b271f0a55670efcb39cc980735d578ee14c2a88"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/inputs/verify_context.py",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/README.md",
+      "sha256": "fc102eba6d674c6ee11e76a1c39d3c10a17066794ed81b9aa29dc9a0780e1974"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/RESULTS.md",
+      "sha256": "66e9a0d6bffb9fcd5da48f3c4f6798d8fd2135932ee70c6bbf323f0feb2f1503"
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery01-active.json",
+      "sha256": "5802ffd370277e66f961b99a373da204861be0dab426aec331ab08c47f537c11"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/SC03-REVIEW01/01_BRAIN_AUDIT.md",
+      "sha256": "97419628cdcbd38061dc383b165d07c7502ee6ff35f24eabe013f2aa7c33ba1c"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/SC03-REVIEW01/external-digest-proof.json",
+      "sha256": "618ba2334438ebfd7d7737d003e126fec43863225a969a0b140aa61e42c51c8b"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/SC03-REVIEW01/SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "b5069554ea1c01dec0c0d3885774f5f36413b5e3d7f9ccc680b30504b6d4c6f4"
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/SC03-REVIEW01/TASK_MANIFEST.json",
+      "sha256": "99985ffc1dbe1fa0a94fe0af092bf42ccfb12ed7d48cdc30d12fca47ed1f634d"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "sha256": "21942c6c32b791a5013f2a468acb2270f6d7f0fb336e30ea2fa7ff2c426f1a32"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "sha256": "1118334ce7647edcd692db72207c8bd38e68bca53fcbc3fb45a5a18c517bf7b7"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "ce1992c391d8b1c533ab9596b00d0f14dfc4c39d51256ed90619ca4351654782"
+    },
+    {
+      "path": "package.json",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "sha256": "b304d306050886f396e5b2ad931b45006f41fe06735cc73be82f86cd30808259"
+    },
+    {
+      "path": "scripts/brain/test_m103_quality_recovery01_profile.py",
+      "sha256": "1d652b17dc2bc4d254a9cb7791cf53df5b259676c854babe9f9ffb22f316423f"
+    }
+  ]
+}

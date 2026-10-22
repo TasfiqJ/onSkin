@@ -5,6 +5,7 @@ installation and run binding must pass. No human approval or signature is claime
 """
 import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, urllib.parse
 import contract as c
+import secret_scan
 
 JOBS = {
     'code-gates': {'phase9_verify', 'dependency_sbom', 'npm_audit_high', 'npm_exception_gate'},
@@ -23,6 +24,7 @@ LEGACY_FILES = set(MANIFESTS.values()) | {
     'code/dependency-sbom-audit.json', 'code/dependency-sbom-audit.exit-code',
     *{folder + '/' + mode + '-exception-gate' + suffix for folder, mode in [('code', 'npm'), ('static', 'osv')] for suffix in ('.stdout', '.stderr', '.exit-code')},
 }
+SECRET_FILES = {'secret/' + secret_scan.PROOF}
 
 def legacy_inventory(directory):
     """Only the complete technical receipt may sit beside these nineteen files."""
@@ -37,7 +39,7 @@ def legacy_inventory(directory):
             dirs[:] = [d for d in dirs if d != 'g97-evidence']
         for name in files:
             observed.add((pathlib.Path(current) / name).relative_to(directory).as_posix())
-    c.require(observed == LEGACY_FILES, 'WORKFLOW_EVIDENCE_INVENTORY_DRIFT')
+    c.require(observed == LEGACY_FILES | SECRET_FILES, 'WORKFLOW_EVIDENCE_INVENTORY_DRIFT')
     return {name: c.SHA(c.safe(directory, name, allow_empty=name.endswith('.stdout'))) for name in sorted(observed)}
 
 def original_jobs(directory, needs, commit, run_id, fresh):
@@ -113,11 +115,17 @@ def original_jobs(directory, needs, commit, run_id, fresh):
                              str(pathlib.Path(directory))], cwd=c.ROOT,
                             capture_output=True, timeout=30, check=False)
     c.require(legacy.returncode == 0, 'WORKFLOW_LEGACY_POLICY_REFUSAL_DRIFT')
-    # The event-range Gitleaks action is supplementary to the freshly verified
-    # full-ref scan. Infrastructure failures, unknown findings, duplicates and
-    # forged ranges cannot masquerade as a known full-history finding.
+    # Original-job3.99.3 diagnostic proof is separate from the frozen G973.99.2
+    # collector closure. Neither version can borrow the other's tool receipt.
+    try:
+        secret_proof = secret_scan.validate_proof(pathlib.Path(directory) / 'secret', c.ROOT, commit, run_id)
+    except ValueError as error:
+        raise c.Rejected(str(error)) from error
     c.require(secret['gitleaks_exit'] in ('0', '2'), 'WORKFLOW_GITLEAKS_EXECUTION_ERROR')
     leak_exit = int(secret['gitleaks_exit'])
+    c.require(secret_proof['commands']['gitleaks-history']['exit'] == leak_exit and
+              secret_proof['commands']['gitleaks-current']['exit'] == 0,
+              'WORKFLOW_GITLEAKS_RAW_EXIT_DRIFT')
     c.require(secret['gitleaks'] == ('success' if leak_exit == 0 else 'failure'),
               'WORKFLOW_GITLEAKS_EXIT_DRIFT')
     tool = c.load(directory, 'secret/gitleaks-tool.json')
@@ -159,8 +167,10 @@ def original_jobs(directory, needs, commit, run_id, fresh):
         if 'endLine' in region:
             c.require(type(region['endLine']) is int and region['endLine'] == full[fingerprint]['EndLine'],
                       'WORKFLOW_GITLEAKS_RANGE_DRIFT')
+    c.require(seen == set(full), 'WORKFLOW_FULL_HISTORY_FINDINGS_OMITTED')
     return {'sourceCommit': commit, 'runId': run_id, 'originalJobs': needs,
             'outcomes': manifests, 'eventRangeHistoricalFindings': len(seen),
+            'originalSecretDiagnosticSha256': c.SHA(c.CANON(secret_proof)),
             'files': legacy_inventory(directory)}
 
 def write_gitleaks_tool():

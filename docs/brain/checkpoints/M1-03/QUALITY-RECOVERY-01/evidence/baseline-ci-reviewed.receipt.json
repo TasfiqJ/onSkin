@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"wsl.exe\", \"-d\", \"onskin-r6-verification\", \"--cd\", \"/root/onskin-quality-recovery01-clean\", \"--exec\", \"env\", \"PATH=/root/onskin-quality-recovery01-tools/bin:/usr/local/bin:/usr/bin:/bin\", \"npm_config_cache=/root/onskin-quality-recovery01-baseline-cache\", \"CI=true\", \"EXPO_NO_TELEMETRY=1\", \"npm\", \"ci\", \"--no-audit\", \"--no-fund\"]",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "environment": "win32; 3.9.13; CI=; npm_config_cache=",
+  "source_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+  "source_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+  "status": "PASS",
+  "exit_code": 0,
+  "started_at_utc": "2026-10-22T04:11:30.800774+00:00",
+  "finished_at_utc": "2026-10-22T04:12:08.237519+00:00",
+  "source_precheck_sha256": {
+    "apps/mobile/package.json": "7c00e764f0b8ee6f8654c3bbcb635041bee7e2e04c20b7f8f3adfe17ad40ce73",
+    "package.json": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+    "package-lock.json": "ce1992c391d8b1c533ab9596b00d0f14dfc4c39d51256ed90619ca4351654782",
+    "scripts/brain/m103_profile.py": "b304d306050886f396e5b2ad931b45006f41fe06735cc73be82f86cd30808259"
+  },
+  "dirty_source_at_start": "M apps/mobile/package.json\n M package-lock.json\n M scripts/brain/m103_profile.py",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/baseline-ci-reviewed.log",
+    "sha256": "f51c974463ef24b3230b6e03271d39fdfda0cfb3d4f5e530c1201c259560de72"
+  },
+  "admission": "NONE"
+}

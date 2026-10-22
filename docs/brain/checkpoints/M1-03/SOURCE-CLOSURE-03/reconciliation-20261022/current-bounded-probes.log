@@ -1,0 +1,13 @@
+owasp-top-ten SQL_DISCOVERY_PREFILTER cycle 1 targets 26 scanned 26 errors 186 fixpoint 5 raw_exit 0
+owasp-top-ten TS_PARTIAL_PARSER cycle 1 targets 1 scanned 1 errors 1 fixpoint 0 raw_exit 0
+owasp-top-ten FIXPOINT_FILE_PRESSURE_SCHEDULING cycle 1 targets 1 scanned 1 errors 0 fixpoint 0 raw_exit 0
+owasp-top-ten TIMEOUT_ISOLATED_FILE cycle 1 targets 1 scanned 1 errors 20 fixpoint 0 raw_exit 0
+secrets SQL_DISCOVERY_PREFILTER cycle 1 targets 26 scanned 26 errors 40 fixpoint 0 raw_exit 0
+typescript TS_PARTIAL_PARSER cycle 1 targets 1 scanned 1 errors 1 fixpoint 0 raw_exit 0
+typescript FIXPOINT_FILE_PRESSURE_SCHEDULING cycle 1 targets 1 scanned 1 errors 0 fixpoint 0 raw_exit 0
+owasp-top-ten SQL_DISCOVERY_PREFILTER cycle 2 targets 26 scanned 26 errors 186 fixpoint 12 raw_exit 0
+owasp-top-ten TS_PARTIAL_PARSER cycle 2 targets 1 scanned 1 errors 1 fixpoint 0 raw_exit 0
+owasp-top-ten FIXPOINT_FILE_PRESSURE_SCHEDULING cycle 2 targets 1 scanned 1 errors 0 fixpoint 0 raw_exit 0
+secrets SQL_DISCOVERY_PREFILTER cycle 2 targets 26 scanned 26 errors 40 fixpoint 0 raw_exit 0
+typescript TS_PARTIAL_PARSER cycle 2 targets 1 scanned 1 errors 1 fixpoint 0 raw_exit 0
+typescript FIXPOINT_FILE_PRESSURE_SCHEDULING cycle 2 targets 1 scanned 1 errors 0 fixpoint 0 raw_exit 0

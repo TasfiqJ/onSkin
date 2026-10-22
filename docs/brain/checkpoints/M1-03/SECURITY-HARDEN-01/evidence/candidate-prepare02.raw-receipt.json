@@ -1,0 +1,18 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "scripts/security_readiness/m103/candidate.py",
+    "prepare",
+    "/root/onskin-overnight01-sh01-candidate02"
+  ],
+  "started": "2026-10-21T11:26:33.113938+00:00",
+  "finished": "2026-10-21T11:27:52.930509+00:00",
+  "raw_exit": 1,
+  "output_sha256": "729efbec583eecd77b26d7f31757140e29e48f931b059e83bf42f637d7c98ac7",
+  "output_bytes": 913,
+  "environment_overrides": null,
+  "source_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "source_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "admission": "NONE"
+}

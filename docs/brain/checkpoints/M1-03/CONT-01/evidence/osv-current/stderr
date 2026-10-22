@@ -1,0 +1,7 @@
+Warning: --output has been deprecated in favor of --output-file
+Scanning dir .
+Starting filesystem walk for root: /
+Scanned /root/onskin-m103c1-source/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt file and found 64 packages
+Scanned /root/onskin-m103c1-source/package-lock.json file and found 1044 packages
+End status: 516 dirs visited, 9240 inodes visited, 2 Extract calls, 257.845144ms elapsed, 257.845263ms wall time
+Filtered 3 local/unscannable package/s from the scan.

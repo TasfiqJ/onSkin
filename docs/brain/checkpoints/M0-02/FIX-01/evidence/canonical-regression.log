@@ -1,0 +1,52 @@
+{
+  "name": "canonical-regression",
+  "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase2/canonical-postgres-pull-retry.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Node20.20.2",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "exit_code": 0,
+  "status": "PASS",
+  "expected_exit": 0,
+  "seconds": 0.247
+}
+TAP version 13
+# Subtest: canonical pull retries only throttling, then returns the successful original result
+ok 1 - canonical pull retries only throttling, then returns the successful original result
+  ---
+  duration_ms: 3.3321
+  ...
+# Subtest: persistent throttling stops after four attempts and preserves the last failure
+ok 2 - persistent throttling stops after four attempts and preserves the last failure
+  ---
+  duration_ms: 0.5627
+  ...
+# Subtest: ECR data allowance exhaustion fails once without treating it as transient request throttling
+ok 3 - ECR data allowance exhaustion fails once without treating it as transient request throttling
+  ---
+  duration_ms: 0.2526
+  ...
+# Subtest: timeouts, cancellation, output bounds, auth, network and unstructured errors never retry
+ok 4 - timeouts, cancellation, output bounds, auth, network and unstructured errors never retry
+  ---
+  duration_ms: 0.619
+  ...
+# Subtest: the real default timer obeys cancellation and a pre-aborted signal cannot start a pull
+ok 5 - the real default timer obeys cancellation and a pre-aborted signal cannot start a pull
+  ---
+  duration_ms: 0.8488
+  ...
+# Subtest: a cancelled backoff cannot start another pull
+ok 6 - a cancelled backoff cannot start another pull
+  ---
+  duration_ms: 0.2336
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93.1068

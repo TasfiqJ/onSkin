@@ -1,0 +1,3 @@
+scripts/brain/test_m103_quality_recovery02_profile.py: 8/8 original test method ASTs AND exact source bodies unchanged; all module AST outside setUp unchanged
+scripts/brain/test_m103_quality_recovery03_profile.py: 8/8 original test method ASTs AND exact source bodies unchanged; all module AST outside setUp unchanged
+PASS: 16 original tests preserved, only fixture source selection changed; one repair approach

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "kind": "DELIVERY_VALIDATION",
+  "command": "python3.12 -B gf01_verify_delivery.py",
+  "delivery_commit": "5fbc7494400d8338245bf49b1d7b7c3840ca325f",
+  "measured_source_commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "exit_code": 1,
+  "output": "delivery-verification-first-attempt.log",
+  "cause": "Existing repository ignore rules excluded declared .log evidence from ordinary git add; strict committed-artifact enforcement correctly refused. Explicit force-add is limited to report-declared evidence logs; no ignore rule or source-code change."
+}

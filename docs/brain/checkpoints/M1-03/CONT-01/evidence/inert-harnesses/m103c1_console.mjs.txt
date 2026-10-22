@@ -1,0 +1,31 @@
+import {spawn} from 'node:child_process';
+import {mkdirSync,writeFileSync,mkdtempSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {setTimeout as delay} from 'node:timers/promises';
+import assert from 'node:assert/strict';
+const root='C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103c1-isolated';
+const out='C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser';mkdirSync(out,{recursive:true});
+const profile=mkdtempSync(tmpdir()+'/onskin-m103c1-console-');
+const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','apps/catalog-operator-console','--host','127.0.0.1','--port','8491'],{cwd:root,env:{...process.env,VITE_OPERATOR_CONSOLE_ENV:'local',VITE_SUPABASE_URL:'http://127.0.0.1:54321',VITE_SUPABASE_PUBLISHABLE_KEY:'sb_publishable_synthetic_console_only_0000'},stdio:['ignore','pipe','pipe'],windowsHide:true});
+let serverLog='';server.stdout.on('data',d=>serverLog+=d);server.stderr.on('data',d=>serverLog+=d);
+const browser=spawn('C:/Program Files/Google/Chrome/Application/chrome.exe',['--headless=new','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=9491',`--user-data-dir=${profile}`,'about:blank'],{windowsHide:true,stdio:'ignore'});
+let ws;
+try {
+ for(let i=0;i<100;i++){try{if((await fetch('http://127.0.0.1:8491')).ok)break;}catch{}await delay(100);}
+ let targets;for(let i=0;i<100;i++){try{targets=await(await fetch('http://127.0.0.1:9491/json/list')).json();if(targets.length)break;}catch{}await delay(100);}
+ ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let id=0;const pending=new Map();const errors=[];
+ ws.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(m.error):p.resolve(m.result);}if(m.method==='Runtime.exceptionThrown')errors.push(m.params);});
+ const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));});
+ const evaluate=async expression=>(await send('Runtime.evaluate',{expression,returnByValue:true})).result.value;
+ await send('Runtime.enable');await send('Page.enable');await send('Network.enable');await send('Network.setBlockedURLs',{urls:['http://127.0.0.1:54321/*']});
+ await send('Page.navigate',{url:'http://127.0.0.1:8491'});
+ let body='';for(let i=0;i<100;i++){body=await evaluate('document.body.innerText');if(body.includes('Operator email'))break;await delay(100);}
+ assert(body.includes('Catalog operations'));assert(body.includes('Environment: local'));assert(body.includes('Existing authorized accounts only'));
+ await send('Input.insertText',{text:'invalid-email'});
+ const rect=await evaluate('JSON.stringify((()=>{const r=document.querySelector("button[type=submit]").getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})())');const point=JSON.parse(rect);
+ await send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await delay(150);
+ body=await evaluate('document.body.innerText');assert.match(body,/email/i);assert.equal(errors.length,0);
+ writeFileSync(out+'/screen.png',Buffer.from((await send('Page.captureScreenshot',{format:'png'})).data,'base64'));
+ writeFileSync(out+'/summary.json',JSON.stringify({status:'PASS',surface:'Actual Chrome headless; Vite8.1.6 dev server; local synthetic publishable-format token; blocked local auth endpoint; no credentials or provider use',checks:['Auth screen rendered','Local memory-only environment','Existing-operator restriction visible','Invalid email through real keyboard/mouse','No uncaught exceptions'],body,errors},null,2));
+ console.log('PASS: actual console browser smoke; screenshot and DOM captured; no provider requests');
+} finally {if(ws)ws.close();browser.kill();server.kill();writeFileSync(out+'/server.log',serverLog);}

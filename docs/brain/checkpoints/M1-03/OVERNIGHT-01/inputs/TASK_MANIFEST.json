@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "OVERNIGHT-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "base_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "state_version": "brain-m1-03-overnight01-expanded-issuance-14",
+  "authorization_id": "M103-OVERNIGHT01-SOURCE-AND-DIAGNOSTIC-01",
+  "superseded_manifest_sha256": "838c0f416ddfa551fc2767419ed015f34c5b3329eeaa0b000938e80a3b72549f",
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1033,
+      "sha256": "8eebf7ff49619caf20574061b1fa030387a65a9353a3ce2b99ceedf3577b2862"
+    },
+    {
+      "path": "ACCEPTANCE_MATRIX.md",
+      "bytes": 2648,
+      "sha256": "7c892b11a5109f0c90aefcb4e32e31e0b469b872d9fc8ebe1cfcf7d9506a5579"
+    },
+    {
+      "path": "AUTONOMY_AND_CHECKPOINTS.md",
+      "bytes": 2085,
+      "sha256": "877b48ba1e4470758fd38c83567e42fa5bfc3feaeaec413099e2645eb7b22ead"
+    },
+    {
+      "path": "BRAIN_STATE/ACCEPTANCE_LEDGER.json",
+      "bytes": 23139,
+      "sha256": "b3b480782067dad39458cf9a062d81ba19217476f63b378317a3a03d27c3d4f0"
+    },
+    {
+      "path": "BRAIN_STATE/ACCEPTANCE_SCOPE.md",
+      "bytes": 428,
+      "sha256": "3180049139836947e9b539d8d894d6caa34c9a285043a0028d734d0b46d608e3"
+    },
+    {
+      "path": "BRAIN_STATE/ADR_DECISIONS.md",
+      "bytes": 1386,
+      "sha256": "aaeee741438e1645780a2e1677470b2d07100a014fd9e7244b315ca34a90271e"
+    },
+    {
+      "path": "BRAIN_STATE/ADR_REGISTRY.json",
+      "bytes": 26556,
+      "sha256": "4c67aaa3c07d58c1c5473ecfef38d0ed356ff986f2918ebda0f597b9cc4c1386"
+    },
+    {
+      "path": "BRAIN_STATE/AUDIT_M1-02_ACCEPTANCE.md",
+      "bytes": 5859,
+      "sha256": "455f98c8ba57f3d69081f3c9a4fd77f9b81487ea8428db3db9f4e6b0e3a50092"
+    },
+    {
+      "path": "BRAIN_STATE/AUDIT_M1-03_REVIEW01.md",
+      "bytes": 10089,
+      "sha256": "c72847b7b704b584da2869662c907b414557481eb57d3b35054332d4a1ef7c75"
+    },
+    {
+      "path": "BRAIN_STATE/AUDIT_M1-03_REVIEW02.md",
+      "bytes": 10167,
+      "sha256": "8f7bc1cf439cdb5ebe1d7e6e218170c16905d9bb9c747f44f1730d566329e676"
+    },
+    {
+      "path": "BRAIN_STATE/BLOCKERS.json",
+      "bytes": 48438,
+      "sha256": "098a8d4f4437913adb2de5e16218b9c5817740ecb6209217e67ffd645f6378ab"
+    },
+    {
+      "path": "BRAIN_STATE/BLOCKERS.md",
+      "bytes": 685,
+      "sha256": "3db87feacd949d99f793535140eceb1f4b10668d94c7ff7c5fe5a45992c0acd2"
+    },
+    {
+      "path": "BRAIN_STATE/BRAIN_RESUME_PROMPT.md",
+      "bytes": 804,
+      "sha256": "77099a1d031d9c68a3a1a6e7f70ebbfaa99f240d13a56726ad234e0200503c5e"
+    },
+    {
+      "path": "BRAIN_STATE/CANDIDATE_TOOL_INPUTS.json",
+      "bytes": 2995,
+      "sha256": "fdc62dc234dff65e091cb44e6bdea414c76d08e4406211f44ccd885b40858685"
+    },
+    {
+      "path": "BRAIN_STATE/CI_ARTIFACT_REVIEW.json",
+      "bytes": 11280,
+      "sha256": "c28855cfb705a99fce3801fd252bf04d68e65491361093e6af5b87df1eebf862"
+    },
+    {
+      "path": "BRAIN_STATE/CI_OBSERVATIONS.json",
+      "bytes": 705,
+      "sha256": "3dbc912753f45143fff9d5e3b3a93469145581f74f5bb3bcbf1f50e868223d5c"
+    },
+    {
+      "path": "BRAIN_STATE/CI_OBSERVATIONS.md",
+      "bytes": 389,
+      "sha256": "c1d43fcf80440ad0837942620d87696b2c92f375163d36c40380bdfe68d8dd0e"
+    },
+    {
+      "path": "BRAIN_STATE/DECISIONS_DELTA.md",
+      "bytes": 741,
+      "sha256": "2e9770a7c821894e19a2af9f81b140335c56731d44f1bc36bafba0e493314426"
+    },
+    {
+      "path": "BRAIN_STATE/EXECUTION_EVIDENCE.json",
+      "bytes": 13762,
+      "sha256": "e463ad9cec0d6380cf625cb7d48ccff1cd16a0ea2ef291cdf759aa70bcf99d22"
+    },
+    {
+      "path": "BRAIN_STATE/NATIVE_AND_FIXTURE_BINDINGS.json",
+      "bytes": 2714,
+      "sha256": "78ebca127cf21c4421e5b1aca827db5006f17eed2dfb3bbf33b0e14e8a91dcb2"
+    },
+    {
+      "path": "BRAIN_STATE/OVERNIGHT_ISSUANCE_OBSERVATION.json",
+      "bytes": 1514,
+      "sha256": "ecfbdf232d8a1bc4ede13cda56be831fecb6b1b21923049c98a42d0efb4171a3"
+    },
+    {
+      "path": "BRAIN_STATE/PUBLICATION_RECOVERY_INPUTS.json",
+      "bytes": 5891,
+      "sha256": "3efd5d7a1cdaee8f8d25659a30fb664b55a9e39a742c06b48aa23a91eacecec9"
+    },
+    {
+      "path": "BRAIN_STATE/REVIEWED_SOURCE_HASHES.json",
+      "bytes": 4557,
+      "sha256": "b1d997938155f01cae1cd4ec29d2ca104ec51ba1593b4707d8f09c01da73be92"
+    },
+    {
+      "path": "BRAIN_STATE/REVIEW_OBSERVATIONS.md",
+      "bytes": 414,
+      "sha256": "a177a552cc3d43b56799e35d40f1addade883019550285bb453369664b00b7a9"
+    },
+    {
+      "path": "BRAIN_STATE/ROADMAP_STATUS.md",
+      "bytes": 560,
+      "sha256": "cf4cc9aeac3875aa32e9bf5b0ad5211e15a9ce078b70bad58d39dcc0b4de9f44"
+    },
+    {
+      "path": "BRAIN_STATE/SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 16976,
+      "sha256": "73e5ef960c8d9093c75486df9e41f2cb20764243214e9979d811939f49aa450f"
+    },
+    {
+      "path": "BRAIN_STATE/STATE_AT_GLANCE.md",
+      "bytes": 823,
+      "sha256": "f4a4d89fb57bd1686c8350a45fa23e4de41cf406977b204f6bf168c9011bee3b"
+    },
+    {
+      "path": "BRAIN_STATE/STATE_MANIFEST.json",
+      "bytes": 4395,
+      "sha256": "9a8cf8f14970914d80cf1dc28301cdeb3bf8403bc191d06acc91cc4c3e7dd716"
+    },
+    {
+      "path": "BRAIN_STATE/TRUFFLEHOG_BYTE_WITNESS.json",
+      "bytes": 2236,
+      "sha256": "52ff6165602d80d71b9918c6f24ab7b9dedb1e0f2fc899d22bc315362cf44257"
+    },
+    {
+      "path": "BRAIN_STATE/brain_state.json",
+      "bytes": 62755,
+      "sha256": "659f94b4add7e48d321a816bdce9d02c1375df243d897bf8f43bafc059133d30"
+    },
+    {
+      "path": "BRAIN_STATE/roadmap.json",
+      "bytes": 50337,
+      "sha256": "1a8a154ec4a2618b88cbe9eebd7ac6a25d7ac3b5776104c0c93cb2d4a85af7e5"
+    },
+    {
+      "path": "CI_REFRESH_CHECKLIST.md",
+      "bytes": 768,
+      "sha256": "3bab9d9b50fa81b552a150bcc1339b814b271428ffc349b1c2ecabafa025e9da"
+    },
+    {
+      "path": "CLOSEOUT_CHECKLIST.md",
+      "bytes": 1001,
+      "sha256": "31fd59ba4b5dbb71f89018de3ff09ce85ecb57085085615d1ab90be2771d39db"
+    },
+    {
+      "path": "DATABASE_CUSTODY.md",
+      "bytes": 1630,
+      "sha256": "4522dc1559393175439bf438ab41bdec3332c3a5fffc11a2246af86d4d2884f5"
+    },
+    {
+      "path": "EVIDENCE_PUBLICATION.md",
+      "bytes": 3359,
+      "sha256": "2c2f3b90e4b16f6438a46b90bce2cecbc4d50e99292e707cb846f5b07123f487"
+    },
+    {
+      "path": "FINDING_TRIAGE_CONTRACT.md",
+      "bytes": 2441,
+      "sha256": "8826d5900559a305dc821d47238c898281d40aad09e7e2e8bdfce3b6c28e3777"
+    },
+    {
+      "path": "GOVERNANCE_TRANSITION.md",
+      "bytes": 2287,
+      "sha256": "e77c131f4cb2a1fb3e9c5a943d336bdfe01e77092bb0a93e84fca9b664e0298c"
+    },
+    {
+      "path": "NETWORK_AND_PRIVACY.md",
+      "bytes": 1411,
+      "sha256": "c5e96fbb6ca7a8f61da951940a4a921f1d73e28d69ec9766b533787755683316"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF_TEMPLATE.md",
+      "bytes": 622,
+      "sha256": "d3c1c6fa91e68133126379fad21b0aa864a4db726efd4139fda76de60bcf24a0"
+    },
+    {
+      "path": "OWNER_ACTION_PACKET.md",
+      "bytes": 649,
+      "sha256": "7e98d5f2240de0973813a3dd8733e55215b63d009ee397bf079956e773cd5677"
+    },
+    {
+      "path": "PRIOR_REPAIR_DETAILS.md",
+      "bytes": 3472,
+      "sha256": "a5b60a010a3c26afaa9aa02c788f4e7a0f7ac41adfb13e94044547515fbffc27"
+    },
+    {
+      "path": "PUBLIC_SOURCES.md",
+      "bytes": 1477,
+      "sha256": "ab78f4f11934244ebdbfabc8bb584d089f49591398603c4e5026f7737535a2ea"
+    },
+    {
+      "path": "REPORT_CONTRACT.md",
+      "bytes": 1111,
+      "sha256": "aa878e5114aa467d2978b8efd9ebf3965b76614e5d91265e2e7a52145792e750"
+    },
+    {
+      "path": "SECURITY_CANDIDATE_ENGINEERING.md",
+      "bytes": 5314,
+      "sha256": "3f40168f88307696e5a1ba1c2c0171a23af527f227bce04d37e4ef5bb9f7a8d5"
+    },
+    {
+      "path": "SOURCE_CHANGE_AUTHORIZATION.md",
+      "bytes": 1675,
+      "sha256": "23535e2e232419c78246c56f9e3452249c68749d6ee1b3a97120453bb94e6dfd"
+    },
+    {
+      "path": "SOURCE_ORIENTATION.md",
+      "bytes": 1538,
+      "sha256": "c4b824bc2896eb45f7d500dc5a4f65f55ba3b74361f6257bf88a43cf9a7d5e9c"
+    },
+    {
+      "path": "STAGE_BRANCH_PROTOCOL.md",
+      "bytes": 792,
+      "sha256": "b2b2042ae4872f8a2e27b91076890ca0d0ed24b5da34a69aa93af5d4e7ec714c"
+    },
+    {
+      "path": "SUCCESS_CRITERIA.md",
+      "bytes": 806,
+      "sha256": "5d122f7b5c2a338c41d83a1a5839feeceeb4c12df54094237606f4ce9e2282b9"
+    },
+    {
+      "path": "TASK.md",
+      "bytes": 4644,
+      "sha256": "66dada92295c3d9803a490186e5eea47506d20a3baf16a6da050ddd27ab35a8e"
+    },
+    {
+      "path": "contracts/ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "path": "contracts/AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "path": "contracts/CORE_CONTRACT.md",
+      "bytes": 11753,
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+    },
+    {
+      "path": "contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "bytes": 9856,
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d"
+    },
+    {
+      "path": "verify_context.py",
+      "bytes": 2754,
+      "sha256": "82ab5da574d6cbe4b6b12df90a68f265dd859529d07bd889b27f8696060769b2"
+    }
+  ],
+  "actual_input_bytes": 389604,
+  "max_input_bytes": 1048576,
+  "new_acceptance": false
+}

@@ -1,0 +1,9 @@
+{
+  "verdict": "pass",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "deletionRecoveryMode": "invalid_support_only",
+  "limits": "Synthetic gate transport only; no real provider deletion, persisted Keychain or Apple revocation evidence."
+}

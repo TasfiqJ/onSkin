@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/gf01_verify_delivery.py", line 6, in <module>
+    p.report(r,cp+'completion-report.json')
+  File "/root/onskin-governance-fixture01/scripts/brain/m103_profile.py", line 1116, in report
+    return report_governance_fixture01(root, name) if name.startswith(GF01_INPUT.rsplit('/', 1)[0] + '/') else _report_before_gf01(root, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-governance-fixture01/scripts/brain/m103_profile.py", line 1090, in report_governance_fixture01
+    committed_artifacts(root, value['artifacts'])
+  File "/root/onskin-governance-fixture01/scripts/brain/m103_profile.py", line 235, in committed_artifacts
+    brain.require(len(entries) == 1 and entries[0].split('\t', 1)[1] == path and
+  File "/root/onskin-governance-fixture01/scripts/brain/brain.py", line 50, in require
+    raise ValueError(message)
+ValueError: Artifact is not a committed regular Git blob: docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/approach01-smoke.log

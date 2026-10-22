@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "PATH=C:/Program Files/Docker/Docker/resources/bin;C:/Program Files/nodejs;C:/Windows/System32;C:/Windows;C:/Python39;C:/Program Files/Git/cmd node scripts/phase2/local-supabase-reset.mjs --verify",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "3a088c7a453dcdba0db83dee90c0364f16b6e34d",
+  "source_tree": "7bf9730be830e56e19116408e5b9b9675e76c255",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/evidence/measured-local-verifier.txt",
+    "sha256": "a60dfe5701dc246447d5906edf60accf255476be7c7a5d9c729eed681800396b"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T23:08:26.780825+00:00",
+  "finished_at_utc": "2026-10-20T23:42:50.351685+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "PATH": "C:/Program Files/Docker/Docker/resources/bin;C:/Program Files/nodejs;C:/Windows/System32;C:/Windows;C:/Python39;C:/Program Files/Git/cmd"
+  },
+  "argv": [
+    "node",
+    "scripts/phase2/local-supabase-reset.mjs",
+    "--verify"
+  ]
+}

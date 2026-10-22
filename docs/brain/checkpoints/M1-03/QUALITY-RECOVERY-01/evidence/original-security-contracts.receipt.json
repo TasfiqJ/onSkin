@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/phase9/security_acceptance\", \"-p\", \"test_*.py\", \"-v\"]",
+  "working_directory": "/root/onskin-quality-recovery01-final",
+  "environment": "linux; 3.12.3; CI=true; npm_config_cache=/root/onskin-quality-recovery01-final-cache",
+  "source_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
+  "source_tree": "bddaebf500681ab6bf0b729bb35df7a3ffe058e0",
+  "status": "FAIL",
+  "exit_code": 1,
+  "started_at_utc": "2026-10-22T04:26:45.398902+00:00",
+  "finished_at_utc": "2026-10-22T04:29:27.363210+00:00",
+  "source_precheck_sha256": {
+    "apps/mobile/package.json": "7c00e764f0b8ee6f8654c3bbcb635041bee7e2e04c20b7f8f3adfe17ad40ce73",
+    "package.json": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+    "package-lock.json": "ce1992c391d8b1c533ab9596b00d0f14dfc4c39d51256ed90619ca4351654782",
+    "scripts/brain/m103_profile.py": "b304d306050886f396e5b2ad931b45006f41fe06735cc73be82f86cd30808259"
+  },
+  "dirty_source_at_start": "",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/original-security-contracts.log",
+    "sha256": "9bde318d7c5a822906aa24e296ba96e7ba45f692ab2bea5f0dd79581859ad3f6"
+  },
+  "admission": "NONE"
+}

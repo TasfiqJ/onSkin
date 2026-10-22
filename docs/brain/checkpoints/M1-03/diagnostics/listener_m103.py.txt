@@ -1,0 +1,10 @@
+"""Execute only the existing synthetic listener regression, preserving inner stderr."""
+import sys,tempfile,pathlib,subprocess,json
+sys.path.insert(0,str(pathlib.Path.cwd()/'scripts/phase9/security_acceptance'))
+import contract as c
+with tempfile.TemporaryDirectory(prefix='m103-listener-') as directory:
+ for name,code,args in [
+  ('expected TCP refusal',c.SCANNER_BIND_GUARD+"\ns=socket.socket();s.bind(('127.0.0.1',0))",[]),
+  ('Unix-domain positive fixture',c.SCANNER_BIND_GUARD+"\ns=socket.socket(socket.AF_UNIX);s.bind(sys.argv[1]);print('ACTUAL_UNIX_BIND_PASSED')",[str(pathlib.Path(directory)/'engine.sock')])]:
+  v=subprocess.run([sys.executable,'-B','-c',code,*args],capture_output=True)
+  print(json.dumps(dict(case=name,exit_code=v.returncode,stdout=v.stdout.decode(errors='replace'),stderr=v.stderr.decode(errors='replace'))))

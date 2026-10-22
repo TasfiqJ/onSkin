@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "wsl -d onskin-r6-verification -- sh -lc \"cd /root/onskin-m103c1-source && GITHUB_ACTIONS=true GITHUB_REPOSITORY=TasfiqJ/onSkin GITHUB_WORKFLOW=Security GITHUB_JOB=secret-scan GITHUB_RUN_ID=999987 GITHUB_RUN_ATTEMPT=1 python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v\"",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Existing credential-free Ubuntu24.04 WSL2 x86_64/glibc2.39; Python3.12.3; Linux Node24.19.0 for unittest Node subprocesses, exact npm11.20.0 JS CLI from read-only Windows global installation for independent Linux npm ci. This is diagnostic execution, not the frozen G97 Linux runtime acceptance. Gitleaks8.24.3/TruffleHog3.99.3 exact authorized bytes; OSV2.3.8 only where explicit. No Semgrep replacement/bootstrap execution.",
+  "source_commit": "e04c77b2fc1975139aaa5f240968f9d8d3f72792",
+  "source_tree": "1f83d386bac4b4125abf74f728731bb3f1a24c63",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/final-linux-contracts.txt",
+    "sha256": "3d04424dc6d9edb225b85ff175f0f65ebeb7069be5f5a3be1f08e484ff168cfb"
+  },
+  "counts": {
+    "passed": 70,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-21T01:48:54.853252+00:00",
+  "finished_at_utc": "2026-10-21T01:51:45.649730+00:00",
+  "extra_environment": {},
+  "argv": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--",
+    "sh",
+    "-lc",
+    "cd /root/onskin-m103c1-source && GITHUB_ACTIONS=true GITHUB_REPOSITORY=TasfiqJ/onSkin GITHUB_WORKFLOW=Security GITHUB_JOB=secret-scan GITHUB_RUN_ID=999987 GITHUB_RUN_ATTEMPT=1 python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained",
+  "ci_simulation_note": "GITHUB_ACTIONS=true was synthetic input for unit-only CI-context regressions in local WSL. This is not a GitHub CI execution or qualified attestation."
+}

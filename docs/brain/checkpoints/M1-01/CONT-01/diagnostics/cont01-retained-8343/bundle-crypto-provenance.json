@@ -1,0 +1,29 @@
+{
+  "available": true,
+  "modules": [
+    {
+      "path": "../../../../../../../Documents/Codex/2026-10-19/c-users-jasim-desktop-onskin-x20-6/work/onSkin-stage/apps/mobile/node_modules/@noble/ciphers/chacha.js",
+      "initialized": true,
+      "randomBytes": "undefined",
+      "xchacha20poly1305": "function"
+    },
+    {
+      "path": "../../../../../../../Documents/Codex/2026-10-19/c-users-jasim-desktop-onskin-x20-6/work/onSkin-stage/apps/mobile/node_modules/@noble/ciphers/_arx.js",
+      "initialized": true,
+      "randomBytes": "undefined",
+      "xchacha20poly1305": "undefined"
+    },
+    {
+      "path": "../../../../../../../Documents/Codex/2026-10-19/c-users-jasim-desktop-onskin-x20-6/work/onSkin-stage/apps/mobile/node_modules/@noble/ciphers/utils.js",
+      "initialized": true,
+      "randomBytes": "function",
+      "xchacha20poly1305": "undefined"
+    },
+    {
+      "path": "../../../../../../../Documents/Codex/2026-10-19/c-users-jasim-desktop-onskin-x20-6/work/onSkin-stage/apps/mobile/node_modules/@noble/ciphers/_poly1305.js",
+      "initialized": true,
+      "randomBytes": "undefined",
+      "xchacha20poly1305": "undefined"
+    }
+  ]
+}

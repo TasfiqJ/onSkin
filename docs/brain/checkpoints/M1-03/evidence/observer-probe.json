@@ -1,0 +1,26 @@
+{
+  "kind": "DISPOSABLE_TEST_SOURCE_MUTATION_NOT_PRODUCT_ACCEPTANCE",
+  "original_test_sha256": "b00042e9dea1a0cf9781cb2beae104324fe69d51c296fb45ea2eaaa7132da729",
+  "original_repository_source_unchanged": true,
+  "shared_dependencies": "Read-only individual directory junctions; caches and .vite-temp remain real directories inside disposable fixture.",
+  "results": [
+    {
+      "variant": "unchanged-control",
+      "fixture_test_sha256": "b00042e9dea1a0cf9781cb2beae104324fe69d51c296fb45ea2eaaa7132da729",
+      "command": "node C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\node_modules\\vitest\\vitest.mjs run src/features/notifications/transaction.cont01.test.ts --cache=false --maxWorkers=1",
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103-observer-fixture-v2",
+      "exit_code": 0,
+      "output_path": "docs/brain/checkpoints/M1-03/evidence/observer-v2-unchanged-control.txt",
+      "output_sha256": "45ad2a765c366e767a6a8e3dec840ecba299d08a7ae98ca1f8a4857c6287d4aa"
+    },
+    {
+      "variant": "observer-flush-fixture",
+      "fixture_test_sha256": "8d8a5eae31af9528f525b1f87569901a8a08e2aeda28204c1f7e4f318ab65527",
+      "command": "node C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\node_modules\\vitest\\vitest.mjs run src/features/notifications/transaction.cont01.test.ts --cache=false --maxWorkers=1",
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103-observer-fixture-v2",
+      "exit_code": 0,
+      "output_path": "docs/brain/checkpoints/M1-03/evidence/observer-v2-observer-flush-fixture.txt",
+      "output_sha256": "f9a7309243003579d0c1ec8f4c7275748b9cd0db792d70f0b744661b5a32934f"
+    }
+  ]
+}

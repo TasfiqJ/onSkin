@@ -1,0 +1,57 @@
+{
+  "name": "advisory-contract",
+  "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase9/security-advisory-exceptions.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Node20.20.2",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "exit_code": 0,
+  "status": "PASS",
+  "expected_exit": 0,
+  "seconds": 0.125
+}
+TAP version 13
+# Subtest: accepts only the reviewed npm and OSV findings, including inherited npm findings
+ok 1 - accepts only the reviewed npm and OSV findings, including inherited npm findings
+  ---
+  duration_ms: 2.5312
+  ...
+# Subtest: rejects any new High advisory and any unreviewed OSV finding
+ok 2 - rejects any new High advisory and any unreviewed OSV finding
+  ---
+  duration_ms: 0.3401
+  ...
+# Subtest: resolves an inherited npm advisory through a dependency cycle
+ok 3 - resolves an inherited npm advisory through a dependency cycle
+  ---
+  duration_ms: 0.3598
+  ...
+# Subtest: rejects changed package versions, removed scanner evidence, and scanner errors
+ok 4 - rejects changed package versions, removed scanner evidence, and scanner errors
+  ---
+  duration_ms: 0.391
+  ...
+# Subtest: fails closed when an approved advisory disappears from either scanner report
+ok 5 - fails closed when an approved advisory disappears from either scanner report
+  ---
+  duration_ms: 0.3455
+  ...
+# Subtest: rejects expanded, expired, and weakened exception records
+ok 6 - rejects expanded, expired, and weakened exception records
+  ---
+  duration_ms: 0.3611
+  ...
+# Subtest: fails when upstream lists a newer release or a patched advisory range
+ok 7 - fails when upstream lists a newer release or a patched advisory range
+  ---
+  duration_ms: 0.4628
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 78.932

@@ -1,8 +1,10 @@
+import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  runAccountGenerationOperation,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
 } from '@/lib/auth/accountGeneration';
@@ -55,7 +57,10 @@ const ROUTINE_DATA = {
 
 let renderer: ReactTestRenderer | null = null;
 
-beforeEach(() => {
+beforeEach(async () => {
+  clearActiveHealthProcessingEpoch();
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  setActiveHealthProcessingEpoch(1, { ownerUserId: 'response-owner-a', accountGeneration });
   (
     globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
   ).IS_REACT_ACT_ENVIRONMENT = true;
@@ -117,6 +122,21 @@ describe('NotificationResponseHost', () => {
     } finally {
       endAccountGenerationBoundary();
     }
+  });
+
+  it.each(['withdrawal', 'owner-change'])('refuses the old mounted listener after %s even before React cleanup', async (boundary) => {
+    await act(async () => { renderer = create(createElement(NotificationResponseHost)); });
+    const listener = mocks.listener;
+    clearActiveHealthProcessingEpoch();
+    if (boundary === 'owner-change') {
+      beginAccountGenerationBoundary();
+      endAccountGenerationBoundary();
+      const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+      setActiveHealthProcessingEpoch(2, { ownerUserId: 'response-owner-b', accountGeneration });
+    }
+    await act(async () => listener?.(response('late-owner-a', ROUTINE_DATA)));
+    expect(mocks.push).not.toHaveBeenCalled();
+    expect(mocks.clear).toHaveBeenCalledOnce();
   });
 
   it('does not subscribe on web and removes the native listener on unmount', async () => {

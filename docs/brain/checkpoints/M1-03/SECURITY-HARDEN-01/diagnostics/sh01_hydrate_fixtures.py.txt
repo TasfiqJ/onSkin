@@ -1,0 +1,14 @@
+import pathlib,subprocess,sys
+repo=pathlib.Path(__file__).parent/'overnight-delivery-clean'
+sys.path.insert(0,str(repo/'scripts/brain'))
+import m1_profile,m102_profile,m103_profile
+commits={v for m in [m1_profile,m102_profile,m103_profile] for k,v in vars(m).items() if 'BASE' in k and isinstance(v,str) and len(v)==40}
+oids=set()
+for commit in commits:
+    for entry in subprocess.check_output(['git','ls-tree','-rz',commit],cwd=repo).split(b'\0'):
+        if entry:
+            meta=entry.split(b'\t',1)[0].split()
+            if meta[1]==b'blob':oids.add(meta[2])
+p=subprocess.run(['git','cat-file','--batch-check'],input=b'\n'.join(sorted(oids))+b'\n',cwd=repo,capture_output=True,check=True)
+assert b' missing' not in p.stdout
+print('Hydrated historical governance fixture metadata:',len(commits),'endpoints,',len(oids),'blobs. No content emitted.')

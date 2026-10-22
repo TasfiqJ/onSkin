@@ -1,0 +1,44 @@
+command: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\tools\node-v20.20.2-win-x64\node.exe C:\Users\jasim\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js run typecheck
+working_directory: C:\Users\jasim\Documents\Codex\2026-10-19\c-users-jasim-desktop-onskin-x20-6\work\onSkin-stage
+snapshot_commit: 8fd48286e0ad65e7797588d7cd88edde27fe4a5f
+snapshot_tree: f7772abe39325075b8a9231b0c98bbbd79c9c769
+exit_code: 0
+
+> layerwell@0.1.0 typecheck
+> turbo run typecheck
+
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/types
+   • Running typecheck in 3 packages
+   • Remote caching disabled, using shared worktree cache
+
+@layerwell/types:typecheck: cache hit, replaying logs 598603dd74803c09
+@layerwell/catalog-operator-console:typecheck: cache hit, replaying logs aa43aa611148e4c8
+@layerwell/types:typecheck: 
+@layerwell/types:typecheck: > @layerwell/types@0.1.0 typecheck
+@layerwell/types:typecheck: > tsc --noEmit
+@layerwell/types:typecheck: 
+@layerwell/types:typecheck: npm notice
+@layerwell/types:typecheck: npm notice New major version of npm available! 10.8.2 -> 12.2.0
+@layerwell/types:typecheck: npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+@layerwell/types:typecheck: npm notice To update run: npm install -g npm@12.2.0
+@layerwell/types:typecheck: npm notice
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/catalog-operator-console:typecheck: > @layerwell/catalog-operator-console@0.1.0 typecheck
+@layerwell/catalog-operator-console:typecheck: > tsc --noEmit
+@layerwell/catalog-operator-console:typecheck: 
+@layerwell/catalog-operator-console:typecheck: npm notice
+@layerwell/catalog-operator-console:typecheck: npm notice New major version of npm available! 10.8.2 -> 12.2.0
+@layerwell/catalog-operator-console:typecheck: npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+@layerwell/catalog-operator-console:typecheck: npm notice To update run: npm install -g npm@12.2.0
+@layerwell/catalog-operator-console:typecheck: npm notice
+@layerwell/mobile:typecheck: cache hit, replaying logs b8123bbfd89a1a49
+@layerwell/mobile:typecheck: 
+@layerwell/mobile:typecheck: > @layerwell/mobile@0.1.0 typecheck
+@layerwell/mobile:typecheck: > tsc --noEmit
+@layerwell/mobile:typecheck: 
+
+ Tasks:    3 successful, 3 total
+Cached:    3 cached, 3 total
+  Time:    180ms >>> FULL TURBO
+

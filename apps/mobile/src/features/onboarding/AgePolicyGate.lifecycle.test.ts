@@ -6,6 +6,11 @@ import AgeGateScreen from '../../app/onboarding/age';
 import { AgePolicyGate } from './AgePolicyGate';
 import type { AgePolicyReceiptStatus } from './ageGateStore';
 import {
+  activeHealthProcessingLeaseSnapshot,
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+import {
   clearAgePolicyReverificationHandoff,
   consumePostAgeConsentRoute,
   stagePostAgeConsentRoute,
@@ -166,6 +171,7 @@ beforeEach(() => {
     });
   consumePostAgeConsentRoute();
   clearAgePolicyReverificationHandoff();
+  clearActiveHealthProcessingEpoch();
 });
 
 afterEach(async () => {
@@ -174,6 +180,17 @@ afterEach(async () => {
 });
 
 describe('AgePolicyGate foreground receipt lifecycle', () => {
+  it('consumes a fresh durable publication even when the receipt was already current', async () => {
+    mocks.segments = ['onboarding', 'age'];
+    mocks.getReceiptStatus.mockResolvedValueOnce('current');
+    await renderGate();
+    await flush();
+    expect(protectedMounted()).toBe(true);
+    stagePostAgeConsentRoute();
+    await act(async () => mocks.setQueryData(['agePolicyReceiptStatus', 'policy-hash'], 'current'));
+    await flush();
+    expect(mocks.replace).toHaveBeenCalledExactlyOnceWith('/onboarding/consent');
+  });
   it('closes protected providers on background and keeps them closed through a fresh missing read', async () => {
     const initial = deferred<AgePolicyReceiptStatus>();
     mocks.getReceiptStatus.mockReturnValueOnce(initial.promise);
@@ -187,7 +204,11 @@ describe('AgePolicyGate foreground receipt lifecycle', () => {
     expect(protectedMounted()).toBe(true);
     expect(mocks.setQueryData).toHaveBeenLastCalledWith(expect.any(Array), 'current');
 
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'owner-a', accountGeneration: 0 });
+    expect(activeHealthProcessingLeaseSnapshot()).not.toBeNull();
+
     await emitAppState('background');
+    expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
     expect(protectedMounted()).toBe(false);
     expect(renderedText()).toContain('Checking age eligibility');
 
@@ -314,6 +335,7 @@ describe('AgePolicyGate foreground receipt lifecycle', () => {
     await renderGate();
     await flush();
     expect(protectedMounted()).toBe(true);
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'owner-a', accountGeneration: 0 });
 
     await act(async () => {
       mocks.setQueryData(['agePolicyReceiptStatus', 'policy-hash'], 'missing');
@@ -321,6 +343,7 @@ describe('AgePolicyGate foreground receipt lifecycle', () => {
     });
 
     expect(protectedMounted()).toBe(false);
+    expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
     expect(renderer!.root.findAllByProps({ testID: 'bootstrap' })).toHaveLength(1);
   });
 

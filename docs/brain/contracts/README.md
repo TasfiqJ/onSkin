@@ -1,0 +1,13 @@
+# Stage completion report contract v2
+
+Historical contract below. Current M0-02 / FIX-01 submissions use [v3](FIX-01-v3.md); the v2 report is preserved but is not accepted by the repaired CLI as a current submission.
+
+[completion-report.v2.schema.json](completion-report.v2.schema.json) is the active M0-02 submission contract. The original SourcePack schema and root compatibility schema remain immutable under `docs/v2/source-inputs/`. Their ambiguous `head_commit/head_tree` fields must not be used to claim the report commit tested itself. Version 2 is intentionally a distinct schema, not a silent reinterpretation.
+
+`implementation_snapshot` names the committed implementation/tree measured before report authoring. Each executed test names its own exact snapshot commit/tree, command, working directory, environment, exit, count, evidence class and hashed sanitized log. Unrun/blocked checks use null exits/artifacts and an explicit limitation. Historical CI names its associated source head, real run conclusion and evidence scope. A continued green step does not override an original nonzero exit or failed job.
+
+`delivery.last_observed_pushed_snapshot` is a past pushed snapshot with a known tree. `delivery.ref` and `resolve_via` identify the **live** final delivery tip; no embedded future commit SHA is asserted. A report/handoff cannot hash itself, nor can its delivery commit be a measured test snapshot without a later distinct report. The CLI verifies commit/tree identities, log hashes and that implementation namespaces have not drifted since the measured implementation. Final evidence-only commits may follow. There is no self-acceptance field value other than false, and admission remains NONE.
+
+The standalone validator interprets only this schema's documented subset: type, required, properties, additionalProperties, items, enum, const, pattern, minimum, minItems and minLength, plus schema/title/description metadata. Unsupported keywords fail closed. It additionally checks test outcomes, artifact hashes and Git bindings; schema shape alone is insufficient. It does not claim to implement arbitrary JSON Schema dialects. No external validation dependency is required.
+
+The root TXT remains a short carrier index. The structured report and detailed evidence are committed to GitHub under `docs/brain/checkpoints/M0-02/`. Existing approved Brain acceptance remains unchanged; `SUBMITTED_REVIEW_REQUIRED` is not acceptance.

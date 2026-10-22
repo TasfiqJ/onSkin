@@ -1,0 +1,58 @@
+{
+  "delivery": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "disposable_candidate_only": true,
+  "old_lock_sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+  "current_lock_sha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+  "native_lock_entries_unchanged": true,
+  "installed_native_source_pins_checked": 10,
+  "mapping_packages": [
+    "@react-native-google-signin/google-signin",
+    "expo-image",
+    "react-native"
+  ],
+  "outputs": [
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "5b26b47d893d76bdc3b8aa087171979d5461eb71b056afd9752d3f21520a6bed",
+      "expected_postimage_sha256": "ca660645ed45c986ddc7711b8896018d05dd530585086f78f82ed94bb2968f56",
+      "expected_postimage_bytes": 8350
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "bytes": 247820,
+      "sha256": "08a5ff4ed0f0f2911d13dcb59cef19b62898c2e8df65bbdaf44424be9b7fe127",
+      "expected_postimage_sha256": "2001e2330293f2fce45d55553ef5b58f9e8e7dd07a8f4dd5cf75d8fd752044e6",
+      "expected_postimage_bytes": 247820
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "bytes": 19517,
+      "sha256": "8b8698f41c85ba53c4ab3012a99ad580fe79329e8724bec54006f8cba7ecef98",
+      "expected_postimage_sha256": "3f619d918084e765827292b6ffab6cd40461c2153ff3f47448b622154074f6f6",
+      "expected_postimage_bytes": 19517
+    }
+  ],
+  "generated_json_semantic_changes": [
+    "/inputs/mapping/sha256",
+    "/inputs/packageLock/bytes",
+    "/inputs/packageLock/sha256"
+  ],
+  "fixture": {
+    "path": "scripts/phase9/security_acceptance/fixtures/m103-pre-vite-package-lock.json.gz",
+    "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "source_path": "package-lock.json",
+    "raw_bytes": 574165,
+    "raw_sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+    "bytes": 127181,
+    "sha256": "947de598d95a5093fe2a13fb5b0390ad3eb61124e4f44bb3aa180fdacbbf14d0",
+    "method": "gzip.GzipFile(filename=\"\", mode=\"wb\", compresslevel=9, mtime=0); original exact Git blob; OS header 255; no JSON reserialization",
+    "scope": "TEST_ONLY_HISTORICAL_INPUT_NOT_ACTIVE_LOCK_OR_ACCEPTANCE_POLICY"
+  },
+  "raw_records": [
+    "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-candidate-evidence.json",
+    "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/native-generated-semantic-diff.json",
+    "C:/Users/jasim/Documents/ChatGPT/BrainReviews/M103-Review02-20261021T022540Z/historical-fixture-binding.json"
+  ]
+}

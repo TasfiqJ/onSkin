@@ -1,3 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+
 import { localDataOwnerBinding } from '@/lib/auth/sessionOwner';
 import {
   assertHealthDataWriteLease,
@@ -270,7 +273,16 @@ export function erasePhotoDeleteRemoteCleanupForBinding(ownerBinding: string): P
     try { listener(); } catch { /* A transport listener cannot prevent erasure. */ }
   }
   return serial(async () => {
-    await storage.removeItem(key);
+    if (Platform.OS === 'web') {
+      // This native-only vault cannot be created on web. Prove absence without
+      // calling SecureStore's unavailable stub. Unexpected retained ciphertext
+      // stays blocked/preserved; web must never pretend to erase a native key.
+      if ((await AsyncStorage.getItem(key)) !== null) {
+        throw new Error('PHOTO_DELETE_CLEANUP_WEB_STORAGE_UNSUPPORTED');
+      }
+    } else {
+      await storage.removeItem(key);
+    }
     // A new invocation may capture only after exact-owner erasure succeeds.
     // Failed erasure stays pending until the existing explicit cleanup retries.
     if (retirements.get(ownerBinding) === state) state.pending = false;

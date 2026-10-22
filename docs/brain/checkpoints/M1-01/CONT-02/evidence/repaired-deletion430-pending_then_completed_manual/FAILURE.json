@@ -1,0 +1,25 @@
+{
+  "bodyText": "Account activity paused Deleting your account Your deletion request is safely queued. Completing deletion can take up to 29 days while providers verify erasure. This device will keep checking, and account activity stays paused until completion is verified. Next automatic check in about 30 seconds. Check status now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Check status now",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 541.5
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8418/onboarding/age",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

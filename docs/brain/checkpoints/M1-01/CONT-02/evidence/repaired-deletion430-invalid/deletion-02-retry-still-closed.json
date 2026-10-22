@@ -1,0 +1,47 @@
+{
+  "bodyText": "Account activity paused Deletion status could not be verified This device kept the saved recovery key and did not reopen the account. Retry the deletion request or check again. If that does not work, contact support. Check status now Retry deletion request Open support",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Check status now",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 471
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry deletion request",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 535
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Open support",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 599
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8419/today",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

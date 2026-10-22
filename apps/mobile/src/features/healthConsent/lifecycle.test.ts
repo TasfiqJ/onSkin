@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  beginPausedHealthDataConsentWithdrawal,
   beginHealthDataConsentWithdrawal,
   completeHealthDataActivationRoute,
   declineAuthoritativeInitialHealthDataConsent,
@@ -343,6 +344,60 @@ describe('health consent lifecycle orchestration', () => {
     });
     expect(mocks.cleanup).toHaveBeenCalledWith(OWNER);
     expect(mocks.beginRemote).toHaveBeenCalled();
+  });
+
+  it.each(['active', 'verification_required'] as const)(
+    'withdraws a verified paused owner from %s without opening processing',
+    async (state) => {
+      mocks.activeLease = null;
+      mocks.record = localRecord(
+        state,
+        state === 'verification_required'
+          ? { verificationReason: 'status_unavailable', verificationResumeState: 'active' }
+          : {},
+      );
+      await expect(beginPausedHealthDataConsentWithdrawal(OWNER)).resolves.toMatchObject({
+        state: 'withdrawing',
+        processingEpoch: 2,
+      });
+      expect(mocks.preparePending).toHaveBeenCalled();
+      expect(mocks.setEpoch).not.toHaveBeenCalled();
+      expect(mocks.activeLease).toBeNull();
+    },
+  );
+
+  it('refuses paused withdrawal for a foreign owner before intent or cleanup', async () => {
+    mocks.activeLease = null;
+    mocks.ownership = 'mismatch';
+    await expect(beginPausedHealthDataConsentWithdrawal(OWNER)).rejects.toThrow(
+      'HEALTH_DATA_LIFECYCLE_LOCAL_OWNER_UNAVAILABLE',
+    );
+    expect(mocks.preparePending).not.toHaveBeenCalled();
+    expect(mocks.cleanup).not.toHaveBeenCalled();
+    expect(mocks.beginRemote).not.toHaveBeenCalled();
+  });
+
+  it('does not infer a processing epoch from missing or unconsented paused state', async () => {
+    mocks.activeLease = null;
+    mocks.record = localRecord('unconsented', { processingEpoch: 0 });
+    await expect(beginPausedHealthDataConsentWithdrawal(OWNER)).rejects.toThrow(
+      'HEALTH_DATA_WITHDRAWAL_NOT_ACTIVE',
+    );
+    expect(mocks.preparePending).not.toHaveBeenCalled();
+    expect(mocks.setEpoch).not.toHaveBeenCalled();
+  });
+
+  it('rejects an owner switch during the paused-state read before publishing an intent', async () => {
+    mocks.activeLease = null;
+    mocks.read.mockImplementationOnce(async () => {
+      mocks.identityGeneration += 1;
+      return mocks.record;
+    });
+    await expect(beginPausedHealthDataConsentWithdrawal(OWNER)).rejects.toThrow(
+      'ACCOUNT_GENERATION_CHANGED',
+    );
+    expect(mocks.preparePending).not.toHaveBeenCalled();
+    expect(mocks.beginRemote).not.toHaveBeenCalled();
   });
 
   it('releases a durable initial refusal so the same owner can later grant consent', async () => {

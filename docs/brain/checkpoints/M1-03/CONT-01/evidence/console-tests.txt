@@ -1,0 +1,13 @@
+
+> @layerwell/catalog-operator-console@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103c1-isolated/apps/catalog-operator-console
+
+
+ Test Files  7 passed (7)
+      Tests  24 passed (24)
+   Start at  21:21:10
+   Duration  1.86s (transform 845ms, setup 0ms, import 2.22s, tests 114ms, environment 1ms)
+

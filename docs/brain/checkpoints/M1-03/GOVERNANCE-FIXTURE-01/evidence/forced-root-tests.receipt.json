@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"npm\", \"test\", \"--\", \"--force\"]",
+  "working_directory": "/root/onskin-governance-fixture01",
+  "environment": "Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; CI=true; fresh no-hardlink full clone; dedicated npm cache; admission NONE",
+  "source_commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+  "source_tree": "b0a80f55a472fc28f02a5e993912314a17726f6c",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log",
+    "sha256": "5ce7e3c18260d20474cb69264bcf9e477e3c8980c17516856106f5f04039fe85"
+  },
+  "counts": {
+    "passed": 6067,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "npm",
+    "test",
+    "--",
+    "--force"
+  ],
+  "started_at_utc": "2026-10-22T17:17:18.112454+00:00",
+  "finished_at_utc": "2026-10-22T17:17:33.106628+00:00"
+}

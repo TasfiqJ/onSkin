@@ -1046,7 +1046,8 @@ describe('T1-R4 same-authority remount gate lifetime regressions', () => {
     assert.ok(mocks.progressGet.mock.calls.length > progressReads);
     assert.ok(mocks.unsynced.mock.calls.length > unsyncedReads);
     assert.equal(control('Test product').props['aria-checked'], true);
-    assert.equal(control('Test product').props.disabled, false);
+    assert.equal(control('Test product').props.disabled, true);
+    assert.match(control('Test product').props.accessibilityHint as string, /cannot be undone/);
     assert.equal(mocks.toggle.mock.calls.length, 1); noSuccess();
   });
 });

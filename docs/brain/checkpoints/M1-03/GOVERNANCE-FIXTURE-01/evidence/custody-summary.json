@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-GOVERNANCE-FIXTURE01-SOURCE-EDIT-01",
+  "external_manifest_sha256": "6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f",
+  "base_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "base_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "implementation": {
+    "commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+    "tree": "b0a80f55a472fc28f02a5e993912314a17726f6c"
+  },
+  "measured_source": {
+    "commit": "1dc58a5c5e49c3ffeada603f7e6f6038fc12803d",
+    "tree": "b0a80f55a472fc28f02a5e993912314a17726f6c"
+  },
+  "source_writer_count": 1,
+  "fresh_clone": true,
+  "hardlinks": false,
+  "alternates": false,
+  "writable_preimages_verified": 7,
+  "protected_preimages_verified": 16,
+  "protected_current_files_identical": 16,
+  "roadmap_tasks": 47,
+  "module_identities": 27,
+  "prior_adr_records": 51,
+  "prior_adr_registry": "docs/brain/reviews/M1-03/SH01-REVIEW01/ADR_REGISTRY.json",
+  "source_edit_union_permitted": false,
+  "fixture_repair_approaches": 1,
+  "worklist_regenerated": false,
+  "original_active_records_unchanged": true,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "incremental_spend_usd": 0,
+  "context_health": {
+    "level": "LOW",
+    "compactions_observed": 0,
+    "status": "sufficient; no scope expansion; independent Brain review required"
+  }
+}

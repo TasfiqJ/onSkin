@@ -1,0 +1,37 @@
+{
+  "root": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "independent_node_modules": true,
+  "node": "22.21.0",
+  "npm": "11.20.0",
+  "lock_sha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+  "expected_lock_sha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+  "closure": {
+    "vite": {
+      "version": "8.1.6",
+      "files": 45,
+      "tree_sha256": "966190261a73294acb3e0141d5529433b186baca72ec0c57abd1578526a616a5"
+    },
+    "rolldown": {
+      "version": "1.1.5",
+      "files": 49,
+      "tree_sha256": "f8774675e35d588b5aac02db48664db1b87f503f0e4351444205142997dffc48"
+    },
+    "@oxc-project/types": {
+      "version": "0.139.0",
+      "files": 4,
+      "tree_sha256": "d0e2712629826a5d8e624c81fe2070f9c213b571c5216f0823cf258124981e7f"
+    },
+    "@rolldown/binding-win32-x64-msvc": {
+      "version": "1.1.5",
+      "files": 3,
+      "tree_sha256": "f5a7f0623c724016911cca495b91e75972b9dcb7b789d42cd7915462d4a8f837"
+    },
+    "vitest": {
+      "version": "4.1.11",
+      "files": 124,
+      "tree_sha256": "61b7148b6616fd9a340234ac1e748ac4cfe8646bedc94d6d26f60aee8724781e"
+    }
+  },
+  "install_receipt": "candidate-install.receipt.json",
+  "install_source_note": "Dirty own-generated candidate manifests at a284020; exact bytes committed89c665880. No shared install was targeted. Postinstall and all backports retained."
+}

@@ -1,0 +1,29 @@
+
+> layerwell@0.1.0 phase9:release-candidate-git-contract:test
+> node --test scripts/phase9/release-candidate-git-contract.test.mjs
+
+✔ accepts governed E plus an exact generated tail and binds required RC metadata (296.81375ms)
+▶ rejects unbound RC metadata, extra E paths, renames, raw tail edits, and near misses
+  ✔ required file omitted from ledger (180.44175ms)
+  ✔ outside change in E (195.515952ms)
+  ✔ outside source renamed into RC (206.806346ms)
+  ✔ later RC mutation (230.178191ms)
+  ✔ near-miss generated output (231.58498ms)
+✔ rejects unbound RC metadata, extra E paths, renames, raw tail edits, and near misses (1045.474449ms)
+▶ rejects modified, hardlinked, skip-worktree, and ignored-untracked metadata
+  ✔ modified file (142.964561ms)
+  ✔ hardlinked file (209.752886ms)
+  ✔ skip-worktree outside source file (147.216344ms)
+  ✔ assume-unchanged outside source file (155.431651ms)
+  ✔ ignored untracked packet (43.939177ms)
+✔ rejects modified, hardlinked, skip-worktree, and ignored-untracked metadata (700.095297ms)
+✔ ignores inherited Git repository, config, and PATH selection environment (257.05165ms)
+✔ rejects malformed RC directories, unsafe/colliding paths, callbacks, and source SHAs (0.251347ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2360.572701

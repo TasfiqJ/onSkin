@@ -1,0 +1,284 @@
+{
+  "bodyText": "Your change was not confirmed. Your choices are still here; try again when private storage is available. < Retinol 0.3% serum data / Added by you CATALOG Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. category retinoid_serum Report an issue Opened October 2026 · edit PAO unknown · edit Recorded package date not entered · set Date unknown WHAT IT CONTRIBUTES Retinoid ROUTINE ROLE Used in your Evening routine. Cycling nights 3, 5. Review the AM/PM plan before you check it off. Replace Mark finished 🗑︎ Remove from shelf? Your change was not confirmed. Your choices are still here; try again when private storage is available. Close Mark discarded Archive it and keep freshness and repurchase history. Remove completely Delete this local shelf entry. This cannot be undone.",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 68
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "More options",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 303,
+      "y": 68
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Report an issue",
+      "role": "button",
+      "selected": false,
+      "width": 105.48,
+      "x": 43,
+      "y": 373
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Edit opened date",
+      "role": "button",
+      "selected": false,
+      "width": 289,
+      "x": 43,
+      "y": 453
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Edit period after opening",
+      "role": "button",
+      "selected": false,
+      "width": 289,
+      "x": 43,
+      "y": 509
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Set date printed on this package",
+      "role": "button",
+      "selected": false,
+      "width": 289,
+      "x": 43,
+      "y": 577
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Replace",
+      "role": "button",
+      "selected": false,
+      "width": 127.5,
+      "x": 24,
+      "y": 617
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Mark finished",
+      "role": "button",
+      "selected": false,
+      "width": 129.5,
+      "x": 161.5,
+      "y": 617
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Remove or discard",
+      "role": "button",
+      "selected": false,
+      "width": 50,
+      "x": 301,
+      "y": 617
+    },
+    {
+      "disabled": false,
+      "height": 304,
+      "hitOk": true,
+      "label": "Dismiss Remove from shelf?",
+      "role": "button",
+      "selected": false,
+      "width": 375,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close product options",
+      "role": "button",
+      "selected": false,
+      "width": 64,
+      "x": 287,
+      "y": 341
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "Mark discardedArchive it and keep freshness and repurchase history.",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 447
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "Remove completelyDelete this local shelf entry. This cannot be undone.",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 543
+    }
+  ],
+  "issueCount": 9,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Back",
+        "role": "button",
+        "selected": false,
+        "width": 48,
+        "x": 24,
+        "y": 68
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "More options",
+        "role": "button",
+        "selected": false,
+        "width": 48,
+        "x": 303,
+        "y": 68
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Report an issue",
+        "role": "button",
+        "selected": false,
+        "width": 105.48,
+        "x": 43,
+        "y": 373
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Edit opened date",
+        "role": "button",
+        "selected": false,
+        "width": 289,
+        "x": 43,
+        "y": 453
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Edit period after opening",
+        "role": "button",
+        "selected": false,
+        "width": 289,
+        "x": 43,
+        "y": 509
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Set date printed on this package",
+        "role": "button",
+        "selected": false,
+        "width": 289,
+        "x": 43,
+        "y": 577
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Replace",
+        "role": "button",
+        "selected": false,
+        "width": 127.5,
+        "x": 24,
+        "y": 617
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Mark finished",
+        "role": "button",
+        "selected": false,
+        "width": 129.5,
+        "x": 161.5,
+        "y": 617
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Remove or discard",
+        "role": "button",
+        "selected": false,
+        "width": 50,
+        "x": 301,
+        "y": 617
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8352/shelf/bd9c8a03-f068-43fb-b89c-10e7b279793a",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

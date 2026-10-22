@@ -1,0 +1,113 @@
+{
+  "bodyText": "PRIVACY & ACCOUNT Your account is still here. Age confirmation is still required for health features. Your existing data rights remain available. Billing does not stop automatically; use Manage subscription below whenever you need it. PRIVACY REQUEST Status: withdrawn. Local cleanup complete. ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support Back to age confirmation",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Manage subscription",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 234
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Restore purchases",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 298
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Export my data",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 362
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Sign out",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 426
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Delete account",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 490
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Consumer health data policy",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 632
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Privacy policy",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 696
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Support",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 760
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to age confirmation",
+      "role": "button",
+      "selected": false,
+      "width": 430,
+      "x": 0,
+      "y": 876
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8353/",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

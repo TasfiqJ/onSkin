@@ -1,0 +1,8 @@
+test_exact_issuance_prior_interval_and_gate_types (test_m103_security_harden01_profile.Hardening) ... ok
+test_intermediate_unauthorized_commit_and_malformed_preimage_refuse (test_m103_security_harden01_profile.Hardening) ... ok
+test_sandbox_digest_discrepancy_is_not_permission_to_edit (test_m103_security_harden01_profile.Hardening) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 167.148s
+
+OK

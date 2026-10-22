@@ -132,6 +132,9 @@ export function useShelf() {
 
   return useQuery<ShelfData>({
     queryKey: ['shelf'],
+    // This projection reads encrypted local records, including just-saved
+    // offline mutations. Connectivity must not pause its cache refresh.
+    networkMode: 'always',
     retry: 1,
     queryFn: () =>
       runCurrentHealthDataOperation(async (lease) => {

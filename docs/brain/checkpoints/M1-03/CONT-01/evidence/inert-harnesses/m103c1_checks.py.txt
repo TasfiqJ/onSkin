@@ -1,0 +1,7 @@
+from m103c1_run import run,P
+R=P/'m103c1-isolated'; env={'CI':'1','EXPO_NO_TELEMETRY':'1'}
+run('expo-doctor',['npm.cmd','--workspace','apps/mobile','exec','--yes','--','expo-doctor@1.21.5'],R,env)
+for platform in ['ios','android']:
+ run('expo-export-'+platform,['npm.cmd','--workspace','apps/mobile','exec','--','expo','export','--platform',platform,'--output-dir',(P/('m103c1-export-'+platform)).as_posix(),'--source-maps','external','--dump-assetmap','--clear'],R,{**env,'NODE_ENV':'production'})
+run('npm-audit-high',['npm.cmd','audit','--audit-level=high','--json'],R)
+run('dependency-sbom',['npm.cmd','run','phase9:dependency-sbom'],R,{'PHASE9_RUN_NPM_AUDIT':'true'})

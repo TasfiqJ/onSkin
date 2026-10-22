@@ -1,0 +1,12 @@
+{
+  "status": "UNREVIEWED_NO_LEAK_INFERRED",
+  "source_commit": "f5061ef28731489d818a04e1102267b0c701569a",
+  "records": [
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "rule": "generic-api-key",
+      "start_line": 89,
+      "end_line": 89
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "verdict": "pass",
+  "scenario": "actual_cross_owner",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "noAFlash": true,
+  "delayedAOperationsRejected": true,
+  "duplicateAndFailedCleanupRetry": true,
+  "bOwnAdmission": true,
+  "bUsableManualShelfAndEdit": true,
+  "exactBOwnerCacheQueueHealth": true,
+  "bDocumentRelaunch": true,
+  "returnAClosedWithoutResurrection": true,
+  "noUncaughtErrors": true,
+  "limits": "DEV/web/development/unconfigured synthetic identity and preflight transport; real Auth reconciliation, owner proof, cleanup, encrypted storage/query, age/consent and routing. No live provider, paid authority, native process death or device proof."
+}

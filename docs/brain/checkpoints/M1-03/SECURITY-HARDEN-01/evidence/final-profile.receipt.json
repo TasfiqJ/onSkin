@@ -1,0 +1,19 @@
+{
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "C:\\Python39\\python.exe -B scripts/brain/brain.py --profile M1-03 validate",
+  "environment": "Windows; Python 3.9.13; local Git; privacy-safe checkpoint validation only",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-21T12:16:11.230552+00:00",
+  "kind": "LOCAL_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/final-profile.txt",
+    "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+  },
+  "python_executable_sha256": "07c96337729e3c4c986e8f5660a97cb475c4c04842606be2654b37892af57de9",
+  "schema_version": 1,
+  "source_commit": "481d146f4bf8c950513b3479dfa052e868f43bae",
+  "source_tree": "ccfbfee4a45166cb74c8f1438e7c98dd008eaa54",
+  "started_at_utc": "2026-10-21T12:15:56.192614+00:00",
+  "status": "PASS",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean"
+}

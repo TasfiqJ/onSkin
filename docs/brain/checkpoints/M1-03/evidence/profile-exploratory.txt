@@ -1,0 +1,8 @@
+test_independent_inputs_and_authority_refusals (test_m103_profile.M103Report) ... ok
+test_valid_and_false_evidence_refusals (test_m103_profile.M103Report) ... ok
+test_wrong_branch_old_base_and_unmeasured_source (test_m103_profile.M103Report) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 65.957s
+
+OK

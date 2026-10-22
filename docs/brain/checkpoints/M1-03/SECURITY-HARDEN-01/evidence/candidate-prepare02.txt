@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/candidate.py", line 206, in <module>
+    if a.command=='prepare': prepare(a.private_root)
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/candidate.py", line 196, in prepare
+    runtime=runtime_inputs(root/'venv'),acquisition_tree=acquisition_tree(root),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/capsule.py", line 38, in runtime_inputs
+    with p.open('rb') as f:magic=f.read(4)
+         ^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/usr/lib/python3.12/lib-dynload'

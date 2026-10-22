@@ -1,0 +1,1 @@
+{"admission": "NONE", "paths": 18964, "supported_targets": 12372, "complete": false, "findings": 4}

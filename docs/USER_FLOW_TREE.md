@@ -2736,3 +2736,43 @@ source tests, or fixture-only screenshots.
 - Keep main's account-generation, health and private-data admission boundaries. Navigate Today, Progress, Shelf and You at all supported sizes, hover/focus/press tabs, scroll and allow motion to settle; repeat with Reduce Motion.
 - Old scan/search/catalog-recovery links resolve to manual entry within the mounted Shelf navigator. Deferred Ask/community/recommendation children never mount and return to Today.
 - Accepted evidence: `test-results/human-e2e/2026-09-27/main-integration/navigation-accepted/`, `navigation-reduced/`, and `onboarding-375/`, `onboarding-390/`, `onboarding-430/`. This is Expo web fixture evidence, not native release approval.
+
+## M1-01 adult18 re-verification (2026-10-20)
+
+- Priority: Critical. Persona: retained guest or account owner with prior16+ proof.
+- Start: welcome or direct protected route, real Expo web development fixture.
+- Old16+ receipt, boolean, unknown or malformed proof never mounts protected providers; owner data stays intact. Confirm new DOB transiently; just-under18 stays closed, eighteenth birthday admits current minimized receipt. No stored DOB or DOB analytics.
+- Invalid calendar date: inline correction; no receipt grant. Storage failure: honest retry, no reset. Background/foreground requires a fresh receipt read and closes the health-processing lease immediately.
+- Happy path: welcome → age → separate draft consent → supported guest/manual Shelf → Today; reload preserves only durable permitted state. Manual/closed catalog links remain manual fallbacks.
+- Run compact375x667 and modern390x844/430x932; capture screenshots and logs. Web fixtures prove navigation/state only. Native storage/provider behavior remains unperformed.
+- Age re-verification: Privacy & account opens a separate exact-owner recovery shell below Auth/App Lock; health, routine, Shelf and notification providers stay unmounted. Missing/legacy/invalid/unavailable receipts do not grant health access. Check ownership again after foreground; unknown/foreign/corrupt proof offers retry/support/sign-out without account data. No broad settings-route exception.
+- Verified-owner rights: export and subscription management use their existing capability checks; account deletion retains its second confirmation and root recovery barrier. Explicit withdrawal can commit/retry its existing durable intent while health processing is already closed. Status retry cannot reactivate a health lease; fresh consent is absent from this shell. Cancel deletion, withdraw, retry, return to age and relaunch; no health-data resurrection.
+- Manual Shelf: no-match → Add it by hand → category/opening state → save twice offline → one encrypted item. Edit while offline; inject a synthetic local write failure and retry with intent retained. Mark finished → archive → relaunch; remove an active item. Corrupt/unsupported bytes show storage recovery and remain byte-identical; restore only the synthetic fixture to verify read recovery. Local Shelf queries must refresh while offline; mirror requests retain separate network/owner admission.
+- Evidence: `docs/brain/checkpoints/M1-01/CONT-01/`. Real web navigation/state, synthetic native-I/O failure injection, source integration, physical device and live provider evidence are separate. A development owner fixture is not persisted production Auth or native Keychain evidence.
+
+## M1-01 CONT-02 account recovery
+
+- At 390x844, then 375x667 and 430x932: complete retained-owner age/consent onboarding, populate Shelf, open You and sign out. First and repeated cleanup failures keep private children closed and expose a usable Try again without an uncaught overlay. Successful retry reaches durable signed-out state; direct Shelf/Today and document relaunch remain age-closed. Capture failure before teardown; never force-click recovery.
+- Source lifecycle coverage: duplicate sign-out/retry, background/foreground, persisted recovery after Auth remount and delayed foreign-owner publication. Same-owner guest upgrade and age-closed withdrawal/deletion remain separate fixtures and source invariants. Web synthetic transport does not prove native/provider effects.
+
+## M1-01 CONT-03 actual cross-owner acceptance
+
+- Critical, synthetic Expo web transport on 390x844, then 375x667 and 430x932. Complete A age/consent onboarding and create distinct Shelf products through UI. Emit B through the same Auth event reconciliation callback and real bounded preflight parser; no receipt/lease injection.
+- Delay A read/write/callback settlement; duplicate B event; first and repeated cleanup refusal expose usable recovery. Observe rendered boundary states for A flashes and uncaught overlays. Retry until B reaches its own age and consent forms, completes onboarding, creates/edits its own manual Shelf and displays B identity.
+- Verify exact durable B owner, health owner, cache/queue isolation and ciphertext; remount/navigation and document reload preserve usable B. Replacement back to A requires age/consent and cannot restore A or B data. Sign-out, same-owner upgrade and retained age-closed withdrawal/deletion remain separate regression scenarios. Native process death/provider authentication remain external.
+
+
+## M1-02 retained daily continuity (2026-10-20)
+
+- Critical: run `node scripts/e2e/onboarding-first-session.mjs --daily-loop` with a fresh synthetic profile at 390x844 first, then 375x667 and 430x932. Complete the actual adult/consent/product/free-plan flow; the existing development draft corpus is source-test context, not qualified review.
+- Today: loaded-app network loss, rejected private write with unchanged bytes, explicit reload/retry, rapid duplicate presses, retained append-only undo refusal, and stable encrypted event identities after document reload. Keep genuine offline cold native launch separate from a Metro-assisted reload after reconnect.
+- Reminder Timing: first visit while loaded offline, failed local write with a visible retained-patch retry, durable time change without purpose opt-in, and reload. Native schedule/cancel/permission/response races use controlled ports; web does not prove OS notifications.
+- Cycle/plan/reorder: verify their existing paid-authority denial in the free synthetic browser. Positive saves and races use the real client cores and controlled ports; do not grant a fake entitlement. Never forge paid authority for the diary. Actual crypto/store integration covers synthetic originals/thumbnails/notes and cleanup; installed-device and authentic provider evidence remain separate.
+
+
+### M1-02 CONT-01 retained daily and reminder recovery
+
+- Record a Today check-off: confirm the rendered phase and local day, refuse a failed encrypted write without success, retry the read, then record offline and reload the same day/phase. Repeated presses insert one event. Completed controls say recorded/cannot undo and are disabled; additive correction remains required under ADR038 in M2-01/M2-02 before M2-03/M2-04 readiness.
+- Save reminder preferences: distinguish storage failure, preferences saved with scheduling unconfirmed, permission denial, all-off, browser preference-only, and native scheduling acknowledgement. Acknowledgement never promises OS delivery. Retry after a saved failure reconciles the latest durable preferences; it cannot restore an earlier opt-in over a later opt-out.
+- Cross-owner/sign-out/privacy: an old view, queued save, native settlement or permission response cannot publish success under the replacement owner or reopened health generation. Paid denial remains denial; native/provider evidence remains separate.
+- Portable verification: development phase overrides require a clock-hook mount on every phase entry. Bind the visible date/heading and encrypted day/journal readback, including saved-AM re-entry. Clock-source integration exercises foreground, midnight and DST without modifying the host clock.

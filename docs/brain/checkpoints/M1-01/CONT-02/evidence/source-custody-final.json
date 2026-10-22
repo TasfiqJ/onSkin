@@ -1,0 +1,62 @@
+{
+  "kind": "CODEX_LOCAL_GIT_OBSERVATION",
+  "admission": "NONE",
+  "recorded_at_utc": "2026-10-20T17:50:45.733854+00:00",
+  "measured": {
+    "commit": "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+    "tree": "8c38e82f86b595eae9ac64c5409a75763c8f1c37"
+  },
+  "base": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+  "checked_commits": [
+    "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+    "f0809923c4fe624329ebc215e7ead0d5b66874fd",
+    "821b74a8cff5c64b56fa085aa1524b0166f3752c",
+    "7afde5aa763b766620f8882e30d858169dd790ff",
+    "4e952618542226fb88ba628822aa76be0a605372",
+    "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+    "a42f575995fe6559791ff593c977aa92c52a609f",
+    "b3b61425e6380f986035bdadd30a37b88741556a",
+    "56c4b2d6ea3684a49c3fe0d765f10df3a82b8823",
+    "3c10b5e9a9d165fc477b19effdd51176866761c0",
+    "968e0e490a82e50af18c3c9eddff4cffd0b15534",
+    "f4f5345aebaf7f0d49b1427b2f91d81d9960f783"
+  ],
+  "protected_paths_unchanged_each_commit": [
+    ".github",
+    "package.json",
+    "package-lock.json",
+    "apps/mobile/package.json",
+    "supabase",
+    "scripts/phase9",
+    "docs/phase-9",
+    "docs/brain/state",
+    "docs/brain/checkpoints/M0-02",
+    "docs/brain/reviews/M0-02",
+    "docs/brain/checkpoints/M1-01/inputs",
+    "docs/brain/checkpoints/M1-01/completion-report.json",
+    "docs/brain/checkpoints/M1-01/CONT-01",
+    "docs/brain/reviews/M1-01/REVIEW-01",
+    "docs/v2",
+    "PROGRESS.md"
+  ],
+  "issued_input_files": 29,
+  "issued_input_and_review_git_blobs_exact": true,
+  "worklist": {
+    "items": 14,
+    "source_paths": 414,
+    "all_fingerprints_match": true,
+    "meanings_and_membership_unchanged": true,
+    "generator_unchanged": true
+  },
+  "environment": {
+    "os": "Windows x64",
+    "python": "3.9.13",
+    "node": "22.21.0",
+    "npm": "11.20.0",
+    "chrome_executable": "155.0.8059.84; checkpoint executable metadata, not per-run protocol attestation",
+    "dependencies": "Existing dependency junctions; unchanged versions and lockfile; no install"
+  },
+  "proposal_notAfter": "2026-10-21T00:00:00Z",
+  "proposal_renewed": false,
+  "limits": "Local source conservation only; no provider, native, qualified or release admission."
+}

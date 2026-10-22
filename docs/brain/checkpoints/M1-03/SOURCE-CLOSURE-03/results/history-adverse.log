@@ -1,0 +1,37 @@
+test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips (test_cloud_history_custody.CloudHistory.test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips) ... /workspace/onSkin/scripts/security_readiness/m103/hydrate_history.py:77: ResourceWarning: unclosed file <_io.BufferedReader name='/tmp/sc03-real-history-36w3yecu/tmp6dn9tdcf/complete.pack'>
+  pack_sha256=hashlib.file_digest(pack.open('rb'), 'sha256').hexdigest() if hasattr(hashlib,'file_digest') else hashlib.sha256(pack.read_bytes()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/workspace/onSkin/scripts/security_readiness/m103/hydrate_history.py:77: ResourceWarning: unclosed file <_io.BufferedReader name='/tmp/sc03-real-history-36w3yecu/tmp6dn9tdcf/complete.pack'>
+  pack_sha256=hashlib.file_digest(pack.open('rb'), 'sha256').hexdigest() if hasattr(hashlib,'file_digest') else hashlib.sha256(pack.read_bytes()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_corrupt_pack_import_refuses (test_cloud_history_custody.CloudHistory.test_corrupt_pack_import_refuses) ... fatal: pack is corrupted (SHA1 mismatch)
+ok
+test_corrupt_source_object_cannot_be_rebound_to_requested_oid (test_cloud_history_custody.CloudHistory.test_corrupt_source_object_cannot_be_rebound_to_requested_oid) ... /workspace/onSkin/scripts/security_readiness/m103/hydrate_history.py:77: ResourceWarning: unclosed file <_io.BufferedReader name='/tmp/sc03-real-history-36w3yecu/tmp0ekgfb67/complete.pack'>
+  pack_sha256=hashlib.file_digest(pack.open('rb'), 'sha256').hexdigest() if hasattr(hashlib,'file_digest') else hashlib.sha256(pack.read_bytes()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FAIL
+test_missing_history_without_explicit_source_refuses (test_cloud_history_custody.CloudHistory.test_missing_history_without_explicit_source_refuses) ... fatal: path 'scripts/phase2/staging-deployment-evidence-lib.mjs' does not exist in 'f1e9a970bbceb803271c8bca41e3a090f93ceefe'
+ok
+test_tree_instead_of_blob_witness_refuses (test_cloud_history_custody.CloudHistory.test_tree_instead_of_blob_witness_refuses) ... ok
+test_unavailable_source_refuses_without_receipt_or_ref_mutation (test_cloud_history_custody.CloudHistory.test_unavailable_source_refuses_without_receipt_or_ref_mutation) ... fatal: cannot change to '/tmp/sc03-real-history-36w3yecu/tmp9egecleh/absent': No such file or directory
+ok
+test_wrong_blob_oid_refuses_after_real_acquisition (test_cloud_history_custody.CloudHistory.test_wrong_blob_oid_refuses_after_real_acquisition) ... ok
+test_wrong_sha256_refuses_after_real_acquisition (test_cloud_history_custody.CloudHistory.test_wrong_sha256_refuses_after_real_acquisition) ... ok
+
+======================================================================
+FAIL: test_corrupt_source_object_cannot_be_rebound_to_requested_oid (test_cloud_history_custody.CloudHistory.test_corrupt_source_object_cannot_be_rebound_to_requested_oid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/onSkin/scripts/security_readiness/m103/test_cloud_history_custody.py", line 132, in test_corrupt_source_object_cannot_be_rebound_to_requested_oid
+    with self.assertRaises((AssertionError, subprocess.CalledProcessError)): self.hydrate(object_source=source)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'AssertionError'>, <class 'subprocess.CalledProcessError'>) not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 143.514s
+
+FAILED (failures=1)
+EXPORT 112 exact historical references; 66 real commit/tree endpoints; pack 69754488552c0e376ed53d7024d30ea25e5e886ccf7fdaa7724bb9291832ba36
+IMPORT 112 exact historical references; 66 real commit/tree endpoints; pack 69754488552c0e376ed53d7024d30ea25e5e886ccf7fdaa7724bb9291832ba36
+EXPORT 112 exact historical references; 66 real commit/tree endpoints; pack 69754488552c0e376ed53d7024d30ea25e5e886ccf7fdaa7724bb9291832ba36

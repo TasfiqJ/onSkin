@@ -1,0 +1,23 @@
+{
+  "name": "candidate-lifecycle-tls-network",
+  "argv": [
+    "/usr/bin/python3.12",
+    "-I",
+    "-B",
+    "/root/onskin-overnight01-native/scripts/security_readiness/m103/sandbox.py",
+    "/root/onskin-overnight01-final-synthetic-home",
+    "/root/onskin-overnight01-candidate05/venv/bin/python",
+    "-I",
+    "-B",
+    "/root/onskin-overnight01-native/scripts/security_readiness/m103/compatibility.py"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:21:51.322252+00:00",
+  "finished": "2026-10-21T04:21:52.238286+00:00",
+  "exit": 0,
+  "bytes": 303,
+  "log_sha256": "04a885387be4b19b4b13074a98a2da28737754fa9ba3dee3d33f7ad236a48b8e",
+  "admission": "NONE"
+}

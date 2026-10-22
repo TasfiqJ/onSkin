@@ -1,3 +1,5 @@
+import { notificationPreferenceRetryPatch } from '@/features/notifications/applyPreferences';
+import { NotificationPreferenceSaveNotice, NotificationPreferenceSavedNotice } from '@/features/notifications/NotificationPreferenceSaveNotice';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
@@ -278,6 +280,15 @@ export default function NotificationSettingsScreen() {
               </Text>
             ) : null}
           </View>
+        ) : null}
+
+        {update.isSuccess && update.data ? <NotificationPreferenceSavedNotice scheduling={update.data.scheduling} /> : null}
+        {update.isError ? (
+          <NotificationPreferenceSaveNotice
+            pending={update.isPending}
+            error={update.error}
+            onRetry={() => update.mutate(notificationPreferenceRetryPatch(update.error, update.variables))}
+          />
         ) : null}
 
         <SectionLabel compact={compactNotifications} micro={microShortNotifications}>

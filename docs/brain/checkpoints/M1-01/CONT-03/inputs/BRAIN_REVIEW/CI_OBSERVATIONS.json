@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "kind": "BRAIN_OBSERVED_GITHUB_PROVIDER_METADATA_AND_LOGS",
+  "recorded_at_utc": "2026-10-20T18:47:02+00:00",
+  "repository": "TasfiqJ/onSkin",
+  "head_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+  "head_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+  "event": "pull_request",
+  "checked_out_pr_merge": "22d4a84b459a0eda576975b4138e7561530c167b",
+  "checked_out_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+  "merge_parent_commits": [
+    "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0"
+  ],
+  "main_merge_performed": false,
+  "source": "Live GitHub connector read of exact-head workflow list/jobs, static job logs, and Git commit object.",
+  "runs": [
+    {
+      "name": "Quality",
+      "run_id": 39470402671,
+      "workflow_id": 312030668,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 118793353573,
+          "name": "Repository quality gates",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 118793353923,
+          "name": "PostgreSQL17 rehearsals",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 118793354179,
+          "name": "PostgreSQL15 rehearsals",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 118793354045,
+          "name": "Credential-free Supabase reset and database tests",
+          "status": "completed",
+          "conclusion": "success",
+          "step_7": "success",
+          "failure_only_type_artifact_step": "skipped"
+        },
+        {
+          "id": 118796007725,
+          "name": "Expo export android",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 118796007800,
+          "name": "Expo export ios",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "interpretation": "Final observed success, including unchanged full canonical database verification. Point-in-time recovery, not permanent ECR availability remediation or protected replay authority."
+    },
+    {
+      "name": "Security",
+      "run_id": 39470402583,
+      "workflow_id": 308213475,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 118792629437,
+          "name": "Secret scanning",
+          "conclusion": "success"
+        },
+        {
+          "id": 118792630171,
+          "name": "Code security gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118792630280,
+          "name": "Static analysis and OSV",
+          "conclusion": "failure"
+        },
+        {
+          "id": 118792631904,
+          "name": "Live Supabase adversarial evidence",
+          "conclusion": "skipped"
+        },
+        {
+          "id": 118795571191,
+          "name": "Automated source-only acceptance",
+          "conclusion": "failure"
+        }
+      ],
+      "static_raw_log_read": true,
+      "raw_refusals": [
+        "SOURCE_INVENTORY_DRIFT",
+        "braces: review is expired or dates are invalid",
+        "node-forge: review is expired or dates are invalid",
+        "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+      ],
+      "note": "Continued step badges do not erase underlying nonzero scanner/exception-gate exits. Source acceptance refused. Advisory applicability/remediation not assessed by this client task."
+    },
+    {
+      "name": "iOS launch contract",
+      "run_id": 39470402549,
+      "workflow_id": 312030667,
+      "status": "completed",
+      "conclusion": "success",
+      "qualification": "Source-only, no physical device/signing/release evidence"
+    }
+  ],
+  "proposal_notAfter": "2026-10-21T00:00:00Z",
+  "protected_source_go": false,
+  "integration_authorized": false,
+  "main_promotion_authorized": false,
+  "quality_history_this_review": [
+    {
+      "status": "in_progress",
+      "db_status": "in_progress",
+      "superseded_by": "Completed success observed on final refresh; provider updated2026-10-20T18:45:08Z"
+    }
+  ],
+  "provider_final_quality_updated_at_utc": "2026-10-20T18:45:08Z"
+}

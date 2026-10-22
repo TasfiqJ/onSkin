@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "OVERNIGHT-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "base_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "approved_state_version": "brain-m1-03-overnight01-expanded-issuance-14",
+  "input_manifest_sha256": "41d67788702092c78946a27d0f7fb3035a8a62268a689ca94bcbc6bbec5a1794",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "review_overlay": "docs/brain/reviews/M1-03/OVERNIGHT-AUTHORIZATION",
+  "source_edit_authorization": "docs/brain/reviews/M1-03/OVERNIGHT-AUTHORIZATION/SOURCE_EDIT_AUTHORIZATION.json",
+  "authorization_id": "M103-OVERNIGHT01-SOURCE-AND-DIAGNOSTIC-01",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "IN_PROGRESS"
+}

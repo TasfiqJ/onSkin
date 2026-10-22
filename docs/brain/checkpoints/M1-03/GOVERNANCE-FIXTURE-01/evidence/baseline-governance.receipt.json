@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3.12\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/brain\", \"-p\", \"test_*.py\", \"-v\"]",
+  "working_directory": "/root/onskin-governance-fixture01",
+  "environment": "Linux WSL onskin-r6-verification; Python3.12.3 Node24.19.0 npm11.17.0; fresh no-hardlink full clone; admission NONE",
+  "source_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "source_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/baseline-governance.log",
+    "sha256": "397483eb6db1429b9f13e687a4cea6c0d414824c7626f0088723bf9bdfbb9757"
+  },
+  "counts": null,
+  "argv": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "observed_inventory": {
+    "tests_run": 93,
+    "failure_events": 3,
+    "errors": 1,
+    "skipped": 2
+  }
+}

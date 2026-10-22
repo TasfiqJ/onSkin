@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-01",
+  "branch": "stage/m1-retained-safety",
+  "submission_status": "PARTIAL",
+  "approved_state_version": "brain-m0-02-accepted-m1-01-issued-5",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02"
+  ],
+  "review_overlay": "docs/brain/reviews/M0-02/REVIEW-02",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "continuation": {
+    "iteration": "CONT-03",
+    "input_manifest_sha256": "42ed0cb652fe921640d525578d0ac59b7832f3d0567e6a5515f3687347c5d2b5",
+    "review_overlay": "docs/brain/reviews/M1-01/REVIEW-03",
+    "base_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+    "state_version": "brain-m1-01-partial-reviewed-cont03-issued-8"
+  }
+}

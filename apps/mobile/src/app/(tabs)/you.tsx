@@ -289,6 +289,11 @@ export default function YouScreen() {
   const reduceMotion = useReduceMotionPreference();
   const params = useLocalSearchParams<{ section?: string }>();
   const { user, isAnonymous, signOut } = useAuth();
+  const handleSignOut = () => {
+    // Auth owns the durable failure state and unmounts this screen. The
+    // rejected operation must stay in its recovery UI, not escape the event.
+    void signOut().catch(() => {});
+  };
   const healthDataOwnerId =
     user?.id ?? (!isSupabaseConfigured ? LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER : null);
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
@@ -675,7 +680,7 @@ export default function YouScreen() {
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={isAnonymous ? 'Create an account' : 'Sign out'}
-                onPress={() => (isAnonymous ? router.push('/onboarding/account') : void signOut())}
+                onPress={() => (isAnonymous ? router.push('/onboarding/account') : handleSignOut())}
                 className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
                 style={({ pressed }) => [
                   { backgroundColor: colors.greige },
@@ -699,12 +704,7 @@ export default function YouScreen() {
                   onPress={() => router.push('/onboarding/account')}
                 />
               ) : (
-                <Button
-                  className="mt-4"
-                  label="Sign out"
-                  variant="ghost"
-                  onPress={() => void signOut()}
-                />
+                <Button className="mt-4" label="Sign out" variant="ghost" onPress={handleSignOut} />
               )}
             </>
           )}

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "admission": "NONE",
+  "observations": [
+    {
+      "output": "exploratory-governance-before.log",
+      "sha256": "51356806ab45a2378421880a9f0eca9435e1a7919f19cf89bb46f7ebc15722ab",
+      "summary": "10 tests; failures6/errors1; concurrent mutable intake, not exact base reproduction",
+      "source_binding": "DIRTY_EXPLORATORY_OVERLAY",
+      "admission": "NONE"
+    },
+    {
+      "output": "exploratory-cont01-first.log",
+      "sha256": "f2039ea10e2b8a8203b32efe656aa8205fb8330bf573b82121c58955458f1666",
+      "summary": "2 tests failed: initial synthetic empty commit setup",
+      "source_binding": "DIRTY_EXPLORATORY_OVERLAY",
+      "admission": "NONE"
+    },
+    {
+      "output": "exploratory-cont01-repaired.log",
+      "sha256": "921f894ead217107bbed9337ec081c7293a3c82ba615aa00d9a50f83bd3519f9",
+      "summary": "2 tests OK; repaired positive and unmeasured-source/false-acceptance negatives",
+      "source_binding": "DIRTY_EXPLORATORY_OVERLAY",
+      "admission": "NONE"
+    },
+    {
+      "output": "exploratory-sh01-repaired.log",
+      "sha256": "313458ae8dc8c7b8cc3edddb23c5023f7df4078d347eebb2de81bd0f5862274c",
+      "summary": "3 tests OK including old-interval, unauthorized intermediate commit and malformed prior sandbox preimage refusal",
+      "source_binding": "DIRTY_EXPLORATORY_OVERLAY",
+      "admission": "NONE"
+    },
+    {
+      "output": "windows-secret-12.log",
+      "sha256": "106907eec7f7950c26f79c8d149d88587a3044afc8548b9433f32e2fb42b4f58",
+      "summary": "12 tests: passed1/errors10/skipped1; Windows pathlib.as_uri relative path errors; Linux process regression skip",
+      "source_binding": "COMMITTED_SOURCE_760745cf",
+      "admission": "NONE"
+    },
+    {
+      "output": "historical-export-incomplete.log",
+      "sha256": "296bbe3c63282672be158c9f41aa32b336d90da925ce22f4f206b3488e6c4cfd",
+      "summary": "Reachable history export exit128; actual unavailable blob3fd9788ff57b9f0d4759964574fc4a5c77de8d51; no imaginary substitution",
+      "source_binding": "COMMITTED_SOURCE_760745cf",
+      "admission": "NONE"
+    }
+  ],
+  "incomplete_hydration": "Second local real-object acquisition interrupted at disk exhaustion; no completed export/pack digest or Linux import claimed"
+}

@@ -1,0 +1,211 @@
+{
+  "bodyText": "TUESDAY, OCTOBER 20 Good morning. Nothing is scheduled this morning. Morning routine 0 of 0 SPF No SPF this morning See why Not now Tonight · Cycling night 1 Retinoid night. Keep it simple › Shelf 1 product ＋ Add All Actives Expiring Everything on your shelf, ordered by supported tracked dates. FIRST ROUTINE Your routine is ready to draft. Even one product can start an honest AM/PM draft. Missing steps stay visible, not invented. Build my routine Owner B manual moisturizer Retinol / retinoid serum · opened Oct · Date unknown Date unknown Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "See why",
+      "role": "button",
+      "selected": false,
+      "width": 245.73,
+      "x": 25,
+      "y": 195
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Not now",
+      "role": "button",
+      "selected": false,
+      "width": 86.27,
+      "x": 278.73,
+      "y": 195
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": false,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 260
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 282.94,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Build my routine",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 317
+    },
+    {
+      "disabled": false,
+      "height": 110,
+      "hitOk": true,
+      "label": "Owner B manual moisturizer, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 423
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Add a product",
+      "role": "button",
+      "selected": false,
+      "width": 159.13,
+      "x": 115.44,
+      "y": 574
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 25,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 194.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 3,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "See why",
+        "role": "button",
+        "selected": false,
+        "width": 245.73,
+        "x": 25,
+        "y": 195
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Not now",
+        "role": "button",
+        "selected": false,
+        "width": 86.27,
+        "x": 278.73,
+        "y": 195
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 88,
+        "hitOk": false,
+        "label": "See your cycle week ahead",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 260
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8428/shelf",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

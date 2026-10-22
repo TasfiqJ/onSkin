@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "kind": "SOURCE_CLOSURE02_HOST_STOP_REPORT",
+  "task_id": "M1-03",
+  "iteration": "SOURCE-CLOSURE-02",
+  "authorization_id": "M103-SOURCE-CLOSURE02-SOURCE-EDIT-01",
+  "status": "BLOCKED_HOST_CUSTODY",
+  "admission": "NONE",
+  "accepted_by_codex": false,
+  "branch": "stage/m1-retained-safety",
+  "source_base": {
+    "commit": "3600db9b5812acebd718111b6bf58efcb554487d",
+    "tree": "fe6148d303adcaf3092c073cefca8ee92065c10e"
+  },
+  "implementation_commit": null,
+  "measured_test_commit": null,
+  "tests_started": 0,
+  "local_suites": {
+    "governance": "NOT_RUN",
+    "linux_security70": "NOT_RUN",
+    "candidate9": "NOT_RUN",
+    "four_bundle_scan": "NOT_RUN",
+    "forced_root_type_lint": "NOT_RUN"
+  },
+  "parser_investigation_cycles": 0,
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "delivery_scope": "Evidence-only custody and root handoff; no new implementation or execution marker",
+  "artifact_hash_algorithm": "SHA256",
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/ACCEPTANCE_MATRIX.md",
+      "sha256": "fc09f22de8a4e85d1d7db7f240738cb9358a7881553c3058d81dcbb974a2ea44",
+      "bytes": 1852
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/BLOCKERS.md",
+      "sha256": "e6e3f4e0b4a6b8bdfb2d9c115f7679ae4019e2819342952dbf7a65f464daf21d",
+      "bytes": 1636
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/evidence/custody-checks.json",
+      "sha256": "b706ba8ac62394e2f218b9067519a13af7ac3b59e5d807e2b39d4bc06a8e819a",
+      "bytes": 1032
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/evidence/preflight.json",
+      "sha256": "185681e6fbe9bd8dd556a0e79ae68fdb1aa11ce3fd489fff5d2c048872b22367",
+      "bytes": 4825
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/evidence/provider-observation.json",
+      "sha256": "c6de44b453822546f920178f097e615673226f13b78786b8f85ee3aec7c08e8b",
+      "bytes": 30092
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/00_READ_FIRST.md",
+      "sha256": "9442a43026ad11b202f73802ca7bcf19730f99b97daf91e2500286ffd5ca0c43",
+      "bytes": 1445
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/BRAIN_REVIEW.md",
+      "sha256": "48df8b3349e2b9e0c4b3fa769302785f6678f7a4f92a7a95eeff0492f6d5e2d0",
+      "bytes": 4174
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/BRANCH_AND_HANDOFF.md",
+      "sha256": "3484ce7f3a7e1656584fe06d886bb189e58ace119c098d3acd1dda4c5dc83cbb",
+      "bytes": 1622
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/CI_OBSERVATION.md",
+      "sha256": "1fa6c04f65dfb2236879f23ef515f6bdce8e3eeca2879764e2a9b13183128e0f",
+      "bytes": 1772
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/HOST_READINESS.md",
+      "sha256": "353265637bd50e64d00e033fa60c238de5731788b25de5148f63319c00e96b12",
+      "bytes": 2162
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/REPRODUCERS.md",
+      "sha256": "68a94b0b85e496c61bb5f0243f9959cd1496689d4568d98f376bfc3908ab064b",
+      "bytes": 2516
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "989f20a4d3e785a1482d7733d67f803a23d854ffefe0eb7674f77c40a0924972",
+      "bytes": 4571
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/SOURCE_EDIT_AUTHORIZATION.md",
+      "sha256": "92b179737b26272691391e285ce0d31d860cc3809887d33de57bd47ac5d8b4da",
+      "bytes": 2091
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/STOP_RULES.md",
+      "sha256": "56ea3be5757fd8ae39a5df22370343d6646d9ddac7a51699bae13ea61fa31ef9",
+      "bytes": 962
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/TASK.md",
+      "sha256": "61c41091fb73a43002e07cb7b038a2ef840f1e2be95391d5411bc17ddbd59549",
+      "bytes": 4216
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/TASK_MANIFEST.json",
+      "sha256": "dde42dff63522aa0620d188f5d9051f06e138e8c43abb1ec6160fb8d918cfe97",
+      "bytes": 2259
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/TEST_AND_ACCEPTANCE.md",
+      "sha256": "07747b1dddf9a5a039ef77c4d6e324662321aecf8d496b31c59e7559022c08a8",
+      "bytes": 2058
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/inputs/verify_context.py",
+      "sha256": "9b8ef407cfc42181387434d6b9e928dc6c3e4dab60919590a1a04fb290abe0bc",
+      "bytes": 1443
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/README.md",
+      "sha256": "88f21d15757833b33f1a6436fa8e98056494372a98b66a1a75036b3795949df3",
+      "bytes": 1834
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-02/RESULTS.md",
+      "sha256": "21898d2df942c3a4e5db5bf2dc84f84f72095b02321f96cdf538a0b4359c02de",
+      "bytes": 2190
+    },
+    {
+      "path": "docs/brain/reviews/M1-03/SC01-REVIEW01/BRAIN_REVIEW.md",
+      "sha256": "48df8b3349e2b9e0c4b3fa769302785f6678f7a4f92a7a95eeff0492f6d5e2d0",
+      "bytes": 4174
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "e7cd8ec059be81997d8a55efa7ee5f5d22cdef79cb9df27cb3e12e7d71132cb1",
+      "bytes": 1670
+    }
+  ],
+  "source_authority": {
+    "protected_source_go": false,
+    "main_promotion_authorized": false,
+    "incremental_spend_usd": 0,
+    "accepted_tasks": [
+      "M0-01",
+      "M0-02",
+      "M1-01",
+      "M1-02"
+    ],
+    "proposal_expired_utc": "2026-10-21T00:00:00Z"
+  },
+  "context_health": {
+    "level": "MEDIUM",
+    "compaction_observed": false
+  },
+  "stop": "Immediate host gate stop; only safe read-only observation custody. No scheduled continuation."
+}

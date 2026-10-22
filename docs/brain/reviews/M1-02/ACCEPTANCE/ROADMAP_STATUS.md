@@ -1,0 +1,49 @@
+# Roadmap status
+Original47 task identities and dependencies preserved.
+- M0-01: ACCEPTED — Fresh-main baseline and Quality diagnosis
+- M0-02: ACCEPTED — Install unified planning authority and durable state
+- M1-01: ACCEPTED — Retained identity, consent and storage safety
+- M1-02: ACCEPTED_SCOPED — Retained Today, private diary and reminders
+- M1-03: ISSUED — Resolve protected baseline and retained release-source debt
+- M2-01: PLANNED — Owner ledger, versioned formula and actual/intended contracts
+- M2-02: PLANNED — Optional exception logging and consented text continuity
+- M2-03: PLANNED — Safe private diary, free authority and native QA candidate
+- M2-04: PLANNED — First internal TestFlight cut
+- M3-01: PLANNED — Native capture and measurement platform
+- M3-02: PLANNED — J05 engineering baseline and model/evaluation interface
+- M3-03: PLANNED — J05 pilot preregistration and authorized collection readiness
+- M3-04: PLANNED — First external usability TestFlight cut
+- M4-01: PLANNED — Complete consumer decisions and factual appointment brief
+- M4-02: PLANNED — Independent client web and workspace grants
+- M4-03: PLANNED — Immutable pro plans, acknowledgement and queue
+- M4-04: PLANNED — Pre-visit and offboarding continuity
+- M4-05: PLANNED — Separate consumer/workspace billing and capacity
+- M4-06: PLANNED — Whole-core QA and release-specific admission packet
+- M5-01: PLANNED — Validate and admit J05 single-scan claims
+- M5-02: PLANNED — Validate and admit J05 longitudinal change
+- MOD-J14: PLANNED — J14 Face-zone maps and summaries
+- MOD-J27: PLANNED — J27 Personalized result explanations
+- MOD-J03: PLANNED — J03 Wrinkles and fine lines
+- MOD-J09: PLANNED — J09 Tone evenness and representative color
+- MOD-J24: PLANNED — J24 Under-eye darkness appearance
+- MOD-J10: PLANNED — J10 Visible redness
+- MOD-J11: PLANNED — J11 Texture / smoothness appearance
+- MOD-J01: PLANNED — J01 Visible pores
+- MOD-J04: PLANNED — J04 Smile-fold appearance
+- MOD-J13: PLANNED — J13 Jawline geometry
+- MOD-J02: PLANNED — J02 Firmness / laxity appearance
+- MOD-J07: PLANNED — J07 Oiliness / sebum estimate
+- MOD-J19: PLANNED — J19 Dry/oily skin-type axis
+- MOD-J21: PLANNED — J21 Pigmentation-type axis
+- MOD-J22: PLANNED — J22 Wrinkle-type axis
+- MOD-J17: PLANNED — J17 Regional left-right differences
+- MOD-J15: PLANNED — J15 Age-group reference comparisons
+- MOD-J18: PLANNED — J18 Appearance-age summary
+- MOD-J06: PLANNED — J06 Predicted UV-associated pigmentation
+- MOD-J12: PLANNED — J12 Estimated skin hydration
+- MOD-J16: PLANNED — J16 T-zone / cheek oil-moisture balance
+- MOD-J23: PLANNED — J23 Acne-related vendor subtype
+- MOD-J20: PLANNED — J20 Sensitivity-related vendor label
+- MOD-J25: PLANNED — J25 Combined skin profile
+- MOD-J26: PLANNED — J26 UV-sensitivity gauge
+- MOD-J08: PLANNED — J08 Predicted porphyrin-related output

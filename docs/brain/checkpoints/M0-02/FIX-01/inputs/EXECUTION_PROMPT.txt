@@ -1,0 +1,25 @@
+Continue in the SAME Codex chat that completed M0-02. Use the attached onSkin_Codex_M0-02_FIX-01_Context.zip as the new repair contract. Read 00_READ_FIRST.md, TASK.md, BRAIN_REVIEW/AUDIT_M0-02_REVIEW01.md and REPRODUCERS.md, then the applicable repository instructions.
+
+Execute only M0-02, repair iteration FIX-01. The Brain's decision on your submitted da9fa04759164b402ee3b2abd1c80e14261614fb (tree e18f73771b5f440613a7e7cd339889949a8ae72a) is FIX_REQUIRED, not accepted. Keep the useful planning installation and repair the governance subsystem end to end; do not merely change expected tests or hide failures.
+
+Repository: https://github.com/TasfiqJ/onSkin
+Existing branch: stage/m0-baseline
+Repair base: da9fa04759164b402ee3b2abd1c80e14261614fb
+Original M0-02 task base: b9a6b093f392ced340c156f2e7dcaefc72ed58e1
+Observed main: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+
+Fetch and reconcile current stage/main before editing and before pushing. Preserve all dirty founder/other work and existing stage ancestry. Only one writer. Do not create another stage branch or reset this one from main. Main remains read-only; PR #8 remains draft and unmerged. Only the Brain may authorize a later exact-head main promotion after the applicable gates; this prompt does not.
+
+Fix all four independently reproduced findings in TASK.md:
+1. The observation validator accepts a PASS without supporting execution evidence, and accepts boolean false as exit zero. Enforce typed, bound, truthful observation evidence.
+2. The report validator accepts unfinished CI as successful, nonexistent/unbound CI evidence and invalid main/original-base identities. Bind CI artifacts and run/source/status relationships; verify Git identity and applicable ancestry without treating offline JSON as provider authenticity.
+3. The task packer accepts a mutable spec repointed to its own self-authored same-task approval manifest. Anchor issuance independently of that spec; preserve the legitimate original context build and fail closed on unapproved substitutions.
+4. Mirror generation creates an outside-root file through a dangling output symlink before rejecting it. Validate write targets before side effects and test that rejected targets stay untouched. The supplied Linux proof is function-level with inert upstream collaborators, not a full Linux CLI pass.
+
+Add meaningful positive and adversarial regressions, exercise the real CLI, and rerun governance, identity/mirror/report/context checks plus affected existing source checks. Own the implementation details within this scope. Do not ask the founder for architecture choices. Preserve all original input bytes, plan/module IDs/dependencies, existing evidence and closed external gates. Publish the approved BRAIN_REVIEW delta as a versioned review overlay, not a silent rewrite of the immutable old snapshot. Preserve the original submitted report; produce a new FIX-01 report with measured snapshot and live delivery identities kept separate.
+
+Do not modify application/runtime/database/types, package/lock/toolchain, existing workflows, Security inventories/scanners/coverage/owner pins/exceptions/dates, DB06/DB08/R2B or canonical-image controls. No registry authentication, vendor signup/spend, M1, J05, research request, signing/deployment/release or main promotion. Quality39371600842 and Security39371600769 remain failed; iOS39371600772 is source-only success. Observe actual Security proposal expiry2026-10-21T00:00:00Z; never renew it to get green.
+
+At EVERY session end, commit and normally push all safe authorized work and tracked root ONSKIN_BRAIN_HANDOFF.txt to origin/stage/m0-baseline, even if PARTIAL/BLOCKED or CI is red. Keep detailed sanitized evidence and the structured report under docs/brain/checkpoints/M0-02/FIX-01/ so the Brain can read them on GitHub. Record exact tests, exits, real skips, snapshots/trees, artifact hashes, blockers and honest context health. Do not push secrets, photos, patient reports or raw clinical data. A failed push is PUSH_BLOCKED, never force-pushed or described as success.
+
+Return a brief final reply: branch, push status, actual latest stage SHA, handoff path, top blocker and context health. Do not self-accept or start another task. Stop for independent Brain review.

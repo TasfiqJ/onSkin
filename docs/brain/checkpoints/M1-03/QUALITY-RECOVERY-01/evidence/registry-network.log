@@ -1,0 +1,20 @@
+{
+  "version": "57.0.3",
+  "dist": {
+    "shasum": "47b8350a24115158b2ee0b9d71c08cd0257b39b6",
+    "tarball": "https://registry.npmjs.org/expo-network/-/expo-network-57.0.3.tgz",
+    "fileCount": 62,
+    "integrity": "sha512-sxBTB5VS24GASXMFMpcgg4jZB4VVELl/b3TCR0joLfzp4g/PkFhQwvKnyAahuheykw605wZe6YGBDyR8Ixa7mA==",
+    "signatures": [
+      {
+        "sig": "MEQCIA+dtGejRbcF3M0R6LkHEZTfPTr54BDP0PBVeK7MCDn5AiAdauF5lnHxpu+TSHih/rD47h+QwZQMdkomAq49MlMosA==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEYCIQCdNHwc5S2ElI5XhDWhKuwlbcJDWzLM96Mt7xSOom9RGgIhAInvmYUgrl0JVc6A3jtFuqvMGQ5Ffck35UK3OBNucJDM",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 109818
+  }
+}

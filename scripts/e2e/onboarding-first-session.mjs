@@ -1,9 +1,17 @@
 import { spawn } from 'node:child_process';
+import { dailyLoopFlow } from './retained-daily-loop.mjs';
 import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
+
+import {
+  assertCompletedAccountRecovery,
+  assertCrossOwnerRaceOutcomes,
+  assertNoUncaughtErrors,
+  isDisallowedLog as disallowedLog,
+} from './retained-safety-assertions.mjs';
 
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
@@ -13,9 +21,20 @@ const accountUpgradeMode =
   accountCheckpointMode ||
   process.argv.includes('--account-upgrade') ||
   process.env.ONBOARDING_E2E_ACCOUNT_UPGRADE?.trim().toLowerCase() === 'email_same_user';
+const crossOwnerMode = process.argv.includes('--cross-owner');
 const accountIsolationMode =
+  crossOwnerMode ||
   process.argv.includes('--account-isolation') ||
   process.env.ONBOARDING_E2E_ACCOUNT_ISOLATION?.trim().toLowerCase() === 'signout_clear_retry';
+const deletionRecoveryMode = process.env.ONBOARDING_E2E_DELETION_RECOVERY;
+if (
+  deletionRecoveryMode &&
+  !['pending_then_completed_manual', 'invalid', 'invalid_support_only', 'expired'].includes(
+    deletionRecoveryMode,
+  )
+) {
+  throw new Error('Unknown deletion recovery fixture.');
+}
 assertSingleMode();
 function assertSingleMode() {
   if (accountUpgradeMode && accountIsolationMode) {
@@ -60,6 +79,10 @@ function assert(condition, message) {
 }
 
 function clearPreviousEvidence() {
+  assert(
+    readdirSync(evidenceDir).length === 0,
+    'Use a fresh evidence directory; prior evidence is immutable.',
+  );
   for (const entry of readdirSync(evidenceDir, { withFileTypes: true })) {
     if (!entry.isFile()) continue;
     if (!/\.(?:json|log|md|png)$/i.test(entry.name)) continue;
@@ -235,7 +258,16 @@ function startExpoServer() {
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
       ...(!accountIsolationMode ? { EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH: 'anonymous_owner' } : {}),
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
-      ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: 'signout_clear_retry' } : {}),
+      ...(accountIsolationMode
+        ? {
+            EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: crossOwnerMode
+              ? 'cross_owner'
+              : 'signout_clear_retry',
+          }
+        : {}),
+      ...(deletionRecoveryMode
+        ? { EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY: deletionRecoveryMode }
+        : {}),
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
       EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '__BLOCKED_PLACEHOLDER__',
       EXPO_PUBLIC_SUPABASE_URL: 'https://blocked-supabase-url.invalid',
@@ -306,6 +338,26 @@ class CdpClient {
       return;
     }
 
+    if (message.method === 'Debugger.paused') {
+      const rows = this.events.filter((event) => event.method === 'diagnostic.exception');
+      this.events.push({
+        method: 'diagnostic.exception',
+        params: {
+          description: message.params.data?.description?.slice(0, 2000),
+          frames: message.params.callFrames.slice(0, 8).map((frame) => ({
+            functionName: frame.functionName,
+            location: frame.location,
+          })),
+        },
+      });
+      if (rows.length < 100)
+        writeJson(
+          'exceptions.json',
+          this.events.filter((e) => e.method === 'diagnostic.exception'),
+        );
+      void this.send('Debugger.resume');
+      return;
+    }
     if (message.method) this.events.push(message);
   }
 
@@ -678,6 +730,7 @@ async function captureStep(client, name, { assertClean = true } = {}) {
   const snapshot = await evaluate(client, auditExpression());
   writeJson(`${name}.json`, snapshot);
   await screenshot(client, name);
+  assertNoUncaughtErrors(snapshot, client.events);
   if (assertClean) {
     assert(snapshot.overflowX <= 1, `${name} has horizontal overflow: ${snapshot.overflowX}px`);
     assert(
@@ -715,21 +768,7 @@ function collectProblemLogs(events) {
     }));
 }
 
-function disallowedLog(log) {
-  const serialized = JSON.stringify(log);
-  return !(
-    serialized.includes('EXPO_PUBLIC_SUPABASE') ||
-    serialized.includes('Notifications') ||
-    serialized.includes('expo-notifications') ||
-    serialized.includes('placeholder') ||
-    serialized.includes('403') ||
-    serialized.includes('supabase.co') ||
-    serialized.includes('shadow') ||
-    serialized.includes('props.pointerEvents is deprecated')
-  );
-}
-
-async function answerQuiz(client) {
+async function answerQuiz(client, prefix = '') {
   const answers = [
     'Shiny in places',
     'Rarely',
@@ -747,14 +786,14 @@ async function answerQuiz(client) {
 
   for (const [index, answer] of answers.entries()) {
     await waitForText(client, answer);
-    if (index === 0) await captureStep(client, '07-quiz-01');
+    if (index === 0) await captureStep(client, prefix + '07-quiz-01');
     await clickByText(client, answer);
-    if (index === 3) await captureStep(client, '08-quiz-after-04');
+    if (index === 3) await captureStep(client, prefix + '08-quiz-after-04');
     if (index === 8) {
       await scrollTextIntoView(client, 'Does not burn');
-      await captureStep(client, '08-quiz-after-09');
+      await captureStep(client, prefix + '08-quiz-after-09');
     }
-    if (index === 10) await captureStep(client, '08-quiz-after-11');
+    if (index === 10) await captureStep(client, prefix + '08-quiz-after-11');
     await clickByText(client, index < answers.length - 1 ? 'Next' : 'See my profile');
   }
 }
@@ -780,6 +819,446 @@ async function addProduct(client, product, evidenceName) {
   await clickByText(client, 'Add to shelf');
   await waitForText(client, product.name);
   return await captureStep(client, evidenceName);
+}
+
+async function retainedRoute(client, pathname) {
+  // Normal web router history event; no provider, lease or consent injection.
+  await evaluate(
+    client,
+    `(() => { history.pushState({}, '', ${JSON.stringify(pathname)}); dispatchEvent(new PopStateEvent('popstate')); })()`,
+  );
+  await waitForPath(client, pathname.split('?')[0]);
+}
+
+// Same portable runner and real UI. Only the Auth/preflight transport and
+// native-I/O settlement timing are synthetic; all authority is application code.
+async function crossOwnerFlow(client, products) {
+  const aMarkers = [
+    ...products.map((p) => p.name),
+    'tas.account-a.e2e@example.com',
+    '00000000-0000-4000-8000-0000000000a1',
+    'late-owner-a',
+    'M102 synthetic moisturizer',
+  ];
+  const bName = 'Owner B manual moisturizer';
+  const moduleExpression = `(suffix) => {
+    const m = [...__r.getModules().values()].find(m => (m.verboseName ?? '').replaceAll('\\\\', '/').endsWith(suffix));
+    if (!m?.publicModule?.exports) throw new Error('Missing loaded module: ' + suffix);
+    return m.publicModule.exports;
+  }`;
+  await navigateClientSide(client, '/you');
+  await waitForText(client, 'tas.account-a.e2e@example.com');
+  await captureStep(client, 'CO-01-owner-a', { assertClean: false });
+  // Observe rendered mutations and animation frames after the neutral boundary
+  // first appears. Record booleans only, never private records or bearer values.
+  await evaluate(
+    client,
+    `(() => {
+    const markers = ${JSON.stringify(aMarkers)};
+    const state = globalThis.__crossOwnerObserved = { closed: false, samples: 0, leaks: 0 };
+    const sample = () => {
+      const text = document.body.innerText;
+      if (/Securing account data|Account access paused/.test(text)) state.closed = true;
+      if (state.closed) { state.samples++; if (markers.some(x => text.includes(x))) state.leaks++; }
+    };
+    new MutationObserver(sample).observe(document.body, { subtree: true, childList: true, characterData: true });
+    const frame = () => { sample(); requestAnimationFrame(frame); }; requestAnimationFrame(frame);
+  })()`,
+  );
+  await evaluate(
+    client,
+    `(async () => {
+    const mod = ${moduleExpression};
+    const kv = mod('/lib/storage/privateKV.ts');
+    const gen = mod('/lib/auth/accountGeneration.ts');
+    const query = mod('/lib/query/queryClient.ts').queryClient;
+    const storageModule = [...__r.getModules().values()].find(m => /async-storage/.test(m.verboseName ?? '') && m.publicModule?.exports?.default?.multiGet);
+    if (!storageModule) throw new Error('AsyncStorage module unavailable');
+    const storage = storageModule.publicModule.exports.default;
+    const originalGet = storage.getItem, originalSet = storage.setItem;
+    const raw = await kv.getPrivateItem('layerwell.shelf.v1');
+    const state = globalThis.__crossOwnerRace = { readEntered: false, writeEntered: false, results: null };
+    let releaseRead, releaseWrite, releaseCallback;
+    const readGate = new Promise(r => releaseRead = r), writeGate = new Promise(r => releaseWrite = r), callbackGate = new Promise(r => releaseCallback = r);
+    storage.getItem = async function(key, ...rest) {
+      const value = await originalGet.call(this, key, ...rest);
+      if (key === 'layerwell.shelf.v1' && !state.readEntered) { state.readEntered = true; await readGate; }
+      return value;
+    };
+    storage.setItem = async function(key, ...rest) {
+      const result = await originalSet.call(this, key, ...rest);
+      if (key === 'layerwell.shelf.v1' && !state.writeEntered) { state.writeEntered = true; await writeGate; }
+      return result;
+    };
+    const result = p => p.then(() => 'UNEXPECTED_SUCCESS', e => String(e.code ?? e.message));
+    const read = result(kv.getPrivateItem('layerwell.shelf.v1'));
+    const lateValue = JSON.parse(raw);
+    lateValue.products[0].name = 'late-owner-a';
+    const write = result(kv.setPrivateItem('layerwell.shelf.v1', JSON.stringify(lateValue)));
+    const callback = result(gen.runAccountGenerationOperation(async lease => {
+      await callbackGate; lease.assertCurrent(); query.setQueryData(['late-owner-a'], 'late-owner-a');
+    }));
+    Promise.all([read, write, callback]).then(results => { state.results = results; });
+    state.release = () => { storage.getItem = originalGet; storage.setItem = originalSet; releaseRead(); releaseWrite(); releaseCallback(); };
+  })()`,
+    true,
+  );
+  await waitForCondition(
+    client,
+    `__crossOwnerRace.readEntered && __crossOwnerRace.writeEntered`,
+    15_000,
+    'real A read/write entered native transport',
+  );
+  await evaluate(
+    client,
+    `(() => { __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); })()`,
+  );
+  await waitForText(client, 'Securing account data');
+  await captureStep(client, 'CO-02-draining-old-owner');
+  const closed = await evaluate(
+    client,
+    `(() => {
+    const mod = ${moduleExpression};
+    return { healthClosed: mod('/lib/consent/healthProcessingEpoch.ts').activeHealthProcessingOwnerUserId() === null,
+      remoteClosed: mod('/lib/supabase/remoteRequestGate.ts').supabaseRemoteRequestSnapshot().state !== 'active',
+      commerceClosed: mod('/lib/iap/revenuecat.ts').accountPublicationSnapshot().state !== 'active' };
+  })()`,
+  );
+  writeJson('CO-immediate-authority-closure.json', closed);
+  assert(
+    Object.values(closed).every((v) => v === true),
+    'Old authority stayed open while A operations drained',
+  );
+  await evaluate(client, '__crossOwnerRace.release()');
+  await waitForText(client, 'Account access paused');
+  const refused = await captureStep(client, 'CO-03-cleanup-refused');
+  assertInteractiveControl(refused, 'Try again');
+  const races = await evaluate(client, '__crossOwnerRace.results');
+  assertCrossOwnerRaceOutcomes(races);
+  writeJson('cross-owner-races.json', {
+    outcomes: races,
+    interpretation:
+      'Delayed A read, committed-write settlement/rollback, and queued callback rejected by real boundaries.',
+  });
+  await clickByText(client, 'Try again');
+  await delay(1200);
+  const repeated = await captureStep(client, 'CO-04-repeated-refusal');
+  assert(
+    repeated.bodyText.includes('Account access paused'),
+    'Duplicate/retry escaped failed cleanup',
+  );
+  assertInteractiveControl(repeated, 'Try again');
+  await clickByText(client, 'Try again');
+  await waitForText(client, 'First, your');
+  await captureStep(client, 'CO-05-b-age-required');
+  // A's age and consent are gone. B must submit both through their forms.
+  await fillByLabel(client, 'Day of birth', '01');
+  await fillByLabel(client, 'Month of birth', '01');
+  await fillByLabel(client, 'Year of birth', '1990');
+  await clickByText(client, 'Continue');
+  await waitForText(client, 'Before the quiz');
+  await captureStep(client, 'CO-06-b-consent-required');
+  await clickByText(client, 'I agree. Continue');
+  await waitForText(client, 'What brings you here?');
+  await clickByText(client, 'Clear skin', { exact: false });
+  await scrollTextIntoView(client, 'Continue');
+  await clickByText(client, 'Continue');
+  await answerQuiz(client, 'CO-B-');
+  await waitForText(client, "What's on your shelf?");
+  const empty = await captureStep(client, 'CO-07-b-empty-shelf');
+  assert(!aMarkers.some((x) => empty.bodyText.includes(x)), 'A content reached B onboarding');
+  await addProduct(client, { category: 'Treatment', name: bName }, 'CO-08-b-manual-created');
+  await scrollTextIntoView(client, 'Continue with 1 product');
+  await clickByText(client, 'Continue with 1 product');
+  await waitForText(client, 'YOUR SKIN PROFILE', 45_000);
+  await clickByText(client, 'Continue');
+  await waitForPath(client, '/onboarding/notifications');
+  await clickByText(client, 'Not now');
+  await waitForPath(client, '/onboarding/account');
+  await clickByText(client, 'Not now');
+  await waitForText(client, 'Continue with the free plan');
+  await clickByText(client, 'Continue with the free plan', { exact: false });
+  await waitForPath(client, '/today');
+  await clickByText(client, 'Shelf');
+  await waitForText(client, bName);
+  const bShelf = await captureStep(client, 'CO-09-b-usable-shelf', { assertClean: false });
+  assert(new URL(bShelf.url).pathname === '/shelf', 'B product interaction must target Shelf');
+  // The mounted Today tab may contain a same-name checkbox. Bind the visible
+  // Shelf product button by its complete accessible label, then hit-test it.
+  const bProduct = bShelf.controls.find((control) =>
+    control.role === 'button' && control.label.startsWith(`${bName},`));
+  assert(bProduct, 'B Shelf product button is unavailable');
+  assertInteractiveControl(bShelf, bProduct.label);
+  await clickByText(client, bProduct.label);
+  await scrollTextIntoView(client, 'Edit opened date');
+  const bDetail = await captureStep(client, 'CO-09b-b-product-detail', { assertClean: false });
+  assertInteractiveControl(bDetail, 'Edit opened date');
+  await clickByText(client, 'Edit opened date');
+  await clickByText(client, '1 mo ago');
+  await captureStep(client, 'CO-10-b-usable-edit', { assertClean: false });
+  await navigateClientSide(client, '/you');
+  await waitForText(client, 'tas.account-b.e2e@example.com');
+  await captureStep(client, 'CO-11-b-identity', { assertClean: false });
+  const inspect = async (name) => {
+    const state = await evaluate(
+      client,
+      `(async () => {
+      const mod = ${moduleExpression};
+      const owner = mod('/lib/auth/sessionOwner.ts');
+      const proof = await owner.readLocalDataOwnerProof();
+      const health = mod('/lib/consent/healthProcessingEpoch.ts');
+      const queries = mod('/lib/query/queryClient.ts').queryClient.getQueryCache().getAll();
+      const shelf = await mod('/lib/storage/privateKV.ts').getPrivateItem('layerwell.shelf.v1');
+      const daily = await Promise.all(['layerwell.notifPrefs.v1', 'layerwell.completions.v1', 'layerwell.routineOrder.v1']
+        .map(key => mod('/lib/storage/privateKV.ts').getPrivateItem(key)));
+      const markers = [...${JSON.stringify(aMarkers)}, await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000a1')];
+      return { exactB: proof.kind === 'owned' && proof.ownerBinding === await owner.localDataOwnerBinding('00000000-0000-4000-8000-0000000000b2'),
+        noRetainedADailyState: daily[1] === null && daily[2] === null &&
+          daily[0] !== null && JSON.parse(daily[0]).prefs.amTime === '07:30' &&
+          JSON.parse(daily[0]).prefs.amEnabled === false && JSON.parse(daily[0]).prefs.pmEnabled === false,
+        healthOwnerB: health.activeHealthProcessingOwnerUserId() === '00000000-0000-4000-8000-0000000000b2',
+        noAInCache: !markers.some(x => JSON.stringify(queries.map(q => [q.queryKey, q.state.data])).includes(x)),
+        noAInShelfOrQueue: !markers.some(x => (shelf ?? '').includes(x)), hasB: shelf?.includes(${JSON.stringify(bName)}) === true,
+        bEditPersisted: Date.parse(JSON.parse(shelf).products.find(p => p.name === ${JSON.stringify(bName)}).openedAt) < Date.now() - 20 * 86400000,
+        ciphertextOnly: !(localStorage.getItem('layerwell.shelf.v1') ?? '').includes(${JSON.stringify(bName)}),
+        noWidgetCapabilities: !localStorage.getItem('layerwell.widgetActionMap.v1') && !localStorage.getItem('layerwell.widgetActionMap.v2'),
+        renderedObservation: globalThis.__crossOwnerObserved ?? null };
+    })()`,
+      true,
+    );
+    writeJson(name + '.json', state);
+    for (const [key, value] of Object.entries(state))
+      if (key !== 'renderedObservation') assert(value === true, `${name}: ${key}`);
+    return state;
+  };
+  const liveState = await inspect('CO-b-boundaries');
+  assert(
+    liveState.renderedObservation.closed &&
+      liveState.renderedObservation.samples > 10 &&
+      liveState.renderedObservation.leaks === 0,
+    'Observed old A flash during B transition',
+  );
+  // Activate another real browser tab to deliver visibility/AppState events.
+  const backgroundTab = await client.send('Target.createTarget', { url: 'about:blank' });
+  await client.send('Target.activateTarget', { targetId: backgroundTab.targetId });
+  await waitForCondition(
+    client,
+    `document.visibilityState === 'hidden'`,
+    15_000,
+    'real browser background',
+  );
+  await client.send('Page.bringToFront');
+  await waitForCondition(
+    client,
+    `document.visibilityState === 'visible'`,
+    15_000,
+    'real browser foreground',
+  );
+  await client.send('Target.closeTarget', { targetId: backgroundTab.targetId });
+  await navigateClientSide(client, '/shelf');
+  await waitForText(client, bName);
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, bName, 60_000);
+  await captureStep(client, 'CO-12-b-document-relaunch', { assertClean: false });
+  await inspect('CO-b-relaunch-boundaries');
+  // Replacement back to A cannot resurrect A's deleted data or B's grants.
+  await evaluate(client, `__LAYERWELL_E2E_ACCOUNT_EVENT__('a')`);
+  await waitForText(client, 'Account access paused');
+  await clickByText(client, 'Try again');
+  await delay(1200);
+  await waitForText(client, 'Account access paused');
+  await clickByText(client, 'Try again');
+  await waitForText(client, 'First, your');
+  const returned = await captureStep(client, 'CO-13-return-a-age-closed');
+  assert(
+    ![...aMarkers, bName].some((x) => returned.bodyText.includes(x)),
+    'Return transition resurrected private content',
+  );
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'First, your', 60_000);
+  await captureStep(client, 'CO-14-return-a-relaunch-closed');
+  assert(
+    await evaluate(client, `!localStorage.getItem('layerwell.shelf.v1')`),
+    'Return A recovered old Shelf',
+  );
+  const logs = collectProblemLogs(client.events);
+  writeJson('browser-warn-error-logs.json', logs);
+  assert(logs.filter(disallowedLog).length === 0, 'Unexpected cross-owner browser error/warning');
+  const summary = {
+    verdict: 'pass',
+    scenario: 'actual_cross_owner',
+    viewport,
+    noAFlash: true,
+    delayedAOperationsRejected: true,
+    duplicateAndFailedCleanupRetry: true,
+    bOwnAdmission: true,
+    bUsableManualShelfAndEdit: true,
+    exactBOwnerCacheQueueHealth: true,
+    bDocumentRelaunch: true,
+    returnAClosedWithoutResurrection: true,
+    noUncaughtErrors: true,
+    limits:
+      'DEV/web/development/unconfigured synthetic identity and preflight transport; real Auth reconciliation, owner proof, cleanup, encrypted storage/query, age/consent and routing. No live provider, paid authority, native process death or device proof.',
+  };
+  writeJson('summary.json', summary);
+  console.log(`Cross-owner E2E passed. Evidence: ${evidenceDir}`);
+}
+
+async function retainedShelfFlow(client) {
+  await retainedRoute(client, '/shelf/no-match?barcode=4006381333931');
+  await waitForText(client, 'Add it by hand');
+  await captureStep(client, 'M1-01-manual-fallback');
+  await clickByText(client, 'Add it by hand', { exact: false });
+  await waitForPath(client, '/shelf/manual');
+  await fillByLabel(client, 'Product name', 'Synthetic manual moisturizer');
+  await clickByText(client, 'Category');
+  await clickByText(client, 'Category, Moisturiser (tube)');
+  await clickByText(client, 'Continue');
+  await waitForText(client, 'Not opened yet');
+  await clickByText(client, 'Not opened yet');
+  await scrollTextIntoView(client, 'Add to shelf');
+  const manualReady = await captureStep(client, 'M1-01b-manual-ready', { assertClean: false });
+  // The modal intentionally occludes its mounted background form. Check the
+  // actionable modal control, retaining the full audit (including occlusion).
+  assertInteractiveControl(manualReady, 'Add to shelf');
+  assert(manualReady.overflowX <= 1, 'Manual modal overflowed horizontally.');
+  await client.send('Network.emulateNetworkConditions', {
+    offline: true,
+    latency: 0,
+    downloadThroughput: -1,
+    uploadThroughput: -1,
+  });
+  const rect = await evaluate(client, rectByTextExpression('Add to shelf', true));
+  assert(rect && !rect.disabled, 'Manual save must be reachable offline.');
+  for (let n = 0; n < 2; n++) {
+    await client.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
+      touchPoints: [{ x: rect.x, y: rect.y, id: 1 }],
+    });
+    await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  }
+  await captureStep(client, 'M1-01c-after-double-submit', { assertClean: false });
+  writeJson(
+    'M1-offline-durable-read.json',
+    await evaluate(
+      client,
+      `(async () => {
+    const module = [...__r.getModules().values()].find(m => /lib[\\\\/]storage[\\\\/]privateKV\\.ts$/.test(m.verboseName ?? ''));
+    if (!module) return { available: false };
+    const raw = await module.publicModule.exports.getPrivateItem('layerwell.shelf.v1');
+    const shelf = JSON.parse(raw);
+    return { available: true, version: shelf.version, productCount: shelf.products.length,
+      containsSyntheticManual: shelf.products.some(p => p.name === 'Synthetic manual moisturizer') };
+  })()`,
+      true,
+    ),
+  );
+  await waitForPath(client, '/shelf');
+  await waitForText(client, 'Synthetic manual moisturizer');
+  await captureStep(client, 'M1-02-offline-double-save');
+  const matches = await evaluate(
+    client,
+    `Array.from(document.querySelectorAll('[role="button"]')).filter(n => n.getAttribute('aria-label')?.startsWith('Synthetic manual moisturizer')).length`,
+  );
+  assert(matches === 1, `Double save rendered ${matches} manual rows.`);
+  await scrollTextIntoView(client, 'Synthetic manual moisturizer', { exact: false });
+  await clickByText(client, 'Synthetic manual moisturizer', { exact: false });
+  await scrollTextIntoView(client, 'Edit opened date');
+  await clickByText(client, 'Edit opened date');
+  await clickByText(client, '1 mo ago');
+  await captureStep(client, 'M1-03-offline-edit');
+  await evaluate(
+    client,
+    `(() => { const original = Storage.prototype.setItem;
+    globalThis.__M1_RESTORE_SYNTHETIC_WRITE__ = () => { Storage.prototype.setItem = original; delete globalThis.__M1_RESTORE_SYNTHETIC_WRITE__; };
+    Storage.prototype.setItem = function(key, value) { if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic local write failure', 'QuotaExceededError'); return original.call(this, key, value); };
+  })()`,
+  );
+  await clickByText(client, 'Edit opened date');
+  await clickByText(client, 'Today');
+  await waitForText(client, 'Your change was not confirmed.');
+  await captureStep(client, 'M1-03b-write-failure-intent-retained', { assertClean: false });
+  await evaluate(client, 'globalThis.__M1_RESTORE_SYNTHETIC_WRITE__()');
+  await clickByText(client, 'Today');
+  await waitForCondition(
+    client,
+    `!document.body.innerText.includes('Your change was not confirmed.')`,
+    30_000,
+    'write retry success',
+  );
+  await captureStep(client, 'M1-03c-write-retry', { assertClean: false });
+  await clickByText(client, 'Mark finished');
+  await waitForPath(client, '/shelf');
+  await retainedRoute(client, '/shelf/archive');
+  await waitForText(client, 'Synthetic manual moisturizer');
+  await captureStep(client, 'M1-04-offline-archive');
+  await client.send('Network.emulateNetworkConditions', {
+    offline: false,
+    latency: 0,
+    downloadThroughput: -1,
+    uploadThroughput: -1,
+  });
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Synthetic manual moisturizer', 60_000);
+  await captureStep(client, 'M1-05-archive-relaunch');
+  await retainedRoute(client, '/shelf');
+  await scrollTextIntoView(client, 'Retinol 0.3% serum', { exact: false });
+  await clickByText(client, 'Retinol 0.3% serum', { exact: false });
+  await clickByText(client, 'More options');
+  await evaluate(
+    client,
+    `(() => { const original = Storage.prototype.setItem;
+    globalThis.__M1_RESTORE_SYNTHETIC_WRITE__ = () => { Storage.prototype.setItem = original; delete globalThis.__M1_RESTORE_SYNTHETIC_WRITE__; };
+    Storage.prototype.setItem = function(key, value) { if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic local write failure', 'QuotaExceededError'); return original.call(this, key, value); };
+  })()`,
+  );
+  await clickByText(client, 'Remove completely', { exact: false });
+  await waitForText(client, 'Your change was not confirmed.');
+  await captureStep(client, 'M1-05b-remove-failure', { assertClean: false });
+  await evaluate(client, 'globalThis.__M1_RESTORE_SYNTHETIC_WRITE__()');
+  await clickByText(client, 'Remove completely', { exact: false });
+  await waitForPath(client, '/shelf');
+  assert(
+    !(await evaluate(client, 'document.body.innerText')).includes('Retinol 0.3% serum'),
+    'Removed product remains visible.',
+  );
+  await captureStep(client, 'M1-06-remove');
+  const retainedCiphertext = await evaluate(client, `localStorage.getItem('layerwell.shelf.v1')`);
+  assert(
+    retainedCiphertext && !retainedCiphertext.includes('Synthetic manual moisturizer'),
+    'Shelf was not encrypted.',
+  );
+  await evaluate(
+    client,
+    `localStorage.setItem('layerwell.shelf.v1', '{"version":"xchacha20poly1305:v99"}')`,
+  );
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Your private data could not open.', 60_000);
+  await captureStep(client, 'M1-07-corruption-preserved');
+  assert(
+    await evaluate(
+      client,
+      `localStorage.getItem('layerwell.shelf.v1') === '{"version":"xchacha20poly1305:v99"}'`,
+    ),
+    'Corrupt bytes were silently changed.',
+  );
+  await evaluate(
+    client,
+    `localStorage.setItem('layerwell.shelf.v1', ${JSON.stringify(retainedCiphertext)})`,
+  );
+  await client.send('Page.reload', { ignoreCache: true });
+  await waitForText(client, 'Shelf', 60_000);
+  await captureStep(client, 'M1-08-storage-recovered');
+  // The dev anonymous fixture has no persisted Auth session. Publish its owner
+  // through the actual eligible age form again before testing owner rights.
+  await retainedRoute(client, '/onboarding/age');
+  await waitForText(client, 'First, your');
+  await fillByLabel(client, 'Day of birth', '01');
+  await fillByLabel(client, 'Month of birth', '01');
+  await fillByLabel(client, 'Year of birth', '1990');
+  await clickByText(client, 'Continue');
+  await waitForPath(client, '/onboarding/consent');
+  await waitForText(client, 'Before the quiz');
 }
 
 function writeReport(summary) {
@@ -880,30 +1359,124 @@ async function run() {
     });
     await client.send('Emulation.setTouchEmulationEnabled', { enabled: true });
 
+    if (deletionRecoveryMode) {
+      await client.send('Page.navigate', { url: `${baseUrl}/today` });
+      const terminalText =
+        deletionRecoveryMode === 'pending_then_completed_manual'
+          ? 'Deleting your account'
+          : deletionRecoveryMode === 'expired'
+            ? 'Deletion receipt needs support'
+            : 'Deletion status could not be verified';
+      await waitForText(client, terminalText, 60_000);
+      const initial = await captureStep(client, 'deletion-01-closed', { assertClean: false });
+      assertInteractiveControl(initial, 'Check status now');
+      assert(
+        !initial.bodyText.includes('Morning routine') &&
+          !initial.bodyText.includes('Account deletion completed'),
+        'Deletion opened protected content or claimed premature completion.',
+      );
+      if (deletionRecoveryMode === 'invalid') {
+        await scrollTextIntoView(client, 'Retry deletion request');
+        await clickByText(client, 'Retry deletion request');
+        await waitForText(client, terminalText);
+        await captureStep(client, 'deletion-02-retry-still-closed', { assertClean: false });
+      } else if (deletionRecoveryMode === 'pending_then_completed_manual') {
+        await clickByText(client, 'Check status now');
+        await waitForText(client, 'Account deletion completed');
+        await scrollTextIntoView(client, 'Continue');
+        const notice = await captureStep(client, 'deletion-02-synthetic-completion-manual', {
+          assertClean: false,
+        });
+        assertInteractiveControl(notice, 'Continue');
+        await clickByText(client, 'Continue');
+        await waitForCondition(
+          client,
+          `document.body.innerText.includes('Begin') || document.body.innerText.includes('First, your')`,
+          30_000,
+          'acknowledged deletion public entry',
+        );
+        await captureStep(client, 'deletion-03-acknowledged');
+      } else {
+        assert(
+          !initial.controls.some((control) => control.label === 'Retry deletion request'),
+          'Unavailable retry was exposed.',
+        );
+        await clickByText(client, 'Check status now');
+        await waitForText(client, terminalText);
+      }
+      const afterReload =
+        deletionRecoveryMode === 'pending_then_completed_manual'
+          ? `document.body.innerText.includes('First, your') || document.body.innerText.includes('Begin')`
+          : `document.body.innerText.includes(${JSON.stringify(terminalText)})`;
+      await client.send('Page.navigate', { url: `${baseUrl}/shelf` });
+      await waitForCondition(client, afterReload, 60_000, 'closed deletion direct entry');
+      await client.send('Page.reload', { ignoreCache: true });
+      await waitForCondition(client, afterReload, 60_000, 'closed deletion relaunch');
+      const reloaded = await captureStep(client, 'deletion-04-relaunch-closed', {
+        assertClean: false,
+      });
+      assert(
+        !reloaded.bodyText.includes('Morning routine'),
+        'Deletion relaunch reopened health content.',
+      );
+      writeJson('summary.json', {
+        verdict: 'pass',
+        viewport,
+        deletionRecoveryMode,
+        limits:
+          'Synthetic gate transport only; no real provider deletion, persisted Keychain or Apple revocation evidence.',
+      });
+      return;
+    }
     await client.send('Page.navigate', { url: `${baseUrl}/?e2eReset=local` });
-    await waitForText(client, 'Begin', 60_000);
-    const welcome = await captureStep(client, '01-welcome');
-
-    await client.send('Page.navigate', { url: `${baseUrl}/today` });
-    await waitForPath(client, '/onboarding/age', 30_000);
-    await waitForText(client, 'First, your', 30_000);
-    const directProtectedAgeGate = await captureStep(client, '01a-direct-protected-age-gate');
-    assert(
-      !directProtectedAgeGate.bodyText.includes('Morning routine'),
-      'A direct protected route mounted Today content before age eligibility.',
-    );
-    await client.send('Page.navigate', { url: baseUrl });
-    await waitForPath(client, '/', 30_000);
-    await waitForText(client, 'Begin', 30_000);
-
-    await scrollTextIntoView(client, 'Begin');
-    await clickByText(client, 'Begin');
+    let welcome;
+    let directProtectedAgeGate;
+    if (accountIsolationMode) {
+      // The retained signed-in fixture correctly requires current 18+ proof.
+      await waitForText(client, 'First, your', 60_000);
+      welcome = await captureStep(client, '01-retained-owner-age-closed');
+      directProtectedAgeGate = welcome;
+    } else {
+      await waitForText(client, 'Begin', 60_000);
+      welcome = await captureStep(client, '01-welcome');
+      await client.send('Page.navigate', { url: `${baseUrl}/today` });
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      directProtectedAgeGate = await captureStep(client, '01a-direct-protected-age-gate');
+      assert(
+        !directProtectedAgeGate.bodyText.includes('Morning routine'),
+        'Today mounted before age proof.',
+      );
+      await client.send('Page.navigate', { url: baseUrl });
+      await waitForText(client, 'Begin', 30_000);
+      await scrollTextIntoView(client, 'Begin');
+      await clickByText(client, 'Begin');
+    }
     await waitForText(client, 'First, your', 30_000);
     await captureStep(client, '02-age-empty');
     await fillByLabel(client, 'Day of birth', '01');
     await fillByLabel(client, 'Month of birth', '01');
     await fillByLabel(client, 'Year of birth', '1990');
     await captureStep(client, '03-age-filled');
+    if (process.argv.includes('--diagnose-exceptions')) {
+      await client.send('Debugger.enable');
+      await client.send('Debugger.setPauseOnExceptions', { state: 'all' });
+    }
+    writeJson(
+      'bundle-crypto-provenance.json',
+      await evaluate(
+        client,
+        `(() => {
+      const modules = globalThis.__r?.getModules?.();
+      if (!modules) return { available: false };
+      return { available: true, modules: [...modules.values()]
+        .filter(m => /ciphers/i.test(m.verboseName ?? ''))
+        .map(m => ({ path: m.verboseName, initialized: m.isInitialized,
+          randomBytes: typeof m.publicModule?.exports?.randomBytes,
+          xchacha20poly1305: typeof m.publicModule?.exports?.xchacha20poly1305 })) };
+    })()`,
+      ),
+    );
     await clickByText(client, 'Continue');
 
     await waitForPath(client, '/onboarding/consent', 30_000);
@@ -1103,19 +1676,37 @@ async function run() {
       'Shelf did not retain every product added during onboarding.',
     );
 
+    if (crossOwnerMode) {
+      if (process.argv.includes('--daily-loop')) {
+        await dailyLoopFlow({ client, evaluate, retainedRoute, waitForText, waitForCondition,
+          clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson });
+      }
+      await crossOwnerFlow(client, productNames);
+      return;
+    }
+
     await clickByText(client, 'Progress', { exact: false });
     await waitForPath(client, '/progress', 30_000);
-    await waitForText(client, 'Unlock your private photo timeline.', 30_000);
+    await waitForText(
+      client,
+      accountIsolationMode
+        ? 'We will keep Pro-only screens hidden'
+        : 'Unlock your private photo timeline.',
+      30_000,
+    );
     await delay(750);
     const progressAfterOnboarding = await captureStep(client, '21-progress-after-onboarding', {
       assertClean: false,
     });
     assert(
-      progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
-        progressAfterOnboarding.bodyText.includes('Subscribe to Pro'),
+      accountIsolationMode
+        ? progressAfterOnboarding.bodyText.includes('subscription status is confirmed') &&
+            !progressAfterOnboarding.bodyText.includes('PRO ACTIVE')
+        : progressAfterOnboarding.bodyText.includes('Unlock your private photo timeline.') &&
+            progressAfterOnboarding.bodyText.includes('Subscribe to Pro'),
       'Progress tab did not render the truthful free-plan feature gate.',
     );
-    await clickByText(client, 'Maybe later');
+    if (!accountIsolationMode) await clickByText(client, 'Maybe later');
     await delay(750);
 
     await clickByText(client, 'You');
@@ -1135,13 +1726,20 @@ async function run() {
     const todayAfterTabRoundTrip = await captureStep(client, '23-today-after-tab-round-trip', {
       assertClean: false,
     });
+    if (process.argv.includes('--daily-loop')) {
+      await dailyLoopFlow({ client, evaluate, retainedRoute, waitForText, waitForCondition,
+        clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson });
+    }
+    if (process.argv.includes('--retained-safety')) await retainedShelfFlow(client);
 
     let ageReverificationBefore = null;
     let ageReverificationBlocked = null;
     let ageReverificationDirectToday = null;
     let ageReverificationReloadedToday = null;
     if (!accountUpgradeMode && !accountIsolationMode) {
-      await client.send('Page.navigate', { url: `${baseUrl}/onboarding/age` });
+      if (process.argv.includes('--retained-safety'))
+        await retainedRoute(client, '/onboarding/age');
+      else await client.send('Page.navigate', { url: `${baseUrl}/onboarding/age` });
       await waitForPath(client, '/onboarding/age', 30_000);
       await waitForText(client, 'First, your', 30_000);
       await fillByLabel(client, 'Day of birth', '01');
@@ -1149,8 +1747,76 @@ async function run() {
       await fillByLabel(client, 'Year of birth', String(new Date().getFullYear()));
       ageReverificationBefore = await captureStep(client, '25-age-reverification-before-submit');
       await clickByText(client, 'Continue');
-      await waitForText(client, 'You need to be at least 16', 30_000);
+      await waitForText(client, 'You need to be at least 18', 30_000);
       ageReverificationBlocked = await captureStep(client, '26-age-reverification-blocked');
+      if (process.argv.includes('--retained-safety')) {
+        await clickByText(client, 'Privacy & account');
+        await waitForText(client, 'Export my data');
+        const rights = await captureStep(client, 'M1-09-verified-owner-rights');
+        assert(
+          !rights.bodyText.includes('Review fresh consent') &&
+            !rights.bodyText.includes('Morning routine'),
+          'Rights shell reopened health admission.',
+        );
+        await scrollTextIntoView(client, 'Delete account');
+        await clickByText(client, 'Delete account');
+        await waitForText(client, 'Delete the whole account');
+        await captureStep(client, 'M1-10-delete-cancel');
+        await scrollTextIntoView(client, 'Cancel');
+        await clickByText(client, 'Cancel');
+        await scrollTextIntoView(client, 'Withdraw health-data consent');
+        await clickByText(client, 'Withdraw health-data consent');
+        await scrollTextIntoView(client, 'Confirm withdrawal');
+        // Refuse a real local cleanup mutation without changing lifecycle or
+        // gate state. The durable withdrawal intent must remain retryable.
+        await evaluate(
+          client,
+          `(() => {
+          const original = Storage.prototype.removeItem;
+          Storage.prototype.removeItem = function(key) {
+            if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic withdrawal cleanup refusal', 'QuotaExceededError');
+            return original.call(this, key);
+          };
+        })()`,
+        );
+        await clickByText(client, 'Confirm withdrawal');
+        await waitForText(client, 'Withdrawal has not finished.');
+        await captureStep(client, 'M1-11a-withdrawal-cleanup-refused', { assertClean: false });
+        await scrollTextIntoView(client, 'Retry / check status');
+        await clickByText(client, 'Retry / check status');
+        await waitForText(client, 'Status: withdrawing.');
+        await scrollTextIntoView(client, 'Retry / check status');
+        await clickByText(client, 'Retry / check status');
+        await waitForText(client, 'Could not finish the privacy request.');
+        await captureStep(client, 'M1-11b-withdrawal-repeated-refusal', { assertClean: false });
+        await client.send('Page.reload', { ignoreCache: true });
+        await waitForCondition(
+          client,
+          `document.body.innerText.includes('Privacy & account') && (document.body.innerText.includes('First, your') || document.body.innerText.includes('Begin'))`,
+          60_000,
+          'safe public bootstrap with rights access',
+        );
+        const interrupted = await captureStep(client, 'M1-11c-withdrawal-relaunch-paused', {
+          assertClean: false,
+        });
+        assert(
+          !interrupted.bodyText.includes('Morning routine') &&
+            !interrupted.bodyText.includes('Review fresh consent'),
+          'Withdrawal relaunch reopened health admission.',
+        );
+        await clickByText(client, 'Privacy & account');
+        await waitForText(client, 'Status: withdrawing.');
+        await scrollTextIntoView(client, 'Retry / check status');
+        await clickByText(client, 'Retry / check status');
+        await waitForText(client, 'Status: withdrawn.');
+        await captureStep(client, 'M1-11-age-closed-withdrawal');
+        assert(
+          !(await evaluate(client, 'document.body.innerText')).includes('Review fresh consent'),
+          'Rights shell offered health activation.',
+        );
+        await scrollTextIntoView(client, 'Back to age confirmation');
+        await clickByText(client, 'Back to age confirmation');
+      }
       assert(
         !ageReverificationBlocked.bodyText.includes('Morning routine') &&
           !ageReverificationBlocked.bodyText.includes('Evening routine'),
@@ -1195,6 +1861,7 @@ async function run() {
     let signedOutWelcome = null;
     let signedOutShelf = null;
     let signedOutToday = null;
+    let signedOutRelaunch = null;
     if (accountIsolationMode) {
       const assertPrivateNamesHidden = (snapshot, label) => {
         for (const product of productNames) {
@@ -1209,6 +1876,7 @@ async function run() {
       await waitForPath(client, '/you', 30_000);
       await waitForText(client, 'tas.account-a.e2e@example.com', 30_000);
       await waitForText(client, 'Sign out', 30_000);
+      await scrollTextIntoView(client, 'Sign out');
       accountBeforeSignOut = await captureStep(client, '25-account-before-signout', {
         assertClean: false,
       });
@@ -1219,43 +1887,46 @@ async function run() {
       assertInteractiveControl(accountBeforeSignOut, 'Sign out');
 
       await clickByText(client, 'Sign out');
-      await waitForText(client, 'Account change paused', 30_000);
+      await waitForText(client, 'Account access paused', 30_000);
       accountBoundaryFailure = await captureStep(client, '26-account-boundary-clear-failure');
       assertPrivateNamesHidden(accountBoundaryFailure, 'Failed account boundary');
       assertInteractiveControl(accountBoundaryFailure, 'Try again');
       assert(
-        accountBoundaryFailure.bodyText.includes('The next account is still locked out.'),
-        'Account boundary failure did not explain that the next account remained locked out.',
+        accountBoundaryFailure.bodyText.includes('Your account data is still locked.'),
+        'Missing recovery explanation.',
       );
-
       await clickByText(client, 'Try again');
-      await waitForText(client, 'Securing account data...', 10_000);
-      accountBoundaryRetry = await captureStep(client, '27-account-boundary-retry');
-      assertPrivateNamesHidden(accountBoundaryRetry, 'Retrying account boundary');
-
+      // Wait beyond the injected cleanup delay, then assert the stable repeated
+      // refusal. A transient spinner is not evidence of completed recovery.
+      await delay(1_200);
+      await waitForText(client, 'Account access paused', 30_000);
+      accountBoundaryRetry = await captureStep(client, '27-account-boundary-repeated-failure');
+      assertPrivateNamesHidden(accountBoundaryRetry, 'Repeated failed account boundary');
+      assertInteractiveControl(accountBoundaryRetry, 'Try again');
+      await clickByText(client, 'Try again');
       await waitForPath(client, '/', 30_000);
       await waitForText(client, 'Begin', 30_000);
       signedOutWelcome = await captureStep(client, '28-signed-out-welcome');
       assertPrivateNamesHidden(signedOutWelcome, 'Signed-out welcome');
 
       await navigateClientSide(client, '/shelf');
-      await waitForPath(client, '/shelf', 30_000);
-      await waitForText(client, 'empty for now', 30_000);
-      signedOutShelf = await captureStep(client, '29-signed-out-shelf');
+      await waitForPath(client, '/onboarding/age', 30_000);
+      await waitForText(client, 'First, your', 30_000);
+      signedOutShelf = await captureStep(client, '29-signed-out-shelf-age-closed');
       assertPrivateNamesHidden(signedOutShelf, 'Signed-out Shelf');
-
       await navigateClientSide(client, '/today?routine=AM');
-      await waitForPath(client, '/today', 30_000);
-      await waitForText(client, 'NO ROUTINE YET', 30_000);
-      signedOutToday = await captureStep(client, '30-signed-out-today', {
-        assertClean: false,
-      });
-      assert(
-        signedOutToday.overflowX <= 1,
-        `Signed-out Today has horizontal overflow: ${signedOutToday.overflowX}px.`,
-      );
-      assertInteractiveControl(signedOutToday, 'Add products');
+      await waitForPath(client, '/onboarding/age', 30_000);
+      signedOutToday = await captureStep(client, '30-signed-out-today-age-closed');
       assertPrivateNamesHidden(signedOutToday, 'Signed-out Today');
+      await client.send('Page.reload', { ignoreCache: true });
+      await waitForText(client, 'First, your', 60_000);
+      const relaunched = await captureStep(client, '31-signed-out-cold-relaunch');
+      signedOutRelaunch = relaunched;
+      assertPrivateNamesHidden(relaunched, 'Signed-out cold relaunch');
+      assert(
+        !relaunched.bodyText.includes('tas.account-a.e2e@example.com'),
+        'Synthetic transport resurrected signed-out identity.',
+      );
     }
 
     const problemLogs = collectProblemLogs(client.events);
@@ -1291,12 +1962,13 @@ async function run() {
     }
 
     const summary = {
+      retainedSafetyMode: process.argv.includes('--retained-safety'),
       accountIsolationMode,
       accountIsolation: accountIsolationMode
         ? {
             accountAEmail: 'tas.account-a.e2e@example.com',
             cleanupFailureStayedGated:
-              accountBoundaryFailure?.bodyText.includes('Account change paused') ?? false,
+              accountBoundaryFailure?.bodyText.includes('Account access paused') ?? false,
             privateNamesHiddenAfterSignOut:
               Boolean(signedOutShelf && signedOutToday) &&
               productNames.every(
@@ -1304,10 +1976,15 @@ async function run() {
                   !signedOutShelf.bodyText.includes(product.name) &&
                   !signedOutToday.bodyText.includes(product.name),
               ),
-            reachedEmptyShelf: signedOutShelf?.bodyText.includes('empty for now') ?? false,
-            reachedEmptyToday: signedOutToday?.bodyText.includes('NO ROUTINE YET') ?? false,
-            retryShowedTransitionGate:
-              accountBoundaryRetry?.bodyText.includes('Securing account data...') ?? false,
+            signedOutShelfAgeClosed: signedOutShelf?.bodyText.includes('First, your') ?? false,
+            signedOutTodayAgeClosed: signedOutToday?.bodyText.includes('First, your') ?? false,
+            repeatedFailureStayedGated:
+              accountBoundaryRetry?.bodyText.includes('Account access paused') ?? false,
+            signedOutReloadAgeClosed: signedOutRelaunch?.bodyText.includes('First, your') ?? false,
+            terminalWelcome: signedOutWelcome?.bodyText.includes('Begin') ?? false,
+            noUncaughtRuntimeExceptions: !client.events.some(
+              (event) => event.method === 'Runtime.exceptionThrown',
+            ),
           }
         : null,
       accountUpgradeMode,
@@ -1359,17 +2036,17 @@ async function run() {
           ? [
               '25-account-before-signout.png',
               '26-account-boundary-clear-failure.png',
-              '27-account-boundary-retry.png',
+              '27-account-boundary-repeated-failure.png',
               '28-signed-out-welcome.png',
-              '29-signed-out-shelf.png',
-              '30-signed-out-today.png',
+              '29-signed-out-shelf-age-closed.png',
+              '30-signed-out-today-age-closed.png',
             ]
           : []),
       ],
       flowResult: accountUpgradeMode
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then continued honestly to Today on the free plan.'
         : accountIsolationMode
-          ? 'Completed onboarding on the free plan, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
+          ? 'Completed onboarding on the free plan, failed two account cleanups behind usable recovery, retried successfully, signed out, and proved direct Shelf and Today routes could not expose account A data.'
           : 'Completed onboarding through the truthful free-plan path to Today without granting Pro, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
@@ -1434,10 +2111,10 @@ async function run() {
           accountIsolationMode ||
           (ageReverificationReloadedToday?.url.includes('/onboarding/age') === true &&
             !ageReverificationReloadedToday.bodyText.includes('Morning routine')),
-        signedOutShelfIsEmpty:
-          !accountIsolationMode || signedOutShelf?.bodyText.includes('empty for now') === true,
-        signedOutTodayIsEmpty:
-          !accountIsolationMode || signedOutToday?.bodyText.includes('NO ROUTINE YET') === true,
+        signedOutShelfIsAgeClosed:
+          !accountIsolationMode || signedOutShelf?.bodyText.includes('First, your') === true,
+        signedOutTodayIsAgeClosed:
+          !accountIsolationMode || signedOutToday?.bodyText.includes('First, your') === true,
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
       },
@@ -1460,7 +2137,7 @@ async function run() {
         ...(accountIsolationMode
           ? [
               'Opened the signed-in account surface and initiated sign-out with account A private queries already populated.',
-              'Verified a forced first cleanup failure exposed only the recovery gate, then retried through the transition state.',
+              'Verified first and repeated cleanup failures exposed usable recovery with no uncaught overlay, then retried successfully.',
               'Verified Welcome, direct Shelf, and direct Today routes contain no account A product names after cleanup.',
             ]
           : []),
@@ -1476,9 +2153,26 @@ async function run() {
       },
     };
 
+    if (accountIsolationMode) assertCompletedAccountRecovery(summary.accountIsolation);
     writeJson('summary.json', summary);
     writeReport(summary);
     console.log(`Onboarding first-session E2E passed. Evidence: ${evidenceDir}`);
+  } catch (error) {
+    // Capture the actual failed surface before closing Chrome/Metro. Synthetic
+    // fixture only: never inspect storage, keys, cookies or network bodies.
+    if (client) {
+      await captureStep(client, 'FAILURE', { assertClean: false }).catch(() => undefined);
+      writeJson('FAILURE-runtime-events.json', collectProblemLogs(client.events));
+      writeJson(
+        'FAILURE-race-state.json',
+        await evaluate(
+          client,
+          `globalThis.__crossOwnerRace ? { readEntered: __crossOwnerRace.readEntered, writeEntered: __crossOwnerRace.writeEntered, results: __crossOwnerRace.results } : null`,
+        ).catch(() => null),
+      );
+    }
+    writeJson('ERROR.json', { status: 'FAIL', message: String(error.message), viewport });
+    throw error;
   } finally {
     client?.close();
     await stopProcess(browser);

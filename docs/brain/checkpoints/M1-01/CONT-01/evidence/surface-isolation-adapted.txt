@@ -1,0 +1,4 @@
+Error: Timed out waiting for text "Unlock your private photo timeline.": condition false
+    at waitForCondition (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/isolation-ui-harness.mjs:396:9)
+    at async waitForText (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/isolation-ui-harness.mjs:404:3)
+    at async run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/isolation-ui-harness.mjs:1303:5)

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd --workspace apps/mobile exec -- vitest run src/features/notifications/deliver.test.ts",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "bcad0fbd20343e2821101347ae1556021f042730",
+  "source_tree": "e7f3fc8dc658e33b7187a5029d993d7e74b71f79",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/evidence/permission-last-schedule-red.txt",
+    "sha256": "4fa8a39009e6b8896b2909914ffd49d2c14cd7ea484160889a891118d25bb6c2"
+  },
+  "counts": {
+    "passed": 33,
+    "failed": 1,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T20:16:21.618561+00:00",
+  "finished_at_utc": "2026-10-20T20:16:23.899571+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "exec",
+    "--",
+    "vitest",
+    "run",
+    "src/features/notifications/deliver.test.ts"
+  ]
+}

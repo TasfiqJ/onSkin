@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B scripts/brain/brain.py validate",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+  "source_tree": "cb99e875b03fb364979a38197d37e24ec3d9e2e4",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-01/evidence/historical-profile.txt",
+    "sha256": "4196e65a3e0d80f9f794448503a6e9d31e1b7fdde3735a3016c1e91ba0b76a17"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T16:11:59.800603+00:00",
+  "finished_at_utc": "2026-10-20T16:12:00.389255+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "python",
+    "-B",
+    "scripts/brain/brain.py",
+    "validate"
+  ]
+}

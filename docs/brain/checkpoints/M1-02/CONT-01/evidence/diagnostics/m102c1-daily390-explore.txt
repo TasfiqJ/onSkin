@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Rendered Today date does not match the interaction target
+    at assertTarget (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/retained-daily-loop.mjs:17:5)
+    at async enterToday (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/retained-daily-loop.mjs:30:5)
+    at async dailyLoopFlow (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/retained-daily-loop.mjs:64:3)
+    at async run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:1724:7) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

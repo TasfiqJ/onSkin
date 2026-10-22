@@ -1,0 +1,21 @@
+
+> layerwell@0.1.0 phase4:catalog-report-privacy-smoke
+> deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/catalog-report/privacy.test.ts supabase/functions/catalog-report/deletionBarrier.test.ts
+
+running 9 tests from ./supabase/functions/catalog-report/privacy.test.ts
+catalog-report privacy contract keeps request fields allowlisted ... ok (0ms)
+catalog-report requires a random UUID report request identity ... ok (0ms)
+catalog-report privacy contract normalizes only non-personal product fields ... ok (1ms)
+catalog-report privacy contract rejects unexpected nested shapes ... ok (0ms)
+catalog-report privacy contract rejects direct sensitive scalars and credentials ... ok (0ms)
+catalog-report privacy contract normalizes barcodes conservatively ... ok (0ms)
+catalog-report missing-product identity requires a barcode or bounded product name ... ok (0ms)
+catalog-report wrong-match identity requires a valid product UUID and identity ... ok (0ms)
+catalog-report applies semantic identity validation before its service RPC ... ok (11ms)
+running 3 tests from ./supabase/functions/catalog-report/deletionBarrier.test.ts
+catalog-report confines serving-control correction intake to its health-bound service RPC ... ok (0ms)
+catalog-report makes feature-flag suppression explicit and preserves correction reporting ... ok (0ms)
+catalog-report deployment requires one hosted-compatible service secret tuple for correction intake ... ok (8ms)
+
+ok | 12 passed | 0 failed (107ms)
+

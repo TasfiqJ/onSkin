@@ -1,0 +1,10 @@
+{
+  "reason": "Final measurements caught a frozen historical source-reconciliation mirror dependency on PROGRESS.md and a generated worklist dirty-state check.",
+  "actions": [
+    "Restore only this session's PROGRESS addition to its exact continuation-base blob; continuation progress remains in its checkpoint, root handoff and USER_FLOW_TREE. No historical mirror regenerated.",
+    "Preserve failed governance/profile/worklist receipts. Worklist generation was correct at the clean 4abe checkpoint; the first check runner wrote its own log into the worktree before checking and therefore made the checked Git status dirty. Use an external temporary output for the clean check.",
+    "Move only this session's newly-created Python __pycache__ outside this checkout. No shared dependency or other checkout is changed."
+  ],
+  "runtime_delta": "None: apps/mobile, runtime tests, Metro configuration and governance code remain byte-identical to b130b3f6bcbb7c21f29dc375c65ee2f41c228d34.",
+  "surface390": "The first exact b130 surface run completed every retained-safety step; preserve it and rerun the final current-head matrix after this documentation-only correction."
+}

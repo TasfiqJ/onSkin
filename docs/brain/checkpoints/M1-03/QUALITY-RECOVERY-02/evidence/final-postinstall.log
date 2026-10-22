@@ -1,0 +1,5 @@
+
+> layerwell@0.1.0 postinstall:check
+> node scripts/postinstall.mjs --check
+
+{"check":true,"viewShot":"checked","widgets":"checked","toolingSecurity":"checked"}

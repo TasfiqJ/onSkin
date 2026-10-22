@@ -1,0 +1,124 @@
+{
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "source_commit": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "note": "PROGRESS already differs after M0-01; hashes show freshness, not approval. No archives copied.",
+  "sources": [
+    {
+      "path": "docs/MASTER_PLAN.md",
+      "supplied_sha256": "7584eac3911f7e4fda7edb36878b191ddccffc6a15c630a53f185d538135260f",
+      "supplied_bytes": 70537,
+      "observed_sha256": "7584eac3911f7e4fda7edb36878b191ddccffc6a15c630a53f185d538135260f",
+      "observed_bytes": 70537,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
+      "supplied_sha256": "ec196b0548e17b953575821a404667a9d3a6e83f642e2338ae453af5cf0440b8",
+      "supplied_bytes": 9636,
+      "observed_sha256": "ec196b0548e17b953575821a404667a9d3a6e83f642e2338ae453af5cf0440b8",
+      "observed_bytes": 9636,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md",
+      "supplied_sha256": "609fe8dd5ff7a2d0cf988ce56aba08fcb7419105fa0ac8033b0a41670ba701e6",
+      "supplied_bytes": 93636,
+      "observed_sha256": "609fe8dd5ff7a2d0cf988ce56aba08fcb7419105fa0ac8033b0a41670ba701e6",
+      "observed_bytes": 93636,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/launch-contract.json",
+      "supplied_sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f",
+      "supplied_bytes": 7437,
+      "observed_sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f",
+      "observed_bytes": 7437,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/execution-status.json",
+      "supplied_sha256": "83b50fa38b4da4d9f0cf3db644d9d90f456686fec30b4377fd8e3667524f2ad0",
+      "supplied_bytes": 8997,
+      "observed_sha256": "83b50fa38b4da4d9f0cf3db644d9d90f456686fec30b4377fd8e3667524f2ad0",
+      "observed_bytes": 8997,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/task-graph.json",
+      "supplied_sha256": "38376e5abfdbd53175079f5f944b8baeff6085f4b4a0510fed9c148d35126cdb",
+      "supplied_bytes": 11616,
+      "observed_sha256": "38376e5abfdbd53175079f5f944b8baeff6085f4b4a0510fed9c148d35126cdb",
+      "observed_bytes": 11616,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/feature-inventory.json",
+      "supplied_sha256": "620d798e86c2fd0f8adb810cac1b11eaa3a1d9551f14db474454bb49f6148178",
+      "supplied_bytes": 94713,
+      "observed_sha256": "620d798e86c2fd0f8adb810cac1b11eaa3a1d9551f14db474454bb49f6148178",
+      "observed_bytes": 94713,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/legacy-task-disposition.json",
+      "supplied_sha256": "c0e7db1c84c24c19124b0c3cdc99ca2cc07ccdc2a5eb6febf7c284ad1305c01b",
+      "supplied_bytes": 78708,
+      "observed_sha256": "c0e7db1c84c24c19124b0c3cdc99ca2cc07ccdc2a5eb6febf7c284ad1305c01b",
+      "observed_bytes": 78708,
+      "state": "MATCH"
+    },
+    {
+      "path": "PROGRESS.md",
+      "supplied_sha256": "c76711501d743cf9500e6130424e91ad559f11d91d6e0b8f26d22a49ddb3bbee",
+      "supplied_bytes": 530513,
+      "observed_sha256": "4ab8ec63364bfa136ccc438b91faabcd3d0cf6c576eddda1ef2cdc34e625730c",
+      "observed_bytes": 532094,
+      "state": "OBSERVED_DELTA_NO_STATUS_UPGRADE"
+    },
+    {
+      "path": "BLOCKERS.md",
+      "supplied_sha256": "580dad8a2f947f4acfd059973fdc4d0b284f91c21f32fa5ca080b81227f7347e",
+      "supplied_bytes": 104862,
+      "observed_sha256": "580dad8a2f947f4acfd059973fdc4d0b284f91c21f32fa5ca080b81227f7347e",
+      "observed_bytes": 104862,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/MAIN_INTEGRATION_2026-09-27.md",
+      "supplied_sha256": "ec48b9e9388ba09842f6ba3e0354a6a2abf4ef16489cdbdbc6413e41d359704f",
+      "supplied_bytes": 4149,
+      "observed_sha256": "ec48b9e9388ba09842f6ba3e0354a6a2abf4ef16489cdbdbc6413e41d359704f",
+      "observed_bytes": 4149,
+      "state": "MATCH"
+    },
+    {
+      "path": "docs/hugeToDo/FOUNDER_EXTERNAL_ONLY.md",
+      "supplied_sha256": "e1af42682e4fb5a2469ece9ac140d92dc3df2c00fe96d3fd1b5229855d96538c",
+      "supplied_bytes": 5252,
+      "observed_sha256": "e1af42682e4fb5a2469ece9ac140d92dc3df2c00fe96d3fd1b5229855d96538c",
+      "observed_bytes": 5252,
+      "state": "MATCH"
+    }
+  ],
+  "original_inventory_metadata": {
+    "schemaVersion": 1,
+    "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
+    "readinessLabels": [
+      "implemented",
+      "stubbed",
+      "simulated",
+      "inert",
+      "needs-device-verification",
+      "launch-blocked"
+    ],
+    "categoryCounts": {
+      "data-store": 153,
+      "edge-function": 18,
+      "feature-flag": 17,
+      "generated-packet": 33,
+      "native-module": 46,
+      "route": 93,
+      "vendor-call": 16
+    }
+  }
+}

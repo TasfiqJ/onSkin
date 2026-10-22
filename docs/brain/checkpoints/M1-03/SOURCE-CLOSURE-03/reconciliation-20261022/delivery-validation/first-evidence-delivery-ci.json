@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "FIRST_EVIDENCE_DELIVERY_CI",
+  "admission": "NONE",
+  "observed_utc": "2026-10-22 03:16:59 UTC",
+  "head": "89c40f1008e60f4b5cf4266c7331532dd75d7679",
+  "merge_checkout": "5092b809c0cd2540b5d19d9f92f2759e75ea6011",
+  "draft": true,
+  "merged": false,
+  "runs": [
+    {
+      "id": 39715653680,
+      "name": "iOS launch contract",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_number": 389,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39715653680/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39715653680/logs",
+      "workflow_id": 312030667
+    },
+    {
+      "id": 39715653679,
+      "name": "Security",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_number": 921,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39715653679/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39715653679/logs",
+      "workflow_id": 308213475
+    },
+    {
+      "id": 39715653770,
+      "name": "Quality",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_number": 389,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39715653770/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39715653770/logs",
+      "workflow_id": 312030668
+    }
+  ],
+  "note": "These are the first evidence-delivery runs, separate from measured-source and final-delivery runs; in-progress observations are never PASS."
+}

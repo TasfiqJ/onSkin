@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "repository": "TasfiqJ/onSkin",
+  "recorded_at_utc": "2026-10-22T15:17:31Z",
+  "observed_head": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+  "observed_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+  "merge_ref": {
+    "sha": "f1e442d70d81697aa09213134769141755ff2407",
+    "tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+    "tree_equals_stage": true
+  },
+  "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "pr": {
+    "number": 9,
+    "draft": true,
+    "state": "open",
+    "merged": false
+  },
+  "runs": [
+    {
+      "name": "iOS launch contract",
+      "run_id": 39801427684,
+      "workflow_id": 312030667,
+      "head_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39801427684",
+      "jobs": [
+        {
+          "id": 119902862946,
+          "name": "iOS all-features contract",
+          "status": "in_progress",
+          "conclusion": "pending",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "run_id": 39801427756,
+      "workflow_id": 308213475,
+      "head_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39801427756",
+      "jobs": [
+        {
+          "id": 119902863755,
+          "name": "Secret scanning",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            {
+              "number": 10,
+              "name": "Enforce secret scanner results"
+            }
+          ]
+        },
+        {
+          "id": 119902863879,
+          "name": "Code security gates",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            {
+              "number": 14,
+              "name": "Enforce code-gate results"
+            }
+          ]
+        },
+        {
+          "id": 119902863891,
+          "name": "Static analysis and OSV",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            {
+              "number": 12,
+              "name": "Stage verified technical receipt after all source checks"
+            },
+            {
+              "number": 14,
+              "name": "Enforce static scanner results"
+            }
+          ]
+        },
+        {
+          "id": 119902981548,
+          "name": "Live Supabase adversarial evidence",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "id": 119905482223,
+          "name": "Automated single-owner source-only Security acceptance",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            {
+              "number": 10,
+              "name": "Require complete original and exact-source technical evidence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Quality",
+      "run_id": 39801428343,
+      "workflow_id": 312030668,
+      "head_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39801428343",
+      "jobs": [
+        {
+          "id": 119903278725,
+          "name": "Repository quality gates",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            {
+              "number": 13,
+              "name": "Check Expo dependency compatibility"
+            }
+          ]
+        },
+        {
+          "id": 119903279118,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 119903279211,
+          "name": "Credential-free Supabase reset and database tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "failed_steps": [
+            {
+              "number": 7,
+              "name": "Reset twice, test, lint, and prove zero drift"
+            }
+          ]
+        },
+        {
+          "id": 119903279244,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "status": "completed",
+          "conclusion": "success",
+          "failed_steps": []
+        },
+        {
+          "id": 119907219100,
+          "name": "Expo export (${{ matrix.platform }})",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ]
+    }
+  ],
+  "provider_snapshot_note": "iOS run metadata says completed/success; job list still says in_progress/pending. Preserve both observations; job completion is not inferred.",
+  "safe_job_excerpts": [
+    {
+      "job_id": 119903278725,
+      "bytes": 213589,
+      "decoded_log_sha256": "0dd392942951b064c90a2916b52ce19ac1dff33c1538ff11741271ee00ada112",
+      "lines": [
+        "2026-10-22T15:06:55.9813170Z iOS privacy source audit outputs are current (archive_required).",
+        "2026-10-22T15:07:13.7171771Z   expo-notifications@57.0.23 - expected version: ~57.0.24",
+        "2026-10-22T15:07:13.7172582Z Your project may not work correctly until you install the expected versions of the packages."
+      ]
+    },
+    {
+      "job_id": 119903279211,
+      "bytes": 82867,
+      "decoded_log_sha256": "01f96e644eb6d108c053a466388f42360bbfe73668e74d30bc2ecc9d8df1dbe1",
+      "lines": [
+        "2026-10-22T15:06:51.6314270Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: error from registry: Data limit exceeded",
+        "2026-10-22T15:06:51.6322079Z     diagnostic: 'Error response from daemon: error from registry: Data limit exceeded'"
+      ]
+    }
+  ],
+  "admission": "NONE"
+}

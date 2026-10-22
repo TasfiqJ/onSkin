@@ -1,0 +1,9 @@
+# M1-03 CONT-01 — submitted for independent Brain review
+
+Bounded source repairs under M103-CONT01-SOURCE-EDIT-01. Original task base2de9ef75a1a1d539b0520ca22160abd6171c9c3b; continuation basec14a3105640034a9d7a47d34533f9bd40faa4cc4/treeeb9bb55569b75dba730ae69e8eb5c703804cfc58. The exact issuance manifest214f13a3406632c50f0c9eebc947c04bb11f56259c12d13f93744f866254508e verified before editing. [Brain review](../../../reviews/M1-03/REVIEW-01/AUDIT_M1-03_REVIEW01.md) is installed unchanged; [issuance](inputs/TASK.md) is unchanged.
+
+Read [implementation and custody](IMPLEMENTATION.md), [validation and limits](VALIDATION.md), the strict [completion report](completion-report.json), and [inert follow-up](INERT_PROPOSALS.md). Every execution receipt binds its command, actual source identity, environment, timestamps, numeric exit, counts/skips and raw output hash. Overlapping focused/root counts are never added.
+
+The four repairs are implemented. This is not whole-baseline acceptance. Security remains red, the original proposal remains expired at2026-10-21T00:00:00Z, protected_source_go=false and main_promotion_authorized=false. M1-03 remains incomplete; M2 is not issued. PR9 stays draft/unmerged; main, M0/PR8, other worktrees and shared dependencies were not implementation targets. No DB replay, SQL/types/Edge edit, provider/owner action, registry login, spend, native signing, deployment or release.
+
+The machine report distinguishes the measured implementation from the later evidence-only delivery. The root ONSKIN_BRAIN_HANDOFF.txt identifies the delivery ref and the external final provider-observation file, created after the final push so it can name that exact SHA without an endless evidence-commit/CI cycle. That final observation is provider metadata, not a signed acceptance or a substitute for original jobs.

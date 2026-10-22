@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"wsl\", \"--distribution\", \"onskin-r6-verification\", \"--user\", \"root\", \"--exec\", \"python3.12\", \"-B\", \"-c\", \"import pathlib,sys,os,unittest\\nos.environ['GIT_NO_LAZY_FETCH']='1'\\nrepo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022');os.chdir(repo)\\nsys.path.insert(0,str(repo/'scripts/brain'))\\nsuite=unittest.defaultTestLoader.discover(str(repo/'scripts/brain'),pattern='test_*.py')\\nresult=unittest.TextTestRunner(verbosity=2).run(suite)\\nsys.exit(0 if result.wasSuccessful() else 1)\\n\"]",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "environment": "Windows Python3.9.13 orchestrator; WSL calls run Linux x86_64 Python3.12.3; root clone Node24.19.0/npm11.17.0; full argv and nested working directory preserved in raw receipt.",
+  "source_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+  "source_tree": "ecdd68e1b0c34377e59309e4ce5f29e1a8b678c8",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/linux-governance71.log",
+    "sha256": "08077d5eaa6d17424471cb3f7c1e11bde7213e5f7bfa244b7e182b9d79a31db1"
+  },
+  "counts": {
+    "passed": 69,
+    "failed": 0,
+    "skipped": 2
+  }
+}

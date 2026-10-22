@@ -1,0 +1,37 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "founder_action": "NEW_CODEX_CHAT",
+  "main_promotion_authorized": false,
+  "main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "orig_ios_source_contract": "PASS",
+  "orig_quality_status": "FAIL",
+  "orig_security_status": "FAIL",
+  "original_SAST": {
+    "failed": 189,
+    "fixpoint_events": 368,
+    "scanned": 12581,
+    "total": 19374,
+    "unreviewed_candidate_findings": 8,
+    "unsupported": 6604
+  },
+  "original_security_proposal_expired": "2026-10-21T00:00:00Z",
+  "prior_governance": {
+    "pass_count": 69,
+    "skip_count": 2,
+    "total": 71
+  },
+  "prior_root_tests": 6067,
+  "protected_source_go": false,
+  "schema_version": 1,
+  "source_diagnostics_scoped_accepted": true,
+  "stage_base_sha": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+  "stage_base_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+  "task": "M1-03/QUALITY-RECOVERY-01",
+  "whole_M1_03_accepted": false,
+  "zero_incremental_spend": true
+}

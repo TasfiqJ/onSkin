@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "message": "Progress tab did not render the truthful free-plan feature gate.",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

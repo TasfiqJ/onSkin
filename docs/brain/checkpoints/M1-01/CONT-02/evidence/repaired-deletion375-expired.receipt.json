@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_EVIDENCE_DIR=docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion375-expired ONBOARDING_E2E_PORT=8417 ONBOARDING_E2E_DEBUG_PORT=9517 ONBOARDING_E2E_VIEWPORT_WIDTH=375 ONBOARDING_E2E_VIEWPORT_HEIGHT=667 ONBOARDING_E2E_DELETION_RECOVERY=expired node scripts/e2e/onboarding-first-session.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "7afde5aa763b766620f8882e30d858169dd790ff",
+  "source_tree": "2c85f1f25277fdcf1dfa15a69f14ffa32af8ed0d",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion375-expired.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T17:33:49.460032+00:00",
+  "finished_at_utc": "2026-10-20T17:34:09.685728+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_EVIDENCE_DIR": "docs/brain/checkpoints/M1-01/CONT-02/evidence/repaired-deletion375-expired",
+    "ONBOARDING_E2E_PORT": "8417",
+    "ONBOARDING_E2E_DEBUG_PORT": "9517",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+    "ONBOARDING_E2E_DELETION_RECOVERY": "expired"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs"
+  ]
+}

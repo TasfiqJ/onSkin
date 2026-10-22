@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "review_id": "M0-02-REVIEW-01",
+  "created_at_utc": "2026-10-20T05:05:13+00:00",
+  "reviewer": "onSkin Brain",
+  "decision": "FIX_REQUIRED",
+  "reviewed_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+  "reviewed_tree": "e18f73771b5f440613a7e7cd339889949a8ae72a",
+  "original_task_base": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "main_tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+  "last_accepted_checkpoint": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+  "commits_reviewed": [
+    "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "da9fa04759164b402ee3b2abd1c80e14261614fb"
+  ],
+  "scope": {
+    "M0-02_delta_files": 132,
+    "full_stage_files": 134,
+    "outside_authorized_scope": [],
+    "protected_runtime_diff_exit": 0,
+    "clean_before_and_after": true,
+    "main_or_stage_writes_by_brain": false
+  },
+  "positive_checks": [
+    {
+      "command": "C:/Python39/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "environment": "authorized Windows host; Python 3.9.13; clean delivered stage worktree",
+      "source_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "source_tree": "e18f73771b5f440613a7e7cd339889949a8ae72a",
+      "exit_code": 0,
+      "tests_considered": 28,
+      "passed": 27,
+      "skipped": 1,
+      "skip_reason": "Windows symbolic-link creation privilege unavailable (WinError 1314); junction and hard-link tests actually passed",
+      "log_sha256": "259f921466d502b45966260011439c08b581f48edc26f69408a41be4bd98bfb5",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py validate",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "scope": "positive input only; does not override reproduced negative-case defects",
+      "log_sha256": "4196e65a3e0d80f9f794448503a6e9d31e1b7fdde3735a3016c1e91ba0b76a17"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py mirrors --check",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "log_sha256": "54134535fb8850c2f1da7f176356e5bfe8bb1dc7a546bb9388ed0766900bff41"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py report docs/brain/checkpoints/M0-02/completion-report.json",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "scope": "positive submission accepted by flawed validator, NOT Brain task acceptance",
+      "log_sha256": "bce21d0e5d08d991cdd867302d2937751ca3bb3e8b2ee37840d757290c48f6f7"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py pack --task M0-02 --output <two distinct outside-root files>",
+      "exit_codes": [
+        0,
+        0
+      ],
+      "equal_bytes": true,
+      "files": 49,
+      "input_bytes": 860347,
+      "archive_bytes": 876597,
+      "sha256": "b73353d64eb93a28dafd8d319c06055440e4e0363243c12ae016b5f6291f5547",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "command": "Independent Git-blob inventory digest compared to the actual uploaded M0-02 context ZIP",
+      "matched_files": 48,
+      "aggregate_sha256": "8e9b05bb0ed86aa9c873a5d24f2ec64621af9d6b3e9d62c7027dee7f85dab220",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    },
+    {
+      "command": "git diff --exit-code <M0-02 original base> <submitted head> -- .github supabase apps packages package.json package-lock.json scripts/phase2 scripts/phase9 scripts/launch",
+      "exit_code": 0,
+      "evidence_class": "INDEPENDENTLY_REPRODUCED"
+    }
+  ],
+  "findings": [
+    {
+      "id": "M002-R1-F1",
+      "priority": "HIGH",
+      "component": "Observation evidence validation",
+      "path": "scripts/brain/brain.py",
+      "lines": "311-342",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "summary": "Full validate CLI accepts an unsupported PASS observation without a command, artifact/hash or source snapshot. It also accepts JSON false as exit code zero.",
+      "cases": [
+        "A1-unbound-observation-pass",
+        "A2-boolean-observation-exit"
+      ],
+      "expected": "Reject incomplete execution evidence and non-integer exits without changing closed authority state."
+    },
+    {
+      "id": "M002-R1-F2",
+      "priority": "HIGH",
+      "component": "Report CI and source identity binding",
+      "path": "scripts/brain/brain.py",
+      "lines": "384-417",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "summary": "Full report CLI accepts in_progress CI with success, nonexistent CI evidence, an all-zero CI head, and a nonexistent observed-main/original-stage-base tuple.",
+      "cases": [
+        "B1-unbound-unfinished-ci-success",
+        "B2-nonexistent-main-and-original-base"
+      ],
+      "expected": "Bind CI rows to listed hash-checked observation artifacts and coherent run/source/status fields; verify declared Git identities and applicable ancestry. Offline consistency is not provider authenticity."
+    },
+    {
+      "id": "M002-R1-F3",
+      "priority": "HIGH",
+      "component": "Task packaging authority",
+      "path": "scripts/brain/brain.py",
+      "lines": "420-440;456-481;578-582",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "summary": "Keeping original immutable inputs/anchor/current task intact, repointing only the mutable task spec at a self-authored matching manifest produces a successful M0-02 ZIP containing unapproved synthetic text.",
+      "cases": [
+        "C1-repointed-approval-pack"
+      ],
+      "expected": "Resolve approved issue identity independently of mutable spec-supplied pointers/hashes; no self-authored same-task approval can authorize a new allowlist."
+    },
+    {
+      "id": "M002-R1-F4",
+      "priority": "HIGH",
+      "component": "Mirror write containment",
+      "path": "scripts/brain/brain.py",
+      "lines": "295-308",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED_FOCUSED_FUNCTION_SLICE",
+      "summary": "A dangling output-file symlink passes the exists-based precheck. touch() creates an empty file outside the root before safe_file rejects the link.",
+      "cases": [
+        "D1-dangling-mirror-output"
+      ],
+      "expected": "Validate lexical target and ancestors before any creation/write; rejection cannot create or alter outside-root or link-target files.",
+      "limitation": "Actual Linux filesystem with five Git-byte-matched function slices; input validation and generated data are inert stubs. Not a full Linux repository/CLI test."
+    }
+  ],
+  "adversarial_cases": [
+    {
+      "id": "A1-unbound-observation-pass",
+      "finding": "F1",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "A2-boolean-observation-exit",
+      "finding": "F1",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "B1-unbound-unfinished-ci-success",
+      "finding": "F2",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "B2-nonexistent-main-and-original-base",
+      "finding": "F2",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "C1-repointed-approval-pack",
+      "finding": "F3",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION",
+      "unapproved_zip_sha256": "50ae7a1d40bd8e8ebe6871966438951ac3e09e4d5bd649cf4ce8284bf6618095",
+      "files": 3,
+      "input_bytes": 331,
+      "archive_bytes": 1208,
+      "forged_approval_sha256": "415b6a7056abb242fc886c5a11d9c38db2783ffac55272fd76c5187ed228ebec",
+      "unchanged_trusted_manifest_sha256": "fd04a4fe643949b994ab01697cf48fb2894da805951f7389c76aa770b0972957"
+    },
+    {
+      "id": "D1-dangling-mirror-output",
+      "finding": "F4",
+      "result": {
+        "scope": "exact function slices; stubbed input validation/data producer; real Linux symlink filesystem",
+        "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+        "outside_exists_before": false,
+        "source_function_hashes": {
+          "require": "9775a8b3969599d5d1f620d9717824195d7ab69490eafb5e7b8d1bacbf14df85",
+          "relative_name": "53273a1847508fc2c45c595090f8156065107b32fe9de65f56030ef9c1d676d7",
+          "safe_file": "9d0376190a57f8ea197710d4da3baa6b22cc52cb7701e853cb6e3baacfde4aed",
+          "no_link_parents": "1d1daa0f8abd9b6e68d00fdd2cdc22adf240010c5aa01eb9f222ecfd085c87ba",
+          "mirrors": "6e39a679eac5dc3483e6a0a0796e9b1ebf9977a47dc6325510ac804f170f693b"
+        },
+        "returned": "Link/reparse point forbidden: docs/v2/mirrors/synthetic-view.txt",
+        "outside_exists_after": true,
+        "outside_bytes": "",
+        "git_function_hashes_independently_matched": true,
+        "source_git_blob_sha256": "7eba8d01320ade6cc57183ba191769246a83e11ed35d0523a0fb9a3f5d3edf82"
+      }
+    }
+  ],
+  "current_ci": {
+    "head_commit": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+    "head_tree": "e18f73771b5f440613a7e7cd339889949a8ae72a",
+    "synthetic_pr_merge_commit": "8a122fde420b39bdad2c8998958ccfdd54a3e17e",
+    "synthetic_tree_binding": "Checkout commit observed in final DB log; tree identity not yet independently retrieved in this review.",
+    "Quality": {
+      "run_id": 39371600842,
+      "status": "completed",
+      "conclusion": "failure",
+      "database_job": 118460482876,
+      "repository_quality_job": 118460483057,
+      "database_command": "npm run phase2:db-local-verify",
+      "database_exit": 1,
+      "source_contract_tests": {
+        "pass": 171,
+        "fail": 0
+      },
+      "error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+      "error_at_utc": "2026-10-20T04:50:33.2932477Z",
+      "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_LOG",
+      "note": "No stack startup/SQL reached by this failed verifier invocation. Registry quota/account root cause and remediation remain unknown."
+    },
+    "Security": {
+      "run_id": 39371600769,
+      "status": "completed",
+      "conclusion": "failure",
+      "static_job": 118460483010,
+      "acceptance_job": 118461695511,
+      "code_job": 118460482706,
+      "code_job_conclusion": "success",
+      "secret_job": 118460482672,
+      "secret_job_conclusion": "success",
+      "live_job": 118460483488,
+      "live_job_conclusion": "skipped",
+      "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_JOB_SUMMARIES",
+      "exact_final_static_log_read": false,
+      "note": "Source inventory and OSV refusal reasons remain independently observed prior-history blockers and are reported at measured c0bd7c27b in the submitted evidence. Do not portray those reported final reasons as a newly read final-tip raw log."
+    },
+    "iOS_launch_contract": {
+      "run_id": 39371600772,
+      "status": "completed",
+      "conclusion": "success",
+      "scope": "SOURCE_CONTRACT_ONLY",
+      "evidence_class": "INDEPENDENTLY_OBSERVED_LIVE_GITHUB_STATUS"
+    }
+  },
+  "limitations": [
+    "No independent full app/device/native build/database reset run in this review.",
+    "Brain reran Windows governance suite on Python 3.9.13, not a second independent 3.12 run.",
+    "Linux mirror proof isolates exact source functions with inert upstream collaborators; no full Linux governance run is claimed.",
+    "Initial shell-wrapper test attempt aborted because PowerShell ErrorActionPreference=Stop interpreted native unittest stderr as an error. It is not counted; subsequent subprocess-captured run completed normally.",
+    "Direct container GitHub clone failed DNS. Actual GitHub reads and authorized Windows Git/worktree access succeeded; branch inspection is not blocked.",
+    "No Security acceptance, owner-variable write, expiration renewal, spending, clinical or public-release admission."
+  ]
+}

@@ -1,0 +1,34 @@
+import datetime,gzip,hashlib,json,pathlib,subprocess,sys
+ROOT=pathlib.Path('/root/onskin-sh01-measured-8e8983f5')
+sys.path.insert(0,str(ROOT/'scripts/security_readiness/m103'))
+from candidate import verify,SHA,write_json
+from source_scan import sealed_run,validate_inventory
+work=pathlib.Path('/root/onskin-sh01-bounded-probes');assert not work.exists();work.mkdir(mode=0o700);(work/'rules').mkdir()
+scan=pathlib.Path('/root/onskin-sh01-full-source-scan02');candidate=pathlib.Path('/root/onskin-overnight01-sh01-candidate04')
+inventory=json.loads((scan/'source-inventory.json').read_bytes());tool=verify(candidate,'3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112')
+all_targets={r['path'] for r in inventory['paths'] if r.get('materialized')}
+results=[]
+for bundle in ['owasp-top-ten','secrets','typescript']:
+    raw=(scan/(bundle+'.raw.json')).read_bytes();baseline=json.loads(raw)
+    targets=sorted(p for p in all_targets-set(baseline['paths']['scanned']) if p.endswith('.sql')) if bundle!='typescript' else []
+    groups=[]
+    if targets:groups.append(('explicit-sql',targets))
+    partial='apps/mobile/src/features/onboarding/AgeReverificationRights.integration.test.ts'
+    if bundle in {'owasp-top-ten','typescript'}:groups.append(('exact-partial-parser',[partial]))
+    rule=work/'rules'/(bundle+'.yaml');rule.write_bytes((scan/'rules'/(bundle+'.yaml')).read_bytes())
+    for kind,paths in groups:
+        name=bundle+'-'+kind;start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+        command=[str(candidate/'venv/bin/python'),'-I','-B',str(candidate/'venv/bin/semgrep'),'scan','--oss-only','--metrics=off','--disable-version-check',
+            '--config',str(rule),'--json','--time','--no-rewrite-rule-ids','--no-git-ignore','--scan-unknown-extensions','--timeout','10','--max-target-bytes','0',*paths]
+        with (work/(name+'.raw.json')).open('wb') as out,(work/(name+'.stderr')).open('wb') as err:
+            code=sealed_run(candidate,tool,inventory,ROOT,work,rule,SHA(rule.read_bytes()),command,out,err,180)
+        raw=(work/(name+'.raw.json')).read_bytes();v=json.loads(raw)
+        row=dict(kind=kind,bundle=bundle,source_commit=inventory['source_commit'],source_tree=inventory['source_tree'],candidate_manifest_sha256=tool['manifest_sha256'],
+            started=start,finished=datetime.datetime.now(datetime.timezone.utc).isoformat(),command=command,targets=paths,raw_exit=code,raw_sha256=SHA(raw),stderr_sha256=SHA((work/(name+'.stderr')).read_bytes()),
+            scanned_paths=v['paths']['scanned'],errors=[{k:x for k,x in e.items() if k in {'type','path','spans','level','code'}} for e in v.get('errors',[])],
+            findings=[dict(id=SHA(json.dumps(f,sort_keys=True).encode()),path=f['path'],rule=f['check_id'],start=f['start'],end=f['end'],disposition='UNREVIEWED') for f in v.get('results',[])],
+            rule_file_profile=v.get('time',{}),admission='NONE',baseline_raw_sha256=SHA((scan/(bundle+'.raw.json')).read_bytes()),final_integrity='PASS')
+        results.append(row);write_json(work/'bounded-outcomes.json',dict(admission='NONE',source_commit=inventory['source_commit'],probes=results))
+        print(bundle,kind,'targets',len(paths),'scanned',len(v['paths']['scanned']),'errors',len(v.get('errors',[])),'raw_exit',code,flush=True)
+validate_inventory(inventory,ROOT);verify(candidate,tool['manifest_sha256'])
+print('Final integrity PASS; baseline omissions/errors remain preserved; no admission.')

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "GIT_SOURCE_BOUNDARY_CHECK",
+  "admission": "NONE",
+  "base_commit": "49a39b7f5b194d5c356a21c690e3f1bdb09edfa1",
+  "measured_commit": "9cc9a1245a1defedcba095254e0eca495f4f4438",
+  "measured_tree": "ae619db20e0d7742b76ee3e87bd6ddb83a702bb8",
+  "protected_changes": [],
+  "prior_review_or_checkpoint_edits": [],
+  "roadmap_tasks": 47,
+  "module_identities": 27,
+  "original_overnight_test_sha256": "9aee4fe96c474edbc58fb3e63d48912b5eb6bc7718da51cdb4cf31f36fc3c46e",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ]
+}

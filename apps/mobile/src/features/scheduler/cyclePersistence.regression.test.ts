@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
 import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -192,6 +192,7 @@ beforeEach(async () => {
   });
 });
 afterEach(async () => {
+  onlineManager.setOnline(true);
   for (const release of pendingGates) release();
   pendingGates.clear();
   if (renderer) await act(async () => { renderer?.unmount(); });
@@ -202,6 +203,13 @@ afterEach(async () => {
 });
 
 describe('cycle persistence baseline comparison', () => {
+  it('reads the local cycle and saves a variant while the actual QueryClient is offline', async () => {
+    onlineManager.setOnline(false);
+    await mount();
+    await act(async () => { await mutations.setVariant('gentle'); });
+    expect(JSON.parse(io.values.get(KEY)!)).toMatchObject({ variant: 'gentle' });
+  });
+
   for (const operation of ['load', 'mutation'] as const) {
     it.each(['variant', 'anchorISO', 'skips', 'stagingOverrides'] as const)(
       `rejects current null %s without rewriting during ${operation}`,

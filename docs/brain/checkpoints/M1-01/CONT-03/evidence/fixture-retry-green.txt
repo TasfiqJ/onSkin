@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/lib/auth/AuthProvider.lifecycle.test.ts src/lib/auth/accountIsolationE2E.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  71 passed (71)
+   Start at  15:03:46
+   Duration  723ms (transform 286ms, setup 0ms, import 490ms, tests 218ms, environment 0ms)
+

@@ -1,0 +1,5 @@
+# Current Brain state
+Version: `brain-m1-03-partial-reviewed-cont01-issued-12`. Review: **PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED** at `c14a3105640034a9d7a47d34533f9bd40faa4cc4` / `eb9bb55569b75dba730ae69e8eb5c703804cfc58`.
+Accepted whole tasks remain M0-01, M0-02, M1-01, M1-02. M1-03 CORE05 and initial diagnosis are accepted in scope; CONT-01 remains required. Next: new Codex chat, existing `stage/m1-retained-safety`, one writer. PR9 draft/unmerged; main unchanged `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`.
+Fresh independent checks:6,067 root tests;164 source contracts;typecheck/lint;56 governance passes+2 Windows skips;strict report/worklist.177 artifact hashes,35 inputs,521 protected paths and 97 unchanged migrations verified. Quality/canonical DB and source-only iOS CI pass; Security fails. Original G97 proposal is expired and unchanged.
+Read AUDIT_M1-03_REVIEW01.md and SOURCE_EDIT_AUTHORIZATION.json. No global protected source GO, new policy window, owner pin, SQL/DB operation, shared dependency mutation, M2, main promotion or release. ADR038 corrections and all native/provider/qualified/clinical/commercial limitations remain.

@@ -1,0 +1,42 @@
+{
+  "task_id": "M1-01",
+  "review": "REVIEW-01",
+  "decision": "FIX_REQUIRED",
+  "findings": [
+    {
+      "id": "M1-WEB-01",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Valid age submit fails in real web app at encrypted key creation: randomBytes export is not a function. Baseline reaches consent URL but independently fails into paused health shell. Complete both boundaries without weakening privacy or treating Node tests as Metro proof."
+    },
+    {
+      "id": "M1-RIGHTS-01",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "evidence_class": "INDEPENDENTLY_OBSERVED_SOURCE_AND_CODEX_REPORTED_GAP",
+      "description": "AgePolicyGate admits only welcome/age without receipt and its unavailable UI only offers retry; existing account/data-rights shell is nested inside that gate. Legacy16+ re-verification needs safe rights access without health processing or broad protected route mounting."
+    },
+    {
+      "id": "M1-MATRIX-01",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "evidence_class": "SOURCE_REPORTED_NOT_COMPLETED",
+      "description": "Integrated owner switch/sign-out/guest upgrade, withdrawal/deletion pending/retry/non-resurrection, and manual Shelf offline/CRUD/corruption matrix remains unfinished."
+    },
+    {
+      "id": "M1-GOV-01",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "M1 report profile regressed previously established evidence requirements: accepts empty evidence with PASS, tests newer than declared measurement, and unmeasured source drift. Extend real-CLI tests; preserve M0 guards."
+    },
+    {
+      "id": "M1-CI-WORKLIST-01",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Derived Phase4 worklist fingerprints stale after Shelf source changes. Narrow generator-only refresh of two derived files authorized, without changing any gate/policy/owner acceptance."
+    }
+  ]
+}

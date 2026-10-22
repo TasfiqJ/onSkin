@@ -1,0 +1,7 @@
+test_extra_source_and_unmeasured_allowed_source_and_false_acceptance (test_m103_cont01_profile.M103Continuation.test_extra_source_and_unmeasured_allowed_source_and_false_acceptance) ... ok
+test_positive_report_and_wrong_base_tree_branch_digest_authority (test_m103_cont01_profile.M103Continuation.test_positive_report_and_wrong_base_tree_branch_digest_authority) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 45.045s
+
+OK

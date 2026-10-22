@@ -1,0 +1,1328 @@
+﻿2026-10-20T22:11:37.6505305Z Current runner version: '2.338.0'
+2026-10-20T22:11:37.6543637Z ##[group]Runner Image Provisioner
+2026-10-20T22:11:37.6544973Z Hosted Compute Agent
+2026-10-20T22:11:37.6546048Z Version: 20261012.601
+2026-10-20T22:11:37.6547140Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-20T22:11:37.6548346Z Build Date: 2026-10-12T17:48:21Z
+2026-10-20T22:11:37.6550061Z Worker ID: {f286090b-26b0-4381-a3f5-8f9d394655d9}
+2026-10-20T22:11:37.6551340Z Region: eastus
+2026-10-20T22:11:37.6552319Z Cloud: Azure
+2026-10-20T22:11:37.6553161Z ##[endgroup]
+2026-10-20T22:11:37.6555584Z ##[group]Operating System
+2026-10-20T22:11:37.6556839Z Ubuntu
+2026-10-20T22:11:37.6557717Z 24.04.5
+2026-10-20T22:11:37.6559007Z LTS
+2026-10-20T22:11:37.6559863Z ##[endgroup]
+2026-10-20T22:11:37.6560871Z ##[group]Runner Image
+2026-10-20T22:11:37.6561973Z Image: ubuntu-24.04
+2026-10-20T22:11:37.6562883Z Version: 20261012.334.1
+2026-10-20T22:11:37.6565057Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-20T22:11:37.6567764Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-20T22:11:37.6569752Z ##[endgroup]
+2026-10-20T22:11:37.6571747Z ##[group]GITHUB_TOKEN Permissions
+2026-10-20T22:11:37.6574835Z Contents: read
+2026-10-20T22:11:37.6575824Z Metadata: read
+2026-10-20T22:11:37.6577013Z ##[endgroup]
+2026-10-20T22:11:37.6580576Z Secret source: Actions
+2026-10-20T22:11:37.6582217Z Cache mode: write
+2026-10-20T22:11:37.6583306Z Prepare workflow directory
+2026-10-20T22:11:37.7172291Z Prepare all required actions
+2026-10-20T22:11:37.7246936Z Getting action download info
+2026-10-20T22:11:37.9220788Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-20T22:11:38.1092931Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-20T22:11:38.2116681Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-20T22:11:38.4118044Z Complete job name: Credential-free Supabase reset and database tests
+2026-10-20T22:11:38.4932644Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-20T22:11:38.4933745Z with:
+2026-10-20T22:11:38.4934268Z   persist-credentials: false
+2026-10-20T22:11:38.4934810Z   repository: TasfiqJ/onSkin
+2026-10-20T22:11:38.4938481Z   token: ***
+2026-10-20T22:11:38.4939218Z   ssh-strict: true
+2026-10-20T22:11:38.4939660Z   ssh-user: git
+2026-10-20T22:11:38.4940081Z   clean: true
+2026-10-20T22:11:38.4940521Z   sparse-checkout-cone-mode: true
+2026-10-20T22:11:38.4941044Z   fetch-depth: 1
+2026-10-20T22:11:38.4941471Z   fetch-tags: false
+2026-10-20T22:11:38.4941910Z   show-progress: true
+2026-10-20T22:11:38.4942370Z   lfs: false
+2026-10-20T22:11:38.4942783Z   submodules: false
+2026-10-20T22:11:38.4943221Z   set-safe-directory: true
+2026-10-20T22:11:38.4943990Z env:
+2026-10-20T22:11:38.4944398Z   CI: true
+2026-10-20T22:11:38.4944809Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T22:11:38.4945259Z ##[endgroup]
+2026-10-20T22:11:38.5986033Z Syncing repository: TasfiqJ/onSkin
+2026-10-20T22:11:38.5989182Z ##[group]Getting Git version info
+2026-10-20T22:11:38.5990450Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-20T22:11:38.5992075Z [command]/usr/bin/git version
+2026-10-20T22:11:38.6086622Z git version 2.55.0
+2026-10-20T22:11:38.6132403Z ##[endgroup]
+2026-10-20T22:11:38.6140232Z Temporarily overriding HOME='/home/runner/work/_temp/2bba320b-ff9d-4228-880b-47b5bcd2db87' before making global git config changes
+2026-10-20T22:11:38.6142659Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T22:11:38.6153029Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-20T22:11:38.6199728Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-20T22:11:38.6201970Z ##[group]Determining repository object format
+2026-10-20T22:11:38.6203436Z ##[endgroup]
+2026-10-20T22:11:38.6205601Z ##[group]Initializing the repository
+2026-10-20T22:11:38.6209897Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-20T22:11:38.6322272Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-20T22:11:38.6323615Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-20T22:11:38.6324661Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-20T22:11:38.6325506Z hint: call:
+2026-10-20T22:11:38.6326037Z hint:
+2026-10-20T22:11:38.6326672Z hint: 	git config --global init.defaultBranch <name>
+2026-10-20T22:11:38.6327469Z hint:
+2026-10-20T22:11:38.6328152Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-20T22:11:38.6329989Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-20T22:11:38.6330849Z hint:
+2026-10-20T22:11:38.6331417Z hint: 	git branch -m <name>
+2026-10-20T22:11:38.6332005Z hint:
+2026-10-20T22:11:38.6332747Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-20T22:11:38.6352698Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-20T22:11:38.6366662Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-20T22:11:38.6421943Z ##[endgroup]
+2026-10-20T22:11:38.6423485Z ##[group]Disabling automatic garbage collection
+2026-10-20T22:11:38.6427105Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-20T22:11:38.6462808Z ##[endgroup]
+2026-10-20T22:11:38.6464589Z ##[group]Setting up auth
+2026-10-20T22:11:38.6465918Z Removing SSH command configuration
+2026-10-20T22:11:38.6472433Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T22:11:38.6509413Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T22:11:38.6881220Z Removing HTTP extra header
+2026-10-20T22:11:38.6888175Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T22:11:38.6939632Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T22:11:38.7211281Z Removing includeIf entries pointing to credentials config files
+2026-10-20T22:11:38.7218292Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T22:11:38.7268517Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T22:11:38.7514232Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-20T22:11:38.7562107Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:38.7603953Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:38.7647205Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:38.7687279Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:38.7719697Z ##[endgroup]
+2026-10-20T22:11:38.7720486Z ##[group]Fetching the repository
+2026-10-20T22:11:38.7728508Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ca62c6c05c40a88d29403c831173821348852512:refs/remotes/pull/9/merge
+2026-10-20T22:11:47.0024776Z From https://github.com/TasfiqJ/onSkin
+2026-10-20T22:11:47.0026746Z  * [new ref]         ca62c6c05c40a88d29403c831173821348852512 -> pull/9/merge
+2026-10-20T22:11:47.0040436Z ##[endgroup]
+2026-10-20T22:11:47.0042288Z ##[group]Determining the checkout info
+2026-10-20T22:11:47.0044041Z ##[endgroup]
+2026-10-20T22:11:47.0045148Z [command]/usr/bin/git sparse-checkout disable
+2026-10-20T22:11:47.0102304Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-20T22:11:47.0141777Z ##[group]Checking out the ref
+2026-10-20T22:11:47.0145877Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/9/merge
+2026-10-20T22:11:48.0603542Z Updating files:  33% (5832/17646)
+2026-10-20T22:11:48.0848500Z Updating files:  34% (6000/17646)
+2026-10-20T22:11:48.1150395Z Updating files:  35% (6177/17646)
+2026-10-20T22:11:48.1500532Z Updating files:  36% (6353/17646)
+2026-10-20T22:11:48.1725284Z Updating files:  37% (6530/17646)
+2026-10-20T22:11:48.1812050Z Updating files:  38% (6706/17646)
+2026-10-20T22:11:48.1906798Z Updating files:  39% (6882/17646)
+2026-10-20T22:11:48.2147956Z Updating files:  40% (7059/17646)
+2026-10-20T22:11:48.2293528Z Updating files:  41% (7235/17646)
+2026-10-20T22:11:48.2475643Z Updating files:  42% (7412/17646)
+2026-10-20T22:11:48.2683865Z Updating files:  43% (7588/17646)
+2026-10-20T22:11:48.2864394Z Updating files:  44% (7765/17646)
+2026-10-20T22:11:48.4897987Z Updating files:  45% (7941/17646)
+2026-10-20T22:11:48.5036434Z Updating files:  46% (8118/17646)
+2026-10-20T22:11:48.5209221Z Updating files:  47% (8294/17646)
+2026-10-20T22:11:48.5341376Z Updating files:  48% (8471/17646)
+2026-10-20T22:11:48.5459731Z Updating files:  49% (8647/17646)
+2026-10-20T22:11:48.5579391Z Updating files:  50% (8823/17646)
+2026-10-20T22:11:48.5685518Z Updating files:  51% (9000/17646)
+2026-10-20T22:11:48.5801239Z Updating files:  52% (9176/17646)
+2026-10-20T22:11:48.5933099Z Updating files:  53% (9353/17646)
+2026-10-20T22:11:48.6071189Z Updating files:  54% (9529/17646)
+2026-10-20T22:11:48.6177319Z Updating files:  55% (9706/17646)
+2026-10-20T22:11:48.6344529Z Updating files:  56% (9882/17646)
+2026-10-20T22:11:48.6484899Z Updating files:  57% (10059/17646)
+2026-10-20T22:11:48.6647812Z Updating files:  58% (10235/17646)
+2026-10-20T22:11:48.6794366Z Updating files:  59% (10412/17646)
+2026-10-20T22:11:48.6937016Z Updating files:  60% (10588/17646)
+2026-10-20T22:11:48.7070396Z Updating files:  61% (10765/17646)
+2026-10-20T22:11:48.7194042Z Updating files:  62% (10941/17646)
+2026-10-20T22:11:48.7330159Z Updating files:  63% (11117/17646)
+2026-10-20T22:11:48.7545287Z Updating files:  64% (11294/17646)
+2026-10-20T22:11:48.7746000Z Updating files:  65% (11470/17646)
+2026-10-20T22:11:48.7955759Z Updating files:  66% (11647/17646)
+2026-10-20T22:11:48.8095385Z Updating files:  67% (11823/17646)
+2026-10-20T22:11:48.8349303Z Updating files:  68% (12000/17646)
+2026-10-20T22:11:48.8662610Z Updating files:  69% (12176/17646)
+2026-10-20T22:11:48.8950212Z Updating files:  70% (12353/17646)
+2026-10-20T22:11:48.9277760Z Updating files:  71% (12529/17646)
+2026-10-20T22:11:48.9630213Z Updating files:  72% (12706/17646)
+2026-10-20T22:11:48.9937601Z Updating files:  73% (12882/17646)
+2026-10-20T22:11:49.0239630Z Updating files:  74% (13059/17646)
+2026-10-20T22:11:49.0329047Z Updating files:  75% (13235/17646)
+2026-10-20T22:11:49.0443867Z Updating files:  75% (13315/17646)
+2026-10-20T22:11:49.0694276Z Updating files:  76% (13411/17646)
+2026-10-20T22:11:49.1038384Z Updating files:  77% (13588/17646)
+2026-10-20T22:11:49.1459540Z Updating files:  78% (13764/17646)
+2026-10-20T22:11:49.1849449Z Updating files:  79% (13941/17646)
+2026-10-20T22:11:49.2251112Z Updating files:  80% (14117/17646)
+2026-10-20T22:11:49.2577750Z Updating files:  81% (14294/17646)
+2026-10-20T22:11:49.2933190Z Updating files:  82% (14470/17646)
+2026-10-20T22:11:49.3315860Z Updating files:  83% (14647/17646)
+2026-10-20T22:11:49.3702059Z Updating files:  84% (14823/17646)
+2026-10-20T22:11:49.3966490Z Updating files:  85% (15000/17646)
+2026-10-20T22:11:49.4243098Z Updating files:  86% (15176/17646)
+2026-10-20T22:11:49.4437275Z Updating files:  87% (15353/17646)
+2026-10-20T22:11:49.4659319Z Updating files:  88% (15529/17646)
+2026-10-20T22:11:49.4802240Z Updating files:  89% (15705/17646)
+2026-10-20T22:11:49.5052921Z Updating files:  90% (15882/17646)
+2026-10-20T22:11:49.5534668Z Updating files:  91% (16058/17646)
+2026-10-20T22:11:49.5735814Z Updating files:  92% (16235/17646)
+2026-10-20T22:11:49.5919882Z Updating files:  93% (16411/17646)
+2026-10-20T22:11:49.6261090Z Updating files:  94% (16588/17646)
+2026-10-20T22:11:49.6455106Z Updating files:  95% (16764/17646)
+2026-10-20T22:11:49.6637318Z Updating files:  96% (16941/17646)
+2026-10-20T22:11:49.6814980Z Updating files:  97% (17117/17646)
+2026-10-20T22:11:49.7172470Z Updating files:  98% (17294/17646)
+2026-10-20T22:11:49.7509789Z Updating files:  99% (17470/17646)
+2026-10-20T22:11:49.7510463Z Updating files: 100% (17646/17646)
+2026-10-20T22:11:49.7510831Z Updating files: 100% (17646/17646), done.
+2026-10-20T22:11:49.7682453Z Note: switching to 'refs/remotes/pull/9/merge'.
+2026-10-20T22:11:49.7682831Z 
+2026-10-20T22:11:49.7683323Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-20T22:11:49.7684422Z changes and commit them, and you can discard any commits you make in this
+2026-10-20T22:11:49.7685536Z state without impacting any branches by switching back to a branch.
+2026-10-20T22:11:49.7686202Z 
+2026-10-20T22:11:49.7686644Z If you want to create a new branch to retain commits you create, you may
+2026-10-20T22:11:49.7687686Z do so (now or later) by using -c with the switch command. Example:
+2026-10-20T22:11:49.7688276Z 
+2026-10-20T22:11:49.7688535Z   git switch -c <new-branch-name>
+2026-10-20T22:11:49.7689336Z 
+2026-10-20T22:11:49.7689582Z Or undo this operation with:
+2026-10-20T22:11:49.7689946Z 
+2026-10-20T22:11:49.7690227Z   git switch -
+2026-10-20T22:11:49.7690524Z 
+2026-10-20T22:11:49.7691050Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-20T22:11:49.7691802Z 
+2026-10-20T22:11:49.7692932Z HEAD is now at ca62c6c Merge 2de9ef75a1a1d539b0520ca22160abd6171c9c3b into bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+2026-10-20T22:11:49.7764433Z ##[endgroup]
+2026-10-20T22:11:49.7824469Z [command]/usr/bin/git log -1 --format=%H
+2026-10-20T22:11:49.7854086Z ca62c6c05c40a88d29403c831173821348852512
+2026-10-20T22:11:49.7865304Z ##[group]Removing auth
+2026-10-20T22:11:49.7865741Z Removing SSH command configuration
+2026-10-20T22:11:49.7870231Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T22:11:49.7907185Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T22:11:49.8159490Z Removing HTTP extra header
+2026-10-20T22:11:49.8164287Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T22:11:49.8204721Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T22:11:49.8451323Z Removing includeIf entries pointing to credentials config files
+2026-10-20T22:11:49.8457157Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T22:11:49.8488594Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-20T22:11:49.8489537Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-20T22:11:49.8498616Z includeif.gitdir:/github/workspace/.git.path
+2026-10-20T22:11:49.8507030Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-20T22:11:49.8508900Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-20T22:11:49.8526235Z /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8538413Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8576937Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-20T22:11:49.8603671Z /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8614696Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8656861Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-20T22:11:49.8686387Z /github/runner_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8697798Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8776588Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-20T22:11:49.8806806Z /github/runner_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8821376Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config
+2026-10-20T22:11:49.8860381Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T22:11:49.9111024Z Removing credentials config '/home/runner/work/_temp/git-credentials-b2e8511f-6c62-46bf-80bf-7c8822e83226.config'
+2026-10-20T22:11:49.9120036Z ##[endgroup]
+2026-10-20T22:11:49.9368073Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-20T22:11:49.9368535Z with:
+2026-10-20T22:11:49.9369302Z   node-version: 20
+2026-10-20T22:11:49.9369593Z   cache: npm
+2026-10-20T22:11:49.9369799Z   check-latest: false
+2026-10-20T22:11:49.9372096Z   token: ***
+2026-10-20T22:11:49.9372318Z   package-manager-cache: true
+2026-10-20T22:11:49.9372567Z env:
+2026-10-20T22:11:49.9372743Z   CI: true
+2026-10-20T22:11:49.9372932Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T22:11:49.9373147Z ##[endgroup]
+2026-10-20T22:11:50.1071687Z Attempting to download 20...
+2026-10-20T22:11:50.6288886Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+2026-10-20T22:11:50.9931113Z Extracting ...
+2026-10-20T22:11:51.0051913Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/3698e0ed-38e8-48bc-a963-42319f9a8b96 -f /home/runner/work/_temp/889087e0-c040-4ff9-817e-b971e806d19b
+2026-10-20T22:11:52.0222561Z Adding to the cache ...
+2026-10-20T22:11:53.9385008Z ##[group]Environment details
+2026-10-20T22:11:54.1689169Z node: v20.20.2
+2026-10-20T22:11:54.1689581Z npm: 10.8.2
+2026-10-20T22:11:54.1689896Z yarn: 1.22.22
+2026-10-20T22:11:54.1690567Z ##[endgroup]
+2026-10-20T22:11:54.1710534Z [command]/opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+2026-10-20T22:11:54.2823439Z /home/runner/.npm
+2026-10-20T22:11:54.3654286Z Cache hit for: node-cache-Linux-x64-npm-4965482aff42dfede513d69e0aec1cc94371f24997ad1db1c0ed439929987d0a
+2026-10-20T22:11:55.4359622Z Received 268435456 of 408780367 (65.7%), 249.8 MBs/sec
+2026-10-20T22:11:55.9318246Z Received 408780367 of 408780367 (100.0%), 256.0 MBs/sec
+2026-10-20T22:11:55.9319633Z Cache Size: ~390 MB (408780367 B)
+2026-10-20T22:11:55.9433909Z [command]/usr/bin/tar -xf /home/runner/work/_temp/690c210c-ed20-41db-9a01-4d4a733616dd/cache.tzst -P -C /home/runner/work/onSkin/onSkin --use-compress-program unzstd
+2026-10-20T22:11:56.7199273Z Cache restored successfully
+2026-10-20T22:11:56.7384329Z Cache restored from key: node-cache-Linux-x64-npm-4965482aff42dfede513d69e0aec1cc94371f24997ad1db1c0ed439929987d0a
+2026-10-20T22:11:56.7884645Z ##[group]Run npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+2026-10-20T22:11:56.7885396Z [36;1mnpm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund[0m
+2026-10-20T22:11:56.9001238Z shell: /usr/bin/bash -e {0}
+2026-10-20T22:11:56.9001541Z env:
+2026-10-20T22:11:56.9001749Z   CI: true
+2026-10-20T22:11:56.9001953Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T22:11:56.9002199Z ##[endgroup]
+2026-10-20T22:12:00.4863333Z 
+2026-10-20T22:12:00.4874783Z removed 65 packages, and changed 112 packages in 4s
+2026-10-20T22:12:00.5067077Z ##[group]Run npm ci
+2026-10-20T22:12:00.5067346Z [36;1mnpm ci[0m
+2026-10-20T22:12:00.5134302Z shell: /usr/bin/bash -e {0}
+2026-10-20T22:12:00.5134590Z env:
+2026-10-20T22:12:00.5134785Z   CI: true
+2026-10-20T22:12:00.5135005Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T22:12:00.5135236Z ##[endgroup]
+2026-10-20T22:12:19.0353641Z npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-20T22:12:26.0119545Z 
+2026-10-20T22:12:26.0120083Z > layerwell@0.1.0 postinstall
+2026-10-20T22:12:26.0120770Z > node scripts/postinstall.mjs
+2026-10-20T22:12:26.0121073Z 
+2026-10-20T22:12:26.1597817Z {"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+2026-10-20T22:12:26.2857331Z 
+2026-10-20T22:12:26.2858379Z added 1036 packages, and audited 1040 packages in 26s
+2026-10-20T22:12:26.2858896Z 
+2026-10-20T22:12:26.2860038Z 203 packages are looking for funding
+2026-10-20T22:12:26.2861001Z   run `npm fund` for details
+2026-10-20T22:12:26.4303263Z 
+2026-10-20T22:12:26.4303752Z 26 high severity vulnerabilities
+2026-10-20T22:12:26.4303996Z 
+2026-10-20T22:12:26.4304260Z To address all issues (including breaking changes), run:
+2026-10-20T22:12:26.4304830Z   npm audit fix --force
+2026-10-20T22:12:26.4305027Z 
+2026-10-20T22:12:26.4305209Z Run `npm audit` for details.
+2026-10-20T22:12:26.4322387Z npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+2026-10-20T22:12:26.4323594Z npm warn install-scripts   @sentry/cli@2.58.4 (postinstall: node ./scripts/install.js)
+2026-10-20T22:12:26.4324721Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-20T22:12:26.4325495Z npm warn install-scripts
+2026-10-20T22:12:26.4326565Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-20T22:12:26.5526572Z ##[group]Run npm run phase2:db-local-contract
+2026-10-20T22:12:26.5526976Z [36;1mnpm run phase2:db-local-contract[0m
+2026-10-20T22:12:26.5591278Z shell: /usr/bin/bash -e {0}
+2026-10-20T22:12:26.5591550Z env:
+2026-10-20T22:12:26.5591741Z   CI: true
+2026-10-20T22:12:26.5591941Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T22:12:26.5592187Z ##[endgroup]
+2026-10-20T22:12:26.6819368Z 
+2026-10-20T22:12:26.6819908Z > layerwell@0.1.0 phase2:db-local-contract
+2026-10-20T22:12:26.6823999Z > node --test scripts/phase2/ask-consent-rebrand-hash.test.mjs scripts/phase2/database-types-contract.test.mjs scripts/phase2/local-supabase-reset-retry.test.mjs scripts/phase2/canonical-postgres-pull-retry.test.mjs scripts/phase2/local-supabase-reset-source.test.mjs scripts/phase2/local-supabase-signal-cleanup.test.mjs scripts/phase2/local-supabase-target-guard.test.mjs scripts/phase2/quality-rehearsal-bindings.test.mjs scripts/phase2/quiz-provenance-contract.test.mjs && node scripts/phase2/local-supabase-contract.mjs
+2026-10-20T22:12:26.6826345Z 
+2026-10-20T22:12:26.7309975Z TAP version 13
+2026-10-20T22:12:27.6760780Z # Subtest: 0074 stages only exact displayed Ask consent hashes without rewriting history or approving grants
+2026-10-20T22:12:27.6790473Z ok 1 - 0074 stages only exact displayed Ask consent hashes without rewriting history or approving grants
+2026-10-20T22:12:27.6879700Z   ---
+2026-10-20T22:12:27.6920647Z   duration_ms: 129.87894
+2026-10-20T22:12:27.6959511Z   ...
+2026-10-20T22:12:27.7370583Z # Subtest: canonical pull retries only throttling, then returns the successful original result
+2026-10-20T22:12:27.7388177Z ok 2 - canonical pull retries only throttling, then returns the successful original result
+2026-10-20T22:12:27.7399494Z   ---
+2026-10-20T22:12:27.7400110Z   duration_ms: 3.605359
+2026-10-20T22:12:27.7400642Z   ...
+2026-10-20T22:12:27.7401665Z # Subtest: persistent throttling stops after four attempts and preserves the last failure
+2026-10-20T22:12:27.7403157Z ok 3 - persistent throttling stops after four attempts and preserves the last failure
+2026-10-20T22:12:27.7404036Z   ---
+2026-10-20T22:12:27.7404482Z   duration_ms: 0.92289
+2026-10-20T22:12:27.7404962Z   ...
+2026-10-20T22:12:27.7406065Z # Subtest: ECR data allowance exhaustion fails once without treating it as transient request throttling
+2026-10-20T22:12:27.7407616Z ok 4 - ECR data allowance exhaustion fails once without treating it as transient request throttling
+2026-10-20T22:12:27.7408554Z   ---
+2026-10-20T22:12:27.7409202Z   duration_ms: 0.390052
+2026-10-20T22:12:27.7409662Z   ...
+2026-10-20T22:12:27.7410483Z # Subtest: timeouts, cancellation, output bounds, auth, network and unstructured errors never retry
+2026-10-20T22:12:27.7411838Z ok 5 - timeouts, cancellation, output bounds, auth, network and unstructured errors never retry
+2026-10-20T22:12:27.7429515Z   ---
+2026-10-20T22:12:27.7445740Z   duration_ms: 2.268793
+2026-10-20T22:12:27.7446753Z   ...
+2026-10-20T22:12:27.7447903Z # Subtest: the real default timer obeys cancellation and a pre-aborted signal cannot start a pull
+2026-10-20T22:12:27.7449878Z ok 6 - the real default timer obeys cancellation and a pre-aborted signal cannot start a pull
+2026-10-20T22:12:27.7450911Z   ---
+2026-10-20T22:12:27.7451489Z   duration_ms: 0.984186
+2026-10-20T22:12:27.7452076Z   ...
+2026-10-20T22:12:27.7452768Z # Subtest: a cancelled backoff cannot start another pull
+2026-10-20T22:12:27.7453684Z ok 7 - a cancelled backoff cannot start another pull
+2026-10-20T22:12:27.7454347Z   ---
+2026-10-20T22:12:27.7454844Z   duration_ms: 0.417453
+2026-10-20T22:12:27.7455373Z   ...
+2026-10-20T22:12:29.4325678Z # Subtest: generated type canonicalization is stable across line endings and rejects malformed output
+2026-10-20T22:12:29.4342329Z ok 8 - generated type canonicalization is stable across line endings and rejects malformed output
+2026-10-20T22:12:29.4346234Z   ---
+2026-10-20T22:12:29.4350991Z   duration_ms: 18.501926
+2026-10-20T22:12:29.4353739Z   ...
+2026-10-20T22:12:29.4355411Z # Subtest: repository type artifact is generated-only and the client overlay is deny-by-default
+2026-10-20T22:12:29.4364995Z ok 9 - repository type artifact is generated-only and the client overlay is deny-by-default
+2026-10-20T22:12:29.4367948Z   ---
+2026-10-20T22:12:29.4372875Z   duration_ms: 166.103237
+2026-10-20T22:12:29.4375330Z   ...
+2026-10-20T22:12:29.4376580Z # Subtest: mobile direct table mutations and RPC typing stay on the reviewed capability lanes
+2026-10-20T22:12:29.4378375Z ok 10 - mobile direct table mutations and RPC typing stay on the reviewed capability lanes
+2026-10-20T22:12:29.4379882Z   ---
+2026-10-20T22:12:29.4384051Z   duration_ms: 1656.731951
+2026-10-20T22:12:29.4389689Z   ...
+2026-10-20T22:12:29.4577435Z # Subtest: retries the precise pre-migration container exit 125 once after the bounded delay
+2026-10-20T22:12:29.4588286Z ok 11 - retries the precise pre-migration container exit 125 once after the bounded delay
+2026-10-20T22:12:29.4589700Z   ---
+2026-10-20T22:12:29.4590363Z   duration_ms: 3.139596
+2026-10-20T22:12:29.4591286Z   ...
+2026-10-20T22:12:29.4592249Z # Subtest: propagates a second matching failure without a third attempt
+2026-10-20T22:12:29.4593434Z ok 12 - propagates a second matching failure without a third attempt
+2026-10-20T22:12:29.4594234Z   ---
+2026-10-20T22:12:29.4594752Z   duration_ms: 0.946895
+2026-10-20T22:12:29.4595297Z   ...
+2026-10-20T22:12:29.4619854Z # Subtest: does not retry SQL, migration, seed, test, or other container failures
+2026-10-20T22:12:29.4620877Z ok 13 - does not retry SQL, migration, seed, test, or other container failures
+2026-10-20T22:12:29.4621502Z   ---
+2026-10-20T22:12:29.4621837Z   duration_ms: 0.728746
+2026-10-20T22:12:29.4622279Z   ...
+2026-10-20T22:12:30.6521891Z # Subtest: DB05 reset source count and latest version bind the current chain
+2026-10-20T22:12:30.6523429Z ok 14 - DB05 reset source count and latest version bind the current chain
+2026-10-20T22:12:30.6524433Z   ---
+2026-10-20T22:12:30.6525291Z   duration_ms: 2.413786
+2026-10-20T22:12:30.6525861Z   ...
+2026-10-20T22:12:30.6526963Z # Subtest: 0072 commerce rehearsal uses its exact migration, then restores the 0081 head for resets
+2026-10-20T22:12:30.6528901Z ok 15 - 0072 commerce rehearsal uses its exact migration, then restores the 0081 head for resets
+2026-10-20T22:12:30.6529772Z   ---
+2026-10-20T22:12:30.6530149Z   duration_ms: 0.443291
+2026-10-20T22:12:30.6530598Z   ...
+2026-10-20T22:12:30.6531531Z # Subtest: the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist
+2026-10-20T22:12:30.6532961Z ok 16 - the 0067-to-0072 rehearsals withhold every later migration until its prerequisites exist
+2026-10-20T22:12:30.6533802Z   ---
+2026-10-20T22:12:30.6534186Z   duration_ms: 0.321903
+2026-10-20T22:12:30.6534603Z   ...
+2026-10-20T22:12:30.6535420Z # Subtest: the pinned trial CLI retains exact current-chain SQL for a local replay
+2026-10-20T22:12:30.6536588Z ok 17 - the pinned trial CLI retains exact current-chain SQL for a local replay
+2026-10-20T22:12:30.6537307Z   ---
+2026-10-20T22:12:30.6537707Z   duration_ms: 0.35162
+2026-10-20T22:12:30.6538115Z   ...
+2026-10-20T22:12:30.6539061Z # Subtest: every local reset uses the precise single-retry wrapper
+2026-10-20T22:12:30.6540197Z ok 18 - every local reset uses the precise single-retry wrapper
+2026-10-20T22:12:30.6540941Z   ---
+2026-10-20T22:12:30.6541465Z   duration_ms: 0.309961
+2026-10-20T22:12:30.6542029Z   ...
+2026-10-20T22:12:30.6542786Z # Subtest: CI retains generated types only as a bounded parity diagnostic
+2026-10-20T22:12:30.6559955Z ok 19 - CI retains generated types only as a bounded parity diagnostic
+2026-10-20T22:12:30.6560633Z   ---
+2026-10-20T22:12:30.6563594Z   duration_ms: 0.295063
+2026-10-20T22:12:30.6564013Z   ...
+2026-10-20T22:12:30.6564805Z # Subtest: 0070 draft-staging evidence is derived from the exact current UTF-8 tuple
+2026-10-20T22:12:30.6565907Z ok 20 - 0070 draft-staging evidence is derived from the exact current UTF-8 tuple
+2026-10-20T22:12:30.6566573Z   ---
+2026-10-20T22:12:30.6566902Z   duration_ms: 2.388277
+2026-10-20T22:12:30.6567580Z   ...
+2026-10-20T22:12:30.6568552Z # Subtest: the fixed reviewed source identity rejects altered normal and override inputs before stack creation
+2026-10-20T22:12:30.6569758Z     # Subtest: normal: missing head
+2026-10-20T22:12:30.6570296Z     ok 1 - normal: missing head
+2026-10-20T22:12:30.6570756Z       ---
+2026-10-20T22:12:30.6571247Z       duration_ms: 2266.755049
+2026-10-20T22:12:30.6571716Z       ...
+2026-10-20T22:12:30.6572012Z     # Subtest: normal: extra migration
+2026-10-20T22:12:30.6572383Z     ok 2 - normal: extra migration
+2026-10-20T22:12:30.6573114Z       ---
+2026-10-20T22:12:30.6573339Z       duration_ms: 1357.65354
+2026-10-20T22:12:30.6573584Z       ...
+2026-10-20T22:12:31.8228838Z     # Subtest: normal: duplicate version
+2026-10-20T22:12:31.8229593Z     ok 3 - normal: duplicate version
+2026-10-20T22:12:31.8230175Z       ---
+2026-10-20T22:12:31.8230553Z       duration_ms: 1171.71139
+2026-10-20T22:12:31.8230975Z       ...
+2026-10-20T22:12:32.9919424Z     # Subtest: normal: renamed middle with identical count and head
+2026-10-20T22:12:32.9920434Z     ok 4 - normal: renamed middle with identical count and head
+2026-10-20T22:12:32.9921181Z       ---
+2026-10-20T22:12:32.9921623Z       duration_ms: 1168.898575
+2026-10-20T22:12:32.9922088Z       ...
+2026-10-20T22:12:34.1452003Z     # Subtest: normal: changed middle bytes with identical count and head
+2026-10-20T22:12:34.1453612Z     ok 5 - normal: changed middle bytes with identical count and head
+2026-10-20T22:12:34.1454425Z       ---
+2026-10-20T22:12:34.1454971Z       duration_ms: 1153.266533
+2026-10-20T22:12:34.1455585Z       ...
+2026-10-20T22:12:35.3125809Z     # Subtest: normal: changed proposal bytes
+2026-10-20T22:12:35.3126572Z     ok 6 - normal: changed proposal bytes
+2026-10-20T22:12:35.3127129Z       ---
+2026-10-20T22:12:35.3127582Z       duration_ms: 1167.043996
+2026-10-20T22:12:35.3127883Z       ...
+2026-10-20T22:12:36.4636436Z     # Subtest: normal: unexpected SQL filename
+2026-10-20T22:12:36.4637595Z     ok 7 - normal: unexpected SQL filename
+2026-10-20T22:12:36.4639415Z       ---
+2026-10-20T22:12:36.4640090Z       duration_ms: 1150.815425
+2026-10-20T22:12:36.4640503Z       ...
+2026-10-20T22:12:37.6188509Z     # Subtest: normal: unexpected directory
+2026-10-20T22:12:37.6191590Z     ok 8 - normal: unexpected directory
+2026-10-20T22:12:37.6192162Z       ---
+2026-10-20T22:12:37.6192641Z       duration_ms: 1155.181114
+2026-10-20T22:12:37.6193097Z       ...
+2026-10-20T22:12:38.7832803Z     # Subtest: override: missing head
+2026-10-20T22:12:38.7833433Z     ok 9 - override: missing head
+2026-10-20T22:12:38.7833894Z       ---
+2026-10-20T22:12:38.7834243Z       duration_ms: 1164.1904
+2026-10-20T22:12:38.7834554Z       ...
+2026-10-20T22:12:39.9414870Z     # Subtest: override: extra migration
+2026-10-20T22:12:39.9418071Z     ok 10 - override: extra migration
+2026-10-20T22:12:39.9418599Z       ---
+2026-10-20T22:12:39.9419299Z       duration_ms: 1157.836561
+2026-10-20T22:12:39.9419561Z       ...
+2026-10-20T22:12:41.1107771Z     # Subtest: override: duplicate version
+2026-10-20T22:12:41.1109828Z     ok 11 - override: duplicate version
+2026-10-20T22:12:41.1110734Z       ---
+2026-10-20T22:12:41.1111465Z       duration_ms: 1168.869604
+2026-10-20T22:12:41.1111958Z       ...
+2026-10-20T22:12:42.2635705Z     # Subtest: override: renamed middle with identical count and head
+2026-10-20T22:12:42.2637441Z     ok 12 - override: renamed middle with identical count and head
+2026-10-20T22:12:42.2638036Z       ---
+2026-10-20T22:12:42.2638440Z       duration_ms: 1152.693318
+2026-10-20T22:12:42.2639066Z       ...
+2026-10-20T22:12:43.4298516Z     # Subtest: override: changed middle bytes with identical count and head
+2026-10-20T22:12:43.4299601Z     ok 13 - override: changed middle bytes with identical count and head
+2026-10-20T22:12:43.4300004Z       ---
+2026-10-20T22:12:43.4300252Z       duration_ms: 1166.284295
+2026-10-20T22:12:43.4300500Z       ...
+2026-10-20T22:12:44.6293586Z     # Subtest: override: changed proposal bytes
+2026-10-20T22:12:44.6294644Z     ok 14 - override: changed proposal bytes
+2026-10-20T22:12:44.6295043Z       ---
+2026-10-20T22:12:44.6295292Z       duration_ms: 1199.273589
+2026-10-20T22:12:44.6295548Z       ...
+2026-10-20T22:12:45.7664876Z     # Subtest: override: unexpected SQL filename
+2026-10-20T22:12:45.7665661Z     ok 15 - override: unexpected SQL filename
+2026-10-20T22:12:45.7666290Z       ---
+2026-10-20T22:12:45.7666727Z       duration_ms: 1136.948594
+2026-10-20T22:12:45.7667001Z       ...
+2026-10-20T22:12:46.9240600Z     # Subtest: override: unexpected directory
+2026-10-20T22:12:46.9241842Z     ok 16 - override: unexpected directory
+2026-10-20T22:12:46.9242983Z       ---
+2026-10-20T22:12:46.9243791Z       duration_ms: 1131.100816
+2026-10-20T22:12:46.9244572Z       ...
+2026-10-20T22:12:46.9245270Z     1..16
+2026-10-20T22:12:46.9246696Z ok 21 - the fixed reviewed source identity rejects altered normal and override inputs before stack creation
+2026-10-20T22:12:46.9248049Z   ---
+2026-10-20T22:12:46.9249048Z   duration_ms: 19911.556456
+2026-10-20T22:12:46.9249836Z   ...
+2026-10-20T22:12:46.9251277Z # Subtest: exact installed history uses the captured CLI 2.117.0 database column and rejects corrupted histories
+2026-10-20T22:12:46.9252638Z     # Subtest: missing installed migration
+2026-10-20T22:12:46.9253500Z     ok 1 - missing installed migration
+2026-10-20T22:12:46.9254237Z       ---
+2026-10-20T22:12:46.9255304Z       duration_ms: 0.662983
+2026-10-20T22:12:46.9255964Z       ...
+2026-10-20T22:12:46.9280769Z     # Subtest: extra installed migration
+2026-10-20T22:12:46.9281692Z     ok 2 - extra installed migration
+2026-10-20T22:12:46.9282521Z       ---
+2026-10-20T22:12:46.9283235Z       duration_ms: 0.579577
+2026-10-20T22:12:46.9283919Z       ...
+2026-10-20T22:12:46.9284734Z     # Subtest: substituted installed migration
+2026-10-20T22:12:46.9305300Z     ok 3 - substituted installed migration
+2026-10-20T22:12:46.9317854Z       ---
+2026-10-20T22:12:46.9318474Z       duration_ms: 0.59205
+2026-10-20T22:12:46.9319303Z       ...
+2026-10-20T22:12:46.9327754Z     # Subtest: duplicate replacing middle
+2026-10-20T22:12:46.9328380Z     ok 4 - duplicate replacing middle
+2026-10-20T22:12:46.9330007Z       ---
+2026-10-20T22:12:46.9330546Z       duration_ms: 0.535564
+2026-10-20T22:12:46.9349269Z       ...
+2026-10-20T22:12:46.9349968Z     # Subtest: extra duplicate
+2026-10-20T22:12:46.9350831Z     ok 5 - extra duplicate
+2026-10-20T22:12:46.9351602Z       ---
+2026-10-20T22:12:46.9352149Z       duration_ms: 0.566743
+2026-10-20T22:12:46.9352905Z       ...
+2026-10-20T22:12:46.9353504Z     # Subtest: wrong ordering
+2026-10-20T22:12:46.9354017Z     ok 6 - wrong ordering
+2026-10-20T22:12:46.9354416Z       ---
+2026-10-20T22:12:46.9354744Z       duration_ms: 0.576491
+2026-10-20T22:12:46.9355136Z       ...
+2026-10-20T22:12:46.9355570Z     # Subtest: missing remote with truthful local
+2026-10-20T22:12:46.9357855Z     ok 7 - missing remote with truthful local
+2026-10-20T22:12:46.9358341Z       ---
+2026-10-20T22:12:46.9358912Z       duration_ms: 0.464081
+2026-10-20T22:12:46.9359287Z       ...
+2026-10-20T22:12:46.9359688Z     # Subtest: local-only entry is not installed
+2026-10-20T22:12:46.9360253Z     ok 8 - local-only entry is not installed
+2026-10-20T22:12:46.9360723Z       ---
+2026-10-20T22:12:46.9361075Z       duration_ms: 0.475241
+2026-10-20T22:12:46.9361457Z       ...
+2026-10-20T22:12:46.9361903Z     # Subtest: all local-only is not installed
+2026-10-20T22:12:46.9362530Z     ok 9 - all local-only is not installed
+2026-10-20T22:12:46.9363034Z       ---
+2026-10-20T22:12:46.9363402Z       duration_ms: 1.44537
+2026-10-20T22:12:46.9363807Z       ...
+2026-10-20T22:12:46.9364362Z     # Subtest: expected version elsewhere cannot repair remote
+2026-10-20T22:12:46.9365149Z     ok 10 - expected version elsewhere cannot repair remote
+2026-10-20T22:12:46.9365730Z       ---
+2026-10-20T22:12:46.9366106Z       duration_ms: 0.434725
+2026-10-20T22:12:46.9366508Z       ...
+2026-10-20T22:12:46.9366987Z     # Subtest: nested timestamp cannot repair remote
+2026-10-20T22:12:46.9368098Z     ok 11 - nested timestamp cannot repair remote
+2026-10-20T22:12:46.9368872Z       ---
+2026-10-20T22:12:46.9369237Z       duration_ms: 0.401012
+2026-10-20T22:12:46.9369662Z       ...
+2026-10-20T22:12:46.9370104Z     # Subtest: numeric remote
+2026-10-20T22:12:46.9370535Z     ok 12 - numeric remote
+2026-10-20T22:12:46.9370931Z       ---
+2026-10-20T22:12:46.9371295Z       duration_ms: 0.416801
+2026-10-20T22:12:46.9371678Z       ...
+2026-10-20T22:12:46.9372025Z     # Subtest: invalid remote
+2026-10-20T22:12:46.9372450Z     ok 13 - invalid remote
+2026-10-20T22:12:46.9372837Z       ---
+2026-10-20T22:12:46.9373176Z       duration_ms: 0.393177
+2026-10-20T22:12:46.9373572Z       ...
+2026-10-20T22:12:46.9373907Z     # Subtest: short remote
+2026-10-20T22:12:46.9374316Z     ok 14 - short remote
+2026-10-20T22:12:46.9374704Z       ---
+2026-10-20T22:12:46.9375036Z       duration_ms: 0.406652
+2026-10-20T22:12:46.9375910Z       ...
+2026-10-20T22:12:46.9376297Z     # Subtest: whitespace remote
+2026-10-20T22:12:46.9376755Z     ok 15 - whitespace remote
+2026-10-20T22:12:46.9377165Z       ---
+2026-10-20T22:12:46.9377508Z       duration_ms: 0.388679
+2026-10-20T22:12:46.9377904Z       ...
+2026-10-20T22:12:46.9378244Z     # Subtest: missing local
+2026-10-20T22:12:46.9378915Z     ok 16 - missing local
+2026-10-20T22:12:46.9379345Z       ---
+2026-10-20T22:12:46.9379747Z       duration_ms: 0.41107
+2026-10-20T22:12:46.9380434Z       ...
+2026-10-20T22:12:46.9380839Z     # Subtest: incorrect local
+2026-10-20T22:12:46.9381325Z     ok 17 - incorrect local
+2026-10-20T22:12:46.9381752Z       ---
+2026-10-20T22:12:46.9382106Z       duration_ms: 0.382267
+2026-10-20T22:12:46.9382513Z       ...
+2026-10-20T22:12:46.9382867Z     # Subtest: numeric local
+2026-10-20T22:12:46.9383384Z     ok 18 - numeric local
+2026-10-20T22:12:46.9399595Z       ---
+2026-10-20T22:12:46.9429976Z       duration_ms: 0.378781
+2026-10-20T22:12:46.9430738Z       ...
+2026-10-20T22:12:46.9431407Z     # Subtest: missing time
+2026-10-20T22:12:46.9432034Z     ok 19 - missing time
+2026-10-20T22:12:46.9432629Z       ---
+2026-10-20T22:12:46.9433162Z       duration_ms: 0.407584
+2026-10-20T22:12:46.9433740Z       ...
+2026-10-20T22:12:46.9434337Z     # Subtest: incorrect time
+2026-10-20T22:12:46.9435155Z     ok 20 - incorrect time
+2026-10-20T22:12:46.9435668Z       ---
+2026-10-20T22:12:46.9436052Z       duration_ms: 0.702446
+2026-10-20T22:12:46.9436514Z       ...
+2026-10-20T22:12:46.9436898Z     # Subtest: numeric time
+2026-10-20T22:12:46.9437370Z     ok 21 - numeric time
+2026-10-20T22:12:46.9437801Z       ---
+2026-10-20T22:12:46.9438181Z       duration_ms: 0.623799
+2026-10-20T22:12:46.9438624Z       ...
+2026-10-20T22:12:46.9439310Z     # Subtest: extra version field
+2026-10-20T22:12:46.9439838Z     ok 22 - extra version field
+2026-10-20T22:12:46.9440310Z       ---
+2026-10-20T22:12:46.9440687Z       duration_ms: 0.640991
+2026-10-20T22:12:46.9441121Z       ...
+2026-10-20T22:12:46.9441523Z     # Subtest: null row
+2026-10-20T22:12:46.9441957Z     ok 23 - null row
+2026-10-20T22:12:46.9442362Z       ---
+2026-10-20T22:12:46.9442746Z       duration_ms: 0.657232
+2026-10-20T22:12:46.9443184Z       ...
+2026-10-20T22:12:46.9443548Z     # Subtest: array row
+2026-10-20T22:12:46.9443974Z     ok 24 - array row
+2026-10-20T22:12:46.9444377Z       ---
+2026-10-20T22:12:46.9444733Z       duration_ms: 0.662993
+2026-10-20T22:12:46.9445231Z       ...
+2026-10-20T22:12:46.9445714Z     # Subtest: missing migrations
+2026-10-20T22:12:46.9446276Z     ok 25 - missing migrations
+2026-10-20T22:12:46.9446742Z       ---
+2026-10-20T22:12:46.9447112Z       duration_ms: 0.206236
+2026-10-20T22:12:46.9447537Z       ...
+2026-10-20T22:12:46.9447963Z     # Subtest: non-array migrations
+2026-10-20T22:12:46.9448551Z     ok 26 - non-array migrations
+2026-10-20T22:12:46.9449272Z       ---
+2026-10-20T22:12:46.9449640Z       duration_ms: 0.198512
+2026-10-20T22:12:46.9450059Z       ...
+2026-10-20T22:12:46.9450483Z     # Subtest: missing message
+2026-10-20T22:12:46.9450966Z     ok 27 - missing message
+2026-10-20T22:12:46.9451396Z       ---
+2026-10-20T22:12:46.9452193Z       duration_ms: 0.260217
+2026-10-20T22:12:46.9452665Z       ...
+2026-10-20T22:12:46.9453096Z     # Subtest: incorrect message
+2026-10-20T22:12:46.9456519Z     ok 28 - incorrect message
+2026-10-20T22:12:46.9457310Z       ---
+2026-10-20T22:12:46.9457927Z       duration_ms: 0.219602
+2026-10-20T22:12:46.9458379Z       ...
+2026-10-20T22:12:46.9459099Z     # Subtest: extra envelope field
+2026-10-20T22:12:46.9459648Z     ok 29 - extra envelope field
+2026-10-20T22:12:46.9460110Z       ---
+2026-10-20T22:12:46.9460468Z       duration_ms: 0.241583
+2026-10-20T22:12:46.9460878Z       ...
+2026-10-20T22:12:46.9461205Z     1..29
+2026-10-20T22:12:46.9462187Z ok 22 - exact installed history uses the captured CLI 2.117.0 database column and rejects corrupted histories
+2026-10-20T22:12:46.9463096Z   ---
+2026-10-20T22:12:46.9463477Z   duration_ms: 26.026156
+2026-10-20T22:12:46.9463880Z   ...
+2026-10-20T22:12:46.9620668Z # Subtest: the local contract requires the exact eight-version withholding list through 0080
+2026-10-20T22:12:46.9622361Z ok 23 - the local contract requires the exact eight-version withholding list through 0080
+2026-10-20T22:12:46.9623335Z   ---
+2026-10-20T22:12:46.9624156Z   duration_ms: 17.115259
+2026-10-20T22:12:46.9624743Z   ...
+2026-10-20T22:12:46.9668493Z # Subtest: H01 complete SQL history is authoritative and cannot accept lossy CLI evidence
+2026-10-20T22:12:46.9699597Z     # Subtest: complete SQL positive through 20260726000067
+2026-10-20T22:12:46.9732572Z     ok 1 - complete SQL positive through 20260726000067
+2026-10-20T22:12:46.9749429Z       ---
+2026-10-20T22:12:46.9756294Z       duration_ms: 3.213064
+2026-10-20T22:12:46.9757014Z       ...
+2026-10-20T22:12:46.9757722Z     # Subtest: complete SQL positive through 20260726000068
+2026-10-20T22:12:46.9758908Z     ok 2 - complete SQL positive through 20260726000068
+2026-10-20T22:12:46.9759679Z       ---
+2026-10-20T22:12:46.9760201Z       duration_ms: 0.228087
+2026-10-20T22:12:46.9760794Z       ...
+2026-10-20T22:12:46.9761518Z     # Subtest: complete SQL positive through 20260726000069
+2026-10-20T22:12:46.9762404Z     ok 3 - complete SQL positive through 20260726000069
+2026-10-20T22:12:46.9763105Z       ---
+2026-10-20T22:12:46.9763622Z       duration_ms: 0.165781
+2026-10-20T22:12:46.9764209Z       ...
+2026-10-20T22:12:46.9764936Z     # Subtest: complete SQL positive through 20260726000070
+2026-10-20T22:12:46.9765970Z     ok 4 - complete SQL positive through 20260726000070
+2026-10-20T22:12:46.9766676Z       ---
+2026-10-20T22:12:46.9767165Z       duration_ms: 0.112942
+2026-10-20T22:12:46.9767716Z       ...
+2026-10-20T22:12:46.9768344Z     # Subtest: complete SQL positive through 20260726000071
+2026-10-20T22:12:46.9769488Z     ok 5 - complete SQL positive through 20260726000071
+2026-10-20T22:12:46.9770187Z       ---
+2026-10-20T22:12:46.9770672Z       duration_ms: 0.103835
+2026-10-20T22:12:46.9771172Z       ...
+2026-10-20T22:12:46.9771794Z     # Subtest: complete SQL positive through 20260729000072
+2026-10-20T22:12:46.9772645Z     ok 6 - complete SQL positive through 20260729000072
+2026-10-20T22:12:46.9773309Z       ---
+2026-10-20T22:12:46.9773832Z       duration_ms: 0.110928
+2026-10-20T22:12:46.9774395Z       ...
+2026-10-20T22:12:46.9775079Z     # Subtest: complete SQL positive through 20261010000081
+2026-10-20T22:12:46.9776057Z     ok 7 - complete SQL positive through 20261010000081
+2026-10-20T22:12:46.9776902Z       ---
+2026-10-20T22:12:46.9777502Z       duration_ms: 0.110417
+2026-10-20T22:12:46.9778167Z       ...
+2026-10-20T22:12:46.9779220Z     # Subtest: reviewer SQL98/CLI97 hidden nonnumeric row
+2026-10-20T22:12:46.9780137Z     ok 8 - reviewer SQL98/CLI97 hidden nonnumeric row
+2026-10-20T22:12:46.9780939Z       ---
+2026-10-20T22:12:46.9781557Z       duration_ms: 0.232606
+2026-10-20T22:12:46.9782213Z       ...
+2026-10-20T22:12:46.9782887Z     # Subtest: hidden int64-overflow row
+2026-10-20T22:12:46.9783648Z     ok 9 - hidden int64-overflow row
+2026-10-20T22:12:46.9784362Z       ---
+2026-10-20T22:12:46.9784892Z       duration_ms: 0.161332
+2026-10-20T22:12:46.9785954Z       ...
+2026-10-20T22:12:46.9790149Z     # Subtest: missing middle row
+2026-10-20T22:12:46.9790971Z     ok 10 - missing middle row
+2026-10-20T22:12:46.9797299Z       ---
+2026-10-20T22:12:46.9797984Z       duration_ms: 0.197269
+2026-10-20T22:12:46.9798949Z       ...
+2026-10-20T22:12:46.9799816Z     # Subtest: extra valid row
+2026-10-20T22:12:46.9800577Z     ok 11 - extra valid row
+2026-10-20T22:12:46.9801262Z       ---
+2026-10-20T22:12:46.9801877Z       duration_ms: 0.158257
+2026-10-20T22:12:46.9802550Z       ...
+2026-10-20T22:12:46.9803203Z     # Subtest: duplicate middle row
+2026-10-20T22:12:46.9803986Z     ok 12 - duplicate middle row
+2026-10-20T22:12:46.9804691Z       ---
+2026-10-20T22:12:46.9805292Z       duration_ms: 0.156835
+2026-10-20T22:12:46.9805956Z       ...
+2026-10-20T22:12:46.9806617Z     # Subtest: duplicate extra row
+2026-10-20T22:12:46.9807453Z     ok 13 - duplicate extra row
+2026-10-20T22:12:46.9808161Z       ---
+2026-10-20T22:12:46.9809040Z       duration_ms: 0.156033
+2026-10-20T22:12:46.9809767Z       ...
+2026-10-20T22:12:46.9810256Z     # Subtest: substituted middle row
+2026-10-20T22:12:46.9810871Z     ok 14 - substituted middle row
+2026-10-20T22:12:46.9811385Z       ---
+2026-10-20T22:12:46.9811776Z       duration_ms: 0.150291
+2026-10-20T22:12:46.9812214Z       ...
+2026-10-20T22:12:46.9812649Z     # Subtest: swapped ordering
+2026-10-20T22:12:46.9813957Z     ok 15 - swapped ordering
+2026-10-20T22:12:46.9814429Z       ---
+2026-10-20T22:12:46.9814830Z       duration_ms: 0.177303
+2026-10-20T22:12:46.9815271Z       ...
+2026-10-20T22:12:46.9815530Z     # Subtest: null version
+2026-10-20T22:12:46.9815786Z     ok 16 - null version
+2026-10-20T22:12:46.9816020Z       ---
+2026-10-20T22:12:46.9816224Z       duration_ms: 0.152025
+2026-10-20T22:12:46.9816462Z       ...
+2026-10-20T22:12:46.9816697Z     # Subtest: numeric version
+2026-10-20T22:12:46.9816961Z     ok 17 - numeric version
+2026-10-20T22:12:46.9817187Z       ---
+2026-10-20T22:12:46.9817381Z       duration_ms: 0.162785
+2026-10-20T22:12:46.9817607Z       ...
+2026-10-20T22:12:46.9817833Z     # Subtest: whitespace in version
+2026-10-20T22:12:46.9818133Z     ok 18 - whitespace in version
+2026-10-20T22:12:46.9818387Z       ---
+2026-10-20T22:12:46.9818580Z       duration_ms: 0.163306
+2026-10-20T22:12:46.9819180Z       ...
+2026-10-20T22:12:46.9819521Z     # Subtest: incomplete aggregate with unchanged count
+2026-10-20T22:12:46.9819931Z     ok 19 - incomplete aggregate with unchanged count
+2026-10-20T22:12:46.9820228Z       ---
+2026-10-20T22:12:46.9820433Z       duration_ms: 0.180989
+2026-10-20T22:12:46.9820659Z       ...
+2026-10-20T22:12:46.9820946Z     # Subtest: missing count
+2026-10-20T22:12:46.9821424Z     ok 20 - missing count
+2026-10-20T22:12:46.9821876Z       ---
+2026-10-20T22:12:46.9822279Z       duration_ms: 0.148118
+2026-10-20T22:12:46.9822724Z       ...
+2026-10-20T22:12:46.9823161Z     # Subtest: false count
+2026-10-20T22:12:46.9823631Z     ok 21 - false count
+2026-10-20T22:12:46.9824044Z       ---
+2026-10-20T22:12:46.9824454Z       duration_ms: 0.140634
+2026-10-20T22:12:46.9824898Z       ...
+2026-10-20T22:12:46.9825283Z     # Subtest: string count
+2026-10-20T22:12:46.9825770Z     ok 22 - string count
+2026-10-20T22:12:46.9826167Z       ---
+2026-10-20T22:12:46.9826381Z       duration_ms: 0.147527
+2026-10-20T22:12:46.9826606Z       ...
+2026-10-20T22:12:46.9826833Z     # Subtest: missing versions
+2026-10-20T22:12:46.9827099Z     ok 23 - missing versions
+2026-10-20T22:12:46.9827333Z       ---
+2026-10-20T22:12:46.9827539Z       duration_ms: 0.215594
+2026-10-20T22:12:46.9827760Z       ...
+2026-10-20T22:12:46.9828014Z     # Subtest: reject wrong or absent SQL database
+2026-10-20T22:12:46.9828382Z     ok 24 - reject wrong or absent SQL database
+2026-10-20T22:12:46.9829183Z       ---
+2026-10-20T22:12:46.9829438Z       duration_ms: 0.227817
+2026-10-20T22:12:46.9829729Z       ...
+2026-10-20T22:12:46.9829999Z     # Subtest: reject wrong or absent SQL current_user
+2026-10-20T22:12:46.9830382Z     ok 25 - reject wrong or absent SQL current_user
+2026-10-20T22:12:46.9830993Z       ---
+2026-10-20T22:12:46.9831442Z       duration_ms: 0.152376
+2026-10-20T22:12:46.9831885Z       ...
+2026-10-20T22:12:46.9832413Z     # Subtest: reject wrong or absent SQL session_user
+2026-10-20T22:12:46.9833151Z     ok 26 - reject wrong or absent SQL session_user
+2026-10-20T22:12:46.9833755Z       ---
+2026-10-20T22:12:46.9834165Z       duration_ms: 0.155701
+2026-10-20T22:12:46.9834614Z       ...
+2026-10-20T22:12:46.9835166Z     # Subtest: reject wrong or absent SQL server_version_num
+2026-10-20T22:12:46.9835958Z     ok 27 - reject wrong or absent SQL server_version_num
+2026-10-20T22:12:46.9836575Z       ---
+2026-10-20T22:12:46.9836968Z       duration_ms: 0.142628
+2026-10-20T22:12:46.9837425Z       ...
+2026-10-20T22:12:46.9837905Z     # Subtest: reject wrong or absent SQL port
+2026-10-20T22:12:46.9838581Z     ok 28 - reject wrong or absent SQL port
+2026-10-20T22:12:46.9839378Z       ---
+2026-10-20T22:12:46.9839765Z       duration_ms: 0.174447
+2026-10-20T22:12:46.9840236Z       ...
+2026-10-20T22:12:46.9840754Z     # Subtest: reject wrong or absent SQL read_only
+2026-10-20T22:12:46.9841466Z     ok 29 - reject wrong or absent SQL read_only
+2026-10-20T22:12:46.9842025Z       ---
+2026-10-20T22:12:46.9842402Z       duration_ms: 0.159398
+2026-10-20T22:12:46.9842837Z       ...
+2026-10-20T22:12:46.9843273Z     # Subtest: wrong container
+2026-10-20T22:12:46.9844097Z     ok 30 - wrong container
+2026-10-20T22:12:46.9844552Z       ---
+2026-10-20T22:12:46.9844925Z       duration_ms: 0.383419
+2026-10-20T22:12:46.9845327Z       ...
+2026-10-20T22:12:46.9845710Z     # Subtest: wrong project
+2026-10-20T22:12:46.9846256Z     ok 31 - wrong project
+2026-10-20T22:12:46.9849442Z       ---
+2026-10-20T22:12:46.9877214Z       duration_ms: 0.236744
+2026-10-20T22:12:46.9877954Z       ...
+2026-10-20T22:12:46.9878583Z     # Subtest: wrong workdir
+2026-10-20T22:12:46.9879522Z     ok 32 - wrong workdir
+2026-10-20T22:12:46.9880136Z       ---
+2026-10-20T22:12:46.9880710Z       duration_ms: 0.168466
+2026-10-20T22:12:46.9881326Z       ...
+2026-10-20T22:12:46.9881955Z     # Subtest: wrong database port
+2026-10-20T22:12:46.9882731Z     ok 33 - wrong database port
+2026-10-20T22:12:46.9883372Z       ---
+2026-10-20T22:12:46.9883919Z       duration_ms: 0.175489
+2026-10-20T22:12:46.9884559Z       ...
+2026-10-20T22:12:46.9885147Z     # Subtest: wrong image
+2026-10-20T22:12:46.9885843Z     ok 34 - wrong image
+2026-10-20T22:12:46.9886501Z       ---
+2026-10-20T22:12:46.9887111Z       duration_ms: 0.161423
+2026-10-20T22:12:46.9887783Z       ...
+2026-10-20T22:12:46.9888431Z     # Subtest: wrong server major
+2026-10-20T22:12:46.9889251Z     ok 35 - wrong server major
+2026-10-20T22:12:46.9889676Z       ---
+2026-10-20T22:12:46.9890018Z       duration_ms: 0.286697
+2026-10-20T22:12:46.9890406Z       ...
+2026-10-20T22:12:46.9890785Z     # Subtest: missing identity
+2026-10-20T22:12:46.9891218Z     ok 36 - missing identity
+2026-10-20T22:12:46.9891620Z       ---
+2026-10-20T22:12:46.9891962Z       duration_ms: 0.211967
+2026-10-20T22:12:46.9892358Z       ...
+2026-10-20T22:12:46.9892738Z     # Subtest: stopped container
+2026-10-20T22:12:46.9893295Z     ok 37 - stopped container
+2026-10-20T22:12:46.9893685Z       ---
+2026-10-20T22:12:46.9894110Z       duration_ms: 0.162415
+2026-10-20T22:12:46.9894496Z       ...
+2026-10-20T22:12:46.9894776Z     1..37
+2026-10-20T22:12:46.9895387Z ok 24 - H01 complete SQL history is authoritative and cannot accept lossy CLI evidence
+2026-10-20T22:12:46.9895968Z   ---
+2026-10-20T22:12:46.9896305Z   duration_ms: 15.600369
+2026-10-20T22:12:46.9896672Z   ...
+2026-10-20T22:12:46.9908933Z # Subtest: H01 contained SQL probe failures stop before successful CLI corroboration
+2026-10-20T22:12:46.9909449Z     # Subtest: nonzero_exit
+2026-10-20T22:12:46.9909720Z     ok 1 - nonzero_exit
+2026-10-20T22:12:46.9909952Z       ---
+2026-10-20T22:12:46.9910165Z       duration_ms: 1.38697
+2026-10-20T22:12:46.9910405Z       ...
+2026-10-20T22:12:46.9910602Z     # Subtest: timeout
+2026-10-20T22:12:46.9910832Z     ok 2 - timeout
+2026-10-20T22:12:46.9911362Z       ---
+2026-10-20T22:12:46.9911591Z       duration_ms: 0.696576
+2026-10-20T22:12:46.9911833Z       ...
+2026-10-20T22:12:46.9912039Z     # Subtest: output_limit
+2026-10-20T22:12:46.9912300Z     ok 3 - output_limit
+2026-10-20T22:12:46.9912531Z       ---
+2026-10-20T22:12:46.9912736Z       duration_ms: 0.669695
+2026-10-20T22:12:46.9912983Z       ...
+2026-10-20T22:12:46.9913180Z     # Subtest: aborted
+2026-10-20T22:12:46.9913401Z     ok 4 - aborted
+2026-10-20T22:12:46.9913608Z       ---
+2026-10-20T22:12:46.9913819Z       duration_ms: 0.583755
+2026-10-20T22:12:46.9914061Z       ...
+2026-10-20T22:12:46.9914248Z     1..4
+2026-10-20T22:12:46.9914687Z ok 25 - H01 contained SQL probe failures stop before successful CLI corroboration
+2026-10-20T22:12:46.9915125Z   ---
+2026-10-20T22:12:46.9915329Z   duration_ms: 3.849438
+2026-10-20T22:12:46.9915553Z   ...
+2026-10-20T22:12:46.9956815Z # Subtest: C01 successful proved cleanup is idempotent and permits final PASS
+2026-10-20T22:12:46.9957888Z ok 26 - C01 successful proved cleanup is idempotent and permits final PASS
+2026-10-20T22:12:46.9958470Z   ---
+2026-10-20T22:12:46.9959176Z   duration_ms: 34.674063
+2026-10-20T22:12:46.9959478Z   ...
+2026-10-20T22:12:46.9999239Z # Subtest: C01 failed stop rejects, retains evidence and suppresses final PASS
+2026-10-20T22:12:47.0000356Z ok 27 - C01 failed stop rejects, retains evidence and suppresses final PASS
+2026-10-20T22:12:47.0001204Z   ---
+2026-10-20T22:12:47.0001530Z   duration_ms: 4.536675
+2026-10-20T22:12:47.0001772Z   ...
+2026-10-20T22:12:47.0017362Z # Subtest: C01 failed directory removal rejects after successful owned stack removal
+2026-10-20T22:12:47.0018919Z ok 28 - C01 failed directory removal rejects after successful owned stack removal
+2026-10-20T22:12:47.0019587Z   ---
+2026-10-20T22:12:47.0020055Z   duration_ms: 1.886818
+2026-10-20T22:12:47.0020568Z   ...
+2026-10-20T22:12:47.0033600Z # Subtest: C01 primary and cleanup failures retain both origins and dispose signals
+2026-10-20T22:12:47.0034953Z ok 29 - C01 primary and cleanup failures retain both origins and dispose signals
+2026-10-20T22:12:47.0036008Z   ---
+2026-10-20T22:12:47.0036372Z   duration_ms: 1.57875
+2026-10-20T22:12:47.0036753Z   ...
+2026-10-20T22:12:47.0052306Z # Subtest: C01 primary failure remains the original error when cleanup succeeds
+2026-10-20T22:12:47.0053695Z ok 30 - C01 primary failure remains the original error when cleanup succeeds
+2026-10-20T22:12:47.0054395Z   ---
+2026-10-20T22:12:47.0054732Z   duration_ms: 1.805565
+2026-10-20T22:12:47.0055104Z   ...
+2026-10-20T22:12:47.0067643Z # Subtest: C01 surviving ps resources or absent proof blocks cleanup
+2026-10-20T22:12:47.0069157Z ok 31 - C01 surviving ps resources or absent proof blocks cleanup
+2026-10-20T22:12:47.0069762Z   ---
+2026-10-20T22:12:47.0070110Z   duration_ms: 1.643632
+2026-10-20T22:12:47.0070479Z   ...
+2026-10-20T22:12:47.0083949Z # Subtest: C01 surviving volume resources or absent proof blocks cleanup
+2026-10-20T22:12:47.0085336Z ok 32 - C01 surviving volume resources or absent proof blocks cleanup
+2026-10-20T22:12:47.0085966Z   ---
+2026-10-20T22:12:47.0086307Z   duration_ms: 1.452694
+2026-10-20T22:12:47.0086675Z   ...
+2026-10-20T22:12:47.0105726Z # Subtest: C01 unknown child containment blocks stop and preserves the sandbox
+2026-10-20T22:12:47.0119721Z ok 33 - C01 unknown child containment blocks stop and preserves the sandbox
+2026-10-20T22:12:47.0120420Z   ---
+2026-10-20T22:12:47.0120762Z   duration_ms: 2.125245
+2026-10-20T22:12:47.0121139Z   ...
+2026-10-20T22:12:47.0129192Z # Subtest: C01 the unchanged 35-second cleanup deadline fails closed when a child never settles
+2026-10-20T22:12:47.0130924Z ok 34 - C01 the unchanged 35-second cleanup deadline fails closed when a child never settles
+2026-10-20T22:12:47.0131857Z   ---
+2026-10-20T22:12:47.0132311Z   duration_ms: 1.984812
+2026-10-20T22:12:47.0132812Z   ...
+2026-10-20T22:12:47.3234434Z # Subtest: C01 actual contained timeout stop failure cannot produce PASS or leak a process
+2026-10-20T22:12:47.3235932Z ok 35 - C01 actual contained timeout stop failure cannot produce PASS or leak a process
+2026-10-20T22:12:47.3236643Z   ---
+2026-10-20T22:12:47.3237052Z   duration_ms: 310.432319
+2026-10-20T22:12:47.3237466Z   ...
+2026-10-20T22:12:47.4027112Z # Subtest: C01 actual contained output-limit stop failure cannot produce PASS or leak a process
+2026-10-20T22:12:47.4028286Z ok 36 - C01 actual contained output-limit stop failure cannot produce PASS or leak a process
+2026-10-20T22:12:47.4029451Z   ---
+2026-10-20T22:12:47.4029827Z   duration_ms: 79.112234
+2026-10-20T22:12:47.4030226Z   ...
+2026-10-20T22:12:47.4810375Z # Subtest: C01 actual contained aborted stop failure cannot produce PASS or leak a process
+2026-10-20T22:12:47.4812052Z ok 37 - C01 actual contained aborted stop failure cannot produce PASS or leak a process
+2026-10-20T22:12:47.4813086Z   ---
+2026-10-20T22:12:47.4813626Z   duration_ms: 77.698976
+2026-10-20T22:12:47.4814030Z   ...
+2026-10-20T22:12:47.5879696Z # Subtest: C01 SIGTERM retains exit 143 on actual cleanup rejection
+2026-10-20T22:12:47.5880722Z ok 38 - C01 SIGTERM retains exit 143 on actual cleanup rejection
+2026-10-20T22:12:47.5881397Z   ---
+2026-10-20T22:12:47.5881834Z   duration_ms: 3.287022
+2026-10-20T22:12:47.5882322Z   ...
+2026-10-20T22:12:47.5883582Z # Subtest: H01 identity diagnostics are allowlisted and every owner field remains mandatory
+2026-10-20T22:12:47.5885092Z     # Subtest: reject containerId
+2026-10-20T22:12:47.5886004Z     ok 1 - reject containerId
+2026-10-20T22:12:47.5886513Z       ---
+2026-10-20T22:12:47.5918118Z       duration_ms: 0.529152
+2026-10-20T22:12:47.5918592Z       ...
+2026-10-20T22:12:47.5942169Z     # Subtest: reject containerName
+2026-10-20T22:12:47.5942773Z     ok 2 - reject containerName
+2026-10-20T22:12:47.5943227Z       ---
+2026-10-20T22:12:47.5943643Z       duration_ms: 0.27237
+2026-10-20T22:12:47.5944047Z       ...
+2026-10-20T22:12:47.5944392Z     # Subtest: reject running
+2026-10-20T22:12:47.5944828Z     ok 3 - reject running
+2026-10-20T22:12:47.5945423Z       ---
+2026-10-20T22:12:47.5946279Z       duration_ms: 0.190668
+2026-10-20T22:12:47.5949425Z       ...
+2026-10-20T22:12:47.5950007Z     # Subtest: reject cliProject
+2026-10-20T22:12:47.5950656Z     ok 4 - reject cliProject
+2026-10-20T22:12:47.5951249Z       ---
+2026-10-20T22:12:47.5951736Z       duration_ms: 0.2132
+2026-10-20T22:12:47.5952269Z       ...
+2026-10-20T22:12:47.5952854Z     # Subtest: reject composeProject
+2026-10-20T22:12:47.5953544Z     ok 5 - reject composeProject
+2026-10-20T22:12:47.5954149Z       ---
+2026-10-20T22:12:47.5954670Z       duration_ms: 0.261511
+2026-10-20T22:12:47.5955226Z       ...
+2026-10-20T22:12:47.5955773Z     # Subtest: reject cliWorkdir
+2026-10-20T22:12:47.5956396Z     ok 6 - reject cliWorkdir
+2026-10-20T22:12:47.5956981Z       ---
+2026-10-20T22:12:47.5957512Z       duration_ms: 0.198593
+2026-10-20T22:12:47.5958114Z       ...
+2026-10-20T22:12:47.5958925Z     # Subtest: reject cliWorkdir
+2026-10-20T22:12:47.5959571Z     ok 7 - reject cliWorkdir
+2026-10-20T22:12:47.5960142Z       ---
+2026-10-20T22:12:47.5960652Z       duration_ms: 0.182122
+2026-10-20T22:12:47.5961211Z       ...
+2026-10-20T22:12:47.5961762Z     # Subtest: reject imageMajor
+2026-10-20T22:12:47.5962369Z     ok 8 - reject imageMajor
+2026-10-20T22:12:47.5962935Z       ---
+2026-10-20T22:12:47.5963444Z       duration_ms: 0.183324
+2026-10-20T22:12:47.5964075Z       ...
+2026-10-20T22:12:47.5984199Z     # Subtest: reject imageMajor
+2026-10-20T22:12:47.5985095Z     ok 9 - reject imageMajor
+2026-10-20T22:12:47.5985888Z       ---
+2026-10-20T22:12:47.5986616Z       duration_ms: 0.247373
+2026-10-20T22:12:47.5987302Z       ...
+2026-10-20T22:12:47.5988033Z     # Subtest: reject imageDigest
+2026-10-20T22:12:47.5989009Z     ok 10 - reject imageDigest
+2026-10-20T22:12:47.5989751Z       ---
+2026-10-20T22:12:47.5990403Z       duration_ms: 0.184115
+2026-10-20T22:12:47.5991089Z       ...
+2026-10-20T22:12:47.5991844Z     # Subtest: reject portBinding
+2026-10-20T22:12:47.5992451Z     ok 11 - reject portBinding
+2026-10-20T22:12:47.5992889Z       ---
+2026-10-20T22:12:47.5993589Z       duration_ms: 0.176321
+2026-10-20T22:12:47.5994008Z       ...
+2026-10-20T22:12:47.5994392Z     # Subtest: reject portBinding
+2026-10-20T22:12:47.5994822Z     ok 12 - reject portBinding
+2026-10-20T22:12:47.5995205Z       ---
+2026-10-20T22:12:47.5995534Z       duration_ms: 0.184016
+2026-10-20T22:12:47.5995897Z       ...
+2026-10-20T22:12:47.5996265Z     # Subtest: reject portBinding
+2026-10-20T22:12:47.6012131Z     ok 13 - reject portBinding
+2026-10-20T22:12:47.6012903Z       ---
+2026-10-20T22:12:47.6013635Z       duration_ms: 0.223568
+2026-10-20T22:12:47.6014389Z       ...
+2026-10-20T22:12:47.6015118Z     # Subtest: reject portBinding
+2026-10-20T22:12:47.6015996Z     ok 14 - reject portBinding
+2026-10-20T22:12:47.6016828Z       ---
+2026-10-20T22:12:47.6017461Z       duration_ms: 0.183034
+2026-10-20T22:12:47.6018177Z       ...
+2026-10-20T22:12:47.6019199Z     1..14
+2026-10-20T22:12:47.6020318Z ok 39 - H01 identity diagnostics are allowlisted and every owner field remains mandatory
+2026-10-20T22:12:47.6021399Z   ---
+2026-10-20T22:12:47.6022055Z   duration_ms: 6.019636
+2026-10-20T22:12:47.6022876Z   ...
+2026-10-20T22:12:47.6024261Z # Subtest: H01 SQL observation rejects swapped immutable IDs and image digests before CLI acceptance
+2026-10-20T22:12:47.6025672Z     # Subtest: id
+2026-10-20T22:12:47.6026493Z     ok 1 - id
+2026-10-20T22:12:47.6027686Z       ---
+2026-10-20T22:12:47.6028411Z       duration_ms: 0.989265
+2026-10-20T22:12:47.6029742Z       ...
+2026-10-20T22:12:47.6030492Z     # Subtest: image
+2026-10-20T22:12:47.6031169Z     ok 2 - image
+2026-10-20T22:12:47.6031854Z       ---
+2026-10-20T22:12:47.6032492Z       duration_ms: 0.633468
+2026-10-20T22:12:47.6033266Z       ...
+2026-10-20T22:12:47.6033933Z     # Subtest: workdir
+2026-10-20T22:12:47.6034684Z     ok 3 - workdir
+2026-10-20T22:12:47.6035436Z       ---
+2026-10-20T22:12:47.6036074Z       duration_ms: 0.694572
+2026-10-20T22:12:47.6036786Z       ...
+2026-10-20T22:12:47.6037414Z     # Subtest: port
+2026-10-20T22:12:47.6038083Z     ok 4 - port
+2026-10-20T22:12:47.6039003Z       ---
+2026-10-20T22:12:47.6039625Z       duration_ms: 0.609763
+2026-10-20T22:12:47.6040260Z       ...
+2026-10-20T22:12:47.6040823Z     # Subtest: project
+2026-10-20T22:12:47.6041510Z     ok 5 - project
+2026-10-20T22:12:47.6042111Z       ---
+2026-10-20T22:12:47.6042715Z       duration_ms: 0.602851
+2026-10-20T22:12:47.6043367Z       ...
+2026-10-20T22:12:47.6043936Z     # Subtest: major
+2026-10-20T22:12:47.6044551Z     ok 6 - major
+2026-10-20T22:12:47.6045146Z       ---
+2026-10-20T22:12:47.6045726Z       duration_ms: 0.54393
+2026-10-20T22:12:47.6046367Z       ...
+2026-10-20T22:12:47.6061650Z     1..6
+2026-10-20T22:12:47.6089804Z ok 40 - H01 SQL observation rejects swapped immutable IDs and image digests before CLI acceptance
+2026-10-20T22:12:47.6092198Z   ---
+2026-10-20T22:12:47.6092669Z   duration_ms: 4.770444
+2026-10-20T22:12:47.6093151Z   ...
+2026-10-20T22:12:47.6094168Z # Subtest: H01 diagnostic has a fixed bounded schema even for long sensitive inspect and expected values
+2026-10-20T22:12:47.6097797Z ok 41 - H01 diagnostic has a fixed bounded schema even for long sensitive inspect and expected values
+2026-10-20T22:12:47.6099096Z   ---
+2026-10-20T22:12:47.6099559Z   duration_ms: 66.859953
+2026-10-20T22:12:47.6100066Z   ...
+2026-10-20T22:12:47.6100953Z # Subtest: successful pgTAP commands never echo summary suffixes or arbitrary output
+2026-10-20T22:12:47.6102228Z ok 42 - successful pgTAP commands never echo summary suffixes or arbitrary output
+2026-10-20T22:12:47.6103192Z   ---
+2026-10-20T22:12:47.6103736Z   duration_ms: 2.738985
+2026-10-20T22:12:47.6104276Z   ...
+2026-10-20T22:12:47.6105161Z # Subtest: H01 changed Docker executable bytes reject before any command can run
+2026-10-20T22:12:47.6106412Z ok 43 - H01 changed Docker executable bytes reject before any command can run
+2026-10-20T22:12:47.6107249Z   ---
+2026-10-20T22:12:47.6107753Z   duration_ms: 1.222972
+2026-10-20T22:12:47.6108281Z   ...
+2026-10-20T22:12:47.6109957Z # Subtest: H01 producer scrubs inherited registry overrides and secrets while preserving non-DB fallback
+2026-10-20T22:12:47.6111568Z ok 44 - H01 producer scrubs inherited registry overrides and secrets while preserving non-DB fallback
+2026-10-20T22:12:47.6112493Z   ---
+2026-10-20T22:12:47.6113013Z   duration_ms: 2.572393
+2026-10-20T22:12:47.6113519Z   ...
+2026-10-20T22:12:47.6114575Z # Subtest: H01 canonical PostgreSQL preparation precedes startup without constraining non-DB registries
+2026-10-20T22:12:47.6116150Z ok 45 - H01 canonical PostgreSQL preparation precedes startup without constraining non-DB registries
+2026-10-20T22:12:47.6117205Z   ---
+2026-10-20T22:12:47.6117585Z   duration_ms: 0.206657
+2026-10-20T22:12:47.6117976Z   ...
+2026-10-20T22:12:47.6119289Z # Subtest: H01 canonical preparation uses a bounded Docker pull of only the ECR PG image and binds its immutable identity
+2026-10-20T22:12:47.6120914Z ok 46 - H01 canonical preparation uses a bounded Docker pull of only the ECR PG image and binds its immutable identity
+2026-10-20T22:12:47.6121865Z   ---
+2026-10-20T22:12:47.6122234Z   duration_ms: 1.5197
+2026-10-20T22:12:47.6122618Z   ...
+2026-10-20T22:12:47.6123510Z # Subtest: H01 canonical preparation rejects unsupported major or architecture before a pull
+2026-10-20T22:12:47.6124839Z ok 47 - H01 canonical preparation rejects unsupported major or architecture before a pull
+2026-10-20T22:12:47.6126001Z   ---
+2026-10-20T22:12:47.6126413Z   duration_ms: 1.478522
+2026-10-20T22:12:47.6126838Z   ...
+2026-10-20T22:12:47.6127587Z # Subtest: H01 canonical preparation explicitly pulls the native arm64 platform
+2026-10-20T22:12:47.6128964Z ok 48 - H01 canonical preparation explicitly pulls the native arm64 platform
+2026-10-20T22:12:47.6129707Z   ---
+2026-10-20T22:12:47.6130088Z   duration_ms: 0.887855
+2026-10-20T22:12:47.6130517Z   ...
+2026-10-20T22:12:47.6131273Z # Subtest: H01 unavailable canonical ECR PostgreSQL never falls back or continues
+2026-10-20T22:12:47.6132445Z ok 49 - H01 unavailable canonical ECR PostgreSQL never falls back or continues
+2026-10-20T22:12:47.6133202Z   ---
+2026-10-20T22:12:47.6133659Z   duration_ms: 4.398226
+2026-10-20T22:12:47.6134063Z   ...
+2026-10-20T22:12:47.6135280Z # Subtest: H01 canonical image admission rejects malformed, foreign, mismatched-digest and wrong-platform responses without disclosure
+2026-10-20T22:12:47.6137260Z ok 50 - H01 canonical image admission rejects malformed, foreign, mismatched-digest and wrong-platform responses without disclosure
+2026-10-20T22:12:47.6138358Z   ---
+2026-10-20T22:12:47.6139006Z   duration_ms: 10.033331
+2026-10-20T22:12:47.6139443Z   ...
+2026-10-20T22:12:47.6140335Z # Subtest: H01 rejects an ECR-named foreign or stale image and missing preparation before SQL
+2026-10-20T22:12:47.6141580Z ok 51 - H01 rejects an ECR-named foreign or stale image and missing preparation before SQL
+2026-10-20T22:12:47.6142353Z   ---
+2026-10-20T22:12:47.6142725Z   duration_ms: 1.248771
+2026-10-20T22:12:47.6143129Z   ...
+2026-10-20T22:12:47.6291585Z # Subtest: SIGINT waits for one cleanup before exiting 130
+2026-10-20T22:12:47.6292552Z ok 52 - SIGINT waits for one cleanup before exiting 130
+2026-10-20T22:12:47.6293101Z   ---
+2026-10-20T22:12:47.6293414Z   duration_ms: 2.141826
+2026-10-20T22:12:47.6293652Z   ...
+2026-10-20T22:12:47.6294013Z # Subtest: SIGTERM exits 143 even when cleanup reports an error
+2026-10-20T22:12:47.6294522Z ok 53 - SIGTERM exits 143 even when cleanup reports an error
+2026-10-20T22:12:47.6294870Z   ---
+2026-10-20T22:12:47.6300005Z   duration_ms: 0.525264
+2026-10-20T22:12:47.6300421Z   ...
+2026-10-20T22:12:47.6301097Z # Subtest: allows only the expected explicitly local database command
+2026-10-20T22:12:47.6301966Z ok 54 - allows only the expected explicitly local database command
+2026-10-20T22:12:47.6302521Z   ---
+2026-10-20T22:12:47.6302834Z   duration_ms: 2.116328
+2026-10-20T22:12:47.6303150Z   ...
+2026-10-20T22:12:47.6303560Z # Subtest: rejects split and equals remote-target flag forms
+2026-10-20T22:12:47.6304305Z ok 55 - rejects split and equals remote-target flag forms
+2026-10-20T22:12:47.6304851Z   ---
+2026-10-20T22:12:47.6305625Z   duration_ms: 0.556844
+2026-10-20T22:12:47.6306105Z   ...
+2026-10-20T22:12:47.6306840Z # Subtest: rejects non-allowlisted commands and missing explicit local targeting
+2026-10-20T22:12:47.6307944Z ok 56 - rejects non-allowlisted commands and missing explicit local targeting
+2026-10-20T22:12:47.6308891Z   ---
+2026-10-20T22:12:47.6309276Z   duration_ms: 0.26642
+2026-10-20T22:12:47.6309722Z   ...
+2026-10-20T22:12:47.6310414Z # Subtest: the PostgreSQL quality job binds the exact database and script
+2026-10-20T22:12:47.6311446Z ok 57 - the PostgreSQL quality job binds the exact database and script
+2026-10-20T22:12:47.6312051Z   ---
+2026-10-20T22:12:47.6312388Z   duration_ms: 7.814521
+2026-10-20T22:12:47.6312800Z   ...
+2026-10-20T22:12:47.6313448Z # Subtest: renamed, removed, and duplicate rehearsal rows fail closed
+2026-10-20T22:12:47.6314382Z ok 58 - renamed, removed, and duplicate rehearsal rows fail closed
+2026-10-20T22:12:47.6314978Z   ---
+2026-10-20T22:12:47.6315323Z   duration_ms: 1.475997
+2026-10-20T22:12:47.6315694Z   ...
+2026-10-20T22:12:47.6316381Z # Subtest: a detached or malformed here-document cannot satisfy the binding
+2026-10-20T22:12:47.6317364Z ok 59 - a detached or malformed here-document cannot satisfy the binding
+2026-10-20T22:12:47.6317982Z   ---
+2026-10-20T22:12:47.6318330Z   duration_ms: 9.349538
+2026-10-20T22:12:47.6319271Z   ...
+2026-10-20T22:12:47.6320131Z # Subtest: actual PostgreSQL matrix retains both versions and the exact step environment binding
+2026-10-20T22:12:47.6321426Z ok 60 - actual PostgreSQL matrix retains both versions and the exact step environment binding
+2026-10-20T22:12:47.6322191Z   ---
+2026-10-20T22:12:47.6322524Z   duration_ms: 50.938417
+2026-10-20T22:12:47.6322884Z   ...
+2026-10-20T22:12:47.6323856Z # Subtest: a changed image, matrix, misplaced environment or optional rehearsal cannot satisfy the matrix binding
+2026-10-20T22:12:47.6324765Z ok 61 - a changed image, matrix, misplaced environment or optional rehearsal cannot satisfy the matrix binding
+2026-10-20T22:12:47.6325262Z   ---
+2026-10-20T22:12:47.6325544Z   duration_ms: 176.477597
+2026-10-20T22:12:47.6325825Z   ...
+2026-10-20T22:12:47.6326265Z # Subtest: ambiguous and malformed YAML cannot grant PostgreSQL matrix coverage
+2026-10-20T22:12:47.6326919Z ok 62 - ambiguous and malformed YAML cannot grant PostgreSQL matrix coverage
+2026-10-20T22:12:47.6327324Z   ---
+2026-10-20T22:12:47.6327533Z   duration_ms: 42.688556
+2026-10-20T22:12:47.6327762Z   ...
+2026-10-20T22:12:47.6328295Z # Subtest: forward SQL admits only the exact old, interim, and current canonical quiz tuples
+2026-10-20T22:12:47.6329391Z ok 63 - forward SQL admits only the exact old, interim, and current canonical quiz tuples
+2026-10-20T22:12:47.6329867Z   ---
+2026-10-20T22:12:47.6330089Z   duration_ms: 3.785035
+2026-10-20T22:12:47.6330324Z   ...
+2026-10-20T22:12:47.6330790Z # Subtest: forward constraint is non-validating, atomic, and never upgrades review status
+2026-10-20T22:12:47.6331539Z ok 64 - forward constraint is non-validating, atomic, and never upgrades review status
+2026-10-20T22:12:47.6331992Z   ---
+2026-10-20T22:12:47.6332188Z   duration_ms: 1.020032
+2026-10-20T22:12:47.6332429Z   ...
+2026-10-20T22:12:47.6332913Z # Subtest: current policy contract keeps the unused authenticated update lane closed
+2026-10-20T22:12:47.6333700Z ok 65 - current policy contract keeps the unused authenticated update lane closed
+2026-10-20T22:12:47.6334209Z   ---
+2026-10-20T22:12:47.6334403Z   duration_ms: 0.373811
+2026-10-20T22:12:47.6334614Z   ...
+2026-10-20T22:12:47.6334840Z 1..65
+2026-10-20T22:12:47.6335022Z # tests 171
+2026-10-20T22:12:47.6335233Z # suites 0
+2026-10-20T22:12:47.6335436Z # pass 171
+2026-10-20T22:12:47.6335632Z # fail 0
+2026-10-20T22:12:47.6335813Z # cancelled 0
+2026-10-20T22:12:47.6336005Z # skipped 0
+2026-10-20T22:12:47.6336193Z # todo 0
+2026-10-20T22:12:47.6336400Z # duration_ms 20916.487353
+2026-10-20T22:12:48.2405235Z DB-05 local Supabase contract: PASS
+2026-10-20T22:12:48.2591932Z ##[group]Run npm run phase2:db-local-verify
+2026-10-20T22:12:48.2592345Z [36;1mnpm run phase2:db-local-verify[0m
+2026-10-20T22:12:48.2659190Z shell: /usr/bin/bash -e {0}
+2026-10-20T22:12:48.2659488Z env:
+2026-10-20T22:12:48.2659685Z   CI: true
+2026-10-20T22:12:48.2659885Z   EXPO_NO_TELEMETRY: 1
+2026-10-20T22:12:48.2660124Z ##[endgroup]
+2026-10-20T22:12:48.3923022Z 
+2026-10-20T22:12:48.3923741Z > layerwell@0.1.0 phase2:db-local-verify
+2026-10-20T22:12:48.3924346Z > node scripts/phase2/local-supabase-reset.mjs --verify
+2026-10-20T22:12:48.3924639Z 
+2026-10-20T22:12:49.6540020Z [db05-local] history Docker identity: {"path":"/usr/bin/docker","sha256":"6435ff9214bf8e0931078fb0980809728cac0a54a526d4f28a26d3e48132b58d"}
+2026-10-20T22:13:51.7588088Z [db05-local] canonical PostgreSQL identity: {"id":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","digest":"sha256:af083ef64d0408c8f098ee6f5c364a59b26f36fbc0f3a334a62c5c1d57362e9b","architecture":"amd64"}
+2026-10-20T22:13:51.7590775Z [db05-local] start isolated credential-free stack...
+2026-10-20T22:15:24.6284151Z [db05-local] start isolated credential-free stack: PASS
+2026-10-20T22:15:24.6409895Z [db05-local] reset through 0067 for the 0068 forward-upgrade rehearsal...
+2026-10-20T22:15:58.5764483Z [db05-local] reset through 0067 for the 0068 forward-upgrade rehearsal: PASS
+2026-10-20T22:15:58.5765502Z [db05-local] verify installed history through 20260726000067...
+2026-10-20T22:15:59.1888491Z [db05-local] verify installed history through 20260726000067: PASS
+2026-10-20T22:15:59.4022296Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:15:59.4030269Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 83, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067"]}
+2026-10-20T22:15:59.4036155Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:15:59.4864549Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:15:59.4914796Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"}],"message":"Migrations listed"}
+2026-10-20T22:15:59.4948865Z [db05-local] verified installed-history JSON end
+2026-10-20T22:15:59.4951755Z [db05-local] verified SQL/CLI database binding: {"id":"19e478f09d0b655a3429e0d5ec1c25deac58ec98f840e37572688e4f6ceaf83a","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:15:59.4954207Z [db05-local] run 0067 to 0068 adherence data-cutover rehearsal...
+2026-10-20T22:16:02.5151630Z [db05-local] run 0067 to 0068 adherence data-cutover rehearsal: PASS
+2026-10-20T22:16:02.5256187Z [db05-local] reset through 0068 for the 0069 forward-upgrade rehearsal...
+2026-10-20T22:16:35.4747929Z [db05-local] reset through 0068 for the 0069 forward-upgrade rehearsal: PASS
+2026-10-20T22:16:35.4748872Z [db05-local] verify installed history through 20260726000068...
+2026-10-20T22:16:36.0514650Z [db05-local] verify installed history through 20260726000068: PASS
+2026-10-20T22:16:36.2450337Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:16:36.2462646Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 84, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068"]}
+2026-10-20T22:16:36.2471536Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:16:36.3265016Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:16:36.3308117Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"}],"message":"Migrations listed"}
+2026-10-20T22:16:36.3338497Z [db05-local] verified installed-history JSON end
+2026-10-20T22:16:36.3341490Z [db05-local] verified SQL/CLI database binding: {"id":"59182888ad97a68b6d89ebdb6b85f1d8ffd4d221f394621fd8c245aee46922eb","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:16:36.3345542Z [db05-local] run 0068 to 0069 sync-bridge data-cutover rehearsal...
+2026-10-20T22:16:37.9383650Z [db05-local] run 0068 to 0069 sync-bridge data-cutover rehearsal: PASS
+2026-10-20T22:16:37.9481706Z [db05-local] reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal...
+2026-10-20T22:17:12.3642382Z [db05-local] reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal: PASS
+2026-10-20T22:17:12.3643631Z [db05-local] verify installed history through 20260726000069...
+2026-10-20T22:17:12.9763906Z [db05-local] verify installed history through 20260726000069: PASS
+2026-10-20T22:17:13.2076303Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:17:13.2089978Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 85, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068", "20260726000069"]}
+2026-10-20T22:17:13.2100085Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:17:13.2891988Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:17:13.2942132Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"},{"local":"20260726000069","remote":"20260726000069","time":"20260726000069"}],"message":"Migrations listed"}
+2026-10-20T22:17:13.2977188Z [db05-local] verified installed-history JSON end
+2026-10-20T22:17:13.2980230Z [db05-local] verified SQL/CLI database binding: {"id":"eff6f051f07c89861ecec546836c299c45b9537fefc12834f0774f668bb7816b","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:17:13.2982682Z [db05-local] run 0069 to 0070 consent-draft staging rehearsal...
+2026-10-20T22:17:14.9129814Z [db05-local] run 0069 to 0070 consent-draft staging rehearsal: PASS
+2026-10-20T22:17:14.9233410Z [db05-local] reset through 0070 for the 0071 recommendation forward-upgrade rehearsal...
+2026-10-20T22:17:48.5787099Z [db05-local] reset through 0070 for the 0071 recommendation forward-upgrade rehearsal: PASS
+2026-10-20T22:17:48.5788244Z [db05-local] verify installed history through 20260726000070...
+2026-10-20T22:17:49.2387667Z [db05-local] verify installed history through 20260726000070: PASS
+2026-10-20T22:17:49.4821613Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:17:49.4831826Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 86, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068", "20260726000069", "20260726000070"]}
+2026-10-20T22:17:49.4838533Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:17:49.5778447Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:17:49.5826779Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"},{"local":"20260726000069","remote":"20260726000069","time":"20260726000069"},{"local":"20260726000070","remote":"20260726000070","time":"20260726000070"}],"message":"Migrations listed"}
+2026-10-20T22:17:49.5849626Z [db05-local] verified installed-history JSON end
+2026-10-20T22:17:49.5851605Z [db05-local] verified SQL/CLI database binding: {"id":"cfed949a3829bd0cbef1f217149a86773bdf09ff85f76e7b419708c5f16dfadc","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:17:49.5853205Z [db05-local] run 0070 to 0071 recommendation zero-admission rehearsal...
+2026-10-20T22:17:51.3751432Z [db05-local] run 0070 to 0071 recommendation zero-admission rehearsal: PASS
+2026-10-20T22:17:51.3850795Z [db05-local] reset through 0071 for the 0072 commerce forward-upgrade rehearsal...
+2026-10-20T22:18:24.7780945Z [db05-local] reset through 0071 for the 0072 commerce forward-upgrade rehearsal: PASS
+2026-10-20T22:18:24.7783014Z [db05-local] verify installed history through 20260726000071...
+2026-10-20T22:18:25.5573883Z [db05-local] verify installed history through 20260726000071: PASS
+2026-10-20T22:18:25.7981208Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:18:25.7995415Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 87, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068", "20260726000069", "20260726000070", "20260726000071"]}
+2026-10-20T22:18:25.8006731Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:18:25.8887133Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:18:25.8938246Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"},{"local":"20260726000069","remote":"20260726000069","time":"20260726000069"},{"local":"20260726000070","remote":"20260726000070","time":"20260726000070"},{"local":"20260726000071","remote":"20260726000071","time":"20260726000071"}],"message":"Migrations listed"}
+2026-10-20T22:18:25.8975266Z [db05-local] verified installed-history JSON end
+2026-10-20T22:18:25.8978311Z [db05-local] verified SQL/CLI database binding: {"id":"4e5249f32c1c2b8c7629265f2ddcfa48e8b6d88cf73581afe17d6e3ba0a3ed05","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:18:25.8981042Z [db05-local] run 0071 to 0072 commerce zero-admission rehearsal...
+2026-10-20T22:18:27.3620572Z [db05-local] run 0071 to 0072 commerce zero-admission rehearsal: PASS
+2026-10-20T22:18:27.3739365Z [db05-local] reset 1 of 2 (migrations plus seed)...
+2026-10-20T22:19:01.4086789Z [db05-local] reset 1 of 2 (migrations plus seed): PASS
+2026-10-20T22:19:01.4087846Z [db05-local] verify installed history through 20261010000081...
+2026-10-20T22:19:02.0401841Z [db05-local] verify installed history through 20261010000081: PASS
+2026-10-20T22:19:02.2668204Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:19:02.2679827Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 97, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068", "20260726000069", "20260726000070", "20260726000071", "20260729000072", "20260921000073", "20260921000074", "20260921000075", "20260921000076", "20260926000077", "20260926000078", "20261007000079", "20261008000080", "20261010000081"]}
+2026-10-20T22:19:02.2686258Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:19:02.3590022Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:19:02.3676059Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"},{"local":"20260726000069","remote":"20260726000069","time":"20260726000069"},{"local":"20260726000070","remote":"20260726000070","time":"20260726000070"},{"local":"20260726000071","remote":"20260726000071","time":"20260726000071"},{"local":"20260729000072","remote":"20260729000072","time":"20260729000072"},{"local":"20260921000073","remote":"20260921000073","time":"20260921000073"},{"local":"20260921000074","remote":"20260921000074","time":"20260921000074"},{"local":"20260921000075","remote":"20260921000075","time":"20260921000075"},{"local":"20260921000076","remote":"20260921000076","time":"20260921000076"},{"local":"20260926000077","remote":"20260926000077","time":"20260926000077"},{"local":"20260926000078","remote":"20260926000078","time":"20260926000078"},{"local":"20261007000079","remote":"20261007000079","time":"20261007000079"},{"local":"20261008000080","remote":"20261008000080","time":"20261008000080"},{"local":"20261010000081","remote":"20261010000081","time":"20261010000081"}],"message":"Migrations listed"}
+2026-10-20T22:19:02.3717471Z [db05-local] verified installed-history JSON end
+2026-10-20T22:19:02.3720558Z [db05-local] verified SQL/CLI database binding: {"id":"d3a7cc468bc91cdcd32d1fce424dfd7584790f1f75207a55b3570cd9057cf8ad","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:19:02.3756852Z [db05-local] reset 2 of 2 (repeatability)...
+2026-10-20T22:19:35.9182177Z [db05-local] reset 2 of 2 (repeatability): PASS
+2026-10-20T22:19:35.9183034Z [db05-local] verify installed history through 20261010000081...
+2026-10-20T22:19:36.4612322Z [db05-local] verify installed history through 20261010000081: PASS
+2026-10-20T22:19:36.6510089Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:19:36.6523496Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 97, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068", "20260726000069", "20260726000070", "20260726000071", "20260729000072", "20260921000073", "20260921000074", "20260921000075", "20260921000076", "20260926000077", "20260926000078", "20261007000079", "20261008000080", "20261010000081"]}
+2026-10-20T22:19:36.6534189Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:19:36.7281092Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:19:36.7312274Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"},{"local":"20260726000069","remote":"20260726000069","time":"20260726000069"},{"local":"20260726000070","remote":"20260726000070","time":"20260726000070"},{"local":"20260726000071","remote":"20260726000071","time":"20260726000071"},{"local":"20260729000072","remote":"20260729000072","time":"20260729000072"},{"local":"20260921000073","remote":"20260921000073","time":"20260921000073"},{"local":"20260921000074","remote":"20260921000074","time":"20260921000074"},{"local":"20260921000075","remote":"20260921000075","time":"20260921000075"},{"local":"20260921000076","remote":"20260921000076","time":"20260921000076"},{"local":"20260926000077","remote":"20260926000077","time":"20260926000077"},{"local":"20260926000078","remote":"20260926000078","time":"20260926000078"},{"local":"20261007000079","remote":"20261007000079","time":"20261007000079"},{"local":"20261008000080","remote":"20261008000080","time":"20261008000080"},{"local":"20261010000081","remote":"20261010000081","time":"20261010000081"}],"message":"Migrations listed"}
+2026-10-20T22:19:36.7334941Z [db05-local] verified installed-history JSON end
+2026-10-20T22:19:36.7336564Z [db05-local] verified SQL/CLI database binding: {"id":"852ff57b712c23648263b74152ff830f2f47c276b29661836afb2212771ab380","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:19:37.5201267Z [db05-local] observed unfiltered SQL history begin
+2026-10-20T22:19:37.5216366Z {"database" : "postgres", "current_user" : "postgres", "session_user" : "postgres", "server_version_num" : "150008", "port" : "5432", "read_only" : "on", "count" : 97, "versions" : ["20260612000001", "20260612000002", "20260612000003", "20260612000004", "20260612000005", "20260612000006", "20260612000007", "20260612000008", "20260612000009", "20260612000010", "20260612000011", "20260612000012", "20260612000013", "20260612000014", "20260612000015", "20260613000016", "20260613000017", "20260613000018", "20260613000019", "20260613000020", "20260613000021", "20260613000022", "20260613000023", "20260613000024", "20260614000025", "20260614000026", "20260615000027", "20260616000028", "20260705000029", "20260705000030", "20260705000031", "20260705000032", "20260705000033", "20260705000034", "20260707000035", "20260710000036", "20260710000037", "20260711000038", "20260711000039", "20260712000040", "20260713000041", "20260713000042", "20260713000043", "20260713000044", "20260713000045", "20260713000046", "20260713000047", "20260713000048", "20260713000049", "20260713000050", "20260713000051", "20260713000052", "20260714000053", "20260715000054", "20260715000055", "20260717000056", "20260717000057", "20260717000058", "20260718000044", "20260718000045", "20260718000046", "20260718000047", "20260718000048", "20260718000049", "20260718000050", "20260718000051", "20260718000052", "20260718000053", "20260718000059", "20260718000060", "20260722000061", "20260722000062", "20260722000063", "20260725000054", "20260726000055", "20260726000056", "20260726000057", "20260726000058", "20260726000059", "20260726000064", "20260726000065", "20260726000066", "20260726000067", "20260726000068", "20260726000069", "20260726000070", "20260726000071", "20260729000072", "20260921000073", "20260921000074", "20260921000075", "20260921000076", "20260926000077", "20260926000078", "20261007000079", "20261008000080", "20261010000081"]}
+2026-10-20T22:19:37.5227589Z [db05-local] observed unfiltered SQL history end
+2026-10-20T22:19:37.6118043Z [db05-local] verified installed-history JSON begin
+2026-10-20T22:19:37.6165633Z {"migrations":[{"local":"20260612000001","remote":"20260612000001","time":"2026-06-12 00:00:01"},{"local":"20260612000002","remote":"20260612000002","time":"2026-06-12 00:00:02"},{"local":"20260612000003","remote":"20260612000003","time":"2026-06-12 00:00:03"},{"local":"20260612000004","remote":"20260612000004","time":"2026-06-12 00:00:04"},{"local":"20260612000005","remote":"20260612000005","time":"2026-06-12 00:00:05"},{"local":"20260612000006","remote":"20260612000006","time":"2026-06-12 00:00:06"},{"local":"20260612000007","remote":"20260612000007","time":"2026-06-12 00:00:07"},{"local":"20260612000008","remote":"20260612000008","time":"2026-06-12 00:00:08"},{"local":"20260612000009","remote":"20260612000009","time":"2026-06-12 00:00:09"},{"local":"20260612000010","remote":"20260612000010","time":"2026-06-12 00:00:10"},{"local":"20260612000011","remote":"20260612000011","time":"2026-06-12 00:00:11"},{"local":"20260612000012","remote":"20260612000012","time":"2026-06-12 00:00:12"},{"local":"20260612000013","remote":"20260612000013","time":"2026-06-12 00:00:13"},{"local":"20260612000014","remote":"20260612000014","time":"2026-06-12 00:00:14"},{"local":"20260612000015","remote":"20260612000015","time":"2026-06-12 00:00:15"},{"local":"20260613000016","remote":"20260613000016","time":"2026-06-13 00:00:16"},{"local":"20260613000017","remote":"20260613000017","time":"2026-06-13 00:00:17"},{"local":"20260613000018","remote":"20260613000018","time":"2026-06-13 00:00:18"},{"local":"20260613000019","remote":"20260613000019","time":"2026-06-13 00:00:19"},{"local":"20260613000020","remote":"20260613000020","time":"2026-06-13 00:00:20"},{"local":"20260613000021","remote":"20260613000021","time":"2026-06-13 00:00:21"},{"local":"20260613000022","remote":"20260613000022","time":"2026-06-13 00:00:22"},{"local":"20260613000023","remote":"20260613000023","time":"2026-06-13 00:00:23"},{"local":"20260613000024","remote":"20260613000024","time":"2026-06-13 00:00:24"},{"local":"20260614000025","remote":"20260614000025","time":"2026-06-14 00:00:25"},{"local":"20260614000026","remote":"20260614000026","time":"2026-06-14 00:00:26"},{"local":"20260615000027","remote":"20260615000027","time":"2026-06-15 00:00:27"},{"local":"20260616000028","remote":"20260616000028","time":"2026-06-16 00:00:28"},{"local":"20260705000029","remote":"20260705000029","time":"2026-07-05 00:00:29"},{"local":"20260705000030","remote":"20260705000030","time":"2026-07-05 00:00:30"},{"local":"20260705000031","remote":"20260705000031","time":"2026-07-05 00:00:31"},{"local":"20260705000032","remote":"20260705000032","time":"2026-07-05 00:00:32"},{"local":"20260705000033","remote":"20260705000033","time":"2026-07-05 00:00:33"},{"local":"20260705000034","remote":"20260705000034","time":"2026-07-05 00:00:34"},{"local":"20260707000035","remote":"20260707000035","time":"2026-07-07 00:00:35"},{"local":"20260710000036","remote":"20260710000036","time":"2026-07-10 00:00:36"},{"local":"20260710000037","remote":"20260710000037","time":"2026-07-10 00:00:37"},{"local":"20260711000038","remote":"20260711000038","time":"2026-07-11 00:00:38"},{"local":"20260711000039","remote":"20260711000039","time":"2026-07-11 00:00:39"},{"local":"20260712000040","remote":"20260712000040","time":"2026-07-12 00:00:40"},{"local":"20260713000041","remote":"20260713000041","time":"2026-07-13 00:00:41"},{"local":"20260713000042","remote":"20260713000042","time":"2026-07-13 00:00:42"},{"local":"20260713000043","remote":"20260713000043","time":"2026-07-13 00:00:43"},{"local":"20260713000044","remote":"20260713000044","time":"2026-07-13 00:00:44"},{"local":"20260713000045","remote":"20260713000045","time":"2026-07-13 00:00:45"},{"local":"20260713000046","remote":"20260713000046","time":"2026-07-13 00:00:46"},{"local":"20260713000047","remote":"20260713000047","time":"2026-07-13 00:00:47"},{"local":"20260713000048","remote":"20260713000048","time":"2026-07-13 00:00:48"},{"local":"20260713000049","remote":"20260713000049","time":"2026-07-13 00:00:49"},{"local":"20260713000050","remote":"20260713000050","time":"2026-07-13 00:00:50"},{"local":"20260713000051","remote":"20260713000051","time":"2026-07-13 00:00:51"},{"local":"20260713000052","remote":"20260713000052","time":"2026-07-13 00:00:52"},{"local":"20260714000053","remote":"20260714000053","time":"2026-07-14 00:00:53"},{"local":"20260715000054","remote":"20260715000054","time":"2026-07-15 00:00:54"},{"local":"20260715000055","remote":"20260715000055","time":"2026-07-15 00:00:55"},{"local":"20260717000056","remote":"20260717000056","time":"2026-07-17 00:00:56"},{"local":"20260717000057","remote":"20260717000057","time":"2026-07-17 00:00:57"},{"local":"20260717000058","remote":"20260717000058","time":"2026-07-17 00:00:58"},{"local":"20260718000044","remote":"20260718000044","time":"2026-07-18 00:00:44"},{"local":"20260718000045","remote":"20260718000045","time":"2026-07-18 00:00:45"},{"local":"20260718000046","remote":"20260718000046","time":"2026-07-18 00:00:46"},{"local":"20260718000047","remote":"20260718000047","time":"2026-07-18 00:00:47"},{"local":"20260718000048","remote":"20260718000048","time":"2026-07-18 00:00:48"},{"local":"20260718000049","remote":"20260718000049","time":"2026-07-18 00:00:49"},{"local":"20260718000050","remote":"20260718000050","time":"2026-07-18 00:00:50"},{"local":"20260718000051","remote":"20260718000051","time":"2026-07-18 00:00:51"},{"local":"20260718000052","remote":"20260718000052","time":"2026-07-18 00:00:52"},{"local":"20260718000053","remote":"20260718000053","time":"2026-07-18 00:00:53"},{"local":"20260718000059","remote":"20260718000059","time":"2026-07-18 00:00:59"},{"local":"20260718000060","remote":"20260718000060","time":"20260718000060"},{"local":"20260722000061","remote":"20260722000061","time":"20260722000061"},{"local":"20260722000062","remote":"20260722000062","time":"20260722000062"},{"local":"20260722000063","remote":"20260722000063","time":"20260722000063"},{"local":"20260725000054","remote":"20260725000054","time":"2026-07-25 00:00:54"},{"local":"20260726000055","remote":"20260726000055","time":"2026-07-26 00:00:55"},{"local":"20260726000056","remote":"20260726000056","time":"2026-07-26 00:00:56"},{"local":"20260726000057","remote":"20260726000057","time":"2026-07-26 00:00:57"},{"local":"20260726000058","remote":"20260726000058","time":"2026-07-26 00:00:58"},{"local":"20260726000059","remote":"20260726000059","time":"2026-07-26 00:00:59"},{"local":"20260726000064","remote":"20260726000064","time":"20260726000064"},{"local":"20260726000065","remote":"20260726000065","time":"20260726000065"},{"local":"20260726000066","remote":"20260726000066","time":"20260726000066"},{"local":"20260726000067","remote":"20260726000067","time":"20260726000067"},{"local":"20260726000068","remote":"20260726000068","time":"20260726000068"},{"local":"20260726000069","remote":"20260726000069","time":"20260726000069"},{"local":"20260726000070","remote":"20260726000070","time":"20260726000070"},{"local":"20260726000071","remote":"20260726000071","time":"20260726000071"},{"local":"20260729000072","remote":"20260729000072","time":"20260729000072"},{"local":"20260921000073","remote":"20260921000073","time":"20260921000073"},{"local":"20260921000074","remote":"20260921000074","time":"20260921000074"},{"local":"20260921000075","remote":"20260921000075","time":"20260921000075"},{"local":"20260921000076","remote":"20260921000076","time":"20260921000076"},{"local":"20260926000077","remote":"20260926000077","time":"20260926000077"},{"local":"20260926000078","remote":"20260926000078","time":"20260926000078"},{"local":"20261007000079","remote":"20261007000079","time":"20261007000079"},{"local":"20261008000080","remote":"20261008000080","time":"20261008000080"},{"local":"20261010000081","remote":"20261010000081","time":"20261010000081"}],"message":"Migrations listed"}
+2026-10-20T22:19:37.6203947Z [db05-local] verified installed-history JSON end
+2026-10-20T22:19:37.6206707Z [db05-local] verified SQL/CLI database binding: {"id":"852ff57b712c23648263b74152ff830f2f47c276b29661836afb2212771ab380","image":"sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d","project":"layerwell_db05_6c0388d9817a043b","workdir":"/tmp/layerwell-db05-local-BaTQSA","port":60081,"major":15}
+2026-10-20T22:19:37.6209689Z [db05-local] migration history: PASS (97, latest 20261010000081)
+2026-10-20T22:19:37.6210626Z [db05-local] run focused CORE-05 structural regressions...
+2026-10-20T22:19:50.7428156Z [db05-local] run focused CORE-05 structural regressions: PASS
+2026-10-20T22:19:50.7429524Z [db05-local] run structural pgTAP tests...
+2026-10-20T22:58:48.8806310Z [db05-local] run structural pgTAP tests: PASS
+2026-10-20T22:58:48.8806955Z [db05-local] lint migrated public schema...
+2026-10-20T22:58:49.6000676Z [db05-local] lint migrated public schema: PASS
+2026-10-20T22:58:49.6001226Z [db05-local] compare local schema to migration shadow...
+2026-10-20T22:59:11.3918014Z [db05-local] compare local schema to migration shadow: PASS
+2026-10-20T22:59:11.3922661Z [db05-local] migration/schema drift: PASS (empty)
+2026-10-20T22:59:11.3929949Z [db05-local] run CAT-08 two-connection revocation rehearsal...
+2026-10-20T22:59:13.0903320Z [db05-local] run CAT-08 two-connection revocation rehearsal: PASS
+2026-10-20T22:59:15.4510541Z [db05-local] temporary types: PASS (7381 lines, sha256 2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795)
+2026-10-20T22:59:15.4516712Z [db05-local] CI diagnostic types: db05-generated-public-types.ts sha256 2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795
+2026-10-20T22:59:15.5191927Z [db08-types] repository parity: PASS (7381 lines, sha256 2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795, already-current)
+2026-10-20T22:59:40.0834288Z [db05-local] full local verification: PASS
+2026-10-20T22:59:40.1074577Z Post job cleanup.
+2026-10-20T22:59:40.3671316Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-4965482aff42dfede513d69e0aec1cc94371f24997ad1db1c0ed439929987d0a, not saving cache.
+2026-10-20T22:59:40.3830208Z Post job cleanup.
+2026-10-20T22:59:40.4746304Z [command]/usr/bin/git version
+2026-10-20T22:59:40.4793377Z git version 2.55.0
+2026-10-20T22:59:40.4840911Z Temporarily overriding HOME='/home/runner/work/_temp/0f812b50-c127-42fb-b910-a2878bcaf071' before making global git config changes
+2026-10-20T22:59:40.4842320Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-20T22:59:40.4847225Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-20T22:59:40.4887397Z Removing SSH command configuration
+2026-10-20T22:59:40.4895309Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T22:59:40.4923341Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T22:59:40.5259891Z Removing HTTP extra header
+2026-10-20T22:59:40.5267202Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T22:59:40.5321233Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T22:59:40.5594104Z Removing includeIf entries pointing to credentials config files
+2026-10-20T22:59:40.5613476Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T22:59:40.5660449Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-20T22:59:40.6107176Z Cleaning up orphan processes
+

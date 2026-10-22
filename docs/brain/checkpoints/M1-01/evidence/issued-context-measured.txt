@@ -1,0 +1,1 @@
+PASS: M1-01 exact input hashes, paths and context bounds. This is package integrity, not runtime/security/release acceptance.

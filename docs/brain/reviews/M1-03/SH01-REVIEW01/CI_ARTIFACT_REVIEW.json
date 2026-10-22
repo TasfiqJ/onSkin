@@ -1,0 +1,316 @@
+{
+  "reviewed_head": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "run_id": 39532208636,
+  "artifacts": [
+    {
+      "id": 12316530079,
+      "label": "secret",
+      "zip_sha256": "6a9fc8b930f94e7de29c45442f6d67d0d2a8d31e1840a856760c6bcb27fb59e6",
+      "files": [
+        {
+          "path": "gitleaks-results.sarif",
+          "bytes": 4577149,
+          "sha256": "c517e43842317ef26f85f15f5268658eabbafa0d583d61b43f6c97fc4fca2a84"
+        },
+        {
+          "path": "gitleaks-tool.json",
+          "bytes": 106,
+          "sha256": "26ea8038dda3c7926b13d7a1c1b49c67baaf22469f3f1ba64aca4b41cb2e69a5"
+        },
+        {
+          "path": "secret-scan-outcomes.json",
+          "bytes": 183,
+          "sha256": "cbd4a9aa963c7041c1a74acc100e1fd14f60aa310f5b5e49bb7188a862403aae"
+        },
+        {
+          "path": "secret-scan-proof.json",
+          "bytes": 5853612,
+          "sha256": "3d2cb407c98a4449fda4caf4d7f27a248d1474edd67be29929838d05ee4f8451"
+        }
+      ]
+    },
+    {
+      "id": 12316120749,
+      "label": "code",
+      "zip_sha256": "ac765b7e1b2b2a03f43dafc782030cd2a8aaf1580dd70430e4dbd452511850ab",
+      "files": [
+        {
+          "path": "code-gates-outcomes.json",
+          "bytes": 234,
+          "sha256": "8ace1bfb3beb840b71fd64ff645fb49f926c69e9668cc4a1f76330de265b23e2"
+        },
+        {
+          "path": "dependency-sbom-audit.exit-code",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "dependency-inventory.json",
+          "bytes": 306828,
+          "sha256": "e6fbf4cab3a34357dbab20569ba50497ce0eb375c77acd03da60b5ab2d5d945a"
+        },
+        {
+          "path": "dependency-sbom-audit.json",
+          "bytes": 33548,
+          "sha256": "6c7e970cf2ac1f592893f9a4a688bdc44a40cfe402b47f05ff1fdda53b79b68b"
+        },
+        {
+          "path": "dependency-sbom.exit-code",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "npm-audit-high.exit-code",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "npm-audit-high.json",
+          "bytes": 33548,
+          "sha256": "6c7e970cf2ac1f592893f9a4a688bdc44a40cfe402b47f05ff1fdda53b79b68b"
+        },
+        {
+          "path": "npm-exception-gate.exit-code",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "npm-exception-gate.stderr",
+          "bytes": 98,
+          "sha256": "336341051787fd581fbc23438e55409a403c1452a1fadde4b8b0776b48b5243d"
+        },
+        {
+          "path": "npm-exception-gate.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "id": 12315752885,
+      "label": "static",
+      "zip_sha256": "9b8d6ef4095fdef1b0849f3ab91dd005ba5051940626d0be5d891c01b9639f19",
+      "files": [
+        {
+          "path": "osv-exception-gate.exit-code",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "osv-exception-gate.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "osv-exception-gate.stderr",
+          "bytes": 278,
+          "sha256": "bc38464de172939bcddf4a3b2cec1a1115ec71eb79740f444e1fe30358cd05b8"
+        },
+        {
+          "path": "osv-scan.exit-code",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "osv-scan.json",
+          "bytes": 27623,
+          "sha256": "5e9fb21d14ffdb9322faec33ddfa7eb73e6126b491735f665fac18fd80e921f8"
+        },
+        {
+          "path": "static-analysis-outcomes.json",
+          "bytes": 190,
+          "sha256": "a18f037acacb9d9c800c195e455f4a03432b621d7e7a4caa59eda3f5d1406699"
+        }
+      ]
+    },
+    {
+      "id": 12316280685,
+      "label": "decision",
+      "zip_sha256": "e8a12332d0be8474afed1b82a9fa0486a69872ce2ba91f25cf07a12bc9b08c8c",
+      "files": [
+        {
+          "path": "g97-decision.json",
+          "bytes": 115,
+          "sha256": "eb5f5ac234c84a2d19178c5a3f62c656da5f60195053e4c088e78d9da73207bd"
+        }
+      ]
+    }
+  ],
+  "secret": {
+    "context": {
+      "attempt": "1",
+      "job": "secret-scan",
+      "kind": "ORIGINAL_SECRET_GITHUB_ACTIONS",
+      "repository": "TasfiqJ/onSkin",
+      "workflow": "Security"
+    },
+    "head": "211f56ec1e80275a3b4e95b9c6161af372ddefc3",
+    "tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+    "parents": [
+      "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8"
+    ],
+    "source_ref": "refs/pull/9/merge",
+    "run_id": "39532208636",
+    "refs": [
+      "refs/pull/9/merge 211f56ec1e80275a3b4e95b9c6161af372ddefc3",
+      "refs/remotes/origin/ai-v1-finish 551a6f40a3bb95f12e008c3f51445dac7698ad7a",
+      "refs/remotes/origin/c07a-cycle-route-readiness 1ddeea2e38ef646d09a29bbdff40cc7b12768a37",
+      "refs/remotes/origin/c08a1-progress-data-authority f1668a46beb46450beb1da5605ca63652c65407f",
+      "refs/remotes/origin/c08a2-progress-lock-authority bb1ac1076149e77edd1bf9746ffe926e70401e9e",
+      "refs/remotes/origin/codex/ci-q-h01-diagnostic-20261012 eb286b237a782454df6e529c74c72dcbe50a2719",
+      "refs/remotes/origin/codex/core-loop-first-insight-gate 0c9601d6787fe76995b1cd1c5a92b41d5d72c177",
+      "refs/remotes/origin/codex/ios-privacy-source fd8ae1faacfc6b4b6c0839fb0272bc49453d4b49",
+      "refs/remotes/origin/main bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "refs/remotes/origin/progress-authority-render-warning 862c7601a18434024612100a4b49f9e779b00fd2",
+      "refs/remotes/origin/stage/m0-baseline 6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "refs/remotes/origin/stage/m1-retained-safety 7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "refs/remotes/pull/9/merge 211f56ec1e80275a3b4e95b9c6161af372ddefc3"
+    ],
+    "reachable_commits": 2572,
+    "patch_commits": 2569,
+    "snapshot_files": 18673,
+    "snapshot_sha256": "816c036bf7c188ef0dfe2bb7eb5080b4b9800a7f774eb88b3fcccb8ccff69a4f",
+    "history_findings": 4329,
+    "current_findings": 1110,
+    "checks": [
+      {
+        "scanner": "gitleaks-current",
+        "raw_exit": 2,
+        "argv": [
+          "/home/runner/work/_temp/original-secret-tools/gitleaks",
+          "detect",
+          "--no-git",
+          "--source=/home/runner/work/_temp/original-secret-scope/current-source",
+          "--redact=100",
+          "--exit-code=2",
+          "--log-level=info",
+          "--report-format=json",
+          "--report-path=/home/runner/work/_temp/original-secret-scope/current-gitleaks.json"
+        ],
+        "started": "2026-10-21T02:19:01.921832+00:00",
+        "finished": "2026-10-21T02:19:08.779955+00:00",
+        "stream_hashes_valid": true
+      },
+      {
+        "scanner": "gitleaks-history",
+        "raw_exit": 2,
+        "argv": [
+          "/home/runner/work/_temp/original-secret-tools/gitleaks",
+          "detect",
+          "--source=/home/runner/work/_temp/original-secret-scope/history.git",
+          "--log-opts=--all --full-history --diff-merges=first-parent",
+          "--redact=100",
+          "--exit-code=2",
+          "--log-level=info",
+          "--report-format=sarif",
+          "--report-path=/home/runner/work/onSkin/onSkin/docs/phase-9/generated/ci-scanner-evidence/gitleaks-results.sarif"
+        ],
+        "started": "2026-10-21T02:18:35.730359+00:00",
+        "finished": "2026-10-21T02:19:01.921793+00:00",
+        "stream_hashes_valid": true
+      },
+      {
+        "scanner": "trufflehog-current",
+        "raw_exit": 0,
+        "argv": [
+          "/home/runner/work/_temp/original-secret-tools/trufflehog",
+          "filesystem",
+          "/home/runner/work/_temp/original-secret-scope/current-source",
+          "--fail",
+          "--no-update",
+          "--json",
+          "--only-verified",
+          "--concurrency=1"
+        ],
+        "started": "2026-10-21T02:19:31.869057+00:00",
+        "finished": "2026-10-21T02:19:48.838175+00:00",
+        "stream_hashes_valid": true
+      },
+      {
+        "scanner": "trufflehog-history",
+        "raw_exit": 0,
+        "argv": [
+          "/home/runner/work/_temp/original-secret-tools/trufflehog",
+          "git",
+          "file:///home/runner/work/_temp/original-secret-scope/history.git",
+          "--bare",
+          "--fail",
+          "--no-update",
+          "--json",
+          "--only-verified",
+          "--concurrency=1"
+        ],
+        "started": "2026-10-21T02:19:08.779992+00:00",
+        "finished": "2026-10-21T02:19:31.869021+00:00",
+        "stream_hashes_valid": true
+      }
+    ],
+    "tools": {
+      "gitleaks": {
+        "asset": "9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c",
+        "binary": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+        "path": "/home/runner/work/_temp/original-secret-tools/gitleaks",
+        "url": "https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz",
+        "version": "8.24.3",
+        "version_result": {
+          "argv": [
+            "/home/runner/work/_temp/original-secret-tools/gitleaks",
+            "version"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "8.24.3\n"
+        }
+      },
+      "trufflehog": {
+        "asset": "029b182e0ed35fd5b02cd1eadc2a94bd457ab14ad22a9380b6e5d9652261d28d",
+        "binary": "f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61",
+        "path": "/home/runner/work/_temp/original-secret-tools/trufflehog",
+        "url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.99.3/trufflehog_3.99.3_linux_amd64.tar.gz",
+        "version": "3.99.3",
+        "version_result": {
+          "argv": [
+            "/home/runner/work/_temp/original-secret-tools/trufflehog",
+            "--version"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "trufflehog 3.99.3\n"
+        }
+      }
+    },
+    "redacted": true
+  },
+  "decision": {
+    "status": "REJECTED",
+    "code": "PROPOSAL_EXPIRED_OR_CHANGED",
+    "acceptanceGranted": false,
+    "rawScannerPass": false
+  },
+  "code_outcomes": {
+    "job": "code-gates",
+    "sha": "211f56ec1e80275a3b4e95b9c6161af372ddefc3",
+    "run_id": "39532208636",
+    "phase9_verify": "failure",
+    "dependency_sbom": "failure",
+    "npm_audit_high": "failure",
+    "npm_exception_gate": "failure"
+  },
+  "secret_outcomes": {
+    "job": "secret-scan",
+    "sha": "211f56ec1e80275a3b4e95b9c6161af372ddefc3",
+    "run_id": "39532208636",
+    "gitleaks": "failure",
+    "gitleaks_exit": "2",
+    "trufflehog": "success"
+  },
+  "static_outcomes": {
+    "job": "static-analysis",
+    "sha": "211f56ec1e80275a3b4e95b9c6161af372ddefc3",
+    "run_id": "39532208636",
+    "semgrep": "failure",
+    "osv": "failure",
+    "osv_exception_gate": "failure"
+  }
+}

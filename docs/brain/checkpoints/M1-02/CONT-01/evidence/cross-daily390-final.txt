@@ -1,0 +1,6 @@
+Error: Owner B manual moisturizer center is not hittable at http://localhost:8357/shelf.
+    at assert (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:78:25)
+    at assertInteractiveControl (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:747:3)
+    at crossOwnerFlow (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:985:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/e2e/onboarding-first-session.mjs:1678:7)

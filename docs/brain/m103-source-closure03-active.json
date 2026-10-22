@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "SOURCE-CLOSURE-03",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "aa598d0c93fcc416ba02cbda9333953430bb2ede",
+  "base_tree": "6dd2010073d913ca400c201f6d58ed1212fa97d4",
+  "input_manifest_sha256": "c86be8cb7055c5784b8739531cab897508708e61a23dc094a7b63262456e0a46",
+  "authorization_id": "M103-SC03-CLOUD-RUNTIME-RECOVERY-01",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "active_writers": 1,
+  "incremental_spend_usd": 0,
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED"
+}

@@ -1,0 +1,55 @@
+{
+  "repository": "TasfiqJ/onSkin",
+  "source_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+  "source_tree": "ac442c8f6d00593b4e6fe4bde3fd060f7fe028fa",
+  "read_at_utc": "2026-10-20T15:01:32+00:00",
+  "evidence_class": "INDEPENDENTLY_OBSERVED_CONNECTED_GITHUB",
+  "Quality": {
+    "run_id": 39440004766,
+    "status": "in_progress",
+    "conclusion": null,
+    "repository_job": {
+      "id": 118687175811,
+      "conclusion": "failure",
+      "failed_step": "Check catalog promotion, curation, and receipt contracts",
+      "subsequent_typecheck_lint_test": "skipped"
+    },
+    "database_job": {
+      "id": 118687176281,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "postgres_15_17_rehearsals": "success",
+    "exports": "skipped",
+    "limitation": "Do not label unfinished database/overall run passed. Worklist refusal independently reproduced locally; final repository full raw log not reread."
+  },
+  "Security": {
+    "run_id": 39440004524,
+    "status": "completed",
+    "conclusion": "failure",
+    "static_job": 118687021379,
+    "acceptance_job": 118690262642,
+    "code_and_secret_jobs": "success",
+    "live_supabase": "skipped",
+    "limitation": "Final job/step metadata independently read. Exact inventory/OSV diagnostics retained from Codex source-head logs at 71f, not a fresh raw-log audit at c0. No original artifact authenticity claim."
+  },
+  "iOS": {
+    "run_id": 39440004457,
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "SOURCE_CONTRACT_ONLY_NOT_NATIVE_DEVICE_OR_SIGNED_BUILD"
+  },
+  "main": {
+    "sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+    "changed": false,
+    "CI_refresh": "NOT_RERUN; historical runs retained separately"
+  },
+  "proposal": {
+    "notAfter": "2026-10-21T00:00:00Z",
+    "databaseReplayAuthority": false,
+    "integrationAuthority": false,
+    "releaseAuthority": false,
+    "expiry_renewal_authorized": false
+  }
+}

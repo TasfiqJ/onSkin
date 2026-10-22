@@ -1,0 +1,33 @@
+import datetime,hashlib,json,pathlib,shutil,subprocess
+WS=pathlib.Path(__file__).parent;ROOT=WS/'overnight-delivery-clean';CP=ROOT/'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01'
+E=CP/'evidence';SHA=lambda b:hashlib.sha256(b).hexdigest()
+def save(name,value): (E/name).write_bytes((json.dumps(value,indent=2)+'\n').encode())
+exploratory=[]
+for source,name,summary in [('closure-governance-before.log','exploratory-governance-before.log','10 tests; failures6/errors1; concurrent mutable intake, not exact base reproduction'),
+    ('closure-cont01-after.log','exploratory-cont01-first.log','2 tests failed: initial synthetic empty commit setup'),
+    ('closure-cont01-after2.log','exploratory-cont01-repaired.log','2 tests OK; repaired positive and unmeasured-source/false-acceptance negatives'),
+    ('closure-sh01-after.log','exploratory-sh01-repaired.log','3 tests OK including old-interval, unauthorized intermediate commit and malformed prior sandbox preimage refusal'),
+    ('closure-secret12.log','windows-secret-12.log','12 tests: passed1/errors10/skipped1; Windows pathlib.as_uri relative path errors; Linux process regression skip'),
+    ('closure-history-export.log','historical-export-incomplete.log','Reachable history export exit128; actual unavailable blob3fd9788ff57b9f0d4759964574fc4a5c77de8d51; no imaginary substitution')]:
+    raw=(WS/source).read_bytes();(E/name).write_bytes(raw)
+    exploratory.append(dict(output=name,sha256=SHA(raw),summary=summary,source_binding='DIRTY_EXPLORATORY_OVERLAY' if name.startswith('exploratory') else 'COMMITTED_SOURCE_760745cf',admission='NONE'))
+save('supplemental-executions.json',dict(schema_version=1,admission='NONE',observations=exploratory,
+    incomplete_hydration='Second local real-object acquisition interrupted at disk exhaustion; no completed export/pack digest or Linux import claimed'))
+save('environment-failure.json',dict(schema_version=1,kind='HOST_ENVIRONMENT_FAILURE',admission='NONE',
+    observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    disk=dict(root='C:/',observed_free_bytes=0,used_bytes=999045459968,later_free_bytes=109989888),
+    linux=dict(distribution='onskin-r6-verification',initial='Python3.12.3; Linux x86_64; private clone at760745cfe321c0453a17f7fe2340d49098c849e6',
+        npm_ci=dict(exit_code=0,installed_packages=1035,raw_log='PRIVATE; inaccessible after WSL storage failure; not a strict published execution receipt'),
+        candidate_prepare='Launcher failed reading output: OSError [Errno5] Input/output error; scanner/candidate exit UNKNOWN',
+        subsequent_launch='getpwuid(0) failed5; fopen(/etc/default/locale) failed5; UtilInitGroups I/O error',
+        targeted_restart='wsl --terminate onskin-r6-verification completed; restart exit1: distribution failed to start, code6 step2, Wsl/Service/CreateInstance/E_FAIL',
+        candidate_nine='NOT_RUN',original_supported70='NOT_RUN',four_bundle_scan='NOT_RUN',parser_cycles_used=0),
+    governance=dict(command='python -B -m unittest discover -s scripts/brain -p test_*.py -v',
+        intended_tests=68,original_tests=65,new_tests=3,raw_exit=4294967295,status='ABORTED_DISK_ERRORS',
+        complete_counts=None,reason='OSError disk errors during fixtures; process55812 stopped to prevent more failed allocations; runner38884 retained raw output'),
+    cleanup=dict(status='AUTOMATIC_APPROVAL_REVIEW_REJECTED',
+        action='Remove this session-created clean disposable clone and interrupted test temp directory',
+        stated_reason='blocked by policy; no detailed rationale supplied',
+        paths_preserved=['C:/Users/jasim/Documents/ChatGPT/MasterV2Code/closure-windows-measured','C:/Users/jasim/AppData/Local/Temp/onskin-brain-tests-xw62wmyb']),
+    authority='No deletion bypass, no hidden worker or scheduled continuation; source stage remains safe and pushed'))
+print('Published safe raw logs, exact limitations and host failure metadata')

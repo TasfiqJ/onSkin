@@ -1,0 +1,39 @@
+{
+  "retrieved_at_utc": "2026-10-21T00:50:48.373089+00:00",
+  "url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.99.3/trufflehog_3.99.3_linux_amd64.tar.gz",
+  "asset_bytes": 35906556,
+  "asset_sha256": "029b182e0ed35fd5b02cd1eadc2a94bd457ab14ad22a9380b6e5d9652261d28d",
+  "executable_member": "trufflehog",
+  "executable_bytes": 37087764,
+  "executable_sha256": "f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61",
+  "executed": false,
+  "archive_members": [
+    {
+      "name": "LICENSE",
+      "bytes": 35449,
+      "regular": true
+    },
+    {
+      "name": "README.md",
+      "bytes": 37978,
+      "regular": true
+    },
+    {
+      "name": "docs/man/trufflehog.1",
+      "bytes": 23165,
+      "regular": true
+    },
+    {
+      "name": "trufflehog",
+      "bytes": 37087764,
+      "regular": true
+    }
+  ],
+  "basis": "Publisher GitHub release API asset digest independently matched; archive/member inspected in memory, never extracted or executed. Release 3.99.3 includes upstream security-labelled updates; do not downgrade to older3.99.2 merely to match frozen policy.",
+  "release_notes_url": "https://github.com/trufflesecurity/trufflehog/releases/tag/v3.99.3",
+  "release_api_url": "https://api.github.com/repos/trufflesecurity/trufflehog/releases/tags/v3.99.3",
+  "release_notes_observation": "The official 3.99.3 notes explicitly identify multiple security dependency updates. This supports rejecting an automatic downgrade to 3.99.2, not a claim that every issue or exposure has been audited.",
+  "scope": "New narrowly authorized original-secret-job executable candidate only. The historical G973.99.2 closure remains unchanged and cannot accept a mismatched3.99.3 receipt. Actual candidate execution/compatibility/coverage is NOT_RUN in Brain review.",
+  "signature_limit": "Publisher HTTPS/API asset digest and downloaded member hash verified; no claim of independent cryptographic signer/certificate verification or comprehensive binary security audit.",
+  "transport_limit": "Container network access failed; successful acquisition and in-memory hash inspection ran on the authorized Windows review host outside the repository. Nothing was extracted, installed or executed."
+}

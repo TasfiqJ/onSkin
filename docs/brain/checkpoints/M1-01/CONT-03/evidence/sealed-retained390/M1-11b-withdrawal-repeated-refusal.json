@@ -1,0 +1,91 @@
+{
+  "bodyText": "PRIVACY & ACCOUNT Your account is still here. Age confirmation is still required for health features. Your existing data rights remain available. Billing does not stop automatically; use Manage subscription below whenever you need it. Could not finish the privacy request. Your health features remain safely paused. PRIVACY REQUEST Status: withdrawing. Local cleanup pending. Retry / check status ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support Back to age confirmation",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry / check status",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 366
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Manage subscription",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 508
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Restore purchases",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 572
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Export my data",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 636
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Sign out",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 700
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Delete account",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 764
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to age confirmation",
+      "role": "button",
+      "selected": false,
+      "width": 390,
+      "x": 0,
+      "y": 788
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8434/",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

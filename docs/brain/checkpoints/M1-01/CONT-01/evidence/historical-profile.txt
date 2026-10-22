@@ -1,0 +1,1 @@
+PASS: immutable inputs, identities, dependencies, closed state and generated mirrors

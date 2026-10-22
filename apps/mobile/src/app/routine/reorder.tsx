@@ -6,6 +6,7 @@ import { Platform, Pressable, ScrollView, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import type { PlanStep } from '@/features/routine/generate';
 import {
+  ROUTINE_ORDER_CONFLICT,
   routineOrderQueryKeyForLease,
   routineOrderOverrideForPhase,
   saveRoutineOrderOverrides,
@@ -160,10 +161,11 @@ function ReorderEditor({
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [saveConflict, setSaveConflict] = useState(false);
   const [reloading, setReloading] = useState(false);
   const reloadInFlight = useRef(false);
   const editingUnavailable =
-    saving || reloading || isLoading || !sourceReady || persistenceUnavailable || !original.lease;
+    saving || reloading || saveConflict || isLoading || !sourceReady || persistenceUnavailable || !original.lease;
 
   function editorIsCurrent(): boolean {
     if (!mounted.current || !original.lease) return false;
@@ -289,8 +291,11 @@ function ReorderEditor({
       }
       haptics.success();
       backOrReplace(router);
-    } catch {
-      if (editorIsCurrent()) setSaveFailed(true);
+    } catch (error) {
+      if (editorIsCurrent()) {
+        setSaveConflict(error instanceof Error && error.message === ROUTINE_ORDER_CONFLICT);
+        setSaveFailed(true);
+      }
     } finally {
       saveInFlight.current = false;
       if (mounted.current) setSaving(false);
@@ -423,7 +428,9 @@ function ReorderEditor({
               Order not saved
             </Text>
             <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
-              We could not confirm the save. Reload to check your saved routine, then try again.
+              {saveConflict
+                ? 'Another order was saved. Your draft is kept. Cancel and reopen to review the saved order before editing again.'
+                : 'We could not confirm the save. Reload to check your saved routine, then try again.'}
             </Text>
           </View>
         ) : null}
@@ -437,7 +444,7 @@ function ReorderEditor({
           </View>
         ) : null}
 
-        {(persistenceUnavailable || saveFailed || (!isLoading && !sourceReady)) && original.lease ? (
+        {!saveConflict && (persistenceUnavailable || saveFailed || (!isLoading && !sourceReady)) && original.lease ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Reload saved order"

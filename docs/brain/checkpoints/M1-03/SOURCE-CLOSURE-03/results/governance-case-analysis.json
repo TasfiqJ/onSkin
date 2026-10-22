@@ -1,0 +1,66 @@
+{
+  "prior_report": {
+    "passed": 61,
+    "failed": 3,
+    "errors": 2,
+    "skipped": 2,
+    "classification": "Prior Codex report only"
+  },
+  "fresh_baseline": {
+    "total": 68,
+    "passed": 61,
+    "failed": 3,
+    "errors": 2,
+    "skipped": 2,
+    "raw_exit": 1
+  },
+  "cases": [
+    {
+      "test": "test_m103_overnight01_profile.Overnight.test_anchors_authority_types_and_separate_intervals",
+      "outcome": "FAIL",
+      "cause": "Expected extension refusal was preempted by SOURCE-CLOSURE-01 successor docs copied into the historical OVERNIGHT fixture.",
+      "classification": "historical copied fixture"
+    },
+    {
+      "test": "test_m103_overnight01_profile.Overnight.test_committed_regular_artifacts_and_identical_local_only_refusal",
+      "outcome": "FAIL",
+      "cause": "Expected committed-regular-artifact refusal was preempted by the same successor contamination.",
+      "classification": "historical copied fixture"
+    },
+    {
+      "test": "test_m103_source_closure01_profile.SourceClosure.test_unmeasured_source_and_mismatched_preimage_refuse",
+      "outcome": "FAIL",
+      "cause": "Expected Implementation differs refusal was preempted by SOURCE-CLOSURE-02 docs outside the old grant.",
+      "classification": "historical endpoint fixture"
+    },
+    {
+      "test": "test_m103_source_closure01_profile.SourceClosure.test_bound_report_authority_immutable_inputs_and_ref",
+      "outcome": "ERROR",
+      "cause": "SC01 fixture used live HEAD aa598d0c, importing SC02 documents that the old grant correctly refuses.",
+      "classification": "historical endpoint fixture"
+    },
+    {
+      "test": "test_m103_source_closure01_profile.SourceClosure.test_intermediate_out_of_scope_and_old_interval_refuse",
+      "outcome": "ERROR",
+      "cause": "Same SC02 successor contamination before the intended unauthorized-commit assertion.",
+      "classification": "historical endpoint fixture"
+    }
+  ],
+  "repair": {
+    "overnight_endpoint": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+    "source_closure01_endpoint": "3600db9b5812acebd718111b6bf58efcb554487d",
+    "method": "Existing fixture_history: independent --no-hardlinks Git pool and exact historical doc archive. Removed unnecessary no-op fixture commit; preserved every negative assertion.",
+    "production_validation": "Additive SC03 interval at aa598d0c. SC01 fixed history ends at 3600db9b; old default validator continues refusing successors."
+  },
+  "other_classifications": {
+    "missing_git_objects": "None in fetched source; actual missing/corrupt private pools tested separately",
+    "os_symlink": "No Linux symlink failures; two unchanged Windows-junction-only skips",
+    "environment": "All five baseline failures were fixture errors; native capsule failure is separate"
+  },
+  "intermediate_results": [
+    "First fixture repair yielded three SC01 passes but two OVERNIGHT setup failures from an unnecessary empty commit; removed no-op commit, unchanged assertions then passed.",
+    "First new corrupt-source test accidentally retained authentic packed bytes; rebuilt a genuinely corrupt private source, asserted wrong raw bytes before exercising refusal; final 8/8 pass.",
+    "Fresh CLI import fixture initially omitted scripts/brain, giving ModuleNotFoundError; exact measured modules copied, then 112-reference roundtrip passed."
+  ],
+  "admission": "NONE"
+}

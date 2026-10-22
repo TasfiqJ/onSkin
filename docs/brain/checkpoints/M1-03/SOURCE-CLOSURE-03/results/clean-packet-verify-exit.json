@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "c86be8cb7055c5784b8739531cab897508708e61a23dc094a7b63262456e0a46"
+  ],
+  "working_directory": "/workspace/sc03-runtime-recovery/measured-repo/docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/inputs/runtime-recovery",
+  "exit": 0,
+  "source_commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+  "source_tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e"
+}

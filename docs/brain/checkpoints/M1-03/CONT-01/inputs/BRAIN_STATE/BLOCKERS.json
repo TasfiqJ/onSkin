@@ -1,0 +1,747 @@
+{
+  "updated_at_utc": "2026-10-21T00:50:48.373089+00:00",
+  "blockers": [
+    {
+      "id": "BLK-01",
+      "status": "RESOLVED_AT_REVIEWED_HEAD_AVAILABILITY_RISK_RETAINED",
+      "description": "Exact delivery Quality39517479330 and canonical DB118953136136 pass. Prior ECR failures remain historical availability risk, not an active failing job at this head.",
+      "impact": "BLOCKS_INTEGRATION_NOT_INDEPENDENT_M1_CLIENT_REPAIR",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00",
+        "audit": "AUDIT_M1-03_REVIEW01.md"
+      },
+      "history": [
+        {
+          "description": "Final Quality run 39366256422 job 118443688177 fails canonical ECR Postgres acquisition with Data limit exceeded before database startup. Local success does not close CI; exact quota cause and safe resolution remain unknown.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600842,
+            "job_id": 118460482876,
+            "error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+            "status": "OPEN"
+          }
+        },
+        {
+          "status": "OPEN_AVAILABILITY_RISK",
+          "description": "ECR acquisition and the entire unchanged database CI gate succeeded at 6aa01995 in Quality39376189137. Earlier repeated Data limit exceeded failures remain historical evidence; permanent quota/account remediation is not established.",
+          "latest_observation": {
+            "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+            "run_id": 39376189137,
+            "job_id": 118475132861,
+            "status": "EXACT_RUN_SUCCESS",
+            "upstream_root_cause": "UNKNOWN",
+            "permanent_repair": "NOT_ESTABLISHED"
+          }
+        },
+        {
+          "status": "OPEN_REPRODUCED_CI_FAILURE",
+          "description": "Final exact-head Quality39456975914 DB job118746292501 again fails canonical ECR preparation before startup/SQL with Data limit exceeded. Earlier M0 pass is historical point-in-time recovery, not permanent repair.",
+          "latest_observation": {
+            "sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+            "run_id": 39456975914,
+            "job_id": 118746292501,
+            "status": "FAILURE_BEFORE_SQL",
+            "permanent_repair": "NOT_ESTABLISHED"
+          }
+        },
+        {
+          "id": "BLK-01",
+          "status": "OPEN_AVAILABILITY_RISK_EXACT_RUN_RECOVERED",
+          "description": "Final-head Quality39470402671 and full canonical DB118793354045 completed successfully during review. Earlier ECR failures remain historical availability evidence; permanent repair is not established.",
+          "impact": "BLOCKS_INTEGRATION_NOT_INDEPENDENT_M1_CLIENT_REPAIR",
+          "latest_observation": {
+            "sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+            "run_id": 39470402671,
+            "job_id": 118793354045,
+            "status": "EXACT_RUN_SUCCESS",
+            "conclusion": "success",
+            "permanent_repair": "NOT_ESTABLISHED"
+          }
+        },
+        {
+          "id": "BLK-01",
+          "status": "OPEN_FINAL_HEAD_DB_PENDING_AVAILABILITY_RISK",
+          "description": "Quality39483363359 repository, PG15/17 and exports pass; canonical DB118837969766 is still in progress at current observation. Prior exact-head recovery and ECR failures are historical; permanent remedy unproven.",
+          "impact": "BLOCKS_INTEGRATION_NOT_INDEPENDENT_M1_CLIENT_REPAIR",
+          "latest_observation": {
+            "sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+            "run_id": 39483363359,
+            "job_id": 118837969766,
+            "status": "IN_PROGRESS",
+            "conclusion": null,
+            "permanent_repair": "NOT_ESTABLISHED"
+          }
+        },
+        {
+          "status": "OPEN_CURRENT_EXACT_HEAD_DB_FAILURE",
+          "description": "Quality39496961034 canonical DB118884388306 fails ECR Data limit exceeded during canonical image preparation before SQL. Repository/PG rehearsals/exports pass independently.",
+          "latest_observation": {
+            "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+            "run_id": 39496961034,
+            "job_id": 118884388306,
+            "status": "failure",
+            "error": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+            "permanent_repair": "NOT_ESTABLISHED"
+          }
+        },
+        {
+          "id": "BLK-01",
+          "status": "OPEN_CURRENT_DB_CI_NOT_COMPLETED_AT_OBSERVATION",
+          "description": "Exact delivery Quality39506203149 canonical DB118915844992 still running at observation; prior ECR failures remain historical, permanent recovery unproved.",
+          "impact": "BLOCKS_INTEGRATION_NOT_INDEPENDENT_M1_CLIENT_REPAIR",
+          "latest_observation": {
+            "sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+            "run_id": 39506203149,
+            "job_id": 118915844992,
+            "status": "in_progress",
+            "observed_at_utc": "2026-10-20T22:35:24Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BLK-02",
+      "status": "OPEN_CURRENT_SECURITY_AND_CUSTODY_FAILURE",
+      "description": "Security39517479326 fails original code/static/acceptance; DB06/DB08/R2B authority remains ungranted despite canonical local/CI success.",
+      "impact": "BLOCKS_PROTECTED_REPLAY_SCHEMA_DEPLOYMENT",
+      "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+      "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+      "history": [
+        {
+          "id": "BLK-02",
+          "status": "OPEN",
+          "description": "Protected DB06/DB08/R2B replay, deployment and custody gates remain ungranted. Codex local disposable verification is diagnostic evidence, not hosted replay or integration authorization.",
+          "impact": "BLOCKS_PROTECTED_REPLAY_SCHEMA_DEPLOYMENT",
+          "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+          "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits."
+        },
+        {
+          "status": "OPEN",
+          "description": "Protected DB06/DB08/R2B replay, deployment and custody gates remain ungranted. Codex local disposable verification is diagnostic evidence, not hosted replay or integration authorization.",
+          "latest_observation": {
+            "run_id": 39496961082,
+            "workflow_id": 308213475,
+            "status": "completed",
+            "conclusion": "failure",
+            "static_job": 118884388573,
+            "secret_job": 118884388439,
+            "secret_conclusion": "success",
+            "code_job": 118884388072,
+            "code_conclusion": "success",
+            "live_job": 118884391774,
+            "live_conclusion": "skipped",
+            "source_acceptance_job": 118887473162,
+            "source_acceptance_conclusion": "failure",
+            "raw_observed_refusals": [
+              "SOURCE_INVENTORY_DRIFT",
+              "braces: review is expired or dates are invalid",
+              "node-forge: review is expired or dates are invalid",
+              "unreviewed OSV advisory: vite@8.1.3:GHSA-587h-7wmj-h5pm",
+              "unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv",
+              "unreviewed OSV advisory: vite@8.1.3:GHSA-r825-w8mm-5pxw",
+              "unreviewed OSV advisory: certifi@2026.10.18:GHSA-6q48-6c7w-9gw2",
+              "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+            ],
+            "interpretation": "Raw provider-log refusals observed. Individual continued step summaries do not erase nonzero raw outcomes. Advisory applicability/exploitability NOT independently assessed."
+          }
+        },
+        {
+          "id": "BLK-02",
+          "status": "OPEN_CURRENT_SECURITY_FAILURE",
+          "description": "Exact delivery Security39506203186 failed. Current raw original-code/static/acceptance reasons and source custody require M1-03 diagnosis; prior advisory/inventory findings never automatically waived.",
+          "impact": "BLOCKS_PROTECTED_REPLAY_SCHEMA_DEPLOYMENT",
+          "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+          "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+          "latest_observation": {
+            "sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+            "run_id": 39506203186,
+            "status": "failure",
+            "observed_at_utc": "2026-10-20T22:35:24Z"
+          }
+        }
+      ],
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00",
+        "audit": "AUDIT_M1-03_REVIEW01.md"
+      }
+    },
+    {
+      "id": "BLK-03",
+      "status": "OPEN_EXPIRED_ORIGINAL_PROPOSAL",
+      "description": "Original source-only proposal expired2026-10-21T00:00:00Z. No expiry, public owner-pin or new acceptance window is authorized.",
+      "impact": "BLOCKS_SECURITY_ADMISSION_AND_PROMOTION",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00",
+        "audit": "AUDIT_M1-03_REVIEW01.md"
+      },
+      "history": [
+        {
+          "description": "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600769,
+            "conclusion": "failure",
+            "static_job": 118460483010,
+            "acceptance_job": 118461695511,
+            "specific_final_static_diagnostics": "NOT_INDEPENDENTLY_REREAD_THIS_REVIEW; prior blockers retained"
+          }
+        },
+        {
+          "status": "OPEN",
+          "description": "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+          "latest_observation": {
+            "sha": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+            "run_id": 39440004524,
+            "conclusion": "failure",
+            "proposal_notAfter": "2026-10-21T00:00:00Z",
+            "no_renewal_authorized": true
+          }
+        },
+        {
+          "id": "BLK-03",
+          "status": "OPEN",
+          "description": "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+          "impact": "BLOCKS_SECURITY_ADMISSION_AND_PROMOTION",
+          "latest_observation": {
+            "sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+            "run_id": 39483363438,
+            "static_job": 118837379401,
+            "conclusion": "failure",
+            "refusals": [
+              "SOURCE_INVENTORY_DRIFT",
+              "braces: review is expired or dates are invalid",
+              "node-forge: review is expired or dates are invalid",
+              "unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv",
+              "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+            ],
+            "proposal_notAfter": "2026-10-21T00:00:00Z",
+            "no_renewal_authorized": true
+          },
+          "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+          "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+          "current_scope_note": "Observed raw failures remain blocked; M1 client acceptance is not protected Security acceptance."
+        }
+      ],
+      "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+      "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+      "current_scope_note": "Observed raw failures remain blocked; M1 client acceptance is not protected Security acceptance."
+    },
+    {
+      "id": "BLK-04",
+      "status": "OPEN",
+      "description": "Physical iOS/provider/qualified reviews not performed"
+    },
+    {
+      "id": "BLK-05",
+      "status": "OPEN",
+      "description": "No J05 single-scan or change claims validated"
+    },
+    {
+      "id": "BLK-06",
+      "status": "OPEN",
+      "description": "26 module research packs are missing; request only a ready next module when triggered"
+    },
+    {
+      "id": "BLK-07",
+      "status": "OPEN",
+      "description": "Commercial investment remains NO-GO; incremental spend authorized is $0"
+    },
+    {
+      "id": "BLK-08",
+      "status": "OPEN_COMPLETE_SOURCE_REVIEW_AND_SAST",
+      "description": "Actual SOURCE_INVENTORY_DRIFT stops Semgrep before execution; frozen manifest/coverage/proposal unchanged. Selected source-repair authorization is not inventory acceptance.",
+      "impact": "No source-only Security GO or branch promotion. M0-02 may document new inventory drift but must not hide or waive it.",
+      "required_resolution": "Separate exact-source review and actual authorized custody procedure; no mechanical rebinding.",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00",
+        "audit": "AUDIT_M1-03_REVIEW01.md"
+      },
+      "history": [
+        {
+          "description": "Final Security run 39366256806 static job 118443689708 rejects SOURCE_INVENTORY_DRIFT. Added handoff/evidence paths are outside the frozen reviewed inventory; existing edited source bytes also require exact review.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600769,
+            "conclusion": "failure",
+            "static_job": 118460483010,
+            "acceptance_job": 118461695511,
+            "specific_final_static_diagnostics": "NOT_INDEPENDENTLY_REREAD_THIS_REVIEW; prior blockers retained"
+          }
+        },
+        {
+          "status": "OPEN",
+          "description": "Final Security39376189138 static job118474749883 rejects SOURCE_INVENTORY_DRIFT; independently read at exact delivery head. No frozen manifest, scanner coverage, owner pins or acceptance rebind authorized.",
+          "latest_observation": {
+            "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+            "run_id": 39376189138,
+            "conclusion": "failure",
+            "static_job": 118474749883,
+            "acceptance_job": 118476384699,
+            "exact_static_log_read": true
+          }
+        },
+        {
+          "id": "BLK-08",
+          "status": "OPEN",
+          "description": "Exact final-head Security39470402583 static118792630280 refuses SOURCE_INVENTORY_DRIFT. Frozen manifests/coverage/pins remain unchanged; no rebind authorized in M1-01.",
+          "impact": "No source-only Security GO or branch promotion. M0-02 may document new inventory drift but must not hide or waive it.",
+          "required_resolution": "Separate exact-source review and actual authorized custody procedure; no mechanical rebinding.",
+          "latest_observation": {
+            "sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+            "run_id": 39483363438,
+            "static_job": 118837379401,
+            "conclusion": "failure",
+            "refusals": [
+              "SOURCE_INVENTORY_DRIFT",
+              "braces: review is expired or dates are invalid",
+              "node-forge: review is expired or dates are invalid",
+              "unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv",
+              "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+            ],
+            "proposal_notAfter": "2026-10-21T00:00:00Z",
+            "no_renewal_authorized": true
+          },
+          "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+          "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+          "current_scope_note": "Observed raw failures remain blocked; M1 client acceptance is not protected Security acceptance."
+        }
+      ],
+      "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+      "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+      "current_scope_note": "Observed raw failures remain blocked; M1 client acceptance is not protected Security acceptance."
+    },
+    {
+      "id": "BLK-09",
+      "status": "OPEN_FINDINGS_AND_TOOL_CLOSURE",
+      "description": "Braces/forge reviews remain expired; Vite findings are eligible for narrow8.1.6 repair; Semgrep/MCP/certifi closure remains an inert unproved candidate. No new exception.",
+      "impact": "Refreshing inventory alone would not establish Security acceptance.",
+      "evidence_kind": "Observed CI refusal; advisory applicability and safe remediation not yet independently assessed.",
+      "required_resolution": "Preserve original scanner reports/outcomes; separately review advisory applicability and governed remediation. No expiration extensions, allowlist growth or dependency updates in M1-01.",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00",
+        "audit": "AUDIT_M1-03_REVIEW01.md"
+      },
+      "history": [
+        {
+          "description": "The same final static job independently reports braces and node-forge review date refusals, plus unreviewed OSV advisory mcp@1.29.0:GHSA-84m7-p3x7-pcfv.",
+          "latest_observation": {
+            "sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+            "run_id": 39371600769,
+            "conclusion": "failure",
+            "static_job": 118460483010,
+            "acceptance_job": 118461695511,
+            "specific_final_static_diagnostics": "NOT_INDEPENDENTLY_REREAD_THIS_REVIEW; prior blockers retained"
+          }
+        },
+        {
+          "status": "OPEN",
+          "description": "Final Security39376189138 independently reports braces/node-forge review-date refusals and mcp@1.29.0:GHSA-84m7-p3x7-pcfv. Repairing inventory alone cannot establish Security acceptance.",
+          "latest_observation": {
+            "sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+            "run_id": 39376189138,
+            "conclusion": "failure",
+            "static_job": 118474749883,
+            "acceptance_job": 118476384699,
+            "exact_static_log_read": true
+          }
+        },
+        {
+          "id": "BLK-09",
+          "status": "OPEN",
+          "description": "Exact final-head static job independently reports braces/node-forge review-date refusals and unreviewed mcp@1.29.0:GHSA-84m7-p3x7-pcfv. These are observed refusals, not an independently assessed advisory remediation.",
+          "impact": "Refreshing inventory alone would not establish Security acceptance.",
+          "evidence_kind": "Observed CI refusal; advisory applicability and safe remediation not yet independently assessed.",
+          "required_resolution": "Preserve original scanner reports/outcomes; separately review advisory applicability and governed remediation. No expiration extensions, allowlist growth or dependency updates in M1-01.",
+          "latest_observation": {
+            "sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+            "run_id": 39483363438,
+            "static_job": 118837379401,
+            "conclusion": "failure",
+            "refusals": [
+              "SOURCE_INVENTORY_DRIFT",
+              "braces: review is expired or dates are invalid",
+              "node-forge: review is expired or dates are invalid",
+              "unreviewed OSV advisory: vite@8.1.3:GHSA-698v-4r3x-3vcv",
+              "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv"
+            ],
+            "proposal_notAfter": "2026-10-21T00:00:00Z",
+            "no_renewal_authorized": true
+          },
+          "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+          "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+          "current_scope_note": "Observed raw failures remain blocked; M1 client acceptance is not protected Security acceptance."
+        }
+      ],
+      "review02_observation": "Security39456975959 remains failed; final static job inventory refusal and raw OSV review/advisory errors independently read. No protected acceptance or expiry renewal.",
+      "review03_observation": "Protected acceptance remains closed. No protected source, authority, dates or scanner edits.",
+      "current_scope_note": "Observed raw failures remain blocked; M1 client acceptance is not protected Security acceptance."
+    },
+    {
+      "id": "BLK-10",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "Full validate CLI accepts an unsupported PASS observation without a command, artifact/hash or source snapshot. It also accepts JSON false as exit code zero.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F1",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "BLK-11",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "Full report CLI accepts in_progress CI with success, nonexistent CI evidence, an all-zero CI head, and a nonexistent observed-main/original-stage-base tuple.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F2",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "BLK-12",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "Keeping original immutable inputs/anchor/current task intact, repointing only the mutable task spec at a self-authored matching manifest produces a successful M0-02 ZIP containing unapproved synthetic text.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F3",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "BLK-13",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "description": "A dangling output-file symlink passes the exists-based precheck. touch() creates an empty file outside the root before safe_file rejects the link.",
+      "impact": "BLOCKS_M0-02_ACCEPTANCE",
+      "finding": "M002-R1-F4",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED_FOCUSED_FUNCTION_SLICE",
+      "resolution_task": "M0-02 FIX-01",
+      "resolution_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "resolution_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "resolution_evidence": "FINDINGS_CLOSURE.json",
+      "resolved_at_utc": "2026-10-20T11:04:47+00:00"
+    },
+    {
+      "id": "M1-WEB-01",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_REVIEWED_WEB390_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Metro app-linked dependency visibility and unconfigured cold lifecycle corrections pass the independent actual390x844 retained flow; no encryption weakening. Native remains unrun.",
+      "previous_description": "Valid age submit fails in real web app at encrypted key creation: randomBytes export is not a function. Baseline reaches consent URL but independently fails into paused health shell. Complete both boundaries without weakening privacy or treating Node tests as Metro proof.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-RIGHTS-01",
+      "severity": "HIGH",
+      "status": "IMPLEMENTED_SOURCE_AND_LOCAL_WEB390_VERIFIED",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Isolated verified-owner age re-verification rights shell, no health children or reconsent, local confirmed withdrawal and cancellation path observed. Native export/billing/provider claims remain unverified; sign-out usability is separately blocked.",
+      "previous_description": "AgePolicyGate admits only welcome/age without receipt and its unavailable UI only offers retry; existing account/data-rights shell is nested inside that gate. Legacy16+ re-verification needs safe rights access without health processing or broad protected route mounting.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-MATRIX-01",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_M1_01_SOURCE_AND_SUPPORTED_WEB",
+      "evidence_class": "SOURCE_INSPECTED_AND_REPORTED_GAP_CONFIRMED",
+      "description": "Retained source and sign-out recovery are verified at fdf040. The actual A-to-B owner transition, late old-owner settlement and usable B state have not been exercised in a browser; source integration and same-owner upgrade do not substitute.",
+      "previous_description": "Integrated owner switch/sign-out/guest upgrade, withdrawal/deletion pending/retry/non-resurrection, and manual Shelf offline/CRUD/corruption matrix remains unfinished.",
+      "reviewed_at_utc": "2026-10-20T18:47:02+00:00",
+      "reviewed_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "history": [
+        {
+          "id": "M1-MATRIX-01",
+          "severity": "HIGH",
+          "status": "OPEN_PARTIAL",
+          "evidence_class": "INDEPENDENTLY_REPRODUCED",
+          "description": "Substantial source coverage225 and actual retained390 flow pass; Codex other sizes/guest upgrade/deletion fixtures remain attributed. Actual sign-out failed-cleanup retry/A-to-B closure is not complete.",
+          "previous_description": "Integrated owner switch/sign-out/guest upgrade, withdrawal/deletion pending/retry/non-resurrection, and manual Shelf offline/CRUD/corruption matrix remains unfinished.",
+          "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+          "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+        },
+        {
+          "id": "M1-MATRIX-01",
+          "severity": "HIGH",
+          "status": "OPEN_REQUIRED_CROSS_OWNER_BROWSER_EVIDENCE",
+          "evidence_class": "SOURCE_INSPECTED_AND_REPORTED_GAP_CONFIRMED",
+          "description": "Retained source and sign-out recovery are verified at fdf040. The actual A-to-B owner transition, late old-owner settlement and usable B state have not been exercised in a browser; source integration and same-owner upgrade do not substitute.",
+          "previous_description": "Integrated owner switch/sign-out/guest upgrade, withdrawal/deletion pending/retry/non-resurrection, and manual Shelf offline/CRUD/corruption matrix remains unfinished.",
+          "reviewed_at_utc": "2026-10-20T18:47:02+00:00",
+          "reviewed_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0"
+        }
+      ],
+      "resolved_sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "resolved_by": "AUDIT_M1-01_ACCEPTANCE.md",
+      "remaining_external_axes": "Native/provider/qualified evidence still unperformed; no gate waiver."
+    },
+    {
+      "id": "M1-GOV-01",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Real CLI regressions now reject empty-evidence PASS, wrong measurement order and dirty/untracked/committed runtime drift. Suite42 passes plus2 genuine platform skips; no new governance rewrite warranted.",
+      "previous_description": "M1 report profile regressed previously established evidence requirements: accepts empty evidence with PASS, tests newer than declared measurement, and unmeasured source drift. Extend real-CLI tests; preserve M0 guards.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-CI-WORKLIST-01",
+      "severity": "MEDIUM",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Unchanged generator strict check passes;14 item non-fingerprint definitions unchanged,413 to414 source references; current repository CI source job succeeds. This is not catalog/Security acceptance.",
+      "previous_description": "Derived Phase4 worklist fingerprints stale after Shelf source changes. Narrow generator-only refresh of two derived files authorized, without changing any gate/policy/owner acceptance.",
+      "reviewed_at_utc": "2026-10-20T16:45:16.826679+00:00",
+      "reviewed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+    },
+    {
+      "id": "M1-SIGNOUT-02",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "description": "Expected sign-out/retry rejections are contained at the UI, core completion refusal preserved, concurrent sign-outs joined; narrow widget-capability revocation removes the actual subsequent cleanup blocker. Actual two-refusal/success/reload flows independently pass at 375/390/430. Native/provider limits remain.",
+      "source_pointers": [
+        "apps/mobile/src/app/(tabs)/you.tsx:678,706",
+        "apps/mobile/src/lib/auth/SessionBoundaryGate.tsx:77",
+        "apps/mobile/src/lib/auth/AuthProvider.tsx:2298-2310"
+      ],
+      "evidence": "REVIEW_OBSERVATIONS.json",
+      "history": [
+        {
+          "id": "M1-SIGNOUT-02",
+          "severity": "HIGH",
+          "status": "OPEN",
+          "evidence_class": "INDEPENDENTLY_REPRODUCED",
+          "description": "Injected sign-out cleanup refusal leaves correct closed account state but uncaught EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE triggers Expo overlay and blocks Try again. Fix both compact/regular You callers and retry boundary error ownership, while preserving core fail-closed assertions.",
+          "source_pointers": [
+            "apps/mobile/src/app/(tabs)/you.tsx:678,706",
+            "apps/mobile/src/lib/auth/SessionBoundaryGate.tsx:77",
+            "apps/mobile/src/lib/auth/AuthProvider.tsx:2298-2310"
+          ],
+          "evidence": "REVIEW_OBSERVATIONS.json / BRAIN-WEB-ISOLATION-390"
+        }
+      ],
+      "reviewed_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "reviewed_at_utc": "2026-10-20T18:47:02+00:00"
+    },
+    {
+      "id": "M1-HARNESS-02",
+      "severity": "MEDIUM",
+      "status": "RESOLVED_FOR_REVIEWED_HEAD",
+      "evidence_class": "INDEPENDENTLY_OBSERVED_SOURCE_AND_REPRODUCED_SURFACE",
+      "description": "Portable maintained isolation runner now follows current age/privacy routes, checks stable terminal flags and real hit targets, and rejects uncaught errors. Independently executed at 375/390/430; historical failed artifacts unchanged. A-to-B scenario remains separate missing coverage, not failure of the repaired sign-out mode.",
+      "evidence": "REVIEW_OBSERVATIONS.json",
+      "history": [
+        {
+          "id": "M1-HARNESS-02",
+          "severity": "MEDIUM",
+          "status": "OPEN",
+          "evidence_class": "INDEPENDENTLY_OBSERVED_SOURCE_AND_REPRODUCED_SURFACE",
+          "description": "Primary account-isolation mode retains old age/route expectations; latest partly repaired evidence runner is a copied script with workstation-specific root. Consolidate a portable maintained runner; assert actual visible recovery/terminal state and uncaught-error absence, not transient text or force-clicking an occluded button. Preserve historical failed evidence.",
+          "evidence": "REPRODUCERS.md"
+        }
+      ],
+      "reviewed_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "reviewed_at_utc": "2026-10-20T18:47:02+00:00"
+    },
+    {
+      "id": "M1-OWNER-BROWSER-03",
+      "severity": "HIGH",
+      "status": "RESOLVED_FOR_M1_01_SOURCE_AND_SUPPORTED_WEB",
+      "evidence_class": "SOURCE_INSPECTED_AND_REPORTED_GAP_CONFIRMED",
+      "description": "Complete the already-required actual A-to-B browser isolation/cleanup/retry/relaunch path through real client authority with local-only synthetic transport. No newly demonstrated data leak is alleged; absence of this proof blocks M1 completion.",
+      "source_pointers": [
+        "apps/mobile/src/lib/auth/AuthProvider.tsx",
+        "apps/mobile/src/lib/auth/accountIsolationE2E.ts",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "docs/brain/checkpoints/M1-01/CONT-02/ACCEPTANCE_CLOSEOUT.csv"
+      ],
+      "acceptance": "Usable B after exact boundary, no old A rendered/cache/storage/late callback authority; failed cleanup closed and retryable; controlled relaunch; fixture disabled outside allowed development mode.",
+      "history": [
+        {
+          "id": "M1-OWNER-BROWSER-03",
+          "severity": "HIGH",
+          "status": "OPEN_REQUIRED_EVIDENCE",
+          "evidence_class": "SOURCE_INSPECTED_AND_REPORTED_GAP_CONFIRMED",
+          "description": "Complete the already-required actual A-to-B browser isolation/cleanup/retry/relaunch path through real client authority with local-only synthetic transport. No newly demonstrated data leak is alleged; absence of this proof blocks M1 completion.",
+          "source_pointers": [
+            "apps/mobile/src/lib/auth/AuthProvider.tsx",
+            "apps/mobile/src/lib/auth/accountIsolationE2E.ts",
+            "scripts/e2e/onboarding-first-session.mjs",
+            "docs/brain/checkpoints/M1-01/CONT-02/ACCEPTANCE_CLOSEOUT.csv"
+          ],
+          "acceptance": "Usable B after exact boundary, no old A rendered/cache/storage/late callback authority; failed cleanup closed and retryable; controlled relaunch; fixture disabled outside allowed development mode."
+        }
+      ],
+      "resolved_sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "resolved_by": "AUDIT_M1-01_ACCEPTANCE.md",
+      "remaining_external_axes": "Native/provider/qualified evidence still unperformed; no gate waiver."
+    },
+    {
+      "id": "M102-R1-F1",
+      "status": "RESOLVED_AT_REVIEWED_HEAD",
+      "description": "Ordinary rescheduleReminders resolves undefined when configureNotifications returns unavailable; controlled-port expectation of truthful failure reproduced red.",
+      "impact": "BLOCKS_M1_02_SOURCE_ACCEPTANCE",
+      "latest_observation": {
+        "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+        "review": "M1-02-REVIEW-01"
+      },
+      "owner": "Codex within issued scope; Brain disposition",
+      "history": [
+        {
+          "status": "OPEN",
+          "description": "Ordinary rescheduleReminders resolves undefined when configureNotifications returns unavailable; controlled-port expectation of truthful failure reproduced red.",
+          "latest_observation": {
+            "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+            "review": "M1-02-REVIEW-01"
+          }
+        }
+      ],
+      "resolved_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "resolved_by": "AUDIT_M1-02_ACCEPTANCE.md"
+    },
+    {
+      "id": "M102-R1-F2",
+      "status": "RESOLVED_AT_REVIEWED_HEAD",
+      "description": "Startup cached unavailable promise prevents later successful port retry; independent native-port test returned unavailable with call count unchanged4.",
+      "impact": "BLOCKS_M1_02_SOURCE_ACCEPTANCE",
+      "latest_observation": {
+        "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+        "review": "M1-02-REVIEW-01"
+      },
+      "owner": "Codex within issued scope; Brain disposition",
+      "history": [
+        {
+          "status": "OPEN",
+          "description": "Startup cached unavailable promise prevents later successful port retry; independent native-port test returned unavailable with call count unchanged4.",
+          "latest_observation": {
+            "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+            "review": "M1-02-REVIEW-01"
+          }
+        }
+      ],
+      "resolved_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "resolved_by": "AUDIT_M1-02_ACCEPTANCE.md"
+    },
+    {
+      "id": "M102-R1-F3",
+      "status": "RESOLVED_AT_REVIEWED_HEAD",
+      "description": "Four actual unchanged daily-loop browser replays fail at storage-refusal expectation; URL AM with rendered PM. First-entry reload diagnostic moves failure to second AM entry. Cause classification remains bounded.",
+      "impact": "BLOCKS_M1_02_SUPPORTED_SURFACE_ACCEPTANCE",
+      "latest_observation": {
+        "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+        "review": "M1-02-REVIEW-01"
+      },
+      "owner": "Codex within issued scope; Brain disposition",
+      "history": [
+        {
+          "status": "OPEN",
+          "description": "Four actual unchanged daily-loop browser replays fail at storage-refusal expectation; URL AM with rendered PM. First-entry reload diagnostic moves failure to second AM entry. Cause classification remains bounded.",
+          "latest_observation": {
+            "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+            "review": "M1-02-REVIEW-01"
+          }
+        }
+      ],
+      "resolved_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "resolved_by": "AUDIT_M1-02_ACCEPTANCE.md"
+    },
+    {
+      "id": "M102-UNDO-CORRECTION",
+      "status": "OPEN",
+      "description": "Undo unavailable in retained append-only schema. ADR038 assigns additive correction contracts/UI to M2-01/M2-02 and requires honest retained UI now.",
+      "impact": "BLOCKS_M2_03_M2_04_READINESS_UNTIL_CORRECTIONS_PROVEN; NOT_AUTHORIZED_NOW",
+      "latest_observation": {
+        "sha": "8c1149116df00f34314357d10929b32f52f6d118",
+        "review": "M1-02-REVIEW-01"
+      },
+      "owner": "Codex within issued scope; Brain disposition"
+    },
+    {
+      "id": "M102-SOURCE-DEBT",
+      "status": "RESOLVED_AT_REVIEWED_HEAD",
+      "description": "CORE05 semantic repair accepted after frozen97/0081 byte identity and adversarial checks; selected164/164 pass. No protected SQL/history edit.",
+      "impact": "M1_03_PROTECTED_RECONCILIATION; BLOCKS_INTEGRATION",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00",
+        "audit": "AUDIT_M1-03_REVIEW01.md"
+      },
+      "owner": "Codex within issued scope; Brain disposition",
+      "history": [
+        {
+          "id": "M102-SOURCE-DEBT",
+          "status": "OPEN",
+          "description": "149 selected source checks:148pass1fail. Unchanged CORE05 asserts exact94-migration text against later source. Preserve failure; no blind count edit.",
+          "impact": "M1_03_PROTECTED_RECONCILIATION; BLOCKS_INTEGRATION",
+          "latest_observation": {
+            "sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+            "pass": 148,
+            "fail": 1,
+            "owner_task": "M1-03",
+            "protected_sql_changes_authorized": false
+          },
+          "owner": "Codex within issued scope; Brain disposition"
+        }
+      ]
+    },
+    {
+      "id": "M103-SECRET-COVERAGE",
+      "status": "OPEN_CONT01_REPAIR_AUTHORIZED_NOT_ACCEPTED",
+      "description": "Actual Gitleaks30-commit range omits56 later commits; TruffleHoglatest3.99.3 differs from reviewed3.99.2. No leak inferred.",
+      "owner": "Codex bounded implementation; independent Brain review",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00"
+      },
+      "no_source_go": true
+    },
+    {
+      "id": "M103-CLASSIFIER",
+      "status": "OPEN_CONT01_REPAIR_AUTHORIZED_NOT_ACCEPTED",
+      "description": "Valid moderate primary children under a high aggregate are incorrectly treated as malformed; preserve real findings and expired refusals while repairing classification.",
+      "owner": "Codex bounded implementation; independent Brain review",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00"
+      },
+      "no_source_go": true
+    },
+    {
+      "id": "M103-VITE",
+      "status": "OPEN_CONT01_REPAIR_AUTHORIZED_NOT_ACCEPTED",
+      "description": "Console/test Vite8.1.3 needs bounded8.1.6 candidate with isolated installation and compatibility/audit proof.",
+      "owner": "Codex bounded implementation; independent Brain review",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00"
+      },
+      "no_source_go": true
+    },
+    {
+      "id": "M103-OBSERVER",
+      "status": "OPEN_CONT01_REPAIR_AUTHORIZED_NOT_ACCEPTED",
+      "description": "Prior observer-publication failures remain real test debt despite independent root6067 pass; test-only settlement repair authorized.",
+      "owner": "Codex bounded implementation; independent Brain review",
+      "latest_observation": {
+        "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+        "at_utc": "2026-10-21T00:50:48.373089+00:00"
+      },
+      "no_source_go": true
+    }
+  ]
+}

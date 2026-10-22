@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "sourcePlan": "docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md",
+  "expectedWorkItemCount": 25,
+  "allowedStatuses": ["not_started", "in_progress", "blocked", "external_pending", "complete"],
+  "items": [
+    {
+      "id": "H-01",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Complete Apple Account/Developer/App Store Connect identity, MFA, membership, truthful seller/legal entity, agreements, tax/banking and required payment steps.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-02",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Obtain written clearance for the exact final public name in the actual launch territory/classes, approve that exact spelling, and authorize/pay any domain/filing/reservation spend.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-03",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Review the exact V1 release facts/corpora that require professional judgment: privacy/consumer-health/regulatory claims, conflict/routine/cycle clinical meaning, cosmetic-chemistry/application copy, relevant IP/content rights and export classification.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-04",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Create/approve/pay the minimum production services and complete any identity/MFA/terms challenge: Expo/EAS, Supabase, RevenueCat, final domain/DNS/hosting.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-05",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Provide supported physical iPhone access and perform real-only actions: camera/OCR labels, protected photo flows/biometric unlock where used, local notification delivery, accessibility checks, StoreKit sandbox purchase/restore/manage, signed-build install/relaunch/background scenarios.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-06",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Approve final US-first launch territory, App Store prices/offers, spending ceilings, tax/business choices, support owner and any material residual risk.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-07",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: After reviewing the immutable release packet, explicitly authorize App Review submission and, separately, public availability.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "H-08",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Recruit genuine beta users: 3-5 internal/friendly testers first and 15-30 total target users before the first limited public-release decision.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "V-01",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Issue membership/capability/TestFlight/App Review/subscription/public-release outcomes.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "V-02",
+      "status": "external_pending",
+      "blockedBy": [],
+      "nextAction": "Codex prepares the surrounding work and records the external outcome: Issue production account/limit/contract approvals where the selected minimum services require them.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-01",
+      "status": "in_progress",
+      "blockedBy": [],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-02",
+      "status": "in_progress",
+      "blockedBy": ["C-01"],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-03",
+      "status": "in_progress",
+      "blockedBy": ["C-01"],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-04",
+      "status": "in_progress",
+      "blockedBy": ["C-01"],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-05",
+      "status": "in_progress",
+      "blockedBy": ["C-01"],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-06",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Preserve/finish fail-closed reviewed guidance source boundary and produce exact professional-review packets for conflict/routine/cycle.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-07",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish the owned-product routine/Today/cycle persistence and recovery source path.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-08",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish private Progress V1 source path without trend/score claims.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-09",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish local reminders V1 and make remote push non-required.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-10",
+      "status": "in_progress",
+      "blockedBy": ["C-01"],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-11",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish V1 privacy/data-rights source path for the guest-first model with optional Apple/email accounts.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-12",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Produce final-brand-ready public web/policy/support source packet with placeholders that fail closed until H-02/H-04 values exist.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-13",
+      "status": "not_started",
+      "blockedBy": ["C-01"],
+      "nextAction": "Complete and capture acceptance evidence: Finish production infrastructure scripts/config/runbooks for the minimum stack.",
+      "evidenceRefs": []
+    },
+    {
+      "id": "C-14",
+      "status": "in_progress",
+      "blockedBy": ["C-01"],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    },
+    {
+      "id": "C-15",
+      "status": "in_progress",
+      "blockedBy": [
+        "C-01",
+        "C-02",
+        "C-03",
+        "C-04",
+        "C-05",
+        "C-06",
+        "C-07",
+        "C-08",
+        "C-09",
+        "C-10",
+        "C-11",
+        "C-12",
+        "C-13",
+        "C-14"
+      ],
+      "nextAction": "Review current-state integration evidence and finish the remaining acceptance in HANDOFF_INTEGRATION_2026-09-27.md; do not infer release readiness from fixture tests.",
+      "evidenceRefs": ["docs/hugeToDo/HANDOFF_INTEGRATION_2026-09-27.md"]
+    }
+  ]
+}

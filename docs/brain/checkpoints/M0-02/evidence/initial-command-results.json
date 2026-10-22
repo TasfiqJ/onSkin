@@ -1,0 +1,275 @@
+[
+  {
+    "name": "governance",
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/brain",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 8.14,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "validate",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "validate"
+    ],
+    "command": "python -B scripts/brain/brain.py validate",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.37,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "mirrors",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "mirrors",
+      "--check"
+    ],
+    "command": "python -B scripts/brain/brain.py mirrors --check",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.27,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "pack-a",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "pack",
+      "--task",
+      "M0-02",
+      "--output",
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\M0-02-a.zip"
+    ],
+    "command": "python -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\M0-02-a.zip",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.5,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "pack-b",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "pack",
+      "--task",
+      "M0-02",
+      "--output",
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\M0-02-b.zip"
+    ],
+    "command": "python -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\M0-02-b.zip",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.5,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "verify-pack",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "verify-pack",
+      "--task",
+      "M0-02",
+      "--output",
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\M0-02-a.zip"
+    ],
+    "command": "python -B scripts/brain/brain.py verify-pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\M0-02-a.zip",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.35,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "reject-unissued",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "pack",
+      "--task",
+      "M1-01",
+      "--output",
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\unissued.zip"
+    ],
+    "command": "python -B scripts/brain/brain.py pack --task M1-01 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\unissued.zip",
+    "exit": 1,
+    "expected_exit": 1,
+    "matched_expected": true,
+    "seconds": 0.21,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "reject-traversal",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "pack",
+      "--task",
+      "../M0-02",
+      "--output",
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\escape.zip"
+    ],
+    "command": "python -B scripts/brain/brain.py pack --task ../M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements\\escape.zip",
+    "exit": 1,
+    "expected_exit": 1,
+    "matched_expected": true,
+    "seconds": 0.2,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "reject-input-output",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/brain/brain.py",
+      "pack",
+      "--task",
+      "M0-02",
+      "--output",
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage\\should-not-exist.zip"
+    ],
+    "command": "python -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage\\should-not-exist.zip",
+    "exit": 1,
+    "expected_exit": 1,
+    "matched_expected": true,
+    "seconds": 0.34,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "canonical-regression",
+    "argv": [
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe",
+      "--test",
+      "scripts/phase2/canonical-postgres-pull-retry.test.mjs"
+    ],
+    "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase2/canonical-postgres-pull-retry.test.mjs",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.13,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "security-exception-contract",
+    "argv": [
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe",
+      "--test",
+      "scripts/phase9/security-advisory-exceptions.test.mjs"
+    ],
+    "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase9/security-advisory-exceptions.test.mjs",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.14,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "security-workflow-contract",
+    "argv": [
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe",
+      "--test",
+      "scripts/phase9/security_acceptance/workflow_contract.test.mjs"
+    ],
+    "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 2.55,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "security-contract",
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_contract.py"
+    ],
+    "command": "python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py",
+    "exit": 1,
+    "expected_exit": 0,
+    "matched_expected": false,
+    "seconds": 0.15,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "source-packet",
+    "argv": [
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe",
+      "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+      "run",
+      "docs:source-packet-audit:check"
+    ],
+    "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js run docs:source-packet-audit:check",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 0.71,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  },
+  {
+    "name": "execution-baseline",
+    "argv": [
+      "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe",
+      "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+      "run",
+      "launch:execution-baseline:check"
+    ],
+    "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js run launch:execution-baseline:check",
+    "exit": 0,
+    "expected_exit": 0,
+    "matched_expected": true,
+    "seconds": 3.24,
+    "snapshot_commit": "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+    "snapshot_tree": "f7772abe39325075b8a9231b0c98bbbd79c9c769"
+  }
+]

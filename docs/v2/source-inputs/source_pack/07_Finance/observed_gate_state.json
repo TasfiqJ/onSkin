@@ -1,0 +1,10 @@
+{
+  "status": "HOLD",
+  "source": "No actual financial/customer study evidence supplied",
+  "scale_admitted": false,
+  "new_paid_solo_admitted": false,
+  "new_paid_studio_admitted": false,
+  "new_plus_conversion_assumed": false,
+  "authorized_new_vendor_spend_usd": 0,
+  "evidence": {}
+}

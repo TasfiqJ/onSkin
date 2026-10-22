@@ -1,0 +1,11 @@
+{
+  "kind": "CODEX_STAGED_GIT_BLOB_VERIFICATION",
+  "recorded_at_utc": "2026-10-20T16:22:41.249800+00:00",
+  "source_commit": "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+  "report_sha256": "4e0715b3c3129ee6baa2d9840e67d74db6c9e0386952e49484d18bb405e83519",
+  "declared_artifacts_verified": 850,
+  "report_staged_bytes_verified": true,
+  "method": "git cat-file --batch index expressions; SHA256 every raw staged blob against report",
+  "exit_code": 0,
+  "limits": "Consistency of staged bytes only. Evidence tail and this verification do not measure themselves or grant acceptance."
+}

@@ -1,0 +1,114 @@
+{
+  "observed_at_utc": "2026-10-21T00:39:50.362703+00:00",
+  "observation_method": "Direct live GitHub connector reads of exact-head original runs/jobs/logs and Git commit object; sanitized Brain transcription, not provider-signed evidence",
+  "head_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "head_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "event": "pull_request",
+  "checkout_commit": "d36d00677be4536a0dc190fa64e1055f6bd307ec",
+  "checkout_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "checkout_parents": [
+    "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "c14a3105640034a9d7a47d34533f9bd40faa4cc4"
+  ],
+  "tree_equality_independently_verified": true,
+  "quality": {
+    "run_id": 39517479330,
+    "status": "completed",
+    "conclusion": "success",
+    "provider_updated_at_utc": "2026-10-21T00:35:43Z",
+    "canonical_database_job": {
+      "id": 118953136136,
+      "status": "completed",
+      "conclusion": "success",
+      "step": "Reset twice, test, lint, and prove zero drift"
+    },
+    "repository_job": {
+      "id": 118953136459,
+      "conclusion": "success"
+    },
+    "pg15_job": {
+      "id": 118953136477,
+      "conclusion": "success"
+    },
+    "pg17_job": {
+      "id": 118953136510,
+      "conclusion": "success"
+    },
+    "exports": [
+      {
+        "platform": "android",
+        "id": 118955093703,
+        "conclusion": "success"
+      },
+      {
+        "platform": "ios",
+        "id": 118955093961,
+        "conclusion": "success"
+      }
+    ],
+    "limit": "Point-in-time credential-free CI success, not permanent ECR repair, hosted replay, DB06/DB08/R2B authority or release."
+  },
+  "security": {
+    "run_id": 39517479326,
+    "status": "completed",
+    "conclusion": "failure",
+    "code_job": 118953012525,
+    "static_job": 118953012218,
+    "secret_job": 118953012568,
+    "source_acceptance_job": 118955018092,
+    "live_job": 118953013535,
+    "live_conclusion": "skipped",
+    "original_raw_logs_read": true,
+    "code_observations": [
+      "Linux Python3.12: 70 acceptance-contract tests pass; separate from Windows fixture failures.",
+      "Raw npm/SBOM/advisory gates nonzero. Expired braces/node-forge reviews and unreviewed Vite remain.",
+      "High aggregate Vite graph includes valid moderate child advisories; current classifier reports malformed high/critical entries."
+    ],
+    "static_observations": [
+      "SOURCE_INVENTORY_DRIFT refuses Semgrep before execution; complete current-source SAST not established.",
+      "Original OSV source scan executes and returns findings. Do not replace missing Semgrep output with zero findings."
+    ],
+    "secret_observations": {
+      "job_conclusion": "success",
+      "gitleaks_version": "8.24.3",
+      "gitleaks_binary_sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+      "observed_log_options": "--no-merges --first-parent dc6c42dfcf796cbddb94b510d30ecf277fa13112^..f0809923c4fe624329ebc215e7ead0d5b66874fd",
+      "observed_commit_count": 30,
+      "later_commits_omitted_through_reviewed_head": 56,
+      "omission_check": "git rev-list --count f0809923c4fe624329ebc215e7ead0d5b66874fd..HEAD",
+      "reported_leaks": 0,
+      "trufflehog_actual_version": "3.99.3",
+      "separate_collector_expected_version": "3.99.2",
+      "trufflehog_image_tag": "latest",
+      "trufflehog_image_digest": "sha256:63b6120f410beb64aea4e421f1ed277248e14b2942d124df289422b623f610d8",
+      "actual_trufflehog_reported_verified": 0,
+      "actual_trufflehog_reported_unverified": 0,
+      "limit": "No leak is inferred. Job success is not complete current-history coverage or execution of the separately pinned collector closure."
+    },
+    "acceptance_observations": [
+      "Actual first refusal SOURCE_INVENTORY_DRIFT. No source GO.",
+      "Stale owner pins and expired proposal are independent unmet prerequisites, not misreported as the first emitted refusal."
+    ]
+  },
+  "ios_launch_contract": {
+    "run_id": 39517479335,
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "SOURCE_ONLY_NOT_PHYSICAL_DEVICE"
+  },
+  "pr": {
+    "number": 9,
+    "draft": true,
+    "merged": false,
+    "head": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73"
+  },
+  "source_proposal_not_after": "2026-10-21T00:00:00Z",
+  "source_proposal_status": "EXPIRED_UNCHANGED",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "earlier_observation_this_review": {
+    "quality": "in_progress",
+    "superseded_by": "Completed success on final live refresh; no prior pending claim relabeled as an earlier pass."
+  }
+}

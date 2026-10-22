@@ -1,0 +1,333 @@
+{
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ BARCODE (OPTIONAL) INGREDIENTS · optional, we’ll find the actives On the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown. Continue Product category Close Cleanser Toner / essence Vitamin C serum Retinol / retinoid serum Serum Moisturiser (tube) Moisturiser (jar) Eye cream Lash / brow serum Mascara / liquid eye Sunscreen (SPF) Oil / balm Benzoyl peroxide product Something else",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Cancel",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Product name",
+      "role": "input",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Brand",
+      "role": "input",
+      "selected": false,
+      "width": 157.14,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Category",
+      "role": "button",
+      "selected": false,
+      "width": 172.86,
+      "x": 193.14,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Barcode, optional",
+      "role": "input",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 66,
+      "hitOk": false,
+      "label": "Ingredients",
+      "role": "textarea",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 414
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Continue",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 776
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Dismiss category picker",
+      "role": "button",
+      "selected": false,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close category picker",
+      "role": "button",
+      "selected": false,
+      "width": 64,
+      "x": 302,
+      "y": 85
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Cleanser",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 145
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Toner / essence",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 205
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Vitamin C serum",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 265
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Retinol / retinoid serum",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 325
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Serum",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 385
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Moisturiser (tube)",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 445
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Moisturiser (jar)",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 505
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Eye cream",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 565
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Lash / brow serum",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 625
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Mascara / liquid eye",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 685
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Category, Sunscreen (SPF)",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 745
+    }
+  ],
+  "issueCount": 7,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Cancel",
+        "role": "button",
+        "selected": false,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Product name",
+        "role": "input",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 146
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Brand",
+        "role": "input",
+        "selected": false,
+        "width": 157.14,
+        "x": 24,
+        "y": 230
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Category",
+        "role": "button",
+        "selected": false,
+        "width": 172.86,
+        "x": 193.14,
+        "y": 230
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Barcode, optional",
+        "role": "input",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 314
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 66,
+        "hitOk": false,
+        "label": "Ingredients",
+        "role": "textarea",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 414
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Continue",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 776
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8339/shelf/manual?intakeId=81ed8551-8f6f-49a7-8358-f5448bced335",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

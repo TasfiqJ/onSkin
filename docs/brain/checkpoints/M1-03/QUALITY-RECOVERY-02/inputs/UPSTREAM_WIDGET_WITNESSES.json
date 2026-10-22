@@ -1,0 +1,31 @@
+{
+  "absent_upstream_expected_custom_native_path": "ios/LayerwellWidgetLifecycleStore.swift",
+  "claim_origin": "INDEPENDENT_BRAIN_NPM_REGISTRY_AND_RAW_TARBALL_CHECK",
+  "claims_not_supported": [
+    "New native compiled binary",
+    "Native Apple archive presence",
+    "Physical-device integration",
+    "G97 source acceptance"
+  ],
+  "from_version": "57.0.26",
+  "original_native_inputs_sha256_equal_across_versions": {
+    "ios/ExpoWidgets.podspec": "fe7fa8b631006c117ed9b7a079a65c362bca470df8c8e171d1c8e65b204d362e",
+    "ios/LiveActivity.swift": "f90be8a3ccde24823fd0cdd35fd8562a526045ae38e33d7fd1deab31b2985b71",
+    "ios/LiveActivityFactory.swift": "7b891a22d57f28c8e729a285475129483401b2623ca1af9cac6b5be916805320",
+    "ios/WidgetObject.swift": "3bbbc29258eaa549d2074e17664f3804511053b9cb5396761c960b3cb5ee9d4e",
+    "ios/Widgets/AppIntent.swift": "f9c61057350a4f42cba5d90642688ea1abe182fec6c503702238d48e828f5fbd",
+    "ios/Widgets/EntryView.swift": "d03d043c4941060bc98f2ad7d8c647de45527e961fbb14de2f2587d16273fc7f",
+    "ios/Widgets/TimelineProvider.swift": "d815a984030c8b1e1f51a4068c6bba71f8d78f5f9e230e80e5fa0d1980652757",
+    "ios/Widgets/Utils.swift": "cca8d5a8d80fa9a21d863876f62c6c134fcb9d1155c04a00728479ff34776850",
+    "ios/Widgets/WidgetLiveActivity.swift": "eb094a8dabfc256d5aaa3c85f31dc26f18264250992acd417da65aa811bd02f6",
+    "ios/WidgetsModule.swift": "770a50195c5427e6fbfb7b2fa2bbb367bbd8cf4426b57a8b752cb0ef0e14510d"
+  },
+  "package": "expo-widgets",
+  "prior_reviewed_payload_directory": "scripts/phase5/expo-widgets-57.0.26",
+  "registry_integrity": "sha512-TPISoZYKWb5+l3NcpM8r9OS3+0CydL1jA+pIinFX+/sCQ2BkbQuqS8xE17w1DzqYhC71CUpwM12hCxkhkqIfiQ==",
+  "registry_url": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.27.tgz",
+  "schema_version": 1,
+  "scope": "source-only observation, not a native build or Security GO",
+  "tar_sha256": "2cc019e6db56a17791521d52b575d34405fe79f4e5596976b5717728a9f2dd90",
+  "to_version": "57.0.27"
+}

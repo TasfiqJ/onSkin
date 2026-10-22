@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "witnesses": 3265,
+  "references": 112,
+  "endpoints": 67,
+  "pack_sha256": "82614addd5d35f3f3830d224a81b5c7b0743b01b22c26e7683b400afd49f4351",
+  "pack_bytes": 257525604,
+  "source_commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+  "source_tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e",
+  "source_refs_unchanged": true,
+  "import_refs_unchanged": true,
+  "live_alternates": false,
+  "hardlinked_source_objects": false,
+  "initial_probe": "Import fixture initially lacked actual scripts/brain modules and refused with ModuleNotFoundError; copied exact measured modules, then import passed. Initial failure log retained."
+}

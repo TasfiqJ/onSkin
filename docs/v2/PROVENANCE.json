@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "M0-02",
+  "intake_archive": {
+    "name": "onSkin_Codex_M0-02_STAGE_BRANCH_Context.zip",
+    "bytes": 153957,
+    "sha256": "080676b8dc78fe4c4a427f6f2be89043441a7e7b8a6a0fe45bff84fc70282590"
+  },
+  "task_manifest_sha256": "fd04a4fe643949b994ab01697cf48fb2894da805951f7389c76aa770b0972957",
+  "source_pack_sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f",
+  "snapshot_root": "docs/v2/source-inputs",
+  "approved_state_root": "docs/brain/state",
+  "rule": "Immutable input bytes; no runtime, source GO, research, spending, commercial or release admission. Historical direct-main instructions superseded by ADR-022. Current observations are separate."
+}

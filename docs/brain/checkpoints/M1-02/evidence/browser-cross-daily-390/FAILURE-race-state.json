@@ -1,0 +1,9 @@
+{
+  "readEntered": true,
+  "writeEntered": true,
+  "results": [
+    "PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY",
+    "HEALTH_DATA_WRITE_ADMISSION_CLOSED",
+    "ACCOUNT_GENERATION_CHANGED"
+  ]
+}

@@ -74,7 +74,11 @@ export function SessionBoundaryGate({ children }: { children: ReactNode }) {
       <Pressable
         accessibilityRole="button"
         className="mt-7 min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
-        onPress={() => void retrySessionBoundary()}
+        onPress={() => {
+          // Auth retains the failure and retry authority until cleanup commits.
+          // This interaction owns the rejected attempt even if the gate remounts.
+          void retrySessionBoundary().catch(() => {});
+        }}
         style={{ backgroundColor: colors.ink }}
       >
         <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>

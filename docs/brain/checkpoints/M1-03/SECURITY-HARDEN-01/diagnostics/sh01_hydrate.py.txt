@@ -1,0 +1,9 @@
+import gzip,json,pathlib,subprocess
+WS=pathlib.Path(__file__).parent;repo=WS/'overnight-delivery-clean'
+witnesses=json.loads(gzip.decompress((repo/'scripts/phase9/security_acceptance/history.json.gz').read_bytes()))
+refs=sorted({r['commit']+':'+r['path'] for r in witnesses})
+p=subprocess.run(['git','cat-file','--batch-check'],input=('\n'.join(refs)+'\n').encode(),cwd=repo,capture_output=True,check=True)
+assert b' missing' not in p.stdout
+print('Hydrated exact historical witness object references:',len(refs),'no source values emitted')
+subprocess.run(['git','fetch','origin','refs/pull/9/merge'],cwd=repo,check=True)
+print('Fetched read-only PR merge object')

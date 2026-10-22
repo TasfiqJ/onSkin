@@ -1,0 +1,1 @@
+PASS: report v3; internally bound evidence, not independent provider authentication

@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "reviewer": "onSkin Brain",
+  "reviewed_at_utc": "2026-10-20T15:01:32+00:00",
+  "head": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+  "tree": "ac442c8f6d00593b4e6fe4bde3fd060f7fe028fa",
+  "scope": {
+    "task_base": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+    "m1_delta_paths": 138,
+    "full_stage_paths_including_accepted_m0": 362,
+    "m1_commits": [
+      "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "c0d97372212fd94e168b1c598b603381ccb9f9cc"
+    ],
+    "original_issued_input_files_verified": 43,
+    "original_manifest_sha256": "48c0e58f00ce54910d640738debfd273a534403ec30aa980277977852f354656",
+    "declared_report_artifacts_hash_verified": 36,
+    "protected_diff_exit": 0,
+    "protected_paths": [
+      ".github",
+      "supabase",
+      "packages",
+      "package.json",
+      "package-lock.json",
+      "scripts/phase9",
+      "docs/phase-9",
+      "scripts/phase2",
+      "docs/hugeToDo/launch-contract.json",
+      ".gitignore"
+    ],
+    "working_tree_status_after_audit": "clean",
+    "old_m0_inputs_states_review01": "unchanged",
+    "review_method": "Full M1 runtime/tooling diffs and associated relevant code; programmatic full changed-path and preserved-input/artifact checks. Inherited M0 review retained; not a fresh line-by-line audit of all historical archives."
+  },
+  "independently_reproduced": [
+    {
+      "id": "BRAIN-M1-GOV-TESTS",
+      "command": "C:/Python39/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "environment": "Windows x64; Python 3.9.13",
+      "source_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "exit_code": 0,
+      "counts": {
+        "passed": 39,
+        "failed": 0,
+        "skipped": 2
+      },
+      "raw_log_sha256": "97ea309bbeded9206a3cede872ea6c0aa55e12306faa144934f7161dd6909377",
+      "limits": "Windows symbolic-link privilege skips; actual junction/hard-link checks ran. No fresh Linux M1 suite run."
+    },
+    {
+      "id": "BRAIN-M1-FOCUSED",
+      "command": "node node_modules/vitest/vitest.mjs run --root apps/mobile src/features/onboarding/ageGate.test.ts src/features/onboarding/ageGateStore.test.ts src/features/onboarding/AgePolicyGate.lifecycle.test.ts src/features/shelf/store.test.ts src/lib/storage/privateKV.test.ts",
+      "environment": "Windows x64; Node22.21.0; unchanged installed dependencies",
+      "source_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "exit_code": 0,
+      "counts": {
+        "files": 5,
+        "passed": 148,
+        "failed": 0
+      },
+      "raw_log_sha256": "76aaf97965beb76e4229405a51e479fc25d1ab2fd39fd7a0b319a2fed1203462",
+      "limits": "Not a full 5,980-test rerun. Outer Python wrapper later failed while printing Unicode to cp1252; the completed command result and saved raw test log were reread."
+    },
+    {
+      "id": "BRAIN-M1-PROFILE",
+      "commands": [
+        "python -B scripts/brain/brain.py --profile M1-01 validate",
+        "python -B scripts/brain/brain.py --profile M1-01 report docs/brain/checkpoints/M1-01/completion-report.json"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "identical_output_sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf",
+      "limits": "Positive checks alone do not prove refusal coverage; new adversarial cases below accepted invalid inputs."
+    },
+    {
+      "id": "BRAIN-M1-WORKLIST",
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "exit_code": 1,
+      "raw_log_sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "result": "Both docs/phase-4/generated/source-worklist.json and .md are stale; no files rewritten."
+    }
+  ],
+  "source_reported_not_independently_rerun": {
+    "codex_measured_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+    "codex_measured_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+    "root_tests": {
+      "passed": 5980,
+      "mobile": 5956,
+      "console": 24,
+      "failed": 0,
+      "skipped": 0,
+      "command": "npm.cmd run test -- --force",
+      "raw_log_sha256": "b575e892ea8ec71d75bbd42eecfeef3f17feea1b9ff2c13ed2df3b46271f0eaf"
+    },
+    "typecheck": "PASS_REPORTED",
+    "lint": "PASS_REPORTED",
+    "native_age_source_contract": "9_PASS_REPORTED_NOT_NATIVE_EXECUTION"
+  },
+  "browser_experiments": [
+    {
+      "id": "BRAIN-M1-WEB-CURRENT",
+      "source_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "environment": "Actual installed headless Chrome; Expo web; Windows; 390x844; port8327/CDP9427; development anonymous_owner; invalid/unconfigured Supabase; synthetic DOB01/01/1990",
+      "exit_code": 1,
+      "url_path": "/onboarding/age",
+      "visible_result": "We couldn't finish the age check. Nothing new was collected. Try again.",
+      "raw_log_sha256": "3c0f0946947d76750af3dc41b95ed1abbe3b2a631b7aa8a510d6d0744e7a5eef",
+      "harness_changes": "Temp copy only: explicit original repoRoot; stop before consent grant if successful; capture failure body/URL/PNG/events before original teardown. No tracked app edits."
+    },
+    {
+      "id": "BRAIN-M1-WEB-BASELINE",
+      "source_commit": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "environment": "Separate clean M0 checkout; same dependency lock and linked target, viewport/DOB/dev fixture; port8328/CDP9428",
+      "exit_code": 1,
+      "url_path": "/onboarding/consent",
+      "visible_result": "HEALTH DATA PAUSED; verification required; Local cleanup pending; rights actions visible",
+      "raw_log_sha256": "8deecf95584aba52b95fed4a94214f06368d1d4401ff8f358cc2af4582dc230e",
+      "limits": "Reached the route but not Before the quiz. Not a passing onboarding control. Distinct checkout paths/resolution topology; do not attribute both failures to M1 code."
+    },
+    {
+      "id": "BRAIN-M1-WEB-EXCEPTION",
+      "source_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+      "environment": "Same current app with local CDP pause-on-caught-exceptions enabled only around valid age submit; debugger automatically resumes; port8329/CDP9429",
+      "exit_code": 1,
+      "caught_exception": "TypeError: (0 , _nobleCiphersUtilsJs.randomBytes) is not a function",
+      "source_stack": [
+        "getOrCreateContentKey",
+        "runSerializedPrivateMutation",
+        "runAccountScopedPrivateOperation",
+        "withOperationTiming",
+        "setAgeVerified",
+        "submit"
+      ],
+      "raw_log_sha256": "50bc35ba22e0d0c5c9c3b79acaf0b50e56bb9a65393cae6e0b39260276ed4449",
+      "limits": "Diagnostic debugger changes scheduling. Establishes caught immediate failure, not complete package-resolution/crypto/native causality. No variable/credential/key dumps or app edits."
+    }
+  ],
+  "dependency_readback": {
+    "shared_root_ciphers_version": "1.3.0",
+    "shared_root_utils_randomBytes_export": false,
+    "mobile_ciphers_version": "2.3.0",
+    "mobile_utils_randomBytes_export": true,
+    "node_resolution_from_mobile_source": "mobile 2.3.0; typeof randomBytes=function",
+    "lock_contains_both_versions": true,
+    "mobile_utils_sha256": "08bce2a6b116205e0d114ed3da22490384d933c6549f0b1a43e2817349465147",
+    "metro_config_sha256": "566865ad3c33cf5134836a2211c697f9e0f33824c5e549a2ea3d151a3f61e677",
+    "hypothesis": "Linked-dependency Metro watch/resolution differs from Node; current config watches resolved hoisted node_modules but does not explicitly watch the separate resolved app-level node_modules target. Verify actual bundled path before changing source. This is an inference, not yet a proved resolver fix."
+  },
+  "unknowns": [
+    "Full remaining owner/consent/deletion/Shelf real-app matrix",
+    "Complete resolution of legacy baseline paused shell",
+    "Native encryption/storage/age/provider behavior",
+    "Final database CI result",
+    "Protected Security acceptance",
+    "Cryptographic/provider authenticity of arbitrary offline receipts"
+  ],
+  "no_actions": [
+    "No Git commits/pushes/merges",
+    "No edits to actual tracked app files",
+    "No vendor spend or new credentials",
+    "No private reports/photos/raw clinical data accessed",
+    "No native/signing/live-provider/release action"
+  ]
+}

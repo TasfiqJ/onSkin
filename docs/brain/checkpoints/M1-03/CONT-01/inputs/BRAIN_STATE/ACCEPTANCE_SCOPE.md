@@ -1,0 +1,2 @@
+# Acceptance scope
+Accepted: M1-03 initial CORE05 semantic repair and bounded diagnostic/custody work. Not accepted: the complete M1-03 baseline, full source/Security coverage, G97 acceptance, hosted replay, M2 entry, merge or release. Independent test results are positive observations with their exact source/environment, not a waiver of preserved prior failures. CONT-01 source-edit permission is separate from acceptance of its future implementation.

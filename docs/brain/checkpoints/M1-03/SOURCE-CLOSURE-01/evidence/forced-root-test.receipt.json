@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd test -- --force",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "environment": "Windows; Python3.9.13; Node v22.21.0",
+  "source_commit": "760745cfe321c0453a17f7fe2340d49098c849e6",
+  "source_tree": "4024679b0e55e0ec2d2b1380c6bdf097fa0fb8ba",
+  "status": "FAIL",
+  "exit_code": 1,
+  "started_at": "2026-10-21T15:23:50.461002+00:00",
+  "finished_at": "2026-10-21T15:23:53.190897+00:00",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/evidence/forced-root-test.log",
+    "sha256": "dbcbc25542e257cf84b579ac1bfdd6d6c17a077d5d6ad88dbfd2f166a1335249"
+  },
+  "admission": "NONE"
+}

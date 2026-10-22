@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "claim_origin": "BRAIN_INDEPENDENT_EXECUTIONS_AND_DIRECT_GITHUB_OBSERVATIONS",
+  "record_type": "Sanitized transcription/index of actual returned execution records, not original provider-signed evidence",
+  "observed_at_utc": "2026-10-20T22:35:24Z",
+  "head": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+  "environment": "Windows x64, existing Node22.21.0/npm11.20.0 and Python3.9.13; unchanged dependency junctions; synthetic local Chrome/Expo web; no new installs; no source edits by reviewer",
+  "source_runs": [
+    {
+      "command": "npm run test -- --force",
+      "exit_code": 0,
+      "result": "6067 passed; 6043 mobile +24 console; zero cached test tasks; no failed/skipped tests",
+      "raw_output_sha256": "dad1ca27ef0b1eade9d86f6a9cb13b6b8b557a083cce23c308af7515acbbea5a",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-0.log"
+    },
+    {
+      "command": "npm run typecheck -- --force",
+      "exit_code": 0,
+      "result": "3 tasks succeeded; zero cached tasks",
+      "raw_output_sha256": "410d9ec64f962d1cfa95db86301c4e343cf3bdf42105b52b62617af22b78c790",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-1.log"
+    },
+    {
+      "command": "npm run lint -- --force",
+      "exit_code": 0,
+      "result": "3 task commands succeeded; not every workspace necessarily defines its own lint rules",
+      "raw_output_sha256": "e35a7a63e7a5bdc408cb87b3093e69b091b2b1c2fd0f4d3b462ee7872558a089",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-2.log"
+    },
+    {
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "exit_code": 0,
+      "result": "55 discovered: 53 passed; 2 genuine Windows symbolic-link skips",
+      "raw_output_sha256": "6ad7d35ecf24fc43124e929742e283a0620d5d3ef05555e800d8e0736ca6a954",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-3.log"
+    },
+    {
+      "command": "python -B scripts/brain/brain.py --profile M1-02 report docs/brain/checkpoints/M1-02/CONT-01/completion-report.json",
+      "exit_code": 0,
+      "result": "Report and issued-authority binding passed; validator success is not independent acceptance",
+      "raw_output_sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-4.log"
+    },
+    {
+      "command": "node --test scripts/core03/routine-guidance-source-contract.test.mjs scripts/core04/persistence-source-contract.test.mjs scripts/core05/adherence-source-contract.test.mjs scripts/photo01/photo01-source-contract.test.mjs scripts/photo02/photo02-source-contract.test.mjs scripts/photo03/photo03-source-contract.test.mjs scripts/photo04/photo04-source-contract.test.mjs scripts/photo05/trend-admission-source-contract.test.mjs scripts/photo07/photo07-source-contract.test.mjs scripts/pay07/entitlement-admission-source-contract.test.mjs scripts/core01/metro-linked-dependencies.test.cjs scripts/core01/native-age-assurance-source-contract.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+      "exit_code": 1,
+      "result": "149 cases: 148 pass, 1 inherited CORE05 failure, 0 skip; overall FAIL",
+      "raw_output_sha256": "eea0e4b28b86e001d43a748b0091ae584513a8c358f89fc0369b1511ee108e48",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-5.log"
+    },
+    {
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "exit_code": 0,
+      "result": "Worklist current and strict check passed",
+      "raw_output_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-20261020T222342Z\\check-6.log"
+    }
+  ],
+  "browser_runs": [
+    {
+      "case": "daily390",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "port": 8491,
+      "debug_port": 9591,
+      "exit_code": 0,
+      "output_sha256": "905eda37a5ac0438758c2b6d4b8580d1339151def071aa78cff6f77cee3417ce",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\daily390.log",
+      "evidence_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\daily390"
+    },
+    {
+      "case": "daily375",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "port": 8492,
+      "debug_port": 9592,
+      "exit_code": 0,
+      "output_sha256": "803f41ce812c2bd26c57c234b2c16d0edbf9d465bd0ac97112e6909d526f797e",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\daily375.log",
+      "evidence_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\daily375"
+    },
+    {
+      "case": "daily430",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "port": 8493,
+      "debug_port": 9593,
+      "exit_code": 0,
+      "output_sha256": "b5ecd1489daf6cfe5e6902e454124f5e30a2a7f1e07bdaf57c47a2eecf30e9f8",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\daily430.log",
+      "evidence_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\daily430"
+    },
+    {
+      "case": "crossDaily390",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --daily-loop --cross-owner",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "port": 8494,
+      "debug_port": 9594,
+      "exit_code": 0,
+      "output_sha256": "c8c88721226beaf05eb1e701eabc507e013dcc2563460761f44d6eee9e691e8c",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\crossDaily390.log",
+      "evidence_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\crossDaily390"
+    },
+    {
+      "case": "signout390",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --account-isolation",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "port": 8495,
+      "debug_port": 9595,
+      "exit_code": 0,
+      "output_sha256": "7d5939ad94c097feba70e17eaee4903cd7fef22d765263a5f07233aec3c46403",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\signout390.log",
+      "evidence_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\signout390"
+    },
+    {
+      "case": "retained390",
+      "command": "node scripts/e2e/onboarding-first-session.mjs --retained-safety",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "port": 8496,
+      "debug_port": 9596,
+      "exit_code": 0,
+      "output_sha256": "6d6a4acfb8739ca9576ef1e529d870009eef3294b99a947caa6eb287a5babaa0",
+      "raw_output_location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\retained390.log",
+      "evidence_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-WEB-20261020T222358Z\\retained390"
+    }
+  ],
+  "browser_harness_sha256": "381f4a70172c6fd8418813b6896e7e26906b1a0ea0857bd36d57f14c90742e67",
+  "daily_helper_sha256": "c34fe25b7eccc59987517464fecb2d3ecf0c0ff3b73d5cb6da85b0dc31c0c31d",
+  "reviewer_probes": {
+    "raw_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-PROBES-20261020T222621Z",
+    "command": "node <repo>/node_modules/vitest/vitest.mjs run --config <probe_dir>/vitest.bound.config.mjs --reporter verbose -t BRAIN:",
+    "exit_code": 0,
+    "pass": 2,
+    "filtered_skips": 37,
+    "raw_output_sha256": "ce2b43e716a6a3fa461b58c618e6911ac6cca40f69da63eea8e3279318d9578c",
+    "results": [
+      "Unavailable ordinary native setup rejects, no schedule",
+      "Failed bootstrap shares in-flight attempt; recovered native port retries 4->8 category calls; ready then reused"
+    ],
+    "setup_diagnostic": "First sandbox probe launch had incorrect external module resolution and __DEV__ setup error. Preserved as reviewer harness failure, not product defect; exact installed native-port module IDs then bound. Source unchanged."
+  },
+  "clock_runs": [
+    {
+      "timezone": "America/Toronto",
+      "command": "npm --workspace apps/mobile run test -- --run src/features/today/routineClock.cont01.test.ts src/features/today/useRoutineClock.test.ts src/features/today/useToday.test.ts",
+      "pass": 19,
+      "fail": 0,
+      "exit_code": 0,
+      "raw_output_sha256": "8352c11a40f6c4972e2c03851915e7e9659139e197c3927201784d9b0107109a",
+      "location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-PROBES-20261020T222621Z\\Toronto.log"
+    },
+    {
+      "timezone": "Pacific/Auckland",
+      "command": "npm --workspace apps/mobile run test -- --run src/features/today/routineClock.cont01.test.ts src/features/today/useRoutineClock.test.ts src/features/today/useToday.test.ts",
+      "pass": 19,
+      "fail": 0,
+      "exit_code": 0,
+      "raw_output_sha256": "7f8431cd591a1d6b2b806057b91a922221613b6adcd4378c0999150547372d57",
+      "location": "C:\\Users\\jasim\\Documents\\ChatGPT\\BrainReviews\\M102CONT01-PROBES-20261020T222621Z\\Auckland.log"
+    }
+  ],
+  "custody": {
+    "new_commits": 9,
+    "incremental_changed_paths": 263,
+    "cumulative_main_changed_paths": 5798,
+    "reported_artifacts_checked": 180,
+    "artifact_mismatches": [],
+    "issued_payload_files_checked": 29,
+    "issued_manifest_sha256": "a74f8d38924807eb7892a05f6ec9477bf9ee3936a456093279eecac183a903bc",
+    "input_mismatches": [],
+    "protected_changes_in_each_commit": [],
+    "historical_record_net_changes": [],
+    "worklist_items": 14,
+    "worklist_git_fingerprints": 414,
+    "worklist_gate_meanings_unchanged": true,
+    "fingerprint_mismatches": [],
+    "measured_source": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+    "measured_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+    "evidence_only_delivery_tail_paths": 191,
+    "unexpected_delivery_tail_paths": [],
+    "final_worktree_status": "CLEAN"
+  },
+  "limitations": [
+    "Finite synthetic browser/core tests, not universal correctness",
+    "Paid positive UI, camera, native Keychain/filesystem/process death/OS delivery, authentic provider replay, qualified review NOT_RUN",
+    "No current local database execution by Brain; source-contract FAIL retained",
+    "All counts of focused/probe/timezone tests overlap or are separate, never added to root total"
+  ]
+}

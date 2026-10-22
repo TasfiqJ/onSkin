@@ -1,0 +1,481 @@
+{
+  "aggregate_axes_correction": "Current results apply only to H and stated environments. Prior evidence and scoped runtime acceptance remain historical; no new overall task/release admission.",
+  "axes": {
+    "client_surface": "Submitted browser evidence not independently replayed in this review; seven server logs unpublished at H",
+    "clinical_change": "NOT_ADMITTED",
+    "clinical_single_scan": "NOT_ADMITTED",
+    "commercial": "NO_GO",
+    "database_ci": "LATEST_QUALITY_REPOSITORY_PG15_PG17_EXPORTS_PASS_CANONICAL_DB_PENDING",
+    "governance_tooling": "INDEPENDENT_CLEAN_CLONE_65_CASES_58PASS_4FAIL_1ERROR_2SKIPS",
+    "integration": "SOURCE_ONLY_DIAGNOSTIC; HOSTED_REPLAY_NOT_AUTHORIZED",
+    "live_provider": "NOT_RUN",
+    "physical_device": "NOT_RUN",
+    "public_release": "BLOCKED",
+    "qualified_review": "NOT_RUN",
+    "retained_undo": "UNAVAILABLE_RETAINED_APPEND_ONLY_ADR038; CORRECTIONS_STILL_REQUIRED_M2_01_M2_02",
+    "secret_scanning": "ORIGINAL_12_TESTS_PASS; COMPLETE_SCANNER_RUN_RED_UNREVIEWED",
+    "security_acceptance": "FAILED_SOURCE_INVENTORY_REVIEW_ADVISORY_AND_EXPIRY",
+    "source": "SH01_ORIGINAL_SECRET_FIXTURE_AND_COMMITTED_EVIDENCE_SCOPED_ACCEPTED_CANDIDATE_PARTIAL",
+    "source_contracts": "131_PASS_ONE_SKIP_IN_132_SELECTED_WINDOWS_SOURCE_CONTRACTS"
+  },
+  "axes_history": [
+    {
+      "axes": {
+        "client_surface": "INDEPENDENT_SIGNOUT_RECOVERY_375_390_430_PASS; RETAINED390_UPGRADE390_DELETION_PENDING390_PASS; A_TO_B_NOT_RUN",
+        "clinical_change": "NOT_ADMITTED",
+        "clinical_single_scan": "NOT_ADMITTED",
+        "commercial": "NO_GO",
+        "database_ci": "EXACT_FINAL_RUN_SUCCESS; HISTORICAL_ECR_AVAILABILITY_RISK_NOT_PERMANENTLY_REPAIRED",
+        "governance_tooling": "M0_ACCEPTANCE_RETAINED; M1_CONT02_GOVERNANCE44_PASS_2_WINDOWS_SKIPS",
+        "integration": "BLOCKED_NOT_AUTHORIZED",
+        "live_provider": "NOT_RUN",
+        "physical_device": "NOT_RUN",
+        "public_release": "BLOCKED",
+        "qualified_review": "NOT_RUN",
+        "source": "M0_GOVERNANCE_ACCEPTED; M1_PARTIAL_FIX_REQUIRED; INDEPENDENT_ROOT6013_PASS"
+      },
+      "reason": "Prior aggregate axes remained stale M1-01 CONT-02 values; preserved, not silently copied as current truth. Exact accepted M1-01 task entry/audit takes precedence.",
+      "source_state_version": "brain-m1-01-accepted-m1-02-issued-9"
+    },
+    {
+      "axes": {
+        "client_surface": "M1_01_ACCEPTED_HISTORICALLY_AT31307694; M1_02_BRAIN_4_DAILY_REPLAYS_FAILED",
+        "clinical_change": "NOT_ADMITTED",
+        "clinical_single_scan": "NOT_ADMITTED",
+        "commercial": "NO_GO",
+        "database_ci": "CURRENT_EXACT_HEAD_FAILURE_ECR_BEFORE_SQL",
+        "governance_tooling": "CURRENT_M1_02_49_PASS_2_GENUINE_WINDOWS_SKIPS; REPORT_CHECK_PASS_NOT_ACCEPTANCE",
+        "integration": "M1_01_LOCAL_SOURCE_AND_SYNTHETIC_WEB_ACCEPTED; M1_02_PARTIAL; HOSTED/PROTECTED_NOT_AUTHORIZED",
+        "live_provider": "NOT_RUN",
+        "physical_device": "NOT_RUN",
+        "public_release": "BLOCKED",
+        "qualified_review": "NOT_RUN",
+        "retained_undo": "UNAVAILABLE_RETAINED_APPEND_ONLY; ADR038_REASSIGNED_CORRECTION_TO_EXISTING_M2_01_M2_02; NOT_PASS",
+        "source": "M0_GOVERNANCE_AND_M1_01_ACCEPTED_SCOPED; M1_02_FIX_REQUIRED; CURRENT_ROOT6048_PASS",
+        "source_contracts": "CURRENT_SELECTED149:148_PASS_1_INHERITED_FAIL"
+      },
+      "reason": "Prior partial scope superseded by exact-head scoped acceptance; historical record preserved",
+      "source_state_version": "brain-m1-02-partial-reviewed-cont01-issued-10"
+    },
+    {
+      "axes": {
+        "client_surface": "PRIOR_M102_SIX_BROWSER_FLOWS_HISTORICAL_NOT_RERUN_IN_M103",
+        "clinical_change": "NOT_ADMITTED",
+        "clinical_single_scan": "NOT_ADMITTED",
+        "commercial": "NO_GO",
+        "database_ci": "EXACT_DELIVERY_QUALITY_AND_CANONICAL_DB_SUCCESS; NO_HOSTED_AUTHORITY",
+        "governance_tooling": "56_PASS_2_GENUINE_WINDOWS_SKIPS; REPORT_VALID_NOT_ACCEPTANCE",
+        "integration": "LOCAL_CONTROLLED_PORT_ACCEPTED_SCOPED; HOSTED/PROTECTED_NOT_AUTHORIZED",
+        "live_provider": "NOT_RUN",
+        "physical_device": "NOT_RUN",
+        "public_release": "BLOCKED",
+        "qualified_review": "NOT_RUN",
+        "retained_undo": "UNAVAILABLE_RETAINED_APPEND_ONLY_ADR038; CORRECTIONS_STILL_REQUIRED_M2_01_M2_02",
+        "secret_scanning": "JOB_SUCCESS_WITH_PROVEN_HISTORY_AND_RUNTIME_PROVENANCE_GAPS",
+        "security_acceptance": "FAILED_AND_ORIGINAL_PROPOSAL_EXPIRED_UNCHANGED",
+        "source": "M103_CORE05_SCOPED_ACCEPTANCE; FULL_BASELINE_SECURITY_BLOCKED",
+        "source_contracts": "164_PASS_0_FAIL"
+      },
+      "reason": "Current M1-03 review updates exact current results; prior evidence remains historical.",
+      "source_state_version": "brain-m1-02-accepted-m1-03-issued-11"
+    },
+    {
+      "axes": {
+        "client_surface": "PRIOR_M102_SIX_BROWSER_FLOWS_HISTORICAL_NOT_RERUN_IN_M103",
+        "clinical_change": "NOT_ADMITTED",
+        "clinical_single_scan": "NOT_ADMITTED",
+        "commercial": "NO_GO",
+        "database_ci": "EXACT_DELIVERY_QUALITY_AND_CANONICAL_DB_SUCCESS; NO_HOSTED_AUTHORITY",
+        "governance_tooling": "56_PASS_2_GENUINE_WINDOWS_SKIPS; REPORT_VALID_NOT_ACCEPTANCE",
+        "integration": "LOCAL_CONTROLLED_PORT_ACCEPTED_SCOPED; HOSTED/PROTECTED_NOT_AUTHORIZED",
+        "live_provider": "NOT_RUN",
+        "physical_device": "NOT_RUN",
+        "public_release": "BLOCKED",
+        "qualified_review": "NOT_RUN",
+        "retained_undo": "UNAVAILABLE_RETAINED_APPEND_ONLY_ADR038; CORRECTIONS_STILL_REQUIRED_M2_01_M2_02",
+        "secret_scanning": "JOB_SUCCESS_WITH_PROVEN_HISTORY_AND_RUNTIME_PROVENANCE_GAPS",
+        "security_acceptance": "FAILED_AND_ORIGINAL_PROPOSAL_EXPIRED_UNCHANGED",
+        "source": "M103_CORE05_SCOPED_ACCEPTANCE; FULL_BASELINE_SECURITY_BLOCKED",
+        "source_contracts": "164_PASS_0_FAIL"
+      },
+      "reason": "Preserve prior exact-head results; never borrow them for H.",
+      "source_state_version": "brain-m1-03-partial-reviewed-cont01-issued-12"
+    },
+    {
+      "source": "M1-03 SH01 inherited state before this independent review",
+      "axes": {
+        "client_surface": "Submitted browser evidence not independently replayed in this review; seven server logs unpublished at H",
+        "clinical_change": "NOT_ADMITTED",
+        "clinical_single_scan": "NOT_ADMITTED",
+        "commercial": "NO_GO",
+        "database_ci": "CURRENT_CANONICAL_DB_PENDING; QUALITY_REPOSITORY_FAILED_NATIVE_MAPPING",
+        "governance_tooling": "58_PASS_2_WINDOWS_SKIPS; CLEAN_CLONE_REPORT_FAIL_12_MISSING_ARTIFACTS",
+        "integration": "LOCAL_CONTROLLED_PORT_ACCEPTED_SCOPED; HOSTED/PROTECTED_NOT_AUTHORIZED",
+        "live_provider": "NOT_RUN",
+        "physical_device": "NOT_RUN",
+        "public_release": "BLOCKED",
+        "qualified_review": "NOT_RUN",
+        "retained_undo": "UNAVAILABLE_RETAINED_APPEND_ONLY_ADR038; CORRECTIONS_STILL_REQUIRED_M2_01_M2_02",
+        "secret_scanning": "COMPLETE_RECORDED_REFS_AND_CURRENT_SNAPSHOT_BYTE_BOUND; RAW_FINDINGS_RETAINED_NO_ACCEPTANCE",
+        "security_acceptance": "FAILED_PROPOSAL_EXPIRED_OR_CHANGED",
+        "source": "CONT01_REPAIRS_SCOPED; NATIVE_AND_FIXTURE_COHERENCE_PENDING",
+        "source_contracts": "164_PASS_0_FAIL"
+      }
+    }
+  ],
+  "class": "BRAIN_ACCEPTANCE_LEDGER",
+  "generated_at_utc": "2026-10-21T13:06:13+00:00",
+  "new_issuance_not_acceptance": "M1-03 SOURCE-CLOSURE-01 follows a partial SH01 review; no whole M1-03 acceptance, no M2/DB/production/release permission.",
+  "sourcepack": {
+    "clinical_admissions": 0,
+    "integrity": "PASS_OFFLINE"
+  },
+  "tasks": [
+    {
+      "accepted_checkpoint_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "accepted_checkpoint_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "base_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "current_observed_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "decision": "ACCEPTED",
+      "decision_scope": "Exact baseline/diagnosis, fail-closed regression test and sanitized checkpoint only. NOT baseline repair, runtime admission, G97 BRAIN source GO, merge, replay or release.",
+      "evidence_pending": [
+        "Quality exact-source CI repair",
+        "Security original source/scanner/advisory/custody acceptance",
+        "Protected replay authority",
+        "Physical-device/provider/qualified evidence"
+      ],
+      "evidence_record": "REVIEW_OBSERVATIONS.json",
+      "fix_status": "NO_RUNTIME_FIX; JUSTIFIED_DIAGNOSIS_WITH_BLOCKER",
+      "new_commits": [
+        "dc6c42dfcf796cbddb94b510d30ecf277fa13112",
+        "b9a6b093f392ced340c156f2e7dcaefc72ed58e1"
+      ],
+      "open_blockers": [
+        "BLK-01",
+        "BLK-02",
+        "BLK-03",
+        "BLK-08",
+        "BLK-09"
+      ],
+      "review_report": "AUDIT_M0-01.md",
+      "state": "ACCEPTED_DIAGNOSTIC_CHECKPOINT_BASELINE_BLOCKED",
+      "task_id": "M0-01"
+    },
+    {
+      "accepted_at_utc": "2026-10-20T11:04:47+00:00",
+      "accepted_checkpoint_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "accepted_checkpoint_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "base_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "base_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "branch": "stage/m0-baseline",
+      "current_observed_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "current_observed_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "decision": "ACCEPTED",
+      "decision_scope": "Planning namespace, identity-preserving crosswalks, durable state, bound report/issuance/ZIP and filesystem tooling. Not Security source GO, runtime feature admission, hosted DB authority or main promotion.",
+      "dependency_decision": "M0-01 diagnostic acceptance is sufficient for independent non-runtime plan installation; does not satisfy database/CI/security gates.",
+      "findings": [
+        "M002-R1-F1",
+        "M002-R1-F2",
+        "M002-R1-F3",
+        "M002-R1-F4"
+      ],
+      "findings_status": "ALL_FOUR_RESOLVED_FOR_EXACT_HEAD",
+      "main_promotion_authorized": false,
+      "new_commits": [
+        "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+        "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+        "da9fa04759164b402ee3b2abd1c80e14261614fb",
+        "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+        "d68d8712518098cd727ed2b42decd5d75f1538c5",
+        "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+        "6aa01995f6dcb94fd28d358badc9f8d1e0273d39"
+      ],
+      "repair_base_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+      "repair_iteration": "FIX-01",
+      "review_history": [
+        {
+          "accepted_checkpoint_sha": null,
+          "base_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+          "base_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+          "branch": "stage/m0-baseline",
+          "current_observed_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+          "current_observed_tree": "e18f73771b5f440613a7e7cd339889949a8ae72a",
+          "decision": "FIX_REQUIRED",
+          "dependency_decision": "M0-01 diagnostic acceptance is sufficient for independent non-runtime plan installation; does not satisfy database/CI/security gates.",
+          "findings": [
+            "M002-R1-F1",
+            "M002-R1-F2",
+            "M002-R1-F3",
+            "M002-R1-F4"
+          ],
+          "main_promotion_authorized": false,
+          "new_commits": [
+            "8fd48286e0ad65e7797588d7cd88edde27fe4a5f",
+            "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+            "da9fa04759164b402ee3b2abd1c80e14261614fb"
+          ],
+          "repair_base_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+          "repair_iteration": "FIX-01",
+          "review_report": "AUDIT_M0-02_REVIEW01.md",
+          "runtime_scope": "NONE",
+          "state": "FIX_REQUIRED_FIX01_ISSUED",
+          "task_id": "M0-02"
+        }
+      ],
+      "review_report": "AUDIT_M0-02_ACCEPTANCE.md",
+      "runtime_scope": "NONE",
+      "state": "ACCEPTED_GOVERNANCE_ONLY",
+      "task_id": "M0-02"
+    },
+    {
+      "accepted_checkpoint_sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "accepted_checkpoint_tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0",
+      "base_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+      "base_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+      "branch": "stage/m1-retained-safety",
+      "closed_findings": [
+        "M1-MATRIX-01",
+        "M1-OWNER-BROWSER-03"
+      ],
+      "continuation_base_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "continuation_base_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "current_observed_sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "current_observed_tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0",
+      "decision": "ACCEPTED",
+      "decision_scope": "RETAINED_CLIENT_SOURCE_AND_SUPPORTED_LOCAL_WEB_SAFETY_ONLY",
+      "dependency_decision": "M1-01 is explicitly dependency-ready after M0-02. Protected Security/replay resolution remains M1-03 and blocks integration; it does not authorize or require a new schema in M1-01.",
+      "depends_on": [
+        "M0-02"
+      ],
+      "findings": [],
+      "main_promotion_authorized": false,
+      "new_commits": [
+        "9508e3fe2626d0cc48f3c479204843920be2bc38",
+        "696fa0e5860638e7fc286a24824010d166bf8c37",
+        "8a8c0d88394986894f1e81085dceba9c927c9076",
+        "b76b8f7df68eb9e48fdb1d2d4a3900ae1ab1dfde",
+        "536a2e41496003265ac68acc4f85214204327fe4",
+        "6e86e61bc5a11dcf5feaed0af3f9980cdd4d2f89",
+        "6c088d81444cda933549d0bb64227a3611e98f70",
+        "a21705a93c64a8e1c0f6f7061d5247c40d1a1f65",
+        "4da339b0aa5d11143668dd03adba55c334748d7d",
+        "38d75c12f13ef105cfa913c8702fd13b6009d97b",
+        "8a485b2e462b041aa9b0a54570595cbcf04bad5e",
+        "7cb800fbc14046284bb610e2c4e2e46303d7a423",
+        "e5005a4f7bdab781782252eb6f07bae97ebb9d7b",
+        "d2916d79c2c04988649a5a8ed631baf67ed2851c",
+        "b1f05a2601927ddbe582de2b15dfa600c9bb3e99",
+        "c15f5860fd9969dcfcb25447da64e149f3d4cae6",
+        "31307694ebb9895ed8cfb77fa6ac532b789d2810"
+      ],
+      "review_history": [
+        {
+          "accepted_checkpoint_sha": null,
+          "base_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+          "base_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+          "branch": "stage/m1-retained-safety",
+          "continuation_base_sha": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+          "current_observed_sha": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+          "current_observed_tree": "ac442c8f6d00593b4e6fe4bde3fd060f7fe028fa",
+          "decision": "FIX_REQUIRED",
+          "decision_scope": "Retain partial code on stage; not accepted as a completed client-safety subsystem.",
+          "dependency_decision": "M1-01 is explicitly dependency-ready after M0-02. Protected Security/replay resolution remains M1-03 and blocks integration; it does not authorize or require a new schema in M1-01.",
+          "depends_on": [
+            "M0-02"
+          ],
+          "findings": [
+            "M1-WEB-01",
+            "M1-RIGHTS-01",
+            "M1-MATRIX-01",
+            "M1-GOV-01",
+            "M1-CI-WORKLIST-01"
+          ],
+          "main_promotion_authorized": false,
+          "review_report": "AUDIT_M1-01_REVIEW01.md",
+          "runtime_scope": "RETAINED_CLIENT_IDENTITY_CONSENT_STORAGE_MANUAL_SHELF_SAFETY",
+          "state": "PARTIAL_REVIEWED_CONT01_ISSUED",
+          "task_id": "M1-01"
+        },
+        {
+          "accepted_checkpoint_sha": null,
+          "base_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+          "base_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+          "branch": "stage/m1-retained-safety",
+          "continuation_base_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+          "continuation_base_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+          "current_observed_sha": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+          "current_observed_tree": "7105fceff7fbaa0190ea0813471adac0a0b7d066",
+          "decision": "FIX_REQUIRED",
+          "decision_scope": "Retain verified improvements, finish account recovery and the same M1 client-safety matrix. No task acceptance, new phase or main promotion.",
+          "dependency_decision": "M1-01 is explicitly dependency-ready after M0-02. Protected Security/replay resolution remains M1-03 and blocks integration; it does not authorize or require a new schema in M1-01.",
+          "depends_on": [
+            "M0-02"
+          ],
+          "findings": [
+            "M1-SIGNOUT-02",
+            "M1-HARNESS-02",
+            "M1-MATRIX-01"
+          ],
+          "main_promotion_authorized": false,
+          "new_commits": [
+            "4abe52d61ee187aca75e5992f74fb3b6175ed587",
+            "b130b3f6bcbb7c21f29dc375c65ee2f41c228d34",
+            "5c8434bdef560c75a9fd95667cf0c5b7ca6b8781",
+            "1155128a71e0d2d91a38b85a0402f92c2970a70e",
+            "8f0980e5c1262257ef3fb0ffa4611dc2a9827d0e",
+            "cf6e3169edaee5102a95a7da7d8f67760108980f",
+            "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+            "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a"
+          ],
+          "review_report": "AUDIT_M1-01_REVIEW02.md",
+          "runtime_scope": "RETAINED_CLIENT_IDENTITY_CONSENT_STORAGE_MANUAL_SHELF_SAFETY",
+          "state": "PARTIAL_REVIEWED_CONT02_ISSUED",
+          "task_id": "M1-01"
+        },
+        {
+          "accepted_checkpoint_sha": null,
+          "base_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39",
+          "base_tree": "3a75ea56f12f9422affc6e09936993ffa9252c05",
+          "branch": "stage/m1-retained-safety",
+          "continuation_base_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+          "continuation_base_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+          "current_observed_sha": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+          "current_observed_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+          "decision": "FIX_REQUIRED",
+          "decision_scope": "Prior sign-out/harness findings closed at exact head; M1 remains incomplete pending required cross-owner browser proof. No later roadmap task or main promotion.",
+          "dependency_decision": "M1-01 is explicitly dependency-ready after M0-02. Protected Security/replay resolution remains M1-03 and blocks integration; it does not authorize or require a new schema in M1-01.",
+          "depends_on": [
+            "M0-02"
+          ],
+          "findings": [
+            "M1-MATRIX-01",
+            "M1-OWNER-BROWSER-03"
+          ],
+          "main_promotion_authorized": false,
+          "new_commits": [
+            "f4f5345aebaf7f0d49b1427b2f91d81d9960f783",
+            "968e0e490a82e50af18c3c9eddff4cffd0b15534",
+            "3c10b5e9a9d165fc477b19effdd51176866761c0",
+            "56c4b2d6ea3684a49c3fe0d765f10df3a82b8823",
+            "b3b61425e6380f986035bdadd30a37b88741556a",
+            "a42f575995fe6559791ff593c977aa92c52a609f",
+            "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+            "4e952618542226fb88ba628822aa76be0a605372",
+            "7afde5aa763b766620f8882e30d858169dd790ff",
+            "821b74a8cff5c64b56fa085aa1524b0166f3752c",
+            "f0809923c4fe624329ebc215e7ead0d5b66874fd",
+            "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+            "288a9e9c2c8ddf51abb6e0e22c83c220ee5cbf53",
+            "59731d69ebca57c0aebcfcc0bc07364c5591291a",
+            "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0"
+          ],
+          "review_report": "AUDIT_M1-01_REVIEW03.md",
+          "runtime_scope": "RETAINED_CLIENT_IDENTITY_CONSENT_STORAGE_MANUAL_SHELF_SAFETY",
+          "state": "PARTIAL_REVIEWED_CONT03_ISSUED",
+          "task_id": "M1-01"
+        }
+      ],
+      "review_report": "AUDIT_M1-01_ACCEPTANCE.md",
+      "runtime_scope": "RETAINED_CLIENT_IDENTITY_CONSENT_STORAGE_MANUAL_SHELF_SAFETY",
+      "state": "ACCEPTED_SCOPED",
+      "task_id": "M1-01"
+    },
+    {
+      "accepted_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "accepted_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+      "base_sha": "31307694ebb9895ed8cfb77fa6ac532b789d2810",
+      "base_tree": "c52f49d6f3dfa8cdee98d4a26c707ad8747576d0",
+      "branch": "stage/m1-retained-safety",
+      "continuation_base_sha": "8c1149116df00f34314357d10929b32f52f6d118",
+      "continuation_base_tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+      "current_observed_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "current_observed_tree": "58ad583815b55736f1e907e02d9c46853f0d1a11",
+      "decision": "ACCEPTED",
+      "decision_scope": "Retained daily-loop/private diary/reminder client source and available synthetic local surface; no positive native, provider, paid-feature, qualified, baseline Security, merge or release approval.",
+      "depends_on": [
+        "M1-01"
+      ],
+      "findings": [],
+      "latest_reviewed_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "latest_reviewed_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+      "main_promotion_authorized": false,
+      "measured_source": "9f1409fb2c2a1189e12c6b8f140f108ce2f2da12",
+      "measured_tree": "b080649f12e25edcaf22d3b8b95c7d4424f97357",
+      "prior_reviews": [
+        {
+          "decision": "FIX_REQUIRED",
+          "report": "AUDIT_M1-02_REVIEW01.md",
+          "sha": "8c1149116df00f34314357d10929b32f52f6d118"
+        }
+      ],
+      "repair_iteration": "CONT-01_REVIEWED",
+      "review_report": "AUDIT_M1-02_ACCEPTANCE.md",
+      "runtime_scope": "RETAINED_TODAY_PRIVATE_DIARY_REMINDER_CONTINUITY",
+      "spend_usd": 0,
+      "state": "ACCEPTED_SCOPED_BASELINE_STILL_BLOCKED",
+      "task_id": "M1-02"
+    },
+    {
+      "accepted_subscope": [
+        "CORE05_SEMANTIC_REPAIR",
+        "INITIAL_DIAGNOSTIC_CUSTODY",
+        "OBSERVER_TEST_SETTLEMENT",
+        "MIXED_SEVERITY_CLASSIFICATION",
+        "ORIGINAL_SECRET_JOB_COVERAGE_AND_BYTE_PROVENANCE",
+        "VITE_MINIMAL_CLOSURE_COMPATIBILITY_ONLY",
+        "NATIVE_MAPPING_AND_GENERATED_AUDIT_COHERENCE",
+        "HISTORICAL_SBOM_TEST_ONLY_LOCK_COHERENCE",
+        "ORIGINAL_ARTIFACT_LATE_PUBLICATION_AND_COMMITTED_GUARD",
+        "NON_ADMITTING_DIAGNOSTIC_SCANNER_CANDIDATE_IMPLEMENTED_PARTIALLY"
+      ],
+      "base_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+      "base_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+      "branch": "stage/m1-retained-safety",
+      "continuation_base_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "continuation_base_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+      "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+      "latest_reviewed_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "latest_reviewed_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+      "main_promotion_authorized": false,
+      "publication_status": "PUBLISHED_RECORDED_LATE_RECOVERY; ORIG829+NEW106_COMMITTED_IN_DELIVERY",
+      "review_history": [
+        {
+          "accepted_subscope": [
+            "CORE05_SEMANTIC_REPAIR",
+            "INITIAL_DIAGNOSTIC_CUSTODY"
+          ],
+          "base_sha": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+          "base_tree": "fb88a57fca2d54bf7975d6b6b0ede12c3a8bd1a0",
+          "branch": "stage/m1-retained-safety",
+          "continuation_base_sha": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+          "continuation_base_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+          "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+          "latest_reviewed_sha": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+          "latest_reviewed_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+          "main_promotion_authorized": false,
+          "review_report": "AUDIT_M1-03_REVIEW01.md",
+          "scope": "Baseline and retained release-source debt; protected writes require separate evidence-bound approval",
+          "state": "PARTIAL_REVIEWED_CONT01_ISSUED",
+          "task_id": "M1-03",
+          "whole_task_accepted": false
+        },
+        {
+          "decision": "PARTIAL_ACCEPTANCE_CONTINUATION_REQUIRED",
+          "latest_reviewed_sha": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+          "latest_reviewed_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+          "review_report": "AUDIT_M1-03_REVIEW02.md",
+          "state": "PARTIAL_REVIEWED_OVERNIGHT01_ISSUED",
+          "whole_task_accepted": false
+        }
+      ],
+      "review_report": "AUDIT_M1-03_OVERNIGHT01.md",
+      "reviewed_sha": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+      "reviewed_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+      "scope": "Baseline and retained release-source debt; protected writes require separate evidence-bound approval",
+      "state": "PARTIAL_OVERNIGHT01_ACCEPTED_SECURITY_HARDEN01_ISSUED",
+      "status": "SECURITY_HARDEN01_ISSUED_NOT_WHOLE_ACCEPTED",
+      "task_id": "M1-03",
+      "whole_task_accepted": false
+    }
+  ]
+}

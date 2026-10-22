@@ -1,0 +1,23 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_m103_security_harden01_profile.py",
+    "-v"
+  ],
+  "started": "2026-10-21T11:28:36.528770+00:00",
+  "finished": "2026-10-21T11:28:57.176680+00:00",
+  "raw_exit": 0,
+  "output_sha256": "21588a1bf6f25e05bd0d3ff636ff711c5d827f30d59302d5b80bb98523ba4c27",
+  "output_bytes": 616,
+  "environment_overrides": null,
+  "source_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "source_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "admission": "NONE"
+}

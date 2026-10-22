@@ -1,0 +1,142 @@
+{
+  "authority": "additive Brain review of accepted scoped engineering; not G97 approval or main promotion",
+  "files": [
+    {
+      "bytes": 23781,
+      "path": "ACCEPTANCE_LEDGER.json",
+      "sha256": "c2968855c43a6574114837e762b338d4e9863ce26e9d6bc1588fb764d1460679"
+    },
+    {
+      "bytes": 428,
+      "path": "ACCEPTANCE_SCOPE.md",
+      "sha256": "3180049139836947e9b539d8d894d6caa34c9a285043a0028d734d0b46d608e3"
+    },
+    {
+      "bytes": 1849,
+      "path": "ADR_DECISIONS.md",
+      "sha256": "e86c4de0a9b9761700c3c56653fa0f286b32be770b54547f27067c5e68a86a3d"
+    },
+    {
+      "bytes": 27842,
+      "path": "ADR_REGISTRY.json",
+      "sha256": "3bb5730db738e898c34f8af42ac2e418536a9e8fc38fb088d8f249984e430a40"
+    },
+    {
+      "bytes": 5859,
+      "path": "AUDIT_M1-02_ACCEPTANCE.md",
+      "sha256": "455f98c8ba57f3d69081f3c9a4fd77f9b81487ea8428db3db9f4e6b0e3a50092"
+    },
+    {
+      "bytes": 10089,
+      "path": "AUDIT_M1-03_REVIEW01.md",
+      "sha256": "c72847b7b704b584da2869662c907b414557481eb57d3b35054332d4a1ef7c75"
+    },
+    {
+      "bytes": 10167,
+      "path": "AUDIT_M1-03_REVIEW02.md",
+      "sha256": "8f7bc1cf439cdb5ebe1d7e6e218170c16905d9bb9c747f44f1730d566329e676"
+    },
+    {
+      "bytes": 50941,
+      "path": "BLOCKERS.json",
+      "sha256": "8ba970d7d94cd26a680f7c36ac892584898f9f3013d0ec5c82072aba232ce396"
+    },
+    {
+      "bytes": 685,
+      "path": "BLOCKERS.md",
+      "sha256": "3db87feacd949d99f793535140eceb1f4b10668d94c7ff7c5fe5a45992c0acd2"
+    },
+    {
+      "bytes": 804,
+      "path": "BRAIN_RESUME_PROMPT.md",
+      "sha256": "77099a1d031d9c68a3a1a6e7f70ebbfaa99f240d13a56726ad234e0200503c5e"
+    },
+    {
+      "bytes": 2995,
+      "path": "CANDIDATE_TOOL_INPUTS.json",
+      "sha256": "fdc62dc234dff65e091cb44e6bdea414c76d08e4406211f44ccd885b40858685"
+    },
+    {
+      "bytes": 11280,
+      "path": "CI_ARTIFACT_REVIEW.json",
+      "sha256": "c28855cfb705a99fce3801fd252bf04d68e65491361093e6af5b87df1eebf862"
+    },
+    {
+      "bytes": 2119,
+      "path": "CI_OBSERVATIONS.json",
+      "sha256": "3bfa73f2f51466a5e2b337a86548e677d15a125a9ce2a5a465ee11f315f9e7c3"
+    },
+    {
+      "bytes": 389,
+      "path": "CI_OBSERVATIONS.md",
+      "sha256": "c1d43fcf80440ad0837942620d87696b2c92f375163d36c40380bdfe68d8dd0e"
+    },
+    {
+      "bytes": 1071,
+      "path": "DECISIONS_DELTA.md",
+      "sha256": "96217a00b702f024e83c10f7fe4742de3c09de79baf2073cb91142a1f7f3c21c"
+    },
+    {
+      "bytes": 13762,
+      "path": "EXECUTION_EVIDENCE.json",
+      "sha256": "e463ad9cec0d6380cf625cb7d48ccff1cd16a0ea2ef291cdf759aa70bcf99d22"
+    },
+    {
+      "bytes": 2714,
+      "path": "NATIVE_AND_FIXTURE_BINDINGS.json",
+      "sha256": "78ebca127cf21c4421e5b1aca827db5006f17eed2dfb3bbf33b0e14e8a91dcb2"
+    },
+    {
+      "bytes": 1514,
+      "path": "OVERNIGHT_ISSUANCE_OBSERVATION.json",
+      "sha256": "ecfbdf232d8a1bc4ede13cda56be831fecb6b1b21923049c98a42d0efb4171a3"
+    },
+    {
+      "bytes": 5891,
+      "path": "PUBLICATION_RECOVERY_INPUTS.json",
+      "sha256": "3efd5d7a1cdaee8f8d25659a30fb664b55a9e39a742c06b48aa23a91eacecec9"
+    },
+    {
+      "bytes": 4557,
+      "path": "REVIEWED_SOURCE_HASHES.json",
+      "sha256": "b1d997938155f01cae1cd4ec29d2ca104ec51ba1593b4707d8f09c01da73be92"
+    },
+    {
+      "bytes": 414,
+      "path": "REVIEW_OBSERVATIONS.md",
+      "sha256": "a177a552cc3d43b56799e35d40f1addade883019550285bb453369664b00b7a9"
+    },
+    {
+      "bytes": 560,
+      "path": "ROADMAP_STATUS.md",
+      "sha256": "cf4cc9aeac3875aa32e9bf5b0ad5211e15a9ce078b70bad58d39dcc0b4de9f44"
+    },
+    {
+      "bytes": 16976,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "73e5ef960c8d9093c75486df9e41f2cb20764243214e9979d811939f49aa450f"
+    },
+    {
+      "bytes": 1152,
+      "path": "STATE_AT_GLANCE.md",
+      "sha256": "6487659fffb48532e5fe34beb0f83afe944c200f660f9e5740954a389e4570dc"
+    },
+    {
+      "bytes": 2236,
+      "path": "TRUFFLEHOG_BYTE_WITNESS.json",
+      "sha256": "52ff6165602d80d71b9918c6f24ab7b9dedb1e0f2fc899d22bc315362cf44257"
+    },
+    {
+      "bytes": 63802,
+      "path": "brain_state.json",
+      "sha256": "8aee8d72b778a45f9b735816e7a8d9d2dd72998046bbe07b02db94bb2920e943"
+    },
+    {
+      "bytes": 50565,
+      "path": "roadmap.json",
+      "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+    }
+  ],
+  "generated_at_utc": "2026-10-21T11:10:53+00:00",
+  "state_version": "brain-m1-03-security-harden01-issued-15"
+}

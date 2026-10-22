@@ -3,6 +3,7 @@ import { Platform, ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
+import { env, isSupabaseConfigured } from '@/lib/env';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 
 import {
@@ -38,6 +39,12 @@ import {
   isAccountDeletionAuthSessionUnavailable,
 } from './actions';
 import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from './accountDeletionCopy';
+import {
+  readAccountDeletionFixturePhase,
+  resolveAccountDeletionRecoveryFixture,
+  writeAccountDeletionFixturePhase,
+  type AccountDeletionRecoveryFixture,
+} from './accountDeletionRecoveryE2E';
 
 type RecoveryView =
   | { kind: 'loading' | 'checking' }
@@ -52,12 +59,6 @@ type RecoveryView =
   | { kind: 'expired' }
   | { kind: 'error' }
   | { kind: 'ready' };
-
-type AccountDeletionRecoveryFixture =
-  | 'pending_then_completed_manual'
-  | 'invalid'
-  | 'invalid_support_only'
-  | 'expired';
 
 const COPY = {
   loading: 'Checking account deletion...',
@@ -80,17 +81,13 @@ const COPY = {
 } as const;
 
 function accountDeletionRecoveryFixture(): AccountDeletionRecoveryFixture | null {
-  if (Platform.OS !== 'web' || typeof __DEV__ === 'undefined' || !__DEV__) return null;
-  const value = process.env.EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY;
-  if (
-    value === 'pending_then_completed_manual' ||
-    value === 'invalid' ||
-    value === 'invalid_support_only' ||
-    value === 'expired'
-  ) {
-    return value;
-  }
-  return null;
+  return resolveAccountDeletionRecoveryFixture({
+    platform: Platform.OS,
+    isDev: typeof __DEV__ !== 'undefined' && __DEV__,
+    appEnvironment: env.appEnvironment,
+    supabaseConfigured: isSupabaseConfigured,
+    mode: process.env.EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY,
+  });
 }
 
 function pendingView(
@@ -130,7 +127,20 @@ export function AccountDeletionRecoveryGate({ children }: { children: ReactNode 
       setSupportUnavailable(false);
 
       if (fixture) {
-        if (fixture === 'pending_then_completed_manual' && retryNonce === 0) {
+        let phase: ReturnType<typeof readAccountDeletionFixturePhase> = 'pending';
+        try {
+          if (fixture === 'pending_then_completed_manual')
+            phase = readAccountDeletionFixturePhase();
+        } catch {
+          setView({ kind: 'error' });
+          return;
+        }
+        if (phase === 'acknowledged') {
+          resolveAccountDeletionStartupWithoutNativeStore();
+          setView({ kind: 'ready' });
+          return;
+        }
+        if (fixture === 'pending_then_completed_manual' && phase === 'pending') {
           setView({
             kind: 'pending',
             status: 'pending',
@@ -264,9 +274,17 @@ export function AccountDeletionRecoveryGate({ children }: { children: ReactNode 
   }, [fixture, retryNonce, wakeRevision]);
 
   const checkAgain = useCallback(() => {
+    if (fixture === 'pending_then_completed_manual') {
+      try {
+        writeAccountDeletionFixturePhase('completed');
+      } catch {
+        setView({ kind: 'error' });
+        return;
+      }
+    }
     setView({ kind: 'checking' });
     setRetryNonce((nonce) => nonce + 1);
-  }, []);
+  }, [fixture]);
 
   const retryIntake = useCallback(async () => {
     if (retryingIntake) return;
@@ -347,8 +365,11 @@ export function AccountDeletionRecoveryGate({ children }: { children: ReactNode 
     }
     setView({ kind: 'checking' });
     try {
-      if (fixture) resolveAccountDeletionStartupWithoutNativeStore();
-      else await clearCompletedAccountDeletionState();
+      if (fixture) {
+        if (fixture === 'pending_then_completed_manual')
+          writeAccountDeletionFixturePhase('acknowledged');
+        resolveAccountDeletionStartupWithoutNativeStore();
+      } else await clearCompletedAccountDeletionState();
       acknowledgeAccountDeletionNotice(notice);
       setManualNotice(null);
       setView({ kind: 'ready' });

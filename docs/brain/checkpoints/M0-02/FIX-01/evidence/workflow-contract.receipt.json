@@ -1,0 +1,21 @@
+{
+  "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Node20.20.2",
+  "source_commit": "64dd095a4b50b2ba2791ad8a49b3caef3d3af545",
+  "source_tree": "ed7f4039d80959140c409ca42ebb8181aef94199",
+  "status": "PASS",
+  "exit_code": 0,
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/workflow-contract.log",
+    "sha256": "d383ca23cb36b69d1da50ea7302d4735e5894de5d78efe18ca57a4969cfc4492"
+  },
+  "counts": {
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0
+  }
+}

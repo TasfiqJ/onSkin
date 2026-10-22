@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "state_version": "brain-m1-01-accepted-m1-02-issued-9",
+  "files": [
+    {
+      "path": "ACCEPTANCE_LEDGER.json",
+      "bytes": 13747,
+      "sha256": "b662ef5edf0baaf8f1ed2257ceaf9e93e23c8bd9e7282a8db2faa3bd6a3ee89e"
+    },
+    {
+      "path": "ACCEPTANCE_SCOPE.md",
+      "bytes": 617,
+      "sha256": "14ce084de84e0115b725e7733b2e8b372f6f87dd7c1a12c5bbdc0f71ddeba4d0"
+    },
+    {
+      "path": "ADR_REGISTRY.json",
+      "bytes": 18707,
+      "sha256": "0e13a9bd6a5d1010cf8fa85489d175f7be29f4433258eb8ec1920652523277cd"
+    },
+    {
+      "path": "AUDIT_M1-01_ACCEPTANCE.md",
+      "bytes": 6220,
+      "sha256": "1f7a3c6f3dae79d5caf691c6ed7d24e68ea6790e3328343b7059708d846be99e"
+    },
+    {
+      "path": "BLOCKERS.json",
+      "bytes": 26845,
+      "sha256": "31e4f68773028753af3ec8835096840a9360c1fb81a0a26fc1f25e11b64213a1"
+    },
+    {
+      "path": "BLOCKERS.md",
+      "bytes": 903,
+      "sha256": "fe0215ffa919648f54c78c39d9117acd03f9ebed38dbe3b7678bd6a992514985"
+    },
+    {
+      "path": "BRAIN_RESUME_PROMPT.md",
+      "bytes": 1514,
+      "sha256": "a7f1e4dc62a63ad6a3571a21e443aab2681bac310a2af970fcddffb2f2c46b65"
+    },
+    {
+      "path": "CI_OBSERVATIONS.md",
+      "bytes": 3108,
+      "sha256": "64e22d957b92c2c2c686f26c0dd7d0642b73fe10bab1e5d84eedf0ebf600aee8"
+    },
+    {
+      "path": "DECISIONS_DELTA.md",
+      "bytes": 1001,
+      "sha256": "c8f095f64690e0714e9641191c530f821ee21f28601380b152666073c9e1e8bb"
+    },
+    {
+      "path": "REVIEW_OBSERVATIONS.md",
+      "bytes": 8843,
+      "sha256": "489f9d5e1217cd7639a2cb5df9646ba9ee87898b823ad01bf7e6507c2284543d"
+    },
+    {
+      "path": "STATE_AT_GLANCE.md",
+      "bytes": 1093,
+      "sha256": "aa19bc98cc55c347999132e7fdc3cfe70625c8e0a62ae70de1187dcc5eb443be"
+    },
+    {
+      "path": "brain_state.json",
+      "bytes": 40075,
+      "sha256": "a48af5e13b9acda73079730001d712005676450f0999843dc7c3b4b02482a0e0"
+    },
+    {
+      "path": "roadmap.json",
+      "bytes": 46643,
+      "sha256": "ae6f090e6ab87eb48bb644fa4372cf1cfeb2060a59aa12c4bd8b0743d8b6f34d"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "bodyText": "PRIVACY & ACCOUNT Your account is still here. Age confirmation is still required for health features. Your existing data rights remain available. Billing does not stop automatically; use Manage subscription below whenever you need it. Withdrawal has not finished. Keep this pause and retry / check status. PRIVACY REQUEST Status: active. Local cleanup complete. Retry / check status [DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent WITHDRAWN. Collected health-purpose data is to be deleted. The account, billing, subscription entitlement, App Lock setting, and store-transaction safety record are preserved. Confirm withdrawal Cancel ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support Back to age confirmation",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry / check status",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 262
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Confirm withdrawal",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 508
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Cancel",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 564
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Manage subscription",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 706
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Restore purchases",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 770
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Export my data",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 834
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to age confirmation",
+      "role": "button",
+      "selected": false,
+      "width": 430,
+      "x": 0,
+      "y": 876
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8396/",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

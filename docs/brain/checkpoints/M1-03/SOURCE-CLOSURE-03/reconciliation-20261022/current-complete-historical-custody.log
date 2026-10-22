@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 19, in <module>
+  File "/root/onskin-reconcile-measured-66ba3219-20261022/scripts/security_readiness/m103/hydrate_history.py", line 64, in hydrate
+    assert not any(line.startswith('?') for line in reachable), 'Incomplete historical object closure'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Incomplete historical object closure

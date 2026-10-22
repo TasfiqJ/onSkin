@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "kind": "COMMITTED_HASH_AUDIT",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "checked_commit": "58290fc2af04f7daeed8860c464d0e1d95ace00b",
+  "checked_tree": "20686764909fab7528040bbdb92f83693d9ed6ba",
+  "report_artifacts_checked": 141,
+  "checksum_objects_checked": 140,
+  "regular_git_blob_modes": [
+    "100644",
+    "100755"
+  ],
+  "working_bytes_equal_committed_blobs": true,
+  "measured_to_checked_tail": "QUALITY-RECOVERY-01 checkpoint and root handoff only",
+  "raw_exit": 0,
+  "output": "COMMITTED_ARTIFACTS 141 PASS; CHECKSUM_OBJECTS 140 PASS; measured-to-delivery checkpoint/handoff only",
+  "admission": "NONE"
+}

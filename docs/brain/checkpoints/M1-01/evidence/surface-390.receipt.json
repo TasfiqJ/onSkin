@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_PORT=8317 ONBOARDING_E2E_DEBUG_PORT=9417 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\docs\\brain\\checkpoints\\M1-01\\evidence\\surface-390 node scripts/e2e/onboarding-first-session.mjs",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Node22.21.0/npm11.20.0; accepted-stage installed dependencies via junctions; unchanged lockfile; no install/upgrade; installed headless Chrome; Expo57 development; anonymous_owner fixture; unconfigured Supabase; synthetic local state only",
+  "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+  "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+  "status": "FAIL",
+  "exit_code": 1,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/evidence/surface-run.txt",
+    "sha256": "aa25f0693cf24e0a3525abf61f4a14130612058eeb6de19b2897b3ce82771ffe"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "authorization_id": "M103-QUALITY-RECOVERY01-SOURCE-EDIT-01",
+  "base_commit": "6c9c280669ccce07cab0b57f7b2118ec7bbd3a35",
+  "base_tree": "43ab1a4a7597c8572850b98fdc420080ec834b07",
+  "file_count": 16,
+  "files": [
+    {
+      "bytes": 2047,
+      "path": "00_READ_FIRST.md",
+      "sha256": "8c63b748441166cb00d2aaf9aabf4de3a4d2b1922478fc60560844a6218b0094"
+    },
+    {
+      "bytes": 4323,
+      "path": "01_BRAIN_AUDIT.md",
+      "sha256": "97419628cdcbd38061dc383b165d07c7502ee6ff35f24eabe013f2aa7c33ba1c"
+    },
+    {
+      "bytes": 5159,
+      "path": "02_TASK.md",
+      "sha256": "4e4545113ad490526770ebbd517d7985eb587b6e7eaa1dd937c197b7401fc2b9"
+    },
+    {
+      "bytes": 2205,
+      "path": "03_SOURCE_EDIT_AUTHORIZATION.md",
+      "sha256": "3cbe5aa49f79f67ed47f67a64fa266cd6f5584d557c2ff37dec55b12d748a933"
+    },
+    {
+      "bytes": 2620,
+      "path": "04_REPRODUCERS.md",
+      "sha256": "a00522b9ae946cb3a9ce7501e85a487ef1ffd69ea845d830688551ea92624a82"
+    },
+    {
+      "bytes": 1994,
+      "path": "05_ACCEPTANCE_MATRIX.md",
+      "sha256": "4ff65097fce95fc5a7fa78b929908f6fce6cbfb5c9cad99cd09451f7402521eb"
+    },
+    {
+      "bytes": 2243,
+      "path": "06_TEST_PLAN.md",
+      "sha256": "85e852fcfc9b4d0b3bba1e1c53b890edb25ab451b33557d3ef2cc0c5c27cc4bc"
+    },
+    {
+      "bytes": 2205,
+      "path": "07_PROTECTED_GATES_AND_OWNER_PACKET.md",
+      "sha256": "9dd542f307aa0aa49d70e133117dce92901a95a3be02b48b374f05baec528cc8"
+    },
+    {
+      "bytes": 2161,
+      "path": "08_DELIVERY_PROTOCOL.md",
+      "sha256": "04de779cf638b445a4f4f0340f38936b9ba1467c89bfa7a2fe92f204201a8c84"
+    },
+    {
+      "bytes": 1146,
+      "path": "09_STOP_RULES.md",
+      "sha256": "cd64ef7c452531a449310882b891dc6ae91e9076bc85960510046abf890df1f6"
+    },
+    {
+      "bytes": 1109,
+      "path": "10_BRANCH_AUTHORITY.md",
+      "sha256": "b561547e77354725a607ebb223d69bb50df54be1fc99658f025bd921788431fd"
+    },
+    {
+      "bytes": 1336,
+      "path": "11_SOURCE_ORIENTATION.md",
+      "sha256": "1251033f37947f7223c2c2fde214549b4243b19b6dfe6cab586a34ccd11bac09"
+    },
+    {
+      "bytes": 1287,
+      "path": "12_EVIDENCE_INDEX.md",
+      "sha256": "cb19d50df44685b5ac7272af3bb0992a9e9e6cfb8f00ba537408cfe6566f77c9"
+    },
+    {
+      "bytes": 3696,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "b5069554ea1c01dec0c0d3885774f5f36413b5e3d7f9ccc680b30504b6d4c6f4"
+    },
+    {
+      "bytes": 1015,
+      "path": "TASK_STATE.json",
+      "sha256": "4cae3b5c8637e2f89d8f4abf7b271f0a55670efcb39cc980735d578ee14c2a88"
+    },
+    {
+      "bytes": 2097,
+      "path": "verify_context.py",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193"
+    }
+  ],
+  "iteration": "QUALITY-RECOVERY-01",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

@@ -1,0 +1,9 @@
+GitHub connector job 118735408995; measured head 034e459a5f6df4b5b597385be2cf883da9ecfda6. Minimized failure excerpt; no local DB/scanner execution claimed.
+2026-10-20T16:05:45.9268551Z     require(tracked|untracked==expected,'SOURCE_INVENTORY_DRIFT')
+2026-10-20T16:05:45.9286321Z contract.Rejected: SOURCE_INVENTORY_DRIFT
+2026-10-20T16:05:47.9746740Z braces: review is expired or dates are invalid
+2026-10-20T16:05:47.9747395Z node-forge: review is expired or dates are invalid
+2026-10-20T16:05:47.9748097Z unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv
+2026-10-20T16:05:47.9832792Z   G97_SEMGREP_OUTCOME: failure
+2026-10-20T16:05:47.9833066Z   G97_OSV_OUTCOME: failure
+2026-10-20T16:05:48.9692990Z   G97_SEMGREP_OUTCOME: failure

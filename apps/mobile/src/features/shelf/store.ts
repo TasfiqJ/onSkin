@@ -1099,19 +1099,14 @@ function notifyShelfMirrorOutboxChanged(): void {
 
 export function loadShelf(): Promise<ShelfProduct[]> {
   return runCurrentHealthDataOperation(async (lease) => {
-    try {
-      lease.assertCurrent();
-      const raw = await getPrivateItem(KEY);
-      lease.assertCurrent();
-      const decoded = decodeShelfState(raw);
-      lease.assertCurrent();
-      return decoded.products;
-    } catch {
-      // Ordinary reads never repair, delete, or replace private shelf bytes.
-      // Authorization invalidation is not an ordinary recovery condition.
-      lease.assertCurrent();
-      return [];
-    }
+    // Only a genuinely missing/empty record is an empty Shelf. Read/decoding
+    // failures must reach the existing retry boundary without changing bytes.
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const decoded = decodeShelfState(raw);
+    lease.assertCurrent();
+    return decoded.products;
   });
 }
 

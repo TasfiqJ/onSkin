@@ -1,0 +1,13 @@
+# Stage-branch protocol — active for M0-02 and later separately issued tasks
+
+Authority: founder-direct ADR-022, scoped operational refinement ADR-024. This supersedes old direct-main push instructions ONLY; every product, privacy, research, spending and protected boundary remains effective.
+
+Stage M0 uses `stage/m0-baseline`. Reuse the existing branch, currently based on main `bbc28dc3d1f945191a81be56945b8bda7bb6ef73` with reviewed checkpoint `b9a6b093f392ced340c156f2e7dcaefc72ed58e1`. Do not recreate it from main and discard accepted stage commits. Read AGENTS/CLAUDE and nested instructions; fetch and verify main/stage ancestry, exact trees and all dirty work. Preserve the founder checkout and other worktrees. Only one writer is authorized. Use a safe worktree/clone when needed; no destructive reset/stash-overwrite, shared rebase, force push, main write or merge.
+
+At every session end commit and push all safe authorized work to `origin/stage/m0-baseline`, including incomplete/red/blocked attempts. Update tracked root `ONSKIN_BRAIN_HANDOFF.txt` every session. Status-only is valid when no code is safe to publish. Never include credentials, private images, patient PDFs, raw clinical data or unapproved protected content. If push is technically impossible report PUSH_BLOCKED accurately; do not fake delivery or force past it. Fetch and reconcile before push, preserving history.
+
+The root TXT is an at-a-glance index, not proof or acceptance. Include task/stage, branch, status/review-required, original stage base and task base, observed main, source/test snapshot identities, exact tests/CI and their evidence class, deviations, blockers, dirty/unpushed paths, next safe action and honest context health. Put full sanitized evidence and a machine completion report under `docs/brain/checkpoints/<task>/`; avoid carrier-only local absolute paths. A short local-path hint for private artifacts is not a public evidence substitute.
+
+A tracked file cannot contain its own future commit SHA or hash itself. Bind tests to a measured source snapshot and distinguish it from the final report/handoff commit. Read the actual delivery tip/tree from the live Git branch after push. Never fabricate a self-referential HEAD. The versioned report schema must make this distinction explicit.
+
+The Brain reads exact branch/commits/cumulative diffs/CI on the founder signal “Codex is done”, then accepts, requests fixes or records blocked verification. Codex cannot mark its own task accepted or infer G97 BRAIN source GO from ordinary diagnostic/source-test acceptance. Every later stage/promotion requires a separate Brain decision. No automatic merging or release.

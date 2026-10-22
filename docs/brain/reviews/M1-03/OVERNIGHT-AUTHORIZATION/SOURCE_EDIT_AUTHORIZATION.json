@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-OVERNIGHT01-SOURCE-AND-DIAGNOSTIC-01",
+  "issuer": "INDEPENDENT_BRAIN_REVIEW02",
+  "task_id": "M1-03",
+  "iteration": "OVERNIGHT-01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "base_tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "reviewed_prior_interval": {
+    "base": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+    "end": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+    "end_tree": "8857cbcaa26c28b434235a53521636af77cb6b36"
+  },
+  "state_version": "brain-m1-03-overnight01-expanded-issuance-14",
+  "authorization_kind": "BOUNDED_SOURCE_REPAIR_PLUS_ISOLATED_NON_ADMITTING_SECURITY_CANDIDATE",
+  "not_g97_source_go": true,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "original_g97_expiry": "2026-10-21T00:00:00Z",
+  "allowed_existing_files": [
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "5b26b47d893d76bdc3b8aa087171979d5461eb71b056afd9752d3f21520a6bed",
+      "semantic_limit": "Change exactly the three mappings[*].lockIntegrity.packageLockSha256 values from old lock to current lock, and nothing else. Match expected postimage.",
+      "expected_postimage_sha256": "ca660645ed45c986ddc7711b8896018d05dd530585086f78f82ed94bb2968f56"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "bytes": 247820,
+      "sha256": "08a5ff4ed0f0f2911d13dcb59cef19b62898c2e8df65bbdaf44424be9b7fe127",
+      "semantic_limit": "Regenerate with unchanged source-audit generator; only three input metadata JSON leaves change. Match expected postimage.",
+      "expected_postimage_sha256": "2001e2330293f2fce45d55553ef5b58f9e8e7dd07a8f4dd5cf75d8fd752044e6"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "bytes": 19517,
+      "sha256": "8b8698f41c85ba53c4ab3012a99ad580fe79329e8724bec54006f8cba7ecef98",
+      "semantic_limit": "Regenerate with unchanged source-audit generator; input fingerprint presentation only; exact expected postimage.",
+      "expected_postimage_sha256": "3f619d918084e765827292b6ffab6cd40461c2153ff3f47448b622154074f6f6"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.test.mjs",
+      "bytes": 14381,
+      "sha256": "f44d77e85240683bc60afed9f7763ed9e3e4276d3c2e0f262468f6963f6a78a9",
+      "semantic_limit": "TEST-ONLY: pair retained historical SBOM fixture with exact self-contained historical lock gzip; verify archive/raw hashes; preserve original positives and negatives; add current-lock mismatch, missing/corrupt fixture and no-runtime-Git controls. No production policy change."
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "bytes": 9128,
+      "sha256": "5fb436e1a5622037711fd0411f8fd02393b150c7c85c3cd768464ea21a35f48d",
+      "semantic_limit": "Add independently anchored OVERNIGHT-01 profile, committed-artifact enforcement, fixed historical interval c14..7305 and separately scoped new interval. Preserve historical inputs/refusals and no-self-acceptance. No generic schema redesign."
+    },
+    {
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "bytes": 5111,
+      "sha256": "320fb1e7ca445130a9e4da07c02416cdab5d37fd52574a11865e00ea27310f3d",
+      "semantic_limit": "Only if required, keep historical fixture at its real prior boundary when new immutable overlay files exist. Preserve all old negative assertions; no skipped checks or broad allowed paths."
+    }
+  ],
+  "allowed_new_code_files": [
+    {
+      "path": "scripts/brain/test_m103_overnight01_profile.py",
+      "git_preimage": "ABSENT",
+      "semantic_limit": "Exact new issuance, fixed prior interval, file purpose, committed artifacts and false authority refusal tests."
+    }
+  ],
+  "allowed_new_data_files": [
+    {
+      "path": "scripts/phase9/security_acceptance/fixtures/m103-pre-vite-package-lock.json.gz",
+      "source_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+      "source_path": "package-lock.json",
+      "raw_bytes": 574165,
+      "raw_sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223",
+      "bytes": 127181,
+      "sha256": "947de598d95a5093fe2a13fb5b0390ad3eb61124e4f44bb3aa180fdacbbf14d0",
+      "method": "gzip.GzipFile(filename=\"\", mode=\"wb\", compresslevel=9, mtime=0); original exact Git blob; OS header 255; no JSON reserialization",
+      "scope": "TEST_ONLY_HISTORICAL_INPUT_NOT_ACTIVE_LOCK_OR_ACCEPTANCE_POLICY"
+    }
+  ],
+  "allowed_recovered_artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/expo-web.log",
+      "bytes": 10468,
+      "sha256": "7ad6206f9c48555eb8070cd1596d6bb7b29b460ea3382c2591da5e74c9ed4a61",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/expo-web.log",
+      "bytes": 17059,
+      "sha256": "e7b40eda50931d4850d0ff49c35603dfe3d814a5ad7973f341457719aa26e6fe",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/expo-web.log",
+      "bytes": 17277,
+      "sha256": "be93c470eb7b6cee0cd373814a197c9a52caa1f030f44f556968a0cf8df7fcb6",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/expo-web.log",
+      "bytes": 17291,
+      "sha256": "b982e0215cedf7e017e125788b83a2fb45f681dfda8892ca90aacbc17b123b18",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/expo-web.log",
+      "bytes": 13420,
+      "sha256": "065bb2b77f044ab2f8ad80c35ef51f261738689830bd6840ae65cc295a028c78",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/expo-web.log",
+      "bytes": 3708,
+      "sha256": "e0bd537372689d341621974c727436cba4a5394f85939ec72d4f015a0022224f",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser/server.log",
+      "bytes": 73,
+      "sha256": "3282c3929d5e62a7a39e769d6d6578158da62418dc1d0bd0949844837fe1f500",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275609.log",
+      "bytes": 32851,
+      "sha256": "2cdc2dba0ff83d9c91ed7abfa9dede7edb548601d1a7d764b4204288a3b1fdb9",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275892.log",
+      "bytes": 82199,
+      "sha256": "964fa775e7335ef634c16be9bccdeb8a8334d96e8d6f7622fde2024f190d1441",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275954.log",
+      "bytes": 158234,
+      "sha256": "95f0b3877b00e44a120bcc40121ab26a72752e7fc0b387abc7372ca58133929d",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996276257.log",
+      "bytes": 89760,
+      "sha256": "d2f43a69e5e507179ba603b29a161546d9cbdc88bcf0789a6d8a2486a75b3ff5",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118997685565.log",
+      "bytes": 42753,
+      "sha256": "957b5228af058d4294069e50e570498f518808b79c9a3c217b5a6e90f9396350",
+      "git_preimage": "ABSENT_AT_7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "local_preimage": "EXISTS_IGNORED_AND_MATCHES_ORIGINAL_REPORT",
+      "operation": "ADD_EXACT_PRESERVED_BYTES_AFTER_SAFE_CONTENT_REVIEW"
+    }
+  ],
+  "administrative_paths": {
+    "new_review_overlay": "docs/brain/reviews/M1-03/OVERNIGHT-AUTHORIZATION/",
+    "new_checkpoint": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/",
+    "new_active_record": "docs/brain/m103-overnight01-active.json",
+    "existing_exact_scope": [
+      ".gitattributes",
+      "docs/brain/README.md",
+      "ONSKIN_BRAIN_HANDOFF.txt"
+    ],
+    "existing_preimages": [
+      {
+        "path": ".gitattributes",
+        "bytes": 1192,
+        "sha256": "72322dfb0cf3e5a2d0cefe8d5e0217dd910a97d667c409f1a6a6f441a5211578"
+      },
+      {
+        "path": "docs/brain/README.md",
+        "bytes": 10384,
+        "sha256": "29574101505a41cd716b04056ab5574f49dc4546f7fbe06ecc3039b7d74dd15b"
+      },
+      {
+        "path": "ONSKIN_BRAIN_HANDOFF.txt",
+        "bytes": 4467,
+        "sha256": "6688b5037d8db5dd249b81e66a27e2ed286933605a1e3ef8c7b3c729ed72a736"
+      }
+    ],
+    "derived_outputs": [
+      "docs/phase-4/generated/source-worklist.json",
+      "docs/phase-4/generated/source-worklist.md"
+    ],
+    "derived_preimages": [
+      {
+        "path": "docs/phase-4/generated/source-worklist.json",
+        "bytes": 137486,
+        "sha256": "fdb95bcad2efc6fcdec219e20e5820b5d7f171d8908b40b44488a4c0f06dde24"
+      },
+      {
+        "path": "docs/phase-4/generated/source-worklist.md",
+        "bytes": 81878,
+        "sha256": "225e8282e9dd2a9b31e2b8c0c8b0e14cac7f417b723d0d5bce9b162e25f3e5d5"
+      }
+    ],
+    "semantic_limits": [
+      "Install only this issuance and successor state in their new paths; original reports and prior issued states remain immutable.",
+      "Append exact new .gitattributes paths only; never remove blanket log ignores.",
+      "Force-add only twelve listed safe matching preserved logs; force-push remains forbidden.",
+      "Unchanged generators only for exact native audit and two source-worklist outputs; no gate meaning/status upgrades.",
+      "PR9 description may be refreshed truthfully; remains draft/unmerged.",
+      "Do not recursively copy old context ZIPs, evidence folders, dependency trees or full package caches into new evidence."
+    ]
+  },
+  "preserved_read_only": [
+    "scripts/phase9/ios-privacy-contract.mjs",
+    "scripts/phase9/ios-privacy-source-audit.mjs",
+    "scripts/phase9/security_acceptance/workflow_contract.mjs",
+    "scripts/phase9/security_acceptance/secret_scan.py",
+    "scripts/phase9/security_acceptance/test_secret_scan.py",
+    "scripts/phase9/security-advisory-exceptions.mjs",
+    "scripts/phase9/security-advisory-exceptions.test.mjs",
+    "package-lock.json",
+    "apps/catalog-operator-console/package.json",
+    "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+    ".github/workflows/security.yml",
+    "scripts/phase9/security_acceptance/workflow_admission.py",
+    "scripts/phase9/security_acceptance/test_contract.py"
+  ],
+  "forbidden": [
+    "Any existing source path not expressly listed above; namespace permission applies only to new standalone diagnostic code.",
+    "Active packages/lock/native SDK/toolchain upgrades or installations into shared node_modules/tool caches.",
+    "Editing existing Security workflow, collector/bootstrap/contract/history/rules/scanner behavior, frozen acceptance source/coverage/proposal/history/exception records, dates or owner pins.",
+    "Activating candidate tooling in original CI, issuing acceptance, signing a new policy, renewing old expiry or relabeling scanner failures/findings as pass.",
+    "Changing native validator/generator, package/artifact/source pins, Apple baseline, runtime privacy/billing behavior or generic Brain schema.",
+    "SQL/schema/RLS/types/Edge/phase2 control edits, hosted replay, using discovered credentials, real provider mutation, spend, M2/J05/research collection, signing/TestFlight/deployment/submission/release/main promotion."
+  ],
+  "rollback": "Revert only new authorized changes by normal commit. Preserve adverse evidence and old refusals. No destructive reset, force-push, policy waiver, history rewrite or old artifact deletion.",
+  "scope_expansion": "Own fixes and refactoring inside new diagnostic namespace and exact repair purposes. Outside that scope, record exact inert patch/evidence and continue another authorized workstream; no round-trip preference questions.",
+  "supersedes": {
+    "context": "onSkin_Codex_M1-03_CONT-02_Context.zip",
+    "manifest_sha256": "838c0f416ddfa551fc2767419ed015f34c5b3329eeaa0b000938e80a3b72549f",
+    "executed": false,
+    "basis": "No tracked execution observed; preserve any later safe work and reconcile, never reset."
+  },
+  "allowed_new_source_namespaces": [
+    {
+      "prefix": "scripts/security_readiness/m103/",
+      "git_preimage": "ABSENT",
+      "permitted_extensions": [
+        ".py",
+        ".mjs",
+        ".json",
+        ".md",
+        ".txt",
+        ".yaml",
+        ".yml"
+      ],
+      "purpose": "Standalone local non-admitting scanner candidate preparation/verification, object-derived snapshot/coverage, redacted proposed findings dispositions and deterministic/adversarial tests. Senior implementation choices inside this namespace.",
+      "constraints": [
+        "No import from runtime or active Security admission; no package scripts/workflow hookup.",
+        "No executables/wheels/tarballs, private media, credentials, environment dumps or downloaded unrelated material committed.",
+        "Candidate exact version/hash manifests are engineering outputs not reviewed acceptance pins.",
+        "No live database or provider connection, authentication or acceptance date generator."
+      ]
+    }
+  ],
+  "isolated_diagnostic_execution": {
+    "authorized": true,
+    "admission": "NONE",
+    "active_security_gate_consumes_candidate": false,
+    "local_platform": "Existing Linux x86_64 Python3.12 environment; use fresh private directories outside all source trees.",
+    "permitted_candidate": "semgrep1.181.0 official wheel/core plus explicit METADATA/RECORD-only derivative for mcp1.30.0; certifi2026.10.19. Exact original hashes in CANDIDATE_TOOL_INPUTS.json.",
+    "no_implicit_approval": "No compatibility or scanner validity presumed. Download bytes, wheel graph, patch, installed tree, network isolation and actual scans must be measured.",
+    "old_engine": "Existing custom native engine, acceptance closure and frozen tool trees are read-only; do not rebuild/patch/replace them. Candidate uses original upstream core bytes with distinct diagnostic identity.",
+    "other_wheels": "Retain existing pinned wheel graph unless declared dependency consistency requires an exact minimum transitive adjustment; document every candidate-only change, official origin/hash and causal constraint. No major version migrations or arbitrary latest resolver.",
+    "allowed_network": "Official public metadata, immutable official artifact downloads and read-only advisory/rule fetches only; existing GitHub reads/pushes. No source upload/metrics/cloud scans or found-credential validation.",
+    "limits": "No production install, no new vendor spending, no API keys, no registry login, no hosted target, no new exposed server."
+  }
+}

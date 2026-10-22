@@ -59,7 +59,7 @@ vi.mock('./deliver', () => ({
     state: 'denied',
     requestAttempted: true,
   })),
-  rescheduleReminders: vi.fn(async () => {}),
+  rescheduleReminders: vi.fn(async () => 'scheduled' as const),
 }));
 
 vi.mock('./store', () => ({
@@ -75,7 +75,7 @@ function deps(outcome: NotificationPermissionOutcome) {
   return {
     requestPermission: vi.fn(async () => outcome),
     saveNotifPrefs,
-    rescheduleReminders: vi.fn(async () => {}),
+    rescheduleReminders: vi.fn(async () => 'scheduled' as const),
   };
 }
 

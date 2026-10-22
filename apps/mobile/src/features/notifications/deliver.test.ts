@@ -29,6 +29,7 @@ const mocks = vi.hoisted(() => ({
     canAskAgain: false,
     expires: 'never',
   })),
+  platformOS: 'ios',
   healthOpen: true,
   loadNotifPrefs: vi.fn(),
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
@@ -99,7 +100,7 @@ vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
 }));
 
 vi.mock('react-native', () => ({
-  Platform: { OS: 'ios' },
+  Platform: { get OS() { return mocks.platformOS; } },
 }));
 
 vi.mock('@/features/routine/reviewGate', () => ({
@@ -166,6 +167,7 @@ const prefs: NotifPrefs = {
 
 beforeEach(() => {
   mocks.healthOpen = true;
+  mocks.platformOS = 'ios';
   mocks.canUseRoutineCadence.mockReset();
   mocks.canUseRoutineCadence.mockReturnValue(true);
   mocks.canUseRoutineRecovery.mockReset();
@@ -290,6 +292,14 @@ describe('notification authorization', () => {
 });
 
 describe('rescheduleReminders', () => {
+  it('rejects ordinary scheduling when native startup is unavailable', async () => {
+    mocks.configureNotifications.mockResolvedValueOnce('unavailable');
+    mocks.loadEntitlement.mockResolvedValueOnce(null);
+    const { rescheduleReminders } = await import('./deliver');
+    await expect(rescheduleReminders({ ...prefs, amEnabled: true, pmEnabled: false, captureReminders: false }))
+      .rejects.toThrow('NOTIFICATION_RUNTIME_UNAVAILABLE');
+  });
+
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
@@ -301,6 +311,43 @@ describe('rescheduleReminders', () => {
     mocks.loadNotifPrefs.mockResolvedValue(prefs);
     mocks.scheduleNotificationAsync.mockReset();
     mocks.scheduleNotificationAsync.mockResolvedValue('notification-id');
+  });
+
+  it('rejects queued owner-A scheduling after a completed account boundary', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    let release!: () => void;
+    let started!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const entered = new Promise<void>((resolve) => { started = resolve; });
+    mocks.loadNotifPrefs.mockImplementationOnce(async () => { started(); await gate; return prefs; });
+    const lifecycle = { isCurrent: () => true, signal: new AbortController().signal };
+    const first = rescheduleReminders(undefined, lifecycle).catch((error: unknown) => error);
+    await entered;
+    const queued = rescheduleReminders(prefs, lifecycle).catch((error: unknown) => error);
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    release();
+    expect(await first).toBeInstanceOf(Error);
+    expect(await queued).toBeInstanceOf(Error);
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+  });
+
+  it.each(['cancel', 'schedule'])('reports %s failure while retaining independent billing reconciliation', async (failure) => {
+    const { rescheduleReminders } = await import('./deliver');
+    if (failure === 'cancel') mocks.cancelAllScheduledNotificationsAsync.mockRejectedValueOnce(new Error('cancel failed'));
+    else mocks.scheduleNotificationAsync.mockRejectedValueOnce(new Error('schedule failed'));
+    await expect(rescheduleReminders(prefs)).rejects.toThrow(`${failure} failed`);
+    expect(mocks.loadEntitlement).toHaveBeenCalledOnce();
+    await expect(rescheduleReminders(prefs)).resolves.toBe('scheduled');
+  });
+
+  it('keeps web preference saves separate from unavailable native scheduling', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    mocks.platformOS = 'web';
+    await expect(rescheduleReminders(prefs)).resolves.toBe('web_preferences_only');
+    expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.getPermissionsAsync).not.toHaveBeenCalled();
   });
 
   it('shifts scheduled reminders inside quiet hours to the quiet-hours end', async () => {
@@ -340,6 +387,38 @@ describe('rescheduleReminders', () => {
         }),
       }),
     );
+  });
+
+  it('cancels a schedule when OS permission changes during its native acknowledgement', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    mocks.scheduleNotificationAsync.mockImplementationOnce(async () => {
+      mocks.getPermissionsAsync.mockResolvedValue({ status: 'denied', granted: false, canAskAgain: false, expires: 'never' });
+      return 'permission-race-id';
+    });
+    await expect(rescheduleReminders({ ...prefs, pmEnabled: false, captureReminders: false })).rejects.toThrow('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('permission-race-id');
+    expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
+  });
+
+  it('serially cancels every created reminder through the exclusive native mutation port', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    const live = new Set<string>();
+    let busy = false;
+    mocks.scheduleNotificationAsync.mockImplementation(async (value) => {
+      const id = (value as { identifier: string }).identifier;
+      if (id.includes('capture')) throw new Error('capture schedule failed');
+      live.add(id);
+      return id;
+    });
+    mocks.cancelScheduledNotificationAsync.mockImplementation(async (id) => {
+      if (busy) throw new Error('exclusive native port busy');
+      busy = true;
+      await Promise.resolve();
+      live.delete(id);
+      busy = false;
+    });
+    await expect(rescheduleReminders(prefs)).rejects.toThrow('capture schedule failed');
+    expect(live.size).toBe(0);
   });
 
   it('cancels stale health schedules and creates none when authorization is not deliverable', async () => {

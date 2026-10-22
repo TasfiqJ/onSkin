@@ -1,0 +1,53 @@
+import argparse, datetime, hashlib, json, os, platform, re, subprocess, sys
+from pathlib import Path
+
+p=argparse.ArgumentParser(); p.add_argument('--id',required=True);p.add_argument('--axis',default='source');p.add_argument('--env-json');p.add_argument('command',nargs=argparse.REMAINDER);a=p.parse_args()
+root=Path.cwd()
+base='docs/brain/checkpoints/M1-03/evidence'
+final_output=root/base/(a.id+'.txt');receipt_path=root/base/(a.id+'.receipt.json')
+temporary=Path(__file__).parent/'m103-command-output';temporary.mkdir(exist_ok=True)
+output=temporary/(a.id+'.txt')
+output.parent.mkdir(parents=True,exist_ok=True)
+assert not output.exists() and not receipt_path.exists() and not final_output.exists(), 'Fresh evidence ID required'
+def git(*args):return subprocess.check_output(['git','-C',str(root),*args],text=True,encoding='utf-8').rstrip('\r\n')
+head=git('rev-parse','HEAD');tree=git('rev-parse','HEAD^{tree}')
+changes=git('status','--porcelain','--untracked-files=all').splitlines()
+unsafe=[s for s in changes if not (s[3:].startswith('docs/brain/checkpoints/M1-03/') or s[3:].startswith('docs/brain/reviews/M1-02/ACCEPTANCE/') or s[3:]=='ONSKIN_BRAIN_HANDOFF.txt')]
+assert not unsafe, 'Uncommitted source cannot be attributed to HEAD: '+str(unsafe)
+argv=a.command[1:] if a.command and a.command[0]=='--' else a.command
+env=dict(os.environ);extra=json.loads(a.env_json or '{}');env.update(extra)
+command=subprocess.list2cmdline(argv)
+if extra:command=' '.join(k+'='+v for k,v in extra.items())+' '+command
+started=datetime.datetime.now(datetime.timezone.utc).isoformat()
+actual=['cmd.exe','/d','/c',*argv] if argv[0].endswith('.cmd') else argv
+with output.open('wb') as stream:
+    result=subprocess.run(actual,cwd=root,env=env,stdout=stream,stderr=subprocess.STDOUT)
+raw=output.read_bytes();text=re.sub(r'\x1b\[[0-9;]*m','',raw.decode('utf-8',errors='replace'))
+counts=None
+if 'vitest' in command or 'run test' in command:
+    summaries=re.findall(r'Tests\s+([^\r\n]+)',text)
+    passed=failed=skipped=0
+    for summary in summaries:
+        for key,number in re.findall(r'(\d+)\s+(passed|failed|skipped)',summary):
+            if number=='passed':passed+=int(key)
+            elif number=='failed':failed+=int(key)
+            else:skipped+=int(key)
+    if passed or failed or skipped:counts=dict(passed=passed,failed=failed,skipped=skipped)
+elif 'unittest' in command:
+    match=re.search(r'Ran (\d+) tests',text); skip=re.search(r'OK \(skipped=(\d+)\)',text)
+    if match and result.returncode==0:
+        skipped=int(skip[1]) if skip else 0;counts=dict(passed=int(match[1])-skipped,failed=0,skipped=skipped)
+elif '--test' in argv:
+    match=re.search(r'# pass (\d+)',text)
+    if match:counts={k:int(re.search('# '+n+r' (\d+)',text)[1]) for k,n in [('passed','pass'),('failed','fail'),('skipped','skipped')]}
+value=dict(schema_version=1,kind='LOCAL_EXECUTION',claim_origin='CODEX_REPORTED_EXECUTION',
+ command=command,working_directory=str(root),environment='Windows x64; Python '+platform.python_version()+'; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.',
+ source_commit=head,source_tree=tree,status='PASS' if result.returncode==0 else 'FAIL',exit_code=result.returncode,
+ output=dict(path=final_output.relative_to(root).as_posix(),sha256=hashlib.sha256(raw).hexdigest()),counts=counts,
+ started_at_utc=started,finished_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+ count_semantics='Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.',extra_environment=extra,argv=argv)
+final_output.parent.mkdir(parents=True,exist_ok=True);final_output.write_bytes(raw)
+receipt_path.write_bytes((json.dumps(value,indent=2)+'\n').encode('utf-8'))
+print(json.dumps(dict(id=a.id,exit=result.returncode,source=head,counts=counts,output=str(output))))
+print(text[-1400:].encode('ascii',errors='backslashreplace').decode())
+sys.exit(result.returncode)

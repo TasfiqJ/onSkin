@@ -107,7 +107,9 @@ describe('account-deletion pre-Auth recovery gate', () => {
   it('exposes a non-destructive support-only fixture without changing retryable invalid', () => {
     const gate = source('features/settings/AccountDeletionRecoveryGate.tsx');
 
-    expect(gate).toContain("| 'invalid_support_only'");
+    expect(source('features/settings/accountDeletionRecoveryE2E.ts')).toContain(
+      "'invalid_support_only'",
+    );
     expect(gate).toContain("if (fixture === 'invalid_support_only')");
     expect(gate).toContain("setView({ kind: 'invalid', retryable: false })");
     expect(gate).toContain("if (fixture === 'invalid')");

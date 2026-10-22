@@ -1,0 +1,23 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "started": "2026-10-21T11:47:38.656965+00:00",
+  "finished": "2026-10-21T11:50:59.898117+00:00",
+  "raw_exit": 1,
+  "output_sha256": "4e81a1da2f5ae02af95b8797d50f3daa42fcd23aa4c1752a4b6b6e3115083a80",
+  "output_bytes": 14337,
+  "environment_overrides": {},
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "admission": "NONE"
+}

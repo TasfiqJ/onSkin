@@ -1,0 +1,24 @@
+{
+  "name": "typecheck",
+  "argv": [
+    "npm",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:25:24.092120+00:00",
+  "finished": "2026-10-21T04:25:47.576765+00:00",
+  "exit": 0,
+  "log_sha256": "7df4fc8cc70b9f6f909bf52c1d3590c68e43b25d058da4bdc6ccf55937dc786c",
+  "bytes": 1152,
+  "admission": "NONE",
+  "environment": {
+    "CI": "true",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-03",
+    "report",
+    "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/completion-report.json"
+  ],
+  "exit": 1,
+  "source_commit": "89c40f1008e60f4b5cf4266c7331532dd75d7679",
+  "source_tree": "eec12f6f13a1f62735e63229e5df3ccc4bc7870c",
+  "log_sha256": "3955d1375092373d8fecf6a434757825af1360d7c79fff9914e114eaf56021de",
+  "observed_utc": "2026-10-22T03:13:45.218517+00:00"
+}

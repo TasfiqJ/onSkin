@@ -1,0 +1,13 @@
+test_exact_report_and_false_authority_refusals (test_m103_quality_recovery03_profile.QualityRecovery03.test_exact_report_and_false_authority_refusals) ... ok
+test_input_review_and_stale_preimage_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_input_review_and_stale_preimage_refuse) ... ok
+test_mapping_other_package_and_lock_mutations_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_mapping_other_package_and_lock_mutations_refuse) ... ok
+test_old_intervals_cannot_admit_qr03 (test_m103_quality_recovery03_profile.QualityRecovery03.test_old_intervals_cannot_admit_qr03) ... ok
+test_protected_widget_root_and_old_active_changes_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_protected_widget_root_and_old_active_changes_refuse) ... ok
+test_report_forged_acceptance_external_go_and_artifact_tamper_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_report_forged_acceptance_external_go_and_artifact_tamper_refuse) ... ok
+test_unauthorized_source_and_intermediate_revert_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_unauthorized_source_and_intermediate_revert_refuse) ... ok
+test_wrong_actual_branch_and_old_head_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_wrong_actual_branch_and_old_head_refuse) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 100.253s
+
+OK

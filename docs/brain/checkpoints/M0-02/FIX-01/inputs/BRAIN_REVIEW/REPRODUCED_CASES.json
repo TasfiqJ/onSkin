@@ -1,0 +1,77 @@
+{
+  "reviewed_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+  "cases": [
+    {
+      "id": "A1-unbound-observation-pass",
+      "finding": "F1",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "A2-boolean-observation-exit",
+      "finding": "F1",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "B1-unbound-unfinished-ci-success",
+      "finding": "F2",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "B2-nonexistent-main-and-original-base",
+      "finding": "F2",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION"
+    },
+    {
+      "id": "C1-repointed-approval-pack",
+      "finding": "F3",
+      "expected": "NONZERO_REJECTION",
+      "actual_cli_exit": 0,
+      "invalid_input_accepted": true,
+      "environment": "Windows Python 3.9.13; disposable fixture using submitted scripts/brain/brain.py; original repository untouched",
+      "scope": "SYNTHETIC REVIEW INPUT, NOT REAL EVIDENCE OR AUTHORIZATION",
+      "unapproved_zip_sha256": "50ae7a1d40bd8e8ebe6871966438951ac3e09e4d5bd649cf4ce8284bf6618095",
+      "files": 3,
+      "input_bytes": 331,
+      "archive_bytes": 1208,
+      "forged_approval_sha256": "415b6a7056abb242fc886c5a11d9c38db2783ffac55272fd76c5187ed228ebec",
+      "unchanged_trusted_manifest_sha256": "fd04a4fe643949b994ab01697cf48fb2894da805951f7389c76aa770b0972957"
+    },
+    {
+      "id": "D1-dangling-mirror-output",
+      "finding": "F4",
+      "result": {
+        "scope": "exact function slices; stubbed input validation/data producer; real Linux symlink filesystem",
+        "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+        "outside_exists_before": false,
+        "source_function_hashes": {
+          "require": "9775a8b3969599d5d1f620d9717824195d7ab69490eafb5e7b8d1bacbf14df85",
+          "relative_name": "53273a1847508fc2c45c595090f8156065107b32fe9de65f56030ef9c1d676d7",
+          "safe_file": "9d0376190a57f8ea197710d4da3baa6b22cc52cb7701e853cb6e3baacfde4aed",
+          "no_link_parents": "1d1daa0f8abd9b6e68d00fdd2cdc22adf240010c5aa01eb9f222ecfd085c87ba",
+          "mirrors": "6e39a679eac5dc3483e6a0a0796e9b1ebf9977a47dc6325510ac804f170f693b"
+        },
+        "returned": "Link/reparse point forbidden: docs/v2/mirrors/synthetic-view.txt",
+        "outside_exists_after": true,
+        "outside_bytes": "",
+        "git_function_hashes_independently_matched": true,
+        "source_git_blob_sha256": "7eba8d01320ade6cc57183ba191769246a83e11ed35d0523a0fb9a3f5d3edf82"
+      }
+    }
+  ]
+}

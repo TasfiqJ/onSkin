@@ -1,0 +1,60 @@
+{
+  "reviewed_sha": "da9fa04759164b402ee3b2abd1c80e14261614fb",
+  "findings": [
+    {
+      "id": "M002-R1-F1",
+      "priority": "HIGH",
+      "component": "Observation evidence validation",
+      "path": "scripts/brain/brain.py",
+      "lines": "311-342",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "summary": "Full validate CLI accepts an unsupported PASS observation without a command, artifact/hash or source snapshot. It also accepts JSON false as exit code zero.",
+      "cases": [
+        "A1-unbound-observation-pass",
+        "A2-boolean-observation-exit"
+      ],
+      "expected": "Reject incomplete execution evidence and non-integer exits without changing closed authority state."
+    },
+    {
+      "id": "M002-R1-F2",
+      "priority": "HIGH",
+      "component": "Report CI and source identity binding",
+      "path": "scripts/brain/brain.py",
+      "lines": "384-417",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "summary": "Full report CLI accepts in_progress CI with success, nonexistent CI evidence, an all-zero CI head, and a nonexistent observed-main/original-stage-base tuple.",
+      "cases": [
+        "B1-unbound-unfinished-ci-success",
+        "B2-nonexistent-main-and-original-base"
+      ],
+      "expected": "Bind CI rows to listed hash-checked observation artifacts and coherent run/source/status fields; verify declared Git identities and applicable ancestry. Offline consistency is not provider authenticity."
+    },
+    {
+      "id": "M002-R1-F3",
+      "priority": "HIGH",
+      "component": "Task packaging authority",
+      "path": "scripts/brain/brain.py",
+      "lines": "420-440;456-481;578-582",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "summary": "Keeping original immutable inputs/anchor/current task intact, repointing only the mutable task spec at a self-authored matching manifest produces a successful M0-02 ZIP containing unapproved synthetic text.",
+      "cases": [
+        "C1-repointed-approval-pack"
+      ],
+      "expected": "Resolve approved issue identity independently of mutable spec-supplied pointers/hashes; no self-authored same-task approval can authorize a new allowlist."
+    },
+    {
+      "id": "M002-R1-F4",
+      "priority": "HIGH",
+      "component": "Mirror write containment",
+      "path": "scripts/brain/brain.py",
+      "lines": "295-308",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED_FOCUSED_FUNCTION_SLICE",
+      "summary": "A dangling output-file symlink passes the exists-based precheck. touch() creates an empty file outside the root before safe_file rejects the link.",
+      "cases": [
+        "D1-dangling-mirror-output"
+      ],
+      "expected": "Validate lexical target and ancestors before any creation/write; rejection cannot create or alter outside-root or link-target files.",
+      "limitation": "Actual Linux filesystem with five Git-byte-matched function slices; input validation and generated data are inert stubs. Not a full Linux repository/CLI test."
+    }
+  ]
+}

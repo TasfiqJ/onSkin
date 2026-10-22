@@ -4,12 +4,14 @@ import { AppState } from 'react-native';
 
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  captureHealthDataWriteLease,
+  assertHealthDataWriteLease,
   runHealthDataOperation,
   runHealthDataWriteOperation,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 
-import { applyNotificationPreferencePatch } from './applyPreferences';
+import { applyNotificationPreferencePatch, NotificationPreferenceSaveError } from './applyPreferences';
 import { getPermissionStatus, rescheduleReminders } from './deliver';
 import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
 
@@ -31,6 +33,7 @@ export function useNotificationAuthorization() {
   }, [qc]);
   return useQuery({
     queryKey: AUTHORIZATION_KEY,
+    networkMode: 'always',
     queryFn: async () => {
       const state = await getPermissionStatus();
       // Reconcile on every settings mount/foreground read. Revocation cancels
@@ -47,6 +50,7 @@ export function useNotificationAuthorization() {
 export function useNotifPrefs() {
   return useQuery({
     queryKey: KEY,
+    networkMode: 'always',
     queryFn: async () => {
       const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
       if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
@@ -62,25 +66,40 @@ export function useNotifPrefs() {
 
 export function useUpdateNotifPrefs() {
   const qc = useQueryClient();
+  // A permission response may outlive this screen and its owner.
+  let expectedLease: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+  try { expectedLease = captureHealthDataWriteLease(); } catch { /* admission closed */ }
   return useMutation({
+    networkMode: 'always',
     mutationFn: async (patch: Partial<NotifPrefs>) => {
-      const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
-      if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+      if (!expectedLease) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+      assertHealthDataWriteLease(expectedLease);
+      const expectedOwnerUserId = expectedLease.ownerUserId;
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
-        const next = await applyNotificationPreferencePatch(
-          patch,
-          {
-            save: saveNotifPrefs,
-            reschedule: rescheduleReminders,
-          },
-          lease,
-        );
+        let result: Awaited<ReturnType<typeof applyNotificationPreferencePatch>>;
+        try {
+          result = await applyNotificationPreferencePatch(
+            patch,
+            {
+              save: saveNotifPrefs,
+              reschedule: rescheduleReminders,
+            },
+            lease,
+          );
+        } catch (error) {
+          lease.assertCurrent();
+          if (error instanceof NotificationPreferenceSaveError) {
+            qc.setQueryData<NotifPrefs>(KEY, error.prefs);
+          }
+          throw error;
+        }
         lease.assertCurrent();
+        const next = result.prefs;
         qc.setQueryData<NotifPrefs>(KEY, next);
         lease.assertCurrent();
         await qc.invalidateQueries({ queryKey: KEY });
         lease.assertCurrent();
-        return next;
+        return result;
       });
     },
   });

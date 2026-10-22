@@ -1,0 +1,21 @@
+{
+  "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Python3.12.14",
+  "source_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+  "source_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+  "status": "PASS",
+  "exit_code": 0,
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/measured-governance-py312.log",
+    "sha256": "843ecc008b98908e025c943e1ced3a89444135e32090a5ab3db14e5d8bb7caee"
+  },
+  "counts": {
+    "passed": 34,
+    "failed": 0,
+    "skipped": 2
+  }
+}

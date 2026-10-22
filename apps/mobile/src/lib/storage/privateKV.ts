@@ -382,9 +382,10 @@ export async function getPrivateItem(key: string): Promise<string | null> {
     if (healthReadLease !== null) assertHealthDataWriteLease(healthReadLease);
   };
   return withOperationTiming('private_kv_read', () =>
-    runAccountScopedPrivateOperation(async () => {
+    runAccountScopedPrivateOperation(async (generation) => {
       assertPrivateDataKey(key);
       const raw = await AsyncStorage.getItem(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
       if (!raw) {
         failedReadSnapshots.delete(key);
@@ -409,6 +410,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
         rememberFailedRead(key, raw);
         throw error;
       }
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
       if (!contentKey) {
         rememberFailedRead(key, raw);
@@ -444,10 +446,11 @@ async function readPrivateItems(
   };
   assertHealthReadsCurrent();
   return withOperationTiming('private_kv_batch_read', () =>
-    runAccountScopedPrivateOperation(async () => {
+    runAccountScopedPrivateOperation(async (generation) => {
       assertHealthReadsCurrent();
       for (const key of keys) assertPrivateDataKey(key);
       const entries = await AsyncStorage.multiGet([...keys]);
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
       const result = new Map<string, string | null>();
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
@@ -481,6 +484,7 @@ async function readPrivateItems(
         for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
         throw error;
       }
+      assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
       if (!contentKey) {
         for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
@@ -819,6 +823,32 @@ export async function multiRemovePrivateItems(keys: readonly string[]): Promise<
       for (const key of keys) failedReadSnapshots.delete(key);
     }),
   );
+}
+
+/** Revoke only widget bearer capabilities, even after an account boundary closes. */
+export async function clearRoutineWidgetActionPrivateItems(): Promise<void> {
+  const keys = ['layerwell.widgetActionMap.v1', 'layerwell.widgetActionMap.v2'] as const;
+  // Share the ordinary per-key queue so an older write/rollback cannot restore
+  // a revoked token after this deletion. This lane cannot read or write data,
+  // accepts no caller-selected key and never reopens account admission.
+  const pending = runSerializedPrivateMutations(keys, async () => {
+    const results = await Promise.allSettled(
+      keys.map(async (key) => {
+        await AsyncStorage.removeItem(key);
+        failedReadSnapshots.delete(key);
+      }),
+    );
+    const failure = results.find(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    );
+    if (failure) throw failure.reason;
+  });
+  inFlightOperations.add(pending);
+  try {
+    await pending;
+  } finally {
+    inFlightOperations.delete(pending);
+  }
 }
 
 export async function clearPrivateKVContentKey(): Promise<void> {

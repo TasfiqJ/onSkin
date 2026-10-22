@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "ONBOARDING_E2E_EVIDENCE_DIR=docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-upgrade390 ONBOARDING_E2E_PORT=8435 ONBOARDING_E2E_DEBUG_PORT=9535 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 node scripts/e2e/onboarding-first-session.mjs --account-upgrade",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "d2916d79c2c04988649a5a8ed631baf67ed2851c",
+  "source_tree": "fa2d6e5697c0a89141bed17f47fd6e52964907d3",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-upgrade390.txt",
+    "sha256": "c30c695d7fd278aebb914da520129da3aa3d2e3dc6256b3b8c2928a37cffed6d"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T19:18:13.824999+00:00",
+  "finished_at_utc": "2026-10-20T19:19:07.962905+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {
+    "ONBOARDING_E2E_EVIDENCE_DIR": "docs/brain/checkpoints/M1-01/CONT-03/evidence/sealed-upgrade390",
+    "ONBOARDING_E2E_PORT": "8435",
+    "ONBOARDING_E2E_DEBUG_PORT": "9535",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--account-upgrade"
+  ]
+}

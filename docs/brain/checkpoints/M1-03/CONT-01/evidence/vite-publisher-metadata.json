@@ -1,0 +1,546 @@
+[
+  {
+    "url": "https://registry.npmjs.org/vite/8.1.6",
+    "response_sha256": "5a6d9fdc64ef17fb82af0a6ddf615c04e6fb8b20433fd7a05111127860bc9320",
+    "metadata": {
+      "//": "READ CONTRIBUTING.md to understand what to put under deps vs. devDeps!",
+      "bin": {
+        "vite": "bin/vite.js"
+      },
+      "bugs": {
+        "url": "https://github.com/vitejs/vite/issues"
+      },
+      "dist": {
+        "shasum": "77f27cfb40c29d02bc60490b01d983e0ecb9a394",
+        "tarball": "https://registry.npmjs.org/vite/-/vite-8.1.6.tgz",
+        "fileCount": 35,
+        "integrity": "sha512-aRAHIxx5SW5zc1sMqFwJU/t5qaFfXb5Hj0J7W0VXihu/X99+346tz6080tO1T1xVIJORX/b3zVTXGFqUXh35uw==",
+        "signatures": [
+          {
+            "sig": "MEUCIQCQI9z1Ij2aWeVWZlQS997yilWSkqybpmKxz7YgPMbNbwIgAaC4vGGJZuiWuiZGHXxLRHIws7CVVi2SN41JCGHxtdI=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEQCIFQL3hJGeNvpoXIUFa4OGPPSZOIcuhZYfWWt96glUHvcAiBZZhZVAOM4k1M887LOdXBRG12gDwaNFGKoDA9xM7jImg==",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/vite@8.1.6",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "unpackedSize": 2253315
+      },
+      "name": "vite",
+      "type": "module",
+      "_from": "file:vite-8.1.6.tgz",
+      "author": {
+        "name": "Evan You"
+      },
+      "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+      },
+      "exports": {
+        ".": "./dist/node/index.js",
+        "./client": {
+          "types": "./client.d.ts"
+        },
+        "./types/*": {
+          "types": "./types/*"
+        },
+        "./internal": "./dist/node/internal.js",
+        "./package.json": "./package.json",
+        "./dist/client/*": "./dist/client/*",
+        "./module-runner": "./dist/node/module-runner.js",
+        "./types/internal/*": null
+      },
+      "funding": "https://github.com/vitejs/vite?sponsor=1",
+      "imports": {
+        "#types/*": "./types/*.d.ts",
+        "#dep-types/*": "./src/types/*.d.ts",
+        "#module-sync-enabled": {
+          "default": "./misc/false.js",
+          "module-sync": "./misc/true.js"
+        }
+      },
+      "license": "MIT",
+      "scripts": {
+        "dev": "premove dist && pnpm build-bundle -w",
+        "lint": "eslint --cache --ext .ts src/**",
+        "build": "premove dist && pnpm build-bundle && pnpm build-types",
+        "format": "oxfmt",
+        "typecheck": "tsc && tsc -p src/node && tsc -p src/client && tsc -p src/module-runner && tsc -p src/shared && tsc -p src/node/__tests_dts__ && tsc -p src/module-runner/__tests_dts__",
+        "build-types": "pnpm build-types-roll && pnpm build-types-check",
+        "build-bundle": "rolldown --config rolldown.config.ts",
+        "generate-target": "tsx scripts/generateTarget.ts",
+        "build-types-roll": "rolldown --config rolldown.dts.config.ts",
+        "build-types-check": "tsc --project tsconfig.check.json"
+      },
+      "_npmUser": {
+        "name": "GitHub Actions",
+        "email": "npm-oidc-no-reply@github.com",
+        "trustedPublisher": {
+          "id": "github",
+          "oidcConfigId": "a2e674b1-239b-4e35-a07f-7b43debc0a8c"
+        }
+      },
+      "homepage": "https://vite.dev",
+      "keywords": [
+        "build-tool",
+        "dev-server",
+        "framework",
+        "frontend",
+        "hmr",
+        "vite"
+      ],
+      "_resolved": "/tmp/8c61d0a8d96bce1da2e48e135dd3c3ab/vite-8.1.6.tgz",
+      "_integrity": "sha512-aRAHIxx5SW5zc1sMqFwJU/t5qaFfXb5Hj0J7W0VXihu/X99+346tz6080tO1T1xVIJORX/b3zVTXGFqUXh35uw==",
+      "repository": {
+        "url": "git+https://github.com/vitejs/vite.git",
+        "type": "git",
+        "directory": "packages/vite"
+      },
+      "_npmVersion": "11.21.0",
+      "description": "Native-ESM powered web dev build tool",
+      "directories": {},
+      "maintainers": [
+        {
+          "name": "yyx990803",
+          "email": "yyx990803@gmail.com"
+        },
+        {
+          "name": "vitebot",
+          "email": "vite@voidzero.dev"
+        }
+      ],
+      "_nodeVersion": "24.21.0",
+      "dependencies": {
+        "postcss": "^8.5.17",
+        "rolldown": "~1.1.5",
+        "picomatch": "^4.0.5",
+        "tinyglobby": "^0.2.17",
+        "lightningcss": "^1.32.0"
+      },
+      "_hasShrinkwrap": false,
+      "readmeFilename": "README.md",
+      "devDependencies": {
+        "ws": "^8.21.0",
+        "cac": "^7.0.0",
+        "ufo": "^1.6.4",
+        "cors": "^2.8.6",
+        "etag": "^1.8.1",
+        "mlly": "^1.8.2",
+        "obug": "^1.0.2",
+        "open": "^10.2.0",
+        "sass": "^1.101.0",
+        "sirv": "^3.0.2",
+        "pathe": "^2.0.3",
+        "mrmime": "^2.0.1",
+        "nanoid": "^5.1.16",
+        "parse5": "^8.0.1",
+        "rollup": "^4.59.0",
+        "terser": "^5.49.0",
+        "connect": "^3.7.0",
+        "esbuild": "^0.28.1",
+        "premove": "^4.0.0",
+        "chokidar": "^3.6.0",
+        "artichokie": "^0.4.4",
+        "periscopic": "^4.0.3",
+        "picocolors": "^1.1.1",
+        "cross-spawn": "^7.0.6",
+        "escape-html": "^1.0.3",
+        "fresh-import": "^0.2.1",
+        "http-proxy-3": "^1.23.3",
+        "magic-string": "^0.30.21",
+        "@babel/parser": "^7.29.7",
+        "@types/pnpapi": "^0.0.5",
+        "@vitest/utils": "4.1.10",
+        "dotenv-expand": "^13.0.0",
+        "estree-walker": "^3.0.3",
+        "sass-embedded": "^1.100.0",
+        "strip-literal": "^3.1.0",
+        "postcss-import": "^16.1.1",
+        "es-module-lexer": "^2.3.1",
+        "postcss-modules": "^9.0.1",
+        "resolve.exports": "^2.0.3",
+        "@vitejs/devtools": "^0.3.4",
+        "@polka/compression": "^1.0.0-next.25",
+        "@types/escape-html": "^1.0.4",
+        "convert-source-map": "^2.0.0",
+        "@rollup/pluginutils": "^5.4.0",
+        "postcss-load-config": "^6.0.1",
+        "rolldown-plugin-dts": "^0.27.6",
+        "@rollup/plugin-alias": "^6.0.0",
+        "@vercel/detect-agent": "^1.2.3",
+        "@jridgewell/remapping": "^2.3.5",
+        "rollup-plugin-license": "^3.7.1",
+        "baseline-browser-mapping": "^2.10.43",
+        "launch-editor-middleware": "^2.14.2",
+        "@jridgewell/trace-mapping": "^0.3.31",
+        "host-validation-middleware": "^0.1.4",
+        "@voidzero-dev/vite-task-client": "^0.2.0",
+        "@rollup/plugin-dynamic-import-vars": "2.1.4"
+      },
+      "peerDependencies": {
+        "tsx": "^4.8.1",
+        "jiti": ">=1.21.0",
+        "less": "^4.0.0",
+        "sass": "^1.70.0",
+        "yaml": "^2.4.2",
+        "stylus": ">=0.54.8",
+        "terser": "^5.16.0",
+        "esbuild": "^0.27.0 || ^0.28.0",
+        "sugarss": "^5.0.0",
+        "@types/node": "^20.19.0 || >=22.12.0",
+        "sass-embedded": "^1.70.0",
+        "@vitejs/devtools": "^0.3.0"
+      },
+      "optionalDependencies": {
+        "fsevents": "~2.3.3"
+      },
+      "peerDependenciesMeta": {
+        "tsx": {
+          "optional": true
+        },
+        "jiti": {
+          "optional": true
+        },
+        "less": {
+          "optional": true
+        },
+        "sass": {
+          "optional": true
+        },
+        "yaml": {
+          "optional": true
+        },
+        "stylus": {
+          "optional": true
+        },
+        "terser": {
+          "optional": true
+        },
+        "esbuild": {
+          "optional": true
+        },
+        "sugarss": {
+          "optional": true
+        },
+        "@types/node": {
+          "optional": true
+        },
+        "sass-embedded": {
+          "optional": true
+        },
+        "@vitejs/devtools": {
+          "optional": true
+        }
+      },
+      "_npmOperationalInternal": {
+        "tmp": "tmp/vite_8.1.6_1791262311201_0.20289716769518806",
+        "host": "s3://npm-registry-packages-npm-production"
+      },
+      "_id": "vite@8.1.6",
+      "version": "8.1.6"
+    },
+    "download_sha256": "4e512df2b82176a9b7462d72188e984bda6d55629a46d506f43cff7848957ee1",
+    "download_bytes": 550992
+  },
+  {
+    "url": "https://registry.npmjs.org/vitest/4.1.11",
+    "response_sha256": "48432f161ab45f60344d096cb21f7022450d2707159234ce51e420ffdabe8068",
+    "metadata": {
+      "bin": {
+        "vitest": "./vitest.mjs"
+      },
+      "bugs": {
+        "url": "https://github.com/vitest-dev/vitest/issues"
+      },
+      "dist": {
+        "shasum": "1653c1521ae917f960d9b21877797c47dfd8bf21",
+        "tarball": "https://registry.npmjs.org/vitest/-/vitest-4.1.11.tgz",
+        "fileCount": 114,
+        "integrity": "sha512-fhACrNXUidIbGSBr5FlbuBkO7VWC1ZyLl0DO4CU2DrQoAPxX84Ysxs+HeGQpii5lZWV1Q4gBZTTu49mF+A6Edw==",
+        "signatures": [
+          {
+            "sig": "MEUCIBSU996mnW6tNJuA1U7CRmR/Ukpn/bd/zIY/j5QMSIkrAiEA533Mf1NVfToeCZQA9EXozqd37DRbe6ZzDbSFdgHQNVo=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/vitest@4.1.11",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "unpackedSize": 1909160
+      },
+      "main": "./dist/index.js",
+      "name": "vitest",
+      "type": "module",
+      "types": "./dist/index.d.ts",
+      "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+      "module": "./dist/index.js",
+      "engines": {
+        "node": "^20.0.0 || ^22.0.0 || >=24.0.0"
+      },
+      "exports": {
+        ".": {
+          "import": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+          },
+          "require": {
+            "types": "./index.d.cts",
+            "default": "./index.cjs"
+          }
+        },
+        "./node": {
+          "types": "./dist/node.d.ts",
+          "default": "./dist/node.js"
+        },
+        "./jsdom": {
+          "types": "./jsdom.d.ts"
+        },
+        "./src/*": "./src/*",
+        "./suite": {
+          "types": "./dist/suite.d.ts",
+          "default": "./dist/suite.js"
+        },
+        "./config": {
+          "types": "./config.d.ts",
+          "default": "./dist/config.js",
+          "require": "./dist/config.cjs"
+        },
+        "./worker": {
+          "types": "./worker.d.ts",
+          "default": "./dist/worker.js"
+        },
+        "./browser": {
+          "types": "./browser/context.d.ts",
+          "default": "./browser/context.js"
+        },
+        "./globals": {
+          "types": "./globals.d.ts"
+        },
+        "./runners": {
+          "types": "./dist/runners.d.ts",
+          "default": "./dist/runners.js"
+        },
+        "./runtime": {
+          "types": "./dist/runtime.d.ts",
+          "default": "./dist/runtime.js"
+        },
+        "./coverage": {
+          "types": "./coverage.d.ts",
+          "default": "./dist/coverage.js"
+        },
+        "./snapshot": {
+          "types": "./dist/snapshot.d.ts",
+          "default": "./dist/snapshot.js"
+        },
+        "./reporters": {
+          "types": "./dist/reporters.d.ts",
+          "default": "./dist/reporters.js"
+        },
+        "./importMeta": {
+          "types": "./importMeta.d.ts"
+        },
+        "./import-meta": {
+          "types": "./import-meta.d.ts"
+        },
+        "./environments": {
+          "types": "./dist/environments.d.ts",
+          "default": "./dist/environments.js"
+        },
+        "./package.json": "./package.json",
+        "./internal/browser": {
+          "types": "./dist/browser.d.ts",
+          "default": "./dist/browser.js"
+        },
+        "./optional-types.js": {
+          "types": "./optional-types.d.ts"
+        },
+        "./optional-runtime-types.js": {
+          "types": "./optional-runtime-types.d.ts"
+        }
+      },
+      "funding": "https://opencollective.com/vitest",
+      "imports": {
+        "#module-evaluator": {
+          "types": "./dist/module-evaluator.d.ts",
+          "default": "./dist/module-evaluator.js"
+        },
+        "#nodejs-worker-loader": "./dist/nodejs-worker-loader.js"
+      },
+      "license": "MIT",
+      "scripts": {
+        "dev": "NODE_OPTIONS=\"--max-old-space-size=8192\" rollup -c --watch -m inline",
+        "build": "premove dist && rollup -c"
+      },
+      "_npmUser": {
+        "name": "GitHub Actions",
+        "email": "npm-oidc-no-reply@github.com",
+        "approver": {
+          "name": "oreanno",
+          "email": "foxzdavinci@gmail.com"
+        },
+        "trustedPublisher": {
+          "id": "github",
+          "oidcConfigId": "oidc:1f286ab6-26e9-44a1-ba48-3a20cbe590fd"
+        }
+      },
+      "homepage": "https://vitest.dev",
+      "keywords": [
+        "vite",
+        "vitest",
+        "test",
+        "jest"
+      ],
+      "repository": {
+        "url": "git+https://github.com/vitest-dev/vitest.git",
+        "type": "git",
+        "directory": "packages/vitest"
+      },
+      "description": "Next generation testing framework powered by Vite",
+      "directories": {},
+      "maintainers": [
+        {
+          "name": "ariperkkio",
+          "email": "ari.perkkio@gmail.com"
+        },
+        {
+          "name": "antfu",
+          "email": "anthonyfu117@hotmail.com"
+        },
+        {
+          "name": "hiogawa",
+          "email": "hi.ogawa.zz@gmail.com"
+        },
+        {
+          "name": "oreanno",
+          "email": "foxzdavinci@gmail.com"
+        },
+        {
+          "name": "yyx990803",
+          "email": "yyx990803@gmail.com"
+        }
+      ],
+      "sideEffects": false,
+      "_nodeVersion": "24.19.0",
+      "dependencies": {
+        "obug": "^2.1.1",
+        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0",
+        "pathe": "^2.0.3",
+        "std-env": "^4.0.0-rc.1",
+        "tinyexec": "^1.0.2",
+        "picomatch": "^4.0.3",
+        "tinybench": "^2.9.0",
+        "tinyglobby": "^0.2.15",
+        "@vitest/spy": "4.1.11",
+        "expect-type": "^1.3.0",
+        "tinyrainbow": "^3.1.0",
+        "magic-string": "^0.30.21",
+        "@vitest/utils": "4.1.11",
+        "@vitest/expect": "4.1.11",
+        "@vitest/mocker": "4.1.11",
+        "@vitest/runner": "4.1.11",
+        "es-module-lexer": "^2.0.0",
+        "@vitest/snapshot": "4.1.11",
+        "why-is-node-running": "^2.3.0",
+        "@vitest/pretty-format": "4.1.11"
+      },
+      "_hasShrinkwrap": false,
+      "devDependencies": {
+        "ws": "^8.19.0",
+        "cac": "^6.7.14",
+        "mime": "^4.1.0",
+        "acorn": "8.11.3",
+        "birpc": "^4.0.0",
+        "jsdom": "^27.4.0",
+        "flatted": "^3.4.2",
+        "prompts": "^2.4.2",
+        "empathic": "^2.0.0",
+        "happy-dom": "^20.8.3",
+        "local-pkg": "^1.1.2",
+        "acorn-walk": "^8.3.5",
+        "@types/node": "^24.12.0",
+        "@bomb.sh/tab": "^0.0.14",
+        "@types/jsdom": "^27.0.0",
+        "@types/estree": "^1.0.8",
+        "strip-literal": "^3.1.0",
+        "tinyhighlight": "^0.3.2",
+        "@types/prompts": "^2.4.9",
+        "@edge-runtime/vm": "^5.0.0",
+        "@types/picomatch": "^4.0.2",
+        "@antfu/install-pkg": "^1.1.0",
+        "@opentelemetry/api": "^1.9.0",
+        "@sinonjs/fake-timers": "15.0.0",
+        "@types/istanbul-reports": "^3.0.4",
+        "@jridgewell/trace-mapping": "0.3.31",
+        "@types/sinonjs__fake-timers": "^15.0.1",
+        "@types/istanbul-lib-coverage": "^2.0.6"
+      },
+      "peerDependencies": {
+        "vite": "^6.0.0 || ^7.0.0 || ^8.0.0",
+        "jsdom": "*",
+        "happy-dom": "*",
+        "@vitest/ui": "4.1.11",
+        "@types/node": "^20.0.0 || ^22.0.0 || >=24.0.0",
+        "@edge-runtime/vm": "*",
+        "@opentelemetry/api": "^1.9.0",
+        "@vitest/coverage-v8": "4.1.11",
+        "@vitest/browser-preview": "4.1.11",
+        "@vitest/coverage-istanbul": "4.1.11",
+        "@vitest/browser-playwright": "4.1.11",
+        "@vitest/browser-webdriverio": "4.1.11"
+      },
+      "peerDependenciesMeta": {
+        "vite": {
+          "optional": false
+        },
+        "jsdom": {
+          "optional": true
+        },
+        "happy-dom": {
+          "optional": true
+        },
+        "@vitest/ui": {
+          "optional": true
+        },
+        "@types/node": {
+          "optional": true
+        },
+        "@edge-runtime/vm": {
+          "optional": true
+        },
+        "@opentelemetry/api": {
+          "optional": true
+        },
+        "@vitest/coverage-v8": {
+          "optional": true
+        },
+        "@vitest/browser-preview": {
+          "optional": true
+        },
+        "@vitest/coverage-istanbul": {
+          "optional": true
+        },
+        "@vitest/browser-playwright": {
+          "optional": true
+        },
+        "@vitest/browser-webdriverio": {
+          "optional": true
+        }
+      },
+      "_npmOperationalInternal": {
+        "tmp": "tmp/vitest_4.1.11_1787063227137_0.09921923508290442",
+        "host": "s3://npm-registry-packages-npm-production"
+      },
+      "_id": "vitest@4.1.11",
+      "version": "4.1.11"
+    }
+  }
+]

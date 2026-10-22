@@ -1,0 +1,24 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "active_writers": 1,
+  "authorization_id": "M103-SECURITY-HARDEN01-SOURCE-EDIT-01",
+  "base_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "base_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "branch": "stage/m1-retained-safety",
+  "incremental_spend_usd": 0,
+  "input_manifest_sha256": "9dc4ecaef5d2c074a57983906dec25ed59c8d6b3b23e36c66993ed63e87bf196",
+  "iteration": "SECURITY-HARDEN-01",
+  "main_promotion_authorized": false,
+  "next_task": null,
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "protected_source_go": false,
+  "research_requests": [],
+  "schema_version": 1,
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED",
+  "task_id": "M1-03"
+}

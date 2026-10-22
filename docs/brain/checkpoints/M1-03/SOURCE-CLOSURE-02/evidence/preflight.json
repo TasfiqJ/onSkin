@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "kind": "READ_ONLY_HOST_PREFLIGHT",
+  "status": "BLOCKED_HOST_CUSTODY",
+  "observed_at_utc": "2026-10-21T17:03:13.359123+00:00",
+  "admission": "NONE",
+  "disk": {
+    "volume": "C:/",
+    "free_bytes": 105439232,
+    "free_gib": 0.09819793701171875,
+    "required_free_gib": 30,
+    "host_ready": false
+  },
+  "wsl": {
+    "inventory_command": "wsl --list --verbose",
+    "inventory_exit": 0,
+    "inventory": "  NAME                      STATE           VERSION\r\n* Ubuntu-22.04              Stopped         2\r\n  onskin-r6-verification    Stopped         2\r\n  docker-desktop            Running         2\r\n",
+    "health_probe": "NOT_RUN_HOST_GATE_FAILED",
+    "reason": "No distro launch attempted on critically full host; earlier WSL E_FAIL remains historical evidence"
+  },
+  "git": {
+    "branch": "stage/m1-retained-safety",
+    "base_commit": "3600db9b5812acebd718111b6bf58efcb554487d",
+    "base_tree": "fe6148d303adcaf3092c073cefca8ee92065c10e",
+    "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "live_refs": [
+      "bbc28dc3d1f945191a81be56945b8bda7bb6ef73\trefs/heads/main",
+      "3600db9b5812acebd718111b6bf58efcb554487d\trefs/heads/stage/m1-retained-safety"
+    ],
+    "prior_reviewed_base": "49a39b7f5b194d5c356a21c690e3f1bdb09edfa1",
+    "prior_base_is_ancestor": true,
+    "dirty_before": [],
+    "second_writer": "NONE_OBSERVED; no delegation, background Python writer or index lock",
+    "fetch": "NOT_RUN_HOST_GATE_FAILED; live refs reconciled read-only via ls-remote"
+  },
+  "package": {
+    "task_manifest_sha256": "dde42dff63522aa0620d188f5d9051f06e138e8c43abb1ec6160fb8d918cfe97",
+    "zip_sha256": "22c1a3bc9278a5ff550b3236218e7fc1436bce167ce339ae28db1a751fd62989",
+    "verified_files": 12,
+    "initial_verification": "IN_MEMORY_ALL_FILE_BYTES_AND_EXACT_MEMBERSHIP",
+    "custody_copy": "Exact small supplied input bytes only; no operational extraction or environment setup"
+  },
+  "preimages": [
+    {
+      "path": ".gitattributes",
+      "git_blob_sha1": "44698d32c98840ded53b11a870b76de675b8a328",
+      "sha256": "5ea3c369bf2c4de6d65c97dd64669cffc046642fa67e13a4acb05db4dab39bdf",
+      "worktree_matches": true
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "git_blob_sha1": "7f3845bccd02f74360ed9de875b063cb926eadb4",
+      "sha256": "adc6bb45b72eee4523e10b4f5cd40cc332e6db0c980f5333686357ba0c59ba66",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/m103_profile.py",
+      "git_blob_sha1": "2bd25c668020562cf86e63b9149a949f6d05d190",
+      "sha256": "7b18bc06a9ac6daf4c9521703093e58e9c443c588117fb1f48d0e48cc4b4e2ce",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_cont01_profile.py",
+      "git_blob_sha1": "f0c77180ca734db4be97afd7e7aaa6f000348804",
+      "sha256": "ee9b0024d77535f0f482a7e8b8c6ac2f71bbf381d6947f51b7ed8579a0aeb109",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_overnight01_profile.py",
+      "git_blob_sha1": "95602ee0d8b1a71a6dfdfbe51854eee2ad4cf164",
+      "sha256": "9aee4fe96c474edbc58fb3e63d48912b5eb6bc7718da51cdb4cf31f36fc3c46e",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_security_harden01_profile.py",
+      "git_blob_sha1": "6f93ea9a1cb9bfe54e16265255eb8ed61452b051",
+      "sha256": "40c4f54b5c3145ba8187792c8ba9f8c27e79a73da19d475ed58e56fc6f7ef338",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/brain/test_m103_source_closure01_profile.py",
+      "git_blob_sha1": "882638b973ca23425aa4702d781e1df7e0d4ad49",
+      "sha256": "547ded6bcfed8ecbad39dce3d77dd076ad5bd40cf8c6b03e7569956be6e75129",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/README.md",
+      "git_blob_sha1": "280f731be0c54f822b192dca5d1556dfc86738b3",
+      "sha256": "19a757c481dfba38b5fa1b48ee7817459aee37a056d316bd4882a2bc4404e61f",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/history_custody.py",
+      "git_blob_sha1": "841528a08a696d8405db4e1fa2b67643c606e9bf",
+      "sha256": "d64adaae00fd9a429946cf88eee223afcf20f5cc39fd863f0a4108985e4087b7",
+      "worktree_matches": true
+    },
+    {
+      "path": "scripts/security_readiness/m103/hydrate_history.py",
+      "git_blob_sha1": "f9e7e466478db0f03a2c274a7ab3017dded84fe6",
+      "sha256": "ad1962415ad9234405407510ec66803a08347816303c49d02b5ba6586e2f6473",
+      "worktree_matches": true
+    }
+  ],
+  "tests_started": 0,
+  "implementation_edits": false,
+  "source_profile_activation": false,
+  "evidence_write_scope": "Only small immutable issuance/review, read-only diagnostics and blocked handoff; no worktree/WSL cleanup",
+  "preserved_cleanup_denial": "No new deletion request, retry, alternate tool, move or bypass"
+}

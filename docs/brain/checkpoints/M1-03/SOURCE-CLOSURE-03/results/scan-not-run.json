@@ -1,0 +1,88 @@
+{
+  "source_commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+  "source_tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e",
+  "status": "NOT_RUN",
+  "reason": "K04 BLOCKED_CLOUD_CAPABILITY; unchanged full ELF closure refuses",
+  "candidate_tests": "NOT_RUN",
+  "bundles": [
+    {
+      "bundle": "owasp-top-ten",
+      "expected_sha256": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+      "status": "NOT_RUN",
+      "raw_exit": null
+    },
+    {
+      "bundle": "react",
+      "expected_sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+      "status": "NOT_RUN",
+      "raw_exit": null
+    },
+    {
+      "bundle": "secrets",
+      "expected_sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+      "status": "NOT_RUN",
+      "raw_exit": null
+    },
+    {
+      "bundle": "typescript",
+      "expected_sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+      "status": "NOT_RUN",
+      "raw_exit": null
+    }
+  ],
+  "new_findings": null,
+  "coverage_partitions": null,
+  "per_path_rule_language_coverage": "NOT_RUN: no engine invocation, no inferred coverage",
+  "parser_diagnostics": "NOT_RUN; SQL26, TS partial parsing and fixpoint warnings are historical only",
+  "historical_findings": "UNKNOWN/UNREVIEWED, no disposition or credential validation",
+  "frozen_reference_inputs": [
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "bytes": 13797,
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "bytes": 6778,
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "bytes": 7937,
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "bytes": 38158,
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/history.py",
+      "bytes": 20514,
+      "sha256": "0e58ddadd9b03e294deb03ac738c2a4bbcbcf8cf7c0f510958e9abccaff7ca93"
+    }
+  ],
+  "frozen_scanner_sources": [
+    {
+      "path": "scripts/security_readiness/m103/candidate.py",
+      "sha256": "02796dac2260c0d5475c3f657fc47689ab9b0e99c19a1536ab331ef5fef52218"
+    },
+    {
+      "path": "scripts/security_readiness/m103/capsule.py",
+      "sha256": "0564f423663811aff707a3ab7fa0a618711c9359621f35f26e26edb5d13c954f"
+    },
+    {
+      "path": "scripts/security_readiness/m103/sandbox.py",
+      "sha256": "fe2c5580115c7f4b791edc7f7a72851044c0677e464bc53c467a42d9ce508b15"
+    },
+    {
+      "path": "scripts/security_readiness/m103/integrity.py",
+      "sha256": "11e548c814f08512a1ea43bb9e2bb4858512f814abe901d65fb95fa6598f8cbc"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_scan.py",
+      "sha256": "19361faa398682beaed980df8519b0ed998508c72931a24264ebad3c52dd3c82"
+    }
+  ],
+  "admission": "NONE"
+}

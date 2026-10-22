@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "kind": "GUARDED_REPORT_VALIDATION",
+  "command": "python -B scripts/brain/brain.py --profile M1-03 report docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/completion-report.json",
+  "raw_exit": 0,
+  "output": "PASS: M1 issued profile; evidence binding is not independent acceptance\r\n",
+  "output_sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf",
+  "scope": "Provisional report with38 committed artifacts before adding final CI observation; final report revalidated after delivery commit",
+  "admission": "NONE"
+}

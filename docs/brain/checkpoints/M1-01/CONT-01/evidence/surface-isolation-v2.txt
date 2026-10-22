@@ -1,0 +1,4 @@
+Error: Progress tab did not render the truthful free-plan feature gate.
+    at assert (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/isolation-ui-harness-v2.mjs:59:25)
+    at run (file:///C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-01/CONT-01/evidence/isolation-ui-harness-v2.mjs:1308:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

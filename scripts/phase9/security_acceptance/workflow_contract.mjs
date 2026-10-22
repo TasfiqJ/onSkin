@@ -39,7 +39,28 @@ export function validateWorkflowAdmission(text) {
       if (!['.stdout', '.stderr', '.exit-code'].every((suffix) => capture.run.includes(prefix + suffix)) || !capture.run.includes('exit "$gate_exit"')) return false;
     }
     const leak = jobs['secret-scan'].steps.find((step) => step.id === 'gitleaks');
-    if (leak?.env?.GITLEAKS_VERSION !== '8.24.3' || leak.env.GITLEAKS_ENABLE_COMMENTS !== 'false' || !command(jobs['secret-scan'], 'gitleaks-results.sarif') || !finalCommand(jobs['secret-scan'], 'python3 -B scripts/phase9/security_acceptance/workflow_admission.py gitleaks-tool')) return false;
+    const secret = jobs['secret-scan'];
+    const helper = 'python3 -B scripts/phase9/security_acceptance/secret_scan.py';
+    const stepNamed = name => secret.steps.find(step => step.name === name);
+    const acquisition = stepNamed('Acquire exact original secret executables');
+    const scope = stepNamed('Scan complete local refs and exact committed current source');
+    const truffle = secret.steps.find(step => step.id === 'trufflehog');
+    if (acquisition?.run?.trim() !== `${helper} acquire --tools "$RUNNER_TEMP/original-secret-tools"` || acquisition.if || acquisition['continue-on-error'] ||
+        scope?.['continue-on-error'] || scope?.if || !scope?.run ||
+        !['git show-ref --verify --quiet "$GITHUB_REF" || git update-ref "$GITHUB_REF" "$GITHUB_SHA"',
+          'test "$(git rev-parse "$GITHUB_REF")" = "$GITHUB_SHA"', `${helper} scan`,
+          '--tools "$RUNNER_TEMP/original-secret-tools"', '--work "$RUNNER_TEMP/original-secret-scope"',
+          '--output docs/phase-9/generated/ci-scanner-evidence',
+          '--commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --source-ref "$GITHUB_REF"'].every(s => scope.run.includes(s)) ||
+        /latest|\|\|\s*true|--depth|--since|--exclude/u.test(scope.run) ||
+        leak?.uses || leak?.['continue-on-error'] !== true ||
+        ![`${helper} outcome --scanner gitleaks --output docs/phase-9/generated/ci-scanner-evidence`, 'code=$?', 'echo "exit-code=$code" >> "$GITHUB_OUTPUT"', 'exit "$code"'].every(s => leak?.run?.includes(s)) ||
+        truffle?.uses || truffle?.['continue-on-error'] !== true ||
+        truffle?.run !== `${helper} outcome --scanner trufflehog --output docs/phase-9/generated/ci-scanner-evidence` ||
+        !finalCommand(secret, `${helper} check`) ||
+        !finalCommand(secret, '--commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"') ||
+        !command(secret, 'python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v') ||
+        secret.steps.find(s => s.name === 'Checkout')?.with?.['fetch-depth'] !== 0) return false;
     const staticJob = jobs['static-analysis'];
     if (staticJob['runs-on'] !== 'ubuntu-24.04' || !command(staticJob, 'bootstrap_tools.py') || !command(staticJob, 'collect.py') || !command(staticJob, 'contract.py check') || !command(staticJob, 'python -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v')) return false;
     if (!command(staticJob, '--output "$RUNNER_TEMP/g97-evidence"') || !command(staticJob, '--evidence "$RUNNER_TEMP/g97-evidence"') ||

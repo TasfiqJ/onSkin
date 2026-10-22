@@ -1,0 +1,98 @@
+[
+  {
+    "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+    "expected": "296eac4dd887b3403eea2ac77f8ec4d3ad7299bc5b8063ce75bda0d873e07831",
+    "actual": "296eac4dd887b3403eea2ac77f8ec4d3ad7299bc5b8063ce75bda0d873e07831",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/candidate.py",
+    "expected": "9cfd2ac00de506e5d91514d844838d36d98952c1c95aeec1fd83ae28161d728f",
+    "actual": "9cfd2ac00de506e5d91514d844838d36d98952c1c95aeec1fd83ae28161d728f",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/source_scan.py",
+    "expected": "522ee67accc650ec85d79bed1ae20494bbeeae15334ed4933ea2883f2a1e4dcd",
+    "actual": "522ee67accc650ec85d79bed1ae20494bbeeae15334ed4933ea2883f2a1e4dcd",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/sandbox.py",
+    "expected": "fe2c5580115c7f4b791edc7d72851044c0677e464bc53c467a42d9ce508b15",
+    "actual": "fe2c5580115c7f4b791edc7f7a72851044c0677e464bc53c467a42d9ce508b15",
+    "status": "EDIT_BLOCKED_PREIMAGE_MISMATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/test_diagnostics.py",
+    "expected": "1ff9b6a09c2324e3b948fe2492bd39fbec51f8b6946e356f53e306d6c73d51e5",
+    "actual": "1ff9b6a09c2324e3b948fe2492bd39fbec51f8b6946e356f53e306d6c73d51e5",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/reconcile.py",
+    "expected": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde",
+    "actual": "e18165bc62fdebd3fd02c1a0111ae9c3ed1a2956f93d3bcf4b1cf339a3481bde",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/dependencies.mjs",
+    "expected": "270c289bca62e55448109121befe5f5209321b6cd359c449b15e8bc815ced54d",
+    "actual": "270c289bca62e55448109121befe5f5209321b6cd359c449b15e8bc815ced54d",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/adverse_install.py",
+    "expected": "4b8631ef4703ce16ffcc57f06973dbf7b91ab368c430020819480cb6374b7e16",
+    "actual": "4b8631ef4703ce16ffcc57f06973dbf7b91ab368c430020819480cb6374b7e16",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/compatibility.py",
+    "expected": "1d735766f3e1dff45678d5ec9e47cc484990154ef464a5f881f2fd42b606321e",
+    "actual": "1d735766f3e1dff45678d5ec9e47cc484990154ef464a5f881f2fd42b606321e",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/fixtures.py",
+    "expected": "3abfad7815bed18b96ba6ce730ebd99b80697b4c80ffd67878867d354908cb3a",
+    "actual": "3abfad7815bed18b96ba6ce730ebd99b80697b4c80ffd67878867d354908cb3a",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/security_readiness/m103/README.md",
+    "expected": "9180181a46a2314736b255ac2ebd1934bc842b74c680df240444f982733ab69c",
+    "actual": "9180181a46a2314736b255ac2ebd1934bc842b74c680df240444f982733ab69c",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/brain/m103_profile.py",
+    "expected": "872c999f716e758bafe88aaba8880c0d5a1e2f169908ca246ed8c731984f6f1a",
+    "actual": "872c999f716e758bafe88aaba8880c0d5a1e2f169908ca246ed8c731984f6f1a",
+    "status": "MATCH"
+  },
+  {
+    "path": "scripts/brain/test_m103_overnight01_profile.py",
+    "expected": "bbd4d4e7a7dd41f7e4a32c3f865277d46afd42e329a137908814a855a59e83bb",
+    "actual": "bbd4d4e7a7dd41f7e4a32c3f865277d46afd42e329a137908814a855a59e83bb",
+    "status": "MATCH"
+  },
+  {
+    "path": "ONSKIN_BRAIN_HANDOFF.txt",
+    "expected": "a2fc959a7ee7c8a83df75f67028623327e0a78542a6f308801517b3b98420288",
+    "actual": "a2fc959a7ee7c8a83df75f67028623327e0a78542a6f308801517b3b98420288",
+    "status": "MATCH"
+  },
+  {
+    "path": "docs/brain/README.md",
+    "expected": "883df680dfb83f759fa87a2144eb1eafe6c48f86504f1a79a92f6fe1e8ced9bd",
+    "actual": "883df680dfb83f759fa87a2144eb1eafe6c48f86504f1a79a92f6fe1e8ced9bd",
+    "status": "MATCH"
+  },
+  {
+    "path": ".gitattributes",
+    "expected": "211fe7484a604f861afdfb42e60e1257452e1ab1d0bae937f771e05f484d82fc",
+    "actual": "211fe7484a604f861afdfb42e60e1257452e1ab1d0bae937f771e05f484d82fc",
+    "status": "MATCH"
+  }
+]

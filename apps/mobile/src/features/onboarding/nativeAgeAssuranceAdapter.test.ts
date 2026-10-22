@@ -34,7 +34,7 @@ function configureNative(): void {
     ageAssuranceContractVersion: 1,
     ageAssuranceReviewStatus: 'launch_blocked',
     ageAssuranceProvider: 'apple_declared_age_range',
-    ageAssuranceMinimumAge: 16,
+    ageAssuranceMinimumAge: 18,
     ageAssuranceMinimumRuntime: 'iOS 26.2',
     ageAssuranceMinimumSdk: 'iOS 26.2',
     ageAssuranceExactBirthDateCollected: false,
@@ -53,7 +53,7 @@ describe('iOS native age-assurance adapter', () => {
     expect(nativeAgeAssuranceAvailability()).toBe('unavailable');
 
     configureNative();
-    mocks.values.ageAssuranceMinimumAge = 18;
+    mocks.values.ageAssuranceMinimumAge = 16;
     expect(nativeAgeAssuranceAvailability()).toBe('misconfigured');
 
     configureNative();

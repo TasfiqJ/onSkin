@@ -1,0 +1,45 @@
+{
+  "version": "57.0.31",
+  "dist": {
+    "shasum": "8bb6dad6146877be097882449b6bb7718f017cd1",
+    "tarball": "https://registry.npmjs.org/expo/-/expo-57.0.31.tgz",
+    "fileCount": 429,
+    "integrity": "sha512-+9AJvHZMLIY/Tv6r5Tpu84vWfI75FBTnineYqjjlHAU138IPg2gYQKn9FQFetCB9YScwyc7STk7WGHSCHAdTiQ==",
+    "signatures": [
+      {
+        "sig": "MEQCIFaqt6rXAPYAkDZgLeWF3reqRtuOG/mHgiOrrZxg5CJQAiAlbXWtnkQI3UYkaIYluGwOGOlc97hfBZxdbdUwzukn6A==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIGw0dWDDZsGj0dqSIZnU8039vuluFWP1vAbM04ZBDxQ6AiEAvaKOb4qFb0lyewzx0i1OJ8tPzrdomuq5hZL6dPYNwt0=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 957086
+  },
+  "dependencies": {
+    "@expo/cli": "^57.0.32",
+    "expo-font": "~57.0.4",
+    "expo-asset": "~57.0.20",
+    "@expo/metro": "~56.0.2",
+    "@expo/config": "~57.0.10",
+    "@expo/log-box": "^57.0.4",
+    "pretty-format": "^29.7.0",
+    "react-refresh": "^0.14.2",
+    "@babel/runtime": "^7.20.0",
+    "@expo/devtools": "~57.0.1",
+    "expo-constants": "~57.0.22",
+    "expo-keep-awake": "~57.0.2",
+    "expo-file-system": "~57.0.7",
+    "@expo/dom-webview": "~57.0.1",
+    "@expo/fingerprint": "^0.20.14",
+    "babel-preset-expo": "~57.0.16",
+    "expo-modules-core": "~57.0.24",
+    "@expo/metro-config": "~57.0.13",
+    "whatwg-url-minimum": "^0.1.2",
+    "@expo/config-plugins": "~57.0.11",
+    "@ungap/structured-clone": "^1.3.0",
+    "expo-modules-autolinking": "~57.0.16",
+    "@expo/local-build-cache-provider": "^57.0.9"
+  }
+}

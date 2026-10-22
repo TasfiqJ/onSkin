@@ -1,0 +1,28 @@
+
+> layerwell@0.1.0 postinstall
+> node scripts/postinstall.mjs
+
+file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:73
+  throw new ViewShotPrivacyPatchError(code, message, cause ? { cause } : undefined);
+        ^
+
+ViewShotPrivacyPatchError: The pinned dependency path is missing: node_modules/react-native-view-shot/package.json.
+    at fail (file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:73:9)
+    at checkedPath (file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:153:7)
+    at readCheckedFile (file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:200:16)
+    at readJson (file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:243:16)
+    at validateInstalledPackage (file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:312:21)
+    at patchReactNativeViewShotPrivacy (file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/phase9/patch-react-native-view-shot-privacy.mjs:413:3)
+    at file:///C:/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/postinstall.mjs:14:18
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  code: 'PATH_MISSING'
+}
+
+Node.js v22.21.0
+npm error code 1
+npm error path C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node scripts/postinstall.mjs
+npm error A complete log of this run can be found in: C:\Users\jasim\AppData\Local\npm-cache\_logs\2026-10-22T04_10_20_009Z-debug-0.log

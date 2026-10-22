@@ -1,0 +1,32 @@
+Provider job 119000585680; run 39532208765; stage 7305ff24c; PR merge 211f56ec; admission NONE.
+Selected decoded public PASS lines, not a new execution or hosted authorization.
+2026-10-21T02:21:34.6977467Z [db05-local] start isolated credential-free stack: PASS
+2026-10-21T02:22:10.0492529Z [db05-local] reset through 0067 for the 0068 forward-upgrade rehearsal: PASS
+2026-10-21T02:22:10.6405809Z [db05-local] verify installed history through 20260726000067: PASS
+2026-10-21T02:22:13.8592382Z [db05-local] run 0067 to 0068 adherence data-cutover rehearsal: PASS
+2026-10-21T02:22:49.3612259Z [db05-local] reset through 0068 for the 0069 forward-upgrade rehearsal: PASS
+2026-10-21T02:22:49.9945738Z [db05-local] verify installed history through 20260726000068: PASS
+2026-10-21T02:22:52.1702749Z [db05-local] run 0068 to 0069 sync-bridge data-cutover rehearsal: PASS
+2026-10-21T02:23:25.6373773Z [db05-local] reset through 0069 for the 0070 consent-draft forward-upgrade rehearsal: PASS
+2026-10-21T02:23:26.4750841Z [db05-local] verify installed history through 20260726000069: PASS
+2026-10-21T02:23:29.0815983Z [db05-local] run 0069 to 0070 consent-draft staging rehearsal: PASS
+2026-10-21T02:24:04.1292212Z [db05-local] reset through 0070 for the 0071 recommendation forward-upgrade rehearsal: PASS
+2026-10-21T02:24:04.7715522Z [db05-local] verify installed history through 20260726000070: PASS
+2026-10-21T02:24:06.5498065Z [db05-local] run 0070 to 0071 recommendation zero-admission rehearsal: PASS
+2026-10-21T02:24:41.3097142Z [db05-local] reset through 0071 for the 0072 commerce forward-upgrade rehearsal: PASS
+2026-10-21T02:24:41.9783269Z [db05-local] verify installed history through 20260726000071: PASS
+2026-10-21T02:24:44.0958440Z [db05-local] run 0071 to 0072 commerce zero-admission rehearsal: PASS
+2026-10-21T02:25:18.9077698Z [db05-local] reset 1 of 2 (migrations plus seed): PASS
+2026-10-21T02:25:19.5471542Z [db05-local] verify installed history through 20261010000081: PASS
+2026-10-21T02:25:55.1484266Z [db05-local] reset 2 of 2 (repeatability): PASS
+2026-10-21T02:25:55.7505050Z [db05-local] verify installed history through 20261010000081: PASS
+2026-10-21T02:25:57.1462412Z [db05-local] migration history: PASS (97, latest 20261010000081)
+2026-10-21T02:26:10.1925000Z [db05-local] run focused CORE-05 structural regressions: PASS
+2026-10-21T03:08:36.8708170Z [db05-local] run structural pgTAP tests: PASS
+2026-10-21T03:08:37.6523837Z [db05-local] lint migrated public schema: PASS
+2026-10-21T03:09:00.9855951Z [db05-local] compare local schema to migration shadow: PASS
+2026-10-21T03:09:00.9862237Z [db05-local] migration/schema drift: PASS (empty)
+2026-10-21T03:09:02.9241514Z [db05-local] run CAT-08 two-connection revocation rehearsal: PASS
+2026-10-21T03:09:05.5417952Z [db05-local] temporary types: PASS (7381 lines, sha256 2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795)
+2026-10-21T03:09:05.6176712Z [db08-types] repository parity: PASS (7381 lines, sha256 2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795, already-current)
+2026-10-21T03:09:30.9207746Z [db05-local] full local verification: PASS

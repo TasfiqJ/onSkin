@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "CONT-01",
+  "branch": "stage/m1-retained-safety",
+  "original_task_base": "2de9ef75a1a1d539b0520ca22160abd6171c9c3b",
+  "base_commit": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "base_tree": "eb9bb55569b75dba730ae69e8eb5c703804cfc58",
+  "approved_state_version": "brain-m1-03-partial-reviewed-cont01-issued-12",
+  "input_manifest_sha256": "214f13a3406632c50f0c9eebc947c04bb11f56259c12d13f93744f866254508e",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "review_overlay": "docs/brain/reviews/M1-03/REVIEW-01",
+  "source_edit_authorization": "docs/brain/reviews/M1-03/REVIEW-01/SOURCE_EDIT_AUTHORIZATION.json",
+  "authorization_id": "M103-CONT01-SOURCE-EDIT-01",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "incremental_spend_usd": 0,
+  "active_writers": 1,
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED"
+}

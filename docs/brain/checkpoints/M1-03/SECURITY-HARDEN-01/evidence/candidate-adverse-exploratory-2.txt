@@ -1,0 +1,88 @@
+test_complete_object_partition_wrong_blob_missing_duplicate_and_digest_lookalike (test_diagnostics.CandidateTests.test_complete_object_partition_wrong_blob_missing_duplicate_and_digest_lookalike) ... ok
+test_exact_deterministic_metadata_record_derivative_and_unchanged_core (test_diagnostics.CandidateTests.test_exact_deterministic_metadata_record_derivative_and_unchanged_core) ... ok
+test_typed_complete_results_timeout_missing_duplicate_stale_and_rule_drift (test_diagnostics.CandidateTests.test_typed_complete_results_timeout_missing_duplicate_stale_and_rule_drift) ... ok
+test_actual_official_core_positive_and_benign_in_capsule (test_integrity.IntegrityTests.test_actual_official_core_positive_and_benign_in_capsule) ... FAIL
+test_bytecode_cache_and_launcher_inputs_are_not_ignored (test_integrity.IntegrityTests.test_bytecode_cache_and_launcher_inputs_are_not_ignored) ... ok
+test_export_modification_rename_links_and_added_paths_refuse (test_integrity.IntegrityTests.test_export_modification_rename_links_and_added_paths_refuse) ... ok
+test_host_change_and_restore_while_child_executes_refuses (test_integrity.IntegrityTests.test_host_change_and_restore_while_child_executes_refuses) ... FAIL
+test_installed_links_hardlinks_fifo_and_transient_process_mutation_refuse (test_integrity.IntegrityTests.test_installed_links_hardlinks_fifo_and_transient_process_mutation_refuse) ... ok
+test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite (test_integrity.IntegrityTests.test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite) ... FAIL
+
+======================================================================
+FAIL: test_actual_official_core_positive_and_benign_in_capsule (test_integrity.IntegrityTests.test_actual_official_core_positive_and_benign_in_capsule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/test_integrity.py", line 104, in test_actual_official_core_positive_and_benign_in_capsule
+    self.assertEqual(exit,0,(root/'err').read_text()[-1600:]);result=json.loads((root/'out').read_bytes())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/capsule.py", line 106, in <module>
+    if sys.argv[1]=='_inside':inside(sys.argv[2])
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/capsule.py", line 68, in inside
+    copied=tree(dst,system=True)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 47, in tree
+    visit(root)
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 43, in visit
+    visit(p)
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 37, in visit
+    target=p.resolve(strict=True)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1242, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 432, in realpath
+  File "<frozen posixpath>", line 499, in _joinrealpath
+  File "<frozen posixpath>", line 476, in _joinrealpath
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/capsule/runtime/usr/lib/x86_64-linux-gnu'
+
+
+======================================================================
+FAIL: test_host_change_and_restore_while_child_executes_refuses (test_integrity.IntegrityTests.test_host_change_and_restore_while_child_executes_refuses)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/test_integrity.py", line 131, in test_host_change_and_restore_while_child_executes_refuses
+    s.sealed_run(candidate,tool,inventory,repo,root,rule,c.SHA(rule.read_bytes()),command,subprocess.PIPE,err,120)
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/source_scan.py", line 112, in sealed_run
+    try:process.wait(timeout=timeout)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/test_integrity.py", line 123, in synchronized_wait
+    changed=True;self.assertEqual(process.stdout.readline().strip(),b'READY')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'' != b'READY'
+
+======================================================================
+FAIL: test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite (test_integrity.IntegrityTests.test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/test_integrity.py", line 80, in test_real_capsule_readonly_source_tool_and_network_and_post_scan_rewrite
+    self.assertEqual(exit,0,(root/'err').read_text()[-1800:]);self.assertIn('IMMUTABLE',(root/'out').read_text())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/capsule.py", line 106, in <module>
+    if sys.argv[1]=='_inside':inside(sys.argv[2])
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/capsule.py", line 68, in inside
+    copied=tree(dst,system=True)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 47, in tree
+    visit(root)
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 43, in visit
+    visit(p)
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 37, in visit
+    target=p.resolve(strict=True)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1242, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 432, in realpath
+  File "<frozen posixpath>", line 499, in _joinrealpath
+  File "<frozen posixpath>", line 476, in _joinrealpath
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/capsule/runtime/usr/lib/x86_64-linux-gnu'
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 11.632s
+
+FAILED (failures=3)

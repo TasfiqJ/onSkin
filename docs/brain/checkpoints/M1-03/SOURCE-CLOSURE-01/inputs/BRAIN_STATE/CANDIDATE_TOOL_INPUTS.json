@@ -1,0 +1,68 @@
+{
+  "metadata_read_at_utc": "2026-10-21T03:10:12.084725+00:00",
+  "evidence_class": "BRAIN_OBSERVED_PRIMARY_METADATA; WHEEL_BYTES_NOT_DOWNLOADED_OR_EXECUTED_IN_THIS_ISSUANCE",
+  "platform": "linux-x86_64-py312",
+  "packages": [
+    {
+      "name": "semgrep",
+      "version": "1.181.0",
+      "metadata_url": "https://pypi.org/pypi/semgrep/1.181.0/json",
+      "metadata_response_sha256": "7d74f2e2bc11fe0889719be0998b9702d1545df5952ba4f25595441c538a06b4",
+      "wheel_sha256": "c142ec04a2ed144970cb0a92f6877651dd3c088505eec737bb7f4db7ae5f0ffa",
+      "wheel_bytes": 70540779,
+      "original_mcp_requirement": "mcp==1.29.0",
+      "candidate_mcp_requirement": "mcp==1.30.0",
+      "derivative_allowed": "Only exact Requires-Dist line and wheel RECORD; actual derived hashes and full dependency consistency must be proved; not an upstream release."
+    },
+    {
+      "name": "mcp",
+      "version": "1.30.0",
+      "metadata_url": "https://pypi.org/pypi/mcp/1.30.0/json",
+      "metadata_response_sha256": "eed19fb444508429a58ca815b0692a8ccafa88392b35eb4096565275c3be414b",
+      "wheel_sha256": "666edb5009503e1047c9d60346a756f94b261f05cc2625f23d41c728ffc484d0",
+      "wheel_bytes": 234581
+    },
+    {
+      "name": "certifi",
+      "version": "2026.10.19",
+      "metadata_url": "https://pypi.org/pypi/certifi/2026.10.19/json",
+      "metadata_response_sha256": "5b6ba21c20c09f5e4ca52bf8251de25fafbdb56909c60e3ba44d4f2b6ef5d319",
+      "wheel_sha256": "42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b",
+      "wheel_bytes": 136464
+    }
+  ],
+  "preserved_reference_inputs": [
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "bytes": 13797,
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "bytes": 6778,
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "bytes": 7937,
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "bytes": 38158,
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/history.py",
+      "bytes": 20514,
+      "sha256": "0e58ddadd9b03e294deb03ac738c2a4bbcbcf8cf7c0f510958e9abccaff7ca93"
+    }
+  ],
+  "rule_bundle_sha256": {
+    "owasp-top-ten": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+    "react": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+    "secrets": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+    "typescript": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395"
+  },
+  "classification": "CANDIDATE_INPUTS_ONLY_NO_TOOL_TRUST_OR_ACCEPTANCE_RENEWAL"
+}

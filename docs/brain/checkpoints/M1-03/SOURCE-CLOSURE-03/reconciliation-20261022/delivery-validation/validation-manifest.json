@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "admission": "NONE",
+  "observed_utc": "2026-10-22T03:17:00.173085+00:00",
+  "verified_evidence_head": "5bd732a9e790f970fd91193bcfdb4555b9d128e9",
+  "verified_tree": "4a22abe0ba024120301316195d87c8fe66cb21a1",
+  "committed_artifacts": 75,
+  "strict_report_exit": 0,
+  "clean_worklist_exit": 0,
+  "initial_failures": "Precommit strict/worklist appropriately refused an uncommitted/dirty output. First published strict check refused20 ignored log files. All20 exact hash-bound sanitized raw files were then explicitly added, preserving source output bytes; the strict report now passes. Git whitespace diagnostics for raw logs are retained data properties, not source edits; no raw output was normalized.",
+  "containing_delivery": "Containing commit adds only these late validation observations and factual handoff; final head/tree resolved externally after push.",
+  "files": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/committed-strict-report.json",
+      "sha256": "7c02a535a226bc627ebc6cbfc762856c10aefd8d73acd6a25107ff008fa24813",
+      "bytes": 493
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/committed-strict-report.log",
+      "sha256": "3955d1375092373d8fecf6a434757825af1360d7c79fff9914e114eaf56021de",
+      "bytes": 155
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/committed-worklist.json",
+      "sha256": "39b1ef4fc4e26ff8bf52b0d93401c0473e758ace52590144e1d8e106de24fd10",
+      "bytes": 385
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/committed-worklist.log",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "bytes": 68
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/complete-committed-strict.json",
+      "sha256": "d3f4e73af759edffa36bb56e5d0cf8331c43a02316b29523b41e72204caec39b",
+      "bytes": 477
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/complete-committed-strict.log",
+      "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf",
+      "bytes": 73
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/delivery-strict-report.json",
+      "sha256": "e639c656e4520c2842319b01988591f82cd2a7ac441d4fc9647f6a85a06d6e41",
+      "bytes": 509
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/delivery-strict-report.log",
+      "sha256": "98eee985e3ad0093de7a0d37d28c3db68e52ce5d215625faa04a9a6fe9584c84",
+      "bytes": 151
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/delivery-worklist.json",
+      "sha256": "68556dfb3d735b006371840f8f06466fd0b830f87ca313bcf2ce0707d293af49",
+      "bytes": 398
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/delivery-worklist.log",
+      "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "bytes": 188
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/delivery-validation/first-evidence-delivery-ci.json",
+      "sha256": "df8006011cdeb7df08e594190289e18b500e3925a6803bc755cf3a8cfeeb0a52",
+      "bytes": 1568
+    }
+  ]
+}

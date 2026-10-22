@@ -1,0 +1,25 @@
+test_exact_report_and_false_authority_refusals (test_m103_quality_recovery03_profile.QualityRecovery03.test_exact_report_and_false_authority_refusals) ... ok
+test_input_review_and_stale_preimage_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_input_review_and_stale_preimage_refuse) ... FAIL
+test_mapping_other_package_and_lock_mutations_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_mapping_other_package_and_lock_mutations_refuse) ... ok
+test_old_intervals_cannot_admit_qr03 (test_m103_quality_recovery03_profile.QualityRecovery03.test_old_intervals_cannot_admit_qr03) ... ok
+test_protected_widget_root_and_old_active_changes_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_protected_widget_root_and_old_active_changes_refuse) ... ok
+test_report_forged_acceptance_external_go_and_artifact_tamper_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_report_forged_acceptance_external_go_and_artifact_tamper_refuse) ... ok
+test_unauthorized_source_and_intermediate_revert_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_unauthorized_source_and_intermediate_revert_refuse) ... ok
+test_wrong_actual_branch_and_old_head_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_wrong_actual_branch_and_old_head_refuse) ... ok
+
+======================================================================
+FAIL: test_input_review_and_stale_preimage_refuse (test_m103_quality_recovery03_profile.QualityRecovery03.test_input_review_and_stale_preimage_refuse)
+----------------------------------------------------------------------
+json.decoder.JSONDecodeError: Extra data: line 15643 column 1 (char 572797)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/onskin-quality-recovery03-source/scripts/brain/test_m103_quality_recovery03_profile.py", line 94, in test_input_review_and_stale_preimage_refuse
+    with self.assertRaisesRegex(ValueError,'QR03 preimage'): p.validate_quality_recovery03(self.root)
+AssertionError: "QR03 preimage" does not match "Extra data: line 15643 column 1 (char 572797)"
+
+----------------------------------------------------------------------
+Ran 8 tests in 170.305s
+
+FAILED (failures=1)

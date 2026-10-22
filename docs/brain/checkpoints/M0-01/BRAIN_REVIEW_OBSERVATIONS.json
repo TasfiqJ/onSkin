@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-20T04:11:45+00:00",
+  "reviewed_repository": "TasfiqJ/onSkin",
+  "observed_main": {
+    "sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "tree": "a7e406303c0c865a2563a0d6f1ab1db80e3bb653",
+    "kind": "INDEPENDENTLY_OBSERVED",
+    "changed_by_brain": false
+  },
+  "reviewed_stage": {
+    "branch": "stage/m0-baseline",
+    "sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+    "tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+    "stage_base_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "commits": [
+      "dc6c42dfcf796cbddb94b510d30ecf277fa13112",
+      "b9a6b093f392ced340c156f2e7dcaefc72ed58e1"
+    ],
+    "normal_ancestry_confirmed": true,
+    "worktree_clean_before_and_after_independent_test": true,
+    "cumulative_diff": {
+      "files": 4,
+      "additions": 250,
+      "deletions": 0,
+      "paths": [
+        "ONSKIN_BRAIN_HANDOFF.txt",
+        "PROGRESS.md",
+        "docs/brain/checkpoints/M0-01/REVIEW_EVIDENCE.md",
+        "scripts/phase2/canonical-postgres-pull-retry.test.mjs"
+      ]
+    },
+    "kind": "INDEPENDENTLY_OBSERVED_AND_REVIEWED",
+    "scope": "Full cumulative two-commit diff plus relevant retry and source-custody code; not a whole-application or full Security implementation audit"
+  },
+  "pull_request": {
+    "number": 8,
+    "draft": true,
+    "merged": false,
+    "head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+    "base_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "ci_checkout_sha": "9c0bf2b3f928f96c80d620abc6da50bba0fca239",
+    "ci_checkout_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+    "tree_equality_independently_verified": true,
+    "note": "GitHub temporary PR merge object, not a merge into main."
+  },
+  "ci": [
+    {
+      "name": "Quality",
+      "run_id": 39366256422,
+      "status": "completed",
+      "conclusion": "failure",
+      "associated_head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "checkout_sha": "9c0bf2b3f928f96c80d620abc6da50bba0fca239",
+      "checkout_tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "jobs": [
+        {
+          "id": 118443688177,
+          "name": "Credential-free Supabase reset and database tests",
+          "conclusion": "failure"
+        },
+        {
+          "id": 118443688345,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443688407,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443688496,
+          "name": "Repository quality gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118445281110,
+          "name": "Expo export (android)",
+          "conclusion": "success"
+        },
+        {
+          "id": 118445281134,
+          "name": "Expo export (ios)",
+          "conclusion": "success"
+        }
+      ],
+      "failure_command": "npm run phase2:db-local-verify",
+      "failure_exit": 1,
+      "failure_timestamp_utc": "2026-10-20T03:50:17.4904138Z",
+      "failure_text": "H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: toomanyrequests: Data limit exceeded",
+      "failure_site": "prepareCanonicalPostgresImage -> runHistoryDocker before local database startup/SQL replay",
+      "source_contract_tests": {
+        "passed": 171,
+        "failed": 0
+      },
+      "generated_types_artifact": "NOT_CREATED; upload step explicitly found no files",
+      "kind": "INDEPENDENTLY_OBSERVED_GITHUB_JOBS_AND_ORIGINAL_FAILURE_LOG"
+    },
+    {
+      "name": "Security",
+      "run_id": 39366256806,
+      "status": "completed",
+      "conclusion": "failure",
+      "associated_head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "checkout_sha": "9c0bf2b3f928f96c80d620abc6da50bba0fca239",
+      "jobs": [
+        {
+          "id": 118443689543,
+          "name": "Code security gates",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443689708,
+          "name": "Static analysis and OSV",
+          "conclusion": "failure"
+        },
+        {
+          "id": 118443689857,
+          "name": "Secret scanning",
+          "conclusion": "success"
+        },
+        {
+          "id": 118443691081,
+          "name": "Live Supabase adversarial evidence",
+          "conclusion": "skipped"
+        },
+        {
+          "id": 118445333003,
+          "name": "Automated single-owner source-only Security acceptance",
+          "conclusion": "failure"
+        }
+      ],
+      "original_static_log_findings": [
+        {
+          "timestamp_utc": "2026-10-20T03:52:12.7388381Z",
+          "text": "contract.Rejected: SOURCE_INVENTORY_DRIFT",
+          "scope": "collect.py -> contract.py source inventory precondition; collection did not complete"
+        },
+        {
+          "timestamp_utc": "2026-10-20T03:52:14.6766420Z",
+          "text": "braces: review is expired or dates are invalid",
+          "scope": "OSV exception gate reported refusal"
+        },
+        {
+          "timestamp_utc": "2026-10-20T03:52:14.6767204Z",
+          "text": "node-forge: review is expired or dates are invalid",
+          "scope": "OSV exception gate reported refusal"
+        },
+        {
+          "timestamp_utc": "2026-10-20T03:52:14.6767731Z",
+          "text": "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv",
+          "scope": "CI-reported unreviewed dependency advisory; exploitability and remediation not independently assessed by this review"
+        }
+      ],
+      "contract_unit_tests": {
+        "passed": 70,
+        "note": "Passing contract tests do not make the failed collector or scanner gates pass."
+      },
+      "step_status_caution": "Some continue-on-error steps show API conclusion success although underlying outcomes and exit codes are failure. Preserve original exits and final enforcement.",
+      "owner_pins_observed_in_final_acceptance_job": {
+        "G97_REVIEWED_SOURCE_COMMIT": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+        "G97_REVIEWED_PROPOSAL_SHA256": "359ad8e7c0efb400c179a0a20cd26932c950ef05a3261db7f9502490f3371685"
+      },
+      "decision_artifact": {
+        "id": 12240151089,
+        "name": "g97-security-decision-39366256806",
+        "bytes": 249,
+        "sha256": "4eeb8b7236d76f721d4e276555ed3fb7215652a123fc14bc057e0ed48121189c",
+        "hash_kind": "OBSERVED_IN_GITHUB_UPLOAD_LOG_NOT_INDEPENDENTLY_REHASHED",
+        "contents_read": false
+      },
+      "kind": "INDEPENDENTLY_OBSERVED_GITHUB_JOBS_AND_ORIGINAL_STATIC_ACCEPTANCE_LOGS"
+    },
+    {
+      "name": "iOS launch contract",
+      "run_id": 39366256375,
+      "status": "completed",
+      "conclusion": "success",
+      "associated_head_sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "scope": "SOURCE_CONTRACT_ONLY; no physical iPhone or signed build evidence",
+      "kind": "INDEPENDENTLY_OBSERVED_GITHUB_RUN"
+    }
+  ],
+  "independent_brain_checks": [
+    {
+      "command": "node --test scripts/phase2/canonical-postgres-pull-retry.test.mjs",
+      "working_directory": "Clean authorized stage worktree",
+      "node": "20.20.2",
+      "platform": "Windows x64",
+      "sha": "b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "tree": "ed42b889912e3fb383cfbafe413e7a66dd558221",
+      "exit_code": 0,
+      "tests_passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "kind": "INDEPENDENTLY_REPRODUCED_BY_BRAIN"
+    },
+    {
+      "command": "git diff --check bbc28dc3d1f945191a81be56945b8bda7bb6ef73 b9a6b093f392ced340c156f2e7dcaefc72ed58e1",
+      "exit_code": 0,
+      "kind": "INDEPENDENTLY_REPRODUCED_BY_BRAIN"
+    },
+    {
+      "command": "git diff --exit-code bbc28dc3d1f945191a81be56945b8bda7bb6ef73 b9a6b093f392ced340c156f2e7dcaefc72ed58e1 -- supabase packages/types/src/database.types.ts package.json package-lock.json .github/workflows scripts/phase2/local-supabase-reset.mjs scripts/phase2/local-supabase-reset-retry.mjs scripts/phase2/staging-deployment-evidence-lib.mjs scripts/phase9/security_acceptance",
+      "exit_code": 0,
+      "kind": "INDEPENDENTLY_REPRODUCED_BY_BRAIN",
+      "scope": "Enumerated paths byte-identical; cumulative diff confirms no other runtime/protected edits"
+    },
+    {
+      "command": "git ls-remote --heads origin main stage/m0-baseline; git log base..head; git status --short --branch",
+      "result": "Expected two-commit ancestry, unchanged main and clean stage",
+      "kind": "INDEPENDENTLY_OBSERVED"
+    },
+    {
+      "command": "Get-FileHash -Algorithm SHA256 work/db-local-verify.log; inspect original final reset/history/types/cleanup markers",
+      "sha256": "7a971cefb2f1ed09c7340817b00af044ec0b8f9d9036bc9e38a8c046e66cc17e",
+      "kind": "INDEPENDENTLY_REHASHED_AND_INSPECTED_CODEX_EXECUTION_LOG",
+      "not_independent_full_db_rerun": true
+    }
+  ],
+  "codex_local_report": {
+    "kind": "CODEX_REPORTED_WITH_ORIGINAL_DB_LOG_INSPECTED; not all commands rerun by Brain",
+    "full_local_verify": "PASS",
+    "root_node": "20.20.2",
+    "root_npm": "11.20.0",
+    "supabase_cli": "2.117.0",
+    "docker_engine": "29.2.1",
+    "database_runtime": "Linux amd64 via Windows Docker",
+    "local_head_binding": "Runtime and database source unchanged across base, test commit and final documentation commit; local run began before final delivery commit. Do not relabel as a fresh independent final-head rerun.",
+    "local_reset_1": "PASS",
+    "local_reset_2": "PASS",
+    "migration_count": 97,
+    "latest_migration": "20261010000081",
+    "types_lines": 7381,
+    "canonical_types_sha256": "2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795",
+    "types_hash_kind": "CODEX_REPORTED; log parity marker inspected, not re-generated by Brain",
+    "source_contract_count": 171,
+    "focused_combined_count": 60,
+    "mobile_test_count": 5952,
+    "console_test_count": 24,
+    "typecheck": "3/3 workspaces reported pass",
+    "lint": "3/3 workspaces reported pass",
+    "toolchain_caveat": "Root npm pinned 11.20.0; some local Turbo workspace scripts used bundled npm 10.8.2. Distinct from Linux CI environment; no toolchain upgrade authorized."
+  },
+  "diagnosis": {
+    "observed": "Final CI canonical Postgres image acquisition fails with ECR Data limit exceeded before database startup; local execution can succeed.",
+    "classification": "EXTERNAL_REGISTRY_AVAILABILITY_OR_QUOTA / REPRODUCIBILITY_BLOCKER, not a demonstrated SQL migration defect",
+    "bounded_regression_result": "Quota-text error must fail once, preserve the original error and not enter transient Rate exceeded retries. Existing implementation already has that behavior.",
+    "runtime_fix_implemented": false,
+    "unknown": [
+      "Exact quota owner, accounting window and runner-network cause",
+      "Reliable zero-incremental-spend authorized CI solution",
+      "Full Security advisory applicability/remediation",
+      "Post-remediation full exact-build CI and custody"
+    ],
+    "not_authorized": [
+      "Registry credential/account configuration",
+      "Canonical-image substitution or fake retagging",
+      "Policy date or approval-pin renewal",
+      "Protected replay/integration/release"
+    ]
+  },
+  "review_limits": [
+    "Only the six-test retry suite and Git/hash checks were rerun independently by Brain; full app/database/scanner/device/provider tests were not.",
+    "All cumulative branch edits were read; this was not a whole-repository Security or clinical audit.",
+    "Final Security artifact upload identity was observed, but its ZIP contents were not downloaded; exact drift is independently present in original static-job logs.",
+    "Container public Git fetch failed DNS; successful live GitHub connector and authorized-desktop reads supplied exact evidence instead.",
+    "A desktop gh command was unavailable (CommandNotFound). A trailing stale LASTEXITCODE was not evidence of success; logs were then fetched through the GitHub connector.",
+    "No repository edits, pushes, merges, provider changes or database replay were executed by Brain during this review."
+  ]
+}

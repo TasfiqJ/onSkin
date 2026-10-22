@@ -1,0 +1,58 @@
+{
+  "updated_at_utc": "2026-10-20T04:11:45+00:00",
+  "blockers": [
+    {
+      "id": "BLK-01",
+      "status": "OPEN",
+      "description": "Final Quality run 39366256422 job 118443688177 fails canonical ECR Postgres acquisition with Data limit exceeded before database startup. Local success does not close CI; exact quota cause and safe resolution remain unknown.",
+      "impact": "BLOCKS_CI_AND_DEPENDENT_DATABASE_SCHEMA"
+    },
+    {
+      "id": "BLK-02",
+      "status": "OPEN",
+      "description": "Protected DB06/DB08/R2B replay, deployment and custody gates remain ungranted. Codex local disposable verification is diagnostic evidence, not hosted replay or integration authorization.",
+      "impact": "BLOCKS_PROTECTED_REPLAY_SCHEMA_DEPLOYMENT"
+    },
+    {
+      "id": "BLK-03",
+      "status": "OPEN",
+      "description": "Main source-only Security proposal remains time-bounded to 2026-10-21T00:00:00Z; stage Security fails. No date, owner-pin, source-manifest or acceptance renewal has been authorized.",
+      "impact": "BLOCKS_SECURITY_ADMISSION_AND_PROMOTION"
+    },
+    {
+      "id": "BLK-04",
+      "status": "OPEN",
+      "description": "Physical iOS/provider/qualified reviews not performed"
+    },
+    {
+      "id": "BLK-05",
+      "status": "OPEN",
+      "description": "No J05 single-scan or change claims validated"
+    },
+    {
+      "id": "BLK-06",
+      "status": "OPEN",
+      "description": "26 module research packs are missing; request only a ready next module when triggered"
+    },
+    {
+      "id": "BLK-07",
+      "status": "OPEN",
+      "description": "Commercial investment remains NO-GO; incremental spend authorized is $0"
+    },
+    {
+      "id": "BLK-08",
+      "status": "OPEN",
+      "description": "Final Security run 39366256806 static job 118443689708 rejects SOURCE_INVENTORY_DRIFT. Added handoff/evidence paths are outside the frozen reviewed inventory; existing edited source bytes also require exact review.",
+      "impact": "No source-only Security GO or branch promotion. M0-02 may document new inventory drift but must not hide or waive it.",
+      "required_resolution": "Separate exact-source review and actual authorized custody procedure; no mechanical rebinding."
+    },
+    {
+      "id": "BLK-09",
+      "status": "OPEN",
+      "description": "The same final static job independently reports braces and node-forge review date refusals, plus unreviewed OSV advisory mcp@1.29.0:GHSA-84m7-p3x7-pcfv.",
+      "impact": "Refreshing inventory alone would not establish Security acceptance.",
+      "evidence_kind": "Observed CI refusal; advisory applicability and safe remediation not yet independently assessed.",
+      "required_resolution": "Preserve original scanner reports/outcomes; separately review advisory applicability and governed remediation. No expiration extensions, allowlist growth or dependency updates in M0-02."
+    }
+  ]
+}

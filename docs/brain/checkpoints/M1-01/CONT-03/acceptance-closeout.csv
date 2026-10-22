@@ -1,0 +1,9 @@
+id,status,result,evidence,limits
+M1-CROSS-OWNER-03,PASS_LOCAL_WEB,A-to-B; own B admission; creation/edit; delayed operations; failure/retry; lifecycle/return,sealed-cross-owner390;sealed-cross-owner375;sealed-cross-owner430,Synthetic identity/preflight only; no live provider/native proof
+M1-OWNER-RACES-03,PASS_SOURCE_AND_LOCAL_WEB,Typed delayed A read/write/callback refusal; duplicate event/retry; owner proof/cache/queue/widget boundaries,sealed-focused;sealed-cross-owner390;sealed-cross-owner375;sealed-cross-owner430,Existing owner-data policy; no cross-owner adoption or broad bypass
+M1-SIGNOUT-02,PASS_LOCAL_WEB_NONREGRESSION,"First/repeated cleanup refusal, retry, public entry/protected routes/relaunch",sealed-signout390,Prior accepted base375/430 evidence referenced historically
+M1-HARNESS-02,PASS,One portable maintained runner; real B controls/terminal checks; errors remain failures,sealed-source-contracts;sealed-cross-owner390,No evidence-directory runner copies
+M1-RIGHTS-CLOSEOUT,PARTIAL_TESTED_EXTERNAL_OPEN,"Age-closed rights, interrupted withdrawal retry, guarded pending deletion and narrow capability revocation",sealed-focused;sealed-retained390;sealed-deletion390,No real provider deletion/device rights proof
+M1-RETAINED-NONREGRESSION,PARTIAL_TESTED_EXTERNAL_OPEN,"Adult18 minimized receipts, encryption, offline routine/Today/manual Shelf, privacy/payment boundaries",sealed-root-test;sealed-focused;sealed-retained390;sealed-upgrade390,Native/private photos/reminders/provider/qualified axes remain open
+M1-CHECKPOINT,SUBMITTED_REVIEW_REQUIRED,Independent CONT03 digest/review; measured report/custody; stage normal push,sealed-governance,Post-measurement report/clean-worklist/Git checks separately bound; Brain acceptance unissued
+M1-PROTECTED,BLOCKED_SEPARATE,Current static Security refuses; Quality/canonical DB pending in measured observation,ci-measured.json,No protected replay/change or expiry renewal; final delivery CI separate

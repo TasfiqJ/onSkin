@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "recorded_at_utc": "2026-10-20T14:28:39Z",
+  "repository": "TasfiqJ/onSkin",
+  "requested_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+  "runs": [
+    {
+      "head_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39435502258,
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "head_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39435502274,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "head_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39435502255,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "temporary_pr_merge": {
+    "commit": "7b59865e155a874d4bc04dde95c89443081b083f",
+    "tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+    "parents": [
+      "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+      "71f313ddce12b618ecae2ade5402358c53c6f378"
+    ]
+  },
+  "limitations": [
+    "Provider metadata/logs read by Codex; not an independent Brain audit.",
+    "Quality remains in progress in this snapshot; repository job failed source-worklist freshness; DB outcome pending.",
+    "Final report/handoff delivery will have a later ref and must get its own CI readback."
+  ]
+}

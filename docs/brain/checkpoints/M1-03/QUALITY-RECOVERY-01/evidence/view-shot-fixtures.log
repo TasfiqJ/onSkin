@@ -1,0 +1,45 @@
+
+> layerwell@0.1.0 phase9:view-shot-privacy:test
+> node --test scripts/phase9/patch-react-native-view-shot-privacy.test.mjs
+
+✔ pins the reviewed source and minimal target bytes (1.88741ms)
+✔ atomically patches only the reviewed original bytes (9.181736ms)
+✔ is idempotent without rewriting the reviewed target (5.82268ms)
+✔ --check accepts only the patched state and never writes (6.745841ms)
+▶ rejects every unreviewed manifest byte variant without mutation
+  ✔ one-byte drift (3.305675ms)
+  ✔ UTF-8 BOM (3.276338ms)
+  ✔ CRLF normalization (2.923725ms)
+  ✔ semantically plausible but unreviewed (3.058945ms)
+  ✔ malformed XML (3.05647ms)
+✔ rejects every unreviewed manifest byte variant without mutation (16.323579ms)
+▶ rejects all reviewed lock provenance drift
+  ✔ lockfile version (2.76239ms)
+  ✔ workspace spec (3.025944ms)
+  ✔ entry version (2.570215ms)
+  ✔ resolved artifact (2.601913ms)
+  ✔ integrity (2.941602ms)
+  ✔ placement flag (2.628333ms)
+  ✔ nested duplicate (2.853708ms)
+  ✔ moved entry (2.536214ms)
+✔ rejects all reviewed lock provenance drift (22.588233ms)
+▶ rejects package declaration and installed identity drift
+  ✔ mobile dependency (2.57488ms)
+  ✔ installed name (2.623281ms)
+  ✔ installed version (2.563229ms)
+✔ rejects package declaration and installed identity drift (8.02437ms)
+✔ rejects malformed or non-object provenance JSON (5.044179ms)
+✔ rejects missing, moved, or wrong-type manifest paths (8.415923ms)
+✔ rejects a linked dependency directory before following it (3.060338ms)
+✔ rejects a linked manifest before reading or replacing its target (3.37127ms)
+✔ rejects non-boolean check options (2.475309ms)
+✔ CLI rejects unknown and duplicate flags before inspecting dependencies (57.716402ms)
+✔ CLI root is anchored to its script location, not the caller cwd (33.917055ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 246.022364

@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "kind": "BRAIN_REVIEW_OBSERVATIONS",
+  "recorded_at_utc": "2026-10-20T18:47:02+00:00",
+  "repository": "TasfiqJ/onSkin",
+  "head": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+  "tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+  "reviewed_iteration": "CONT-02",
+  "evidence_method": "Source inspection plus actual read-only exact-head commands on authorized Windows device. This minimized record is transcribed from direct tool outputs; it is not a copy of the complete raw transcripts.",
+  "environment": "Windows x64; Python3.9.13; Node22.21.0/npm11.20.0; existing unchanged dependency junctions; synthetic unconfigured Expo web/headless Chrome.",
+  "executions": [
+    {
+      "id": "root-tests",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/s",
+        "/c",
+        "npm run test -- --force"
+      ],
+      "started_at_utc": "2026-10-20T18:32:06.716163+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6013,
+        "failed": 0,
+        "skipped": 0,
+        "cached_tasks": 0,
+        "mobile": 5989,
+        "console": 24
+      },
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-0.log",
+        "sha256": "116791847a5bca377fc27b9098deeaeefa455e3ce376f628e1df598692330da0",
+        "bytes_copied_into_context": false
+      }
+    },
+    {
+      "id": "typecheck",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/s",
+        "/c",
+        "npm run typecheck -- --force"
+      ],
+      "started_at_utc": "2026-10-20T18:32:43.675756+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "successful_tasks": 3,
+        "cached_tasks": 0
+      },
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-1.log",
+        "sha256": "269e243f54d9d5444795c5ef0a4e35510d128001e3fa2d0dda6b0d43eadcce53",
+        "bytes_copied_into_context": false
+      }
+    },
+    {
+      "id": "lint",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/s",
+        "/c",
+        "npm run lint -- --force"
+      ],
+      "started_at_utc": "2026-10-20T18:32:59.859901+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "successful_tasks": 3,
+        "cached_tasks": 0,
+        "qualification": "Mobile ESLint, console TypeScript; types task explicitly has no independent lint configured."
+      },
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-2.log",
+        "sha256": "d6451f618c4584b097f61727624a6a92ec32356cd94fb345a172403729cc00a3",
+        "bytes_copied_into_context": false
+      }
+    },
+    {
+      "id": "governance",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/brain",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "started_at_utc": "2026-10-20T18:33:46.826993+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "total": 46,
+        "passed": 44,
+        "failed": 0,
+        "skipped": 2,
+        "qualification": "Two genuine Windows symlink-privilege skips. Junction/hardlink tests executed. No Linux rerun in this review."
+      },
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-3.log",
+        "sha256": "ee1c5162db1f3a67782623a7949ec43f7501609d2464f3d0e78ba4db93702f17",
+        "bytes_copied_into_context": false
+      }
+    },
+    {
+      "id": "report-cli",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/brain/brain.py",
+        "--profile",
+        "M1-01",
+        "report",
+        "docs/brain/checkpoints/M1-01/CONT-02/completion-report.json"
+      ],
+      "started_at_utc": "2026-10-20T18:37:18.160717+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {},
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-4.log",
+        "sha256": "541c8017bb7fd21a866d855fe5fda85fc611681400b90b57d960d104b9d21bff",
+        "bytes_copied_into_context": false
+      }
+    },
+    {
+      "id": "source-contracts",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "--test",
+        "scripts/core01/metro-linked-dependencies.test.cjs",
+        "scripts/core01/native-age-assurance-source-contract.test.mjs",
+        "scripts/e2e/retained-safety-assertions.test.mjs"
+      ],
+      "started_at_utc": "2026-10-20T18:37:27.045235+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0
+      },
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-5.log",
+        "sha256": "b8ee655c25d13d9e6748353121a47e2038cec8deff85ad1f3c2cdb5e252f0f66",
+        "bytes_copied_into_context": false
+      }
+    },
+    {
+      "id": "worklist",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "started_at_utc": "2026-10-20T18:37:27.488866+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {},
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\check-6.log",
+        "sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+        "bytes_copied_into_context": false
+      }
+    }
+  ],
+  "browser_executions": [
+    {
+      "id": "isolation390",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--account-isolation"
+      ],
+      "environment": {
+        "ONBOARDING_E2E_PORT": "8391",
+        "ONBOARDING_E2E_DEBUG_PORT": "9491",
+        "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+        "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+        "ONBOARDING_E2E_EVIDENCE_DIR": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation390"
+      },
+      "started_at_utc": "2026-10-20T18:33:24.221278+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "summary_verdict": "pass",
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation390.log",
+        "sha256": "d033983aa4f305abcc176f6709a17b6fbb6f0eb69bc51a46105033f465524bb1",
+        "bytes_copied_into_context": false
+      },
+      "harness_sha256": "63fbd7bb6b0b15781e2b775196ab1185c4f283695ff8338a59badc42bfbd9021"
+    },
+    {
+      "id": "retained390",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--retained-safety"
+      ],
+      "environment": {
+        "ONBOARDING_E2E_PORT": "8392",
+        "ONBOARDING_E2E_DEBUG_PORT": "9492",
+        "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+        "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+        "ONBOARDING_E2E_EVIDENCE_DIR": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\retained390"
+      },
+      "started_at_utc": "2026-10-20T18:34:21.849900+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "summary_verdict": "pass",
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\retained390.log",
+        "sha256": "9e3f8313f51f9cf5dd3eeecf7a0dedb8a421c6be1bdbb533d0f407a25a79b29a",
+        "bytes_copied_into_context": false
+      },
+      "harness_sha256": "63fbd7bb6b0b15781e2b775196ab1185c4f283695ff8338a59badc42bfbd9021"
+    },
+    {
+      "id": "isolation375",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--account-isolation"
+      ],
+      "environment": {
+        "ONBOARDING_E2E_PORT": "8393",
+        "ONBOARDING_E2E_DEBUG_PORT": "9493",
+        "ONBOARDING_E2E_VIEWPORT_WIDTH": "375",
+        "ONBOARDING_E2E_VIEWPORT_HEIGHT": "667",
+        "ONBOARDING_E2E_EVIDENCE_DIR": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation375"
+      },
+      "started_at_utc": "2026-10-20T18:35:48.781042+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "summary_verdict": "pass",
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation375.log",
+        "sha256": "8f0e5599d9a09bbfaee9014cbc318e660d508a7b01c4d6ffc6ded9c41b5117cd",
+        "bytes_copied_into_context": false
+      },
+      "harness_sha256": "63fbd7bb6b0b15781e2b775196ab1185c4f283695ff8338a59badc42bfbd9021"
+    },
+    {
+      "id": "isolation430",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--account-isolation"
+      ],
+      "environment": {
+        "ONBOARDING_E2E_PORT": "8394",
+        "ONBOARDING_E2E_DEBUG_PORT": "9494",
+        "ONBOARDING_E2E_VIEWPORT_WIDTH": "430",
+        "ONBOARDING_E2E_VIEWPORT_HEIGHT": "932",
+        "ONBOARDING_E2E_EVIDENCE_DIR": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation430"
+      },
+      "started_at_utc": "2026-10-20T18:36:46.245839+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "summary_verdict": "pass",
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation430.log",
+        "sha256": "2b00252825231045ac01cbc157faa11e9c1c879af5786c60487fe833c833a8a2",
+        "bytes_copied_into_context": false
+      },
+      "harness_sha256": "63fbd7bb6b0b15781e2b775196ab1185c4f283695ff8338a59badc42bfbd9021"
+    },
+    {
+      "id": "upgrade390",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--account-upgrade"
+      ],
+      "environment": {
+        "ONBOARDING_E2E_PORT": "8395",
+        "ONBOARDING_E2E_DEBUG_PORT": "9495",
+        "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+        "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+        "ONBOARDING_E2E_EVIDENCE_DIR": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\upgrade390"
+      },
+      "started_at_utc": "2026-10-20T18:37:43.251418+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "summary_verdict": "pass",
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\upgrade390.log",
+        "sha256": "6fb74e2f86978a48afc285d1dd0259aa333451ef3c7449fb6730f2bca68f001d",
+        "bytes_copied_into_context": false
+      },
+      "harness_sha256": "63fbd7bb6b0b15781e2b775196ab1185c4f283695ff8338a59badc42bfbd9021"
+    },
+    {
+      "id": "deletionPending390",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "source_commit": "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0",
+      "source_tree": "2be9159a7eca917a7e0cbbc083c4c1ec6f3fa0ea",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs"
+      ],
+      "environment": {
+        "ONBOARDING_E2E_PORT": "8396",
+        "ONBOARDING_E2E_DEBUG_PORT": "9496",
+        "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+        "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+        "ONBOARDING_E2E_EVIDENCE_DIR": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\deletionPending390",
+        "ONBOARDING_E2E_DELETION_RECOVERY": "pending_then_completed_manual"
+      },
+      "started_at_utc": "2026-10-20T18:38:36.516698+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "summary_verdict": "pass",
+      "raw_output": {
+        "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\deletionPending390.log",
+        "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+        "bytes_copied_into_context": false
+      },
+      "harness_sha256": "63fbd7bb6b0b15781e2b775196ab1185c4f283695ff8338a59badc42bfbd9021"
+    }
+  ],
+  "custody": {
+    "base": "6b137a4f57ed9ad11cef0c91b49ca0bfaf71427a",
+    "commits": [
+      "f4f5345aebaf7f0d49b1427b2f91d81d9960f783",
+      "968e0e490a82e50af18c3c9eddff4cffd0b15534",
+      "3c10b5e9a9d165fc477b19effdd51176866761c0",
+      "56c4b2d6ea3684a49c3fe0d765f10df3a82b8823",
+      "b3b61425e6380f986035bdadd30a37b88741556a",
+      "a42f575995fe6559791ff593c977aa92c52a609f",
+      "2f0e500a3192134c49fb3a3b6f2d6192ab1d89fd",
+      "4e952618542226fb88ba628822aa76be0a605372",
+      "7afde5aa763b766620f8882e30d858169dd790ff",
+      "821b74a8cff5c64b56fa085aa1524b0166f3752c",
+      "f0809923c4fe624329ebc215e7ead0d5b66874fd",
+      "bb9d84be5fba8bbcb8a05343b66152a7ae8cded6",
+      "288a9e9c2c8ddf51abb6e0e22c83c220ee5cbf53",
+      "59731d69ebca57c0aebcfcc0bc07364c5591291a",
+      "fdf040cf28a4b3576f98b60d3b8d96a54bf689b0"
+    ],
+    "continuation_changed_paths": 2675,
+    "cumulative_main_changed_paths": 3917,
+    "ordinary_changed_paths": 26,
+    "report_artifacts_checked": 2619,
+    "artifact_hash_mismatches": [],
+    "issued_manifest": "4a5812eaac01c099c831a5f445898c1bd101d6a754aac497e67dfe50d966fcd1",
+    "issued_files_checked_excluding_manifest": 29,
+    "original_inputs_and_older_checkpoints_unchanged": true,
+    "protected_paths_unchanged_each_commit": true,
+    "protected_paths": [
+      ".github",
+      "supabase",
+      "packages",
+      "package.json",
+      "package-lock.json",
+      "apps/mobile/package.json",
+      "apps/catalog-operator-console/package.json",
+      "scripts/phase2",
+      "scripts/phase9",
+      "docs/phase-9",
+      "docs/hugeToDo/launch-contract.json",
+      ".gitignore"
+    ],
+    "worklist_item_meanings_unchanged": 14,
+    "worklist_fingerprints_verified": 414,
+    "worklist_generator_sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+    "clean_before_and_after": true,
+    "main_sha": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "m0_stage_sha": "6aa01995f6dcb94fd28d358badc9f8d1e0273d39"
+  },
+  "raw_metadata_record": {
+    "owner_device_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-review-baffpn2z\\independent-review-transfer.json",
+    "bytes": 21048,
+    "sha256": "6db86845168b749aabe2f29234904c81baaba310d19e7ea4ac5f348467e2fdcd",
+    "copied_to_context": false
+  },
+  "visual_inspections": [
+    "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation390\\27-account-boundary-repeated-failure.png",
+    "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation390\\28-signed-out-welcome.png",
+    "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-brain-cont02-web-fb1hdq75\\isolation390\\31-signed-out-cold-relaunch.png"
+  ],
+  "limits": [
+    "No A-to-B browser replay was supplied or independently executed; no such maintained mode exists at this head.",
+    "The separately reported 332 focused tests overlap root; not independently rerun as an extra command this review.",
+    "Codex reports 21 selected browser runs at bb9d84; Brain independently reran six listed cases at fdf040.",
+    "Raw artifact hash equality is integrity, not proof of every semantic claim. Not every one of 2619 artifacts was visually/semantically inspected.",
+    "Web fixture identity/deletion transport is not live provider proof. No physical native/Keychain/process-death/photo/reminder/payment/qualified/research/release validation."
+  ]
+}

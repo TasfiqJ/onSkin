@@ -1,0 +1,56 @@
+
+> layerwell@0.1.0 phase5:ios-extension-contract:smoke
+> node --test scripts/phase5/ios-extension-contract.test.mjs scripts/phase5/widget-privacy-manifest.test.mjs scripts/phase5/patch-expo-widgets-lifecycle.test.mjs scripts/phase5/expo-widgets-lifecycle-source.test.mjs
+
+✔ SDK57 bridge accepts the new API while native authority owns deadlines and deep links (1.632151ms)
+✔ native authority is cross-process serialized, durable, and ABA-resistant (0.420176ms)
+✔ unconditional cleanup closes authority before clearing derived presentation and activities (0.543551ms)
+✔ SQLite is the sole Layerwell timeline authority with a killed-app redaction entry (0.37793ms)
+✔ AppIntent commits the native outbox and never writes Layerwell UserDefaults (0.28595ms)
+✔ reconciliation is exact all-or-redact and persisted rows are strictly bounded (0.84447ms)
+✔ Live Activity APIs globally gate Layerwell and destroy aliases or duplicates (0.490781ms)
+✔ signed flags remain literal false and cleanup does not consult them (0.278255ms)
+✔ the exact dependency patch links SQLite and exposes only bounded JSON bridge methods (0.48476ms)
+✔ accepts the single derived iOS WidgetKit + ActivityKit extension contract (1.483144ms)
+✔ rejects a URL scheme that diverges from the compiled widget link allowlist (0.8729ms)
+✔ rejects drift in the exact reviewed widget dependency lock (0.165709ms)
+✔ rejects widget APNs entitlement (0.150711ms)
+✔ rejects a colliding or wrong extension identifier (0.187339ms)
+✔ rejects frequent updates (0.162161ms)
+✔ rejects Android generation (0.174519ms)
+✔ rejects Android widget options (0.133397ms)
+✔ rejects the iPad-only extra-large family (0.256083ms)
+✔ rejects an extra extension (0.280186ms)
+✔ rejects cross-variant App Group collisions (0.244494ms)
+✔ pins every reviewed original and patched source hash (1.869942ms)
+✔ rejects an extra copy hidden below an unreviewed transitive dependency (10.650881ms)
+✔ durably stages files and synchronizes each POSIX rename for crash recovery (0.227249ms)
+✔ check mode accepts a complete reviewed patch without writing (11.30146ms)
+✔ accepts one exact workspace-nested reviewed installation (12.703385ms)
+✔ idempotently completes a reviewed partial install by adding the missing native store (28.444866ms)
+✔ classifies only explicitly reviewed prior patch generations as upgradeable (0.242493ms)
+▶ rejects payload or installed target byte drift before mutation
+  ✔ payload drift (10.014277ms)
+  ✔ target drift (8.277327ms)
+✔ rejects payload or installed target byte drift before mutation (18.800646ms)
+▶ rejects reviewed package and lock provenance drift
+  ✔ mobile range (7.842729ms)
+  ✔ workspace range (7.992426ms)
+  ✔ artifact URL (7.944046ms)
+  ✔ integrity (7.35154ms)
+  ✔ installed version (7.427032ms)
+✔ rejects reviewed package and lock provenance drift (39.111189ms)
+✔ main Expo config declares the App Group UserDefaults reason and orders the companion plugin (1.767951ms)
+✔ widget manifest merge is idempotent and preserves unrelated declarations (1.574739ms)
+✔ writes a stable target manifest after expo-widgets and preserves invalid source bytes (9.015118ms)
+✔ writes immutable disabled lifecycle flags into the generated extension plist (2.69092ms)
+✔ creates and idempotently attaches the target manifest to extension resources only (0.699623ms)
+✔ repairs a detached existing manifest reference without duplicating it (0.245055ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 185.779798

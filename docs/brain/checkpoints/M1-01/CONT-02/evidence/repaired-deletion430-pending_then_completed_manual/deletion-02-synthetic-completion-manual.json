@@ -1,0 +1,36 @@
+{
+  "bodyText": "Account deletion completed One Apple step remains Your Layerwell account and data were deleted, but the Sign in with Apple connection could not be revoked automatically. On iPhone, open Settings, tap your name, tap Sign in with Apple, choose Layerwell, then tap Delete. Open Apple instructions Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Open Apple instructions",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 505.5
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 569.5
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8418/today",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

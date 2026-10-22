@@ -1,0 +1,18 @@
+test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips (test_cloud_history_custody.CloudHistory.test_acquires_missing_commit_tree_blob_before_witnesses_and_roundtrips) ... ok
+test_corrupt_pack_import_refuses (test_cloud_history_custody.CloudHistory.test_corrupt_pack_import_refuses) ... fatal: pack is corrupted (SHA1 mismatch)
+ok
+test_corrupt_source_object_cannot_be_rebound_to_requested_oid (test_cloud_history_custody.CloudHistory.test_corrupt_source_object_cannot_be_rebound_to_requested_oid) ... ok
+test_missing_history_without_explicit_source_refuses (test_cloud_history_custody.CloudHistory.test_missing_history_without_explicit_source_refuses) ... fatal: path 'scripts/phase2/staging-deployment-evidence-lib.mjs' does not exist in 'f1e9a970bbceb803271c8bca41e3a090f93ceefe'
+ok
+test_tree_instead_of_blob_witness_refuses (test_cloud_history_custody.CloudHistory.test_tree_instead_of_blob_witness_refuses) ... ok
+test_unavailable_source_refuses_without_receipt_or_ref_mutation (test_cloud_history_custody.CloudHistory.test_unavailable_source_refuses_without_receipt_or_ref_mutation) ... fatal: cannot change to '/tmp/sc03-real-history-a9o_w2yt/tmprsyhxlgi/absent': No such file or directory
+ok
+test_wrong_blob_oid_refuses_after_real_acquisition (test_cloud_history_custody.CloudHistory.test_wrong_blob_oid_refuses_after_real_acquisition) ... ok
+test_wrong_sha256_refuses_after_real_acquisition (test_cloud_history_custody.CloudHistory.test_wrong_sha256_refuses_after_real_acquisition) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 161.762s
+
+OK
+EXPORT 112 exact historical references; 67 real commit/tree endpoints; pack 91ad6c014c89efd6c4ccd1b6b540d9d37172805a7834f9a2ea397e2315394e14
+IMPORT 112 exact historical references; 67 real commit/tree endpoints; pack 91ad6c014c89efd6c4ccd1b6b540d9d37172805a7834f9a2ea397e2315394e14

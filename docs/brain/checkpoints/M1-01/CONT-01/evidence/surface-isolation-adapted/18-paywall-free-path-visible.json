@@ -1,0 +1,113 @@
+{
+  "bodyText": "Your plan for oily, sensitive skin is ready. Everything below is part of Layerwell Pro. Routine builder. Your products and missing steps Ingredient and shelf details, with source status Private photo timeline. On-device only Reminders and a forgiving streak Annual Monthly ANNUAL Store pricing Checking price Monthly option Checking price Plan status is unavailable. Check access or restore your purchases before buying again. Check access again Manage existing subscription Subscribe to Pro Manage or cancel the subscription in App Store Continue with the free plan No purchase. Pro features stay locked until you choose a plan. › Terms · Privacy · Restore Payment is charged to your App Store account at confirmation. The annual plan auto-renews unless cancelled at least 24 hours before the current period ends. Manage or cancel in App Store. Health-related guidance requires independent professional review before availability · photos stay on your device · no data sales",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Annual subscription",
+      "role": "radio",
+      "selected": false,
+      "width": 165,
+      "x": 24,
+      "y": -12
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Monthly subscription",
+      "role": "radio",
+      "selected": false,
+      "width": 165,
+      "x": 201,
+      "y": -12
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check subscription access",
+      "role": "button",
+      "selected": false,
+      "width": 318,
+      "x": 36,
+      "y": 304
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Manage existing subscription",
+      "role": "button",
+      "selected": false,
+      "width": 318,
+      "x": 36,
+      "y": 352
+    },
+    {
+      "disabled": true,
+      "height": 54,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 432
+    },
+    {
+      "disabled": false,
+      "height": 82,
+      "hitOk": true,
+      "label": "Continue with the free planNo purchase. Pro features stay locked until you choose a plan.›",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 528
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 96.89,
+      "y": 610
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "selected": false,
+      "width": 48.03,
+      "x": 170.25,
+      "y": 610
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "selected": false,
+      "width": 49.47,
+      "x": 243.64,
+      "y": 610
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8359/onboarding/paywall",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

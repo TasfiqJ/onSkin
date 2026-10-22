@@ -1,0 +1,36 @@
+{
+  "bodyText": "Account activity paused Deletion status could not be verified This device kept the saved recovery key and did not reopen the account, but the original authenticated retry session is no longer available. Check status again or contact support. Check status now Open support",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Check status now",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 513
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Open support",
+      "role": "button",
+      "selected": false,
+      "width": 340,
+      "x": 45,
+      "y": 577
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8420/shelf",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

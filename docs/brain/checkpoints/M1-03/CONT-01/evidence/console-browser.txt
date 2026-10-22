@@ -1,0 +1,1 @@
+PASS: actual console browser smoke; screenshot and DOM captured; no provider requests

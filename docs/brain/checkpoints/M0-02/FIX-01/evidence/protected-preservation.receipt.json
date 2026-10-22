@@ -1,0 +1,17 @@
+{
+  "command": "git diff --exit-code da9fa04759164b402ee3b2abd1c80e14261614fb 3daa1f38007f2a512b9af0f4132a8f0b2feb6720 -- apps packages supabase .github package.json package-lock.json scripts/phase2 scripts/phase9 docs/phase-9 docs/v2/source-inputs docs/brain/state docs/brain/checkpoints/M0-02/completion-report.json docs/brain/checkpoints/M0-02/evidence docs/brain/checkpoints/M0-02/REVIEW_EVIDENCE.md",
+  "working_directory": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage",
+  "environment": "Windows x64; Git",
+  "source_commit": "3daa1f38007f2a512b9af0f4132a8f0b2feb6720",
+  "source_tree": "bd89efae1701642e3cb14f731346be173b6614de",
+  "status": "PASS",
+  "exit_code": 0,
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "output": {
+    "path": "docs/brain/checkpoints/M0-02/FIX-01/evidence/protected-preservation.log",
+    "sha256": "dc36485e9364dda3c799ddbcd6c1e3dea8673f77314afa914b84ba3ccca3334a"
+  },
+  "counts": null
+}

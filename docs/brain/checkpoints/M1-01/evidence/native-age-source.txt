@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: CORE01 local module inventory is exact and contains no binary or privacy manifest
+ok 1 - CORE01 local module inventory is exact and contains no binary or privacy manifest
+  ---
+  duration_ms: 3.7291
+  type: 'test'
+  ...
+# Subtest: CORE01 Expo registration is iOS-only and autolinks one first-party module
+ok 2 - CORE01 Expo registration is iOS-only and autolinks one first-party module
+  ---
+  duration_ms: 503.7531
+  type: 'test'
+  ...
+# Subtest: CORE01 native config declares the Apple age-range entitlement
+ok 3 - CORE01 native config declares the Apple age-range entitlement
+  ---
+  duration_ms: 0.4631
+  type: 'test'
+  ...
+# Subtest: CORE01 pod has no third-party or bundled executable dependency
+ok 4 - CORE01 pod has no third-party or bundled executable dependency
+  ---
+  duration_ms: 1.65
+  type: 'test'
+  ...
+# Subtest: CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+ok 5 - CORE01 native method is SDK- and runtime-guarded and uses the fixed 18 gate
+  ---
+  duration_ms: 1.0557
+  type: 'test'
+  ...
+# Subtest: CORE01 maps every known declaration and communication-limit control
+ok 6 - CORE01 maps every known declaration and communication-limit control
+  ---
+  duration_ms: 1.2373
+  type: 'test'
+  ...
+# Subtest: CORE01 native response is deterministic, request-bound, and contains no exact age
+ok 7 - CORE01 native response is deterministic, request-bound, and contains no exact age
+  ---
+  duration_ms: 1.4273
+  type: 'test'
+  ...
+# Subtest: CORE01 source performs no logging, networking, or persistence
+ok 8 - CORE01 source performs no logging, networking, or persistence
+  ---
+  duration_ms: 0.7568
+  type: 'test'
+  ...
+# Subtest: CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+ok 9 - CORE01 TypeScript bridge pins the native contract but remains literally launch-blocked
+  ---
+  duration_ms: 1.894
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 590.0875

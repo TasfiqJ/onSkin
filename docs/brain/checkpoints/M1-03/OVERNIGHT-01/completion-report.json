@@ -1,0 +1,862 @@
+{
+  "schema_version": 3,
+  "task_id": "M1-03",
+  "iteration": "OVERNIGHT-01",
+  "branch": "stage/m1-retained-safety",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "measured": {
+    "commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+    "tree": "e626c1922c4e47d8033fcb598a492694396dcb01"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "acceptance-contract",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/acceptance-contract.receipt.json",
+      "sha256": "095f9d01305a7f189e294bfdf3c509a58a3dc9ad27f8bc3c940f6a2ff9114c1d"
+    },
+    {
+      "command": "/usr/bin/python3.12 -B /root/onskin-overnight01-native/scripts/security_readiness/m103/fixtures.py /root/onskin-overnight01-candidate05 /root/onskin-overnight01-fixture-final",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "candidate-actual-synthetic-scan",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-actual-synthetic-scan.receipt.json",
+      "sha256": "be8bd50ee638e739578ea269596fa3c2c908d0c8793110f95290f902242c683e"
+    },
+    {
+      "command": "/usr/bin/python3.12 -B /root/onskin-overnight01-native/scripts/security_readiness/m103/adverse_install.py /root/onskin-overnight01-candidate05",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "candidate-adverse",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-adverse.receipt.json",
+      "sha256": "b8ef2c6b7416307c1af86caf987106b486a77062c48ef09f76d51f0af311133d"
+    },
+    {
+      "command": "/usr/bin/python3.12 -B /root/onskin-overnight01-native/scripts/security_readiness/m103/candidate.py verify /root/onskin-overnight01-candidate05",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "candidate-integrity",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-integrity.receipt.json",
+      "sha256": "375728bf734a837126a976405ad1d342ae14e0fb01d984a38dd4cc3aaf7b640a"
+    },
+    {
+      "command": "/usr/bin/python3.12 -I -B /root/onskin-overnight01-native/scripts/security_readiness/m103/sandbox.py /root/onskin-overnight01-final-synthetic-home /root/onskin-overnight01-candidate05/venv/bin/python -I -B /root/onskin-overnight01-native/scripts/security_readiness/m103/compatibility.py",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "candidate-lifecycle-tls-network",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-lifecycle-tls-network.receipt.json",
+      "sha256": "487bfe6c1c507599e3fd3e98f98c7df8210049c9ab541b0ee7a1f47366c4ca4a"
+    },
+    {
+      "command": "npm run phase2:db-local-contract",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "db-source",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/db-source.receipt.json",
+      "sha256": "fadf875c1c0d514cabd8c81719e3f781a11fd312b8ec9bfe14b61b8dcebe98f2"
+    },
+    {
+      "command": "python3.12 -B -m unittest discover -s scripts/security_readiness/m103 -p test_diagnostics.py -v",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "diagnostics",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/diagnostics.receipt.json",
+      "sha256": "51adf458c9d9df9b6494246806f2d843f33b61c29d682b9c830f8cd96b5d991b"
+    },
+    {
+      "command": "python3.12 -B -m unittest discover -s scripts/brain -p 'test_*.py' -v",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "governance",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/governance.receipt.json",
+      "sha256": "8916e0a61dfb952b8b44ae07f0b8913908761caf219451ead23527cc75ca10ee"
+    },
+    {
+      "command": "npm run lint -- --force",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "lint",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/lint.receipt.json",
+      "sha256": "db290ee1266866c01b3b1b1d632e4ba6211a7248b957500d1847b8ade9a56819"
+    },
+    {
+      "command": "node scripts/phase9/ios-privacy-source-audit.mjs --check --strict",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "native-check",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-check.receipt.json",
+      "sha256": "932935de52cc134ca741adc7373d9729c1f11065d4a44bf1008ffda84f05cf50"
+    },
+    {
+      "command": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs scripts/phase9/ios-archive-privacy-evidence.test.mjs scripts/phase9/verification-wiring-contract.test.mjs scripts/phase9/security_acceptance/workflow_contract.test.mjs scripts/phase9/security-advisory-exceptions.test.mjs scripts/phase9/tooling-security-vulnerabilities.test.mjs scripts/phase9/patch-tooling-security.test.mjs scripts/core05/adherence-source-contract.test.mjs",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "native-workflow-mitigation",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-workflow-mitigation.receipt.json",
+      "sha256": "407490c5ed2bce806f7e4a7ae04082ffc6853341231d6297cdbaa53009a6bed5"
+    },
+    {
+      "command": "npm run postinstall:check",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "postinstall",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/postinstall.receipt.json",
+      "sha256": "53a4bd2f8a0cf5b8b1fa1d1830135c17e78290e5fc97e2d4cf3efb4e248f81cd"
+    },
+    {
+      "command": "npm run test -- --force",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "root-test",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/root-test.receipt.json",
+      "sha256": "5f7df2174b64f9a9be00e07a40435febbbe2ed5841bc96171ff27bed6dbe5998"
+    },
+    {
+      "command": "python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "secret-contract",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/secret-contract.receipt.json",
+      "sha256": "4b878fc3df5f3f36e05d8e8f4d4916757bed68c9812b8621ec6330e74c76a1ed"
+    },
+    {
+      "command": "npm run typecheck -- --force",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "typecheck",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/typecheck.receipt.json",
+      "sha256": "f75d5acb0cd7d08b2487564e5af6c798d2e35e4abe703a44c68db4f49b6112a6"
+    },
+    {
+      "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3/Node22.21.0; private npm installation; telemetry disabled",
+      "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+      "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "worklist",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/worklist.receipt.json",
+      "sha256": "45581155ab8c5418e353957e293045640d0cea59c037fe7f8a61d46672715280"
+    },
+    {
+      "command": "python3.12 -B -m unittest discover -s scripts/brain -p test_m103_cont01_profile.py -v",
+      "working_directory": "/root/onskin-overnight01-native",
+      "environment": "Linux x86_64/Python3.12.3; actual final Git snapshot",
+      "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+      "source_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-legacy-linux",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-legacy-linux.receipt.json",
+      "sha256": "46a9743a68068c7af39e4d3489b32d6963e104f1f2ab3d91369ede20a2622a01"
+    },
+    {
+      "command": "python3.12 -B /mnt/c/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/security_readiness/m103/source_scan.py --candidate /root/onskin-overnight01-candidate05 --repo /mnt/c/Users/jasim/Desktop/onSkin --commit 3c063dfe47d887e7aa3e27d05da41658b69a59dc --work /root/onskin-overnight01-source-final --rules /root/g97-finish-r1-20261018/packet/retained-raw/rules --pins /mnt/c/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/docs/brain/checkpoints/M1-03/OVERNIGHT-01/inputs/BRAIN_STATE/CANDIDATE_TOOL_INPUTS.json",
+      "working_directory": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code",
+      "environment": "Linux x86_64/Python3.12.3; candidate05; clean child environment and seccomp network denial",
+      "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+      "source_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+      "status": "FAIL",
+      "exit_code": 1,
+      "id": "final-source-scan",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-source-scan.receipt.json",
+      "sha256": "b4301f67f7343ad09d4ca0364c43bba4e73bfbf16c90cb7fdfbee5de523f93a4"
+    },
+    {
+      "command": "python3.12 -B /mnt/c/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/scripts/security_readiness/m103/reconcile.py --repo /mnt/c/Users/jasim/Desktop/onSkin --proof /mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-provider-7305/secret-scanner-evidence-39532208636/secret-scan-proof.json --sarif /mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-provider-7305/secret-scanner-evidence-39532208636/gitleaks-results.sarif --output /root/onskin-overnight01-final-reconciliation.json",
+      "working_directory": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code",
+      "environment": "Linux x86_64/Python3.12.3; local Git reads, no credential validation",
+      "source_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+      "source_tree": "e626c1922c4e47d8033fcb598a492694396dcb01",
+      "status": "PASS",
+      "exit_code": 0,
+      "id": "final-reconciliation",
+      "axis": "source",
+      "admission": "NONE",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-reconciliation.receipt.json",
+      "sha256": "5e75ead64a2e8fb7b4f15297e95afd834b14071c80399610482dd5dd436e3e64"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/DATABASE_CUSTODY.md",
+      "sha256": "df1e9c42072aa8a7d0df5b078828645f5d5ebb8e80a42aed7384f865e5ddd2ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/acceptance-contract.execution.json",
+      "sha256": "e614ca9d278d96ae044ba3a18425c477eb494a9df0d775715120a32c506f037a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/acceptance-contract.receipt.json",
+      "sha256": "095f9d01305a7f189e294bfdf3c509a58a3dc9ad27f8bc3c940f6a2ff9114c1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/acceptance-contract.txt",
+      "sha256": "bfbce5e2f7a2ef4829def087681a55b4a4ffada2e135da7853d0d4867732c729"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-actual-synthetic-scan.execution.json",
+      "sha256": "14af5e21ad3d9f38161fa7afca9cf9ba62386a6339191ba32df6098b003b6224"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-actual-synthetic-scan.receipt.json",
+      "sha256": "be8bd50ee638e739578ea269596fa3c2c908d0c8793110f95290f902242c683e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-actual-synthetic-scan.txt",
+      "sha256": "6ee6be0f5777dece84983506b630de159d35acae113353320bb12645b38d43e6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-adverse.execution.json",
+      "sha256": "d602be618cc9bd88ee62a4c3d4730b4c2b35d8682194c974db097791f472799f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-adverse.receipt.json",
+      "sha256": "b8ef2c6b7416307c1af86caf987106b486a77062c48ef09f76d51f0af311133d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-adverse.txt",
+      "sha256": "2b65d2aa861ddb44580005b42a0f595496ee816096900b8d263422ab7d0030fb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-clean-rerun.json",
+      "sha256": "051c94298883338cff6342b49e021f14381da441c637d47295376025640d1b66"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-integrity.execution.json",
+      "sha256": "da76a6b4ffc91122e278e31a9f5669e8ef5c128edf7a39c421753b760ff8ed35"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-integrity.receipt.json",
+      "sha256": "375728bf734a837126a976405ad1d342ae14e0fb01d984a38dd4cc3aaf7b640a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-integrity.txt",
+      "sha256": "6cbdf9a467c409378428f33418867dc38bebd9a3283d29dc02d3e948c7f448c3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-lifecycle-tls-network.execution.json",
+      "sha256": "504ca7e5b8f759928bf720d60cbea5ae2b468cb27f006cfdeb37baab38bd5e77"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-lifecycle-tls-network.receipt.json",
+      "sha256": "487bfe6c1c507599e3fd3e98f98c7df8210049c9ab541b0ee7a1f47366c4ca4a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-lifecycle-tls-network.txt",
+      "sha256": "04a885387be4b19b4b13074a98a2da28737754fa9ba3dee3d33f7ad236a48b8e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-requirements.txt",
+      "sha256": "0549a6016bd9503f2904f3a00013d8158f434f7190ca041398f72bea4556d948"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate05-pip-check.txt",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate05.json.gz",
+      "sha256": "6cad871127e8186f63629f3ea88cc768602ff41600714aa8b26c3d538c8ba86e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate06-pip-check.txt",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate06.json.gz",
+      "sha256": "61236bae690c7f44e488dcd8c61d6ac3a7393f9520278ec14cc9766a523e1c01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json",
+      "sha256": "036913f47b5a9d27ed515b401b69ccbfd692096a433455546fd16e66d2580850"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/containers.json",
+      "sha256": "d113711333825bedf8260ee65cbc0b915d265d9459e21130660f7653d3f32f06"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/current-db-acquisition-failure.txt",
+      "sha256": "789d48acbf7af06277a48c708393bf1ada394e09324c0dfaaf18f1162e9d1bd6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/current-primary-advisories.json",
+      "sha256": "28c596bdfb9d2bebd5b33250f991e4f09d9f6b6744cc0d15a99fa60c56d14216"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/db-source.execution.json",
+      "sha256": "c8f53a26431b5d3621e3575192744c33051fae24a828721c72fd6cec222890cc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/db-source.receipt.json",
+      "sha256": "fadf875c1c0d514cabd8c81719e3f781a11fd312b8ec9bfe14b61b8dcebe98f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/db-source.txt",
+      "sha256": "0d5213f3c8d125e0b0d036aac90a3c0349217106c4e0d08453c98b53731ec704"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/dependency-reconciliation.json",
+      "sha256": "f6c1a397b6ea7249a991ab6679733ec8579ecd944edac709945a915338c7929f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/diagnostics.execution.json",
+      "sha256": "af3ece7963d349509995dbd272c0c3d5a9339db5a2e8a5c44b16e076b73a8222"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/diagnostics.receipt.json",
+      "sha256": "51adf458c9d9df9b6494246806f2d843f33b61c29d682b9c830f8cd96b5d991b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/diagnostics.txt",
+      "sha256": "40eb1603caa20bf8cb7a8c82c8db618f710570a8fb7f05082ac42bfdec87cbda"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/early-profile-positive.txt",
+      "sha256": "37fa39a8acf716080e3336146bba83bd81c56156609c9a72b424832a5189646b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/early-workflow-sbom.txt",
+      "sha256": "9825e2777b5c84b5450c2c3eb9a96224fad2e8c4a0a51159657b01a516f195f7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-coverage.json.gz",
+      "sha256": "4309121790ec407dc2b3722219da99e810cf0d9fb1c11a680c87339de0545ec8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-legacy-linux.receipt.json",
+      "sha256": "46a9743a68068c7af39e4d3489b32d6963e104f1f2ab3d91369ede20a2622a01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-legacy-linux.txt",
+      "sha256": "247e09ba6c3920fa21db7cb62ef5d7110d270b507f4dae74c63a9c2a225bc6de"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-legacy-profile.txt",
+      "sha256": "e8b8c3414ac8d2c68c31fa60f2547d5fd372ce8c4f952c9f562e8c676f07b654"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-owasp-top-ten.raw.json.gz",
+      "sha256": "935056031424211a9747c28f252672f79ed05295df218a2f691d8936541f2d87"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-owasp-top-ten.stderr.txt",
+      "sha256": "53f8fb733ee218ef91a1b12e9d4e6f190bbbc46506ce3927de80f1dd2407c47f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-partition.json.gz",
+      "sha256": "434da906bcc671e0b307e80569ffa65013e312d64d0e809854c4938f50550f94"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-react.raw.json.gz",
+      "sha256": "3cc9313766f0f6828a45f5127cccf044b26dbe92947149b2dc27343b52ee3097"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-react.stderr.txt",
+      "sha256": "3662438460b7f3c7f7c135e3f2224acd697c9a429ef3f209ba53bdeea4af8ca7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-reconciliation.receipt.json",
+      "sha256": "5e75ead64a2e8fb7b4f15297e95afd834b14071c80399610482dd5dd436e3e64"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-reconciliation.txt",
+      "sha256": "b3788f33fb603bf36fc9887c4b8f83dad33e913691a52060280e34c32b3b6a0e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-scan-outcome.json",
+      "sha256": "57f85b6569fceb10795c9f71a9ab66fcebe78451e71cb78df136499c16283e4f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-source-inventory.json.gz",
+      "sha256": "0e44b745db5f1aeded619cc7c96956f73bc088059904441cba2a5831dd574dba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-source-scan.receipt.json",
+      "sha256": "b4301f67f7343ad09d4ca0364c43bba4e73bfbf16c90cb7fdfbee5de523f93a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-source-scan.txt",
+      "sha256": "ed2e85bd28c5fb6ab36cdb42fa2d81519d05efdcdbf1348a78754c4a055c10de"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-typescript.raw.json.gz",
+      "sha256": "f88b5b7b13d89a82679a61b31b684904da7acfc3b466bbe7152d804a3c688acc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-typescript.stderr.txt",
+      "sha256": "af508b3936b58e19a41005fcc72358b6970ed7290a3ef4ac99633edef603db51"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/governance.execution.json",
+      "sha256": "5e13dc09be73ec20eda40b3b038d89eb9c7bf5848a370948add2664752376bdd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/governance.receipt.json",
+      "sha256": "8916e0a61dfb952b8b44ae07f0b8913908761caf219451ead23527cc75ca10ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/governance.txt",
+      "sha256": "013018c35d3cfa7931660cc5d16cd34ed390eb137b60fb96b1af258ddd6d831c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/late-publication.json",
+      "sha256": "c8b1d8d822fc6d2eb49ced1fff5b8597335f2ddbca495ec72dcdc82edb378785"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/lint.execution.json",
+      "sha256": "4d6c1cba981ea4c6820fbaba2987ef57101edfd988a04ec66af3eb6e1ca2ac23"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/lint.receipt.json",
+      "sha256": "db290ee1266866c01b3b1b1d632e4ba6211a7248b957500d1847b8ade9a56819"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/lint.txt",
+      "sha256": "fb5f2190e9b5880ec35477383b19c829ca9b73b00db76b3447a7cf1747d824b2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/measured-head-ci.json",
+      "sha256": "9eb64fedd7a1ddeb362a985671f8a82639ba39f8966fa82f67c40fcef9697bb5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-check.execution.json",
+      "sha256": "b3c39d1091486667b4fba95e06ac2a4f79da5ffa723e20cfc0cf4501b93599df"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-check.receipt.json",
+      "sha256": "932935de52cc134ca741adc7373d9729c1f11065d4a44bf1008ffda84f05cf50"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-check.txt",
+      "sha256": "d960a107f2026007e252e97133834df9d7a12f213d6a109f18c4978829f5fda8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-workflow-mitigation.execution.json",
+      "sha256": "63fa6fe1b1154a207e2f623c40920db78576a2023bf71a2c8df83108358dd4bd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-workflow-mitigation.receipt.json",
+      "sha256": "407490c5ed2bce806f7e4a7ae04082ffc6853341231d6297cdbaa53009a6bed5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/native-workflow-mitigation.txt",
+      "sha256": "a3c7a9c6851b64464ac697c29f61774389bbd01cae05c1df4f02afb6d6bc13c6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/original-ci-jobs.json",
+      "sha256": "1681dbbade543be44e9953f16b290e10b857a3f467c9e3ef4832365b2b613aa9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/original-db-job-excerpts.txt",
+      "sha256": "0e4638baabe9e198bd9d89aee2eb94dd710c85d7a4e273c557396b049c438f75"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/original-provider-artifact-identities.json",
+      "sha256": "a37edfb85a6b5be828447bdc653fe8ec5cad5c95ccd1072434f87552f200b2ae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/original-secret-reconciliation.json.gz",
+      "sha256": "102713dd56aade2ffa3ea809d7b90b4e26632b646d021a6aae4289d7efb1d756"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/postinstall.execution.json",
+      "sha256": "9d85c8e302114fff5d191cabcc8b8bfc5050008dfb149f102000ec1e70f5593e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/postinstall.receipt.json",
+      "sha256": "53a4bd2f8a0cf5b8b1fa1d1830135c17e78290e5fc97e2d4cf3efb4e248f81cd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/postinstall.txt",
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-coverage.json.gz",
+      "sha256": "5a066a62785a70ab33d2570e05401f963cd87c733e350a3e40026c4ea7554074"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-partition.json.gz",
+      "sha256": "aee252286062aad6310d67d7ce9a4212eb4332b87244e67151058d74837b62d6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-scan-outcome.json",
+      "sha256": "57f85b6569fceb10795c9f71a9ab66fcebe78451e71cb78df136499c16283e4f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-source-inventory.json.gz",
+      "sha256": "97191fc1da79850869ea2d4b4d94e33ffda63db750ce668164c19a2fba0f7798"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/root-test.execution.json",
+      "sha256": "011d93ddac58de07543a73eb7fcd79a0b6aa511a12efd9a258d61fd964a93c51"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/root-test.receipt.json",
+      "sha256": "5f7df2174b64f9a9be00e07a40435febbbe2ed5841bc96171ff27bed6dbe5998"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/root-test.txt",
+      "sha256": "a953218326cad2ebc780465eaf086e05d8a8633edf2989e098a3283094432a02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/sast-proposed-dispositions.json",
+      "sha256": "0254c2a68d63eb2ec5c2cf90692e3db6e0d29023b722690ff23d041e03e06ee6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/secret-contract.execution.json",
+      "sha256": "a25401787f7e1e908b6ce6acfc817eae4c581434f81774cc51620411473f5c5d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/secret-contract.receipt.json",
+      "sha256": "4b878fc3df5f3f36e05d8e8f4d4916757bed68c9812b8621ec6330e74c76a1ed"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/secret-contract.txt",
+      "sha256": "8a6dba5261ce3c834e93fd0433d5eb8aaa7b1c25904ddcc402b3a658b46653d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/typecheck.execution.json",
+      "sha256": "5ed09b5c5cf129e72f9f55f8f4764b041a09edd2e6f2ff3bbed6e360d0ff46fc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/typecheck.receipt.json",
+      "sha256": "f75d5acb0cd7d08b2487564e5af6c798d2e35e4abe703a44c68db4f49b6112a6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/typecheck.txt",
+      "sha256": "7df4fc8cc70b9f6f909bf52c1d3590c68e43b25d058da4bdc6ccf55937dc786c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/worklist.execution.json",
+      "sha256": "64d2990928f87c4eb628bbdbd16e3254b53ad07a54d9d0d8bf2d2a7dca338a72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/worklist.receipt.json",
+      "sha256": "45581155ab8c5418e353957e293045640d0cea59c037fe7f8a61d46672715280"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/worklist.txt",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/intake.json",
+      "sha256": "d58002bbec99eb58fc315297d7117110c6573c6b950c2885330480a0bd0c8ba4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/README.md",
+      "sha256": "952ff06e44351714c39deb1b001d0d519f9a013b1333a9e7cdf1122a88e6fdd8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/RESUME.md",
+      "sha256": "c5235d7b6b1690b98aa08d3e38ff70852fb281caf8e9c7d6279d9d653c6ef7ca"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/WORK_REMAINING.md",
+      "sha256": "7656b113932a6807e14c15d6d89660cc068493ac7f41fffdfc72fe5ba029e422"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-cross-daily390/expo-web.log",
+      "sha256": "7ad6206f9c48555eb8070cd1596d6bb7b29b460ea3382c2591da5e74c9ed4a61"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily375/expo-web.log",
+      "sha256": "e7b40eda50931d4850d0ff49c35603dfe3d814a5ad7973f341457719aa26e6fe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390/expo-web.log",
+      "sha256": "be93c470eb7b6cee0cd373814a197c9a52caa1f030f44f556968a0cf8df7fcb6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily430/expo-web.log",
+      "sha256": "b982e0215cedf7e017e125788b83a2fb45f681dfda8892ca90aacbc17b123b18"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-retained390/expo-web.log",
+      "sha256": "065bb2b77f044ab2f8ad80c35ef51f261738689830bd6840ae65cc295a028c78"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-signout390/expo-web.log",
+      "sha256": "e0bd537372689d341621974c727436cba4a5394f85939ec72d4f015a0022224f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/console-browser/server.log",
+      "sha256": "3282c3929d5e62a7a39e769d6d6578158da62418dc1d0bd0949844837fe1f500"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275609.log",
+      "sha256": "2cdc2dba0ff83d9c91ed7abfa9dede7edb548601d1a7d764b4204288a3b1fdb9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275892.log",
+      "sha256": "964fa775e7335ef634c16be9bccdeb8a8334d96e8d6f7622fde2024f190d1441"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996275954.log",
+      "sha256": "95f0b3877b00e44a120bcc40121ab26a72752e7fc0b387abc7372ca58133929d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118996276257.log",
+      "sha256": "d2f43a69e5e507179ba603b29a161546d9cbdc88bcf0789a6d8a2486a75b3ff5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/job-118997685565.log",
+      "sha256": "957b5228af058d4294069e50e570498f518808b79c9a3c217b5a6e90f9396350"
+    }
+  ],
+  "scope_matrix": [
+    {
+      "id": "ON-A-INTEGRATION",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "postinstall",
+        "native-workflow-mitigation",
+        "final-legacy-linux"
+      ]
+    },
+    {
+      "id": "ON-B-TOOLS",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "candidate-integrity",
+        "candidate-adverse",
+        "candidate-lifecycle-tls-network",
+        "candidate-actual-synthetic-scan",
+        "diagnostics"
+      ]
+    },
+    {
+      "id": "ON-C-COVERAGE",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "diagnostics",
+        "final-source-scan"
+      ]
+    },
+    {
+      "id": "ON-C-TRIAGE",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "diagnostics",
+        "final-reconciliation"
+      ]
+    },
+    {
+      "id": "ON-D-CUSTODY",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "db-source"
+      ]
+    },
+    {
+      "id": "ON-E-PUBLICATION",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "final-legacy-linux"
+      ]
+    }
+  ],
+  "ci": [
+    {
+      "name": "Quality",
+      "run_id": 39532208765,
+      "workflow_id": 312030668,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json"
+    },
+    {
+      "name": "Security",
+      "run_id": 39532208636,
+      "workflow_id": 308213475,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json"
+    },
+    {
+      "name": "iOS launch contract",
+      "run_id": 39532208683,
+      "workflow_id": 312030667,
+      "status": "completed",
+      "conclusion": "success",
+      "head_commit": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json"
+    },
+    {
+      "name": "Quality",
+      "run_id": 39543844814,
+      "workflow_id": 312030668,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json"
+    },
+    {
+      "name": "iOS launch contract",
+      "run_id": 39543844793,
+      "workflow_id": 312030667,
+      "status": "completed",
+      "conclusion": "success",
+      "head_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json"
+    },
+    {
+      "name": "Security",
+      "run_id": 39543844764,
+      "workflow_id": 308213475,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_commit": "3c063dfe47d887e7aa3e27d05da41658b69a59dc",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/ci-observation.json"
+    }
+  ],
+  "axes": {
+    "source": "PARTIAL_TESTED_NOT_COMPLETE",
+    "integration": "NOT_RUN",
+    "surface": "NOT_RUN",
+    "physical_device": "NOT_ADMITTED",
+    "live_provider": "NOT_ADMITTED",
+    "qualified_review": "NOT_ADMITTED",
+    "clinical": "NOT_ADMITTED",
+    "commercial": "NOT_ADMITTED",
+    "release": "NOT_ADMITTED"
+  },
+  "blockers": [
+    "Independent Brain review; no self-acceptance or M2 issuance",
+    "Candidate Python-cache and post-export source-drift hardening incomplete",
+    "SAST findings/timeout/partial parsing/26 coverage gaps; no active adoption",
+    "5439 original secret records unresolved; dependency advisories/exceptions remain open",
+    "Current canonical DB acquisition data limit; DB06/DB08/R2B protected authority remains absent"
+  ],
+  "context_health": {
+    "level": "HIGH",
+    "compactions_observed": 0,
+    "action": "SAFE_CHECKPOINT_AND_STOP_FOR_INDEPENDENT_REVIEW"
+  }
+}

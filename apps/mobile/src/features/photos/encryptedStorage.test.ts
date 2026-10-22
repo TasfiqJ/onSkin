@@ -479,6 +479,32 @@ describe('encrypted photo storage', () => {
     expect(mocks.asyncStorage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
   });
 
+  it.each(['restore', 'reconcile'])('removes a %s destination after native commit-then-reject and withdrawal', async (mode) => {
+    const directory = 'file://document/photos/v1/';
+    const originalUri = `${directory}ambiguous-restore.layerwellphoto`;
+    const quarantinedUri = `${originalUri}.pending-delete-operation`;
+    const source = 'file://capture/synthetic.jpg';
+    mocks.files.set(source, Buffer.from('synthetic non-personal image').toString('base64'));
+    await encryptCapturedPhoto(source, 'ambiguous-restore');
+    const encrypted = mocks.files.get(originalUri)!;
+    mocks.files.delete(originalUri);
+    mocks.files.set(quarantinedUri, encrypted);
+    mocks.getInfoAsync.mockImplementation(async (uri: string) => ({ exists: uri === directory || mocks.files.has(uri) }));
+    mocks.readDirectoryAsync.mockResolvedValue(['ambiguous-restore.layerwellphoto.pending-delete-operation']);
+    mocks.moveAsync.mockImplementationOnce(async ({ from, to }: { from: string; to: string }) => {
+      mocks.files.set(to, mocks.files.get(from)!);
+      mocks.files.delete(from);
+      clearActiveHealthProcessingEpoch();
+      throw new Error('native acknowledgement lost');
+    });
+    const operation = mode === 'restore'
+      ? restoreQuarantinedPhoto({ originalUri, quarantinedUri })
+      : reconcileEncryptedPhotoStorage([originalUri]);
+    await expect(operation).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.files.has(originalUri)).toBe(false);
+    expect(mocks.files.has(quarantinedUri)).toBe(false);
+  });
+
   it('purges a restored live photo when its status lease expires during restore', async () => {
     const originalUri = 'file://document/photos/v1/restore-expiry.layerwellphoto';
     const quarantinedUri = `${originalUri}.pending-delete-operation`;
@@ -988,11 +1014,16 @@ describe('encrypted photo storage', () => {
 
   it('clears web photo authorities without calling unavailable SecureStore', async () => {
     mocks.platformOS = 'web';
+    mocks.getInfoAsync.mockImplementationOnce(() => {
+      throw new Error('Expo file API synchronously unavailable on web');
+    });
     mocks.asyncStorage.set(CONTENT_KEY_MARKER, '1');
 
     await expect(clearEncryptedPhotoStorage()).resolves.toBeUndefined();
 
     expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
+    expect(mocks.getInfoAsync).not.toHaveBeenCalled();
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 

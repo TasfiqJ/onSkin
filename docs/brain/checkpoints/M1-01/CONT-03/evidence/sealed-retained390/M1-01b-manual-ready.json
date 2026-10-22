@@ -1,0 +1,256 @@
+{
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Moisturiser (tube) ▾ BARCODE (OPTIONAL) INGREDIENTS · optional, we’ll find the actives On the next step, record PAO only when it is printed beside the open-jar symbol. Otherwise leave it unknown. Continue ◴ x When did you open it? Choose the state that matches this package. A PAO clock starts only after your choice. Just opened it Clock starts today Pick a date I opened it earlier ✓ Not opened yet No PAO clock; add a printed date if the pack has one PAO not set tap to set ✎ Add to shelf",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Cancel",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Product name",
+      "role": "input",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Brand",
+      "role": "input",
+      "selected": false,
+      "width": 157.14,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Category, Moisturiser (tube)",
+      "role": "button",
+      "selected": false,
+      "width": 172.86,
+      "x": 193.14,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": false,
+      "label": "Barcode, optional",
+      "role": "input",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 66,
+      "hitOk": false,
+      "label": "Ingredients",
+      "role": "textarea",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 414
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Continue",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 776
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Close",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 314,
+      "y": 179
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "Just opened it",
+      "role": "radio",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 358
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "Pick a date",
+      "role": "radio",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 446
+    },
+    {
+      "disabled": false,
+      "height": 100,
+      "hitOk": true,
+      "label": "Not opened yet",
+      "role": "radio",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 534
+    },
+    {
+      "disabled": false,
+      "height": 70,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 654
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add to shelf",
+      "role": "button",
+      "selected": false,
+      "width": 334,
+      "x": 28,
+      "y": 748
+    }
+  ],
+  "issueCount": 7,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Cancel",
+        "role": "button",
+        "selected": false,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Product name",
+        "role": "input",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 146
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Brand",
+        "role": "input",
+        "selected": false,
+        "width": 157.14,
+        "x": 24,
+        "y": 230
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Category, Moisturiser (tube)",
+        "role": "button",
+        "selected": false,
+        "width": 172.86,
+        "x": 193.14,
+        "y": 230
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 50,
+        "hitOk": false,
+        "label": "Barcode, optional",
+        "role": "input",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 314
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 66,
+        "hitOk": false,
+        "label": "Ingredients",
+        "role": "textarea",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 414
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Continue",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 776
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8434/shelf/opened?intakeId=9916a925-052f-445a-8e4b-ecc3ae5dfb80",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

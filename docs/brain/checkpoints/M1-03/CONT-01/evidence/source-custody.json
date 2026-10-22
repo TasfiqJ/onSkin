@@ -1,0 +1,156 @@
+{
+  "base": "c14a3105640034a9d7a47d34533f9bd40faa4cc4",
+  "head": "e04c77b2fc1975139aaa5f240968f9d8d3f72792",
+  "tree": "1f83d386bac4b4125abf74f728731bb3f1a24c63",
+  "per_commit": [
+    {
+      "commit": "a284020c7785757842c0c07b5010e412c00af895",
+      "paths": [
+        "apps/mobile/src/features/notifications/transaction.cont01.test.ts"
+      ]
+    },
+    {
+      "commit": "89c665880ef1bb23e7358fc0146429e525c76508",
+      "paths": [
+        "apps/catalog-operator-console/package.json",
+        "package-lock.json",
+        "scripts/phase9/security-advisory-exceptions.mjs",
+        "scripts/phase9/security-advisory-exceptions.test.mjs"
+      ]
+    },
+    {
+      "commit": "6c8f5fc586bb6994370e78e0305a2445613fcb82",
+      "paths": [
+        ".github/workflows/security.yml",
+        "scripts/phase9/security_acceptance/secret_scan.py",
+        "scripts/phase9/security_acceptance/test_contract.py",
+        "scripts/phase9/security_acceptance/test_secret_scan.py",
+        "scripts/phase9/security_acceptance/workflow_admission.py",
+        "scripts/phase9/security_acceptance/workflow_contract.mjs",
+        "scripts/phase9/security_acceptance/workflow_contract.test.mjs"
+      ]
+    },
+    {
+      "commit": "57205a7cb805140aa795b220125d73df8288987b",
+      "paths": [
+        "scripts/phase9/security_acceptance/secret_scan.py",
+        "scripts/phase9/security_acceptance/test_contract.py",
+        "scripts/phase9/security_acceptance/test_secret_scan.py"
+      ]
+    },
+    {
+      "commit": "207d7aadf828080a64f3a62fb655e6cba70d55c7",
+      "paths": [
+        ".gitattributes",
+        "docs/brain/README.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/REPETITION_PLAN.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/00_READ_FIRST.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/ACCEPTANCE_MATRIX.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/ACCEPTANCE_LEDGER.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/ACCEPTANCE_SCOPE.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/ADR_DECISIONS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/AUDIT_M1-02_ACCEPTANCE.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/AUDIT_M1-03_REVIEW01.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/BLOCKERS.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/BLOCKERS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/BRAIN_RESUME_PROMPT.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/CI_OBSERVATIONS.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/CI_OBSERVATIONS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/DECISIONS_DELTA.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/EXECUTION_EVIDENCE.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/REVIEWED_SOURCE_HASHES.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/REVIEW_OBSERVATIONS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/ROADMAP_STATUS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/SOURCE_EDIT_AUTHORIZATION.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/STATE_AT_GLANCE.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/STATE_MANIFEST.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/TRUFFLEHOG_BYTE_WITNESS.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/brain_state.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/BRAIN_STATE/roadmap.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/CI_REFRESH_CHECKLIST.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/GOVERNANCE_TRANSITION.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/ONSKIN_BRAIN_HANDOFF_TEMPLATE.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/OWNER_ACTION_PACKET.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/REPORT_CONTRACT.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/SOURCE_CHANGE_AUTHORIZATION.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/SOURCE_ORIENTATION.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/STAGE_BRANCH_PROTOCOL.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/SUCCESS_CRITERIA.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/TASK.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/TASK_MANIFEST.json",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/contracts/ACCEPTANCE_AND_MIGRATION.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/contracts/AUTHORITY_AND_DECISIONS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/contracts/CORE_CONTRACT.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+        "docs/brain/checkpoints/M1-03/CONT-01/inputs/verify_context.py",
+        "docs/brain/m103-cont01-active.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/ACCEPTANCE_LEDGER.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/ACCEPTANCE_SCOPE.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/ADR_DECISIONS.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/ADR_REGISTRY.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/AUDIT_M1-02_ACCEPTANCE.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/AUDIT_M1-03_REVIEW01.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/BLOCKERS.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/BLOCKERS.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/BRAIN_RESUME_PROMPT.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/CI_OBSERVATIONS.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/CI_OBSERVATIONS.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/DECISIONS_DELTA.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/EXECUTION_EVIDENCE.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/REVIEWED_SOURCE_HASHES.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/REVIEW_OBSERVATIONS.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/ROADMAP_STATUS.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/SOURCE_EDIT_AUTHORIZATION.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/STATE_AT_GLANCE.md",
+        "docs/brain/reviews/M1-03/REVIEW-01/STATE_MANIFEST.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/TRUFFLEHOG_BYTE_WITNESS.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/brain_state.json",
+        "docs/brain/reviews/M1-03/REVIEW-01/roadmap.json",
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md",
+        "scripts/brain/m103_profile.py",
+        "scripts/brain/test_m103_cont01_profile.py",
+        "scripts/phase9/security_acceptance/secret_scan.py",
+        "scripts/phase9/security_acceptance/test_contract.py",
+        "scripts/phase9/security_acceptance/workflow_admission.py"
+      ]
+    },
+    {
+      "commit": "e26dc863404d43ad3a41a9d8514bf72019fd291e",
+      "paths": [
+        "scripts/phase9/security_acceptance/secret_scan.py",
+        "scripts/phase9/security_acceptance/test_contract.py",
+        "scripts/phase9/security_acceptance/test_secret_scan.py"
+      ]
+    },
+    {
+      "commit": "f5061ef28731489d818a04e1102267b0c701569a",
+      "paths": [
+        "scripts/phase9/security_acceptance/test_secret_scan.py"
+      ]
+    },
+    {
+      "commit": "20cd7d8f95bf889362a56620f9945190c571d5a1",
+      "paths": [
+        "scripts/phase9/security_acceptance/test_contract.py"
+      ]
+    },
+    {
+      "commit": "e04c77b2fc1975139aaa5f240968f9d8d3f72792",
+      "paths": [
+        "scripts/phase9/security_acceptance/secret_scan.py",
+        "scripts/phase9/security_acceptance/test_contract.py",
+        "scripts/phase9/security_acceptance/test_secret_scan.py"
+      ]
+    }
+  ],
+  "migrations": 97,
+  "migration_bytes_unchanged": true,
+  "worklist_row_meanings": 14,
+  "source_reference_identities": 414,
+  "all_identities_unchanged": true,
+  "only_allowlisted_paths": true,
+  "protected_source_go": false,
+  "main_promotion_authorized": false
+}

@@ -1,0 +1,19 @@
+{
+  "name": "candidate-actual-synthetic-scan",
+  "argv": [
+    "/usr/bin/python3.12",
+    "-B",
+    "/root/onskin-overnight01-native/scripts/security_readiness/m103/fixtures.py",
+    "/root/onskin-overnight01-candidate05",
+    "/root/onskin-overnight01-fixture-final"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:21:52.238459+00:00",
+  "finished": "2026-10-21T04:21:55.676806+00:00",
+  "exit": 0,
+  "bytes": 70,
+  "log_sha256": "6ee6be0f5777dece84983506b630de159d35acae113353320bb12645b38d43e6",
+  "admission": "NONE"
+}

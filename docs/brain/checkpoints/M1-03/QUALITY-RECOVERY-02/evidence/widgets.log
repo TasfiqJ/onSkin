@@ -1,0 +1,39 @@
+
+> layerwell@0.1.0 phase5:expo-widgets-lifecycle:test
+> node --test scripts/phase5/patch-expo-widgets-lifecycle.test.mjs scripts/phase5/expo-widgets-lifecycle-source.test.mjs
+
+✔ SDK57 bridge accepts the new API while native authority owns deadlines and deep links (4.642794ms)
+✔ native authority is cross-process serialized, durable, and ABA-resistant (0.517988ms)
+✔ unconditional cleanup closes authority before clearing derived presentation and activities (0.558334ms)
+✔ SQLite is the sole Layerwell timeline authority with a killed-app redaction entry (0.443356ms)
+✔ AppIntent commits the native outbox and never writes Layerwell UserDefaults (0.332248ms)
+✔ reconciliation is exact all-or-redact and persisted rows are strictly bounded (0.964407ms)
+✔ Live Activity APIs globally gate Layerwell and destroy aliases or duplicates (0.494864ms)
+✔ signed flags remain literal false and cleanup does not consult them (0.642069ms)
+✔ the exact dependency patch links SQLite and exposes only bounded JSON bridge methods (0.631145ms)
+✔ pins every reviewed original and patched source hash (2.396516ms)
+✔ rejects an extra copy hidden below an unreviewed transitive dependency (10.448807ms)
+✔ durably stages files and synchronizes each POSIX rename for crash recovery (0.238841ms)
+✔ check mode accepts a complete reviewed patch without writing (13.77598ms)
+✔ accepts one exact workspace-nested reviewed installation (11.370949ms)
+✔ idempotently completes a reviewed partial install by adding the missing native store (26.793643ms)
+✔ classifies only explicitly reviewed prior patch generations as upgradeable (3.452192ms)
+▶ rejects payload or installed target byte drift before mutation
+  ✔ payload drift (7.852205ms)
+  ✔ target drift (8.308583ms)
+✔ rejects payload or installed target byte drift before mutation (16.675352ms)
+▶ rejects reviewed package and lock provenance drift
+  ✔ mobile range (7.257485ms)
+  ✔ workspace range (7.856958ms)
+  ✔ artifact URL (6.959026ms)
+  ✔ integrity (7.129693ms)
+  ✔ installed version (7.117394ms)
+✔ rejects reviewed package and lock provenance drift (36.899615ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 187.206069

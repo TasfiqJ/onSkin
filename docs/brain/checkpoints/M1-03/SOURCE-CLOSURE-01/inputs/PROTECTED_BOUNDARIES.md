@@ -1,0 +1,5 @@
+# Permanently separate authorities
+
+G97 Security source-only proposal expired 2026-10-21T00:00:00Z; current `SOURCE_INVENTORY_DRIFT`, unreviewed npm/OSV and actual secret findings cannot be cleared by refreshing a frozen manifest or inventing a new owner date. Semgrep private diagnostic candidate has no active policy status, not even after a full unit suite. The owner/custodian must independently review any new source/proposal/exception/version/expiry before adopted policy can change.
+
+DB06 staging migration rehearsal and DB08 linked staging type parity remain protected. Current local canonical reset is a credential-free disposable baseline, not a hosted deployment/authoritative cutover. R2B `supabase_admin` default ACL requires a real issuer/receipt/scope; do not infer it from the local PG15/17 rehearsals. Keep 97 migrations exact. M2-01 depends on M1-03 and is NOT issued. ADR038 still obliges additive correction M2-01/M2-02 and retained undo remains unavailable. No J05/research, native hardware TestFlight, live provider, billing activation, clinical/qualified or commercial release.

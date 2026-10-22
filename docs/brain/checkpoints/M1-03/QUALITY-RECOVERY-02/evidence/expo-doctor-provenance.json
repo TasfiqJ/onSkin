@@ -1,0 +1,30 @@
+{
+  "version": "1.21.5",
+  "dist": {
+    "shasum": "c62be1041492f7a4925edbfc35a2fccd3085560e",
+    "tarball": "https://registry.npmjs.org/expo-doctor/-/expo-doctor-1.21.5.tgz",
+    "fileCount": 101,
+    "integrity": "sha512-VH/G2zHnc0kNrvfx/kYOD1QaCr2DC3cLaAPw7MzySypPhAb6nsIKJurNDyasbhU3KknK931Kedc2zRLkfdMisA==",
+    "signatures": [
+      {
+        "sig": "MEYCIQCuKcPUX7Z4QzdKhPGLw/BD7C3LFUTwV6sV176a4NO8cwIhAPOBXi3sNfoJzISnikzsb8jJUyuX1IlVQLEazE5bVCrr",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEQCIFrumdJpwgRQewqfPnzoYHD82CKU9buFTffWHL3nHBL0AiAWdYK9BoQ8yGLlBxHOC440Juq1YWAYyZYxxC63TiYnUg=="
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/expo-doctor@1.21.5",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 900943
+  },
+  "tar_sha256": "645e3e6a629bcc761a7f5b9123d974b7b976850a2e7d912ca1d30d8c42b62b41",
+  "binary": "/root/onskin-quality-recovery02-doctor/package/bin/expo-doctor.js",
+  "binary_sha256": "65a66743e8143093b879e61eff2369b6fab81fb617ca657ccc133ed9d9009a87",
+  "admission": "NONE"
+}

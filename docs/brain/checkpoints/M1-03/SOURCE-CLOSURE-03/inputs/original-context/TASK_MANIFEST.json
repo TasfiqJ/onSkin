@@ -1,0 +1,75 @@
+{
+  "acceptance": "NONE; Brain post-code independent review required",
+  "authorization_id": "M103-SOURCE-CLOSURE03-CLOUD-SOURCE-EDIT-01",
+  "base_commit": "aa598d0c93fcc416ba02cbda9333953430bb2ede",
+  "base_tree": "6dd2010073d913ca400c201f6d58ed1212fa97d4",
+  "branch": "stage/m1-retained-safety",
+  "files": [
+    {
+      "bytes": 1945,
+      "path": "00_READ_FIRST.md",
+      "sha256": "166bdec6953d5da69737f2ee179fb79d50fae74cce86b2c36979edb104fc9b14"
+    },
+    {
+      "bytes": 2460,
+      "path": "01_BRAIN_DECISION.md",
+      "sha256": "913de5380c28ec1256ad2b2501e36f087367b6c9dec4c9bb25eb34d75db7332f"
+    },
+    {
+      "bytes": 3747,
+      "path": "02_CLOUD_ENVIRONMENT.md",
+      "sha256": "9415f8aeb8fd6ddfffa39e93ac31e323261b358452674f238cd4926d290a84d6"
+    },
+    {
+      "bytes": 6401,
+      "path": "03_TASK.md",
+      "sha256": "472be1bcd42c8c39aec334a65db0aa0ca863d9e750270dce0ab97152bf580308"
+    },
+    {
+      "bytes": 6270,
+      "path": "04_SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "1cb1727b7964280833a1bd5a2bbefb5ecd0f39da10d8f19cfcdeadf63abd2c20"
+    },
+    {
+      "bytes": 1715,
+      "path": "05_SOURCE_BOUNDARIES.md",
+      "sha256": "3f0405ab2b237b79be25b5933c5d92d60fa73167a8025d72558f2f04280a92eb"
+    },
+    {
+      "bytes": 2184,
+      "path": "06_TEST_AND_ACCEPTANCE.md",
+      "sha256": "5532c781ae1665299ed557f7714c056696acd36489298128a76975e29bd49b4d"
+    },
+    {
+      "bytes": 1889,
+      "path": "07_REPRODUCERS.md",
+      "sha256": "8ad98c4554f19b527bf2913b2d3313c7745ffc6f5e42a6634f281c26d889a3cf"
+    },
+    {
+      "bytes": 1981,
+      "path": "08_CI_AND_EXTERNAL_GATES.md",
+      "sha256": "23e2bb137d75a1d278d5f0609c863e8728831a9bdb0fff2d03a9452e4c92a5aa"
+    },
+    {
+      "bytes": 2018,
+      "path": "09_DELIVERY_PROTOCOL.md",
+      "sha256": "4ac668a2bb27ce17b260579ed4b863d3911e65370d8d05118a57d2e07a158fec"
+    },
+    {
+      "bytes": 1292,
+      "path": "10_STOP_RULES.md",
+      "sha256": "1db0197ed20201ac487ea82f912773a140d652db7170887204bee3fe2c070d42"
+    },
+    {
+      "bytes": 1516,
+      "path": "verify_context.py",
+      "sha256": "df14f15e3f1e2293aed85268463cb2d94b168b9a05015395fec54e21af8b68b8"
+    }
+  ],
+  "iteration": "SOURCE-CLOSURE-03",
+  "mode": "CODEX_CLOUD_ONLY",
+  "original_prior_window_expired_utc": "2026-10-21T00:00:00Z",
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

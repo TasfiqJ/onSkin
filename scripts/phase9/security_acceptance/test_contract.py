@@ -255,6 +255,13 @@ class ContractTests(unittest.TestCase):
   write('code/npm-audit-high.json',fresh['npm-installed']['report']);write('code/npm-audit-high.exit-code',b'1\n')
   # Actual source-generated packet; only the unit fixture's clock is refreshed.
   execution=c.load(c.HERE,'legacy-sbom-fixture.json.gz');sbom=execution['packet'];sbom['generatedAt']=c.now().isoformat(timespec='milliseconds').replace('+00:00','Z')
+  # Synthetic original-secret receipt fixture only: the authorized Vite closure
+  # must match the current lock so the unchanged SBOM guard can reach the new
+  # secret proof negatives. The historical compressed fixture stays untouched.
+  locked=c.load(c.ROOT,'package-lock.json')['packages']
+  for row in sbom['packages']:
+   if row['path'] in ('node_modules/vite','node_modules/rolldown','node_modules/@oxc-project/types') or row['path'].startswith('node_modules/@rolldown/binding-'):
+    row.update(**{key:locked[row['path']].get(key) for key in ('version','license','resolved')})
   write('code/dependency-inventory.json',sbom);write('code/dependency-sbom.exit-code',b'1\n')
   write('code/dependency-sbom-audit.json',execution['audit']);write('code/dependency-sbom-audit.exit-code',b'1\n')
   for mode,refusal in execution['policyRefusals'].items():
@@ -263,8 +270,18 @@ class ContractTests(unittest.TestCase):
   write('static/osv-scan.exit-code',str(fresh['osv']['exit']).encode()+b'\n')
   write('static/osv-scan.json',fresh['osv']['report'])
   write('secret/gitleaks-tool.json',{'version':'8.24.3','sha256':self.policy['toolBytes']['gitleaks'][0],'exit':0})
-  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report'][:2]]
+  findings=[{'ruleId':item['RuleID'],'partialFingerprints':{'commitSha':item['Commit']},'locations':[{'physicalLocation':{'artifactLocation':{'uri':item['File']},'region':{'startLine':item['StartLine'],'endLine':item['EndLine'],'snippet':{'text':'REDACTED'}}}}]} for item in fresh['gitleaks']['report']]
   write('secret/gitleaks-results.sarif',{'$schema':'https://json.schemastore.org/sarif-2.1.0.json','version':'2.1.0','runs':[{'tool':{'driver':{'name':'gitleaks','semanticVersion':'v8.0.0'}},'results':findings}]})
+  # New original-secret diagnostic fixture only. Actual source/ref validation is
+  # exercised against >30 real Git commits in test_secret_scan, never mocked there.
+  from unittest import mock
+  from test_secret_scan import synthetic_proof
+  environment=mock.patch.dict(os.environ,{'GITHUB_ACTIONS':'false'});environment.start();self.addCleanup(environment.stop)
+  scope=dict(head=commit,tree='b'*40,parents=[],refs=['refs/heads/synthetic '+commit],
+             commits=[commit],patch_commits=[commit],snapshot=[],snapshot_sha256=w.secret_scan.sha(b'[]'))
+  patch=mock.patch.object(w.secret_scan,'git_scope',return_value=scope);patch.start();self.addCleanup(patch.stop)
+  proof,sarif=synthetic_proof(scope,run_id,findings)
+  write('secret/gitleaks-results.sarif',sarif);write('secret/'+w.secret_scan.PROOF,proof)
   return w,root,needs,commit,run_id,fresh
  def test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture();p=root/'code/dependency-inventory.json';original=p.read_bytes()
@@ -314,7 +331,7 @@ class ContractTests(unittest.TestCase):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
   result=w.original_jobs(root,needs,commit,run_id,fresh)
   self.assertEqual(result['sourceCommit'],commit);self.assertEqual(result['runId'],run_id)
-  self.assertEqual(result['eventRangeHistoricalFindings'],2);self.assertEqual(set(result['files']),w.LEGACY_FILES)
+  self.assertEqual(result['eventRangeHistoricalFindings'],len(fresh['gitleaks']['report']));self.assertEqual(set(result['files']),w.LEGACY_FILES|w.SECRET_FILES)
   self.assertNotIn('acceptanceGranted',result);self.assertNotIn('signature',result)
  def test_original_workflow_missing_extra_failed_skipped_cancelled_jobs_reject(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
@@ -335,7 +352,7 @@ class ContractTests(unittest.TestCase):
    p.write_bytes(original)
  def test_original_workflow_omitted_added_or_linked_artifacts_reject(self):
   w,root,needs,commit,run_id,fresh=self.workflow_fixture()
-  for name in w.LEGACY_FILES:
+  for name in w.LEGACY_FILES|w.SECRET_FILES:
    p=root/name;original=p.read_bytes();p.unlink()
    with self.subTest(missing=name):
     with self.assertRaises((c.Rejected,FileNotFoundError)):w.original_jobs(root,needs,commit,run_id,fresh)

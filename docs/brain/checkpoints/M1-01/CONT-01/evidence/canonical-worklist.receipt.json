@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node scripts/phase4/build-source-worklist.mjs --strict --check",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "034e459a5f6df4b5b597385be2cf883da9ecfda6",
+  "source_tree": "cb99e875b03fb364979a38197d37e24ec3d9e2e4",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-01/CONT-01/evidence/canonical-worklist.txt",
+    "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T16:02:22.503761+00:00",
+  "finished_at_utc": "2026-10-20T16:02:22.743604+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "node",
+    "scripts/phase4/build-source-worklist.mjs",
+    "--strict",
+    "--check"
+  ]
+}

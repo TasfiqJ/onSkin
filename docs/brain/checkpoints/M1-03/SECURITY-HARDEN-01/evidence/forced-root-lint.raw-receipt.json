@@ -1,0 +1,18 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "started": "2026-10-21T11:44:03.466896+00:00",
+  "finished": "2026-10-21T11:44:54.836550+00:00",
+  "raw_exit": 0,
+  "output_sha256": "14f8a56e0c071527aa94bf70326134cf503111f73ac72c70554a25fde0966f79",
+  "output_bytes": 1178,
+  "environment_overrides": {},
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1",
+  "source_tree": "369a92f9f36f19d6b90f3d43535f9ce9a01d279c",
+  "admission": "NONE"
+}

@@ -1,0 +1,19 @@
+{
+  "claim_origin": "CODEX_REPORTED_DIAGNOSTICS",
+  "base_probe": {
+    "runtime_commit": "8c1149116df00f34314357d10929b32f52f6d118",
+    "runtime_paths": [
+      "apps/mobile/src/features/notifications/startup.ts",
+      "apps/mobile/src/features/notifications/deliver.ts"
+    ],
+    "probe_source": "new maintained tests uncommitted at execution; -t selects only F1/F2; 2 failed and 42 intentionally unselected tests, not full-suite Windows skips",
+    "command": "npm.cmd --workspace apps/mobile run test -- --run src/features/notifications/startup.test.ts src/features/notifications/deliver.test.ts -t \"shares each failed native attempt|rejects ordinary scheduling when native startup\"",
+    "exit": 1,
+    "restoration": "runtime bytes saved and restored in Python finally; no commit or push with temporary original runtime",
+    "probe_reference_commit": "b986e88bdff8db245e3b45787431b9f43b1b25e8",
+    "probe_reference_limit": "Canonical probe bodies were later committed here; execution combined the original base runtime with these new working-tree probes. It is not a clean-base suite claim."
+  },
+  "daily_first_diagnostic": "First maintained helper reload bound Morning correctly, then case-sensitive date assertion rejected uppercase visible date; fixed comparison retains date equality. This failed diagnostic is not a production defect or acceptance pass.",
+  "cross_owner": "Actual Shelf button is visible/hittable. The old ambiguous label lookup chose a mounted Today checkbox. The maintained runner now targets Shelf path and full accessible button label. Failure PNG/JSON retained.",
+  "pre_sealed_runs": "Earlier final-labelled commands retain their real source SHA. fd97 was introduced during the earlier matrix; daily430-final is diagnostic only. The old external driver stopped at cross failure, so it never ran its incorrectly named retained-shelf flag. The sealed driver uses --retained-safety and preserves each source SHA. No expired/refused history rewritten."
+}

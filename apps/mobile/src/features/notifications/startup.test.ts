@@ -132,6 +132,49 @@ describe('minimal notification startup', () => {
     expectNoBusinessReads();
   });
 
+  it('shares each failed native attempt, retries refailure, and reuses recovered ready setup', async () => {
+    mocks.setNotificationCategoryAsync.mockRejectedValue(new Error('temporary'));
+    const { configureNotifications } = await import('./startup');
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const first = configureNotifications();
+      expect(configureNotifications()).toBe(first);
+      expect(await first).toBe('unavailable');
+      expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(attempt * 4);
+    }
+    mocks.setNotificationCategoryAsync.mockResolvedValue(undefined);
+    const retry = configureNotifications();
+    expect(configureNotifications()).toBe(retry);
+    expect(await retry).toBe('ready');
+    expect(await configureNotifications()).toBe('ready');
+    expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(12);
+    expectNoBusinessReads();
+  });
+
+  it('contains synchronous native throws and permits a later attempt', async () => {
+    mocks.setNotificationCategoryAsync.mockImplementationOnce(() => { throw new Error('sync bridge'); });
+    const { configureNotifications } = await import('./startup');
+    expect(await configureNotifications()).toBe('unavailable');
+    expect(await configureNotifications()).toBe('ready');
+  });
+
+  it('drains already-started category work when another native wrapper throws synchronously', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    mocks.setNotificationCategoryAsync.mockImplementationOnce(async () => { await gate; return undefined; })
+      .mockImplementationOnce(() => { throw new Error('sync partial bridge failure'); });
+    const { configureNotifications } = await import('./startup');
+    const first = configureNotifications();
+    let settled = false;
+    void first.then(() => { settled = true; });
+    await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
+    expect(settled).toBe(false);
+    expect(configureNotifications()).toBe(first);
+    release();
+    expect(await first).toBe('unavailable');
+    expect(await configureNotifications()).toBe('ready');
+    expect(mocks.setNotificationCategoryAsync).toHaveBeenCalledTimes(8);
+  });
+
   it('keeps the root notification import graph at the two-platform-module boundary', () => {
     const startup = readFileSync(`${SRC_DIR}/features/notifications/startup.ts`, 'utf8');
     const root = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');

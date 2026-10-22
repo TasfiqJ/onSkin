@@ -39,6 +39,13 @@ type LocalOwnerProof =
 
 const h = vi.hoisted(() => {
   const state = {
+    fixture: null as {
+      mode: 'cross_owner';
+      session: Session;
+      clearDelayMs: number;
+      clearFailures: number;
+    } | null,
+    fixtureB: null as Session | null,
     admissionPaused: false,
     activeSessionId: null as string | null,
     activeUserId: null as string | null,
@@ -373,7 +380,11 @@ vi.mock('./accountGeneration', () => ({
   endAccountGenerationBoundary: vi.fn(),
   waitForAccountGenerationOperationsToSettle: vi.fn(),
 }));
-vi.mock('./accountIsolationE2E', () => ({ getAccountIsolationE2EFixture: () => null }));
+vi.mock('./accountIsolationE2E', () => ({
+  getAccountIsolationE2EFixture: () => h.state.fixture,
+  accountIsolationE2EPreflightTransport: () => undefined,
+  accountIsolationE2EEvent: () => h.state.fixtureB,
+}));
 vi.mock('./accountUpgrade', () => ({
   authenticateWithAppleCredential: h.authenticateWithAppleCredential,
   authenticateWithProviderToken: vi.fn(),
@@ -597,6 +608,8 @@ beforeEach(() => {
     globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
   ).IS_REACT_ACT_ENVIRONMENT = true;
   currentAuth = null;
+  h.state.fixture = null;
+  h.state.fixtureB = null;
   h.state.admissionPaused = false;
   h.state.activeSessionId = null;
   h.state.activeUserId = null;
@@ -807,6 +820,31 @@ describe('AuthProvider Sign in with Apple publication boundary', () => {
 });
 
 describe('AuthProvider cold restore and foreground publication lifecycle', () => {
+  it('retries the pending cross-owner boundary when the synthetic transport has no commerce resume hook', async () => {
+    const owner = session(USER_A, SESSION_A, 'fixture-a', 'fixture-a');
+    const replacement = session(USER_B, SESSION_B, 'fixture-b', 'fixture-b');
+    h.state.fixture = { mode: 'cross_owner', session: owner, clearDelayMs: 0, clearFailures: 0 };
+    h.state.fixtureB = replacement;
+    await mount();
+    expect(currentAuth?.session?.user.id).toBe(USER_A);
+    h.prepareLocalDataForSession.mockRejectedValueOnce(new Error('synthetic cleanup refusal'));
+    await act(async () => {
+      (
+        globalThis as typeof globalThis & { __LAYERWELL_E2E_ACCOUNT_EVENT__?: (owner: 'b') => void }
+      ).__LAYERWELL_E2E_ACCOUNT_EVENT__?.('b');
+    });
+    await flush();
+    expect(currentAuth?.sessionBoundaryError).toBe(true);
+    expect(currentAuth?.session).toBeNull();
+    await act(async () => {
+      await Promise.all([currentAuth!.retrySessionBoundary(), currentAuth!.retrySessionBoundary()]);
+    });
+    await flush();
+    expect(h.prepareLocalDataForSession).toHaveBeenCalledTimes(3);
+    expect(currentAuth?.session?.user.id).toBe(USER_B);
+    expect(currentAuth?.sessionBoundaryError).toBe(false);
+  });
+
   it('does not let an initial active event cancel a delayed cold restore', async () => {
     const restored = session(USER_A, SESSION_A, 'cold', 'refresh-cold');
     const restore = deferred<{ data: { session: Session }; error: null }>();
@@ -1562,6 +1600,67 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
 
     remoteSignOut.resolve({ data: null, error: null });
     await act(async () => signOut);
+    expect(h.clearAuthDerivedCleanupRequired).toHaveBeenCalledOnce();
+  });
+
+  it('joins duplicate sign-outs and retries across repeated failures without publishing a delayed owner', async () => {
+    const owner = session(USER_A, SESSION_A, 'owner', 'refresh-owner');
+    const replacement = session(USER_B, SESSION_B, 'late-b', 'refresh-b');
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: owner }, error: null });
+    await mount();
+    h.prepareLocalDataForSession.mockClear();
+    h.prepareLocalDataForSession
+      .mockRejectedValueOnce(new Error('cleanup first failure'))
+      .mockRejectedValueOnce(new Error('cleanup repeated failure'));
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      await act(async () => {
+        const first = currentAuth!.signOut();
+        const duplicate = currentAuth!.signOut();
+        const settled = await Promise.allSettled([first, duplicate]);
+        expect(first).toBe(duplicate);
+        expect(settled.map((result) => result.status)).toEqual(['rejected', 'rejected']);
+        for (const result of settled) {
+          if (result.status === 'rejected') {
+            expect(String(result.reason)).toContain('EXPLICIT_SIGN_OUT_LOCAL_BOUNDARY_INCOMPLETE');
+          }
+        }
+      });
+      expect(currentAuth?.session).toBeNull();
+      expect(currentAuth?.sessionBoundaryError).toBe(true);
+      expect(h.clearAuthDerivedCleanupRequired).not.toHaveBeenCalled();
+      await emitAuthState('SIGNED_IN', replacement);
+      expect(currentAuth?.session).toBeNull();
+    }
+
+    await emitAppState('background');
+    await emitAppState('active');
+    await act(async () => {
+      await Promise.all([currentAuth!.retrySessionBoundary(), currentAuth!.retrySessionBoundary()]);
+    });
+    expect(h.prepareLocalDataForSession).toHaveBeenCalledTimes(3);
+    expect(currentAuth?.session).toBeNull();
+    expect(currentAuth?.sessionBoundaryError).toBe(false);
+    expect(h.clearAuthDerivedCleanupRequired).toHaveBeenCalledOnce();
+    expect(h.state.events).not.toContain(`activate:${replacement.access_token}`);
+  });
+
+  it('retains the durable sign-out refusal across provider remount and retries cleanup before reading Auth', async () => {
+    const owner = session(USER_A, SESSION_A, 'owner', 'refresh-owner');
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: owner }, error: null });
+    await mount();
+    h.clearPersistedSession.mockRejectedValueOnce(new Error('storage offline'));
+    await act(async () => {
+      await expect(currentAuth!.signOut()).rejects.toThrow('storage offline');
+    });
+    expect(currentAuth?.sessionBoundaryError).toBe(true);
+    expect(h.clearAuthDerivedCleanupRequired).not.toHaveBeenCalled();
+    await act(async () => renderer!.unmount());
+    h.readAuthDerivedCleanupRequired.mockResolvedValue(true);
+    h.auth.getSession.mockClear();
+    await mount();
+    expect(currentAuth?.session).toBeNull();
+    expect(h.auth.getSession).not.toHaveBeenCalled();
     expect(h.clearAuthDerivedCleanupRequired).toHaveBeenCalledOnce();
   });
 

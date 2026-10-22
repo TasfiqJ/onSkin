@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "claim_origin": "CODEX_VISUAL_INSPECTION",
+  "images": [
+    {
+      "path": "evidence/browser-daily-375/M102-04a-offline-reminder-recovery.png",
+      "observed": "Visible multiline saved-but-unconfirmed notice and Try again action; morning/evening and quiet-hour controls remain readable at375."
+    },
+    {
+      "path": "evidence/browser-daily-430/M102-06-pm.png",
+      "observed": "Both synthetic PM steps checked, evening-complete state, one routine day, tabs visible at430. Existing cycle preview and DEV AM/PM selector do not grant paid settings authority."
+    }
+  ],
+  "limits": "Targeted inspection of affected states; full screenshots and state JSON accompany actual browser commands. No native, accessibility certification or all-screen design admission."
+}

@@ -11,6 +11,7 @@ import {
   rescheduleReminders,
   requestPermission,
   type NotificationPermissionOutcome,
+  type ReminderScheduleOutcome,
 } from './deliver';
 import { saveNotifPrefs, type NotifPrefs } from './store';
 
@@ -27,7 +28,7 @@ const OPTIONAL_NOTIFICATION_PURPOSES_OFF: Partial<NotifPrefs> = {
 type NotificationOnboardingDeps = {
   requestPermission: () => Promise<NotificationPermissionOutcome>;
   saveNotifPrefs: (patch: Partial<NotifPrefs>) => Promise<NotifPrefs>;
-  rescheduleReminders: (prefs: NotifPrefs) => Promise<void>;
+  rescheduleReminders: (prefs: NotifPrefs) => Promise<ReminderScheduleOutcome>;
 };
 
 const defaultDeps: NotificationOnboardingDeps = {

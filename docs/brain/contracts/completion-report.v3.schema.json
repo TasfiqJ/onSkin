@@ -1,0 +1,423 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "branch",
+    "base_commit",
+    "original_stage_base",
+    "observed_main",
+    "implementation_snapshot",
+    "delivery",
+    "submission_status",
+    "accepted_by_brain",
+    "admission",
+    "summary",
+    "decisions",
+    "tests",
+    "ci",
+    "evidence_artifacts",
+    "blockers",
+    "rollback",
+    "context_health",
+    "handoff_file",
+    "iteration",
+    "last_brain_verdict",
+    "repair_base"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 3
+    },
+    "task_id": {
+      "const": "M0-02"
+    },
+    "branch": {
+      "const": "stage/m0-baseline"
+    },
+    "base_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "original_stage_base": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "observed_main": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "implementation_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "resolve_via",
+        "last_observed_pushed_snapshot",
+        "status"
+      ],
+      "properties": {
+        "ref": {
+          "const": "refs/heads/stage/m0-baseline"
+        },
+        "resolve_via": {
+          "const": "git ls-remote origin refs/heads/stage/m0-baseline"
+        },
+        "last_observed_pushed_snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "commit",
+            "tree"
+          ],
+          "properties": {
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "tree": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "PUSHED_STAGE_BRANCH",
+            "PUSH_BLOCKED"
+          ]
+        }
+      }
+    },
+    "submission_status": {
+      "enum": [
+        "SUBMITTED_REVIEW_REQUIRED",
+        "PARTIAL",
+        "BLOCKED"
+      ]
+    },
+    "accepted_by_brain": {
+      "const": false
+    },
+    "admission": {
+      "const": "NONE"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "command",
+          "working_directory",
+          "environment",
+          "snapshot_commit",
+          "snapshot_tree",
+          "status",
+          "exit_code",
+          "evidence_class",
+          "axis",
+          "count",
+          "artifact",
+          "limitations"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "working_directory": {
+            "type": "string",
+            "minLength": 1
+          },
+          "environment": {
+            "type": "string",
+            "minLength": 1
+          },
+          "snapshot_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "snapshot_tree": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_RUN",
+              "BLOCKED"
+            ]
+          },
+          "exit_code": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "evidence_class": {
+            "enum": [
+              "INDEPENDENTLY_REPRODUCED",
+              "SOURCE_REPORTED",
+              "UNKNOWN"
+            ]
+          },
+          "axis": {
+            "enum": [
+              "source",
+              "integration",
+              "qualified_review",
+              "live_provider",
+              "public_release",
+              "commercial",
+              "physical_device_surface",
+              "research"
+            ]
+          },
+          "count": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "artifact": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "ci": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "head_commit",
+          "name",
+          "run_id",
+          "status",
+          "conclusion",
+          "scope",
+          "evidence_class",
+          "artifact",
+          "repository",
+          "workflow_id"
+        ],
+        "properties": {
+          "head_commit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "run_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "pending"
+            ]
+          },
+          "conclusion": {
+            "enum": [
+              "success",
+              "failure",
+              "skipped",
+              "cancelled",
+              "pending",
+              "timed_out",
+              "action_required",
+              "neutral",
+              "stale"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_class": {
+            "enum": [
+              "INDEPENDENTLY_OBSERVED",
+              "SOURCE_REPORTED"
+            ]
+          },
+          "artifact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repository": {
+            "const": "TasfiqJ/onSkin"
+          },
+          "workflow_id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "evidence_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256",
+          "scope"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "rollback": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context_health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "estimate",
+        "compaction_observed",
+        "accepted_tasks_in_instance",
+        "handoff_needed",
+        "notes"
+      ],
+      "properties": {
+        "estimate": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "unknown"
+          ]
+        },
+        "compaction_observed": {
+          "type": "boolean"
+        },
+        "accepted_tasks_in_instance": {
+          "const": 0
+        },
+        "handoff_needed": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "handoff_file": {
+      "const": "ONSKIN_BRAIN_HANDOFF.txt"
+    },
+    "iteration": {
+      "const": "FIX-01"
+    },
+    "last_brain_verdict": {
+      "const": "FIX_REQUIRED"
+    },
+    "repair_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "tree"
+      ],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tree": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "onSkin completion report v3 / M0-02 FIX-01",
+  "description": "V3 binds execution receipts, CI observation artifacts and Git ancestry. V2 is preserved historical evidence and is not accepted as a current submission. Offline consistency does not authenticate author/provider claims."
+}

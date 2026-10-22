@@ -1,0 +1,43 @@
+{
+  "source_pack_sha256": "aec786bcf593a4348a263742c7481d09e3e9587c89fa783eff95a3999876982f",
+  "selected_canonical_inputs": [
+    {
+      "archive_path": "01_Executive/AUTHORITY_AND_DECISIONS.md",
+      "context_path": "contracts/AUTHORITY_AND_DECISIONS.md",
+      "bytes": 7413,
+      "sha256": "95f2d04810353d9217bb41a749a8774f1c76d4779b596742e0ed243cd2b9c2ba"
+    },
+    {
+      "archive_path": "01_Executive/EXECUTIVE_BLUEPRINT.md",
+      "context_path": "contracts/EXECUTIVE_BLUEPRINT.md",
+      "bytes": 15762,
+      "sha256": "409fc5d899463238c38debc819ae9b5c5fe0523f11ba7b7c32582ab26a361627"
+    },
+    {
+      "archive_path": "03_Architecture/CORE_CONTRACT.md",
+      "context_path": "contracts/CORE_CONTRACT.md",
+      "bytes": 11753,
+      "sha256": "4ae9108da24d2cc351c73675b0d8c33c878ee7b772ebe17a2546a2e35fc26930"
+    },
+    {
+      "archive_path": "03_Architecture/ACCEPTANCE_AND_MIGRATION.md",
+      "context_path": "contracts/ACCEPTANCE_AND_MIGRATION.md",
+      "bytes": 6470,
+      "sha256": "9df781268ea0de5c9b44458a4e77158f195443e5c4ca0ad3316528aceb4fc8c7"
+    },
+    {
+      "archive_path": "03_Architecture/CLINICAL_PLATFORM_CONTRACT.md",
+      "context_path": "contracts/CLINICAL_PLATFORM_CONTRACT.md",
+      "bytes": 9151,
+      "sha256": "d08ccb978726e8f8204ff794011a34b42a6efa8beb3d574acf2ed38d52eac47d"
+    },
+    {
+      "archive_path": "07_Finance/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "context_path": "contracts/FINANCIAL_AND_SPEND_DECISIONS.md",
+      "bytes": 9856,
+      "sha256": "9a4f88db98fd3309c7ee7952d28ce8c618117c4a014b44ab12d7c7614196400d"
+    }
+  ],
+  "history_and_restricted_inputs": "NOT_INCLUDED",
+  "original_full_sourcepack_verification": "Previously reproduced and retained in state; this packaging reads selected canonical text/JSON only."
+}

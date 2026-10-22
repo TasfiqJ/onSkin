@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/candidate.py", line 206, in <module>
+    if a.command=='prepare': prepare(a.private_root)
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/candidate.py", line 196, in prepare
+    runtime=runtime_inputs(root/'venv'),acquisition_tree=acquisition_tree(root),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/capsule.py", line 25, in runtime_inputs
+    if p.is_dir():directories.append(dict(path=str(p),tree=tree(p)))
+                                                           ^^^^^^^
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 47, in tree
+    visit(root)
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 35, in visit
+    require(venv and (name=='lib64' and os.readlink(p)=='lib' or
+  File "/root/onskin-sh01-source/scripts/security_readiness/m103/integrity.py", line 10, in require
+    if not ok: raise ValueError(reason)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: UNEXPECTED_LINK

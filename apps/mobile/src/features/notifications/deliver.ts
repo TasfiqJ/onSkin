@@ -102,16 +102,22 @@ async function scheduleNativeNotificationUnderLifecycle(
 }
 
 async function cancelCreatedHealthNotifications(ids: ReadonlySet<string>): Promise<void> {
-  await Promise.allSettled([...ids].map((id) => cancelNativeScheduledNotificationExact(id)));
+  // The shared native coordinator admits one ordinary mutation at a time.
+  let failure: unknown = null;
+  for (const id of ids) {
+    try { await cancelNativeScheduledNotificationExact(id); } catch (error) { failure ??= error; }
+  }
+  if (failure) throw failure;
 }
 
 async function runHealthNotificationOperation<T>(
   operation: (context: HealthNotificationOperation) => Promise<T>,
   lifecycle?: NotificationScheduleLifecycle,
 ): Promise<T> {
-  const execute = () =>
-    runAccountGenerationOperation(async (accountLease) => {
-      const healthLease = captureHealthDataWriteLease();
+  const pending = runAccountGenerationOperation(async (accountLease) => {
+    // Capture before queueing: deferred work belongs to its calling authority.
+    const healthLease = captureHealthDataWriteLease();
+    const execute = async () => {
       const createdIds = new Set<string>();
       const assertCurrent = () =>
         assertHealthNotificationOperationCurrent(accountLease, healthLease, lifecycle);
@@ -131,8 +137,12 @@ async function runHealthNotificationOperation<T>(
         createdIds.add(id);
         try {
           assertCurrent();
+          if (!isDeliverableAuthorizationState(await getPermissionStatus())) {
+            throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+          }
+          assertCurrent();
         } catch (error) {
-          await cancelNativeScheduledNotificationExact(id).catch(() => undefined);
+          await cancelNativeScheduledNotificationExact(id);
           createdIds.delete(id);
           throw error;
         }
@@ -150,12 +160,14 @@ async function runHealthNotificationOperation<T>(
         await cancelCreatedHealthNotifications(createdIds);
         throw error;
       }
-    });
-  const pending = healthNotificationOperationTail.then(execute, execute);
-  healthNotificationOperationTail = pending.then(
-    () => undefined,
-    () => undefined,
-  );
+    };
+    const queued = healthNotificationOperationTail.then(execute, execute);
+    healthNotificationOperationTail = queued.then(
+      () => undefined,
+      () => undefined,
+    );
+    return queued;
+  });
   inFlightHealthNotificationOperations.add(pending);
   try {
     return await pending;
@@ -181,9 +193,9 @@ export function nowHHMM(d = new Date()): string {
  * are scheduled as repeating DAILY local notifications at the user's chosen times
  * (no server round-trip, content on-device, §3.6 discretion). Behavioural triggers
  * go through the frequency-cap engine before firing. Everything is guarded. On
- * Expo Go / emulators / unsupported devices it degrades to a no-op rather than
- * throwing (real on-device behaviour + Android-14 exact-alarm acceptance is
- * B-NOTIF-VERIFY). NO health-revealing content is placed in any push payload; these
+ * unsupported native runtimes it reports scheduling failure for retry; web
+ * remains preference-only. Real device behaviour and Android exact-alarm
+ * acceptance remain B-NOTIF-VERIFY. NO health-revealing content is placed in any push payload; these
  * are LOCAL notifications (§8).
  */
 
@@ -324,10 +336,21 @@ async function cancelPreferenceReminderSchedules(assertCurrent: () => void): Pro
  * preference-owned fixed IDs are cancelled, billing/behavioural notifications are
  * left alone, and a background transition aborts/compensates in-flight schedules.
  */
+export type ReminderScheduleOutcome =
+  | 'scheduled'
+  | 'disabled'
+  | 'permission_denied'
+  | 'web_preferences_only'
+  | 'admission_closed';
+
 export async function rescheduleReminders(
   prefs?: NotifPrefs,
   lifecycle?: NotificationScheduleLifecycle,
-): Promise<void> {
+): Promise<ReminderScheduleOutcome> {
+  // Web persists local preferences and reports OS availability separately.
+  // There is no native scheduler to converge on this platform.
+  if (Platform.OS === 'web') return 'web_preferences_only';
+  let outcome: ReminderScheduleOutcome = 'admission_closed';
   let lifecycleFailure: unknown = null;
   try {
     await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {
@@ -342,15 +365,19 @@ export async function rescheduleReminders(
       assertCurrent();
       const authorization = await getPermissionStatus();
       if (!isDeliverableAuthorizationState(authorization)) {
-        if (lifecycle && authorization === 'unavailable') {
+        if (authorization === 'unavailable') {
           throw new Error('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
         }
+        outcome = 'permission_denied';
         return;
       }
       assertCurrent();
-      if ((await configureNotifications()) !== 'ready') {
-        if (lifecycle) throw new Error('NOTIFICATION_RUNTIME_UNAVAILABLE');
+      if (!p.amEnabled && !p.pmEnabled && !p.captureReminders) {
+        outcome = 'disabled';
         return;
+      }
+      if ((await configureNotifications()) !== 'ready') {
+        throw new Error('NOTIFICATION_RUNTIME_UNAVAILABLE');
       }
       assertCurrent();
       const channelId = Platform.OS === 'android' ? 'routine' : undefined;
@@ -405,21 +432,28 @@ export async function rescheduleReminders(
           assertCurrent();
         }
       }
+      outcome = 'scheduled';
       // The ordinary settings/onboarding path intentionally keeps the existing
       // global sweep + billing rebuild behavior. Root lifecycle mode stays local.
     }, lifecycle);
   } catch (error) {
-    if (lifecycle) lifecycleFailure = error;
+    if (lifecycle || !(error instanceof AccountGenerationLeaseError ||
+      (error instanceof Error && [HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+        HEALTH_DATA_WRITE_OWNER_MISMATCH].includes(error.message)))) {
+      lifecycleFailure = error;
+    }
   }
 
   if (lifecycle) {
     if (lifecycleFailure) throw lifecycleFailure;
-    return;
+    return outcome;
   }
 
   // Billing safety is deliberately outside health admission and its tracked
   // operation. Re-create it even if health scheduling was closed or aborted.
   await scheduleTrialReminder();
+  if (lifecycleFailure) throw lifecycleFailure;
+  return outcome;
 }
 
 const TRIAL_REMINDER_ID = 'layerwell-trial-reminder';

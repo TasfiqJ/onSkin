@@ -1,0 +1,2321 @@
+{
+  "admission": "NONE",
+  "disposition": "ALL_UNREVIEWED_NO_EXCEPTION_OR_EXPIRY_RENEWAL",
+  "npm_exit": 1,
+  "npm_record_count": 68,
+  "npm_records": {
+    "@expo/cli": {
+      "effects": [
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/cli",
+      "nodes": [
+        "node_modules/@expo/cli"
+      ],
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
+      "severity": "high",
+      "via": [
+        "@expo/code-signing-certificates",
+        "@expo/log-box",
+        "@expo/metro",
+        "@expo/metro-config",
+        "@expo/router-server",
+        "node-forge",
+        "react-native"
+      ]
+    },
+    "@expo/code-signing-certificates": {
+      "effects": [
+        "@expo/cli"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/code-signing-certificates",
+      "nodes": [
+        "node_modules/@expo/code-signing-certificates"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        "node-forge"
+      ]
+    },
+    "@expo/devtools": {
+      "effects": [
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/devtools",
+      "nodes": [
+        "node_modules/@expo/devtools"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@expo/dom-webview": {
+      "effects": [
+        "@expo/log-box",
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/dom-webview",
+      "nodes": [
+        "node_modules/@expo/dom-webview"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@expo/log-box": {
+      "effects": [
+        "@expo/cli",
+        "@expo/metro-runtime",
+        "expo",
+        "expo-router"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/log-box",
+      "nodes": [
+        "node_modules/@expo/log-box"
+      ],
+      "range": "57.0.1 - 57.0.4",
+      "severity": "high",
+      "via": [
+        "@expo/dom-webview",
+        "react-native"
+      ]
+    },
+    "@expo/metro": {
+      "effects": [
+        "@expo/cli",
+        "@expo/metro-config",
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/metro",
+      "nodes": [
+        "node_modules/@expo/metro"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        "metro",
+        "metro-config",
+        "metro-file-map",
+        "metro-transform-worker"
+      ]
+    },
+    "@expo/metro-config": {
+      "effects": [
+        "@expo/cli",
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/metro-config",
+      "nodes": [
+        "node_modules/@expo/metro-config"
+      ],
+      "range": ">=0.21.0-canary-20250630-547cd82",
+      "severity": "high",
+      "via": [
+        "@expo/metro"
+      ]
+    },
+    "@expo/metro-runtime": {
+      "effects": [
+        "@expo/router-server",
+        "expo-router"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/metro-runtime",
+      "nodes": [
+        "node_modules/@expo/metro-runtime"
+      ],
+      "range": "57.0.14 - 57.0.17",
+      "severity": "high",
+      "via": [
+        "@expo/log-box",
+        "react-native"
+      ]
+    },
+    "@expo/router-server": {
+      "effects": [
+        "@expo/cli"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "@expo/router-server",
+      "nodes": [
+        "node_modules/@expo/router-server"
+      ],
+      "range": "57.0.10 - 57.0.13",
+      "severity": "high",
+      "via": [
+        "@expo/metro-runtime",
+        "expo-constants",
+        "expo-font"
+      ]
+    },
+    "@expo/ui": {
+      "effects": [
+        "expo-router",
+        "expo-widgets"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "@expo/ui",
+      "nodes": [
+        "node_modules/@expo/ui"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@infinitered/react-native-mlkit-core": {
+      "effects": [
+        "@infinitered/react-native-mlkit-face-detection"
+      ],
+      "fixAvailable": true,
+      "isDirect": false,
+      "name": "@infinitered/react-native-mlkit-core",
+      "nodes": [
+        "node_modules/@infinitered/react-native-mlkit-core"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@infinitered/react-native-mlkit-face-detection": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "@infinitered/react-native-mlkit-face-detection",
+      "nodes": [
+        "node_modules/@infinitered/react-native-mlkit-face-detection"
+      ],
+      "range": ">=5.0.0",
+      "severity": "high",
+      "via": [
+        "@infinitered/react-native-mlkit-core",
+        "react-native"
+      ]
+    },
+    "@react-native-async-storage/async-storage": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "@react-native-async-storage/async-storage",
+      "nodes": [
+        "node_modules/@react-native-async-storage/async-storage"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@react-native-google-signin/google-signin": {
+      "effects": [],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "@react-native-google-signin/google-signin",
+        "version": "8.2.2"
+      },
+      "isDirect": true,
+      "name": "@react-native-google-signin/google-signin",
+      "nodes": [
+        "node_modules/@react-native-google-signin/google-signin"
+      ],
+      "range": ">=9.0.0",
+      "severity": "high",
+      "via": [
+        "expo",
+        "react-native"
+      ]
+    },
+    "@react-native-masked-view/masked-view": {
+      "effects": [
+        "expo-router"
+      ],
+      "fixAvailable": true,
+      "isDirect": false,
+      "name": "@react-native-masked-view/masked-view",
+      "nodes": [
+        "node_modules/@react-native-masked-view/masked-view"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@react-native/community-cli-plugin": {
+      "effects": [
+        "react-native"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native",
+        "version": "0.72.17"
+      },
+      "isDirect": false,
+      "name": "@react-native/community-cli-plugin",
+      "nodes": [
+        "node_modules/@react-native/community-cli-plugin"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        "@react-native/metro-config",
+        "metro",
+        "metro-config"
+      ]
+    },
+    "@react-native/metro-config": {
+      "effects": [
+        "@react-native/community-cli-plugin",
+        "react-native-worklets"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native",
+        "version": "0.72.17"
+      },
+      "isDirect": false,
+      "name": "@react-native/metro-config",
+      "nodes": [
+        "node_modules/@react-native/metro-config"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        "metro-config"
+      ]
+    },
+    "@react-native/virtualized-lists": {
+      "effects": [
+        "react-native"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native",
+        "version": "0.72.17"
+      },
+      "isDirect": false,
+      "name": "@react-native/virtualized-lists",
+      "nodes": [
+        "node_modules/@react-native/virtualized-lists"
+      ],
+      "range": ">=0.85.0-nightly-20260108-1236b6be4",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "@sentry/react-native": {
+      "effects": [],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "@sentry/react-native",
+        "version": "5.15.2"
+      },
+      "isDirect": true,
+      "name": "@sentry/react-native",
+      "nodes": [
+        "node_modules/@sentry/react-native"
+      ],
+      "range": ">=5.16.0-alpha.1",
+      "severity": "high",
+      "via": [
+        "expo",
+        "react-native"
+      ]
+    },
+    "babel-preset-expo": {
+      "effects": [
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "babel-preset-expo",
+      "nodes": [
+        "node_modules/expo/node_modules/babel-preset-expo"
+      ],
+      "range": "57.0.16",
+      "severity": "high",
+      "via": [
+        "expo-widgets"
+      ]
+    },
+    "braces": {
+      "effects": [
+        "chokidar",
+        "micromatch"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "tailwindcss",
+        "version": "4.3.3"
+      },
+      "isDirect": false,
+      "name": "braces",
+      "nodes": [
+        "node_modules/braces"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        {
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "cwe": [
+            "CWE-674"
+          ],
+          "dependency": "braces",
+          "name": "braces",
+          "range": "<=3.0.3",
+          "severity": "high",
+          "source": 1240992,
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+        }
+      ]
+    },
+    "chokidar": {
+      "effects": [
+        "tailwindcss"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "tailwindcss",
+        "version": "4.3.3"
+      },
+      "isDirect": false,
+      "name": "chokidar",
+      "nodes": [
+        "node_modules/chokidar"
+      ],
+      "range": "2.0.0 - 3.6.0",
+      "severity": "high",
+      "via": [
+        "braces"
+      ]
+    },
+    "expo": {
+      "effects": [
+        "@react-native-google-signin/google-signin",
+        "@sentry/react-native"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "expo",
+      "nodes": [
+        "node_modules/expo"
+      ],
+      "range": ">=45.0.0-beta.1",
+      "severity": "high",
+      "via": [
+        "@expo/cli",
+        "@expo/devtools",
+        "@expo/dom-webview",
+        "@expo/log-box",
+        "@expo/metro",
+        "@expo/metro-config",
+        "babel-preset-expo",
+        "expo-asset",
+        "expo-constants",
+        "expo-file-system",
+        "expo-font",
+        "expo-modules-core",
+        "react-native"
+      ]
+    },
+    "expo-apple-authentication": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-apple-authentication",
+      "nodes": [
+        "node_modules/expo-apple-authentication"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-asset": {
+      "effects": [
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "expo-asset",
+      "nodes": [
+        "node_modules/expo-asset"
+      ],
+      "range": "57.0.20",
+      "severity": "high",
+      "via": [
+        "expo-constants",
+        "react-native"
+      ]
+    },
+    "expo-camera": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-camera",
+      "nodes": [
+        "node_modules/expo-camera"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-constants": {
+      "effects": [
+        "@expo/router-server",
+        "expo",
+        "expo-asset",
+        "expo-linking",
+        "expo-notifications",
+        "expo-router"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "expo-constants",
+      "nodes": [
+        "node_modules/expo-constants"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-dev-client": {
+      "effects": [],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo-dev-client",
+        "version": "58.0.14"
+      },
+      "isDirect": true,
+      "name": "expo-dev-client",
+      "nodes": [
+        "node_modules/expo-dev-client"
+      ],
+      "range": "57.0.20",
+      "severity": "high",
+      "via": [
+        "expo-dev-launcher",
+        "expo-dev-menu"
+      ]
+    },
+    "expo-dev-launcher": {
+      "effects": [
+        "expo-dev-client"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo-dev-client",
+        "version": "58.0.14"
+      },
+      "isDirect": false,
+      "name": "expo-dev-launcher",
+      "nodes": [
+        "node_modules/expo-dev-launcher"
+      ],
+      "range": "57.0.21",
+      "severity": "high",
+      "via": [
+        "expo-dev-menu",
+        "react-native"
+      ]
+    },
+    "expo-dev-menu": {
+      "effects": [
+        "expo-dev-client",
+        "expo-dev-launcher"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo-dev-client",
+        "version": "58.0.14"
+      },
+      "isDirect": false,
+      "name": "expo-dev-menu",
+      "nodes": [
+        "node_modules/expo-dev-menu"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-file-system": {
+      "effects": [
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "expo-file-system",
+      "nodes": [
+        "node_modules/expo-file-system"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-font": {
+      "effects": [
+        "@expo/router-server",
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "expo-font",
+      "nodes": [
+        "node_modules/expo-font"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-glass-effect": {
+      "effects": [
+        "expo-router"
+      ],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-glass-effect",
+      "nodes": [
+        "node_modules/expo-glass-effect"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-image": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-image",
+      "nodes": [
+        "node_modules/expo-image"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-linking": {
+      "effects": [
+        "expo-router"
+      ],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-linking",
+      "nodes": [
+        "node_modules/expo-linking"
+      ],
+      "range": "57.0.0-canary-20260526-13e89ca - 57.0.0-canary-20260623-1c70a78 || 57.0.13 - 58.0.0-canary-20260908-e343e6e",
+      "severity": "high",
+      "via": [
+        "expo-constants",
+        "react-native"
+      ]
+    },
+    "expo-modules-core": {
+      "effects": [
+        "expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "expo-modules-core",
+      "nodes": [
+        "node_modules/expo-modules-core"
+      ],
+      "range": "55.0.13-canary-20260424-7bedc9d - 55.0.13-canary-20260429-a5e59cf || 56.0.0-canary-20260128-67ce8d5 - 56.0.0-canary-20260501-870dcba || 57.0.22 - 57.0.23",
+      "severity": "high",
+      "via": [
+        "expo-modules-jsi",
+        "react-native"
+      ]
+    },
+    "expo-modules-jsi": {
+      "effects": [
+        "expo-modules-core"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "expo-modules-jsi",
+      "nodes": [
+        "node_modules/expo-modules-jsi"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-notifications": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-notifications",
+      "nodes": [
+        "node_modules/expo-notifications"
+      ],
+      "range": "0.31.4-canary-20250611-f0afe80 - 0.31.4-canary-20250613-b29d676-2 || 1.0.0-canary-20240814-ce0f7d5 - 1.0.0-canary-20241018-bf4b2f7-1 || 56.0.15-canary-20260526-6cd5e37 - 56.0.15-canary-20260628-fc0d9b4 || 57.0.0-canary-20260526-13e89ca - 57.0.0-canary-20260623-1c70a78 || 57.0.23 - 58.0.0-canary-20260909-ea7a89a",
+      "severity": "high",
+      "via": [
+        "expo-constants",
+        "react-native"
+      ]
+    },
+    "expo-router": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-router",
+      "nodes": [
+        "node_modules/expo-router"
+      ],
+      "range": "5.2.0-canary-20250611-f0afe80 - 5.2.0-canary-20250811-5c940c0 || 6.1.0-canary-20250930-9dc59d3 - 7.0.0-canary-20260113-4879b86 || 55.0.3-canary-20260424-7bedc9d - 55.0.3-canary-20260429-a5e59cf || >=56.0.0-canary-20260212-4f61309",
+      "severity": "high",
+      "via": [
+        "@expo/log-box",
+        "@expo/metro-runtime",
+        "@expo/ui",
+        "@react-native-masked-view/masked-view",
+        "expo-constants",
+        "expo-glass-effect",
+        "expo-linking",
+        "expo-symbols",
+        "react-native",
+        "react-native-reanimated"
+      ]
+    },
+    "expo-sharing": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-sharing",
+      "nodes": [
+        "node_modules/expo-sharing"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-status-bar": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-status-bar",
+      "nodes": [
+        "node_modules/expo-status-bar"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-store-review": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-store-review",
+      "nodes": [
+        "node_modules/expo-store-review"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-symbols": {
+      "effects": [
+        "expo-router"
+      ],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-symbols",
+      "nodes": [
+        "node_modules/expo-symbols"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-system-ui": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-system-ui",
+      "nodes": [
+        "node_modules/expo-system-ui"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-web-browser": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "expo-web-browser",
+      "nodes": [
+        "node_modules/expo-web-browser"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "expo-widgets": {
+      "effects": [
+        "babel-preset-expo"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "expo-widgets",
+      "nodes": [
+        "node_modules/expo-widgets"
+      ],
+      "range": "57.0.26",
+      "severity": "high",
+      "via": [
+        "@expo/ui",
+        "react-native"
+      ]
+    },
+    "fast-glob": {
+      "effects": [
+        "tailwindcss"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "tailwindcss",
+        "version": "4.3.3"
+      },
+      "isDirect": false,
+      "name": "fast-glob",
+      "nodes": [
+        "node_modules/fast-glob"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        "micromatch"
+      ]
+    },
+    "metro": {
+      "effects": [
+        "@expo/metro",
+        "@react-native/community-cli-plugin",
+        "metro-config",
+        "metro-transform-worker"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "metro",
+      "nodes": [
+        "node_modules/metro"
+      ],
+      "range": ">=0.71.0",
+      "severity": "high",
+      "via": [
+        "metro-config",
+        "metro-file-map",
+        "metro-transform-worker"
+      ]
+    },
+    "metro-config": {
+      "effects": [
+        "@expo/metro",
+        "@react-native/community-cli-plugin",
+        "@react-native/metro-config",
+        "metro"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "metro-config",
+      "nodes": [
+        "node_modules/metro-config"
+      ],
+      "range": ">=0.71.0",
+      "severity": "high",
+      "via": [
+        "metro"
+      ]
+    },
+    "metro-file-map": {
+      "effects": [
+        "@expo/metro",
+        "metro"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "metro-file-map",
+      "nodes": [
+        "node_modules/metro-file-map"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        "micromatch"
+      ]
+    },
+    "metro-transform-worker": {
+      "effects": [
+        "@expo/metro",
+        "metro"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": false,
+      "name": "metro-transform-worker",
+      "nodes": [
+        "node_modules/metro-transform-worker"
+      ],
+      "range": ">=0.71.0",
+      "severity": "high",
+      "via": [
+        "metro"
+      ]
+    },
+    "micromatch": {
+      "effects": [
+        "fast-glob",
+        "metro-file-map",
+        "tailwindcss"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "tailwindcss",
+        "version": "4.3.3"
+      },
+      "isDirect": false,
+      "name": "micromatch",
+      "nodes": [
+        "node_modules/micromatch"
+      ],
+      "range": ">=0.2.0",
+      "severity": "high",
+      "via": [
+        "braces"
+      ]
+    },
+    "nativewind": {
+      "effects": [],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "nativewind",
+        "version": "2.0.11"
+      },
+      "isDirect": true,
+      "name": "nativewind",
+      "nodes": [
+        "node_modules/nativewind"
+      ],
+      "range": "<=0.0.0-nightly.fcb5034 || 3.0.0-2978594.0 - 4.2.7",
+      "severity": "high",
+      "via": [
+        "react-native-css-interop"
+      ]
+    },
+    "node-forge": {
+      "effects": [
+        "@expo/cli",
+        "@expo/code-signing-certificates"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "expo",
+        "version": "44.0.6"
+      },
+      "isDirect": true,
+      "name": "node-forge",
+      "nodes": [
+        "node_modules/node-forge"
+      ],
+      "range": "*",
+      "severity": "high",
+      "via": [
+        {
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "cwe": [
+            "CWE-347"
+          ],
+          "dependency": "node-forge",
+          "name": "node-forge",
+          "range": "<=1.4.0",
+          "severity": "high",
+          "source": 1240912,
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
+        }
+      ]
+    },
+    "react-native": {
+      "effects": [
+        "@expo/cli",
+        "@expo/devtools",
+        "@expo/dom-webview",
+        "@expo/log-box",
+        "@expo/metro-runtime",
+        "@expo/ui",
+        "@infinitered/react-native-mlkit-core",
+        "@infinitered/react-native-mlkit-face-detection",
+        "@react-native-async-storage/async-storage",
+        "@react-native-google-signin/google-signin",
+        "@react-native-masked-view/masked-view",
+        "@react-native/virtualized-lists",
+        "@sentry/react-native",
+        "expo",
+        "expo-apple-authentication",
+        "expo-asset",
+        "expo-camera",
+        "expo-constants",
+        "expo-dev-launcher",
+        "expo-dev-menu",
+        "expo-file-system",
+        "expo-font",
+        "expo-glass-effect",
+        "expo-image",
+        "expo-linking",
+        "expo-modules-core",
+        "expo-modules-jsi",
+        "expo-notifications",
+        "expo-router",
+        "expo-sharing",
+        "expo-status-bar",
+        "expo-store-review",
+        "expo-symbols",
+        "expo-system-ui",
+        "expo-web-browser",
+        "expo-widgets",
+        "react-native-css-interop",
+        "react-native-drawer-layout",
+        "react-native-gesture-handler",
+        "react-native-get-random-values",
+        "react-native-is-edge-to-edge",
+        "react-native-purchases",
+        "react-native-reanimated",
+        "react-native-safe-area-context",
+        "react-native-screens",
+        "react-native-url-polyfill",
+        "react-native-view-shot",
+        "react-native-worklets"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native",
+        "version": "0.72.17"
+      },
+      "isDirect": true,
+      "name": "react-native",
+      "nodes": [
+        "node_modules/react-native"
+      ],
+      "range": ">=0.73.0-nightly-20230506-1af868c52",
+      "severity": "high",
+      "via": [
+        "@react-native/community-cli-plugin",
+        "@react-native/virtualized-lists"
+      ]
+    },
+    "react-native-css-interop": {
+      "effects": [
+        "nativewind"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "nativewind",
+        "version": "2.0.11"
+      },
+      "isDirect": false,
+      "name": "react-native-css-interop",
+      "nodes": [
+        "node_modules/react-native-css-interop"
+      ],
+      "range": "<=0.0.0-alpha.27 || >=0.0.1",
+      "severity": "high",
+      "via": [
+        "react-native",
+        "react-native-reanimated",
+        "tailwindcss"
+      ]
+    },
+    "react-native-drawer-layout": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": false,
+      "name": "react-native-drawer-layout",
+      "nodes": [
+        "node_modules/react-native-drawer-layout"
+      ],
+      "range": "4.0.0-alpha.0 - 4.0.0-alpha.4 || 4.1.7",
+      "severity": "high",
+      "via": [
+        "react-native",
+        "react-native-reanimated"
+      ]
+    },
+    "react-native-gesture-handler": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "react-native-gesture-handler",
+      "nodes": [
+        "node_modules/react-native-gesture-handler"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-get-random-values": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "react-native-get-random-values",
+      "nodes": [
+        "node_modules/react-native-get-random-values"
+      ],
+      "range": ">=2.0.0",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-is-edge-to-edge": {
+      "effects": [
+        "react-native-reanimated"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native-reanimated",
+        "version": "4.2.2"
+      },
+      "isDirect": false,
+      "name": "react-native-is-edge-to-edge",
+      "nodes": [
+        "node_modules/react-native-is-edge-to-edge"
+      ],
+      "range": "0.1.0 - 1.1.6",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-purchases": {
+      "effects": [],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native-purchases",
+        "version": "8.12.0"
+      },
+      "isDirect": true,
+      "name": "react-native-purchases",
+      "nodes": [
+        "node_modules/react-native-purchases"
+      ],
+      "range": ">=9.0.0",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-reanimated": {
+      "effects": [
+        "expo-router",
+        "react-native-css-interop",
+        "react-native-drawer-layout"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native-reanimated",
+        "version": "4.2.2"
+      },
+      "isDirect": true,
+      "name": "react-native-reanimated",
+      "nodes": [
+        "node_modules/react-native-reanimated"
+      ],
+      "range": "3.17.0-nightly-20241017-b4db5623b - 3.17.2 || 3.18.0-nightly-20250320-21b88660a - 3.18.0-nightly-20250602-f1f88d1c1 || 3.20.0-nightly-20250722-b6c8b9a3c - 4.0.0-nightly-20250406-e10b6307b || 4.1.7 - 4.2.0-nightly-20251017-235c127fd || >=4.2.3",
+      "severity": "high",
+      "via": [
+        "react-native",
+        "react-native-is-edge-to-edge",
+        "react-native-worklets"
+      ]
+    },
+    "react-native-safe-area-context": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "react-native-safe-area-context",
+      "nodes": [
+        "node_modules/react-native-safe-area-context"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-screens": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "react-native-screens",
+      "nodes": [
+        "node_modules/react-native-screens"
+      ],
+      "range": "4.25.0-beta.1 - 4.26.0 || 4.27.0-nightly-20260710-f0a3a819f - 4.27.0-nightly-20260807-ba6bd9e22",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-url-polyfill": {
+      "effects": [],
+      "fixAvailable": true,
+      "isDirect": true,
+      "name": "react-native-url-polyfill",
+      "nodes": [
+        "node_modules/react-native-url-polyfill"
+      ],
+      "range": "",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-view-shot": {
+      "effects": [],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native-view-shot",
+        "version": "4.0.3"
+      },
+      "isDirect": true,
+      "name": "react-native-view-shot",
+      "nodes": [
+        "node_modules/react-native-view-shot"
+      ],
+      "range": ">=5.0.0-alpha.0",
+      "severity": "high",
+      "via": [
+        "react-native"
+      ]
+    },
+    "react-native-worklets": {
+      "effects": [
+        "react-native-reanimated"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "react-native-worklets",
+        "version": "0.7.4"
+      },
+      "isDirect": true,
+      "name": "react-native-worklets",
+      "nodes": [
+        "node_modules/react-native-worklets"
+      ],
+      "range": ">=0.8.0-bundle-mode-preview-1",
+      "severity": "high",
+      "via": [
+        "@react-native/metro-config",
+        "react-native"
+      ]
+    },
+    "tailwindcss": {
+      "effects": [
+        "react-native-css-interop"
+      ],
+      "fixAvailable": {
+        "isSemVerMajor": true,
+        "name": "tailwindcss",
+        "version": "4.3.3"
+      },
+      "isDirect": true,
+      "name": "tailwindcss",
+      "nodes": [
+        "node_modules/tailwindcss"
+      ],
+      "range": "<=0.0.0-oxide-insiders.ff2c25f || 2.1.0-canary.1 - 3.4.19",
+      "severity": "high",
+      "via": [
+        "chokidar",
+        "fast-glob",
+        "micromatch"
+      ]
+    }
+  },
+  "npm_sha256": "70fe5e932f1949f82d331562d03d33086cc335f30216834c26fb9b14d5568022",
+  "osv_exit": 1,
+  "osv_record_count": 5,
+  "osv_records": [
+    {
+      "packages": [
+        {
+          "groups": [
+            {
+              "aliases": [
+                "CVE-2026-93687",
+                "GHSA-vfj7-8cjw-p6xm"
+              ],
+              "ids": [
+                "GHSA-vfj7-8cjw-p6xm"
+              ],
+              "max_severity": "8.7"
+            }
+          ],
+          "package": {
+            "ecosystem": "npm",
+            "name": "braces",
+            "version": "3.0.3"
+          },
+          "vulnerabilities": [
+            {
+              "affected": [
+                {
+                  "database_specific": {
+                    "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/09/GHSA-vfj7-8cjw-p6xm/GHSA-vfj7-8cjw-p6xm.json"
+                  },
+                  "package": {
+                    "ecosystem": "npm",
+                    "name": "braces",
+                    "purl": "pkg:npm/braces"
+                  },
+                  "ranges": [
+                    {
+                      "events": [
+                        {
+                          "introduced": "0"
+                        },
+                        {
+                          "last_affected": "3.0.3"
+                        }
+                      ],
+                      "type": "SEMVER"
+                    }
+                  ]
+                }
+              ],
+              "aliases": [
+                "CVE-2026-93687"
+              ],
+              "database_specific": {
+                "cwe_ids": [
+                  "CWE-674"
+                ],
+                "github_reviewed": true,
+                "github_reviewed_at": "2026-10-02T22:36:33Z",
+                "nvd_published_at": "2026-09-18T16:17:15Z",
+                "severity": "HIGH"
+              },
+              "details": "braces through 3.0.3 contains a stack overflow vulnerability in the recursive AST walkers that lack depth guards. Attackers can supply deeply nested brace patterns under the character limit to exhaust the call stack and terminate the Node.js process with an uncaught RangeError.",
+              "id": "GHSA-vfj7-8cjw-p6xm",
+              "modified": "2026-10-02T22:45:04.328737432Z",
+              "published": "2026-09-18T18:31:41Z",
+              "references": [
+                {
+                  "type": "ADVISORY",
+                  "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-93687"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/micromatch/braces/issues/70"
+                },
+                {
+                  "type": "PACKAGE",
+                  "url": "https://github.com/micromatch/braces"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/micromatch/braces/blob/3.0.3/lib/compile.js#L49-L53"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/micromatch/braces/blob/3.0.3/lib/expand.js#L102-L105"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/micromatch/braces/blob/3.0.3/lib/parse.js#L38-L40"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://www.vulncheck.com/advisories/braces-through-3.0.3-stack-overflow-via-deeply-nested-patterns"
+                }
+              ],
+              "schema_version": "1.9.0",
+              "severity": [
+                {
+                  "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "type": "CVSS_V3"
+                },
+                {
+                  "score": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+                  "type": "CVSS_V4"
+                }
+              ],
+              "summary": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns"
+            }
+          ]
+        },
+        {
+          "groups": [
+            {
+              "aliases": [
+                "CVE-2026-33894",
+                "CVE-2026-85393",
+                "GHSA-86w9-cpqp-85rv",
+                "GHSA-ppp5-5v6c-4jwp"
+              ],
+              "ids": [
+                "GHSA-86w9-cpqp-85rv"
+              ],
+              "max_severity": "8.7"
+            }
+          ],
+          "package": {
+            "ecosystem": "npm",
+            "name": "node-forge",
+            "version": "1.4.0"
+          },
+          "vulnerabilities": [
+            {
+              "affected": [
+                {
+                  "database_specific": {
+                    "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/09/GHSA-86w9-cpqp-85rv/GHSA-86w9-cpqp-85rv.json"
+                  },
+                  "package": {
+                    "ecosystem": "npm",
+                    "name": "node-forge",
+                    "purl": "pkg:npm/node-forge"
+                  },
+                  "ranges": [
+                    {
+                      "events": [
+                        {
+                          "introduced": "0"
+                        },
+                        {
+                          "last_affected": "1.4.0"
+                        }
+                      ],
+                      "type": "SEMVER"
+                    }
+                  ]
+                }
+              ],
+              "aliases": [
+                "CVE-2026-33894",
+                "CVE-2026-85393",
+                "GHSA-ppp5-5v6c-4jwp"
+              ],
+              "database_specific": {
+                "cwe_ids": [
+                  "CWE-347"
+                ],
+                "github_reviewed": true,
+                "github_reviewed_at": "2026-10-01T21:09:09Z",
+                "nvd_published_at": "2026-09-03T19:17:31Z",
+                "severity": "HIGH"
+              },
+              "details": "node-forge through 1.4.0 fails to validate element count in nested DigestAlgorithm sequences during RSA PKCS#1 v1.5 signature verification. Attackers can embed garbage bytes inside the DigestAlgorithm sequence to forge valid signatures for arbitrary messages using low-exponent RSA keys. This is an incomplete fix for CVE-2026-33894.",
+              "id": "GHSA-86w9-cpqp-85rv",
+              "modified": "2026-10-01T21:40:55.016251436Z",
+              "published": "2026-09-03T21:31:15Z",
+              "references": [
+                {
+                  "type": "ADVISORY",
+                  "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-85393"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/digitalbazaar/forge/issues/1149"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/digitalbazaar/forge/pull/1152"
+                },
+                {
+                  "type": "ADVISORY",
+                  "url": "https://github.com/advisories/GHSA-ppp5-5v6c-4jwp"
+                },
+                {
+                  "type": "PACKAGE",
+                  "url": "https://github.com/digitalbazaar/forge"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/asn1.js"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/rsa.js"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://www.vulncheck.com/advisories/node-forge-through-1.4.0-rsa-pkcs-1-1.5-signature-forgery-via-nested-digestalgorithm-padding"
+                }
+              ],
+              "schema_version": "1.9.0",
+              "severity": [
+                {
+                  "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                  "type": "CVSS_V3"
+                },
+                {
+                  "score": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N",
+                  "type": "CVSS_V4"
+                }
+              ],
+              "summary": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements"
+            }
+          ]
+        }
+      ],
+      "source": {
+        "path": "/home/runner/work/onSkin/onSkin/package-lock.json",
+        "type": "lockfile"
+      }
+    },
+    {
+      "packages": [
+        {
+          "groups": [
+            {
+              "aliases": [
+                "GHSA-6q48-6c7w-9gw2",
+                "PYSEC-2026-4320"
+              ],
+              "ids": [
+                "PYSEC-2026-4320",
+                "GHSA-6q48-6c7w-9gw2"
+              ],
+              "max_severity": "9.1"
+            }
+          ],
+          "package": {
+            "ecosystem": "PyPI",
+            "name": "certifi",
+            "version": "2026.10.18"
+          },
+          "vulnerabilities": [
+            {
+              "affected": [
+                {
+                  "database_specific": {
+                    "source": "https://github.com/pypa/advisory-database/blob/main/vulns/certifi/PYSEC-2026-4320.yaml"
+                  },
+                  "package": {
+                    "ecosystem": "PyPI",
+                    "name": "certifi",
+                    "purl": "pkg:pypi/certifi"
+                  },
+                  "ranges": [
+                    {
+                      "events": [
+                        {
+                          "introduced": "2019.03.09"
+                        },
+                        {
+                          "fixed": "2026.10.19"
+                        }
+                      ],
+                      "type": "ECOSYSTEM"
+                    }
+                  ],
+                  "versions": [
+                    "2019.11.28",
+                    "2019.3.9",
+                    "2019.6.16",
+                    "2019.9.11",
+                    "2020.11.8",
+                    "2020.12.5",
+                    "2020.4.5",
+                    "2020.4.5.1",
+                    "2020.4.5.2",
+                    "2020.6.20",
+                    "2021.10.8",
+                    "2021.5.30",
+                    "2022.12.7",
+                    "2022.5.18",
+                    "2022.5.18.1",
+                    "2022.6.15",
+                    "2022.6.15.1",
+                    "2022.6.15.2",
+                    "2022.9.14",
+                    "2022.9.24",
+                    "2023.11.17",
+                    "2023.5.7",
+                    "2023.7.22",
+                    "2024.12.14",
+                    "2024.2.2",
+                    "2024.6.2",
+                    "2024.7.4",
+                    "2024.8.30",
+                    "2025.1.31",
+                    "2025.10.5",
+                    "2025.11.12",
+                    "2025.4.26",
+                    "2025.6.15",
+                    "2025.7.14",
+                    "2025.7.9",
+                    "2025.8.3",
+                    "2026.1.4",
+                    "2026.10.18",
+                    "2026.2.25",
+                    "2026.4.22",
+                    "2026.5.20",
+                    "2026.6.17",
+                    "2026.7.22"
+                  ]
+                }
+              ],
+              "aliases": [
+                "GHSA-6q48-6c7w-9gw2"
+              ],
+              "details": "Certifi versions before 2026.10.18 include the `emSign ECC Root CA - G3` root certificate in their bundled CA store. Eight eMudhra intermediate CA certificates that chain to this root have compromised private keys and the CA has revoked them. \n\nAn attacker with one of the compromised keys can issue valid-looking certificates for any hostname. If the attacker is also on-path, they can intercept or modify TLS traffic from clients that trust the certifi bundle. Examples include `requests`, `urllib3` and `pip`, and the Python.org macOS installer.\n\nCertifi 2026.10.18 removed all emSign roots from the bundle. Certifi 2026.10.19 restored the emSign roots that are not affected. Upgrade to 2026.10.19 or later, and rebuild container images that vendor certifi.",
+              "id": "PYSEC-2026-4320",
+              "modified": "2026-10-20T22:00:02.600723204Z",
+              "published": "2026-10-20T21:41:50.722083Z",
+              "references": [
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://emudhra.we-have-a-problem.com"
+                },
+                {
+                  "type": "PACKAGE",
+                  "url": "https://github.com/certifi/python-certifi"
+                },
+                {
+                  "type": "PACKAGE",
+                  "url": "https://pypi.org/project/certifi"
+                },
+                {
+                  "type": "ADVISORY",
+                  "url": "https://github.com/advisories/GHSA-6q48-6c7w-9gw2"
+                }
+              ],
+              "schema_version": "1.9.0",
+              "severity": [
+                {
+                  "score": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+                  "type": "CVSS_V4"
+                }
+              ],
+              "summary": "certifi bundles emSign root CAs with compromised intermediate CA keys"
+            },
+            {
+              "affected": [
+                {
+                  "database_specific": {
+                    "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-6q48-6c7w-9gw2/GHSA-6q48-6c7w-9gw2.json"
+                  },
+                  "package": {
+                    "ecosystem": "PyPI",
+                    "name": "certifi",
+                    "purl": "pkg:pypi/certifi"
+                  },
+                  "ranges": [
+                    {
+                      "events": [
+                        {
+                          "introduced": "2019.03.09"
+                        },
+                        {
+                          "fixed": "2026.10.19"
+                        }
+                      ],
+                      "type": "ECOSYSTEM"
+                    }
+                  ],
+                  "versions": [
+                    "2019.11.28",
+                    "2019.3.9",
+                    "2019.6.16",
+                    "2019.9.11",
+                    "2020.11.8",
+                    "2020.12.5",
+                    "2020.4.5",
+                    "2020.4.5.1",
+                    "2020.4.5.2",
+                    "2020.6.20",
+                    "2021.10.8",
+                    "2021.5.30",
+                    "2022.12.7",
+                    "2022.5.18",
+                    "2022.5.18.1",
+                    "2022.6.15",
+                    "2022.6.15.1",
+                    "2022.6.15.2",
+                    "2022.9.14",
+                    "2022.9.24",
+                    "2023.11.17",
+                    "2023.5.7",
+                    "2023.7.22",
+                    "2024.12.14",
+                    "2024.2.2",
+                    "2024.6.2",
+                    "2024.7.4",
+                    "2024.8.30",
+                    "2025.1.31",
+                    "2025.10.5",
+                    "2025.11.12",
+                    "2025.4.26",
+                    "2025.6.15",
+                    "2025.7.14",
+                    "2025.7.9",
+                    "2025.8.3",
+                    "2026.1.4",
+                    "2026.10.18",
+                    "2026.2.25",
+                    "2026.4.22",
+                    "2026.5.20",
+                    "2026.6.17",
+                    "2026.7.22"
+                  ]
+                }
+              ],
+              "aliases": [
+                "PYSEC-2026-4320"
+              ],
+              "database_specific": {
+                "cwe_ids": [
+                  "CWE-295"
+                ],
+                "github_reviewed": true,
+                "github_reviewed_at": "2026-10-20T19:35:05Z",
+                "nvd_published_at": null,
+                "severity": "CRITICAL"
+              },
+              "details": "Certifi versions before 2026.10.18 include the `emSign ECC Root CA - G3` root certificate in their bundled CA store. Eight eMudhra intermediate CA certificates that chain to this root have compromised private keys and the CA has revoked them. \n\nAn attacker with one of the compromised keys can issue valid-looking certificates for any hostname. If the attacker is also on-path, they can intercept or modify TLS traffic from clients that trust the certifi bundle. Examples include `requests`, `urllib3` and `pip`, and the Python.org macOS installer.\n\nCertifi 2026.10.18 removed all emSign roots from the bundle. Certifi 2026.10.19 restored the emSign roots that are not affected. Upgrade to 2026.10.19 or later, and rebuild container images that vendor certifi.",
+              "id": "GHSA-6q48-6c7w-9gw2",
+              "modified": "2026-10-20T22:11:14.336568839Z",
+              "published": "2026-10-20T19:35:05Z",
+              "references": [
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://emudhra.we-have-a-problem.com"
+                },
+                {
+                  "type": "PACKAGE",
+                  "url": "https://github.com/certifi/python-certifi"
+                }
+              ],
+              "schema_version": "1.9.0",
+              "severity": [
+                {
+                  "score": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+                  "type": "CVSS_V4"
+                }
+              ],
+              "summary": "certifi bundles emSign root CAs with compromised intermediate CA keys"
+            }
+          ]
+        },
+        {
+          "groups": [
+            {
+              "aliases": [
+                "CVE-2026-59951",
+                "GHSA-84m7-p3x7-pcfv"
+              ],
+              "ids": [
+                "GHSA-84m7-p3x7-pcfv"
+              ],
+              "max_severity": "7.5"
+            }
+          ],
+          "package": {
+            "ecosystem": "PyPI",
+            "name": "mcp",
+            "version": "1.29.0"
+          },
+          "vulnerabilities": [
+            {
+              "affected": [
+                {
+                  "database_specific": {
+                    "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+                  },
+                  "package": {
+                    "ecosystem": "PyPI",
+                    "name": "mcp",
+                    "purl": "pkg:pypi/mcp"
+                  },
+                  "ranges": [
+                    {
+                      "events": [
+                        {
+                          "introduced": "1.8.0"
+                        },
+                        {
+                          "fixed": "1.30.0"
+                        }
+                      ],
+                      "type": "ECOSYSTEM"
+                    }
+                  ],
+                  "versions": [
+                    "1.10.0",
+                    "1.10.1",
+                    "1.11.0",
+                    "1.12.0",
+                    "1.12.1",
+                    "1.12.2",
+                    "1.12.3",
+                    "1.12.4",
+                    "1.13.0",
+                    "1.13.1",
+                    "1.14.0",
+                    "1.14.1",
+                    "1.15.0",
+                    "1.16.0",
+                    "1.17.0",
+                    "1.18.0",
+                    "1.19.0",
+                    "1.20.0",
+                    "1.21.0",
+                    "1.21.1",
+                    "1.21.2",
+                    "1.22.0",
+                    "1.23.0",
+                    "1.23.1",
+                    "1.23.2",
+                    "1.23.3",
+                    "1.24.0",
+                    "1.25.0",
+                    "1.26.0",
+                    "1.27.0",
+                    "1.27.1",
+                    "1.27.2",
+                    "1.28.0",
+                    "1.28.1",
+                    "1.29.0",
+                    "1.29.1",
+                    "1.8.0",
+                    "1.8.1",
+                    "1.9.0",
+                    "1.9.1",
+                    "1.9.2",
+                    "1.9.3",
+                    "1.9.4"
+                  ]
+                },
+                {
+                  "database_specific": {
+                    "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+                  },
+                  "package": {
+                    "ecosystem": "PyPI",
+                    "name": "mcp",
+                    "purl": "pkg:pypi/mcp"
+                  },
+                  "ranges": [
+                    {
+                      "events": [
+                        {
+                          "introduced": "2.0.0"
+                        },
+                        {
+                          "fixed": "2.2.0"
+                        }
+                      ],
+                      "type": "ECOSYSTEM"
+                    }
+                  ],
+                  "versions": [
+                    "2.0.0",
+                    "2.0.1",
+                    "2.1.0",
+                    "2.1.1"
+                  ]
+                }
+              ],
+              "aliases": [
+                "CVE-2026-59951"
+              ],
+              "database_specific": {
+                "cwe_ids": [
+                  "CWE-400",
+                  "CWE-770",
+                  "CWE-772"
+                ],
+                "github_reviewed": true,
+                "github_reviewed_at": "2026-10-15T20:13:13Z",
+                "nvd_published_at": "2026-10-14T17:18:29Z",
+                "severity": "MODERATE"
+              },
+              "details": "### Summary\nIn affected versions, a Streamable HTTP server in stateful mode (the default) never reclaimed session state:\n\n- sessions did not expire;\n- a client `DELETE` ended the session but left its entry registered;\n- a session whose first request was refused stayed registered with a running task.\n\nEach session also kept its parsed `initialize` parameters, and the number of sessions was unlimited. A client that could reach the endpoint could grow server memory without bound using ordinary short requests; only a restart reclaimed it.\n\n### Am I affected?\nYes, if you serve MCP over Streamable HTTP in stateful mode and clients you do not fully trust can reach the endpoint. Stateful mode is the default for:\n\n- `FastMCP` (1.x)\n- `MCPServer` and `Server.streamable_http_app()` (2.x)\n- `StreamableHTTPSessionManager`\n\nAffected versions: 1.8.0 through 1.29.1, and 2.0.0 through 2.1.1.\n\nNot affected:\n\n- servers on 1.12.0 or later passing `stateless_http=True` (no sessions are kept)\n- servers using only the stdio or SSE transports\n\nAuthentication limits who can open sessions, not how many a token holder can open.\n\n### Fix\nUpgrade to `mcp` 1.30.0 (1.x) or 2.2.0 (2.x) or later. In those versions:\n\n- a session with no request in flight for `session_idle_timeout` seconds (default 1800) is closed and its ID then answers `404`; open streams and in-progress requests keep it alive;\n- at most `max_sessions` sessions exist at once (default 10000); a request that would open another is answered `503`;\n- a session is discarded as soon as it ends, whether by `DELETE`, expiry, or a refused opening request.\n\nBoth settings are keyword arguments on `FastMCP(...)` (1.x), `MCPServer.run()` / `streamable_http_app()` (2.x) and `StreamableHTTPSessionManager`; `None` disables them.\n\nThis bounds retention rather than eliminating it: a live session still holds its `initialize` parameters (up to roughly twice the 4 MiB body limit), and an `initialize` with invalid parameters still opens a session that expires like any other. On a small host, lower `session_idle_timeout`, `max_sessions` and `max_request_body_size` to fit.\n\nIf you cannot upgrade yet, pass `stateless_http=True` (1.12.0 or later) where you need no per-session state, or restrict who can reach the endpoint.",
+              "id": "GHSA-84m7-p3x7-pcfv",
+              "modified": "2026-10-15T20:30:08.565001293Z",
+              "published": "2026-10-15T20:13:13Z",
+              "references": [
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv"
+                },
+                {
+                  "type": "ADVISORY",
+                  "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-59951"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/pull/3395"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/pull/3426"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/commit/92120b4b0f50385af096592d7cee932fc1d994e7"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/commit/d2290ca3434731b68ea3e2270bc06a6e6575931b"
+                },
+                {
+                  "type": "PACKAGE",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v1.30.0"
+                },
+                {
+                  "type": "WEB",
+                  "url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.2.0"
+                }
+              ],
+              "schema_version": "1.9.0",
+              "severity": [
+                {
+                  "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                  "type": "CVSS_V3"
+                },
+                {
+                  "score": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                  "type": "CVSS_V4"
+                }
+              ],
+              "summary": "MCP Python SDK: Unbounded Session Accumulation in StreamableHTTP Transport Enables Resource Exhaustion"
+            }
+          ]
+        }
+      ],
+      "source": {
+        "path": "/home/runner/work/onSkin/onSkin/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+        "type": "lockfile"
+      }
+    }
+  ],
+  "osv_sha256": "5e9fb21d14ffdb9322faec33ddfa7eb73e6126b491735f665fac18fd80e921f8",
+  "package_lock_sha256": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+  "provider_merge": "4961434a8c1ddcc5588177b01d2cf7f8a210202f",
+  "provider_run_id": 39593867671,
+  "six_previous_unknown_routes": [
+    {
+      "dependency_path": [
+        {
+          "from_path": "",
+          "kind": "devDependencies",
+          "name": "react-native-worklets",
+          "optional_peer": false,
+          "range": "0.10.1",
+          "to": "node_modules/react-native-worklets"
+        },
+        {
+          "from_path": "node_modules/react-native-worklets",
+          "kind": "peerDependencies",
+          "name": "@react-native/metro-config",
+          "optional_peer": false,
+          "range": "*",
+          "to": "node_modules/@react-native/metro-config"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-config",
+          "kind": "dependencies",
+          "name": "@react-native/metro-babel-transformer",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/metro-babel-transformer"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-babel-transformer",
+          "kind": "dependencies",
+          "name": "@react-native/babel-preset",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/babel-preset"
+        },
+        {
+          "from_path": "node_modules/@react-native/babel-preset",
+          "kind": "dependencies",
+          "name": "@babel/plugin-transform-react-jsx-self",
+          "optional_peer": false,
+          "range": "^7.24.7",
+          "to": "node_modules/@babel/plugin-transform-react-jsx-self"
+        }
+      ],
+      "path": "node_modules/@babel/plugin-transform-react-jsx-self",
+      "scope": "INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE",
+      "status": "EXACT_LOCK_PEER_ROUTE",
+      "version": "7.29.7"
+    },
+    {
+      "dependency_path": [
+        {
+          "from_path": "",
+          "kind": "devDependencies",
+          "name": "react-native-worklets",
+          "optional_peer": false,
+          "range": "0.10.1",
+          "to": "node_modules/react-native-worklets"
+        },
+        {
+          "from_path": "node_modules/react-native-worklets",
+          "kind": "peerDependencies",
+          "name": "@react-native/metro-config",
+          "optional_peer": false,
+          "range": "*",
+          "to": "node_modules/@react-native/metro-config"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-config",
+          "kind": "dependencies",
+          "name": "@react-native/metro-babel-transformer",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/metro-babel-transformer"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-babel-transformer",
+          "kind": "dependencies",
+          "name": "@react-native/babel-preset",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/babel-preset"
+        },
+        {
+          "from_path": "node_modules/@react-native/babel-preset",
+          "kind": "dependencies",
+          "name": "@babel/plugin-transform-react-jsx-source",
+          "optional_peer": false,
+          "range": "^7.24.7",
+          "to": "node_modules/@babel/plugin-transform-react-jsx-source"
+        }
+      ],
+      "path": "node_modules/@babel/plugin-transform-react-jsx-source",
+      "scope": "INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE",
+      "status": "EXACT_LOCK_PEER_ROUTE",
+      "version": "7.29.7"
+    },
+    {
+      "dependency_path": [
+        {
+          "from_path": "",
+          "kind": "devDependencies",
+          "name": "react-native-worklets",
+          "optional_peer": false,
+          "range": "0.10.1",
+          "to": "node_modules/react-native-worklets"
+        },
+        {
+          "from_path": "node_modules/react-native-worklets",
+          "kind": "peerDependencies",
+          "name": "@react-native/metro-config",
+          "optional_peer": false,
+          "range": "*",
+          "to": "node_modules/@react-native/metro-config"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-config",
+          "kind": "dependencies",
+          "name": "@react-native/metro-babel-transformer",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/metro-babel-transformer"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-babel-transformer",
+          "kind": "dependencies",
+          "name": "@react-native/babel-preset",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/babel-preset"
+        },
+        {
+          "from_path": "node_modules/@react-native/babel-preset",
+          "kind": "dependencies",
+          "name": "@babel/plugin-transform-regenerator",
+          "optional_peer": false,
+          "range": "^7.24.7",
+          "to": "node_modules/@babel/plugin-transform-regenerator"
+        }
+      ],
+      "path": "node_modules/@babel/plugin-transform-regenerator",
+      "scope": "INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE",
+      "status": "EXACT_LOCK_PEER_ROUTE",
+      "version": "7.29.8"
+    },
+    {
+      "dependency_path": [
+        {
+          "from_path": "",
+          "kind": "devDependencies",
+          "name": "react-native-worklets",
+          "optional_peer": false,
+          "range": "0.10.1",
+          "to": "node_modules/react-native-worklets"
+        },
+        {
+          "from_path": "node_modules/react-native-worklets",
+          "kind": "peerDependencies",
+          "name": "@react-native/metro-config",
+          "optional_peer": false,
+          "range": "*",
+          "to": "node_modules/@react-native/metro-config"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-config",
+          "kind": "dependencies",
+          "name": "@react-native/metro-babel-transformer",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/metro-babel-transformer"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-babel-transformer",
+          "kind": "dependencies",
+          "name": "@react-native/babel-preset",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/babel-preset"
+        }
+      ],
+      "path": "node_modules/@react-native/babel-preset",
+      "scope": "INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE",
+      "status": "EXACT_LOCK_PEER_ROUTE",
+      "version": "0.86.3"
+    },
+    {
+      "dependency_path": [
+        {
+          "from_path": "",
+          "kind": "devDependencies",
+          "name": "react-native-worklets",
+          "optional_peer": false,
+          "range": "0.10.1",
+          "to": "node_modules/react-native-worklets"
+        },
+        {
+          "from_path": "node_modules/react-native-worklets",
+          "kind": "peerDependencies",
+          "name": "@react-native/metro-config",
+          "optional_peer": false,
+          "range": "*",
+          "to": "node_modules/@react-native/metro-config"
+        },
+        {
+          "from_path": "node_modules/@react-native/metro-config",
+          "kind": "dependencies",
+          "name": "@react-native/metro-babel-transformer",
+          "optional_peer": false,
+          "range": "0.86.3",
+          "to": "node_modules/@react-native/metro-babel-transformer"
+        }
+      ],
+      "path": "node_modules/@react-native/metro-babel-transformer",
+      "scope": "INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE",
+      "status": "EXACT_LOCK_PEER_ROUTE",
+      "version": "0.86.3"
+    },
+    {
+      "dependency_path": [
+        {
+          "from_path": "",
+          "kind": "devDependencies",
+          "name": "react-native-worklets",
+          "optional_peer": false,
+          "range": "0.10.1",
+          "to": "node_modules/react-native-worklets"
+        },
+        {
+          "from_path": "node_modules/react-native-worklets",
+          "kind": "peerDependencies",
+          "name": "@react-native/metro-config",
+          "optional_peer": false,
+          "range": "*",
+          "to": "node_modules/@react-native/metro-config"
+        }
+      ],
+      "path": "node_modules/@react-native/metro-config",
+      "scope": "INSTALL_GRAPH_ONLY_NOT_RUNTIME_REACHABILITY_OR_ACCEPTANCE",
+      "status": "EXACT_LOCK_PEER_ROUTE",
+      "version": "0.86.3"
+    }
+  ],
+  "source_commit": "8e8983f5f05ad23406f58129551eb4dc312176b1"
+}

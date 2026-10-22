@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"npm\", \"ci\", \"--no-audit\", \"--no-fund\"]",
+  "working_directory": "/root/onskin-quality-recovery03-source",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; isolated no-hardlink checkout; dedicated cache; no shared node_modules",
+  "source_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "source_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "started_utc": "2026-10-22T15:59:10.007971+00:00",
+  "duration_seconds": 18.814,
+  "tracked_dirty_paths_at_start": [
+    "apps/mobile/package.json",
+    "package-lock.json"
+  ],
+  "exit_code": 0,
+  "status": "PASS",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/patched-fresh-ci.log",
+    "sha256": "a99a6fa6f56be82c457bb21aac94d6c406045afe7cbecdd9b905fdefa93e493a"
+  },
+  "admission": "NONE",
+  "phase": "PRECOMMIT_DIAGNOSTIC; not exact measured-source acceptance"
+}

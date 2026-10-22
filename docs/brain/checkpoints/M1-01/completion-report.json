@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-01",
+  "branch": "stage/m1-retained-safety",
+  "status": "PARTIAL",
+  "measured": {
+    "commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+    "tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "executions": [
+    {
+      "id": "root-typecheck",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/root-typecheck.receipt.json",
+      "sha256": "6262c75459b0dc60c985f78efdce6e1bd018f9cca95c2c9e3e425383957f9dde",
+      "command": "npm.cmd run typecheck -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Node22.21.0/npm11.20.0; accepted-stage installed dependencies via junctions; unchanged lockfile; no install/upgrade",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "root-lint",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/root-lint.receipt.json",
+      "sha256": "88b3821b9389c289ab0d3005c65ed7049e7729c768f7b6e50fd4277ef74551d6",
+      "command": "npm.cmd run lint -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Node22.21.0/npm11.20.0; accepted-stage installed dependencies via junctions; unchanged lockfile; no install/upgrade",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "root-test",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/root-test.receipt.json",
+      "sha256": "53ab68bfc21dd90449cb8fd2edb0e73a4e80774292464368ce53486f5a5fad82",
+      "command": "npm.cmd run test -- --force",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Node22.21.0/npm11.20.0; accepted-stage installed dependencies via junctions; unchanged lockfile; no install/upgrade",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "native-age-source",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/native-age-source.receipt.json",
+      "sha256": "de87409327582e80a7804649b8a153d1cc567bfe1e4186158053e3ad8ece85e8",
+      "command": "node --test scripts/core01/native-age-assurance-source-contract.test.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Node22.21.0/npm11.20.0; accepted-stage installed dependencies via junctions; unchanged lockfile; no install/upgrade",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "governance-measured",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/governance-measured.receipt.json",
+      "sha256": "47c77554039ab896ad5456041e489803ae3ed9d16371a1ef6a2025d33a2d385f",
+      "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python3.9.13; real Windows junction/hardlink cases; two actual symlink-privilege skips",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "m1-profile-measured",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/m1-profile-measured.receipt.json",
+      "sha256": "ceb3a70654f309dd88c622622a4f5915cec34c0f76ac503e5a2029bd059a0efe",
+      "command": "python -B scripts/brain/brain.py --profile M1-01 validate",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Python3.9.13",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "issued-context-measured",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/issued-context-measured.receipt.json",
+      "sha256": "bf8822b0a997ff1d3f803a3deb34d63c4eb999bc4690e2d963002eb5e5a3aec4",
+      "command": "python -B verify_context.py --expected-manifest-sha256 48c0e58f00ce54910d640738debfd273a534403ec30aa980277977852f354656",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\docs\\brain\\checkpoints\\M1-01\\inputs",
+      "environment": "Windows x64; Python3.9.13",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "id": "surface-390",
+      "evidence_class": "INDEPENDENTLY_REPRODUCED",
+      "axis": "source",
+      "admission": "NONE",
+      "artifact": "docs/brain/checkpoints/M1-01/evidence/surface-390.receipt.json",
+      "sha256": "08297e52ae83a33cf48633956ef2ee38bf01de6aa982a6b712f42416de4eb00f",
+      "command": "ONBOARDING_E2E_PORT=8317 ONBOARDING_E2E_DEBUG_PORT=9417 ONBOARDING_E2E_VIEWPORT_WIDTH=390 ONBOARDING_E2E_VIEWPORT_HEIGHT=844 ONBOARDING_E2E_EVIDENCE_DIR=C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety\\docs\\brain\\checkpoints\\M1-01\\evidence\\surface-390 node scripts/e2e/onboarding-first-session.mjs",
+      "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+      "environment": "Windows x64; Node22.21.0/npm11.20.0; accepted-stage installed dependencies via junctions; unchanged lockfile; no install/upgrade; installed headless Chrome; Expo57 development; anonymous_owner fixture; unconfigured Supabase; synthetic local state only",
+      "source_commit": "71f313ddce12b618ecae2ade5402358c53c6f378",
+      "source_tree": "75963b8d0c0a538ba46a594bd98d9304badc7db1",
+      "status": "FAIL",
+      "exit_code": 1
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/ci-observation-source.json",
+      "sha256": "a32d6a056a344c532b3c035bc17c71b11dc867298b7bc81d5f7ed6b03acf2de6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/ci-pr9-source.json",
+      "sha256": "22d18b604d1ac94ee87c7e29b03649635a634ca8d34806bfc4515a79ec9e8957"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/ci-quality-118671307055.txt",
+      "sha256": "27dfb1c11b49a40312fd963598c4eb33f2b024e87dbeac7c69869a7e184f215d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/ci-quality-jobs-initial.json",
+      "sha256": "e6b25d5ced710f01fa9fc853a76462e61c080b4b493493e6d2f3e0506348f7c9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/ci-security-118671307430.txt",
+      "sha256": "cab8424a8e43c063ef2777ff3ce8a21946bd1532b9f60bcd6aa8993b0215ab6e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/ci-security-jobs.json",
+      "sha256": "f36f3e0b7bdcb2cf53d7457c32032c7cd5402b26d3c601fb66037cfa2de9094e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/governance-initial.txt",
+      "sha256": "bda7f7d58eb01236d7f99bbf8e2ad5a6a8147f2c50a8b5d5718a3a5e47dc7d9a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/governance-measured.receipt.json",
+      "sha256": "47c77554039ab896ad5456041e489803ae3ed9d16371a1ef6a2025d33a2d385f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/governance-measured.txt",
+      "sha256": "717f8bc393825124707e54b3cfbe583b6c4608ff8b687fb8b8c0ba73081f11f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/issued-context-measured.receipt.json",
+      "sha256": "bf8822b0a997ff1d3f803a3deb34d63c4eb999bc4690e2d963002eb5e5a3aec4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/issued-context-measured.txt",
+      "sha256": "397d9b1b0116a176d6648cf81eabe7d100ed8be152a8e99bcc9c16ca1775acda"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/m1-profile-measured.receipt.json",
+      "sha256": "ceb3a70654f309dd88c622622a4f5915cec34c0f76ac503e5a2029bd059a0efe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/m1-profile-measured.txt",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/native-age-source.receipt.json",
+      "sha256": "de87409327582e80a7804649b8a153d1cc567bfe1e4186158053e3ad8ece85e8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/native-age-source.txt",
+      "sha256": "801d854dd4939f88aa63e7b5d01c753d8b6aa023856e63cfb2f46edbd8ac2554"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/private-read-reproduction.txt",
+      "sha256": "bea968d63b4429e239a41388045403a2a05b2ce7cbaa8e005c49432deb1da9f2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-check-exits.json",
+      "sha256": "e5ca4b74ede8c9cd5131911db8ca7cb62303850467323340d3bf46a230da7a2a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-lint.receipt.json",
+      "sha256": "88b3821b9389c289ab0d3005c65ed7049e7729c768f7b6e50fd4277ef74551d6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-lint.txt",
+      "sha256": "f2b66f9d830974aa124c35e4a32dce3443ceceeaa53ce5db34438f42502c99fa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-test.receipt.json",
+      "sha256": "53ab68bfc21dd90449cb8fd2edb0e73a4e80774292464368ce53486f5a5fad82"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-test.txt",
+      "sha256": "b575e892ea8ec71d75bbd42eecfeef3f17feea1b9ff2c13ed2df3b46271f0eaf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-typecheck.receipt.json",
+      "sha256": "6262c75459b0dc60c985f78efdce6e1bd018f9cca95c2c9e3e425383957f9dde"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/root-typecheck.txt",
+      "sha256": "ee26e5311ad52d8462a88fbc6cb1d6c15b4baccfe16fef8222a86239f2c0775d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/safety-initial.txt",
+      "sha256": "10343ee667a642b1d63e4da566fd99479410e17e0688f754c1fcbc79b310aa7c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/01-welcome.json",
+      "sha256": "2eafbf5f19775da181388f182bb25ad34d6876242da07ed099a24e8e8eb568a5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/01-welcome.png",
+      "sha256": "8f0eaf05b5d84fa8e6e524dd6360964d316e75b65ad0e0fa267b410f25df0530"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/01a-direct-protected-age-gate.json",
+      "sha256": "0ec1412066e34d2b49664ff05f6a520a2bbd87079bf53892eb1b4c93eaa92ecc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/01a-direct-protected-age-gate.png",
+      "sha256": "b26a3f7fdcf40ab2d1c818f252da4e73948f08cfe8aa44201494945d01f50e3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/02-age-empty.json",
+      "sha256": "0ec1412066e34d2b49664ff05f6a520a2bbd87079bf53892eb1b4c93eaa92ecc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/02-age-empty.png",
+      "sha256": "b26a3f7fdcf40ab2d1c818f252da4e73948f08cfe8aa44201494945d01f50e3c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/03-age-filled.json",
+      "sha256": "d2744fb34bb145246ce8de0c7a2fc498edf257a913f93139c2c4203506138bc1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/03-age-filled.png",
+      "sha256": "fd9d018262f43ff9683e20021b575cf7d01e1463b7891c88caa4ce8a40bc291c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390/expo-web.log",
+      "sha256": "541bcf47c15cd0982f905529740105361890b0004155c832732acb1ad4a39f0c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-390.receipt.json",
+      "sha256": "08297e52ae83a33cf48633956ef2ee38bf01de6aa982a6b712f42416de4eb00f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/surface-run.txt",
+      "sha256": "aa25f0693cf24e0a3525abf61f4a14130612058eeb6de19b2897b3ce82771ffe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01/evidence/worktree-reconciliation.json",
+      "sha256": "13d1355596d318b5cce49c9cf38379d39eb02040664317bf5cc3cae72dfaa2fd"
+    }
+  ],
+  "scope_matrix": [
+    {
+      "area": "owner/session isolation",
+      "status": "PARTIAL_TESTED",
+      "code": [
+        "apps/mobile/src/lib/storage/privateKV.ts",
+        "apps/mobile/src/lib/auth/AuthProvider.tsx",
+        "apps/mobile/src/lib/auth/localAccountIsolation.ts"
+      ],
+      "invariant": "Delayed non-health private single/batch reads reject across private account boundary; existing ownership/publication tests retained.",
+      "evidence": [
+        "root-test",
+        "evidence/private-read-reproduction.txt"
+      ],
+      "remaining": "Complete integrated A-to-B/sign-out/guest upgrade surface matrix."
+    },
+    {
+      "area": "consent/withdrawal/deletion",
+      "status": "PARTIAL_TESTED",
+      "code": [
+        "apps/mobile/src/features/onboarding/AgePolicyGate.tsx",
+        "apps/mobile/src/features/healthConsent/lifecycle.ts",
+        "apps/mobile/src/features/settings/actions.ts"
+      ],
+      "invariant": "Age-check closure clears global health authority; existing withdrawal/deletion source tests retained.",
+      "evidence": [
+        "root-test"
+      ],
+      "remaining": "Complete pending/retry audit and privacy/deletion/export/subscription exits during re-verification."
+    },
+    {
+      "area": "adult18",
+      "status": "SOURCE_TESTED_SURFACE_FAILED",
+      "code": [
+        "apps/mobile/src/features/onboarding/ageGate.ts",
+        "apps/mobile/src/features/onboarding/ageGateStore.ts",
+        "apps/mobile/modules/native-age-assurance/ios/NativeAgeAssuranceModule.swift"
+      ],
+      "invariant": "Birthday/invalid dates and actual old16+ receipt re-verification without data deletion; tuple draft-v2-adult18 hash; unchanged minimized receipt schema1; draft legal review; native invocation closed.",
+      "evidence": [
+        "root-test",
+        "native-age-source",
+        "surface-390"
+      ],
+      "remaining": "Web valid-DOB Continue did not reach consent; root cause unresolved."
+    },
+    {
+      "area": "private store/manual Shelf",
+      "status": "PARTIAL_TESTED",
+      "code": [
+        "apps/mobile/src/features/shelf/store.ts",
+        "apps/mobile/src/features/shelf/ShelfDataAvailabilityGate.tsx",
+        "apps/mobile/src/lib/storage/privateKV.ts"
+      ],
+      "invariant": "Read/parse failures no longer return empty Shelf success; existing serialized mutation, double submission and recovery tests retained.",
+      "evidence": [
+        "root-test"
+      ],
+      "remaining": "Manual add/edit/archive/remove/offline/retry/persistence/owner-switch surface matrix; native storage unperformed."
+    }
+  ],
+  "axes": {
+    "source": "PARTIAL_TESTED_NOT_COMPLETE",
+    "integration": "BLOCKED",
+    "surface": "FAILED_EXPO_WEB_390_ONBOARDING_TIMEOUT",
+    "physical_device": "NOT_RUN",
+    "live_provider": "NOT_RUN",
+    "qualified_review": "NOT_RUN",
+    "clinical": "NOT_ADMITTED",
+    "commercial": "BLOCKED",
+    "release": "BLOCKED"
+  },
+  "blockers": [
+    "M1-WEB-01:390x844 real Expo web flow timed out after valid synthetic DOB Continue, before consent. App/fixture/harness cause unknown; last pre-submit screenshot and failure log retained.",
+    "M1-RIGHTS-01: Complete safe withdrawal/export/deletion/subscription exits during age re-verification; no automatic purge added.",
+    "M1-MATRIX-01: Full integrated race/recovery and manual Shelf surface matrix incomplete.",
+    "CI at measured source: Quality repository job failed stale Phase4 worklist; DB job still running in observation. Security failed inventory and OSV date/advisory checks. iOS source-only success. Final delivery CI requires separate readback.",
+    "Context HIGH: mandatory fresh-chat rotation before further source work. Same M1 task partial; no self-acceptance/new task/main promotion."
+  ],
+  "context_health": {
+    "level": "HIGH",
+    "compaction_observed": false,
+    "fresh_chat_required": true,
+    "reason": "Long initial subsystem trace and verified partial source checkpoint."
+  }
+}

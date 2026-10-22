@@ -1,0 +1,8 @@
+# Stage and carrier protocol — M1 continuation
+One issued roadmap task: M1-01, iteration CONT-01. One active writer. Existing branch `stage/m1-retained-safety` continues from `c0d97372212fd94e168b1c598b603381ccb9f9cc`; no new stage or reset to main.
+The founder opens a fresh Codex chat because the predecessor reported HIGH context, then uploads the single CONT-01 context ZIP and pastes the execution prompt. Do not include chat-creation commands in the engineer prompt.
+Preserve stopped predecessor state and all dirty/ignored dependency arrangements. Before editing, fetch refs and reconcile safely. If other work appears, isolate it; do not reset, clean or overwrite it. Only synthetic disposable test state may be reset by the reviewed test harness.
+Every session ends with safe authorized code/evidence plus tracked root ONSKIN_BRAIN_HANDOFF.txt committed and normally pushed to origin/stage/m1-retained-safety, including partial or blocked sessions. Main and prior M0 stage remain untouched. PR9 stays draft/unmerged. No force pushes or rewritten shared history.
+The Brain alone decides later exact-head promotion. Task acceptance is not promotion, and green CI is not protected/privacy/research/release admission. Separate founder approvals for protected external actions, spending, submission and release remain mandatory.
+The founder normally returns only “Codex is done.” Put full sanitized evidence/report in the branch. Report PUSH_BLOCKED honestly if transport fails.
+Use fresh instances at major subsystem boundaries, HIGH context/compaction, two unsuccessful fix cycles, or three accepted substantive tasks. Capture safe dirty state first; no concurrent writer. No background monitoring promise.

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "npm",
+    "ci",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "started": "2026-10-21T11:24:12.981944+00:00",
+  "finished": "2026-10-21T11:24:32.525048+00:00",
+  "raw_exit": 0,
+  "output_sha256": "03030643d8d5dadc7e11ac771017e4ee4d24e072091cc4c944ca0e96d2c0add8",
+  "output_bytes": 715,
+  "environment_overrides": null,
+  "source_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "source_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "admission": "NONE"
+}

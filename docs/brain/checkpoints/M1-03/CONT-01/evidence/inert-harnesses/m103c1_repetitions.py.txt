@@ -1,0 +1,4 @@
+import pathlib,sys,shutil
+from m103c1_run import run,P,STAGE
+root=P/'m103c1-isolated'; phase=sys.argv[1]
+for i in range(1,6):run(phase+'-observer-'+str(i),['npm.cmd','--workspace','apps/mobile','run','test','--','src/features/notifications/transaction.cont01.test.ts'],root)

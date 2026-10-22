@@ -1,0 +1,8 @@
+npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+> layerwell@0.1.0 postinstall
+> node scripts/postinstall.mjs
+
+{"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+
+added 1040 packages in 27s

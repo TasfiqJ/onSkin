@@ -1,0 +1,3 @@
+# Report and evidence requirements
+
+Prefer Markdown human entrypoints and strict JSON machine receipts. For each test/scan include command, args, env, started/completed UTC, source commit and tree, tool hashes, exit code (integer or explicit not run), pass/fail/skip counts, evidence SHA, and reason. Preserve measured vs delivery heads and PR merge-test checkout. Source-reported, Brain independently reproduced, provider-observed and UNKNOWN must be distinct. Any fail/skip/pending/unavailable stays so. Git-committed artifacts must exist as matching single-link regular blobs on the pushed branch; no local-only logs substituted. The original report is not rewritten; new successor references historical bytes/omissions.

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python3\", \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", \"scripts/brain\", \"-p\", \"test_*.py\", \"-v\"]",
+  "working_directory": "/root/onskin-quality-recovery02-source",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+  "source_commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+  "source_tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+  "started_utc": "2026-10-22T15:05:23.542861+00:00",
+  "duration_seconds": 565.341,
+  "exit_code": 0,
+  "status": "PASS",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/final-governance.log",
+    "sha256": "2445a905b8abcb6920b6a4318266299fe132238251c0d6baf189b75556184720"
+  },
+  "admission": "NONE",
+  "counts": {
+    "passed": 83,
+    "failed": 0,
+    "skipped": 2
+  }
+}

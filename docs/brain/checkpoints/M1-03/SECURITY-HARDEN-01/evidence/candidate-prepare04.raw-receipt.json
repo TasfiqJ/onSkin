@@ -1,0 +1,20 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "scripts/security_readiness/m103/candidate.py",
+    "prepare",
+    "/root/onskin-overnight01-sh01-candidate04",
+    "--wheel-cache",
+    "/root/onskin-overnight01-sh01-candidate03"
+  ],
+  "started": "2026-10-21T11:37:07.569405+00:00",
+  "finished": "2026-10-21T11:38:13.788662+00:00",
+  "raw_exit": 0,
+  "output_sha256": "d9623af3b513f6ef882fecec04237028203a4f3c468a982fa601e299474a4542",
+  "output_bytes": 49,
+  "environment_overrides": {},
+  "source_commit": "8babdad11791496ad6e8c45154b3b173bdddd36e",
+  "source_tree": "cf2ff58cc140956d8c3cda4a11c703733ebe6544",
+  "admission": "NONE"
+}

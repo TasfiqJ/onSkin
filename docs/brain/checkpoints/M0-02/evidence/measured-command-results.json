@@ -1,0 +1,90 @@
+[
+  {
+    "name": "governance-py39",
+    "command": "python -B -m unittest discover -s scripts/brain -p test_*.py -v",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "governance-py312",
+    "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B -m unittest discover -s scripts/brain -p test_*.py -v",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "validate",
+    "command": "python -B scripts/brain/brain.py validate",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "mirrors",
+    "command": "python -B scripts/brain/brain.py mirrors --check",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "pack-py39",
+    "command": "python -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements-final\\M0-02-py39.zip",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "pack-py312",
+    "command": "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements-final\\M0-02-py312.zip",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "verify-pack",
+    "command": "python -B scripts/brain/brain.py verify-pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements-final\\M0-02-py39.zip",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "reject-unissued",
+    "command": "python -B scripts/brain/brain.py pack --task M1-01 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements-final\\unissued.zip",
+    "exit": 1,
+    "expected_exit": 1,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "reject-traversal",
+    "command": "python -B scripts/brain/brain.py pack --task ../M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\m0-02-measurements-final\\escape.zip",
+    "exit": 1,
+    "expected_exit": 1,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "reject-input-output",
+    "command": "python -B scripts/brain/brain.py pack --task M0-02 --output C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage\\should-not-exist.zip",
+    "exit": 1,
+    "expected_exit": 1,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  },
+  {
+    "name": "release-inventory",
+    "command": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\tools\\node-v20.20.2-win-x64\\node.exe --test \"--test-name-pattern=central downstream inventory\" scripts/launch/governed-evidence-chain.test.mjs",
+    "exit": 0,
+    "expected_exit": 0,
+    "snapshot_commit": "c0bd7c27b9cddfe7b771d6756c4f5fa887a84a2c",
+    "snapshot_tree": "d60d4a591653b141964680f153a8d82937d2984f"
+  }
+]

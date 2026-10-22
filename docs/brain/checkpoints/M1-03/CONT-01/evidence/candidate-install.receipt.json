@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd ci --no-audit --no-fund",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "a284020c7785757842c0c07b5010e412c00af895",
+  "source_tree": "51a9126a140ba3be9226b580f9a100a9f106e1b8",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/candidate-install.txt",
+    "sha256": "a5d21f44b2d52134550570df22f2dba8a113473da472dcd3459e8283d082e247"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T01:09:29.226267+00:00",
+  "finished_at_utc": "2026-10-21T01:10:18.973994+00:00",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "ci",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained",
+  "installation_source_note": "Git HEAD was a284020 at install start with two own generated dependency files dirty. Exact candidate bytes were subsequently committed as89c665880ef1bb23e7358fc0146429e525c76508. This is install execution evidence, not clean source execution at a284020.",
+  "installed_input_sha256": {
+    "package-lock.json": "7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c",
+    "apps/catalog-operator-console/package.json": "61b4d3b51ae7baafe47c8902ad5dcb2cde4f975543eb3d867eb051d46e3ac67b"
+  },
+  "installed_inputs_commit": "89c665880ef1bb23e7358fc0146429e525c76508"
+}

@@ -1,0 +1,47 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications/transaction.cont01.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103c1-isolated/apps/mobile
+
+stderr | src/features/notifications/transaction.cont01.test.ts > permission revoked at native settlement compensates and cannot claim scheduling
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/transaction.cont01.test.ts (10 tests | 1 failed) 186ms
+   × permission revoked at native settlement compensates and cannot claim scheduling 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > permission revoked at native settlement compensates and cannot claim scheduling
+AssertionError: expected undefined to be 'permission_denied' // Object.is equality
+
+- Expected:
+"permission_denied"
+
++ Received:
+undefined
+
+ ❯ src/features/notifications/transaction.cont01.test.ts:195:37
+    193|   expect(ports.native.size).toBe(0);
+    194|   await act(async () => { await mutation.mutateAsync({ amEnabled: true…
+    195|   expect(mutation.data?.scheduling).toBe('permission_denied');
+       |                                     ^
+    196|   expect(ports.native.size).toBe(0);
+    197| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  21:07:45
+   Duration  716ms (transform 173ms, setup 0ms, import 351ms, tests 186ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Documents\ChatGPT\MasterV2Code\m103c1-isolated\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Documents\ChatGPT\MasterV2Code\m103c1-isolated\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/notifications/transaction.cont01.test.ts

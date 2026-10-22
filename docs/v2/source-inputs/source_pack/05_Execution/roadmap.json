@@ -1,0 +1,1238 @@
+{
+  "schema_version": 1,
+  "current_task": "M0-01",
+  "engineering_phase_order": [
+    "P0",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9"
+  ],
+  "task_order_is_priority_not_automatic_release": true,
+  "research_wait_rule": "Proceed only with independent ready task. Never complete blocked prerequisites; later module sequence may change only via explicit evidence-based ADR.",
+  "first_internal_testflight": "M2-04",
+  "first_external_usability_testflight": "M3-04",
+  "first_quantitative_claim": "M5-01",
+  "first_quantitative_change": "M5-02",
+  "tasks": [
+    {
+      "id": "M0-01",
+      "phase": "P0",
+      "title": "Fresh-main baseline and Quality diagnosis",
+      "depends_on": [],
+      "status": "READY_TO_ISSUE",
+      "deliverables": [
+        "Exact SHA/tree and intervening diff",
+        "Failing reset-job diagnosis/reproduction",
+        "Narrow non-protected fix only if justified; otherwise protected packet",
+        "Structured report/evidence bundle"
+      ],
+      "acceptance": [
+        "No unexplained dirty changes",
+        "No count/hash/expiry admission bypass",
+        "Current CI outcomes and skipped tests explicit",
+        "First-pass root-cause report is useful even if protected blocker prevents a fix"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M0-02",
+      "phase": "P0",
+      "title": "Install unified planning authority and durable state",
+      "depends_on": [
+        "M0-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Adoption ADR and source-of-truth namespace",
+        "376/202/25/38 crosswalks with original evidence",
+        "Task builder and completion schema"
+      ],
+      "acceptance": [
+        "No runtime feature enabled",
+        "No legacy external gate marked complete",
+        "Generated validators/mirrors consistent"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M1-01",
+      "phase": "P1",
+      "title": "Retained identity, consent and storage safety",
+      "depends_on": [
+        "M0-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Owner/session/withdrawal/deletion barriers",
+        "Adult18+ alignment",
+        "Manual Shelf and recovery regression fixes"
+      ],
+      "acceptance": [
+        "Owner-switch/no-content-flash negative tests",
+        "No forced login or loss of existing account data"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M1-02",
+      "phase": "P1",
+      "title": "Retained Today, private diary and reminders",
+      "depends_on": [
+        "M1-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Durable routine/checkoff/cycle outbox",
+        "Local encrypted photos/cleanup",
+        "Local reminder lifecycle"
+      ],
+      "acceptance": [
+        "Offline/retry/idempotency pass",
+        "No unsupported trend or clinical advice claims",
+        "Real-only tests remain separate"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M1-03",
+      "phase": "P1",
+      "title": "Resolve protected baseline and retained release-source debt",
+      "depends_on": [
+        "M1-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Actual DB06/DB08/R2B custody and replay evidence",
+        "Green applicable baseline CI or explicitly blocked dependent work",
+        "Content/privacy review packets"
+      ],
+      "acceptance": [
+        "No fake re-attestation or expiry renewal",
+        "Current schema replay/privilege results exact",
+        "Unreviewed positive guidance remains unavailable"
+      ],
+      "external_gates": [
+        "Protected replay/acceptance authority where required"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M2-01",
+      "phase": "P2",
+      "title": "Owner ledger, versioned formula and actual/intended contracts",
+      "depends_on": [
+        "M1-03"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Immutable entity/event contracts",
+        "Additive migrations and compatibility adapters",
+        "Idempotent backfill and reconciliation"
+      ],
+      "acceptance": [
+        "No historical formula overwrite",
+        "CAS/idempotency/deletion-win tests",
+        "Rollback-compatible reads"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M2-02",
+      "phase": "P2",
+      "title": "Optional exception logging and consented text continuity",
+      "depends_on": [
+        "M2-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Intended versus actual UI",
+        "Optional exceptions and corrections",
+        "Optional text-sync/privacy adapter"
+      ],
+      "acceptance": [
+        "Silence is unknown",
+        "Same-owner linking proven",
+        "Cross-owner/grant negative tests"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M2-03",
+      "phase": "P2",
+      "title": "Safe private diary, free authority and native QA candidate",
+      "depends_on": [
+        "M2-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Working core diary/history/export",
+        "Separate free quota and paid receipt authority",
+        "Native device test packet"
+      ],
+      "acceptance": [
+        "Local artifact deletion/cancellation",
+        "Free quota never grants Plus",
+        "Unsupported/provider-unknown flows unavailable"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M2-04",
+      "phase": "P2",
+      "title": "First internal TestFlight cut",
+      "depends_on": [
+        "M2-03"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Immutable signed build packet",
+        "Internal eligible tester cohort",
+        "Exact physical-device smoke report"
+      ],
+      "acceptance": [
+        "CI at build SHA",
+        "Real install/relaunch/photo/privacy checks",
+        "Clinical/pro capabilities closed"
+      ],
+      "external_gates": [
+        "Apple membership/signing",
+        "Physical iPhone access",
+        "Truthful privacy/build declarations"
+      ],
+      "spend_trigger": "APPLE_ENROLLMENT_WHEN_BUILD_READY",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M3-01",
+      "phase": "P3",
+      "title": "Native capture and measurement platform",
+      "depends_on": [
+        "M2-03"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Native capture bridge/profile registry",
+        "Per-region quality and typed result contracts",
+        "Local artifact/cancel/mirror tests"
+      ],
+      "acceptance": [
+        "No fake RAW/depth claims",
+        "Two candidate hardware profiles assessed",
+        "Unsupported measurement falls back to diary"
+      ],
+      "external_gates": [
+        "Physical hardware for G1; source can proceed first"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M3-02",
+      "phase": "P3",
+      "title": "J05 engineering baseline and model/evaluation interface",
+      "depends_on": [
+        "M3-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "J05 union/coverage arithmetic",
+        "Classical baseline and isolated research candidate interface",
+        "J05-only maps/templates and independent evaluation harness"
+      ],
+      "acceptance": [
+        "Empty/overlap/denominator/orientation tests",
+        "No trained-data or accuracy claim",
+        "Native/runtime interface parity fixtures"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M3-03",
+      "phase": "P3",
+      "title": "J05 pilot preregistration and authorized collection readiness",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Frozen pilot target/capture/annotation plan",
+        "Rights and split manifest specification",
+        "Actual quotations and qualified-owner action packet"
+      ],
+      "acceptance": [
+        "Disjoint people/scope defined",
+        "Collection does not start on unapproved consent",
+        "No JANUS compatibility requirement for independent target"
+      ],
+      "external_gates": [
+        "Clinical/statistical/rights review",
+        "Research site/participant permissions",
+        "Approved pilot funding"
+      ],
+      "spend_trigger": "PILOT_QUOTES_BEFORE_COLLECTION",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M3-04",
+      "phase": "P3",
+      "title": "First external usability TestFlight cut",
+      "depends_on": [
+        "M2-04",
+        "M3-01",
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Safe photo diary/capture candidate",
+        "5–10 then15–30 invited usability testers",
+        "Consent/privacy/support and beta review packet"
+      ],
+      "acceptance": [
+        "Unvalidated numeric measurements hidden",
+        "No P0/P1 defects",
+        "Real feedback retained, not simulated"
+      ],
+      "external_gates": [
+        "Apple Beta App Review",
+        "Qualified exact-scope privacy/claims review",
+        "Real testers/support route"
+      ],
+      "spend_trigger": "HOSTED_DATA_ONLY_IF_USED",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M4-01",
+      "phase": "P4",
+      "title": "Complete consumer decisions and factual appointment brief",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Formula-aware basic/advanced decision workspace",
+        "Owner-confirmed what-if and free standard brief",
+        "Accessible recovery and content review packet"
+      ],
+      "acceptance": [
+        "Unknown inputs remain unknown",
+        "No product-effect causality",
+        "No hosted-media dependence"
+      ],
+      "external_gates": [
+        "Qualified review before positive advice exposure"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M4-02",
+      "phase": "P4",
+      "title": "Independent client web and workspace grants",
+      "depends_on": [
+        "M4-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Dedicated professional/client web",
+        "Roles and one active scoped practice",
+        "Revocation/owner continuity"
+      ],
+      "acceptance": [
+        "No catalog-console reuse as fake workspace",
+        "Text-only core passes without media",
+        "Grant epoch recheck at publication"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M4-03",
+      "phase": "P4",
+      "title": "Immutable pro plans, acknowledgement and queue",
+      "depends_on": [
+        "M4-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Plans/templates and acknowledgement",
+        "Material-event queue/dedup/reopen",
+        "Staff capacity/digest limits"
+      ],
+      "acceptance": [
+        "No automatic mutation of actual routine",
+        "No emergency monitoring promise",
+        "Race/revocation/capacity negatives"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M4-04",
+      "phase": "P4",
+      "title": "Pre-visit and offboarding continuity",
+      "depends_on": [
+        "M4-03"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Pre-visit report",
+        "Relationship switching and retained history",
+        "Deletion/export/retention operations"
+      ],
+      "acceptance": [
+        "Independent owner login survives practice exit",
+        "Export irrevocability disclosed",
+        "No unsupported media in hosted grants"
+      ],
+      "external_gates": [],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M4-05",
+      "phase": "P4",
+      "title": "Separate consumer/workspace billing and capacity",
+      "depends_on": [
+        "M4-04"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "StoreKit/RevenueCat and workspace sandbox lifecycle",
+        "Free quota distinctions",
+        "Capacity/downgrade/refund ordering"
+      ],
+      "acceptance": [
+        "Free operations survive lapse",
+        "Linked client never receives Plus implicitly",
+        "No price/SKU migration without authority"
+      ],
+      "external_gates": [
+        "Actual provider/merchant/sandbox device evidence before live use"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M4-06",
+      "phase": "P4",
+      "title": "Whole-core QA and release-specific admission packet",
+      "depends_on": [
+        "M4-05"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "C01–C12/P01–P06 evidence-axis ledger",
+        "Source/provider/device/expert/restore/support packets",
+        "Consumer-only/pro-capability admission separated"
+      ],
+      "acceptance": [
+        "No public launch from source-only green",
+        "Supported surfaces/accessibility recovery pass",
+        "Hosted promises have funded coverage/restore"
+      ],
+      "external_gates": [
+        "Actual hosting/account/reviewer/operator evidence before corresponding exposure"
+      ],
+      "spend_trigger": "LIVE_HOSTING_AND_COVERAGE_BEFORE_REAL_DATA",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M5-01",
+      "phase": "P5",
+      "title": "Validate and admit J05 single-scan claims",
+      "depends_on": [
+        "M3-03",
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Rights-cleared frozen candidate/data splits",
+        "Independent per-profile/scope validation",
+        "Exact-build claim admission"
+      ],
+      "acceptance": [
+        "G1/G2/G3/G5 pass",
+        "J05 unvalidated states hidden",
+        "Failed groups/configurations not silently included"
+      ],
+      "external_gates": [
+        "Paid/authorized research and independent validation",
+        "Claims/privacy/build review"
+      ],
+      "spend_trigger": "CAPTURE_DATA_LABELS_COMPUTE_ONLY_ON_APPROVED_EXPERIMENT",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "M5-02",
+      "phase": "P5",
+      "title": "Validate and admit J05 longitudinal change",
+      "depends_on": [
+        "M5-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Common-support comparison",
+        "No-change and genuinely-changing evaluation",
+        "Version migration and conditional noise policy"
+      ],
+      "acceptance": [
+        "G4 passes plus G1/G2/G3/G5",
+        "Multiplicity and false-change assessment",
+        "No product causality"
+      ],
+      "external_gates": [
+        "Independent longitudinal evidence"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated"
+    },
+    {
+      "id": "MOD-J14",
+      "phase": "P5",
+      "title": "J14 Face-zone maps and summaries",
+      "depends_on": [
+        "M3-02",
+        "M5-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J14_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "M5-01",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J27",
+      "phase": "P5",
+      "title": "J27 Personalized result explanations",
+      "depends_on": [
+        "M3-02",
+        "M5-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J27_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J14",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J03",
+      "phase": "P5",
+      "title": "J03 Wrinkles and fine lines",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J03_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J27",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J09",
+      "phase": "P5",
+      "title": "J09 Tone evenness and representative color",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J09_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J03",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J24",
+      "phase": "P6",
+      "title": "J24 Under-eye darkness appearance",
+      "depends_on": [
+        "M3-02",
+        "MOD-J09"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J24_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J09",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J10",
+      "phase": "P6",
+      "title": "J10 Visible redness",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J10_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J24",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J11",
+      "phase": "P6",
+      "title": "J11 Texture / smoothness appearance",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J11_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J10",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J01",
+      "phase": "P6",
+      "title": "J01 Visible pores",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J01_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J11",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J04",
+      "phase": "P6",
+      "title": "J04 Smile-fold appearance",
+      "depends_on": [
+        "M3-02",
+        "MOD-J03"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J04_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J01",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J13",
+      "phase": "P6",
+      "title": "J13 Jawline geometry",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J13_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J04",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J02",
+      "phase": "P7",
+      "title": "J02 Firmness / laxity appearance",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J02_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J13",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J07",
+      "phase": "P7",
+      "title": "J07 Oiliness / sebum estimate",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J07_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J02",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J19",
+      "phase": "P7",
+      "title": "J19 Dry/oily skin-type axis",
+      "depends_on": [
+        "M3-02",
+        "MOD-J07"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J19_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J07",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J21",
+      "phase": "P7",
+      "title": "J21 Pigmentation-type axis",
+      "depends_on": [
+        "M3-02",
+        "M5-01"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J21_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J19",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J22",
+      "phase": "P7",
+      "title": "J22 Wrinkle-type axis",
+      "depends_on": [
+        "M3-02",
+        "MOD-J03"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J22_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J21",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J17",
+      "phase": "P7",
+      "title": "J17 Regional left-right differences",
+      "depends_on": [
+        "M3-02",
+        "MOD-J14"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J17_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J22",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J15",
+      "phase": "P7",
+      "title": "J15 Age-group reference comparisons",
+      "depends_on": [
+        "M3-02",
+        "MOD-J14"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J15_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J17",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J18",
+      "phase": "P7",
+      "title": "J18 Appearance-age summary",
+      "depends_on": [
+        "M3-02",
+        "MOD-J15",
+        "MOD-J03",
+        "M5-01",
+        "MOD-J09"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J18_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J15",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J06",
+      "phase": "P8",
+      "title": "J06 Predicted UV-associated pigmentation",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J06_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J18",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J12",
+      "phase": "P8",
+      "title": "J12 Estimated skin hydration",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J12_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J06",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J16",
+      "phase": "P8",
+      "title": "J16 T-zone / cheek oil-moisture balance",
+      "depends_on": [
+        "M3-02",
+        "MOD-J07",
+        "MOD-J12"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J16_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J12",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J23",
+      "phase": "P9",
+      "title": "J23 Acne-related vendor subtype",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J23_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J16",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J20",
+      "phase": "P9",
+      "title": "J20 Sensitivity-related vendor label",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J20_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J23",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J25",
+      "phase": "P9",
+      "title": "J25 Combined skin profile",
+      "depends_on": [
+        "M3-02",
+        "MOD-J19",
+        "MOD-J20",
+        "MOD-J21",
+        "MOD-J22",
+        "MOD-J23",
+        "MOD-J24"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J25_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J20",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J26",
+      "phase": "P9",
+      "title": "J26 UV-sensitivity gauge",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J26_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J25",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    },
+    {
+      "id": "MOD-J08",
+      "phase": "P9",
+      "title": "J08 Predicted porphyrin-related output",
+      "depends_on": [
+        "M3-02"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "Requested/adopted research contract",
+        "Module-specific source and eval artifacts",
+        "Scoped validation/admission decision"
+      ],
+      "acceptance": [
+        "Research pack supplied and reconciled",
+        "Unavailable parents/results propagate",
+        "No borrowed accuracy or undefined vendor mapping"
+      ],
+      "external_gates": [
+        "J08_Important_Documents.zip",
+        "Independent feature validation"
+      ],
+      "spend_trigger": "NONE",
+      "owner": "Codex implementation; Brain review; named external owners where gated",
+      "sequencing_predecessor": "MOD-J26",
+      "sequence_rule": "Priority predecessor, not a measurement dependency. Default exact queue applies; a documented research blocker/no-go permits only an independent task via a Brain ADR."
+    }
+  ]
+}

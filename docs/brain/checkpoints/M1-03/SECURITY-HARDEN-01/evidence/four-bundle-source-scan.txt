@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/root/onskin-sh01-measured-8e8983f5/scripts/security_readiness/m103/source_scan.py", line 202, in <module>
+    sys.exit(run(pathlib.Path(a.candidate),pathlib.Path(a.repo),a.commit,pathlib.Path(a.work),pathlib.Path(a.rules),pins,a.tool_manifest_sha256))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-measured-8e8983f5/scripts/security_readiness/m103/source_scan.py", line 138, in run
+    code=sealed_run(candidate,tool,inventory,repo,work,local,digest,parse,out,err,180)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/onskin-sh01-measured-8e8983f5/scripts/security_readiness/m103/source_scan.py", line 107, in sealed_run
+    guard.check()
+  File "/root/onskin-sh01-measured-8e8983f5/scripts/security_readiness/m103/integrity.py", line 81, in check
+    require(not events,'INPUT_MUTATION_OBSERVED_OR_WATCH_OVERFLOW')
+  File "/root/onskin-sh01-measured-8e8983f5/scripts/security_readiness/m103/integrity.py", line 10, in require
+    if not ok: raise ValueError(reason)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: INPUT_MUTATION_OBSERVED_OR_WATCH_OVERFLOW

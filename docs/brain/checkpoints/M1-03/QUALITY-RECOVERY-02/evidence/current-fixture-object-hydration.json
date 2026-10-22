@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "required_unique_objects": 192,
+  "missing_before": 1,
+  "objects": [
+    {
+      "git_blob": "62216ad60a04edd5b8996ed563a598168b03a6de",
+      "sha256": "08d6befbe87b684b2115854758e1f8e1044f15d970e6b90c78a2655215ed2e55",
+      "bytes": 13797
+    }
+  ],
+  "admission": "NONE",
+  "scope": "Git object hydration only; no checkout, ref, source, policy or fixture change",
+  "missing_after": 0
+}

@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "purpose": "Every recorded diagnostic and successful run; no failed run erased. Current matrix executions are separately selected in completion-report.json. Counts overlap; do not add.",
+  "executions": [
+    {
+      "id": "browser-cross-daily-390-final",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final.receipt.json",
+      "sha256": "d42921f4b36e4bd06df3931aa81f70b7705076d572ee82c777e066d7333383a4",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390-final.txt",
+        "sha256": "c93204000ad8ebf4ce93e5fc16fc3865c29a40728ab0c760e964863eb0579636"
+      }
+    },
+    {
+      "id": "browser-cross-daily-390",
+      "status": "FAIL",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390.receipt.json",
+      "sha256": "3956548ec3fe792d8b22b5e8bb5c3dc6e575fea6ce6fee4527429423db4b27bb",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-cross-daily-390.txt",
+        "sha256": "1ab4076656d8aadd74f28de862a2961ef82c5c6c6cbafcd326558f18830e1b1f"
+      }
+    },
+    {
+      "id": "browser-daily-375",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375.receipt.json",
+      "sha256": "06b938d85d25423fdce8f0dac8f8971b48666db1a73c00d942323219e6b58120",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-375.txt",
+        "sha256": "bd8c0c2068406ee61fd8e754e3e1f7dc6f7957a032ca0b4235872bd5ef2a531e"
+      }
+    },
+    {
+      "id": "browser-daily-390-attempt2",
+      "status": "FAIL",
+      "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+      "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2.receipt.json",
+      "sha256": "77f3387c9cf422e77d95a7aba99139f782c08657bbeb20870e43866ce5ac0ad0",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt2.txt",
+        "sha256": "350920b461e4e6b59bdf7c49ddd3baa74eea8325e7a49aad2853488facc1d7b3"
+      }
+    },
+    {
+      "id": "browser-daily-390-attempt3",
+      "status": "FAIL",
+      "source_commit": "d9fb219e84f1d6e801004dff39bbed4ecc26fcf2",
+      "source_tree": "59b170a32ba97bdf64614133912a3b92c3f1ee11",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3.receipt.json",
+      "sha256": "f170c13ee533d9140ba9ffc89c872f082f9a290ae5a2ac2d6418a4fa5f194d8d",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt3.txt",
+        "sha256": "a320a9448e741dd7ff6bab7260d786fb08ed8d6c603dfc05dbac3e5d23e9e53d"
+      }
+    },
+    {
+      "id": "browser-daily-390-attempt4",
+      "status": "FAIL",
+      "source_commit": "c75e8fd25064930fe31f8fdfecc1a3f1d343b99f",
+      "source_tree": "60613d90ae778d2b14bd3573808ca4c0497fd800",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4.receipt.json",
+      "sha256": "3472f2b979d260277197e3e54bb42a10d0c24c6ee76777569490a4fccdff93a1",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt4.txt",
+        "sha256": "c88bb841c151051b346ddd7ccc96ad89607438a082fb013ffcf7c5261ab089a1"
+      }
+    },
+    {
+      "id": "browser-daily-390-attempt5",
+      "status": "FAIL",
+      "source_commit": "aab5272fd90840fad52e01870c0715f4a03f27b4",
+      "source_tree": "fe46ace343efd6617bfeba74a9db1ed6414aae4a",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5.receipt.json",
+      "sha256": "b68833d0af4255dfd8b9cce46894a24a0b32414e694d77c9f3ba33333e0cf713",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt5.txt",
+        "sha256": "df59ba6ab44f9253172257a4d62c583a0a37df854d8c9366edb0f0c0e6e9e99e"
+      }
+    },
+    {
+      "id": "browser-daily-390-attempt6",
+      "status": "FAIL",
+      "source_commit": "d45dbc82bdde384bdc1f0da9a70eb8e0b01d57eb",
+      "source_tree": "e3b5322449088aab5be03471c85ec78db43a3dc4",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6.receipt.json",
+      "sha256": "8a80129e8d73df737f36571d70564bfee9030c47ebe911149d7f2f05bedf758d",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390-attempt6.txt",
+        "sha256": "529432f5b1f4b39ebcd3a81f61ce70f94e25f2b21b269a371b82c557b4fa5bce"
+      }
+    },
+    {
+      "id": "browser-daily-390",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390.receipt.json",
+      "sha256": "bfdfb92f47639abbe6c335fc330eaa7f9d2799410eeff1fdfa2ce29665555af7",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-390.txt",
+        "sha256": "db6db8036d791267c3f2f7d48c8659e8d48a4529c6a8e0fc8154a7e0452cdf91"
+      }
+    },
+    {
+      "id": "browser-daily-430",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430.receipt.json",
+      "sha256": "cb9bff7a9865a495e8fb35182cd22e7d8b886314563c99364abda48cef221eab",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-daily-430.txt",
+        "sha256": "2cef10f1ec499486493dc2edae1933d2853af0f727e399281fc986e7dc95ea6c"
+      }
+    },
+    {
+      "id": "browser-discovery-390",
+      "status": "FAIL",
+      "source_commit": "a3c776284889ab2a8b4f838d593fdfaf405c6690",
+      "source_tree": "bd30ca7a72d705a69876d74ce7a93c9ca00b4924",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390.receipt.json",
+      "sha256": "0e38477273d282800c5cbd4a76a7a47072acb25b4725925567332ffd09a5b167",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-discovery-390.txt",
+        "sha256": "d7d5ba43d5cce4e5f7d1d2d3eb054a572fe4ce0d2d65acd655574daf3e171ed5"
+      }
+    },
+    {
+      "id": "browser-retained-390",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390.receipt.json",
+      "sha256": "2898a7a29a67f3b7f902a3a1c7f51136570767de4752ff0038a0a0f0c81d6638",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-retained-390.txt",
+        "sha256": "84741126fdb1800815945348309f96e644522e11a8ac3933d9f3878ff9ebe0d6"
+      }
+    },
+    {
+      "id": "browser-signout-390",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390.receipt.json",
+      "sha256": "9d72de90a60c99ac5e3617f5903f041a4d9f3c22faedb89ea787b485bf9aeb06",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/browser-signout-390.txt",
+        "sha256": "0e6b56de055b8bc8ad1c3cd48a50a2ec957e57d5892d32a11429e36897c93083"
+      }
+    },
+    {
+      "id": "causal-red",
+      "status": "FAIL",
+      "source_commit": "7f469fffac4b629c8edadbec888c7984685c3faf",
+      "source_tree": "9ece1333c702354127325d5aa024ec2a3b266a60",
+      "exit_code": 1,
+      "counts": {
+        "passed": 73,
+        "failed": 5,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/causal-red.receipt.json",
+      "sha256": "3ad2d9b372177dffd3819756f063d56f5f48ee9d46e56fb1a3ddfaaede68c47b",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/causal-red.txt",
+        "sha256": "8628cc6e2d0219c7b16bbd595c3e4db7ca6963b30e7b57c5a26fc627ef4d4049"
+      }
+    },
+    {
+      "id": "focused-final",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": {
+        "passed": 700,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/focused-final.receipt.json",
+      "sha256": "c1aae635c5e563911b2db950cf77e910c6e5103bc418a87c9b64dae3bb6df1e5",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/focused-final.txt",
+        "sha256": "68604a07a61d0d47acafd9df9b7e413c08c05a0324ee873da831edcc4744ce48"
+      }
+    },
+    {
+      "id": "focused-second",
+      "status": "PASS",
+      "source_commit": "d9fb219e84f1d6e801004dff39bbed4ecc26fcf2",
+      "source_tree": "59b170a32ba97bdf64614133912a3b92c3f1ee11",
+      "exit_code": 0,
+      "counts": {
+        "passed": 700,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/focused-second.receipt.json",
+      "sha256": "ae38dfd8b275e74be65717aaa9f0739d6d24f98033a75f6ef2f959bcf87cd184",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/focused-second.txt",
+        "sha256": "8ad65882e6170cd4973777cfcc4eb7514911b2ed4e9b77251353db14a51c1a19"
+      }
+    },
+    {
+      "id": "focused",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": {
+        "passed": 700,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/focused.receipt.json",
+      "sha256": "7e2d4d1e2d0f3a6b35baa6d1bc4597f7d4595d7222e7e8f7cfdf149832c73665",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/focused.txt",
+        "sha256": "3b00e37307ed6f0b31980dd2eda5ca85c61b9570d03b543220a75b56c90af222"
+      }
+    },
+    {
+      "id": "governance-final",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": {
+        "passed": 49,
+        "failed": 0,
+        "skipped": 2
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/governance-final.receipt.json",
+      "sha256": "d942dfd555cbca3b354aa3cf2d6c425fed898ea1b38949b1dbe54f5d0a071c7b",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/governance-final.txt",
+        "sha256": "fae9faa4b2b68252c9f55d28bf5dd242e3b7ff108d6bb91082682fd04813fa7f"
+      }
+    },
+    {
+      "id": "governance-first",
+      "status": "PASS",
+      "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+      "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+      "exit_code": 0,
+      "counts": {
+        "passed": 49,
+        "failed": 0,
+        "skipped": 2
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/governance-first.receipt.json",
+      "sha256": "5b4407698f04d94c9df86a5e63bc2b5e8a96bd28e4950f296ee682f4ac48f00a",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/governance-first.txt",
+        "sha256": "0d7b66788979c81fe94197fabd67c54d969d7d88968033e4d197be63a6b85e15"
+      }
+    },
+    {
+      "id": "governance",
+      "status": "FAIL",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/governance.receipt.json",
+      "sha256": "9d65a4568d4addce61a3e6b92320c2fbb04f66fbfb680b51eefffbd9085f812d",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/governance.txt",
+        "sha256": "a13dcf90cbe9b1fbf5220dbaefe566ec2b018e73f835ce5272ee5ed8f48a265d"
+      }
+    },
+    {
+      "id": "input-verifier-final",
+      "status": "PASS",
+      "source_commit": "e03d8899ba38a234638114f854faf501f21205a0",
+      "source_tree": "9d1037acdb1f89c440385e30e6d594bf7c90bdeb",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.receipt.json",
+      "sha256": "327369f0c2a85939af4840afc29ccb74a8a2dcb27851ca6cea4753bb838d1a40",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/input-verifier-final.txt",
+        "sha256": "76ebcf1de12283c11f65b0683561b7779854e9492247df94b2baa35804287f6b"
+      }
+    },
+    {
+      "id": "lint-second",
+      "status": "PASS",
+      "source_commit": "d9fb219e84f1d6e801004dff39bbed4ecc26fcf2",
+      "source_tree": "59b170a32ba97bdf64614133912a3b92c3f1ee11",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/lint-second.receipt.json",
+      "sha256": "b5ac9a0b56d7d148b2f826dfc1aad64a23183702f7a753abc4e880ba24df046f",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/lint-second.txt",
+        "sha256": "d0193c6c29f7a0413aea4e603f506f447c65cac2bf2d5ffbc522aba31a91913f"
+      }
+    },
+    {
+      "id": "order-and-permission-red",
+      "status": "FAIL",
+      "source_commit": "8a5de1d67ceb7469f33483c3077c6c968fe29ba4",
+      "source_tree": "7d72c7193331a58ec4c6e6818f06e49cef1e863f",
+      "exit_code": 1,
+      "counts": {
+        "passed": 82,
+        "failed": 1,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/order-and-permission-red.receipt.json",
+      "sha256": "9bace028f2ecf5c006e5fea418fe55cad949323a601e262a4d6418ef4eb19edf",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/order-and-permission-red.txt",
+        "sha256": "1a8955ac819e7e13ab8a46443b30106fcf0f7d7276202f1b1f20a76f266ccb3c"
+      }
+    },
+    {
+      "id": "permission-last-schedule-red",
+      "status": "FAIL",
+      "source_commit": "bcad0fbd20343e2821101347ae1556021f042730",
+      "source_tree": "e7f3fc8dc658e33b7187a5029d993d7e74b71f79",
+      "exit_code": 1,
+      "counts": {
+        "passed": 33,
+        "failed": 1,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/permission-last-schedule-red.receipt.json",
+      "sha256": "683fd6d36eb56c6897ab2d38cf7107d5c5d7398e1a26406e461739710047d731",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/permission-last-schedule-red.txt",
+        "sha256": "4fa8a39009e6b8896b2909914ffd49d2c14cd7ea484160889a891118d25bb6c2"
+      }
+    },
+    {
+      "id": "response-and-parallel-red",
+      "status": "FAIL",
+      "source_commit": "6c4cf7cf15ddcf5db95d0acedbe07734f1bbf11c",
+      "source_tree": "66c8a90f59f1260562ccb4bbdcdac0df939359f4",
+      "exit_code": 1,
+      "counts": {
+        "passed": 8,
+        "failed": 4,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/response-and-parallel-red.receipt.json",
+      "sha256": "87ec81bfe1eeb7c3ab27b68be6f21219867b33f537b9db01cd0721cb8decf5df",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/response-and-parallel-red.txt",
+        "sha256": "c458b52a45aa63580a8cf54116e2915a2dd6c4231db7171fe78001f78c2034a8"
+      }
+    },
+    {
+      "id": "root-lint-final",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-lint-final.receipt.json",
+      "sha256": "f096abf6d371f601f62f94f6a6ee94d4f26af036607f2c614ed95711524966b8",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-final.txt",
+        "sha256": "bed4a0ffea85c65de3bff713956af351463301d3468df4d739f117e9bc7e146c"
+      }
+    },
+    {
+      "id": "root-lint-first",
+      "status": "FAIL",
+      "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+      "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-lint-first.receipt.json",
+      "sha256": "9377951c38cfb01bf43e7b7db48bfee31958b322aea19bfac08b031ccca3090a",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-lint-first.txt",
+        "sha256": "d6bb36ea5525d8b7f41cabe6cedc682a3f391ac6de32896ddc737ca928157a92"
+      }
+    },
+    {
+      "id": "root-lint",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-lint.receipt.json",
+      "sha256": "f4987ca2b8e719c588ff56b675d60f0db36810df371a3e4f4bcd5451ec325de8",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-lint.txt",
+        "sha256": "ea45478ddbe21669eeab0db42ede9418a99a22566f091c83df08bda1c2c6f2c0"
+      }
+    },
+    {
+      "id": "root-tests-final",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6048,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-tests-final.receipt.json",
+      "sha256": "d0a24149b7170ba28b3a9e6d31e7c96900019c7e11ea7e4f62240e46811dc3ba",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-tests-final.txt",
+        "sha256": "66126b509baa1e3595a0f4497e21af0b589ee4e343d79e37e06732afd84b105d"
+      }
+    },
+    {
+      "id": "root-tests-first",
+      "status": "PASS",
+      "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+      "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6036,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-tests-first.receipt.json",
+      "sha256": "7dd7ff6ede946e204f884c4d01066ca574fa16bb121cbc4a785387697fb9dcde",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-tests-first.txt",
+        "sha256": "3b0bd6a58e628bb2397da505a7019c696acd63a2872cf8ff70b3848c31293a7c"
+      }
+    },
+    {
+      "id": "root-tests",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": {
+        "passed": 6048,
+        "failed": 0,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-tests.receipt.json",
+      "sha256": "ce9fa8e258e33ef8e5280af7501ad02d44e71e5558e9d6c2699f17890388dec5",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-tests.txt",
+        "sha256": "22c024e94c9e9d8a8c0636dc990a524589374e37661add38e2d3d57978fc7548"
+      }
+    },
+    {
+      "id": "root-typecheck-final",
+      "status": "PASS",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-final.receipt.json",
+      "sha256": "98ee99a2fe5d4a62146830e35b7610bc3e20715262b7ea7f1f3098cfb81ca098",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-final.txt",
+        "sha256": "ab4eaa454223d2e6e878e00828306a119bff02b9565af5547cb6ac4a9288af06"
+      }
+    },
+    {
+      "id": "root-typecheck-first",
+      "status": "PASS",
+      "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+      "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-first.receipt.json",
+      "sha256": "06ea8469a2876bb74ca1d570707b3e37590517d47b4df353f5ecd158242dd0de",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck-first.txt",
+        "sha256": "568be9d5b8baa9d076a99ae928e3c04cd5635b01631a0c07896ce60dfd03f854"
+      }
+    },
+    {
+      "id": "root-typecheck",
+      "status": "PASS",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/root-typecheck.receipt.json",
+      "sha256": "60b754434ad8c4b3c0d00857841c50bd842ee694d3900bc1510952eae0b3fa81",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/root-typecheck.txt",
+        "sha256": "eaac0b7f1666c3239f3aa5f26c956495fe5af17ed455cff0c1e15b7caae4ee7c"
+      }
+    },
+    {
+      "id": "source-contracts-final",
+      "status": "FAIL",
+      "source_commit": "0377c190b92625eb76bdb43ebcfd0c21c9a96c3e",
+      "source_tree": "2f2617e6718c48213e483790d0272fdc978194c3",
+      "exit_code": 1,
+      "counts": {
+        "passed": 148,
+        "failed": 1,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/source-contracts-final.receipt.json",
+      "sha256": "837258b21e04a53ef33bf70d26cb2cf78d313f6a62deeddaa6d1f76e72c90fb9",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts-final.txt",
+        "sha256": "437fcebd328ee11603990c16cf4c4e9b3774bcfc7127ab98904c19e6ad6d7003"
+      }
+    },
+    {
+      "id": "source-contracts-first",
+      "status": "FAIL",
+      "source_commit": "73f5bd0cb669f80114585ab0542bc603111b6444",
+      "source_tree": "99b3bf6e97d4fe3f2f68fc9edade1de16cc4aee9",
+      "exit_code": 1,
+      "counts": {
+        "passed": 148,
+        "failed": 1,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/source-contracts-first.receipt.json",
+      "sha256": "b3f7e60a355895d4a6725842f2c31fe0b9abb0b71d4467bd06829fff82918749",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts-first.txt",
+        "sha256": "7bf5c26e6f7c4c73479e20f5637b7e35a64bbb402c005164868405f28b81d318"
+      }
+    },
+    {
+      "id": "source-contracts",
+      "status": "FAIL",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 1,
+      "counts": {
+        "passed": 148,
+        "failed": 1,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/source-contracts.receipt.json",
+      "sha256": "1a2f25eba2c6e23fe8cd5e5fdb32522e31f8aa80107d1831bd85601271c4056d",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/source-contracts.txt",
+        "sha256": "5ce497fa1d7c802fc4585d5705e3ffff66057249aafd29cbb4685e03040a17bf"
+      }
+    },
+    {
+      "id": "stale-preference-cycle-red",
+      "status": "FAIL",
+      "source_commit": "d81285dd631dfa2dd0f711fe9d66bf6955aa9c1d",
+      "source_tree": "1de2b9955c88a67df02ad1f48f63494a0c4c660d",
+      "exit_code": 1,
+      "counts": {
+        "passed": 28,
+        "failed": 2,
+        "skipped": 0
+      },
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/stale-preference-cycle-red.receipt.json",
+      "sha256": "61524fb73ae4a373690a9fe61cfaad5941d8c02b39c5e8499c0430369d4d5093",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/stale-preference-cycle-red.txt",
+        "sha256": "309bf1d50889c20418afc34985b92cbdc0a9b961975116de4ac7b0d412762676"
+      }
+    },
+    {
+      "id": "worklist-final",
+      "status": "PASS",
+      "source_commit": "e03d8899ba38a234638114f854faf501f21205a0",
+      "source_tree": "9d1037acdb1f89c440385e30e6d594bf7c90bdeb",
+      "exit_code": 0,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/worklist-final.receipt.json",
+      "sha256": "39c8a17598160e17612ee9b6581a2f4c74c001cbf78d23f085c0c680cb44ee3b",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/worklist-final.txt",
+        "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+      }
+    },
+    {
+      "id": "worklist",
+      "status": "FAIL",
+      "source_commit": "6c36263620a577065f3ae0334030a6aa27b00b4d",
+      "source_tree": "0fc52809026df4f2b6dbf26e75a0922e53061868",
+      "exit_code": 1,
+      "counts": null,
+      "receipt": "docs/brain/checkpoints/M1-02/evidence/worklist.receipt.json",
+      "sha256": "ed5256588d35802927a604abbf6d2f0294094bde38c706152d95c511fddb81c9",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-02/evidence/worklist.txt",
+        "sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb"
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "note": "Read-only existing shared installations; not a fresh npm ci or qualified mitigation acceptance.",
+  "packages": [
+    {
+      "name": "braces",
+      "real_path": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage\\node_modules\\braces",
+      "version": "3.0.3",
+      "files": [
+        {
+          "path": "lib/parse.js",
+          "actual_sha256": "fe5bcc00e2aa9afa6e85b3697f10c7cb9eacc38323d3d375247475406bc07176",
+          "expected_patched_sha256": "fe5bcc00e2aa9afa6e85b3697f10c7cb9eacc38323d3d375247475406bc07176",
+          "matches_existing_backport": true
+        },
+        {
+          "path": "lib/compile.js",
+          "actual_sha256": "cb2c9b0f9d18879b392bdaca7e026f7b4c1047177806551ea707e9b3f7f16d4f",
+          "expected_patched_sha256": "cb2c9b0f9d18879b392bdaca7e026f7b4c1047177806551ea707e9b3f7f16d4f",
+          "matches_existing_backport": true
+        },
+        {
+          "path": "lib/expand.js",
+          "actual_sha256": "5b35d437861daf886cae53ba00e1e936e3145f2dad065cdf6fb6f26ce192e10b",
+          "expected_patched_sha256": "5b35d437861daf886cae53ba00e1e936e3145f2dad065cdf6fb6f26ce192e10b",
+          "matches_existing_backport": true
+        },
+        {
+          "path": "lib/stringify.js",
+          "actual_sha256": "a81e69c3c345c0582c3f65184199543a85cbad70974b03d2dea737e66367857e",
+          "expected_patched_sha256": "a81e69c3c345c0582c3f65184199543a85cbad70974b03d2dea737e66367857e",
+          "matches_existing_backport": true
+        }
+      ]
+    },
+    {
+      "name": "node-forge",
+      "real_path": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage\\node_modules\\node-forge",
+      "version": "1.4.0",
+      "files": [
+        {
+          "path": "lib/rsa.js",
+          "actual_sha256": "22ad28b10041635f3d4aa7ba6198b2c4d5cca0307bbcaac8cdc44885a536db5a",
+          "expected_patched_sha256": "22ad28b10041635f3d4aa7ba6198b2c4d5cca0307bbcaac8cdc44885a536db5a",
+          "matches_existing_backport": true
+        }
+      ]
+    },
+    {
+      "name": "vite",
+      "real_path": "C:\\Users\\jasim\\Documents\\Codex\\2026-10-19\\c-users-jasim-desktop-onskin-x20-6\\work\\onSkin-stage\\node_modules\\vite",
+      "version": "8.1.3"
+    }
+  ]
+}

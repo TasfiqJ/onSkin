@@ -1,0 +1,3 @@
+# Finite substantial effort, not pointless repetition
+
+Two causally distinct bounded repair/reproduction cycles per parser/fixpoint class are enough when exact original tool rules and source cannot support full coverage. Record the exact residual rule/file/error and stop promising green if the engine is incompatible. Prioritize the genuine governance/70 historical object defect, final-source four-bundle receipts and qualified review packet over endless re-running 6,067 already stable tests. On HIGH context/compaction, safe commit/push/handoff and stop immediately. No hidden background worker or future continuation without separate Brain review.

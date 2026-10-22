@@ -1,0 +1,8 @@
+from m103c1_run import run,P
+root=P/'m103c1-isolated'
+for i,(name,width,height,flags) in enumerate([
+ ('daily390',390,844,['--daily-loop']),('daily375',375,667,['--daily-loop']),
+ ('daily430',430,932,['--daily-loop']),('cross-daily390',390,844,['--daily-loop','--cross-owner']),
+ ('signout390',390,844,['--account-isolation']),('retained390',390,844,['--retained-safety'])]):
+ env=dict(ONBOARDING_E2E_PORT=str(8492+i),ONBOARDING_E2E_DEBUG_PORT=str(9492+i),ONBOARDING_E2E_VIEWPORT_WIDTH=str(width),ONBOARDING_E2E_VIEWPORT_HEIGHT=str(height),ONBOARDING_E2E_EVIDENCE_DIR=(P/('m103c1-'+name)).as_posix())
+ run('browser-'+name,['node','scripts/e2e/onboarding-first-session.mjs',*flags],root,env,axis='surface')

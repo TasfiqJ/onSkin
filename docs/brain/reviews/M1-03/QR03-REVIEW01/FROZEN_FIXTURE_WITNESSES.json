@@ -1,0 +1,11 @@
+{
+  "new_QR03_current_marker": "docs/brain/m103-quality-recovery03-active.json",
+  "observed_regression": "QR02 setUp copies current .gitattributes and m103_profile.py into predecessor synthetic fixture. QR03 has analogous future-drift risk.",
+  "qr02_fixture_original_module": "scripts/brain/test_m103_quality_recovery02_profile.py",
+  "qr02_frozen_source_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "qr02_frozen_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "qr03_fixture_original_module": "scripts/brain/test_m103_quality_recovery03_profile.py",
+  "qr03_frozen_source_commit": "dbcfce9770850d4655221bd3d4c3b5799553aed2",
+  "qr03_frozen_tree": "93d9a5789c1ce443cf0bcd86696fff044ff2fd64",
+  "required_semantics": "Copy Git blob content at the exact historical frozen predecessor endpoint; keep original asserted test methods, test_count and negatives. Always refuse missing/corrupt historical bytes."
+}

@@ -1,0 +1,164 @@
+{
+  "base_commit": "c0d97372212fd94e168b1c598b603381ccb9f9cc",
+  "runs": [
+    {
+      "directory": "cont01-baseline-8331",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-baseline-8332",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-cleanup-8337",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "report.md",
+        "summary.json"
+      ]
+    },
+    {
+      "directory": "cont01-cleanup-diagnostic-8336",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "exceptions.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-lifecycle-diagnostic-8334",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "exceptions.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-photos-8335",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-resolver-8333",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8338",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8339",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8340",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8341",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8342",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8343",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png",
+        "M1-offline-durable-read.json"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8344",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png",
+        "M1-offline-durable-read.json"
+      ]
+    },
+    {
+      "directory": "cont01-retained-8345",
+      "scope": "Exploratory synthetic local run; runtime dirty/unfrozen, not formal measured-head evidence",
+      "files": [
+        "bundle-crypto-provenance.json",
+        "ERROR.json",
+        "FAILURE.json",
+        "FAILURE.png",
+        "M1-offline-durable-read.json"
+      ]
+    }
+  ],
+  "limitations": [
+    "Exploratory source changed between runs; no newer committed snapshot is invented. Do not count these as measured source passes.",
+    "8331 first catch used case-colliding FAILURE.json/failure.json on Windows; screenshot survived, body overwritten by error metadata. Corrected before 8332; later body/error artifacts are separate.",
+    "8338/8339/8341/8343/8344 include harness selector/occluded-background failures. 8340/8342 exposed the actual offline cache defect. 8345 reached storage recovery then exposed current-to-current age publication navigation.",
+    "All web runs used the recorded port/debug-port pair (debug = app+1100), 390x844, fresh directories, synthetic 01/01/1990, no configured service credentials; no native/provider admission."
+  ]
+}

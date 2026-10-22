@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "node scripts/e2e/onboarding-first-session.mjs --daily-loop",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\m103c1-isolated",
+  "environment": "Windows x64 Python 3.9.13; Node22.21.0 npm11.20.0; fresh independent m103c1-isolated node_modules unless command explicitly states Linux container; no shared dependency mutations",
+  "source_commit": "6c8f5fc586bb6994370e78e0305a2445613fcb82",
+  "source_tree": "70548b3a5f22e73d63199435d4ce0db48b39368f",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/CONT-01/evidence/browser-daily390.txt",
+    "sha256": "99047e69dfa5e98afad2f1846dfb45f52fc3f2f062e8b2d938044b361e649024"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-21T01:25:17.605951+00:00",
+  "finished_at_utc": "2026-10-21T01:27:15.888364+00:00",
+  "extra_environment": {
+    "ONBOARDING_E2E_PORT": "8492",
+    "ONBOARDING_E2E_DEBUG_PORT": "9492",
+    "ONBOARDING_E2E_VIEWPORT_WIDTH": "390",
+    "ONBOARDING_E2E_VIEWPORT_HEIGHT": "844",
+    "ONBOARDING_E2E_EVIDENCE_DIR": "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/m103c1-daily390"
+  },
+  "argv": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop"
+  ],
+  "count_semantics": "Overlapping focused and broad counts are never added; failures retained"
+}

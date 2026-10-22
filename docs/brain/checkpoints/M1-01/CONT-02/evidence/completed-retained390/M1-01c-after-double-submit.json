@@ -1,0 +1,135 @@
+{
+  "bodyText": "Shelf 4 products ＋ Add All Actives Expiring Everything on your shelf, ordered by supported tracked dates. Interaction guidance is unavailable We won't show a compatibility result for these products until that review is complete. FIRST ROUTINE Your routine is ready to draft. Uses the products you added, and keeps missing steps visible instead of inventing them. Build my routine Synthetic manual moisturizer added by hand · unopened · Date unknown Date unknown Mineral SPF 50 Sunscreen (SPF) · opened Oct · Date unknown Date unknown Glycolic 7% toner Toner / essence · opened Oct · Date unknown Date unknown Retinol 0.3% serum Retinol / retinoid serum · opened Oct · Date unknown Date unknown Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 282.94,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Build my routine",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 450
+    },
+    {
+      "disabled": false,
+      "height": 110,
+      "hitOk": true,
+      "label": "Synthetic manual moisturizer, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 556
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": true,
+      "label": "Mineral SPF 50, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 710
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 25,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62.24,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 194.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8400/shelf",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

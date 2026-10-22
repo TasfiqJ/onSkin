@@ -1,0 +1,1390 @@
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/baseline-governance.log:64: trailing whitespace.
++test_widget_guard_hash_and_payload_path_changes_refuse (test_m103_quality_recovery02_profile.QualityRecovery02.test_widget_guard_hash_and_payload_path_changes_refuse) ... 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:13: trailing whitespace.
++@layerwell/mobile:lint: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:16: trailing whitespace.
++@layerwell/mobile:lint: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:17: trailing whitespace.
++@layerwell/catalog-operator-console:lint: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:20: trailing whitespace.
++@layerwell/catalog-operator-console:lint: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:21: trailing whitespace.
++@layerwell/types:lint: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:24: trailing whitespace.
++@layerwell/types:lint: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:29: trailing whitespace.
++  Time:    30.759s 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-lint.log:30: new blank line at EOF.
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:12: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:15: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:16: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:19: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:20: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:22: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:23: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:25: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:33: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:38: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:45: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:49: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:52: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:55: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:58: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:61: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:64: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:67: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:70: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:73: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:77: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:80: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:83: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:86: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:89: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:92: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:95: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:98: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:101: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:104: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:107: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:110: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:113: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:116: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:120: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:123: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:126: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:129: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:132: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:137: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:140: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:143: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:146: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:149: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:152: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:156: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:159: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:162: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:165: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:168: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:171: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:174: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:177: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:180: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:183: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:186: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:189: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:192: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:195: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:198: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:201: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:204: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:207: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:210: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:213: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:217: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:220: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:223: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:226: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:229: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:232: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:235: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:240: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:243: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:246: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:249: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:252: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:255: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:258: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:261: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:264: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:267: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:270: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:273: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:276: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:279: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:283: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:286: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:289: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:292: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:295: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:298: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:301: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:304: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:307: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:310: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:313: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:316: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:319: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:322: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:325: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:328: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:331: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:335: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:338: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:341: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:344: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:348: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:351: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:354: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:359: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:362: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:365: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:368: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:371: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:374: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:378: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:381: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:384: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:387: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:391: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:394: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:397: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:400: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:403: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:406: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:409: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:412: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:415: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:418: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:421: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:424: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:427: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:430: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:433: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:436: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:439: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:442: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:445: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:448: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:451: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:454: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:457: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:460: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:463: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:466: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:469: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:472: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:475: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:478: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:481: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:484: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:487: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:490: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:493: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:496: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:500: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:504: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:507: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:511: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:514: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:517: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:520: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:523: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:526: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:529: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:532: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:535: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:538: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:541: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:545: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:548: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:551: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:555: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:558: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:561: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:564: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:567: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:570: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:573: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:576: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:579: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:582: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:586: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:589: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:592: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:595: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:598: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:601: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:604: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:608: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:611: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:615: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:618: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:621: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:624: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:627: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:630: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:633: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:636: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:639: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:642: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:645: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:648: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:651: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:654: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:657: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:661: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:664: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:668: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:671: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:674: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:677: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:680: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:684: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:687: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:691: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:694: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:699: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:702: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:707: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:710: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:713: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:717: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:721: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:724: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:727: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:730: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:733: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:736: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:739: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:742: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:745: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:748: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:751: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:754: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:757: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:761: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:764: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:767: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:771: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:774: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:777: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:780: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:783: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:786: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:789: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:792: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:795: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:798: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:801: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:804: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:807: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:810: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:813: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:816: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:819: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:822: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:825: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:828: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:831: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:834: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:837: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:840: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:844: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:848: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:851: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:854: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:857: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:860: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:863: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:866: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:869: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:872: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:875: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:878: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:881: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:884: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:887: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:890: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:893: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:897: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:900: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:903: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:907: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:910: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:913: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:916: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:919: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:922: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:926: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:929: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:932: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:935: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:938: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:941: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:944: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:947: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:950: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:953: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:956: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:959: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:962: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:965: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:968: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:971: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:974: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:977: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:980: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:983: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:987: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:990: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:995: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:998: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1001: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1005: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1008: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1011: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1014: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1017: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1020: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1023: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1026: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1029: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1032: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1035: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1038: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1041: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1043: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1048: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1051: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1053: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1058: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1061: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1063: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1068: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1071: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1073: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1078: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1081: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1083: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1088: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1091: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1093: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1098: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1101: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1103: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1108: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1111: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1113: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1118: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1120: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1123: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1125: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1130: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1133: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1135: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1140: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1143: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1145: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1150: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1152: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1155: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1158: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1161: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1163: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1168: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1171: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1173: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1178: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1181: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1183: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1188: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1190: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1193: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1196: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1199: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1202: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1205: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1208: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1211: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1214: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1217: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1220: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1223: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1226: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1229: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1232: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1235: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1238: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1241: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1244: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1246: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1251: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1254: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1256: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1261: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1264: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1266: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1271: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1274: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1276: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1281: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1284: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1286: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1291: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1294: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1296: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1301: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1304: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1306: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1311: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1314: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1316: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1321: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1323: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1326: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1329: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1332: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1334: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1339: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1342: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1344: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1349: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1352: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1354: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1359: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1362: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1364: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1369: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1372: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1374: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1379: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1382: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1384: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1389: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1392: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1394: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1399: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1402: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1404: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1409: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1411: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1414: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1420: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1423: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1426: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1429: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1433: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1437: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1441: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1444: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1447: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1450: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1453: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1456: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1459: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1464: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1468: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1471: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1475: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1479: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1482: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1485: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1489: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1493: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1497: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1500: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1504: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1507: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1510: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1513: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1516: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1519: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1522: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1525: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1528: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1531: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1534: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1537: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1540: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1543: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1546: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1550: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1553: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1556: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1559: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1564: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1567: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1570: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1573: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1576: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1579: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1582: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1586: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1589: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1595: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1600: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1603: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1606: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1609: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1612: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1615: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1618: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1621: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1624: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1627: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1630: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1633: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1636: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1641: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1644: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1647: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1650: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1653: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1656: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1660: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1663: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1666: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1669: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1672: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1675: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1678: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1681: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1685: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1688: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1691: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1694: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1697: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1700: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1703: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1707: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1711: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1715: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1718: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1722: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1725: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1728: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1731: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1734: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1737: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1740: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1743: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1746: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1749: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1752: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1755: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1758: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1761: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1764: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1768: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1772: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1775: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1778: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1781: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1784: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1790: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1793: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1796: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1799: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1805: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1810: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1814: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1817: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1820: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1824: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1827: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1832: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1835: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1838: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1843: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1847: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1850: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1854: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1857: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1860: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1863: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1866: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1870: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1873: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1876: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1879: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1882: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1885: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1888: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1892: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1895: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1898: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1901: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1904: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1908: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1911: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1914: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1917: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1920: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1924: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1927: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1931: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1934: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1937: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1941: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1944: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1948: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1963: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1967: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1971: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1978: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1982: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:1997: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2001: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2004: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2008: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2017: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2021: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2024: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2027: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2030: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2033: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2036: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2039: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2045: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2048: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2054: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2057: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2067: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2100: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2105: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2108: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2112: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2127: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2130: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2136: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2139: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2143: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2147: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2150: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2153: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2156: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2159: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2162: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2165: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2168: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2171: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2174: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2177: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2180: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2183: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2186: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2189: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2192: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2197: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2200: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2204: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2207: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2210: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2213: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2216: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2233: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2237: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2266: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2269: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2272: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2310: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2313: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2324: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2327: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2330: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2334: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2337: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2409: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2518: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2523: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2527: trailing whitespace.
++  Time:    14.844s 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-root-tests.log:2528: new blank line at EOF.
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:12: trailing whitespace.
++@layerwell/types:typecheck: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:15: trailing whitespace.
++@layerwell/types:typecheck: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:16: trailing whitespace.
++@layerwell/catalog-operator-console:typecheck: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:19: trailing whitespace.
++@layerwell/catalog-operator-console:typecheck: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:21: trailing whitespace.
++@layerwell/mobile:typecheck: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:24: trailing whitespace.
++@layerwell/mobile:typecheck: 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:28: trailing whitespace.
++  Time:    13.571s 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/forced-typecheck.log:29: new blank line at EOF.
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_report.py:10: trailing whitespace.
++subprocess.run(['git','merge-base','--is-ancestor',source['commit'],'HEAD'],cwd=ROOT,check=True)
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_report.py:11: trailing whitespace.
++assert all(path=='ONSKIN_BRAIN_HANDOFF.txt' or path.startswith(CP) for path in git('diff','--name-only',source['commit'],'HEAD').splitlines())
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-security70.log:38: trailing whitespace.
++test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder (test_contract.ContractTests.test_original_workflow_actual_gitleaks_tool_cannot_borrow_SARIF_placeholder) ... 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-security70.log:45: trailing whitespace.
++test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived (test_contract.ContractTests.test_original_workflow_legacy_fetch_execution_or_extra_refusal_cannot_be_waived) ... 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/original-security70.log:56: trailing whitespace.
++test_original_workflow_osv_execution_error_with_known_json_rejects (test_contract.ContractTests.test_original_workflow_osv_execution_error_with_known_json_rejects) ... 
+docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/preflight.log:344: new blank line at EOF.

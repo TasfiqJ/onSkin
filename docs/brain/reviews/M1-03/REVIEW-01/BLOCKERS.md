@@ -1,0 +1,4 @@
+# Remaining blockers
+Current exact Quality/canonical DB and CORE05 are no longer failing blockers. Historical ECR availability remains a risk, not proof of present failure.
+Security still has real findings/expired reviews, a mixed-severity classifier defect, incomplete secret history/provenance, missing current Semgrep/SAST and unreviewed source inventory. The old source proposal is expired; public owner pins and future source review remain separate actual-authority obligations. Semgrep/MCP/certifi candidate closure is not approved for activation.
+CONT-01 may repair the four selected source areas only. DB06/DB08/R2B, retained correction obligations, native/provider/paid-positive/qualified/clinical/commercial/release limits remain unchanged. See BLOCKERS.json for current and preserved historical records.

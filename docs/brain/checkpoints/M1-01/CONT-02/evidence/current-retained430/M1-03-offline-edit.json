@@ -1,0 +1,124 @@
+{
+  "bodyText": "< Synthetic manual moisturizer data / Added by you CATALOG Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. barcode 4006381333931 category moisturiser_tube Report an issue Opened September 2026 · edit PAO unknown · edit Recorded package date not entered · set Date unknown ROUTINE ROLE Used in your Evening routine. Review the AM/PM plan before you check it off. Replace Mark finished 🗑︎",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "More options",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 358,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Report an issue",
+      "role": "button",
+      "selected": false,
+      "width": 105.48,
+      "x": 43,
+      "y": 315
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit opened date",
+      "role": "button",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 395
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Edit period after opening",
+      "role": "button",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 451
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Set date printed on this package",
+      "role": "button",
+      "selected": false,
+      "width": 344,
+      "x": 43,
+      "y": 519
+    },
+    {
+      "disabled": false,
+      "height": 94,
+      "hitOk": true,
+      "label": "Review routine placement",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 598
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Replace",
+      "role": "button",
+      "selected": false,
+      "width": 155,
+      "x": 24,
+      "y": 882
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Mark finished",
+      "role": "button",
+      "selected": false,
+      "width": 157,
+      "x": 189,
+      "y": 882
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Remove or discard",
+      "role": "button",
+      "selected": false,
+      "width": 50,
+      "x": 356,
+      "y": 882
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8396/shelf/d996cb86-ea0d-43b6-8542-44c217a302ab",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}

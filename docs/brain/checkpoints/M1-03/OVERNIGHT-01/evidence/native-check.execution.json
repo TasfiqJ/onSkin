@@ -1,0 +1,23 @@
+{
+  "name": "native-check",
+  "argv": [
+    "node",
+    "scripts/phase9/ios-privacy-source-audit.mjs",
+    "--check",
+    "--strict"
+  ],
+  "source_commit": "e356e8fbaa1f6f3501bce4a48e3bfb5ea922f987",
+  "source_tree": "caabdb244d9c9635ab29aaa70f9ae0884a3a827b",
+  "working_directory": "/root/onskin-overnight01-native",
+  "started": "2026-10-21T04:26:36.082956+00:00",
+  "finished": "2026-10-21T04:26:37.047720+00:00",
+  "exit": 0,
+  "log_sha256": "d960a107f2026007e252e97133834df9d7a12f213d6a109f18c4978829f5fda8",
+  "bytes": 162,
+  "admission": "NONE",
+  "environment": {
+    "CI": "true",
+    "EXPO_NO_TELEMETRY": "1",
+    "TURBO_TELEMETRY_DISABLED": "1"
+  }
+}

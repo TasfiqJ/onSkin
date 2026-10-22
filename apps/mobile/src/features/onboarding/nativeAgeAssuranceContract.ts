@@ -1,7 +1,7 @@
 export const NATIVE_AGE_ASSURANCE_CONTRACT_VERSION = 1 as const;
 export const NATIVE_AGE_ASSURANCE_REVIEW_STATUS = 'launch_blocked' as const;
 export const NATIVE_AGE_ASSURANCE_PROVIDER = 'apple_declared_age_range' as const;
-export const NATIVE_AGE_ASSURANCE_MINIMUM_AGE = 16 as const;
+export const NATIVE_AGE_ASSURANCE_MINIMUM_AGE = 18 as const;
 export const NATIVE_AGE_ASSURANCE_MINIMUM_RUNTIME = 'iOS 26.2' as const;
 export const NATIVE_AGE_ASSURANCE_MINIMUM_SDK = 'iOS 26.2' as const;
 export const NATIVE_AGE_ASSURANCE_EXACT_BIRTH_DATE_COLLECTED = false as const;

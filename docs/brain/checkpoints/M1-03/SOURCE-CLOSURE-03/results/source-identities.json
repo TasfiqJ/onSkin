@@ -1,0 +1,21 @@
+{
+  "base": {
+    "commit": "aa598d0c93fcc416ba02cbda9333953430bb2ede",
+    "tree": "6dd2010073d913ca400c201f6d58ed1212fa97d4"
+  },
+  "implementation": {
+    "commit": "79db3088b42e0de2671cbeda27e1cfc0bdc3c9db",
+    "tree": "43a6bcee9d505c54e68bb730947053124160ec3b"
+  },
+  "measured": {
+    "commit": "ad7ba39e59566ebf076c385fdcc32377af6ead15",
+    "tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e"
+  },
+  "measured_head_pr_merge": {
+    "commit": "404685389c0a388fec6a9f57e1693663a7e0a201",
+    "tree": "f38cf743d83a5e82f4780c5b312a09c0b59a2a4e"
+  },
+  "delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "final_delivery_commit": "External final receipt/containing commit; never a circular embedded SHA",
+  "main_untouched": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73"
+}

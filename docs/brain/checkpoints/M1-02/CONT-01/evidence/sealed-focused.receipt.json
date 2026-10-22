@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "npm.cmd --workspace apps/mobile run test -- --run src/features/today src/features/routine/orderStore.test.ts src/features/routine/reorder.g2.test.ts src/features/scheduler/cyclePersistence.regression.test.ts src/features/photos/encryptedStorage.test.ts src/features/photos/photoDeleteR3.integration.test.ts src/features/notifications src/lib/storage/privateKV.test.ts src/lib/storage/plaintextStagingCore.test.ts src/lib/offline/completionQueue.test.ts src/lib/offline/OfflineSync.test.ts",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "fd97c5ec36b93738b16d7e9428b271a8ebe15c65",
+  "source_tree": "3559bc9d9b1df1956a2648fa8fbbfe6ab64b03c8",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-02/CONT-01/evidence/sealed-focused.txt",
+    "sha256": "dcead65b7e9bc6a12560c0e12f1011c274f742a77870f9a0686805428436192b"
+  },
+  "counts": {
+    "passed": 719,
+    "failed": 0,
+    "skipped": 0
+  },
+  "started_at_utc": "2026-10-20T21:53:15.486171+00:00",
+  "finished_at_utc": "2026-10-20T21:53:43.492538+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "--run",
+    "src/features/today",
+    "src/features/routine/orderStore.test.ts",
+    "src/features/routine/reorder.g2.test.ts",
+    "src/features/scheduler/cyclePersistence.regression.test.ts",
+    "src/features/photos/encryptedStorage.test.ts",
+    "src/features/photos/photoDeleteR3.integration.test.ts",
+    "src/features/notifications",
+    "src/lib/storage/privateKV.test.ts",
+    "src/lib/storage/plaintextStagingCore.test.ts",
+    "src/lib/offline/completionQueue.test.ts",
+    "src/lib/offline/OfflineSync.test.ts"
+  ]
+}

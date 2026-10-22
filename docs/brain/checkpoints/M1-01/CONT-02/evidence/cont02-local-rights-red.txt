@@ -1,0 +1,47 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run --run src/features/onboarding/AgeReverificationRights.integration.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/onSkin/.claude/worktrees/m1-retained-safety/apps/mobile
+
+ ❯ src/features/onboarding/AgeReverificationRights.integration.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/onboarding/AgeReverificationRights.integration.test.ts [ src/features/onboarding/AgeReverificationRights.integration.test.ts ]
+Error: [vitest] No "NativeModules" export is defined on the "react-native" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("react-native"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ❯ ../../../../../../../Documents/Codex/2026-10-19/c-users-jasim-desktop-onskin-x20-6/work/onSkin-stage/node_modules/react-native-url-polyfill/js/URL.js:6:26
+      4| let BLOB_URL_PREFIX = null;
+      5|
+      6| const NativeBlobModule = NativeModules.BlobModule;
+       |                          ^
+      7|
+      8| if (
+ ❯ ../../../../../../../Documents/Codex/2026-10-19/c-users-jasim-desktop-onskin-x20-6/work/onSkin-stage/node_modules/react-native-url-polyfill/index.js:5:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  13:30:36
+   Duration  593ms (transform 258ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\.claude\worktrees\m1-retained-safety\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run src/features/onboarding/AgeReverificationRights.integration.test.ts

@@ -137,7 +137,7 @@ export default function NotificationPreferenceScheduleReconciler() {
     if (Platform.OS === 'web') return;
 
     const coordinator = createNotificationScheduleLifecycleCoordinator({
-      reconcile: (lifecycle) => rescheduleReminders(undefined, lifecycle),
+      reconcile: async (lifecycle) => { await rescheduleReminders(undefined, lifecycle); },
       onAttemptError: (error, exhausted) => {
         if (exhausted) devWarn('notification_schedule_reconciliation_failed', error);
       },

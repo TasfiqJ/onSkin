@@ -1,0 +1,45 @@
+{
+  "at_utc": "2026-10-21T03:10:12.084725+00:00",
+  "repo": "TasfiqJ/onSkin",
+  "branch": "stage/m1-retained-safety",
+  "head": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+  "tree": "8857cbcaa26c28b434235a53521636af77cb6b36",
+  "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "local_tracked_dirty_state": "CLEAN_AT_READ",
+  "PR9": {
+    "draft": true,
+    "merged": false
+  },
+  "no_new_independent_acceptance": true,
+  "CI": {
+    "observed_at_utc": "2026-10-21T03:10:12.084725+00:00",
+    "head_sha": "7305ff24c78d2f9d883e26a7ba2a8e6169902fd8",
+    "source": "Fresh GitHub connector read; no new runs requested",
+    "runs": [
+      {
+        "id": 39532208765,
+        "name": "Quality",
+        "status": "in_progress",
+        "conclusion": null,
+        "known_repository_job": "FAILED_NATIVE_MAPPING",
+        "database": "PENDING_AT_OBSERVATION"
+      },
+      {
+        "id": 39532208636,
+        "name": "Security",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 39532208683,
+        "name": "iOS launch contract",
+        "status": "completed",
+        "conclusion": "success",
+        "scope": "SOURCE_ONLY"
+      }
+    ]
+  },
+  "source_read": "Live GitHub PR and Actions, read-only authorized desktop git status; no writer changed source.",
+  "external_metadata": "Fresh primary PyPI exact-version metadata read on connected device. Container DNS attempts failed and supply no package-byte evidence.",
+  "no_runtime_scan_or_test_this_turn": true
+}

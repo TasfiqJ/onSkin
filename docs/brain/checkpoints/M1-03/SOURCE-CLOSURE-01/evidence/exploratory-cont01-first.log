@@ -1,0 +1,31 @@
+test_extra_source_and_unmeasured_allowed_source_and_false_acceptance (test_m103_cont01_profile.M103Continuation) ... FAIL
+test_positive_report_and_wrong_base_tree_branch_digest_authority (test_m103_cont01_profile.M103Continuation) ... FAIL
+
+======================================================================
+FAIL: test_extra_source_and_unmeasured_allowed_source_and_false_acceptance (test_m103_cont01_profile.M103Continuation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_cont01_profile.py", line 30, in setUp
+    self.commit()
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 50, in commit
+    self.command('-c', 'user.name=Synthetic Fixture', '-c', 'user.email=fixture@example.invalid',
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 1 != 0 : 
+
+======================================================================
+FAIL: test_positive_report_and_wrong_base_tree_branch_digest_authority (test_m103_cont01_profile.M103Continuation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m103_cont01_profile.py", line 30, in setUp
+    self.commit()
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 50, in commit
+    self.command('-c', 'user.name=Synthetic Fixture', '-c', 'user.email=fixture@example.invalid',
+  File "C:\Users\jasim\Documents\ChatGPT\MasterV2Code\overnight-delivery-clean\scripts\brain\test_m1_report_cli.py", line 45, in command
+    self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+AssertionError: 1 != 0 : 
+
+----------------------------------------------------------------------
+Ran 2 tests in 35.804s
+
+FAILED (failures=2)

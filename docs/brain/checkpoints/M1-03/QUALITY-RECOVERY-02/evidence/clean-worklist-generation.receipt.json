@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"npm\", \"run\", \"phase4:source-worklist:strict\"]",
+  "working_directory": "/root/onskin-quality-recovery02-source",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+  "source_commit": "0e3bc6e151f42868043a3ae87af3f61507865326",
+  "source_tree": "09b0faa35fa641cf423c9bbc3edcfa7706431e04",
+  "started_utc": "2026-10-22T15:04:09.628886+00:00",
+  "duration_seconds": 0.452,
+  "exit_code": 0,
+  "status": "PASS",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/clean-worklist-generation.log",
+    "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb"
+  },
+  "admission": "NONE"
+}

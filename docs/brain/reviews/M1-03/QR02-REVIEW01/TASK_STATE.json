@@ -1,0 +1,30 @@
+{
+  "accepted_M1_03": false,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "adrs": 51,
+  "authorization_id": "M103-QUALITY-RECOVERY03-SOURCE-EDIT-01",
+  "base_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "base_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "branch": "stage/m1-retained-safety",
+  "hosted_replay_admitted": false,
+  "incremental_spend_usd": 0,
+  "ios_final_head": "SOURCE_ONLY_SUCCESS",
+  "iteration": "QUALITY-RECOVERY-03",
+  "main_observed": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "main_promotion_authorized": false,
+  "modules": 27,
+  "pr9": "DRAFT_OPEN_UNMERGED",
+  "previous_scoped_review": "QR02 source-only four dependency/version patches and privacy source provenance PARTIAL_ACCEPTED",
+  "project": "onSkin V2",
+  "quality_final_head": "ORIGINAL_SOURCE_JOB_FAILED_EXPO_NOTIFICATIONS;CANONICAL_DB_PENDING_OR_FAILED_ECR",
+  "roadmap_tasks": 47,
+  "schema_version": 1,
+  "security_final_head": "ORIGINAL_FAILURE",
+  "source_security_admitted": false,
+  "task_id": "M1-03"
+}

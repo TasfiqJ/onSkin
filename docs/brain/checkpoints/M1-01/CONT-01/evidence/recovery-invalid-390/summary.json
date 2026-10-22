@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "mode": "invalid",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "scope": "Actual pre-Auth web fixture UI only; no destructive request, server capability, native persistence, provider or release proof."
+}

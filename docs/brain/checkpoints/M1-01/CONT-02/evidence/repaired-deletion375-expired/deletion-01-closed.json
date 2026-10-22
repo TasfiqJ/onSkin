@@ -1,0 +1,36 @@
+{
+  "bodyText": "Account activity paused Deletion receipt needs support The server receipt expired before this device could verify it. We kept the saved recovery information and did not reopen the account. Contact support before creating or using another account. Check status now Open support",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Check status now",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 390.5
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Open support",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 454.5
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8417/today",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

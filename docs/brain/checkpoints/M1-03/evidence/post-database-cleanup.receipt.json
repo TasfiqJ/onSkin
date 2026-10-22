@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "python -B C:/Users/jasim/Documents/ChatGPT/MasterV2Code/postdb_m103.py",
+  "working_directory": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\m1-retained-safety",
+  "environment": "Windows x64; Python 3.9.13; Node22.21.0/npm11.20.0; existing dependency junctions; unchanged lockfile; no install. Synthetic local Chrome/Expo development fixtures for surface commands.",
+  "source_commit": "ec74d4044991ba1a6887b765dd04ca36f7cb8894",
+  "source_tree": "97b5250584f306dd014b92a3746e476c7914017b",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/evidence/post-database-cleanup.txt",
+    "sha256": "ac380861b8c91f572ddfe003b5ad11f585dbc0de8250c992f170f0a14b26b93b"
+  },
+  "counts": null,
+  "started_at_utc": "2026-10-20T23:43:34.506573+00:00",
+  "finished_at_utc": "2026-10-20T23:43:35.271117+00:00",
+  "count_semantics": "Per-command counts; focused checks overlap broad checks and are never added to them. Cache output retained; force used for root tasks.",
+  "extra_environment": {},
+  "argv": [
+    "python",
+    "-B",
+    "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/postdb_m103.py"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "QUALITY-RECOVERY-02",
+  "revision": "REISSUED01",
+  "authorization_id": "M103-QUALITY-RECOVERY02-SOURCE-EDIT-01",
+  "external_manifest_sha256": "78f4dc0753bc1ad8c05d3253645f2a34ff3b57714866de68dda396a6af210339",
+  "status": "PARTIAL_SAFE_SOURCE_PATCHES; SUBMITTED_REVIEW_REQUIRED",
+  "admission": "NONE",
+  "implementation": {
+    "commit": "3966b4cf6e68b6ef23fb1d23c720b797bd997998",
+    "tree": "8bf043037b8cd30c6346c6933d7b3c4fb83c3ccd",
+    "admission": "NONE"
+  },
+  "measured": {
+    "commit": "dcfb51b107019f31f2be96d099e424991c8fbb34",
+    "tree": "5169c4895bb6e17ec26b4f04d7ee7881328c87fd",
+    "admission": "NONE"
+  },
+  "counts": {
+    "root_passed": 6067,
+    "root_failed": 0,
+    "root_cached_tasks": 0,
+    "typecheck_cached_tasks": 0,
+    "lint_cached_tasks": 0,
+    "governance_ran": 85,
+    "governance_passed": 83,
+    "governance_skipped": 2,
+    "qr02_adverse": 8,
+    "secret_passed": 12,
+    "security_ran": 70,
+    "security_outcome": "failures=23, errors=2",
+    "widgets_passed": 25,
+    "extension_passed": 42,
+    "privacy_passed": 77,
+    "archive_privacy_fixture_passed": 238,
+    "doctor_passed": 20,
+    "doctor_total": 21
+  },
+  "actual_lock_sha256": "67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85",
+  "native_upstream_originals_verified": 10,
+  "native_payloads_unchanged": 11,
+  "mapping_lock_entries_verified": 4,
+  "mapping_installed_source_pins_verified": 10,
+  "mapping_digest_fields_changed": 3,
+  "original_security": "RED",
+  "canonical_db": "BLOCKED_ECR_DATA_LIMIT_EXCEEDED",
+  "remaining_source_blocker": "SCOPE_EXCEEDED_EXPO_NOTIFICATIONS: installed57.0.23, official expected~57.0.24; fifth manifest edit is not authorized",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "incremental_spend_usd": 0,
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "context_health": "MODERATE; no observed compaction",
+  "final_delivery_ref": "refs/heads/stage/m1-retained-safety",
+  "final_ci_note": "This committed observation is the measured head. Terminal delivery verification must query the later pushed head independently."
+}
