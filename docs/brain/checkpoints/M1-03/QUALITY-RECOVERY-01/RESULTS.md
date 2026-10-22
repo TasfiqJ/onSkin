@@ -79,6 +79,7 @@ Every output and receipt below is SHA256-bound, including failed/preparatory obs
 | registry-network | 1bd013f5 | PASS | 0 |
 | release-git-fixtures | 1bd013f5 | PASS | 0 |
 | store-source-contract | 1bd013f5 | FAIL | 1 |
+| strict-report-postcommit | 58290fc2 | PASS | 0 |
 | strict-source-profile | 1bd013f5 | PASS | 0 |
 | tooling-fixtures | 1bd013f5 | PASS | 0 |
 | view-shot-fixtures | 1bd013f5 | PASS | 0 |

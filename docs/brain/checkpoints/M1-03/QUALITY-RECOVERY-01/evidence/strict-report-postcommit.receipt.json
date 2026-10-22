@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"python.exe\", \"-B\", \"scripts/brain/brain.py\", \"--profile\", \"M1-03\", \"report\", \"docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/completion-report.json\"]",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "environment": "win32; 3.9.13; CI=; npm_config_cache=",
+  "source_commit": "58290fc2af04f7daeed8860c464d0e1d95ace00b",
+  "source_tree": "20686764909fab7528040bbdb92f83693d9ed6ba",
+  "status": "PASS",
+  "exit_code": 0,
+  "started_at_utc": "2026-10-22T04:32:53.545646+00:00",
+  "finished_at_utc": "2026-10-22T04:34:03.173436+00:00",
+  "source_precheck_sha256": {
+    "apps/mobile/package.json": "7c00e764f0b8ee6f8654c3bbcb635041bee7e2e04c20b7f8f3adfe17ad40ce73",
+    "package.json": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+    "package-lock.json": "ce1992c391d8b1c533ab9596b00d0f14dfc4c39d51256ed90619ca4351654782",
+    "scripts/brain/m103_profile.py": "b304d306050886f396e5b2ad931b45006f41fe06735cc73be82f86cd30808259"
+  },
+  "dirty_source_at_start": "",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-report-postcommit.log",
+    "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+  },
+  "admission": "NONE"
+}

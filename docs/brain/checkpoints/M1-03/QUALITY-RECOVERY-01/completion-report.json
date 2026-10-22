@@ -576,6 +576,10 @@
       "sha256": "bf11b19fb1bb3c79cb4cac886458561dbbb46c083701e9b664f69f539a7b1588"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/committed-artifact-verification.json",
+      "sha256": "9312c6366cf0efb7bd39f7b2becea1c30a97c0d9ea61b7a12174aa522f1a261c"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/context-verification.json",
       "sha256": "618ba2334438ebfd7d7737d003e126fec43863225a969a0b140aa61e42c51c8b"
     },
@@ -872,6 +876,14 @@
       "sha256": "c3cde925b6dbe1b20ad45a873dca68aa6074b37aaee792c137ecbeb64a6a1534"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-report-postcommit.log",
+      "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-report-postcommit.receipt.json",
+      "sha256": "a41eed81f4e9252c74534f59f674cc4405875731f9fbc5e93ed238633b76cd4e"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-source-profile.log",
       "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
     },
@@ -881,7 +893,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/summary.json",
-      "sha256": "82f761f78576a6e0743d385e0ddfcddc84c4a53bbcef7fcd191cc6dedeff34ce"
+      "sha256": "8ecd7e2eb1f275f65c9fec4a7e51fdeab89f4e9d1a174572cb9d144a65f51498"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/tooling-fixtures.log",
@@ -1021,7 +1033,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/RESULTS.md",
-      "sha256": "c6ca13b4fd05ccbd71533577d1df58bfbcc88d9a33a548e03ea92bdcd84737cc"
+      "sha256": "5a6642d79d939a0bee12b189bbe9bb8bab687d54d6905b52b96b2dd371d1bcb1"
     },
     {
       "path": "docs/brain/m103-quality-recovery01-active.json",
@@ -1069,7 +1081,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/SHA256SUMS.json",
-      "sha256": "aa5b89522ac7d26fc6b09cb29fd8bd65b3054aef85f52922366ff53df8f29086"
+      "sha256": "f458adf53455b30631dcac915e332b3df0ed11fd15804d7bc32708f6cf161c18"
     }
   ],
   "scope_matrix": [

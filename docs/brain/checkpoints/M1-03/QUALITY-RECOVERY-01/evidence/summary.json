@@ -388,6 +388,17 @@
       }
     },
     {
+      "id": "strict-report-postcommit",
+      "status": "PASS",
+      "raw_exit": 0,
+      "source_commit": "58290fc2af04f7daeed8860c464d0e1d95ace00b",
+      "source_tree": "20686764909fab7528040bbdb92f83693d9ed6ba",
+      "output": {
+        "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/strict-report-postcommit.log",
+        "sha256": "abdd45346e8c616d6a2ae51a4d3c0ad67678917b779d19aa9303312076798bcf"
+      }
+    },
+    {
       "id": "strict-source-profile",
       "status": "PASS",
       "raw_exit": 0,
