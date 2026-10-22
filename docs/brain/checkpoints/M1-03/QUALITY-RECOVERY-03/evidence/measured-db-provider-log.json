@@ -1,0 +1,14 @@
+{
+  "job_id": 119943306675,
+  "run_id": 39812735782,
+  "head_commit": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+  "decoded_log_sha256": "e827f1034cc3e08c26749f434740618caeaacf84d3c36b82cd3062cc514b369e",
+  "sanitized_excerpts": [
+    "2026-10-22T16:18:53.4207712Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: error from registry: Data limit exceeded",
+    "2026-10-22T16:18:53.4216330Z     diagnostic: 'Error response from daemon: error from registry: Data limit exceeded'"
+  ],
+  "canonical_image_unchanged": true,
+  "local_acquisition_attempts": 0,
+  "paid_retry": false,
+  "admission": "NONE"
+}

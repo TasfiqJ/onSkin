@@ -1,0 +1,29 @@
+{
+  "instructions": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "be3dbb304c30af6cc7a0f51e890ccb0e22a312690f8f455b88a710065da71a1a",
+      "git_blob": "ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0",
+      "read_before_source_edits": true,
+      "unchanged": true
+    },
+    {
+      "path": "docs/brain/AGENTS.md",
+      "sha256": "6fc492bc33d39d7d609574984d259da88a93c53eabd18d545ab272c6d550144d",
+      "git_blob": "b5aec7886df072024d616228077c1ee9a169f86c",
+      "read_before_source_edits": true,
+      "unchanged": true
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "2baa63ccb443800af7ffc6be239848b8d1a84cb078e163574a95792d882f68c0",
+      "git_blob": "6d2cacba1f58032e3878c16b0868b6c4a58fcd42",
+      "read_before_source_edits": true,
+      "unchanged": true
+    }
+  ],
+  "applicable_nested_instructions": [
+    "docs/brain/AGENTS.md"
+  ],
+  "admission": "NONE"
+}

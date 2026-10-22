@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "measured": {
+    "commit": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+    "tree": "db1c3db6f93e2d341a6bd85de2ad9d87db76d0af"
+  },
+  "original_test_path": "scripts/brain/test_m103_quality_recovery02_profile.py",
+  "original_test_git_blob": "71cf7490212eb8483dcb4eb9a9e7c1caa8db10c8",
+  "original_test_sha256": "77b1520a0594ca737303148586572d98e4211d739d89f712ae0a87842cfc2bf0",
+  "original_test_unchanged": true,
+  "current_attributes_sha256": "0989b8860a3146dafc0821f6ffd18caa27c87c53bd25dbbd3819ca78991d52be",
+  "frozen_endpoint_attributes_sha256": "58cc1493e2dd014812689be2685973a3a9150242b2bd1b45f50a174ea10e4c7b",
+  "failure": "Original QR02 fixture copies current .gitattributes into the predecessor interval; exact QR02 immutable marker guard rejects the QR03 additions",
+  "required_log": "final-governance-current.log",
+  "additional_diagnostic": "final-governance.log; frozen inputs,93 tests,91 pass/2 genuine Windows-only skips; not a substitute",
+  "requested_independent_brain_action": "Review exact results and decide whether to issue a narrowly scoped frozen-endpoint fixture correction; no current permission to edit original test or loosen old interval",
+  "outside_current_existing_file_allowlist": true,
+  "older_source_scope_expansion_permitted": false,
+  "protected_source_go": false,
+  "admission": "NONE"
+}

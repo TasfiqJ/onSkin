@@ -1,0 +1,96 @@
+
+> layerwell@0.1.0 phase9:ios-privacy-source-audit:test
+> node --test scripts/phase9/ios-privacy-source-audit.test.mjs
+
+✔ pins and parses the installed react-native-view-shot privacy manifest (5.531883ms)
+✔ checked-in SDK mapping resolves hoisted lock entries and installed source pins (5.56473ms)
+✔ accepts a minimal dictionary and deterministically normalizes a complete valid manifest (1.657166ms)
+▶ rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs
+  ✔ non-buffer (0.234539ms)
+  ✔ incomplete XML (0.149071ms)
+  ✔ malformed XML that passes the document boundary check (3.671677ms)
+  ✔ non-XML junk before the plist root (0.172413ms)
+  ✔ binary plist (0.182424ms)
+  ✔ non-dictionary root (1.461633ms)
+  ✔ UTF-8 BOM (0.344832ms)
+  ✔ invalid UTF-8 (0.20245ms)
+✔ rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs (7.51347ms)
+✔ rejects duplicate top-level dictionary keys before parser last-value recovery (0.374472ms)
+▶ rejects unknown top-level keys and wrong top-level value types
+  ✔ unknown key (0.322723ms)
+  ✔ tracking string (0.206073ms)
+  ✔ domains string (0.243519ms)
+  ✔ accessed API dictionary (0.275751ms)
+  ✔ collected data dictionary (0.199491ms)
+✔ rejects unknown top-level keys and wrong top-level value types (1.67703ms)
+✔ rejects an explicitly empty accessed-API array (0.208124ms)
+▶ rejects required-reason mismatches, duplicate reasons, and duplicate categories
+  ✔ reason belongs to another category (0.254313ms)
+  ✔ duplicate reason (0.215043ms)
+  ✔ duplicate category (0.286159ms)
+  ✔ unknown category (0.287735ms)
+  ✔ empty reasons (0.195388ms)
+✔ rejects required-reason mismatches, duplicate reasons, and duplicate categories (1.617926ms)
+▶ rejects collected-data values outside Apple enums and invalid field values
+  ✔ unknown collected data type (0.353855ms)
+  ✔ unknown collected data purpose (0.24897ms)
+  ✔ empty purposes (0.221941ms)
+✔ rejects collected-data values outside Apple enums and invalid field values (1.388927ms)
+✔ rejects duplicate collected types (0.450243ms)
+▶ rejects every tracking contradiction
+  ✔ domains while tracking is false (0.256929ms)
+  ✔ tracking true without domains (0.211603ms)
+  ✔ collected item tracks while top-level tracking is false (0.305179ms)
+✔ rejects every tracking contradiction (1.156439ms)
+▶ accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts
+  ✔ query (0.327391ms)
+  ✔ wildcard (0.404037ms)
+  ✔ leading hyphen (0.243479ms)
+  ✔ trailing hyphen (0.213883ms)
+  ✔ empty label (0.201127ms)
+  ✔ IPv4 (0.285168ms)
+  ✔ IPv6 (0.234132ms)
+  ✔ localhost (0.236115ms)
+  ✔ port (0.198609ms)
+  ✔ scheme (0.195626ms)
+  ✔ path (0.19181ms)
+  ✔ unicode label (0.203516ms)
+  ✔ case-insensitive duplicate (0.233389ms)
+  ✔ case-insensitive two-label duplicate (0.207519ms)
+  ✔ overlong label (0.265414ms)
+✔ accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts (5.02058ms)
+✔ rejects source-only reports that make archive, labels, signatures, review, or acceptance claims (0.70333ms)
+✔ rejects nested archive-inclusion and signature claims anywhere in report arrays or records (0.273968ms)
+✔ audits a minimal fixture deterministically and still requires archive follow-up (6.498189ms)
+✔ deeply freezes the audit report so mutation cannot alter deterministic serialization (5.829519ms)
+✔ rejects a mutated baseline even when its published and sorted digests are recomputed (2.451078ms)
+✔ binds exact podspec privacy resources and ignores Ruby comments as evidence (7.334275ms)
+✔ retains unresolved standalone manifests as archive-required warnings (4.546387ms)
+✔ does not treat an arbitrary quoted podspec string as a resource binding (4.674377ms)
+✔ does not parse a .resources assignment token embedded inside a Ruby string literal (4.70207ms)
+✔ treats an embedded XCFramework manifest as source-container bound (5.647353ms)
+▶ rejects non-exact, escaping, and missing podspec privacy resources
+  ✔ glob reference (4.730874ms)
+  ✔ package escape (5.21459ms)
+  ✔ missing exact target (4.261398ms)
+✔ rejects non-exact, escaping, and missing podspec privacy resources (14.593853ms)
+✔ does not silently skip a malformed native package.json (4.342762ms)
+✔ ledgers a malformed installed package.json even without another native root signal (3.309079ms)
+✔ applies the total native traversal bound globally across packages (5.330301ms)
+✔ rejects oversized manifests, excessive depth, and unreviewed bound overrides (8.269794ms)
+✔ rejects a symlink or junction inside native source traversal (4.601743ms)
+✔ CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments (109.315ms)
+✔ CLI --write is deterministic and --check is read-only on success and drift (17.07539ms)
+✔ CLI strict mode fails closed before writing invalid source evidence (2.458721ms)
+✔ CLI refuses a generated-output directory link without touching its target (2.528319ms)
+✔ CLI refuses existing output paths that are distinct hardlinks to one inode (2.403295ms)
+✔ CLI follows host case rules when output paths differ only by case (6.826699ms)
+✔ CLI refuses an existing output-file symlink without mutating its target (3.215999ms)
+ℹ tests 77
+ℹ suites 0
+ℹ pass 77
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 349.385408

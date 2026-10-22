@@ -1,0 +1,9 @@
+# Open blockers and owner actions
+
+0. **ORDINARY_GOVERNANCE_FIXTURE_COMPATIBILITY.** Required current-checkout discovery ran93 tests and failed (failures=3, errors=1, skipped=2). The original QR02 fixture copies live `.gitattributes` into its old interval; strict guards reject QR03 markers. Its test file is outside this issuance. Brain must review and explicitly authorize any frozen-endpoint fixture correction. Separate frozen-input diagnostic success91/2skip is not substituted for this red command.
+
+1. **ORIGINAL_SECURITY_RED.** Original70 tests remain `failures=23, errors=2`,exit1,including authentic `WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT`. Current source findings/advisories/SBOM/coverage are owner-controlled; the original proposal expired2026-10-21T00:00:00Z. The hash-only owner packet binds current source, frozen artifact identities and real test output. Qualified owners must review the discrepancy and independently issue any new authority. No fixture, source inventory, proposal, rule, exception, expiry or Security fingerprint was changed.
+2. **CANONICAL_DB_ECR_BLOCKED.** The original canonical ECR image remains subject to `Data limit exceeded`. This issuance makes no acquisition retry, replacement, authentication or quota/payment workaround. Provider observations distinguish canonical DB from PG15/17 rehearsals. DB06/DB08/R2B and hosted authority stay closed.
+3. **INDEPENDENT_BRAIN_REVIEW_REQUIRED.** Bounded SDK source compatibility now passes locally, but whole M1-03 is unaccepted. Exact final-head CI may remain PENDING; final delivery observations must not borrow measured/earlier outcomes. Archive/device/native privacy reviewer sign-off, provider, clinical/research, deployment, signing/TestFlight, M2 and release remain unadmitted.
+
+protected_source_go=false;main_promotion_authorized=false;hosted_replay_authorized=false. Spend $0;admission NONE. PR9 draft/open/unmerged;main unchanged.

@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "measured_source": {
+    "commit": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+    "tree": "db1c3db6f93e2d341a6bd85de2ad9d87db76d0af"
+  },
+  "current_lock_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+  "original_test": "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+  "original_predicate": "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT",
+  "protected_artifacts": [
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "bytes": 2327707,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "bytes": 38158,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "bytes": 13797,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test-fixtures.json.gz",
+      "git_blob": "e169484d968c9270ae2dbaa5eb113069025281db",
+      "sha256": "617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655",
+      "bytes": 574209,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "git_blob": "34e7b277c934f05bd102ef646b4c82a3453408ee",
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8",
+      "bytes": 17412,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "git_blob": "4b05ec36fcd678120c09b8d0cebd247f34a83503",
+      "sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a",
+      "bytes": 15616,
+      "unchanged": true
+    },
+    {
+      "path": "docs/brain/current.json",
+      "git_blob": "438e7d4388c9e04a13416e1acb216e0a920fa1d5",
+      "sha256": "794244fc73f11c923c21a36d248d8301147d6a8a4a8fd61ddce34f1e315ba943",
+      "bytes": 2693,
+      "unchanged": true
+    },
+    {
+      "path": "docs/brain/state/roadmap.json",
+      "git_blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877",
+      "bytes": 44273,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "git_blob": "f86cfa007bf90881d2fa0c93ae0f60f229e9b3fd",
+      "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c",
+      "bytes": 16969,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "git_blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c",
+      "sha256": "aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510",
+      "bytes": 78932,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "git_blob": "69123bd77b7af0c97f55d9e47b3bad975498cbd7",
+      "sha256": "1c2e05e245db33ed7635de68e73488f568fc0ace2a7b35f52a7b4ebc1e061552",
+      "bytes": 912,
+      "unchanged": true
+    },
+    {
+      "path": "package.json",
+      "git_blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+      "bytes": 46730,
+      "unchanged": true
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery02-active.json",
+      "git_blob": "b3627c612b0ec20ff83daccf8d70a5d29903269e",
+      "sha256": "9449aa72f422ceab9f228d072630457f068dc65655e597b93e97b4723c5b5040",
+      "bytes": 1047,
+      "unchanged": true
+    }
+  ],
+  "affected_source_hashes": [
+    {
+      "path": "package-lock.json",
+      "current_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+      "current_git_blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "frozen_inventory_sha256": "474da1e26f630472bd1144df727fd0c21f0dddbc3d76d10d95b0f3b6a8778223"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "current_sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f",
+      "current_git_blob": "6217bd03730c530445861cc3e1e438a92f401b83",
+      "frozen_inventory_sha256": "9e45bbad2c2efe1a9a26e1e62d347ca578327d56ce41dbf0a2d2ac66323063bd"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "current_sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246",
+      "current_git_blob": "9776ac1b83e79c39e71b34867481d71cb56a29a4",
+      "frozen_inventory_sha256": "5b26b47d893d76bdc3b8aa087171979d5461eb71b056afd9752d3f21520a6bed"
+    }
+  ],
+  "original_proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "original_security_status": "RED",
+  "current_source_findings_advisories_and_coverage": "OWNER_CONTROLLED_UNREVIEWED; no raw findings or credentials included",
+  "requested_qualified_owner_action": "Review original exact-source scanner/SBOM producer-consumer discrepancy and issue independent exact authority if warranted; no fixture, source manifest, proposal, rule, exception or expiry refresh is authorized",
+  "canonical_db": "CLOSED; no ECR image substitution, paid retry, credentials or hosted replay",
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "admission": "NONE",
+  "original_technical_suite": {
+    "ran": 70,
+    "outcome": "failures=23, errors=2",
+    "exit_code": 1,
+    "log_sha256": "459bb9582c7f0d007318042a77ffb2da5c171c76746bdd9fcf8cf3e7cf597fc4"
+  },
+  "measured_provider_observation": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/measured-ci.json"
+}

@@ -1,0 +1,259 @@
+{
+  "policy": "Only local technical-test/tool outputs and safe provider excerpts are published; no raw provider scanner findings downloaded. Known literal credential/private-key patterns checked without publishing matched values; no credential testing.",
+  "logs": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/baseline-fresh-ci.log",
+      "sha256": "28ab67ad7e36f0004e0c551196912f110a9c48c91b35225ac22436fd206b6061",
+      "bytes": 712,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/baseline-mobile-expo-check.log",
+      "sha256": "8225fed7bda745afcf581844a0dab84bf962f013f0bebb70e13642550a02f761",
+      "bytes": 276,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/baseline-toolchain.log",
+      "sha256": "8f8126ad4d4b03c930db74861968e34b23387ecb685ea65927cfe8b57fd1b665",
+      "bytes": 31,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/clean-worklist-generation.log",
+      "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb",
+      "bytes": 237,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/doctor-registry.log",
+      "sha256": "ed42d2906c4200ee1df696f544591ef8fb81d1e89de49ac3c8cac89d540f9569",
+      "bytes": 979,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-archive-privacy-tests.log",
+      "sha256": "dfcc4d81f3fd4153600cface0f2d9da24c85036e24ca579ebb6fce6be6bd38c7",
+      "bytes": 14387,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-extension.log",
+      "sha256": "57491c0e899302c0df78c31aedbe3eca5be6cb657798a2274d2a1eecb8ca6170",
+      "bytes": 3608,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-forced-lint.log",
+      "sha256": "f75270ab63e6b9e1e6f7718e9b6af1589fe9b7ec657b7792216f7f29ac9f5095",
+      "bytes": 1161,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-forced-tests.log",
+      "sha256": "f9ff69e43bac0362b9258258267b6508163eaf427f48fb40aeae2fcfa345fbd8",
+      "bytes": 315369,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-forced-typecheck.log",
+      "sha256": "0cbd4d5cfeef4d2e7b7c62b40d87429433fd6b60e998ad6fb0452bd8dbb3082a",
+      "bytes": 1152,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-fresh-ci.log",
+      "sha256": "a99a6fa6f56be82c457bb21aac94d6c406045afe7cbecdd9b905fdefa93e493a",
+      "bytes": 712,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-governance-current.log",
+      "sha256": "46a175eccc604615e416a243b21bc226060dc03a9e7a72e123d52bd8b755ec0b",
+      "bytes": 19580,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-governance.log",
+      "sha256": "dd4c1964d45990154e1eb742ed916e56c3330721e8d18a68ed07c49d0290e939",
+      "bytes": 15528,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-mobile-doctor.log",
+      "sha256": "5c8d10c41f7c83d824b83c8fcd9cfaade4c534633584f4e93e6db3588a947bb1",
+      "bytes": 306,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-mobile-expo-check.log",
+      "sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+      "bytes": 28,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-postinstall.log",
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb",
+      "bytes": 161,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-privacy-check.log",
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c",
+      "bytes": 288,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-privacy-tests.log",
+      "sha256": "bf6305495b24683a319844c5caeb0f78a8821d1ac7bfb9cdaf85c942026ef344",
+      "bytes": 5484,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "bytes": 72,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-secret12.log",
+      "sha256": "4750d1999164b7b672e1b91420522046304c860ca1324221dd0ad1499ec45b23",
+      "bytes": 2103,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-security70.log",
+      "sha256": "459bb9582c7f0d007318042a77ffb2da5c171c76746bdd9fcf8cf3e7cf597fc4",
+      "bytes": 39703,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-store-source.log",
+      "sha256": "739fa4da6e8e132cbb7a2a06a8c96d2506cd9a2990c6209e3bd8d19e828348ed",
+      "bytes": 1259,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-widgets.log",
+      "sha256": "2401a943267544b17e46d731db269b794de26a64bf55f611e57b70a7a9ddf9f1",
+      "bytes": 2262,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/implementation-privacy-generation.log",
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb",
+      "bytes": 290,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/lock-regeneration.log",
+      "sha256": "ce7bf91f54adc7390cff6bf1c2572fd00ce9cfbd0611637e273059c4710a80c9",
+      "bytes": 18,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/patched-fresh-ci.log",
+      "sha256": "a99a6fa6f56be82c457bb21aac94d6c406045afe7cbecdd9b905fdefa93e493a",
+      "bytes": 712,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-extension.log",
+      "sha256": "e31dbfe90c6432709534509ea0dc7c0d2d3cafd77d680f0da5ab8d93cd0e3ad7",
+      "bytes": 3605,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-mobile-doctor.log",
+      "sha256": "5c8d10c41f7c83d824b83c8fcd9cfaade4c534633584f4e93e6db3588a947bb1",
+      "bytes": 306,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-mobile-expo-check.log",
+      "sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+      "bytes": 28,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-postinstall.log",
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb",
+      "bytes": 161,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-privacy-check.log",
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c",
+      "bytes": 288,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-privacy-tests.log",
+      "sha256": "1a687f70f52006bf88b70dc4a4e9d497d5affe0247eac583d1870b5c6f91fab2",
+      "bytes": 5493,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-profile-final.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "bytes": 72,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-profile.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "bytes": 72,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/precommit-widgets.log",
+      "sha256": "b8549e3884e16dfbb436f6cf0f7efa7c100a8680d89490b2bbe81554b8bafe2b",
+      "bytes": 2262,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/privacy-generate.log",
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb",
+      "bytes": 290,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr02-frozen-endpoint.log",
+      "sha256": "1db8e84a652b098923f5f2a658337ed5ec9954632fda3ebd1baf51e03e1c54af",
+      "bytes": 1475,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr02-positive-preserved.log",
+      "sha256": "5e17f34e73377329205f22e75a597f25942f1f0aa66d20dc391429abeb76ed11",
+      "bytes": 2138,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr03-adverse-repaired.log",
+      "sha256": "78e67c5cd7160fd087aa88403761f2f2dfaf69b1c9b635ec70bd37403adcfc2f",
+      "bytes": 1428,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr03-adverse.log",
+      "sha256": "dff58b4117cb6644f945bbec7545f518e66abe0dd06c8aaf0cd039b507a62f6a",
+      "bytes": 2278,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/registry-notifications.log",
+      "sha256": "a8c864c888574a4763bf3f262930782c99f15436daf55a782eded3556ea485a3",
+      "bytes": 1070,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/reviewed-npm-registry.log",
+      "sha256": "a16bea9598023ec2c13ba65b61c0d1651f6b4dd85c6e0ecd1380cc11a162605f",
+      "bytes": 767,
+      "literal_credential_pattern_hits": 0
+    }
+  ],
+  "redactions_required": 0,
+  "admission": "NONE"
+}

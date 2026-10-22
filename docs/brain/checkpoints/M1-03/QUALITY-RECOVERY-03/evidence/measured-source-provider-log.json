@@ -1,0 +1,14 @@
+{
+  "job_id": 119943307221,
+  "run_id": 39812735782,
+  "head_commit": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+  "job_conclusion": "success",
+  "decoded_log_sha256": "591843abf9e27d043db967540ba5eddeb1d0405b2853d6242516292b8fceea3f",
+  "sanitized_excerpts": [
+    "2026-10-22T16:19:10.3185087Z iOS privacy source audit outputs are current (archive_required).",
+    "2026-10-22T16:19:28.3527028Z Dependencies are up to date",
+    "2026-10-22T16:19:35.7573227Z 21/21 checks passed. No issues detected!",
+    "2026-10-22T16:20:07.9191506Z Phase 4 source worklist passed."
+  ],
+  "admission": "NONE"
+}

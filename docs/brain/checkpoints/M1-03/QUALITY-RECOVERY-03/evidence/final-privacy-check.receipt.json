@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"npm\", \"run\", \"phase9:ios-privacy-source-audit:check\"]",
+  "working_directory": "/root/onskin-quality-recovery03-source",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; isolated no-hardlink checkout; dedicated cache; no shared node_modules",
+  "source_commit": "8f79f90da1b4ecb1f721ea55c93998173ed910ef",
+  "source_tree": "db1c3db6f93e2d341a6bd85de2ad9d87db76d0af",
+  "started_utc": "2026-10-22T16:17:31.317204+00:00",
+  "duration_seconds": 1.197,
+  "tracked_dirty_paths_at_start": [],
+  "exit_code": 0,
+  "status": "PASS",
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/final-privacy-check.log",
+    "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c"
+  },
+  "admission": "NONE"
+}
