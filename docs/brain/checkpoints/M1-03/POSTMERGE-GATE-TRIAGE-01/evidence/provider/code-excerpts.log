@@ -1,0 +1,382 @@
+2026-10-22T18:42:52.8548383Z not ok 9 - N34: pure cutover planning emits safe hashes; supplied commit data conveys no approval
+2026-10-22T18:42:52.8599961Z   error: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:52.8600535Z   code: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:54.4872914Z # {"case":"N02","detail":"supabase/migrations/20260612000001_extensions_and_helpers.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4874641Z # {"case":"N02","detail":"supabase/migrations/20260612000002_profiles.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4876232Z # {"case":"N02","detail":"supabase/migrations/20260612000003_catalog.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4877939Z # {"case":"N02","detail":"supabase/migrations/20260612000004_skin_profiles.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4879548Z # {"case":"N02","detail":"supabase/migrations/20260612000005_user_products.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4881163Z # {"case":"N02","detail":"supabase/migrations/20260612000006_routines.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4882830Z # {"case":"N02","detail":"supabase/migrations/20260612000007_routine_completions.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4884447Z # {"case":"N02","detail":"supabase/migrations/20260612000008_photos.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4886036Z # {"case":"N02","detail":"supabase/migrations/20260612000009_entitlements.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4887749Z # {"case":"N02","detail":"supabase/migrations/20260612000010_consents.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4889429Z # {"case":"N02","detail":"supabase/migrations/20260612000011_notification_preferences.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4891102Z # {"case":"N02","detail":"supabase/migrations/20260612000012_routine_conflicts.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4893030Z # {"case":"N02","detail":"supabase/migrations/20260612000013_seed_intelligence.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4894677Z # {"case":"N02","detail":"supabase/migrations/20260612000014_sequencing_rules.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4896278Z # {"case":"N02","detail":"supabase/migrations/20260612000015_active_ramp.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4898144Z # {"case":"N02","detail":"supabase/migrations/20260613000016_smart_shelf.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4899759Z # {"case":"N02","detail":"supabase/migrations/20260613000017_cycles.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4901401Z # {"case":"N02","detail":"supabase/migrations/20260613000018_photo_progress.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4903091Z # {"case":"N02","detail":"supabase/migrations/20260613000019_reminders_streaks.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4904856Z # {"case":"N02","detail":"supabase/migrations/20260613000020_subscription_extensions.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4906599Z # {"case":"N02","detail":"supabase/migrations/20260613000021_recommendations.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4908371Z # {"case":"N02","detail":"supabase/migrations/20260613000022_commerce.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4909957Z # {"case":"N02","detail":"supabase/migrations/20260613000023_community.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4911873Z # {"case":"N02","detail":"supabase/migrations/20260613000024_photo_trend.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4913533Z # {"case":"N02","detail":"supabase/migrations/20260614000025_ask_layerwell.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4915179Z # {"case":"N02","detail":"supabase/migrations/20260614000026_phase4_catalog.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4916806Z # {"case":"N02","detail":"supabase/migrations/20260615000027_phase6_payments.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4918574Z # {"case":"N02","detail":"supabase/migrations/20260616000028_phase8_growth.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4920226Z # {"case":"N02","detail":"supabase/migrations/20260705000029_phase9_edge_rate_limits.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4921942Z # {"case":"N02","detail":"supabase/migrations/20260705000030_phase9_cross_owner_fk_rls.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4923782Z # {"case":"N02","detail":"supabase/migrations/20260705000031_phase9_photo_community_reference_rls.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4925618Z # {"case":"N02","detail":"supabase/migrations/20260705000032_phase9_consent_withdrawal.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4927565Z # {"case":"N02","detail":"supabase/migrations/20260705000033_phase9_notification_lock_screen_privacy.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4929480Z # {"case":"N02","detail":"supabase/migrations/20260705000034_phase9_security_definer_hardening.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4931556Z # {"case":"N02","detail":"supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4933507Z # {"case":"N02","detail":"supabase/migrations/20260710000036_photo_quality_provenance.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4935377Z # {"case":"N02","detail":"supabase/migrations/20260710000037_routine_conflict_choice_identity.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4937395Z # {"case":"N02","detail":"supabase/migrations/20260711000038_shelf_freshness_invariants.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4939203Z # {"case":"N02","detail":"supabase/migrations/20260711000039_replenishment_alert_opt_in.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4941033Z # {"case":"N02","detail":"supabase/migrations/20260712000040_edge_rate_limit_cleanup_index.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4942916Z # {"case":"N02","detail":"supabase/migrations/20260713000041_revenuecat_webhook_atomic_projection.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4944785Z # {"case":"N02","detail":"supabase/migrations/20260713000042_catalog_search_indexed_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4946585Z # {"case":"N02","detail":"supabase/migrations/20260713000043_account_deletion_resumable.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4948548Z # {"case":"N02","detail":"supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4950589Z # {"case":"N02","detail":"supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4952417Z # {"case":"N02","detail":"supabase/migrations/20260713000046_account_service_row_scrub.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4954260Z # {"case":"N02","detail":"supabase/migrations/20260713000047_account_obf_contribution_erasure.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4956248Z # {"case":"N02","detail":"supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4958433Z # {"case":"N02","detail":"supabase/migrations/20260713000049_revenuecat_deletion_barrier_guard.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4960407Z # {"case":"N02","detail":"supabase/migrations/20260713000050_service_writer_deletion_barriers.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4962398Z # {"case":"N02","detail":"supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4964284Z # {"case":"N02","detail":"supabase/migrations/20260713000052_account_publication_fence.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4966181Z # {"case":"N02","detail":"supabase/migrations/20260714000053_entitlement_authority_lanes.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4968234Z # {"case":"N02","detail":"supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4970120Z # {"case":"N02","detail":"supabase/migrations/20260715000055_apple_auth_lifecycle.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.4972135Z # {"case":"N02","detail":"supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.5104868Z # {"case":"N02","detail":"supabase/migrations/20260717000057_catalog_import_lifecycle.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.5312134Z # {"case":"N02","detail":"supabase/migrations/20260717000058_catalog_launch_curation.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.5512639Z # {"case":"N02","detail":"supabase/migrations/20260718000044_commerce_click_event_idempotency.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.5723827Z # {"case":"N02","detail":"supabase/migrations/20260718000045_catalog_import_pipeline.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.5918681Z # {"case":"N02","detail":"supabase/migrations/20260718000046_shelf_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.6135533Z # {"case":"N02","detail":"supabase/migrations/20260718000047_notification_preferences_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.6331429Z # {"case":"N02","detail":"supabase/migrations/20260718000048_recommendation_preferences_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.6545046Z # {"case":"N02","detail":"supabase/migrations/20260718000049_notification_delivery_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.6765560Z # {"case":"N02","detail":"supabase/migrations/20260718000050_shelf_scan_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.6965075Z # {"case":"N02","detail":"supabase/migrations/20260718000051_conflict_choice_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.7170675Z # {"case":"N02","detail":"supabase/migrations/20260718000052_catalog_search_bigram_index.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.7365169Z # {"case":"N02","detail":"supabase/migrations/20260718000053_edge_rate_limit_cleanup_index_guard.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.7571822Z # {"case":"N02","detail":"supabase/migrations/20260718000059_catalog_scan_minimization.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.7767442Z # {"case":"N02","detail":"supabase/migrations/20260718000060_cat07_truthful_freshness.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.7981457Z # {"case":"N02","detail":"supabase/migrations/20260722000061_catalog_import_benzoyl_review_override.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.8191779Z # {"case":"N02","detail":"supabase/migrations/20260722000062_catalog_curation_statement_guard.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.8385865Z # {"case":"N02","detail":"supabase/migrations/20260722000063_catalog_operator_authority.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.8598699Z # {"case":"N02","detail":"supabase/migrations/20260725000054_catalog_import_identity_and_visibility.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.8795844Z # {"case":"N02","detail":"supabase/migrations/20260726000055_immutable_event_clock_skew.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.9008925Z # {"case":"N02","detail":"supabase/migrations/20260726000056_shelf_local_date_boundary.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.9204907Z # {"case":"N02","detail":"supabase/migrations/20260726000057_skin_profile_consent_gate.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.9412461Z # {"case":"N02","detail":"supabase/migrations/20260726000058_photo_delete_outbox_rpc.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.9606085Z # {"case":"N02","detail":"supabase/migrations/20260726000059_edge_rate_limit_cleanup_concurrent_index.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:54.9825035Z # {"case":"N02","detail":"supabase/migrations/20260726000064_skin_profile_quiz_provenance.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.0058058Z # {"case":"N02","detail":"supabase/migrations/20260726000065_catalog_operator_transition_conflict_target.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.0268257Z # {"case":"N02","detail":"supabase/migrations/20260726000066_legacy_clinical_content_immutability.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.0490373Z # {"case":"N02","detail":"supabase/migrations/20260726000067_catalog_release_temp_table_lint_contract.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.0689943Z # {"case":"N02","detail":"supabase/migrations/20260726000068_routine_adherence_authority.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.0906065Z # {"case":"N02","detail":"supabase/migrations/20260726000069_routine_completion_sync_bridge.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.1107775Z # {"case":"N02","detail":"supabase/migrations/20260726000070_health_consent_draft_successor_staging.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.1326134Z # {"case":"N02","detail":"supabase/migrations/20260726000071_recommendation_zero_admission.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.1543790Z # {"case":"N02","detail":"supabase/migrations/20260729000072_commerce_zero_admission.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.1747677Z # {"case":"N02","detail":"supabase/migrations/20260921000073_catalog_search_promotion_boundary.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.1968836Z # {"case":"N02","detail":"supabase/migrations/20260921000074_ask_consent_rebrand_hash_alignment.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.2167808Z # {"case":"N02","detail":"supabase/migrations/20260921000075_skin_profile_quiz_contract_successor.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.2380386Z # {"case":"N02","detail":"supabase/migrations/20260921000076_health_consent_statement_time.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.2573543Z # {"case":"N02","detail":"supabase/migrations/20260926000077_consent_and_api_access_fences.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.2793032Z # {"case":"N02","detail":"supabase/migrations/20260926000078_catalog_operator_public_execute_fence.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.2989902Z # {"case":"N02","detail":"supabase/migrations/20261007000079_revenuecat_webhook_authority.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3205323Z # {"case":"N02","detail":"supabase/migrations/20261008000080_revenuecat_webhook_execution_acl.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3422364Z # {"case":"N02","detail":"supabase/migrations/20261010000081_db06_acl_r2a_client_nonrow_privileges.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3436223Z # {"case":"N03","detail":"20260718000046","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3453423Z # {"case":"N03","detail":"20260718000047","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3456808Z # {"case":"N03","detail":"20260718000048","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3465535Z # {"case":"N03","detail":"20260718000049","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3473400Z # {"case":"N03","detail":"20260718000050","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3481071Z # {"case":"N03","detail":"20260718000051","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3487224Z # {"case":"N03","detail":"20260718000052","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3495444Z # {"case":"N03","detail":"20260718000053","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3504101Z # {"case":"N03","detail":"20260718000059","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3510875Z # {"case":"N03","detail":"20260718000060","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3518098Z # {"case":"N03","detail":"20260722000061","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3525037Z # {"case":"N03","detail":"20260722000062","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3539240Z # {"case":"N04","detail":"05983dc1f54cb02346a2512464139ff34e4e70cf0e173bf9ca1a60ceb4f3aec8","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3547557Z # {"case":"N04","detail":"9dfd88a77f973fe6b87b8360c1ddb11f2eeacf954b98e2734a42a2a31e5e41c2","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3554034Z # {"case":"N05","detail":"correct prefix rows only","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3770674Z # {"case":"N05","detail":"missing 0081","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.3974051Z # {"case":"N06","detail":"same bytes and ID, different filename","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.4162461Z # {"case":"N07","detail":"duplicate inventory row","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.4171351Z # {"case":"N08","detail":"swap first two rows","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.4943321Z # {"case":"N10","detail":"supabase/migrations/20261007000079_revenuecat_webhook_authority.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.5157324Z # {"case":"N10","detail":"supabase/migrations/20261008000080_revenuecat_webhook_execution_acl.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.5352646Z # {"case":"N10","detail":"supabase/migrations/20261010000081_db06_acl_r2a_client_nonrow_privileges.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.5564405Z # {"case":"N11","detail":"supabase/functions/account-deletion/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.5773060Z # {"case":"N11","detail":"supabase/functions/apple-account-events/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.5969333Z # {"case":"N11","detail":"supabase/functions/apple-auth-lifecycle/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.6172615Z # {"case":"N11","detail":"supabase/functions/apple-auth-worker/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.6365559Z # {"case":"N11","detail":"supabase/functions/ask-layerwell/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.6573876Z # {"case":"N11","detail":"supabase/functions/catalog-lookup/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.6769758Z # {"case":"N11","detail":"supabase/functions/catalog-operator/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.6971537Z # {"case":"N11","detail":"supabase/functions/catalog-report/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.7164586Z # {"case":"N11","detail":"supabase/functions/catalog-search/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.7372980Z # {"case":"N11","detail":"supabase/functions/consent-withdrawal/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.7577873Z # {"case":"N11","detail":"supabase/functions/data-export/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.7771335Z # {"case":"N11","detail":"supabase/functions/growth-event/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.7972635Z # {"case":"N11","detail":"supabase/functions/health-consent-worker/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.8164306Z # {"case":"N11","detail":"supabase/functions/order-report-poll/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.8368511Z # {"case":"N11","detail":"supabase/functions/revenuecat-webhook/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.8557156Z # {"case":"N11","detail":"supabase/functions/subscription-grants/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.8761240Z # {"case":"N11","detail":"supabase/functions/subscription-reconciliation/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.8967148Z # {"case":"N11","detail":"supabase/functions/waitlist/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.9162969Z # {"case":"N12","detail":"_shared/appleVault.ts: account-deletion,apple-auth-lifecycle,apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.9373163Z # {"case":"N12","detail":"_shared/auth.ts: account-deletion,apple-auth-lifecycle,ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export,subscription-grants,subscription-reconciliation","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.9563405Z # {"case":"N12","detail":"_shared/body.ts: account-deletion,apple-account-events,apple-auth-lifecycle,apple-auth-worker,ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export,growth-event,health-consent-worker,subscription-grants,subscription-reconciliation,waitlist","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.9767883Z # {"case":"N12","detail":"_shared/env.ts: account-deletion,apple-account-events,apple-auth-lifecycle,apple-auth-worker,ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export,growth-event,health-consent-worker,order-report-poll,revenuecat-webhook,subscription-grants,subscription-reconciliation,waitlist","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:55.9958892Z # {"case":"N12","detail":"_shared/fetch.ts: account-deletion,apple-account-events,apple-auth-lifecycle,apple-auth-worker,growth-event,subscription-reconciliation,waitlist","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.0166135Z # {"case":"N12","detail":"_shared/revenueCatIdentityTombstone.ts: account-deletion,revenuecat-webhook","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.0377224Z # {"case":"N12","detail":"_shared/stagingTrafficFreeze.ts: account-deletion,apple-account-events,apple-auth-lifecycle,apple-auth-worker,ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export,growth-event,health-consent-worker,order-report-poll,revenuecat-webhook,subscription-grants,subscription-reconciliation,waitlist","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.0565842Z # {"case":"N12","detail":"_shared/supabaseKeyMap.ts: account-deletion,apple-account-events,apple-auth-lifecycle,apple-auth-worker,ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export,growth-event,health-consent-worker,revenuecat-webhook,subscription-grants,subscription-reconciliation,waitlist","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.0778265Z # {"case":"N12","detail":"_shared/supabaseSecretKey.ts: account-deletion,apple-account-events,apple-auth-lifecycle,apple-auth-worker,catalog-lookup,catalog-report,catalog-search,consent-withdrawal,data-export,growth-event,health-consent-worker,revenuecat-webhook,subscription-grants,subscription-reconciliation,waitlist","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.0974885Z # {"case":"N12","detail":"_shared/verifiedAuthSessionClaims.ts: account-deletion,apple-auth-lifecycle,consent-withdrawal,subscription-reconciliation","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.1182895Z # {"case":"N12","detail":"account-deletion/appleDeletionExecutor.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.1375687Z # {"case":"N12","detail":"account-deletion/appleDeletionNetwork.ts: account-deletion,apple-auth-lifecycle,apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.1577479Z # {"case":"N12","detail":"account-deletion/authDeletionExecutor.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.1787562Z # {"case":"N12","detail":"account-deletion/deletionProviderNetwork.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.1980726Z # {"case":"N12","detail":"account-deletion/durableDeletionCore.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.2193019Z # {"case":"N12","detail":"account-deletion/durableDeletionCrypto.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.2387561Z # {"case":"N12","detail":"account-deletion/durableDeletionDatabaseGateway.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.2602720Z # {"case":"N12","detail":"account-deletion/durableDeletionEncryptedStateStore.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.2801619Z # {"case":"N12","detail":"account-deletion/durableDeletionHttpHandler.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.3011560Z # {"case":"N12","detail":"account-deletion/durableDeletionPayloads.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.3231939Z # {"case":"N12","detail":"account-deletion/durableDeletionRuntime.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.3438916Z # {"case":"N12","detail":"account-deletion/durableDeletionRuntimeCore.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.3658811Z # {"case":"N12","detail":"account-deletion/durableDeletionWorker.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.3865529Z # {"case":"N12","detail":"account-deletion/durableProviderDeletion.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.4075216Z # {"case":"N12","detail":"account-deletion/photoStorageDeletionExecutor.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.4268680Z # {"case":"N12","detail":"account-deletion/postHogDeletionExecutor.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.4475101Z # {"case":"N12","detail":"account-deletion/providerDeletion.ts: account-deletion,apple-auth-lifecycle,apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.4686518Z # {"case":"N12","detail":"account-deletion/revenueCatV2DeletionExecutor.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.4879554Z # {"case":"N12","detail":"account-deletion/serviceRoleCleanup.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.5095593Z # {"case":"N12","detail":"account-deletion/serviceRowsDeletionExecutor.ts: account-deletion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.5297546Z # {"case":"N12","detail":"_shared/appleLifecycleSecrets.ts: apple-account-events,apple-auth-lifecycle,apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.5507278Z # {"case":"N12","detail":"apple-account-events/core.ts: apple-account-events","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.5703788Z # {"case":"N12","detail":"apple-account-events/database.ts: apple-account-events","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.5911698Z # {"case":"N12","detail":"apple-account-events/httpHandler.ts: apple-account-events","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.6122532Z # {"case":"N12","detail":"apple-account-events/verifier.ts: apple-account-events","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.6320045Z # {"case":"N12","detail":"_shared/supabasePublishableKey.ts: apple-auth-lifecycle,ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.6532662Z # {"case":"N12","detail":"apple-auth-lifecycle/core.ts: apple-auth-lifecycle","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.6727222Z # {"case":"N12","detail":"apple-auth-lifecycle/database.ts: apple-auth-lifecycle","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.6935315Z # {"case":"N12","detail":"apple-auth-worker/core.ts: apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.7128122Z # {"case":"N12","detail":"apple-auth-worker/database.ts: apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.7340802Z # {"case":"N12","detail":"apple-auth-worker/httpHandler.ts: apple-auth-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.7554107Z # {"case":"N12","detail":"_shared/accountAccess.ts: ask-layerwell,catalog-lookup,catalog-operator,catalog-report,catalog-search,consent-withdrawal,data-export,subscription-grants,subscription-reconciliation","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.7747244Z # {"case":"N12","detail":"_shared/healthProcessingEpoch.ts: ask-layerwell,catalog-lookup,catalog-report,catalog-search","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.7961180Z # {"case":"N12","detail":"ask-layerwell/consentAdmission.ts: ask-layerwell","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.8169030Z # {"case":"N12","detail":"ask-layerwell/contract.ts: ask-layerwell","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.8368111Z # {"case":"N12","detail":"ask-layerwell/gatewayCore.ts: ask-layerwell","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.8563402Z # {"case":"N12","detail":"consent-withdrawal/healthConsentContract.ts: ask-layerwell,catalog-lookup,catalog-report,catalog-search,consent-withdrawal,data-export,health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.8773954Z # {"case":"N12","detail":"_shared/catalogBarcode.ts: catalog-lookup,catalog-report","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.8983957Z # {"case":"N12","detail":"catalog-lookup/catalogContract.ts: catalog-lookup","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.9179707Z # {"case":"N12","detail":"catalog-operator/contract.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.9390433Z # {"case":"N12","detail":"catalog-operator/databaseGateway.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.9587591Z # {"case":"N12","detail":"catalog-operator/databaseUrl.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.9802749Z # {"case":"N12","detail":"catalog-operator/httpHandler.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:56.9999229Z # {"case":"N12","detail":"catalog-operator/responseContract.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.0223803Z # {"case":"N12","detail":"catalog-operator/runtimeContext.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.0444762Z # {"case":"N12","detail":"catalog-operator/verifiedAuth.ts: catalog-operator","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.0675033Z # {"case":"N12","detail":"catalog-report/privacy.ts: catalog-report","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.0889575Z # {"case":"N12","detail":"catalog-search/catalogContract.ts: catalog-search","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.1084373Z # {"case":"N12","detail":"_shared/storagePath.ts: consent-withdrawal,data-export,health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.1303225Z # {"case":"N12","detail":"consent-withdrawal/dependentCleanupRuntime.ts: consent-withdrawal,health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.1499918Z # {"case":"N12","detail":"consent-withdrawal/granularWithdrawalCore.ts: consent-withdrawal,health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.1712324Z # {"case":"N12","detail":"consent-withdrawal/healthLifecycleCore.ts: consent-withdrawal,data-export,health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.1924334Z # {"case":"N12","detail":"data-export/exportCore.ts: consent-withdrawal,data-export,health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.2130531Z # {"case":"N12","detail":"data-export/catalogCorrectionExportCore.ts: data-export","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.2345995Z # {"case":"N12","detail":"data-export/exportRegistry.ts: data-export","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.2542296Z # {"case":"N12","detail":"data-export/healthSyncExportCore.ts: data-export","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.2757427Z # {"case":"N12","detail":"health-consent-worker/combinedWorkerCore.ts: health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.2969586Z # {"case":"N12","detail":"health-consent-worker/dependentWorkerCore.ts: health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.3182385Z # {"case":"N12","detail":"health-consent-worker/httpHandler.ts: health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.3398366Z # {"case":"N12","detail":"health-consent-worker/workerCore.ts: health-consent-worker","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.3595455Z # {"case":"N12","detail":"revenuecat-webhook/webhookCore.ts: revenuecat-webhook","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.3805277Z # {"case":"N12","detail":"subscription-grants/customProGrantAdmission.ts: subscription-grants","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.3999430Z # {"case":"N12","detail":"subscription-grants/grantErrors.ts: subscription-grants","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4207669Z # {"case":"N12","detail":"subscription-reconciliation/publicationLease.ts: subscription-reconciliation","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4412524Z # {"case":"N12","detail":"subscription-reconciliation/reconciliationCore.ts: subscription-reconciliation","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4431693Z # {"case":"N13","detail":"deleted helper","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4515598Z # {"case":"N14","detail":"extra-function/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4537988Z # {"case":"N14","detail":"_shared/extra/index.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4558243Z # {"case":"N14","detail":".hidden.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4567370Z # {"case":"N15","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4574580Z # {"case":"N15","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4579652Z # {"case":"N15","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4588783Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4595821Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4601803Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4608513Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4614004Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4620140Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4625940Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4630795Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4635396Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4642210Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4648083Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4653603Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4660847Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4666268Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4672209Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4679126Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4684610Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4690641Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4697399Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4703288Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4709055Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4716785Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4722814Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4728652Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4735529Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4741846Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4747118Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4754182Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4759952Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4765606Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4772805Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4778158Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4783639Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4790949Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4796153Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4802057Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4808833Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4814132Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4820189Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4826766Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4832506Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4838083Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4844740Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4850792Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4861990Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4866180Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4870696Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4875991Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4883172Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4889194Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4894498Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4901637Z # {"case":"N16","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4907700Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4913180Z # {"case":"N16","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4923434Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4930549Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4937546Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4944307Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4951275Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4958300Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4965620Z # {"case":"N17","detail":"supabase/functions/manifest.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4973455Z # {"case":"N18","detail":"supabase/functions/deno.lock","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4981976Z # {"case":"N19","detail":"packages/types/src/client-database.types.contract.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4987348Z # {"case":"N19","detail":"packages/types/src/client-database.types.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.4996010Z # {"case":"N19","detail":"packages/types/src/database.types.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.5218261Z # {"case":"N20","detail":"docs/hugeToDo/evidence-governance.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.5425125Z # {"case":"N20","detail":"docs/hugeToDo/feature-inventory.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.5641539Z # {"case":"N20","detail":"docs/phase-2/staging-cutover-attestation.template.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.5856151Z # {"case":"N20","detail":"docs/phase-2/staging-traffic-provider-freeze-attestation.template.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.6056654Z # {"case":"N20","detail":"docs/phase-2/staging-zero-cohort-boundary-attestation.template.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.6276846Z # {"case":"N20","detail":"package-lock.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.6487999Z # {"case":"N20","detail":"package.json","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.6690956Z # {"case":"N20","detail":"scripts/phase2/bounded-response-body.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.6954725Z # {"case":"N20","detail":"scripts/phase2/build-windows-job-runner.ps1","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.7167149Z # {"case":"N20","detail":"scripts/phase2/contained-command.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.7392270Z # {"case":"N20","detail":"scripts/phase2/database-types-contract-lib.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.7621149Z # {"case":"N20","detail":"scripts/phase2/deploy-supabase-staging.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.7824271Z # {"case":"N20","detail":"scripts/phase2/deploy-supabase-staging.ps1","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.8034861Z # {"case":"N20","detail":"scripts/phase2/local-supabase-reset-retry.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.8248245Z # {"case":"N20","detail":"scripts/phase2/local-supabase-reset.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.8449703Z # {"case":"N20","detail":"scripts/phase2/local-supabase-signal-cleanup.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.8659487Z # {"case":"N20","detail":"scripts/phase2/local-supabase-target-guard.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.8857582Z # {"case":"N20","detail":"scripts/phase2/prepare-staging-cutover.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.9059308Z # {"case":"N20","detail":"scripts/phase2/process-tree.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.9263493Z # {"case":"N20","detail":"scripts/phase2/read-edge-app-environment.ts","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.9457505Z # {"case":"N20","detail":"scripts/phase2/schema-diff-evidence.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.9663538Z # {"case":"N20","detail":"scripts/phase2/staging-cron-job-inventory.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:57.9871037Z # {"case":"N20","detail":"scripts/phase2/staging-cron-table-exists.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.0068672Z # {"case":"N20","detail":"scripts/phase2/staging-migration-history-exists.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.0279743Z # {"case":"N20","detail":"scripts/phase2/staging-migration-inventory.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.0486861Z # {"case":"N20","detail":"scripts/phase2/staging-schema-inventory.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.0688712Z # {"case":"N20","detail":"scripts/phase2/staging-traffic-freeze-canary.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.0905368Z # {"case":"N20","detail":"scripts/phase2/windows-job-runner.cs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.1107150Z # {"case":"N20","detail":"scripts/phase9/edge-function-manifest-check.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.1318089Z # {"case":"N20","detail":"scripts/phase9/edge-function-manifest-lib.mjs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.1321323Z # {"case":"N20","detail":"supabase/config.toml","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.1533282Z # {"case":"N20","detail":"supabase/seed.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.1734893Z # {"case":"N20","detail":"supabase/templates/email_change.html","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.1977051Z # {"case":"N22","detail":"supabase/seed.sql","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2192825Z # {"case":"N22","detail":"supabase/templates/email_change.html","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2204575Z # {"case":"N23","detail":"(s) => { s.migrations[0].sha256 = '0'.repeat(64); }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2209147Z # {"case":"N23","detail":"(s) => { s.migrations.pop(); }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2224667Z # {"case":"N23","detail":"(s) => { s.stableDeploymentInputs[0].byteCount += 1; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2245407Z # {"case":"N23","detail":"(s) => { s.sourceInputs[0].path = '../outside'; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2254140Z # {"case":"N23","detail":"(s) => { s.functionSources[s.functions[0].slug][0].sha256 = '0'.repeat(64); }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2271007Z # {"case":"N23","detail":"(inventory) => { inventory.deploymentInputs[0].sha256 = '0'.repeat(64); inventory.deploymentInputSetSha256 = sha256(canonicalJson(inventory.deploymentInputs)); }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2287398Z # {"case":"N23","detail":"(s) => { s.expandedDeploymentInputs[0].byteCount += 1; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2294965Z # {"case":"N24","detail":"missing schemaVersion","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2300783Z # {"case":"N24","detail":"missing migrationCount","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2305286Z # {"case":"N24","detail":"missing latestMigrationId","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2311607Z # {"case":"N24","detail":"missing migrations","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2316181Z # {"case":"N24","detail":"missing migrationSetSha256","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2320506Z # {"case":"N24","detail":"missing functionCount","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2324252Z # {"case":"N24","detail":"missing functions","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2328567Z # {"case":"N24","detail":"missing functionSetSha256","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2333702Z # {"case":"N24","detail":"missing functionManifestSha256","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2339887Z # {"case":"N24","detail":"missing denoLockSha256","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2345865Z # {"case":"N24","detail":"missing functionSources","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2351689Z # {"case":"N24","detail":"missing functionPaths","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2357999Z # {"case":"N24","detail":"missing sourceInputs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2363337Z # {"case":"N24","detail":"missing stableDeploymentInputs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2368677Z # {"case":"N24","detail":"missing expandedDeploymentInputs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2373694Z # {"case":"N24","detail":"missing expandedDeploymentInputSetSha256","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2378081Z # {"case":"N24","detail":"missing deploymentInputs","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2382950Z # {"case":"N24","detail":"missing deploymentInputSetSha256","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2389055Z # {"case":"N24","detail":"missing featureIds","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2394490Z # {"case":"N24","detail":"missing gatedSurfaceIds","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2398445Z # {"case":"N24","detail":"missing hostedSecretGroups","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2405301Z # {"case":"N24","detail":"(s) => { s.expectedHashes = {}; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2408136Z # {"case":"N24","detail":"(s) => { s.migrations = {}; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2412645Z # {"case":"N24","detail":"(s) => { s.functions = null; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2427283Z # {"case":"N24","detail":"(s) => { s.sourceInputs[0].extra = true; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2442071Z # {"case":"N24","detail":"(s) => { s.functionSources = []; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2455358Z # {"case":"N24","detail":"(s) => { s.sourceInputs[0].byteCount = '1'; }","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2464669Z # {"case":"N24","detail":"caller expected-hash override ignored","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2472723Z # {"case":"N25","detail":"extra caller receipt","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2482645Z # {"case":"N25","detail":"environment does not choose expected pins","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2517977Z # {"case":"N31","detail":"source stop","observed":"DB06_SOURCE_CONTRACT_REVIEW_REQUIRED","outcome":"refused"}
+2026-10-22T18:42:58.2661224Z not ok 12 - current reviewed source inventory is deterministic and exact
+2026-10-22T18:42:58.2666710Z   error: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.2667733Z   code: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.2939600Z not ok 32 - N01: reviewed immutable G leaves accept; no replay or candidate approval follows
+2026-10-22T18:42:58.2943747Z   error: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.2944136Z   code: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.3025350Z not ok 52 - N21: actual archived C2 package-lock bytes cannot substitute for G
+2026-10-22T18:42:58.3060481Z not ok 57 - N29: exact candidate source and pinned CLI still stop unconditionally
+2026-10-22T18:42:58.3064877Z   error: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.3065499Z   code: 'DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.3081815Z not ok 59 - N31: mocked pre-link order stops source/replay failures before any remote command
+2026-10-22T18:42:58.3085551Z   error: 'N31: replay stop: DB06_SOURCE_CONTRACT_REVIEW_REQUIRED'
+2026-10-22T18:42:58.3105971Z # fail 6
+2026-10-22T18:42:58.3253057Z ##[error]Process completed with exit code 1.
+2026-10-22T18:43:02.4769253Z FAIL braces: review is expired or dates are invalid
+2026-10-22T18:43:02.4769664Z FAIL node-forge: review is expired or dates are invalid
+2026-10-22T18:43:02.4770360Z FAIL unreviewed moderate npm advisory: @vitest/mocker@4.1.11:GHSA-qxg6-89mg-rqv8 (severity: moderate)
+2026-10-22T18:43:02.4771669Z FAIL unreviewed moderate npm advisory: @vitest/mocker@4.1.11:GHSA-xp26-3454-mjgp (severity: moderate)
+2026-10-22T18:43:02.4892663Z ##[error]Process completed with exit code 1.
+2026-10-22T18:43:04.4296485Z ##[error]Process completed with exit code 1.
+2026-10-22T18:43:04.7971566Z ##[error]Process completed with exit code 1.
+2026-10-22T18:43:06.3446796Z ##[error]Process completed with exit code 1.

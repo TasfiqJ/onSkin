@@ -1,0 +1,95 @@
+[
+  {
+    "name": "original-sbom-wrapper",
+    "command": [
+      "node",
+      "/root/onskin-postmerge-gate-triage01-candidate/scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "sbom",
+      "/tmp/g97-workflow-unit-hl3rl8c1/code"
+    ],
+    "exit": 1,
+    "seconds": 0.2,
+    "sha256": "46157f53c73ef8ab1a043a26837091aef3f498c6c152a8d886ed1e591032051c",
+    "bytes": 97
+  },
+  {
+    "name": "underlying-assertion",
+    "command": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import {assertLegacyAuditedSbom} from './scripts/phase9/security_acceptance/workflow_contract.mjs';\nimport {readFileSync} from 'node:fs';\nconst load=p=>JSON.parse(readFileSync(p,'utf8'));\ntry {console.log(JSON.stringify(assertLegacyAuditedSbom({packet:load(process.argv[1]+'/code/dependency-inventory.json'),audit:load(process.argv[1]+'/code/dependency-sbom-audit.json'),lock:load('package-lock.json'),policy:load('docs/phase-9/security-advisory-exceptions.json'),auditExit:1,sbomExit:1})));}\ncatch(e){console.error(JSON.stringify({name:e.name,code:e.code,operator:e.operator,stack:e.stack.split('\\n').filter(l=>!l.includes('node:internal')).slice(0,5)}));process.exitCode=1;}\n",
+      "/tmp/g97-workflow-unit-hl3rl8c1"
+    ],
+    "exit": 1,
+    "seconds": 0.11,
+    "sha256": "0001ab58456973976603a7c7ce48b27830a83b03c9b379c98c8ce03edd725b5a",
+    "bytes": 224
+  },
+  {
+    "name": "original-targeted",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+      "-v"
+    ],
+    "exit": 1,
+    "seconds": 0.45,
+    "sha256": "12cbb19368d49a4dfe68ac8f3fec18ed051e4a35e949d3641bedadd3f06b5a31",
+    "bytes": 1409
+  },
+  {
+    "name": "original-70",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_contract.py",
+      "-v"
+    ],
+    "exit": 1,
+    "seconds": 152.48,
+    "sha256": "3fbd85be32b0c6aaa5f719e37e3b6a6473149ed2974bd77defdf12aa44f18cc7",
+    "bytes": 39943
+  },
+  {
+    "name": "original-secret-12",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_secret_scan.py",
+      "-v"
+    ],
+    "exit": 0,
+    "seconds": 6.81,
+    "sha256": "6bdc63656b5cf9d494b8eb2571edb4c69cc48dbdc8a1c735eae35d7009541a03",
+    "bytes": 2111
+  },
+  {
+    "name": "original-workflow-structure",
+    "command": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import {validateWorkflowAdmission} from './scripts/phase9/security_acceptance/workflow_contract.mjs';import {readFileSync} from 'node:fs';const valid=validateWorkflowAdmission(readFileSync('.github/workflows/security.yml','utf8'));console.log(JSON.stringify({valid,approval:false}));if(!valid)process.exitCode=1;"
+    ],
+    "exit": 0,
+    "seconds": 0.08,
+    "sha256": "53e5ce81d3a0800f072a4a16a003f87c4afc39c62536cedd10c4b9ca9a985819",
+    "bytes": 40
+  }
+]

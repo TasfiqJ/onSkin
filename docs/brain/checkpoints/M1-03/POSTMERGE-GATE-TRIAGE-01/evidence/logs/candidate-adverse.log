@@ -1,0 +1,12 @@
+
+STDERR
+test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects (test_contract.ContractTests.test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects) ... ok
+test_original_workflow_sbom_execution_exit_cannot_be_waived (test_contract.ContractTests.test_original_workflow_sbom_execution_exit_cannot_be_waived) ... ok
+test_original_workflow_unknown_npm_or_osv_finding_rejects (test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects) ... ok
+test_SBOM_component_and_dependency_edge_omissions_rejected (test_contract.ContractTests.test_SBOM_component_and_dependency_edge_omissions_rejected) ... ok
+test_owner_receipt_requires_exact_binding_signature_and_time (test_contract.ContractTests.test_owner_receipt_requires_exact_binding_signature_and_time) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.685s
+
+OK

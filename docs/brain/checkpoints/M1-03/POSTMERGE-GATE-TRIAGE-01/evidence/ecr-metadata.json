@@ -1,0 +1,13 @@
+{
+  "time": "2026-10-22T22:43:14.702899+00:00",
+  "method": "HEAD",
+  "url": "https://public.ecr.aws/v2/supabase/postgres/manifests/15.8.1.085",
+  "authentication": "NONE; no bearer token requested",
+  "status": 401,
+  "headers": {
+    "Content-Type": "application/json; charset=utf-8",
+    "WWW-Authenticate": "Bearer realm=\"https://public.ecr.aws/token/\",service=\"public.ecr.aws\",scope=\"aws\""
+  },
+  "pull": false,
+  "spend_usd": 0
+}

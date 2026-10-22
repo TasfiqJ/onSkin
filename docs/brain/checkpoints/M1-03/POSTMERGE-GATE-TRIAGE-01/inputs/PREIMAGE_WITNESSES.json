@@ -1,0 +1,116 @@
+{
+  "commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "files": [
+    {
+      "bytes": 2135,
+      "git_blob": "c0af474371cc339e4bb41b107dc0a99647ed8a36",
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "a64b3e0e8e6d64b96cd3673dad928b6d0bb7715d1d0d606470d6899c76c92aed"
+    },
+    {
+      "bytes": 2895,
+      "git_blob": "ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0",
+      "path": "AGENTS.md",
+      "sha256": "be3dbb304c30af6cc7a0f51e890ccb0e22a312690f8f455b88a710065da71a1a"
+    },
+    {
+      "bytes": 5635,
+      "git_blob": "6d2cacba1f58032e3878c16b0868b6c4a58fcd42",
+      "path": "CLAUDE.md",
+      "sha256": "2baa63ccb443800af7ffc6be239848b8d1a84cb078e163574a95792d882f68c0"
+    },
+    {
+      "bytes": 29246,
+      "git_blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "path": ".github/workflows/security.yml",
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1"
+    },
+    {
+      "bytes": 13201,
+      "git_blob": "7efb90aaabbeca82149d4efa0067943abb251351",
+      "path": ".github/workflows/quality.yml",
+      "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8"
+    },
+    {
+      "bytes": 2314,
+      "git_blob": "6afd4e34c6142c1a28814f2deb73483b1365d863",
+      "path": ".github/workflows/g97-security-acceptance.yml",
+      "sha256": "ba7733652563ec9317cbf773693140323ea17f03c444c82dd21a4a771b9f4dae"
+    },
+    {
+      "bytes": 2327707,
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d"
+    },
+    {
+      "bytes": 13797,
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "bytes": 17412,
+      "git_blob": "34e7b277c934f05bd102ef646b4c82a3453408ee",
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8"
+    },
+    {
+      "bytes": 15616,
+      "git_blob": "4b05ec36fcd678120c09b8d0cebd247f34a83503",
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a"
+    },
+    {
+      "bytes": 49408,
+      "git_blob": "cf5ade898af4862a12b714a56cd8472d461b5e59",
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "sha256": "73e31496101f9e0dd3bfc0bb716e0717ebfdfeecea1627c5d43853c3a1f1638c"
+    },
+    {
+      "bytes": 8268,
+      "git_blob": "00206f6ef6ce4dee68dd9c29af496c1ea3e3b9fb",
+      "path": "scripts/phase9/dependency-sbom.mjs",
+      "sha256": "083e0779128bd0bb553d1b2243eb231078cc4b2322236f7318cd4b9e375e8b70"
+    },
+    {
+      "bytes": 55248,
+      "git_blob": "1864f940d3407bb87c25fa689bcd036638c510e6",
+      "path": "scripts/phase2/local-supabase-reset.mjs",
+      "sha256": "4a5a58b3547c82e8a61fe17ba20ac970b26aa9d2721e713be583bebd90a6a920"
+    },
+    {
+      "bytes": 572797,
+      "git_blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "path": "package-lock.json",
+      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568"
+    },
+    {
+      "bytes": 44273,
+      "git_blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "path": "docs/brain/state/roadmap.json",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877"
+    },
+    {
+      "bytes": 1052,
+      "git_blob": "c35aca6c9cd79e63cbb2033b9500355e43d6353d",
+      "path": "docs/brain/m103-governance-fixture01-active.json",
+      "sha256": "9863a2f3ddf4c20dfa34b42dd611eb94da562699e3395d600acf146995f7ff92"
+    },
+    {
+      "bytes": 46730,
+      "git_blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "path": "package.json",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
+    },
+    {
+      "bytes": 2901,
+      "git_blob": "fb04ec613e3c9bf19252a40eab34d6d54541304a",
+      "path": "docs/brain/state/BLOCKERS.json",
+      "sha256": "b6d20d0996a0de320880a2078a8b1bd989c5ccf4490ef9a65d43e1f5a5484fd9"
+    }
+  ],
+  "schema_version": 1,
+  "source_note": "Independently derived from immutable Git objects under exact matching main tree; Codex must reverify each SHA256, Git blob and byte count before work.",
+  "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80"
+}

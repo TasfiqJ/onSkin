@@ -1,0 +1,42 @@
+[
+  {
+    "job_id": 120014969957,
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39833311172/job/120014969957",
+    "decoded_log_file_sha256": "afd4f25dc86e1f30c8434b9d1396e83e81e102ca8f0d4cf7207498f325019dc2",
+    "decoded_log_file_bytes": 420016,
+    "excerpt_sha256": "3acb0a11d067600b7a7b4fbff446cf6290068523ab197690e58e5ad9b3126155",
+    "serialization": "connector decoded UTF-8 transcript serialized with LF; not a claim about original archive bytes"
+  },
+  {
+    "job_id": 120014968751,
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39833311172/job/120014968751",
+    "decoded_log_file_sha256": "b4de2944879c59eff01043044fd44346fa2b43b3e21a4b40cf8d88a98686087c",
+    "decoded_log_file_bytes": 120784,
+    "excerpt_sha256": "2864ef092826b66ba954570d9a1957b66b45ec595bebe1e3ef5d18e3d67a22df",
+    "serialization": "connector decoded UTF-8 transcript serialized with LF; not a claim about original archive bytes"
+  },
+  {
+    "job_id": 120014969027,
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39833311172/job/120014969027",
+    "decoded_log_file_sha256": "65583afbaf79ecbc1e88fdedd9ca9d525a5ca0cb74ab8492345fe44c9170b631",
+    "decoded_log_file_bytes": 32395,
+    "excerpt_sha256": "edd4abce1a3a7bb2bd50fc615c3b230a07ef9f51933a6f464a2cc91d6bba6619",
+    "serialization": "connector decoded UTF-8 transcript serialized with LF; not a claim about original archive bytes"
+  },
+  {
+    "job_id": 120017408594,
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39833311172/job/120017408594",
+    "decoded_log_file_sha256": "28bda7c03a5cb6df5878b5cbfd8354e5a5ee2f1757e54b043dd5922f39db322e",
+    "decoded_log_file_bytes": 42149,
+    "excerpt_sha256": "1be2c7baa308d20e2537e8286b517533f4b69ce05b118f222209f53591deecb3",
+    "serialization": "connector decoded UTF-8 transcript serialized with LF; not a claim about original archive bytes"
+  },
+  {
+    "job_id": 120014968722,
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/39833311194/job/120014968722",
+    "decoded_log_file_sha256": "79d4b024cd6f6c3eba717b4b328f4f9c8001645f67f4ee46208658e075f54bbb",
+    "decoded_log_file_bytes": 81780,
+    "excerpt_sha256": "239e23f16f845329c445175eeb03e06be0696cd88814d5ca88f510f1e6f801d8",
+    "serialization": "connector decoded UTF-8 transcript serialized with LF; not a claim about original archive bytes"
+  }
+]

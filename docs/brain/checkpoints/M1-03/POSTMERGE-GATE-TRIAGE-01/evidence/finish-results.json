@@ -1,0 +1,66 @@
+[
+  {
+    "name": "candidate-reverse-apply",
+    "command": [
+      "git",
+      "apply",
+      "-R",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch"
+    ],
+    "exit": 0,
+    "seconds": 0.01,
+    "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+    "bytes": 8
+  },
+  {
+    "name": "candidate-reversal-clean",
+    "command": [
+      "git",
+      "diff",
+      "--exit-code"
+    ],
+    "exit": 0,
+    "seconds": 0.43,
+    "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+    "bytes": 8
+  },
+  {
+    "name": "reversed-original-targeted",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+      "-v"
+    ],
+    "exit": 1,
+    "seconds": 0.44,
+    "sha256": "b1d9d56a5fc43c3e88cd362d1b21959593f497f3664a7eaed95206a997c8ca84",
+    "bytes": 1409
+  },
+  {
+    "name": "candidate-fresh-apply-check",
+    "command": [
+      "git",
+      "apply",
+      "--check",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch"
+    ],
+    "exit": 0,
+    "seconds": 0.01,
+    "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+    "bytes": 8
+  },
+  {
+    "name": "local-database-source-contract",
+    "command": [
+      "node",
+      "scripts/phase2/local-supabase-contract.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.28,
+    "sha256": "de9f07517b68c0ed0f65df996f5f3048752c7b6243ca879630f953d556cba9db",
+    "bytes": 44
+  }
+]

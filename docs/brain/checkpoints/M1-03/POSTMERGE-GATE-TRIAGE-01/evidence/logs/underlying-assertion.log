@@ -1,0 +1,3 @@
+
+STDERR
+{"name":"AssertionError","code":"ERR_ASSERTION","operator":"deepStrictEqual","stack":["AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:","+ actual - expected","... Skipped lines","","  ["]}

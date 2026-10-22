@@ -1,0 +1,47 @@
+{
+  "measured_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "measured_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "assertions": [
+    {
+      "case": "original-unit",
+      "exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "5179b26be99522c2d797385a56a55b043f9e45469c8be5c13b7bea068296859d",
+      "result": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "assertion": [
+          "    at assertLegacyAuditedSbom (file:///root/onskin-postmerge-gate-triage01-candidate/scripts/phase9/security_acceptance/workflow_contract.mjs:129:10)"
+        ]
+      }
+    },
+    {
+      "case": "real-provider",
+      "exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "aa0bb103fe8dfd9c5daf29352677cbb2b2159eead9a7e667d3705fc70efb0f57",
+      "result": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "assertion": [
+          "    at assertLegacyAuditedSbom (file:///root/onskin-postmerge-gate-triage01-candidate/scripts/phase9/security_acceptance/workflow_contract.mjs:117:10)"
+        ]
+      }
+    }
+  ],
+  "unchanged_graph_fixture_sha256": "72a07b2d11df37bd8d496de489a1a2d6a0e5c1837d576968a1a804e93e20b9ad",
+  "graph_edges": 2653,
+  "unchanged_cyclonedx_fixture_sha256": "49d09592723eecd5fd49714dbc84c72320b42f612b51f495ccc9609cf5578862",
+  "components": 964,
+  "dependency_rows": 965,
+  "dependency_edges": 2454,
+  "validator_sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a",
+  "candidate_changed_paths": [
+    "scripts/phase9/security_acceptance/test_contract.py"
+  ],
+  "yaml_version": "2.9.0",
+  "node": "v24.19.0",
+  "python": "3.12.3"
+}

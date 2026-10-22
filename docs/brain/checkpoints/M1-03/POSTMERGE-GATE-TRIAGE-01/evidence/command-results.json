@@ -1,0 +1,225 @@
+[
+  {
+    "name": "original-sbom-wrapper",
+    "command": [
+      "node",
+      "/root/onskin-postmerge-gate-triage01-candidate/scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "sbom",
+      "/tmp/g97-workflow-unit-hl3rl8c1/code"
+    ],
+    "exit": 1,
+    "seconds": 0.2,
+    "sha256": "46157f53c73ef8ab1a043a26837091aef3f498c6c152a8d886ed1e591032051c",
+    "bytes": 97
+  },
+  {
+    "name": "underlying-assertion",
+    "command": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import {assertLegacyAuditedSbom} from './scripts/phase9/security_acceptance/workflow_contract.mjs';\nimport {readFileSync} from 'node:fs';\nconst load=p=>JSON.parse(readFileSync(p,'utf8'));\ntry {console.log(JSON.stringify(assertLegacyAuditedSbom({packet:load(process.argv[1]+'/code/dependency-inventory.json'),audit:load(process.argv[1]+'/code/dependency-sbom-audit.json'),lock:load('package-lock.json'),policy:load('docs/phase-9/security-advisory-exceptions.json'),auditExit:1,sbomExit:1})));}\ncatch(e){console.error(JSON.stringify({name:e.name,code:e.code,operator:e.operator,stack:e.stack.split('\\n').filter(l=>!l.includes('node:internal')).slice(0,5)}));process.exitCode=1;}\n",
+      "/tmp/g97-workflow-unit-hl3rl8c1"
+    ],
+    "exit": 1,
+    "seconds": 0.11,
+    "sha256": "0001ab58456973976603a7c7ce48b27830a83b03c9b379c98c8ce03edd725b5a",
+    "bytes": 224
+  },
+  {
+    "name": "original-targeted",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+      "-v"
+    ],
+    "exit": 1,
+    "seconds": 0.45,
+    "sha256": "12cbb19368d49a4dfe68ac8f3fec18ed051e4a35e949d3641bedadd3f06b5a31",
+    "bytes": 1409
+  },
+  {
+    "name": "original-70",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_contract.py",
+      "-v"
+    ],
+    "exit": 1,
+    "seconds": 152.48,
+    "sha256": "3fbd85be32b0c6aaa5f719e37e3b6a6473149ed2974bd77defdf12aa44f18cc7",
+    "bytes": 39943
+  },
+  {
+    "name": "original-secret-12",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_secret_scan.py",
+      "-v"
+    ],
+    "exit": 0,
+    "seconds": 6.81,
+    "sha256": "6bdc63656b5cf9d494b8eb2571edb4c69cc48dbdc8a1c735eae35d7009541a03",
+    "bytes": 2111
+  },
+  {
+    "name": "original-workflow-structure",
+    "command": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import {validateWorkflowAdmission} from './scripts/phase9/security_acceptance/workflow_contract.mjs';import {readFileSync} from 'node:fs';const valid=validateWorkflowAdmission(readFileSync('.github/workflows/security.yml','utf8'));console.log(JSON.stringify({valid,approval:false}));if(!valid)process.exitCode=1;"
+    ],
+    "exit": 0,
+    "seconds": 0.08,
+    "sha256": "53e5ce81d3a0800f072a4a16a003f87c4afc39c62536cedd10c4b9ca9a985819",
+    "bytes": 40
+  },
+  {
+    "name": "candidate-targeted",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+      "-v"
+    ],
+    "exit": 0,
+    "seconds": 0.62,
+    "sha256": "bff534e95a8198c4e7175f05597a0e34ce0b8dad4d2fdf36efbcc1edfb4816da",
+    "bytes": 270
+  },
+  {
+    "name": "candidate-adverse",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_contract.ContractTests.test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects",
+      "test_contract.ContractTests.test_original_workflow_sbom_execution_exit_cannot_be_waived",
+      "test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects",
+      "test_contract.ContractTests.test_SBOM_component_and_dependency_edge_omissions_rejected",
+      "test_contract.ContractTests.test_owner_receipt_requires_exact_binding_signature_and_time",
+      "-v"
+    ],
+    "exit": 0,
+    "seconds": 1.78,
+    "sha256": "f607232c4d8da53672cca91a56ec28192c9490c328ca72d1d5872eb9f7eb6cc6",
+    "bytes": 905
+  },
+  {
+    "name": "candidate-70",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_contract.py",
+      "-v"
+    ],
+    "exit": 0,
+    "seconds": 158.1,
+    "sha256": "a6a698fed97190d9ff215dde905686f1b774c0e33298a28f9aa581cc9765fc19",
+    "bytes": 11409
+  },
+  {
+    "name": "canonical-image-source-contract",
+    "command": [
+      "node",
+      "--test",
+      "scripts/phase2/canonical-postgres-pull-retry.test.mjs",
+      "scripts/phase2/local-supabase-reset-source.test.mjs"
+    ],
+    "exit": 0,
+    "seconds": 9.42,
+    "sha256": "b782820ea394beb7ddcb6c9cb72a2bb3386c2d16ed8c4a9efe5d72469293d845",
+    "bytes": 9474
+  },
+  {
+    "name": "candidate-reverse-apply",
+    "command": [
+      "git",
+      "apply",
+      "-R",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch"
+    ],
+    "exit": 0,
+    "seconds": 0.01,
+    "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+    "bytes": 8
+  },
+  {
+    "name": "candidate-reversal-clean",
+    "command": [
+      "git",
+      "diff",
+      "--exit-code"
+    ],
+    "exit": 0,
+    "seconds": 0.43,
+    "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+    "bytes": 8
+  },
+  {
+    "name": "reversed-original-targeted",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+      "-v"
+    ],
+    "exit": 1,
+    "seconds": 0.44,
+    "sha256": "b1d9d56a5fc43c3e88cd362d1b21959593f497f3664a7eaed95206a997c8ca84",
+    "bytes": 1409
+  },
+  {
+    "name": "candidate-fresh-apply-check",
+    "command": [
+      "git",
+      "apply",
+      "--check",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch"
+    ],
+    "exit": 0,
+    "seconds": 0.01,
+    "sha256": "a3680b6601c39b586ea892ad2bbaa58a7f72b62a64f73917b09aa8c5f188110e",
+    "bytes": 8
+  },
+  {
+    "name": "local-database-source-contract",
+    "command": [
+      "node",
+      "scripts/phase2/local-supabase-contract.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.28,
+    "sha256": "de9f07517b68c0ed0f65df996f5f3048752c7b6243ca879630f953d556cba9db",
+    "bytes": 44
+  }
+]

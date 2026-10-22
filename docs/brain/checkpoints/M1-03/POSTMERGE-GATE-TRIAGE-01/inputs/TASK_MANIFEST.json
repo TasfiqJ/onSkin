@@ -1,0 +1,63 @@
+{
+  "authorization_id": "M103-POSTMERGE-GATE-TRIAGE01-READONLY-CANDIDATE-01",
+  "base_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "base_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "branch": "stage/m1-gate-recovery",
+  "file_count": 10,
+  "files": [
+    {
+      "bytes": 1130,
+      "path": "00_READ_FIRST.md",
+      "sha256": "59701a96bb9c020fa2952d21f6bf6a1c3df9b3b2d2f642e7b84fc279ac15a88a"
+    },
+    {
+      "bytes": 1824,
+      "path": "01_CURRENT_TRUTH.md",
+      "sha256": "9dbf46dfa9df72a6ad3b72b7559d78b79e3b88ca198a0f635d7a62bfbd497533"
+    },
+    {
+      "bytes": 2817,
+      "path": "02_TASK.md",
+      "sha256": "165c2c421f0e281791aec03cbfbbd55b29e8d208d3d6c6b003fce32ac0b5e473"
+    },
+    {
+      "bytes": 2191,
+      "path": "03_EVIDENCE_AND_TESTS.md",
+      "sha256": "3497e405f55cd6e1c209c6e844983774f636585a5d704114701e6ab6e655d9a0"
+    },
+    {
+      "bytes": 1069,
+      "path": "04_ECR_BOUNDARY.md",
+      "sha256": "0f32460a666aa75731082ea7be71bd12dfdd265cdaa9b1ef866cae23e1a3aa48"
+    },
+    {
+      "bytes": 2196,
+      "path": "05_DELIVERY_AND_STOP.md",
+      "sha256": "42cedec32b2980f3487973e338f4abc5354162ddfa3c8e739d9d9f7ac75cadcc"
+    },
+    {
+      "bytes": 4505,
+      "path": "PREIMAGE_WITNESSES.json",
+      "sha256": "4c12cb9d1efa54ac423e4b7b6ff98e1b2617ab9fa60e85849414fc1811e4948c"
+    },
+    {
+      "bytes": 1737,
+      "path": "SOURCE_AUTHORITY.json",
+      "sha256": "bd3a1023fa6d08d2a64206d3d96f3f0ddbef20446793d032b2dcf09a15eef835"
+    },
+    {
+      "bytes": 2033,
+      "path": "STATE_OF_MAIN.json",
+      "sha256": "649eb2f45b136517f42a95992fa833d2c6a46e957eaf153506efb47431068020"
+    },
+    {
+      "bytes": 2079,
+      "path": "verify_context.py",
+      "sha256": "f1f503a9e842f43d5d42088080374e056e4b847849f12e6d999510c4c5a9142d"
+    }
+  ],
+  "iteration": "POSTMERGE-GATE-TRIAGE-01",
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

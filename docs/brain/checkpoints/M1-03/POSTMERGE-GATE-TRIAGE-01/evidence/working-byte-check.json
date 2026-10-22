@@ -1,0 +1,24 @@
+{
+  "protected_working_files_matched": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".github/workflows/security.yml",
+    ".github/workflows/quality.yml",
+    ".github/workflows/g97-security-acceptance.yml",
+    "scripts/phase9/security_acceptance/source-manifest.json",
+    "scripts/phase9/security_acceptance/proposal.json",
+    "scripts/phase9/security_acceptance/workflow_admission.py",
+    "scripts/phase9/security_acceptance/workflow_contract.mjs",
+    "scripts/phase9/security_acceptance/test_contract.py",
+    "scripts/phase9/dependency-sbom.mjs",
+    "scripts/phase2/local-supabase-reset.mjs",
+    "package-lock.json",
+    "docs/brain/state/roadmap.json",
+    "docs/brain/m103-governance-fixture01-active.json",
+    "package.json",
+    "docs/brain/state/BLOCKERS.json"
+  ],
+  "count": 17,
+  "root_handoff": "authorized new bytes; original Git witness independently validated before work",
+  "gitattributes": "text=auto eol=lf; checkpoint -text preserves bytes"
+}

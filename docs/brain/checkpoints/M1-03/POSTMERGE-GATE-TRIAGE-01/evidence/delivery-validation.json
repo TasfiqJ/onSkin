@@ -1,0 +1,13 @@
+{
+  "all_path_scope_checks": "PASS",
+  "regular_blob_checks": "PASS",
+  "all_receipt_whitespace_raw_exit": 2,
+  "preserved_raw_log_whitespace": [
+    "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-70.log:40: trailing whitespace.",
+    "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-70.log:47: trailing whitespace.",
+    "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-70.log:58: trailing whitespace."
+  ],
+  "prose_scripts_patch_json_whitespace_exit": 0,
+  "protected_source_changes": 0,
+  "interpretation": "raw original transcript bytes retained; no source gate result altered"
+}

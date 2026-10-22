@@ -1,0 +1,62 @@
+{
+  "accepted_roadmap_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "hosted_db_go": false,
+  "incremental_spend_usd": 0,
+  "ios": {
+    "conclusion": "success",
+    "scope": "source-only",
+    "status": "completed",
+    "workflow_id": 39833311278
+  },
+  "janus_modules": 27,
+  "m103_status": "PARTIAL_SOURCE_SCOPES_ACCEPTED_NOT_WHOLE_TASK",
+  "m2_authorized": false,
+  "main_push_authorized": false,
+  "merged_pr": 9,
+  "original_main_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "original_main_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "pr9_merged": true,
+  "prior_adr_count": 51,
+  "quality": {
+    "canonical_database_conclusion": "failure",
+    "canonical_database_job": 120014968722,
+    "canonical_pinned_image": "public.ecr.aws/supabase/postgres:15.8.1.085",
+    "conclusion": "failure",
+    "error": "Error response from daemon: error from registry: Data limit exceeded",
+    "expo_exports": "ios and android success",
+    "pg15_pg17_rehearsals": "success",
+    "quality_source_conclusion": "success",
+    "quality_source_job": 120014968068,
+    "status": "completed",
+    "workflow_id": 39833311194
+  },
+  "release_go": false,
+  "repository": "TasfiqJ/onSkin",
+  "roadmap_task_total": 47,
+  "schema_version": 1,
+  "security": {
+    "code_job": 120014969957,
+    "conclusion": "failure",
+    "known_failure": "WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT",
+    "original_source_only_proposal_expires": "2026-10-21T00:00:00Z",
+    "original_technical_suite": {
+      "errors": 2,
+      "failure_events": 23,
+      "tests": 70
+    },
+    "other_findings": "OSV/npm advisories, incomplete SAST coverage, unreviewed secret findings; verify current source",
+    "secret_job": 120014969027,
+    "source_admission_job": 120017408594,
+    "static_osv_job": 120014968751,
+    "status": "completed",
+    "workflow_id": 39833311172
+  },
+  "source_go": false,
+  "working_branch": "stage/m1-gate-recovery",
+  "working_branch_created_by_brain_at_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e"
+}
