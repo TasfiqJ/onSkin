@@ -296,7 +296,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/README.md",
-      "sha256": "615bb1c67ae581c2c502c4bee923412702206afac42711269489ecec082f087b"
+      "sha256": "dfa7103c9c99309bfdb036b9e73ab43107a2a04bd21b737d4616264f37226dd1"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/RESULTS.md",
@@ -536,7 +536,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/log-sanitization.json",
-      "sha256": "14328ea804f5ce0315d277e2f12fb8913bcd52a61c01785f52fbc1fd5379a788"
+      "sha256": "1f4b2d29c466d597a06059c2fb3935891290c79647e1ac30c271925098f2fa12"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/measured-ci-initial.json",
@@ -659,6 +659,22 @@
       "sha256": "0eacf035167f4ba318c01193525fded4145603af2c7f29c775346f2471d2a661"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/publication-strict-report.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/publication-strict-report.receipt.json",
+      "sha256": "4eace2b98e945361973cf4fe5990c185252a8d4aa9c712d19ed2f53c28176945"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/publication-worklist-check.log",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/publication-worklist-check.receipt.json",
+      "sha256": "9da05824873defbfa2e4fb05ac3b7126b64d8325429108ae3242b7ccbbcfd94c"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr02-frozen-endpoint.log",
       "sha256": "1db8e84a652b098923f5f2a658337ed5ec9954632fda3ebd1baf51e03e1c54af"
     },
@@ -704,7 +720,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/results-summary.json",
-      "sha256": "91f1fd3c6086ff1cd0f6ed3aceed91930d51caa05533c0c6ee6aae1b118894ee"
+      "sha256": "cc08e4f175dff07da1728bbf1657bd4c9ba195158889ca1ae74615337e59f962"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/reviewed-npm-provenance.json",

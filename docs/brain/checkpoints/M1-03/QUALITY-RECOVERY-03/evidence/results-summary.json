@@ -18,9 +18,6 @@
     "root_passed": 6067,
     "root_failed": 0,
     "cached_tasks": 0,
-    "governance_ran": 93,
-    "governance_passed": 91,
-    "governance_skipped": 2,
     "new_adverse": 8,
     "secret_passed": 12,
     "security_ran": 70,
@@ -30,7 +27,11 @@
     "privacy_passed": 77,
     "archive_privacy_fixtures_passed": 238,
     "doctor_passed": 21,
-    "doctor_total": 21
+    "doctor_total": 21,
+    "frozen_endpoint_governance_ran": 93,
+    "frozen_endpoint_governance_passed": 91,
+    "frozen_endpoint_governance_skipped": 2,
+    "ordinary_governance_ran": 93
   },
   "lock_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
   "changed_lock_entries": 2,

@@ -218,6 +218,18 @@
       "literal_credential_pattern_hits": 0
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/publication-strict-report.log",
+      "sha256": "3f5bbeeb661cff36054a33adcd5c574544a695c24ff66cfa593882a1b8c20bef",
+      "bytes": 72,
+      "literal_credential_pattern_hits": 0
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/publication-worklist-check.log",
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "bytes": 182,
+      "literal_credential_pattern_hits": 0
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-03/evidence/qr02-frozen-endpoint.log",
       "sha256": "1db8e84a652b098923f5f2a658337ed5ec9954632fda3ebd1baf51e03e1c54af",
       "bytes": 1475,
