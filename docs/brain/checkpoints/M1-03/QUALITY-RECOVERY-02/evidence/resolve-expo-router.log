@@ -1,0 +1,20 @@
+{
+  "version": "57.0.29",
+  "dist": {
+    "shasum": "0dcc3eca4d9a861afceea71c7fb9e9d1920d4ff8",
+    "tarball": "https://registry.npmjs.org/expo-router/-/expo-router-57.0.29.tgz",
+    "fileCount": 2459,
+    "integrity": "sha512-jm3ZVLm40zZc7XpfvGjZqgoaWjNOEht5mXAxi5RC8gqUQxSq4PRTMy49TXsYlDncVPZFgFPXaE2vOLrsv7Cpsw==",
+    "signatures": [
+      {
+        "sig": "MEYCIQC3f2gn6JI+r97lQ3u/A1SjKPksLuHeDyjmzT1oyNTQXgIhAICYjF8ZYXxtYDchzmDZ1ZOYxbCOfLF6bIQvDvq1mYeD",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEQCIAeurvSdiZlCb1nZ/4LcKZo6vTigX4LTw04fCrIZpqbJAiBBYmE+Vk5iJZd7Rr3v+VrpgJaeoCuJOrrbpO1YF15PBQ==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 6200423
+  }
+}

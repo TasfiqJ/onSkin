@@ -1,0 +1,20 @@
+{
+  "version": "4.2.12",
+  "dist": {
+    "shasum": "dd863622d5b3dc09b8becfb6c5ce527f1dbaaad8",
+    "tarball": "https://registry.npmjs.org/react-native-drawer-layout/-/react-native-drawer-layout-4.2.12.tgz",
+    "fileCount": 90,
+    "integrity": "sha512-qYmntEctkMSodN7pnC2llV21nswImLFPHJeT3PJXSJqZdU4jzDATR8iVi66sXkrtoOLJ2+EvXxgd7sMMpV4ViA==",
+    "signatures": [
+      {
+        "sig": "MEUCIQCJHaT45IHyDHfalx76UNs9k0HG+hGzO62QVqT4EGp6mAIgPDir1xgboVHneMuFWGLdoX2f85mV+wn4VoRRV2UrnFU=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEUCIDKElNeV3lS29MxRQOjq9+8V3g+NtJpx5DwyJXj3zNiwAiEA5b+7vzOHdhvAdRmJqtoJCfxdSl++CMviZ34lGAHrXoc="
+      }
+    ],
+    "unpackedSize": 114258
+  }
+}

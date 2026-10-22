@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "command": "[\"npm\", \"run\", \"phase9:ios-privacy-source-audit:test\"]",
+  "working_directory": "/root/onskin-quality-recovery02-source",
+  "environment": "Linux; Node24.19.0 npm11.20.0 Python3.12.3; CI=true; dedicated npm cache; no borrowed node_modules",
+  "source": {
+    "commit": "b74c0efa23828bcdaa3fbe49e43177dcc69331b9",
+    "tree": "675e93e9b1636d169d45cc532a4a1f7daf2509cb"
+  },
+  "started_utc": "2026-10-22T14:59:51.137742+00:00",
+  "duration_seconds": 0.445,
+  "exit_code": 0,
+  "status": "PASS",
+  "log": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.log",
+  "log_sha256": "b05d02c14be966c7fbd6080dc45e4044f2ed3abc65349be7bae62b469137a71a",
+  "admission": "NONE",
+  "execution_source_note": "Precommit or implementation-production diagnostic; not exact measured source acceptance. Raw exit and output retained."
+}

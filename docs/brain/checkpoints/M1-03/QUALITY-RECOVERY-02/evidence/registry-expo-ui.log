@@ -1,0 +1,32 @@
+{
+  "version": "57.0.26",
+  "dist": {
+    "shasum": "d5a241e3799ad40533cb5875a02b2d0dd1da33d3",
+    "tarball": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.26.tgz",
+    "fileCount": 1269,
+    "integrity": "sha512-sEvRjKK08nCq4sXo5PjDckA9OBpxFokCXs5MakWlI1wT1gQNvyliWn/Dwic8XC6YPTN/TbnEp2X/SEduD9+I3Q==",
+    "signatures": [
+      {
+        "sig": "MEQCIGBnOkQ++K2DlbLI7vwaRPwQn0nc/1kOb9mECfStM9v5AiB+VOauhU+J7ApZQakz4Xfg12LDNm4pvG9oPElPvCzEiA==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIFpQZLlyB2zWqY30zXpZGacuD/UQz7nNLPmEvWyw6/MZAiEA5NNpEI1DzYoAsA/al95t1KqrqPkXH8dVwK/HQ3vwonk=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 4731294
+  },
+  "dependencies": {
+    "vaul": "^1.1.2",
+    "sf-symbols-typescript": "^2.1.0"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-dom": "*",
+    "@babel/core": "*",
+    "react-native": "*",
+    "react-native-worklets": "*"
+  }
+}

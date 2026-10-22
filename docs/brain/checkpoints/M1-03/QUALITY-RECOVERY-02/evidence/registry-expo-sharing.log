@@ -1,0 +1,30 @@
+{
+  "version": "57.0.24",
+  "dist": {
+    "shasum": "8997868627fd3467e00f3486546c1edd6c60b9e2",
+    "tarball": "https://registry.npmjs.org/expo-sharing/-/expo-sharing-57.0.24.tgz",
+    "fileCount": 159,
+    "integrity": "sha512-q3+9V8Xa41S4KWe0bq2e2FuByeVBHu04G3lk5TqS030fWe3QdNHeSEbUn51RqxfcxMPa53NWVkVYP967xqtL3w==",
+    "signatures": [
+      {
+        "sig": "MEQCIGBhecOGCScvD9NufZ3079ujRN/vmX3JJ9iQbrWEHZm5AiBqNfpgd7pm2Hm9V7QKgZaBGkkCnod6hYrcsuTOUvzX/Q==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEYCIQCt/5aHBm7X80KbyqZ+8aUSjzgYQptvg6AX3x7Fb/QiiAIhAPTeb1DRF06ktBjK1aYAUziaFRn5+pxvn6n9lCRtOSCM",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "unpackedSize": 271575
+  },
+  "dependencies": {
+    "@expo/plist": "^0.8.1",
+    "@expo/config-types": "^57.0.2",
+    "@expo/config-plugins": "^57.0.11"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}

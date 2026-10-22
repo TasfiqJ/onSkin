@@ -1,0 +1,8 @@
+
+> layerwell@0.1.0 phase4:source-worklist:strict
+> node scripts/phase4/build-source-worklist.mjs --strict
+
+Wrote docs/phase-4/generated/source-worklist.json
+Wrote docs/phase-4/generated/source-worklist.md
+WARN Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence.
+Phase 4 source worklist passed.
