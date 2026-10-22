@@ -7,7 +7,8 @@ for filename in ['gf01_report.py','gf01_intake_evidence.py','gf01_verify_deliver
 BASE='dbcfce9770850d4655221bd3d4c3b5799553aed2'
 def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT).decode().strip()
 source=dict(commit='1dc58a5c5e49c3ffeada603f7e6f6038fc12803d',tree='b0a80f55a472fc28f02a5e993912314a17726f6c')
-assert git('rev-parse','HEAD')==source['commit']
+subprocess.run(['git','merge-base','--is-ancestor',source['commit'],'HEAD'],cwd=ROOT,check=True)
+assert all(path=='ONSKIN_BRAIN_HANDOFF.txt' or path.startswith(CP) for path in git('diff','--name-only',source['commit'],'HEAD').splitlines())
 labels=['full-governance','targeted-qr02','targeted-qr03','fixture-ast-proof','fresh-npm-ci','forced-root-tests','forced-typecheck','forced-lint','original-secret12','source-worklist-check','original-security70','strict-profile']
 receipts={label:json.loads((EVIDENCE/(label+'.receipt.json')).read_bytes()) for label in labels}
 for label,value in receipts.items():

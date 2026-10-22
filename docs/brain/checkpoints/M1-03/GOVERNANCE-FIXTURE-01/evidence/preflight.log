@@ -1,0 +1,344 @@
+MATCH allowed_existing_files .gitattributes 2313 c06492f174db13630da9f8deb043a890d8d313f0 0989b8860a3146dafc0821f6ffd18caa27c87c53bd25dbbd3819ca78991d52be
+MATCH allowed_existing_files ONSKIN_BRAIN_HANDOFF.txt 2880 2a38ac20a7a0647b6a17a3a946a794ee88392227 2ba3170e4770b12cc96dda4e032f73a7609fb9bb0119959c0eaac8cfbb54b72e
+MATCH allowed_existing_files scripts/brain/m103_profile.py 67627 7024ccaf09c0c64362fa4b185f59ff29c24aa878 8661c05110c04503154eca169be6a99f9c15d1ba0e0b4686d5263f674b4acf0c
+MATCH allowed_existing_files scripts/brain/test_m103_quality_recovery02_profile.py 8057 71cf7490212eb8483dcb4eb9a9e7c1caa8db10c8 77b1520a0594ca737303148586572d98e4211d739d89f712ae0a87842cfc2bf0
+MATCH allowed_existing_files scripts/brain/test_m103_quality_recovery03_profile.py 8250 80af42eb1310f05ddcb575f3aa164f6c2074cb22 c9be236b649704b1c0cd01f0e178d7f8fb2d27122472bd9fc7a4506e064710e7
+MATCH allowed_existing_files docs/phase-4/generated/source-worklist.json 137486 a7f1ef62d6f95bf021f36644721d1b1e75441f5c 9a23dcb35c5a92c8932c5f761c443ba84b1b9b429d1158d4860488388fda3839
+MATCH allowed_existing_files docs/phase-4/generated/source-worklist.md 81878 131edfa0b43a2a069636333e28b7aaa30a816257 f0631ceef2c6976edd135bd178bbf1dd6aa3cda0cf36059a2edbfb23746ebf64
+MATCH protected_unchanged apps/mobile/package.json 3007 6217bd03730c530445861cc3e1e438a92f401b83 f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f
+MATCH protected_unchanged package-lock.json 572797 e53de80bf46db8f7a7fcd97781971911e2d328bd 99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568
+MATCH protected_unchanged package.json 46730 7b0522688c74c78328aa587cb9f9a07b65965061 c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1
+MATCH protected_unchanged docs/phase-9/ios-sdk-package-mapping.json 8350 9776ac1b83e79c39e71b34867481d71cb56a29a4 9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246
+MATCH protected_unchanged docs/phase-9/generated/ios-privacy-source-audit.json 247820 36eb99e320de7873bc569f1e88e93cdb7bbca158 e7158aaae26d12fa90cc6d6a002d9b45d325d8633c8c5b9ec19860b06e02a388
+MATCH protected_unchanged docs/phase-9/generated/ios-privacy-source-audit.md 19517 c8247b85acb7b123279411644fbb83f7efce7936 60930f751eb83bc95cdb2122099dda2bd7beeb9a17fe5e108d4296cda878eee5
+MATCH protected_unchanged scripts/phase5/patch-expo-widgets-lifecycle.mjs 16969 f86cfa007bf90881d2fa0c93ae0f60f229e9b3fd 6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c
+MATCH protected_unchanged scripts/phase9/ios-privacy-contract.mjs 78932 3ca1f9a55e43ffd358f7c7a86dffa3174436e59c aa153d93c58a97121f4a4c4ccc0fb1b87fce3e1b1a93e54b7cd8ba1915291510
+MATCH protected_unchanged scripts/phase9/security_acceptance/source-manifest.json 2327707 a774abbf05448ff9a283f2214c13c2c231fc964b 3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d
+MATCH protected_unchanged scripts/phase9/security_acceptance/proposal.json 13797 6c350d1fbfcc5d5386de1fccc35bb7c531095054 03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896
+MATCH protected_unchanged scripts/phase9/security_acceptance/test-fixtures.json.gz 574209 e169484d968c9270ae2dbaa5eb113069025281db 617059c165170845978a4925284282b2d3f0cf742133ca05494f83ed48712655
+MATCH protected_unchanged scripts/phase9/security_acceptance/contract.py 38158 ef6418942aa3eca8234f342b0a391bc2d715daac a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a
+MATCH protected_unchanged scripts/phase9/security_acceptance/workflow_admission.py 17412 34e7b277c934f05bd102ef646b4c82a3453408ee 7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8
+MATCH protected_unchanged docs/brain/current.json 2693 438e7d4388c9e04a13416e1acb216e0a920fa1d5 794244fc73f11c923c21a36d248d8301147d6a8a4a8fd61ddce34f1e315ba943
+MATCH protected_unchanged docs/brain/state/roadmap.json 44273 3480774ca0794cae65c36820610572c49007d6e8 f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877
+MATCH protected_unchanged docs/brain/m103-quality-recovery03-active.json 961 1bfeaad1a9b32a472d77e11a52981d5ed6480f99 7b10de99c1472a9cbd9260b915e3432ba10bec8d36c9fdaacf9475a764491413
+PREFLIGHT PASS 7 writable + 16 protected; clean exact checkout; no alternates
+
+FILE AGENTS.md
+# Layerwell Agent Instructions
+
+This repo is an Expo React Native skincare app. Read `CLAUDE.md` before changing behavior, then read the source-of-truth docs for the feature area being touched. Keep changes scoped to the requested feature or launch gate.
+
+## Strategy And Launch Docs
+
+The `04_repo_docs` strategy packet has been integrated into the active `docs/` tree. Before work that affects product scope, launch positioning, pricing, architecture, growth, or readiness, read:
+
+- `docs/MASTER_PLAN.md`
+- `docs/PRODUCT_REQUIREMENTS.md`
+- `docs/ARCHITECTURE.md`
+- `docs/FEATURE_INDEX.md`
+- `docs/ROADMAP.md`
+- `docs/DECISIONS.md`
+- `docs/TESTING_STRATEGY.md`
+- `docs/CODE_REVIEW.md`
+- `docs/CODEX_IMPLEMENTATION_PROMPT.md`
+- `docs/DEVICE_SUPPORT_POLICY.md`
+- `docs/MASTER_PLAN_UPDATE_PATCH.md`
+- `docs/rebrand-and-core-loop-migration-checklist.md`
+- `docs/FOR_TAS_TO_DO.md`
+- `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md`
+- `docs/hugeToDo/LEAN_V1_SCOPE_UPDATE_2026-09-27.md`
+- `docs/hugeToDo/launch-contract.json`
+
+## Commands
+
+Repository-level checks:
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+```
+
+Mobile workspace checks:
+
+```bash
+npm --workspace apps/mobile run typecheck
+npm --workspace apps/mobile run lint
+npm --workspace apps/mobile run test
+```
+
+Useful app start commands:
+
+```bash
+npm --workspace apps/mobile run start
+npm --workspace apps/mobile run ios
+npm --workspace apps/mobile run android
+npm --workspace apps/mobile run web
+```
+
+## Human-Simulated E2E Testing
+
+Codex must use human-simulated E2E verification before marking UI-facing work done. Unit and integration tests are required where relevant, but they are not enough to prove a real user can complete the flow.
+
+For UI-facing work:
+
+1. Read `docs/HUMAN_SIMULATED_E2E_TESTING.md`.
+2. Check `docs/USER_FLOW_TREE.md` for the target feature. If the branch is missing, update the tree before testing.
+3. Start or open the actual app surface. For Layerwell this is usually Expo iOS Simulator, Android emulator/device, or Expo web when the flow is web-compatible.
+4. Confirm the expected starting screen is visible before interacting.
+5. Drive the app like a user: tap, click, type, scroll, navigate back/forward, refresh/relaunch where relevant, and exercise critical error or empty-state branches.
+6. Capture evidence such as screenshots, videos, Playwright traces, simulator logs, console logs, UI snapshots, or terminal transcripts.
+7. If a bug is found, record it with `docs/E2E_BUG_REPORT_TEMPLATE.md`, make the smallest correct fix, and re-run the same surface flow.
+8. Use `docs/E2E_TESTING_CHECKLIST.md` as the acceptance gate before saying UI work is complete.
+
+Do not install new E2E dependencies unless the repo's package manager and test setup have been inspected and the change is explicitly part of the task. Do not invent unavailable credentials, devices, or services. Mark unknowns as Open Questions.
+
+
+FILE docs/brain/AGENTS.md
+# Brain custody
+
+Read README.md and the active task. Preserve state/* as the approved Brain snapshot. Append Codex observations only to current.json/checkpoints; never accept your own task or clear another axis. Preserve the separately attributed Brain and Codex M0-01 records. Contracts/task-specs change only inside the current user scope and with exact provenance; synthetic test approvals belong only in disposable tests. End every session with a tracked root handoff and safe stage push. Main and protected Security/database custody remain read-only.
+
+
+FILE CLAUDE.md
+# Layerwell - Skincare Routine App
+
+## What This Is
+
+Cross-platform iOS and Android skincare routine app built with Expo,
+Supabase, and local-first product logic. The business target is a paid
+subscription app with optional post-launch commerce, but the current project is
+not production-ready until the launch gates in `BLOCKERS.md` and
+`LAUNCH_READINESS.md` are cleared.
+
+## Source-Of-Truth Docs
+
+Read the relevant source doc before changing a feature. These files are
+authoritative for product behavior, schema, privacy posture, and launch scope:
+
+- `docs/MASTER_PLAN.md`
+- `docs/PRODUCT_REQUIREMENTS.md`
+- `docs/ARCHITECTURE.md`
+- `docs/FEATURE_INDEX.md`
+- `docs/ROADMAP.md`
+- `docs/DECISIONS.md`
+- `docs/TESTING_STRATEGY.md`
+- `docs/CODE_REVIEW.md`
+- `docs/CODEX_IMPLEMENTATION_PROMPT.md`
+- `docs/DEVICE_SUPPORT_POLICY.md`
+- `docs/UPDATE_DELIVERY_POLICY.md`
+- `docs/MASTER_PLAN_UPDATE_PATCH.md`
+- `docs/rebrand-and-core-loop-migration-checklist.md`
+- `docs/FOR_TAS_TO_DO.md`
+- `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md`
+- `docs/hugeToDo/LEAN_V1_SCOPE_UPDATE_2026-09-27.md`
+- `docs/hugeToDo/launch-contract.json`
+- `docs/00-architecture.md`
+- `docs/01-auth-onboarding.md`
+- `docs/02-ingredient-intelligence.md`
+- `docs/03-routine-builder.md`
+- `docs/04-smart-shelf.md`
+- `docs/05-actives-scheduler.md`
+- `docs/06-photo-progress.md`
+- `docs/07-reminders-streaks-widgets.md`
+- `docs/08-subscriptions-paywall.md`
+- `docs/09-personalized-recommendations.md`
+- `docs/10-creator-stacks-build-spec.md`
+- `docs/11-community-layer.md`
+- `docs/12-ai-trend-analysis.md`
+- `docs/13-ask-layerwell-assistant.md`
+- `docs/14-growth-to-seven-figures.md`
+- `docs/legal-readiness.md`
+- `LAUNCH_READINESS.md`
+- `docs/v1-scope-freeze.md`
+- `docs/brand-decision-memo.md`
+- `docs/brand-evidence.md`
+- `docs/seven-figure-readiness.md`
+- `docs/phase-2-readiness-checklist.md`
+- `docs/phase-2-production-infrastructure-runbook.md`
+- `docs/phase-2-status.md`
+- `docs/store-privacy-inventory.md`
+- `docs/phase-3/regulatory-positioning-memo.md`
+- `docs/phase-3/legal-regulatory-review-log.md`
+- `docs/phase-3/clinical-review-log.md`
+- `docs/phase-3/cosmetic-chemistry-review-log.md`
+- `docs/phase-3/privacy-security-review-log.md`
+- `docs/phase-3/ip-fto-review-log.md`
+- `docs/phase-3/review-packet-index.md`
+- `docs/phase-3/review-signoff.schema.json`
+- `docs/phase-3/review-signoff.template.json`
+- `docs/phase-3/signoffs/README.md`
+- `docs/phase-3/quiz-fto-summary.md`
+- `docs/phase-3/data-inventory.md`
+- `docs/phase-3/consent-matrix.md`
+- `docs/phase-3/store-metadata-review.md`
+- `docs/phase-3/app-review-notes.md`
+- `docs/phase-3/google-play-health-declaration-notes.md`
+- `docs/phase-3/launch-claims-vocabulary.md`
+- `docs/phase-4/catalog-source-memo-cosing.md`
+- `docs/phase-4/catalog-source-memo-open-beauty-facts.md`
+- `docs/phase-4/odbl-compliance-memo.md`
+- `docs/phase-4/phase-4-exit-review.md`
+
+The previous `docs/design-spec.pdf` reference is obsolete. The design handoff
+source in this workspace is the local `dx*` handoff folders and their `.dc.html`
+files. Do not claim a PDF design spec exists unless it is restored to `docs/`.
+
+## Hard Rules
+
+- Do not call a surface production-ready because a screen exists. Use the
+  readiness statuses in `LAUNCH_READINESS.md`: `implemented`, `stubbed`,
+  `simulated`, `inert`, `needs-device-verification`, or `launch-blocked`.
+- If the source docs do not specify behavior, schema, privacy copy, or medical
+  guidance, stop and record the gap in `BLOCKERS.md`.
+- Never weaken Row-Level Security. Every user table remains owner-scoped.
+- Privacy is a product rule: photos are local-only by default, health-data
+  consent is unbundled, and analytics/sharing require explicit authorization.
+- Keep commerce independent from recommendations. Commission data must never
+  influence ranking or client-readable recommendation logic.
+- Treat catalog fixture imports as test data only. Product-specific
+  recommendations require source-approved, reviewed, correction-free products
+  with `verified` or `usable` quality.
+- Do not promise or implement Open Beauty Facts contribution-back in the current
+  launch architecture, and do not display source images. Any future external
+  recipient or image use requires a new reviewed privacy/legal/architecture
+  decision rather than an environment flag or queue activation.
+- Do not market AI skin scores, skin age, disease diagnosis, percentage
+  improvement, or unreviewed clinical recommendations.
+
+## Commands
+
+Repository-level commands:
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run phase2:check-env
+npm run phase2:rls-smoke
+npm run phase3:audit-copy
+npm run phase3:review-packet
+npm run phase3:review-signoff-template -- --list
+npm run phase4:check-source-env
+npm run phase4:import-obf-fixture
+npm run phase4:qa-report
+```
+
+Mobile workspace commands:
+
+```bash
+npm --workspace apps/mobile run typecheck
+npm --workspace apps/mobile run lint
+npm --workspace apps/mobile run test
+```
+
+Useful development commands:
+
+```bash
+npm --workspace apps/mobile run start
+npm --workspace apps/mobile run ios
+npm --workspace apps/mobile run android
+npm --workspace apps/mobile run web
+```
+
+## Workflow
+
+- Read the relevant docs and blockers before changing code.
+- Keep implementation tightly scoped to the requested feature or launch gate.
+- After each slice, run typecheck, lint, and tests when feasible, then update
+  `PROGRESS.md` and any affected readiness docs.
+- Do not configure Apple, Google, Supabase, RevenueCat, Sentry, PostHog, or
+  domains under the `Layerwell` identity until `docs/brand-decision-memo.md` is
+  resolved by counsel/founder decision.
+
+
+FILE docs/brain/README.md
+Current issuance: [M1-03 SECURITY-HARDEN-01](checkpoints/M1-03/SECURITY-HARDEN-01/inputs/TASK.md), manifest 9dc4ecaef5d2c074a57983906dec25ed59c8d6b3b23e36c66993ed63e87bf196. [Independent review](reviews/M1-03/OVERNIGHT-REVIEW01/AUDIT_M1-03_OVERNIGHT01.md); [active record](m103-security-harden01-active.json). Prior intervals remain immutable. No Security admission or promotion.
+
+Current issuance: [M1-03 OVERNIGHT-01](checkpoints/M1-03/OVERNIGHT-01/inputs/TASK.md). Manifest 41d67788702092c78946a27d0f7fb3035a8a62268a689ca94bcbc6bbec5a1794; exact independent [authority](reviews/M1-03/OVERNIGHT-AUTHORIZATION/SOURCE_EDIT_AUTHORIZATION.json). The fixed prior endpoint is 7305ff24c; the new interval is checked separately. Candidate engineering has admission NONE; original Security and expiry remain unchanged. [m103-overnight01-active.json](m103-overnight01-active.json) records work in progress, never acceptance.
+
+Current continuation: [M1-03 CONT-01](checkpoints/M1-03/CONT-01/inputs/TASK.md), independently anchored by manifest 214f13a3406632c50f0c9eebc947c04bb11f56259c12d13f93744f866254508e and [Brain REVIEW-01](reviews/M1-03/REVIEW-01/AUDIT_M1-03_REVIEW01.md). [m103-cont01-active.json](m103-cont01-active.json) binds bounded repairs only. Whole M1-03 remains incomplete; protected_source_go=false and main_promotion_authorized=false. Historical entrypoints below remain unchanged.
+
+Current issuance: [M1-03](checkpoints/M1-03/inputs/TASK.md), independently anchored by manifest e580ae55c3aa97fe18a8b4e8782b1887ee503b3fec88df0034aa82cc2edee95f. [m103-active.json](m103-active.json) is the sole current execution overlay; M1-02 is accepted only for retained client/local continuity. Use --profile M1-03 validate/report. Prior entrypoints below are historical. No protected source GO, main promotion, later task or expiry renewal.
+
+Current issuance: [M1-02](checkpoints/M1-02/inputs/TASK.md), anchored to the independently supplied digest and the unchanged [M1-01 acceptance](reviews/M1-01/ACCEPTANCE/AUDIT_M1-01_ACCEPTANCE.md). [m102-active.json](m102-active.json) is the sole current execution overlay. Use `--profile M1-02 validate` or `--profile M1-02 report docs/brain/checkpoints/M1-02/completion-report.json`. M0 and M1-01 profiles, state and reports below remain historical. This does not accept M1-02, issue M1-03, renew expiry, or authorize main promotion.
+
+Current issuance: [M1-01 CONT-03](checkpoints/M1-01/CONT-03/inputs/TASK.md), independently anchored by [Brain REVIEW-03](reviews/M1-01/REVIEW-03/AUDIT_M1-01_REVIEW03.md). Same M1 stage; actual cross-owner acceptance remains under review. The active profile admits schema 3 CONT-03 reports and preserves all historical anchors/refusals. No self-acceptance or main promotion.
+
+Current continuation: [M1-01 CONT-02](checkpoints/M1-01/CONT-02/inputs/TASK.md), issued by [Brain REVIEW-02](reviews/M1-01/REVIEW-02/AUDIT_M1-01_REVIEW02.md). Original M1/CONT-01 records below remain historical. The active overlay binds the independently supplied CONT-02 digest; schema 3 reports bind this iteration without changing prior reports or accepting M1.
+
+# Durable Brain state and succession
+
+Current M1 continuation: [REVIEW-01](reviews/M1-01/REVIEW-01/AUDIT_M1-01_REVIEW01.md), **FIX_REQUIRED / PARTIAL**, and the independently anchored [CONT-01 input](checkpoints/M1-01/CONT-01/inputs/TASK.md). Its successor evidence/report lives under `checkpoints/M1-01/CONT-01/`; the original M1 report remains historical. Validate the new report with `python -B scripts/brain/brain.py --profile M1-01 report docs/brain/checkpoints/M1-01/CONT-01/completion-report.json`. This does not accept M1 or authorize promotion. The immutable M0 state and original M1 issuance remain intact.
+
+Active authority is now [REVIEW-02](reviews/M0-02/REVIEW-02/README.md): M0-02 accepted for governance only; M1-01 explicitly issued. [active.json](active.json) is the M1 execution overlay. The unchanged `current.json`, state, REVIEW-01, original reports, schemas and mirrors below remain the historical M0 profile. They do not describe the active task. M1 source work cannot accept itself or promote main.
+
+Use `python -B scripts/brain/brain.py --profile M1-01 validate` for the active profile, and `--profile M1-01 report docs/brain/checkpoints/M1-01/completion-report.json` for its report. The default profile remains M0-02 for historical verification. M1 input bytes and the human-provided issuance digest are checked independently of its mutable task spec. Run `python -B -m unittest discover -s scripts/brain -p "test_*.py" -v` for both profiles and the original refusal cases. See [M1 checkpoint](checkpoints/M1-01/README.md).
+
+The remaining text describes the preserved M0 profile at its original submission, before Brain REVIEW-02.
+
+Latest authority: [Brain REVIEW-01](reviews/M0-02/REVIEW-01/README.md), verdict **FIX_REQUIRED**, M0-02 / FIX-01 from `da9fa04759164b402ee3b2abd1c80e14261614fb`. This versioned overlay supersedes prior submission/review status, while the original state/input bytes below remain immutable. Current observations use schema 3 and [report/evidence contract v3](contracts/FIX-01-v3.md). The [original submitted report](checkpoints/M0-02/completion-report.json) is historical; the new [FIX-01 report](checkpoints/M0-02/FIX-01/completion-report.json) is separate. Only Brain can accept or authorize an exact-head main promotion; this repair does neither.
+
+Start at [V2 authority](../v2/README.md), [approved state](state/brain_state.json), [acceptance ledger](state/ACCEPTANCE_LEDGER.json), [ADRs](state/ADR_REGISTRY.json), [blockers](state/BLOCKERS.json) and [approved roadmap](state/roadmap.json). These are the exact Brain-approved bytes supplied for M0-02. [Current observations](current.json) are a separate Codex overlay and cannot modify acceptance. The original Codex [M0-01 evidence](checkpoints/M0-01/REVIEW_EVIDENCE.md) is preserved beside the separately attributed [Brain audit](checkpoints/M0-01/BRAIN_AUDIT_M0-01.md) and [Brain machine observations](checkpoints/M0-01/BRAIN_REVIEW_OBSERVATIONS.json).
+
+Only one writer and one issued task are permitted. M0-02 installs non-runtime planning controls; no M1 task is issued. Ready selection lists outstanding dependencies, priority predecessors and external gates but never issues work, starts a process, merges or purchases anything. M0-01 diagnostic acceptance satisfies only this explicitly independent M0-02 dependency. All baseline, DB06/DB08/R2B, source custody, device, provider, research and release constraints remain open.
+
+Evidence vocabulary for new observations: `SOURCE_REPORTED` (an attributed claim), `INDEPENDENTLY_OBSERVED` (read metadata/logs/source), `INDEPENDENTLY_REPRODUCED` (actually reran an exact check), `DECIDED` (attributed authorized decision), `UNKNOWN`. Existing richer historical vocabulary remains intact in the approved snapshot, rather than being silently normalized. A reproduced source test never closes another evidence axis. FAIL, NOT_RUN and BLOCKED cannot become PASS. Artifact identities can remain unknown/null; missing research/parents never become admitted zero values.
+
+From repository root, using the installed Python interpreter:
+
+```text
+python scripts/brain/brain.py validate
+python scripts/brain/brain.py mirrors --check
+python -B -m unittest discover -s scripts/brain -p "test_*.py" -v
+python scripts/brain/brain.py report docs/brain/checkpoints/M0-02/FIX-01/completion-report.json
+python scripts/brain/brain.py ready
+python scripts/brain/brain.py pack --task M0-02 --output <absolute-external-new-path.zip>
+python scripts/brain/brain.py verify-pack --task M0-02 --output <absolute-external-existing-path.zip>
+```
+
+`mirrors` without `--check` regenerates the planning views. Check mode is non-writing and byte-exact. Run it after approved snapshot integration or an observed source delta, inspect the delta, and never change the immutable inputs to suppress a refusal. Existing source hashes can differ (for example M0-01 changed PROGRESS); `source-reconciliation.json` records that freshness difference without overwriting historical truth. The launch contract itself must remain byte-identical during M0-02.
+
+The M0-02 pack command rebuilds the **already issued input context for audit**, not a new task authorization or updated research bundle. Its 48 explicit inputs come from the Brain's supplied task manifest, including the historical builder as explicitly selected text reference. `CONTEXT_MANIFEST.json` is new deterministic packaging metadata; the inherited `TASK_MANIFEST.json` stays unchanged. The original ZIP's compression/timestamps differ, so its hash intentionally differs from the integrated deterministic ZIP. No full history/research archive is copied.
+
+Future task specs belong under `task-specs/` only after separate Brain issuance/review. Each spec binds an issue manifest by SHA256, exact source/archive names, bytes, file hashes and context bounds. Source/test code needs explicit code review in that issue allowlist. Positive future-task tests use synthetic fixtures only. A declarative issue record is not a cryptographic signature: reviewing its commit/author/custody is the Brain's responsibility. Codex must not fabricate a record to admit an unknown task.
+
+The installed authority anchor deliberately admits the supplied M0-02 state/version only. A future accepted-state transition requires a newly reviewed immutable snapshot/version and corresponding validator-anchor review, together with its issued task spec; adding a spec alone cannot authorize execution. Preserve old snapshots and record the successor's provenance. Do not rotate the current anchor to silence an unissued-task refusal.
+
+Packaging rejects traversal, absolute/drive/UNC/ADS names, case/Windows aliases, links and reparse points (including junctions), hard-linked files, private/restricted paths, credentials, binary signatures, archives, non-UTF8/control text, altered input hashes, unknown/unissued tasks, collisions, excessive file/byte counts, linked output ancestors and output inside the input root. It reads explicit files only, uses fixed sorted stored ZIP entries, CRC checks, exact content hashes and canonical byte comparison. These controls complement human input review; a text suffix is not a proof that arbitrary text is public. Never place private reports, personal images or raw clinical data on any allowlist.
+
+At every session end, fetch/reconcile without rewriting shared history, commit/push safe work plus [root handoff](../../ONSKIN_BRAIN_HANDOFF.txt), and place sanitized evidence/report under the task checkpoint. Use [report v2](contracts/README.md) to distinguish measured source/test snapshots from the final delivery ref. Obtain delivery HEAD from the live pushed branch after the report commit. Push failures are `PUSH_BLOCKED`, never force-pushed. Stop for independent Brain review; only it can accept M0-02.
+
+The proposal's actual expiry remains **2026-10-21T00:00:00Z**. Inspect the current UTC clock when reviewing; an expired proposal stays expired. Do not refresh its date, owner pins, inventory or exception policy. [Remediation packet](checkpoints/M0-02/BASELINE_REMEDIATION_PROPOSAL.md) is proposal-only. No owner action or paid/authenticated route is required to finish M0-02.
+
+
+FILE docs/brain/m103-quality-recovery03-active.json
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "QUALITY-RECOVERY-03",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "3dcaf50633024ec652fe7b14a5c9072eac92642e",
+  "base_tree": "fd98eedb0cef6644d8e1538047aacbe44f10d837",
+  "input_manifest_sha256": "658feca65de33bfed425de3318e5e2b40a41014027c8a6a524de814740ccb200",
+  "authorization_id": "M103-QUALITY-RECOVERY03-SOURCE-EDIT-01",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "active_writers": 1,
+  "incremental_spend_usd": 0,
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "clinical_research_or_release_authorized": false,
+  "source_edit_union_permitted": false,
+  "prior_reviews_mutable": false,
+  "protected_security_and_db_admission": "CLOSED",
+  "next_task": null,
+  "original_security_proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED"
+}
+

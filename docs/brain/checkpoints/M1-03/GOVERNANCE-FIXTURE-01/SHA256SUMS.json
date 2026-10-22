@@ -45,9 +45,9 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/completion-report.json",
-      "git_blob": "8a451d998fc1b2453ecf3a452e8bc7160b2e71e0",
-      "sha256": "00a2b878741a815f648591c1bea09965109582ab16d648ebb4ddb891dc74a71f",
-      "bytes": 28792,
+      "git_blob": "8dd29c85fc008246a82645267e8c40265c279033",
+      "sha256": "f201a8ae784c7e4548b54a3bc1e901e28fe0ce9ce4dfd901411f471dd06071e0",
+      "bytes": 29855,
       "git_mode": "100644"
     },
     {
@@ -76,6 +76,34 @@
       "git_blob": "ca31c6867e8fbb8ba1eb34633726f5a2da23ef82",
       "sha256": "177b1f50c08cb4a3b1875ec29eeba908ac07f405c76f6f6eb86cb9df4ca73674",
       "bytes": 1492,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/delivery-verification-first-attempt.log",
+      "git_blob": "cc730332c5b3c7d11c89a6c818d380152dd04d06",
+      "sha256": "a33880f5b671ff45d4036dc9f33d7dc2eb110b9fed546700f43376b4e8f8595e",
+      "bytes": 1082,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/delivery-verification-first-attempt.receipt.json",
+      "git_blob": "1eda5f59eccba566d9a6cff3459d0474a071a31f",
+      "sha256": "df2f7aa69d3815590741412a4f007e3c943b6ed0ce5fc4cfc23462a21e5eeb74",
+      "bytes": 584,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/delivery-verification-second-attempt.log",
+      "git_blob": "cc730332c5b3c7d11c89a6c818d380152dd04d06",
+      "sha256": "a33880f5b671ff45d4036dc9f33d7dc2eb110b9fed546700f43376b4e8f8595e",
+      "bytes": 1082,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/evidence-staging-diagnostics.json",
+      "git_blob": "c08552574b74562d4c7dc34365fff62dc89d71e9",
+      "sha256": "5dd2922c9a6701c196ddf06a6b92b900ef4e0950d945f3781a7c01312c3983da",
+      "bytes": 805,
       "git_mode": "100644"
     },
     {
@@ -206,9 +234,9 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_report.py",
-      "git_blob": "9158c0e422c6a4ae58f4f6012b35c4f0f7036c0b",
-      "sha256": "71e03ab4d0f21c7e648d48f16012debc34b7b66851925c20174bcbb5e257cfbc",
-      "bytes": 16261,
+      "git_blob": "a6c067e4d3c0ab60a7dfa15cbf4fb4e3d83774d7",
+      "sha256": "e4ef0251526017945ddae824c4636b3fcbc93420d734df1668c0d8e3464b0967",
+      "bytes": 16338,
       "git_mode": "100644"
     },
     {
@@ -300,6 +328,13 @@
       "git_blob": "49c5bb362ae9075433d30475842bec33e4bc3007",
       "sha256": "669cd1d44a613b2c03c1cd1d96ca48a78d2fbfba4e8e43afd7f7720d5a09be9e",
       "bytes": 559,
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/raw-log-whitespace-diagnostic.log",
+      "git_blob": "9e99324019ed376ba3bcf5bb98065ba6871d27b6",
+      "sha256": "b20b90c9094bd5dd0a47c04f63293a78aa82216928adae97ef1382eccd08af95",
+      "bytes": 94548,
       "git_mode": "100644"
     },
     {

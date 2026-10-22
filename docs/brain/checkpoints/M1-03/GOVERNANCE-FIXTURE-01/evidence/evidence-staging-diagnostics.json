@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "EVIDENCE_STAGING_DIAGNOSTICS",
+  "commands": [
+    {
+      "command": "git diff --cached --check",
+      "exit_code": 2,
+      "output": "raw-log-whitespace-diagnostic.log",
+      "interpretation": "Raw unittest/Turbo output contains trailing whitespace. Preserve its exact hash-bound bytes. Code-only whitespace verification is separate; no repository ignore rule or test is changed."
+    },
+    {
+      "command": "python3.12 -B gf01_verify_delivery.py",
+      "exit_code": 1,
+      "output": "delivery-verification-second-attempt.log",
+      "interpretation": "The preceding raw-log whitespace diagnostic stopped the evidence commit; strict committed-artifact enforcement continued to refuse uncommitted logs."
+    }
+  ],
+  "implementation_source_unchanged": true
+}

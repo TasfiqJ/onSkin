@@ -240,6 +240,22 @@
       "sha256": "177b1f50c08cb4a3b1875ec29eeba908ac07f405c76f6f6eb86cb9df4ca73674"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/delivery-verification-first-attempt.log",
+      "sha256": "a33880f5b671ff45d4036dc9f33d7dc2eb110b9fed546700f43376b4e8f8595e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/delivery-verification-first-attempt.receipt.json",
+      "sha256": "df2f7aa69d3815590741412a4f007e3c943b6ed0ce5fc4cfc23462a21e5eeb74"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/delivery-verification-second-attempt.log",
+      "sha256": "a33880f5b671ff45d4036dc9f33d7dc2eb110b9fed546700f43376b4e8f8595e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/evidence-staging-diagnostics.json",
+      "sha256": "5dd2922c9a6701c196ddf06a6b92b900ef4e0950d945f3781a7c01312c3983da"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/external-context-verification.receipt.json",
       "sha256": "bd528f9dcc6944efbda459a94d96b3d0b9c40b5cdcbe5832a7b43f3bdadeeaa1"
     },
@@ -313,7 +329,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_report.py",
-      "sha256": "71e03ab4d0f21c7e648d48f16012debc34b7b66851925c20174bcbb5e257cfbc"
+      "sha256": "e4ef0251526017945ddae824c4636b3fcbc93420d734df1668c0d8e3464b0967"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/gf01_run.py",
@@ -366,6 +382,10 @@
     {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/push-dry-run.receipt.json",
       "sha256": "669cd1d44a613b2c03c1cd1d96ca48a78d2fbfba4e8e43afd7f7720d5a09be9e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/raw-log-whitespace-diagnostic.log",
+      "sha256": "b20b90c9094bd5dd0a47c04f63293a78aa82216928adae97ef1382eccd08af95"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/evidence/source-worklist-check.log",
