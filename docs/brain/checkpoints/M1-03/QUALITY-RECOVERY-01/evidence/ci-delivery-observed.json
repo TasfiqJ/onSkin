@@ -1,0 +1,761 @@
+{
+  "schema_version": 1,
+  "kind": "CI_OBSERVATION",
+  "evidence_class": "INDEPENDENTLY_OBSERVED",
+  "claim_origin": "CODEX_OBSERVED_PROVIDER_METADATA",
+  "recorded_at_utc": "2026-10-22T04:36:16Z",
+  "repository": "TasfiqJ/onSkin",
+  "runs": [
+    {
+      "head_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39723152918,
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "head_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39723152850,
+      "status": "in_progress",
+      "conclusion": "pending"
+    },
+    {
+      "head_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39723152880,
+      "status": "in_progress",
+      "conclusion": "pending"
+    }
+  ],
+  "jobs": [
+    {
+      "run_id": 39723152918,
+      "jobs": [
+        {
+          "id": 119640983589,
+          "name": "Code security gates",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152918,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Phase 9 verification",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Dependency SBOM with audit metadata",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Capture high or critical npm advisories",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9
+            },
+            {
+              "name": "Test reviewed security exceptions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10
+            },
+            {
+              "name": "Enforce reviewed npm advisory exceptions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 11
+            },
+            {
+              "name": "Write code-gate evidence manifest",
+              "status": "pending",
+              "conclusion": null,
+              "number": 12
+            },
+            {
+              "name": "Upload code-gate evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13
+            },
+            {
+              "name": "Enforce code-gate results",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14
+            },
+            {
+              "name": "Post Setup Deno",
+              "status": "pending",
+              "conclusion": null,
+              "number": 26
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "pending",
+              "conclusion": null,
+              "number": 27
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 28
+            }
+          ]
+        },
+        {
+          "id": 119640983714,
+          "name": "Secret scanning",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152918,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Test original secret scope and receipt refusals",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Acquire exact original secret executables",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Scan complete local refs and exact committed current source",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 5
+            },
+            {
+              "name": "Gitleaks",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6
+            },
+            {
+              "name": "TruffleHog verified secrets",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Write secret scanner evidence manifest",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Upload secret scanner evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9
+            },
+            {
+              "name": "Enforce secret scanner results",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20
+            }
+          ]
+        },
+        {
+          "id": 119640983827,
+          "name": "Static analysis and OSV",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152918,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Python",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Prepare exact Linux scanners and npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Semgrep OWASP/TypeScript/React/secrets",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Prepare OSV evidence directory",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "OSV scanner",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9
+            },
+            {
+              "name": "Enforce reviewed OSV advisory exceptions",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10
+            },
+            {
+              "name": "Write static scanner evidence manifest",
+              "status": "pending",
+              "conclusion": null,
+              "number": 11
+            },
+            {
+              "name": "Stage verified technical receipt after all source checks",
+              "status": "pending",
+              "conclusion": null,
+              "number": 12
+            },
+            {
+              "name": "Upload static scanner evidence",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13
+            },
+            {
+              "name": "Enforce static scanner results",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14
+            },
+            {
+              "name": "Post Setup Python",
+              "status": "pending",
+              "conclusion": null,
+              "number": 26
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "pending",
+              "conclusion": null,
+              "number": 27
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 28
+            }
+          ]
+        },
+        {
+          "id": 119640985361,
+          "name": "Live Supabase adversarial evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_id": 39723152918,
+          "logs_url": null,
+          "steps": null
+        }
+      ]
+    },
+    {
+      "run_id": 39723152850,
+      "jobs": [
+        {
+          "id": 119640983250,
+          "name": "iOS all-features contract",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152850,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Validate launch contract",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 6
+            },
+            {
+              "name": "Validate execution baseline",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Run safe repository checks",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Post Setup Deno",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 39723152880,
+      "jobs": [
+        {
+          "id": 119641293220,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152880,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 3
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6
+            }
+          ]
+        },
+        {
+          "id": 119641293460,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152880,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 3
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6
+            }
+          ]
+        },
+        {
+          "id": 119641293552,
+          "name": "Credential-free Supabase reset and database tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152880,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 5
+            },
+            {
+              "name": "Check local-only database contract",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6
+            },
+            {
+              "name": "Reset twice, test, lint, and prove zero drift",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Retain generated public types for parity diagnosis",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            }
+          ]
+        },
+        {
+          "id": 119641293595,
+          "name": "Repository quality gates",
+          "status": "in_progress",
+          "conclusion": null,
+          "run_id": 39723152880,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Checkout",
+              "status": "in_progress",
+              "conclusion": null,
+              "number": 3
+            },
+            {
+              "name": "Setup Node",
+              "status": "pending",
+              "conclusion": null,
+              "number": 4
+            },
+            {
+              "name": "Setup Deno",
+              "status": "pending",
+              "conclusion": null,
+              "number": 5
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "pending",
+              "conclusion": null,
+              "number": 6
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "pending",
+              "conclusion": null,
+              "number": 7
+            },
+            {
+              "name": "Verify tooling security backports",
+              "status": "pending",
+              "conclusion": null,
+              "number": 8
+            },
+            {
+              "name": "Verify installed iOS native sources",
+              "status": "pending",
+              "conclusion": null,
+              "number": 9
+            },
+            {
+              "name": "Verify store-only client delivery",
+              "status": "pending",
+              "conclusion": null,
+              "number": 10
+            },
+            {
+              "name": "Verify governed release provenance",
+              "status": "pending",
+              "conclusion": null,
+              "number": 11
+            },
+            {
+              "name": "Verify iOS Simulator compile workflow contract",
+              "status": "pending",
+              "conclusion": null,
+              "number": 12
+            },
+            {
+              "name": "Check Expo dependency compatibility",
+              "status": "pending",
+              "conclusion": null,
+              "number": 13
+            },
+            {
+              "name": "Run Expo Doctor",
+              "status": "pending",
+              "conclusion": null,
+              "number": 14
+            },
+            {
+              "name": "Check export statistics analyzer",
+              "status": "pending",
+              "conclusion": null,
+              "number": 15
+            },
+            {
+              "name": "Check deterministic optimization fixtures",
+              "status": "pending",
+              "conclusion": null,
+              "number": 16
+            },
+            {
+              "name": "Check local Edge Function contracts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 17
+            },
+            {
+              "name": "Check catalog promotion, curation, and receipt contracts",
+              "status": "pending",
+              "conclusion": null,
+              "number": 18
+            },
+            {
+              "name": "Execute account service scrub migration rehearsal",
+              "status": "pending",
+              "conclusion": null,
+              "number": 19
+            },
+            {
+              "name": "Typecheck",
+              "status": "pending",
+              "conclusion": null,
+              "number": 20
+            },
+            {
+              "name": "Lint",
+              "status": "pending",
+              "conclusion": null,
+              "number": 21
+            },
+            {
+              "name": "Test",
+              "status": "pending",
+              "conclusion": null,
+              "number": 22
+            },
+            {
+              "name": "Check performance readiness docs",
+              "status": "pending",
+              "conclusion": null,
+              "number": 23
+            },
+            {
+              "name": "Check device support source contract",
+              "status": "pending",
+              "conclusion": null,
+              "number": 24
+            },
+            {
+              "name": "Check source packet",
+              "status": "pending",
+              "conclusion": null,
+              "number": 25
+            },
+            {
+              "name": "Post Checkout",
+              "status": "pending",
+              "conclusion": null,
+              "number": 49
+            },
+            {
+              "name": "Stop containers",
+              "status": "pending",
+              "conclusion": null,
+              "number": 50
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "git": {
+    "observed_pushed_stage": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+    "tree": "b32f212cf741e39308b08d63d876f7569e0c0212",
+    "main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+    "pr9": {
+      "draft": true,
+      "state": "open",
+      "merged": false,
+      "head": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "merge_checkout": "aa160ce74d2c9f2903b1904626e72357a0e0e07e",
+      "merge_tree": "b32f212cf741e39308b08d63d876f7569e0c0212"
+    }
+  },
+  "admission": "NONE",
+  "note": "Snapshot of the pushed evidence head; subsequent receipt-only commit is identified separately in final response. Pending stays pending."
+}

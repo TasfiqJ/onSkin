@@ -564,6 +564,10 @@
       "sha256": "9a75fa114ec2a194bb24a42f8fe19ad980229460e53a9ba22a19bf491c187e10"
     },
     {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-delivery-observed.json",
+      "sha256": "ad9b94fc6670d3284588126c38dff2fdb0db1d0a0272db5a83104df15f4834fa"
+    },
+    {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-implementation.json",
       "sha256": "234f44cf93615744b2f1a59c6bef04a1113d11b69d5e7d30cb4398d6777e13a9"
     },
@@ -582,6 +586,10 @@
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/context-verification.json",
       "sha256": "618ba2334438ebfd7d7737d003e126fec43863225a969a0b140aa61e42c51c8b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/delivery-report-check.json",
+      "sha256": "5dbfd9d902f3d6e2e4dff2c1a94181c9e43bb4906d1b19fa8015fa9d2484dc2b"
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/environment.log",
@@ -1033,7 +1041,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/RESULTS.md",
-      "sha256": "5a6642d79d939a0bee12b189bbe9bb8bab687d54d6905b52b96b2dd371d1bcb1"
+      "sha256": "66e9a0d6bffb9fcd5da48f3c4f6798d8fd2135932ee70c6bbf323f0feb2f1503"
     },
     {
       "path": "docs/brain/m103-quality-recovery01-active.json",
@@ -1081,7 +1089,7 @@
     },
     {
       "path": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/SHA256SUMS.json",
-      "sha256": "f458adf53455b30631dcac915e332b3df0ed11fd15804d7bc32708f6cf161c18"
+      "sha256": "5100b5d68951291cb33505081f2664946e886f057ba6a9422f0f124fe785c1ed"
     }
   ],
   "scope_matrix": [
@@ -1178,6 +1186,36 @@
     "reason": "Bounded source scope delivered; stop for independent Brain review."
   },
   "ci": [
+    {
+      "head_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "name": "Security",
+      "workflow_id": 308213475,
+      "run_id": 39723152918,
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-delivery-observed.json"
+    },
+    {
+      "head_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "name": "iOS launch contract",
+      "workflow_id": 312030667,
+      "run_id": 39723152850,
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-delivery-observed.json"
+    },
+    {
+      "head_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+      "name": "Quality",
+      "workflow_id": 312030668,
+      "run_id": 39723152880,
+      "status": "in_progress",
+      "conclusion": "pending",
+      "repository": "TasfiqJ/onSkin",
+      "artifact": "docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/evidence/ci-delivery-observed.json"
+    },
     {
       "head_commit": "1bd013f5e68a671f76a3f9749e3b7fb395d49f15",
       "name": "Quality",

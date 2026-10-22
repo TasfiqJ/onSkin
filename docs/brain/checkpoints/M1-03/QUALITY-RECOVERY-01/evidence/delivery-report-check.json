@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "STRICT_COMMITTED_REPORT_CHECK",
+  "checked_commit": "4bcaac9f5bfb16802e955cf519d66d9280bbb995",
+  "checked_tree": "b32f212cf741e39308b08d63d876f7569e0c0212",
+  "command": "python -B scripts/brain/brain.py --profile M1-03 report docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-01/completion-report.json",
+  "raw_exit": 0,
+  "output": "PASS: M1 issued profile; evidence binding is not independent acceptance\n",
+  "report_artifacts_bound_to_committed_blobs": 144,
+  "checksum_manifest_objects": 143,
+  "admission": "NONE",
+  "scope": "Strict report and source governance only; Security/Quality/native mapping/DB failures remain preserved."
+}
