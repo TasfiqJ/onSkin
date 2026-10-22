@@ -1,0 +1,37 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "authorization_id": "M103-QUALITY-RECOVERY02-SOURCE-EDIT-01",
+  "base_commit": "b74c0efa23828bcdaa3fbe49e43177dcc69331b9",
+  "base_tree": "675e93e9b1636d169d45cc532a4a1f7daf2509cb",
+  "branch": "stage/m1-retained-safety",
+  "g97_original_source_proposal_expired_utc": "2026-10-21T00:00:00Z",
+  "hosted_replay_authorized": false,
+  "incremental_spend_usd": 0,
+  "ios_final_head": {
+    "conclusion": "success_source_only",
+    "run_id": 39723353624
+  },
+  "iteration": "QUALITY-RECOVERY-02",
+  "main_promotion_authorized": false,
+  "observed_main": "bbc28dc3d1f945191a81be56945b8bda7bb6ef73",
+  "one_writer": true,
+  "original_security_source_contract": "FAIL: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT; do not refresh frozen fixture/policy",
+  "protected_source_go": false,
+  "quality_final_head": {
+    "canonical_ecr_job_id": 119641729444,
+    "conclusion": "failure",
+    "run_id": 39723353598,
+    "source_job_id": 119641729371
+  },
+  "required_status": "SUBMITTED_REVIEW_REQUIRED; admission NONE",
+  "security_final_head": {
+    "conclusion": "failure",
+    "run_id": 39723353606
+  },
+  "task_id": "M1-03"
+}

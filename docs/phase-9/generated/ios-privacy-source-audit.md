@@ -14,8 +14,8 @@ resolution, and the release archive require separate verification.
 ## Input bindings
 
 - Baseline: `docs/phase-9/apple-ios-privacy-baseline.json` - `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `ca660645ed45c986ddc7711b8896018d05dd530585086f78f82ed94bb2968f56`
-- Package lock: `package-lock.json` - `7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c`
+- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `8a80e8afe3fd8565767440fbd5093fdefc9caf9812236a53430ed5c3600c8a6a`
+- Package lock: `package-lock.json` - `67e15e71ed7fd70d7becf68963db1145ce9ac81ce928af40f8cd196dce805c85`
 
 ## Summary
 
@@ -35,7 +35,7 @@ resolution, and the release archive require separate verification.
 | @expo/dom-webview                              | 57.0.1  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @expo/expo-modules-macros-plugin               | 0.6.1   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | @expo/log-box                                  | 57.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| @expo/ui                                       | 57.0.25 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| @expo/ui                                       | 57.0.26 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @infinitered/react-native-mlkit-core           | 5.0.0   | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @infinitered/react-native-mlkit-face-detection | 5.0.0   | archive_required | 0         | 1        | 0            | 0          | 0            |
 | @react-native-async-storage/async-storage      | 2.2.0   | archive_required | 1         | 1        | 0            | 0          | 0            |
@@ -46,7 +46,7 @@ resolution, and the release archive require separate verification.
 | @tanstack/react-query                          | 5.101.0 | archive_required | 0         | 0        | 0            | 0          | 0            |
 | asap                                           | 2.0.6   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | cross-fetch                                    | 3.2.0   | archive_required | 0         | 0        | 0            | 0          | 0            |
-| expo                                           | 57.0.30 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo                                           | 57.0.31 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-apple-authentication                      | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-application                               | 57.0.3  | archive_required | 1         | 1        | 0            | 0          | 0            |
 | expo-asset                                     | 57.0.20 | archive_required | 0         | 1        | 0            | 0          | 0            |
@@ -70,20 +70,20 @@ resolution, and the release archive require separate verification.
 | expo-local-authentication                      | 57.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-localization                              | 57.0.2  | archive_required | 1         | 1        | 0            | 0          | 0            |
 | expo-manifests                                 | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-modules-core                              | 57.0.23 | archive_required | 0         | 3        | 0            | 0          | 0            |
-| expo-modules-jsi                               | 57.1.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-network                                   | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-modules-core                              | 57.0.24 | archive_required | 0         | 3        | 0            | 0          | 0            |
+| expo-modules-jsi                               | 57.1.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-network                                   | 57.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-notifications                             | 57.0.23 | archive_required | 1         | 1        | 0            | 0          | 0            |
-| expo-router                                    | 57.0.28 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-router                                    | 57.0.29 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-secure-store                              | 57.0.4  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-sharing                                   | 57.0.23 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-sharing                                   | 57.0.24 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-splash-screen                             | 57.0.10 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-store-review                              | 57.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-symbols                                   | 57.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-system-ui                                 | 57.0.4  | archive_required | 1         | 1        | 0            | 0          | 0            |
 | expo-updates-interface                         | 57.0.2  | archive_required | 0         | 1        | 0            | 0          | 0            |
 | expo-web-browser                               | 57.0.3  | archive_required | 0         | 1        | 0            | 0          | 0            |
-| expo-widgets                                   | 57.0.26 | archive_required | 0         | 1        | 0            | 0          | 0            |
+| expo-widgets                                   | 57.0.27 | archive_required | 0         | 1        | 0            | 0          | 0            |
 | nanoid                                         | 3.3.18  | archive_required | 0         | 0        | 0            | 0          | 0            |
 | react-freeze                                   | 1.0.4   | archive_required | 0         | 0        | 0            | 0          | 0            |
 | react-native                                   | 0.86.3  | archive_required | 6         | 81       | 0            | 0          | 0            |

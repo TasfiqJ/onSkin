@@ -1,0 +1,87 @@
+{
+  "authorization_id": "M103-QUALITY-RECOVERY02-SOURCE-EDIT-01",
+  "base_commit": "b74c0efa23828bcdaa3fbe49e43177dcc69331b9",
+  "base_tree": "675e93e9b1636d169d45cc532a4a1f7daf2509cb",
+  "branch": "stage/m1-retained-safety",
+  "file_count": 15,
+  "files": [
+    {
+      "bytes": 2673,
+      "path": "00_READ_FIRST.md",
+      "sha256": "8f89f06fa44892ea1d776a52e207b22b2eeea4e3e66247bc8b5c4d9f9dca0b58"
+    },
+    {
+      "bytes": 3339,
+      "path": "01_BRAIN_AUDIT.md",
+      "sha256": "2ce368cf3a32043d6ab0b7c1866750df12ebaa840b1dba3ab0e7d229c9559b86"
+    },
+    {
+      "bytes": 4674,
+      "path": "02_TASK.md",
+      "sha256": "d50c2b7a6ce364acc3ba2de655144e94f041f9fe98d13fe88464318b60a942df"
+    },
+    {
+      "bytes": 2465,
+      "path": "03_SOURCE_EDIT_AUTHORIZATION.md",
+      "sha256": "c4a81dada9bfa2e76929cc03f81da9fdc14d58438efea444fc0cb062d881994e"
+    },
+    {
+      "bytes": 1924,
+      "path": "04_UPSTREAM_WIDGET_EQUIVALENCE.md",
+      "sha256": "aae71e0dba72f8acdfd76198d5770141f29d087486f5c4f441e1b666433991b3"
+    },
+    {
+      "bytes": 2005,
+      "path": "05_PRIVACY_MAPPING_RULES.md",
+      "sha256": "8e5dd540e0f0e8e4bbd8e3e06e207a82bfd02ab95ef3d64d7b5d26e0c0976162"
+    },
+    {
+      "bytes": 1934,
+      "path": "06_REPRODUCERS.md",
+      "sha256": "46eca6a5409760a3654cd62c12bddf5ac43e6a49437fe1487b452b7b49ed470a"
+    },
+    {
+      "bytes": 1999,
+      "path": "07_TEST_AND_ACCEPTANCE.md",
+      "sha256": "6c86ad0508e40b5a774de45c9fb4851e4233bf97ec68e5408bb7051962966835"
+    },
+    {
+      "bytes": 1933,
+      "path": "08_PROTECTED_GATES.md",
+      "sha256": "7ad5287f58d6e55b382c1ef5d81a14acd4a67bd6dd97d830df2224a0c79b2b69"
+    },
+    {
+      "bytes": 2296,
+      "path": "09_DELIVERY_PROTOCOL.md",
+      "sha256": "b17b1b2bcb7babc24d590b9377c855203c59f559e009fbd4d752e629666294a6"
+    },
+    {
+      "bytes": 1667,
+      "path": "10_STOP_RULES.md",
+      "sha256": "45209f01aa387e51032c80d3bfd04f9588c2bab1989aa431498ed3767ff90024"
+    },
+    {
+      "bytes": 7010,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "44992018817701bbe8977f129df7b9d00ea8558e2bef8eb7b0883a9381d59995"
+    },
+    {
+      "bytes": 1194,
+      "path": "TASK_STATE.json",
+      "sha256": "e1a46c7074072661d71c4068b9b4c4c48f172a7f1299fbe6f371aaa49f36ceb9"
+    },
+    {
+      "bytes": 1978,
+      "path": "UPSTREAM_WIDGET_WITNESSES.json",
+      "sha256": "712f034f7a50ed413c76c457f4138201a4336e96453b2bd191dcc4398ca54497"
+    },
+    {
+      "bytes": 2097,
+      "path": "verify_context.py",
+      "sha256": "1ff5bb4626c7ceba1d0c0b622d4fc52efab1996c8f5a49c05fb82046bb54c193"
+    }
+  ],
+  "iteration": "QUALITY-RECOVERY-02",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

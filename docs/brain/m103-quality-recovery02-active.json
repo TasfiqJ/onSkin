@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "QUALITY-RECOVERY-02",
+  "revision": "REISSUED01",
+  "branch": "stage/m1-retained-safety",
+  "base_commit": "b74c0efa23828bcdaa3fbe49e43177dcc69331b9",
+  "base_tree": "675e93e9b1636d169d45cc532a4a1f7daf2509cb",
+  "input_manifest_sha256": "78f4dc0753bc1ad8c05d3253645f2a34ff3b57714866de68dda396a6af210339",
+  "authorization_id": "M103-QUALITY-RECOVERY02-SOURCE-EDIT-01",
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_replay_authorized": false,
+  "release_or_m2_authorized": false,
+  "active_writers": 1,
+  "incremental_spend_usd": 0,
+  "source_edit_union_permitted": false,
+  "native_payload_rewrite_permitted": false,
+  "security_policy_or_fixture_refresh_permitted": false,
+  "protected_security_db_admission": "CLOSED",
+  "next_task": null,
+  "research_requests": [],
+  "proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "submission_status": "SUBMITTED_REVIEW_REQUIRED"
+}

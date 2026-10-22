@@ -1,0 +1,9 @@
+# Independently observed upstream widget equivalence
+
+Before issuing this grant, Brain queried the official npm registry for four SDK patches and retrieved `expo-widgets@57.0.27`. The registry returned version57.0.27, tarball URL `https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.27.tgz`, SRI `sha512-TPISoZYKWb5+l3NcpM8r9OS3+0CydL1jA+pIinFX+/sCQ2BkbQuqS8xE17w1DzqYhC71CUpwM12hCxkhkqIfiQ==`. Brain's tar SHA256 was `2cc019e6db56a17791521d52b575d34405fe79f4e5596976b5717728a9f2dd90`.
+
+Ten of the ten upstream native input files from the reviewed patch descriptor (Swift/podspec) have **unchanged SHA256** compared with pinned `expo-widgets@57.0.26` original upstream source. The 11th native path `ios/LayerwellWidgetLifecycleStore.swift` was **not present upstream**, consistent with this app's reviewed added custom store. The 10 exact path/hash rows are in `UPSTREAM_WIDGET_WITNESSES.json` and must be rechecked by Codex from independently acquired bytes (not fabricated artifact metadata).
+
+**Implication:** update version/official tarball/SRI provenance in `scripts/phase5/patch-expo-widgets-lifecycle.mjs` while retaining original reviewed patched payload source and every 11 target `original`, `priorPatched`, `patched` hash verbatim. The payload directory named `expo-widgets-57.0.26` remains an immutable prior-reviewed patch source, not a claim that installed upstream is 57.0.26. Do not bulk-copy 11 Swift files or rewrite ABI, App Intent, ownership/quiescence, storage, lifecycle privacy, or native verification code. Run actual postinstall, idempotency/adverse patch tests, iOS extension and privacy checks. A new upstream unexpected byte is a HARD STOP before mutation.
+
+All upstream witness assertions are **source-equivalence only**; Expo's own SDK checker is the compatibility authority, and only an actual native build/archive/device test could establish compiled readiness (not authorized here).

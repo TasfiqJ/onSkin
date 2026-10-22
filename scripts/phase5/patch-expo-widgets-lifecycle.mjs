@@ -18,11 +18,11 @@ import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const EXPO_WIDGETS_PACKAGE_NAME = 'expo-widgets';
-export const EXPO_WIDGETS_PACKAGE_VERSION = '57.0.26';
+export const EXPO_WIDGETS_PACKAGE_VERSION = '57.0.27';
 export const EXPO_WIDGETS_LOCK_RESOLVED =
-  'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.26.tgz';
+  'https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.27.tgz';
 export const EXPO_WIDGETS_LOCK_INTEGRITY =
-  'sha512-gXVYxNeYR08QvohfnyyqTVxGgsF07PtK0Pg/i4vdFs2akT6mf/m4/vc3Co1F5lMDzbQSTpZyCDMxVOImv3F46g==';
+  'sha512-TPISoZYKWb5+l3NcpM8r9OS3+0CydL1jA+pIinFX+/sCQ2BkbQuqS8xE17w1DzqYhC71CUpwM12hCxkhkqIfiQ==';
 
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const PAYLOAD_DIRECTORY = 'scripts/phase5/expo-widgets-57.0.26';
