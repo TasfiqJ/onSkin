@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-22T15:02:46.258Z",
+  "generatedAt": "2026-10-22T15:04:10.054Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "3966b4cf6e68b6ef23fb1d23c720b797bd997998",
-  "gitStatus": "?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-expo-check.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/baseline-fresh-ci.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/doctor-registry.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-check.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/expo-doctor.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/extension.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-privacy-generate.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/implementation-snapshot.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/lock-regeneration.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/patched-fresh-ci.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/postinstall.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/precommit-profile.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-check.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-generate.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/privacy-tests.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-adverse.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/qr02-initial-profile.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-router.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-sharing.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-ui.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/registry-expo-widgets.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-router.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-sharing.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-ui.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-expo-widgets.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/resolve-react-native-drawer-layout.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/reviewed-toolchain.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/store-source.receipt.json\n?? docs/brain/checkpoints/M1-03/QUALITY-RECOVERY-02/evidence/widgets.receipt.json",
+  "gitSha": "0e3bc6e151f42868043a3ae87af3f61507865326",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 414,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -3088,7 +3088,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }
