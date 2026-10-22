@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "LOCAL_EXECUTION",
+  "claim_origin": "CODEX_REPORTED_EXECUTION",
+  "command": "[\"wsl\", \"--distribution\", \"onskin-r6-verification\", \"--user\", \"root\", \"--exec\", \"python3.12\", \"-B\", \"-c\", \"import pathlib,subprocess,os,sys,hashlib,json\\nrepo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022')\\nos.environ['GIT_NO_LAZY_FETCH']='1'\\nassert not repo.exists()\\nsubprocess.run(['git','-c','gc.auto=0','clone','--no-hardlinks','--no-checkout','/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean',str(repo)],check=True)\\nsubprocess.run(['git','-C',str(repo),'checkout','stage/m1-retained-safety'],check=True)\\nassert subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD']).decode().strip()=='66ba3219549d426cbb66c7497a37948aa7d8f12e'\\nassert not (repo/'.git/objects/info/alternates').exists()\\nassert not subprocess.check_output(['git','-C',str(repo),'status','--porcelain'])\\nprint('Independent no-hardlinks clone; exact source; no alternates.')\\nfor argv in [['node','--version'],['npm','--version']]:subprocess.run(argv,check=True)\\n\"]",
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "environment": "Windows Python3.9.13 orchestrator; WSL calls run Linux x86_64 Python3.12.3; root clone Node24.19.0/npm11.17.0; full argv and nested working directory preserved in raw receipt.",
+  "source_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+  "source_tree": "ecdd68e1b0c34377e59309e4ce5f29e1a8b678c8",
+  "status": "PASS",
+  "exit_code": 0,
+  "output": {
+    "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/current-independent-clone.log",
+    "sha256": "e91f8a44b62a5f9abd8fa938b3cd220bc42e0fdac6e71d076d20152979b92b7f"
+  }
+}

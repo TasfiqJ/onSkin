@@ -1,0 +1,315 @@
+"""Read/test-only reconciliation. Results never grant source or promotion authority."""
+import datetime
+import hashlib
+import json
+import os
+import pathlib
+import platform
+import subprocess
+import sys
+import time
+import zipfile
+
+sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
+
+ROOT = pathlib.Path(__file__).resolve().parent
+REPO = ROOT / 'overnight-delivery-clean'
+CONTEXT = ROOT / 'onSkin_M1-03_SOURCE-CLOSURE-01_context'
+OUT = ROOT / 'sc01-reconciliation-20261022T023600Z'
+HEAD = '66ba3219549d426cbb66c7497a37948aa7d8f12e'
+MANIFEST = '0759147b5810936e79891852f1d4b490b1bf8c132c7d3e61d1b2716b6d82dcc5'
+SEAL = '3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112'
+OUT.mkdir(exist_ok=True)
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def git(*args):
+    return subprocess.check_output(['git', '-C', str(REPO), '-c', 'gc.auto=0', *args],
+                                   env=dict(os.environ, GIT_NO_LAZY_FETCH='1'))
+
+def save(name, value):
+    target = OUT / name
+    with target.open('xb') as stream:
+        stream.write((json.dumps(value, indent=2, ensure_ascii=True) + '\n').encode())
+
+def run(name, argv, cwd=REPO, timeout=1800):
+    assert git('rev-parse', 'HEAD').decode().strip() == HEAD
+    started = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    clock = time.monotonic()
+    logfile = OUT / (name + '.log')
+    with logfile.open('xb') as output:
+        try:
+            process = subprocess.run(argv, cwd=cwd, stdout=output, stderr=subprocess.STDOUT,
+                                     timeout=timeout, env=dict(os.environ, GIT_NO_LAZY_FETCH='1'))
+            code, status = process.returncode, 'PASS' if process.returncode == 0 else 'FAIL'
+        except subprocess.TimeoutExpired:
+            code, status = None, 'TIMEOUT'
+    raw = logfile.read_bytes()
+    value = dict(schema_version=1, kind='RECONCILIATION_EXECUTION', admission='NONE',
+                 evidence_class='INDEPENDENTLY_REPRODUCED', argv=argv, working_directory=str(cwd),
+                 started_utc=started, ended_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                 seconds=round(time.monotonic()-clock, 3), host=platform.platform(),
+                 python=sys.version, source_commit=HEAD, source_tree=git('rev-parse', HEAD+'^{tree}').decode().strip(),
+                 status=status, exit_code=code, log=logfile.name, log_bytes=len(raw), log_sha256=sha(raw))
+    save(name+'.receipt.json', value)
+    print(json.dumps(value), flush=True)
+    print(raw.decode('utf-8', errors='replace')[-2200:], flush=True)
+    return code
+
+action = sys.argv[1]
+if action == 'intake':
+    assert git('rev-parse','HEAD').decode().strip() == HEAD
+    assert not git('status','--porcelain=v1').strip()
+    assert sha((CONTEXT/'TASK_MANIFEST.json').read_bytes()) == MANIFEST
+    auth = json.loads((CONTEXT/'SOURCE_EDIT_AUTHORIZATION.json').read_bytes())
+    rows = []
+    for row in auth['preimages']:
+        old = git('show',auth['base_commit']+':'+row['path'])
+        now = git('show',HEAD+':'+row['path'])
+        working=(REPO/row['path']).read_bytes()
+        rows.append(dict(path=row['path'], issued_sha256=row['sha256'], base_sha256=sha(old),
+                         current_git_blob=git('rev-parse',HEAD+':'+row['path']).decode().strip(),
+                         current_sha256=sha(now), working_sha256=sha(working),
+                         base_matches=sha(old)==row['sha256'], current_matches=sha(now)==row['sha256']))
+        assert now == working
+    archive = pathlib.Path('C:/Users/jasim/.codex/codex-remote-attachments/01a15f02-bfe9-7481-b082-28c37c18829c/83619112-7161-4591-8A24-FB5E4B515E96/1-onSkin_Codex_M1-03_SOURCE-CLOSURE-01_Context.zip')
+    with zipfile.ZipFile(archive) as zipped:
+        assert all(zipped.read(r.filename)==(CONTEXT/r.filename).read_bytes() for r in zipped.infolist())
+        zip_files=len(zipped.infolist())
+    manifest=json.loads((CONTEXT/'TASK_MANIFEST.json').read_bytes())
+    inputs='docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/'
+    copies=[]
+    for row in manifest['files'] + [dict(path='TASK_MANIFEST.json',sha256=MANIFEST)]:
+        data=(CONTEXT/row['path']).read_bytes()
+        assert sha(data)==row['sha256'] and git('show',HEAD+':'+inputs+row['path'])==data
+        copies.append(dict(path=inputs+row['path'],sha256=sha(data)))
+    for path in (CONTEXT/'BRAIN_STATE').iterdir():
+        assert git('show',HEAD+':docs/brain/reviews/M1-03/SH01-REVIEW01/'+path.name)==path.read_bytes()
+    current_manifest=json.loads((REPO/'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/SHA256SUMS.json').read_bytes())
+    for row in current_manifest['files']:
+        raw=git('show',HEAD+':'+row['path'])
+        assert sha(raw)==row['sha256'] and (REPO/row['path']).read_bytes()==raw
+    protected=git('diff','--name-only',auth['base_commit'],HEAD,'--','.github','supabase','packages/types',
+                  'package-lock.json','package.json','apps/mobile','apps/console','packages','scripts/phase2',
+                  'scripts/phase9/security_acceptance','docs/brain/state').decode().splitlines()
+    assert not protected
+    save('intake.json',dict(schema_version=1,kind='OLDER_ISSUANCE_RECONCILIATION',admission='NONE',
+        observed_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),user_direction='Reconcile the older request against current stage',
+        supplied_manifest_sha256=MANIFEST,zip_members_equal=zip_files,installed_input_files_equal=len(copies),
+        brain_state_files_equal=len(list((CONTEXT/'BRAIN_STATE').iterdir())),preimages=rows,
+        source_commit=HEAD,source_tree=git('rev-parse',HEAD+'^{tree}').decode().strip(),
+        main=git('rev-parse','origin/main').decode().strip(),
+        sc03_committed_artifacts_verified=len(current_manifest['files']),protected_path_differences=protected,
+        scope='Read-only inspection/tests and additive reconciliation evidence; no renewed implementation authority',
+        supplied_preimage_failures=sum(not r['base_matches'] for r in rows),
+        changed_current_preimages=sum(not r['current_matches'] for r in rows)))
+    print('Intake verified; 57 exact ZIP members/installed inputs; complete unchanged Brain state; protected diff empty.')
+elif action == 'governance':
+    sys.exit(run('windows-governance71',[sys.executable,'-B','-m','unittest','discover','-s','scripts/brain','-p','test_*.py','-v']))
+elif action == 'candidate':
+    code = """import sys,pathlib,json,hashlib,platform
+sys.path.insert(0,'/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/security_readiness/m103')
+import candidate
+root=pathlib.Path('/root/onskin-overnight01-sh01-candidate04')
+value=candidate.verify(root,'"""+SEAL+"""')
+print(json.dumps(dict(status='INTEGRITY_VERIFIED',admission='NONE',manifest_sha256=value['manifest_sha256'],wheels=len(value['wheels']),installed_files=len(value['installed_tree']),runtime_files=len(value['runtime']['files']),python=platform.python_version(),platform=platform.platform())))
+"""
+    sys.exit(run('retained-candidate-integrity',['wsl','--distribution','onskin-r6-verification','--user','root',
+                '--exec','python3.12','-B','-c',code],timeout=300))
+elif action == 'candidate-tests':
+    code = """import sys,os,unittest
+sys.path.insert(0,'/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/security_readiness/m103')
+os.environ['ONSKIN_TEST_CANDIDATE']='/root/onskin-overnight01-sh01-candidate04'
+suite=unittest.defaultTestLoader.loadTestsFromNames(['test_diagnostics','test_integrity'])
+result=unittest.TextTestRunner(verbosity=2).run(suite)
+sys.exit(0 if result.wasSuccessful() else 1)
+"""
+    sys.exit(run('linux-candidate9',['wsl','--distribution','onskin-r6-verification','--user','root',
+                '--exec','python3.12','-B','-c',code],timeout=900))
+elif action == 'strict':
+    profile=run('current-profile',[sys.executable,'-B','scripts/brain/brain.py','--profile','M1-03','validate'])
+    report=run('current-strict-report',[sys.executable,'-B','scripts/brain/brain.py','--profile','M1-03','report',
+                'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/completion-report.json'])
+    worklist=run('current-worklist-check',['node','scripts/phase4/build-source-worklist.mjs','--strict','--check'])
+    sys.exit(0 if all(x==0 for x in [profile,report,worklist]) else 1)
+elif action == 'scan':
+    code = """import sys,os,pathlib,json
+repo=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean')
+sys.path.insert(0,str(repo/'scripts/security_readiness/m103'))
+os.environ['GIT_NO_LAZY_FETCH']='1'
+import source_scan
+pins=json.loads((repo/'docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json').read_bytes())['rule_bundle_sha256']
+sys.exit(source_scan.run(pathlib.Path('/root/onskin-overnight01-sh01-candidate04'),repo,
+    '"""+HEAD+"""',pathlib.Path('/root/onskin-source-closure01-reconciled-scan-66ba3219-20261022T0240'),
+    pathlib.Path('/root/onskin-overnight01-source-scan02'),pins,'"""+SEAL+"""'))
+"""
+    sys.exit(run('current-four-bundle-scan',['wsl','--distribution','onskin-r6-verification','--user','root',
+                '--exec','python3.12','-B','-c',code],timeout=4200))
+elif action == 'history-security':
+    code = """import pathlib,gzip,json,os,subprocess,hashlib
+repo=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean')
+os.environ['GIT_NO_LAZY_FETCH']='1'
+raw=(repo/'scripts/phase9/security_acceptance/history.json.gz').read_bytes()
+witnesses=json.loads(gzip.decompress(raw));refs={}
+for row in witnesses:
+    key=row['commit']+':'+row['path'];value=(row['source_blob'],row['source_sha256'])
+    assert key not in refs or refs[key]==value
+    refs[key]=value
+verified=[]
+with subprocess.Popen(['git','-C',str(repo),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE) as reader:
+    for key,(blob,digest) in sorted(refs.items()):
+        reader.stdin.write((key+'\\n').encode());reader.stdin.flush()
+        header=reader.stdout.readline().decode().split()
+        assert len(header)==3 and header[:2]==[blob,'blob'],key+': missing/wrong Git object'
+        data=reader.stdout.read(int(header[2]));assert reader.stdout.read(1)==b'\\n'
+        assert hashlib.sha256(data).hexdigest()==digest
+        assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\0'+data).hexdigest()==blob
+        verified.append(dict(reference=key,git_blob=blob,sha256=digest,bytes=len(data)))
+    reader.stdin.close();assert reader.wait()==0
+print(json.dumps(dict(admission='NONE',status='VERIFIED_OFFLINE_REAL_GIT_BYTES',witnesses=len(witnesses),references=verified,history_sha256=hashlib.sha256(raw).hexdigest(),network='GIT_NO_LAZY_FETCH=1; no object acquisition needed for these existing witnesses')))
+"""
+    result=run('current-history-witnesses',['wsl','--distribution','onskin-r6-verification','--user','root',
+                '--exec','python3.12','-B','-c',code],timeout=300)
+    if result:
+        sys.exit(result)
+    code="""import os,sys,unittest,pathlib
+os.environ['GIT_NO_LAZY_FETCH']='1'
+repo=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean')
+os.chdir(repo)
+sys.path.insert(0,str(repo/'scripts/phase9/security_acceptance'))
+suite=unittest.defaultTestLoader.loadTestsFromName('test_contract')
+result=unittest.TextTestRunner(verbosity=2).run(suite)
+sys.exit(0 if result.wasSuccessful() else 1)
+"""
+    sys.exit(run('current-linux-security70',['wsl','--distribution','onskin-r6-verification','--user','root',
+                '--exec','python3.12','-B','-c',code],timeout=900))
+elif action in {'root-checks','root-tail'}:
+    clone='/root/onskin-reconcile-measured-66ba3219-20261022'
+    prelude="import pathlib,subprocess,os,sys,hashlib,json\nrepo=pathlib.Path("+repr(clone)+")\nos.environ['GIT_NO_LAZY_FETCH']='1'\n"
+    code=prelude+"""assert not repo.exists()
+subprocess.run(['git','-c','gc.auto=0','clone','--no-hardlinks','--no-checkout','/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean',str(repo)],check=True)
+subprocess.run(['git','-C',str(repo),'checkout','stage/m1-retained-safety'],check=True)
+assert subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD']).decode().strip()=='"""+HEAD+"""'
+assert not (repo/'.git/objects/info/alternates').exists()
+assert not subprocess.check_output(['git','-C',str(repo),'status','--porcelain'])
+print('Independent no-hardlinks clone; exact source; no alternates.')
+for argv in [['node','--version'],['npm','--version']]:subprocess.run(argv,check=True)
+"""
+    wsl=['wsl','--distribution','onskin-r6-verification','--user','root','--exec','python3.12','-B','-c']
+    if action=='root-checks' and run('current-independent-clone',wsl+[code],timeout=300):sys.exit(1)
+    commands=[('npm-ci',['npm','ci','--no-audit','--no-fund']),('root-test',['npm','test','--','--force']),
+              ('root-typecheck',['npm','run','typecheck','--','--force']),('root-lint',['npm','run','lint','--','--force'])]
+    for name,argv in commands if action=='root-checks' else commands[2:]:
+        code=prelude+"assert subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD']).decode().strip()=="+repr(HEAD)+"\n"
+        code+="before=(repo/'package-lock.json').read_bytes()\nresult=subprocess.run("+repr(argv)+",cwd=repo)\n"
+        code+="assert (repo/'package-lock.json').read_bytes()==before\nprint('LOCK_SHA256',hashlib.sha256(before).hexdigest(),flush=True)\nsys.exit(result.returncode)\n"
+        result=run('current-'+name,wsl+[code],timeout=1200)
+        if name=='npm-ci' and result:sys.exit(result)
+elif action == 'hydrated-tests':
+    code="""import pathlib,subprocess,os,json,gzip,hashlib,sys
+os.environ['GIT_NO_LAZY_FETCH']='1'
+repo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022')
+source=pathlib.Path('/root/onskin-brain-overnight-review')
+work=pathlib.Path('/root/onskin-reconciliation-custody-66ba3219-20261022');work.mkdir(mode=0o700)
+def git(root,*args,**kw):return subprocess.check_output(['git','-C',str(root),'-c','gc.auto=0',*args],**kw)
+before=git(repo,'show-ref')
+original=git(source,'cat-file','blob','32c36cf860aee91e177d7db2286e40e6dda35182:scripts/phase9/security_acceptance/history.json.gz')
+old=json.loads(gzip.decompress(original));current=json.loads(gzip.decompress((repo/'scripts/phase9/security_acceptance/history.json.gz').read_bytes()))
+endpoints={r['commit'] for r in old+current}|{'32c36cf860aee91e177d7db2286e40e6dda35182','569a16d07c0103e0c019f35e384a278671f2a76f'}
+for commit in endpoints:assert git(source,'cat-file','-t',commit).strip()==b'commit'
+pack=work/'authentic-historical.pack'
+with pack.open('xb') as stream:
+ subprocess.run(['git','-C',str(source),'pack-objects','--stdout','--revs'],input=('\\n'.join(sorted(endpoints))+'\\n').encode(),stdout=stream,check=True)
+with pack.open('rb') as stream:
+ subprocess.run(['git','-C',str(repo),'index-pack','--stdin'],stdin=stream,stdout=subprocess.DEVNULL,check=True)
+sys.path.insert(0,str(repo/'scripts/security_readiness/m103'))
+from hydrate_history import hydrate
+hydrate(repo,work/'complete-endpoints.pack',work/'complete-endpoints.json')
+references={}
+for r in old+current:
+ key=r['commit']+':'+r['path'];value=(r['source_blob'],r['source_sha256']);assert key not in references or references[key]==value;references[key]=value
+rows=[]
+for key,(blob,digest) in sorted(references.items()):
+ data=git(repo,'cat-file','blob',key)
+ assert hashlib.sha256(data).hexdigest()==digest and hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\0'+data).hexdigest()==blob
+ rows.append(dict(reference=key,git_blob=blob,sha256=digest,bytes=len(data)))
+assert before==git(repo,'show-ref')
+value=dict(admission='NONE',status='AUTHENTIC_FULL_HISTORICAL_CUSTODY',source_repo=str(source),source_head=git(source,'rev-parse','HEAD').decode().strip(),source_tree=git(source,'rev-parse','HEAD^{tree}').decode().strip(),old_witnesses=len(old),current_witnesses=len(current),verified_references=rows,import_pack_sha256=hashlib.file_digest(pack.open('rb'),'sha256').hexdigest(),import_pack_bytes=pack.stat().st_size,complete_endpoint_receipt=json.loads((work/'complete-endpoints.json').read_bytes()),refs_unchanged_sha256=hashlib.sha256(before).hexdigest(),network='GIT_NO_LAZY_FETCH=1; authentic local Git only; no alternate or ref changes')
+(work/'custody.json').write_text(json.dumps(value,indent=2)+'\\n')
+print(json.dumps(value))
+"""
+    wsl=['wsl','--distribution','onskin-r6-verification','--user','root','--exec','python3.12','-B','-c']
+    if run('current-complete-historical-custody',wsl+[code],timeout=600):sys.exit(1)
+    for name,module in [('security70-hydrated','test_contract'),('secret12','test_secret_scan')]:
+        code="""import pathlib,sys,os,unittest
+os.environ['GIT_NO_LAZY_FETCH']='1'
+repo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022');os.chdir(repo)
+sys.path.insert(0,str(repo/'scripts/phase9/security_acceptance'))
+suite=unittest.defaultTestLoader.loadTestsFromName('"""+module+"""')
+result=unittest.TextTestRunner(verbosity=2).run(suite)
+sys.exit(0 if result.wasSuccessful() else 1)
+"""
+        run('current-linux-'+name,wsl+[code],timeout=900)
+elif action == 'hydration-recovery':
+    code="""import pathlib,subprocess,os,json,gzip,hashlib,sys
+os.environ['GIT_NO_LAZY_FETCH']='1'
+repo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022');source=pathlib.Path('/root/onskin-brain-overnight-review')
+work=pathlib.Path('/root/onskin-reconciliation-custody-66ba3219-20261022')
+sys.path.insert(0,str(repo/'scripts/brain'));sys.path.insert(0,str(repo/'scripts/security_readiness/m103'))
+import m1_profile,m102_profile,m103_profile
+from hydrate_history import hydrate
+def git(root,*args,**kw):return subprocess.check_output(['git','-C',str(root),'-c','gc.auto=0',*args],**kw)
+refs=git(repo,'show-ref');rows=json.loads(gzip.decompress((repo/'scripts/phase9/security_acceptance/history.json.gz').read_bytes()))
+commits={r['commit'] for r in rows}|{'569a16d07c0103e0c019f35e384a278671f2a76f',git(repo,'rev-parse','HEAD').decode().strip()}
+for module in [m1_profile,m102_profile,m103_profile]:commits.update(v for k,v in vars(module).items() if 'BASE' in k and isinstance(v,str) and len(v)==40)
+acquired=[];unavailable=[]
+for depth in range(20):
+ listing=git(repo,'rev-list','--objects','--missing=print',*sorted(commits)).decode().splitlines()
+ missing=sorted(x[1:] for x in listing if x.startswith('?'))
+ if not missing:break
+ for oid in missing:
+  result=subprocess.run(['git','-C',str(source),'cat-file','-t',oid],capture_output=True)
+  if result.returncode:unavailable.append(oid);continue
+  kind=result.stdout.decode().strip();assert kind in {'blob','tree','commit','tag'}
+  raw=git(source,'cat-file',kind,oid)
+  assert hashlib.sha1(kind.encode()+b' '+str(len(raw)).encode()+b'\\0'+raw).hexdigest()==oid
+  assert git(repo,'hash-object','-w','-t',kind,'--stdin',input=raw).decode().strip()==oid
+  acquired.append(dict(oid=oid,kind=kind,sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw)))
+ if unavailable:break
+assert refs==git(repo,'show-ref')
+value=dict(admission='NONE',source_repo=str(source),source_head=git(source,'rev-parse','HEAD').decode().strip(),target_head=git(repo,'rev-parse','HEAD').decode().strip(),acquired_objects=acquired,unavailable=unavailable,refs_sha256=hashlib.sha256(refs).hexdigest(),refs_unchanged=True,network='OFFLINE_LOCAL_GIT_ONLY')
+if not unavailable:
+ hydrate(repo,work/'complete-endpoints-recovered.pack',work/'complete-endpoints-recovered.json')
+ value['complete_endpoint_receipt']=json.loads((work/'complete-endpoints-recovered.json').read_bytes())
+(work/'recovery.json').write_text(json.dumps(value,indent=2)+'\\n');print(json.dumps(value))
+sys.exit(1 if unavailable else 0)
+"""
+    wsl=['wsl','--distribution','onskin-r6-verification','--user','root','--exec','python3.12','-B','-c']
+    run('current-historical-custody-recovery',wsl+[code],timeout=600)
+    for name,module in [('security70-hydrated','test_contract'),('secret12','test_secret_scan')]:
+        code="""import pathlib,sys,os,unittest
+os.environ['GIT_NO_LAZY_FETCH']='1'
+repo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022');os.chdir(repo)
+sys.path.insert(0,str(repo/'scripts/phase9/security_acceptance'))
+suite=unittest.defaultTestLoader.loadTestsFromName('"""+module+"""')
+result=unittest.TextTestRunner(verbosity=2).run(suite)
+sys.exit(0 if result.wasSuccessful() else 1)
+"""
+        run('current-linux-'+name,wsl+[code],timeout=900)
+elif action == 'linux-governance':
+    code="""import pathlib,sys,os,unittest
+os.environ['GIT_NO_LAZY_FETCH']='1'
+repo=pathlib.Path('/root/onskin-reconcile-measured-66ba3219-20261022');os.chdir(repo)
+sys.path.insert(0,str(repo/'scripts/brain'))
+suite=unittest.defaultTestLoader.discover(str(repo/'scripts/brain'),pattern='test_*.py')
+result=unittest.TextTestRunner(verbosity=2).run(suite)
+sys.exit(0 if result.wasSuccessful() else 1)
+"""
+    sys.exit(run('linux-governance71',['wsl','--distribution','onskin-r6-verification','--user','root',
+        '--exec','python3.12','-B','-c',code],timeout=900))
+elif action == 'scan-probes':
+    sys.exit(run('current-bounded-probes',['wsl','--distribution','onskin-r6-verification','--user','root',
+        '--exec','python3.12','-B','/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/sc01-reconciliation-20261022T023600Z/scan_reconciliation.py','probes'],timeout=2400))
+else:
+    raise ValueError('Unknown reconciliation action')

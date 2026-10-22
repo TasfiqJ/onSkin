@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "RECONCILIATION_EXECUTION",
+  "admission": "NONE",
+  "evidence_class": "INDEPENDENTLY_REPRODUCED",
+  "argv": [
+    "wsl",
+    "--distribution",
+    "onskin-r6-verification",
+    "--user",
+    "root",
+    "--exec",
+    "python3.12",
+    "-B",
+    "-c",
+    "import sys,os,pathlib,json\nrepo=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean')\nsys.path.insert(0,str(repo/'scripts/security_readiness/m103'))\nos.environ['GIT_NO_LAZY_FETCH']='1'\nimport source_scan\npins=json.loads((repo/'docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/inputs/REVIEW_STATE/CANDIDATE_TOOL_INPUTS.json').read_bytes())['rule_bundle_sha256']\nsys.exit(source_scan.run(pathlib.Path('/root/onskin-overnight01-sh01-candidate04'),repo,\n    '66ba3219549d426cbb66c7497a37948aa7d8f12e',pathlib.Path('/root/onskin-source-closure01-reconciled-scan-66ba3219-20261022T0240'),\n    pathlib.Path('/root/onskin-overnight01-source-scan02'),pins,'3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112'))\n"
+  ],
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "started_utc": "2026-10-22T02:38:32.290878+00:00",
+  "ended_utc": "2026-10-22T02:44:22.666406+00:00",
+  "seconds": 350.375,
+  "host": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+  "source_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+  "source_tree": "ecdd68e1b0c34377e59309e4ce5f29e1a8b678c8",
+  "status": "FAIL",
+  "exit_code": 1,
+  "log": "current-four-bundle-scan.log",
+  "log_bytes": 100,
+  "log_sha256": "9e4809fd446ab569107c797aad09f131367138e94adf847ae11a59edd0f584a2"
+}

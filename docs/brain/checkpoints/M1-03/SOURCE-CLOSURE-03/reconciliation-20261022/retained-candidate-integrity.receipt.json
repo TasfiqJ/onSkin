@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "RECONCILIATION_EXECUTION",
+  "admission": "NONE",
+  "evidence_class": "INDEPENDENTLY_REPRODUCED",
+  "argv": [
+    "wsl",
+    "--distribution",
+    "onskin-r6-verification",
+    "--user",
+    "root",
+    "--exec",
+    "python3.12",
+    "-B",
+    "-c",
+    "import sys,pathlib,json,hashlib,platform\nsys.path.insert(0,'/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean/scripts/security_readiness/m103')\nimport candidate\nroot=pathlib.Path('/root/onskin-overnight01-sh01-candidate04')\nvalue=candidate.verify(root,'3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112')\nprint(json.dumps(dict(status='INTEGRITY_VERIFIED',admission='NONE',manifest_sha256=value['manifest_sha256'],wheels=len(value['wheels']),installed_files=len(value['installed_tree']),runtime_files=len(value['runtime']['files']),python=platform.python_version(),platform=platform.platform())))\n"
+  ],
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "started_utc": "2026-10-22T02:34:08.095563+00:00",
+  "ended_utc": "2026-10-22T02:34:14.700231+00:00",
+  "seconds": 6.61,
+  "host": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+  "source_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+  "source_tree": "ecdd68e1b0c34377e59309e4ce5f29e1a8b678c8",
+  "status": "PASS",
+  "exit_code": 0,
+  "log": "retained-candidate-integrity.log",
+  "log_bytes": 297,
+  "log_sha256": "37374a56c55fcb7b125afe0eb9c5d3f7c194bc0d83683b54825fde22d46e89e9"
+}

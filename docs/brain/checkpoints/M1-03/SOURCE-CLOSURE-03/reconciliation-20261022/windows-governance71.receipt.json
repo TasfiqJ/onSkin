@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "RECONCILIATION_EXECUTION",
+  "admission": "NONE",
+  "evidence_class": "INDEPENDENTLY_REPRODUCED",
+  "argv": [
+    "C:\\Python39\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "working_directory": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\overnight-delivery-clean",
+  "started_utc": "2026-10-22T02:34:50.932523+00:00",
+  "ended_utc": "2026-10-22T03:04:50.952756+00:00",
+  "seconds": 1800.032,
+  "host": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+  "source_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+  "source_tree": "ecdd68e1b0c34377e59309e4ce5f29e1a8b678c8",
+  "status": "TIMEOUT",
+  "exit_code": null,
+  "log": "windows-governance71.log",
+  "log_bytes": 6473,
+  "log_sha256": "9f13dd38d4d027da991dead6fc4c7334b02ccea3f80dc0117a22cf80555b94b5"
+}

@@ -1,0 +1,95 @@
+"""Bounded read/execute diagnostics; original source/rules remain immutable."""
+import collections, datetime, gzip, hashlib, json, os, pathlib, shutil, sys
+
+REPO=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/overnight-delivery-clean')
+OUT=pathlib.Path('/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/sc01-reconciliation-20261022T023600Z')
+SCAN=pathlib.Path('/root/onskin-source-closure01-reconciled-scan-66ba3219-20261022T0240')
+CAND=pathlib.Path('/root/onskin-overnight01-sh01-candidate04')
+SEAL='3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112'
+os.environ['GIT_NO_LAZY_FETCH']='1'
+sys.path.insert(0,str(REPO/'scripts/security_readiness/m103'))
+from candidate import SHA,verify
+from source_scan import sealed_run,validate_inventory
+
+def save(path,value):
+    with path.open('x',encoding='utf-8') as stream:json.dump(value,stream,indent=2);stream.write('\n')
+
+coverage=json.loads((SCAN/'coverage.json').read_bytes())
+inventory=json.loads((SCAN/'source-inventory.json').read_bytes())
+partition=json.loads((SCAN/'partition.json').read_bytes())
+indexed={r['path']:r for r in inventory['paths']}
+
+def error(row):
+    typ=row.get('type');typ=typ[0] if isinstance(typ,list) else typ
+    return dict(type=typ,code=row.get('code'),level=row.get('level'),path=row.get('path'),
+                spans=[{k:s[k] for k in ['file','start','end'] if k in s} for s in row.get('spans',[])],
+                original_error_sha256=SHA(json.dumps(row,sort_keys=True).encode()))
+
+if sys.argv[1]=='summary':
+    rows=[]
+    for row in coverage['runs']:
+        profile=SCAN/row['rule_file_profile']['path'];raw=profile.read_bytes();value=json.loads(gzip.decompress(raw))
+        assert all(isinstance(r,str) for r in value['rules'])
+        for target in value['targets']:
+            assert set(target)<=set(['path','num_bytes','parse_times','match_times','run_time'])
+            assert target['path'].removeprefix('./') in indexed
+            assert all(isinstance(x,(float,int)) for key in ['parse_times','match_times'] for x in target[key])
+        shutil.copyfile(profile,OUT/profile.name)
+        rows.append({k:row[k] for k in ['bundle','expected_sha256','raw_exit','status','final_integrity',
+            'rule_count','rule_ids','rule_languages','scanned_paths','unscanned_targets','raw_sha256','stderr_sha256',
+            'raw_finding_count','raw_error_count','skipped_rules','profiled_rule_ids','rule_file_profile',
+            'fixpoint_timeouts','zero_timing_means','coverage_complete','command']})
+        rows[-1].update(errors=[error(e) for e in row['errors']],findings=row['findings'])
+    languages=collections.defaultdict(collections.Counter)
+    for row in partition['paths']:languages[pathlib.PurePosixPath(row['path']).suffix.lower() or '<none>'][row['partition']]+=1
+    result=dict(schema_version=1,admission='NONE',source_commit=coverage['source_commit'],source_tree=coverage['source_tree'],
+        candidate_manifest_sha256=SEAL,paths=len(partition['paths']),partition=dict(collections.Counter(r['partition'] for r in partition['paths'])),
+        language_partition={k:dict(v) for k,v in sorted(languages.items())},runs=rows,
+        failed_targets=[dict(path=r['path'],git_blob=r['git_blob'],sha256=r.get('sha256'),applicable_bundles=r.get('applicable_bundles'),scanned_bundles=r.get('scanned_bundles')) for r in partition['paths'] if r['partition']=='FAILED'],
+        private_artifacts=[dict(name=p.name,bytes=p.stat().st_size,sha256=SHA(p.read_bytes())) for p in sorted(SCAN.iterdir()) if p.is_file()],
+        warning_events=sum(len(r['fixpoint_timeouts']) for r in rows),findings=sum(r['raw_finding_count'] for r in rows),
+        outcome=json.loads((SCAN/'outcome.json').read_bytes()),zero_timing='NO_POSITIVE_RULE_EXECUTION_PROOF',
+        public_profiles='Exact original gzip timing matrices; keys and source paths verified to contain only IDs, paths, byte counts and numeric times; raw finding/error scanner reports stay private.')
+    save(OUT/'current-scan-summary.json',result)
+    print(json.dumps(dict(paths=result['paths'],partition=result['partition'],warnings=result['warning_events'],findings=result['findings'],admission='NONE')))
+elif sys.argv[1]=='probes':
+    work=pathlib.Path('/root/onskin-reconciliation-bounded-probes-66ba3219-20261022');work.mkdir(mode=0o700);(work/'rules').mkdir()
+    tool=verify(CAND,SEAL);validate_inventory(inventory,REPO);results=[]
+    for cycle in [1,2]:
+        for baseline in coverage['runs']:
+            bundle=baseline['bundle'];groups=[]
+            sql=[p for p in baseline['unscanned_targets'] if p.endswith('.sql')]
+            if sql:groups.append(('SQL_DISCOVERY_PREFILTER',sql,[] if cycle==1 else ['--optimizations','none']))
+            if bundle in ['owasp-top-ten','typescript']:
+                groups.append(('TS_PARTIAL_PARSER',['apps/mobile/src/features/onboarding/AgeReverificationRights.integration.test.ts'],[] if cycle==1 else ['--optimizations','none']))
+                warnings=collections.Counter(w.get('location',{}).get('path','').removeprefix('./') for w in baseline['fixpoint_timeouts'])
+                worst=[name for name,count in warnings.most_common(1) if name in indexed]
+                if worst:groups.append(('FIXPOINT_FILE_PRESSURE_SCHEDULING',worst,[] if cycle==1 else ['--jobs','1']))
+            if bundle=='owasp-top-ten' and cycle==1:
+                for item in baseline['errors']:
+                    if item['type']=='Timeout':groups.append(('TIMEOUT_ISOLATED_FILE',[item['path']],[]))
+            rule=work/'rules'/(bundle+'.yaml')
+            if not rule.exists():rule.write_bytes((SCAN/'rules'/(bundle+'.yaml')).read_bytes())
+            assert SHA(rule.read_bytes())==baseline['expected_sha256']
+            for kind,paths,flags in groups:
+                name=bundle+'-'+kind.lower()+'-cycle'+str(cycle)
+                command=[str(CAND/'venv/bin/python'),'-I','-B',str(CAND/'venv/bin/semgrep'),'scan','--oss-only','--metrics=off','--disable-version-check','--config',str(rule),'--json','--time','--no-rewrite-rule-ids','--no-git-ignore','--scan-unknown-extensions','--timeout','10','--max-target-bytes','0',*flags,*paths]
+                start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+                with (work/(name+'.raw.json')).open('xb') as out,(work/(name+'.stderr')).open('xb') as err:
+                    code=sealed_run(CAND,tool,inventory,REPO,work,rule,baseline['expected_sha256'],command,out,err,180)
+                raw=(work/(name+'.raw.json')).read_bytes();value=json.loads(raw)
+                result=dict(cycle=cycle,error_class=kind,bundle=bundle,targets=paths,source_commit=inventory['source_commit'],source_tree=inventory['source_tree'],
+                    candidate_manifest_sha256=SEAL,rule_sha256=baseline['expected_sha256'],command=command,started_utc=start,
+                    ended_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),raw_exit=code,raw_sha256=SHA(raw),stderr_sha256=SHA((work/(name+'.stderr')).read_bytes()),
+                    scanned_paths=value.get('paths',{}).get('scanned',[]),errors=[error(e) for e in value.get('errors',[])],
+                    findings=[dict(id=SHA(json.dumps(f,sort_keys=True).encode()),path=f['path'],rule=f['check_id'],start=f['start'],end=f['end'],disposition='UNREVIEWED') for f in value.get('results',[])],
+                    fixpoint_timeouts=[dict(error_type=w.get('error_type'),severity=w.get('severity'),location=w.get('location'),message_sha256=SHA(w.get('message','').encode())) for w in value.get('time',{}).get('fixpoint_timeouts',[])],
+                    final_integrity='PASS',admission='NONE')
+                results.append(result)
+                print(bundle,kind,'cycle',cycle,'targets',len(paths),'scanned',len(result['scanned_paths']),'errors',len(result['errors']),'fixpoint',len(result['fixpoint_timeouts']),'raw_exit',code,flush=True)
+                (work/'probes.json').write_text(json.dumps(dict(admission='NONE',probes=results),indent=2)+'\n')
+    validate_inventory(inventory,REPO);verify(CAND,SEAL)
+    save(OUT/'current-bounded-probes.json',dict(schema_version=1,admission='NONE',source_commit=inventory['source_commit'],source_tree=inventory['source_tree'],
+        source_mutations=0,rule_mutations=0,timeout_seconds_unchanged=10,probes=results,
+        limit='Two distinct candidate-only cycles per SQL/TS/fixpoint class; one isolated-file timeout probe. Full-source failures/findings remain unchanged.'))
+else:raise ValueError('Unknown action')

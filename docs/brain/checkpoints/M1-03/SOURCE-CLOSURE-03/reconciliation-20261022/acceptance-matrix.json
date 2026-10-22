@@ -1,0 +1,63 @@
+{
+  "admission": "NONE",
+  "source_commit": "66ba3219549d426cbb66c7497a37948aa7d8f12e",
+  "scope": [
+    {
+      "id": "K01",
+      "status": "PASS",
+      "evidence": [
+        "current-profile"
+      ]
+    },
+    {
+      "id": "K02",
+      "status": "PASS",
+      "evidence": [
+        "current-historical-custody-recovery"
+      ]
+    },
+    {
+      "id": "K03",
+      "status": "PASS",
+      "evidence": [
+        "linux-governance71",
+        "current-linux-security70-hydrated",
+        "current-linux-secret12"
+      ]
+    },
+    {
+      "id": "K04",
+      "status": "PASS",
+      "evidence": [
+        "retained-candidate-integrity",
+        "linux-candidate9"
+      ]
+    },
+    {
+      "id": "K05",
+      "status": "FAIL",
+      "evidence": [
+        "current-four-bundle-scan",
+        "current-bounded-probes"
+      ]
+    },
+    {
+      "id": "K06",
+      "status": "PASS",
+      "evidence": [
+        "current-root-test",
+        "current-root-typecheck",
+        "current-root-lint",
+        "current-worklist-check"
+      ]
+    },
+    {
+      "id": "K07",
+      "status": "PARTIAL_TESTED",
+      "evidence": [
+        "current-strict-report"
+      ]
+    }
+  ],
+  "semantics": "PASS is limited to the named local diagnostic/test scope; K05 coverage is FAIL. No whole M1-03, protected Security, hosted database or promotion acceptance."
+}
