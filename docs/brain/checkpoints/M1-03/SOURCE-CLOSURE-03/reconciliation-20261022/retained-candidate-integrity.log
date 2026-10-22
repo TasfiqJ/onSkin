@@ -1,0 +1,1 @@
+{"status": "INTEGRITY_VERIFIED", "admission": "NONE", "manifest_sha256": "3d8a461873f7c7bc8498c84cffd5adab8a12f3d0bb60bc3740234889d3a03112", "wheels": 66, "installed_files": 4393, "runtime_files": 55, "python": "3.12.3", "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"}

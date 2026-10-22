@@ -1,0 +1,9 @@
+
+> layerwell@0.1.0 postinstall
+> node scripts/postinstall.mjs
+
+{"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":npm warn allow-scripts 2 packages have LOCK_SHA256 7a98ddc5ba1ac26e0fa0682b0681de4502c2e5dd85630cdbc691e535f07be77c
+ntry/cli@2.58.4 (postinstall: node ./scripts/install.js)
+npm warn allow-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
