@@ -1268,5 +1268,18 @@
     }
   ],
   "self_reference_policy": "This manifest excludes itself. Every listed row is an authentic regular blob in bound_snapshot. A final manifest-only commit is verified externally, including its SHA/tree and clean status.",
-  "admission": "NONE"
+  "admission": "NONE",
+  "task_owned_runtime_cleanup": {
+    "observed_at": "2026-10-23T20:32:50.936037+00:00",
+    "argv": [
+      "docker",
+      "rm",
+      "-f",
+      "7112d1328f36d6f7138156ceeba7fca5957a66f3df5c3223335783a20d354b75"
+    ],
+    "exit": 0,
+    "output": "7112d1328f36d6f7138156ceeba7fca5957a66f3df5c3223335783a20d354b75",
+    "scope": "Only this task-created container; completed scratch/caches discarded after durable receipts. No other container/image/distro/data removed.",
+    "host_free_bytes_after": 3615723520
+  }
 }
