@@ -436,5 +436,11 @@
     "raw_exit": 1,
     "status": "REJECTED",
     "receipt": "evidence/final-checks/original-strict-report.stderr.txt"
+  },
+  "auxiliary_whitespace_check": {
+    "technical_source_raw_exit": 0,
+    "checkpoint_raw_exit": 2,
+    "status": "FINDINGS_RETAINED",
+    "receipt": "evidence/final-checks/whitespace.receipt.json"
   }
 }

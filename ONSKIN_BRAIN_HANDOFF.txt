@@ -39,3 +39,5 @@ source_security_go=false; protected_source_go=false; M1-03 accepted=false; hoste
 main_promotion=false; M2=false; clinical/release=false; native/archive/device signoff=false.
 No credentials/login/ECR pull/paid runner/native signing. Incremental spend $0. Context healthy.
 STOP for independent Brain review. Founder relay: Codex is done.
+
+Auxiliary checkpoint whitespace check exit2 retained for preserved CRLF/raw log bytes; technical source diffcheck exit0.

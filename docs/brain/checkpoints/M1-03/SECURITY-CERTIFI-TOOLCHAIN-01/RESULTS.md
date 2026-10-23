@@ -34,3 +34,5 @@ Two own wrapper mistakes are retained in `evidence/auxiliary-attempts.json`: npm
 The original strict Brain reporter has no issuance adapter for this new disjoint scope; its actual rejection is captured separately, without altering governance source or granting acceptance. A separate exact-scope/hash verifier checks this technical packet, while original admission remains closed.
 
 Final local checks: original input verifier PASS; exact technical scope PASS; original strict report raw exit 1, `REJECTED: Wrong M1 branch`; original strict live governance raw exit 1, `Wrong GF01 branch`. These original refusals remain blockers. New-checkpoint-only Gitleaks disclosure scan returned exit 0 with an empty result; no repository/history secret clearance follows.
+
+Optional full-evidence Git whitespace check returned raw exit 2 for byte-preserved checkpoint CRLF/log whitespace. Its bounded receipt and full raw transcript SHA are retained; this is not called PASS. The two-file technical source diff separately returned exit 0. Issued members/raw receipts remain exact.

@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "id": "technical-source-whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "eaa47d7a1882dc395100bd0a958550a8beef406b",
+        "de17484d0490f6990aa66d92aec25005a48d7f0c"
+      ],
+      "raw_exit": 0,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "finding_paths": [],
+      "utc": "2026-10-23T17:41:43.989963+00:00"
+    },
+    {
+      "id": "evidence-whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "de17484d0490f6990aa66d92aec25005a48d7f0c",
+        "HEAD"
+      ],
+      "raw_exit": 2,
+      "stdout_bytes": 551551,
+      "stdout_sha256": "8b60343b3d5dd487c83de4a1e0e6540f86d31ea020389640782b15a0a7b8aadb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "finding_paths": [
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/BLOCKERS.md",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/README.md",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/RESULTS.md",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/SHA256SUMS.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/completion-report.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/final-checks/checkpoint-disclosure-scan.receipt.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/final-checks/context-verifier.stdout.txt",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/final-checks/exact-technical-scope.stdout.txt",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/final-checks/original-strict-report.stderr.txt",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/final-checks/receipts.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/preflight-local.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/reproduction/system-pip-probe.receipt.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/sanitization.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/stage-promotion.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/upstream/fetch-receipts.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/upstream/verification.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/validation/forced-lint.stdout.txt",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/validation/forced-root6067.stdout.txt",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/validation/forced-typecheck.stdout.txt",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/validation/original-strict-governance.receipt.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/evidence/validation/test-counts.json",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/reproduce_candidate.py",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/reproduce_candidate_attempt01.py",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/tool_inventory.py",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/tool_inventory_attempt01.py",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/verify_delivery.py"
+      ],
+      "utc": "2026-10-23T17:41:44.061055+00:00"
+    }
+  ],
+  "interpretation": "Optional formatting check: CRLF and original log whitespace are preserved in checkpoint bytes. Raw full transcript stays outside repository with this hash. No issued inputs or raw receipts normalized; two technical source files pass unchanged whitespace check. Required technical and adverse tests pass; this optional exit2 is not reported as PASS."
+}
