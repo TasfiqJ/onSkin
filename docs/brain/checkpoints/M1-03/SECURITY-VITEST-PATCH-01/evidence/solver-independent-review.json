@@ -1,0 +1,930 @@
+{
+  "changed_entries": 12,
+  "added": 0,
+  "removed": 0,
+  "official_tarballs": [
+    {
+      "path": "node_modules/@vitest/expect",
+      "name": "@vitest/expect",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Fexpect/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/expect/-/expect-4.1.12.tgz",
+      "tarball_sha256": "8c932064dafe90dca40312b44c5b63623c8c7e03bb9b38c4bd9af2f5701f7bb6",
+      "integrity": "sha512-vFlTt+YEu9WBpNjdGayNmlMVzrWPi1+sv853/7t2FU7hpO5gAFBKHzQmkCq5Xjpr+evegF2994LQT3hF3mRlqQ==",
+      "dev": true,
+      "metadata_response_sha256": "0528bfe881bab6121b389e1ab88a26bf43208027e80016c43a5971b391f4f199",
+      "saved_metadata_sha256": "8a043d40967d628a0fe471245b595cb623be998dc710cdfb0ba732392aee4b24",
+      "saved_metadata_path": "evidence/vitest-expect-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/@vitest/mocker",
+      "name": "@vitest/mocker",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Fmocker/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.12.tgz",
+      "tarball_sha256": "8f9ac0144028329f5c649c031608b8877efea748cdbded0d7f41d60f9be49c52",
+      "integrity": "sha512-fKShNpKZzupWZuY0z7egydvL0sqW4INEZBEExMBMAa6izlENEVHwoXgdaTCaBZ5fwlr4xf2o1wXC83n9RpO+NA==",
+      "dev": true,
+      "metadata_response_sha256": "8db5c03250edf5280c4ba695058beaa9daa2b6ebd2e115de5c4c615889effb58",
+      "saved_metadata_sha256": "10dd9a11c65267c98294ed9d58846a367994e60c1f515a08d93cf3e001532bc7",
+      "saved_metadata_path": "evidence/vitest-mocker-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/@vitest/pretty-format",
+      "name": "@vitest/pretty-format",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Fpretty-format/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/pretty-format/-/pretty-format-4.1.12.tgz",
+      "tarball_sha256": "929beb93dafed9e676e55f07919839643231679384020a5ef9c2d02022a5dd80",
+      "integrity": "sha512-XW9O8+Mxx4VpCtkYdMJLZQQwsVryP9wk7cPKDxtXFfwSak6yRh5+2fep/Y0XF/ElBvJHq8bcYdi6aeuai0opZA==",
+      "dev": true,
+      "metadata_response_sha256": "351069ed91e3ef52bc958fa7da8da7326b09865cda981aa37ee8c29c8b6f14f4",
+      "saved_metadata_sha256": "a4a4d0f7b9e15ff5aff3bc18e8a2ec5ca945a047558b66feb806f4dc9106d91c",
+      "saved_metadata_path": "evidence/vitest-pretty-format-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/@vitest/runner",
+      "name": "@vitest/runner",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Frunner/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/runner/-/runner-4.1.12.tgz",
+      "tarball_sha256": "061db956dceb2b291e1a4ceb3c5b7e31c368e75b34411953402e339ef566e6cf",
+      "integrity": "sha512-NKlVKCr5QnCe8jijdMnmkpHHU+WTqiLFR6G0pHji9uRjXK9xJl1k1nTw6F3pOOj2PDcsDt2GKQMI7wIsaT491w==",
+      "dev": true,
+      "metadata_response_sha256": "ce975479304c71711463b4a47545256fb37eec3f466f8191aa8a5983726c4385",
+      "saved_metadata_sha256": "3b43b5b58747d530fe9f540124040dece8474f57e2f7f77044efe11838d2e05b",
+      "saved_metadata_path": "evidence/vitest-runner-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/@vitest/snapshot",
+      "name": "@vitest/snapshot",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Fsnapshot/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-4.1.12.tgz",
+      "tarball_sha256": "10b57fb1cb37d110309dd64e22a154bf26bd98526cc1ea5307b2f2478cbdddf5",
+      "integrity": "sha512-ko1y1Qgb/slzQ9mr+b89Cuqud8WG1TKtsPD8r7ZUBdvVOGt85Af2HwCqHujrhwJq95hs/9RM7fcAPg57o1vlzw==",
+      "dev": true,
+      "metadata_response_sha256": "e1224551dfdd89b4dee9ff0a57117bb29a75b9f6e64e3a94be06feb4aaca44c6",
+      "saved_metadata_sha256": "efa62dbbc62d4b2c19a74a18265e2d0683dbc4b4c9ed93d90c7221d8c1f71d48",
+      "saved_metadata_path": "evidence/vitest-snapshot-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/@vitest/spy",
+      "name": "@vitest/spy",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Fspy/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/spy/-/spy-4.1.12.tgz",
+      "tarball_sha256": "eb9a67720d1082f33bfc5cf3a41ee6d297e994cf26013dae0ad807a474fa44a3",
+      "integrity": "sha512-RGq9x4JNGNTZHEJxvN0oSiJjeSCExm0n2gZKKJZHY9cX5AVA6M7VJILBT3ZJ/tJ/0J9uWT7fETV9/btoi//vSg==",
+      "dev": true,
+      "metadata_response_sha256": "f05eb9a7f06b3c45f150c2735e48feaa79a65a217f247f29fa9e2373c1f2ebe9",
+      "saved_metadata_sha256": "cdb294adcfc5468a23a65283a3ce00dc936e520797b43efe6ce3c29c4201f081",
+      "saved_metadata_path": "evidence/vitest-spy-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/@vitest/utils",
+      "name": "@vitest/utils",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/%40vitest%2Futils/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/@vitest/utils/-/utils-4.1.12.tgz",
+      "tarball_sha256": "0c25f072d4afcb52fa48266177111ca90bc4116c66473170959aae1d57db347d",
+      "integrity": "sha512-Q3awXrwOfEV+qc3WmO5ONyE0yO7Q1gQ9/oyHxGLZ/pl7N3NO/ZztqQwKLuwMkV+CA1JYSIeO3gkHnRDIo4AVaA==",
+      "dev": true,
+      "metadata_response_sha256": "5ff2d396f4bd7c27566d00dfdaae96f8d29a6a410d09443db3263c7e0002afb8",
+      "saved_metadata_sha256": "e47cdc3509a160359267b75df6134e4420b9b767f6ac7268f2f61c11192c6c2f",
+      "saved_metadata_path": "evidence/vitest-utils-4.1.12-metadata.json"
+    },
+    {
+      "path": "node_modules/chai",
+      "name": "chai",
+      "version": "6.3.0",
+      "metadata_url": "https://registry.npmjs.org/chai/6.3.0",
+      "tarball_url": "https://registry.npmjs.org/chai/-/chai-6.3.0.tgz",
+      "tarball_sha256": "ef5457b2ab9e011093f47f104fecc94e5b36ce729fdba6fbc8b0ce316c2e8f60",
+      "integrity": "sha512-XWAtwJ6OHO+tj0EKCs0Y2UamnyOxseZWltU4x2U2wh8g4AigdjwvtUjvLP2tqkA/avxHEtzxNaqGq/YGNwckKg==",
+      "dev": true,
+      "metadata_response_sha256": "385439cf6e2cfa599896770467d70c5a31ff9dc29a7e57182f043edaa5874ce8",
+      "saved_metadata_sha256": "da34137c705c672324e60f1c489a306afaf99aad605cf0418aacfe8debbe72a9",
+      "saved_metadata_path": "evidence/chai-6.3.0-metadata.json"
+    },
+    {
+      "path": "node_modules/tinyrainbow",
+      "name": "tinyrainbow",
+      "version": "3.2.0",
+      "metadata_url": "https://registry.npmjs.org/tinyrainbow/3.2.0",
+      "tarball_url": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.2.0.tgz",
+      "tarball_sha256": "97d53ca3a53834d45c68bd6ec2c8a64cc2e3282d744c8dc4ee0ed7e6e2913636",
+      "integrity": "sha512-LgO3D9yZJjApUiuUfl9iFAwrtaX4+lok3wJIqttGoKCHlWUqHqbQpnxCf82L8FjgKsh4iGo78hqJwgL8F6To2A==",
+      "dev": true,
+      "metadata_response_sha256": "054751f5bc5320f8fca315d03b4cbcf8e502542b49d08c31acd3eb99c1dd8046",
+      "saved_metadata_sha256": "716714f7a131b49553d45ec826d9c35a7e89a03724f2461a02cde8776070e42b",
+      "saved_metadata_path": "evidence/tinyrainbow-3.2.0-metadata.json"
+    },
+    {
+      "path": "node_modules/tinyrainbow",
+      "name": "tinyrainbow",
+      "version": "3.1.1",
+      "metadata_url": "https://registry.npmjs.org/tinyrainbow/3.1.1",
+      "tarball_url": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.1.1.tgz",
+      "tarball_sha256": "cdb1b980964665438e90dd184d7cfbe2c1544a73b6cc949c92c2592cb8791744",
+      "integrity": "sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==",
+      "dev": true,
+      "metadata_response_sha256": "ece77bd54b7eb9c46451392bb1dc79dad05f6bedf0a76924b5f39eb04a0f9faa",
+      "saved_metadata_sha256": "0bc5925142b61d7481879f39cf1bc42f519361c47c3a2da6c3a86ee7371e5783",
+      "saved_metadata_path": "evidence/tinyrainbow-3.1.1-metadata.json"
+    },
+    {
+      "path": "node_modules/vitest",
+      "name": "vitest",
+      "version": "4.1.12",
+      "metadata_url": "https://registry.npmjs.org/vitest/4.1.12",
+      "tarball_url": "https://registry.npmjs.org/vitest/-/vitest-4.1.12.tgz",
+      "tarball_sha256": "ac79c9561c99eabc1cc29e0a839cbd03d1ff0e45bbecb5a2edfa6c3827c823d1",
+      "integrity": "sha512-5eWdz2yb3ajxWF3C8C4TjkXl7FGm3n2E/VlazALrQHzK7nYMSGFnCZto0bbPNl77AwkOZVLk0YnBAejUu0NiWA==",
+      "dev": true,
+      "metadata_response_sha256": "6f6dd06b4b6f0611d655c76981a318a5f2ddf6e5ec032056876751c754fdbcc0",
+      "saved_metadata_sha256": "256fd7a6b33bb953461e09ed96c71ab10f4cacd9f4bb64d4a30dfee242bcfd8e",
+      "saved_metadata_path": "evidence/vitest-4.1.12-metadata.json"
+    }
+  ],
+  "tinyrainbow_parents": [
+    {
+      "path": "node_modules/@vitest/expect",
+      "group": "dependencies",
+      "range": "^3.1.0",
+      "dev": true
+    },
+    {
+      "path": "node_modules/@vitest/pretty-format",
+      "group": "dependencies",
+      "range": "^3.1.0",
+      "dev": true
+    },
+    {
+      "path": "node_modules/@vitest/utils",
+      "group": "dependencies",
+      "range": "^3.1.0",
+      "dev": true
+    },
+    {
+      "path": "node_modules/vitest",
+      "group": "dependencies",
+      "range": "^3.1.0",
+      "dev": true
+    }
+  ],
+  "tinyrainbow_justification": "Existing dependency used exclusively by four dev-only Vitest packages. Reviewed npm 11.20 refreshes its ^3.1.0 range from 3.1.1 to 3.2.0. Official tarball SRI verified; package has no runtime dependencies or install lifecycle; fresh public npm audit reports no advisory for tinyrainbow, vitest or @vitest/mocker. Actual package source diff preserved for independent review.",
+  "audit_exit": 1,
+  "remaining_vulnerabilities": {
+    "@expo/cli": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@expo/code-signing-certificates",
+        "@expo/log-box",
+        "@expo/metro",
+        "@expo/metro-config",
+        "@expo/router-server",
+        "node-forge",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@expo/cli"
+      ]
+    },
+    "@expo/code-signing-certificates": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "node-forge"
+      ],
+      "nodes": [
+        "node_modules/@expo/code-signing-certificates"
+      ]
+    },
+    "@expo/devtools": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@expo/devtools"
+      ]
+    },
+    "@expo/dom-webview": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@expo/dom-webview"
+      ]
+    },
+    "@expo/log-box": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@expo/dom-webview",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@expo/log-box"
+      ]
+    },
+    "@expo/metro": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "metro",
+        "metro-config",
+        "metro-file-map",
+        "metro-transform-worker"
+      ],
+      "nodes": [
+        "node_modules/@expo/metro"
+      ]
+    },
+    "@expo/metro-config": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@expo/metro"
+      ],
+      "nodes": [
+        "node_modules/@expo/metro-config"
+      ]
+    },
+    "@expo/metro-runtime": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@expo/log-box",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@expo/metro-runtime"
+      ]
+    },
+    "@expo/router-server": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@expo/metro-runtime",
+        "expo-constants",
+        "expo-font"
+      ],
+      "nodes": [
+        "node_modules/@expo/router-server"
+      ]
+    },
+    "@expo/ui": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native",
+        "react-native-worklets"
+      ],
+      "nodes": [
+        "node_modules/@expo/ui"
+      ]
+    },
+    "@infinitered/react-native-mlkit-core": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@infinitered/react-native-mlkit-core"
+      ]
+    },
+    "@infinitered/react-native-mlkit-face-detection": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@infinitered/react-native-mlkit-core",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@infinitered/react-native-mlkit-face-detection"
+      ]
+    },
+    "@react-native-async-storage/async-storage": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@react-native-async-storage/async-storage"
+      ]
+    },
+    "@react-native-google-signin/google-signin": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "expo",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@react-native-google-signin/google-signin"
+      ]
+    },
+    "@react-native-masked-view/masked-view": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@react-native-masked-view/masked-view"
+      ]
+    },
+    "@react-native/community-cli-plugin": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@react-native/metro-config",
+        "metro",
+        "metro-config"
+      ],
+      "nodes": [
+        "node_modules/@react-native/community-cli-plugin"
+      ]
+    },
+    "@react-native/metro-config": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "metro-config"
+      ],
+      "nodes": [
+        "node_modules/@react-native/metro-config"
+      ]
+    },
+    "@react-native/virtualized-lists": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@react-native/virtualized-lists"
+      ]
+    },
+    "@sentry/react-native": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "expo",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/@sentry/react-native"
+      ]
+    },
+    "braces": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240992,
+          "name": "braces",
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "severity": "high",
+          "range": "<=3.0.3"
+        }
+      ],
+      "nodes": [
+        "node_modules/braces"
+      ]
+    },
+    "chokidar": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "braces"
+      ],
+      "nodes": [
+        "node_modules/chokidar"
+      ]
+    },
+    "expo": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@expo/cli",
+        "@expo/devtools",
+        "@expo/dom-webview",
+        "@expo/log-box",
+        "@expo/metro",
+        "@expo/metro-config",
+        "expo-asset",
+        "expo-constants",
+        "expo-file-system",
+        "expo-font",
+        "expo-modules-core",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo"
+      ]
+    },
+    "expo-apple-authentication": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-apple-authentication"
+      ]
+    },
+    "expo-asset": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "expo-constants",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-asset"
+      ]
+    },
+    "expo-camera": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-camera"
+      ]
+    },
+    "expo-constants": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-constants"
+      ]
+    },
+    "expo-dev-client": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "expo-dev-launcher",
+        "expo-dev-menu"
+      ],
+      "nodes": [
+        "node_modules/expo-dev-client"
+      ]
+    },
+    "expo-dev-launcher": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "expo-dev-menu",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-dev-launcher"
+      ]
+    },
+    "expo-dev-menu": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-dev-menu"
+      ]
+    },
+    "expo-file-system": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-file-system"
+      ]
+    },
+    "expo-font": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-font"
+      ]
+    },
+    "expo-glass-effect": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-glass-effect"
+      ]
+    },
+    "expo-image": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-image"
+      ]
+    },
+    "expo-linking": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "expo-constants",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-linking"
+      ]
+    },
+    "expo-modules-core": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "expo-modules-jsi",
+        "react-native",
+        "react-native-worklets"
+      ],
+      "nodes": [
+        "node_modules/expo-modules-core"
+      ]
+    },
+    "expo-modules-jsi": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-modules-jsi"
+      ]
+    },
+    "expo-notifications": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "expo-constants",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-notifications"
+      ]
+    },
+    "expo-router": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@expo/log-box",
+        "@expo/metro-runtime",
+        "@expo/ui",
+        "@react-native-masked-view/masked-view",
+        "expo-constants",
+        "expo-glass-effect",
+        "expo-linking",
+        "expo-symbols",
+        "react-native",
+        "react-native-drawer-layout",
+        "react-native-reanimated"
+      ],
+      "nodes": [
+        "node_modules/expo-router"
+      ]
+    },
+    "expo-sharing": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-sharing"
+      ]
+    },
+    "expo-status-bar": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-status-bar"
+      ]
+    },
+    "expo-store-review": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-store-review"
+      ]
+    },
+    "expo-symbols": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-symbols"
+      ]
+    },
+    "expo-system-ui": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-system-ui"
+      ]
+    },
+    "expo-web-browser": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-web-browser"
+      ]
+    },
+    "expo-widgets": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@expo/ui",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/expo-widgets"
+      ]
+    },
+    "fast-glob": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "micromatch"
+      ],
+      "nodes": [
+        "node_modules/fast-glob"
+      ]
+    },
+    "metro": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "metro-config",
+        "metro-file-map",
+        "metro-transform-worker"
+      ],
+      "nodes": [
+        "node_modules/metro"
+      ]
+    },
+    "metro-config": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "metro"
+      ],
+      "nodes": [
+        "node_modules/metro-config"
+      ]
+    },
+    "metro-file-map": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "micromatch"
+      ],
+      "nodes": [
+        "node_modules/metro-file-map"
+      ]
+    },
+    "metro-transform-worker": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "metro"
+      ],
+      "nodes": [
+        "node_modules/metro-transform-worker"
+      ]
+    },
+    "micromatch": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "braces"
+      ],
+      "nodes": [
+        "node_modules/micromatch"
+      ]
+    },
+    "nativewind": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native-css-interop"
+      ],
+      "nodes": [
+        "node_modules/nativewind"
+      ]
+    },
+    "node-forge": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1240912,
+          "name": "node-forge",
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "severity": "high",
+          "range": "<=1.4.0"
+        }
+      ],
+      "nodes": [
+        "node_modules/node-forge"
+      ]
+    },
+    "react-native": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@react-native/community-cli-plugin",
+        "@react-native/virtualized-lists"
+      ],
+      "nodes": [
+        "node_modules/react-native"
+      ]
+    },
+    "react-native-css-interop": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native",
+        "react-native-reanimated"
+      ],
+      "nodes": [
+        "node_modules/react-native-css-interop"
+      ]
+    },
+    "react-native-drawer-layout": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native",
+        "react-native-reanimated"
+      ],
+      "nodes": [
+        "node_modules/react-native-drawer-layout"
+      ]
+    },
+    "react-native-gesture-handler": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-gesture-handler"
+      ]
+    },
+    "react-native-get-random-values": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-get-random-values"
+      ]
+    },
+    "react-native-is-edge-to-edge": {
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-is-edge-to-edge"
+      ]
+    },
+    "react-native-purchases": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-purchases"
+      ]
+    },
+    "react-native-reanimated": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native",
+        "react-native-is-edge-to-edge",
+        "react-native-worklets"
+      ],
+      "nodes": [
+        "node_modules/react-native-reanimated"
+      ]
+    },
+    "react-native-safe-area-context": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-safe-area-context"
+      ]
+    },
+    "react-native-screens": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-screens"
+      ]
+    },
+    "react-native-url-polyfill": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-url-polyfill"
+      ]
+    },
+    "react-native-view-shot": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-view-shot"
+      ]
+    },
+    "react-native-worklets": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@react-native/metro-config",
+        "react-native"
+      ],
+      "nodes": [
+        "node_modules/react-native-worklets"
+      ]
+    },
+    "tailwindcss": {
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "chokidar",
+        "fast-glob",
+        "micromatch"
+      ],
+      "nodes": [
+        "node_modules/tailwindcss"
+      ]
+    }
+  },
+  "counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 67,
+    "critical": 0,
+    "total": 67
+  }
+}

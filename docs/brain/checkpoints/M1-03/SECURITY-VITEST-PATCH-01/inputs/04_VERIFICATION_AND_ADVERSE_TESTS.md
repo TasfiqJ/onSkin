@@ -1,0 +1,9 @@
+# Required tests and receipts
+
+Before edits: verify exact base and all SHA/Git-blob/length preimages, one writer, clean worktree, GitHub PR/main stage, source policy. Immediately after patch: hash the two direct manifest changes and exact npm dependency lock delta.
+
+Fresh Linux Node 22/24 and reviewed npm 11.20: `npm ci --no-audit --no-fund`; `npm test -- --force` (baseline 6,067), `npm run typecheck -- --force`, `npm run lint -- --force` (0 cached); original `python3.12 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_contract.py -v` (70), original secret12, ordinary Linux `python3.12 -B -m unittest discover -s scripts/brain -p 'test_*.py' -v` (103, two genuine Windows-only skips); mobile Expo install --check from apps/mobile; original widget/postinstall, strict privacy source audit/check/test, archive privacy fixtures and strict Phase4 check.
+
+Add a checkpoint-only exact-scope verifier and >=6 adverse cases: mutated second manifest, unintended direct package, tampered transitive SRI, foreign npm provenance, missing mapped source pin, forged archive approval, forged Security GO/expiry/OSV exception, unauthorized intermediate commit (at least six meaningful distinct checks). Report all actual exits; no weakening old assertions. If ordinary old GF01 profile refuses the new stage by fixed history, retain that refusal and use the new independent external-manifest-bound check. Do not rewrite old Brain authorities.
+
+Run original OSV/npm security collection only if it can be done with approved zero-cost offline/existing public tools and exact provenance. Real advisories not resolved must remain red; do not invent fresh authenticated scanner coverage. CI source-run and final delivery-run Quality/Security/iOS jobs must be fetched by exact SHA; PENDING stays PENDING.

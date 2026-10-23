@@ -1,0 +1,24 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "base_commit": "d2ce5e95cd24edb2ab4d833dee945bdbc59da9fe",
+  "base_tree": "604976823a08700009f8129273f3d0c3d7e34104",
+  "branch": "stage/m1-gate-recovery",
+  "db_go": false,
+  "hosted_replay_authorized": false,
+  "incremental_spend_usd": 0,
+  "iteration": "SECURITY-VITEST-PATCH-01",
+  "m2_authorized": false,
+  "observed_main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "owner_evidence_required_after_source_remediation": true,
+  "pr": 10,
+  "pr_draft": true,
+  "release_authorized": false,
+  "schema_version": 1,
+  "source_security_go": false,
+  "task_id": "M1-03"
+}

@@ -1,0 +1,1087 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-SECURITY-VITEST-PATCH01-SOURCE-EDIT-01",
+  "iteration": "SECURITY-VITEST-PATCH-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "source": {
+    "implementation_sha": "39390947063092ff67ac503cd0b86992eb65b941",
+    "implementation_tree": "0c4a1ceb61fa3d145f348a410284a78a82b144fd",
+    "clean_measured_sha": "39390947063092ff67ac503cd0b86992eb65b941",
+    "clean_measured_tree": "0c4a1ceb61fa3d145f348a410284a78a82b144fd"
+  },
+  "delivery": {
+    "branch": "stage/m1-gate-recovery",
+    "pr_number": 10,
+    "pr_draft": true,
+    "final_sha_in_this_tree": null,
+    "final_tree_in_this_tree": null,
+    "evidence_only_tail": true,
+    "note": "Resolve the actual pushed delivery SHA/tree and exact-head checks after this evidence-only commit. A future commit cannot truthfully self-hash in its own tree; final observation is returned externally and on draft PR #10."
+  },
+  "context": {
+    "external_manifest_sha256": "cf3719c07e41699088bc25e9b3903610f49c1885c25417a8649a99238b290e24",
+    "verified": true,
+    "preimages_verified": 36,
+    "input_members": 13,
+    "all_issued_members_installed_exactly": true
+  },
+  "scope": {
+    "allowed_existing_paths": 9,
+    "implementation_paths": [
+      "apps/mobile/package.json",
+      "apps/catalog-operator-console/package.json",
+      "package-lock.json",
+      "docs/phase-9/ios-sdk-package-mapping.json",
+      "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "docs/phase-9/generated/ios-privacy-source-audit.md"
+    ],
+    "conditional_mapping_fields_changed": 3,
+    "generated_privacy_files": 2,
+    "canonical_worklist_files": 2,
+    "all_other_existing_paths_unchanged": true,
+    "all_intermediate_commits_checked": true,
+    "original_security_test_contract_sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8"
+  },
+  "dependency_remediation": {
+    "vitest_from": "4.1.11",
+    "vitest_to": "4.1.12",
+    "mocker_to": "4.1.12",
+    "npm": "11.20.0",
+    "lock_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+    "changed_lock_entries": 12,
+    "added_packages": 0,
+    "removed_packages": 0,
+    "chai": "6.2.2 -> 6.3.0",
+    "tinyrainbow": "3.1.1 -> 3.2.0",
+    "tinyrainbow_justification": "Existing dependency used exclusively by four dev-only Vitest packages. Reviewed npm 11.20 refreshes its ^3.1.0 range from 3.1.1 to 3.2.0. Official tarball SRI verified; package has no runtime dependencies or install lifecycle; fresh public npm audit reports no advisory for tinyrainbow, vitest or @vitest/mocker. Actual package source diff preserved for independent review.",
+    "official_tarball_integrities_verified": true,
+    "targets_absent_from_fresh_public_npm_audit": true,
+    "remaining_npm_audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 67,
+      "critical": 0,
+      "total": 67
+    },
+    "solver_receipt": "evidence/solver-delta.json",
+    "independent_review": "evidence/solver-independent-review.json"
+  },
+  "ios_source_provenance": {
+    "mapped_entries_identical": 4,
+    "installed_source_pins_identical": 10,
+    "mapping_only_lock_hash_fields": 3,
+    "evidence_level": "source_candidate",
+    "archiveRequired": true,
+    "native_device_archive_signoff": false,
+    "receipt": "evidence/conditional-ios-source-provenance.json"
+  },
+  "checks": [
+    {
+      "name": "reviewed-npm-version",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/reviewed-npm-version.json",
+      "transcript": "evidence/reviewed-npm-version.log"
+    },
+    {
+      "name": "runtime",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/runtime.json",
+      "transcript": "evidence/runtime.log"
+    },
+    {
+      "name": "npm-selected",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/npm-selected.json",
+      "transcript": "evidence/npm-selected.log"
+    },
+    {
+      "name": "installed-context-verification",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/installed-context-verification.json",
+      "transcript": "evidence/installed-context-verification.log"
+    },
+    {
+      "name": "lock-regeneration",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/lock-regeneration.json",
+      "transcript": "evidence/lock-regeneration.log"
+    },
+    {
+      "name": "fresh-npm-audit",
+      "exit_code": 1,
+      "result": "FAIL",
+      "details": "Real public lock-only audit remains exit 1: 67 high propagated findings; zero moderate. Both target advisories and tinyrainbow are absent. No audit fix or exception.",
+      "receipt": "evidence/fresh-npm-audit.json",
+      "transcript": "evidence/fresh-npm-audit.log"
+    },
+    {
+      "name": "fresh-npm-ci",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Authentic npm 11.20.0 fresh ci; 1032 packages added; original postinstall executed. Same final lock SHA. Existing allowScripts warnings preserved.",
+      "receipt": "evidence/fresh-npm-ci.json",
+      "transcript": "evidence/fresh-npm-ci.log"
+    },
+    {
+      "name": "ios-privacy-source-regenerate",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/ios-privacy-source-regenerate.json",
+      "transcript": "evidence/ios-privacy-source-regenerate.log"
+    },
+    {
+      "name": "ios-privacy-source-check",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/ios-privacy-source-check.json",
+      "transcript": "evidence/ios-privacy-source-check.log"
+    },
+    {
+      "name": "root-test-force",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "6067 tests: 6043 mobile + 24 console, 2 successful tasks, 0 cached.",
+      "receipt": "evidence/root-test-force.json",
+      "transcript": "evidence/root-test-force.log"
+    },
+    {
+      "name": "typecheck-force",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "3/3 tasks successful; 0 cached.",
+      "receipt": "evidence/typecheck-force.json",
+      "transcript": "evidence/typecheck-force.log"
+    },
+    {
+      "name": "lint-force",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "3/3 tasks successful; 0 cached.",
+      "receipt": "evidence/lint-force.json",
+      "transcript": "evidence/lint-force.log"
+    },
+    {
+      "name": "original-security-70",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "70 original tests; zero skips; original test_contract.py SHA256 unchanged.",
+      "receipt": "evidence/original-security-70.json",
+      "transcript": "evidence/original-security-70.log"
+    },
+    {
+      "name": "original-secret-12",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "12 original secret-scan fixtures; zero skips.",
+      "receipt": "evidence/original-secret-12.json",
+      "transcript": "evidence/original-secret-12.log"
+    },
+    {
+      "name": "ordinary-governance-103",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "103 discovered; 101 passed; two original Windows-only junction tests skipped on Linux.",
+      "receipt": "evidence/ordinary-governance-103.json",
+      "transcript": "evidence/ordinary-governance-103.log"
+    },
+    {
+      "name": "expo-mobile-check",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/expo-mobile-check.json",
+      "transcript": "evidence/expo-mobile-check.log"
+    },
+    {
+      "name": "postinstall-check",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/postinstall-check.json",
+      "transcript": "evidence/postinstall-check.log"
+    },
+    {
+      "name": "widget-extension-check",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/widget-extension-check.json",
+      "transcript": "evidence/widget-extension-check.log"
+    },
+    {
+      "name": "widget-extension-tests",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/widget-extension-tests.json",
+      "transcript": "evidence/widget-extension-tests.log"
+    },
+    {
+      "name": "ios-privacy-source-final-check",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/ios-privacy-source-final-check.json",
+      "transcript": "evidence/ios-privacy-source-final-check.log"
+    },
+    {
+      "name": "ios-privacy-source-tests",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/ios-privacy-source-tests.json",
+      "transcript": "evidence/ios-privacy-source-tests.log"
+    },
+    {
+      "name": "ios-archive-privacy-fixtures",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/ios-archive-privacy-fixtures.json",
+      "transcript": "evidence/ios-archive-privacy-fixtures.log"
+    },
+    {
+      "name": "frozen-gf01-refusal",
+      "exit_code": 1,
+      "result": "BLOCKED",
+      "details": "Preserved frozen prior profile. Its failure is not source acceptance.",
+      "receipt": "evidence/frozen-gf01-refusal.json",
+      "transcript": "evidence/frozen-gf01-refusal.log"
+    },
+    {
+      "name": "phase4-worklist-regenerate",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/phase4-worklist-regenerate.json",
+      "transcript": "evidence/phase4-worklist-regenerate.log"
+    },
+    {
+      "name": "phase4-worklist-check",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "Original command and unmodified raw exit/transcript preserved. No coverage percentage is claimed.",
+      "receipt": "evidence/phase4-worklist-check.json",
+      "transcript": "evidence/phase4-worklist-check.log"
+    },
+    {
+      "name": "checkpoint-adverse-14",
+      "exit_code": 0,
+      "result": "PASS",
+      "details": "14 checkpoint test methods: one true positive and 13 adverse methods; npm provenance exercises three subcases. Temporary intermediate commits use private object/index directories and do not update any repository ref.",
+      "receipt": "evidence/checkpoint-adverse-14.json",
+      "transcript": "evidence/checkpoint-adverse-14.log"
+    }
+  ],
+  "ci": {
+    "source": {
+      "head_sha": "39390947063092ff67ac503cd0b86992eb65b941",
+      "observed_at": "2026-10-23 03:53:14 UTC",
+      "source": "GitHub connector queries for PR-triggered runs by exact source commit and latest-attempt jobs; no status borrowed",
+      "workflows": [
+        {
+          "run": {
+            "id": 39897308840,
+            "name": "iOS launch contract",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_number": 404,
+            "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308840/jobs",
+            "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308840/logs",
+            "workflow_id": 312030667
+          },
+          "jobs": {
+            "jobs": [
+              {
+                "id": 120230605711,
+                "name": "iOS all-features contract",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308840,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Setup Node",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Setup Deno",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Install",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Validate launch contract",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 6
+                  },
+                  {
+                    "name": "Validate execution baseline",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 7
+                  },
+                  {
+                    "name": "Run safe repository checks",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Setup Deno",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 14
+                  },
+                  {
+                    "name": "Post Setup Node",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 15
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 16
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "run": {
+            "id": 39897308849,
+            "name": "Security",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_number": 936,
+            "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308849/jobs",
+            "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308849/logs",
+            "workflow_id": 308213475
+          },
+          "jobs": {
+            "jobs": [
+              {
+                "id": 120230605725,
+                "name": "Code security gates",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308849,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Setup Node",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Setup Deno",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Use reviewed npm",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Install",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 6
+                  },
+                  {
+                    "name": "Phase 9 verification",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 7
+                  },
+                  {
+                    "name": "Dependency SBOM with audit metadata",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 8
+                  },
+                  {
+                    "name": "Capture high or critical npm advisories",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 9
+                  },
+                  {
+                    "name": "Test reviewed security exceptions",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 10
+                  },
+                  {
+                    "name": "Enforce reviewed npm advisory exceptions",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 11
+                  },
+                  {
+                    "name": "Write code-gate evidence manifest",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 12
+                  },
+                  {
+                    "name": "Upload code-gate evidence",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 13
+                  },
+                  {
+                    "name": "Enforce code-gate results",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 14
+                  },
+                  {
+                    "name": "Post Setup Deno",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 26
+                  },
+                  {
+                    "name": "Post Setup Node",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 27
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 28
+                  }
+                ]
+              },
+              {
+                "id": 120230605927,
+                "name": "Static analysis and OSV",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308849,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Setup Node",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Setup Python",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Prepare exact Linux scanners and npm",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Install",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 6
+                  },
+                  {
+                    "name": "Semgrep OWASP/TypeScript/React/secrets",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 7
+                  },
+                  {
+                    "name": "Prepare OSV evidence directory",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 8
+                  },
+                  {
+                    "name": "OSV scanner",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 9
+                  },
+                  {
+                    "name": "Enforce reviewed OSV advisory exceptions",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 10
+                  },
+                  {
+                    "name": "Write static scanner evidence manifest",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 11
+                  },
+                  {
+                    "name": "Stage verified technical receipt after all source checks",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 12
+                  },
+                  {
+                    "name": "Upload static scanner evidence",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 13
+                  },
+                  {
+                    "name": "Enforce static scanner results",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 14
+                  },
+                  {
+                    "name": "Post Setup Python",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 26
+                  },
+                  {
+                    "name": "Post Setup Node",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 27
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 28
+                  }
+                ]
+              },
+              {
+                "id": 120230606005,
+                "name": "Secret scanning",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308849,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Test original secret scope and receipt refusals",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Acquire exact original secret executables",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Scan complete local refs and exact committed current source",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 5
+                  },
+                  {
+                    "name": "Gitleaks",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 6
+                  },
+                  {
+                    "name": "TruffleHog verified secrets",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 7
+                  },
+                  {
+                    "name": "Write secret scanner evidence manifest",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 8
+                  },
+                  {
+                    "name": "Upload secret scanner evidence",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 9
+                  },
+                  {
+                    "name": "Enforce secret scanner results",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 10
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 20
+                  }
+                ]
+              },
+              {
+                "id": 120230607299,
+                "name": "Live Supabase adversarial evidence",
+                "status": "completed",
+                "conclusion": "skipped",
+                "run_id": 39897308849,
+                "logs_url": null,
+                "steps": null
+              }
+            ]
+          }
+        },
+        {
+          "run": {
+            "id": 39897308828,
+            "name": "Quality",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_number": 404,
+            "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308828/jobs",
+            "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308828/logs",
+            "workflow_id": 312030668
+          },
+          "jobs": {
+            "jobs": [
+              {
+                "id": 120230605885,
+                "name": "Credential-free Supabase reset and database tests",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308828,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Setup Node",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Use reviewed npm",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Install from lockfile",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Check local-only database contract",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 6
+                  },
+                  {
+                    "name": "Reset twice, test, lint, and prove zero drift",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 7
+                  },
+                  {
+                    "name": "Retain generated public types for parity diagnosis",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Setup Node",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 15
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 16
+                  }
+                ]
+              },
+              {
+                "id": 120230606090,
+                "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308828,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Execute all isolated PostgreSQL rehearsals",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 3
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 6
+                  }
+                ]
+              },
+              {
+                "id": 120230606106,
+                "name": "Repository quality gates",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308828,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Initialize containers",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Setup Node",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Setup Deno",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Use reviewed npm",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Install from lockfile",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 7
+                  },
+                  {
+                    "name": "Verify tooling security backports",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 8
+                  },
+                  {
+                    "name": "Verify installed iOS native sources",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 9
+                  },
+                  {
+                    "name": "Verify store-only client delivery",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 10
+                  },
+                  {
+                    "name": "Verify governed release provenance",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 11
+                  },
+                  {
+                    "name": "Verify iOS Simulator compile workflow contract",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 12
+                  },
+                  {
+                    "name": "Check Expo dependency compatibility",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 13
+                  },
+                  {
+                    "name": "Run Expo Doctor",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 14
+                  },
+                  {
+                    "name": "Check export statistics analyzer",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 15
+                  },
+                  {
+                    "name": "Check deterministic optimization fixtures",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 16
+                  },
+                  {
+                    "name": "Check local Edge Function contracts",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 17
+                  },
+                  {
+                    "name": "Check catalog promotion, curation, and receipt contracts",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 18
+                  },
+                  {
+                    "name": "Execute account service scrub migration rehearsal",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 19
+                  },
+                  {
+                    "name": "Typecheck",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 20
+                  },
+                  {
+                    "name": "Lint",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 21
+                  },
+                  {
+                    "name": "Test",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 22
+                  },
+                  {
+                    "name": "Check performance readiness docs",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 23
+                  },
+                  {
+                    "name": "Check device support source contract",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 24
+                  },
+                  {
+                    "name": "Check source packet",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 25
+                  },
+                  {
+                    "name": "Post Setup Deno",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 47
+                  },
+                  {
+                    "name": "Post Setup Node",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 48
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 49
+                  },
+                  {
+                    "name": "Stop containers",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 50
+                  }
+                ]
+              },
+              {
+                "id": 120230606133,
+                "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+                "status": "in_progress",
+                "conclusion": null,
+                "run_id": 39897308828,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Checkout",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Execute all isolated PostgreSQL rehearsals",
+                    "status": "in_progress",
+                    "conclusion": null,
+                    "number": 3
+                  },
+                  {
+                    "name": "Post Checkout",
+                    "status": "pending",
+                    "conclusion": null,
+                    "number": 6
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "final_delivery": {
+      "status": "NOT_KNOWN_AT_COMMIT_SEAL",
+      "note": "Fetch the actual final delivery SHA after the normal push; pending remains pending. Do not borrow source statuses."
+    }
+  },
+  "blockers": [
+    "Original protected Security admission remains CLOSED; proposal expired 2026-10-21T00:00:00Z.",
+    "Current public npm audit still fails; braces/node-forge reviews remain frozen and expired.",
+    "Original source inventory/SAST, OSV/Python toolchain and current-source secret provider findings remain separate; new Vitest source is not scanner acceptance.",
+    "Canonical ECR gate remains external. Fixed image public.ecr.aws/supabase/postgres:15.8.1.085; no local pull, substitute, credential retry or spending. Successful PG15/17 rehearsal does not close this gate.",
+    "Frozen GF01 profile refusal retained; independent VP01 scope check does not accept M1-03.",
+    "Independent Brain review required."
+  ],
+  "boundaries": {
+    "protected_source_go": false,
+    "hosted_replay_authorized": false,
+    "main_promotion_authorized": false,
+    "database_go": false,
+    "m2_authorized": false,
+    "release_authorized": false,
+    "archive_signoff": false,
+    "device_signoff": false,
+    "native_privacy_signoff": false,
+    "accepted_tasks": [
+      "M0-01",
+      "M0-02",
+      "M1-01",
+      "M1-02"
+    ],
+    "incremental_spend_usd": 0,
+    "security_admission": "CLOSED",
+    "original_security_expiry_utc": "2026-10-21T00:00:00Z"
+  },
+  "context_health": "Healthy; bounded single issuance; no scope union; implementation and measured source preserved separately from delivery evidence.",
+  "independent_brain_review_required": true
+}

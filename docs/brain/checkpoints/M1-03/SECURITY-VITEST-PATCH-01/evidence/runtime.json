@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "--version"
+  ],
+  "cwd": "/root/onskin-brain-sbomfix01-d2ce-review",
+  "started_at": "2026-10-23T03:27:23.846943+00:00",
+  "ended_at": "2026-10-23T03:27:23.854840+00:00",
+  "duration_seconds": 0.008,
+  "exit_code": 0,
+  "transcript_sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-03",
+    "validate"
+  ],
+  "cwd": "/root/onskin-brain-sbomfix01-d2ce-review",
+  "started_at": "2026-10-23T03:49:16.877807+00:00",
+  "ended_at": "2026-10-23T03:49:16.959906+00:00",
+  "duration_seconds": 0.082,
+  "exit_code": 1,
+  "transcript_sha256": "31b4f62035d55aec8d073143fc73fb8f25c889eeb5eb3603314abf74c36a4b9d"
+}

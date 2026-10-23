@@ -1,0 +1,17 @@
+{
+  "npm_version": "11.20.0",
+  "lock_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+  "regeneration_command": [
+    "npm",
+    "install",
+    "--package-lock-only",
+    "--ignore-scripts",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "tarball_url": "https://registry.npmjs.org/npm/-/npm-11.20.0.tgz",
+  "tarball_sha256": "d1a92f40e6c407b84c3a00c3cf978a10b24fd42f153c527e2016cef7bb34a483",
+  "registry_integrity": "sha512-dF3EDFwbYN+N5RUip+ZYDe0NeURK5BgqKOcvT1iNtUYhTMTl0FwWhBuXrS7KtXyduqyTMS5aaQaregnHDAxNgw==",
+  "raw_regeneration_receipt": "evidence/lock-regeneration.json",
+  "raw_regeneration_transcript": "evidence/lock-regeneration.log"
+}

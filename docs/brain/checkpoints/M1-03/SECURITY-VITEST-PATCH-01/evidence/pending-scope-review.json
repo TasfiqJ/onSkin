@@ -1,0 +1,16 @@
+{
+  "command": [
+    "python3.12",
+    "-B",
+    "-c",
+    "import pathlib,sys;sys.path.insert(0,sys.argv[1]);import verify_scope as v;v.verify(pathlib.Path(sys.argv[2]),check_worktree=False)",
+    "/root/onskin-brain-sbomfix01-d2ce-review/docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01",
+    "/root/onskin-brain-sbomfix01-d2ce-review"
+  ],
+  "cwd": "/root/onskin-brain-sbomfix01-d2ce-review",
+  "started_at": "2026-10-23T03:54:40.024243+00:00",
+  "ended_at": "2026-10-23T03:54:40.379585+00:00",
+  "duration_seconds": 0.355,
+  "exit_code": 0,
+  "transcript_sha256": "51b8c75c70f9218a66822a2d368341cc55ff63f39fb813b3d305c14220fbfb2a"
+}

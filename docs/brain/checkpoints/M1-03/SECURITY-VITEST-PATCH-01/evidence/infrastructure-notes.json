@@ -1,0 +1,13 @@
+{
+  "source_failures_hidden": false,
+  "notes": [
+    "Initial discovery command lost shell dollar-variable quoting; only read-only inventory ran and it was replaced with direct Python inspection.",
+    "The reused review clone origin is a historical local checkout without the stage ref. Initial fetch failed; fetching the official GitHub URL explicitly succeeded and all stage/main/36 witnesses matched before edits. Origin configuration was not changed.",
+    "A read-only shell search was split by shell metacharacters; no source mutation or secret exposure occurred. Subsequent orchestration uses direct argument arrays.",
+    "The initial solver guard stopped on 12 entries versus the preview 11. Independent review proved the additional tinyrainbow 3.2.0 delta is exclusively a Vitest dev dependency, verified its official tarball and source, and retained fresh public audit failure. No lock was hand-edited or downgrade forced.",
+    "An external helper stripped leading porcelain whitespace and rejected its path-set assertion before commit. Replaced it with separate tracked-diff/untracked checks. No source check failed or was bypassed.",
+    "npm 11.20.0 fresh ci warned that the pre-existing @sentry/cli and unrs-resolver install scripts are outside allowScripts. Existing policy was unchanged; no package-script approval was added.",
+    "Linux Git push stalled without acknowledgement and its owned transport was terminated (actual exit -15 retained). Windows Git used the existing credential manager for a normal push of the exact same local commit to the existing stage ref. No credential was displayed or configured, no new branch or force push was used, and live official stage/main refs were rechecked.",
+    "Initial artifact readback caught raw .log files omitted by the existing Git ignore rule. Before committing, explicitly force-added only this newly authorized checkpoint prefix and regenerated the artifact manifest. The ignore rule and all source files were unchanged."
+  ]
+}

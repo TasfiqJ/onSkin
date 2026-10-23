@@ -1,0 +1,39 @@
+{
+  "commit_sha": "d2ce5e95cd24edb2ab4d833dee945bdbc59da9fe",
+  "source": "GitHub connector exact commit workflow query (PR triggered runs)",
+  "observation": "Read during VP01 preflight",
+  "data": {
+    "workflow_runs": [
+      {
+        "id": 39891184592,
+        "name": "iOS launch contract",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 403,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39891184592/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39891184592/logs",
+        "workflow_id": 312030667
+      },
+      {
+        "id": 39891184616,
+        "name": "Security",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_number": 935,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39891184616/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39891184616/logs",
+        "workflow_id": 308213475
+      },
+      {
+        "id": 39891184554,
+        "name": "Quality",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_number": 403,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39891184554/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39891184554/logs",
+        "workflow_id": 312030668
+      }
+    ]
+  }
+}

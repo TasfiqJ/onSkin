@@ -1,0 +1,762 @@
+{
+  "head_sha": "39390947063092ff67ac503cd0b86992eb65b941",
+  "observed_at": "2026-10-23 03:53:14 UTC",
+  "source": "GitHub connector queries for PR-triggered runs by exact source commit and latest-attempt jobs; no status borrowed",
+  "workflows": [
+    {
+      "run": {
+        "id": 39897308840,
+        "name": "iOS launch contract",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 404,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308840/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308840/logs",
+        "workflow_id": 312030667
+      },
+      "jobs": {
+        "jobs": [
+          {
+            "id": 120230605711,
+            "name": "iOS all-features contract",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308840,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Setup Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Setup Deno",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Install",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Validate launch contract",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Validate execution baseline",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Run safe repository checks",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Post Setup Deno",
+                "status": "pending",
+                "conclusion": null,
+                "number": 14
+              },
+              {
+                "name": "Post Setup Node",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "run": {
+        "id": 39897308849,
+        "name": "Security",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 936,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308849/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308849/logs",
+        "workflow_id": 308213475
+      },
+      "jobs": {
+        "jobs": [
+          {
+            "id": 120230605725,
+            "name": "Code security gates",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308849,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Setup Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Setup Deno",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Use reviewed npm",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Install",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Phase 9 verification",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Dependency SBOM with audit metadata",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Capture high or critical npm advisories",
+                "status": "pending",
+                "conclusion": null,
+                "number": 9
+              },
+              {
+                "name": "Test reviewed security exceptions",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              },
+              {
+                "name": "Enforce reviewed npm advisory exceptions",
+                "status": "pending",
+                "conclusion": null,
+                "number": 11
+              },
+              {
+                "name": "Write code-gate evidence manifest",
+                "status": "pending",
+                "conclusion": null,
+                "number": 12
+              },
+              {
+                "name": "Upload code-gate evidence",
+                "status": "pending",
+                "conclusion": null,
+                "number": 13
+              },
+              {
+                "name": "Enforce code-gate results",
+                "status": "pending",
+                "conclusion": null,
+                "number": 14
+              },
+              {
+                "name": "Post Setup Deno",
+                "status": "pending",
+                "conclusion": null,
+                "number": 26
+              },
+              {
+                "name": "Post Setup Node",
+                "status": "pending",
+                "conclusion": null,
+                "number": 27
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 28
+              }
+            ]
+          },
+          {
+            "id": 120230605927,
+            "name": "Static analysis and OSV",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308849,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Setup Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Setup Python",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Prepare exact Linux scanners and npm",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Install",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Semgrep OWASP/TypeScript/React/secrets",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Prepare OSV evidence directory",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "OSV scanner",
+                "status": "pending",
+                "conclusion": null,
+                "number": 9
+              },
+              {
+                "name": "Enforce reviewed OSV advisory exceptions",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              },
+              {
+                "name": "Write static scanner evidence manifest",
+                "status": "pending",
+                "conclusion": null,
+                "number": 11
+              },
+              {
+                "name": "Stage verified technical receipt after all source checks",
+                "status": "pending",
+                "conclusion": null,
+                "number": 12
+              },
+              {
+                "name": "Upload static scanner evidence",
+                "status": "pending",
+                "conclusion": null,
+                "number": 13
+              },
+              {
+                "name": "Enforce static scanner results",
+                "status": "pending",
+                "conclusion": null,
+                "number": 14
+              },
+              {
+                "name": "Post Setup Python",
+                "status": "pending",
+                "conclusion": null,
+                "number": 26
+              },
+              {
+                "name": "Post Setup Node",
+                "status": "pending",
+                "conclusion": null,
+                "number": 27
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 28
+              }
+            ]
+          },
+          {
+            "id": 120230606005,
+            "name": "Secret scanning",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308849,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Test original secret scope and receipt refusals",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Acquire exact original secret executables",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Scan complete local refs and exact committed current source",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Gitleaks",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "TruffleHog verified secrets",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Write secret scanner evidence manifest",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Upload secret scanner evidence",
+                "status": "pending",
+                "conclusion": null,
+                "number": 9
+              },
+              {
+                "name": "Enforce secret scanner results",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 20
+              }
+            ]
+          },
+          {
+            "id": 120230607299,
+            "name": "Live Supabase adversarial evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "run_id": 39897308849,
+            "logs_url": null,
+            "steps": null
+          }
+        ]
+      }
+    },
+    {
+      "run": {
+        "id": 39897308828,
+        "name": "Quality",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 404,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308828/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39897308828/logs",
+        "workflow_id": 312030668
+      },
+      "jobs": {
+        "jobs": [
+          {
+            "id": 120230605885,
+            "name": "Credential-free Supabase reset and database tests",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308828,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Setup Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Use reviewed npm",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Install from lockfile",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Check local-only database contract",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Reset twice, test, lint, and prove zero drift",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Retain generated public types for parity diagnosis",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Post Setup Node",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              }
+            ]
+          },
+          {
+            "id": 120230606090,
+            "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308828,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Execute all isolated PostgreSQL rehearsals",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              }
+            ]
+          },
+          {
+            "id": 120230606106,
+            "name": "Repository quality gates",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308828,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Initialize containers",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Setup Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Setup Deno",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Use reviewed npm",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6
+              },
+              {
+                "name": "Install from lockfile",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Verify tooling security backports",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Verify installed iOS native sources",
+                "status": "pending",
+                "conclusion": null,
+                "number": 9
+              },
+              {
+                "name": "Verify store-only client delivery",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              },
+              {
+                "name": "Verify governed release provenance",
+                "status": "pending",
+                "conclusion": null,
+                "number": 11
+              },
+              {
+                "name": "Verify iOS Simulator compile workflow contract",
+                "status": "pending",
+                "conclusion": null,
+                "number": 12
+              },
+              {
+                "name": "Check Expo dependency compatibility",
+                "status": "pending",
+                "conclusion": null,
+                "number": 13
+              },
+              {
+                "name": "Run Expo Doctor",
+                "status": "pending",
+                "conclusion": null,
+                "number": 14
+              },
+              {
+                "name": "Check export statistics analyzer",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Check deterministic optimization fixtures",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              },
+              {
+                "name": "Check local Edge Function contracts",
+                "status": "pending",
+                "conclusion": null,
+                "number": 17
+              },
+              {
+                "name": "Check catalog promotion, curation, and receipt contracts",
+                "status": "pending",
+                "conclusion": null,
+                "number": 18
+              },
+              {
+                "name": "Execute account service scrub migration rehearsal",
+                "status": "pending",
+                "conclusion": null,
+                "number": 19
+              },
+              {
+                "name": "Typecheck",
+                "status": "pending",
+                "conclusion": null,
+                "number": 20
+              },
+              {
+                "name": "Lint",
+                "status": "pending",
+                "conclusion": null,
+                "number": 21
+              },
+              {
+                "name": "Test",
+                "status": "pending",
+                "conclusion": null,
+                "number": 22
+              },
+              {
+                "name": "Check performance readiness docs",
+                "status": "pending",
+                "conclusion": null,
+                "number": 23
+              },
+              {
+                "name": "Check device support source contract",
+                "status": "pending",
+                "conclusion": null,
+                "number": 24
+              },
+              {
+                "name": "Check source packet",
+                "status": "pending",
+                "conclusion": null,
+                "number": 25
+              },
+              {
+                "name": "Post Setup Deno",
+                "status": "pending",
+                "conclusion": null,
+                "number": 47
+              },
+              {
+                "name": "Post Setup Node",
+                "status": "pending",
+                "conclusion": null,
+                "number": 48
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 49
+              },
+              {
+                "name": "Stop containers",
+                "status": "pending",
+                "conclusion": null,
+                "number": 50
+              }
+            ]
+          },
+          {
+            "id": 120230606133,
+            "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 39897308828,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Execute all isolated PostgreSQL rehearsals",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Post Checkout",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "mapping_sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246",
+  "source_pins": [
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin/RNGoogleSignin.podspec",
+      "sha256": "50e4c8ec91bb448f4cb5d7dd291b0baea940607a5d3cb6230a96958cb9bb6493"
+    },
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin/package.json",
+      "sha256": "550ee99143b8098cd2ba673a8487fc8b5eca79880f64541d3ddb5393cfd5f2b3"
+    },
+    {
+      "path": "node_modules/expo-image/ios/ExpoImage.podspec",
+      "sha256": "de1c67fa42920094c4175f04a3900f6cdc9f260c49a35b7e3e33106c2e5963af"
+    },
+    {
+      "path": "node_modules/expo-image/package.json",
+      "sha256": "49a7b898a180ab27ef94ebd9510db681c09a7a40f6cb9830632c8e9749038bdc"
+    },
+    {
+      "path": "node_modules/expo-image/spm.config.json",
+      "sha256": "51afff0024dd49640df1bc9f3d800c64cc11570ab3ee13c8b39c1f28f78ab6f0"
+    },
+    {
+      "path": "node_modules/hermes-compiler/package.json",
+      "sha256": "a03d51044c32ad7fd4486453e56c8b9f53a9b8a6a1d9958f81fdb5f39d69fc1c"
+    },
+    {
+      "path": "node_modules/react-native/package.json",
+      "sha256": "416224a4e7caf2ee1f8f9bead8508d0b608feed745371ce0a8f0e2cafa16d144"
+    },
+    {
+      "path": "node_modules/react-native/sdks/.hermesversion",
+      "sha256": "5bdde0c2a3bf8b9a6df20ed87130fdff5945f8f32d8152165b8af8b14ff0ebab"
+    },
+    {
+      "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
+      "sha256": "ddfe34594624ed40a6299fd00a7105bdef0967ed73aad256ae596963b439dbc0"
+    },
+    {
+      "path": "node_modules/react-native/sdks/hermes-engine/version.properties",
+      "sha256": "3b83e21d08ae2c2c1e77e747545f89f381020d5cb11d8496b215cbffa900a750"
+    }
+  ],
+  "mapped_entries": [
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin",
+      "version": "16.1.2",
+      "integrity": "sha512-1hf4pRmpnS5t0dHtqU72Q1FmWzsCZR2Sm3uVQbbfMKeNPl5TKjpAsP6F8QTZ9L+Q6Cnn9tL9BXpDCb1nyutdCQ=="
+    },
+    {
+      "path": "node_modules/expo-image",
+      "version": "57.0.5",
+      "integrity": "sha512-jOm5lofaIKXhQ7i0Hz3I5JuNULw/aghmpIPZXddwQcEtw8+wUhlozq3M7LbsOrcsBEapcG4jFs85DsfuFoz1tQ=="
+    },
+    {
+      "path": "node_modules/hermes-compiler",
+      "version": "250829098.0.17",
+      "integrity": "sha512-qG1PXzTEtriF6oQLZF3vyHhSMxOdW5h2TqqLri0rdpstPustd2fSvRZQMVAPdlhgFwBfYnj3OUZtiO6LjYsEFw=="
+    },
+    {
+      "path": "node_modules/react-native",
+      "version": "0.86.3",
+      "integrity": "sha512-JR5s3bM9ezud+Mw24GlNXNfthqPIKwrQgPPJcam+L97t2sKjjEavhCzBn+fyqZZRcM5+XlhYxpTxVkK7e1n38Q=="
+    }
+  ]
+}
