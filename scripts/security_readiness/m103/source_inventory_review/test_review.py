@@ -77,6 +77,12 @@ class ReviewTests(unittest.TestCase):
         for name in ('../a','/a','C:/a','a\\b','a//b','a/./b','a\0b','a\nb','a/CON','a/x.','a/x '):
             with self.subTest(path=repr(name)),self.assertRaises(r.Refused):r.path_ok(name)
 
+    def test_output_traversal_cannot_bypass_external_source_guard(self):
+        with self.assertRaisesRegex(r.Refused,'OUTPUT_PATH_TRAVERSAL'):
+            r.external_output(ROOT,ROOT.parent/'external'/'..'/ROOT.name/'new')
+        with self.assertRaisesRegex(r.Refused,'OUTPUT_INSIDE_MEASURED_SOURCE'):
+            r.external_output(ROOT,ROOT/'new')
+
     def test_symlink_git_mode_refused_without_windows_privilege(self):
         with tempfile.TemporaryDirectory() as temp:
             folder=pathlib.Path(temp)

@@ -346,6 +346,16 @@ def write_bundle(out, value):
     return summary
 
 
+def external_output(repo, out):
+    out=out.absolute()
+    need('..' not in out.parts, 'OUTPUT_PATH_TRAVERSAL')
+    for p in (out,*out.parents):
+        if p.exists() or p.is_symlink():
+            need(not p.is_symlink() and not getattr(p.lstat(),'st_file_attributes',0)&0x400, 'LINKED_OUTPUT')
+    need(not out.resolve().is_relative_to(repo.resolve()), 'OUTPUT_INSIDE_MEASURED_SOURCE')
+    return out
+
+
 def verify_bundle(repo, directory):
     """Rebuild from immutable objects; catches re-signed omissions and altered classifications."""
     c=contract(repo,BASE)
@@ -372,8 +382,7 @@ def main():
     p.add_argument('mode',choices=['generate','verify']);p.add_argument('--repo',type=pathlib.Path,required=True)
     p.add_argument('--commit');p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
     try:
-        repo=a.repo.resolve(); out=a.out.absolute()
-        need(not out.is_relative_to(repo), 'OUTPUT_INSIDE_MEASURED_SOURCE')
+        repo=a.repo.resolve(); out=external_output(repo,a.out)
         summary=write_bundle(out,build(repo,a.commit)) if a.mode=='generate' else verify_bundle(repo,out)
         print(json.dumps({k:summary[k] for k in ('source_commit','source_tree','tracked_regular_paths','relations','dispositions','admission','coverage_complete')}))
         return 0
