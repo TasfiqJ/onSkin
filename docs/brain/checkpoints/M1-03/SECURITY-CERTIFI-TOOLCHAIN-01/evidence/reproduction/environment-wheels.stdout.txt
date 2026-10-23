@@ -1,0 +1,2 @@
+e995a37590643450898cfa5bd5113831a547506cd545c335a409339d0c1e87ab  /usr/share/python-wheels/pip-24.0-py3-none-any.whl
+fcfc63a09d24f6195a4c89e8e55323331857ff3711f9f0f574152e76b6f7d8ba  /usr/share/python-wheels/setuptools-68.1.2-py3-none-any.whl

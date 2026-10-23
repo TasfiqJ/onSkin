@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--no-input",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--no-compile",
+    "--no-deps",
+    "--target",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/old-original-02",
+    "--requirement",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+    "--report",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/old-original-02-wheel-install.json",
+    "--cache-dir",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/old-original-02-cache"
+  ],
+  "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa",
+  "started_utc": "2026-10-23T17:18:39.137709+00:00",
+  "exit": 0,
+  "elapsed_seconds": 15.284
+}

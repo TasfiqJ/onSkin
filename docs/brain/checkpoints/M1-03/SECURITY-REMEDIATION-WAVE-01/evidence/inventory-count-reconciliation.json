@@ -1,0 +1,34 @@
+{
+  "historical_counts_are_not_gate0_preimages": true,
+  "measurements": [
+    {
+      "commit": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+      "tracked": 20230,
+      "extra": 8308,
+      "changed": 89,
+      "changed_count_provenance": "Original source-manifest requirement SHA is unchanged at this historical commit; current base adds only certifi requirements to the 89 previously measured changed reviewed paths."
+    },
+    {
+      "commit": "eaa47d7a1882dc395100bd0a958550a8beef406b",
+      "tracked": 20276,
+      "extra": 8354,
+      "missing": 0
+    },
+    {
+      "commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "tracked": 20407,
+      "extra": 8485,
+      "missing": 0
+    }
+  ],
+  "issued_claim": {
+    "extra": 8308,
+    "changed": 89
+  },
+  "exact_base_measured": {
+    "extra": 8485,
+    "changed": 90
+  },
+  "disposition": "Preserve measured drift; do not rewrite original manifest or pretend issued count reproduced.",
+  "conclusion": "Issued 8308/89 reproduces the earlier 4f6a2d2 source inventory. Exact authorized 05dc has 177 more evidence paths and one additional changed requirement file. No Gate0 preimage discrepancy."
+}

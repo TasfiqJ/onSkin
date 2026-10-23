@@ -1,0 +1,165 @@
+{
+  "source_stage": "455e3596876d85f5734f4ac3163df1de09647e1f",
+  "source_tree": "f873f4ba961b078465234f33eb2f30728f343515",
+  "ci_artifact_source_commit": "9eb12b8dacd7221c39f7350bc622daa42e2052b0",
+  "ci_artifact_source_ref": "refs/pull/10/merge",
+  "artifact_tree_equals_issued_tree": true,
+  "quality": {
+    "run_id": 40029099723,
+    "status": "completed",
+    "conclusion": "failure",
+    "canonical_db": "FAIL: H01_SQL_PROBE_FAILED: registry Data limit exceeded",
+    "repository_quality_job": "success",
+    "ios_android_exports": "success"
+  },
+  "security": {
+    "run_id": 40029099712,
+    "status": "completed",
+    "conclusion": "failure",
+    "code": "failure",
+    "secret": "failure",
+    "static": "failure",
+    "automated_acceptance": "failure",
+    "hosted": "skipped"
+  },
+  "ios": {
+    "run_id": 40029099736,
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "SOURCE_ONLY"
+  },
+  "logs": {
+    "static": {
+      "job": "static",
+      "provider": "GitHub connector",
+      "raw_log_published": false,
+      "known_failure_tokens": [
+        "SOURCE_INVENTORY_DRIFT"
+      ],
+      "process_exit_codes": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "code": {
+      "job": "code",
+      "provider": "GitHub connector",
+      "raw_log_published": false,
+      "known_failure_tokens": [],
+      "process_exit_codes": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "secret": {
+      "job": "secret",
+      "provider": "GitHub connector",
+      "raw_log_published": false,
+      "known_failure_tokens": [
+        "CURRENT_SOURCE_FINDINGS"
+      ],
+      "process_exit_codes": [
+        2,
+        1
+      ]
+    },
+    "quality-db": {
+      "job": "quality-db",
+      "provider": "GitHub connector",
+      "raw_log_published": false,
+      "known_failure_tokens": [
+        "Data limit exceeded"
+      ],
+      "process_exit_codes": [
+        1
+      ]
+    }
+  },
+  "artifact_metadata": {
+    "artifacts": [
+      {
+        "id": 12534516354,
+        "name": "g97-security-decision-40029099712",
+        "size_in_bytes": 252,
+        "url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12534516354",
+        "archive_download_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12534516354/zip",
+        "expired": false,
+        "created_at": "2026-10-23T21:51:38Z",
+        "expires_at": "2026-11-22T21:51:37Z",
+        "updated_at": "2026-10-23T21:51:38Z",
+        "digest": "sha256:ad359a253cb1531b5f52518918aa0e513a79dd6fcb62010a1a07104a38221ff0",
+        "workflow_run": {
+          "id": 40029099712,
+          "repository_id": 1267954179,
+          "head_repository_id": 1267954179,
+          "head_branch": "stage/m1-gate-recovery",
+          "head_sha": "455e3596876d85f5734f4ac3163df1de09647e1f"
+        }
+      },
+      {
+        "id": 12534013104,
+        "name": "static-scanner-evidence-40029099712",
+        "size_in_bytes": 16614,
+        "url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12534013104",
+        "archive_download_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12534013104/zip",
+        "expired": false,
+        "created_at": "2026-10-23T21:50:51Z",
+        "expires_at": "2026-11-22T21:50:50Z",
+        "updated_at": "2026-10-23T21:50:51Z",
+        "digest": "sha256:a186590b7464609af09e7b792f27db2e624d61a9ead654da15bfab5d1cd2ff5e",
+        "workflow_run": {
+          "id": 40029099712,
+          "repository_id": 1267954179,
+          "head_repository_id": 1267954179,
+          "head_branch": "stage/m1-gate-recovery",
+          "head_sha": "455e3596876d85f5734f4ac3163df1de09647e1f"
+        }
+      },
+      {
+        "id": 12533363580,
+        "name": "secret-scanner-evidence-40029099712",
+        "size_in_bytes": 1554180,
+        "url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12533363580",
+        "archive_download_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12533363580/zip",
+        "expired": false,
+        "created_at": "2026-10-23T21:48:30Z",
+        "expires_at": "2026-11-22T21:48:30Z",
+        "updated_at": "2026-10-23T21:48:30Z",
+        "digest": "sha256:64c41f3b457b7177ff7ee9a1f7a5b4aa75a54ea58c5002529b31af3a80ae1dd1",
+        "workflow_run": {
+          "id": 40029099712,
+          "repository_id": 1267954179,
+          "head_repository_id": 1267954179,
+          "head_branch": "stage/m1-gate-recovery",
+          "head_sha": "455e3596876d85f5734f4ac3163df1de09647e1f"
+        }
+      },
+      {
+        "id": 12533354577,
+        "name": "code-security-evidence-40029099712",
+        "size_in_bytes": 31182,
+        "url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12533354577",
+        "archive_download_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/artifacts/12533354577/zip",
+        "expired": false,
+        "created_at": "2026-10-23T21:49:13Z",
+        "expires_at": "2026-11-22T21:49:12Z",
+        "updated_at": "2026-10-23T21:49:13Z",
+        "digest": "sha256:66ea1ff720b0306cd752c688dee25887f06bc5e838c1e91feb40db7daf9ef926",
+        "workflow_run": {
+          "id": 40029099712,
+          "repository_id": 1267954179,
+          "head_repository_id": 1267954179,
+          "head_branch": "stage/m1-gate-recovery",
+          "head_sha": "455e3596876d85f5734f4ac3163df1de09647e1f"
+        }
+      }
+    ]
+  },
+  "source_security_go": false,
+  "protected_source_go": false
+}

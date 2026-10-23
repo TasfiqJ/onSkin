@@ -1,0 +1,915 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-SECURITY-VITEST-PATCH01-SOURCE-EDIT-01",
+  "external_manifest_sha256": "cf3719c07e41699088bc25e9b3903610f49c1885c25417a8649a99238b290e24",
+  "measured_source_sha": "39390947063092ff67ac503cd0b86992eb65b941",
+  "measured_source_tree": "0c4a1ceb61fa3d145f348a410284a78a82b144fd",
+  "exclusions": [
+    "This manifest excludes itself to avoid self-reference; its actual committed blob is verified after commit."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/BLOCKERS.md",
+      "bytes": 1594,
+      "sha256": "ab5b837d7dd75c4529f1a8158d9ce3dd22b08be365dce91f3798ab93a17ae761",
+      "git_blob": "3f8bf97f4801812342c2fb3ea604a69ca0268c57",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/README.md",
+      "bytes": 2920,
+      "sha256": "3289ba62c415da7ccd7fbd7002d2c93a2a4c37077f162cabecd21e430e1f22b4",
+      "git_blob": "cb9948f0bf9993eb14045d06b2ba864eb91662b5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/RESULTS.md",
+      "bytes": 5364,
+      "sha256": "f1e363281e91fa46170fb859c44aa4f46ea579fcf926e70434c19b8b215cbe21",
+      "git_blob": "417284a66d73a4628f09653d8b3fc0122c2ff092",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/SOLVER_REVIEW.md",
+      "bytes": 3106,
+      "sha256": "4bb699733a564fe515c5e8826378e2b02d3d24ffdf0f78be208c4a7cfe4a1647",
+      "git_blob": "812162bc8d88538218784c855e4f9e87751dde93",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/completion-report.json",
+      "bytes": 40028,
+      "sha256": "803a4d30a0f9a1dc839dcba85c922cdbef1e137197a484c4598c5669945097dd",
+      "git_blob": "bd88c0d3f6dad910a9f84677cc1bd321f525c82d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/GHSA-qxg6-89mg-rqv8.json",
+      "bytes": 841,
+      "sha256": "b19e162553d1635d8152032dec5dc2b3024b9c30c5158ddd2c1a6e1232201027",
+      "git_blob": "c2b640d7b567252347e4cf4916485463b13c5da8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/GHSA-xp26-3454-mjgp.json",
+      "bytes": 833,
+      "sha256": "ffabe891130b20cddd421e2b91921c4d184bf6b0fb49bc2b963011f9106d804d",
+      "git_blob": "a089c12d92be233fe8ed7755b00f6345319bc7c7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/baseline-ci-live.json",
+      "bytes": 1415,
+      "sha256": "9ffc58d7025fe0636be00634ab1762e372588faa6fb1a27554cd6e2397fd3bc9",
+      "git_blob": "2ff1c2b442e4ab792caa4144d8e55e2d1aeb479b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/baseline-ios-source-pins.json",
+      "bytes": 2635,
+      "sha256": "08615665bf3308de9a6827739997632fd0000e86058769af5124ece1514636cd",
+      "git_blob": "271af0481f41cd2d1256fe2b7f7853fe2fcdb18c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/canonical-worklist-source.json",
+      "bytes": 497,
+      "sha256": "1354c5d9d3edcd05f2d64b20793e0a92b08149eed8b4bd511a8565a637b8604b",
+      "git_blob": "0a6e0d540d50c9bc04d04873d2639566f9cc8030",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/chai-6.3.0-metadata.json",
+      "bytes": 3768,
+      "sha256": "da34137c705c672324e60f1c489a306afaf99aad605cf0418aacfe8debbe72a9",
+      "git_blob": "32f1aaaf7bba3226bf900f447647f87f777089af",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/checkpoint-adverse-14.json",
+      "bytes": 538,
+      "sha256": "27b96c389c43cbd8c9e992cf0d6b7aac598b9bd1e527626de704d4e57afe0b37",
+      "git_blob": "2b4cd74051721aaaf9bb24ca105cf7ac5b8737df",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/checkpoint-adverse-14.log",
+      "bytes": 1818,
+      "sha256": "af0997d1340dd63464d68c563803bceace0b6777195bcf0c200d4523001bb26e",
+      "git_blob": "88979374c71682ad866c05bb694fc2c59957ae53",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/clean-measured-source.json",
+      "bytes": 292,
+      "sha256": "aa58ac9c912346945e6230673a65d06a5eadf06a7daebbb702708a79e8c9628c",
+      "git_blob": "284e0b0fcb42c7282d134f5ab98372b37f12375c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/conditional-ios-source-provenance.json",
+      "bytes": 3313,
+      "sha256": "364bfa838bf76ede07238316926d51b7f16658aeefe63d2a3ab2552a940c001a",
+      "git_blob": "1d9a8e643de3f8081ba6cb1fdf02a1c51bb9e1cd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/delivery-diff-check.json",
+      "bytes": 353,
+      "sha256": "9374b52cb7aabef8b8dd36f68a3ee7b5c6b8a5507ef2d0a380a235e61ff7187e",
+      "git_blob": "340e9a8d5163ec109500e8c81a4eea8fb9b63599",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/delivery-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/delivery-stage.json",
+      "bytes": 541,
+      "sha256": "b9f71f31d909868b3f661e593e6f0880420f5878428bd7bb767e635cd2c86e54",
+      "git_blob": "1a1acc4b5a3c98058ecccb4efd470c0da2ec7749",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/delivery-stage.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/expo-mobile-check.json",
+      "bytes": 440,
+      "sha256": "0601056dd6d39a2ec4250a9587d8580e2d6d5680e34db1e52e0b54936ba0e925",
+      "git_blob": "55d43e8c2100ff815755ff4c59edafbfe1420437",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/expo-mobile-check.log",
+      "bytes": 28,
+      "sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+      "git_blob": "017f692ff17f9741bf46a8bb420c7c4d01834e8a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/fresh-npm-audit.json",
+      "bytes": 401,
+      "sha256": "070466f8792af779b8a6410f3c7b51337e14c1008b315cc576a67bcc6ac90c5c",
+      "git_blob": "56434b76b66add3970030c655a3c1fc3d616d126",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/fresh-npm-audit.log",
+      "bytes": 32339,
+      "sha256": "d88b6d6b6ac0527e12bb0624d14aeed6f7eedad3bc8e22b8c1fbe9964d629524",
+      "git_blob": "560cba0345cd80ec773a7c717627855d7998ae90",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/fresh-npm-ci.json",
+      "bytes": 392,
+      "sha256": "7b54310451abb60268661342274ab63f5d9030f4e6089df54fa7b2fba1d6ecb9",
+      "git_blob": "711760ae7ae7a79fadaf5b05f2b59b68ad37920c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/fresh-npm-ci.log",
+      "bytes": 712,
+      "sha256": "f68231c153830ec39d511f0bc804424753c73df81a0d3b0bb0660eff9edf1541",
+      "git_blob": "f93700f2579247e05ea6dee3326788ff56f5b4de",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/frozen-gf01-refusal.json",
+      "bytes": 419,
+      "sha256": "c106e4d2002da9a206716d5ad24adbedbba6e66a8d649e8ea07cc6af94aa3232",
+      "git_blob": "18b1cf1ebd508a3313a6e2f1064734861aa152f2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/frozen-gf01-refusal.log",
+      "bytes": 28,
+      "sha256": "31b4f62035d55aec8d073143fc73fb8f25c889eeb5eb3603314abf74c36a4b9d",
+      "git_blob": "f34be8b91cdf51c2eed96ec38f2c029aac9522c9",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/implementation-source.json",
+      "bytes": 1960,
+      "sha256": "dd35aabe4d32e713d16ded6dd3e35596ff5127f087cd4a933d149d62d7a627b3",
+      "git_blob": "75c5af31b5fc27614c77ef132d495e5fb80e5874",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/infrastructure-notes.json",
+      "bytes": 2005,
+      "sha256": "f515ea0aaca99d4334d618b7f16d83c50eeb405c7c266bfdfe051cd99a76d8eb",
+      "git_blob": "ce3fd99e22854feea1ada54c29caa6bfc15e8479",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/installed-context-verification.json",
+      "bytes": 532,
+      "sha256": "d170cc61d0e147973a2f6ae604d17c6c2c540f6053fc27500db497be19676a63",
+      "git_blob": "20e469977755aa1d18b11de17274c435f50f5ac2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/installed-context-verification.log",
+      "bytes": 173,
+      "sha256": "1ccaad1b415aed515165348a42a7037cb2e36367f5bbe245fea9700458075159",
+      "git_blob": "26d3b8382c9c2d697a877c696e2828856cb16316",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-archive-privacy-fixtures.json",
+      "bytes": 406,
+      "sha256": "30657f840ee80641ef8e0674004c94023b4b97a392887ebbc0fc5083e20ecfa3",
+      "git_blob": "178bdfa3f2990c2b95ae59e62b47b205ad757210",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-archive-privacy-fixtures.log",
+      "bytes": 14405,
+      "sha256": "4e5812b72619348ade4c4cd1c8f389554dd94d4796977da4bfe76f5ccb4c034e",
+      "git_blob": "a6c48d0ee9a77dc3914ead924647cc6195580d46",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-check.json",
+      "bytes": 403,
+      "sha256": "5ed7c429356c024ae175760a86f27d1ec11d50ed0ac19b967f009f6a47857a73",
+      "git_blob": "d0a9d6da69f43efcba4a9f84adada149f5f9a976",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-check.log",
+      "bytes": 288,
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c",
+      "git_blob": "fd1da54831d41bc2d3f78c0b074ed64a3c347741",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-final-check.json",
+      "bytes": 403,
+      "sha256": "b5d5edaf440d7a67fdae5bb714d42ff494171bc8a75f4e60c2e97b8c25f48f03",
+      "git_blob": "ceae3556222ab1ea58741c86d60118d40cfe0a84",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-final-check.log",
+      "bytes": 288,
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c",
+      "git_blob": "fd1da54831d41bc2d3f78c0b074ed64a3c347741",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-regenerate.json",
+      "bytes": 397,
+      "sha256": "225cc841c0076f622873e022bba139c6499a5df3a68fc0ddb2825915d5164f32",
+      "git_blob": "eea407d60da267cb279567989c28eaa3a9a68b59",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-regenerate.log",
+      "bytes": 290,
+      "sha256": "48c965f19107f2caf6e285b454299746006ab44abe0f20820dffa44e7774a5eb",
+      "git_blob": "4632fabe35ce40796950a4c1f9eadf24d87a5b82",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-tests.json",
+      "bytes": 402,
+      "sha256": "249bbe660936cf9b9d5915c327497bbb656ebdb6788eb8c4e79a3864295dc900",
+      "git_blob": "8a02a29c1d55762cda12042b611ebfa92f9f8d8e",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ios-privacy-source-tests.log",
+      "bytes": 5489,
+      "sha256": "ca14d63751f031fa119144727b352d013c3e219fa71aced2e022e8fa46a5d0c8",
+      "git_blob": "83712c76532fb60feed18ac60afb57cc485bbc6a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/lint-force.json",
+      "bytes": 396,
+      "sha256": "0fcacd94fd6c4e510d0da2b4bb6c793803343468aee0d49d0e191a0e13c14f6c",
+      "git_blob": "99f46a33fe312b3fb52be913caf61f972dbd3d71",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/lint-force.log",
+      "bytes": 1177,
+      "sha256": "3150602723e31938b85113d44cc0776644e852e983db1926fd5d1c0f89a0e104",
+      "git_blob": "46709ba7816c212fcca779da0b5848d705205902",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/lock-regeneration.json",
+      "bytes": 448,
+      "sha256": "ae0203f25aa31859e5437995e7e85c0f4b7bf26570dfc72d8f866aae5ecb6b6a",
+      "git_blob": "a816547e7f130a24cfb69f47dc70f00cde102f20",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/lock-regeneration.log",
+      "bytes": 18,
+      "sha256": "ce7bf91f54adc7390cff6bf1c2572fd00ce9cfbd0611637e273059c4710a80c9",
+      "git_blob": "0d21e5ed0014b5bd067333b326ac324921b9da12",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/manifest-delta.json",
+      "bytes": 471,
+      "sha256": "74f083765662bbcd973be29d5ad516907500d3766392e0e203beb6cf83f8e131",
+      "git_blob": "d06ae965e02dd51f445cedafd13a9ae4450f59d7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/npm-11.20.0-metadata.json",
+      "bytes": 67251,
+      "sha256": "a999822f8164c733008d0a3c7f6b38c8a2a67181307cf6a293120586f6e76c54",
+      "git_blob": "fb9195305c1ccd3124bc25d3e562ee02725b3d88",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/npm-regeneration-provenance.json",
+      "bytes": 672,
+      "sha256": "e522115a20ef2f2d0e32ef80ddda89599248eaef2c1b585422e1b277a07c5427",
+      "git_blob": "466855af4b6829f1fb11ba4043828705af4ec3f1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/npm-selected.json",
+      "bytes": 363,
+      "sha256": "cfb478a81a224c5c7e906dd287d8e5e3b4aa98f01941dd05236028916733756b",
+      "git_blob": "c2cfa2b2b45a9d69e68683297734d0ec4047b771",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/npm-selected.log",
+      "bytes": 8,
+      "sha256": "6784d6c924df1c8341f9f841f5b5b20c37255de3d34f923baebc0a557d5d5201",
+      "git_blob": "383e991f5489ff6e8ba1a564117df33aa6d80a6c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ordinary-governance-103.json",
+      "bytes": 455,
+      "sha256": "de7617a148a6cb7863ff0cc00f11d73182738502c78db03b087df7d7df65bb5a",
+      "git_blob": "271199d2569b703bcfb5c0634d25a85a509ac425",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/ordinary-governance-103.log",
+      "bytes": 16208,
+      "sha256": "a6287b788db1e14ca1b25ca0601f6eda060e395fa9c3c583e674bcb3ca5a1db5",
+      "git_blob": "ba01b5c66fd62f649b3b5989e52937403799f719",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/original-secret-12.json",
+      "bytes": 484,
+      "sha256": "075ba863294c4a473d89247202289fbda86ca0c162e888ada3ea28d2e474c0f3",
+      "git_blob": "e8b3f0ebfc0092cb42e0ebb586b092215e62caa3",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/original-secret-12.log",
+      "bytes": 2103,
+      "sha256": "2e247a6bb88b23529a412eaae20a4efbb1f030a489f050964c906ee1897970d4",
+      "git_blob": "db9cb7a4806382c18ad75e980b4f1fdf524f1e2b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/original-security-70.json",
+      "bytes": 483,
+      "sha256": "38368d8c1a79aadd6e502f01e2831121a7bb982e65b65d3b40daf68a88c845a0",
+      "git_blob": "922c9a335b47cae4dc96407d8ca124a72b23dfd1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/original-security-70.log",
+      "bytes": 11401,
+      "sha256": "f12cda8b0700b7b42bfa9ff10fc5843e2e27cf8ca39cc658906cc6d4eee2fe11",
+      "git_blob": "ae347ef068e3990d5cfbbab498edfdffd80c7e81",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/pending-scope-review.json",
+      "bytes": 642,
+      "sha256": "dcac8d480d27fc44a7802693700438c6c50a34f296aa98310ea1cdbc8c8ea4b7",
+      "git_blob": "cb81e5a6d628ad63bab6f9f7ddaf9a2fad43136c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/pending-scope-review.log",
+      "bytes": 354,
+      "sha256": "51b8c75c70f9218a66822a2d368341cc55ff63f39fb813b3d305c14220fbfb2a",
+      "git_blob": "0195afbb0d7b49fbd186a1c2d3f90730c1534cce",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/phase4-worklist-check.json",
+      "bytes": 394,
+      "sha256": "32b31f591ff8568e9f92b7638a07454976bd6626b1f677074fe3f41650f4e8dc",
+      "git_blob": "de69f4d27622c6b921b39c1aff90c36efe2999c7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/phase4-worklist-check.log",
+      "bytes": 182,
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "git_blob": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/phase4-worklist-regenerate.json",
+      "bytes": 394,
+      "sha256": "1a7dbd623eb1c571633c8ecbf69989ccb43140ab8d2e6faf2df87b1367a69fc4",
+      "git_blob": "7463112aa1e8e619f8b29118fec7b7586a5f61a8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/phase4-worklist-regenerate.log",
+      "bytes": 237,
+      "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb",
+      "git_blob": "75cf4b879859dc18c34c3a4f52ff202594d42afb",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/postinstall-check.json",
+      "bytes": 383,
+      "sha256": "c7473d08ab4ee12aa3113fdb5089dba770275c4de2b9774ea2c8b7549c9eb16f",
+      "git_blob": "084372ae6bd91939c75a0467676e8d8e13a7c91b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/postinstall-check.log",
+      "bytes": 161,
+      "sha256": "54d2ac7be50cdc04567161a43e6278bdf0a49e24c8cdd10ef4a002c6183ba3cb",
+      "git_blob": "ae3db5bcda96c086ae97d2b69088e6481f3bde05",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/preflight.json",
+      "bytes": 10392,
+      "sha256": "db1258fdd18fa4717bff697ad2e17565f021ac1a9b2d4483acb7901b2a1dfcdf",
+      "git_blob": "f96f95dfbceb75fc882a8f91d901d01da6a8ab41",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/prepush-remote-fetch.json",
+      "bytes": 533,
+      "sha256": "d62c4ae1570a4f09dc3a174011495389813fa81332613715ae2c0acdfaab9d84",
+      "git_blob": "76ee741da82e4dc9f22db86349935cf3240a1ee9",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/prepush-remote-fetch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/registry-provenance.json",
+      "bytes": 2056,
+      "sha256": "c261f87b8cf4ecd7dcdf38b2d6034993adae1b820f8794deb93db1ad41836b49",
+      "git_blob": "91ae8075d82b85f6bd2c61ff01180eb93dc041c2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/reviewed-npm-version.json",
+      "bytes": 399,
+      "sha256": "efb99cd056f9b25af1661c40eec2bb606e73517b2022bdccf76657111eb15c76",
+      "git_blob": "bf6fc018396374610803288badd466693c4f24d7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/reviewed-npm-version.log",
+      "bytes": 8,
+      "sha256": "6784d6c924df1c8341f9f841f5b5b20c37255de3d34f923baebc0a557d5d5201",
+      "git_blob": "383e991f5489ff6e8ba1a564117df33aa6d80a6c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/root-test-force.json",
+      "bytes": 385,
+      "sha256": "1e7fd91de5b31433f98446e1acdd429254b1e6255ec132b79e8d1a194c17ab77",
+      "git_blob": "ab2900d900df9338815b30290939a121ca76a217",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/root-test-force.log",
+      "bytes": 315413,
+      "sha256": "b5c1f801a89bf31083347ee1e4959437e08b1fe94bd2faa51fd633622893a175",
+      "git_blob": "e5b4191737c6f93734c4bfc05008518fe4125298",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/runtime.json",
+      "bytes": 344,
+      "sha256": "54a985f4baefce689793dacb15f1cf8aa6edfa9406dd0229436189058cdd9ca7",
+      "git_blob": "7a6051e698f11ae1880307c5b404bd5cf4a837dc",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/runtime.log",
+      "bytes": 9,
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+      "git_blob": "3648bfc346569dbd2100505f5c60d9d4598ed69e",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/solver-delta.json",
+      "bytes": 22804,
+      "sha256": "7d80974cffc80291b78254330417f0f741db154c2a1d2d0e15980d748a5e5638",
+      "git_blob": "b0d8ea583b4a4a5abdb9efffe3f98e19f6bc4a54",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/solver-independent-review.json",
+      "bytes": 25424,
+      "sha256": "87636478ef3b7b1b0c5fe86af8de4637228ed15c0ea4ee201f841c7293bea360",
+      "git_blob": "c2789d13670ab1b57cc48818e1fcabffdea9f92e",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-ci-observation.json",
+      "bytes": 23482,
+      "sha256": "c09fc0b31fd97a1cfd21ecbb651398f0f4cb5f959395d9955e90db6945508956",
+      "git_blob": "c9cea83333bf9f5ea5cc3b204bbbcbe795ef2e8b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-commit.json",
+      "bytes": 420,
+      "sha256": "ce6ebd50f0a655869bb786710354f6f52a7717ff1a20851d0d028bdcd2d06ba5",
+      "git_blob": "68fc35c5dd525500e1d39bdf24883cacfa8bb26b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-commit.log",
+      "bytes": 627,
+      "sha256": "24df7f8f9b513ed03dc756ea9fdb0deb3ca57ff0395a76ac94d934624c44cdf7",
+      "git_blob": "df1d431e5298b5098220b337563da48ea9ded9bd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-diff-check.json",
+      "bytes": 353,
+      "sha256": "24fdb502f4af6a1aa295b062004371133e6de31c05ad781bb49a45eff17821e7",
+      "git_blob": "1b5bc0d638e8822d6ee0945c1a1137917984bef0",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-push-windows.json",
+      "bytes": 847,
+      "sha256": "ebdc907492315deaff8017b393922d47ceecf25fc6941542833035b23ae8b8fe",
+      "git_blob": "fc17edabd588f948ea6ae59b61252ce0a2694778",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-push-windows.log",
+      "bytes": 95,
+      "sha256": "265f4766182319f6f40c78394914f9dd835ef2f3e41f61f1aa55f0155b899332",
+      "git_blob": "4434d8a741b6a37735f08630801af1359a9bd7d7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-push.json",
+      "bytes": 432,
+      "sha256": "a293a9306867336d1c8d92cebd81274822456eef2b5834fded40eddeb2c84cd2",
+      "git_blob": "ae06c6efeaf2fc408b6f3e9e4bef867589bb96f8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-push.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-stage.json",
+      "bytes": 621,
+      "sha256": "98b42abb3d5f528833ec3f29d22fe9c0d9529fa03b3e4aaaad1d3cfbfa06ba3e",
+      "git_blob": "13c8c2b1853a73dafd5e2c0e077c8c3a3881ee31",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/source-stage.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/tinyrainbow-3.1.1-metadata.json",
+      "bytes": 2618,
+      "sha256": "0bc5925142b61d7481879f39cf1bc42f519361c47c3a2da6c3a86ee7371e5783",
+      "git_blob": "cb983b7d487535812f56cda292b1c9715dcdf5cd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/tinyrainbow-3.2.0-metadata.json",
+      "bytes": 2613,
+      "sha256": "716714f7a131b49553d45ec826d9c35a7e89a03724f2461a02cde8776070e42b",
+      "git_blob": "9ca7dae276dacae18d147c30b4fe2b8abe804d9f",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/tinyrainbow-upstream-source.diff",
+      "bytes": 6288,
+      "sha256": "c9cb28261dc390f947ddc76f56d44ed23d0d1f3181d260e70de7b0dd000562e1",
+      "git_blob": "c7206b098123db326e3298b4f71fa24db85b93b1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/typecheck-force.json",
+      "bytes": 401,
+      "sha256": "e63b2caf77c7d209ab21055aa67caa2727c1cb74fcf358ded37f0bedd19dbd83",
+      "git_blob": "f0fd84f8a3b29a0ec67d8a7c3e7dcfeb19e26406",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/typecheck-force.log",
+      "bytes": 1168,
+      "sha256": "05fd8207d0a31d7a3607fd84f81c9dbaabf706331766cae8cc9ea3490b902add",
+      "git_blob": "d90d20e104e45fdb6022565181caab6555245fad",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-4.1.12-metadata.json",
+      "bytes": 7533,
+      "sha256": "256fd7a6b33bb953461e09ed96c71ab10f4cacd9f4bb64d4a30dfee242bcfd8e",
+      "git_blob": "8401d67fadd8a0dcbf42f24e2c6510e68485acfa",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-expect-4.1.12-metadata.json",
+      "bytes": 2864,
+      "sha256": "8a043d40967d628a0fe471245b595cb623be998dc710cdfb0ba732392aee4b24",
+      "git_blob": "f6fde6d751761913104a8459413f3a354efc32bd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-mocker-4.1.12-metadata.json",
+      "bytes": 3970,
+      "sha256": "10dd9a11c65267c98294ed9d58846a367994e60c1f515a08d93cf3e001532bc7",
+      "git_blob": "f33418ddf6a4e362d5d28ca64c16036897043f5c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-pretty-format-4.1.12-metadata.json",
+      "bytes": 2884,
+      "sha256": "a4a4d0f7b9e15ff5aff3bc18e8a2ec5ca945a047558b66feb806f4dc9106d91c",
+      "git_blob": "b4923bea22cf93ceb6dd69e82c57ef2f6a68bd75",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-runner-4.1.12-metadata.json",
+      "bytes": 2849,
+      "sha256": "3b43b5b58747d530fe9f540124040dece8474f57e2f7f77044efe11838d2e05b",
+      "git_blob": "5e9d6de363830f7a4cc9fe0e933f8be38cfaba76",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-snapshot-4.1.12-metadata.json",
+      "bytes": 3055,
+      "sha256": "efa62dbbc62d4b2c19a74a18265e2d0683dbc4b4c9ed93d90c7221d8c1f71d48",
+      "git_blob": "0f8701a71d58afcaca0984750e0f697aebb4cb8d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-spy-4.1.12-metadata.json",
+      "bytes": 2673,
+      "sha256": "cdb294adcfc5468a23a65283a3ce00dc936e520797b43efe6ce3c29c4201f081",
+      "git_blob": "457db265b57fa4d67d2e86938d8581d640008d7f",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/vitest-utils-4.1.12-metadata.json",
+      "bytes": 4188,
+      "sha256": "e47cdc3509a160359267b75df6134e4420b9b767f6ac7268f2f61c11192c6c2f",
+      "git_blob": "05ff72c1d5ed00b6291bf88dff23abfe52465dd7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/widget-extension-check.json",
+      "bytes": 401,
+      "sha256": "9368e33a6ec7739b3f76412a6c62ba67af55d82b7440dd0bae368279866eeff2",
+      "git_blob": "67d3fb65171c8ad6ac4112e22a2e12d3d321c28b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/widget-extension-check.log",
+      "bytes": 151,
+      "sha256": "95149b34b0830273b073d2439be9a2eee9dc14b6d068c08eee53c51d53752894",
+      "git_blob": "43bd19cf5c35e662c0a7d57b2e5119fb608e5089",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/widget-extension-tests.json",
+      "bytes": 400,
+      "sha256": "f52c0416f23a8fda44804c98c63ede82726812e0a55ff67e52c67a24f1ca28f1",
+      "git_blob": "464fc14201988927194669c8fe3d25de6450006a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/evidence/widget-extension-tests.log",
+      "bytes": 2263,
+      "sha256": "d4a23ce473d04e00ca69894b86be6ba01ac65f5f98e89574c2bc21a26f1cdd71",
+      "git_blob": "e612762a43c3940e21decf21813ec784d7eb3a93",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/00_READ_FIRST.md",
+      "bytes": 946,
+      "sha256": "38e48328a0c982ee756a67b354c5d56161ddac2dbf979f14730ff788c03b16a5",
+      "git_blob": "5449564cd00fcf81205acac8e9db99c10ddbdd25",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/01_INDEPENDENT_BRAIN_AUDIT.md",
+      "bytes": 1661,
+      "sha256": "6cb0532e0eca4945ffd9b8ab2e39ab1515c5f956756c936465d922d4d063f24a",
+      "git_blob": "f9dc65f0ed5772b7317f144df474145dd4665d3d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/02_SOURCE_PATCH_RULES.md",
+      "bytes": 1435,
+      "sha256": "2015eb7f4650468a904dc5fac91fb1091253c0e3da014809d7f62773d6918dec",
+      "git_blob": "b6041c79a5fa3fdb33423642458b6c065eee5a39",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/03_PRIVACY_LOCK_BINDINGS.md",
+      "bytes": 1155,
+      "sha256": "e1faff7e317edb7f3a3d346eecdb6c704c633ae10639012725036b2d9afd322a",
+      "git_blob": "abfbf1af7c5baff61dead8d1e5fb65664c13d3f4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/04_VERIFICATION_AND_ADVERSE_TESTS.md",
+      "bytes": 1810,
+      "sha256": "d1ec2ef0dcc0e2a0fb3d7cc6d6b695e31477d80e5c8d19c3ab53f754647a9707",
+      "git_blob": "4058fa4113d6dd54912f05f5c65420dd88a93819",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/05_PROTECTED_GATES.md",
+      "bytes": 1033,
+      "sha256": "167e9c75145ddaa82eb38177353e3e83a38f569a64994821588c0472847b6224",
+      "git_blob": "757cc454fa37f51a7bfd649f4675c520edf71113",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/06_DELIVERY_STOP.md",
+      "bytes": 1148,
+      "sha256": "a75cdf78723f7c8e34cc2abb256e1cd52c4d6b4ba25d9b498e8766d7b8828406",
+      "git_blob": "54019a7a2ecfd3e6eea847adc9ae09a038ed927b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/BASELINE_CI.json",
+      "bytes": 1361,
+      "sha256": "0f91b9354e3105b9dea9653de24bb247bf3dc55c5a24ae8bb218afb52761141d",
+      "git_blob": "beb6c37a9185c0dbd6f31a9d39996cb2771e1245",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/PREIMAGE_WITNESSES.json",
+      "bytes": 8843,
+      "sha256": "99e1286e5526f82a55abaad829795f3ba6f72644d2b9eec748794aca45cf298b",
+      "git_blob": "3d0d66c26c235fdf0b15ec7b2aec782156f072fb",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 10869,
+      "sha256": "16a808f82d760ad318217e564d73b96b34a98772372aa2b5770f1eb2f0d07f32",
+      "git_blob": "c90a1ca60176f0f0c2db938a33722e3fb78ef23a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/TASK_MANIFEST.json",
+      "bytes": 2444,
+      "sha256": "cf3719c07e41699088bc25e9b3903610f49c1885c25417a8649a99238b290e24",
+      "git_blob": "6bbad29fee26e09e37db465c2becfcb67c1c6212",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/TASK_STATE.json",
+      "bytes": 655,
+      "sha256": "3489f1dbc3ef3f9ed282aa6a0e35427af182509e0e18ac80d349051051c23273",
+      "git_blob": "3df01c51d66830ea439d99625844bb1d0bce1096",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/UPSTREAM_VITEST_WITNESS.json",
+      "bytes": 2049,
+      "sha256": "398d12aee8ef69c7d70b801fb8d6ef09b8d3f7a6c04057c5bc1e9bd879d1bef3",
+      "git_blob": "190ccafc9e5ac7cbb4f434f980a0799492e549e5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/inputs/verify_context.py",
+      "bytes": 2450,
+      "sha256": "eb54135c74ba60c30e0207d6e5b3453fb7429294a7eceb1c9da70db9b23ff181",
+      "git_blob": "a1366565a4b67255b4bccb0ce3221f9c20a18705",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/test_scope.py",
+      "bytes": 6993,
+      "sha256": "8a3a1267e3fa48d5241a9c7dab4dc35196d2932343b12f04d02583ab358ea22d",
+      "git_blob": "6c621f488f639f32a96d68081bf60fb914973349",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/verify_scope.py",
+      "bytes": 10754,
+      "sha256": "43d1ee2544e4918e8e2786932684c0312de61ed3d3abc05e81b8f213b061974d",
+      "git_blob": "ccba26401390071c562c39c2d5b282b08c1c3824",
+      "git_mode": "100644"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "bytes": 3007,
+      "sha256": "ee2adeb11eda8ff8ee7fd4a36f69c29817883e7825d0ea62e43de358862e5361",
+      "git_blob": "2ab151e029e094a9420af84fb6bedfc7f86fdade",
+      "git_mode": "100644"
+    },
+    {
+      "path": "apps/catalog-operator-console/package.json",
+      "bytes": 539,
+      "sha256": "10fce1f7fc5ab515f3ddb8825c0b223c51cb4fe404b32b39b009e4055a128903",
+      "git_blob": "5f398bc8b02fb6628bbfa84cd4138e7971dcc120",
+      "git_mode": "100644"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 572798,
+      "sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "40abcddf562853d8d2312ace7ea31c9d97d69903b59594bddc5a78a82f479fcd",
+      "git_blob": "3ab1c5aa8c68a1802ea054d510f675d715683e1d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "bytes": 247820,
+      "sha256": "b92d7c23744b9700cd5c15036b76f42dc3d95708c9665395bc483da91208bcfd",
+      "git_blob": "894b8ff4de8c05b94f65cdc479ac582ea34df80d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "bytes": 19517,
+      "sha256": "1ff659c00353fbfac38f7bf47d058cdef0249119d9f8c6c271895aa5cd949ed2",
+      "git_blob": "e24271a986392b79a2c5784a932a437d6594cd35",
+      "git_mode": "100644"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 2477,
+      "sha256": "b17073927468758c19508b96889ae582cd1d550afbd77f14369e147b928301e6",
+      "git_blob": "ad9535c45eebd56e220affcdf56e521960d949c3",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "bytes": 137486,
+      "sha256": "32bc072fccf212e79e06c3a7018e9c74efd6bd231a877f06f38773d4cb6e2c6e",
+      "git_blob": "067d1d4f64d5a1aee3b218ebb113c3b74e0b6bc5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "bytes": 81878,
+      "sha256": "66d30fd8140d1b3c98b0df3ba831d011efdbd30cc95ada5d661f6c6ecaa78915",
+      "git_blob": "d8c972b471cd3ae52b557d7b76ea31c989576fbd",
+      "git_mode": "100644"
+    }
+  ]
+}

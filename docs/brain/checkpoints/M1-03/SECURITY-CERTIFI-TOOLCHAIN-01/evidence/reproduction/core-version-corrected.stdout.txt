@@ -1,0 +1,22 @@
+[
+  {
+    "toolset": "old-tools",
+    "argv": [
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/old-tools/semgrep/semgrep/bin/semgrep-core",
+      "-version"
+    ],
+    "exit": 0,
+    "stdout": "semgrep-core version: 1.181.0 (72d3525fe7)\n",
+    "stderr": ""
+  },
+  {
+    "toolset": "new-tools-02",
+    "argv": [
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/semgrep/semgrep/bin/semgrep-core",
+      "-version"
+    ],
+    "exit": 0,
+    "stdout": "semgrep-core version: 1.181.0 (72d3525fe7)\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,220 @@
+{
+  "utc": "2026-10-23T17:12:18.508270+00:00",
+  "root": "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/onSkin_M103_CERTIFI_REPAIR01_EXACT_eaa47d7",
+  "branch": "stage/m1-gate-recovery",
+  "head": "eaa47d7a1882dc395100bd0a958550a8beef406b",
+  "tree": "7abcf80b45c88bad08f8411405c744c55d727093",
+  "status": "",
+  "remote": "https://github.com/TasfiqJ/onSkin.git",
+  "fingerprint": "7c7499572becd4cc57bd96071e91fb6c033660022224f96e2474232d9a450833",
+  "preimages": [
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 29246,
+      "git_blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1",
+      "working_bytes": 29246,
+      "working_sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1",
+      "working_identical": true
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 3395,
+      "git_blob": "24d7aad1e9432c44d67df8c64b22a921f38e7552",
+      "sha256": "b2251f8f7d94c5060c52e0256aef2aab56af6abc1bd769cb77b3bdabeaab428b",
+      "working_bytes": 3395,
+      "working_sha256": "b2251f8f7d94c5060c52e0256aef2aab56af6abc1bd769cb77b3bdabeaab428b",
+      "working_identical": true
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/SHA256SUMS.json",
+      "bytes": 24442,
+      "git_blob": "292c3f9a39733aa1a9aa8948adf665cc5a8fbbc5",
+      "sha256": "893b15681986da65f0bdfbae0e799041606ef7735334ee1941ff158d8b601dfd",
+      "working_bytes": 24442,
+      "working_sha256": "893b15681986da65f0bdfbae0e799041606ef7735334ee1941ff158d8b601dfd",
+      "working_identical": true
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/ARTIFACT_SHA256.json",
+      "bytes": 14884,
+      "git_blob": "566a43ca06001a2b86bc80d902f253a9b23382ce",
+      "sha256": "e72b9ca3f75f09178bdb6623f4d5dd55bb7e2f416a8580fc5976048e19a106e5",
+      "working_bytes": 14884,
+      "working_sha256": "e72b9ca3f75f09178bdb6623f4d5dd55bb7e2f416a8580fc5976048e19a106e5",
+      "working_identical": true
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/SHA256SUMS.json",
+      "bytes": 40115,
+      "git_blob": "933a120b9ede7e542a8f3f75be42391a0cb636b9",
+      "sha256": "40fd5d3f1eaf643201ce643c569d3ca1352d0af5c8956f8a32dc036c6e482f4c",
+      "working_bytes": 40115,
+      "working_sha256": "40fd5d3f1eaf643201ce643c569d3ca1352d0af5c8956f8a32dc036c6e482f4c",
+      "working_identical": true
+    },
+    {
+      "path": "docs/brain/m103-governance-fixture01-active.json",
+      "bytes": 1052,
+      "git_blob": "c35aca6c9cd79e63cbb2033b9500355e43d6353d",
+      "sha256": "9863a2f3ddf4c20dfa34b42dd611eb94da562699e3395d600acf146995f7ff92",
+      "working_bytes": 1052,
+      "working_sha256": "9863a2f3ddf4c20dfa34b42dd611eb94da562699e3395d600acf146995f7ff92",
+      "working_identical": true
+    },
+    {
+      "path": "docs/brain/state/roadmap.json",
+      "bytes": 44273,
+      "git_blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877",
+      "working_bytes": 44273,
+      "working_sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877",
+      "working_identical": true
+    },
+    {
+      "path": "docs/phase-9/security-advisory-exceptions.json",
+      "bytes": 1577,
+      "git_blob": "3e575fa3769a4f1b8dcdeae970d8bd4072d64740",
+      "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+      "working_bytes": 1577,
+      "working_sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+      "working_identical": true
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 572798,
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "working_bytes": 572798,
+      "working_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase2/local-supabase-reset.mjs",
+      "bytes": 55248,
+      "git_blob": "1864f940d3407bb87c25fa689bcd036638c510e6",
+      "sha256": "4a5a58b3547c82e8a61fe17ba20ac970b26aa9d2721e713be583bebd90a6a920",
+      "working_bytes": 55248,
+      "working_sha256": "4a5a58b3547c82e8a61fe17ba20ac970b26aa9d2721e713be583bebd90a6a920",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/dependency-sbom.mjs",
+      "bytes": 8268,
+      "git_blob": "00206f6ef6ce4dee68dd9c29af496c1ea3e3b9fb",
+      "sha256": "083e0779128bd0bb553d1b2243eb231078cc4b2322236f7318cd4b9e375e8b70",
+      "working_bytes": 8268,
+      "working_sha256": "083e0779128bd0bb553d1b2243eb231078cc4b2322236f7318cd4b9e375e8b70",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "bytes": 7937,
+      "git_blob": "c009d7f5a1e373b5da7dfab86707a6cad24ec2a8",
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927",
+      "working_bytes": 7937,
+      "working_sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/collect.py",
+      "bytes": 10743,
+      "git_blob": "d2a4d4e9f5d26950d6ea9b761619d6926dc90502",
+      "sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212",
+      "working_bytes": 10743,
+      "working_sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "bytes": 38158,
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "working_bytes": 38158,
+      "working_sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "bytes": 13797,
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "working_bytes": 13797,
+      "working_sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "bytes": 81513,
+      "git_blob": "d3d811b1ab1f6d672c965d8c005cd94e77ed63b3",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
+      "working_bytes": 81513,
+      "working_sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/secret_scan.py",
+      "bytes": 20692,
+      "git_blob": "cd9d88d5f723cae30ef9a8cee18126136e396218",
+      "sha256": "30a04d2b2c7a4fa9aefacdea6796b20c7e1f332b61102d12a47878145e3590a5",
+      "working_bytes": 20692,
+      "working_sha256": "30a04d2b2c7a4fa9aefacdea6796b20c7e1f332b61102d12a47878145e3590a5",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "bytes": 6778,
+      "git_blob": "641e85bad6becf327f0a3269340bb49c6db912a7",
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+      "working_bytes": 6778,
+      "working_sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "bytes": 2327707,
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "working_bytes": 2327707,
+      "working_sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "bytes": 49880,
+      "git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d",
+      "sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+      "working_bytes": 49880,
+      "working_sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+      "bytes": 15122,
+      "git_blob": "5c13967f1377aa64fc4bb44398ad3e712515d9cc",
+      "sha256": "78f7285f6a9c0443aa62ff3021264b88ae3c034da1edb353af2e7dd993b8470d",
+      "working_bytes": 15122,
+      "working_sha256": "78f7285f6a9c0443aa62ff3021264b88ae3c034da1edb353af2e7dd993b8470d",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "bytes": 17412,
+      "git_blob": "34e7b277c934f05bd102ef646b4c82a3453408ee",
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8",
+      "working_bytes": 17412,
+      "working_sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8",
+      "working_identical": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "bytes": 15616,
+      "git_blob": "4b05ec36fcd678120c09b8d0cebd247f34a83503",
+      "sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a",
+      "working_bytes": 15616,
+      "working_sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a",
+      "working_identical": true
+    }
+  ],
+  "locks": []
+}

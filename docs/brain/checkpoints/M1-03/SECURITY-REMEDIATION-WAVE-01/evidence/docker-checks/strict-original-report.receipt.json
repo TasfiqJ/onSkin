@@ -1,0 +1,18 @@
+{
+  "name": "strict-original-report",
+  "argv": [
+    "python3",
+    "-B",
+    "scripts/brain/brain.py",
+    "report",
+    "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/completion-report.json"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:16:10.277351+00:00",
+  "ended": "2026-10-23T20:16:10.445357+00:00",
+  "seconds": 0.1680103329999838,
+  "exit": 1,
+  "log_sha256": "f0b6577e504880ae0063e3bec8b8a8e63eefef35bfec1ed2dc55b851ccc4b796",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

@@ -1,0 +1,8 @@
+Collecting mcp==1.30.0 (from -r /work/tmp/wave-forged-j1l16vgb/requirements.txt (line 1))
+  Downloading mcp-1.30.0-py3-none-any.whl (234 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 234.6/234.6 kB 4.2 MB/s eta 0:00:00
+ERROR: THESE PACKAGES DO NOT MATCH THE HASHES FROM THE REQUIREMENTS FILE. If you have updated the package versions, please update the hashes. Otherwise, examine the package contents carefully; someone may have tampered with them.
+    mcp==1.30.0 from https://files.pythonhosted.org/packages/f5/f4/e58bc33317c92a0203664daaf00bf6f41166cc0149e5d6870a03f7cd004a/mcp-1.30.0-py3-none-any.whl (from -r /work/tmp/wave-forged-j1l16vgb/requirements.txt (line 1)):
+        Expected sha256 0000000000000000000000000000000000000000000000000000000000000000
+             Got        666edb5009503e1047c9d60346a756f94b261f05cc2625f23d41c728ffc484d0
+

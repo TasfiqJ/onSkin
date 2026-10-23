@@ -1,0 +1,90 @@
+[
+  {
+    "name": "original-contract-70",
+    "command": [
+      "wsl",
+      "-d",
+      "onskin-r6-verification",
+      "--cd",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+      "--",
+      "python3.12",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_contract.py",
+      "-v"
+    ],
+    "cwd": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+    "started": "2026-10-23T14:11:37.243753+00:00",
+    "finished": "2026-10-23T14:17:07.843116+00:00",
+    "raw_exit": 1,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "ee25d7b83f6b2dac3ff0b0b8105c73117a6363e03dc1506e595757f12129766a",
+    "summary": [
+      "Ran 70 tests in 328.797s",
+      "FAILED (failures=23, errors=2)"
+    ]
+  },
+  {
+    "name": "original-secret-12",
+    "command": [
+      "wsl",
+      "-d",
+      "onskin-r6-verification",
+      "--cd",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+      "--",
+      "python3.12",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_secret_scan.py",
+      "-v"
+    ],
+    "cwd": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+    "started": "2026-10-23T14:17:07.844625+00:00",
+    "finished": "2026-10-23T14:17:13.384577+00:00",
+    "raw_exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "b4a160479c2bc20db5703b5f0e95671d6cfa4eebc6623aec81730841a2363680",
+    "summary": [
+      "Ran 12 tests in 5.235s",
+      "OK"
+    ]
+  },
+  {
+    "name": "original-expiry-contracts",
+    "command": [
+      "wsl",
+      "-d",
+      "onskin-r6-verification",
+      "--cd",
+      "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+      "--",
+      "node",
+      "--test",
+      "scripts/phase9/security-advisory-exceptions.test.mjs"
+    ],
+    "cwd": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+    "started": "2026-10-23T14:17:13.385576+00:00",
+    "finished": "2026-10-23T14:17:13.566983+00:00",
+    "raw_exit": 0,
+    "stdout_sha256": "52b1672a167b470936a4c89692d0c18e0c5d062f51d4be7882b01a2009fdd309",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary": [
+      "tests 8",
+      "pass 8",
+      "fail 0",
+      "skipped 0"
+    ]
+  }
+]

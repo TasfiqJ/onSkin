@@ -1,0 +1,2217 @@
+{
+  "admission": "NONE",
+  "files": [
+    {
+      "bytes": 3576,
+      "git_blob": "c346ddb95814210e2388ccb7b4477be4a411361d",
+      "mode": "100644",
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "d03d61c8f19e65b1fdba438c22798f63dc3d22b9cba0ba193f62e5f5ce77e4a8"
+    },
+    {
+      "bytes": 1588,
+      "git_blob": "12c4b2b01e936af94904599774501b00dcdc017d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/BLOCKERS.md",
+      "sha256": "13e11dffcc519e8dea7492ff39b96033683d553f18bee5d6f8d607a3c06305fc"
+    },
+    {
+      "bytes": 4346,
+      "git_blob": "a7c93300c7c8f61a565d5d4e2dd8d87d5aa657b1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/INVENTORY_PROOF.md",
+      "sha256": "6dfd2f929e892262ad44fa36ca61a028b1d253d640c627b3f426e4d9f00ff827"
+    },
+    {
+      "bytes": 2002,
+      "git_blob": "7de3b732b3b395ebfbd56438d6c354ca8618bed0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/NEXT_EXACT_SOURCE_SCOPE.md",
+      "sha256": "f13a66a3bb63346458d57cf4ba924325dd9d21bfa19c3a0958d9d661a65a0691"
+    },
+    {
+      "bytes": 1965,
+      "git_blob": "8c1f8410e475ef2b48405d5ba195c63e83b344c5",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/OWASP_CUSTODY.md",
+      "sha256": "54bb31191c27ffdff57fbc4ba9e2a2971129c38ac4321033e094acc55b2050c2"
+    },
+    {
+      "bytes": 2058,
+      "git_blob": "a3d753345eba3899588843ac8c15939659d47991",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/README.md",
+      "sha256": "503f8a663efb96e44b7cb7f05ed450a8f524f1b390321a1fbab5997c68111041"
+    },
+    {
+      "bytes": 3076,
+      "git_blob": "f9d92a1e5efdbfd21e9c2347fdef00b685092c65",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/RESULTS.md",
+      "sha256": "cefe0d4b1682198369bc34061501a2b6d7be031000b0ab3a5d6f4da083c83373"
+    },
+    {
+      "bytes": 1617,
+      "git_blob": "05b5666b3bd2ca2dd0bf2a4a3a20b654d9a22b01",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/custody-cycle-proof.json",
+      "sha256": "4c9f5658b0419122450efc7c2b89f4b86cb8ff7eacaa34212d31732a93184336"
+    },
+    {
+      "bytes": 2921,
+      "git_blob": "ae76206f8424a780febe4f459d3250637fb402f9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/descriptor.json",
+      "sha256": "27e24faa35f0e1dc8a44a13f4c5d8270ca15232be9b3aa7421c748477a91ec14"
+    },
+    {
+      "bytes": 69672,
+      "git_blob": "d753a995c661104c50242b7b62d38765e7afe37a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0000.json",
+      "sha256": "276b3b74f0ad6ae09735db900677217851d6fbf497c5b1c7f3d8db2a46c94f54"
+    },
+    {
+      "bytes": 73174,
+      "git_blob": "6d59973830fdf3e53571f7c8f8f2ab6d193c398b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0001.json",
+      "sha256": "baff2c6686e3577e883da81fbd3903a1a0bd13eabeae94b2ce421f71bdb0e36a"
+    },
+    {
+      "bytes": 78075,
+      "git_blob": "0372aeb6e9a950f7d1a3b903ea8869f3c6b38498",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0002.json",
+      "sha256": "f68716d53cc02ebf9ca24e39ea8445eef8d532d22d187f992fac0bb1e0adf9c2"
+    },
+    {
+      "bytes": 89283,
+      "git_blob": "40b248718fc1a781a379cfa46748bfdefc9ca7ba",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0003.json",
+      "sha256": "57b28dbf99229fab127f6f6ac33bb57f5dd1541bd9463f3035315480a9737065"
+    },
+    {
+      "bytes": 90425,
+      "git_blob": "5428687f06369ce74f5be980084c63d5fbe21a29",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0004.json",
+      "sha256": "df3dc02afebb0a70e210c558e60d1c909381e56cb3d8c98bf4cfb1925e64a45d"
+    },
+    {
+      "bytes": 90689,
+      "git_blob": "5407ffaeb8137330ab55a57e6ec69ff3178364d7",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0005.json",
+      "sha256": "b86e7880db12af452f8f8ee27e95bb159d0f93f7f61722f2eb7e45bc7652659d"
+    },
+    {
+      "bytes": 93337,
+      "git_blob": "ea878c7438fadb80759f894715ff3d83ebef7807",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0006.json",
+      "sha256": "46a8036ccd1e1778766a7c741b5420b36d7e75b9c8e37cfdc2334fb5302e801b"
+    },
+    {
+      "bytes": 91967,
+      "git_blob": "c05f89a7a964a3676eab26faa975a5f32aa5be7c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0007.json",
+      "sha256": "626ffd6ebca63447b35eba82738bcdfcea97d80ef1b030309fb1fe247450844b"
+    },
+    {
+      "bytes": 90855,
+      "git_blob": "e7b6b21f9963301da7dc67be8f48b29647a7961d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0008.json",
+      "sha256": "49c015f7102ccf4b9db60287a59050676646062329ccff546b02e0b0e3d568d3"
+    },
+    {
+      "bytes": 89843,
+      "git_blob": "1a1c89154e10c68a268f8df1cfc361ab2cf7b6c4",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0009.json",
+      "sha256": "741d0e7964cb9d364053ac49a05948ae4363ef233ab65af537e41d6832c1ae7a"
+    },
+    {
+      "bytes": 91321,
+      "git_blob": "c1a5c7f5e71fd8f9632810f179c1b914502e60bd",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0010.json",
+      "sha256": "47f84d401472915d2239cd8abeedadee2a8337c93fbe8a1e291f5900ae02b255"
+    },
+    {
+      "bytes": 86358,
+      "git_blob": "b64db238b15ff5b09b954c34aaffb92436241818",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0011.json",
+      "sha256": "a86670cb9bdfb5783a95a80ed835b449855e7e5adb957126c55f0b9896503cd4"
+    },
+    {
+      "bytes": 87849,
+      "git_blob": "397c3ef9f3972fea3a5869f942ade8cc9ea9a907",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0012.json",
+      "sha256": "d2f24fe82e43dcf1050acdf6603405d87cf4e7f44abace3c1685510472472048"
+    },
+    {
+      "bytes": 89548,
+      "git_blob": "2b55b1fac934a1f0f9376588ac173241ed534f42",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0013.json",
+      "sha256": "15dadd4f7ddaba2a3f46c7005cbc5817d90a876e4452efaa2fc5703b4b7ea30e"
+    },
+    {
+      "bytes": 86665,
+      "git_blob": "f089f441f3ae67120683b4d25ffaaf467d703d5d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0014.json",
+      "sha256": "988e756821db7cad9869ec6a6d6c50b8dfbe3dbe0fb7faf77c8ebd40c0babaa4"
+    },
+    {
+      "bytes": 87171,
+      "git_blob": "637c676a0fab3d0d99e05fb49c387027f794ad33",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0015.json",
+      "sha256": "91ebbea32f608d76acc65378beb0e223b4f9033e7d9903406d07da5caeb51d66"
+    },
+    {
+      "bytes": 93605,
+      "git_blob": "a818331b997a66ddad4156840748218e66391847",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0016.json",
+      "sha256": "f8750b4ebfaea4d2ddd0fd3afd67170a82fabc61b9053492e573fe0987507a62"
+    },
+    {
+      "bytes": 91841,
+      "git_blob": "82855b3d73c8ea765384bd81e5467b0cd3499d5d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0017.json",
+      "sha256": "bc4fdade0167e43c97356b6593cc2087116b09352367bbf1e7c8ba8dbcb06987"
+    },
+    {
+      "bytes": 84700,
+      "git_blob": "c1b15d4bdba232f8f49c71a09c87c2df77839cc9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0018.json",
+      "sha256": "26da5927185ff47c051c2f2fd65cdac28b55c9b36d51b7d56e05fa381d4ba42a"
+    },
+    {
+      "bytes": 78236,
+      "git_blob": "23b18a0415388cdae947a616d918298642d0c533",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0019.json",
+      "sha256": "506f846fd616ef1b1651e74b420d99beb37ea2ce7b1abe2452ccc5aebe1f55b2"
+    },
+    {
+      "bytes": 73533,
+      "git_blob": "0c5007bb7e58dd0e1b4e88ca056f44eb31e2db0d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0020.json",
+      "sha256": "d754b53374205bc9c9c92736a0bef352f8c6d4a7a4d08ef4be34d54cd9f46bcc"
+    },
+    {
+      "bytes": 69494,
+      "git_blob": "7d4da3a4f6937e1d11cccddbafb5e2ae5bb5ee8a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0021.json",
+      "sha256": "2d5678e4c243e1c09b5c3b9438692b17700def75d7bc2a5311e7ce8f2b5e087b"
+    },
+    {
+      "bytes": 83233,
+      "git_blob": "78dbc8410147536e0186c8f142143d61dc30da1e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0022.json",
+      "sha256": "5e6079727737979fd67223c3de6193895aa477df8ebb936ffe70a4f3c27f8e5d"
+    },
+    {
+      "bytes": 95182,
+      "git_blob": "be6055834008ff93512bbb400d59f0f7631ec667",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0023.json",
+      "sha256": "9c1d9bf1924ac538653c7759ff0fd18d759d66261daabe0d86fad4a1fd07bc07"
+    },
+    {
+      "bytes": 95337,
+      "git_blob": "e1adeb598ff8e7ae191bcbe146e9dc983cfc08c1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0024.json",
+      "sha256": "5b6c0bed836b8c8b6fa29fd87b615b3f56917cdf70febc2aca086db01fbd1a5c"
+    },
+    {
+      "bytes": 93425,
+      "git_blob": "2a0beaf7335c9728d34a7968f3b46e3ba77d3bb2",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0025.json",
+      "sha256": "5f6b7c4b4df6367534abbcf4156c80f84054face609482689081a465edae39ac"
+    },
+    {
+      "bytes": 96004,
+      "git_blob": "4e454d4a51a7a967bf49ccea4415756e333a7263",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0026.json",
+      "sha256": "549bc4297d9ec2ec674ea364b826062581d8f9fb6a3c94fd23d2982b1bdb9d3f"
+    },
+    {
+      "bytes": 90047,
+      "git_blob": "7b5689e1df5da0a537274ad18399083c0a3459be",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0027.json",
+      "sha256": "d60590f32c1f04eff7fd7693cde04fb8147f0c5f54988ef32f33d3ea6ef4115f"
+    },
+    {
+      "bytes": 93973,
+      "git_blob": "d9dbcb192685a71874092ec841d5134c719e4fdc",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0028.json",
+      "sha256": "3bd71362ddfab4b26021428827cf3b9044fa4a8d0663a1ec1458bd83287d6ab6"
+    },
+    {
+      "bytes": 94945,
+      "git_blob": "8c39d035c61a8dca006b137e87a96cbeccb3ee9c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0029.json",
+      "sha256": "b4834143a7486a1df122410c8ac56be1cc7cb9d6ccdf2f8e89f807938f515268"
+    },
+    {
+      "bytes": 92954,
+      "git_blob": "c483aeb7c010f3d5c488b022be1a6af066799658",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0030.json",
+      "sha256": "87d290e8a2f66d373bd6725e3185dc76a543857ce261b0e8c9491db5504c5fe4"
+    },
+    {
+      "bytes": 96662,
+      "git_blob": "842c544f03e34d001653c5e914906e544bd54019",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0031.json",
+      "sha256": "a709c8cce61974c6e9a330723c2611adbfa36b7d84036258bb7a28112a2f24e3"
+    },
+    {
+      "bytes": 96400,
+      "git_blob": "d93ad70e7b48af1a7246d03e8649b35035616a1b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0032.json",
+      "sha256": "c301b5ee5dbca678ae54c3b115562d7a2448320371ec490badb93aa6738e79c8"
+    },
+    {
+      "bytes": 94556,
+      "git_blob": "5bda1a52a659ba738f888049bec090fc8d01ea94",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0033.json",
+      "sha256": "910eb935feb5c3fd7d5b65962062db3df693aaec9d7db9c105f3f2e0549bf8f4"
+    },
+    {
+      "bytes": 96895,
+      "git_blob": "7026e6d3995b374932bf102bceaa40c7689756b4",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0034.json",
+      "sha256": "509509597ee009b1ab9c2667baf174159667ff03d58d5824ab7252992e869fda"
+    },
+    {
+      "bytes": 98629,
+      "git_blob": "64e8e4ca6c4cac24580798a06f570c9a59951fde",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0035.json",
+      "sha256": "0c9d343bcbdd17fe7bcbf0a11554dc488a2ad8095dfe4f8499679cbf291546bf"
+    },
+    {
+      "bytes": 95420,
+      "git_blob": "1d0533f9994d6da0f63d8247ca3e73957a0a9f05",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0036.json",
+      "sha256": "1c1da44ba3313b29cfbfc957fb61a95a1c2bc34750718098677c6eeef0b1db99"
+    },
+    {
+      "bytes": 97904,
+      "git_blob": "80f48ea912cd813560b67e7df5c8f3e368cddd6f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0037.json",
+      "sha256": "5ee4fcefe34b3a4106b6cf1a39150f7e07782dd1ab3d7eca9498b441f5de50e9"
+    },
+    {
+      "bytes": 103190,
+      "git_blob": "2247412996d9b2af3cc26d4ecf7f7f557440a532",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0038.json",
+      "sha256": "0b51536a73c56c99441a133e209261122c08255170aa3541d926491eb4e474cb"
+    },
+    {
+      "bytes": 103331,
+      "git_blob": "f6a036ad1a77a887ae0d6de12ca44cb07f2ee9ba",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0039.json",
+      "sha256": "4dd24c08b86ab59084c435140c76abfe037c93c013e6b0df0781b0b73599e6b6"
+    },
+    {
+      "bytes": 63414,
+      "git_blob": "642abc4d3fb8675a0e01a84ab0ecf810ff50dc06",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0040.json",
+      "sha256": "75e013b4ec98560e3c3ac27184603bed47122968bc126c073b6f5e65ac9504b9"
+    },
+    {
+      "bytes": 60330,
+      "git_blob": "45d60e16d77ab61194d14293dab96a343fe20fa9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0000.json",
+      "sha256": "510d6efaec93078a2c50330f5f2399af62623596257c6e88d9cfaecefafe95b4"
+    },
+    {
+      "bytes": 63958,
+      "git_blob": "7cf35840f33569df28ecb6fcabbe4d325fe04abf",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0001.json",
+      "sha256": "399bcf941c45088d218d4e4bed11f9380b957b0c64a4fe100b3da44c86e7a27c"
+    },
+    {
+      "bytes": 68085,
+      "git_blob": "1b3c9b979d490e9200955f001e9b64e786cbb164",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0002.json",
+      "sha256": "8e980a2998385b63c82dc76a32bc4c779f5ac21c669edc689c679f0c5d28124e"
+    },
+    {
+      "bytes": 75765,
+      "git_blob": "d667d66aa5ddc03b6e2698659dea2aba7d572331",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0003.json",
+      "sha256": "1871bb46b74d65fccb108e8e16c62ff570081198712b7aa94b1f8fc48e23515a"
+    },
+    {
+      "bytes": 77339,
+      "git_blob": "251ef6c0759ca8670a80e869186ad5e7b68a73b1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0004.json",
+      "sha256": "6a494fc630f1cf3acf2c36b92ca9fa781cb4656d22034e498696e92868ffc06c"
+    },
+    {
+      "bytes": 77387,
+      "git_blob": "75a7f8273888ccf4c3a446272d70e9316f27c966",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0005.json",
+      "sha256": "6e08fde1f0145f2a3fb69f14fc20840591d30e5b0f44858f7dc49f04efd6e823"
+    },
+    {
+      "bytes": 80341,
+      "git_blob": "f8827c032fe24559f763f5300979368e6a95bb52",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0006.json",
+      "sha256": "9439c25595117023a0c746a217b2c19fe04bf609afbf0fd3df84380243c7227e"
+    },
+    {
+      "bytes": 78863,
+      "git_blob": "9daac0af1f5b40c6a59c7d9e1b75b8af91caafd3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0007.json",
+      "sha256": "ba90245047251592b9b144530ed34ce97b7fa3097c703aded5fdc99e31ca0bdc"
+    },
+    {
+      "bytes": 77607,
+      "git_blob": "ff4af80f7ebacbdbd78685566712b8dfec3ee2a2",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0008.json",
+      "sha256": "e9589001e30a93de6a07579da85ada1b88595b2188b6f6fbf4ca86c00516c0a9"
+    },
+    {
+      "bytes": 76937,
+      "git_blob": "18241d1e47bbb8e690b2ce5f6e64538e0c3a4915",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0009.json",
+      "sha256": "544de139048355b6eb869f72094a6f551173674beb0578a928768cc2fc7e626b"
+    },
+    {
+      "bytes": 78109,
+      "git_blob": "ba6be894f9aed2054ae4f3ac4c4de186c58edbf3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0010.json",
+      "sha256": "71f3f0c55f6a65651af0f541de776a9e4d48afc3eb35b94b61fe05192dbb0531"
+    },
+    {
+      "bytes": 74766,
+      "git_blob": "9df2d308d0d5b53ddc42d322c461728d9db9f715",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0011.json",
+      "sha256": "31d372209355c43d3af4551ed17ed7d6cacd1a8e263b6188aa5f421b2e68b60a"
+    },
+    {
+      "bytes": 75627,
+      "git_blob": "e0163ba0b8898b2c4cd4adf60b0e7670ea4e6f3e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0012.json",
+      "sha256": "0fb89c485fa663aebec28e51531ad3db3c8391c57642084f608698f4f414ee81"
+    },
+    {
+      "bytes": 76444,
+      "git_blob": "d79787a74562e7dba037873ed11f7d58e2c73324",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0013.json",
+      "sha256": "d9fc33de894327227b896a5048316d0a5905e7da261375d70abb5b6433f370d2"
+    },
+    {
+      "bytes": 80389,
+      "git_blob": "8851becb2d52b65fe3066cad5274cfe4f4500213",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0014.json",
+      "sha256": "0d1807dd65cef3b2293a968bdc19a1883a6011a1f0f063f1597a9faa2f9ed4ca"
+    },
+    {
+      "bytes": 77955,
+      "git_blob": "80fbaf07ebd6f09c6189b7679ae02f1b54dfa5aa",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0015.json",
+      "sha256": "23c3b73d7e727acff7251694651f2af9774a6e3dadd17c81b3e6b1326dcb8d91"
+    },
+    {
+      "bytes": 85241,
+      "git_blob": "fc9da6fb476ed9139f1644dbb2c788533652ebdc",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0016.json",
+      "sha256": "a8d930c546d4da6a28c778436fc4b04a571198aea371e6863e15a52e587529cc"
+    },
+    {
+      "bytes": 82625,
+      "git_blob": "849178ac32210eadc14722d91bf67ea11c901da0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0017.json",
+      "sha256": "05cc5d7903212c16ce10faed9bfa347c8fed049c99062f2ef4170460ccee0259"
+    },
+    {
+      "bytes": 76014,
+      "git_blob": "2367f21d6a9cd04ccb5cc3369b31b93cd8883ecc",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0018.json",
+      "sha256": "f767de53c8509065868da8606f0a18f38ab379f01b876cb827507c010a926d92"
+    },
+    {
+      "bytes": 69020,
+      "git_blob": "f33e3ccd22c7227d45f70214a87b7eb90e416ceb",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0019.json",
+      "sha256": "c5a762838d3130219ab3766bf288db2be3b2cda73e86427da10036c84321a4ef"
+    },
+    {
+      "bytes": 64317,
+      "git_blob": "361a69714d25bdff415c733de7d3e396ea13076c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0020.json",
+      "sha256": "843352c6191f8bf144c05238726cf5fd70ed7c4047fb0c6aa18f96b46808ded5"
+    },
+    {
+      "bytes": 60294,
+      "git_blob": "45d0d875bccf156b9498c4eb1bef232fcf7f3eca",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0021.json",
+      "sha256": "2705330ffc4bb99495e5b36e4f81c97e2e795d86e340fc61199bedba3846c832"
+    },
+    {
+      "bytes": 74912,
+      "git_blob": "898d2a66118501ec9f7ed0f8758ef803936bc61c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0022.json",
+      "sha256": "02303a220bc5ba168dfb1ff2cf55cc1429db2aa7a5336cefd3964d669ad37416"
+    },
+    {
+      "bytes": 87982,
+      "git_blob": "bceded808c6e493504f42a322b313c4690c1130f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0023.json",
+      "sha256": "1c3d9161d88eb1120aa61725a46ed6d604346f4152cf64a83d95d663e0651e10"
+    },
+    {
+      "bytes": 86845,
+      "git_blob": "0790a4f3c0c6ae3dcd697dd5bd318cebb985f27d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0024.json",
+      "sha256": "2a035ed3b2d23056ec26860112251bdb9d5dd728d1b51ab944f3b4bf504fa980"
+    },
+    {
+      "bytes": 85379,
+      "git_blob": "464335e2a30361a6f21d1d6f6d4edb2130e312a3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0025.json",
+      "sha256": "422948c8f0b16c1209ca9df09d22e1cbf50037c6a8683d8ccda0359db97f761e"
+    },
+    {
+      "bytes": 87926,
+      "git_blob": "8343015a0c094a0aa8026a4615c60a8dc5b91aca",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0026.json",
+      "sha256": "209f06e1c26e88d94257e5d3bae643513440d5cfd9f3d5b87610530d3111fc03"
+    },
+    {
+      "bytes": 83344,
+      "git_blob": "fa8d9ee174432dadd7a96fcfa2c6c68766c540fd",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0027.json",
+      "sha256": "a0799f2c911f011cb8521ab437aeb239e4afa1579b76de3b652e135ad39b02ab"
+    },
+    {
+      "bytes": 81805,
+      "git_blob": "546088b2c3584c3d12608a0e4b762fbc9f3d1696",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0028.json",
+      "sha256": "2f2ca7983d7415a5081e5815fb5e138aa44be4e9b1157a7dc2698b9a1b4dab06"
+    },
+    {
+      "bytes": 83854,
+      "git_blob": "a2ef97a82585ba8d552f7d4c765fff7deba90e38",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0029.json",
+      "sha256": "3fbea5390e4ec7b026c8578a1710afc0efa8b4410600984d32c1edd694aaf820"
+    },
+    {
+      "bytes": 79300,
+      "git_blob": "823b3a75d4f6d54425a43ade9a1ddc187a12a732",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0030.json",
+      "sha256": "c257b35281a74ee6ebcfbbcd4897fab4fd623685d57f81f9262b1fc8144744c5"
+    },
+    {
+      "bytes": 83014,
+      "git_blob": "8390d2658bba84ab8fd75a67b7a978a842e6a26b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0031.json",
+      "sha256": "7db24851f8fc1d93dd151bdb5f42ca339c7070b7d536dfbd2c21a45ad951b5c1"
+    },
+    {
+      "bytes": 82831,
+      "git_blob": "28de07bfac48c31089f92e870fcc683f0b6bd5b9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0032.json",
+      "sha256": "f2941b919fc9ac72ababbc190ece1cf06f19990d56253f2f8add548256c4b063"
+    },
+    {
+      "bytes": 80959,
+      "git_blob": "1c759ffe0a941e09680e973588b182510de4cfbd",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0033.json",
+      "sha256": "afdb23fc6edd216067a77df27a725107bb3a8022fbad6339502d721cf45cc35b"
+    },
+    {
+      "bytes": 83669,
+      "git_blob": "d0ac6ad6ed812210a7bd6323c885f8ff0b60047f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0034.json",
+      "sha256": "e24f60423269a1bd65ce8f5dab812ba8b05c719f0f57f70f8eeb5a0158125255"
+    },
+    {
+      "bytes": 85273,
+      "git_blob": "ad08e2a2e65d7fe1f367206741767d0e58ecfee5",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0035.json",
+      "sha256": "2b5ac105a4dd3d494708ab2683066c8cafab938461288292872beac5c133c7f4"
+    },
+    {
+      "bytes": 83980,
+      "git_blob": "4fb060bc73605fc8810884ab31c9b8818920dd4a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0036.json",
+      "sha256": "2dc4a81ac4738ac40592b3c53e8913ba31c7538cf85afaf64d6f5cd79a74151f"
+    },
+    {
+      "bytes": 87847,
+      "git_blob": "2574d0368302bbc702fb295febe811a7d1d5ec54",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0037.json",
+      "sha256": "72faf50ac110fc153955ebb5ca4f9b475f7586b874b86bf2963fd0c9d00d3dbd"
+    },
+    {
+      "bytes": 90837,
+      "git_blob": "d953ce14aae8f50584428f1bd737ff2be0826aa7",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0038.json",
+      "sha256": "9f10eea4095db28d26030ae88333f9e75202c9fc01bf119b2df551fee1509bc4"
+    },
+    {
+      "bytes": 91320,
+      "git_blob": "bb7cfd7f97e54f311c5e3ab091baa1e3528a2bfa",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0039.json",
+      "sha256": "cab7e134f2c499b60b46e4cd3d0feb2ab3599d9a04e50706d9d72a92b15c0283"
+    },
+    {
+      "bytes": 54386,
+      "git_blob": "7528de22c3a284b9d12395358b8fa6e75bd3a937",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0040.json",
+      "sha256": "e81bac9828bd4599c7224486abece4953a4202c44054f92db7f99398fe489ee9"
+    },
+    {
+      "bytes": 4276,
+      "git_blob": "51d664483db58add59882dcd5c3acf68de9063ab",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/completion-report.json",
+      "sha256": "51b5adea81b617982d43990002e2a880dfcf9b4914a0ed26101483238e8704f0"
+    },
+    {
+      "bytes": 568,
+      "git_blob": "946d12494a8c46b8b4fca95df25cb0a91762a9d6",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/intent.json",
+      "sha256": "482273a4721f9efefb7a711d0b5bfa8fe5ed0ca974966c4c9547b51b8717d903"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "7ed751adfa3bf67b60944954c8a049503667dfe1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/result.json",
+      "sha256": "3916cff1a2f6dfda6b14cd6dab7391dd77cc2c231df68f4071cedfb195a3f46f"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 371,
+      "git_blob": "582ceb49ec75ef274fdfce777f7915a194216825",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/stdout.txt",
+      "sha256": "52b5ecd029bb91d22c939857f207b9cf75833f1ba58715a8f15b5f7fa70062d7"
+    },
+    {
+      "bytes": 5843,
+      "git_blob": "66d93e1c2f79f8963a868dcf0b3b3909af2503c8",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/determinism.json",
+      "sha256": "02f6951659af7cdce413227039709823cb2ebaf666cdebac86d8a6ab680e6ae2"
+    },
+    {
+      "bytes": 571,
+      "git_blob": "62f253204d30dda96a3678c8f3127e050a1e4336",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/intent.json",
+      "sha256": "6088ec9f7e5f64466adec00a81f55442b5960e2a38ec697efbd128d8a64faa15"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "ed012c80748182a28efb255734709e9ec3a8f60d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/result.json",
+      "sha256": "34f661115ce6d5c6e4942ee53411c6dbdf10a4575a61df5064bb8abd74c9dbd7"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 235,
+      "git_blob": "fa7b1d76e5c8e001f08dcb3142a1f51df5293710",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/stdout.txt",
+      "sha256": "d4ca5c765db8ec05210b9b32dc68d70f487a97d9db63c1b76dbf2b794d8b81b2"
+    },
+    {
+      "bytes": 464,
+      "git_blob": "8a3c6b3c49b54e7cbc77f9aef61ee5931ccda6bd",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/candidate-reassembly-proof.json",
+      "sha256": "2146a71b240c89de2523a2f9aca0f4a6b42334337529bcee46de9c9bad2858fd"
+    },
+    {
+      "bytes": 376,
+      "git_blob": "4e81f5e200c6cee7ebf18b29cbc0ced67288a627",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/intent.json",
+      "sha256": "9f9cae555d52a2b36fdce6301c74d39beaf041950e271018bde75c6c173cc409"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "481e201789883bed80280f3f7b9964a6c6f89c44",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/result.json",
+      "sha256": "dae4967aeaa0cbd0dae60a3079bf2ffe6921e0ffbbba0b90dc40a4fdffbe0b36"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1772,
+      "git_blob": "0afaaab77ce386e9957ef5fcab049f04c9e73f3b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/stdout.txt",
+      "sha256": "102c4b3bf71411f05b3d0b4dc2f8c25b22f0340c3666ccc9ec5d06967c356947"
+    },
+    {
+      "bytes": 480,
+      "git_blob": "537577af8065598c8e7db2a15756b4808573ef5a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/intent.json",
+      "sha256": "5400d023555869acd06f5cf2abe263f85bc8b3a9744e8146df512c019789311b"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "686345e52255bc1843131adbe941961e713a6563",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/result.json",
+      "sha256": "6c6e52533f0b1fc0b57159c0dd6018487c25c45e69f769d5055f8f887396672f"
+    },
+    {
+      "bytes": 1055,
+      "git_blob": "b6077a394c64d9a5294aae5d51eff86f7d03c174",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/stderr.txt",
+      "sha256": "81aee33a715d2353cd1ebd876f5942bfdd78f41f73262ac076ccacca3630a147"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 527,
+      "git_blob": "67cfd436d21bfdbb4247dfa6b23935c0e7d4ff27",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/intent.json",
+      "sha256": "126b5079b0383a86683debdc77383e81c44272b8a21dd06d94b2714dab7c9048"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "477e53473b8308fc76b583bf2bbcd3d400d3ea04",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/result.json",
+      "sha256": "d35d0925cd46687d3e2724962576cb5dd6199da6feb6031d327144acd811fabb"
+    },
+    {
+      "bytes": 2452,
+      "git_blob": "8b5ab55439e921488f84e584e2990190f7ef4731",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/stderr.txt",
+      "sha256": "bb330d59cb80ecbc968b18c41dff85761e133c613156772a547f129f6ab49969"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 468,
+      "git_blob": "f72bbd080c855e1f445feb9b183f63846f4e2ab6",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/intent.json",
+      "sha256": "b3fd48c08936709698a2d315e7906a8f7111f581240a54b000a48e860f887108"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "709c0297b0e78117122edba6b5e772e21b16903a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/result.json",
+      "sha256": "a14c84e49b9e583032320cab86f02077961f4506b7c9e1a264ed180395452bc8"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 111,
+      "git_blob": "0f49babf765182b17c90901cb08ac5086ff576ff",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/stdout.txt",
+      "sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d"
+    },
+    {
+      "bytes": 376,
+      "git_blob": "b1b8e61e02d480a1325503c9a780ba9a77d84c8e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/intent.json",
+      "sha256": "867347787a7bf3e0fb3c767068e52f72bde5dd1c4d126d0f0e8633bbf4dfa077"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "d1002326c87d84e82747d8b6cba7406f95fb2c95",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/result.json",
+      "sha256": "baea3de187cfd12a075301a615044b4b4ef7df9f0a87c6104ff8a7f8e753eb22"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 68,
+      "git_blob": "73aa86a5ad3944a643a3bbe0f81fa767533f2142",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/stdout.txt",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+    },
+    {
+      "bytes": 2499,
+      "git_blob": "664a84c969d6fd1a443ba9667aafebfaae6e9df2",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/receipt.json",
+      "sha256": "eca8155299ddaeaf211231f4559a527c8673cfb01e8d970cc8751c1a8ab4afab"
+    },
+    {
+      "bytes": 511,
+      "git_blob": "9c20f9b74e834f64ec2ce86b94caa576a9cb66c3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/intent.json",
+      "sha256": "31dbd6072adecfc020aa0f84c9f9e4d6225b46698ba8519a358720d9d92e3479"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "c8187b7708047c04a1f72a25976ba49bb6cc2ac3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/result.json",
+      "sha256": "c9e7bf1f35229b36628c460370e572ee00503a0d54d711e47b89b808c0397cce"
+    },
+    {
+      "bytes": 18080,
+      "git_blob": "3b82e7d00495b3a66c66752ed540f3f6d9d4d995",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/stderr.txt",
+      "sha256": "7b84a5f5ce3e02d5d1eff40b5511af328a699b43bbe72a9e61baf7a38c7858bb"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 508,
+      "git_blob": "565c88727f6b0f6c072ecdb5efd745d7cd981805",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/intent.json",
+      "sha256": "ab2cf1e8e14f02581b39bbc0b591c3d69f216e4b4d335fc615891e0bac028bf5"
+    },
+    {
+      "bytes": 292,
+      "git_blob": "92487d8172002708946825d19e0f8443bd06b9fb",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/result.json",
+      "sha256": "94f2c616f50eef7a24db740e3c5140e4eafdbe9a0e245c5c168c5bbe49e4baea"
+    },
+    {
+      "bytes": 1815,
+      "git_blob": "5eba68a89d25ef0903e76cdc2fdb490ff5decd68",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/stderr.txt",
+      "sha256": "5183cdbcf6b36837c4fd535b5dcd0d4baab8b327861c7c83a1e4b4c4eadfae80"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 376,
+      "git_blob": "fabe2cb5f29f90ccc7811760200929d103aa736f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/intent.json",
+      "sha256": "a897e14d77e3c8b8b087f0caef1e33b211d69ec0f20c9b6ca91e30b0dd0cdd6e"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "d90180dea528d376212ec3f73ae2d7996bfafb10",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/result.json",
+      "sha256": "6a6084338374ef2c21fdb80fc366af1126f7127bb099ad1547bcda983426802e"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1771,
+      "git_blob": "0aadcc54eacefab74e487fba5f1d23a7f98674b3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/stdout.txt",
+      "sha256": "83306c2e00038868bd959fb2226c5fb9e5c0751a4a55960275c82d0119689617"
+    },
+    {
+      "bytes": 407,
+      "git_blob": "f30b21df9bba4fa554f2a0e951b69534d3a6b956",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/intent.json",
+      "sha256": "9bb0cd136734937508d20107d4a5534636d1c0f76dc92f28f834c34c6cc251f2"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "d9486130a9009284115f25cb223ac47c4b2df428",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/result.json",
+      "sha256": "83d995eff8d0b1a74fa794ca06ca8b85b2ac61313eb1764bcc7ae0d3c80f5c81"
+    },
+    {
+      "bytes": 5499,
+      "git_blob": "247c6ea8c750a3e96c21d5c3e1b25cffdf764308",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/stderr.txt",
+      "sha256": "baac2d67591e1a9fbc43e28ab1839cdac17b1a61082512d50641eac7be989b77"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 454,
+      "git_blob": "8578cdfa4b200de3985f6398d5d516e13b664156",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/intent.json",
+      "sha256": "0640e445988782a7dda1c0c8cfaedf9d25f0e39a017aab6b553c193f08cd365f"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "98c430e689a9e36754557770e9134ec45f3bdbcf",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/result.json",
+      "sha256": "bf4a4e2488f035e15eff530761fbe580ab5efd050148976d570dd2a79d105117"
+    },
+    {
+      "bytes": 1635,
+      "git_blob": "29632edd4bd8bf46c5b47c322afac811ba8d81ca",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/stderr.txt",
+      "sha256": "a970bec944895e3d0f7905168504b09b50834f87051be46596818269f85ada4b"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 395,
+      "git_blob": "9fc1e176ffbcd55a62c6b21ba5ac1c3e2a3e538e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/intent.json",
+      "sha256": "ee560949d07d06f4d60d540d96026ec4035fa86629b0e5b9f1ab965035898e2b"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "6bfecfdc0baf5f367ac5ec7f4622be9f9e5ed69b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/result.json",
+      "sha256": "f6190b3989ef60161f02130fdd373ccb526671019261b777a846f12774d006e4"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 111,
+      "git_blob": "0f49babf765182b17c90901cb08ac5086ff576ff",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/stdout.txt",
+      "sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d"
+    },
+    {
+      "bytes": 376,
+      "git_blob": "a672f464d6e2d4e12aef3c37db4c055689e307fe",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/intent.json",
+      "sha256": "0c94741d3b69867e39fbd0360e53cf7563c1620b03eab85809dcc32dd8a565fd"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "d1389c92631e696329ca466e4e1f1fd3b2703d8d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/result.json",
+      "sha256": "7cd0eb7b63029f997035e02ed4ba8517c3bbd0d351d3c27100820e8f7929201c"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 68,
+      "git_blob": "73aa86a5ad3944a643a3bbe0f81fa767533f2142",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/stdout.txt",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+    },
+    {
+      "bytes": 2505,
+      "git_blob": "8fe3a6d40a9337283ed814c168dab17eb30633d8",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/receipt.json",
+      "sha256": "ac35937d997795c6fa3010f1163bae9e6f26bbba3b71c59c31eb6449b4798f3d"
+    },
+    {
+      "bytes": 438,
+      "git_blob": "3ca1cb11a3ec8d336a260da0533496bec3cb9ad8",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/intent.json",
+      "sha256": "029516ac5f50ea421f241f81dc12e403a1900047eb02185267cd858fca97df9e"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "7ad04b85f7e9fc1873ae6fb45d459a90a14d9ab5",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/result.json",
+      "sha256": "afaf6bce7ec9388ca9025e09e901d431e53c9b026df83f5b22fc264e2c310c1f"
+    },
+    {
+      "bytes": 13594,
+      "git_blob": "5054bba8b27cd63860cfe772a4df5a0a12221001",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/stderr.txt",
+      "sha256": "3180473d8094fdb4f4aa38ddda5d7c7ddc59d9516675ce75a73eb9843f112156"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 435,
+      "git_blob": "e3608dac6d7adaadcc4ab2dc4066462ec140774c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/intent.json",
+      "sha256": "854955db76184bf933b663673c0c1ec26c94d28cbb73da7900957d4774033b3a"
+    },
+    {
+      "bytes": 284,
+      "git_blob": "850eefd13d1dcdb2e5f15c8e240777b6bb89f045",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/result.json",
+      "sha256": "6352e676cc48aa36266fa940befa9907678a26af70e0dead50b99c6d6549dc54"
+    },
+    {
+      "bytes": 1721,
+      "git_blob": "016066ebb8ea793b052ded97b9f458e689abc50a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/stderr.txt",
+      "sha256": "d62d8833e6e09b94474b81011f9641b1f995c823b40ca121c2ed2f3897231dd0"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 527,
+      "git_blob": "50655f60757e6d2f32764a3c436244489d5b366b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/clean-clones.json",
+      "sha256": "3bc9ab23ed436a9c169f4d01614afa8eab8a940ceeeaf3fec558d1a17470207f"
+    },
+    {
+      "bytes": 50001,
+      "git_blob": "c36e2e9f43e080998f9ed879b0ce579c206d0829",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/delivery-scope-audit.json",
+      "sha256": "5789b0f88cd062c153e2b1fd47a1a845e1acf3be53bfe72a94b2db02529ec62d"
+    },
+    {
+      "bytes": 1940,
+      "git_blob": "0c5451d9a67759fec4f35ddb8500609dfb6fe279",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/environment-limitations.json",
+      "sha256": "95227ff164ac27c80d0c549b292cb4b424c225afef9bd3696677965205bebf0d"
+    },
+    {
+      "bytes": 5934,
+      "git_blob": "e0c9453817d1581976f1822341c3af2d5fe14a45",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-determinism.json",
+      "sha256": "d0f32b04c7158117838e944ac34e06cc1115a86b61788e300b3ece34a204eeda"
+    },
+    {
+      "bytes": 595,
+      "git_blob": "636052dc655bc9d0d97fda9ee5332b1a84b454bc",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/intent.json",
+      "sha256": "c5798adff9cbfc0d4f8f1b973149d38b21a110b342d29fe61001339363eacee3"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "572904ea0065a773e2ec81eb3c98222b0de7296d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/result.json",
+      "sha256": "b7594c5bfcb4e88e1b0aeed7dc020fabb891be1794f82bc8545ccdd7e0a1b6be"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 139,
+      "git_blob": "a7814fac1165b619f84eb3ec588bebc642d2bf39",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/stdout.txt",
+      "sha256": "edb6be3e551eb762c150219b996ab178063275c277bfd44532b836a6ac328448"
+    },
+    {
+      "bytes": 376,
+      "git_blob": "dc4087540a3e83d3e3f9f822316091ddd6de572c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/intent.json",
+      "sha256": "55a332e0ea9c040a6d2fc7c733d6f8c8e206aef6aa007c1136ff4cc2289f282e"
+    },
+    {
+      "bytes": 284,
+      "git_blob": "5959e0c880b21aa08104febcebd0414bee513161",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/result.json",
+      "sha256": "1b27c8c8190f6769d1fbbd7702968dacba0aa24a88647e4973a68c921d548cc3"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1771,
+      "git_blob": "e43907a1e45071a442c06a0144d84fc842b966f9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/stdout.txt",
+      "sha256": "1e5b4340babd321ef1fb86c1faa7d7b307493d780509b40cd1f3d8755bd17d01"
+    },
+    {
+      "bytes": 699,
+      "git_blob": "a82db9ceacb9223bf27564fccb28747c61246961",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/intent.json",
+      "sha256": "736f48f62359b1f91fbd719b4d7b9b5eba749cad5fae8b639dae16df9252c69e"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "3e8afe2ce9311d16ba7f763a4a5ccc340276db53",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/result.json",
+      "sha256": "5e19b6f482a1fb18b1cda3a75ea915f815e102adf0500bd5a22aab05b7434002"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 371,
+      "git_blob": "466669f00c8ca80dcb21b36e618a73a250f2c305",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/stdout.txt",
+      "sha256": "2086cec46d5a867cbe84c5a6da0df8946b798973cc8dd6a955ea031f9eb407e8"
+    },
+    {
+      "bytes": 527,
+      "git_blob": "8c09590f44103926aa1b6d63587fb97cfdce93d1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/intent.json",
+      "sha256": "077325fbd7d4f9e80c14d219df6156b3ce1bfb03f19383f91dce945f3efa0fc6"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "9f61afe40351d25387ae26b0ef1ee80a3f9d7d0d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/result.json",
+      "sha256": "b718f1fbb0ae07d5472d721d4d127bcf6180ad43b090babef54846131c799367"
+    },
+    {
+      "bytes": 2602,
+      "git_blob": "c133314ee726001e97bc4f56c155971dc5ed2c3e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/stderr.txt",
+      "sha256": "4d91ec98f72466d6dc979136daeb837d6b55607c3a57de317551cce283b52eac"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 468,
+      "git_blob": "82f4184d9a1e654a19a499313bc56568e5a6e869",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/intent.json",
+      "sha256": "29891fca882d9872a7864cc0ef2c1c80dea5295f41ed41e3d53be9026d440e84"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "1bbf8533e0e89a647ee9b9bc99fca9c77d165928",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/result.json",
+      "sha256": "e5b1d4581e56c790e1798c2675d8e9932992efbf658daebbba5ff9e06b016462"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 111,
+      "git_blob": "0f49babf765182b17c90901cb08ac5086ff576ff",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/stdout.txt",
+      "sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d"
+    },
+    {
+      "bytes": 376,
+      "git_blob": "904955b3eafa8173317e42a3a59681f332f01da6",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/intent.json",
+      "sha256": "047ed737c5098b29ab65119a49bc9ce38cc1b33c11dd83125eb7af68e41e9c74"
+    },
+    {
+      "bytes": 285,
+      "git_blob": "ef0911716df6e3bf032f6c9e3e29230b5e64a8ce",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/result.json",
+      "sha256": "6a01a8f1868f93c033396f4b618b11e87ec924cafbae2fbf05e87fbbbf3df33b"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 68,
+      "git_blob": "73aa86a5ad3944a643a3bbe0f81fa767533f2142",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/stdout.txt",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+    },
+    {
+      "bytes": 699,
+      "git_blob": "581eed5cc1b5095b4fa8828c1f9b70e35647d30c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/intent.json",
+      "sha256": "98a3c689b823d513e17dde98cccb27555a401e6580c1928d7f118511ce5116ae"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "c5babe0fe49feb4e165ff58a55f532ff30dc165e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/result.json",
+      "sha256": "ce1d1a06db508ad7f700011c32672f330e13e95a635fa8370a482c1f0ff9409b"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 371,
+      "git_blob": "466669f00c8ca80dcb21b36e618a73a250f2c305",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/stdout.txt",
+      "sha256": "2086cec46d5a867cbe84c5a6da0df8946b798973cc8dd6a955ea031f9eb407e8"
+    },
+    {
+      "bytes": 458900,
+      "git_blob": "efb7bc942b4c0d538d3dd0f71869090de7050028",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/historical-obligations.json",
+      "sha256": "a3c5f3ea22f7b3c7f5338364ffc9808a727ee60b270e3bb3637dec34b30101ef"
+    },
+    {
+      "bytes": 422378,
+      "git_blob": "148d6ad40d705a97bfe5d35961d0b78a2c826c6e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0000.json",
+      "sha256": "fb7bbfcbc7776b55dbffca082bce758394b795c27cef17dd37a76e13267a4a8e"
+    },
+    {
+      "bytes": 436786,
+      "git_blob": "1c7d31b45db34878108bc368d42532dfb921d658",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0001.json",
+      "sha256": "186d0600808852770801afe9b1c3427d627160f7b79ba80cf5519576aa291be9"
+    },
+    {
+      "bytes": 309939,
+      "git_blob": "3c411d0a6ca521ca42075315b20badbfc02d18a8",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0002.json",
+      "sha256": "08cd8c6ff253819f6a9c3f2d46ff62265e34fcf10e0dd721cea81949aad2d43e"
+    },
+    {
+      "bytes": 268250,
+      "git_blob": "876f83c976171ea0745e7cecdd0b42c1f79bb5ea",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0003.json",
+      "sha256": "eeac33217a2801c6b521d40649bb8fa8be80e7cbd99ef5a8b60264d36e6f926a"
+    },
+    {
+      "bytes": 270948,
+      "git_blob": "60cf8e51481cf7b8aea6a37a78710f41c6846b08",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0004.json",
+      "sha256": "de2d16c5f10da331827b92cf7005a3a6050a5ecc9d0039f022835594a63af26c"
+    },
+    {
+      "bytes": 271268,
+      "git_blob": "eb7b8dde92e3c6f47faddc865a955e9210275128",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0005.json",
+      "sha256": "6754a3cdf7b39458b04d707d8a9d00c14b9ee78aaaeda11d1abf2f50212b80dc"
+    },
+    {
+      "bytes": 276781,
+      "git_blob": "8bd0958e06ef9ba5f7e0724ea989bbf2cb4bc90c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0006.json",
+      "sha256": "70d45eac99aa48fa445cc38793b74a7d1345b4f9c90dde34c612f0c027100c7f"
+    },
+    {
+      "bytes": 273972,
+      "git_blob": "41ebc51db9faa42d616ffe56b03e1847b2ecd8ec",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0007.json",
+      "sha256": "25b96029e5a82ac3b0fde94065ca52520e32552eff4df52f5e7edf5c39e73c1a"
+    },
+    {
+      "bytes": 271631,
+      "git_blob": "77660cf98e067947b96eed165ac804fda09252a5",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0008.json",
+      "sha256": "1d7559391fd09f4ea5543d54f2fe234263a4a2618d1782c1672e2336ffe9ba31"
+    },
+    {
+      "bytes": 269939,
+      "git_blob": "869b7506b84f9a744cd75cef42ad42c7d8afa62e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0009.json",
+      "sha256": "5d90caff721cab052de3e3be9231bcf813e680df1fd72a0f5cd6d4ab8170f973"
+    },
+    {
+      "bytes": 272550,
+      "git_blob": "1411923e8514aa7a7f335048be80d7ca9f1c0f46",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0010.json",
+      "sha256": "19cdac67b7d2af810e9b5ac395913dcbf0ec0cbf7b965f069737508fbf234602"
+    },
+    {
+      "bytes": 264211,
+      "git_blob": "0bc04a18345610903eb5fcf784ad18aa60428ef4",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0011.json",
+      "sha256": "be49ae971525f81329e1637c2984518a962598c1f76b5e8cef2cb0e447279fdb"
+    },
+    {
+      "bytes": 266622,
+      "git_blob": "8c822e401efccb130292690f6c3d1350b7fb3151",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0012.json",
+      "sha256": "c44e0a0e07913a4181431c74e6508e2c5ffab16eefcaeabbeb85a4c3d5dd023f"
+    },
+    {
+      "bytes": 269172,
+      "git_blob": "280ec84e2596c772be6a1936d30a0815ce6d749f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0013.json",
+      "sha256": "c61998097acedaed3233da7c29744fd78b10512f59e5a530ecc137931738acff"
+    },
+    {
+      "bytes": 269961,
+      "git_blob": "970797a6a774a6fc82e58dd8802ec33c77919c8c",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0014.json",
+      "sha256": "7cb4e8b93058cc68fcd0bf55d75c869fb5c8c3d479a46c4d3f56489551c5e94e"
+    },
+    {
+      "bytes": 267875,
+      "git_blob": "86a90d366264e2547138c3c513df06ef90a9618e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0015.json",
+      "sha256": "cef1cf41f25d7f7fb59e06fc6c3157be32a4bcad0588cda9b96f25b0a46941e8"
+    },
+    {
+      "bytes": 281334,
+      "git_blob": "33d16c217e4933a417b53185f2c548e65857bcfd",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0016.json",
+      "sha256": "eef2ab0723031d17bd44a16323b2734c847a39b6038b39bdfebf900443baf1c2"
+    },
+    {
+      "bytes": 277356,
+      "git_blob": "3491ca4f44706663eb9f9eb009cfc173891ed611",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0017.json",
+      "sha256": "0f60a2ffa48755ca4431585d47568688810712231b1f4ba140cc00989a1e9484"
+    },
+    {
+      "bytes": 262716,
+      "git_blob": "32e725af7102b3275825f7a0283da0e00e2f4db7",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0018.json",
+      "sha256": "852377a5bc52dd182361fd4f52a463195f73f8fd2ea6a8f60b30c4d9e80739c7"
+    },
+    {
+      "bytes": 364456,
+      "git_blob": "4ebab96417fc683ad47169ab80f7cefd63db732d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0019.json",
+      "sha256": "6373204daa4d50b05a3ebc7643edfc495e1c4f2b214c7ddcc2b30c06dde2210a"
+    },
+    {
+      "bytes": 416123,
+      "git_blob": "bdfd833895314b35365ac4cc22f039430f7f1e0a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0020.json",
+      "sha256": "683d00f89fca17126024e2c84e574e8e3c75b60a1b22af4fffd67b00637877f7"
+    },
+    {
+      "bytes": 409532,
+      "git_blob": "86eb0690f3d8e8a6ac678bfc9ded96a6c157bf8b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0021.json",
+      "sha256": "39153be4af30d7653df99c8c57d0468f1f98958fb2f08222208792760dadfc09"
+    },
+    {
+      "bytes": 482995,
+      "git_blob": "2ff6d4a19dc88518118d94dae3ab458fe81432ca",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0022.json",
+      "sha256": "0f4f7f9b6c6589f7c57923c6cc5bf3bb5df6a78ce53506a21e84cf2439f76c15"
+    },
+    {
+      "bytes": 532443,
+      "git_blob": "faaaf2df7b3902fabcd9197b729518b9b67ea050",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0023.json",
+      "sha256": "52322448012d5849555ae4aa412a0e3658aca0ea426a2cad670795c5d63a91a2"
+    },
+    {
+      "bytes": 529269,
+      "git_blob": "6bb34b0a1461817eb3d2567b87e95c729f502ca1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0024.json",
+      "sha256": "42be2d2a402c43152d44fcffff9f0162d50c8c6eb8c7cd559d70377a08683523"
+    },
+    {
+      "bytes": 523968,
+      "git_blob": "359b35f35227c2763aaa19412176edc41bbe03c5",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0025.json",
+      "sha256": "dc581167d35f84d4e9d15ca26fd35e3720c4f873d5223601133b30b8f8cdbba3"
+    },
+    {
+      "bytes": 533160,
+      "git_blob": "74fd732c3799f07a13ec2c322c812c11bf7ca256",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0026.json",
+      "sha256": "abafd55ba519706a716e7c0675062d9e572e1c93bd05f5c24e665b4993feacea"
+    },
+    {
+      "bytes": 511934,
+      "git_blob": "ad14e17764b6c8abd9efe29039fd1a24c96b8d31",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0027.json",
+      "sha256": "11f819058454c5843bfecbbe151022a410f3e4ac6ef6c9a6258819b73941c021"
+    },
+    {
+      "bytes": 516347,
+      "git_blob": "2a26644df33c11587660ab3e05d2fbcd4122d6aa",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0028.json",
+      "sha256": "796388d529656ada7a4246c81670eda5deb86098670b8d677ed45d201d5ab29b"
+    },
+    {
+      "bytes": 522580,
+      "git_blob": "393f407375f605c5eea24b79f9691d2d231ca0b7",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0029.json",
+      "sha256": "a87dd659d9428c3104b434bb64326ffff25bd1519be7c296bb2f6032f238bc72"
+    },
+    {
+      "bytes": 509946,
+      "git_blob": "2b9a82612929e5ef0672d11f3fafcc65bb1508c9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0030.json",
+      "sha256": "fc8713821f933cee1f6abaa9223eaabc08d60c68f8c2b1b29e44798a69661996"
+    },
+    {
+      "bytes": 525850,
+      "git_blob": "ee64e8cceab98f3b2d7f93616f4e088387a43862",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0031.json",
+      "sha256": "dec9edaca776637f4e97edd50a3791968bdb522af4f652a727d0706ec4b942e5"
+    },
+    {
+      "bytes": 522944,
+      "git_blob": "f6e1ff195ddb46166f113b57114e182d58148984",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0032.json",
+      "sha256": "98fac2822e0e2f2ee3e860e92033e20ae512c440fd997e43ad778c88dc59b617"
+    },
+    {
+      "bytes": 516548,
+      "git_blob": "5c31c61c6522b03dc91cb882dc2668494d4287d0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0033.json",
+      "sha256": "8bd8d650f243db4de890c4d8c568a34baee62fe25e40e4ce4699fb8a0936ae28"
+    },
+    {
+      "bytes": 527216,
+      "git_blob": "80d0fba61a16941325f7eaf5c43449414c938062",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0034.json",
+      "sha256": "a8d148408927431e3be559850b9ecad745477ee20967780028072ae9058c9d8f"
+    },
+    {
+      "bytes": 532564,
+      "git_blob": "d7147b208a0bf9cbe94a862e0086afac099464a4",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0035.json",
+      "sha256": "c6dbbe85a32bc12252f6dd9c018c15b24cc2550096acf25f3630cf05f834e41f"
+    },
+    {
+      "bytes": 523797,
+      "git_blob": "7adec60b9508858780f087dba64fe68c6bcdd6cf",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0036.json",
+      "sha256": "555deb4d47446769d4da34e3455433063575b347697c499bca4b0c54dc7c9479"
+    },
+    {
+      "bytes": 537516,
+      "git_blob": "3bb480efc2e67b442a3d35b1feb821af735038c4",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0037.json",
+      "sha256": "ef0a13ab96206c6d47090c2904e8912b8359834735adee0d0743f3af4f4c04c9"
+    },
+    {
+      "bytes": 554406,
+      "git_blob": "e63fa8ab6a97b9f3eb7c7cb3a636079734121563",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0038.json",
+      "sha256": "177df953a4acba81b7062cd15c85bd244b80172aa7ec49058bb0674be9e7a9e6"
+    },
+    {
+      "bytes": 553896,
+      "git_blob": "03f9d01e96f943ed0ee0c3d1b478e885e80fceaf",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0039.json",
+      "sha256": "eca45a6bd0659b2158e9cbcf56b1a831385677245ee75672a74007783e23c2a2"
+    },
+    {
+      "bytes": 331688,
+      "git_blob": "18b10c1d9f8c438a850b84b5133a8fbbadb2b338",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0040.json",
+      "sha256": "1a8925a15b4390090287a0c8a63314db7202615ea3e8b0898e8f0b8228ec19a4"
+    },
+    {
+      "bytes": 38482,
+      "git_blob": "a4f43589643553e0acd675865f92f747e54e5afd",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/refusals.json",
+      "sha256": "0a89a5f2e1f67bc3e177bfda7e259fd39a08a1c6edb05367fd94df45940b499c"
+    },
+    {
+      "bytes": 23078,
+      "git_blob": "42b26bd284b5983abb25b458f66f34d8b14ca50a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/sql-targets.json",
+      "sha256": "77fd0ed32f657dbe016c534b0022dd9972d06fa31a32ffd9cca939cc8f59dbb2"
+    },
+    {
+      "bytes": 7146,
+      "git_blob": "8bdab0997e2f2413bb348f91fbeee8b80b6e2506",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/summary.json",
+      "sha256": "3e3ebdc60892d012102456febe6fb434198ff556722d7dbb1ad17ba3add62263"
+    },
+    {
+      "bytes": 458900,
+      "git_blob": "efb7bc942b4c0d538d3dd0f71869090de7050028",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/historical-obligations.json",
+      "sha256": "a3c5f3ea22f7b3c7f5338364ffc9808a727ee60b270e3bb3637dec34b30101ef"
+    },
+    {
+      "bytes": 437426,
+      "git_blob": "2535a9db4c38a33b5613e5afa28064b9c3bdf300",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0000.json",
+      "sha256": "dba4968a97ea0c7fd58583159a84636b94297edc9d5cbab6d113599e50fb6415"
+    },
+    {
+      "bytes": 452146,
+      "git_blob": "4f428fe347bf64f3e5fd290cdc8a623a7eeb5c7e",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0001.json",
+      "sha256": "e679e2d631c97f53ff7c80c28b4fa96adf5afff3791bef14370b6b4e39cc1d51"
+    },
+    {
+      "bytes": 327182,
+      "git_blob": "058ab6a81403bf16f8757a009fd6c92e946f2a62",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0002.json",
+      "sha256": "c8d543db951159eda93777b1cedbc3c01a861b8be4050366dd29d614c87ff3f9"
+    },
+    {
+      "bytes": 286682,
+      "git_blob": "35bdf83568dfab5877e386fdf7155bc23b232fff",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0003.json",
+      "sha256": "b1e64707468db0e8fc7b1140993ae10a23d4b11db03dd4152460b7074f4a0436"
+    },
+    {
+      "bytes": 289380,
+      "git_blob": "4bd2151a4ba7b793edb13e2734da232a47aedd03",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0004.json",
+      "sha256": "8f54dde8b23e81428bd0ac6bdbd77db9df961823310beeb6b888618bc71b1d33"
+    },
+    {
+      "bytes": 289700,
+      "git_blob": "dd50c16e3d6f8c36a531497817adf15f5153ed39",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0005.json",
+      "sha256": "6db29866c969a6864cf4e32f1568061dd259089407a014dc70dc860275cc94d3"
+    },
+    {
+      "bytes": 295213,
+      "git_blob": "0afcfd9a76e5fc5ad6e66868ac4f83aa52cf7557",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0006.json",
+      "sha256": "f6d6e1264858b5ad8adfc68f9e80be7b43b72602d5f20f69a06fe25727a7bce5"
+    },
+    {
+      "bytes": 292404,
+      "git_blob": "39fc794cb57bf4a8f5db84946912bb8f2e3c5baf",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0007.json",
+      "sha256": "567e16950ebcbd5301106cf6390676e382855548f041ba1a36adf6c351577655"
+    },
+    {
+      "bytes": 290063,
+      "git_blob": "57da2a5f64c3f704aa7bd78e074320529abf19eb",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0008.json",
+      "sha256": "c95528463fec4926a11045b0de3664e828701f050cb158174d8f3be4e96b716b"
+    },
+    {
+      "bytes": 288371,
+      "git_blob": "ea530620c2e948da525f1b479ec13425203de732",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0009.json",
+      "sha256": "d813ac8ea53fe8ad061d8b091139b3f184ababe7caac7001d5c96420f4bee180"
+    },
+    {
+      "bytes": 290982,
+      "git_blob": "c3c22d2bf01d6442615d14680c94f7c319678ad6",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0010.json",
+      "sha256": "96283f36a867bce8e62e097ced78d2162c0989b53d3b95346d164d689bdfceaa"
+    },
+    {
+      "bytes": 282643,
+      "git_blob": "e0716008c5435d77723e6e0d718e33a8c55c8115",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0011.json",
+      "sha256": "29f51e04d57ae8d4a23259dfd330e054381ed881e76c188d3a6e2f9f703154d2"
+    },
+    {
+      "bytes": 285054,
+      "git_blob": "15df6f342f6924c46e9d240678c62f627c33271a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0012.json",
+      "sha256": "1251b5ef5817ff2700de9ec50ce7898c51ccaef79729ba544d4da1c8c383ed0f"
+    },
+    {
+      "bytes": 287604,
+      "git_blob": "c85bc1f8a0ed3917a1106c8832a565f7996d7bdb",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0013.json",
+      "sha256": "86bd2fb7fd699d82b074575169371d28c1201bf07d4331ae04076fec04d1f418"
+    },
+    {
+      "bytes": 288393,
+      "git_blob": "0381535eb5454e84c61fcc463311129d5eb9f12d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0014.json",
+      "sha256": "126e910642a41c3faecfc008de2375ab0c49fc286fa47e7fe4e35227e0ae7703"
+    },
+    {
+      "bytes": 286307,
+      "git_blob": "aaf9e9b318d77a71895eb31b855c0eab8256fbf0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0015.json",
+      "sha256": "513e8b33e5573a75a0c224f24ea93518fd2d20fb2b49169aaee3185bd584d58d"
+    },
+    {
+      "bytes": 300029,
+      "git_blob": "294092f1038ba208bf8478791e51b755bbc0033a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0016.json",
+      "sha256": "1fc852ab933759b3e57650401e3e462aa784442726c4f78a2479b66bc8c8107b"
+    },
+    {
+      "bytes": 295677,
+      "git_blob": "80959035674acb2e88bf4c18381f8f086c935c30",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0017.json",
+      "sha256": "6475360170f08f02157f661ef548e1008fdb30bccd3234c7016f48c9c048b55d"
+    },
+    {
+      "bytes": 281778,
+      "git_blob": "3c7de2708d67161ff4e61a266241e712dde0a847",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0018.json",
+      "sha256": "4bf8d4957cedf5ecfcbeea121b55199a69dcd28244419e41c139f4bdb792def2"
+    },
+    {
+      "bytes": 374355,
+      "git_blob": "16f1a25bb641be767e21040a1c1bb226e0063ef0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0019.json",
+      "sha256": "5a74a00f8a957c89a7a6c19f3b95948b4df83f41134af002572fc3defefc5b17"
+    },
+    {
+      "bytes": 434236,
+      "git_blob": "bc2bc5b2a95df11384d1ad2c2f3cd1b60a6a1373",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0020.json",
+      "sha256": "2de996392d121fda93bece8b175106888c685ade9bd0da0940df1b9725e3153f"
+    },
+    {
+      "bytes": 416648,
+      "git_blob": "0b98196050b16637a7322a5a728f026af209de09",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0021.json",
+      "sha256": "6ed694ada429ce2a50a9bc0e66b1f603545bd2867ae67c9cecd9bd61c00f595d"
+    },
+    {
+      "bytes": 492205,
+      "git_blob": "a681c24e4fadea15ef9ba4ecacd03d8549ae125f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0022.json",
+      "sha256": "f3a358cae8259f249404c2a4a1bf8f9473b1fb2f54aab28a6c4893b1c404b3b1"
+    },
+    {
+      "bytes": 542487,
+      "git_blob": "9222b80346c9d90a4ce0c463449b19fb4a7ea424",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0023.json",
+      "sha256": "bc77641c68242c214676d02c5cf5a472dd91034598ba60e65e5f4b3d1232bb9f"
+    },
+    {
+      "bytes": 540442,
+      "git_blob": "67d5f5d9a9a6f348268525069d98ff3532fb7543",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0024.json",
+      "sha256": "817c58b8f895696c89df2da55b802f1030f20122163ae5c7478941b072d4e86d"
+    },
+    {
+      "bytes": 533775,
+      "git_blob": "86cf826bc6660ad0af45c08bc8eb8ce545304e16",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0025.json",
+      "sha256": "a3e5a8ec12d82fefcec458bbbedb99a066ba5dafa26de8535aac665803f28b61"
+    },
+    {
+      "bytes": 543842,
+      "git_blob": "4381c1943ac6f8d8be13b9aeb20d5b867e9734e6",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0026.json",
+      "sha256": "2860bd40830bee7ba1a2f251aaad196aaed6b467886b1a61d5a143089e452308"
+    },
+    {
+      "bytes": 523057,
+      "git_blob": "2a247de05855feafb04b919166e73acc8071efd0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0027.json",
+      "sha256": "68c9dc7b9ba92045d8ceb973ad9406ce812aee4e0f24c448a22855f11b387009"
+    },
+    {
+      "bytes": 527586,
+      "git_blob": "d34a593f7aa3f8d4b3bdca130adf2f5f497541b1",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0028.json",
+      "sha256": "ca6486cd1565b5efaf070787df15b7e7f3694840511cfdf367b64c19b6e1c63d"
+    },
+    {
+      "bytes": 533650,
+      "git_blob": "67db4ddd511c578068b70d7c7b26149d18b364de",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0029.json",
+      "sha256": "f136a62dfa5d4faa0bf281471b6443801b16c8f917d1aa9a196ec555875a1797"
+    },
+    {
+      "bytes": 520546,
+      "git_blob": "5facbd8599c5f4ed2d80e995634529549890ef97",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0030.json",
+      "sha256": "00134be019d196585a2c34d490cf057befd481c809188dde645e7e227ac86a39"
+    },
+    {
+      "bytes": 535372,
+      "git_blob": "626c64043ec65d54411427839f5cf4820b6cf003",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0031.json",
+      "sha256": "be66cb914c24d3f808cb0dfb8c174a09107341852ba69f5625989394b14005b1"
+    },
+    {
+      "bytes": 534700,
+      "git_blob": "e3754fc5bad373112637e752135ae988b1adfd0d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0032.json",
+      "sha256": "731858f2f48eb3b86a6e4d9357682ad6194be4bf5d4d56c2caa7af0237446ab8"
+    },
+    {
+      "bytes": 527336,
+      "git_blob": "1f73a6fbd05a1970a5658d263f6cfba8780e07cc",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0033.json",
+      "sha256": "636bd85ab9291568505958ee0834d36c86d7683eedddb561823a09dd150ca75d"
+    },
+    {
+      "bytes": 537266,
+      "git_blob": "7dd49f01f7035d97f4da6f94cdb4f28d75e582a3",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0034.json",
+      "sha256": "0228c25ce80a0a274db218c7b5eaf81a62b68fe17915ce7fb1c0626ae6ae2a2a"
+    },
+    {
+      "bytes": 544040,
+      "git_blob": "b019add5c73f817946d13cae418a7ac9ab02d657",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0035.json",
+      "sha256": "e1b7d525efe91fa58290e2d0d7e2363eb8663e7afdc8203fdbc58b978bcdd10c"
+    },
+    {
+      "bytes": 534389,
+      "git_blob": "9422c9547766c122933b64ade33bbd8d940af2a9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0036.json",
+      "sha256": "c8fb1db629e0ace42dfa000490060d2d7b402b59fcbb122b990f347fdeb125b3"
+    },
+    {
+      "bytes": 547516,
+      "git_blob": "e4f8d81950848b280ca63d547fecad46bb66f6b7",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0037.json",
+      "sha256": "ab747bb726059a3bd6913673d9491c2fdb6b87ffd0ecccb64aab04ba7c0a20c4"
+    },
+    {
+      "bytes": 564000,
+      "git_blob": "94d35051e6ba563f59cf40a593cb0d5f39b0f3b7",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0038.json",
+      "sha256": "f159cb80f55e968732c1c216849272181ee50ad2bad2cdd1d89f66366a876ce9"
+    },
+    {
+      "bytes": 565454,
+      "git_blob": "98bece7a2c97db3d76fcb77d59068ceb9038d86b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0039.json",
+      "sha256": "62dee52fd8c7e0ee426695fffc104ac8c9a951349560d267396cd2fd23c526b6"
+    },
+    {
+      "bytes": 358503,
+      "git_blob": "92eec5ab503c3b7ccd835ff7313ccd52827c10e0",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0040.json",
+      "sha256": "f016e8b04acc23a9bd72d6dd848fce30a88c95da9d1b4f225fd9fcb0ec1c880c"
+    },
+    {
+      "bytes": 40669,
+      "git_blob": "72b60eb555aabd3b86db5c2b27a5e1b0a0a4e762",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/refusals.json",
+      "sha256": "99e408d81cf2e47aa2d9be81f1ce0faed3678b3f7f51881649c2ce1e1ea5a171"
+    },
+    {
+      "bytes": 23624,
+      "git_blob": "1e9730e0b04eb8a78b31aa54169d3c3940874c37",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/sql-targets.json",
+      "sha256": "002f4c2598c2df129ef32c90bee6fed811cfe0ade53c4bc27dbdb77f68769cdb"
+    },
+    {
+      "bytes": 7267,
+      "git_blob": "1ceab33738c297e83d162195834118a0390ef8a9",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/summary.json",
+      "sha256": "b16b086598b8e901295b3b0bbc4280f5d3ffce8d4224b4e8cdad6f062c2481f1"
+    },
+    {
+      "bytes": 624,
+      "git_blob": "caddb9e9bc5e8d4a53c02c6eac9ad4f25348ee60",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/intent.json",
+      "sha256": "4d214e9f63df124bfc620c7997c3d885ea5cd66123122e166fe489817cba5728"
+    },
+    {
+      "bytes": 286,
+      "git_blob": "c204bd221d9b20c11ee2471c8a680264ddf60760",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/result.json",
+      "sha256": "1cc59756a4cc25ae54911c5fccf707d5fd9e4dd92873fdc841237af4e6adff02"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 371,
+      "git_blob": "80b30a1f6df2c50a015d9e0a5892229560a6638d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/stdout.txt",
+      "sha256": "ecca8de5fe60414bd8cd9afc73dd84ffa18ae5c919da9852caf43bcbf91bc34a"
+    },
+    {
+      "bytes": 624,
+      "git_blob": "4ca3e7e51f81e43885fdebb35a0b6f5c49939f2f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/intent.json",
+      "sha256": "ec0770f98d58a7bdd4b0d46c8823e40642fc992d5231a8a6165b3638ff8cbc6a"
+    },
+    {
+      "bytes": 287,
+      "git_blob": "e6335202e6773f9d489cd687f5a0eecac731ee8f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/result.json",
+      "sha256": "fa510a5da6aeb3437057cb2a15e257ec7c3184083f38f88a6d7646afadf68226"
+    },
+    {
+      "bytes": 0,
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 371,
+      "git_blob": "80b30a1f6df2c50a015d9e0a5892229560a6638d",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/stdout.txt",
+      "sha256": "ecca8de5fe60414bd8cd9afc73dd84ffa18ae5c919da9852caf43bcbf91bc34a"
+    },
+    {
+      "bytes": 5490,
+      "git_blob": "c1ed765a343658ba63e47e0f4b2879091b8da4ac",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-ci-observation.json",
+      "sha256": "366d07af1425e00cfe6c84e74afd0cf752d3118705d7ecd5b17000ab48b75000"
+    },
+    {
+      "bytes": 1316,
+      "git_blob": "d16894f86fcb3d2f95fc41f031c3e91facfd5b27",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-code-static-summary.json",
+      "sha256": "f44e05bd9aaf1adc84c561b4a537cba0e0d5d602a13d47ddf4c2c14044a6277f"
+    },
+    {
+      "bytes": 1108,
+      "git_blob": "62b5b6148f14b98ac12ba89831784e6d049d97ed",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-projection-proof.json",
+      "sha256": "02fdb6648dec5c9961d428955d64f33ac1a6a5d63fc580ab6d3e57d6f8a5ed6b"
+    },
+    {
+      "bytes": 960,
+      "git_blob": "bf20c8a9b5e3dc757b141ebe2c2f95400b7ee1fb",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-secret-summary.json",
+      "sha256": "33f7645f635e254ad333a066edb5d58a7992194f3e2ec631330528c8143794b1"
+    },
+    {
+      "bytes": 21464,
+      "git_blob": "2bc307b6eca142b6adba2d931a747010cc1b6dd2",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/owasp-custody-attempts.json",
+      "sha256": "079d8a69ca3dfa836e991b8bbdbe4df59a1c74170c5baea686707eb956728327"
+    },
+    {
+      "bytes": 8368,
+      "git_blob": "a23496ed6d3030470507b4746224a8ca86c5e123",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/preflight.json",
+      "sha256": "42bc9c403434688dff80b5104f69c26ee32dd2ff5c7300ac7448b465107f0629"
+    },
+    {
+      "bytes": 2036,
+      "git_blob": "34e7e59be896fc451a73e7255b922330dea7f198",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/00_READ_FIRST.md",
+      "sha256": "43f70f6c776e414c46d0ff832d86acb22c4a17eacf33a35d6ffdb775a08a9ee9"
+    },
+    {
+      "bytes": 2281,
+      "git_blob": "cc008fa378233f405168f7073217567ec429ef7a",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/01_INDEPENDENT_BRAIN_REVIEW.md",
+      "sha256": "0b15d50836b384d987234601dd5bf8e8b24473371b45ceeaedca6f75ceaccf7a"
+    },
+    {
+      "bytes": 4987,
+      "git_blob": "c714826f686f86228c2e3ac5ccde019c918bd82b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/02_ENGINEERING_MISSION.md",
+      "sha256": "f131d4480ec8e331917518f2495b35686e4665a030ccd7575a872d5e89cdd635"
+    },
+    {
+      "bytes": 1847,
+      "git_blob": "8a61c7eb4eff6b09426493a08c4a3f4c99960f51",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/03_EXACT_SOURCE_AUTHORITY.md",
+      "sha256": "dadf5b2db9215fa4f45e78dc275835c4c362382cea0f7c23d738466933d5b358"
+    },
+    {
+      "bytes": 2212,
+      "git_blob": "af7ef285f8eca23f05d4845ef2ed64c6a80283b2",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/04_ACCEPTANCE_TESTS.md",
+      "sha256": "d0564d272bee4f3899cdb5972b2db5f89a797ed2808f495f53ddaaed586bb360"
+    },
+    {
+      "bytes": 1484,
+      "git_blob": "e1f4a06f05670660a2fd9e43f0f14d395f3e5f6b",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/05_OWASP_AND_OWNER_GATES.md",
+      "sha256": "9159d13855105d910966dd15746802f39bc5b98d897584796080867269bd7f2f"
+    },
+    {
+      "bytes": 1910,
+      "git_blob": "f4e416b0c615da2adba2dfb6db242aa17716d334",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/06_DELIVERY_AND_CI.md",
+      "sha256": "07520902f800851d119e980d6ce8f85102e6d13daab6e173c719f24e6128574c"
+    },
+    {
+      "bytes": 1192,
+      "git_blob": "b767c54e200c94dc776cbd743c7e1faa43551a84",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/07_STOP_RULES.md",
+      "sha256": "9517e582bcd9bd6b1b37405ec8e2842b4a4ecf5269dcc8b7d252960126068755"
+    },
+    {
+      "bytes": 5888,
+      "git_blob": "8df4d5c51e487efe2aa01c6fb491135e84fa5d14",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/PREIMAGE_WITNESSES.json",
+      "sha256": "2052ee196937a19c288b6fb84631f7f6b5ec69f940929cf5c1766a28d86567cd"
+    },
+    {
+      "bytes": 1948,
+      "git_blob": "b2e43f1e17bcc54a40aaa8505dea88c1f0f39e2f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/SOURCE_AUTHORIZATION.json",
+      "sha256": "821dc186b2f49bda8c5ca0df84c11edcd5cb6569336245b80372e37fb633ca83"
+    },
+    {
+      "bytes": 2288,
+      "git_blob": "adfde3fe8aeda0ab9003fd43709356fda486b63f",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/TASK_MANIFEST.json",
+      "sha256": "47ae1a581038ec3122eeba5caaa4cde408f8e9e840973d4b81e18a83c6d45051"
+    },
+    {
+      "bytes": 2058,
+      "git_blob": "0e1b59601255470bc9e029acf3c46691885e8c49",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/TASK_STATE.json",
+      "sha256": "fb20d883b0aacf040364fe7c11cb0914ab05dd39257d6a959615a686c5f1f53d"
+    },
+    {
+      "bytes": 18130,
+      "git_blob": "62b2749a6f8a4864523101cd58c4431feba75f50",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/archive/issued-context.zip",
+      "sha256": "be873e3243a109957e5334eeea2f47d3ee764754d2ad81ce4caefb09601c4fdb"
+    },
+    {
+      "bytes": 2184,
+      "git_blob": "745ac4fead1e645e48acc016bb0be198ad8047b5",
+      "mode": "100644",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/verify_context.py",
+      "sha256": "4665f6ac8be933ff8710d61ee376e80be921d21d37cb53254266575fa872142b"
+    },
+    {
+      "bytes": 2751,
+      "git_blob": "757aecf6dc03a6eb97397b7274f260ffcf6fbc9d",
+      "mode": "100644",
+      "path": "scripts/security_readiness/m103/source_inventory_review/README.md",
+      "sha256": "fa3f6472f1eb000d260eaf8ca77f483de59abc3d3639edc1bf2e4a4c03e6c621"
+    },
+    {
+      "bytes": 3723,
+      "git_blob": "f8ced1dd5b12d580a43c5c6a71503e74ab80d3b2",
+      "mode": "100644",
+      "path": "scripts/security_readiness/m103/source_inventory_review/custody.py",
+      "sha256": "ba6175726dfe5ab19794169aaf452f46d7b7a97bcbb74e3de3dd7c17db558164"
+    },
+    {
+      "bytes": 20755,
+      "git_blob": "b57308d5ac3041c67d3a2ac6b40de671e7585d36",
+      "mode": "100644",
+      "path": "scripts/security_readiness/m103/source_inventory_review/review.py",
+      "sha256": "826889433c837c83d654b6592c0472814d69bb8ff0ce507e32973f17f2898b94"
+    },
+    {
+      "bytes": 3764,
+      "git_blob": "cb7a7a2abc2cd5fc1b43ac565579be39ad37b38d",
+      "mode": "100644",
+      "path": "scripts/security_readiness/m103/source_inventory_review/run_checks.py",
+      "sha256": "59673f4b5a1346f7540e3cedbcd64532a5c55404b3b469d49763040ad26ed388"
+    },
+    {
+      "bytes": 10413,
+      "git_blob": "e448c4b91d78bc535e081ea27c1af3fe2fa8732c",
+      "mode": "100644",
+      "path": "scripts/security_readiness/m103/source_inventory_review/test_review.py",
+      "sha256": "bad06cf7f495dd3d4752339bba193bd5a1517e92fc038c452ebbd619c522b7c9"
+    }
+  ],
+  "measured_source_commit": "df17120787162afd9c73a77e120418115fc0ed19",
+  "measured_source_tree": "c16053107b1dbedacd9920a2244c8bc33f9d846d",
+  "protected_source_go": false,
+  "schema": 1,
+  "scope": "Every new task checkpoint/implementation regular Git file and factual root handoff; historical source identities are separately complete in measured inventory.",
+  "self_exclusion": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/SHA256SUMS.json",
+  "self_exclusion_reason": "No manifest can hash its own bytes; final Git commit/tree binds this manifest externally."
+}

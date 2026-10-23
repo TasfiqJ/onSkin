@@ -1,0 +1,30 @@
+{
+  "scope": "Own diagnostic wrappers; original installer and test source unchanged",
+  "attempts": [
+    {
+      "id": "candidate-driver-attempt01",
+      "raw_process_exit": 1,
+      "original_bootstrap_exit": 0,
+      "stderr_tail": "AssertionError at tool_tree(BASE/'old-tools/npm')==tool_tree(BASE/'new-tools/npm')==policy['npmToolTree']",
+      "cause": "Wrapper compared npm prefix including parent installation bookkeeping; unchanged contract hashes node_modules/npm",
+      "scratch_action": "Restored both scratch technical preimages before second fresh candidate attempt",
+      "resolution": "Second independent fresh candidate install and unchanged bootstrap passed; exact original npm contract scope matches both trees"
+    },
+    {
+      "id": "optional-binary-inventory-attempt01",
+      "raw_process_exit": 1,
+      "stderr_tail": "AssertionError at rows['old-tools']['binaries']==rows['new-tools-02']['binaries']",
+      "cause": "Version diagnostic stderr includes different absolute old/new executable paths; hashes and bytes match",
+      "resolution": "Second inventory run retains full version stdout/stderr/exits and independently compares file SHA256 and lengths; all identical"
+    },
+    {
+      "id": "optional-core-version-flag",
+      "raw_core_exits": [2, 2],
+      "cause": "Custom core accepts -version, not --version",
+      "resolution": "One corrected -version invocation per unchanged core, with separate raw receipts"
+    }
+  ],
+  "protected_stage_source_edited_during_attempts": false,
+  "original_checks_weakened": false,
+  "max_meaningful_attempts_per_cause": 2
+}

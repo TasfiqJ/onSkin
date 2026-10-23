@@ -1,0 +1,54 @@
+Requirement already satisfied: semgrep==1.181.0 in ./candidate-env/lib/python3.12/site-packages (from -r /work/bridge2/incompatible-extra.txt (line 1)) (1.181.0)
+Requirement already satisfied: mcp==1.30.0 in ./candidate-env/lib/python3.12/site-packages (from mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (1.30.0)
+Collecting typer==0.1.0 (from -r /work/bridge2/incompatible-extra.txt (line 3))
+  Downloading typer-0.1.0-py3-none-any.whl.metadata (11 kB)
+Requirement already satisfied: attrs>=21.3 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (26.1.0)
+Requirement already satisfied: boltons~=21.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (21.0.0)
+Requirement already satisfied: click-option-group~=0.5 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (0.5.9)
+Requirement already satisfied: click~=8.4.2 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (8.4.2)
+Requirement already satisfied: colorama~=0.4.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (0.4.6)
+Requirement already satisfied: exceptiongroup~=1.2.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (1.2.2)
+Requirement already satisfied: glom>=23.3 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (25.12.0)
+Requirement already satisfied: jsonschema~=4.25.1 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (4.25.1)
+Requirement already satisfied: opentelemetry-api~=1.45.1 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (1.45.1)
+Requirement already satisfied: opentelemetry-sdk~=1.45.1 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (1.45.1)
+Requirement already satisfied: opentelemetry-exporter-otlp-proto-http~=1.45.1 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (1.45.1)
+Requirement already satisfied: opentelemetry-instrumentation-requests~=0.58b0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (0.66b1)
+Requirement already satisfied: opentelemetry-instrumentation-threading~=0.58b0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (0.66b1)
+Requirement already satisfied: packaging>=21.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (26.3)
+Requirement already satisfied: peewee~=3.14 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (3.19.0)
+Requirement already satisfied: pyjwt<3,>=2.15.0 in ./candidate-env/lib/python3.12/site-packages (from pyjwt[crypto]<3,>=2.15.0->semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (2.15.1)
+Requirement already satisfied: requests~=2.22 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (2.34.2)
+Requirement already satisfied: rich>=13.5.2 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (15.0.0)
+Requirement already satisfied: ruamel.yaml>=0.18.15 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (0.19.1)
+Requirement already satisfied: ruamel.yaml.clib==0.2.15 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (0.2.15)
+Requirement already satisfied: semantic-version~=2.10.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (2.10.0)
+Requirement already satisfied: tomli~=2.4.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (2.4.1)
+Requirement already satisfied: typing-extensions~=4.2 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (4.16.0)
+Requirement already satisfied: urllib3~=2.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (2.8.0)
+Requirement already satisfied: wcmatch~=8.3 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible-extra.txt (line 1)) (8.5.2)
+Requirement already satisfied: anyio>=4.5 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (4.15.1)
+Requirement already satisfied: httpx-sse>=0.4 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (0.4.3)
+Requirement already satisfied: httpx<1.0.0,>=0.27.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (0.28.1)
+Requirement already satisfied: pydantic-settings>=2.5.2 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (2.16.0)
+Requirement already satisfied: pydantic<3.0.0,>=2.11.0 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (2.14.1)
+Requirement already satisfied: python-multipart>=0.0.9 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (0.0.32)
+Requirement already satisfied: sse-starlette>=1.6.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (3.5.0)
+Requirement already satisfied: starlette>=0.27 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (1.9.0)
+Requirement already satisfied: typing-inspection>=0.4.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (0.4.4)
+Requirement already satisfied: uvicorn>=0.31.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0->-r /work/bridge2/incompatible-extra.txt (line 2)) (0.54.0)
+INFO: pip is looking at multiple versions of typer to determine which version is compatible with other requirements. This could take a while.
+Collecting semgrep==1.181.0 (from -r /work/bridge2/incompatible-extra.txt (line 1))
+  Downloading semgrep-1.181.0-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-manylinux_2_34_x86_64.whl.metadata (22 kB)
+INFO: pip is looking at multiple versions of semgrep to determine which version is compatible with other requirements. This could take a while.
+ERROR: Cannot install -r /work/bridge2/incompatible-extra.txt (line 1) and mcp==1.30.0 because these package versions have conflicting dependencies.
+
+The conflict is caused by:
+    The user requested mcp==1.30.0
+    semgrep 1.181.0 depends on mcp==1.29.0
+
+To fix this you could try to:
+1. loosen the range of package versions you've specified
+2. remove package versions to allow pip attempt to solve the dependency conflict
+
+ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts

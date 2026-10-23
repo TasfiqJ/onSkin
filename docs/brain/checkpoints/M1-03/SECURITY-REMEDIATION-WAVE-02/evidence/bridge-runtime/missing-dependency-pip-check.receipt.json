@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "--isolated",
+    "--python",
+    "/work/bridge2/candidate-env/bin/python",
+    "check"
+  ],
+  "cwd": "/work/bridge2",
+  "environment": {
+    "SEMGREP_SEND_METRICS": "off",
+    "SEMGREP_ENABLE_VERSION_CHECK": "0",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "exit": 1,
+  "seconds": 0.6170013179944362,
+  "log_sha256": "b3663459cff7e756898849cea746be142f1a7d78b7c001dc7df005e475d9e294"
+}

@@ -1,0 +1,22 @@
+{
+  "label": "root-forced-tests-corrected",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "npm",
+    "test",
+    "--",
+    "--force"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:27:55.706687+00:00",
+  "finished_utc": "2026-10-23T02:28:13.488216+00:00",
+  "seconds": 17.781,
+  "raw_exit": 0
+}

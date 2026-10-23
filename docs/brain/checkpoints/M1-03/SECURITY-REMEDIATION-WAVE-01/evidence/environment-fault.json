@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-10-23T19:54:01.951745+00:00",
+  "fault": "HOST_DISK_FULL_WSL_IO_FAILURE",
+  "host_free_bytes_at_fault": 8265728,
+  "linux_filesystem_first_error": "OSError: [Errno 30] Read-only file system while writing candidate-v3 requirements",
+  "subsequent_error": "WSL getpwuid/getpwnam EIO; governance103 log read failed with Errno 5",
+  "completed_before_fault": [
+    "old exact package trees",
+    "mcp scratch trees",
+    "otel scratch trees",
+    "combined preliminary scratch trees",
+    "Security70 exit0",
+    "secret12 exit0",
+    "expiry8 exit0",
+    "fresh npm ci exit0",
+    "npm candidate ci exit0",
+    "npm candidate audit exit1",
+    "npm candidate archive fixture exit0"
+  ],
+  "partial_not_pass": [
+    "governance103 interrupted during original tests",
+    "root6067/typecheck/lint not reached",
+    "mobile Expo and strict worklist/report not reached"
+  ],
+  "recovery": "Byte-preserving native NTFS compression only within designated checkout; verify every protected Git/working byte again. Stop/restart only failed onskin-r6-verification distro to recover own scratch receipts. No source reset, cache deletion, global WSL shutdown, ECR pull or spending."
+}

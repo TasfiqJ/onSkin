@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "/work/bridge2/old-site/semgrep/bin/semgrep-core",
+    "-version"
+  ],
+  "cwd": "/work/bridge2",
+  "environment": {
+    "SEMGREP_SEND_METRICS": "off",
+    "SEMGREP_ENABLE_VERSION_CHECK": "0",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "exit": 0,
+  "seconds": 0.1160461220133584,
+  "log_sha256": "3d80ce5dc5962eea7bb3d7b409c5ce65bca0fbd75936dfebf2497adba175093d"
+}

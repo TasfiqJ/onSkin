@@ -1,0 +1,439 @@
+{
+  "schema": 1,
+  "measured_source_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "measured_source_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "admission": "NONE",
+  "exclusions": [
+    "this self-referential manifest",
+    "final delivery commit identity, observed outside the committed tree"
+  ],
+  "artifacts": [
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "mode": "100644",
+      "git_blob": "18cc3d5c5a0425b0d7d90e853ef63fd674a83f0e",
+      "bytes": 1355,
+      "sha256": "4593e4f51acf31dcec05d8d5fb1948a035897e672354ba7798d12032655a6fb9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/BLOCKERS.md",
+      "mode": "100644",
+      "git_blob": "f2b350855319790c6692a7acd34403c0fff642b7",
+      "bytes": 3400,
+      "sha256": "507c6642d0967621a1d838f1dd424dc3911d5a52fddfd6a5a546accb8585f814"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/ECR_CUSTODY.md",
+      "mode": "100644",
+      "git_blob": "9d19299ce03faaa88555cf8fa0478e60eecab469",
+      "bytes": 2638,
+      "sha256": "25e2df6e3a625bc2caa4b66fa27c24ea8946b9abf009302672392751b46657a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/NEXT_EDIT_PROPOSAL.md",
+      "mode": "100644",
+      "git_blob": "718ae48175837dd17e035f32fa6c8b2fe4551893",
+      "bytes": 2494,
+      "sha256": "3882a5b52cc56b39d817cea2d393fd65e9a7bb25b0b6a98555ecb219729fbb16"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/README.md",
+      "mode": "100644",
+      "git_blob": "9175c690c23c7ea45403cbe15caa4914ecaacda0",
+      "bytes": 2434,
+      "sha256": "648c6208fe3684fe0fc3890037a85683c32aa049bfc405ce2327ab15a562bb8d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/RESULTS.md",
+      "mode": "100644",
+      "git_blob": "8e7bcdaf14dcbda0093b89a20e8eb69f6f9cd075",
+      "bytes": 3328,
+      "sha256": "096532e31206c9dedffaac1501b21cd5924bbcaee059d15f3b3eb9e8b5dfe1de"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/SECURITY_CAUSAL_PROOF.md",
+      "mode": "100644",
+      "git_blob": "727d9cca6c6d9fdeccd16bc8c6e195f23265ed98",
+      "bytes": 3531,
+      "sha256": "c9481e7019a6f083366de86a01002a19f1f464a097c72f039ab3d9130b870fd4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch",
+      "mode": "100644",
+      "git_blob": "fa184ea8ad1a2fc8ce430d56138843ba8d1128a4",
+      "bytes": 2993,
+      "sha256": "8ca578ae875fb2012613604ab3f3f55326ef253267f5223a137034b9d868bf0a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/SOURCE_BINDINGS.json",
+      "mode": "100644",
+      "git_blob": "89a68c300f8074f728e5d1e545669d99df033aec",
+      "bytes": 10562,
+      "sha256": "fc069e0c641179dc52e743460e53c8e3923de5b730fa23aec1f475c8342796d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/baseline-results.json",
+      "mode": "100644",
+      "git_blob": "8bc14801919e049abb025d0501d353a9bd321017",
+      "bytes": 3112,
+      "sha256": "f4d048e96d19686f3a1f170f9b926079d1d46924b529b6fa1459867c62b2b4d1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/candidate-postimage.json",
+      "mode": "100644",
+      "git_blob": "7ec4103a3030d4f87f596818649a1cbc2b9070b0",
+      "bytes": 281,
+      "sha256": "cf7effd53d3af9dd3b8b828b50f3a584e0614a7d122dad13b28cbba4bb228d47"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/candidate-results.json",
+      "mode": "100644",
+      "git_blob": "25e1289a123695bf2d6405106fc5ed6cc27b6d57",
+      "bytes": 1889,
+      "sha256": "6659549d703503137d8c24bae9f3e8d8f462aa899259902979355f7aa18a8f83"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/causal-proof.json",
+      "mode": "100644",
+      "git_blob": "ee60cbc2499ff600da5266dc9f1fe512decc7759",
+      "bytes": 1860,
+      "sha256": "c6b9c58048e38cf447dccfbdc048ea69357a53a3c9a79f02ed04e406f4bd62a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/command-results.json",
+      "mode": "100644",
+      "git_blob": "81c91b03c01a70e5bcb3868a0dc1e6f67502388d",
+      "bytes": 6802,
+      "sha256": "63d7c9b901dc3c406e65d8f4e2be6a99c0d69266baca4b631cc7c988849be7c6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/delivery-validation.json",
+      "mode": "100644",
+      "git_blob": "304cc5bd7bd935a1f158c28bdd7f3ebf3cb48dc5",
+      "bytes": 674,
+      "sha256": "d47728dd285d9663a958a850178fd18d4bccccd77a4ede06bcb820cf2920e408"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/ecr-metadata.json",
+      "mode": "100644",
+      "git_blob": "0668df7f75f036331546043a76102f2b86f695a4",
+      "bytes": 455,
+      "sha256": "6448b1589a6e9047bb9db042c0801780fac3622b7064572a9c3fc3f18387a3cc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/finish-results.json",
+      "mode": "100644",
+      "git_blob": "cb64927f2b80e0a3a49a2ea4832799a8f58d8c19",
+      "bytes": 1807,
+      "sha256": "ebad891217e19b9e3b14b043fdeadff23d36171f069f3ca1d8932cd85ee99ed6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/input-copy-verification.log",
+      "mode": "100644",
+      "git_blob": "9501d0a5d00c2bb41018b0e3aba33b1f98292f2b",
+      "bytes": 111,
+      "sha256": "cff9a7453978cfab495cea64a564b126bb734fd3b76b433db0812eb041eab06f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/intake.json",
+      "mode": "100644",
+      "git_blob": "ad5b0f58942b3575ecf6de276ea2b1b7383958e0",
+      "bytes": 4928,
+      "sha256": "ecb904841a03686dc36eb41b8cca1f3ea37b8d151ba296f2491a79455851adf5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/candidate-70.log",
+      "mode": "100644",
+      "git_blob": "2883b03687fd71ae41bd29e560aff513637617d9",
+      "bytes": 11409,
+      "sha256": "a6a698fed97190d9ff215dde905686f1b774c0e33298a28f9aa581cc9765fc19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/candidate-adverse.log",
+      "mode": "100644",
+      "git_blob": "647c4688f9b43ecdf280b0564dce5c821e9ac8a7",
+      "bytes": 905,
+      "sha256": "f607232c4d8da53672cca91a56ec28192c9490c328ca72d1d5872eb9f7eb6cc6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/candidate-targeted.log",
+      "mode": "100644",
+      "git_blob": "6fee21c38459e9845b05af8b78a9e4419df3c7f1",
+      "bytes": 270,
+      "sha256": "bff534e95a8198c4e7175f05597a0e34ce0b8dad4d2fdf36efbcc1edfb4816da"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/canonical-image-source-contract.log",
+      "mode": "100644",
+      "git_blob": "9a922bcbd37a9778d0229f17425f5c93d08b6aff",
+      "bytes": 9474,
+      "sha256": "b782820ea394beb7ddcb6c9cb72a2bb3386c2d16ed8c4a9efe5d72469293d845"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/local-database-source-contract.log",
+      "mode": "100644",
+      "git_blob": "b23829db054361c1da50824b19ad5c77f7be4506",
+      "bytes": 44,
+      "sha256": "de9f07517b68c0ed0f65df996f5f3048752c7b6243ca879630f953d556cba9db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-70.log",
+      "mode": "100644",
+      "git_blob": "1ec2758e4aeadb994abb3c5bcf3e377569239ced",
+      "bytes": 39943,
+      "sha256": "3fbd85be32b0c6aaa5f719e37e3b6a6473149ed2974bd77defdf12aa44f18cc7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-sbom-wrapper.log",
+      "mode": "100644",
+      "git_blob": "fb09b4a360eb9a76e3e0bbefe6166e984ab80904",
+      "bytes": 97,
+      "sha256": "46157f53c73ef8ab1a043a26837091aef3f498c6c152a8d886ed1e591032051c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-secret-12.log",
+      "mode": "100644",
+      "git_blob": "36d3022d5e87acd7731d22d700756183b920f0ff",
+      "bytes": 2111,
+      "sha256": "6bdc63656b5cf9d494b8eb2571edb4c69cc48dbdc8a1c735eae35d7009541a03"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-targeted.log",
+      "mode": "100644",
+      "git_blob": "de6b6345d5ec5e2f2b6faed4cea5a1f88c68ad22",
+      "bytes": 1409,
+      "sha256": "12cbb19368d49a4dfe68ac8f3fec18ed051e4a35e949d3641bedadd3f06b5a31"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/original-workflow-structure.log",
+      "mode": "100644",
+      "git_blob": "5c77eff1253da42fad52daacf64038d003fc0d03",
+      "bytes": 40,
+      "sha256": "53e5ce81d3a0800f072a4a16a003f87c4afc39c62536cedd10c4b9ca9a985819"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/reversed-original-targeted.log",
+      "mode": "100644",
+      "git_blob": "e172b129e195987eef14895b3f2b125d8dd36bd7",
+      "bytes": 1409,
+      "sha256": "b1d9d56a5fc43c3e88cd362d1b21959593f497f3664a7eaed95206a997c8ca84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/logs/underlying-assertion.log",
+      "mode": "100644",
+      "git_blob": "4b6fc799c481af93017cfed7fee6ff49d574ba3b",
+      "bytes": 224,
+      "sha256": "0001ab58456973976603a7c7ce48b27830a83b03c9b379c98c8ce03edd725b5a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/package-delta.json",
+      "mode": "100644",
+      "git_blob": "bddb2156de57fb3ed5ba4920147ec660d98dfc12",
+      "bytes": 2857,
+      "sha256": "0abf78142655a88ebba0fa00a6dddfc565899df2dea9940d0bbf91c699cfb471"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider-decision.json",
+      "mode": "100644",
+      "git_blob": "dba9e86a6ed05d465764df4e8d57c843a218f8d9",
+      "bytes": 170,
+      "sha256": "6684ce61d068b1d30d5251442534fff145fb43b5b26acf8a081dc1f9907782a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider-jobs.json",
+      "mode": "100644",
+      "git_blob": "37c09337b9e67656159de18159e97a9e01fb56bf",
+      "bytes": 25525,
+      "sha256": "eb0684fc4e3ba0c911cc70b106fac8a78eeccd5ebba6124e74a952c2315c1286"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider-log-receipts.json",
+      "mode": "100644",
+      "git_blob": "9335cb6e249ee0e7df25d91573336d3af4e2a66f",
+      "bytes": 2365,
+      "sha256": "0412480237c07a19f274a1ff32fb84fcb1de8b5446fe37da0c98b85420697042"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider-runs.json",
+      "mode": "100644",
+      "git_blob": "1cd0eb6e24074e754a4b52d8907bcfdf0d4d039b",
+      "bytes": 918,
+      "sha256": "55a5cf406e89df7072060d37f221ba6b2e1f1c92f32ea9ebd86e9b2bbb2c1208"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider/admission-excerpts.log",
+      "mode": "100644",
+      "git_blob": "b8d03beddd485242defe75bd3e40191d37479634",
+      "bytes": 74,
+      "sha256": "1be2c7baa308d20e2537e8286b517533f4b69ce05b118f222209f53591deecb3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider/code-excerpts.log",
+      "mode": "100644",
+      "git_blob": "307c7c135b420fd7027170e160cecc032c401115",
+      "bytes": 66644,
+      "sha256": "3acb0a11d067600b7a7b4fbff446cf6290068523ab197690e58e5ad9b3126155"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider/quality-db-excerpts.log",
+      "mode": "100644",
+      "git_blob": "cec7864a830c39d1b405b5a641b94d547ae96216",
+      "bytes": 660,
+      "sha256": "239e23f16f845329c445175eeb03e06be0696cd88814d5ca88f510f1e6f801d8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider/secret-excerpts.log",
+      "mode": "100644",
+      "git_blob": "f0347e9fd289b22da03994b25468682c235aecc7",
+      "bytes": 281,
+      "sha256": "edd4abce1a3a7bb2bd50fc615c3b230a07ef9f51933a6f464a2cc91d6bba6619"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/provider/static-excerpts.log",
+      "mode": "100644",
+      "git_blob": "55460e061606141270e1ad4522b77026347af26c",
+      "bytes": 484,
+      "sha256": "2864ef092826b66ba954570d9a1957b66b45ec595bebe1e3ef5d18e3d67a22df"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/reproduce/baseline.py",
+      "mode": "100644",
+      "git_blob": "d1672bfc4d32be91f3f0a15b631a9f7962892888",
+      "bytes": 3455,
+      "sha256": "a1a29e315d2178414b0adbab04d2eb45c5f1c3dd231af6ce083fecbaaf673006"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/reproduce/candidate.py",
+      "mode": "100644",
+      "git_blob": "dd1a7ba01c60136c28642a697ee75cdc8d0f4f1f",
+      "bytes": 3946,
+      "sha256": "9c2dc2d68f7203281ad4a5e0b2372b20e2c0b554eb5ea4ac2b4680ece6750d4e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/reproduce/discrepancies.py",
+      "mode": "100644",
+      "git_blob": "72d0439cb493cb665a17ab97870c62a3849fd240",
+      "bytes": 7651,
+      "sha256": "613a31420e3fe8c532b74be5d1c799efad24d650495bc2ff3b23d435fff21b8e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/reproduce/finish_experiment.py",
+      "mode": "100644",
+      "git_blob": "dd42aac17b4f574de9d9ab702d0e8397e4bf678f",
+      "bytes": 1992,
+      "sha256": "a53e6a6f9271960191f5420b448442c8c1a757381dc5424cae58abe1d83b5170"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/reproduce/proof.py",
+      "mode": "100644",
+      "git_blob": "b33d762c7b2e421ec0a0b65e66abb38e007c8ba7",
+      "bytes": 2949,
+      "sha256": "701d4e1a645c36b33b4ff7ceeff2ef75f8113de9a6ebfd51a345506d45864efe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/sanitization.json",
+      "mode": "100644",
+      "git_blob": "c615bd2e45e26742672b9d11eaf882244b33d6db",
+      "bytes": 540,
+      "sha256": "e1ae6255782c7171c9e996824c2d20336c5790d38f2ac45f6701d1c9a30a7c70"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/scanner-discrepancies.json",
+      "mode": "100644",
+      "git_blob": "e280356aa86215d42e9d9f550b623f2422b6cca8",
+      "bytes": 421380,
+      "sha256": "185ffa9d5b517d43c21d0cd778b0143bef5b50a9442c6f6e9854d2aff2862c95"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/status.json",
+      "mode": "100644",
+      "git_blob": "abb43a2ed55ac90dbf36e49c08090db9f8967c8d",
+      "bytes": 1077,
+      "sha256": "fd27be428d8cd36206f37ffe75b29074bd5583edb8af68c90992b297da4ed147"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/evidence/working-byte-check.json",
+      "mode": "100644",
+      "git_blob": "0fc42351ee43e05ecc81e7db16a5ad54ce750bc7",
+      "bytes": 967,
+      "sha256": "205e90d0ed13b614cdc86619b7d6e77ea99c15ae05f0d8f415ecacb98bfdcb31"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/00_READ_FIRST.md",
+      "mode": "100644",
+      "git_blob": "d43119b8a48e6acd5c91dee495528fe3a871b431",
+      "bytes": 1130,
+      "sha256": "59701a96bb9c020fa2952d21f6bf6a1c3df9b3b2d2f642e7b84fc279ac15a88a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/01_CURRENT_TRUTH.md",
+      "mode": "100644",
+      "git_blob": "565a2ea43b047a383f5ebdde94a7a0568649ff73",
+      "bytes": 1824,
+      "sha256": "9dbf46dfa9df72a6ad3b72b7559d78b79e3b88ca198a0f635d7a62bfbd497533"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/02_TASK.md",
+      "mode": "100644",
+      "git_blob": "599cdaf40d0b30796e2351fd0d9c2d8ea6e0ac92",
+      "bytes": 2817,
+      "sha256": "165c2c421f0e281791aec03cbfbbd55b29e8d208d3d6c6b003fce32ac0b5e473"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/03_EVIDENCE_AND_TESTS.md",
+      "mode": "100644",
+      "git_blob": "394f0441a7f4c52d26c311830946eead5621d3a5",
+      "bytes": 2191,
+      "sha256": "3497e405f55cd6e1c209c6e844983774f636585a5d704114701e6ab6e655d9a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/04_ECR_BOUNDARY.md",
+      "mode": "100644",
+      "git_blob": "5e0246487dfff6061a81949fdf349d7623232d3f",
+      "bytes": 1069,
+      "sha256": "0f32460a666aa75731082ea7be71bd12dfdd265cdaa9b1ef866cae23e1a3aa48"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/05_DELIVERY_AND_STOP.md",
+      "mode": "100644",
+      "git_blob": "40c852cd862abec8116f41235f56e86b48a79e7e",
+      "bytes": 2196,
+      "sha256": "42cedec32b2980f3487973e338f4abc5354162ddfa3c8e739d9d9f7ac75cadcc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/PREIMAGE_WITNESSES.json",
+      "mode": "100644",
+      "git_blob": "68b8808f06a647b537378fc1aa9858fb71d86df4",
+      "bytes": 4505,
+      "sha256": "4c12cb9d1efa54ac423e4b7b6ff98e1b2617ab9fa60e85849414fc1811e4948c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/SOURCE_AUTHORITY.json",
+      "mode": "100644",
+      "git_blob": "e8ddb5de986b0783cd69198450280bba3f031fe8",
+      "bytes": 1737,
+      "sha256": "bd3a1023fa6d08d2a64206d3d96f3f0ddbef20446793d032b2dcf09a15eef835"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/STATE_OF_MAIN.json",
+      "mode": "100644",
+      "git_blob": "87382eecd9314556d0f368806ff09e3e4fe9f51d",
+      "bytes": 2033,
+      "sha256": "649eb2f45b136517f42a95992fa833d2c6a46e957eaf153506efb47431068020"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/TASK_MANIFEST.json",
+      "mode": "100644",
+      "git_blob": "81137f07010c603b5fd42d2c2ea646f9642f583b",
+      "bytes": 1935,
+      "sha256": "75ffa77d1d4371ccad901a49272aba267e4e8468f4e64c14c2fa3d563235f9c4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/inputs/verify_context.py",
+      "mode": "100644",
+      "git_blob": "452fffb577f9947ca9ef78af01f71d18c7a7f797",
+      "bytes": 2079,
+      "sha256": "f1f503a9e842f43d5d42088080374e056e4b847849f12e6d999510c4c5a9142d"
+    }
+  ]
+}

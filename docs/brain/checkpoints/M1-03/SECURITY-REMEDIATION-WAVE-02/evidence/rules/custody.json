@@ -1,0 +1,482 @@
+{
+  "observed_at": "2026-10-23T21:19:05.550891+00:00",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "approach1_registry": [
+    {
+      "name": "owasp-top-ten",
+      "url": "https://semgrep.dev/c/p/owasp-top-ten",
+      "bytes": 1499313,
+      "sha256": "c552bf8aa0b9dfcb854cd4ae14108fae63f30ac237bb902c0f2f25e98b32b57b",
+      "expected_sha256": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+      "matches_pin": false,
+      "retained_only_if_authentic": true
+    },
+    {
+      "name": "react",
+      "url": "https://semgrep.dev/c/p/react",
+      "bytes": 17090,
+      "sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+      "expected_sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+      "matches_pin": true,
+      "retained_only_if_authentic": true
+    },
+    {
+      "name": "secrets",
+      "url": "https://semgrep.dev/c/p/secrets",
+      "bytes": 94643,
+      "sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+      "expected_sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+      "matches_pin": true,
+      "retained_only_if_authentic": true
+    },
+    {
+      "name": "typescript",
+      "url": "https://semgrep.dev/c/p/typescript",
+      "bytes": 221296,
+      "sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+      "expected_sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+      "matches_pin": true,
+      "retained_only_if_authentic": true
+    }
+  ],
+  "approach2_named_git_history_blobs": [
+    {
+      "path": ".github/workflows/g97-security-acceptance.yml",
+      "git_blob": "6afd4e34c6142c1a28814f2deb73483b1365d863",
+      "bytes": 2314,
+      "sha256": "ba7733652563ec9317cbf773693140323ea17f03c444c82dd21a4a771b9f4dae",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/ios-launch-contract.yml",
+      "git_blob": "3f80c9f19ac4a3675d82446501a0d3aae4c511a0",
+      "bytes": 1200,
+      "sha256": "9b3d549354fdbd01ea8d25be1637d1d95f57f07c98c058ce6cea0270e64c2896",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/ios-simulator-compile.yml",
+      "git_blob": "0564dea4c256471ab139a7fd03acc59f3e8d2a78",
+      "bytes": 4105,
+      "sha256": "ea1e9d5714f9d3a7297a6727c15c822edde35e34b829c0dddbf33346efd80556",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "7efb90aaabbeca82149d4efa0067943abb251351",
+      "bytes": 13201,
+      "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "bytes": 29246,
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1",
+      "matches_pin": false
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-owasp-top-ten.raw.json.gz",
+      "git_blob": "ec793cfc897bb6c723d3e20afe0ff622f0bd97da",
+      "bytes": 2661703,
+      "sha256": "935056031424211a9747c28f252672f79ed05295df218a2f691d8936541f2d87",
+      "matches_pin": false,
+      "inflated_bytes": 92469077,
+      "inflated_sha256": "566e1d83cd08217d187c5eacdf14ea868e0be9bdb8e315339209b557082d4df9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/owasp-top-ten-rule-file-profile.json.gz",
+      "git_blob": "4ae9f91c3c69f5c567350418fced5d657a94ff34",
+      "bytes": 2617165,
+      "sha256": "4c53c8b7e2c712f9622736476afd452b26bd8ec8bd06f6b2daca9321602a822b",
+      "matches_pin": false,
+      "inflated_bytes": 92475943,
+      "inflated_sha256": "d45ae7563470ddb8147411d183cbf7403c552617bb64a100c8dce07b91ef911c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/owasp-top-ten.rule-file-profile.json.gz",
+      "git_blob": "70ba933faec2d0fa5df521f973945094f847075f",
+      "bytes": 2702706,
+      "sha256": "6782b65fc83e71db92111c577d064a9816ca6335b8c1196b20de134031206b29",
+      "matches_pin": false,
+      "inflated_bytes": 95129938,
+      "inflated_sha256": "fc4460747bd610c423d63e18e75896bb98afb4139f9bf5a2ad1a14c22a97fcf6"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "2a92c7fea377694183460fffeab58dc2b409e750",
+      "bytes": 28425,
+      "sha256": "20c98df5976fcdd782f5cf0f695fe2386afbf47253aef02d808bf3e5e5cacf09",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "f9b7906daeb2f8d798caa8395fb313bb7f1d2ce8",
+      "bytes": 28136,
+      "sha256": "360488d12114f969eb79c0c44289ef8b9c9b9e7b98435866abd9f46ba8e971bf",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "1c6bc1c72dd061fb03b866d409790c1f6a65faac",
+      "bytes": 27883,
+      "sha256": "e80d42121b10a7c0be20e7ac654adf7de06d469cf4fa09e33e0cb447c030c939",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "c77463f97b01f1db582483b74cc88998bba81fe8",
+      "bytes": 31067,
+      "sha256": "5b6430e7a9ffb04190cbd530ef929c670e2d6a59dac0cb3673e537161be70302",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "f8a04ae0107fde72f22e778dcf9b7a1f6bd8a487",
+      "bytes": 30904,
+      "sha256": "b86ea17ec54da75bfba85ed792bd2c0cef34a3146a3425af49694c717c4d4186",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "9ca9888847eeb1445d04e911acae628878a286a4",
+      "bytes": 29868,
+      "sha256": "ddd635f90193daf1669ce36522ce2c333f7c1bbbdd26e92c57afe890bbc5550b",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "2ccad6860db289db697336c032629756b546a43d",
+      "bytes": 28950,
+      "sha256": "a1872c781d2fcb867fed00cef797b409aaa67463e12ead15ef8c9f812bbbc000",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/g97-security-acceptance.yml",
+      "git_blob": "3679abf6a2f442d5333325b5944981cc1f3300f5",
+      "bytes": 2161,
+      "sha256": "bdef1d04d97280e9c1136c9dcde7da28bdb729cf6e0d51bf2bea4dcc1d88a368",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "28fda3c909790c2a3b7fa12347a8b4082ccafc8c",
+      "bytes": 13149,
+      "sha256": "14f2c0efb8ec7acf675b190b4a635155d7f797a06ea72a4b539fe09c656741ed",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "2b6e15667d24745e3d510ee840f4d236d9097076",
+      "bytes": 28812,
+      "sha256": "02d30571c7b3688fbb73f1028d1d39226bf00167237caece1b38baf89660b1a0",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/g97-security-acceptance.yml",
+      "git_blob": "8151f7d575ffa9a8ba8bd16bda936d3a4adea510",
+      "bytes": 4112,
+      "sha256": "310f3cf326817c55fac2ef320515c31629c9d403a15b23936a6ab898437420b9",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "7b13aba67a962c6b50ca2341fdad4cc4c4251451",
+      "bytes": 21707,
+      "sha256": "c545df115b7346200456fc4e50808ef14a4a0fb15ba30d0b1e6b1454ba988534",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "799d15f099eca454822dd45c330b9436d83e96c4",
+      "bytes": 12961,
+      "sha256": "908e930f3c9366fdc642659f627f81feec54cd47e2d77b0108296e49eed5d285",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "c0481e6b2c8bc3df4a498ee78c4706b80b3d63cb",
+      "bytes": 20623,
+      "sha256": "1d9e4a0d63451f0bd903b61eb4d8519b8271fe5929a82e0b17fd6fd1641d33d3",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "88e4ed6d2f266d54edc7fa11cda5dd6fcd48bb44",
+      "bytes": 12553,
+      "sha256": "4e298803f8c77caef5489dd53cf017ebdea62f18a03548af5a0db92722827136",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "8fff4d13c315253e4732edfcdba1b4d013716b1c",
+      "bytes": 20275,
+      "sha256": "76c2b04920f22b143ddef3856bb48d9d55e1e9382b472fe2ff53e940a5d152a0",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "13fad793392d8dcda77f852358436619abfdd3b8",
+      "bytes": 12475,
+      "sha256": "bdfb2b76adbcce35de64bd04a3b2e5cec3f5ca925eee2eefb307a6e157a581ea",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "5a8410aa67c33463bd7ef39aa92c284c717303bf",
+      "bytes": 19196,
+      "sha256": "6e3df8dbaf14e7644daa3a3ad930853111c7b8afc4766d965d6835e65236c725",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/ios-launch-contract.yml",
+      "git_blob": "069a6e0d5b58c261555a6792008877780a9f0723",
+      "bytes": 1017,
+      "sha256": "e488987ed6e8a09296f643f8df86341db668acad24579083f81d81b6e1e4c3dd",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "15014c5a6ec7ce2ee97bf72b644686284af32961",
+      "bytes": 4590,
+      "sha256": "37d8a0e3760fc7da54314a765ccf7848221706f843eab54ff53fe15efbde6f0e",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "654cd72605f3212463ea6dbf1aaba362013bfa71",
+      "bytes": 12639,
+      "sha256": "fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "d02464613374cc9a823092ac5361b2ae48e37f5c",
+      "bytes": 12623,
+      "sha256": "ebad4bc6d926cb49d85c0ff86aa5e641391aa0d43347172a78345548da47a701",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "e70ce2c8bf084e92682782d6b0dea3d7b44932f0",
+      "bytes": 12538,
+      "sha256": "525cfe3c605067717ec6ce4b5c08efdcc270c69677cf5b798d1ca54a330dfe5c",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "92f85e2638067a8e79f7ab94fbbb9a51281a6c30",
+      "bytes": 19090,
+      "sha256": "aec0247646e47fb21f5003ab5d278d18b19ca531a191e78b4fb4e7d783774c8d",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "8b207c74bc55957d6e512fbdcd44fffa7c47b930",
+      "bytes": 12117,
+      "sha256": "3e1235359b68c1647aaa30ca6a3306ab1b57d0feeb89dec4358f7c09223d726a",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "109d522f5910946d13da2150ebc37e881b3e905e",
+      "bytes": 11994,
+      "sha256": "4721a5b641f84aa7135d3e002773e3b67da0a060b2ad0ae9d17cc2cefe2f6b4c",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "f9b4b8df4849ab02ee043b14246fe823bbc2f490",
+      "bytes": 18943,
+      "sha256": "c813e8ebdce3ff0002b4ba168526d58d4a1b39ae11254aab4542f834c43e6eaa",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/ios-simulator-compile.yml",
+      "git_blob": "e39cb33f15e8f86a0e01f5a7dc738504f8a0be55",
+      "bytes": 6063,
+      "sha256": "87ecee7163764a04e8986a171cb6b40bdf0fca1eebd3645d0810f068620f9cc2",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "51ea55de8938286e52a11b3e046a326387faf83d",
+      "bytes": 11261,
+      "sha256": "d3466b03129824af69bdfac9e5958001705b59bd052cefcfd3ad5699dccf0d99",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/ios-simulator-compile.yml",
+      "git_blob": "df2d3716eedb3949d76fd53f4cb50ece8c93ea33",
+      "bytes": 6057,
+      "sha256": "6fdfde6443dd487ecf9bbca103b2aff2fee10c0f8cd5f5209b3d1438169fc35c",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "c4debb9abb4a61c97eb534756edb16b090f54af7",
+      "bytes": 11249,
+      "sha256": "034f7a679b42fdc8ef7382a48ae1b440ae3354704e22a26a90ec872dfc7a44fb",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "e71a79f65c83b87ee79ae6a8b6f9b94a53367866",
+      "bytes": 19055,
+      "sha256": "72951da24cdf28c6b5c62b75e0f6b3659ea6e8b46440e609a213d8943ca13c70",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "3aac66f6d8d3a6c60afcaa74f39139c508e13326",
+      "bytes": 4536,
+      "sha256": "a7f193ea2ea611ac59767c79709884cdeab63c8a5d7389c7ccbbe58afcb38c2f",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "d28c6d55b64e218c6f732586aba6ea708271fa2f",
+      "bytes": 10888,
+      "sha256": "6223becd6a57b8e5eb06972a31ea45b6e2f3988f40e88fd36474a28c53541ed5",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "86cfa7f12b1b7d6b104a4cb283b190ee6a445a4f",
+      "bytes": 10554,
+      "sha256": "1b4bd0d46aeac3044c673d95754c25e283152461fddd062c19921e976be2faf0",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "f463cf8d50faf45b7efe35721f26b0271156efc0",
+      "bytes": 9733,
+      "sha256": "6f95078f8977d62e52cc8f562e1b316fa9e34fa2f395b009717ffd6d5fb4cc0c",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "1c7a7c0cd7e0d6b5265a38040f2e614266d61498",
+      "bytes": 9570,
+      "sha256": "6d2013e572622a5dfc66f4ab14650b760074ed44bd470dc13adc837826b9f74e",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "82ea3447c7b7715927e74126f98bf85001963546",
+      "bytes": 9444,
+      "sha256": "9bdb6ea48fbaea893f53522a87281c531c99662d978bbdb745b2d1d41a1d6fbd",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "eb78f93c6f075f6cb029f70eaf6e9a6710200c24",
+      "bytes": 9224,
+      "sha256": "5a38100532c58ecd9d9d414d0455bdf63912feef1e836d738ff4612096a06038",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "307f690e4753ed368bcf95a3e4cb7a34d3fdfabb",
+      "bytes": 8913,
+      "sha256": "6be83291bcedd89aa9aea732e0254adf6180c13291a2838b097012f02497eaf4",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "b76a511dbc4ecc8efac9cc4de8b1eb7b13cde68e",
+      "bytes": 8800,
+      "sha256": "5e9c2aee7f1369edc4f1f4a8cc1c199333b105dea223749882ef22e55f5e1063",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "9a5c38ba642aca271173ab9f3ca48d61d53f4b80",
+      "bytes": 8761,
+      "sha256": "c38790c999b704995f2502ff6ef22df525945790959c5173d6647674b5c0b6c4",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "7ba103a3b23df596a7fbf3197e0b886dde283bfd",
+      "bytes": 8540,
+      "sha256": "37212b5ddca911d757a7a361e1846eaac20e3aa374ccf1b7982fa0e27d1aae98",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "ac0acbfa3c726d9d0d96ef807fc8626d80a4e4b4",
+      "bytes": 8265,
+      "sha256": "d27c7356a1a117dbbb70996d661cd9467926e29f1bc49cad428130014f847305",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "dd56343a2755ff2f409f95072e0158784943fcd0",
+      "bytes": 8213,
+      "sha256": "de65e53f1890803983f94d1188e24cba680051a08b11f980e7927326d6473b28",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "33055e989e2371c09d3046b90085f1c3ef15da09",
+      "bytes": 17412,
+      "sha256": "ce6f3d9dce2ae5b01253a74a0a3fbef468706ce4c887fa2875e3db681e9597ba",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "dda68e8c7359f2cf441734aa291279a58dcdebe4",
+      "bytes": 8061,
+      "sha256": "39fdd9d6192eaa1d8a1be764333a311c332105fcdc390d24a21ba0f3c1f9f23b",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "a18584768ed7c2b24f070bbc8b499c7b008c1b85",
+      "bytes": 7278,
+      "sha256": "eda70620a3e4a89dcec095881c801f424d920f309c1acefdb82ac8e20091bc2a",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "98edc29ec311dd365ffe9c23a15d9a962a76a1b7",
+      "bytes": 7120,
+      "sha256": "88114f502950a2775e6d9aead1781aabc590830ca232ffce52fe1795fea8f69e",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "a77bb39fd1ad7200e270f4cefaad9f334f85e3de",
+      "bytes": 5242,
+      "sha256": "7dd03d4293239a8d30da38f525073cab0711210647cbe81607343bcc94267c2b",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "6f7887106dfbe2cefbb59aa5374ca86735a6e5fc",
+      "bytes": 4448,
+      "sha256": "615825a9d3d9ee87fcc6e6dd2dc1b3353f806f37c95ff34346b9ac05c7de2011",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "git_blob": "d0b60ac74d556b3040d93888bf6493bd73e49bf4",
+      "bytes": 4388,
+      "sha256": "ca21660d9a50e20f51149ed367e7507914888ebc3b6acbbab8f1eb131aed229e",
+      "matches_pin": false
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "git_blob": "625e9e25a2a5b72abfc439b656391e32323b5bea",
+      "bytes": 12722,
+      "sha256": "97e2a0d58a9437beab381014bf0a73d6823cf1abaee8752f32972c300cd9f2dd",
+      "matches_pin": false
+    }
+  ],
+  "history_candidate_count": 61,
+  "history_pin_matches": [],
+  "all_four_authentic": false,
+  "original_rule_changed": false,
+  "current_sast_coverage_claim": false
+}

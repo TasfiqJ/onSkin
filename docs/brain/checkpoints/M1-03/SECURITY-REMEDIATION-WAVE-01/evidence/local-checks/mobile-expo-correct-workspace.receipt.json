@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "node",
+    "/work/repo/node_modules/expo/bin/cli",
+    "install",
+    "--check"
+  ],
+  "cwd": "/work/repo/apps/mobile",
+  "exit": 0,
+  "started": "2026-10-23T20:10:23.497126+00:00",
+  "ended": "2026-10-23T20:10:23.877714+00:00",
+  "log_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+  "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

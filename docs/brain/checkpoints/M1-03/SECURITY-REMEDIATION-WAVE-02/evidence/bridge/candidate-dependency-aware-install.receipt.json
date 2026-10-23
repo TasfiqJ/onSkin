@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "--isolated",
+    "--python",
+    "/work/bridge/candidate-env/bin/python",
+    "install",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--no-input",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--no-compile",
+    "-r",
+    "/evidence/official/combined-requirements.txt",
+    "--report",
+    "/evidence/bridge/candidate-installed.json",
+    "--cache-dir",
+    "/work/pip-cache"
+  ],
+  "cwd": "/work/bridge",
+  "environment": {},
+  "started": "2026-10-23T21:15:58.450227+00:00",
+  "exit": 0,
+  "seconds": 6.680635219003307,
+  "log_sha256": "15101477d843f3da7abe03194f850096a52cc6237115a64212a11ce9bb4eba88"
+}

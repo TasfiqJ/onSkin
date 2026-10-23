@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-03-GOVERNANCE-FIXTURE-01",
+    "report",
+    "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/completion-report.json"
+  ],
+  "cwd": "/work/repo",
+  "environment": {
+    "CI": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TURBO_TELEMETRY_DISABLED": "1",
+    "DO_NOT_TRACK": "1"
+  },
+  "exit": 2,
+  "seconds": 0.06606910499976948,
+  "observed_at": "2026-10-23T21:31:19.627999+00:00",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "log_sha256": "cc36fbc8aaa57887e6055b4e0fa6e94d1669ff2cf14af56bde519cb2e1c5ead0"
+}

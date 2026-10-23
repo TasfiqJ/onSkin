@@ -1,0 +1,21 @@
+{
+  "fault": "Original Docker tmpfs had noexec; npm/Turbo exited126 before tests",
+  "repair_argv": [
+    "docker",
+    "exec",
+    "--privileged",
+    "onskin-m103-wave01-7d13be9c",
+    "mount",
+    "-o",
+    "remount,exec",
+    "/work"
+  ],
+  "scope": "Only task-owned memory tmpfs in this disposable container mount namespace",
+  "after": [
+    "tmpfs /work tmpfs rw,nosuid,nodev,noexec,relatime,size=8388608k 0 0"
+  ],
+  "source_files_changed": false,
+  "remount_result": "OS rejected mount operation; noexec unchanged",
+  "raw_post_attempt_commands": "docker-forced-rerun: all original commands remain exit126; never PASS",
+  "selected_fallback": "New no-hardlink /opt/wave-repo clone on executable container overlay, fresh npm ci, original forced commands. Source HEAD/tree remain 05dc/fc579."
+}

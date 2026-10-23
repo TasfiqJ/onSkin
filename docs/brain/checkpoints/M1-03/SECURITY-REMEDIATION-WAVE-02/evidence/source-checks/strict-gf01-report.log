@@ -1,0 +1,3 @@
+usage: brain.py [-h] [--root ROOT] [--profile {M0-02,M1-01,M1-02,M1-03}]
+                {validate,mirrors,report,ready,pack,verify-pack} ...
+brain.py: error: argument --profile: invalid choice: 'M1-03-GOVERNANCE-FIXTURE-01' (choose from 'M0-02', 'M1-01', 'M1-02', 'M1-03')

@@ -1,0 +1,157 @@
+test_inherited_auto_maintenance_and_hooks_cannot_escape_fixture (test_secret_scan.FixtureLifecycleTests) ... ok
+test_owned_process_is_joined_before_git_directory_cleanup (test_secret_scan.FixtureLifecycleTests) ... skipped 'Linux subprocess/pipe cleanup regression'
+test_CI_repository_job_attempt_and_local_receipts_cannot_be_substituted (test_secret_scan.SecretScanTests) ... ERROR
+test_actual_history_reproduces_first30_cutoff_and_newest_scope (test_secret_scan.SecretScanTests) ... ERROR
+test_binary_and_deletion_commits_remain_in_reachable_history (test_secret_scan.SecretScanTests) ... ERROR
+test_exact_tool_asset_executable_and_version_mismatches_reject (test_secret_scan.SecretScanTests) ... ERROR
+test_merge_only_content_is_part_of_the_required_patch_scope (test_secret_scan.SecretScanTests) ... ERROR
+test_missing_truncated_stale_output_and_forged_range_rejects (test_secret_scan.SecretScanTests) ... ERROR
+test_omitted_newest_ref_source_run_or_snapshot_substitution_rejects (test_secret_scan.SecretScanTests) ... ERROR
+test_raw_reports_findings_and_exits_remain_independent (test_secret_scan.SecretScanTests) ... ERROR
+test_ref_drift_or_new_commit_invalidates_prior_receipt (test_secret_scan.SecretScanTests) ... ERROR
+test_safe_archive_and_byte_substitution_refuse_before_execution (test_secret_scan.SecretScanTests) ... ERROR
+
+======================================================================
+ERROR: test_CI_repository_job_attempt_and_local_receipts_cannot_be_substituted (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_actual_history_reproduces_first30_cutoff_and_newest_scope (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_binary_and_deletion_commits_remain_in_reachable_history (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_exact_tool_asset_executable_and_version_mismatches_reject (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_merge_only_content_is_part_of_the_required_patch_scope (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_missing_truncated_stale_output_and_forged_range_rejects (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_omitted_newest_ref_source_run_or_snapshot_substitution_rejects (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_raw_reports_findings_and_exits_remain_independent (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_ref_drift_or_new_commit_invalidates_prior_receipt (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+======================================================================
+ERROR: test_safe_archive_and_byte_substitution_refuse_before_execution (test_secret_scan.SecretScanTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 58, in setUp
+    self.proof, self.sarif = synthetic_proof(self.scope)
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\test_secret_scan.py", line 36, in synthetic_proof
+    for name, argv in s.commands(tools, proof['mirror'], proof['snapshot'], proof['sarif'], proof['current_report']).items():
+  File "C:\Users\jasim\Desktop\WeddingCards\m103-security-coverage-test-a\scripts\phase9\security_acceptance\secret_scan.py", line 163, in commands
+    'trufflehog-history': [th, 'git', pathlib.Path(mirror).as_uri(), '--bare', '--fail',
+  File "C:\Python39\lib\pathlib.py", line 772, in as_uri
+    raise ValueError("relative path can't be expressed as a file URI")
+ValueError: relative path can't be expressed as a file URI
+
+----------------------------------------------------------------------
+Ran 12 tests in 44.254s
+
+FAILED (errors=10, skipped=1)

@@ -1,0 +1,17 @@
+{
+  "observed_utc": "2026-10-23 02:37:34 UTC",
+  "source_commit": "efc75bf119904f983e40380067f682d111da52dd",
+  "run_id": 39890269416,
+  "job_id": 120208081900,
+  "job_name": "Credential-free Supabase reset and database tests",
+  "status": "completed",
+  "conclusion": "failure",
+  "failure_step": "Reset twice, test, lint, and prove zero drift",
+  "sanitized_provider_log_excerpts": [
+    "2026-10-23T02:34:59.0459102Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: error from registry: Data limit exceeded",
+    "2026-10-23T02:34:59.0464486Z     diagnostic: 'Error response from daemon: error from registry: Data limit exceeded'"
+  ],
+  "canonical_image_source_pin": "public.ecr.aws/supabase/postgres:15.8.1.085",
+  "local_image_pull_attempted": false,
+  "admission": "CLOSED"
+}

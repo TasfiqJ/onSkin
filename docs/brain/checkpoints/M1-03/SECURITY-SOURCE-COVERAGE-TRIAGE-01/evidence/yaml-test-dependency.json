@@ -1,0 +1,11 @@
+{
+  "purpose": "original unit-test dependency only; no scanner or acceptance",
+  "package": "yaml",
+  "version": "2.9.0",
+  "resolved": "https://registry.npmjs.org/yaml/-/yaml-2.9.0.tgz",
+  "integrity": "sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==",
+  "sha256": "008fa204cb1ba700e0272ba045abbf09a6ffe63456e8146ba97cac6c2ad1ef91",
+  "started": "2026-10-23T14:19:48.727856+00:00",
+  "finished": "2026-10-23T14:19:48.960654+00:00",
+  "source_lock_unchanged": true
+}

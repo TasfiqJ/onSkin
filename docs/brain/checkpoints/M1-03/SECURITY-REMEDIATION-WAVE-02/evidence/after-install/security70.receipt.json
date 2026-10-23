@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_contract.py",
+    "-v"
+  ],
+  "cwd": "/work/repo",
+  "exit": 0,
+  "seconds": 172.84698144200956,
+  "observed_at": "2026-10-23T21:35:13.721060+00:00",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "log_sha256": "61d8679aad378504e68062ce18da80956650ecb87831bdfa7fbbc0e79f18cdff"
+}

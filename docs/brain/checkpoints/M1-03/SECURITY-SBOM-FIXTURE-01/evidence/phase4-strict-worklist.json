@@ -1,0 +1,21 @@
+{
+  "label": "phase4-strict-worklist",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "npm",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:28:26.080250+00:00",
+  "finished_utc": "2026-10-23T02:28:26.487394+00:00",
+  "seconds": 0.406,
+  "raw_exit": 0
+}

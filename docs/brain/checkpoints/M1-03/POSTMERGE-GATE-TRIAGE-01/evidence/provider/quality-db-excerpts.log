@@ -1,0 +1,5 @@
+2026-10-22T18:40:59.7100141Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: error from registry: Data limit exceeded
+2026-10-22T18:40:59.7102475Z     at async runWithCanonicalPostgresPullRetry (file:///home/runner/work/onSkin/onSkin/scripts/phase2/local-supabase-reset-retry.mjs:11:14)
+2026-10-22T18:40:59.7103460Z     at async prepareCanonicalPostgresImage (file:///home/runner/work/onSkin/onSkin/scripts/phase2/local-supabase-reset.mjs:544:18)
+2026-10-22T18:40:59.7110897Z     diagnostic: 'Error response from daemon: error from registry: Data limit exceeded'
+2026-10-22T18:40:59.7255971Z ##[error]Process completed with exit code 1.

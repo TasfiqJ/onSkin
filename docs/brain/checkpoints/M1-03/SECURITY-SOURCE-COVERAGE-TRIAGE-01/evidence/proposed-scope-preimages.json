@@ -1,0 +1,14 @@
+[
+  {
+    "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+    "bytes": 6778,
+    "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+    "git_blob": "641e85bad6becf327f0a3269340bb49c6db912a7"
+  },
+  {
+    "path": "scripts/phase9/security_acceptance/proposal.json",
+    "bytes": 13797,
+    "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+    "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054"
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "source_url": "https://api.github.com/advisories/GHSA-qxg6-89mg-rqv8",
+  "html_url": "https://github.com/advisories/GHSA-qxg6-89mg-rqv8",
+  "ghsa_id": "GHSA-qxg6-89mg-rqv8",
+  "published_at": "2026-10-21T19:54:26Z",
+  "updated_at": "2026-10-21T19:54:27Z",
+  "severity": "medium",
+  "vulnerabilities": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@vitest/mocker"
+      },
+      "vulnerable_version_range": ">= 2.1.0-beta.7, < 4.1.12",
+      "first_patched_version": "4.1.12",
+      "vulnerable_functions": []
+    },
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@vitest/mocker"
+      },
+      "vulnerable_version_range": ">= 5.0.0-beta.1, < 5.0.3",
+      "first_patched_version": "5.0.3",
+      "vulnerable_functions": []
+    }
+  ],
+  "observed_at": "2026-10-23T03:26:33.458491+00:00"
+}

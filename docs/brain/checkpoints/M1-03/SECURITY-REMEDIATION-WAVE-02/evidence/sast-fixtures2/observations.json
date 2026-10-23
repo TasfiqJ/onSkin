@@ -1,0 +1,157 @@
+{
+  "runs": [
+    {
+      "label": "old",
+      "argv": [
+        "/work/runtime/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,socket\n# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable\n# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.\ndef g97_scanner_audit(event,args):\n if event == 'socket.bind' and args[0].family in (socket.AF_INET,socket.AF_INET6):\n  raise PermissionError('G97_SCANNER_INTERNET_LISTENER_FORBIDDEN')\nsys.addaudithook(g97_scanner_audit)\nimport site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()",
+        "/work/bridge2/old-site",
+        "scan",
+        "--error",
+        "--strict",
+        "--oss-only",
+        "--metrics=off",
+        "--jobs=1",
+        "--max-memory=768",
+        "--timeout=30",
+        "--max-target-bytes=4194304",
+        "--json",
+        "--output=/work/sast-fixtures2/old.json",
+        "--config",
+        "/work/rules/typescript.yaml",
+        "--config",
+        "/work/rules/react.yaml",
+        "--config",
+        "/work/rules/secrets.yaml",
+        "negative.ts",
+        "positive.ts",
+        "positive.tsx"
+      ],
+      "cwd": "/work/sast-fixtures2",
+      "exit": 1,
+      "seconds": 4.375673945003655,
+      "raw_sha256": "ab812587163ce46ec00f10e5bcab501befb2236cac9c338b02ef84f7a956998c",
+      "log_sha256": "4603a35f2383877a73633f487f6524c360d8eaa048be0ea1d52f09fd3d2ac18f",
+      "version": "1.181.0",
+      "results": [
+        {
+          "rule_id": "work.rules.javascript.lang.security.detect-eval-with-expression.detect-eval-with-expression",
+          "path": "positive.ts",
+          "start": {
+            "line": 1,
+            "col": 40,
+            "offset": 39
+          },
+          "end": {
+            "line": 1,
+            "col": 53,
+            "offset": 52
+          }
+        },
+        {
+          "rule_id": "work.rules.typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml",
+          "path": "positive.tsx",
+          "start": {
+            "line": 1,
+            "col": 87,
+            "offset": 86
+          },
+          "end": {
+            "line": 1,
+            "col": 92,
+            "offset": 91
+          }
+        }
+      ],
+      "errors": [],
+      "paths_scanned": [
+        "negative.ts",
+        "positive.ts",
+        "positive.tsx"
+      ],
+      "skipped_rules": [],
+      "fixpoint_timeouts": []
+    },
+    {
+      "label": "new",
+      "argv": [
+        "/work/bridge2/candidate-env/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,socket\n# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable\n# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.\ndef g97_scanner_audit(event,args):\n if event == 'socket.bind' and args[0].family in (socket.AF_INET,socket.AF_INET6):\n  raise PermissionError('G97_SCANNER_INTERNET_LISTENER_FORBIDDEN')\nsys.addaudithook(g97_scanner_audit)\nimport site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()",
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+        "scan",
+        "--error",
+        "--strict",
+        "--oss-only",
+        "--metrics=off",
+        "--jobs=1",
+        "--max-memory=768",
+        "--timeout=30",
+        "--max-target-bytes=4194304",
+        "--json",
+        "--output=/work/sast-fixtures2/new.json",
+        "--config",
+        "/work/rules/typescript.yaml",
+        "--config",
+        "/work/rules/react.yaml",
+        "--config",
+        "/work/rules/secrets.yaml",
+        "negative.ts",
+        "positive.ts",
+        "positive.tsx"
+      ],
+      "cwd": "/work/sast-fixtures2",
+      "exit": 1,
+      "seconds": 4.3252350539842155,
+      "raw_sha256": "421b0fa4e9eca983f1d61073ebcb5e330a1448fc3e35da1eb4c945cc463c230f",
+      "log_sha256": "4603a35f2383877a73633f487f6524c360d8eaa048be0ea1d52f09fd3d2ac18f",
+      "version": "1.181.0",
+      "results": [
+        {
+          "rule_id": "work.rules.javascript.lang.security.detect-eval-with-expression.detect-eval-with-expression",
+          "path": "positive.ts",
+          "start": {
+            "line": 1,
+            "col": 40,
+            "offset": 39
+          },
+          "end": {
+            "line": 1,
+            "col": 53,
+            "offset": 52
+          }
+        },
+        {
+          "rule_id": "work.rules.typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml",
+          "path": "positive.tsx",
+          "start": {
+            "line": 1,
+            "col": 87,
+            "offset": 86
+          },
+          "end": {
+            "line": 1,
+            "col": 92,
+            "offset": 91
+          }
+        }
+      ],
+      "errors": [],
+      "paths_scanned": [
+        "negative.ts",
+        "positive.ts",
+        "positive.tsx"
+      ],
+      "skipped_rules": [],
+      "fixpoint_timeouts": []
+    }
+  ],
+  "fixture_revision": "Use actual rule taint sources: location.hash and function parameter; generic input/arrow fixture gave no findings. No rule changed."
+}

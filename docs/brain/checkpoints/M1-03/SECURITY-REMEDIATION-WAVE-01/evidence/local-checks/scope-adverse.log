@@ -1,0 +1,13 @@
+test_false_go (__main__.Refusals) ... ok
+test_forged_wheel (__main__.Refusals) ... ok
+test_owner_and_expiry (__main__.Refusals) ... ok
+test_positive_diagnostic_scope (__main__.Refusals) ... ok
+test_requirements_and_package_tree_edit (__main__.Refusals) ... ok
+test_source_manifest_and_rule_edits (__main__.Refusals) ... ok
+test_unexpected_dependency_drift (__main__.Refusals) ... ok
+test_wrong_source (__main__.Refusals) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK

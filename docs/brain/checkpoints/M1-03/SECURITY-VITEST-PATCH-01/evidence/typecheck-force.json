@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/tmp/onskin-vp01-bin/npm",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "cwd": "/root/onskin-brain-sbomfix01-d2ce-review",
+  "started_at": "2026-10-23T03:31:40.332042+00:00",
+  "ended_at": "2026-10-23T03:31:54.761657+00:00",
+  "duration_seconds": 12.106,
+  "exit_code": 0,
+  "transcript_sha256": "05fd8207d0a31d7a3607fd84f81c9dbaabf706331766cae8cc9ea3490b902add"
+}

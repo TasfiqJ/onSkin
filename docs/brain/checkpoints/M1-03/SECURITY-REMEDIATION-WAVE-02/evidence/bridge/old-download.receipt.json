@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "--isolated",
+    "download",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--no-input",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--no-deps",
+    "-r",
+    "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+    "-d",
+    "/work/bridge/old-wheels",
+    "--cache-dir",
+    "/work/pip-cache"
+  ],
+  "cwd": "/work/bridge",
+  "environment": {},
+  "started": "2026-10-23T21:15:21.036918+00:00",
+  "exit": 0,
+  "seconds": 14.199055809993297,
+  "log_sha256": "81232b68b866a5fd1d7aa338bb5fb24d847fe5fea44bbe55308d6b0d833617e1"
+}

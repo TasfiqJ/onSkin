@@ -1,0 +1,19 @@
+{
+  "committed_patch_git_blob": "fa184ea8ad1a2fc8ce430d56138843ba8d1128a4",
+  "committed_patch_path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch",
+  "committed_patch_sha256": "8ca578ae875fb2012613604ab3f3f55326ef253267f5223a137034b9d868bf0a",
+  "expected_postimage_bytes": 49880,
+  "expected_postimage_git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d",
+  "expected_postimage_sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+  "only_changed_existing_source": "scripts/phase9/security_acceptance/test_contract.py",
+  "patch_bytes": 2993,
+  "preimage_bytes": 49408,
+  "preimage_git_blob": "cf5ade898af4862a12b714a56cd8472d461b5e59",
+  "preimage_sha256": "73e31496101f9e0dd3bfc0bb716e0717ebfdfeecea1627c5d43853c3a1f1638c",
+  "reference_proof_path": "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/SECURITY_CAUSAL_PROOF.md",
+  "reversal_rule": "git apply -R only in disposable clone; stage may revert only via new authorized commit, never force push",
+  "schema_version": 1,
+  "security_impact": "Synthetic current-lock fixture correction, NOT a scanner receipt or acceptance",
+  "source_commit": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+  "source_tree": "c7196a52c8d2e34a661841c3d4d92f3867b75e39"
+}

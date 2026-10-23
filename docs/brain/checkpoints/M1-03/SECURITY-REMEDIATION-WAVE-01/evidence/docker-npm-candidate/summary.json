@@ -1,0 +1,162 @@
+{
+  "admission": "NONE",
+  "stage_edit": false,
+  "candidate": "Remove only root direct node-forge; NOT A FIX",
+  "receipts": [
+    {
+      "name": "delete-direct",
+      "argv": [
+        "node",
+        "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+        "pkg",
+        "delete",
+        "devDependencies.node-forge"
+      ],
+      "cwd": "/work/npm-candidate",
+      "exit": 0,
+      "started_unix": 1792785811.327828,
+      "seconds": 0.21642279624938965,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "candidate-lock",
+      "argv": [
+        "node",
+        "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+        "install",
+        "--package-lock-only",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/work/npm-candidate",
+      "exit": 0,
+      "started_unix": 1792785811.5461335,
+      "seconds": 0.9176733493804932,
+      "log_sha256": "31f28eee1d81c8b9468c7df197d2666b425968d7cfa8f9ebcd0f3188395c0656"
+    },
+    {
+      "name": "candidate-ci",
+      "argv": [
+        "node",
+        "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/work/npm-candidate",
+      "exit": 0,
+      "started_unix": 1792785812.4658766,
+      "seconds": 36.41285800933838,
+      "log_sha256": "bbb7807adeb42d207ab132ce0b466e4bea379985890a96ce376498e0d7cb6523"
+    },
+    {
+      "name": "candidate-audit",
+      "argv": [
+        "node",
+        "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+        "audit",
+        "--package-lock-only",
+        "--audit-level=high",
+        "--json"
+      ],
+      "cwd": "/work/npm-candidate",
+      "exit": 1,
+      "started_unix": 1792785848.8809295,
+      "seconds": 2.2730839252471924,
+      "log_sha256": "5b4c371e6c1a12aa697de91d647aae973ed0d120e7cf1d899d3cbfc8cb496379"
+    },
+    {
+      "name": "archive-tests",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/phase9/ios-archive-privacy-evidence.test.mjs"
+      ],
+      "cwd": "/work/npm-candidate",
+      "exit": 0,
+      "started_unix": 1792785851.1560805,
+      "seconds": 1.6912083625793457,
+      "log_sha256": "00ef426493b507c01627090583e2207c90ca08bd7383aec0d6482f56232e4b33"
+    },
+    {
+      "name": "candidate-graph",
+      "argv": [
+        "node",
+        "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+        "ls",
+        "node-forge",
+        "--all",
+        "--json"
+      ],
+      "cwd": "/work/npm-candidate",
+      "exit": 0,
+      "started_unix": 1792785852.849408,
+      "seconds": 0.8172645568847656,
+      "log_sha256": "83239c13a86d1379ff68b7b3b1bc96cdda010d73ab771a66f6e01dec63ccfae3"
+    }
+  ],
+  "official_registry": [
+    {
+      "url": "https://registry.npmjs.org/node-forge/latest",
+      "metadata_sha256": "bab897062dd42d67cc7212c18a524d729e84d0900512038a5ec14bba74357bf8",
+      "name": "node-forge",
+      "version": "1.4.0",
+      "node_forge_dependency": null,
+      "integrity": "sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ=="
+    },
+    {
+      "url": "https://registry.npmjs.org/@expo%2fcli/latest",
+      "metadata_sha256": "e0e70f710f6922fb410c7ced16aba089277f5f60bfc89d0e3191b146f6eb356d",
+      "name": "@expo/cli",
+      "version": "58.1.14",
+      "node_forge_dependency": "^1.4.0",
+      "integrity": "sha512-Qrpkhb9XrQn+wuxaOVR0hh0dLzeFZjGZHC9Jz86hPsexPzP+/mnMigRoWVaeEP8q7b3Hsr98gozL5d94DzFOBw=="
+    }
+  ],
+  "candidate_audit_counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 6,
+    "critical": 0,
+    "total": 6
+  },
+  "remaining_node_forge": {
+    "name": "node-forge",
+    "severity": "high",
+    "isDirect": false,
+    "via": [
+      {
+        "source": 1240912,
+        "name": "node-forge",
+        "dependency": "node-forge",
+        "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+        "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+        "severity": "high",
+        "cwe": [
+          "CWE-347"
+        ],
+        "cvss": {
+          "score": 7.5,
+          "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+        },
+        "range": "<=1.4.0"
+      }
+    ],
+    "effects": [
+      "@expo/cli",
+      "@expo/code-signing-certificates"
+    ],
+    "range": "*",
+    "nodes": [
+      "node_modules/node-forge"
+    ],
+    "fixAvailable": {
+      "name": "expo",
+      "version": "44.0.6",
+      "isSemVerMajor": true
+    }
+  },
+  "decision": "REJECT: vulnerable Expo certificate dependency persists; passing archive fixtures cannot authorize removal or clear the advisory."
+}

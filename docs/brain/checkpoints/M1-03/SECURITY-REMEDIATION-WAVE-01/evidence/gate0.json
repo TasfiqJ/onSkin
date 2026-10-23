@@ -1,0 +1,231 @@
+{
+  "observed_at": "2026-10-23T19:40:31.511696+00:00",
+  "base_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "base_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "canonical_preimage_fingerprint": "9fe6fec09698e595def19a6f7304d1376f850e32d12051e8ebdd882f16fd3c2f",
+  "preimages": [
+    {
+      "bytes": 3623,
+      "git_blob": "1cff596b3229017f3b75a5beed87948c61771917",
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "eb52450a3662b1ca8bb2c683de6c02c5363fab67c8cff4f033e72d24bc7c2375",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 2501,
+      "git_blob": "3c6f10f0aff17acb5e7438b17c8773431b1ae1e3",
+      "path": ".gitattributes",
+      "sha256": "6c27bcb17651fadff9242a5a02f7afa7f2820c885584d0be8f63010ec0254dd2",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 6778,
+      "git_blob": "ee24c284afc6251892bcbdbd8e6fc280a3d543ef",
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "sha256": "9af06b943d8cc19750ddc2f6d3831c096f540fb68965b62b2e760706a1db465f",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 13797,
+      "git_blob": "a220415ed4043c6a8528ad00bac72decf72b778f",
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "abc1ab02e54f50348e6f10b9a4cffa66164ffdd4bbf09693534b0e50d549f3e3",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 137486,
+      "git_blob": "067d1d4f64d5a1aee3b218ebb113c3b74e0b6bc5",
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "sha256": "32bc072fccf212e79e06c3a7018e9c74efd6bd231a877f06f38773d4cb6e2c6e",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 81878,
+      "git_blob": "d8c972b471cd3ae52b557d7b76ea31c989576fbd",
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "sha256": "66d30fd8140d1b3c98b0df3ba831d011efdbd30cc95ada5d661f6c6ecaa78915",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 7937,
+      "git_blob": "c009d7f5a1e373b5da7dfab86707a6cad24ec2a8",
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 2327707,
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 81513,
+      "git_blob": "d3d811b1ab1f6d672c965d8c005cd94e77ed63b3",
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 10743,
+      "git_blob": "d2a4d4e9f5d26950d6ea9b761619d6926dc90502",
+      "path": "scripts/phase9/security_acceptance/collect.py",
+      "sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 38158,
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 49880,
+      "git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d",
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 15122,
+      "git_blob": "5c13967f1377aa64fc4bb44398ad3e712515d9cc",
+      "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+      "sha256": "78f7285f6a9c0443aa62ff3021264b88ae3c034da1edb353af2e7dd993b8470d",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 20692,
+      "git_blob": "cd9d88d5f723cae30ef9a8cee18126136e396218",
+      "path": "scripts/phase9/security_acceptance/secret_scan.py",
+      "sha256": "30a04d2b2c7a4fa9aefacdea6796b20c7e1f332b61102d12a47878145e3590a5",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 17412,
+      "git_blob": "34e7b277c934f05bd102ef646b4c82a3453408ee",
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 15616,
+      "git_blob": "4b05ec36fcd678120c09b8d0cebd247f34a83503",
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 8268,
+      "git_blob": "00206f6ef6ce4dee68dd9c29af496c1ea3e3b9fb",
+      "path": "scripts/phase9/dependency-sbom.mjs",
+      "sha256": "083e0779128bd0bb553d1b2243eb231078cc4b2322236f7318cd4b9e375e8b70",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 29246,
+      "git_blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "path": ".github/workflows/security.yml",
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 13201,
+      "git_blob": "7efb90aaabbeca82149d4efa0067943abb251351",
+      "path": ".github/workflows/quality.yml",
+      "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 1577,
+      "git_blob": "3e575fa3769a4f1b8dcdeae970d8bd4072d64740",
+      "path": "docs/phase-9/security-advisory-exceptions.json",
+      "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 46730,
+      "git_blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "path": "package.json",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 572798,
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "path": "package-lock.json",
+      "sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 8350,
+      "git_blob": "3ab1c5aa8c68a1802ea054d510f675d715683e1d",
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "sha256": "40abcddf562853d8d2312ace7ea31c9d97d69903b59594bddc5a78a82f479fcd",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 44273,
+      "git_blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "path": "docs/brain/state/roadmap.json",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877",
+      "working_equal": true,
+      "git_verified": true
+    },
+    {
+      "bytes": 1052,
+      "git_blob": "c35aca6c9cd79e63cbb2033b9500355e43d6353d",
+      "path": "docs/brain/m103-governance-fixture01-active.json",
+      "sha256": "9863a2f3ddf4c20dfa34b42dd611eb94da562699e3395d600acf146995f7ff92",
+      "working_equal": true,
+      "git_verified": true
+    }
+  ],
+  "manifest_sha256": "249b00aae6198adca75225b911f1c8273ce94ff9a2b129fe4b1f45edd494e303",
+  "context_verifier": {
+    "argv": [
+      "python",
+      "-B",
+      "verify_context.py",
+      "--expected-manifest-sha256",
+      "249b00aae6198adca75225b911f1c8273ce94ff9a2b129fe4b1f45edd494e303"
+    ],
+    "exit": 0,
+    "stdout": "VERIFIED 13 members, 25 preimages, external SHA 249b00aae6198adca75225b911f1c8273ce94ff9a2b129fe4b1f45edd494e303"
+  },
+  "live_refs": "d9912f4c8b30358593569c5b9b4e84773c6f463e\trefs/heads/main\n05dc51d6c945d31c66b921ae99dee603de464cdc\trefs/heads/stage/m1-gate-recovery\n",
+  "pr10": {
+    "draft": true,
+    "state": "open",
+    "merged": false,
+    "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+    "base": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+    "source": "independent GitHub connector get_pr_info"
+  },
+  "writer_check": "only active command matched exact checkout path; no lock file; initial status clean",
+  "zip_sha256": "3c23233fbf4c7526f1d78b45f65feb6f7af58865a89a1b8af2eb2019b0ac9bf1"
+}

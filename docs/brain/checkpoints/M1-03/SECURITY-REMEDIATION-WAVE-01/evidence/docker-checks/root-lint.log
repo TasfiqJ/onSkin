@@ -1,0 +1,5 @@
+
+> layerwell@0.1.0 lint
+> turbo run lint --force
+
+sh: 1: turbo: Permission denied

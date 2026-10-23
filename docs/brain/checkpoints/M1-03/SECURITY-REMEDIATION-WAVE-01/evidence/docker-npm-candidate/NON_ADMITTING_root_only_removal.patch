@@ -1,0 +1,24 @@
+diff --git a/package-lock.json b/package-lock.json
+index eae8a62b..2c3bc01f 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -16,7 +16,6 @@
+         "@expo/plist": "0.7.0",
+         "@xmldom/xmldom": "0.8.15",
+         "bplist-parser": "0.3.2",
+-        "node-forge": "1.4.0",
+         "pngjs": "3.4.0",
+         "prettier": "^3.4.2",
+         "react-native": "0.86.3",
+diff --git a/package.json b/package.json
+index 7b052268..dd9b65fd 100644
+--- a/package.json
++++ b/package.json
+@@ -299,7 +299,6 @@
+     "@expo/plist": "0.7.0",
+     "@xmldom/xmldom": "0.8.15",
+     "bplist-parser": "0.3.2",
+-    "node-forge": "1.4.0",
+     "pngjs": "3.4.0",
+     "prettier": "^3.4.2",
+     "react-native": "0.86.3",

@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "npm",
+    "ls",
+    "node-forge",
+    "--all",
+    "--json"
+  ],
+  "cwd": "/work/npm-candidate",
+  "exit": 0,
+  "seconds": 0.7704052990011405,
+  "log_sha256": "522130cb03428839abdf640e53825270d9e5b3e91f4419e87b4fa8587c53183c",
+  "raw_private": false
+}

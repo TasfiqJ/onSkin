@@ -1,0 +1,41 @@
+[
+  {
+    "package": "vitest",
+    "version": "4.1.12",
+    "metadata_url": "https://registry.npmjs.org/vitest/4.1.12",
+    "metadata_sha256": "6f6dd06b4b6f0611d655c76981a318a5f2ddf6e5ec032056876751c754fdbcc0",
+    "tarball_url": "https://registry.npmjs.org/vitest/-/vitest-4.1.12.tgz",
+    "tarball_bytes": 475403,
+    "tarball_sha256": "ac79c9561c99eabc1cc29e0a839cbd03d1ff0e45bbecb5a2edfa6c3827c823d1",
+    "integrity": "sha512-5eWdz2yb3ajxWF3C8C4TjkXl7FGm3n2E/VlazALrQHzK7nYMSGFnCZto0bbPNl77AwkOZVLk0YnBAejUu0NiWA==",
+    "registry_shasum": "b372587e9c000f165f1757793178ea6b5631f82e",
+    "integrity_verified": true,
+    "observed_at": "2026-10-23T03:26:31.726080+00:00"
+  },
+  {
+    "package": "@vitest/mocker",
+    "version": "4.1.12",
+    "metadata_url": "https://registry.npmjs.org/%40vitest%2Fmocker/4.1.12",
+    "metadata_sha256": "8db5c03250edf5280c4ba695058beaa9daa2b6ebd2e115de5c4c615889effb58",
+    "tarball_url": "https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.12.tgz",
+    "tarball_bytes": 56550,
+    "tarball_sha256": "8f9ac0144028329f5c649c031608b8877efea748cdbded0d7f41d60f9be49c52",
+    "integrity": "sha512-fKShNpKZzupWZuY0z7egydvL0sqW4INEZBEExMBMAa6izlENEVHwoXgdaTCaBZ5fwlr4xf2o1wXC83n9RpO+NA==",
+    "registry_shasum": "13b241597b79695e401fd05b363bb8e79695dfac",
+    "integrity_verified": true,
+    "observed_at": "2026-10-23T03:26:31.926553+00:00"
+  },
+  {
+    "package": "npm",
+    "version": "11.20.0",
+    "metadata_url": "https://registry.npmjs.org/npm/11.20.0",
+    "metadata_sha256": "a999822f8164c733008d0a3c7f6b38c8a2a67181307cf6a293120586f6e76c54",
+    "tarball_url": "https://registry.npmjs.org/npm/-/npm-11.20.0.tgz",
+    "tarball_bytes": 3004748,
+    "tarball_sha256": "d1a92f40e6c407b84c3a00c3cf978a10b24fd42f153c527e2016cef7bb34a483",
+    "integrity": "sha512-dF3EDFwbYN+N5RUip+ZYDe0NeURK5BgqKOcvT1iNtUYhTMTl0FwWhBuXrS7KtXyduqyTMS5aaQaregnHDAxNgw==",
+    "registry_shasum": "6326d796fe2eff2cc0427e21940443df812a729a",
+    "integrity_verified": true,
+    "observed_at": "2026-10-23T03:26:33.022154+00:00"
+  }
+]

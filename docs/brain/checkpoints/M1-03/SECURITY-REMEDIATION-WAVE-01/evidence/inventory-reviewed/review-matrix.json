@@ -1,0 +1,80 @@
+{
+  "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "missing": [],
+  "row_count": 20407,
+  "rows_sha256": "cee72b694433b5e0614f6eb2985eec03c21501098ad548ae82b7da9b9901b35b",
+  "shards": [
+    {
+      "path": "review-rows-00.json",
+      "rows": 2000,
+      "sha256": "a64b0a56f3322f977dd9b7cd039516a4f1bb8fd08cd55eecae8fe29230b57460",
+      "bytes": 748073
+    },
+    {
+      "path": "review-rows-01.json",
+      "rows": 2000,
+      "sha256": "5fa2773b4ffc4be0a000116215385bf212646af6a35e2e7b35549330fee61608",
+      "bytes": 782551
+    },
+    {
+      "path": "review-rows-02.json",
+      "rows": 2000,
+      "sha256": "f6f4535b6528d785a440d638ba3e0da32e0cef91716d3fa7d1183aac074d97b8",
+      "bytes": 778895
+    },
+    {
+      "path": "review-rows-03.json",
+      "rows": 2000,
+      "sha256": "c240c1ca8f9e47b8c4b81b64b2127cb76a5d4d7bc8a1015516b566a685a215b8",
+      "bytes": 778626
+    },
+    {
+      "path": "review-rows-04.json",
+      "rows": 2000,
+      "sha256": "37ed80a93ff5d5aaf23cc3ddabaf0e648c93b5fb3c4eed7f8c20f87d476aed1a",
+      "bytes": 774990
+    },
+    {
+      "path": "review-rows-05.json",
+      "rows": 2000,
+      "sha256": "41d32ee4ac53ab87ee4007e7daad8c7a822d4ca1ebf552bdc890901913503505",
+      "bytes": 776690
+    },
+    {
+      "path": "review-rows-06.json",
+      "rows": 2000,
+      "sha256": "ab26982244f748e0a240de364f1f559d01c7e184092a19a46e07546ef3626b1d",
+      "bytes": 830007
+    },
+    {
+      "path": "review-rows-07.json",
+      "rows": 2000,
+      "sha256": "82aa2a9d4e820df9b43715a2cdee05770f1684fe6a3177a5e16f4e222ce5e865",
+      "bytes": 817863
+    },
+    {
+      "path": "review-rows-08.json",
+      "rows": 2000,
+      "sha256": "f0dbc0a313d048a8ebe149a1b6f518a695acab43f0a091904bcd29ee07a5d393",
+      "bytes": 821558
+    },
+    {
+      "path": "review-rows-09.json",
+      "rows": 2000,
+      "sha256": "59fdf5dfa9a561637a00b193806bc6868941bb3368fd8f32690a39c61d192db6",
+      "bytes": 842513
+    },
+    {
+      "path": "review-rows-10.json",
+      "rows": 407,
+      "sha256": "74ff39bb857db4cd8e1d0eaa67117a53f3ab1ea98af8b24f20d1355b7f10cbbe",
+      "bytes": 164155
+    }
+  ],
+  "note": "All diagnostic rows retained in bounded shards; no original source manifest or 4MiB scanner limit edit. Formatting-only reorganization of this task checkpoint.",
+  "supersedes": {
+    "commit": "ab263f4f4a66e9aff96bed86239da23656edbb5d",
+    "git_blob": "66bd452338bf3b8f9ee1ffaf3b3815d869bf2d85",
+    "sha256": "b462c58a04627836abd35500e7645e5481683d7dbe8b331f14cc3bf70fd9154a"
+  }
+}

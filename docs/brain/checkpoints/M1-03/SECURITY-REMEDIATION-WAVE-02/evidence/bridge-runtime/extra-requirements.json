@@ -1,0 +1,14 @@
+{
+  "semgrep_provides_extra": [],
+  "mcp_provides_extra": [
+    "cli",
+    "rich",
+    "ws"
+  ],
+  "mcp_extra_requires": [
+    "python-dotenv>=1.0.0; extra == 'cli'",
+    "typer>=0.16.0; extra == 'cli'",
+    "rich>=13.9.4; extra == 'rich'",
+    "websockets>=15.0.1; extra == 'ws'"
+  ]
+}

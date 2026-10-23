@@ -1,0 +1,20 @@
+{
+  "name": "root-typecheck",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:18:02.916714+00:00",
+  "ended": "2026-10-23T20:18:03.034653+00:00",
+  "seconds": 0.11795337797957473,
+  "exit": 126,
+  "log_sha256": "edc23a2991f99bd76a2f1a58167b41d20e7be284937197718397594fc1ceb04d",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_changes_after": ""
+}

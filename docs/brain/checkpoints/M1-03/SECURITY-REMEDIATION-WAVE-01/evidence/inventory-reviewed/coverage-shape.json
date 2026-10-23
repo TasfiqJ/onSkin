@@ -1,0 +1,15 @@
+{
+  "type": "dict",
+  "keys": [
+    "exclusions",
+    "explicitTargets",
+    "schema",
+    "targets"
+  ],
+  "entries": {
+    "exclusions": 2716,
+    "explicitTargets": 26,
+    "schema": 1,
+    "targets": 9206
+  }
+}

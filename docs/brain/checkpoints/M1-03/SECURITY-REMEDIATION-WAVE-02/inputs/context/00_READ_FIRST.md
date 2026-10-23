@@ -1,0 +1,9 @@
+# onSkin V2 — SECURITY-REMEDIATION-WAVE-02
+
+**New exact Brain authorization:** `M103-SECURITY-REMEDIATION-WAVE02-CONDITIONAL-SOURCE-EDIT-01`. **Task:** make legitimate Security engineering progress in multiple coordinated workstreams. Codex owns technical decisions, can troubleshoot and choose bounded alternatives without asking the founder. Independent Brain retains acceptance/merge decisions.
+
+Do this in order: (1) extract this ONE ZIP into a new task directory, (2) verify its manifest with the **external literal SHA-256 in the founder's exact prompt** using `python -B verify_context.py --expected-manifest-sha256 <DIGEST>`, (3) read `01_BRAIN_DECISION.md` through `07_DELIVERY.md`, and `PREIMAGE_PATHS.json`, `SOURCE_EDIT_AUTHORIZATION.json`, `CURRENT_HEAD_AND_CI.json`, (4) run `python -B verify_source_preimages.py --repo <PATH> --expected-fingerprint 51bef23541f736bc2a890e25ae5ca8ac6c60104b2aef2906262f2038fee5a0d7` against the designated checkout, and (5) independently check live GitHub stage/main/PR before edit.
+
+**Designated new clean checkout:** `C:\Users\jasim\Documents\ChatGPT\MasterV2Code\onSkin_M103_SECURITY_WAVE02_EXACT_0ecfa2`. Brain created this as a no-hardlink clone, fetched the current GitHub stage, verified HEAD `0ecfa2a646ce9b30e717f6995097515f884cfdaf`, tree `b6b5ec635dd12e327a34904ebbd1e1252715bcd4`, clean working status, no Git alternates, and source file bytes equal Git for all 27 issued paths. Codex MUST recheck; cannot fall back to old worktrees. If any drift, STOP. Keep PR #10 draft/open/unmerged. `main` currently `d9912f4c8b30358593569c5b9b4e84773c6f463e`; no writer other than this assignment.
+
+**Zero-cost privacy:** no patient/JANUS records, no live found-secret validation, no credential uploads, no paid service, no hosted replay, no signing/clinical/release/M2 and no main merge. Source Security GO is false regardless of local tests.

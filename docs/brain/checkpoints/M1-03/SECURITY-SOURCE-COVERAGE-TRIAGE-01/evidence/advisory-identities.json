@@ -1,0 +1,255 @@
+{
+  "npm": {
+    "counts": {
+      "critical": 0,
+      "high": 67,
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "total": 67
+    },
+    "fixed_mocker_advisories_present": false,
+    "outcomes": {
+      "dependency_sbom": "failure",
+      "job": "code-gates",
+      "npm_audit_high": "failure",
+      "npm_exception_gate": "failure",
+      "phase9_verify": "failure",
+      "run_id": "39897570159",
+      "sha": "21dada6c761a56eaac1f1f2e8562fad6903bf50f"
+    },
+    "propagated_package_names": [
+      "@expo/cli",
+      "@expo/code-signing-certificates",
+      "@expo/devtools",
+      "@expo/dom-webview",
+      "@expo/log-box",
+      "@expo/metro",
+      "@expo/metro-config",
+      "@expo/metro-runtime",
+      "@expo/router-server",
+      "@expo/ui",
+      "@infinitered/react-native-mlkit-core",
+      "@infinitered/react-native-mlkit-face-detection",
+      "@react-native-async-storage/async-storage",
+      "@react-native-google-signin/google-signin",
+      "@react-native-masked-view/masked-view",
+      "@react-native/community-cli-plugin",
+      "@react-native/metro-config",
+      "@react-native/virtualized-lists",
+      "@sentry/react-native",
+      "braces",
+      "chokidar",
+      "expo",
+      "expo-apple-authentication",
+      "expo-asset",
+      "expo-camera",
+      "expo-constants",
+      "expo-dev-client",
+      "expo-dev-launcher",
+      "expo-dev-menu",
+      "expo-file-system",
+      "expo-font",
+      "expo-glass-effect",
+      "expo-image",
+      "expo-linking",
+      "expo-modules-core",
+      "expo-modules-jsi",
+      "expo-notifications",
+      "expo-router",
+      "expo-sharing",
+      "expo-status-bar",
+      "expo-store-review",
+      "expo-symbols",
+      "expo-system-ui",
+      "expo-web-browser",
+      "expo-widgets",
+      "fast-glob",
+      "metro",
+      "metro-config",
+      "metro-file-map",
+      "metro-transform-worker",
+      "micromatch",
+      "nativewind",
+      "node-forge",
+      "react-native",
+      "react-native-css-interop",
+      "react-native-drawer-layout",
+      "react-native-gesture-handler",
+      "react-native-get-random-values",
+      "react-native-is-edge-to-edge",
+      "react-native-purchases",
+      "react-native-reanimated",
+      "react-native-safe-area-context",
+      "react-native-screens",
+      "react-native-url-polyfill",
+      "react-native-view-shot",
+      "react-native-worklets",
+      "tailwindcss"
+    ],
+    "raw_exits": {
+      "dependency-sbom-audit.exit-code": 1,
+      "dependency-sbom.exit-code": 1,
+      "npm-audit-high.exit-code": 1,
+      "npm-exception-gate.exit-code": 1
+    },
+    "roots": [
+      {
+        "advisory": "GHSA-vfj7-8cjw-p6xm",
+        "affected_range": "<=3.0.3",
+        "locked_paths": [
+          {
+            "dev_flag": false,
+            "dev_optional": false,
+            "path": "node_modules/braces",
+            "version": "3.0.3"
+          }
+        ],
+        "package": "braces",
+        "severity": "high"
+      },
+      {
+        "advisory": "GHSA-86w9-cpqp-85rv",
+        "affected_range": "<=1.4.0",
+        "locked_paths": [
+          {
+            "dev_flag": false,
+            "dev_optional": false,
+            "path": "node_modules/node-forge",
+            "version": "1.4.0"
+          }
+        ],
+        "package": "node-forge",
+        "severity": "high"
+      }
+    ]
+  },
+  "original_decision": {
+    "acceptanceGranted": false,
+    "code": "PROPOSAL_EXPIRED_OR_CHANGED",
+    "rawScannerPass": false,
+    "status": "REJECTED"
+  },
+  "osv": {
+    "findings": [
+      {
+        "aliases": [
+          "CVE-2026-114603"
+        ],
+        "fixed_versions": [
+          "1.45.1"
+        ],
+        "id": "GHSA-xcq7-p3pf-p88h",
+        "package": {
+          "ecosystem": "PyPI",
+          "name": "opentelemetry-api",
+          "version": "1.37.0"
+        },
+        "source": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-requirements.txt"
+      },
+      {
+        "aliases": [
+          "CVE-2026-93687"
+        ],
+        "fixed_versions": [],
+        "id": "GHSA-vfj7-8cjw-p6xm",
+        "package": {
+          "ecosystem": "npm",
+          "name": "braces",
+          "version": "3.0.3"
+        },
+        "source": "package-lock.json"
+      },
+      {
+        "aliases": [
+          "CVE-2026-33894",
+          "CVE-2026-85393",
+          "GHSA-ppp5-5v6c-4jwp"
+        ],
+        "fixed_versions": [],
+        "id": "GHSA-86w9-cpqp-85rv",
+        "package": {
+          "ecosystem": "npm",
+          "name": "node-forge",
+          "version": "1.4.0"
+        },
+        "source": "package-lock.json"
+      },
+      {
+        "aliases": [
+          "GHSA-6q48-6c7w-9gw2"
+        ],
+        "fixed_versions": [
+          "2026.10.19"
+        ],
+        "id": "PYSEC-2026-4320",
+        "package": {
+          "ecosystem": "PyPI",
+          "name": "certifi",
+          "version": "2026.10.18"
+        },
+        "source": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+      },
+      {
+        "aliases": [
+          "PYSEC-2026-4320"
+        ],
+        "fixed_versions": [
+          "2026.10.19"
+        ],
+        "id": "GHSA-6q48-6c7w-9gw2",
+        "package": {
+          "ecosystem": "PyPI",
+          "name": "certifi",
+          "version": "2026.10.18"
+        },
+        "source": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+      },
+      {
+        "aliases": [
+          "CVE-2026-59951"
+        ],
+        "fixed_versions": [
+          "1.30.0",
+          "2.2.0"
+        ],
+        "id": "GHSA-84m7-p3x7-pcfv",
+        "package": {
+          "ecosystem": "PyPI",
+          "name": "mcp",
+          "version": "1.29.0"
+        },
+        "source": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+      },
+      {
+        "aliases": [
+          "CVE-2026-114603"
+        ],
+        "fixed_versions": [
+          "1.45.1"
+        ],
+        "id": "GHSA-xcq7-p3pf-p88h",
+        "package": {
+          "ecosystem": "PyPI",
+          "name": "opentelemetry-api",
+          "version": "1.37.0"
+        },
+        "source": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+      }
+    ],
+    "g97_receipt_present": false,
+    "outcomes": {
+      "job": "static-analysis",
+      "osv": "failure",
+      "osv_exception_gate": "failure",
+      "run_id": "39897570159",
+      "semgrep": "failure",
+      "sha": "21dada6c761a56eaac1f1f2e8562fad6903bf50f"
+    },
+    "raw_exits": {
+      "osv-exception-gate.exit-code": 1,
+      "osv-scan.exit-code": 1
+    },
+    "semgrep_report_present": false
+  }
+}

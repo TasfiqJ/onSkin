@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "npm",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "cwd": "/work/repo",
+  "environment": {
+    "CI": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TURBO_TELEMETRY_DISABLED": "1",
+    "DO_NOT_TRACK": "1"
+  },
+  "exit": 0,
+  "seconds": 0.21621901899925433,
+  "observed_at": "2026-10-23T21:31:19.380487+00:00",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "log_sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+}

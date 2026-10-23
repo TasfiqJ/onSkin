@@ -1,0 +1,7 @@
+# One substantial delivery and truthful stop
+
+New checkpoint `docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/`: required `README.md`, `RESULTS.md`, `BLOCKERS.md`, `SECURITY_PACKAGE_FIX.md`, `SOURCE_COVERAGE_CANDIDATE.md`, `SAFE_SECRET_AND_ADVISORY_MATRIX.md`, `NEXT_PROPOSED_SOURCE_SCOPE.md`, `completion-report.json`, `SHA256SUMS.json`, and sanitized actual command/execution/CI/candidate evidence under `evidence/**`, exact input context under `inputs/`. Hash authentic committed Git blobs, not just working files. No raw secret bytes, SARIF dumps, scanned patient source or private archives.
+
+Root `ONSKIN_BRAIN_HANDOFF.txt` must be truthful: code source commit/tree and tested tree, evidence-only tail SHA/tree, exact PR10 draft/main, original Quality/Security/iOS job IDs, measured remediation counts, accepted tasks M0-01/M0-02/M1-01/M1-02 only, original proposal expiry remains expired, no source Security/hosted DB/M2/release GO, spend0, context health. If all package candidates blocked, still deliver meaningful source-coverage/owner-candidate evidence, not speculative revisions.
+
+Stop for Brain when all meaningful authorized workstreams are completed or truly blocked with reproducible cause; no next self-task, no merge to main or new branch. Do not ask founder to decide technical next steps. No reset/rebase/force-push or pipeline editing. Preserve all failed exits and negative cases. Existing PR10 remains draft/open/unmerged.

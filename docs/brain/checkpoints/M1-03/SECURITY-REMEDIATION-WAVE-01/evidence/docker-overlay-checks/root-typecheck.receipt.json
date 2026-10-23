@@ -1,0 +1,20 @@
+{
+  "name": "root-typecheck",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "cwd": "/opt/wave-repo",
+  "started": "2026-10-23T20:19:21.356230+00:00",
+  "ended": "2026-10-23T20:19:33.803653+00:00",
+  "seconds": 12.447437536000507,
+  "exit": 0,
+  "log_sha256": "6ef111cb76d35aaea8717bc6b52b8b78dd1e8173f9c53cdeb986c3839974add3",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_changes_after": ""
+}

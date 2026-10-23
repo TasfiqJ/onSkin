@@ -1,0 +1,942 @@
+{
+  "measured_source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "measured_source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "receipts": [
+    {
+      "path": "source-checks/expiry8.receipt.json",
+      "exit": 0,
+      "seconds": 0.11615871998947114,
+      "argv": [
+        "node",
+        "--test",
+        "scripts/phase9/security-advisory-exceptions.test.mjs"
+      ],
+      "log_sha256": "ffa8282dfe1c8b1d84cc075ef4bc175c88ed67c060ab6d1f9048b97688bef451"
+    },
+    {
+      "path": "source-checks/governance103.receipt.json",
+      "exit": 124,
+      "seconds": 600.0187668300059,
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/brain",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "log_sha256": "f0b9992651adcb32e6faf7a2328aabfad3a2e8fabc1b2a38459b8ff7e1d50548"
+    },
+    {
+      "path": "source-checks/ios-source-check.receipt.json",
+      "exit": 0,
+      "seconds": 1.168742812005803,
+      "argv": [
+        "npm",
+        "run",
+        "phase9:ios-privacy-source-audit:check"
+      ],
+      "log_sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c"
+    },
+    {
+      "path": "source-checks/mobile-expo.receipt.json",
+      "exit": 0,
+      "seconds": 0.36668078100774437,
+      "argv": [
+        "node",
+        "/work/repo/node_modules/expo/bin/cli",
+        "install",
+        "--check"
+      ],
+      "log_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db"
+    },
+    {
+      "path": "source-checks/npm-audit.receipt.json",
+      "exit": 1,
+      "seconds": 2.5218899230239913,
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=high",
+        "--json"
+      ],
+      "log_sha256": "84074ed7bae57d91494c7e4fb9a2c7008165bafd55102aef60049020433e24dc"
+    },
+    {
+      "path": "source-checks/npm-ci.receipt.json",
+      "exit": 0,
+      "seconds": 36.15832499199314,
+      "argv": [
+        "npm",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "log_sha256": "bbb7807adeb42d207ab132ce0b466e4bea379985890a96ce376498e0d7cb6523"
+    },
+    {
+      "path": "source-checks/npm-node-forge-tree.receipt.json",
+      "exit": 0,
+      "seconds": 0.7677391119941603,
+      "argv": [
+        "npm",
+        "ls",
+        "node-forge",
+        "--all",
+        "--json"
+      ],
+      "log_sha256": "522130cb03428839abdf640e53825270d9e5b3e91f4419e87b4fa8587c53183c"
+    },
+    {
+      "path": "source-checks/secret12.receipt.json",
+      "exit": 0,
+      "seconds": 3.8234252689871937,
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_secret_scan.py",
+        "-v"
+      ],
+      "log_sha256": "8e203b014bab0d84496438ac15004b331b5d23f3d54f8596158db7b68f62dfc0"
+    },
+    {
+      "path": "source-checks/security70.receipt.json",
+      "exit": 1,
+      "seconds": 159.10471221400076,
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_contract.py",
+        "-v"
+      ],
+      "log_sha256": "f7fcfc6c4f0411e82535a741ed57d17d79ece200d23cd4fd10d4f38164061f3c"
+    },
+    {
+      "path": "source-checks/strict-gf01-report.receipt.json",
+      "exit": 2,
+      "seconds": 0.06606910499976948,
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/brain/brain.py",
+        "--profile",
+        "M1-03-GOVERNANCE-FIXTURE-01",
+        "report",
+        "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/completion-report.json"
+      ],
+      "log_sha256": "cc36fbc8aaa57887e6055b4e0fa6e94d1669ff2cf14af56bde519cb2e1c5ead0"
+    },
+    {
+      "path": "source-checks/strict-original-report.receipt.json",
+      "exit": 1,
+      "seconds": 0.16614585398929194,
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/brain/brain.py",
+        "report",
+        "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/completion-report.json"
+      ],
+      "log_sha256": "f0b6577e504880ae0063e3bec8b8a8e63eefef35bfec1ed2dc55b851ccc4b796"
+    },
+    {
+      "path": "source-checks/worklist-check.receipt.json",
+      "exit": 0,
+      "seconds": 0.21621901899925433,
+      "argv": [
+        "npm",
+        "run",
+        "phase4:source-worklist:check"
+      ],
+      "log_sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f"
+    },
+    {
+      "path": "after-install/security70.receipt.json",
+      "exit": 0,
+      "seconds": 172.84698144200956,
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_contract.py",
+        "-v"
+      ],
+      "log_sha256": "61d8679aad378504e68062ce18da80956650ecb87831bdfa7fbbc0e79f18cdff"
+    },
+    {
+      "path": "after-install/strict-gf01-report.receipt.json",
+      "exit": 1,
+      "seconds": 0.11629138700664043,
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/brain/brain.py",
+        "--profile",
+        "M1-03",
+        "report",
+        "docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01/completion-report.json"
+      ],
+      "log_sha256": "31b4f62035d55aec8d073143fc73fb8f25c889eeb5eb3603314abf74c36a4b9d"
+    },
+    {
+      "path": "bridge/candidate-dependency-aware-dry-run.receipt.json",
+      "exit": 0,
+      "seconds": 7.382265696011018,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge/candidate-env/bin/python",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "--dry-run",
+        "-r",
+        "/evidence/official/combined-requirements.txt",
+        "--report",
+        "/evidence/bridge/candidate-solver.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "11f00459ada661ce8cfb3fd57a2b0ded31a11605c0a8660023fd15d24eff4e40"
+    },
+    {
+      "path": "bridge/candidate-dependency-aware-install.receipt.json",
+      "exit": 0,
+      "seconds": 6.680635219003307,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge/candidate-env/bin/python",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "-r",
+        "/evidence/official/combined-requirements.txt",
+        "--report",
+        "/evidence/bridge/candidate-installed.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "15101477d843f3da7abe03194f850096a52cc6237115a64212a11ce9bb4eba88"
+    },
+    {
+      "path": "bridge/candidate-pip-check.receipt.json",
+      "exit": 0,
+      "seconds": 0.617352557979757,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge/candidate-env/bin/python",
+        "check"
+      ],
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "bridge/candidate-upstream-seed.receipt.json",
+      "exit": 0,
+      "seconds": 1.6194065330200829,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge/candidate-env/bin/python",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "--no-deps",
+        "-r",
+        "/work/bridge/semgrep-only.txt",
+        "--report",
+        "/evidence/bridge/candidate-upstream-seed.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "85e810dd9463c489d42a31c7cb955bb18ccdaeefee327f11143c501155d6bc3d"
+    },
+    {
+      "path": "bridge/candidate-venv.receipt.json",
+      "exit": 0,
+      "seconds": 0.06561967800371349,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/work/bridge/candidate-env"
+      ],
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge/old-download.receipt.json",
+      "exit": 0,
+      "seconds": 14.199055809993297,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "download",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-deps",
+        "-r",
+        "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+        "-d",
+        "/work/bridge/old-wheels",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "81232b68b866a5fd1d7aa338bb5fb24d847fe5fea44bbe55308d6b0d833617e1"
+    },
+    {
+      "path": "bridge/old-install.receipt.json",
+      "exit": 0,
+      "seconds": 9.38691699798801,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "--no-deps",
+        "--target",
+        "/work/bridge/old-site",
+        "-r",
+        "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+        "--report",
+        "/evidence/bridge/old-official-install.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "c8fe7d56e1306bc135d54c72c342e6292b3739e570e5a36055dd3c101362ad05"
+    },
+    {
+      "path": "bridge2/candidate-dependency-aware-dry-run.receipt.json",
+      "exit": 0,
+      "seconds": 5.87891839601798,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "--dry-run",
+        "-r",
+        "/evidence/official/combined-requirements.txt",
+        "--report",
+        "/evidence/bridge2/candidate-solver.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "2dd7f4916b1ed8b05fc1c37f5d7cb1b6929aeb1b08dd9849dde74d6e63bbb91a"
+    },
+    {
+      "path": "bridge2/candidate-dependency-aware-install.receipt.json",
+      "exit": 0,
+      "seconds": 6.529937251994852,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "-r",
+        "/evidence/official/combined-requirements.txt",
+        "--report",
+        "/evidence/bridge2/candidate-installed.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "15101477d843f3da7abe03194f850096a52cc6237115a64212a11ce9bb4eba88"
+    },
+    {
+      "path": "bridge2/candidate-pip-check.receipt.json",
+      "exit": 0,
+      "seconds": 0.6172496399958618,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "check"
+      ],
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "bridge2/candidate-upstream-seed.receipt.json",
+      "exit": 0,
+      "seconds": 1.5692785040009767,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "--no-deps",
+        "-r",
+        "/work/bridge2/semgrep-only.txt",
+        "--report",
+        "/evidence/bridge2/candidate-upstream-seed.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "39821ce8ee63d212c7f6ab3b99376f6a1db3cc19e3e6b23f219c99df411b88c6"
+    },
+    {
+      "path": "bridge2/candidate-venv.receipt.json",
+      "exit": 0,
+      "seconds": 0.03343831200618297,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/work/bridge2/candidate-env"
+      ],
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bridge2/old-download.receipt.json",
+      "exit": 0,
+      "seconds": 5.377731885004323,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "download",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-deps",
+        "-r",
+        "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+        "-d",
+        "/work/bridge2/old-wheels",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "1b0bbb4710907ef3f40fd01f03132c0603a2d35720aa10add119a5c6a5199248"
+    },
+    {
+      "path": "bridge2/old-install.receipt.json",
+      "exit": 0,
+      "seconds": 8.084055341983913,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "install",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--no-input",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--no-compile",
+        "--no-deps",
+        "--target",
+        "/work/bridge2/old-site",
+        "-r",
+        "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+        "--report",
+        "/evidence/bridge2/old-official-install.json",
+        "--cache-dir",
+        "/work/pip-cache"
+      ],
+      "log_sha256": "c8fe7d56e1306bc135d54c72c342e6292b3739e570e5a36055dd3c101362ad05"
+    },
+    {
+      "path": "bridge-runtime/incompatible-extra-solver.receipt.json",
+      "exit": 1,
+      "seconds": 1.017989537998801,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "install",
+        "--dry-run",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--only-binary=:all:",
+        "-r",
+        "/work/bridge2/incompatible-extra.txt"
+      ],
+      "log_sha256": "50e7ce5f0c31647eedf33b30c9ed8353cb68ebbdfbb22e16927d51dd503a1bb9"
+    },
+    {
+      "path": "bridge-runtime/incompatible-solver.receipt.json",
+      "exit": 1,
+      "seconds": 0.9175470790069085,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "install",
+        "--dry-run",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--only-binary=:all:",
+        "-r",
+        "/work/bridge2/incompatible.txt"
+      ],
+      "log_sha256": "e8b704cd0f86de8b98eabfde9e087fd96bec9afcf7f45dfed2cba0c400bcacca"
+    },
+    {
+      "path": "bridge-runtime/missing-dependency-pip-check.receipt.json",
+      "exit": 1,
+      "seconds": 0.6170013179944362,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "check"
+      ],
+      "log_sha256": "b3663459cff7e756898849cea746be142f1a7d78b7c001dc7df005e475d9e294"
+    },
+    {
+      "path": "bridge-runtime/new-core-version.receipt.json",
+      "exit": 0,
+      "seconds": 0.11587033901014365,
+      "argv": [
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages/semgrep/bin/semgrep-core",
+        "-version"
+      ],
+      "log_sha256": "3d80ce5dc5962eea7bb3d7b409c5ce65bca0fbd75936dfebf2497adba175093d"
+    },
+    {
+      "path": "bridge-runtime/new-semgrep-version.receipt.json",
+      "exit": 0,
+      "seconds": 1.869516997016035,
+      "argv": [
+        "/work/bridge2/candidate-env/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,socket\n# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable\n# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.\ndef g97_scanner_audit(event,args):\n if event == 'socket.bind' and args[0].family in (socket.AF_INET,socket.AF_INET6):\n  raise PermissionError('G97_SCANNER_INTERNET_LISTENER_FORBIDDEN')\nsys.addaudithook(g97_scanner_audit)\nimport site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()",
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+        "--version"
+      ],
+      "log_sha256": "6c6e9c0c95928a60570a564f1531624a0e6d1a055642fdf50fc9179a1a1a5b28"
+    },
+    {
+      "path": "bridge-runtime/old-core-version.receipt.json",
+      "exit": 0,
+      "seconds": 0.1160461220133584,
+      "argv": [
+        "/work/bridge2/old-site/semgrep/bin/semgrep-core",
+        "-version"
+      ],
+      "log_sha256": "3d80ce5dc5962eea7bb3d7b409c5ce65bca0fbd75936dfebf2497adba175093d"
+    },
+    {
+      "path": "bridge-runtime/old-semgrep-version.receipt.json",
+      "exit": 0,
+      "seconds": 1.8697059219994117,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,socket\n# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable\n# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.\ndef g97_scanner_audit(event,args):\n if event == 'socket.bind' and args[0].family in (socket.AF_INET,socket.AF_INET6):\n  raise PermissionError('G97_SCANNER_INTERNET_LISTENER_FORBIDDEN')\nsys.addaudithook(g97_scanner_audit)\nimport site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()",
+        "/work/bridge2/old-site",
+        "--version"
+      ],
+      "log_sha256": "6c6e9c0c95928a60570a564f1531624a0e6d1a055642fdf50fc9179a1a1a5b28"
+    },
+    {
+      "path": "final-candidate-checks/new-pip-check.receipt.json",
+      "exit": 0,
+      "seconds": 0.6170018060074653,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "check"
+      ],
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "final-candidate-checks/old-dependency-aware-dry-run.receipt.json",
+      "exit": 0,
+      "seconds": 0.7673573220090475,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "install",
+        "--dry-run",
+        "--require-hashes",
+        "--only-binary=:all:",
+        "--index-url",
+        "https://pypi.org/simple",
+        "-r",
+        "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+      ],
+      "log_sha256": "5ddf7e0c439ed5c2b319b93dfe8ff16d6b885c09c6754de5fcb4b7eae949f05c"
+    },
+    {
+      "path": "final-candidate-checks/old-pip-check.receipt.json",
+      "exit": 0,
+      "seconds": 0.4164759690174833,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "path": "extra-check/mcp-cli-extra.receipt.json",
+      "exit": 1,
+      "seconds": null,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "--python",
+        "/work/bridge2/candidate-env/bin/python",
+        "install",
+        "--dry-run",
+        "--only-binary=:all:",
+        "--index-url",
+        "https://pypi.org/simple",
+        "mcp[cli]==1.30.0",
+        "typer==0.1.0"
+      ],
+      "log_sha256": "0eb8d3e69a5bb96e57041fba22af9cc57012e4cd938dab50de0d7132aecd1bed"
+    },
+    {
+      "path": "integration/new.receipt.json",
+      "exit": 0,
+      "seconds": 6.02774596598465,
+      "argv": [
+        "/work/bridge2/candidate-env/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+        "/evidence/integration_smoke.py"
+      ],
+      "log_sha256": "03598a7b03ed2eb7926616cfed6bd869dba1a26d67e8e69bde2c73d7feb239af"
+    },
+    {
+      "path": "integration/old.receipt.json",
+      "exit": 1,
+      "seconds": 4.073886012018193,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/old-site",
+        "/evidence/integration_smoke.py"
+      ],
+      "log_sha256": "c01fcefa89267515b581f0c7cb509e6d481d8b83562f7338c671c1c99f79982d"
+    },
+    {
+      "path": "integration2/new.receipt.json",
+      "exit": 0,
+      "seconds": 6.2288743760145735,
+      "argv": [
+        "/work/bridge2/candidate-env/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+        "/evidence/integration_smoke.py"
+      ],
+      "log_sha256": "cddb0248676ffb740768ca18e9075f949c0cfe23449b3c6068692966b0c534b9"
+    },
+    {
+      "path": "integration2/old.receipt.json",
+      "exit": 1,
+      "seconds": 8.132309228996746,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/old-site",
+        "/evidence/integration_smoke.py"
+      ],
+      "log_sha256": "d7458f280d65c666eb204de1fa94074c48de856d681caae0b3395c9e0f4893c8"
+    },
+    {
+      "path": "integration3/new.receipt.json",
+      "exit": 0,
+      "seconds": 6.430284817004576,
+      "argv": [
+        "/work/bridge2/candidate-env/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+        "/evidence/integration_smoke.py"
+      ],
+      "log_sha256": "80ea482d0232a99879e0455ead6045c92ea85e27b7295f9e0271aa7e2cea90f3"
+    },
+    {
+      "path": "integration3/old.receipt.json",
+      "exit": 0,
+      "seconds": 6.381504207995022,
+      "argv": [
+        "/work/runtime/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/old-site",
+        "/evidence/integration_smoke.py"
+      ],
+      "log_sha256": "417730eb125bef62f57064b5a4d232510f51dc5e418c42b8c666ebd5239bab06"
+    },
+    {
+      "path": "npm-candidate/candidate-audit.receipt.json",
+      "exit": 1,
+      "seconds": 2.5191170679754578,
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=high",
+        "--json"
+      ],
+      "log_sha256": "84074ed7bae57d91494c7e4fb9a2c7008165bafd55102aef60049020433e24dc"
+    },
+    {
+      "path": "npm-candidate/candidate-expo-compatibility.receipt.json",
+      "exit": 0,
+      "seconds": 0.3165470509848092,
+      "argv": [
+        "node",
+        "/work/npm-candidate/node_modules/expo/bin/cli",
+        "install",
+        "--check"
+      ],
+      "log_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db"
+    },
+    {
+      "path": "npm-candidate/candidate-node-forge-tree.receipt.json",
+      "exit": 0,
+      "seconds": 0.7704052990011405,
+      "argv": [
+        "npm",
+        "ls",
+        "node-forge",
+        "--all",
+        "--json"
+      ],
+      "log_sha256": "522130cb03428839abdf640e53825270d9e5b3e91f4419e87b4fa8587c53183c"
+    },
+    {
+      "path": "npm-candidate/candidate-npm-ci.receipt.json",
+      "exit": 0,
+      "seconds": 36.046067389979726,
+      "argv": [
+        "npm",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "log_sha256": "bbb7807adeb42d207ab132ce0b466e4bea379985890a96ce376498e0d7cb6523"
+    },
+    {
+      "path": "npm-candidate/clone.receipt.json",
+      "exit": 0,
+      "seconds": 3.0725606069900095,
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "--single-branch",
+        "--branch",
+        "stage/m1-gate-recovery",
+        "/work/repo",
+        "/work/npm-candidate"
+      ],
+      "log_sha256": "3219372ba8580445c269d2af9d334eee15ff10855b926d8ac9d22437c1d6e4cc"
+    },
+    {
+      "path": "npm-candidate/sdk57-lock-candidate.receipt.json",
+      "exit": 0,
+      "seconds": 3.4245309550024103,
+      "argv": [
+        "npm",
+        "update",
+        "expo",
+        "--workspace",
+        "apps/mobile",
+        "--package-lock-only",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "log_sha256": "e64af586ea357f57559d65d1407e250bb430d9affd6f6fb18035db10efc3efe1"
+    }
+  ],
+  "orchestration_failures": [
+    {
+      "command": "intake.py first invocation",
+      "exit": 1,
+      "reason": "Driver ancestor off by one; no Git repository found. Corrected before independent fingerprint proof."
+    },
+    {
+      "command": "WSL runtime probe",
+      "exit": 1,
+      "reason": "Wsl/Service/CreateInstance/E_FAIL; distro failed to start, failure step 2. No repair/restart attempted; isolated Docker used."
+    },
+    {
+      "command": "linux_setup.py first invocation",
+      "exit": 1,
+      "reason": "Archive path guard rejected the harmless top-level Node directory. Exact archive hash passed. Guard corrected to permit that directory."
+    },
+    {
+      "command": "bridge_trial.py bridge",
+      "exit": 1,
+      "reason": "NON_METADATA_DISTINFO_DRIFT: invalid comparison of target/venv generated RECORD layouts. Independent original package-tree proof passed."
+    },
+    {
+      "command": "bridge_trial.py bridge2",
+      "exit": 1,
+      "reason": "UNRELATED_INSTALLED_FILE_DRIFT: cross-layout launcher/RECORD paths. Full delta retained; final original canonical tree proof and same-install dist-info proof pass."
+    },
+    {
+      "command": "sast_fixtures.py first revision",
+      "exit": 1,
+      "reason": "Both scanners exited 0 with zero findings; fixture lacked actual original rule taint source. Rule-specific second revision produces two matching findings with exit 1 by --error, intentionally."
+    }
+  ],
+  "governance": "INCOMPLETE_TIMEOUT_124_NO_103_SUITE_PASS",
+  "root_6067_typecheck_lint": "NOT_RUN_DIAGNOSTIC_ONLY_SOURCE_UNCHANGED",
+  "stage_technical_edit_eligible": false
+}

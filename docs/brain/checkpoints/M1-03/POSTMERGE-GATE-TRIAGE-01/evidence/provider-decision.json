@@ -1,0 +1,8 @@
+{
+  "g97-decision.json": {
+    "status": "REJECTED",
+    "code": "PROPOSAL_EXPIRED_OR_CHANGED",
+    "acceptanceGranted": false,
+    "rawScannerPass": false
+  }
+}

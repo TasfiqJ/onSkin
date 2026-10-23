@@ -1,0 +1,183 @@
+{
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "original_lock_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+  "candidate_lock_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+  "original_expo": "57.0.31",
+  "candidate_expo": "57.0.31",
+  "package_delta_count": 0,
+  "delta": [],
+  "expo_compatibility_exit": 0,
+  "audit_exit": 1,
+  "audit_counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 7,
+    "critical": 0,
+    "total": 7
+  },
+  "sanitized_findings": [
+    {
+      "package": "@expo/cli",
+      "severity": "high",
+      "isDirect": false,
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
+      "via": [
+        "@expo/code-signing-certificates",
+        "node-forge",
+        "zod"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/cli"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@expo/code-signing-certificates",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "node-forge"
+      ],
+      "effects": [
+        "@expo/cli"
+      ],
+      "nodes": [
+        "node_modules/@expo/code-signing-certificates"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@react-native-google-signin/google-signin",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=9.0.0",
+      "via": [
+        "expo"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/@react-native-google-signin/google-signin"
+      ],
+      "fixAvailable": {
+        "name": "@react-native-google-signin/google-signin",
+        "version": "8.2.2",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@sentry/react-native",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=5.16.0-alpha.1",
+      "via": [
+        "expo"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/@sentry/react-native"
+      ],
+      "fixAvailable": {
+        "name": "@sentry/react-native",
+        "version": "5.15.2",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=45.0.0-beta.1",
+      "via": [
+        "@expo/cli"
+      ],
+      "effects": [
+        "@react-native-google-signin/google-signin",
+        "@sentry/react-native"
+      ],
+      "nodes": [
+        "node_modules/expo"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "node-forge",
+      "severity": "high",
+      "isDirect": true,
+      "range": "*",
+      "via": [
+        {
+          "name": "node-forge",
+          "source": 1240912,
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "range": "<=1.4.0",
+          "severity": "high"
+        }
+      ],
+      "effects": [
+        "@expo/cli",
+        "@expo/code-signing-certificates"
+      ],
+      "nodes": [
+        "node_modules/node-forge"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "zod",
+      "severity": "high",
+      "isDirect": false,
+      "range": "<4.6.6",
+      "via": [
+        {
+          "name": "zod",
+          "source": 1243066,
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "range": "<4.6.6",
+          "severity": "high"
+        }
+      ],
+      "effects": [
+        "@expo/cli"
+      ],
+      "nodes": [
+        "node_modules/zod"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
+    }
+  ],
+  "node_forge_versions": [
+    "1.4.0"
+  ],
+  "zod_versions": [
+    "3.25.76"
+  ],
+  "stage_edit": false,
+  "accepted": false,
+  "decision": "REJECT_IF_NODE_FORGE_OR_ZOD_ADVISORY_REMAINS"
+}

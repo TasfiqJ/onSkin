@@ -1,0 +1,155 @@
+{
+  "packet_count": 1116,
+  "lock_count": 1113,
+  "missing": [
+    "node_modules/@expo/package-manager/node_modules/@expo/json-file"
+  ],
+  "extra": [
+    "node_modules/@expo/metro/node_modules/metro-runtime",
+    "node_modules/metro-config/node_modules/metro-runtime",
+    "node_modules/metro/node_modules/metro-runtime",
+    "node_modules/uuid"
+  ],
+  "changed": [
+    {
+      "path": "node_modules/@expo/cli",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/cli/node_modules/picomatch",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/config-plugins",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/metro-config/node_modules/picomatch",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/osascript",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/package-manager",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/router-server",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/ui",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/@expo/xcpretty",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-modules-core",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-modules-jsi",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-network",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-notifications",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-router",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-sharing",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/expo-widgets",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/metro-runtime",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/react-native-drawer-layout",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    },
+    {
+      "path": "node_modules/xcode",
+      "fields": [
+        "version",
+        "resolved"
+      ]
+    }
+  ]
+}

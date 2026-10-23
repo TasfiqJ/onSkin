@@ -1,0 +1,116 @@
+{
+  "bugs": {
+    "url": "https://github.com/vitest-dev/vitest/issues"
+  },
+  "dist": {
+    "shasum": "53670a17d3d804e651195d5babab1bf2fd83688a",
+    "tarball": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-4.1.12.tgz",
+    "fileCount": 13,
+    "integrity": "sha512-ko1y1Qgb/slzQ9mr+b89Cuqud8WG1TKtsPD8r7ZUBdvVOGt85Af2HwCqHujrhwJq95hs/9RM7fcAPg57o1vlzw==",
+    "signatures": [
+      {
+        "sig": "MEUCIC27f5zAUQ+Dpw9YiWVWQgzt8+licTv7BHUV7ulEdE0pAiEA54F/pcB1BUD10+TAn1r4NVkoz8fcuK8Mvr9vFNLXmfI=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@vitest%2fsnapshot@4.1.12",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 59314
+  },
+  "main": "./dist/index.js",
+  "name": "@vitest/snapshot",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./*": "./*",
+    "./manager": {
+      "types": "./dist/manager.d.ts",
+      "default": "./dist/manager.js"
+    },
+    "./environment": {
+      "types": "./dist/environment.d.ts",
+      "default": "./dist/environment.js"
+    }
+  },
+  "funding": "https://opencollective.com/vitest",
+  "license": "MIT",
+  "scripts": {
+    "dev": "rollup -c --watch",
+    "build": "premove dist && rollup -c"
+  },
+  "_npmUser": {
+    "name": "GitHub Actions",
+    "email": "npm-oidc-no-reply@github.com",
+    "approver": {
+      "name": "oreanno",
+      "email": "foxzdavinci@gmail.com"
+    },
+    "trustedPublisher": {
+      "id": "github",
+      "oidcConfigId": "ae21fa98-4ba9-4146-be24-9feb4cbf959d"
+    }
+  },
+  "homepage": "https://vitest.dev/guide/snapshot",
+  "keywords": [
+    "vitest",
+    "test",
+    "snapshot"
+  ],
+  "repository": {
+    "url": "git+https://github.com/vitest-dev/vitest.git",
+    "type": "git",
+    "directory": "packages/snapshot"
+  },
+  "description": "Vitest snapshot manager",
+  "directories": {},
+  "maintainers": [
+    {
+      "name": "ariperkkio",
+      "email": "ari.perkkio@gmail.com"
+    },
+    {
+      "name": "antfu",
+      "email": "anthonyfu117@hotmail.com"
+    },
+    {
+      "name": "hiogawa",
+      "email": "hi.ogawa.zz@gmail.com"
+    },
+    {
+      "name": "oreanno",
+      "email": "foxzdavinci@gmail.com"
+    },
+    {
+      "name": "yyx990803",
+      "email": "yyx990803@gmail.com"
+    }
+  ],
+  "sideEffects": false,
+  "_nodeVersion": "24.21.0",
+  "dependencies": {
+    "pathe": "^2.0.3",
+    "magic-string": "^0.30.21",
+    "@vitest/utils": "4.1.12",
+    "@vitest/pretty-format": "4.1.12"
+  },
+  "_hasShrinkwrap": false,
+  "devDependencies": {
+    "natural-compare": "^1.4.0",
+    "@types/natural-compare": "^1.4.3"
+  },
+  "_npmOperationalInternal": {
+    "tmp": "tmp/snapshot_4.1.12_1792075234960_0.4871494060994479",
+    "host": "s3://npm-registry-packages-npm-production"
+  },
+  "_id": "@vitest/snapshot@4.1.12",
+  "version": "4.1.12"
+}

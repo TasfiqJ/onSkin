@@ -1,0 +1,15 @@
+{
+  "label": "context-copy-verification",
+  "command": [
+    "python",
+    "-B",
+    "verify_context.py",
+    "--expected-manifest-sha256",
+    "0b080328e308f3533afeb9b3764fd4f2d07f48a1ab5d5674e6fc08413a1cb50b"
+  ],
+  "cwd": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs",
+  "started_utc": "2026-10-23T02:30:50.668056+00:00",
+  "finished_utc": "2026-10-23T02:30:50.830950+00:00",
+  "seconds": 0.157,
+  "raw_exit": 0
+}

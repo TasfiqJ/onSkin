@@ -1,0 +1,16 @@
+✔ accepts only the reviewed npm and OSV findings, including inherited npm findings (2.895977ms)
+✔ rejects any new High advisory and any unreviewed OSV finding (0.408419ms)
+✔ resolves an inherited npm advisory through a dependency cycle (0.266966ms)
+✔ rejects changed package versions, removed scanner evidence, and scanner errors (0.374259ms)
+✔ fails closed when an approved advisory disappears from either scanner report (0.291676ms)
+✔ rejects expanded, expired, and weakened exception records (0.321688ms)
+✔ fails when upstream lists a newer release or a patched advisory range (0.46693ms)
+✔ retains the real Vite high aggregate with two moderate primary children (2.686703ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.568167

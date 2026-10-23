@@ -1,0 +1,7 @@
+# Non-bypassable protected source, rule and secret gates
+
+Original G97 `sourceManifest` and `scanCoverageManifest` are frozen, proposal `notAfter=2026-10-21T00:00:00Z` remains expired. The original collector refuses `SOURCE_INVENTORY_DRIFT` before Semgrep executes. A genuine source review must classify every path and preserve negative cases before a separately authorized new exact-source issuance can change any of these source identities. No direct candidate/diagnostic GO, no waiver from a successful Python unit suite. Historical Semgrep had 189 failed targets and 368 fixpoint events; not new current coverage.
+
+OWASP original SHA256 `5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1` is not available from the official registry as last checked. Latest named bundle `c552bf8aa0b9dfcb854cd4ae14108fae63f30ac237bb902c0f2f25e98b32b57b` does not match and cannot be swapped. All-four-rule Semgrep parity is false/not tested until authentic old bytes and permitted custodian proof exist.
+
+Original Gitleaks findings (both current and historical) and OSV/npm advisories are owner-unreviewed. Never publish raw findings, tokens, patient/JANUS files or issuer secrets, validate suspected credentials, broaden scanner exclusion, use untrusted hosted provider/paid registry or modify signed source history. If only an owner action can unblock, produce ONE exact safe, finite custodian request rather than guess or churn. The user is a relay, not a technical implementer.

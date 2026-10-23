@@ -1,0 +1,22 @@
+{
+  "name": "npm-tool",
+  "argv": [
+    "npm",
+    "install",
+    "--prefix",
+    "/work/npm-runtime",
+    "npm@11.20.0",
+    "--ignore-scripts",
+    "--bin-links=false",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:00:48.772994+00:00",
+  "ended": "2026-10-23T20:00:52.655838+00:00",
+  "seconds": 3.8828368370013777,
+  "exit": 0,
+  "log_sha256": "50757a665bab7da045f03c60abfc5431ce8cb0fd971798700ecaddadb0a0591e",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

@@ -1,0 +1,53 @@
+{
+  "commit": "39390947063092ff67ac503cd0b86992eb65b941",
+  "tree": "0c4a1ceb61fa3d145f348a410284a78a82b144fd",
+  "branch": "stage/m1-gate-recovery",
+  "parent": "d2ce5e95cd24edb2ab4d833dee945bdbc59da9fe",
+  "changed_paths": [
+    "apps/mobile/package.json",
+    "apps/catalog-operator-console/package.json",
+    "package-lock.json",
+    "docs/phase-9/ios-sdk-package-mapping.json",
+    "docs/phase-9/generated/ios-privacy-source-audit.json",
+    "docs/phase-9/generated/ios-privacy-source-audit.md"
+  ],
+  "clean": true,
+  "source_hashes": [
+    {
+      "path": "apps/mobile/package.json",
+      "sha256": "ee2adeb11eda8ff8ee7fd4a36f69c29817883e7825d0ea62e43de358862e5361",
+      "git_blob": "2ab151e029e094a9420af84fb6bedfc7f86fdade",
+      "bytes": 3007
+    },
+    {
+      "path": "apps/catalog-operator-console/package.json",
+      "sha256": "10fce1f7fc5ab515f3ddb8825c0b223c51cb4fe404b32b39b009e4055a128903",
+      "git_blob": "5f398bc8b02fb6628bbfa84cd4138e7971dcc120",
+      "bytes": 539
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "bytes": 572798
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "sha256": "40abcddf562853d8d2312ace7ea31c9d97d69903b59594bddc5a78a82f479fcd",
+      "git_blob": "3ab1c5aa8c68a1802ea054d510f675d715683e1d",
+      "bytes": 8350
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "sha256": "b92d7c23744b9700cd5c15036b76f42dc3d95708c9665395bc483da91208bcfd",
+      "git_blob": "894b8ff4de8c05b94f65cdc479ac582ea34df80d",
+      "bytes": 247820
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "sha256": "1ff659c00353fbfac38f7bf47d058cdef0249119d9f8c6c271895aa5cd949ed2",
+      "git_blob": "e24271a986392b79a2c5784a932a437d6594cd35",
+      "bytes": 19517
+    }
+  ]
+}

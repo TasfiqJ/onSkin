@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "base": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+  "head": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+  "tree": "c7196a52c8d2e34a661841c3d4d92f3867b75e39",
+  "target_postimage": {
+    "bytes": 49880,
+    "sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+    "git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d"
+  },
+  "unchanged_witnesses": 23,
+  "original_test_bodies_preserved": 70,
+  "only_changed_function": "ContractTests.workflow_fixture",
+  "changed_paths": [
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/baseline-target-red.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/exact-patch.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-preparation-retry.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-preparation.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/npm-ci.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/preflight.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/prepare_linux.sh",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/run_check.py",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_scope.py",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/00_READ_FIRST.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/01_INDEPENDENT_BRAIN_AUDIT.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/02_EXECUTE_EXACT_PATCH.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/03_AUTHORITY_AND_BOUNDARIES.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/04_REQUIRED_VERIFICATION.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/05_REAL_SECURITY_REFUSALS.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/06_DELIVERY_PROTOCOL.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/07_STOP_RULES.md",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/BASELINE_CI.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/PATCH_REVIEW.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/PREIMAGE_WITNESSES.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/TASK_MANIFEST.json",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/verify_context.py",
+    "scripts/phase9/security_acceptance/test_contract.py"
+  ],
+  "protected_source_go": false,
+  "security_admission": "CLOSED"
+}

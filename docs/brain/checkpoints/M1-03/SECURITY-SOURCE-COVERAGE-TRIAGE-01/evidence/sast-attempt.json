@@ -1,0 +1,51 @@
+{
+  "status": "BLOCKED_NO_EVIDENCE",
+  "purpose": "standalone diagnostic only; never original G97 admission",
+  "raw_bootstrap_exit": 1,
+  "bootstrap_command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--",
+    "python3.12",
+    "-B",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source/scripts/phase9/security_acceptance/bootstrap_tools.py",
+    "/tmp/m103-coverage-triage-r1-b67cc855-tools"
+  ],
+  "started_utc": null,
+  "finished_utc": null,
+  "timing_limitation": "Bootstrap start/end UTC were not captured; tool wall time was 5.0118091 seconds. Rule acquisitions have measured UTC receipts.",
+  "safe_error": "/usr/bin/python3.12: No module named pip",
+  "bootstrap_reached": "npm installed; pinned Python wheel installation could not start",
+  "pinned_inputs": [
+    {
+      "path": "scripts/phase9/security_acceptance/bootstrap_tools.py",
+      "bytes": 7937,
+      "sha256": "c2e0a26ef175a9520a4f9e04d0ccc59264cdd56fdb97113efc1bc9416044a927",
+      "git_blob": "c009d7f5a1e373b5da7dfab86707a6cad24ec2a8"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-engine-linux-x86_64.tar.gz",
+      "bytes": 60665755,
+      "sha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9",
+      "git_blob": "680a605b2de5a42d830c431ca8b389f4eea273ff"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "bytes": 6778,
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+      "git_blob": "641e85bad6becf327f0a3269340bb49c6db912a7"
+    }
+  ],
+  "expected_semgrep_version": "1.181.0",
+  "expected_semgrep_package_tree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
+  "expected_custom_core_sha256": "187283dcd737cf34fde16b99e440c44236b63c47d4db107bfe15b188080238b7",
+  "expected_custom_engine_source_commit": "72d3525fe7e02f486428386078f192f8c4756804",
+  "local_binary_or_package_tree_verified": false,
+  "rules": "rule-acquisition.json; OWASP family drift, three others match",
+  "scanner_executed": false,
+  "findings": null,
+  "scanned_paths": null,
+  "coverage_percent": null,
+  "no_installer_or_rule_modifications": true
+}

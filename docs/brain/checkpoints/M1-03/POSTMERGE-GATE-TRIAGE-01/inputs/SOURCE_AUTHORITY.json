@@ -1,0 +1,41 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "accounts_credentials_authorized": false,
+  "allowed_existing_files": [
+    "ONSKIN_BRAIN_HANDOFF.txt"
+  ],
+  "allowed_new_prefixes": [
+    "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/"
+  ],
+  "authorization_id": "M103-POSTMERGE-GATE-TRIAGE01-READONLY-CANDIDATE-01",
+  "branch": "stage/m1-gate-recovery",
+  "branch_initial_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "candidate_patch_policy": "Produce candidate .patch under checkpoint only; test independently in disposable cloned checkout. Never apply to working branch.",
+  "db_schema_types_edge_writable": false,
+  "expected_deliverable": "A new causal experiment/proof for the original Security SBOM producer-consumer refusal, complete sanitized gate-status matrix, reproducible candidate(s), and current ECR custodian blocker without fictional success.",
+  "github_workflows_writable": false,
+  "hosted_db_replay_authorized": false,
+  "issued_main_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "issued_main_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "iteration": "POSTMERGE-GATE-TRIAGE-01",
+  "m2_authorized": false,
+  "main_promotion_authorized": false,
+  "main_writable": false,
+  "original_security_protected_sources_writable": false,
+  "other_existing_files_writable": false,
+  "permitted_source_code_edits": false,
+  "preimages_file": "PREIMAGE_WITNESSES.json",
+  "registry_substitute_authorized": false,
+  "release_authorized": false,
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "source_security_go": false,
+  "spend_usd": 0,
+  "task_id": "M1-03",
+  "witness_sha256": "4c12cb9d1efa54ac423e4b7b6ff98e1b2617ab9fa60e85849414fc1811e4948c"
+}

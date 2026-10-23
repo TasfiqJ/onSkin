@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "venv",
+    "--without-pip",
+    "/work/bridge2/candidate-env"
+  ],
+  "cwd": "/work/bridge2",
+  "environment": {},
+  "started": "2026-10-23T21:17:31.949604+00:00",
+  "exit": 0,
+  "seconds": 0.03343831200618297,
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

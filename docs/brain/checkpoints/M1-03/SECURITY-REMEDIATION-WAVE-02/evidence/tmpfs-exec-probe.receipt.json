@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "/work/exec-test"
+  ],
+  "cwd": "/work",
+  "exit": 0,
+  "seconds": 0.0027643860084936023,
+  "observed_at": "2026-10-23T21:14:13.980336+00:00",
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,717 @@
+{
+  "run": 40020077385,
+  "archive_sha256": "0e321d0177b1c9b723fb502db6a95a6a2a1ee0b5cf0e803d2842f7fee2f943aa",
+  "raw_sha256": "b8e33190352c3c2879aa4239f27ba5e897af6e1c9fcf84728807ddd8642fb8a0",
+  "scanner_exit": 1,
+  "outcomes": {
+    "job": "static-analysis",
+    "sha": "3f04e0fc6e4dff45d5095a7d6bde6872d42a4b68",
+    "run_id": "40020077385",
+    "semgrep": "failure",
+    "osv": "failure",
+    "osv_exception_gate": "failure"
+  },
+  "rows": [
+    {
+      "source": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-requirements.txt",
+      "package": {
+        "name": "opentelemetry-api",
+        "version": "1.37.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-xcq7-p3pf-p88h",
+          "aliases": [
+            "CVE-2026-114603"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "last_known_affected_version_range": "<= 1.45.0",
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-xcq7-p3pf-p88h/GHSA-xcq7-p3pf-p88h.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "opentelemetry-api",
+                "purl": "pkg:pypi/opentelemetry-api"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "0"
+                    },
+                    {
+                      "fixed": "1.45.1"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "0.10b0",
+                "0.11b0",
+                "0.12b0",
+                "0.13b0",
+                "0.14b0",
+                "0.15b0",
+                "0.16b0",
+                "0.16b1",
+                "0.17b0",
+                "0.1a0",
+                "0.2a0",
+                "0.3a0",
+                "0.4a0",
+                "0.4a1",
+                "0.5b0",
+                "0.6b0",
+                "0.7b0",
+                "0.7b1",
+                "0.8b0",
+                "0.9b0",
+                "1.0.0",
+                "1.0.0rc1",
+                "1.1.0",
+                "1.10.0",
+                "1.10a0",
+                "1.11.0",
+                "1.11.1",
+                "1.12.0",
+                "1.12.0rc1",
+                "1.12.0rc2",
+                "1.13.0",
+                "1.14.0",
+                "1.15.0",
+                "1.16.0",
+                "1.17.0",
+                "1.18.0",
+                "1.19.0",
+                "1.2.0",
+                "1.20.0",
+                "1.21.0",
+                "1.22.0",
+                "1.23.0",
+                "1.24.0",
+                "1.25.0",
+                "1.26.0",
+                "1.27.0",
+                "1.28.0",
+                "1.28.1",
+                "1.28.2",
+                "1.29.0",
+                "1.3.0",
+                "1.30.0",
+                "1.31.0",
+                "1.31.1",
+                "1.32.0",
+                "1.32.1",
+                "1.33.0",
+                "1.33.1",
+                "1.34.0",
+                "1.34.1",
+                "1.35.0",
+                "1.36.0",
+                "1.37.0",
+                "1.38.0",
+                "1.39.0",
+                "1.39.1",
+                "1.4.0",
+                "1.4.1",
+                "1.40.0",
+                "1.41.0",
+                "1.41.1",
+                "1.42.0",
+                "1.42.1",
+                "1.43.0",
+                "1.44.0",
+                "1.45.0",
+                "1.5.0",
+                "1.6.0",
+                "1.6.1",
+                "1.6.2",
+                "1.7.0",
+                "1.7.1",
+                "1.8.0",
+                "1.9.0",
+                "1.9.1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/official-final/mcp-requirements.txt",
+      "package": {
+        "name": "opentelemetry-api",
+        "version": "1.37.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-xcq7-p3pf-p88h",
+          "aliases": [
+            "CVE-2026-114603"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "last_known_affected_version_range": "<= 1.45.0",
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-xcq7-p3pf-p88h/GHSA-xcq7-p3pf-p88h.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "opentelemetry-api",
+                "purl": "pkg:pypi/opentelemetry-api"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "0"
+                    },
+                    {
+                      "fixed": "1.45.1"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "0.10b0",
+                "0.11b0",
+                "0.12b0",
+                "0.13b0",
+                "0.14b0",
+                "0.15b0",
+                "0.16b0",
+                "0.16b1",
+                "0.17b0",
+                "0.1a0",
+                "0.2a0",
+                "0.3a0",
+                "0.4a0",
+                "0.4a1",
+                "0.5b0",
+                "0.6b0",
+                "0.7b0",
+                "0.7b1",
+                "0.8b0",
+                "0.9b0",
+                "1.0.0",
+                "1.0.0rc1",
+                "1.1.0",
+                "1.10.0",
+                "1.10a0",
+                "1.11.0",
+                "1.11.1",
+                "1.12.0",
+                "1.12.0rc1",
+                "1.12.0rc2",
+                "1.13.0",
+                "1.14.0",
+                "1.15.0",
+                "1.16.0",
+                "1.17.0",
+                "1.18.0",
+                "1.19.0",
+                "1.2.0",
+                "1.20.0",
+                "1.21.0",
+                "1.22.0",
+                "1.23.0",
+                "1.24.0",
+                "1.25.0",
+                "1.26.0",
+                "1.27.0",
+                "1.28.0",
+                "1.28.1",
+                "1.28.2",
+                "1.29.0",
+                "1.3.0",
+                "1.30.0",
+                "1.31.0",
+                "1.31.1",
+                "1.32.0",
+                "1.32.1",
+                "1.33.0",
+                "1.33.1",
+                "1.34.0",
+                "1.34.1",
+                "1.35.0",
+                "1.36.0",
+                "1.37.0",
+                "1.38.0",
+                "1.39.0",
+                "1.39.1",
+                "1.4.0",
+                "1.4.1",
+                "1.40.0",
+                "1.41.0",
+                "1.41.1",
+                "1.42.0",
+                "1.42.1",
+                "1.43.0",
+                "1.44.0",
+                "1.45.0",
+                "1.5.0",
+                "1.6.0",
+                "1.6.1",
+                "1.6.2",
+                "1.7.0",
+                "1.7.1",
+                "1.8.0",
+                "1.9.0",
+                "1.9.1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/official-final/otel-requirements.txt",
+      "package": {
+        "name": "mcp",
+        "version": "1.29.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-84m7-p3x7-pcfv",
+          "aliases": [
+            "CVE-2026-59951"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "mcp",
+                "purl": "pkg:pypi/mcp"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "1.8.0"
+                    },
+                    {
+                      "fixed": "1.30.0"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "1.10.0",
+                "1.10.1",
+                "1.11.0",
+                "1.12.0",
+                "1.12.1",
+                "1.12.2",
+                "1.12.3",
+                "1.12.4",
+                "1.13.0",
+                "1.13.1",
+                "1.14.0",
+                "1.14.1",
+                "1.15.0",
+                "1.16.0",
+                "1.17.0",
+                "1.18.0",
+                "1.19.0",
+                "1.20.0",
+                "1.21.0",
+                "1.21.1",
+                "1.21.2",
+                "1.22.0",
+                "1.23.0",
+                "1.23.1",
+                "1.23.2",
+                "1.23.3",
+                "1.24.0",
+                "1.25.0",
+                "1.26.0",
+                "1.27.0",
+                "1.27.1",
+                "1.27.2",
+                "1.28.0",
+                "1.28.1",
+                "1.29.0",
+                "1.29.1",
+                "1.8.0",
+                "1.8.1",
+                "1.9.0",
+                "1.9.1",
+                "1.9.2",
+                "1.9.3",
+                "1.9.4"
+              ]
+            },
+            {
+              "database_specific": {
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "mcp",
+                "purl": "pkg:pypi/mcp"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "2.0.0"
+                    },
+                    {
+                      "fixed": "2.2.0"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "2.0.0",
+                "2.0.1",
+                "2.1.0",
+                "2.1.1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "package-lock.json",
+      "package": {
+        "name": "node-forge",
+        "version": "1.4.0",
+        "ecosystem": "npm"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-86w9-cpqp-85rv",
+          "aliases": [
+            "CVE-2026-33894",
+            "CVE-2026-85393",
+            "GHSA-ppp5-5v6c-4jwp"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/09/GHSA-86w9-cpqp-85rv/GHSA-86w9-cpqp-85rv.json"
+              },
+              "package": {
+                "ecosystem": "npm",
+                "name": "node-forge",
+                "purl": "pkg:npm/node-forge"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "0"
+                    },
+                    {
+                      "last_affected": "1.4.0"
+                    }
+                  ],
+                  "type": "SEMVER"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "package-lock.json",
+      "package": {
+        "name": "zod",
+        "version": "3.25.76",
+        "ecosystem": "npm"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-mrhx-c7xc-m3w5",
+          "aliases": [
+            "CVE-2023-54404"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-mrhx-c7xc-m3w5/GHSA-mrhx-c7xc-m3w5.json"
+              },
+              "package": {
+                "ecosystem": "npm",
+                "name": "zod",
+                "purl": "pkg:npm/zod"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "0"
+                    },
+                    {
+                      "fixed": "4.6.6"
+                    }
+                  ],
+                  "type": "SEMVER"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "package": {
+        "name": "mcp",
+        "version": "1.29.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-84m7-p3x7-pcfv",
+          "aliases": [
+            "CVE-2026-59951"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "mcp",
+                "purl": "pkg:pypi/mcp"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "1.8.0"
+                    },
+                    {
+                      "fixed": "1.30.0"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "1.10.0",
+                "1.10.1",
+                "1.11.0",
+                "1.12.0",
+                "1.12.1",
+                "1.12.2",
+                "1.12.3",
+                "1.12.4",
+                "1.13.0",
+                "1.13.1",
+                "1.14.0",
+                "1.14.1",
+                "1.15.0",
+                "1.16.0",
+                "1.17.0",
+                "1.18.0",
+                "1.19.0",
+                "1.20.0",
+                "1.21.0",
+                "1.21.1",
+                "1.21.2",
+                "1.22.0",
+                "1.23.0",
+                "1.23.1",
+                "1.23.2",
+                "1.23.3",
+                "1.24.0",
+                "1.25.0",
+                "1.26.0",
+                "1.27.0",
+                "1.27.1",
+                "1.27.2",
+                "1.28.0",
+                "1.28.1",
+                "1.29.0",
+                "1.29.1",
+                "1.8.0",
+                "1.8.1",
+                "1.9.0",
+                "1.9.1",
+                "1.9.2",
+                "1.9.3",
+                "1.9.4"
+              ]
+            },
+            {
+              "database_specific": {
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "mcp",
+                "purl": "pkg:pypi/mcp"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "2.0.0"
+                    },
+                    {
+                      "fixed": "2.2.0"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "2.0.0",
+                "2.0.1",
+                "2.1.0",
+                "2.1.1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "package": {
+        "name": "opentelemetry-api",
+        "version": "1.37.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        {
+          "id": "GHSA-xcq7-p3pf-p88h",
+          "aliases": [
+            "CVE-2026-114603"
+          ],
+          "affected": [
+            {
+              "database_specific": {
+                "last_known_affected_version_range": "<= 1.45.0",
+                "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-xcq7-p3pf-p88h/GHSA-xcq7-p3pf-p88h.json"
+              },
+              "package": {
+                "ecosystem": "PyPI",
+                "name": "opentelemetry-api",
+                "purl": "pkg:pypi/opentelemetry-api"
+              },
+              "ranges": [
+                {
+                  "events": [
+                    {
+                      "introduced": "0"
+                    },
+                    {
+                      "fixed": "1.45.1"
+                    }
+                  ],
+                  "type": "ECOSYSTEM"
+                }
+              ],
+              "versions": [
+                "0.10b0",
+                "0.11b0",
+                "0.12b0",
+                "0.13b0",
+                "0.14b0",
+                "0.15b0",
+                "0.16b0",
+                "0.16b1",
+                "0.17b0",
+                "0.1a0",
+                "0.2a0",
+                "0.3a0",
+                "0.4a0",
+                "0.4a1",
+                "0.5b0",
+                "0.6b0",
+                "0.7b0",
+                "0.7b1",
+                "0.8b0",
+                "0.9b0",
+                "1.0.0",
+                "1.0.0rc1",
+                "1.1.0",
+                "1.10.0",
+                "1.10a0",
+                "1.11.0",
+                "1.11.1",
+                "1.12.0",
+                "1.12.0rc1",
+                "1.12.0rc2",
+                "1.13.0",
+                "1.14.0",
+                "1.15.0",
+                "1.16.0",
+                "1.17.0",
+                "1.18.0",
+                "1.19.0",
+                "1.2.0",
+                "1.20.0",
+                "1.21.0",
+                "1.22.0",
+                "1.23.0",
+                "1.24.0",
+                "1.25.0",
+                "1.26.0",
+                "1.27.0",
+                "1.28.0",
+                "1.28.1",
+                "1.28.2",
+                "1.29.0",
+                "1.3.0",
+                "1.30.0",
+                "1.31.0",
+                "1.31.1",
+                "1.32.0",
+                "1.32.1",
+                "1.33.0",
+                "1.33.1",
+                "1.34.0",
+                "1.34.1",
+                "1.35.0",
+                "1.36.0",
+                "1.37.0",
+                "1.38.0",
+                "1.39.0",
+                "1.39.1",
+                "1.4.0",
+                "1.4.1",
+                "1.40.0",
+                "1.41.0",
+                "1.41.1",
+                "1.42.0",
+                "1.42.1",
+                "1.43.0",
+                "1.44.0",
+                "1.45.0",
+                "1.5.0",
+                "1.6.0",
+                "1.6.1",
+                "1.6.2",
+                "1.7.0",
+                "1.7.1",
+                "1.8.0",
+                "1.9.0",
+                "1.9.1"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

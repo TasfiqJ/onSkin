@@ -1,0 +1,20 @@
+{
+  "name": "root-lint",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:18:03.053658+00:00",
+  "ended": "2026-10-23T20:18:03.175278+00:00",
+  "seconds": 0.1216388699831441,
+  "exit": 126,
+  "log_sha256": "0606f73c7bcbb8662dedca4d6010bb9bef9a578185ada663db6c52d800c74795",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_changes_after": ""
+}

@@ -1,0 +1,437 @@
+{
+  "observed_at": "2026-10-23T21:18:09.052823+00:00",
+  "old_distributions": 66,
+  "proposed_distributions": 68,
+  "semgrep": {
+    "name": "semgrep",
+    "version": "1.181.0",
+    "metadata_url": "https://pypi.org/pypi/semgrep/1.181.0/json",
+    "metadata_sha256": "ee573d9c17f9288870c6e049550909ba7abe853745d862006ddad76eb07f4a1f",
+    "requires_dist": [
+      "attrs>=21.3",
+      "boltons~=21.0",
+      "click-option-group~=0.5",
+      "click~=8.4.2",
+      "colorama~=0.4.0",
+      "exceptiongroup~=1.2.0",
+      "glom>=23.3",
+      "jsonschema~=4.25.1",
+      "mcp==1.29.0",
+      "opentelemetry-api~=1.37.0",
+      "opentelemetry-sdk~=1.37.0",
+      "opentelemetry-exporter-otlp-proto-http~=1.37.0",
+      "opentelemetry-instrumentation-requests~=0.58b0",
+      "opentelemetry-instrumentation-threading~=0.58b0",
+      "packaging>=21.0",
+      "peewee~=3.14",
+      "pyjwt[crypto]<3,>=2.15.0",
+      "requests~=2.22",
+      "rich>=13.5.2",
+      "ruamel.yaml>=0.18.15",
+      "ruamel.yaml.clib==0.2.15",
+      "semantic-version~=2.10.0",
+      "tomli~=2.4.0",
+      "typing-extensions~=4.2",
+      "urllib3~=2.0",
+      "wcmatch~=8.3",
+      "pywin32==311; sys_platform == \"win32\""
+    ],
+    "pinned_wheels": [
+      {
+        "filename": "semgrep-1.181.0-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-manylinux_2_34_x86_64.whl",
+        "bytes": 70540779,
+        "sha256": "c142ec04a2ed144970cb0a92f6877651dd3c088505eec737bb7f4db7ae5f0ffa"
+      }
+    ]
+  },
+  "candidate_conflicts": [
+    {
+      "parent": "semgrep",
+      "requirement": "mcp==1.29.0",
+      "candidate_version": "1.30.0"
+    },
+    {
+      "parent": "semgrep",
+      "requirement": "opentelemetry-api~=1.37.0",
+      "candidate_version": "1.45.1"
+    },
+    {
+      "parent": "semgrep",
+      "requirement": "opentelemetry-sdk~=1.37.0",
+      "candidate_version": "1.45.1"
+    },
+    {
+      "parent": "semgrep",
+      "requirement": "opentelemetry-exporter-otlp-proto-http~=1.37.0",
+      "candidate_version": "1.45.1"
+    }
+  ],
+  "missing_default_dependencies": [],
+  "extra_marker_limit": "Only default Linux Python3.12 dependencies of Semgrep and changed family evaluated here. Full resolver and requested extras remain required.",
+  "osv": {
+    "url": "https://api.osv.dev/v1/querybatch",
+    "response_sha256": "077b0e2c688d109551bce863aef9db7eedd812d9220a3617c481e44e1c4c36c0",
+    "results": [
+      {
+        "package": "annotated-types",
+        "version": "0.8.0",
+        "ids": []
+      },
+      {
+        "package": "anyio",
+        "version": "4.15.1",
+        "ids": []
+      },
+      {
+        "package": "attrs",
+        "version": "26.1.0",
+        "ids": []
+      },
+      {
+        "package": "boltons",
+        "version": "21.0.0",
+        "ids": []
+      },
+      {
+        "package": "bracex",
+        "version": "3.1",
+        "ids": []
+      },
+      {
+        "package": "certifi",
+        "version": "2026.10.19",
+        "ids": []
+      },
+      {
+        "package": "cffi",
+        "version": "2.1.1",
+        "ids": []
+      },
+      {
+        "package": "charset-normalizer",
+        "version": "3.5.2",
+        "ids": []
+      },
+      {
+        "package": "click",
+        "version": "8.4.2",
+        "ids": []
+      },
+      {
+        "package": "click-option-group",
+        "version": "0.5.9",
+        "ids": []
+      },
+      {
+        "package": "colorama",
+        "version": "0.4.6",
+        "ids": []
+      },
+      {
+        "package": "cryptography",
+        "version": "50.0.2",
+        "ids": []
+      },
+      {
+        "package": "exceptiongroup",
+        "version": "1.2.2",
+        "ids": []
+      },
+      {
+        "package": "face",
+        "version": "26.0.1",
+        "ids": []
+      },
+      {
+        "package": "glom",
+        "version": "25.12.0",
+        "ids": []
+      },
+      {
+        "package": "googleapis-common-protos",
+        "version": "1.75.5",
+        "ids": []
+      },
+      {
+        "package": "h11",
+        "version": "0.16.0",
+        "ids": []
+      },
+      {
+        "package": "httpcore",
+        "version": "1.0.9",
+        "ids": []
+      },
+      {
+        "package": "httpx",
+        "version": "0.28.1",
+        "ids": []
+      },
+      {
+        "package": "httpx-sse",
+        "version": "0.4.3",
+        "ids": []
+      },
+      {
+        "package": "idna",
+        "version": "3.20",
+        "ids": []
+      },
+      {
+        "package": "importlib-metadata",
+        "version": "8.7.1",
+        "ids": []
+      },
+      {
+        "package": "jsonschema",
+        "version": "4.25.1",
+        "ids": []
+      },
+      {
+        "package": "jsonschema-specifications",
+        "version": "2025.9.1",
+        "ids": []
+      },
+      {
+        "package": "markdown-it-py",
+        "version": "4.2.0",
+        "ids": []
+      },
+      {
+        "package": "mcp",
+        "version": "1.30.0",
+        "ids": []
+      },
+      {
+        "package": "mdurl",
+        "version": "0.1.2",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-api",
+        "version": "1.45.1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-exporter-otlp-proto-common",
+        "version": "1.45.1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-exporter-otlp-proto-http",
+        "version": "1.45.1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-instrumentation",
+        "version": "0.66b1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-instrumentation-requests",
+        "version": "0.66b1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-instrumentation-threading",
+        "version": "0.66b1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-proto",
+        "version": "1.45.1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-sdk",
+        "version": "1.45.1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-semantic-conventions",
+        "version": "0.66b1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-util-http",
+        "version": "0.66b1",
+        "ids": []
+      },
+      {
+        "package": "packaging",
+        "version": "26.3",
+        "ids": []
+      },
+      {
+        "package": "peewee",
+        "version": "3.19.0",
+        "ids": []
+      },
+      {
+        "package": "protobuf",
+        "version": "6.33.6",
+        "ids": []
+      },
+      {
+        "package": "pycparser",
+        "version": "3.11",
+        "ids": []
+      },
+      {
+        "package": "pydantic",
+        "version": "2.14.1",
+        "ids": []
+      },
+      {
+        "package": "pydantic-settings",
+        "version": "2.16.0",
+        "ids": []
+      },
+      {
+        "package": "pydantic-core",
+        "version": "2.50.1",
+        "ids": []
+      },
+      {
+        "package": "pygments",
+        "version": "2.21.0",
+        "ids": []
+      },
+      {
+        "package": "pyjwt",
+        "version": "2.15.1",
+        "ids": []
+      },
+      {
+        "package": "python-dotenv",
+        "version": "1.2.4",
+        "ids": []
+      },
+      {
+        "package": "python-multipart",
+        "version": "0.0.32",
+        "ids": []
+      },
+      {
+        "package": "referencing",
+        "version": "0.37.0",
+        "ids": []
+      },
+      {
+        "package": "requests",
+        "version": "2.34.2",
+        "ids": []
+      },
+      {
+        "package": "rich",
+        "version": "15.0.0",
+        "ids": []
+      },
+      {
+        "package": "rpds-py",
+        "version": "2026.9.1",
+        "ids": []
+      },
+      {
+        "package": "ruamel-yaml",
+        "version": "0.19.1",
+        "ids": []
+      },
+      {
+        "package": "ruamel-yaml-clib",
+        "version": "0.2.15",
+        "ids": []
+      },
+      {
+        "package": "semantic-version",
+        "version": "2.10.0",
+        "ids": []
+      },
+      {
+        "package": "semgrep",
+        "version": "1.181.0",
+        "ids": []
+      },
+      {
+        "package": "sse-starlette",
+        "version": "3.5.0",
+        "ids": []
+      },
+      {
+        "package": "starlette",
+        "version": "1.9.0",
+        "ids": []
+      },
+      {
+        "package": "tomli",
+        "version": "2.4.1",
+        "ids": []
+      },
+      {
+        "package": "typing-inspection",
+        "version": "0.4.4",
+        "ids": []
+      },
+      {
+        "package": "typing-extensions",
+        "version": "4.16.0",
+        "ids": []
+      },
+      {
+        "package": "urllib3",
+        "version": "2.8.0",
+        "ids": []
+      },
+      {
+        "package": "uvicorn",
+        "version": "0.54.0",
+        "ids": []
+      },
+      {
+        "package": "wcmatch",
+        "version": "8.5.2",
+        "ids": []
+      },
+      {
+        "package": "wrapt",
+        "version": "1.17.3",
+        "ids": []
+      },
+      {
+        "package": "zipp",
+        "version": "4.1.1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-exporter-http-transport",
+        "version": "0.66b1",
+        "ids": []
+      },
+      {
+        "package": "opentelemetry-exporter-otlp-common",
+        "version": "0.66b1",
+        "ids": []
+      }
+    ],
+    "positive_controls": [
+      {
+        "package": "mcp",
+        "version": "1.29.0",
+        "ids": [
+          "GHSA-84m7-p3x7-pcfv"
+        ]
+      },
+      {
+        "package": "opentelemetry-api",
+        "version": "1.37.0",
+        "ids": [
+          "GHSA-xcq7-p3pf-p88h"
+        ]
+      }
+    ],
+    "status": "QUERIED",
+    "controls_detect_known_advisories": true
+  },
+  "eligible": false,
+  "reason": "Semgrep 1.181.0 declared constraints reject both patched families. No stage technical edit is eligible."
+}

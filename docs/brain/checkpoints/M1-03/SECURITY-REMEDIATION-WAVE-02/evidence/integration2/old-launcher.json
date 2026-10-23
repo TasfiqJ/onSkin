@@ -1,0 +1,5 @@
+{
+  "source": "#!/bin/sh\nexec /work/runtime/bin/python -I -S -B -c 'import sys,socket\n# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable\n# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.\ndef g97_scanner_audit(event,args):\n if event == '\"'\"'socket.bind'\"'\"' and args[0].family in (socket.AF_INET,socket.AF_INET6):\n  raise PermissionError('\"'\"'G97_SCANNER_INTERNET_LISTENER_FORBIDDEN'\"'\"')\nsys.addaudithook(g97_scanner_audit)\nimport site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()' /work/bridge2/old-site \"$@\"\n",
+  "sha256": "9e67da67d7799f48da2828aaff83ee5c038a5007f25291c702649a412428d4b3",
+  "purpose": "Dispatch ORIGINAL isolated contract.SEMGREP_ENTRY for original --target installation; no scanner output substituted."
+}

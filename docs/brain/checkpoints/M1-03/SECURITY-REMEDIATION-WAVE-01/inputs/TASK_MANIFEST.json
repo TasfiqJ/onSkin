@@ -1,0 +1,77 @@
+{
+  "authorization_id": "M103-SECURITY-REMEDIATION-WAVE01-CONDITIONAL-SOURCE-EDIT-01",
+  "base_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "base_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "branch": "stage/m1-gate-recovery",
+  "file_count": 13,
+  "files": [
+    {
+      "bytes": 1655,
+      "path": "00_READ_FIRST.md",
+      "sha256": "6f4916ef33794788576412dd6e30f361e05d7ecae6d9c30446c9f463e58bf0d3"
+    },
+    {
+      "bytes": 2496,
+      "path": "01_INDEPENDENT_BRAIN_REVIEW.md",
+      "sha256": "1dbb0fe5aea7eb547e3d58635c234d2ba434120ffd88be91c37143e56d58683f"
+    },
+    {
+      "bytes": 5304,
+      "path": "02_MISSION_AND_AUTONOMY.md",
+      "sha256": "8520e65f98747b35b18763ebcb58d09993fa921762bb59b4a19eefc474bb2009"
+    },
+    {
+      "bytes": 2447,
+      "path": "03_FINITE_EDIT_BOUNDARIES.md",
+      "sha256": "d52802e0eee1e96e17a93a7aa957af5bfc1e641c194399b9d5b7b4b1034352f4"
+    },
+    {
+      "bytes": 2449,
+      "path": "04_VERIFICATION_AND_ACCEPTANCE.md",
+      "sha256": "cd210ca2da1ef25836b85da70a51d7af0c0352a0efd00227e973533673414358"
+    },
+    {
+      "bytes": 1527,
+      "path": "05_AUTONOMOUS_OPERATING_PROTOCOL.md",
+      "sha256": "7577df114d6b34c805b41e27751c90bd7d2f90b1a03156eca489158b6fc2d2c6"
+    },
+    {
+      "bytes": 1456,
+      "path": "06_DELIVERY_AND_STOP.md",
+      "sha256": "2c20036df530445c951fe8b155f5b7f30946044a7d31d1f9a8bc24bb7a2a9a65"
+    },
+    {
+      "bytes": 1283,
+      "path": "07_EVIDENCE_SOURCES.md",
+      "sha256": "e665ab5348837aa0081897d3b0fa42d99dfaa5a0eb708a750a840bd095d30c0d"
+    },
+    {
+      "bytes": 837,
+      "path": "08_STOP_AND_PRIVACY.md",
+      "sha256": "e4a09f24acf3bca938691b283c1c28379e1c0807d1bf5f5722174312ba7614f3"
+    },
+    {
+      "bytes": 1328,
+      "path": "BRAIN_STATE_AT_ISSUANCE.json",
+      "sha256": "24fc158172ce7e3fe0e6b5639dc90e844b952351dcddf17d9678b7b51aaec809"
+    },
+    {
+      "bytes": 6123,
+      "path": "PREIMAGE_WITNESSES.json",
+      "sha256": "f88e997b293440124b70ac244b29b6bd2508eaba39ee46c7216282788b44b260"
+    },
+    {
+      "bytes": 3889,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "096310801cb475f9dbcd88916005dfeb35004fae1eb94be2a278fe4a46bbd4e9"
+    },
+    {
+      "bytes": 1774,
+      "path": "verify_context.py",
+      "sha256": "e161aec9b8582de812d2cb4ee9c800069986404d6b69a95e14c8ef9de6b5c205"
+    }
+  ],
+  "iteration": "SECURITY-REMEDIATION-WAVE-01",
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1
+}

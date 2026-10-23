@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "cwd": "/tmp/onskin-security-sbom-fixture01-20261022",
+  "clean": true,
+  "measured_commit": "efc75bf119904f983e40380067f682d111da52dd",
+  "measured_tree": "85568597205ccb6ee5a94fe16db063f78abbc70f",
+  "tracked_files": 20032,
+  "tracked_inventory_sha256": "1b2226303e8515ad2e376660167cb72bda40bb51bab1d34881a8d2f1f24bb6ed",
+  "witnesses_verified": 25,
+  "node": "v22.21.0",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "security_admission": "CLOSED"
+}

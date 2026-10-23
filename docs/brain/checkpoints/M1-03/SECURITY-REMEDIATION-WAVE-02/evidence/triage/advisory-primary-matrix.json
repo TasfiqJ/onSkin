@@ -1,0 +1,680 @@
+{
+  "observed_at": "2026-10-23T21:29:52.316496+00:00",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "original_osv_run": 40020077385,
+  "original_osv_exit": 1,
+  "primary_advisories": [
+    {
+      "id": "GHSA-86w9-cpqp-85rv",
+      "url": "https://api.osv.dev/v1/vulns/GHSA-86w9-cpqp-85rv",
+      "response_sha256": "c225b0aa407b99368da3925e6c7040b5831a652a7ab51841af885e8602a70767",
+      "modified": "2026-10-01T21:40:55.016251436Z",
+      "published": "2026-09-03T21:31:15Z",
+      "withdrawn": null,
+      "aliases": [
+        "CVE-2026-33894",
+        "CVE-2026-85393",
+        "GHSA-ppp5-5v6c-4jwp"
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "node-forge",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/node-forge"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "last_affected": "1.4.0"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/09/GHSA-86w9-cpqp-85rv/GHSA-86w9-cpqp-85rv.json"
+          }
+        }
+      ],
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-85393"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/digitalbazaar/forge/issues/1149"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/digitalbazaar/forge/pull/1152"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://github.com/advisories/GHSA-ppp5-5v6c-4jwp"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/digitalbazaar/forge"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/asn1.js"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/rsa.js"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.vulncheck.com/advisories/node-forge-through-1.4.0-rsa-pkcs-1-1.5-signature-forgery-via-nested-digestalgorithm-padding"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-mrhx-c7xc-m3w5",
+      "url": "https://api.osv.dev/v1/vulns/GHSA-mrhx-c7xc-m3w5",
+      "response_sha256": "b65c53465dfd1f783373f6b544cce3075d5483ad1d8591d44c719eb46c60ab8f",
+      "modified": "2026-10-23T18:30:09.376405885Z",
+      "published": "2026-10-01T18:32:46Z",
+      "withdrawn": null,
+      "aliases": [
+        "CVE-2023-54404"
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "zod",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/zod"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "4.6.6"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-mrhx-c7xc-m3w5/GHSA-mrhx-c7xc-m3w5.json"
+          }
+        }
+      ],
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-54404"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/colinhacks/zod/issues/1872"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/colinhacks/zod/pull/6475"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/colinhacks/zod/pull/6652"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/colinhacks/zod/commit/a0ebf970f2d752e5f58527cd2942ff48be4f46bd"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/colinhacks/zod"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.vulncheck.com/advisories/zod-uncontrolled-resource-consumption-via-array-validation"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-84m7-p3x7-pcfv",
+      "url": "https://api.osv.dev/v1/vulns/GHSA-84m7-p3x7-pcfv",
+      "response_sha256": "5fc193e5e9a48468a81112b7b190329a83df5428ab53f8f158e763b9ce5045ea",
+      "modified": "2026-10-15T20:30:08.565001293Z",
+      "published": "2026-10-15T20:13:13Z",
+      "withdrawn": null,
+      "aliases": [
+        "CVE-2026-59951"
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "mcp",
+            "ecosystem": "PyPI",
+            "purl": "pkg:pypi/mcp"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "1.8.0"
+                },
+                {
+                  "fixed": "1.30.0"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "1.10.0",
+            "1.10.1",
+            "1.11.0",
+            "1.12.0",
+            "1.12.1",
+            "1.12.2",
+            "1.12.3",
+            "1.12.4",
+            "1.13.0",
+            "1.13.1",
+            "1.14.0",
+            "1.14.1",
+            "1.15.0",
+            "1.16.0",
+            "1.17.0",
+            "1.18.0",
+            "1.19.0",
+            "1.20.0",
+            "1.21.0",
+            "1.21.1",
+            "1.21.2",
+            "1.22.0",
+            "1.23.0",
+            "1.23.1",
+            "1.23.2",
+            "1.23.3",
+            "1.24.0",
+            "1.25.0",
+            "1.26.0",
+            "1.27.0",
+            "1.27.1",
+            "1.27.2",
+            "1.28.0",
+            "1.28.1",
+            "1.29.0",
+            "1.29.1",
+            "1.8.0",
+            "1.8.1",
+            "1.9.0",
+            "1.9.1",
+            "1.9.2",
+            "1.9.3",
+            "1.9.4"
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+          }
+        },
+        {
+          "package": {
+            "name": "mcp",
+            "ecosystem": "PyPI",
+            "purl": "pkg:pypi/mcp"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "2.0.0"
+                },
+                {
+                  "fixed": "2.2.0"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "2.0.0",
+            "2.0.1",
+            "2.1.0",
+            "2.1.1"
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-84m7-p3x7-pcfv/GHSA-84m7-p3x7-pcfv.json"
+          }
+        }
+      ],
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-59951"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/pull/3395"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/pull/3426"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/commit/92120b4b0f50385af096592d7cee932fc1d994e7"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/commit/d2290ca3434731b68ea3e2270bc06a6e6575931b"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/modelcontextprotocol/python-sdk"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v1.30.0"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.2.0"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-xcq7-p3pf-p88h",
+      "url": "https://api.osv.dev/v1/vulns/GHSA-xcq7-p3pf-p88h",
+      "response_sha256": "69af42227e71aed73090f1f2773a91119e581fbc19ac344425d9de446c3ad2d3",
+      "modified": "2026-10-22T16:30:40.999595074Z",
+      "published": "2026-10-22T16:22:07Z",
+      "withdrawn": null,
+      "aliases": [
+        "CVE-2026-114603"
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "opentelemetry-api",
+            "ecosystem": "PyPI",
+            "purl": "pkg:pypi/opentelemetry-api"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "1.45.1"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "0.10b0",
+            "0.11b0",
+            "0.12b0",
+            "0.13b0",
+            "0.14b0",
+            "0.15b0",
+            "0.16b0",
+            "0.16b1",
+            "0.17b0",
+            "0.1a0",
+            "0.2a0",
+            "0.3a0",
+            "0.4a0",
+            "0.4a1",
+            "0.5b0",
+            "0.6b0",
+            "0.7b0",
+            "0.7b1",
+            "0.8b0",
+            "0.9b0",
+            "1.0.0",
+            "1.0.0rc1",
+            "1.1.0",
+            "1.10.0",
+            "1.10a0",
+            "1.11.0",
+            "1.11.1",
+            "1.12.0",
+            "1.12.0rc1",
+            "1.12.0rc2",
+            "1.13.0",
+            "1.14.0",
+            "1.15.0",
+            "1.16.0",
+            "1.17.0",
+            "1.18.0",
+            "1.19.0",
+            "1.2.0",
+            "1.20.0",
+            "1.21.0",
+            "1.22.0",
+            "1.23.0",
+            "1.24.0",
+            "1.25.0",
+            "1.26.0",
+            "1.27.0",
+            "1.28.0",
+            "1.28.1",
+            "1.28.2",
+            "1.29.0",
+            "1.3.0",
+            "1.30.0",
+            "1.31.0",
+            "1.31.1",
+            "1.32.0",
+            "1.32.1",
+            "1.33.0",
+            "1.33.1",
+            "1.34.0",
+            "1.34.1",
+            "1.35.0",
+            "1.36.0",
+            "1.37.0",
+            "1.38.0",
+            "1.39.0",
+            "1.39.1",
+            "1.4.0",
+            "1.4.1",
+            "1.40.0",
+            "1.41.0",
+            "1.41.1",
+            "1.42.0",
+            "1.42.1",
+            "1.43.0",
+            "1.44.0",
+            "1.45.0",
+            "1.5.0",
+            "1.6.0",
+            "1.6.1",
+            "1.6.2",
+            "1.7.0",
+            "1.7.1",
+            "1.8.0",
+            "1.9.0",
+            "1.9.1"
+          ],
+          "database_specific": {
+            "last_known_affected_version_range": "<= 1.45.0",
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2026/10/GHSA-xcq7-p3pf-p88h/GHSA-xcq7-p3pf-p88h.json"
+          }
+        }
+      ],
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/open-telemetry/opentelemetry-python/security/advisories/GHSA-xcq7-p3pf-p88h"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/open-telemetry/opentelemetry-python/pull/5749"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/open-telemetry/opentelemetry-python/commit/d5224bf4ffdf2aee1b592ad238dcc32ca957f26b"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/open-telemetry/opentelemetry-python"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/open-telemetry/opentelemetry-python/blob/main/CHANGELOG.md#version-1451066b1-2026-10-06"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/open-telemetry/opentelemetry-python/releases/tag/v1.45.1"
+        }
+      ]
+    }
+  ],
+  "registry": [
+    {
+      "name": "node-forge",
+      "url": "https://registry.npmjs.org/node-forge",
+      "response_sha256": "e3de9b1da86bb0b8a133a8ebcc3a95c5c736bd2bbb189831ebed136d8ce296ed",
+      "dist_tags": {
+        "latest": "1.4.0"
+      },
+      "latest": "1.4.0",
+      "latest_dependencies": {},
+      "latest_peer_dependencies": {},
+      "latest_dist": {
+        "integrity": "sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ==",
+        "shasum": "1c7b7d8bdc2d078739f58287d589d903a11b2fc2",
+        "tarball": "https://registry.npmjs.org/node-forge/-/node-forge-1.4.0.tgz"
+      },
+      "published_versions": 134
+    },
+    {
+      "name": "@expo/code-signing-certificates",
+      "url": "https://registry.npmjs.org/@expo%2fcode-signing-certificates",
+      "response_sha256": "d200762202605ec5b7afcb19bb0c30d186fe5094bf73a28c3226ee998f6eeb6c",
+      "dist_tags": {
+        "latest": "0.0.7"
+      },
+      "latest": "0.0.7",
+      "latest_dependencies": {
+        "node-forge": "^1.4.0"
+      },
+      "latest_peer_dependencies": {},
+      "latest_dist": {
+        "shasum": "fefb3c3e8ee85f0ef906d41f0c7ee2fcca43e236",
+        "tarball": "https://registry.npmjs.org/@expo/code-signing-certificates/-/code-signing-certificates-0.0.7.tgz",
+        "integrity": "sha512-zP0tnfqrFFRL8INtOaQ6XwEYfdIpIH9vrEo7y0bHQGQa50z4/QWXE5CI4nRUHxqFW4MVWOwXFg1hom1aAZHNkQ=="
+      },
+      "published_versions": 7
+    },
+    {
+      "name": "expo",
+      "url": "https://registry.npmjs.org/expo",
+      "response_sha256": "811f3a7af2c825cc961da2a761b85ebe81fe7fd6a6654e931680af13c7923b8a",
+      "dist_tags": {
+        "sdk-52": "52.0.49",
+        "sdk-53": "53.0.27",
+        "canary-sdk-55": "55.0.3-canary-20260429-a5e59cf",
+        "canary-sdk-56": "56.0.6-canary-20260701-9100865",
+        "canary": "58.0.0-canary-20260909-ea7a89a",
+        "next": "58.0.11",
+        "latest": "58.0.17",
+        "sdk-57": "57.0.31",
+        "sdk-56": "56.0.24",
+        "sdk-55": "55.0.32",
+        "sdk-54": "54.0.38"
+      },
+      "latest": "58.0.17",
+      "latest_dependencies": {
+        "@expo/cli": "^58.1.14",
+        "expo-font": "~58.0.9",
+        "expo-asset": "~58.0.18",
+        "@expo/metro": "~58.0.0",
+        "@expo/config": "~58.0.7",
+        "@expo/log-box": "^58.0.13",
+        "pretty-format": "^29.7.0",
+        "react-refresh": "^0.14.2",
+        "@babel/runtime": "^7.20.0",
+        "@expo/devtools": "~58.0.2",
+        "expo-constants": "~58.0.13",
+        "expo-keep-awake": "~58.0.3",
+        "expo-file-system": "~58.0.10",
+        "expo-modules-cli": "~0.3.1",
+        "@expo/dom-webview": "~58.0.2",
+        "@expo/fingerprint": "^0.21.6",
+        "babel-preset-expo": "~58.0.19",
+        "expo-modules-core": "~58.0.24",
+        "@expo/metro-config": "~58.0.16",
+        "whatwg-url-minimum": "^0.2.0",
+        "@expo/log-box-utils": "^58.0.2",
+        "@expo/config-plugins": "~58.0.10",
+        "@ungap/structured-clone": "^1.3.0",
+        "expo-modules-autolinking": "~58.0.14",
+        "@expo/local-build-cache-provider": "^58.0.7"
+      },
+      "latest_peer_dependencies": {
+        "react": "*",
+        "react-dom": "*",
+        "react-native": "*",
+        "react-native-web": "*",
+        "@expo/dom-webview": "*",
+        "@expo/metro-runtime": "*",
+        "react-native-webview": "*"
+      },
+      "latest_dist": {
+        "shasum": "44b2bf40afc4c4005be55a8e8bab639befc6154d",
+        "tarball": "https://registry.npmjs.org/expo/-/expo-58.0.17.tgz",
+        "integrity": "sha512-IFH8ExamRC2m7La8q/RiBaZ3dcHga2fuMPQzRXsagS7w2sLDwwExEpZWT9Mr+30A13xEuXAHxZD3zmtgetzvHw=="
+      },
+      "published_versions": 1009
+    },
+    {
+      "name": "zod",
+      "url": "https://registry.npmjs.org/zod",
+      "response_sha256": "e96328b2e5019efc4071ecf6d04b565bde83669a387130496c36770f2f051017",
+      "dist_tags": {
+        "next": "3.25.0-beta.20250519T094321",
+        "alpha": "3.25.68-alpha.11",
+        "beta": "4.1.13-beta.0",
+        "canary": "4.5.0-canary.20260828T171753",
+        "latest": "4.6.7"
+      },
+      "latest": "4.6.7",
+      "latest_dependencies": {},
+      "latest_peer_dependencies": {},
+      "latest_dist": {
+        "shasum": "e806cf64a7f4e37635ce9f2f52c04c3766f75e5b",
+        "tarball": "https://registry.npmjs.org/zod/-/zod-4.6.7.tgz",
+        "integrity": "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg=="
+      },
+      "published_versions": 1013
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-requirements.txt",
+      "path_sha256": "e702b10c1eb3cea652198521bdbb8627e8049c4a4689b99473aa6e640ba3e4bc",
+      "git_blob": "7ae1f68ccc432f3b95cd30b96752fe1712a06a9d",
+      "file_sha256": "0549a6016bd9503f2904f3a00013d8158f434f7190ca041398f72bea4556d948",
+      "package": {
+        "name": "opentelemetry-api",
+        "version": "1.37.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        "GHSA-xcq7-p3pf-p88h"
+      ],
+      "execution_role": "immutable-historical-evidence",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/official-final/mcp-requirements.txt",
+      "path_sha256": "5d0515afa1719c3c8da63cca4c5110253398069eac5b3f8e46102baa05e4b920",
+      "git_blob": "206621ddde9373112785b6c35c5074454a5418f5",
+      "file_sha256": "3b3636e1a304826f89d848caf203a057afc178214b5264ad98ec565a15d7e2b0",
+      "package": {
+        "name": "opentelemetry-api",
+        "version": "1.37.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        "GHSA-xcq7-p3pf-p88h"
+      ],
+      "execution_role": "immutable-historical-evidence",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/official-final/otel-requirements.txt",
+      "path_sha256": "e70e19b3473b065f0870988d26b00ecacd48b554a20481bf01eda1cb5e692283",
+      "git_blob": "7b602600601750ce213fc83720dd91326826e65c",
+      "file_sha256": "df151c865121b8c8dc5cf9d6ce633db46d13e42c20f6dc4174c6fb09139fd920",
+      "package": {
+        "name": "mcp",
+        "version": "1.29.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        "GHSA-84m7-p3x7-pcfv"
+      ],
+      "execution_role": "immutable-historical-evidence",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    },
+    {
+      "path": "package-lock.json",
+      "path_sha256": "053150b640a7ce75eff69d1a22cae7f0f94ad64ce9a855db544dda0929316519",
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "file_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "package": {
+        "name": "node-forge",
+        "version": "1.4.0",
+        "ecosystem": "npm"
+      },
+      "advisories": [
+        "GHSA-86w9-cpqp-85rv"
+      ],
+      "execution_role": "application-and-development-lock-requires-parent-analysis",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    },
+    {
+      "path": "package-lock.json",
+      "path_sha256": "053150b640a7ce75eff69d1a22cae7f0f94ad64ce9a855db544dda0929316519",
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "file_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+      "package": {
+        "name": "zod",
+        "version": "3.25.76",
+        "ecosystem": "npm"
+      },
+      "advisories": [
+        "GHSA-mrhx-c7xc-m3w5"
+      ],
+      "execution_role": "application-and-development-lock-requires-parent-analysis",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "path_sha256": "fb8b8347bbe57fc930967b4eb5bcd3fdc9376df24f969a33ed986e26dd67acbf",
+      "git_blob": "ee24c284afc6251892bcbdbd8e6fc280a3d543ef",
+      "file_sha256": "9af06b943d8cc19750ddc2f6d3831c096f540fb68965b62b2e760706a1db465f",
+      "package": {
+        "name": "mcp",
+        "version": "1.29.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        "GHSA-84m7-p3x7-pcfv"
+      ],
+      "execution_role": "scanner-cli-only",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "path_sha256": "fb8b8347bbe57fc930967b4eb5bcd3fdc9376df24f969a33ed986e26dd67acbf",
+      "git_blob": "ee24c284afc6251892bcbdbd8e6fc280a3d543ef",
+      "file_sha256": "9af06b943d8cc19750ddc2f6d3831c096f540fb68965b62b2e760706a1db465f",
+      "package": {
+        "name": "opentelemetry-api",
+        "version": "1.37.0",
+        "ecosystem": "PyPI"
+      },
+      "advisories": [
+        "GHSA-xcq7-p3pf-p88h"
+      ],
+      "execution_role": "scanner-cli-only",
+      "disposition": "REPAIR_CANDIDATE_OR_OWNER_REVIEW_REQUIRED"
+    }
+  ],
+  "stage_dependencies_changed": false
+}

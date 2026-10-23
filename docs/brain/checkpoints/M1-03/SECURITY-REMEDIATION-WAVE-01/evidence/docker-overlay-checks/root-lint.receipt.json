@@ -1,0 +1,20 @@
+{
+  "name": "root-lint",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "cwd": "/opt/wave-repo",
+  "started": "2026-10-23T20:19:33.826314+00:00",
+  "ended": "2026-10-23T20:20:02.471238+00:00",
+  "seconds": 28.645357343018986,
+  "exit": 0,
+  "log_sha256": "d8e155f6125068377641b844bd0258db6668462f2e2aaa62dceb0eb7e81e55d6",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_changes_after": ""
+}

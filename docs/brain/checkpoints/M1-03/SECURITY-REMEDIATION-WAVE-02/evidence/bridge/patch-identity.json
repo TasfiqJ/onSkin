@@ -1,0 +1,27 @@
+{
+  "status": "CUSTOM_CANDIDATE_ONLY_NOT_OFFICIAL_UPSTREAM_WHEEL",
+  "upstream_wheel_sha256": "c142ec04a2ed144970cb0a92f6877651dd3c088505eec737bb7f4db7ae5f0ffa",
+  "upstream_metadata_sha256": "551bb8eea5dcbe0b884cd4c9012a394b0c7f7c55854ad7946a08b6f9b12a6b0e",
+  "custom_metadata_sha256": "23ee34f9baf0cb736e8d08b402d7b419bedf2c6c24d9db9fff3b20e2530cb0d9",
+  "patch_sha256": "672d3873545e1129a6a4bb6e49bce50aff92a9ab7bd6b30e70995b82c78abf2b",
+  "old_new_requires_dist": [
+    {
+      "old": "Requires-Dist: mcp==1.29.0",
+      "new": "Requires-Dist: mcp==1.30.0"
+    },
+    {
+      "old": "Requires-Dist: opentelemetry-api~=1.37.0",
+      "new": "Requires-Dist: opentelemetry-api~=1.45.1"
+    },
+    {
+      "old": "Requires-Dist: opentelemetry-sdk~=1.37.0",
+      "new": "Requires-Dist: opentelemetry-sdk~=1.45.1"
+    },
+    {
+      "old": "Requires-Dist: opentelemetry-exporter-otlp-proto-http~=1.37.0",
+      "new": "Requires-Dist: opentelemetry-exporter-otlp-proto-http~=1.45.1"
+    }
+  ],
+  "other_metadata_unchanged": true,
+  "official_wheel_rewritten": false
+}

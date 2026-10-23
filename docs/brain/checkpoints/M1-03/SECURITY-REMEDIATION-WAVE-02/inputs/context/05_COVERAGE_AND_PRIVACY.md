@@ -1,0 +1,7 @@
+# SAST and sensitive evidence boundaries
+
+Never quote or commit raw scanner secrets, access tokens, security answers, patient/JANUS reference records, authors/emails from private reports or full scanner payloads. Use hashed source path/range/blob with tool ID + original artifact digest and count. The original Gitleaks current/history findings must remain unreviewed until qualified issuer disposition. Any actual live credential discovered: do not validate it; record safe escalation instructions for proper credential custodian. No automatic allowlisting, dismissal or rotation from this task.
+
+Do not expand original source-inventory coverage by simply excluding checkpoint/JSON/gzip paths or lowering denominator. The original 11,922 reviewed partition is frozen and currently conflicts with new 20k+ source. Produce an explicit review candidate with all added and changed classes and keep scanner parser errors/timeout/fixpoint events independent. History 189 failed targets / 368 fixpoint events are NOT newly scanned data. OWASP pin mismatch is a real blocker; authenticate exact old bytes or require separate source review. No original scanner rule/manifest/policy changes.
+
+No patient research, clinical advice, billing activation, hosted DB replay, signing, TestFlight or public release. `protected_source_go=false`, `main_promotion_authorized=false`, original source proposal remains expired `2026-10-21T00:00:00Z`, and accepted roadmap tasks remain `M0-01/M0-02/M1-01/M1-02`.

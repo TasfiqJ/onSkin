@@ -1,0 +1,49 @@
+{
+  "source_changes_from_preparation": false,
+  "items": [
+    {
+      "operation": "disposable clone Windows status",
+      "outcome": "Long filenames initially appeared modified with inherited Git config; set clone-local core.longpaths=true and core.autocrlf=false. Clean status and exact working/Git sample bytes then confirmed. No reset or source rewrite."
+    },
+    {
+      "operation": "inventory helper attempts",
+      "raw_exit_codes": [
+        1,
+        1,
+        0
+      ],
+      "outcome": "Initial clean-status assertion and ordinary long-path open failed; final helper reused original contract.physical and completed; original source guard separately exited1 as required."
+    },
+    {
+      "operation": "optional original bootstrap",
+      "raw_exit": 1,
+      "outcome": "Missing Python pip; no scanner executed or package-tree provenance established. No replacement installer used."
+    },
+    {
+      "operation": "provider temporary download URL",
+      "http_status": 403,
+      "outcome": "Expired transport reference refreshed via existing read-only connector; original ZIP digest matched. No account or credential action."
+    },
+    {
+      "operation": "secret reducer initial assertion",
+      "raw_exit": 1,
+      "outcome": "Initial assumption that Match equals the redaction marker was too strict. Original contract requires Secret=REDACTED; final reducer verifies that and withholds every Match/context field."
+    },
+    {
+      "operation": "first original70 test attempt",
+      "raw_exit": 1,
+      "outcome": "Missing exact locked YAML in disposable clone; preserved failure and SRI-verified dependency installation, then original70 exited0."
+    },
+    {
+      "operation": "handoff authoring helper",
+      "raw_exit": 1,
+      "outcome": "Python3.9 write_text does not accept newline argument. Replaced by UTF8 write_bytes; first attempt did not write the handoff."
+    },
+    {
+      "operation": "staged whitespace audit",
+      "wrapper_exit": 1,
+      "underlying_git_exit": null,
+      "outcome": "Authored Python text outputs used Windows CRLF. Normalized only authored files to LF, preserved all13 exact packet inputs; final staged whitespace check exited0 with zero output."
+    }
+  ]
+}

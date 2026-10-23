@@ -1,0 +1,42 @@
+{
+  "observed_at": "2026-10-23T21:33:41.709Z",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "workflow_runs": [
+    {
+      "id": 40020077467,
+      "name": "iOS launch contract",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 409,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/40020077467/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/40020077467/logs",
+      "workflow_id": 312030667
+    },
+    {
+      "id": 40020077385,
+      "name": "Security",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_number": 941,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/40020077385/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/40020077385/logs",
+      "workflow_id": 308213475
+    },
+    {
+      "id": 40020077445,
+      "name": "Quality",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 409,
+      "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/40020077445/jobs",
+      "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/40020077445/logs",
+      "workflow_id": 312030668
+    }
+  ],
+  "canonical_job": {
+    "id": 120642030703,
+    "conclusion": "success",
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/40020077445/job/120642030703"
+  },
+  "note": "This is the measured source, not a later delivery-head CI result. Historical ECR Data limit exceeded is preserved as intermittent infrastructure history; this exact-source canonical job passed. Hosted DB authority remains false."
+}

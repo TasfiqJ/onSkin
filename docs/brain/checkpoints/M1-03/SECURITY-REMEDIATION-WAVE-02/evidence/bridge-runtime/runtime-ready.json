@@ -1,0 +1,7 @@
+{
+  "candidate": "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+  "python": "/work/bridge2/candidate-env/bin/python",
+  "old_site": "/work/bridge2/old-site",
+  "stage_technical_edit_eligible": false,
+  "critical_missing_gate": "AUTHENTIC_OWASP_PIN_NOT_RECOVERED"
+}

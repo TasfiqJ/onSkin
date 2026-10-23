@@ -1,0 +1,31 @@
+{
+  "authorized_branch": "stage/m1-gate-recovery",
+  "authorized_head": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+  "authorized_tree": "791580347993487bd3920727ee7b0e31668eed4e",
+  "checkout_recovery_method": "New independent clone; GitHub fetch of existing remote branch; fast-forward only in NEW clone; no reset/rebase/force-push and no modification to stale checkout.",
+  "kind": "INDEPENDENT_BRAIN_READBACK_OF_EXACT_CLEAN_WORKTREE",
+  "note": "A readback proves the state at issuance, not future immutability. Codex MUST recheck before starting. Any discrepancy STOP.",
+  "observed_main_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "observed_pr": 10,
+  "observed_pr_draft_open_unmerged": true,
+  "original_stale_checkout_untouched": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\postmerge-gate-triage01-stage",
+  "original_stale_head": "d2ce5e95cd24edb2ab4d833dee945bdbc59da9fe",
+  "original_stale_tree": "604976823a08700009f8129273f3d0c3d7e34104",
+  "revision": "REISSUED-R1",
+  "schema_version": 1,
+  "scope_change": "NONE. Only the workspace selection and issuance anchor are corrected. All original false gates and read-only source restrictions remain.",
+  "verification_result": {
+    "branch": "stage/m1-gate-recovery",
+    "cloned_without_hardlinks": true,
+    "git_alternates_file_absent": true,
+    "git_source_bytes_match_working_files": true,
+    "head_matches": true,
+    "preimage_count": 20,
+    "preimage_set_fingerprint": "4954012441f89c16902e8de3a55ef75403034bfaa23da413cacb614d3a79113c",
+    "source_repository_remote": "https://github.com/TasfiqJ/onSkin.git",
+    "tree_matches": true,
+    "worktree_clean": true,
+    "worktree_line_ending_conversion_disabled": true
+  },
+  "verified_windows_checkout": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_COVERAGE_TRIAGE01_EXACT_4f6a2d2"
+}

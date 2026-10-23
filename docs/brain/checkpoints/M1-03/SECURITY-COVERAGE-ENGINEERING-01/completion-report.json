@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "SECURITY-COVERAGE-ENGINEERING-01",
+  "authorization_id": "M103-SECURITY-COVERAGE-ENGINEERING01-CANDIDATE-01",
+  "status": "PARTIAL_BLOCKED_SUBMITTED_REVIEW_REQUIRED",
+  "context_health": "VALID",
+  "external_manifest_sha256": "47ae1a581038ec3122eeba5caaa4cde408f8e9e840973d4b81e18a83c6d45051",
+  "preimage_fingerprint": "f59f12dda69122f79ee0f76d6360daff0e73243e9a487d1fa260c97c114b4f0d",
+  "issued_commit": "455e3596876d85f5734f4ac3163df1de09647e1f",
+  "issued_tree": "f873f4ba961b078465234f33eb2f30728f343515",
+  "measured_implementation_commit": "df17120787162afd9c73a77e120418115fc0ed19",
+  "measured_implementation_tree": "c16053107b1dbedacd9920a2244c8bc33f9d846d",
+  "preceding_original_test_attempt_commit": "a03e2f5340cc3d30ee829efed521d18573d66eff",
+  "preceding_original_test_attempt_tree": "471ecf1b90989292bd3f673c9ba4e2eeed38a726",
+  "final_delivery_commit": null,
+  "final_delivery_tree": null,
+  "final_delivery_resolution": "Resolve live pushed ref and current CI externally after evidence commit; avoid future self-reference.",
+  "issued_counts": {
+    "regular_paths": 20817,
+    "added": 8895,
+    "changed": 90,
+    "missing": 0,
+    "checkpoint_review_additions": 8747
+  },
+  "measured_counts": {
+    "regular_paths": 20835,
+    "added": 8913,
+    "changed": 90,
+    "missing": 0,
+    "required": 14228,
+    "auxiliary": 1451,
+    "excluded": 5095,
+    "REFUSED": 61
+  },
+  "candidate": {
+    "disposition": "NON_ADMITTING_OWNER_REVIEW_REQUIRED",
+    "manifest_rows": 20833,
+    "target_partition_rows": 20835,
+    "denominator_equality": true,
+    "independent_clean_runs": 2,
+    "identical_output_files": 45,
+    "original_patch_applied": false,
+    "original_patch_status": "WITHHELD_TECHNICALLY_UNJUSTIFIED: original schema cannot encode 61 REFUSED paths",
+    "sql_targets": 26,
+    "historical_failed_targets": 189,
+    "historical_fixpoint_events": 368,
+    "historical_obligations": "OPEN",
+    "all_four_rule_claim": false,
+    "source_security": "NO_GO",
+    "scan_coverage": "NO_GO"
+  },
+  "tests": {
+    "new_adversarial": {
+      "tests": 22,
+      "raw_exit": 0,
+      "status": "PASS"
+    },
+    "expiry8": {
+      "tests": 8,
+      "raw_exit": 0,
+      "status": "PASS"
+    },
+    "strict_worklist": {
+      "raw_exit": 0,
+      "status": "PASS",
+      "generated_files_modified": false
+    },
+    "original_source_scope": {
+      "raw_exit": 1,
+      "status": "SOURCE_INVENTORY_DRIFT"
+    },
+    "original_security70": {
+      "status": "INCOMPLETE",
+      "raw_exit": 1,
+      "timeout_seconds": 180,
+      "observed_failing_subcases": 4
+    },
+    "original_secret12": {
+      "status": "FAIL",
+      "raw_exit": 1,
+      "attempted": 12,
+      "errors": 10,
+      "skipped": 1
+    },
+    "ordinary_governance103": {
+      "status": "INCOMPLETE",
+      "raw_exit": 1,
+      "reason": "Disk exhaustion; ordinary suites interrupted; no synthetic replacement"
+    },
+    "root6067": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "lint": "NOT_RUN"
+  },
+  "original_security": "FAIL",
+  "fresh_original_sast": "NOT_RUN",
+  "owasp": {
+    "recovered": false,
+    "meaningful_approaches": 2,
+    "action_packet": "OWASP_CUSTODY.md"
+  },
+  "issued_ci": {
+    "security": {
+      "run_id": 40029099712,
+      "conclusion": "failure"
+    },
+    "quality": {
+      "run_id": 40029099723,
+      "conclusion": "failure"
+    },
+    "ios": {
+      "run_id": 40029099736,
+      "conclusion": "success_source_only"
+    },
+    "artifact_commit": "9eb12b8dacd7221c39f7350bc622daa42e2052b0",
+    "artifact_tree": "f873f4ba961b078465234f33eb2f30728f343515"
+  },
+  "current_ci": "Final head observed separately after push; no borrowing from source head",
+  "findings": {
+    "gitleaks_current": 1132,
+    "gitleaks_history": 4373,
+    "disposition": "OWNER_UNREVIEWED",
+    "npm_high": 7,
+    "osv_advisory_ids": 4
+  },
+  "protected_source_go": false,
+  "source_security_go": false,
+  "main_promotion_authorized": false,
+  "hosted_db_go": false,
+  "m2_authorized": false,
+  "release_authorized": false,
+  "device_archive_approval": false,
+  "main_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "pr10": "DRAFT_OPEN_UNMERGED",
+  "spend_usd": 0,
+  "independent_brain_review_required": true
+}

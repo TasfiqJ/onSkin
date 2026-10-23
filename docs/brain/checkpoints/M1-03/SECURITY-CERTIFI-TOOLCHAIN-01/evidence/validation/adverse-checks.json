@@ -1,0 +1,27 @@
+[
+  {
+    "id": "certifi-tamper",
+    "status": "PASS",
+    "actual_refusal": "SEMGREP_IMPLEMENTATION_DRIFT"
+  },
+  {
+    "id": "stale-tool-tree",
+    "status": "PASS",
+    "actual_refusal": "SEMGREP_IMPLEMENTATION_DRIFT"
+  },
+  {
+    "id": "extra-package",
+    "status": "PASS",
+    "actual_refusal": "SEMGREP_IMPLEMENTATION_DRIFT"
+  },
+  {
+    "id": "forged-expiry",
+    "status": "PASS",
+    "actual_refusal": "PROPOSAL_EXPIRED_OR_CHANGED"
+  },
+  {
+    "id": "real-proposal-remains-expired",
+    "status": "PASS",
+    "actual_refusal": "PROPOSAL_EXPIRED_OR_CHANGED"
+  }
+]

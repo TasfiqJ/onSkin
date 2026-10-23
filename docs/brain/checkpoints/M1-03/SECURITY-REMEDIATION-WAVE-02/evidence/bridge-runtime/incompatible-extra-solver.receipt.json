@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "--isolated",
+    "--python",
+    "/work/bridge2/candidate-env/bin/python",
+    "install",
+    "--dry-run",
+    "--index-url",
+    "https://pypi.org/simple",
+    "--only-binary=:all:",
+    "-r",
+    "/work/bridge2/incompatible-extra.txt"
+  ],
+  "cwd": "/work/bridge2",
+  "environment": {
+    "SEMGREP_SEND_METRICS": "off",
+    "SEMGREP_ENABLE_VERSION_CHECK": "0",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "exit": 1,
+  "seconds": 1.017989537998801,
+  "log_sha256": "50e7ce5f0c31647eedf33b30c9ed8353cb68ebbdfbb22e16927d51dd503a1bb9"
+}

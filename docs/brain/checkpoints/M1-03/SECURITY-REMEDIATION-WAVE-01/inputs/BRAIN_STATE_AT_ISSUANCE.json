@@ -1,0 +1,30 @@
+{
+  "accepted_roadmap_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "certifi_scope_result": "Technically verified exact single requirement delta, original & changed Semgrep tree hashes; not Security GO",
+  "current_ios": "PASS source only",
+  "current_quality": "FAIL because pinned ECR image Data limit exceeded; source QA, exports and PG rehearsals passed",
+  "current_security": "FAIL original source inventory 8308 extra 89 changed paths, current secret findings, npm/OSV and expired exceptions, original source proposal expired",
+  "date": "2026-10-23",
+  "governance103": "Independent rerun underway; do not borrow a passing count not yet observed",
+  "hosted_db_go": false,
+  "incremental_spend_usd": 0,
+  "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "main_promotion_authorized": false,
+  "original_70_reproduced": true,
+  "original_secret12_reproduced": true,
+  "pr10_draft_open": true,
+  "prior_differently_named_Sbom_Vitest_grants": "historical provenance discrepancy explicitly retained; not ratified",
+  "project": "onSkin V2",
+  "run_ios": 39997349006,
+  "run_quality": 39997349019,
+  "run_security": 39997349147,
+  "schema_version": 1,
+  "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "source_go": false,
+  "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

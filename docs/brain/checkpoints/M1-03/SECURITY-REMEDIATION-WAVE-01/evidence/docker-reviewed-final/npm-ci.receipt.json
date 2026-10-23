@@ -1,0 +1,19 @@
+{
+  "name": "npm-ci",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "ci",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/opt/wave-repo",
+  "started": "2026-10-23T20:26:54.991175+00:00",
+  "ended": "2026-10-23T20:27:13.249720+00:00",
+  "seconds": 18.259658388997195,
+  "exit": 0,
+  "log_sha256": "136a20bdd45f0808e86ef53c2f2ee158d7e646ea7e5f3159d61dd384413fd514",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_changes_after": ""
+}

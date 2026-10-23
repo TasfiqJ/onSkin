@@ -1,0 +1,22 @@
+{
+  "label": "linux-test-source-binding",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "python3.12",
+    "-B",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_test_source.py",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:31:57.080545+00:00",
+  "finished_utc": "2026-10-23T02:31:57.503965+00:00",
+  "seconds": 0.422,
+  "raw_exit": 0
+}

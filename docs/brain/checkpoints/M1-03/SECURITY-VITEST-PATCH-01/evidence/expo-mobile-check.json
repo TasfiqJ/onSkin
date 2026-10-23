@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/tmp/onskin-vp01-bin/npm",
+    "exec",
+    "--offline",
+    "--",
+    "expo",
+    "install",
+    "--check"
+  ],
+  "cwd": "/root/onskin-brain-sbomfix01-d2ce-review/apps/mobile",
+  "started_at": "2026-10-23T03:49:11.656490+00:00",
+  "ended_at": "2026-10-23T03:49:12.421901+00:00",
+  "duration_seconds": 0.765,
+  "exit_code": 0,
+  "transcript_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db"
+}

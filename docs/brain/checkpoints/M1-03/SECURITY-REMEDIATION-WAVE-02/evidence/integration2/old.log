@@ -1,0 +1,69 @@
+/work/bridge2/old-site/pydantic_settings/sources/utils.py:51: IncompleteFieldDefinitionWarning: Field 'lifespan' has an incomplete definition: its annotation contains an unresolved forward reference, so settings sources may fail to correctly resolve its value. Call `model_rebuild()` on the model where the field is defined, once all the referenced types are defined.
+  warnings.warn(  # noqa: B028  (called from many sources at differing depths, so no stacklevel is correct)
+[10/23/26 21:25:29] DEBUG    Getting API token from settings file     auth.py:85
+                    DEBUG    No API token found in settings file      auth.py:89
+                    WARNING  No SEMGREP_APP_TOKEN found, not      semgrep.py:159
+                             running `semgrep mcp` daemon...                    
+                    DEBUG    Getting API token from settings file     auth.py:85
+                    DEBUG    No API token found in settings file      auth.py:89
+                    DEBUG    Getting API token from settings file     auth.py:85
+                    DEBUG    No API token found in settings file      auth.py:89
+[10/23/26 21:25:31] INFO     get_supported_languages failed:      tracing.py:318
+                             Error running semgrep: (2) Usage:                  
+                             semgrep show [OPTIONS]                             
+                             [SCANNING_ROOTS]...                                
+                                                                                
+                             Error: No such option                              
+                             '--experimental'. Did you mean                     
+                             '--pro-intrafile'?                                 
+                                                                                
+                    VERBOSE  Not sending pseudonymous      verbose_logging.py:39
+                             metrics since metrics are                          
+                             configured to OFF, registry                        
+                             usage is False, and login                          
+                             status is False                                    
+  + Exception Group Traceback (most recent call last):
+  |   File "<string>", line 1, in <module>
+  |   File "<frozen runpy>", line 286, in run_path
+  |   File "<frozen runpy>", line 98, in _run_module_code
+  |   File "<frozen runpy>", line 88, in _run_code
+  |   File "/evidence/integration_smoke.py", line 67, in <module>
+  |     result=dict(mcp=asyncio.run(session_smoke()),http_lifecycle=asyncio.run(http_lifecycle()),otel=dict(semgrep_Telemetry_configure=True,trace_propagation=True,thread_context=True,local_otlp_http_export=True,received=received),external_requests=False,synthetic_only=True)
+  |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+  |     return runner.run(main)
+  |            ^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+  |     return self._loop.run_until_complete(task)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+  |     return future.result()
+  |            ^^^^^^^^^^^^^^^
+  |   File "/evidence/integration_smoke.py", line 55, in session_smoke
+  |     async with stdio_client(params) as (read,write):
+  |   File "/usr/lib/python3.12/contextlib.py", line 231, in __aexit__
+  |     await self.gen.athrow(value)
+  |   File "/work/bridge2/old-site/mcp/client/stdio/__init__.py", line 182, in stdio_client
+  |     async with (
+  |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "/work/bridge2/old-site/mcp/client/stdio/__init__.py", line 189, in stdio_client
+    |     yield read_stream, write_stream
+    |   File "/evidence/integration_smoke.py", line 56, in session_smoke
+    |     async with ClientSession(read,write) as session:
+    |   File "/work/bridge2/old-site/mcp/shared/session.py", line 238, in __aexit__
+    |     return await self._task_group.__aexit__(exc_type, exc_val, exc_tb)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "/evidence/integration_smoke.py", line 61, in session_smoke
+      |     assert not result.isError and result.content
+      |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      | AssertionError
+      +------------------------------------

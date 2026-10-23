@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "git",
+    "clone",
+    "--no-hardlinks",
+    "--single-branch",
+    "--branch",
+    "stage/m1-gate-recovery",
+    "/work/repo",
+    "/work/npm-candidate"
+  ],
+  "cwd": "/work",
+  "exit": 0,
+  "seconds": 3.0725606069900095,
+  "log_sha256": "3219372ba8580445c269d2af9d334eee15ff10855b926d8ac9d22437c1d6e4cc",
+  "raw_private": false
+}

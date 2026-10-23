@@ -1,0 +1,6 @@
+
+> layerwell@0.1.0 phase9:ios-privacy-source-audit:check
+> node scripts/phase9/ios-privacy-source-audit.mjs --check --strict
+
+iOS privacy source audit outputs are current (archive_required).
+Archive follow-up is required; this source audit makes no archive or App Store acceptance claim.

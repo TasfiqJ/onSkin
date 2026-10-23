@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+    "-B",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo/scripts/brain/brain.py",
+    "--profile",
+    "M1-03",
+    "validate"
+  ],
+  "exit": 1,
+  "utc": "2026-10-23T17:28:15.123345+00:00",
+  "interpretation": "Original admission check; failure is retained, never a technical or owner acceptance"
+}

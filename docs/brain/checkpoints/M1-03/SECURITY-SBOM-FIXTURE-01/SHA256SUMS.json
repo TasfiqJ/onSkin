@@ -1,0 +1,557 @@
+{
+  "schema_version": 1,
+  "authorization_id": "M103-SECURITY-SBOM-FIXTURE01-SOURCE-EDIT-01",
+  "measured_source_commit": "efc75bf119904f983e40380067f682d111da52dd",
+  "measured_source_tree": "85568597205ccb6ee5a94fe16db063f78abbc70f",
+  "exclusions": [
+    "SHA256SUMS.json excludes itself to avoid self-reference; its actual blob is verified from the committed tree after commit"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/BLOCKERS.md",
+      "bytes": 1817,
+      "sha256": "1325d0c408809e7bc84e81ba7ca4ed6d69822c424d8d63b533faac199598ca3e",
+      "git_blob": "8dc1beeffd4b72ba2a7929f0f80998f35989c44d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/completion-report.json",
+      "bytes": 32393,
+      "sha256": "96fc96005e294740c458f8b4f006758200cd30b9440c4429f5455039b61d83c4",
+      "git_blob": "233f3b91d2408d029e6ece46a5459548950af86e",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/baseline-target-red.json",
+      "bytes": 687,
+      "sha256": "5c31c1d2a47d8dfc5da74082d68807380730508d2687806e4f660082bde2385e",
+      "git_blob": "905f8d6c39febfb53549b80222c0f8611759cfa8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/baseline-target-red.log",
+      "bytes": 1395,
+      "sha256": "4434e2e6e54b352e251cc8835f7b3d419ce0b2c2bb4974fd99c42214d1239c6f",
+      "git_blob": "7ca0a2a0a5b99487ef39934ed713f32c7e8eb3ae",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/ci-source-completion-observation.json",
+      "bytes": 12559,
+      "sha256": "b790646ce1db2b55c64916df3e0bece8f0a71ffef443bdb5255757b441a3f8d2",
+      "git_blob": "1903fdb94952cb20ba9af97c8864af11a917ad00",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/ci-source-first-observation.json",
+      "bytes": 17802,
+      "sha256": "a2221a1962bf81b9a94a22bba35084f46c1330f3658e9e1514b6cc040b8a8a01",
+      "git_blob": "d656a36204672f693fdd59dac16654b959af5aaf",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/context-copy-verification.json",
+      "bytes": 449,
+      "sha256": "b1320497160f70f86ce4a3129c942c222ad8afae19a9a6cc6537ea03cdb59cc9",
+      "git_blob": "417faefa7a3fd63afb8a087b2a62faac6d5a0890",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/context-copy-verification.log",
+      "bytes": 112,
+      "sha256": "469c7539735be70073af81130b1a60d1d35821bd28e4e61119e1f40b4aefd3bd",
+      "git_blob": "7d4c1e9d2f7dd6a058d8526f2f8b6a7e582a0fbd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/contracts-70-linux.json",
+      "bytes": 660,
+      "sha256": "9b85d5b5218ea9bdd1bb6b434748933f844bb0c8358e0bfd3e24d2c429231ca4",
+      "git_blob": "f04c0b52ff188bdaaae6701191b236c9b6b4131f",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/contracts-70-linux.log",
+      "bytes": 11401,
+      "sha256": "3458105778492a0908d22c8afced22f46f5d17102bc23adf8e1237d2555eff9c",
+      "git_blob": "016abeb7dde998885c7bdd414809e20740718756",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/disposable-negatives-2.json",
+      "bytes": 696,
+      "sha256": "29b8435fa3fe7155a46b85e084e764ab7e9324364ced971574d3283884b46a2d",
+      "git_blob": "10677576f0a2c26ab1931d740ef47bfec00a0cd8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/disposable-negatives-2.log",
+      "bytes": 386,
+      "sha256": "1cb7d7e7247ad38d3d30f23773f175ba4096502012fd85129ca1b36a78356979",
+      "git_blob": "b01a8e841cebf477fafde82675c12109da813e1c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/draft-pr.json",
+      "bytes": 429,
+      "sha256": "2104896d6165877c331d6537c5e238c50266185ed7b47989f0f522b27d5e47d2",
+      "git_blob": "76c7c4c6541e8b8cdc5bf848cd8760841ca3fd2f",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/exact-patch.json",
+      "bytes": 721,
+      "sha256": "4a5ca8d3801101a23f622c2edf800b6e7deb7be92c17b50e85034f33f5ba9b9d",
+      "git_blob": "6a0619c9a7313613d470176b3281696d9d8bdc13",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/fresh-provider-code-refusal.json",
+      "bytes": 513,
+      "sha256": "25768647c04b01d585292cfd32f9dbb8e928a8886066170e6aecc5ecea633437",
+      "git_blob": "e55cbc80ce758427d30ac0bfd74f70424f0b2ec1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/fresh-provider-db-refusal.json",
+      "bytes": 805,
+      "sha256": "c691d18f16cd94f6f2cacd761fa041b7cfca7dfee4b9f84f05bb6dac47f6540d",
+      "git_blob": "c92ee6ef4c1878bc602e10f86220583d9c4a0f06",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/frozen-prior-profile.json",
+      "bytes": 470,
+      "sha256": "d897378c6a3615c018ebd97fb6dc3f58c2505d72d06132a2f88e24581e17b436",
+      "git_blob": "d04cdf3e38f2d37f75e116a8681afc811c5fc2e4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/frozen-prior-profile.log",
+      "bytes": 28,
+      "sha256": "31b4f62035d55aec8d073143fc73fb8f25c889eeb5eb3603314abf74c36a4b9d",
+      "git_blob": "f34be8b91cdf51c2eed96ec38f2c029aac9522c9",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/governance-103-linux.json",
+      "bytes": 634,
+      "sha256": "57d0ad1b919ee531abd1f065a21d449d9341ea725f537e6edd7effd2dd64b24f",
+      "git_blob": "933fb1b9b55648d68089d608fe1d854b6c8cf30f",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/governance-103-linux.log",
+      "bytes": 16208,
+      "sha256": "644ccbe06ff0093e955d60e5d2d11b2c85921d74d283efe69fb15ace80217509",
+      "git_blob": "98b5c9cea5f6c313f3088fb3f23ceb07ca8b9dbb",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/historical-provider-review.json",
+      "bytes": 1555,
+      "sha256": "caca4bb50c77c7980aa3d61ac37c284da1a7f1e2e21db87081183adf934c9108",
+      "git_blob": "d6d936005eb647188199aec0ab9484c8235fbbdb",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/infrastructure-notes.json",
+      "bytes": 1540,
+      "sha256": "ec9430e477d47a597ce1e8148bbdd5cfb75b3f68fb7527fd9ed0723f09ec19db",
+      "git_blob": "ce1b1ffe2b19762de6bf7fa10b10894ca8064aaf",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/lint-forced.json",
+      "bytes": 540,
+      "sha256": "cd3576780b24cd08b8dc2778cbd493bb949d52e9e6c12758b4fa48ad9e9fc528",
+      "git_blob": "0a20e257f18e6418374bbe4c437234f26458dae6",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/lint-forced.log",
+      "bytes": 1161,
+      "sha256": "8ef058b1f6fb27f699d3f6462af8811b8b5538e85d4e6398b78c9aa5c189e93a",
+      "git_blob": "9712f5f679a3ee26574e71a0d161d813e42981a8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-preparation-retry.json",
+      "bytes": 479,
+      "sha256": "51457fe42d1e3962f01740d00f898b66cfefa35fadd7868310f77de01e955b90",
+      "git_blob": "59232f1db4ad5c748626a2dc07f0b446767bc95a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-preparation-retry.log",
+      "bytes": 3653,
+      "sha256": "f53e4747a7bcc4ccf1be5a81b189334b195f07fcfb4206f1e9b21a98974b6ebb",
+      "git_blob": "58e127de40ef360a9b715887df6b833891716110",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-preparation.json",
+      "bytes": 1158,
+      "sha256": "ba84b1865878ba59739785c182206078e27f401e8366c1e1327d0a048c6a64f0",
+      "git_blob": "4941eb44852b036257f5ce8a0e058dc5eab8a012",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-preparation.log",
+      "bytes": 124,
+      "sha256": "1b954fea2f208021cf01c1f879ef5295ce47c07002a28534870bbc1dd8d14efc",
+      "git_blob": "67cfe7bdd93ba1290feb62dd0e162c16d3a59528",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-source-fast-forward.json",
+      "bytes": 452,
+      "sha256": "a74595eb7cdf2a9e0a8657ff889118e88c2709727083f2b534b3d89b8d315a16",
+      "git_blob": "b3b72fd4640abe7f18f4618b8bc70331a866e3a2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-source-fast-forward.log",
+      "bytes": 224,
+      "sha256": "ebe5379dd2ce939f393700d853974c8d13830beb604f095597e1c803412d4382",
+      "git_blob": "a97e00ba790672104bcd1631d99e0acb8e8bac5d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-test-source-binding.json",
+      "bytes": 841,
+      "sha256": "d5826abc879544f6bc3a256e732f99f5496187fef844719b177033530f3fd672",
+      "git_blob": "7905fc2da634a013de9889c53d544e2e3b4f2044",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/linux-test-source-binding.log",
+      "bytes": 498,
+      "sha256": "5898018dadd6de24915fb4d47721c0f99551535a45680e70aee9860f4861cc53",
+      "git_blob": "3ae58b4a48d1c6baaeaad1495adfde74e07e0402",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/npm-ci.json",
+      "bytes": 494,
+      "sha256": "ac6a1a8eaf6dab8a92c1584fbea8475b20850905f0e31aaa0346dd72239b2faa",
+      "git_blob": "96fcf4e8234cdb924e98f0027f5f401eee20b12a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/npm-ci.log",
+      "bytes": 495,
+      "sha256": "0a3880bab6e936f88203091d09cc651b85f9afa86ed3b417e30acd0e6b5e99a4",
+      "git_blob": "ab4593c51149271879b3af7f30327272fec3c9b4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/phase4-strict-worklist.json",
+      "bytes": 547,
+      "sha256": "7f323e5c7e40335430c55d2b6924a47d398c5765ee23fd3d05ff40b61a1836e5",
+      "git_blob": "998d34205e39af3773f1055b777c2b8428a60c60",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/phase4-strict-worklist.log",
+      "bytes": 182,
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "git_blob": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/preflight.json",
+      "bytes": 6614,
+      "sha256": "d2e6767cd168eb59a1de1b710ca39ed0b8a8ed3e11c210ea9edf637d42bf5f39",
+      "git_blob": "48ea57de24bc0b7f4eb665e31eac531d923036fc",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/prepare_linux.sh",
+      "bytes": 840,
+      "sha256": "bb834e4d627340837d90d8c4566e241ae6f5d0bee4915c2d6ba86070209aded6",
+      "git_blob": "6350b328a516c338ae37ad21aab1b953814be44a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/push-source-only.json",
+      "bytes": 308,
+      "sha256": "111087d25e7bf936fa00249edcc9dde0e81761025451a9d265777bc76394838b",
+      "git_blob": "6bdb745078a3db26ce674a2586dccdd0d105a4e2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/push-source-only.log",
+      "bytes": 95,
+      "sha256": "d93375bb8eb00033f44c30d0aabd482f5c400159c191584d7ad4bdff2611223e",
+      "git_blob": "b6f9faff101bfbbf76827f7fc544eb76739fcbbf",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/root-forced-tests-corrected.json",
+      "bytes": 544,
+      "sha256": "49064267078939804dc138e7d5f336058a763085d07e0e19960ec8a79da657b5",
+      "git_blob": "ac8ad26452c1772ec0eafdc9657810fda1458b84",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/root-forced-tests-corrected.log",
+      "bytes": 315839,
+      "sha256": "738fc68a8a4d0ecb8a4cf3f4d5510daf53b832769b28a49e86e2e7ab37aa8f55",
+      "git_blob": "a2abf5a8293e828c316803ebdcba2869793eb6f8",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/root-forced-tests.json",
+      "bytes": 556,
+      "sha256": "338b3b3dcf2b8f7abf68404abdb53d38939fe3479d7bd8b236c4357819165852",
+      "git_blob": "ef04c2fc6fa81e75ed5c5f1b196547ebd4156e17",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/root-forced-tests.log",
+      "bytes": 153,
+      "sha256": "26286395976775e3e24bed82d8f3d51231872f5599d1e87db6df8efef63134c7",
+      "git_blob": "4b50e66fa0cdbff96ca3868ca8d1bba7bcf02047",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/run_check.py",
+      "bytes": 1043,
+      "sha256": "2290235b348b06279c2d466222d79c2830fdc16aa0ba09ca98941bdde559d5f4",
+      "git_blob": "66c79e95813f52ce00ef896cab9b903190852cd5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/sanitization.json",
+      "bytes": 364,
+      "sha256": "bbcbce20c9543c0cce93fd7357a453027a3cddb428a9b8c8259b189e1d38a03f",
+      "git_blob": "675d3536202b83eca2aa1be332b541b30b5a59c1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/scope-before-seal.json",
+      "bytes": 335,
+      "sha256": "20f9161ba08ce4b1039430fa8ea09d5e04d3756f4b0a105c667a61b88ffbaa31",
+      "git_blob": "4aeba9001fd4e61466ef3f59e744f0a6e06c118b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/scope-before-seal.log",
+      "bytes": 5644,
+      "sha256": "2871cde85618e35b4709096f2de8d28bb1a6eed5f0a447bde59f86cf61692c75",
+      "git_blob": "33d47e72b160ea8c8c33b173e0efecb3c3d3725d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/scope-post-patch.json",
+      "bytes": 334,
+      "sha256": "639311dd1b070ed337da52d76f8f44c67b5e987fbfa37d03039e7505035000e4",
+      "git_blob": "12af2b290f15393d3da4bdba1d30a9cde0956fa1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/scope-post-patch.log",
+      "bytes": 2775,
+      "sha256": "b69faa04903ca76015d4eae47db04344fd42e6069e7eedc13a3ebc343464fdf6",
+      "git_blob": "318f290c0b51b35af450e7612d087fbef5849bd4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/secret-fixtures-12-linux.json",
+      "bytes": 667,
+      "sha256": "529b86ae2a9047bf9cce37129da0687eb418bae3a19e52b65a0c8254448cf0f9",
+      "git_blob": "0e7a8d9537f74df54a3298e0076ef89e9bcf2faf",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/secret-fixtures-12-linux.log",
+      "bytes": 2103,
+      "sha256": "5a31a0862b5049c5a38f0b665d4074d1f719b5a66e009eaee2ca01c1a0ae5739",
+      "git_blob": "d7d3c9bbd53643a48923275ef767cb9de53bf3c1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/targeted-original-6.json",
+      "bytes": 1174,
+      "sha256": "4733f5af76a538f98cbd5299156381c05bf4eeefe3a37968f4daee7d8a2b8ccd",
+      "git_blob": "69c1cd496df85aa3c151cc0faab02b38f2a1ea2a",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/targeted-original-6.log",
+      "bytes": 1062,
+      "sha256": "d746233549b8222dee0923796b31882af97802aa1c2fcb07769f86eda913e9af",
+      "git_blob": "26215af69d63ca29be26cbe542c49535a898b408",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/test_disposable_negatives.py",
+      "bytes": 2283,
+      "sha256": "ed989192d2c161bb3a467a8fc9aedd3ad8e789ee2fdc9840434d8f8259ca6bb2",
+      "git_blob": "347c29317c94a05497ab03889852e7f59e98ad74",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/typecheck-forced.json",
+      "bytes": 549,
+      "sha256": "223f86a96c01d196a13b48fc2a0d5e2d102335259b2301a7ad353586c8df6485",
+      "git_blob": "dd34c494045a80ed69dd91c860ad4e65d5546182",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/typecheck-forced.log",
+      "bytes": 1152,
+      "sha256": "115ce055f4b8737655abf7507b31b628e9a41a9067ee10d4157a91154df70508",
+      "git_blob": "54dd18f5a8ca933f38560f8147dfe4c1f6b52d76",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_scope.py",
+      "bytes": 3244,
+      "sha256": "5404766731570dc885e4a98501ec11cca936838366f275d9b1a70d7003820b30",
+      "git_blob": "a6ef3e350a3dfb7542ca663a1d8119d38e15ef21",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_test_source.py",
+      "bytes": 1617,
+      "sha256": "c09820f927bcb99e0414ee8264fad04a42abb326ac8e4faccd7af653c3a285b9",
+      "git_blob": "99f0c39edcd33d43b2a2b5e960155eb4f1db93d5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/00_READ_FIRST.md",
+      "bytes": 1326,
+      "sha256": "edabebb8474e0ca09bcf7bf3c0935277a7d6e10188cf8578121aba2dfa3c9b2d",
+      "git_blob": "c79c4b07d45ca0603177a3bc8aff4d3c0b6c2d06",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/01_INDEPENDENT_BRAIN_AUDIT.md",
+      "bytes": 2272,
+      "sha256": "ed6911b0b91502b566cb63b6ce3295474dc638cd2557de7005804c33f9b8e29a",
+      "git_blob": "cedf897407785d9013dd70ae0f7b8537d2874c30",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/02_EXECUTE_EXACT_PATCH.md",
+      "bytes": 3080,
+      "sha256": "3d42f4dac0b4fba8e0bfb21e7dd948642fe2d0d251e0b8ed043b4e6ee6ae45c6",
+      "git_blob": "6cc7727edc8309f07c48c1a1e298724bac2c62f2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/03_AUTHORITY_AND_BOUNDARIES.md",
+      "bytes": 1630,
+      "sha256": "35fcca604ddcea4292a9e4619079da988e6332f0f7ee5ed93e9e048e35f0a9a5",
+      "git_blob": "bcfea9a6dce8526af96205036eaf0476b5adb918",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/04_REQUIRED_VERIFICATION.md",
+      "bytes": 1826,
+      "sha256": "21329e204c34de65b6103fc59071e38c578338dc242a5c40c34ebf8ffecd6847",
+      "git_blob": "44f5e750f3d102a4c392bc87fc093acd1a68bc67",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/05_REAL_SECURITY_REFUSALS.md",
+      "bytes": 1445,
+      "sha256": "b7c83ba51d758803050219c634bb7e32652cd18c51ff69cd3ad233d84891b354",
+      "git_blob": "b3e139cbdc7292322cb360bf178917a12ffbd1b4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/06_DELIVERY_PROTOCOL.md",
+      "bytes": 1392,
+      "sha256": "fdf521a4e90ccddb09603ba7cf1bf69372f7e968a8e1462dfba83bc575fe18c6",
+      "git_blob": "3484eb526af0dd8228597ef8676af6391d65b86d",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/07_STOP_RULES.md",
+      "bytes": 1010,
+      "sha256": "aab77d38af3def8c052dec72de39b7bf7066502d3788552dc314d8212bd54768",
+      "git_blob": "fe5d49814eae959bb5ae2807067880b19dc8a8f5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/BASELINE_CI.json",
+      "bytes": 1447,
+      "sha256": "9e258c4ff7c27474055d708d10943817eb269a0d52cc17b85d56ed297a5854bd",
+      "git_blob": "706cb5b28e6d0cd27911228b19213947cdf96a77",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/PATCH_REVIEW.json",
+      "bytes": 1303,
+      "sha256": "729d56850e99b9df0bb75f191c847c5a485a50ad3858195da7da3046ef64357a",
+      "git_blob": "a2c6664b0822586ffe9f24087205b9f5d39d6a3b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/PREIMAGE_WITNESSES.json",
+      "bytes": 6432,
+      "sha256": "13cec44b9ad500f433bcbeb6b4b5181f327ab7417acea7df06295d2f2fc7aadf",
+      "git_blob": "17bd41b2f9b425c635ffbd2905b97c29ef9089c5",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 2174,
+      "sha256": "71fc9dbca48c239d960dae09ebea2a4654a32b203ffc017ba1261bc8f1ff1a58",
+      "git_blob": "b7be0725e21400d71f46d13b1ed979fc66d9ccf4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/TASK_MANIFEST.json",
+      "bytes": 2441,
+      "sha256": "0b080328e308f3533afeb9b3764fd4f2d07f48a1ab5d5674e6fc08413a1cb50b",
+      "git_blob": "9ab1414d41af806b5711897490da428dd5d90110",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs/verify_context.py",
+      "bytes": 2079,
+      "sha256": "f1f503a9e842f43d5d42088080374e056e4b847849f12e6d999510c4c5a9142d",
+      "git_blob": "452fffb577f9947ca9ef78af01f71d18c7a7f797",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/README.md",
+      "bytes": 2317,
+      "sha256": "cdd28d8ff64e461c8ede0533e91df7b72cb1eb595aff06fd56b17a9406923b4b",
+      "git_blob": "9c601c8cbee93ba23e52b02e10515c57b75f1fcb",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/RESULTS.md",
+      "bytes": 3954,
+      "sha256": "248b22402b9ffa9e6c719e0bb2db9422af88a2076610fbb27e2b180892c949a6",
+      "git_blob": "24d70892a00cb14f131fcd54cc240b08723b86b7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/source-only.patch",
+      "bytes": 2993,
+      "sha256": "8ca578ae875fb2012613604ab3f3f55326ef253267f5223a137034b9d868bf0a",
+      "git_blob": "fa184ea8ad1a2fc8ce430d56138843ba8d1128a4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 2461,
+      "sha256": "247263028dd3636812cb2cb27e365d02628139bda076f4413f096fb91dba0a24",
+      "git_blob": "354f3364118f453440540438dc61444b26ca7a78",
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "bytes": 49880,
+      "sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+      "git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d",
+      "git_mode": "100644"
+    }
+  ]
+}

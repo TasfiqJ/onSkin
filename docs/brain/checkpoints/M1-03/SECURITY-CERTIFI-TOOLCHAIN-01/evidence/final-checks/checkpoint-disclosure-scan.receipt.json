@@ -1,0 +1,9 @@
+{
+  "raw_exit": 0,
+  "findings": 0,
+  "scanner": "gitleaks8.24.3",
+  "scanner_sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+  "scope": "Only new SECURITY-CERTIFI-TOOLCHAIN-01 checkpoint; no repository or historic secret clearance",
+  "redact": "100",
+  "original_source_security_admitted": false
+}

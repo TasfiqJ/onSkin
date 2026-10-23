@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "npm",
+    "install",
+    "--prefix",
+    "/work/npm-tool",
+    "npm@11.20.0",
+    "--ignore-scripts",
+    "--bin-links=false",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/work",
+  "exit": 0,
+  "seconds": 3.624094266007887,
+  "observed_at": "2026-10-23T21:14:13.585682+00:00",
+  "log_sha256": "eae026ccb1885e4f9ebc47cdf803ee7cd05368da59a6ef5210ec5d47b6541b06"
+}

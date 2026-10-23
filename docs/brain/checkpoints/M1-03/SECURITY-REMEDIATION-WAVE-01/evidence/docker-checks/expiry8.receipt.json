@@ -1,0 +1,16 @@
+{
+  "name": "expiry8",
+  "argv": [
+    "node",
+    "--test",
+    "scripts/phase9/security-advisory-exceptions.test.mjs"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:04:39.711874+00:00",
+  "ended": "2026-10-23T20:04:39.830630+00:00",
+  "seconds": 0.1187581499980297,
+  "exit": 0,
+  "log_sha256": "7d9e0e43f57b7ef52a736933090be3f45059ccf3f272dbe6b6a5a683fb7c4cfe",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

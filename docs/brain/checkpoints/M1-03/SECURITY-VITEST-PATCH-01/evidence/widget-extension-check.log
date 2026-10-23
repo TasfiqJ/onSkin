@@ -1,0 +1,5 @@
+
+> layerwell@0.1.0 phase5:expo-widgets-lifecycle:check
+> node scripts/phase5/patch-expo-widgets-lifecycle.mjs --check
+
+{"status":"checked","files":11}

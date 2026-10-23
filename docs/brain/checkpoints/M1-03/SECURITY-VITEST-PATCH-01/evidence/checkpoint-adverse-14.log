@@ -1,0 +1,20 @@
+test_01_true_source_and_provenance_and_report (test_scope.ExactScopeTests.test_01_true_source_and_provenance_and_report) ... ok
+test_02_mutated_second_manifest (test_scope.ExactScopeTests.test_02_mutated_second_manifest) ... ok
+test_03_unintended_direct_package (test_scope.ExactScopeTests.test_03_unintended_direct_package) ... ok
+test_04_forged_target_lock_integrity (test_scope.ExactScopeTests.test_04_forged_target_lock_integrity) ... ok
+test_05_extra_transitive_package (test_scope.ExactScopeTests.test_05_extra_transitive_package) ... ok
+test_06_tampered_transitive_sri (test_scope.ExactScopeTests.test_06_tampered_transitive_sri) ... ok
+test_07_foreign_npm_version_and_tarball (test_scope.ExactScopeTests.test_07_foreign_npm_version_and_tarball) ... ok
+test_08_missing_mapped_source_pin (test_scope.ExactScopeTests.test_08_missing_mapped_source_pin) ... ok
+test_09_fake_installed_source_pin (test_scope.ExactScopeTests.test_09_fake_installed_source_pin) ... ok
+test_10_forged_native_archive_approval (test_scope.ExactScopeTests.test_10_forged_native_archive_approval) ... ok
+test_11_expired_security_waiver (test_scope.ExactScopeTests.test_11_expired_security_waiver) ... ok
+test_12_forged_protected_security_go (test_scope.ExactScopeTests.test_12_forged_protected_security_go) ... ok
+test_13_forged_osv_exception (test_scope.ExactScopeTests.test_13_forged_osv_exception) ... ok
+test_14_unauthorized_intermediate_commit_reverted_at_endpoint (test_scope.ExactScopeTests.test_14_unauthorized_intermediate_commit_reverted_at_endpoint) ... VERIFIED: external manifest cf3719c07e41699088bc25e9b3903610f49c1885c25417a8649a99238b290e24; 13 members; 36 Git preimages; auth M103-SECURITY-VITEST-PATCH01-SOURCE-EDIT-01
+ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.552s
+
+OK

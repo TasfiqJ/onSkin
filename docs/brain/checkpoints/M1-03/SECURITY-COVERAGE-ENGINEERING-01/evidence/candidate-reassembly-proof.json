@@ -1,0 +1,12 @@
+{
+  "admission": "NONE",
+  "binding_documents": 2,
+  "manifest_rows": 20833,
+  "no_omissions_or_duplicates": true,
+  "protected_source_go": false,
+  "reconstructed_manifest_bytes": 4034057,
+  "reconstructed_manifest_sha256": "c0085a9cc215429ecbb2de5fcc45a611e87bab6a0b66440810095a83865b2ad5",
+  "source_commit": "df17120787162afd9c73a77e120418115fc0ed19",
+  "source_tree": "c16053107b1dbedacd9920a2244c8bc33f9d846d",
+  "target_partition_rows": 20835
+}

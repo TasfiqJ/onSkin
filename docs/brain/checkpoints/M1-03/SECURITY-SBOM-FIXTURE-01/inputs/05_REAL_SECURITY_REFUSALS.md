@@ -1,0 +1,7 @@
+# What fixing the fixture absolutely DOES NOT fix
+
+The original CI evidence for merged main and previous stage is RED. True current SBOM package inventory matches the current lock, but the immutable Security legacy policy permits only two expired-policy blockers. Real npm audit includes two additional primary moderate `@vitest/mocker@4.1.11` findings: `GHSA-qxg6-89mg-rqv8`, `GHSA-xp26-3454-mjgp`. The real provider validator rejects this at `workflow_contract.mjs:117`, independent of the synthetic fixture drift at line 129. Additional expired reviews for `braces`/`node-forge`, OSV findings, unreviewed secret scan outputs and incomplete static coverage remain. Source manifest/owner pins have not been renewed.
+
+The prior source-only Security proposal expired on 2026-10-21T00:00:00Z. Historical provider evidence is time-bounded: do not re-date or replay an expired historical receipt as current. Fresh actual provider CI and qualified authorized review remain necessary. No test fixture change can upgrade these to admitted or waive a vulnerability.
+
+The mandatory database reset uses `public.ecr.aws/supabase/postgres:15.8.1.085`; prior exact main CI failed `Error response from daemon: error from registry: Data limit exceeded`. Do not pull a replacement or claim PG15/17 account-deletion rehearsals are canonical parity. DB06/DB08/R2B remain closed. Physical iOS source checks or Expo exports are not signed archive/device clearance.

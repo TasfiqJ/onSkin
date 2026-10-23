@@ -1,0 +1,5 @@
+# Mandatory stop boundaries
+
+Immediately STOP and report a hash-bound refusal if: external manifest invalid; stage/main/head/tree diverged; one of 25 preimages differs; candidate patch or postimage hash differs; modified source outside `test_contract.py` is necessary; original 70-case fixture negatives weaken or fail; output tries to claim scanner/source Security GO; source manifest/expiry/workflow/OSV/secret rules or advisories are modified; a force/reset/rebase/main write is attempted; code needs paid registry/credentials/database/clinical/device/release work; a draft PR is incorrectly merged/readied; GitHub worktree is dirty or another writer raced.
+
+A protected real Security refusal and canonical ECR failure ARE EXPECTED and must remain faithfully RED, not grounds for secret remediation in this task. A draft PR is optional and may be blocked; preserve stage push either way. If original negative tests fail, do not write a misleading green checkpoint. Authority never accumulates across tasks.

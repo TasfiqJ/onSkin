@@ -1,0 +1,16 @@
+**ONE NEXT_EXACT_SOURCE_SCOPE proposal — NOT AUTHORIZATION.**
+
+Proposed task: `SCANNER-DEPENDENCY-METADATA-BRIDGE-01`, issued by independent Brain against the exact delivered stage SHA/tree and fresh preimages. Its sole implementation objective would be a reproducible metadata-only bridge allowing the proven fixed MCP/OpenTelemetry family while preserving Semgrep's executable Python/core/engine/rules. Current work proves the upstream declared dependency barrier; it does not grant permission to bypass it.
+
+Requested finite source allowlist:
+
+1. `scripts/phase9/security_acceptance/bootstrap_tools.py`: verify the original official Semgrep wheel/install first, then apply one reviewed METADATA-only dependency patch before verifying the final tool tree. Preserve wheel hash verification, isolated startup, all existing engine member checks and original closure verification.
+2. New `scripts/phase9/security_acceptance/semgrep-dependency-metadata.patch`: exact old/new Requires-Dist lines for MCP and the three incompatible OpenTelemetry stable constraints, applied only to the reviewed 1.181.0 dist-info METADATA. Label this custom packaging honestly; do not call a modified artifact an official upstream wheel.
+3. `scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt`: only MCP1.30.0 and coherent OpenTelemetry1.45.1/0.66b1 pins, including the two officially verified new family distributions. Preserve all unrelated pins.
+4. `scripts/phase9/security_acceptance/proposal.json`: only independently derived requirements/original-assembly/final package identities and an explicit reviewed metadata-patch input identity if required by the revised build contract. No owner, expiry, source/coverage/rule or acceptance edit.
+5. `scripts/phase9/security_acceptance/test_contract.py`: only independently reviewed tests for metadata patch source/version/hash drift, missing or duplicate patch lines, hidden dependency drift and unrelated Semgrep file changes. Existing tests remain intact.
+6. New checkpoint under the separately issued task, optional canonical Phase4 worklist outputs, and factual root handoff.
+
+Brain should require an exact source-reviewed patch design before issuing this wider scope. The bridge may be rejected if compatibility cannot be proved. Acceptance must include dependency-aware wheel-only resolution, actual full graph checks including requested extras, unchanged nonfamily/core/engine file hashes, MCP session lifecycle integration, OpenTelemetry import/export/propagation smoke tests, all four pinned rule families against deterministic SAST fixtures, original tests/adverse tests and fresh source-quality checks. The original old trees must reproduce first; missing rule provenance or hidden extras remain blockers.
+
+Do not solve this task by weakening metadata validation, editing upstream pins in place without provenance, silently treating `--no-deps` as compatibility, upgrading the Semgrep core, changing rules/targets/coverage, renewing expiry, creating a Security GO or editing npm/app/DB sources. Independent Brain must accept or reject the proposed bridge and issue fresh authority. Inventory, real secret review/rotation, npm node-forge and provider ECR remain separate unresolved tracks.

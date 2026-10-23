@@ -1,0 +1,64 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "active_writers": 1,
+  "allowed_existing_files": [
+    "scripts/phase9/security_acceptance/test_contract.py",
+    "ONSKIN_BRAIN_HANDOFF.txt"
+  ],
+  "allowed_git_actions": [
+    "normal commits and push to exact stage",
+    "optionally create ONE draft PR targeting main after pushed fixture code (NO MERGE)"
+  ],
+  "allowed_new_prefixes": [
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/"
+  ],
+  "authorization_id": "M103-SECURITY-SBOM-FIXTURE01-SOURCE-EDIT-01",
+  "base_commit": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+  "base_tree": "c7196a52c8d2e34a661841c3d4d92f3867b75e39",
+  "branch": "stage/m1-gate-recovery",
+  "clinical_or_release_authorized": false,
+  "cloud_spending_authorized_usd": 0,
+  "database_go": false,
+  "do_not_edit": [
+    ".github/**",
+    "supabase/**",
+    "scripts/phase2/**",
+    "scripts/phase9/security_acceptance/* except test_contract.py",
+    "scripts/phase9/dependency-sbom.mjs",
+    "scripts/phase9/security-advisory-exceptions.mjs",
+    "docs/phase-9/security-advisory-exceptions.json",
+    "scripts/brain/**",
+    "package.json",
+    "package-lock.json",
+    ".gitattributes",
+    "apps/**",
+    "docs/brain/state/**",
+    "docs/brain/current.json",
+    "docs/brain/m103-*-active.json"
+  ],
+  "ecr_image_pull_authorized": false,
+  "hosted_db_replay_authorized": false,
+  "iteration": "SECURITY-SBOM-FIXTURE-01",
+  "m2_authorized": false,
+  "main_promotion_authorized": false,
+  "main_writable": false,
+  "no_self_acceptance": true,
+  "no_union_with_previous_scopes": true,
+  "observed_main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "original_security_test_fixture_edit_only": true,
+  "patch_witness_file": "PATCH_REVIEW.json",
+  "preimages_file": "PREIMAGE_WITNESSES.json",
+  "protected_source_go": false,
+  "report_status_max": "SUBMITTED_REVIEW_REQUIRED",
+  "repository": "TasfiqJ/onSkin",
+  "result": "TECHNICAL_UNIT_TEST_FIX_ONLY; REAL_SECURITY_PROVIDER_GATES_STAY_RED",
+  "schema_version": 1,
+  "security_admission": "CLOSED",
+  "source_test_original_frozen_proposal_expires_utc": "2026-10-21T00:00:00Z",
+  "task_id": "M1-03"
+}

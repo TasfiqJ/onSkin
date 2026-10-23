@@ -1,0 +1,78 @@
+{
+  "authorization_id": "M103-SECURITY-SBOM-FIXTURE01-SOURCE-EDIT-01",
+  "base_commit": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+  "base_tree": "c7196a52c8d2e34a661841c3d4d92f3867b75e39",
+  "branch": "stage/m1-gate-recovery",
+  "file_count": 13,
+  "files": [
+    {
+      "bytes": 1326,
+      "path": "00_READ_FIRST.md",
+      "sha256": "edabebb8474e0ca09bcf7bf3c0935277a7d6e10188cf8578121aba2dfa3c9b2d"
+    },
+    {
+      "bytes": 2272,
+      "path": "01_INDEPENDENT_BRAIN_AUDIT.md",
+      "sha256": "ed6911b0b91502b566cb63b6ce3295474dc638cd2557de7005804c33f9b8e29a"
+    },
+    {
+      "bytes": 3080,
+      "path": "02_EXECUTE_EXACT_PATCH.md",
+      "sha256": "3d42f4dac0b4fba8e0bfb21e7dd948642fe2d0d251e0b8ed043b4e6ee6ae45c6"
+    },
+    {
+      "bytes": 1630,
+      "path": "03_AUTHORITY_AND_BOUNDARIES.md",
+      "sha256": "35fcca604ddcea4292a9e4619079da988e6332f0f7ee5ed93e9e048e35f0a9a5"
+    },
+    {
+      "bytes": 1826,
+      "path": "04_REQUIRED_VERIFICATION.md",
+      "sha256": "21329e204c34de65b6103fc59071e38c578338dc242a5c40c34ebf8ffecd6847"
+    },
+    {
+      "bytes": 1445,
+      "path": "05_REAL_SECURITY_REFUSALS.md",
+      "sha256": "b7c83ba51d758803050219c634bb7e32652cd18c51ff69cd3ad233d84891b354"
+    },
+    {
+      "bytes": 1392,
+      "path": "06_DELIVERY_PROTOCOL.md",
+      "sha256": "fdf521a4e90ccddb09603ba7cf1bf69372f7e968a8e1462dfba83bc575fe18c6"
+    },
+    {
+      "bytes": 1010,
+      "path": "07_STOP_RULES.md",
+      "sha256": "aab77d38af3def8c052dec72de39b7bf7066502d3788552dc314d8212bd54768"
+    },
+    {
+      "bytes": 1447,
+      "path": "BASELINE_CI.json",
+      "sha256": "9e258c4ff7c27474055d708d10943817eb269a0d52cc17b85d56ed297a5854bd"
+    },
+    {
+      "bytes": 1303,
+      "path": "PATCH_REVIEW.json",
+      "sha256": "729d56850e99b9df0bb75f191c847c5a485a50ad3858195da7da3046ef64357a"
+    },
+    {
+      "bytes": 6432,
+      "path": "PREIMAGE_WITNESSES.json",
+      "sha256": "13cec44b9ad500f433bcbeb6b4b5181f327ab7417acea7df06295d2f2fc7aadf"
+    },
+    {
+      "bytes": 2174,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "71fc9dbca48c239d960dae09ebea2a4654a32b203ffc017ba1261bc8f1ff1a58"
+    },
+    {
+      "bytes": 2079,
+      "path": "verify_context.py",
+      "sha256": "f1f503a9e842f43d5d42088080374e056e4b847849f12e6d999510c4c5a9142d"
+    }
+  ],
+  "iteration": "SECURITY-SBOM-FIXTURE-01",
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

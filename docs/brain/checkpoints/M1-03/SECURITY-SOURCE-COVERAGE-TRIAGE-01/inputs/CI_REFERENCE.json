@@ -1,0 +1,41 @@
+{
+  "ios": {
+    "admission": "SOURCE_ONLY",
+    "conclusion": "success",
+    "run_id": 39897570132,
+    "status": "completed"
+  },
+  "main_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "pr": {
+    "number": 10,
+    "status": "draft_open_unmerged"
+  },
+  "prior_issuance_mismatch": "Most recent Brain prompt in this conversation authorized SBOM-UNIT-FIXTURE-01 only. Current commit also contains differently labeled SECURITY-SBOM-FIXTURE-01 and SECURITY-VITEST-PATCH-01 grants. Treat prior authorizations as UNVERIFIED, not a substitute for independent source review.",
+  "quality": {
+    "canonical_db": "success",
+    "canonical_db_job_id": 120231715918,
+    "conclusion": "success",
+    "note": "Pinned ECR/SQL verified on this exact source and isolated GitHub runner, not hosted replay",
+    "run_id": 39897570236,
+    "status": "completed"
+  },
+  "schema_version": 1,
+  "security": {
+    "code_job_id": 120231424346,
+    "conclusion": "failure",
+    "note": "Unreviewed original static/source/OSV/secret/expiry findings; not GO",
+    "run_id": 39897570159,
+    "secret_job_id": 120231424549,
+    "source_admission_job_id": 120232409649,
+    "source_inventory_job_id": 120231424552,
+    "status": "completed"
+  },
+  "source_commit": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+  "source_scoped_evidence": {
+    "github_live_checks_always_required": true,
+    "root_tests_6067_passed": true,
+    "sbom_70_original_tests_passed": true,
+    "vitest_adverse_14_passed": true
+  },
+  "source_tree": "791580347993487bd3920727ee7b0e31668eed4e"
+}

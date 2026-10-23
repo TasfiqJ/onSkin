@@ -1,0 +1,8 @@
+opentelemetry-exporter-otlp-proto-http 1.45.1 requires opentelemetry-api, which is not installed.
+opentelemetry-instrumentation-requests 0.66b1 requires opentelemetry-api, which is not installed.
+opentelemetry-instrumentation-threading 0.66b1 requires opentelemetry-api, which is not installed.
+opentelemetry-instrumentation 0.66b1 requires opentelemetry-api, which is not installed.
+opentelemetry-sdk 1.45.1 requires opentelemetry-api, which is not installed.
+opentelemetry-exporter-http-transport 0.66b1 requires opentelemetry-api, which is not installed.
+opentelemetry-semantic-conventions 0.66b1 requires opentelemetry-api, which is not installed.
+semgrep 1.181.0 requires opentelemetry-api, which is not installed.

@@ -1,0 +1,20 @@
+test_original_workflow_valid_known_artifacts_are_technical_only (test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only) ... ERROR
+
+======================================================================
+ERROR: test_original_workflow_valid_known_artifacts_are_technical_only (test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/onskin-security-sbom-fixture01-20261022/scripts/phase9/security_acceptance/test_contract.py", line 332, in test_original_workflow_valid_known_artifacts_are_technical_only
+    result=w.original_jobs(root,needs,commit,run_id,fresh)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/onskin-security-sbom-fixture01-20261022/scripts/phase9/security_acceptance/workflow_admission.py", line 95, in original_jobs
+    c.require(sbom.returncode == 0, 'WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT')
+  File "/tmp/onskin-security-sbom-fixture01-20261022/scripts/phase9/security_acceptance/contract.py", line 17, in require
+    if not ok:raise Rejected(code)
+              ^^^^^^^^^^^^^^^^^^^^
+contract.Rejected: WORKFLOW_SBOM_UNRELATED_FAILURE_OR_DRIFT
+
+----------------------------------------------------------------------
+Ran 1 test in 0.511s
+
+FAILED (errors=1)

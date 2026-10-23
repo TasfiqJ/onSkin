@@ -1,0 +1,38 @@
+{
+  "all_other_existing_files_read_only": true,
+  "allowed_existing_files": [
+    "ONSKIN_BRAIN_HANDOFF.txt"
+  ],
+  "allowed_new_prefixes": [
+    "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/"
+  ],
+  "approved_checkout_path_windows": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_COVERAGE_TRIAGE01_EXACT_4f6a2d2",
+  "authorization_id": "M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1",
+  "base_commit": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+  "base_tree": "791580347993487bd3920727ee7b0e31668eed4e",
+  "branch": "stage/m1-gate-recovery",
+  "checkout_recovery_not_scope_expansion": true,
+  "checkout_witness": "CHECKOUT_WITNESS.json",
+  "credential_or_paid_service_authorized": false,
+  "hosted_db_replay_authorized": false,
+  "incremental_spend_usd": 0,
+  "iteration": "SECURITY-SOURCE-COVERAGE-TRIAGE-01",
+  "m2_authorized": false,
+  "main_writable": false,
+  "observed_main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "original_security_sources_policies_and_fixtures_writable": false,
+  "owner_original_proposal_expiry_utc": "2026-10-21T00:00:00Z",
+  "pr10_merge_or_ready_authorized": false,
+  "purpose": "Read-only classification of original source-inventory/SAST coverage and secret/advisory refusal, not source Security acceptance, waiver or artifact refresh",
+  "release_authorized": false,
+  "repository": "TasfiqJ/onSkin",
+  "revision": "REISSUED-R1-EXACT-CHECKOUT-RECOVERY",
+  "schema_version": 1,
+  "source_acceptance": "TECHNICAL_EVIDENCE_ONLY; UNVERIFIED_PRIOR_ISSUANCE_NOT_RECTIFIED",
+  "source_security_go": false,
+  "stale_checkout_path_windows_do_not_use": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\postmerge-gate-triage01-stage",
+  "supersedes_authorization_id": "M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01",
+  "supersedes_external_manifest_sha256": "ab6784e080c157487868a87edc4f49b9d2f5ed0fe679b34f73bbd30c706d39e8",
+  "task_id": "M1-03",
+  "verified_preimage_fingerprint": "4954012441f89c16902e8de3a55ef75403034bfaa23da413cacb614d3a79113c"
+}

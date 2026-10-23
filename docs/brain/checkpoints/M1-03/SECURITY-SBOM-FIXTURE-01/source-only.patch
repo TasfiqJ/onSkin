@@ -1,0 +1,35 @@
+diff --git a/scripts/phase9/security_acceptance/test_contract.py b/scripts/phase9/security_acceptance/test_contract.py
+index cf5ade89..e5c9a7cd 100644
+--- a/scripts/phase9/security_acceptance/test_contract.py
++++ b/scripts/phase9/security_acceptance/test_contract.py
+@@ -253,15 +253,21 @@ class ContractTests(unittest.TestCase):
+    if name=='static-analysis':obj.update(osv='failure',osv_exception_gate='failure')
+    write(w.MANIFESTS[name],obj)
+   write('code/npm-audit-high.json',fresh['npm-installed']['report']);write('code/npm-audit-high.exit-code',b'1\n')
+-  # Actual source-generated packet; only the unit fixture's clock is refreshed.
+-  execution=c.load(c.HERE,'legacy-sbom-fixture.json.gz');sbom=execution['packet'];sbom['generatedAt']=c.now().isoformat(timespec='milliseconds').replace('+00:00','Z')
+-  # Synthetic original-secret receipt fixture only: the authorized Vite closure
+-  # must match the current lock so the unchanged SBOM guard can reach the new
+-  # secret proof negatives. The historical compressed fixture stays untouched.
+-  locked=c.load(c.ROOT,'package-lock.json')['packages']
+-  for row in sbom['packages']:
+-   if row['path'] in ('node_modules/vite','node_modules/rolldown','node_modules/@oxc-project/types') or row['path'].startswith('node_modules/@rolldown/binding-'):
+-    row.update(**{key:locked[row['path']].get(key) for key in ('version','license','resolved')})
++  # Synthetic audit replay only: invoke the unchanged producer against the
++  # current lock. This unit packet is never a scanner receipt or acceptance.
++  execution=c.load(c.HERE,'legacy-sbom-fixture.json.gz')
++  with tempfile.TemporaryDirectory(prefix='g97-unit-sbom-producer-') as d:
++   producer=pathlib.Path(d);(producer/'docs/phase-9').mkdir(parents=True)
++   (producer/'package-lock.json').write_bytes(c.safe(c.ROOT,'package-lock.json'))
++   (producer/'docs/phase-9/security-advisory-exceptions.json').write_bytes(c.safe(c.ROOT,'docs/phase-9/security-advisory-exceptions.json'))
++   (producer/'audit.json').write_bytes(c.CANON(execution['audit']))
++   stub=producer/'unit-audit.mjs'
++   stub.write_text("import {readFileSync} from 'node:fs';process.stdout.write(readFileSync(new URL('audit.json',import.meta.url)));process.exitCode=1;")
++   generated=subprocess.run(['node',str(c.ROOT/'scripts/phase9/dependency-sbom.mjs')],cwd=producer,
++     env={'PATH':os.environ['PATH'],'PHASE9_RUN_NPM_AUDIT':'true','npm_execpath':str(stub),
++          'npm_config_offline':'false','PHASE9_DEPENDENCY_AUDIT_PASS':'false'},capture_output=True,timeout=30)
++   self.assertEqual(generated.returncode,1)  # Preserve the real expired-policy refusal.
++   sbom=c.load(producer,'docs/phase-9/generated/dependency-inventory.json')
+   write('code/dependency-inventory.json',sbom);write('code/dependency-sbom.exit-code',b'1\n')
+   write('code/dependency-sbom-audit.json',execution['audit']);write('code/dependency-sbom-audit.exit-code',b'1\n')
+   for mode,refusal in execution['policyRefusals'].items():

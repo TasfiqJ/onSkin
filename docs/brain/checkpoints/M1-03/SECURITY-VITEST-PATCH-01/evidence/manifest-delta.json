@@ -1,0 +1,12 @@
+[
+  {
+    "path": "apps/mobile/package.json",
+    "before_sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f",
+    "after_sha256": "ee2adeb11eda8ff8ee7fd4a36f69c29817883e7825d0ea62e43de358862e5361"
+  },
+  {
+    "path": "apps/catalog-operator-console/package.json",
+    "before_sha256": "61b4d3b51ae7baafe47c8902ad5dcb2cde4f975543eb3d867eb051d46e3ac67b",
+    "after_sha256": "10fce1f7fc5ab515f3ddb8825c0b223c51cb4fe404b32b39b009e4055a128903"
+  }
+]

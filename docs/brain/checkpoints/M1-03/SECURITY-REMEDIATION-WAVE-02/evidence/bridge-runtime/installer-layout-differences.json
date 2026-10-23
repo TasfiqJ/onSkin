@@ -1,0 +1,141 @@
+{
+  "explanation": "Cross-layout target/bin launchers and generated RECORD paths differ between pip --target and venv. These are explicitly excluded by the ORIGINAL contract.tool_tree algorithm; no new exemption was added. Every difference is retained here. Semgrep non-METADATA dist-info files are compared before/after in the SAME venv and identical, including RECORD.",
+  "differences": [
+    {
+      "path": "bin/cffi-gen-src",
+      "old_sha256": "36c84fb8e64050e17b2f8b87a5eda7f472ada30248d908279760dd349a1f9351",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/dotenv",
+      "old_sha256": "44f3bc85401bc211d374d1aaf8596685aee9f4bb65e1f37ac057689267d65f78",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/glom",
+      "old_sha256": "a448d5bb100a5b1037af7879307017e07f4091913cefa79fca6dcab233ff113f",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/httpx",
+      "old_sha256": "fd152ce6f8d3197df0c927e4a6347e1affefb0ab3c4e8c9dbbcc0bd017c4e5fa",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/idna",
+      "old_sha256": "4326e6c196db74c1c082f593ff01635abd382bd1f64562bf9ef4a1ddc7a0be9e",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/jsonschema",
+      "old_sha256": "f22187e62539b9e8b5f94ad1a7242d56d5bda2e611997b51d30663bf0c3a3f18",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/markdown-it",
+      "old_sha256": "8760220608951dcd3dbd68af0299b466a87026e894bb899611a40305e02de553",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/mcp",
+      "old_sha256": "a7f80389d79def7be7977889c6c09bbdff571d29ed6f0a793f3a842b67584698",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/normalizer",
+      "old_sha256": "c610012d192fd97d74daec26d67f5bdadeee5d42230c5ba6ad10d695eec2d7a4",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/opentelemetry-bootstrap",
+      "old_sha256": "f8d8c2da2b310047989f5cd288e6c3fbb2a0c795a9147f03f5859ead8242e433",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/opentelemetry-instrument",
+      "old_sha256": "57cd07cea02e53d0846940bcc596e090c3623e4e9c4e5a0607606d5d5fbc2cc2",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/pwiz",
+      "old_sha256": "464dca79259bfbded8d1fa383cd33a2accc6b0e508f9c842eddc11ac0665dbca",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/pygmentize",
+      "old_sha256": "403fe5672ff9b3fa3cc23f8c4e6f3f49de8c065115199df5f9baf232d811e7a1",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/pysemgrep",
+      "old_sha256": "8bd514db109cf47c687583741c9bbd37499912ef619a439c553fc0a87b04b69b",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/semgrep",
+      "old_sha256": "e74a004a628a40f752ee9abe7874a31485f61998d4f150623c6ba1c2bd0ddbc7",
+      "new_sha256": null
+    },
+    {
+      "path": "bin/uvicorn",
+      "old_sha256": "263265025ae66004c7fa8d7c490438a34f2cc68d00bc2352096dfeee4f95e5ee",
+      "new_sha256": null
+    },
+    {
+      "path": "cffi-2.1.1.dist-info/RECORD",
+      "old_sha256": "508ae1a67db7d0fdb415ba5dce7e9b57b6065a56f0febe407dc09eb13d5b926f",
+      "new_sha256": "c1dce0e43be5c5dfecc2b01dc803df271291bee2dbbe3e0eb747bc272c1aba2a"
+    },
+    {
+      "path": "charset_normalizer-3.5.2.dist-info/RECORD",
+      "old_sha256": "e2c52592a585c35f21ae1b7f48f883f43a83e10fbc44f8040efbc0b414986cdc",
+      "new_sha256": "daf4deb9bfc601924856b1d805442aa57aec2fe42b135fde5e7570e397e12658"
+    },
+    {
+      "path": "glom-25.12.0.dist-info/RECORD",
+      "old_sha256": "b402592a76c39be87330517e75bca900552c8b8fe3a5e6ef7f9e1c5896111170",
+      "new_sha256": "8d27a37dd19e22d52cb5ee94fc6dadc07dcdb12f8d21a378024a9769cbf05e31"
+    },
+    {
+      "path": "httpx-0.28.1.dist-info/RECORD",
+      "old_sha256": "6713c6d94af22736303a73613d4162be7010203a2aecd2feaf2dfb7744816c5c",
+      "new_sha256": "cd9dc9f91c0c698969e4aa4ac6a693487dfafd3b3613ba28316c995d523d8eae"
+    },
+    {
+      "path": "idna-3.20.dist-info/RECORD",
+      "old_sha256": "a005990d5b85cab3cb5195b258279f0ea72107e5f3a4d2e359b5a06aeeb94cc1",
+      "new_sha256": "79aded5dca95013fc11ba7b1b8cb3ff5fc906e0f302f9de50baabea6f26ef3a5"
+    },
+    {
+      "path": "jsonschema-4.25.1.dist-info/RECORD",
+      "old_sha256": "c8cc0e55db741403d451bede4397df05fc0e7bc2b7e43264bc4a083999ced4a2",
+      "new_sha256": "beccdf8b105da0fad576598960f60c0bc49aee48cd2d588c8c3c51e7918a1684"
+    },
+    {
+      "path": "markdown_it_py-4.2.0.dist-info/RECORD",
+      "old_sha256": "4654864fb70841d1cb6c19331f48aee432ece69a81ea4a2bdd1a1d61a6ce0ff4",
+      "new_sha256": "47c2579e7ed9bbe747eaa5747ac417bf21e3c60f124de24a1fe5aed7728f3ab9"
+    },
+    {
+      "path": "peewee-3.19.0.dist-info/RECORD",
+      "old_sha256": "b7600aa6bc8a4ac952a42a4f3b699535ed4af6e44599f6cb6611053abc66e955",
+      "new_sha256": "e00d9736098232b2a2bc8d90a5adeca8495ad43586e97107e1e341308450bb5d"
+    },
+    {
+      "path": "pygments-2.21.0.dist-info/RECORD",
+      "old_sha256": "db8d639ed9892fcbbab61874d07dc12b3ae2bc4571663049588d44fa6b910b50",
+      "new_sha256": "6d5285ac8ee4bbfcd1c44bf0574d61541c1faff3e69abce39f21fab1316f23fc"
+    },
+    {
+      "path": "python_dotenv-1.2.4.dist-info/RECORD",
+      "old_sha256": "f1dbbc4b47b99bbdef3ff009631bebca1ac4ef7ad7d274cec0badfb4ec542c33",
+      "new_sha256": "10e07ce839d0385ac862280bd1d2098552154d9d19738e34ed72a61722a8c978"
+    },
+    {
+      "path": "uvicorn-0.54.0.dist-info/RECORD",
+      "old_sha256": "3dcb566c12d4e557d761f6c3ea57742ba961175f7604030142b1552fee2118fa",
+      "new_sha256": "4373120dba0c0a748965dd9405c77d1993fd4e58305ece7a36a6501d294f4378"
+    }
+  ],
+  "unexplained_canonical_package_files": []
+}

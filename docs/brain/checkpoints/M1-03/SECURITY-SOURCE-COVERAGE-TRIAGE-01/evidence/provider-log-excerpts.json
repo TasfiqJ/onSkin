@@ -1,0 +1,17 @@
+{
+  "120231424552": [
+    "2026-10-23T03:58:47.2465348Z Ran 70 tests in 143.276s",
+    "2026-10-23T03:58:47.3871171Z     require(tracked|untracked==expected,'SOURCE_INVENTORY_DRIFT')",
+    "2026-10-23T03:58:47.3873706Z contract.Rejected: SOURCE_INVENTORY_DRIFT",
+    "2026-10-23T03:58:47.4003422Z ##[error]Process completed with exit code 1.",
+    "2026-10-23T03:58:49.3888599Z ##[error]Process completed with exit code 1.",
+    "2026-10-23T03:58:49.6217591Z ##[error]Process completed with exit code 1.",
+    "2026-10-23T03:58:50.7448592Z ##[error]Process completed with exit code 1."
+  ],
+  "120232409649": [
+    "2026-10-23T04:00:12.0921184Z ##[group]Run original_jobs=\"$G97_ORIGINAL_JOBS\"",
+    "2026-10-23T04:00:12.0921604Z \u001b[36;1moriginal_jobs=\"$G97_ORIGINAL_JOBS\"\u001b[0m",
+    "2026-10-23T04:00:12.0995821Z   G97_ORIGINAL_JOBS: {",
+    "2026-10-23T04:00:12.3239972Z ##[error]Process completed with exit code 1."
+  ]
+}

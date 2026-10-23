@@ -1,0 +1,296 @@
+{
+  "status": "PASS",
+  "changes": {
+    "requirementsSha256": "9af06b943d8cc19750ddc2f6d3831c096f540fb68965b62b2e760706a1db465f",
+    "originalPackageTree": "f739ad265e973b29098d5bd640f2a01e25de016596d5761b5b8b030d58507cb9",
+    "semgrepPackageTree": "5ad98b88c9391d205d83b224498022013b89ae5b27fe307983319912e0fe1ffd"
+  },
+  "old_original_package_tree": "dabde8c684374b57d6f9b3093dff0fa020169d9d9a99d266ad810e1504b2774f",
+  "old_assembled_package_tree": "8d4ccb867b988c64d6bf77d6c2921c9a32f01fb980e761374c525103a85a154a",
+  "candidate_proposal_sha256": "abc1ab02e54f50348e6f10b9a4cffa66164ffdd4bbf09693534b0e50d549f3e3",
+  "old_file_count": 2834,
+  "new_file_count": 2834,
+  "file_delta": [
+    {
+      "path": "certifi-2026.10.18.dist-info/INSTALLER",
+      "old": {
+        "bytes": 4,
+        "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/METADATA",
+      "old": {
+        "bytes": 2526,
+        "sha256": "5f23b0cfb71be0a44970eb5d3ad49ba3db52616d7a583d594697bd9ee1bf2065"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/RECORD",
+      "old": {
+        "bytes": 1148,
+        "sha256": "9e94a5690ceba4aa0bb0e1eb7bb57fe2d46d3f21d2c101c38ea4067992ca8d6c"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/REQUESTED",
+      "old": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/WHEEL",
+      "old": {
+        "bytes": 91,
+        "sha256": "61532836a2b3111b7ec23519c09df7c41180c27165fb872a6d8913b566b88ad1"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/licenses/LICENSE",
+      "old": {
+        "bytes": 989,
+        "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/top_level.txt",
+      "old": {
+        "bytes": 8,
+        "sha256": "28cbb8bd409fb232eb90f6d235d81d7a44bea552730402453bffe723c345ebe5"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/INSTALLER",
+      "old": null,
+      "new": {
+        "bytes": 4,
+        "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/METADATA",
+      "old": null,
+      "new": {
+        "bytes": 2526,
+        "sha256": "a5c0be3a42daeef0edfaf58e6ea5b7550f3e4e8eb35420f72e902df9bcf00f5c"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/RECORD",
+      "old": null,
+      "new": {
+        "bytes": 1148,
+        "sha256": "1e12b9b887ffd01e5870bc8b1738d55027b085581f8431c14d2f1130c8f5f5ca"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/REQUESTED",
+      "old": null,
+      "new": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/WHEEL",
+      "old": null,
+      "new": {
+        "bytes": 91,
+        "sha256": "6beb9d2f69b857fe989fc6feb8acd66f5d918d1c70c0ca3aa21605336e2da5a6"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/licenses/LICENSE",
+      "old": null,
+      "new": {
+        "bytes": 989,
+        "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/top_level.txt",
+      "old": null,
+      "new": {
+        "bytes": 8,
+        "sha256": "28cbb8bd409fb232eb90f6d235d81d7a44bea552730402453bffe723c345ebe5"
+      }
+    },
+    {
+      "path": "certifi/__init__.py",
+      "old": {
+        "bytes": 94,
+        "sha256": "b2abf32ecf8abfc3de58cea9745e37ce61452c2eeb3f5346a3f0f0c9616189ad"
+      },
+      "new": {
+        "bytes": 94,
+        "sha256": "f8ccfc10235998c7edd340f2f305b5f3d71aed978aea82a02af30d7877bee902"
+      }
+    },
+    {
+      "path": "certifi/cacert.pem",
+      "old": {
+        "bytes": 234072,
+        "sha256": "d87887200c9a705dccc937b9b83b5e67e47024c4a4b7f9dd15700c72e0f55453"
+      },
+      "new": {
+        "bytes": 238856,
+        "sha256": "50f79f98dac192b20dbf73f35c56f0b0c557ab267ff5199d1117cc1180b70785"
+      }
+    }
+  ],
+  "assembled_file_delta": [
+    {
+      "path": "certifi-2026.10.18.dist-info/INSTALLER",
+      "old": {
+        "bytes": 4,
+        "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/METADATA",
+      "old": {
+        "bytes": 2526,
+        "sha256": "5f23b0cfb71be0a44970eb5d3ad49ba3db52616d7a583d594697bd9ee1bf2065"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/RECORD",
+      "old": {
+        "bytes": 1148,
+        "sha256": "9e94a5690ceba4aa0bb0e1eb7bb57fe2d46d3f21d2c101c38ea4067992ca8d6c"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/REQUESTED",
+      "old": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/WHEEL",
+      "old": {
+        "bytes": 91,
+        "sha256": "61532836a2b3111b7ec23519c09df7c41180c27165fb872a6d8913b566b88ad1"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/licenses/LICENSE",
+      "old": {
+        "bytes": 989,
+        "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.18.dist-info/top_level.txt",
+      "old": {
+        "bytes": 8,
+        "sha256": "28cbb8bd409fb232eb90f6d235d81d7a44bea552730402453bffe723c345ebe5"
+      },
+      "new": null
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/INSTALLER",
+      "old": null,
+      "new": {
+        "bytes": 4,
+        "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/METADATA",
+      "old": null,
+      "new": {
+        "bytes": 2526,
+        "sha256": "a5c0be3a42daeef0edfaf58e6ea5b7550f3e4e8eb35420f72e902df9bcf00f5c"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/RECORD",
+      "old": null,
+      "new": {
+        "bytes": 1148,
+        "sha256": "1e12b9b887ffd01e5870bc8b1738d55027b085581f8431c14d2f1130c8f5f5ca"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/REQUESTED",
+      "old": null,
+      "new": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/WHEEL",
+      "old": null,
+      "new": {
+        "bytes": 91,
+        "sha256": "6beb9d2f69b857fe989fc6feb8acd66f5d918d1c70c0ca3aa21605336e2da5a6"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/licenses/LICENSE",
+      "old": null,
+      "new": {
+        "bytes": 989,
+        "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7"
+      }
+    },
+    {
+      "path": "certifi-2026.10.19.dist-info/top_level.txt",
+      "old": null,
+      "new": {
+        "bytes": 8,
+        "sha256": "28cbb8bd409fb232eb90f6d235d81d7a44bea552730402453bffe723c345ebe5"
+      }
+    },
+    {
+      "path": "certifi/__init__.py",
+      "old": {
+        "bytes": 94,
+        "sha256": "b2abf32ecf8abfc3de58cea9745e37ce61452c2eeb3f5346a3f0f0c9616189ad"
+      },
+      "new": {
+        "bytes": 94,
+        "sha256": "f8ccfc10235998c7edd340f2f305b5f3d71aed978aea82a02af30d7877bee902"
+      }
+    },
+    {
+      "path": "certifi/cacert.pem",
+      "old": {
+        "bytes": 234072,
+        "sha256": "d87887200c9a705dccc937b9b83b5e67e47024c4a4b7f9dd15700c72e0f55453"
+      },
+      "new": {
+        "bytes": 238856,
+        "sha256": "50f79f98dac192b20dbf73f35c56f0b0c557ab267ff5199d1117cc1180b70785"
+      }
+    }
+  ],
+  "all_noncertifi_files_identical": true,
+  "all_scanner_binaries_identical": true,
+  "npm_tree_identical": true,
+  "preserved_upstream_identical": true,
+  "engine": {
+    "originalCoreSha256": "14f4b18720d881156bc0cc507b19130aa8d8db0882a5a479fb3919aadefca857",
+    "portableCoreSha256": "187283dcd737cf34fde16b99e440c44236b63c47d4db107bfe15b188080238b7",
+    "archiveSha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9",
+    "originalPreserved": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-preserved-02"
+  },
+  "old_new_environment": "same Python3.12.3, pip24.0 venv; glibc2.39; isolated fresh hash-required wheel-only targets"
+}

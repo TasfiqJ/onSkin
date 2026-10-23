@@ -1,0 +1,5 @@
+{
+  "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "superseded_by": "../inventory-reviewed/review-matrix.json",
+  "reason": "The complete final matrix retains all20407 rows plus unchanged canonical classifier results. Do not duplicate the preliminary unclassified matrix. Its authentic original bytes remain in milestone ab263f4f."
+}

@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "node",
+    "/work/npm-candidate/node_modules/expo/bin/cli",
+    "install",
+    "--check"
+  ],
+  "cwd": "/work/npm-candidate/apps/mobile",
+  "exit": 0,
+  "seconds": 0.3165470509848092,
+  "log_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+  "raw_private": false
+}

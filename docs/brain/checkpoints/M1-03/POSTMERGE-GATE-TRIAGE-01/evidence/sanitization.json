@@ -1,0 +1,10 @@
+{
+  "admission": "NONE",
+  "raw_scanner_artifacts_published": false,
+  "provider_archives": "private; raw ZIP hashes match GitHub digests in scanner-discrepancies.json",
+  "secret_evidence": "counts, exits, location SHA256s only; redaction assertions executed before extraction; no snippets or secret payloads published",
+  "unit_logs": "original and candidate synthetic tests, unchanged raw exits and transcript bytes",
+  "source_hashes": "immutable regular Git blobs",
+  "root_tests": "NOT_RUN; no app source changes",
+  "spend_usd": 0
+}

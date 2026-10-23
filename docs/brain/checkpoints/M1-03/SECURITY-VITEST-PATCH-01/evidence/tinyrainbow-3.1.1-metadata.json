@@ -1,0 +1,95 @@
+{
+  "bugs": {
+    "url": "https://github.com/tinylibs/tinyrainbow/issues"
+  },
+  "dist": {
+    "shasum": "c0168387d3d8d70b6b3c2c0936de5fee738cea20",
+    "tarball": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.1.1.tgz",
+    "fileCount": 5,
+    "integrity": "sha512-yau8yJdTt989Mm0Bd/236QnzEiPf2xLLTqUZRUJOo/3CB078LSwzei343DgtJVmfJKJE3TMINY1u42SQsP6mXw==",
+    "signatures": [
+      {
+        "sig": "MEUCIQC1PZ75Bd8qmLKKIVPUlVnikVfE3dpNFY5uMH2J4c7+ewIgOui2Nqv6tzVeVw8D2dKQiA6L6bUsJ/1AyBjyKiSm5WY=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/tinyrainbow@3.1.1",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 7471
+  },
+  "main": "./dist/index.js",
+  "name": "tinyrainbow",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "browser": "./dist/index.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
+  "gitHead": "c1ec6f409a4ca8a4aa4f23e0c4654187bf833243",
+  "license": "MIT",
+  "_npmUser": {
+    "name": "GitHub Actions",
+    "email": "npm-oidc-no-reply@github.com",
+    "approver": {
+      "name": "43081j",
+      "email": "43081james@gmail.com"
+    },
+    "trustedPublisher": {
+      "id": "github",
+      "oidcConfigId": "oidc:b4455158-5f75-4be4-aa4e-812c94f468a3"
+    }
+  },
+  "homepage": "https://github.com/tinylibs/tinyrainbow#readme",
+  "keywords": [
+    "colors",
+    "tty"
+  ],
+  "repository": {
+    "url": "git+https://github.com/tinylibs/tinyrainbow.git",
+    "type": "git"
+  },
+  "_npmVersion": "12.0.1",
+  "description": "A small library to print colourful messages.",
+  "directories": {},
+  "maintainers": [
+    {
+      "name": "43081j",
+      "email": "43081james@gmail.com"
+    },
+    {
+      "name": "oreanno",
+      "email": "foxzdavinci@gmail.com"
+    }
+  ],
+  "sideEffects": false,
+  "_nodeVersion": "24.18.0",
+  "contributors": [
+    {
+      "url": "https://github.com/aslemammad",
+      "name": "M. Bagher Abiat",
+      "email": "zorofight94@gmail.com"
+    },
+    {
+      "url": "https://github.com/sheremet-va",
+      "name": "Vladimir",
+      "email": "sleuths.slews0s@icloud.com"
+    }
+  ],
+  "_hasShrinkwrap": false,
+  "packageManager": "pnpm@10.34.5",
+  "_npmOperationalInternal": {
+    "tmp": "tmp/tinyrainbow_3.1.1_1785236861498_0.5885290409737889",
+    "host": "s3://npm-registry-packages-npm-production"
+  },
+  "_id": "tinyrainbow@3.1.1",
+  "version": "3.1.1"
+}

@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "authority": "M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1",
+  "source_sha": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+  "source_tree": "791580347993487bd3920727ee7b0e31668eed4e",
+  "self_exclusion": "This file excludes itself; its real committed identity is verified after commit, avoiding self-reference.",
+  "files": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/BLOCKERS.md",
+      "bytes": 1902,
+      "sha256": "714f4ea55416108e79a4098d4cc4f5126956d9076b68a80aaec71b576b7950db",
+      "git_blob": "f0ce0fdae7cb46a7664769fe94e1d093e3c9efd6",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/diagnose_inventory.py",
+      "bytes": 6236,
+      "sha256": "cb8c45bc814d84e62bb5f99cc5440111a9e438da05f696351b671f7f7fab0c97",
+      "git_blob": "83268fddc82ebc24b063b5c211ea1705eba33ab7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/advisory-identities.json",
+      "bytes": 6597,
+      "sha256": "6b25687586bf6dc17ad041d23732260465c541698f3f7daa8bef0d2d067c3653",
+      "git_blob": "5f4d76d54695fe5152fa20a6250a93144a4d70a1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/certifi-upstream-identities.json",
+      "bytes": 2537,
+      "sha256": "fdeab0f52518c0a6d1975a7a5ae4665525a58fd2e51309a9601cb6f9d7243ecd",
+      "git_blob": "2f276be8f7937feb58f8960252829e76a96b74c9",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/current-source-samples.json",
+      "bytes": 1563,
+      "sha256": "49f8b12f4fa837c4573b14a3b3f53a97a6c960c3b678a0650c79ece89fca5efd",
+      "git_blob": "a9dcaa6e4ec6ea95b47037b0c59198beb5bc0e21",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/dependency-source-usage.json",
+      "bytes": 841,
+      "sha256": "b1d9bb2058b1c781df817000b73602462dcf21de32763f7706edbc986ffab84d",
+      "git_blob": "b567cb97044f885f8b87c74f0a87c22a09eb4c38",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/fresh-contract-retry.json",
+      "bytes": 971,
+      "sha256": "0b6e159a0ab02a0df5453ad23e77dcdb6c68d96bf5d3e7539eca8ebfa18db0e6",
+      "git_blob": "a09fa5dedf731e5de36b40d925036010719283cf",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/fresh-tests.json",
+      "bytes": 3011,
+      "sha256": "c27456036f56bec17f4ec7593aea5c2033c781d41f2a8bfdf1f6d0067db4d3e3",
+      "git_blob": "bd35f4408e7511e2cf9d88326c4b6a392bc2cc1b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/infrastructure-notes.json",
+      "bytes": 2238,
+      "sha256": "5271ed94ac862e0f36e59af7af00480475055647c7d92c6200fd9b5d2dfc917e",
+      "git_blob": "c99a8f56afc5614d01f37fdf24eb8c376b6f0122",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/inventory-reproducer.json",
+      "bytes": 1507,
+      "sha256": "86eb0c59d350e4b207bf97f24da7a71c40e1a2f4d5728031287072101ef0bc89",
+      "git_blob": "bf80ffaa6bc897a459d23d481663503c667a8e6b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/local-test-dispositions.json",
+      "bytes": 1914,
+      "sha256": "f219b69c63724f32aba77acfaaff19f79b76a53c006fc43ae8948eb32d52e7e7",
+      "git_blob": "2a5643c0617dd93ad9d4c159a38c4c6e6f65fae4",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/preflight-rows.json",
+      "bytes": 4964,
+      "sha256": "2db669d215f34afe29a82768d2bd447a5b17acc71a339fa04b3dfc2f875f30b7",
+      "git_blob": "460dee37f2a3c99dac2ba2d651bd8ae9973a4398",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/preflight.json",
+      "bytes": 1058,
+      "sha256": "64722ad7aa701121cb6b2c4c7411e5666ba8ef23a36e4efcc6ad8c2d32c71426",
+      "git_blob": "1470c778a18071e233850b79fecef0c3b7f9c6fd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/proposed-scope-preimages.json",
+      "bytes": 493,
+      "sha256": "3e5e678526a62d67d67941951ac8f27e5614a0cdaaf0cf428a6c7264900cbf96",
+      "git_blob": "29ffb5f92792c397ab116552ae7748b652c19fb2",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/provider-artifact-identities.json",
+      "bytes": 4645,
+      "sha256": "4d475dfbb1e9928d11b3ca15e2a8ff2a50138faf2b556487169f0eeba93998aa",
+      "git_blob": "fd463ef0110dd56d598441aaf9c8a18b493c336e",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/provider-log-excerpts.json",
+      "bytes": 936,
+      "sha256": "dc73bdb246fb5799e7764902aafa4e557a27c9af0386c67e6ef183a1231b0641",
+      "git_blob": "4b2b828b6f62f004dec434d5372f103383681cfd",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/provider-observations.json",
+      "bytes": 31388,
+      "sha256": "3ba8b2b6eb8bbe6a818f5881d17ac0a52a87224beefd93b481697e7f5ae1ff9a",
+      "git_blob": "89138aed0a253ed380124d7a6d2d42d200088422",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/rule-acquisition.json",
+      "bytes": 1756,
+      "sha256": "8817cbe5ce5597fd846518c1f6fbb757dfeeec6489feae69c26a0a6f9ed7bc37",
+      "git_blob": "84d26fb28217905be8919f04afa2ff8f6e0a989c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/runtime.json",
+      "bytes": 665,
+      "sha256": "c7e5b325243e02dbeb14ca5740b43f76765ecfe6198f2d719c55d778de8fa460",
+      "git_blob": "090691144ecac54ad8b2b383b96baf1d328b073e",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/sast-attempt.json",
+      "bytes": 2280,
+      "sha256": "cf1242e6db41239e7f8ff875c02579bde415a82c86dfa89791e25d1180da1f29",
+      "git_blob": "a55f579b8cbe7a3463c02474ba90f746bac8f153",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/secret-location-comparison.json",
+      "bytes": 382,
+      "sha256": "592a17ca447eb8519ff8cbd8a044140b881e992f9efe1bd8e9958254068938d6",
+      "git_blob": "c8d9a332c90d40db01589fdde1b3a7bd1c86fb7c",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/evidence/yaml-test-dependency.json",
+      "bytes": 515,
+      "sha256": "cf972d903d898ce96ce4d947e611371bcbb1a4a58039f838ada2dcfa95f1f30f",
+      "git_blob": "495f841760ea9ed9c0701a13e6ab4a0af2fed9d1",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/GATE_MATRIX.json",
+      "bytes": 3099,
+      "sha256": "fa65ac3f1ea60ad0fdad995fc767b4327685229c2bb8eb6adfb7fe73482dd96d",
+      "git_blob": "a94994a6cb98dea29e4d62c203ee74d06420bb27",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/00_READ_FIRST.md",
+      "bytes": 2437,
+      "sha256": "dbd56ec1af9c2ac5c0577c964b17c8b61aa5d37e06fcd656b066c7db3f3d0a14",
+      "git_blob": "29d89449f54e8916e447174b9a20b697f3677b53",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/01_INDEPENDENT_BRAIN_REVIEW.md",
+      "bytes": 2070,
+      "sha256": "108bf4825b284f156122c8d5cf19c7ea263d509b4969b42fc711357783c2d553",
+      "git_blob": "9a0d8a8b221c30b164129ec96a6b49a6c604fe10",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/02_TASK.md",
+      "bytes": 2894,
+      "sha256": "b59e5ce36018bb1aec3acce8410168c6a5e7e35696ed7e6a389725eccbe85b0f",
+      "git_blob": "e375968d37e8eee6a2f92817e23706114072901f",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/03_BOUNDARIES.md",
+      "bytes": 1172,
+      "sha256": "e319afba0b5f3cd27ad67e197565a927532723f7082793409146e3f5768a55b8",
+      "git_blob": "94086f48140bb5d34cc34c747fae400f6aa5e37b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/04_EVIDENCE_AND_TESTS.md",
+      "bytes": 1640,
+      "sha256": "1656b2ccbb653c1bb0bfadaa6a80632871b998ce73e1d1c14312b09656848298",
+      "git_blob": "aceeeeef451755664f6475b694d510b1b5e5fca7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/05_DELIVERY_AND_STOP.md",
+      "bytes": 1454,
+      "sha256": "9403e9afced988d43eab7f8ffb37767571896701a60336153af947ffb69e0d03",
+      "git_blob": "cd8d6e851d6e9a8acdf866aec26a6dd4452a4d33",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/06_EXACT_CHECKOUT_RECOVERY.md",
+      "bytes": 3386,
+      "sha256": "2df6e059b4297c87ef9bd5814a732c6466cfdde3e54aa38b26975e6e2e9a8f29",
+      "git_blob": "7d0df055a3cf19fbadad954c956b98df09b6b525",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/CHECKOUT_WITNESS.json",
+      "bytes": 1845,
+      "sha256": "2731fc0ce8f5eba7b0dcb4f48c4231198944faba6988ccb8805cde47c983ffef",
+      "git_blob": "5accff553f99fd8810f95735544a8b92fab4335b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/CI_REFERENCE.json",
+      "bytes": 1551,
+      "sha256": "f1fc13b73e385a7e4d8bfec9d2c558af137f30175de1f3c2cdca81bca9cc8752",
+      "git_blob": "03cf28c92e72cd9a81cba3e88a4925c09dadceec",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/PREIMAGE_WITNESSES.json",
+      "bytes": 5009,
+      "sha256": "e50926566571ec31a25507ea218bf16c152f6b869ee4148083c1b786ea70c43b",
+      "git_blob": "9cfde8748dcaad1cd94058c4f7ba8b304470b8a9",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/SOURCE_AUTHORIZATION.json",
+      "bytes": 2036,
+      "sha256": "85804487ec8107c744afd5550667c788e93cf644566f4d9a1ead5c34e6f78c99",
+      "git_blob": "820a13f31b1c64a9a30b1e2b9e18c4c2795c6118",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/TASK_MANIFEST.json",
+      "bytes": 2442,
+      "sha256": "b22116affd45a3621b89ab80e4260db6db608068abb468c253563ebb1235ddf8",
+      "git_blob": "7d77705f6c5b48e48d19972fe8e082cf38cf5327",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/inputs/verify_context.py",
+      "bytes": 2079,
+      "sha256": "f1f503a9e842f43d5d42088080374e056e4b847849f12e6d999510c4c5a9142d",
+      "git_blob": "452fffb577f9947ca9ef78af01f71d18c7a7f797",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/NEXT_EXACT_SOURCE_SCOPE.md",
+      "bytes": 3765,
+      "sha256": "57bd3e7f94fd575e774e6f95697f0de3afcb6446b1f3df819648f5543513ac5b",
+      "git_blob": "a53998dbef56ed5c824188f2740b098627b72723",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/OSV_NPM_OWNER_ACTIONS.md",
+      "bytes": 4871,
+      "sha256": "1ee3e05eaa7009acb52427650c388aad3fc1ba9c1553ca55d05ab77418ce0bd2",
+      "git_blob": "6d39e70e3ce7cfd9c7fc10aafb3aef56e5bf4c61",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/README.md",
+      "bytes": 3233,
+      "sha256": "2415c9c86dd1447cf962641dcecb6618932dc781911dace2ab01346b823c0214",
+      "git_blob": "47b8a70397f8f7cc8d3d56a8d3bcad7f503d39a0",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/RESULTS.md",
+      "bytes": 5158,
+      "sha256": "1cec2a30fd008339fa4837198d4487464b370abae6b60b97c0b3b8f2406f852c",
+      "git_blob": "bd9bd685538b7d114f076067ecde0c1f3f3da4ae",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/SAFE_SECRET_DISCREPANCIES.json",
+      "bytes": 198236,
+      "sha256": "f5f7b3678aae1e3e3751a01e9c863feb0a4679d81d6c545dcecb8dd5b1ae63fe",
+      "git_blob": "394091e2b92a89dfa461c04bbb4ace151e50ccff",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/SCAN_COVERAGE_MATRIX.json",
+      "bytes": 1878930,
+      "sha256": "b71a311badab019bc3152ecb21b50507e7ca3888c1755c501dd4e12ff3777f13",
+      "git_blob": "70752e49b55ec98b98b13a16345338ab9269d2e7",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/SOURCE_INVENTORY_CAUSAL_PROOF.md",
+      "bytes": 4085,
+      "sha256": "3cc150473344daad2a1328cad212985abd030d24506d8d2a3a59b5f0f329b974",
+      "git_blob": "a1036854dccb243076d4ce9f301559905ae1fc08",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/summarize_provider.py",
+      "bytes": 8525,
+      "sha256": "062828996a0b0898f160ec4b20141da233b4e558b8ffc287f9ba98b43588aede",
+      "git_blob": "d6423af665448c7d078231c2cc5254a6598a3058",
+      "git_mode": "100644"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/verify_delivery.py",
+      "bytes": 5643,
+      "sha256": "b03daa83dacb198b124fbab5b5e6340d0f57c6077c521bb04e690333d5ffe4d0",
+      "git_blob": "1308bddae021ce5d73afa3b5b356fc327f830a9b",
+      "git_mode": "100644"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 3395,
+      "sha256": "b2251f8f7d94c5060c52e0256aef2aab56af6abc1bd769cb77b3bdabeaab428b",
+      "git_blob": "24d7aad1e9432c44d67df8c64b22a921f38e7552",
+      "git_mode": "100644"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "observed_utc": "2026-10-23 02:38:50 UTC",
+  "source_commit": "efc75bf119904f983e40380067f682d111da52dd",
+  "run_id": 39890269391,
+  "job_id": 120208081790,
+  "conclusion": "failure",
+  "log_characters": 421086,
+  "known_unreviewed_advisory_ids": {
+    "GHSA-qxg6-89mg-rqv8": true,
+    "GHSA-xp26-3454-mjgp": true
+  },
+  "vitest_mocker_mentioned": true,
+  "sbom_refusal_observed": false,
+  "expired_review_refusal_observed": true,
+  "raw_scanner_findings_committed": false,
+  "security_admission": "CLOSED"
+}

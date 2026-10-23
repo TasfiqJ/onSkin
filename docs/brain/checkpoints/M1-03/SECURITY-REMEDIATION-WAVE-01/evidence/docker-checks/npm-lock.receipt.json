@@ -1,0 +1,19 @@
+{
+  "name": "npm-lock",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "audit",
+    "--package-lock-only",
+    "--audit-level=high",
+    "--json"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:16:13.653543+00:00",
+  "ended": "2026-10-23T20:16:14.623401+00:00",
+  "seconds": 0.969863989012083,
+  "exit": 1,
+  "log_sha256": "c50ba924fcb586cbda522a553c4aeae5019b75618526f227735fb9fcb44478e5",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

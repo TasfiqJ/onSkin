@@ -1,0 +1,78 @@
+{
+  "authorization_id": "M103-SECURITY-VITEST-PATCH01-SOURCE-EDIT-01",
+  "base_commit": "d2ce5e95cd24edb2ab4d833dee945bdbc59da9fe",
+  "base_tree": "604976823a08700009f8129273f3d0c3d7e34104",
+  "branch": "stage/m1-gate-recovery",
+  "file_count": 13,
+  "files": [
+    {
+      "bytes": 946,
+      "path": "00_READ_FIRST.md",
+      "sha256": "38e48328a0c982ee756a67b354c5d56161ddac2dbf979f14730ff788c03b16a5"
+    },
+    {
+      "bytes": 1661,
+      "path": "01_INDEPENDENT_BRAIN_AUDIT.md",
+      "sha256": "6cb0532e0eca4945ffd9b8ab2e39ab1515c5f956756c936465d922d4d063f24a"
+    },
+    {
+      "bytes": 1435,
+      "path": "02_SOURCE_PATCH_RULES.md",
+      "sha256": "2015eb7f4650468a904dc5fac91fb1091253c0e3da014809d7f62773d6918dec"
+    },
+    {
+      "bytes": 1155,
+      "path": "03_PRIVACY_LOCK_BINDINGS.md",
+      "sha256": "e1faff7e317edb7f3a3d346eecdb6c704c633ae10639012725036b2d9afd322a"
+    },
+    {
+      "bytes": 1810,
+      "path": "04_VERIFICATION_AND_ADVERSE_TESTS.md",
+      "sha256": "d1ec2ef0dcc0e2a0fb3d7cc6d6b695e31477d80e5c8d19c3ab53f754647a9707"
+    },
+    {
+      "bytes": 1033,
+      "path": "05_PROTECTED_GATES.md",
+      "sha256": "167e9c75145ddaa82eb38177353e3e83a38f569a64994821588c0472847b6224"
+    },
+    {
+      "bytes": 1148,
+      "path": "06_DELIVERY_STOP.md",
+      "sha256": "a75cdf78723f7c8e34cc2abb256e1cd52c4d6b4ba25d9b498e8766d7b8828406"
+    },
+    {
+      "bytes": 1361,
+      "path": "BASELINE_CI.json",
+      "sha256": "0f91b9354e3105b9dea9653de24bb247bf3dc55c5a24ae8bb218afb52761141d"
+    },
+    {
+      "bytes": 8843,
+      "path": "PREIMAGE_WITNESSES.json",
+      "sha256": "99e1286e5526f82a55abaad829795f3ba6f72644d2b9eec748794aca45cf298b"
+    },
+    {
+      "bytes": 10869,
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "sha256": "16a808f82d760ad318217e564d73b96b34a98772372aa2b5770f1eb2f0d07f32"
+    },
+    {
+      "bytes": 655,
+      "path": "TASK_STATE.json",
+      "sha256": "3489f1dbc3ef3f9ed282aa6a0e35427af182509e0e18ac80d349051051c23273"
+    },
+    {
+      "bytes": 2049,
+      "path": "UPSTREAM_VITEST_WITNESS.json",
+      "sha256": "398d12aee8ef69c7d70b801fb8d6ef09b8d3f7a6c04057c5bc1e9bd879d1bef3"
+    },
+    {
+      "bytes": 2450,
+      "path": "verify_context.py",
+      "sha256": "eb54135c74ba60c30e0207d6e5b3453fb7429294a7eceb1c9da70db9b23ff181"
+    }
+  ],
+  "iteration": "SECURITY-VITEST-PATCH-01",
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}

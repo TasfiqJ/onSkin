@@ -1,0 +1,18 @@
+{
+  "name": "npm-initial",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "audit",
+    "--audit-level=high",
+    "--json"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:16:10.451225+00:00",
+  "ended": "2026-10-23T20:16:12.672542+00:00",
+  "seconds": 2.2227721599920187,
+  "exit": 1,
+  "log_sha256": "5dc31064e8ec805e90526829cf667622a28841a7abee1224be4f9874f2df689f",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}
