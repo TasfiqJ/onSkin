@@ -14,8 +14,8 @@ resolution, and the release archive require separate verification.
 ## Input bindings
 
 - Baseline: `docs/phase-9/apple-ios-privacy-baseline.json` - `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`
-- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246`
-- Package lock: `package-lock.json` - `99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568`
+- Mapping: `docs/phase-9/ios-sdk-package-mapping.json` - `40abcddf562853d8d2312ace7ea31c9d97d69903b59594bddc5a78a82f479fcd`
+- Package lock: `package-lock.json` - `6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242`
 
 ## Summary
 
