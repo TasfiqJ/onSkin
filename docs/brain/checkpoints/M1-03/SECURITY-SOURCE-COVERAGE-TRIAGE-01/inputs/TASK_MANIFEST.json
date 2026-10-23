@@ -1,0 +1,75 @@
+{
+  "authorization_id": "M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1",
+  "base_commit": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+  "base_tree": "791580347993487bd3920727ee7b0e31668eed4e",
+  "branch": "stage/m1-gate-recovery",
+  "file_count": 12,
+  "files": [
+    {
+      "bytes": 2437,
+      "path": "00_READ_FIRST.md",
+      "sha256": "dbd56ec1af9c2ac5c0577c964b17c8b61aa5d37e06fcd656b066c7db3f3d0a14"
+    },
+    {
+      "bytes": 2070,
+      "path": "01_INDEPENDENT_BRAIN_REVIEW.md",
+      "sha256": "108bf4825b284f156122c8d5cf19c7ea263d509b4969b42fc711357783c2d553"
+    },
+    {
+      "bytes": 2894,
+      "path": "02_TASK.md",
+      "sha256": "b59e5ce36018bb1aec3acce8410168c6a5e7e35696ed7e6a389725eccbe85b0f"
+    },
+    {
+      "bytes": 1172,
+      "path": "03_BOUNDARIES.md",
+      "sha256": "e319afba0b5f3cd27ad67e197565a927532723f7082793409146e3f5768a55b8"
+    },
+    {
+      "bytes": 1640,
+      "path": "04_EVIDENCE_AND_TESTS.md",
+      "sha256": "1656b2ccbb653c1bb0bfadaa6a80632871b998ce73e1d1c14312b09656848298"
+    },
+    {
+      "bytes": 1454,
+      "path": "05_DELIVERY_AND_STOP.md",
+      "sha256": "9403e9afced988d43eab7f8ffb37767571896701a60336153af947ffb69e0d03"
+    },
+    {
+      "bytes": 3386,
+      "path": "06_EXACT_CHECKOUT_RECOVERY.md",
+      "sha256": "2df6e059b4297c87ef9bd5814a732c6466cfdde3e54aa38b26975e6e2e9a8f29"
+    },
+    {
+      "bytes": 1845,
+      "path": "CHECKOUT_WITNESS.json",
+      "sha256": "2731fc0ce8f5eba7b0dcb4f48c4231198944faba6988ccb8805cde47c983ffef"
+    },
+    {
+      "bytes": 1551,
+      "path": "CI_REFERENCE.json",
+      "sha256": "f1fc13b73e385a7e4d8bfec9d2c558af137f30175de1f3c2cdca81bca9cc8752"
+    },
+    {
+      "bytes": 5009,
+      "path": "PREIMAGE_WITNESSES.json",
+      "sha256": "e50926566571ec31a25507ea218bf16c152f6b869ee4148083c1b786ea70c43b"
+    },
+    {
+      "bytes": 2036,
+      "path": "SOURCE_AUTHORIZATION.json",
+      "sha256": "85804487ec8107c744afd5550667c788e93cf644566f4d9a1ead5c34e6f78c99"
+    },
+    {
+      "bytes": 2079,
+      "path": "verify_context.py",
+      "sha256": "f1f503a9e842f43d5d42088080374e056e4b847849f12e6d999510c4c5a9142d"
+    }
+  ],
+  "iteration": "SECURITY-SOURCE-COVERAGE-TRIAGE-01",
+  "repository": "TasfiqJ/onSkin",
+  "revision": "REISSUED-R1-EXACT-CHECKOUT-RECOVERY",
+  "schema_version": 1,
+  "supersedes_external_manifest_sha256": "ab6784e080c157487868a87edc4f49b9d2f5ed0fe679b34f73bbd30c706d39e8",
+  "task_id": "M1-03"
+}

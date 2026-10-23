@@ -1,0 +1,20 @@
+{
+  "first_original70_exit": 1,
+  "first_failure_cause_independently_observed": "Node ERR_MODULE_NOT_FOUND: yaml imported by unchanged workflow_contract.mjs; no application dependencies were installed in the disposable clone",
+  "first_summary": [
+    "70 test methods",
+    "23 failed subtests; 2 errors"
+  ],
+  "selected_original_negative_results": [
+    "test_coverage_exclusion_manifest_source_identity_and_partition_drift_rejected (test_contract.ContractTests.test_coverage_exclusion_manifest_source_identity_and_partition_drift_rejected) ... ok",
+    "test_engine_install_preserves_original_and_rejects_source_drift_before_move (test_contract.ContractTests.test_engine_install_preserves_original_and_rejects_source_drift_before_move) ... ok",
+    "test_oversize_text_is_scanned_and_bounded_not_excluded (test_contract.ContractTests.test_oversize_text_is_scanned_and_bounded_not_excluded) ... ok",
+    "test_owner_decision_digest_changes_for_any_original_raw_byte_change (test_contract.ContractTests.test_owner_decision_digest_changes_for_any_original_raw_byte_change) ... ERROR",
+    "test_scanner_strictness_and_bounded_size_cannot_be_removed (test_contract.ContractTests.test_scanner_strictness_and_bounded_size_cannot_be_removed) ... ok",
+    "test_source_drift_extra_missing_and_expired_policy_tamper (test_contract.ContractTests.test_source_drift_extra_missing_and_expired_policy_tamper) ... ok",
+    "test_untrusted_semgrep_package_rejected_before_running_a_scanner (test_contract.ContractTests.test_untrusted_semgrep_package_rejected_before_running_a_scanner) ... ok"
+  ],
+  "test_dependency_remedy": "Unpack only exact lock-bound yaml@2.9.0 in disposable ignored node_modules; integrity verified; no manifest/lock/source edits",
+  "rerun_receipt": "fresh-contract-retry.json",
+  "provider_original70": "PASS: original exact-tree job log says Ran 70 tests and OK; local attempt recorded separately"
+}

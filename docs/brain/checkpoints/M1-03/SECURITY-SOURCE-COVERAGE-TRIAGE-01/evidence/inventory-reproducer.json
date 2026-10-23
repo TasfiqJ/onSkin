@@ -1,0 +1,27 @@
+{
+  "before_scanners": true,
+  "collector_order": [
+    "source(root,policy)",
+    "scan_coverage(policy,root)",
+    "coupled_source(root,installed)",
+    "verify_tool_sources(tools,policy)",
+    "scanner commands"
+  ],
+  "command": [
+    "C:\\Python39\\python.exe",
+    "-B",
+    "-c",
+    "import pathlib,sys; sys.path.insert(0,sys.argv[1]); import contract; contract.source(pathlib.Path(sys.argv[2]),contract.load(contract.HERE,'proposal.json'))",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330\\diagnostic-source\\scripts\\phase9\\security_acceptance",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330\\diagnostic-source"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330\\diagnostic-source",
+  "finished": "2026-10-23T14:12:52.066350+00:00",
+  "original_collect_sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212",
+  "original_contract_sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a",
+  "raw_exit": 1,
+  "safe_error": "contract.Rejected: SOURCE_INVENTORY_DRIFT",
+  "started": "2026-10-23T14:12:51.782620+00:00",
+  "stderr_sha256": "92e150f797b8ebb2fcba4e72a7d5243716c667261ff5f134f946ad005185e860",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

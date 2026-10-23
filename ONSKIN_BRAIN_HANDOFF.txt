@@ -1,35 +1,47 @@
-M1-03 SECURITY-VITEST-PATCH-01 — SUBMITTED_REVIEW_REQUIRED
-Authorization M103-SECURITY-VITEST-PATCH01-SOURCE-EDIT-01 only. No grant union.
-Implementation / clean measured SHA: 39390947063092ff67ac503cd0b86992eb65b941
-Implementation / clean measured tree: 0c4a1ceb61fa3d145f348a410284a78a82b144fd
-Two Vitest dev ranges ^4.1.11 -> ^4.1.12; authentic reviewed npm 11.20.0 lock.
-Lock SHA256 6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242; 12 changed entries, zero added/deleted packages.
-Additional tinyrainbow 3.1.1 -> 3.2.0 independently justified as Vitest-only dev.
-Both official target tarball SRIs and upstream patched advisories verified.
-Four mapped npm identities and ten installed source pins unchanged; only three
-iOS whole-lock bindings updated, two canonical privacy outputs regenerated.
-Source_candidate and archiveRequired=true; no native/archive/device signoff.
+M1-03 SECURITY-SOURCE-COVERAGE-TRIAGE-01 R1 — PARTIAL_DIAGNOSTIC
+Sole authority M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1; no union.
+External R1 manifest b22116affd45a3621b89ab80e4260db6db608068abb468c253563ebb1235ddf8 VERIFIED.
+Measured baseline SHA 4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe
+Measured baseline tree 791580347993487bd3920727ee7b0e31668eed4e
+Designated exact checkout only; 20 Git/working preimages match; fingerprint
+4954012441f89c16902e8de3a55ef75403034bfaa23da413cacb614d3a79113c.
+Stale checkout never accessed/altered; separate no-hardlink disposable diagnostic clone.
 
-PASS: fresh ci 1032; forced root6067; typecheck/lint zero cache; original70;
-secret12; ordinary103 governance (101 pass, two Windows-only skips); mobile Expo;
-widget/postinstall; original privacy/archive fixtures; strict Phase4 worklist;
-14 checkpoint source-scope positive/adverse methods. Original test_contract.py
-SHA256 661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8 unchanged.
-Frozen GF01 profile BLOCKED, Wrong GF01 branch; no weakening or acceptance.
-Fresh public npm audit FAIL exit1: 67 high propagated findings; both target
-mocker IDs absent. Original Security inventory/static/OSV/secret gates remain.
-Protected Security proposal expired 2026-10-21T00:00:00Z; no policy change.
-Canonical ECR image public.ecr.aws/supabase/postgres:15.8.1.085 unchanged;
-historical Data limit exceeded is external, no local pull or substitute.
+Original inventory refusal independently reproduced: exit1 SOURCE_INVENTORY_DRIFT.
+11922 reviewed paths vs 20230 current; 11833 same, 89 changed, 8308 extra, 0 missing.
+Frozen partition 7755 required +1451 auxiliary +2716 excluded; 26 explicit SQL.
+No inventory/coverage edit. 60 new gzip refusals and one >4MiB JSON retained.
+Original Semgrep never ran. Standalone bootstrap exit1 missing Python pip;
+OWASP rule bytes differ from original hash; other three rule families match.
+Current SAST findings/scanned paths/coverage null; BLOCKED/NO_EVIDENCE.
 
-Source exact-head CI receipts: checkpoint evidence/source-ci-observation.json.
-Final delivery SHA/tree and exact-head CI are resolved AFTER the evidence-only
-commit/push and returned externally; no future self-hash or borrowed status.
-PR https://github.com/TasfiqJ/onSkin/pull/10 stays draft/open/unmerged.
+Original Security 39897570159 FAILURE; Quality 39897570236 SUCCESS including
+canonical isolated ECR DB job 120231715918; iOS 39897570132 SUCCESS SOURCE_ONLY.
+PR provider artifacts use merge SHA 21dada6c761a56eaac1f1f2e8562fad6903bf50f,
+same independently verified measured tree; run head is issued stage SHA.
+Canonical isolated success is real; no hosted DB06/DB08/R2B authority or local pull.
+Safe original counts: Gitleaks current1120/history4349 exit2; TruffleHog3.99.3
+current/history exit0 complete verified-zero, no global secret clearance.
+1107 old location/rule pairs plus13 additions; no payload/disposition equivalence.
+Npm exit1:67 propagated high records/two roots; repaired mocker IDs absent.
+OSV exit1:7 source records/6 unique identities; proposal/exception expiry unchanged.
+Fresh diagnostic original70/secret12/expiry8 PASS; initial missing-YAML failure retained.
+No frontend rerun or new native/archive/privacy/database execution claimed.
+
+ONE proposed next grant: certifi scanner pin 2026.10.18->2026.10.19 and directly
+coupled Linux tool-tree bindings only; exact two-path preimages in NEXT_EXACT_SOURCE_SCOPE.md.
+Proposal only; no source fix applied. Source/coverage review and owner-controlled
+unexpired original approval/pins remain separately missing. Prior alternate SBOM/Vitest
+issuance provenance remains UNVERIFIED despite technically substantiated patches.
+
+Checkpoint docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/.
+Only new checkpoint and this handoff changed. Evidence-tail SHA/tree and its exact
+CI are resolved after normal stage commit/push and returned externally; no self-hash
+or borrowed later-head status. PR10 stays draft/open/unmerged; no reviewer-state edit.
 Main read-only d9912f4c8b30358593569c5b9b4e84773c6f463e.
-Checkpoint docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/.
-protected_source_go=false; hosted_replay_authorized=false;
-main_promotion_authorized=false; database_go=false; M2/release=false.
-Accepted only M0-01/M0-02/M1-01/M1-02. Incremental spend $0.
-Context healthy; bounded task complete for independent Brain review.
-STOP. Founder relay: Codex is done.
+protected_source_go=false; source_security_go=false; M1-03 admitted=false;
+database_go=false; database_hosted_go=false; hosted_replay_authorized=false;
+main_promotion_authorized=false; m2_authorized=false; release_authorized=false;
+archive/device/native_privacy_signoff=false. Accepted only M0-01/M0-02/M1-01/M1-02.
+Incremental spend $0. Context healthy; R1 inputs complete; scanner limits explicit.
+STOP for independent Brain review. Founder relay: Codex is done.

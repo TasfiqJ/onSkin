@@ -1,0 +1,22 @@
+{
+  "authority": "M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1",
+  "external_manifest_sha256": "b22116affd45a3621b89ab80e4260db6db608068abb468c253563ebb1235ddf8",
+  "verification_exit": 0,
+  "verified_archive_members": 12,
+  "verified_at_initial_preflight": "2026-10-23",
+  "head": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+  "tree": "791580347993487bd3920727ee7b0e31668eed4e",
+  "branch": "stage/m1-gate-recovery",
+  "remote": "https://github.com/TasfiqJ/onSkin.git",
+  "status_initially_empty": true,
+  "alternates_absent": true,
+  "all_20_source_file_link_counts_one": true,
+  "index_lock_absent": true,
+  "no_competing_writer_observed": true,
+  "live_main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "live_stage_head_matches": true,
+  "github_tree_matches": true,
+  "pr10_draft_open_unmerged": true,
+  "fingerprint_algorithm": "SHA256(json.dumps(full PREIMAGE_WITNESSES object, sort_keys=True, separators=(comma,colon)).encode()); no trailing newline",
+  "fingerprint": "4954012441f89c16902e8de3a55ef75403034bfaa23da413cacb614d3a79113c"
+}

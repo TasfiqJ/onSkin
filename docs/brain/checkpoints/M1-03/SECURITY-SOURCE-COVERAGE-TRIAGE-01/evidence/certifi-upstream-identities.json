@@ -1,0 +1,89 @@
+[
+  {
+    "url": "https://pypi.org/pypi/certifi/2026.10.19/json",
+    "started": "2026-10-23T14:18:49.546168+00:00",
+    "finished": "2026-10-23T14:18:49.604258+00:00",
+    "sha256": "ff912753725b147f8da6250d871b07cc801030bdee0b6e3ce1354ff8ddc6ed43",
+    "safe": {
+      "name": "certifi",
+      "version": "2026.10.19",
+      "requires_python": ">=3.7",
+      "wheels": [
+        {
+          "filename": "certifi-2026.10.19-py3-none-any.whl",
+          "sha256": "42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b",
+          "url": "https://files.pythonhosted.org/packages/c4/51/29046e48f693c54e5b7412216d447a1d8362c9653148d98c02cdf65fa733/certifi-2026.10.19-py3-none-any.whl"
+        }
+      ]
+    },
+    "status": "FETCHED"
+  },
+  {
+    "url": "https://api.osv.dev/v1/vulns/PYSEC-2026-4320",
+    "started": "2026-10-23T14:18:49.604258+00:00",
+    "finished": "2026-10-23T14:18:50.023127+00:00",
+    "sha256": "90c25755ad072a95744c337b91e20bf980afbf273655bd0d4885cbd407214aac",
+    "safe": {
+      "id": "PYSEC-2026-4320",
+      "withdrawn": null,
+      "modified": "2026-10-20T22:00:02.600723204Z",
+      "affected": [
+        {
+          "package": {
+            "name": "certifi",
+            "ecosystem": "PyPI",
+            "purl": "pkg:pypi/certifi"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "2019.03.09"
+                },
+                {
+                  "fixed": "2026.10.19"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "status": "FETCHED"
+  },
+  {
+    "url": "https://api.osv.dev/v1/vulns/GHSA-6q48-6c7w-9gw2",
+    "started": "2026-10-23T14:18:50.023127+00:00",
+    "finished": "2026-10-23T14:18:50.186136+00:00",
+    "sha256": "770ba0eb9bf6255fa42a180d8578cbdbe9c66df70b4dba1859d0a9e7aee5b01f",
+    "safe": {
+      "id": "GHSA-6q48-6c7w-9gw2",
+      "withdrawn": null,
+      "modified": "2026-10-20T22:11:14.336568839Z",
+      "affected": [
+        {
+          "package": {
+            "name": "certifi",
+            "ecosystem": "PyPI",
+            "purl": "pkg:pypi/certifi"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "2019.03.09"
+                },
+                {
+                  "fixed": "2026.10.19"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "status": "FETCHED"
+  }
+]

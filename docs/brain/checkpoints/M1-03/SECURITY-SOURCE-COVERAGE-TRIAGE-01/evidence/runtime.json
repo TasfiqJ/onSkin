@@ -1,0 +1,16 @@
+{
+  "platform": "WSL onskin-r6-verification Linux x86_64 glibc 2.39",
+  "python": "3.12.3",
+  "node": "24.19.0",
+  "python_binary": {
+    "path": "/usr/bin/python3.12",
+    "bytes": 8020928,
+    "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+  },
+  "node_binary": {
+    "path": "/root/onskin-runtime/node-v24.19.0-linux-x64/bin/node",
+    "bytes": 125989464,
+    "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12"
+  },
+  "test_runtime_note": "Local unit diagnostics use observed Node 24.19.0. Original provider workflow selected Node 22.21.0; these are not conflated. No pinned local scanner was executed."
+}

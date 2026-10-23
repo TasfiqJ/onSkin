@@ -1,0 +1,46 @@
+[
+  {
+    "profile": "owasp-top-ten",
+    "expected_sha256": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+    "observed_sha256": "67649293a7565596255d9ae3f4ccb7156e849d6c385f5ac463eb428c53d3012f",
+    "bytes": 1499313,
+    "matches": false,
+    "status": "BLOCKED_RULE_BYTES_DRIFT",
+    "url": "https://semgrep.dev/c/p/owasp-top-ten",
+    "started": "2026-10-23T14:16:44.114336+00:00",
+    "finished": "2026-10-23T14:16:44.451724+00:00"
+  },
+  {
+    "profile": "react",
+    "expected_sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+    "observed_sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+    "bytes": 17090,
+    "matches": true,
+    "status": "MATCH",
+    "url": "https://semgrep.dev/c/p/react",
+    "started": "2026-10-23T14:16:44.115334+00:00",
+    "finished": "2026-10-23T14:16:44.306426+00:00"
+  },
+  {
+    "profile": "secrets",
+    "expected_sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+    "observed_sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+    "bytes": 94643,
+    "matches": true,
+    "status": "MATCH",
+    "url": "https://semgrep.dev/c/p/secrets",
+    "started": "2026-10-23T14:16:44.115334+00:00",
+    "finished": "2026-10-23T14:16:44.299415+00:00"
+  },
+  {
+    "profile": "typescript",
+    "expected_sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+    "observed_sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+    "bytes": 221296,
+    "matches": true,
+    "status": "MATCH",
+    "url": "https://semgrep.dev/c/p/typescript",
+    "started": "2026-10-23T14:16:44.115832+00:00",
+    "finished": "2026-10-23T14:16:44.344865+00:00"
+  }
+]

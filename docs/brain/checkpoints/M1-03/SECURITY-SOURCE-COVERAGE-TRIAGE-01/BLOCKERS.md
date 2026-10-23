@@ -1,0 +1,9 @@
+# Open blockers
+
+- Original source inventory: 8,308 extras and 89 changed reviewed paths. No source or frozen inventory repair authorized. Coverage review must account for 60 added gzip files, one oversized JSON and all new/changed app sources; no denominator or parser waiver.
+- Original Semgrep never executed at this source. Original static artifact contains no Semgrep report or G97 collector receipt. Optional local bootstrap exited 1 because Python pip was unavailable. Public OWASP rule bytes differ from the exact original hash; three other families match. No replacement engine, wrapper, rule set or smaller target subset was used. SAST is BLOCKED / NO_EVIDENCE, not zero findings.
+- Original current Gitleaks findings remain unreviewed; 1,120 current and 4,349 historical records remain distinct. TruffleHog verified zero does not clear them. No sensitive payloads are published and no owner/account action is authorized.
+- Original npm/OSV findings and expired exception/proposal refusals remain. The proposed certifi repair is unissued. Historical requirement evidence cannot be changed to make recursive OSV green.
+- Prior source patches are technically supported by independent Brain observations and provider results. Earlier differently named SBOM/Vitest issuances are UNVERIFIED in the current conversation. This R1 authorizes diagnosis of the observed baseline only; no retroactive approval, history rewrite or reviewer-state change.
+- Canonical isolated Quality database job succeeded. This clears the historical claim that its ECR pull was still blocked at this tree; it grants no hosted DB06/DB08/R2B replay, hosted database acceptance, main promotion or release authority.
+- This evidence-only successor has its own exact CI state, queried after push. Original source outcomes cannot be copied to that successor. Whole M1-03 remains unadmitted; independent Brain review required.

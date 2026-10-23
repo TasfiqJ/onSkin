@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "authority": "M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1",
+  "status": "PARTIAL_DIAGNOSTIC",
+  "source": {
+    "sha": "4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe",
+    "tree": "791580347993487bd3920727ee7b0e31668eed4e",
+    "provider_pr_merge_sha": "21dada6c761a56eaac1f1f2e8562fad6903bf50f",
+    "provider_pr_merge_tree": "791580347993487bd3920727ee7b0e31668eed4e"
+  },
+  "evidence_delivery": {
+    "branch": "stage/m1-gate-recovery",
+    "sha_in_own_tree": null,
+    "tree_in_own_tree": null,
+    "resolution": "Resolve after normal commit/push; exact values returned externally",
+    "ci": "NOT_OBSERVED_AT_REPORT_SEAL; query exact delivery head after push; never inherit source outcomes"
+  },
+  "original_provider": {
+    "security": {"run_id": 39897570159, "status": "completed", "conclusion": "failure"},
+    "quality": {"run_id": 39897570236, "status": "completed", "conclusion": "success", "canonical_local_database_job_id": 120231715918, "canonical_local_database": "success", "hosted_replay": false},
+    "ios": {"run_id": 39897570132, "status": "completed", "conclusion": "success", "scope": "SOURCE_ONLY"}
+  },
+  "security_predicates": {
+    "original_inventory": "SOURCE_INVENTORY_DRIFT",
+    "current_sast": "BLOCKED_NO_EVIDENCE",
+    "current_sast_findings": null,
+    "current_sast_coverage_percent": null,
+    "current_gitleaks": "UNRESOLVED_1120_FINDINGS",
+    "history_gitleaks": "4349_FINDINGS_DISTINCT_FROM_CURRENT",
+    "trufflehog": "ORIGINAL_CURRENT_AND_HISTORY_COMPLETED_VERIFIED_ZERO; DOES_NOT_CLEAR_GITLEAKS",
+    "npm": "67_HIGH_PROPAGATED_RECORDS_TWO_PRIMARY_ROOTS",
+    "osv": "7_SOURCE_RECORDS_6_UNIQUE_IDENTITIES",
+    "exception_expiry": "2026-10-17",
+    "proposal_expiry": "2026-10-21T00:00:00Z",
+    "automated_decision": "REJECTED_PROPOSAL_EXPIRED_OR_CHANGED"
+  },
+  "axes": {
+    "technically_tested": "Observed source-tree Quality/canonical isolated database and iOS source-only success; original Security failure; local diagnostic tests reported separately",
+    "previously_authorized": "Current R1 read-only diagnosis VERIFIED; differently named earlier SBOM/Vitest source issuances UNVERIFIED in this conversation",
+    "currently_admitted": "M1-03 false; original Security closed; no retroactive grant",
+    "accepted_tasks_unchanged": ["M0-01", "M0-02", "M1-01", "M1-02"]
+  },
+  "admissions": {
+    "m1_03_admitted": false,
+    "protected_source_go": false,
+    "source_security_go": false,
+    "database_go": false,
+    "database_hosted_go": false,
+    "hosted_db06_db08_r2b_replay_authorized": false,
+    "main_promotion_authorized": false,
+    "m2_authorized": false,
+    "release_authorized": false,
+    "native_archive_device_signoff": false,
+    "prior_issuance_provenance_rectified": false
+  },
+  "incremental_spend_usd": 0,
+  "pr10": "draft_open_unmerged",
+  "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "independent_brain_review_required": true,
+  "context_health": "R1 external manifest verified; complete packet retained; no union; scanner provenance and coverage limitations explicitly blocked"
+}

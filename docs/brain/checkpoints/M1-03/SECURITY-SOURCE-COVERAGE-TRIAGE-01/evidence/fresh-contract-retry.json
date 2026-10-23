@@ -1,0 +1,31 @@
+{
+  "name": "original-contract-70-after-locked-yaml",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+    "--",
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_contract.py",
+    "-v"
+  ],
+  "cwd": "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/context_M103_SECURITY_COVERAGE_TRIAGE01_R1_b67cc855646c4d02973ac63e37cf5330/diagnostic-source",
+  "started": "2026-10-23T14:20:31.897981+00:00",
+  "finished": "2026-10-23T14:26:47.015813+00:00",
+  "raw_exit": 0,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "6fe8645d35fb20f9974f74bd9dcaba1c61ff55e8c2e248becb0ba99b1e66563e",
+  "summary": [
+    "Ran 70 tests in 373.145s",
+    "OK"
+  ]
+}

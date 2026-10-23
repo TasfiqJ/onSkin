@@ -1,0 +1,18 @@
+# One proposed next repair — certifi scanner dependency
+
+**PROPOSAL ONLY; NOT AUTHORIZATION.** Request a new independently issued source-edit grant to replace only `certifi==2026.10.18` with `certifi==2026.10.19` in the original Linux/Python 3.12 scanner requirements, together with the directly coupled reviewed tool identity bindings in `proposal.json`. This repairs two actual OSV advisory IDs using a published fixed wheel, without inventing a fix for unpatched npm roots or editing historical evidence. It is the narrowest demonstrated genuine dependency repair; it does not close the earlier inventory/coverage refusal.
+
+| Exact existing path | Bytes | Original Git blob | SHA256 |
+| --- | ---: | --- | --- |
+| scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt | 6778 | 641e85bad6becf327f0a3269340bb49c6db912a7 | d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f |
+| scripts/phase9/security_acceptance/proposal.json | 13797 | 6c350d1fbfcc5d5386de1fccc35bb7c531095054 | 03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896 |
+
+These bind measured source commit `4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe` and tree `791580347993487bd3920727ee7b0e31668eed4e`. This evidence tail changes neither proposed path. Before issuance, Brain must bind the live successor HEAD/tree, repeat these preimages and provide independent Linux tool-tree postimage witnesses; this report cannot issue its own new authority.
+
+Official PyPI metadata identifies `certifi-2026.10.19-py3-none-any.whl`, SHA256 `42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b`, Python >=3.7. Both official OSV records remain unwithdrawn and specify 2026.10.19 as fixed. Metadata response hashes, timestamps and source URLs are in `evidence/certifi-upstream-identities.json`. The wheel was not installed or applied under this grant; the follow-up must independently download/hash it and inspect metadata/source compatibility.
+
+The follow-up's only candidate proposal changes are `semgrepBuild.requirementsSha256`, `semgrepBuild.originalPackageTree` and `semgrepPackageTree`, recomputed from clean exact installations and independently reviewed. All other requirements, engine archive/core/source build, four rule hashes, scanner versions, commands, original inventory/coverage and npm sources must remain byte-identical. No mass solver update. If resolving only certifi requires any other package/source change, stop and return a new bounded proposal.
+
+Required nonwaiver checks: exact one-line requirement delta and two-path source audit; original and replacement wheel provenance; fresh hash-required installation; old/new package-tree diff restricted to certifi and its distribution metadata; unchanged custom core and scanner byte pins; original 70 contracts, 12 secret tests and eight exception tests; pinned OSV confirmation that these two certifi IDs are absent while every other actual finding remains visible; negative checks for forged wheel hashes, unrelated requirement drift, stale/forged package-tree identities and attempted admission. Source inventory refusal, the unchanged expired proposal and unchanged expired exception policies must continue to refuse admission. A standalone scan is diagnostic only.
+
+No new source manifest, scan partition, rule, exception, expiry, owner pin, workflow, historical checkpoint, runtime/npm lock, native/privacy or database edit is proposed in this repair. A later original Security admission would separately require a current source/coverage review, exact archived OWASP rule bytes or an independently authorized rule review, complete pinned scanner provenance, safe resolution of current secret findings and explicit owner-controlled unexpired approval/pins. None is supplied here.

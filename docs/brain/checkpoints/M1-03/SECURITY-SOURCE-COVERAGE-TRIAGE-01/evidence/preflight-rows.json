@@ -1,0 +1,126 @@
+{
+  "utc": "2026-10-23T14:04:36.176849+00:00",
+  "files": [
+    {
+      "bytes": 2477,
+      "git_blob": "ad9535c45eebd56e220affcdf56e521960d949c3",
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "sha256": "b17073927468758c19508b96889ae582cd1d550afbd77f14369e147b928301e6"
+    },
+    {
+      "bytes": 29246,
+      "git_blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "path": ".github/workflows/security.yml",
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1"
+    },
+    {
+      "bytes": 2327707,
+      "git_blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d"
+    },
+    {
+      "bytes": 81513,
+      "git_blob": "d3d811b1ab1f6d672c965d8c005cd94e77ed63b3",
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5"
+    },
+    {
+      "bytes": 10743,
+      "git_blob": "d2a4d4e9f5d26950d6ea9b761619d6926dc90502",
+      "path": "scripts/phase9/security_acceptance/collect.py",
+      "sha256": "f7c827eee4ebe2c2ff56a083e87c34655336dd9d9aeae4824024b9e96792d212"
+    },
+    {
+      "bytes": 38158,
+      "git_blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+      "path": "scripts/phase9/security_acceptance/contract.py",
+      "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+    },
+    {
+      "bytes": 13797,
+      "git_blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+    },
+    {
+      "bytes": 20692,
+      "git_blob": "cd9d88d5f723cae30ef9a8cee18126136e396218",
+      "path": "scripts/phase9/security_acceptance/secret_scan.py",
+      "sha256": "30a04d2b2c7a4fa9aefacdea6796b20c7e1f332b61102d12a47878145e3590a5"
+    },
+    {
+      "bytes": 49880,
+      "git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d",
+      "path": "scripts/phase9/security_acceptance/test_contract.py",
+      "sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8"
+    },
+    {
+      "bytes": 15122,
+      "git_blob": "5c13967f1377aa64fc4bb44398ad3e712515d9cc",
+      "path": "scripts/phase9/security_acceptance/test_secret_scan.py",
+      "sha256": "78f7285f6a9c0443aa62ff3021264b88ae3c034da1edb353af2e7dd993b8470d"
+    },
+    {
+      "bytes": 17412,
+      "git_blob": "34e7b277c934f05bd102ef646b4c82a3453408ee",
+      "path": "scripts/phase9/security_acceptance/workflow_admission.py",
+      "sha256": "7306952f2ca7d16cb2ae765def9f70134b7e84707d4e86ecf2fc6d7e5cee2ac8"
+    },
+    {
+      "bytes": 15616,
+      "git_blob": "4b05ec36fcd678120c09b8d0cebd247f34a83503",
+      "path": "scripts/phase9/security_acceptance/workflow_contract.mjs",
+      "sha256": "c10d31381ef6fca9c836d785e804178ba3f48e3e99a92e1f42078a99a58fc47a"
+    },
+    {
+      "bytes": 8268,
+      "git_blob": "00206f6ef6ce4dee68dd9c29af496c1ea3e3b9fb",
+      "path": "scripts/phase9/dependency-sbom.mjs",
+      "sha256": "083e0779128bd0bb553d1b2243eb231078cc4b2322236f7318cd4b9e375e8b70"
+    },
+    {
+      "bytes": 1577,
+      "git_blob": "3e575fa3769a4f1b8dcdeae970d8bd4072d64740",
+      "path": "docs/phase-9/security-advisory-exceptions.json",
+      "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d"
+    },
+    {
+      "bytes": 572798,
+      "git_blob": "eae8a62b545fa898d5ec1becf4c321f0f716be5b",
+      "path": "package-lock.json",
+      "sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242"
+    },
+    {
+      "bytes": 40115,
+      "git_blob": "933a120b9ede7e542a8f3f75be42391a0cb636b9",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-VITEST-PATCH-01/SHA256SUMS.json",
+      "sha256": "40fd5d3f1eaf643201ce643c569d3ca1352d0af5c8956f8a32dc036c6e482f4c"
+    },
+    {
+      "bytes": 24442,
+      "git_blob": "292c3f9a39733aa1a9aa8948adf665cc5a8fbbc5",
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/SHA256SUMS.json",
+      "sha256": "893b15681986da65f0bdfbae0e799041606ef7735334ee1941ff158d8b601dfd"
+    },
+    {
+      "bytes": 55248,
+      "git_blob": "1864f940d3407bb87c25fa689bcd036638c510e6",
+      "path": "scripts/phase2/local-supabase-reset.mjs",
+      "sha256": "4a5a58b3547c82e8a61fe17ba20ac970b26aa9d2721e713be583bebd90a6a920"
+    },
+    {
+      "bytes": 44273,
+      "git_blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "path": "docs/brain/state/roadmap.json",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877"
+    },
+    {
+      "bytes": 1052,
+      "git_blob": "c35aca6c9cd79e63cbb2033b9500355e43d6353d",
+      "path": "docs/brain/m103-governance-fixture01-active.json",
+      "sha256": "9863a2f3ddf4c20dfa34b42dd611eb94da562699e3395d600acf146995f7ff92"
+    }
+  ],
+  "all_pass": true
+}

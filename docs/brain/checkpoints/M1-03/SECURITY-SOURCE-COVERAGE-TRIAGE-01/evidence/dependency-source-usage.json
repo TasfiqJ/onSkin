@@ -1,0 +1,35 @@
+[
+  {
+    "path": "package.json",
+    "selected_dependencies": {
+      "dependencies": {},
+      "devDependencies": {
+        "node-forge": "1.4.0",
+        "yaml": "2.9.0"
+      }
+    },
+    "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
+  },
+  {
+    "path": "apps/mobile/package.json",
+    "selected_dependencies": {
+      "dependencies": {
+        "expo": "~57.0.31"
+      },
+      "devDependencies": {
+        "vitest": "^4.1.12"
+      }
+    },
+    "sha256": "ee2adeb11eda8ff8ee7fd4a36f69c29817883e7825d0ea62e43de358862e5361"
+  },
+  {
+    "path": "apps/catalog-operator-console/package.json",
+    "selected_dependencies": {
+      "dependencies": {},
+      "devDependencies": {
+        "vitest": "^4.1.12"
+      }
+    },
+    "sha256": "10fce1f7fc5ab515f3ddb8825c0b223c51cb4fe404b32b39b009e4055a128903"
+  }
+]
