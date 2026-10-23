@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+    "-B",
+    "scripts/phase9/security_acceptance/bootstrap_tools.py",
+    "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/old-tools"
+  ],
+  "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+  "started_utc": "2026-10-23T17:15:15.964187+00:00",
+  "exit": 0,
+  "elapsed_seconds": 31.602
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "context-verifier",
+    "argv": [
+      "C:\\Python39\\python.exe",
+      "-B",
+      "verify_context.py",
+      "--expected-manifest-sha256",
+      "cccff31a39e59cb0e647accd2ff124547c523db97ed0c136bb56a99e8745743e"
+    ],
+    "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_CERTIFI_REPAIR01_EXACT_eaa47d7\\docs\\brain\\checkpoints\\M1-03\\SECURITY-CERTIFI-TOOLCHAIN-01\\inputs\\members",
+    "exit": 0,
+    "expected_exit": 0,
+    "utc": "2026-10-23T17:38:18.156825+00:00"
+  },
+  {
+    "id": "original-strict-report",
+    "argv": [
+      "C:\\Python39\\python.exe",
+      "-B",
+      "scripts/brain/brain.py",
+      "--profile",
+      "M1-03",
+      "report",
+      "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/completion-report.json"
+    ],
+    "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_CERTIFI_REPAIR01_EXACT_eaa47d7",
+    "exit": 1,
+    "expected_exit": 1,
+    "utc": "2026-10-23T17:38:20.735692+00:00"
+  },
+  {
+    "id": "exact-technical-scope",
+    "argv": [
+      "C:\\Python39\\python.exe",
+      "-B",
+      "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_CERTIFI_REPAIR01_EXACT_eaa47d7\\docs\\brain\\checkpoints\\M1-03\\SECURITY-CERTIFI-TOOLCHAIN-01\\verify_delivery.py"
+    ],
+    "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_CERTIFI_REPAIR01_EXACT_eaa47d7",
+    "exit": 0,
+    "expected_exit": 0,
+    "utc": "2026-10-23T17:38:23.367110+00:00"
+  }
+]

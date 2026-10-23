@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "repository": "TasfiqJ/onSkin",
+  "task_id": "M1-03",
+  "iteration": "SECURITY-CERTIFI-TOOLCHAIN-01",
+  "authorization_id": "M103-SECURITY-CERTIFI-TOOLCHAIN01-CONDITIONAL-SOURCE-EDIT-01",
+  "branch": "stage/m1-gate-recovery",
+  "base_commit": "eaa47d7a1882dc395100bd0a958550a8beef406b",
+  "base_tree": "7abcf80b45c88bad08f8411405c744c55d727093",
+  "observed_main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "source_preimage_fingerprint": "7c7499572becd4cc57bd96071e91fb6c033660022224f96e2474232d9a450833",
+  "file_count": 11,
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1635,
+      "sha256": "bca614f7d08b520ed9d722b033b0f416443858c12e6111546334813029129921"
+    },
+    {
+      "path": "01_BRAIN_DECISION.md",
+      "bytes": 1759,
+      "sha256": "0d8924cdbc74f5bc753bd1d4022b1bf1683c5bb75caffe88179f873c93c5cf3c"
+    },
+    {
+      "path": "02_EXACT_SCOPE.md",
+      "bytes": 2035,
+      "sha256": "0a3a40185eff32d7dd12d8d72b5d5ad9486ab3e417ee7ade1922c6b75cc6618b"
+    },
+    {
+      "path": "03_TOOL_TREE_REPRODUCTION.md",
+      "bytes": 2873,
+      "sha256": "ed532a541769d4dba2282b674527d8f1e5c81b525fa35d028519df9e030388f2"
+    },
+    {
+      "path": "04_TESTS_AND_DELIVERY.md",
+      "bytes": 1731,
+      "sha256": "9399ea53156de0fb8f99c130c0a0fd0b42d10875a0e64cccf5d913dc25d5565f"
+    },
+    {
+      "path": "05_STOP_RULES.md",
+      "bytes": 909,
+      "sha256": "ed5b98b2aeefbd41df1193727454048dd97b983d8effc7b35140e6282b20c231"
+    },
+    {
+      "path": "SOURCE_EDIT_AUTHORIZATION.json",
+      "bytes": 3468,
+      "sha256": "ca30f3912443536554d64e5ea06e3e7464f3119c81e6d33d13d9fb558f32c861"
+    },
+    {
+      "path": "SOURCE_PREIMAGES.json",
+      "bytes": 5809,
+      "sha256": "67f415d6155c8b7f500227ab7e0000f1592ce05ae09a2b4c27863356f38e39da"
+    },
+    {
+      "path": "TASK_STATE.json",
+      "bytes": 1981,
+      "sha256": "e5bb56743c37b4e08e93486dd73168ba20a4997ea24f42cfbdb00ccfe4986262"
+    },
+    {
+      "path": "UPSTREAM_CERTIFI_WITNESS.json",
+      "bytes": 1980,
+      "sha256": "6701779da063bdb543a882e66c783b132bc91aad3bef42d9c4c71a87a096a2bf"
+    },
+    {
+      "path": "verify_context.py",
+      "bytes": 2337,
+      "sha256": "9405cb1f486407ef64849997009b3e9250976df4a67da461f25f85dd6a370e45"
+    }
+  ]
+}

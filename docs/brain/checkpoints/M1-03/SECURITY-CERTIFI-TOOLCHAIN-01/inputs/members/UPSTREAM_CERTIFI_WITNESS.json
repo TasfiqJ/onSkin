@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "package": "certifi",
+  "old_version": "2026.10.18",
+  "target_version": "2026.10.19",
+  "python_requires": ">=3.7",
+  "old_requirements_line": "certifi==2026.10.18 --hash=sha256:73191c47aaa79da394e8fee2dbc2ec827432cab56311122c9e47abf79e390f62",
+  "new_requirements_line": "certifi==2026.10.19 --hash=sha256:42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b",
+  "wheel_url": "https://files.pythonhosted.org/packages/c4/51/29046e48f693c54e5b7412216d447a1d8362c9653148d98c02cdf65fa733/certifi-2026.10.19-py3-none-any.whl",
+  "wheel_filename": "certifi-2026.10.19-py3-none-any.whl",
+  "wheel_sha256": "42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b",
+  "wheel_bytes": 136464,
+  "verification": "Brain independently fetched official wheel 2026-10-23; SHA256, ZIP CRC, METADATA name/version/Python range checked; wheel source not embedded",
+  "pypi_release": "https://pypi.org/project/certifi/2026.10.19/",
+  "osv_aliases": [
+    "PYSEC-2026-4320",
+    "GHSA-6q48-6c7w-9gw2"
+  ],
+  "osv_fixed_version": "2026.10.19",
+  "advisory_note": "Aliases may count as two scanner records for one underlying issue; do not count as two independent vulnerabilities or claim full OSV PASS.",
+  "original_hash_pin_scope": {
+    "requirements_file": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+    "proposal_file": "scripts/phase9/security_acceptance/proposal.json",
+    "proposal_identity_keys": [
+      "semgrepBuild.requirementsSha256",
+      "semgrepBuild.originalPackageTree",
+      "semgrepPackageTree"
+    ]
+  },
+  "original_requirements_sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+  "old_proposal_sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+  "original_toolchain_glibc_min": "2.39",
+  "original_toolchain_python": "3.12",
+  "original_source_rule_gate": "Frozen OWASP rule bytes already drift; same external blocker after this change"
+}

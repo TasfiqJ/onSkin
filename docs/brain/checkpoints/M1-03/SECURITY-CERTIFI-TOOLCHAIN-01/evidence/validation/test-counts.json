@@ -1,0 +1,59 @@
+{
+  "status": "PASS",
+  "counts": {
+    "original-security70": {
+      "total": 70,
+      "passed": 70,
+      "skipped": 0,
+      "failed": 0
+    },
+    "original-secret12": {
+      "total": 12,
+      "passed": 12,
+      "skipped": 0,
+      "failed": 0
+    },
+    "ordinary-governance103": {
+      "total": 103,
+      "passed": 101,
+      "skipped": 2,
+      "failed": 0
+    },
+    "forced-root6067": {
+      "passed": 6067,
+      "workspace_pass_counts": [
+        24,
+        6043
+      ],
+      "failed": 0,
+      "cached": 0,
+      "tasks": 2
+    },
+    "forced-typecheck": {
+      "cached": 0,
+      "tasks": 3
+    },
+    "forced-lint": {
+      "cached": 0,
+      "tasks": 3
+    },
+    "original-expiry-exception8": {
+      "total": 8,
+      "raw_exit": 0
+    },
+    "ios-source-privacy-tests": {
+      "total": 77,
+      "raw_exit": 0
+    },
+    "ios-archive-privacy-fixtures": {
+      "total": 238,
+      "raw_exit": 0
+    }
+  },
+  "original_source_gate": {
+    "status": "REJECTED",
+    "code": "SOURCE_INVENTORY_DRIFT",
+    "rawScannerPass": false,
+    "acceptanceGranted": false
+  }
+}

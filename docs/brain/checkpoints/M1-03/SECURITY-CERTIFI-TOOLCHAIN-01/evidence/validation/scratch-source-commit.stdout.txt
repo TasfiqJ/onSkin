@@ -1,0 +1,2 @@
+[stage/m1-gate-recovery c4ef10d2] fix(security): update exact certifi scanner dependency
+ 2 files changed, 4 insertions(+), 4 deletions(-)

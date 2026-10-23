@@ -1,0 +1,49 @@
+{
+  "pr": {
+    "observed_utc": "2026-10-23T17:15:41.911Z",
+    "url": "https://github.com/TasfiqJ/onSkin/pull/10",
+    "number": 10,
+    "state": "open",
+    "merged": false,
+    "draft": true,
+    "base": "main",
+    "base_sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+    "head": "stage/m1-gate-recovery",
+    "head_sha": "eaa47d7a1882dc395100bd0a958550a8beef406b",
+    "updated_at": "2026-10-23T14:36:25Z"
+  },
+  "ci": {
+    "workflow_runs": [
+      {
+        "id": 39971053406,
+        "name": "Security",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_number": 938,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39971053406/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39971053406/logs",
+        "workflow_id": 308213475
+      },
+      {
+        "id": 39971053267,
+        "name": "iOS launch contract",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 406,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39971053267/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39971053267/logs",
+        "workflow_id": 312030667
+      },
+      {
+        "id": 39971053465,
+        "name": "Quality",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 406,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39971053465/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39971053465/logs",
+        "workflow_id": 312030668
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "executable": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "libc": [
+    "glibc",
+    "2.39"
+  ],
+  "pip": "24.0",
+  "python_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+}

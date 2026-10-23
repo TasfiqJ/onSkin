@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--",
+    "python3.12",
+    "-m",
+    "pip",
+    "--version"
+  ],
+  "exit": 1,
+  "status": "ENVIRONMENT_LIMITATION_RESOLVED_WITH_ISOLATED_VENV",
+  "host_mutated": false,
+  "utc": "2026-10-23T17:22:53.488952+00:00"
+}

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "sha256sum",
+    "/usr/share/python-wheels/pip-24.0-py3-none-any.whl",
+    "/usr/share/python-wheels/setuptools-68.1.2-py3-none-any.whl"
+  ],
+  "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+  "started_utc": "2026-10-23T17:15:15.951316+00:00",
+  "exit": 0,
+  "elapsed_seconds": 0.011
+}

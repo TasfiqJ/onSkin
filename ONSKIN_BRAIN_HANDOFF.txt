@@ -1,47 +1,41 @@
-M1-03 SECURITY-SOURCE-COVERAGE-TRIAGE-01 R1 — PARTIAL_DIAGNOSTIC
-Sole authority M103-SECURITY-SOURCE-COVERAGE-TRIAGE01-READONLY-01-R1; no union.
-External R1 manifest b22116affd45a3621b89ab80e4260db6db608068abb468c253563ebb1235ddf8 VERIFIED.
-Measured baseline SHA 4f6a2d2c84a06ba9b794967fb76a5f9b6fc994fe
-Measured baseline tree 791580347993487bd3920727ee7b0e31668eed4e
-Designated exact checkout only; 20 Git/working preimages match; fingerprint
-4954012441f89c16902e8de3a55ef75403034bfaa23da413cacb614d3a79113c.
-Stale checkout never accessed/altered; separate no-hardlink disposable diagnostic clone.
+M1-03 SECURITY-CERTIFI-TOOLCHAIN-01 — SUBMITTED_REVIEW_REQUIRED
+Sole exact non-union authority M103-SECURITY-CERTIFI-TOOLCHAIN01-CONDITIONAL-SOURCE-EDIT-01.
+External manifest cccff31a39e59cb0e647accd2ff124547c523db97ed0c136bb56a99e8745743e VERIFIED.
+Used only designated onSkin_M103_CERTIFI_REPAIR01_EXACT_eaa47d7; baseline eaa47d7a1882dc395100bd0a958550a8beef406b,
+tree 7abcf80b45c88bad08f8411405c744c55d727093. All23 Git blob/SHA/size/working preimages verified;
+canonical fingerprint 7c7499572becd4cc57bd96071e91fb6c033660022224f96e2474232d9a450833.
+No second writer observed through clean-status/ref/lock checks; no older checkout accessed or changed.
 
-Original inventory refusal independently reproduced: exit1 SOURCE_INVENTORY_DRIFT.
-11922 reviewed paths vs 20230 current; 11833 same, 89 changed, 8308 extra, 0 missing.
-Frozen partition 7755 required +1451 auxiliary +2716 excluded; 26 explicit SQL.
-No inventory/coverage edit. 60 new gzip refusals and one >4MiB JSON retained.
-Original Semgrep never ran. Standalone bootstrap exit1 missing Python pip;
-OWASP rule bytes differ from original hash; other three rule families match.
-Current SAST findings/scanned paths/coverage null; BLOCKED/NO_EVIDENCE.
+Official certifi2026.10.19 wheel SHA42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b,
+136464 bytes, ZIP/RECORD/METADATA verified. Independent official OSV aliases fixed2026.10.19;
+one underlying issue only. No full advisory clearance.
+Fresh no-hardlink isolated Linux/Python3.12.3/glibc2.39/pip24.0 baseline and candidate,
+unchanged original bootstrap/hash-required wheel-only installs; both exact old tree identities reproduce.
+66 distributions, 2834 file records;16 changes confined to certifi/old-new dist-info.
+Every other package, scanner/engine/core, npm and preserved provenance identity unchanged.
+Only one certifi requirement line and three authentic derived proposal hashes changed.
+Expired notAfter2026-10-21T00:00:00Z/state/owners/acceptance/manifest/rules/coverage remain immutable.
+Own comparison/probe failures and bounded corrections retained; no original checks weakened.
 
-Original Security 39897570159 FAILURE; Quality 39897570236 SUCCESS including
-canonical isolated ECR DB job 120231715918; iOS 39897570132 SUCCESS SOURCE_ONLY.
-PR provider artifacts use merge SHA 21dada6c761a56eaac1f1f2e8562fad6903bf50f,
-same independently verified measured tree; run head is issued stage SHA.
-Canonical isolated success is real; no hosted DB06/DB08/R2B authority or local pull.
-Safe original counts: Gitleaks current1120/history4349 exit2; TruffleHog3.99.3
-current/history exit0 complete verified-zero, no global secret clearance.
-1107 old location/rule pairs plus13 additions; no payload/disposition equivalence.
-Npm exit1:67 propagated high records/two roots; repaired mocker IDs absent.
-OSV exit1:7 source records/6 unique identities; proposal/exception expiry unchanged.
-Fresh diagnostic original70/secret12/expiry8 PASS; initial missing-YAML failure retained.
-No frontend rerun or new native/archive/privacy/database execution claimed.
+Measured scratch source c4ef10d264a21c491072e6503797681ac52e835e; tree 4f0342e9056b46b11f94765f7079a071b7b7ceea.
+Designated stage technical source de17484d0490f6990aa66d92aec25005a48d7f0c; identical measured tree.
+Fresh npmci1032; original70/secret12/expiry8; governance103 with2 Windows-only skips;
+forced root6067/typecheck/lint zero cached; Expo; strict unchanged iOS privacy/check/tests/archive fixtures;
+strict canonical Phase4 worklist; certifi tamper/stale-tree/extra-package/forged-expiry refusal checks verified.
+Original source inventory remains rawexit1 SOURCE_INVENTORY_DRIFT; real SAST NOT_RUN/NO_EVIDENCE.
+Original strict Brain report rejection retained; no current-scope governance adapter is fabricated.
 
-ONE proposed next grant: certifi scanner pin 2026.10.18->2026.10.19 and directly
-coupled Linux tool-tree bindings only; exact two-path preimages in NEXT_EXACT_SOURCE_SCOPE.md.
-Proposal only; no source fix applied. Source/coverage review and owner-controlled
-unexpired original approval/pins remain separately missing. Prior alternate SBOM/Vitest
-issuance provenance remains UNVERIFIED despite technically substantiated patches.
+Checkpoint docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/ includes exact input ZIP/members,
+README/RESULTS/BLOCKERS/report/SHA256SUMS, public package and sanitized execution receipts.
+Later evidence-tail SHA/tree and exact NEW-head CI are returned after normal safe stage push;
+no future self-hash, no borrowed CI, PENDING remains PENDING. Issued baseline Security FAILURE,
+Quality canonical isolated DB SUCCESS and iOS SOURCE_ONLY SUCCESS remain source-bound to eaa47d7.
+R1 extra8308/changed89, current1120/historic4349 Gitleaks, npm67 High, other OSV and OWASP
+rule drift remain unresolved; frozen owner/exception expiry unchanged. Prior differently named
+SBOM/Vitest issuances are not ratified by this task. No historical policy or source inventory renewal.
 
-Checkpoint docs/brain/checkpoints/M1-03/SECURITY-SOURCE-COVERAGE-TRIAGE-01/.
-Only new checkpoint and this handoff changed. Evidence-tail SHA/tree and its exact
-CI are resolved after normal stage commit/push and returned externally; no self-hash
-or borrowed later-head status. PR10 stays draft/open/unmerged; no reviewer-state edit.
-Main read-only d9912f4c8b30358593569c5b9b4e84773c6f463e.
-protected_source_go=false; source_security_go=false; M1-03 admitted=false;
-database_go=false; database_hosted_go=false; hosted_replay_authorized=false;
-main_promotion_authorized=false; m2_authorized=false; release_authorized=false;
-archive/device/native_privacy_signoff=false. Accepted only M0-01/M0-02/M1-01/M1-02.
-Incremental spend $0. Context healthy; R1 inputs complete; scanner limits explicit.
+PR10 draft/open/unmerged; main d9912f4c8b30358593569c5b9b4e84773c6f463e unchanged.
+source_security_go=false; protected_source_go=false; M1-03 accepted=false; hosted_DB/replay_GO=false;
+main_promotion=false; M2=false; clinical/release=false; native/archive/device signoff=false.
+No credentials/login/ECR pull/paid runner/native signing. Incremental spend $0. Context healthy.
 STOP for independent Brain review. Founder relay: Codex is done.

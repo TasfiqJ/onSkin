@@ -1,0 +1,1 @@
+{"status": "PASS", "preimages": 23, "requirements_edit": "one exact certifi line", "proposal_edit": "three exact hash substitutions only", "changed_paths": 127, "committed_checkpoint": false, "source_security_admitted": false}

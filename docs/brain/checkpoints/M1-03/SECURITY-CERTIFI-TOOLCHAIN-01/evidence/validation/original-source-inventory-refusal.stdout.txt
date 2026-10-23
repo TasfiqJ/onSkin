@@ -1,0 +1,1 @@
+{"status": "REJECTED", "code": "SOURCE_INVENTORY_DRIFT", "rawScannerPass": false, "acceptanceGranted": false}

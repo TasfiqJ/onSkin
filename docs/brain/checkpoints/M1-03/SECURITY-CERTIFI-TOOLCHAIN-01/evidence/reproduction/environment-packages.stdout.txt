@@ -1,0 +1,4 @@
+libc6:amd64	2.39-0ubuntu8.9
+python3-pip-whl	24.0+dfsg-1ubuntu1.3
+python3.12	3.12.3-1ubuntu0.17
+python3.12-venv	3.12.3-1ubuntu0.17

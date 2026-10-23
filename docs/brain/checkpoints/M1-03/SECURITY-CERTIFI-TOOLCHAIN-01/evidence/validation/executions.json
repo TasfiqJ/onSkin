@@ -1,0 +1,285 @@
+[
+  {
+    "id": "scratch-source-stage",
+    "argv": [
+      "git",
+      "add",
+      "scripts/phase9/security_acceptance/proposal.json",
+      "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:20:18.101089+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 0.035,
+    "status": "PASS"
+  },
+  {
+    "id": "scratch-source-commit",
+    "argv": [
+      "git",
+      "-c",
+      "user.name=Codex",
+      "-c",
+      "user.email=codex@openai.com",
+      "commit",
+      "-m",
+      "fix(security): update exact certifi scanner dependency"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:20:18.138338+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 0.067,
+    "status": "PASS"
+  },
+  {
+    "id": "fresh-npm-ci",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "ci",
+      "--no-audit",
+      "--no-fund",
+      "--cache",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/fresh-validation-npm-cache",
+      "--registry",
+      "https://registry.npmjs.org/"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:20:18.316716+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 35.823,
+    "status": "PASS"
+  },
+  {
+    "id": "original-security70",
+    "argv": [
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_contract.py",
+      "-v"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:20:55.209388+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 157.285,
+    "status": "PASS"
+  },
+  {
+    "id": "original-secret12",
+    "argv": [
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/phase9/security_acceptance",
+      "-p",
+      "test_secret_scan.py",
+      "-v"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:23:37.864746+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 3.572,
+    "status": "PASS"
+  },
+  {
+    "id": "original-expiry-exception8",
+    "argv": [
+      "node",
+      "--test",
+      "scripts/phase9/security-advisory-exceptions.test.mjs"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:23:41.438700+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 0.117,
+    "status": "PASS"
+  },
+  {
+    "id": "ordinary-governance103",
+    "argv": [
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/brain",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:23:41.558114+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 724.096,
+    "status": "PASS"
+  },
+  {
+    "id": "original-source-inventory-refusal",
+    "argv": [
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/venv/bin/python",
+      "-B",
+      "scripts/phase9/security_acceptance/contract.py",
+      "source"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:36:17.463083+00:00",
+    "exit": 1,
+    "expected_exit": 1,
+    "elapsed_seconds": 0.117,
+    "status": "PASS"
+  },
+  {
+    "id": "forced-root6067",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "test",
+      "--",
+      "--force",
+      "--cache-dir",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/fresh-turbo-test-cache"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:36:17.582784+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 12.855,
+    "status": "PASS"
+  },
+  {
+    "id": "forced-typecheck",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "typecheck",
+      "--",
+      "--force",
+      "--cache-dir",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/fresh-turbo-type-cache"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:36:30.440435+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 11.989,
+    "status": "PASS"
+  },
+  {
+    "id": "forced-lint",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "lint",
+      "--",
+      "--force",
+      "--cache-dir",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/fresh-turbo-lint-cache"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:36:43.575988+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 26.113,
+    "status": "PASS"
+  },
+  {
+    "id": "mobile-expo-compatibility",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "--workspace",
+      "apps/mobile",
+      "exec",
+      "--",
+      "expo",
+      "install",
+      "--check"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:37:09.691068+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 0.619,
+    "status": "PASS"
+  },
+  {
+    "id": "ios-source-privacy-check",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "phase9:ios-privacy-source-audit:check"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:37:10.312437+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 1.17,
+    "status": "PASS"
+  },
+  {
+    "id": "ios-source-privacy-tests",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "phase9:ios-privacy-source-audit:test"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:37:11.484448+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 0.468,
+    "status": "PASS"
+  },
+  {
+    "id": "ios-archive-privacy-fixtures",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "phase9:ios-archive-privacy-evidence:test"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:37:11.954361+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 1.971,
+    "status": "PASS"
+  },
+  {
+    "id": "canonical-phase4-worklist-check",
+    "argv": [
+      "node",
+      "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/new-tools-02/npm/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "phase4:source-worklist:check"
+    ],
+    "cwd": "/tmp/onskin-m103-certifi-0fd3eeace36a492bb97dfcd8d99231aa/repo",
+    "started_utc": "2026-10-23T17:37:15.056625+00:00",
+    "exit": 0,
+    "expected_exit": 0,
+    "elapsed_seconds": 0.267,
+    "status": "PASS"
+  }
+]
