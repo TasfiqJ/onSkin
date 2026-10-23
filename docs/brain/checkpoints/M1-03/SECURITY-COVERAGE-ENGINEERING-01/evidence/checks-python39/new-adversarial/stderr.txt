@@ -1,0 +1,26 @@
+test_added_evidence_tail_and_removal (test_review.ReviewTests) ... ok
+test_changed_git_blob_and_restore (test_review.ReviewTests) ... ok
+test_decompression_bomb_is_bounded (test_review.ReviewTests) ... ok
+test_denominator_cannot_be_resigned (test_review.ReviewTests) ... ok
+test_duplicate_json_key_original_parser (test_review.ReviewTests) ... ok
+test_duplicate_source_and_restore (test_review.ReviewTests) ... ok
+test_forged_go_all_claim_fields (test_review.ReviewTests) ... ok
+test_forged_row_acceptance (test_review.ReviewTests) ... ok
+test_git_object_byte_tamper_and_restore (test_review.ReviewTests) ... ok
+test_live_proposal_cycle_refuses_two_successive_rebindings (test_review.ReviewTests) ... ok
+test_malformed_scope (test_review.ReviewTests) ... ok
+test_missing_sql_and_restore (test_review.ReviewTests) ... ok
+test_noncanonical_order_and_restore (test_review.ReviewTests) ... ok
+test_nonignored_tail_refuses_ignored_regular_files_are_accounted (test_review.ReviewTests) ... ok
+test_omitted_source_and_restore (test_review.ReviewTests) ... ok
+test_original_rule_hash_pin_and_restore (test_review.ReviewTests) ... ok
+test_oversized_required_source_stays_refused (test_review.ReviewTests) ... ok
+test_path_traversal_and_windows_alias (test_review.ReviewTests) ... ok
+test_symlink_git_mode_refused_without_windows_privilege (test_review.ReviewTests) ... ok
+test_tampered_pinned_gzip_crc_and_truncation (test_review.ReviewTests) ... ok
+test_unreviewed_gzip_never_excluded (test_review.ReviewTests) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 5.259s
+
+OK

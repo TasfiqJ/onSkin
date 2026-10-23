@@ -1,0 +1,1 @@
+{"status": "REFUSED", "code": "INVENTORY_RECOMPUTATION_DRIFT", "admission": "NONE", "protected_source_go": false, "main_promotion_authorized": false, "coverage_complete": false, "original_sast": "NOT_RUN", "owner_review": "REQUIRED"}

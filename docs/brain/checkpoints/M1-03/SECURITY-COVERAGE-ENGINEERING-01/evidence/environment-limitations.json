@@ -1,0 +1,52 @@
+{
+  "extra_clone": {
+    "checkout_exit_observed": 1,
+    "cleanup": "Deletion rejected by automatic approval review: blocked by policy. Kept in place; reversible NTFS compression completed.",
+    "raw_exit": null,
+    "raw_exit_note": "Individual git process exit was not captured separately; shell result 1 is observed.",
+    "reason": "No space left on device",
+    "shell_raw_exit": 1,
+    "status": "FAILED"
+  },
+  "governance103": {
+    "alternate_synthetic_green": false,
+    "controller_interrupted": true,
+    "raw_exit": 1,
+    "reason": "Ordinary suites consumed disk while creating disposable fixtures. Both owned child processes stopped after physical disk exhaustion, rather than asserting 103 passes.",
+    "status": "INCOMPLETE"
+  },
+  "initial_handoff_write": {
+    "reason": "Python3.9 Path.write_text has no newline keyword; no file bytes changed; corrected final handoff uses write_bytes.",
+    "status": "FAILED"
+  },
+  "initial_security70": {
+    "raw_exit": 1,
+    "reason": "Default Python 3.9 cannot parse original history.py PEP701 f-string syntax"
+  },
+  "python312_security70": {
+    "observed_failing_subcases": [
+      "SAST diagnostics parsing",
+      "SAST diagnostics taint",
+      "engine_requested",
+      "skipped_rules"
+    ],
+    "raw_exit": 1,
+    "status": "INCOMPLETE",
+    "timeout_seconds": 180
+  },
+  "root6067": "NOT_RUN: new code is independent Python tooling; no app/package/native changes",
+  "secret12": {
+    "raw_exit": 1,
+    "reason": "POSIX synthetic absolute fixture /synthetic/history.git cannot be pathlib.WindowsPath.as_uri; both real attempts retained",
+    "status": "FAIL"
+  },
+  "spend_usd": 0,
+  "typecheck_lint": "NOT_RUN: no TypeScript/JavaScript/package changes",
+  "wsl": {
+    "reasons": [
+      "onskin-r6-verification failed to start E_FAIL",
+      "Ubuntu-22.04 VHDX missing"
+    ],
+    "status": "UNAVAILABLE"
+  }
+}

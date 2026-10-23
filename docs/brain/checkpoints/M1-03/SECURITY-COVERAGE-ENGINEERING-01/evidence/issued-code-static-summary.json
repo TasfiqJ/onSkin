@@ -1,0 +1,46 @@
+{
+  "code": {
+    "artifact_sha256": "66ea1ff720b0306cd752c688dee25887f06bc5e838c1e91feb40db7daf9ef926",
+    "npm_advisories": [
+      "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+      "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5"
+    ],
+    "npm_counts": {
+      "critical": 0,
+      "high": 7,
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "total": 7
+    },
+    "outcomes": {
+      "dependency_sbom": "failure",
+      "job": "code-gates",
+      "npm_audit_high": "failure",
+      "npm_exception_gate": "failure",
+      "phase9_verify": "failure",
+      "run_id": "40029099712",
+      "sha": "9eb12b8dacd7221c39f7350bc622daa42e2052b0"
+    },
+    "owner_disposition": "UNREVIEWED"
+  },
+  "static": {
+    "artifact_sha256": "a186590b7464609af09e7b792f27db2e624d61a9ead654da15bfab5d1cd2ff5e",
+    "osv_advisory_ids": [
+      "GHSA-84m7-p3x7-pcfv",
+      "GHSA-86w9-cpqp-85rv",
+      "GHSA-mrhx-c7xc-m3w5",
+      "GHSA-xcq7-p3pf-p88h"
+    ],
+    "osv_packages": 9,
+    "outcomes": {
+      "job": "static-analysis",
+      "osv": "failure",
+      "osv_exception_gate": "failure",
+      "run_id": "40029099712",
+      "semgrep": "failure",
+      "sha": "9eb12b8dacd7221c39f7350bc622daa42e2052b0"
+    },
+    "owner_disposition": "UNREVIEWED"
+  }
+}

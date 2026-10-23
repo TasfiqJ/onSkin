@@ -1,0 +1,1291 @@
+{
+  "admission": "NONE",
+  "allowed_existing_modified": [
+    "ONSKIN_BRAIN_HANDOFF.txt"
+  ],
+  "audit_scope_note": "Before adding this audit and SHA256SUMS; both are new checkpoint-only evidence paths and independently checked after final commit.",
+  "authored_format_check": {
+    "args": [
+      "git",
+      "-c",
+      "core.whitespace=cr-at-eol",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":(glob,exclude)docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/**/*.txt"
+    ],
+    "raw_exit": 0
+  },
+  "canonical_worklists_unchanged": true,
+  "changes_checked": [
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "status": "M"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/BLOCKERS.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/INVENTORY_PROOF.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/NEXT_EXACT_SOURCE_SCOPE.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/OWASP_CUSTODY.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/README.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/RESULTS.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/custody-cycle-proof.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/descriptor.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0000.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0001.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0002.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0003.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0004.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0005.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0006.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0007.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0008.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0009.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0010.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0011.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0012.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0013.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0014.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0015.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0016.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0017.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0018.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0019.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0020.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0021.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0022.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0023.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0024.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0025.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0026.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0027.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0028.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0029.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0030.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0031.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0032.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0033.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0034.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0035.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0036.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0037.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0038.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0039.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/source-manifest-0040.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0000.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0001.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0002.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0003.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0004.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0005.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0006.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0007.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0008.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0009.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0010.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0011.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0012.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0013.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0014.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0015.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0016.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0017.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0018.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0019.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0020.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0021.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0022.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0023.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0024.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0025.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0026.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0027.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0028.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0029.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0030.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0031.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0032.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0033.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0034.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0035.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0036.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0037.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0038.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0039.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/candidate/target-partition-0040.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/completion-report.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/authentic-bundle-verification/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/determinism.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/bundle-integrity-checks/resigned-source-hash-tamper/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/candidate-reassembly-proof.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/expiry8/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/governance103/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/new-adversarial/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/original-source-scope/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/phase4-worklist/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/receipt.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/secret12/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python312/security70/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/expiry8/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/governance103/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/new-adversarial/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/original-source-scope/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/phase4-worklist/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/receipt.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/secret12/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/checks-python39/security70/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/clean-clones.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/environment-limitations.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-determinism.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/context/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/expiry8/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/generate/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/new-adversarial22/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/original-source-scope/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-a-receipts/phase4-worklist/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/final-run-b-receipts/generate/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/historical-obligations.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0000.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0001.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0002.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0003.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0004.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0005.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0006.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0007.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0008.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0009.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0010.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0011.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0012.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0013.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0014.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0015.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0016.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0017.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0018.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0019.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0020.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0021.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0022.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0023.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0024.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0025.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0026.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0027.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0028.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0029.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0030.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0031.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0032.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0033.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0034.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0035.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0036.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0037.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0038.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0039.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/inventory-0040.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/refusals.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/sql-targets.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-issued/summary.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/historical-obligations.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0000.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0001.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0002.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0003.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0004.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0005.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0006.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0007.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0008.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0009.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0010.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0011.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0012.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0013.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0014.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0015.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0016.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0017.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0018.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0019.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0020.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0021.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0022.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0023.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0024.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0025.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0026.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0027.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0028.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0029.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0030.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0031.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0032.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0033.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0034.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0035.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0036.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0037.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0038.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0039.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/inventory-0040.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/refusals.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/sql-targets.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-measured/summary.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-a-receipt/generate/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/intent.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/result.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/stderr.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/inventory-run-b-receipt/generate/stdout.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-ci-observation.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-code-static-summary.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-projection-proof.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/issued-secret-summary.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/owasp-custody-attempts.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/evidence/preflight.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/00_READ_FIRST.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/01_INDEPENDENT_BRAIN_REVIEW.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/02_ENGINEERING_MISSION.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/03_EXACT_SOURCE_AUTHORITY.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/04_ACCEPTANCE_TESTS.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/05_OWASP_AND_OWNER_GATES.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/06_DELIVERY_AND_CI.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/07_STOP_RULES.md",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/PREIMAGE_WITNESSES.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/SOURCE_AUTHORIZATION.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/TASK_MANIFEST.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/TASK_STATE.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/archive/issued-context.zip",
+      "status": "A"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03/SECURITY-COVERAGE-ENGINEERING-01/inputs/verify_context.py",
+      "status": "A"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_inventory_review/README.md",
+      "status": "A"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_inventory_review/custody.py",
+      "status": "A"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_inventory_review/review.py",
+      "status": "A"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_inventory_review/run_checks.py",
+      "status": "A"
+    },
+    {
+      "path": "scripts/security_readiness/m103/source_inventory_review/test_review.py",
+      "status": "A"
+    }
+  ],
+  "cr_at_eol_full_raw_check_exit": 2,
+  "default_whitespace_check_exit": 2,
+  "issued_commit": "455e3596876d85f5734f4ac3163df1de09647e1f",
+  "measured_commit": "df17120787162afd9c73a77e120418115fc0ed19",
+  "measured_tree": "c16053107b1dbedacd9920a2244c8bc33f9d846d",
+  "other_preimage_witnesses_unchanged": 23,
+  "protected_paths_changed": false,
+  "protected_source_go": false,
+  "raw_windows_receipts_preserved": true,
+  "reason": "Only byte-exact raw receipt CRLF/unfinished stderr whitespace remains. No raw evidence normalized.",
+  "schema": 1
+}
