@@ -1,0 +1,4 @@
+Collecting semgrep==1.181.0 (from -r /work/bridge/semgrep-only.txt (line 1))
+  Using cached semgrep-1.181.0-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-manylinux_2_34_x86_64.whl (70.5 MB)
+Installing collected packages: semgrep
+Successfully installed semgrep-1.181.0

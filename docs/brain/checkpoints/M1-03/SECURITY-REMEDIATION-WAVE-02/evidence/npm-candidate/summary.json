@@ -1,18 +1,36 @@
 {
-  "auditReportVersion": 2,
-  "vulnerabilities": {
-    "@expo/cli": {
-      "name": "@expo/cli",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "original_lock_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+  "candidate_lock_sha256": "6557c859298af02363aeb9c1efb37240de0bddfd3f4f4bffa93d34a85b9e8242",
+  "original_expo": "57.0.31",
+  "candidate_expo": "57.0.31",
+  "package_delta_count": 0,
+  "delta": [],
+  "expo_compatibility_exit": 0,
+  "audit_exit": 1,
+  "audit_counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 7,
+    "critical": 0,
+    "total": 7
+  },
+  "sanitized_findings": [
+    {
+      "package": "@expo/cli",
       "severity": "high",
       "isDirect": false,
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
       "via": [
         "@expo/code-signing-certificates",
-        "node-forge"
+        "node-forge",
+        "zod"
       ],
       "effects": [
         "expo"
       ],
-      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
       "nodes": [
         "node_modules/@expo/cli"
       ],
@@ -22,17 +40,17 @@
         "isSemVerMajor": true
       }
     },
-    "@expo/code-signing-certificates": {
-      "name": "@expo/code-signing-certificates",
+    {
+      "package": "@expo/code-signing-certificates",
       "severity": "high",
       "isDirect": false,
+      "range": "*",
       "via": [
         "node-forge"
       ],
       "effects": [
         "@expo/cli"
       ],
-      "range": "*",
       "nodes": [
         "node_modules/@expo/code-signing-certificates"
       ],
@@ -42,15 +60,15 @@
         "isSemVerMajor": true
       }
     },
-    "@react-native-google-signin/google-signin": {
-      "name": "@react-native-google-signin/google-signin",
+    {
+      "package": "@react-native-google-signin/google-signin",
       "severity": "high",
       "isDirect": true,
+      "range": ">=9.0.0",
       "via": [
         "expo"
       ],
       "effects": [],
-      "range": ">=9.0.0",
       "nodes": [
         "node_modules/@react-native-google-signin/google-signin"
       ],
@@ -60,15 +78,15 @@
         "isSemVerMajor": true
       }
     },
-    "@sentry/react-native": {
-      "name": "@sentry/react-native",
+    {
+      "package": "@sentry/react-native",
       "severity": "high",
       "isDirect": true,
+      "range": ">=5.16.0-alpha.1",
       "via": [
         "expo"
       ],
       "effects": [],
-      "range": ">=5.16.0-alpha.1",
       "nodes": [
         "node_modules/@sentry/react-native"
       ],
@@ -78,10 +96,11 @@
         "isSemVerMajor": true
       }
     },
-    "expo": {
-      "name": "expo",
+    {
+      "package": "expo",
       "severity": "high",
       "isDirect": true,
+      "range": ">=45.0.0-beta.1",
       "via": [
         "@expo/cli"
       ],
@@ -89,7 +108,6 @@
         "@react-native-google-signin/google-signin",
         "@sentry/react-native"
       ],
-      "range": ">=45.0.0-beta.1",
       "nodes": [
         "node_modules/expo"
       ],
@@ -99,33 +117,24 @@
         "isSemVerMajor": true
       }
     },
-    "node-forge": {
-      "name": "node-forge",
+    {
+      "package": "node-forge",
       "severity": "high",
       "isDirect": true,
+      "range": "*",
       "via": [
         {
-          "source": 1240912,
           "name": "node-forge",
-          "dependency": "node-forge",
-          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "source": 1240912,
           "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
-          "severity": "high",
-          "cwe": [
-            "CWE-347"
-          ],
-          "cvss": {
-            "score": 7.5,
-            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
-          },
-          "range": "<=1.4.0"
+          "range": "<=1.4.0",
+          "severity": "high"
         }
       ],
       "effects": [
         "@expo/cli",
         "@expo/code-signing-certificates"
       ],
-      "range": "*",
       "nodes": [
         "node_modules/node-forge"
       ],
@@ -134,24 +143,41 @@
         "version": "44.0.6",
         "isSemVerMajor": true
       }
-    }
-  },
-  "metadata": {
-    "vulnerabilities": {
-      "info": 0,
-      "low": 0,
-      "moderate": 0,
-      "high": 6,
-      "critical": 0,
-      "total": 6
     },
-    "dependencies": {
-      "prod": 753,
-      "dev": 325,
-      "optional": 89,
-      "peer": 6,
-      "peerOptional": 0,
-      "total": 1113
+    {
+      "package": "zod",
+      "severity": "high",
+      "isDirect": false,
+      "range": "<4.6.6",
+      "via": [
+        {
+          "name": "zod",
+          "source": 1243066,
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "range": "<4.6.6",
+          "severity": "high"
+        }
+      ],
+      "effects": [
+        "@expo/cli"
+      ],
+      "nodes": [
+        "node_modules/zod"
+      ],
+      "fixAvailable": {
+        "name": "expo",
+        "version": "44.0.6",
+        "isSemVerMajor": true
+      }
     }
-  }
+  ],
+  "node_forge_versions": [
+    "1.4.0"
+  ],
+  "zod_versions": [
+    "3.25.76"
+  ],
+  "stage_edit": false,
+  "accepted": false,
+  "decision": "REJECT_IF_NODE_FORGE_OR_ZOD_ADVISORY_REMAINS"
 }

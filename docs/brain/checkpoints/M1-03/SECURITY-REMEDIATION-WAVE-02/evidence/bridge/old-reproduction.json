@@ -1,0 +1,15 @@
+{
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "requirements_sha256": "9af06b943d8cc19750ddc2f6d3831c096f540fb68965b62b2e760706a1db465f",
+  "originalPackageTree": "f739ad265e973b29098d5bd640f2a01e25de016596d5761b5b8b030d58507cb9",
+  "semgrepPackageTree": "5ad98b88c9391d205d83b224498022013b89ae5b27fe307983319912e0fe1ffd",
+  "engine": {
+    "originalCoreSha256": "14f4b18720d881156bc0cc507b19130aa8d8db0882a5a479fb3919aadefca857",
+    "portableCoreSha256": "187283dcd737cf34fde16b99e440c44236b63c47d4db107bfe15b188080238b7",
+    "archiveSha256": "f94f7e80c9fde88488c52b84a123992f22644513b2a9b99f0dc81bcd6c35f8b9",
+    "originalPreserved": "/work/bridge/old-preserved"
+  },
+  "upstream_wheel_sha256": "c142ec04a2ed144970cb0a92f6877651dd3c088505eec737bb7f4db7ae5f0ffa",
+  "all_original_identities_reproduced": true
+}

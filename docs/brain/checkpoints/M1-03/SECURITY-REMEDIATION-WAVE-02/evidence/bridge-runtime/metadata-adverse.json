@@ -1,0 +1,23 @@
+{
+  "cases": [
+    {
+      "case": "tampered-metadata",
+      "rejected": true
+    },
+    {
+      "case": "wrong-version",
+      "rejected": true
+    },
+    {
+      "case": "unknown-wheel",
+      "rejected": true
+    },
+    {
+      "case": "double-patch",
+      "rejected": true
+    }
+  ],
+  "incompatible_solver_refused": true,
+  "incompatible_extra_refused": true,
+  "missing_dependency_refused": true
+}

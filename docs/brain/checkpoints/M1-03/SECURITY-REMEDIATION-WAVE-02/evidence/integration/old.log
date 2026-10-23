@@ -1,0 +1,118 @@
+/work/bridge2/old-site/pydantic_settings/sources/utils.py:51: IncompleteFieldDefinitionWarning: Field 'lifespan' has an incomplete definition: its annotation contains an unresolved forward reference, so settings sources may fail to correctly resolve its value. Call `model_rebuild()` on the model where the field is defined, once all the referenced types are defined.
+  warnings.warn(  # noqa: B028  (called from many sources at differing depths, so no stacklevel is correct)
+  + Exception Group Traceback (most recent call last):
+  |   File "<string>", line 1, in <module>
+  |   File "<frozen runpy>", line 286, in run_path
+  |   File "<frozen runpy>", line 98, in _run_module_code
+  |   File "<frozen runpy>", line 88, in _run_code
+  |   File "/tmp/wave02-mcp-vy1t8o1i/server.py", line 7, in <module>
+  |     server.run(transport='stdio')
+  |   File "/work/bridge2/old-site/mcp/server/fastmcp/server.py", line 299, in run
+  |     anyio.run(self.run_stdio_async)
+  |   File "/work/bridge2/old-site/anyio/_core/_eventloop.py", line 83, in run
+  |     return async_backend.run(func, args, {}, backend_options)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 2548, in run
+  |     return runner.run(wrapper())
+  |            ^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+  |     return self._loop.run_until_complete(task)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+  |     return future.result()
+  |            ^^^^^^^^^^^^^^^
+  |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 2531, in wrapper
+  |     return await func(*args)
+  |            ^^^^^^^^^^^^^^^^^
+  |   File "/work/bridge2/old-site/mcp/server/fastmcp/server.py", line 758, in run_stdio_async
+  |     async with stdio_server() as (read_stream, write_stream):
+  |   File "/usr/lib/python3.12/contextlib.py", line 231, in __aexit__
+  |     await self.gen.athrow(value)
+  |   File "/work/bridge2/old-site/mcp/server/stdio.py", line 85, in stdio_server
+  |     async with anyio.create_task_group() as tg:
+  |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/work/bridge2/old-site/mcp/server/stdio.py", line 88, in stdio_server
+    |     yield read_stream, write_stream
+    |   File "/work/bridge2/old-site/mcp/server/fastmcp/server.py", line 759, in run_stdio_async
+    |     await self._mcp_server.run(
+    |   File "/work/bridge2/old-site/mcp/server/lowlevel/server.py", line 663, in run
+    |     lifespan_context = await stack.enter_async_context(self.lifespan(self))
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/usr/lib/python3.12/contextlib.py", line 659, in enter_async_context
+    |     result = await _enter(cm)
+    |              ^^^^^^^^^^^^^^^^
+    |   File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    |     return await anext(self.gen)
+    |            ^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/mcp/server/fastmcp/server.py", line 141, in wrap
+    |     async with lifespan(app) as context:
+    |   File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+    |     return await anext(self.gen)
+    |            ^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/semgrep/mcp/server.py", line 502, in server_lifespan
+    |     context = await mk_context(top_level_span=span)
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/semgrep/mcp/semgrep.py", line 141, in mk_context
+    |     resp = await run_semgrep_process_sync(top_level_span, ["--pro", "--version"])
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/semgrep/mcp/semgrep.py", line 106, in run_semgrep_process_sync
+    |     await create_args(args),
+    |     ^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/semgrep/mcp/semgrep.py", line 60, in create_args
+    |     raise McpError(
+    | mcp.shared.exceptions.McpError: Failed to find semgrep binary
+    +------------------------------------
+  + Exception Group Traceback (most recent call last):
+  |   File "<string>", line 1, in <module>
+  |   File "<frozen runpy>", line 286, in run_path
+  |   File "<frozen runpy>", line 98, in _run_module_code
+  |   File "<frozen runpy>", line 88, in _run_code
+  |   File "/evidence/integration_smoke.py", line 66, in <module>
+  |     result=dict(mcp=asyncio.run(session_smoke()),http_lifecycle=asyncio.run(http_lifecycle()),otel=dict(semgrep_Telemetry_configure=True,trace_propagation=True,thread_context=True,local_otlp_http_export=True,received=received),external_requests=False,synthetic_only=True)
+  |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+  |     return runner.run(main)
+  |            ^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+  |     return self._loop.run_until_complete(task)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+  |     return future.result()
+  |            ^^^^^^^^^^^^^^^
+  |   File "/evidence/integration_smoke.py", line 54, in session_smoke
+  |     async with stdio_client(params) as (read,write):
+  |   File "/usr/lib/python3.12/contextlib.py", line 231, in __aexit__
+  |     await self.gen.athrow(value)
+  |   File "/work/bridge2/old-site/mcp/client/stdio/__init__.py", line 182, in stdio_client
+  |     async with (
+  |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "/work/bridge2/old-site/mcp/client/stdio/__init__.py", line 189, in stdio_client
+    |     yield read_stream, write_stream
+    |   File "/evidence/integration_smoke.py", line 55, in session_smoke
+    |     async with ClientSession(read,write) as session:
+    |   File "/work/bridge2/old-site/mcp/shared/session.py", line 238, in __aexit__
+    |     return await self._task_group.__aexit__(exc_type, exc_val, exc_tb)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/work/bridge2/old-site/anyio/_backends/_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "/evidence/integration_smoke.py", line 56, in session_smoke
+      |     initialized=await session.initialize();tools=await session.list_tools();names=[t.name for t in tools.tools]
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "/work/bridge2/old-site/mcp/client/session.py", line 183, in initialize
+      |     result = await self.send_request(
+      |              ^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "/work/bridge2/old-site/mcp/shared/session.py", line 306, in send_request
+      |     raise McpError(response_or_error.error)
+      | mcp.shared.exceptions.McpError: Connection closed
+      +------------------------------------

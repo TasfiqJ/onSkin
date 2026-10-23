@@ -1,0 +1,40 @@
+{
+  "runs": [
+    {
+      "label": "old",
+      "argv": [
+        "/work/runtime/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/old-site",
+        "/evidence/integration_smoke.py"
+      ],
+      "cwd": "/work/bridge2",
+      "exit": 1,
+      "seconds": 4.073886012018193,
+      "log_sha256": "c01fcefa89267515b581f0c7cb509e6d481d8b83562f7338c671c1c99f79982d"
+    },
+    {
+      "label": "new",
+      "argv": [
+        "/work/bridge2/candidate-env/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+        "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+        "/evidence/integration_smoke.py"
+      ],
+      "cwd": "/work/bridge2",
+      "exit": 0,
+      "seconds": 6.02774596598465,
+      "log_sha256": "03598a7b03ed2eb7926616cfed6bd869dba1a26d67e8e69bde2c73d7feb239af"
+    }
+  ],
+  "old_new_pass": false,
+  "stage_technical_edit_eligible": false
+}

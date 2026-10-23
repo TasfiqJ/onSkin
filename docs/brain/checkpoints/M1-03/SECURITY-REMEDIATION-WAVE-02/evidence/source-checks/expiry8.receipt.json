@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "node",
+    "--test",
+    "scripts/phase9/security-advisory-exceptions.test.mjs"
+  ],
+  "cwd": "/work/repo",
+  "environment": {
+    "CI": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TURBO_TELEMETRY_DISABLED": "1",
+    "DO_NOT_TRACK": "1"
+  },
+  "exit": 0,
+  "seconds": 0.11615871998947114,
+  "observed_at": "2026-10-23T21:31:17.606303+00:00",
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "log_sha256": "ffa8282dfe1c8b1d84cc075ef4bc175c88ed67c060ab6d1f9048b97688bef451"
+}

@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--dry-run",
+    "--require-hashes",
+    "--only-binary=:all:",
+    "--index-url",
+    "https://pypi.org/simple",
+    "-r",
+    "/work/repo/scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt"
+  ],
+  "cwd": "/",
+  "environment": {
+    "PYTHONPATH": "/work/bridge2/old-site"
+  },
+  "exit": 0,
+  "seconds": 0.7673573220090475,
+  "log_sha256": "5ddf7e0c439ed5c2b319b93dfe8ff16d6b885c09c6754de5fcb4b7eae949f05c"
+}

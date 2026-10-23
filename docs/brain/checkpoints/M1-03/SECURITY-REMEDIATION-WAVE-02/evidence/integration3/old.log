@@ -1,0 +1,18 @@
+/work/bridge2/old-site/pydantic_settings/sources/utils.py:51: IncompleteFieldDefinitionWarning: Field 'lifespan' has an incomplete definition: its annotation contains an unresolved forward reference, so settings sources may fail to correctly resolve its value. Call `model_rebuild()` on the model where the field is defined, once all the referenced types are defined.
+  warnings.warn(  # noqa: B028  (called from many sources at differing depths, so no stacklevel is correct)
+[10/23/26 21:26:20] WARNING  User doesn't have the Pro Engine     semgrep.py:151
+                             installed, not running `semgrep mcp`               
+                             daemon...                                          
+                    DEBUG    Getting API token from settings file     auth.py:85
+                    DEBUG    No API token found in settings file      auth.py:89
+                    DEBUG    Getting API token from settings file     auth.py:85
+                    DEBUG    No API token found in settings file      auth.py:89
+                    INFO     get_supported_languages succeeded    tracing.py:314
+                    VERBOSE  Not sending pseudonymous      verbose_logging.py:39
+                             metrics since metrics are                          
+                             configured to OFF, registry                        
+                             usage is False, and login                          
+                             status is False                                    
+/work/bridge2/old-site/pydantic_settings/sources/utils.py:51: IncompleteFieldDefinitionWarning: Field 'lifespan' has an incomplete definition: its annotation contains an unresolved forward reference, so settings sources may fail to correctly resolve its value. Call `model_rebuild()` on the model where the field is defined, once all the referenced types are defined.
+  warnings.warn(  # noqa: B028  (called from many sources at differing depths, so no stacklevel is correct)
+{"external_requests": false, "http_lifecycle": true, "mcp": {"initialized": true, "ping": true, "server_lifespan": "ORIGINAL_SEMGREP", "shutdown": true, "supported_languages_call": true, "tool_count": 7, "transport": "stdio"}, "otel": {"local_otlp_http_export": true, "received": [{"content_type": "application/x-protobuf", "path": "/v1/traces", "spans": 2}], "semgrep_Telemetry_configure": true, "thread_context": true, "trace_propagation": true}, "synthetic_only": true}

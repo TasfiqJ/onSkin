@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/work/bridge2/candidate-env/bin/python",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,socket\n# This scanner is a CLI. Refuse Internet listener binds, including the vulnerable\n# MCP stateful HTTP transport. Unix-domain engine communication remains allowed.\ndef g97_scanner_audit(event,args):\n if event == 'socket.bind' and args[0].family in (socket.AF_INET,socket.AF_INET6):\n  raise PermissionError('G97_SCANNER_INTERNET_LISTENER_FORBIDDEN')\nsys.addaudithook(g97_scanner_audit)\nimport site;site.addsitedir(sys.argv[1]);sys.path.insert(0,sys.argv.pop(1));from semgrep.console_scripts.pysemgrep import main;main()",
+    "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+    "--version"
+  ],
+  "cwd": "/work/bridge2",
+  "environment": {
+    "SEMGREP_SEND_METRICS": "off",
+    "SEMGREP_ENABLE_VERSION_CHECK": "0",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "exit": 0,
+  "seconds": 1.869516997016035,
+  "log_sha256": "6c6e9c0c95928a60570a564f1531624a0e6d1a055642fdf50fc9179a1a1a5b28"
+}

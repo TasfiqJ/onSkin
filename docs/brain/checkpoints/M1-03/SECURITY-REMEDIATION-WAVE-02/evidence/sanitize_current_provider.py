@@ -65,7 +65,7 @@ with zipfile.ZipFile(private/'static.zip') as z:
         'raw_sha256':sha(osv_raw),'scanner_exit':int(z.read('osv-scan.exit-code')),'outcomes':json.loads(z.read('static-analysis-outcomes.json')),'rows':rows},indent=2)+'\n')
 with zipfile.ZipFile(private/'code.zip') as z:
     raw=z.read('npm-audit-high.json'); data=json.loads(raw)
-    (out/'provider-npm-audit.json').write_bytes(raw)
+    # Full npm payload stays in disposable memory; only typed summaries are exported.
     (out/'safe-provider-code-summary.json').write_text(json.dumps({'run':40020077385,'archive_sha256':sha((private/'code.zip').read_bytes()),'npm_audit_sha256':sha(raw),'counts':data['metadata']['vulnerabilities'],
         'npm_audit_exit':int(z.read('npm-audit-high.exit-code')),'outcomes':json.loads(z.read('code-gates-outcomes.json'))},indent=2)+'\n')
 print(json.dumps(summary,indent=2))

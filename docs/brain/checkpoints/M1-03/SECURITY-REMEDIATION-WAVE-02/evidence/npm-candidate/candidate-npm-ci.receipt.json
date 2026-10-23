@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "npm",
+    "ci",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/work/npm-candidate",
+  "exit": 0,
+  "seconds": 36.046067389979726,
+  "log_sha256": "bbb7807adeb42d207ab132ce0b466e4bea379985890a96ce376498e0d7cb6523",
+  "raw_private": false
+}

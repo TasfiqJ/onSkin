@@ -1,0 +1,10 @@
+{
+  "custom_originalPackageTree": "b28ca10171b511bf24b04fd42bc873a0d32dc8877f52f8cccbd0e97f78324395",
+  "custom_semgrepPackageTree": "8e23372f8942d03719e9cf15a1fc96e27e4cc05e5b01558a2aa052ac962b0449",
+  "official_wheel_unchanged": true,
+  "semgrep_non_metadata_distinfo_unchanged": true,
+  "upstream_metadata_sha256": "551bb8eea5dcbe0b884cd4c9012a394b0c7f7c55854ad7946a08b6f9b12a6b0e",
+  "custom_metadata_sha256": "23ee34f9baf0cb736e8d08b402d7b419bedf2c6c24d9db9fff3b20e2530cb0d9",
+  "canonical_unexplained_deltas": 0,
+  "custom": true
+}

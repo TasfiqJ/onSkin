@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "git",
+    "-c",
+    "safe.directory=/issued",
+    "clone",
+    "--no-hardlinks",
+    "--single-branch",
+    "--branch",
+    "stage/m1-gate-recovery",
+    "/issued",
+    "/work/repo"
+  ],
+  "cwd": "/work",
+  "exit": 0,
+  "seconds": 11.54151492100209,
+  "observed_at": "2026-10-23T21:12:46.379443+00:00",
+  "log_sha256": "a9ac8533d9c685192576e1dba51410fbc37997a1268f65b1a0f7ad889448fb83"
+}

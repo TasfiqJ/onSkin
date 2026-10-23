@@ -1,0 +1,10 @@
+{
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "versions": "Python 3.12.3\nldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39\nv24.19.0\n11.20.0\ntmpfs on /work type tmpfs (rw,nosuid,nodev,relatime,size=10485760k)\n",
+  "npm_tool_tree": "b941f37688799d749409b6449dce4721c5e2ed96e9bfe43eaab79850fa11b7cd",
+  "node_tarball_sha256": "14b342e71204f811bde6153be8e04b62aef63c236fef92b55f9c83154b409647",
+  "node_shasums_sha256": "be0629ee2bcd8e40bb856abdd3407f0762101b76bd60a36b8867f637733631c0",
+  "source_read_only": true,
+  "scratch": "/work memory tmpfs",
+  "incremental_spend_usd": 0
+}

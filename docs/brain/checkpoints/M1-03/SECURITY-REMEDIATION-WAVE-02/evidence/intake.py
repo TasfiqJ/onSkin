@@ -24,11 +24,11 @@ obj.update(fingerprint=fingerprint, independent_git_object_and_workfile_verifica
            observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(), branch=git('branch','--show-current').decode().strip(),
            external_manifest_sha256='55663df49e98f5209d4c2b04d573d058042aa16e0d95ede4c17547f4edd12dff')
 (out/'independent-preimages.json').write_text(json.dumps(obj, indent=2)+'\n', encoding='utf-8')
-inputs = out.parent/'inputs'; inputs.mkdir(exist_ok=False)
+inputs = out.parent/'inputs/context'; inputs.mkdir(exist_ok=False,parents=True)
 for path in ctx.iterdir():
     assert path.is_file()
     shutil.copyfile(path,inputs/path.name)
-shutil.copyfile(archive,inputs/archive.name)
+uploaded=inputs.parent/'uploaded';uploaded.mkdir();shutil.copyfile(archive,uploaded/archive.name)
 (out/'context-validation.json').write_text(json.dumps(dict(manifest_valid=True,declared_members=13,source_verifier_exit=0,
     independent_fingerprint=fingerprint,archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
     context_folder=str(ctx),repository=str(root),technical_source_edited=False),indent=2)+'\n')

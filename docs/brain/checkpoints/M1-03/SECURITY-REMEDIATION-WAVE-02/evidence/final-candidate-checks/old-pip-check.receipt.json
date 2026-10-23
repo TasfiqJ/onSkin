@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/work/runtime/bin/python",
+    "-B",
+    "-m",
+    "pip",
+    "check"
+  ],
+  "cwd": "/",
+  "environment": {
+    "PYTHONPATH": "/work/bridge2/old-site"
+  },
+  "exit": 0,
+  "seconds": 0.4164759690174833,
+  "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+}

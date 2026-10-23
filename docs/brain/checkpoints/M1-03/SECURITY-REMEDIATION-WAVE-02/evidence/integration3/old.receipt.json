@@ -1,0 +1,17 @@
+{
+  "label": "old",
+  "argv": [
+    "/work/runtime/bin/python",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+    "/work/bridge2/old-site",
+    "/evidence/integration_smoke.py"
+  ],
+  "cwd": "/work/bridge2",
+  "exit": 0,
+  "seconds": 6.381504207995022,
+  "log_sha256": "417730eb125bef62f57064b5a4d232510f51dc5e418c42b8c666ebd5239bab06"
+}

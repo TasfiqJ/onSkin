@@ -1,0 +1,23 @@
+Requirement already satisfied: semgrep==1.181.0 in ./candidate-env/lib/python3.12/site-packages (from -r /work/bridge2/incompatible.txt (line 1)) (1.181.0)
+Collecting mcp==1.29.0 (from -r /work/bridge2/incompatible.txt (line 2))
+  Downloading mcp-1.29.0-py3-none-any.whl.metadata (9.3 kB)
+Requirement already satisfied: attrs>=21.3 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (26.1.0)
+Requirement already satisfied: boltons~=21.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (21.0.0)
+Requirement already satisfied: click-option-group~=0.5 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (0.5.9)
+Requirement already satisfied: click~=8.4.2 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (8.4.2)
+Requirement already satisfied: colorama~=0.4.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (0.4.6)
+Requirement already satisfied: exceptiongroup~=1.2.0 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (1.2.2)
+Requirement already satisfied: glom>=23.3 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (25.12.0)
+Requirement already satisfied: jsonschema~=4.25.1 in ./candidate-env/lib/python3.12/site-packages (from semgrep==1.181.0->-r /work/bridge2/incompatible.txt (line 1)) (4.25.1)
+INFO: pip is looking at multiple versions of semgrep to determine which version is compatible with other requirements. This could take a while.
+ERROR: Cannot install mcp==1.29.0 and semgrep==1.181.0 because these package versions have conflicting dependencies.
+
+The conflict is caused by:
+    The user requested mcp==1.29.0
+    semgrep 1.181.0 depends on mcp==1.30.0
+
+To fix this you could try to:
+1. loosen the range of package versions you've specified
+2. remove package versions to allow pip attempt to solve the dependency conflict
+
+ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts

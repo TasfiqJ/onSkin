@@ -1,0 +1,17 @@
+{
+  "label": "new",
+  "argv": [
+    "/work/bridge2/candidate-env/bin/python",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,site,runpy;p=sys.argv.pop(1);site.addsitedir(p);sys.argv=[sys.argv[1],p];runpy.run_path(sys.argv[0],run_name=\"__main__\")",
+    "/work/bridge2/candidate-env/lib/python3.12/site-packages",
+    "/evidence/integration_smoke.py"
+  ],
+  "cwd": "/work/bridge2",
+  "exit": 0,
+  "seconds": 6.2288743760145735,
+  "log_sha256": "cddb0248676ffb740768ca18e9075f949c0cfe23449b3c6068692966b0c534b9"
+}

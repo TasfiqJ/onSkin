@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "npm",
+    "update",
+    "expo",
+    "--workspace",
+    "apps/mobile",
+    "--package-lock-only",
+    "--ignore-scripts",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/work/npm-candidate",
+  "exit": 0,
+  "seconds": 3.4245309550024103,
+  "log_sha256": "e64af586ea357f57559d65d1407e250bb430d9affd6f6fb18035db10efc3efe1",
+  "raw_private": false
+}

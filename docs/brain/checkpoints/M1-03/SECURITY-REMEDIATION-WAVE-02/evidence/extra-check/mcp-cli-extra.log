@@ -1,0 +1,31 @@
+Requirement already satisfied: mcp==1.30.0 in ./candidate-env/lib/python3.12/site-packages (from mcp[cli]==1.30.0) (1.30.0)
+Collecting typer==0.1.0
+  Using cached typer-0.1.0-py3-none-any.whl.metadata (11 kB)
+Requirement already satisfied: anyio>=4.5 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (4.15.1)
+Requirement already satisfied: httpx-sse>=0.4 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (0.4.3)
+Requirement already satisfied: httpx<1.0.0,>=0.27.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (0.28.1)
+Requirement already satisfied: jsonschema>=4.20.0 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (4.25.1)
+Requirement already satisfied: pydantic-settings>=2.5.2 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (2.16.0)
+Requirement already satisfied: pydantic<3.0.0,>=2.11.0 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (2.14.1)
+Requirement already satisfied: pyjwt>=2.10.1 in ./candidate-env/lib/python3.12/site-packages (from pyjwt[crypto]>=2.10.1->mcp==1.30.0->mcp[cli]==1.30.0) (2.15.1)
+Requirement already satisfied: python-multipart>=0.0.9 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (0.0.32)
+Requirement already satisfied: sse-starlette>=1.6.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (3.5.0)
+Requirement already satisfied: starlette>=0.27 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (1.9.0)
+Requirement already satisfied: typing-extensions>=4.9.0 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (4.16.0)
+Requirement already satisfied: typing-inspection>=0.4.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (0.4.4)
+Requirement already satisfied: uvicorn>=0.31.1 in ./candidate-env/lib/python3.12/site-packages (from mcp==1.30.0->mcp[cli]==1.30.0) (0.54.0)
+Collecting click<7.2.0,>=7.1.1 (from typer==0.1.0)
+  Downloading click-7.1.2-py2.py3-none-any.whl.metadata (2.9 kB)
+Requirement already satisfied: python-dotenv>=1.0.0 in ./candidate-env/lib/python3.12/site-packages (from mcp[cli]==1.30.0) (1.2.4)
+INFO: pip is looking at multiple versions of mcp[cli] to determine which version is compatible with other requirements. This could take a while.
+ERROR: Cannot install mcp[cli]==1.30.0 and typer==0.1.0 because these package versions have conflicting dependencies.
+
+The conflict is caused by:
+    The user requested typer==0.1.0
+    mcp[cli] 1.30.0 depends on typer>=0.16.0; extra == "cli"
+
+To fix this you could try to:
+1. loosen the range of package versions you've specified
+2. remove package versions to allow pip attempt to solve the dependency conflict
+
+ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
