@@ -1,0 +1,18 @@
+{
+  "name": "npm-ci",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "ci",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:00:52.663330+00:00",
+  "ended": "2026-10-23T20:01:35.549991+00:00",
+  "seconds": 42.46268227699329,
+  "exit": 0,
+  "log_sha256": "e0eb759c34a7aa682f059c3ad0e2f071e3212d9bbe11b162b4dc2984d800a53f",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

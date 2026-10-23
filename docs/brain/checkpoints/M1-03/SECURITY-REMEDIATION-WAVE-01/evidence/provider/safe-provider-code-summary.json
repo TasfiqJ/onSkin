@@ -1,0 +1,23 @@
+{
+  "run": 39997349147,
+  "archive_sha256": "e10fb2e8dae6b48bd20b346a2ed0e23f4a6a32bcfbbdaf93b937e480dfc2422f",
+  "npm_audit_sha256": "c50ba924fcb586cbda522a553c4aeae5019b75618526f227735fb9fcb44478e5",
+  "counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 6,
+    "critical": 0,
+    "total": 6
+  },
+  "npm_audit_exit": 1,
+  "outcomes": {
+    "job": "code-gates",
+    "sha": "5a5eee5dc6cd87eb5c69b463a955ed4327f36cf1",
+    "run_id": "39997349147",
+    "phase9_verify": "failure",
+    "dependency_sbom": "failure",
+    "npm_audit_high": "failure",
+    "npm_exception_gate": "failure"
+  }
+}

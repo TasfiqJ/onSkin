@@ -1,0 +1,2182 @@
+{
+  "label": "combined",
+  "changed_files": 435,
+  "unexpected": [],
+  "rows": [
+    {
+      "path": "mcp-1.29.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/METADATA",
+      "old_sha256": "bc4b33ed1eea597cacf79c959094a51f127407cd82f776cb3430a7e7a92a8333",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/WHEEL",
+      "old_sha256": "942926c567d0b1273d09f20295879abd37507845f6b683eab9f87d808df91100",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/entry_points.txt",
+      "old_sha256": "8271816e8df2185d1824d5df669824020d7e090b4ac67cf1ae5039ddcf2f8980",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/licenses/LICENSE",
+      "old_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "3880c29896149862971af57942e3e5c0ad2a909696a66b9811c62f6e47e65111"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "ccec20e2307acd7da453dd7437e70c6b08e2bc3ead3bc3445af135da37b56d59"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "8271816e8df2185d1824d5df669824020d7e090b4ac67cf1ae5039ddcf2f8980"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d"
+    },
+    {
+      "path": "mcp/client/auth/extensions/client_credentials.py",
+      "old_sha256": "5ef09aac14270780d112e6045728196ded0ff568fbcfc752c7fdd2a9a8cc2b34",
+      "new_sha256": "3b2abf2710be1fb637971cd3d3da26ffd10148ebba81f95784bf25784d5d751f"
+    },
+    {
+      "path": "mcp/client/auth/oauth2.py",
+      "old_sha256": "5f5c34780e3fdde9fd5d572271c9196ec7bd2782a25805f668f454a95213d214",
+      "new_sha256": "748d563748a8b06f734540ae0f3417ac2bc98b58f0c06ab11fc91dff940ef89e"
+    },
+    {
+      "path": "mcp/client/auth/utils.py",
+      "old_sha256": "326e38de48fda47634f665187e59abf3d5bc8dec596a5bc34bde9bff7d6d5081",
+      "new_sha256": "73381e2c5457fba39b710e5b6db8dd2d252133b9faa54367bc00af0ae9465c65"
+    },
+    {
+      "path": "mcp/client/session.py",
+      "old_sha256": "92f812af17983f5a36b4703b065216cc49252fc59dbd04b753286fa78580b07a",
+      "new_sha256": "7606a75a9b65cfa21df57901df600a80fdf4bab10ef0bb92abe6aa1cc0db35c9"
+    },
+    {
+      "path": "mcp/client/sse.py",
+      "old_sha256": "99420030ad50e4c209d877ef469f91df457a9d4a62f88d1f77dfd4b4b79123d8",
+      "new_sha256": "e0639a016e6c8459531424be8b5bf00056dd58ac5c55ef49099137a9db02274f"
+    },
+    {
+      "path": "mcp/client/streamable_http.py",
+      "old_sha256": "8eb01c3d4da89c6e73d494a96029dbcf2fe05d0bfffe76071b1e409afdb62f5b",
+      "new_sha256": "b4bc6dfdf3b21bace5bb3d19403446ec31c351f786a3217a7686f55dc1bcd6e7"
+    },
+    {
+      "path": "mcp/server/auth/middleware/bearer_auth.py",
+      "old_sha256": "90451121f43c0d6f44d56339897ec5f022f77de89b9a7d258da1b4f6d6f2f8f4",
+      "new_sha256": "bc83a65fcbc83269310e108611e105ee93c53eecea9085f858233dfbfccbb95f"
+    },
+    {
+      "path": "mcp/server/auth/provider.py",
+      "old_sha256": "32c497b64bc8f3ecdeac33376405c397bd3ad2f8cf44463768cb6f2b5473a007",
+      "new_sha256": "73916a156a98f2bd851b450b31dee2084026871efb7b69e8d149c771269fc2da"
+    },
+    {
+      "path": "mcp/server/auth/routes.py",
+      "old_sha256": "8f80796f63f0d9526708eab76d6dadde646f831277a08e70cd09f4cf7025679d",
+      "new_sha256": "5a5c5cde95acdbf33c540ae0115e901205282162890fa98941e13f42272bbdd2"
+    },
+    {
+      "path": "mcp/server/auth/settings.py",
+      "old_sha256": "363f2d3425c0347302997ea7c426be194ac0f649c9f5ff330ae33130314de03e",
+      "new_sha256": "06d84ec25f75f48b72e15e8b527ca4cede7df4245414ac1c07dff21682d60ea8"
+    },
+    {
+      "path": "mcp/server/fastmcp/server.py",
+      "old_sha256": "ffeae9682b6776fe9d621f2dbfff33ac0dba7645e08aaeb8c47528a32fa08bb3",
+      "new_sha256": "1b1c8cd4f6e350f7d4f62627764ed7c0f51e85872d32aba9d9da560a2bd2c50c"
+    },
+    {
+      "path": "mcp/server/fastmcp/utilities/func_metadata.py",
+      "old_sha256": "72f72f1dc9195b91280b84c2ae8db466e8c289ca3069e18dfa8dfeb0df59deb2",
+      "new_sha256": "c951a064ea3f1488c2f9685168ab049a31d9772c5ff06340f1b435399e1db18c"
+    },
+    {
+      "path": "mcp/server/sse.py",
+      "old_sha256": "e95d03b40ddb68968d5cc1b0a386c378197f54410709123f485564f05e4fbd77",
+      "new_sha256": "b7a6885508c9d96107ff8564697d66428620da71b5227d5f914e95c13b58ad7d"
+    },
+    {
+      "path": "mcp/server/streamable_http.py",
+      "old_sha256": "b184f85a99c9bd3aacc8232f6ccd2cc24cbfd3964ecb23ab2c9565d9aa38b225",
+      "new_sha256": "bea279ba402b95c1bb3f3c2566db39c972ac76355b80719fb3b8fc356319b29f"
+    },
+    {
+      "path": "mcp/server/streamable_http_manager.py",
+      "old_sha256": "8ece055c2910570c642e9acdf935baee8858347ce512ce03f9acbbcc4705ce08",
+      "new_sha256": "d602d0b8e8c57138170e14f3c9901fc3feef5aa34457fd4a6ee3a114e6096f88"
+    },
+    {
+      "path": "mcp/server/transport_security.py",
+      "old_sha256": "3258d3d144cab8b472bbcf35526e81b85ea08ff67ddefb25616180fe121355fa",
+      "new_sha256": "a512b9c99ca3c45ce30d0bac8d5a3d1a99f24ab0a9702cb35397186fb4da0693"
+    },
+    {
+      "path": "mcp/shared/_httpx_utils.py",
+      "old_sha256": "6dfbf2a6ae73b1bbcbe1d82d35f5fe969f11fc5aa6cc3b5610aeb52bb63e4a8b",
+      "new_sha256": "8777ec1e0b61a3b02a06d6646f10583fc4274e4aa34006163eece64f0d209d52"
+    },
+    {
+      "path": "mcp/shared/auth.py",
+      "old_sha256": "491c6ce44e7c264b28ea96654f2fac0c55f10c28b6a73601ffc8066f3cf6e664",
+      "new_sha256": "c7237afdd49a6e47a79e0059c6a47a97bf38ff98a0504907a357a9ed4720c396"
+    },
+    {
+      "path": "opentelemetry/_events/__init__.py",
+      "old_sha256": "08bd915c54f1d846d654f2362d8692954887265840557f8b110573627d4224dd",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry/_events/py.typed",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry/_logs/__init__.py",
+      "old_sha256": "59d12d9cbff24f13fa2031d9c8ec3e8adf524954201440ff82a1e86451125eb6",
+      "new_sha256": "ca88fc404db00814569f310bde3dc4a1d4bee8d362defd37272938b4d81fe8f2"
+    },
+    {
+      "path": "opentelemetry/_logs/_internal/__init__.py",
+      "old_sha256": "88d59e99e734b86e113f19fe00860746b34293b4cd9b9b4fc803d28a58bdbd97",
+      "new_sha256": "8edbf0bf6cc20f78124d5847e19f9fa73b87b1a2ad3b21f6646324607758dce7"
+    },
+    {
+      "path": "opentelemetry/_logs/severity/__init__.py",
+      "old_sha256": "ac70085e56d40dd7a06cdcd274bb4a85e5092b7605c0b7d51c76fb83da9a4168",
+      "new_sha256": "19b1b0ae360372e249cf15c3000e265420cbeaad6101d1843e4ce28be4292f9b"
+    },
+    {
+      "path": "opentelemetry/attributes/__init__.py",
+      "old_sha256": "dc26dbbd6d7fe2a48743e7c0bcfd02c6f94534d5f63eed49c809dcf63afb5384",
+      "new_sha256": "40e46fdd33828a889da31e539add39b3b5528a569834f6a5aa85d6c1c4d48f57"
+    },
+    {
+      "path": "opentelemetry/baggage/__init__.py",
+      "old_sha256": "6264aef71e76813cc3aa40ba29957be7810096bdb5e3d4acbc7aab8c1578fd85",
+      "new_sha256": "4cea8c0bdf6848885e2b17e357c75ce9cf9279a3e710169ad5886210b8838f5b"
+    },
+    {
+      "path": "opentelemetry/baggage/propagation/__init__.py",
+      "old_sha256": "140d94f58c99e4839b589557df535453ba2e29868cd0975463791d8914fa3c7d",
+      "new_sha256": "bedd2aa3f83fb41eea84f66b1a11067f4162c94d1236b643ef4d620c75eb524b"
+    },
+    {
+      "path": "opentelemetry/context/__init__.py",
+      "old_sha256": "f5550bc7ac7eb84baab410fc6e2491921e915057daeba5923cd0c5edddb1fb8c",
+      "new_sha256": "a979c3f42ea14c0e8309f29e9cf9b2f94af7ff63e963e8d3211e7ad1cc8b0ec6"
+    },
+    {
+      "path": "opentelemetry/context/context.py",
+      "old_sha256": "7c65acfe01cb56e3abdd3602b178665159622012fd5f5cccfd1699b4e65c44a7",
+      "new_sha256": "f946dab972b3e22fffeb48faeeb047a9331b2b0c69df4b75acbd49b7eddb93bb"
+    },
+    {
+      "path": "opentelemetry/context/contextvars_context.py",
+      "old_sha256": "6074f62ec7694e56c9d1fdbfc5e927805e24d59796f94fbfe27ccf91c67fa41d",
+      "new_sha256": "58e4df8b71ce6ff35c8312eb1788e244cd5366419ad80eae4aa230a070bf769b"
+    },
+    {
+      "path": "opentelemetry/environment_variables/__init__.py",
+      "old_sha256": "9af0b0accb8ce41ae977ec9c2da2af369f28a0137fe5af8a6067d31c14602291",
+      "new_sha256": "c230482b03d87e723c5cd090dc9f34e08e81095ead4f132f972ea02c5fc232df"
+    },
+    {
+      "path": "opentelemetry/exporter/http/transport/__init__.py",
+      "old_sha256": null,
+      "new_sha256": "0bbcdf4012fc503f4357b08bbb5f87f0a3e355a641720d91d2cc308496818320"
+    },
+    {
+      "path": "opentelemetry/exporter/http/transport/_base.py",
+      "old_sha256": null,
+      "new_sha256": "fe6a1a182dc56d24d5650db2ed61a496aefa13387193b7247d126f2a5ed97307"
+    },
+    {
+      "path": "opentelemetry/exporter/http/transport/_requests.py",
+      "old_sha256": null,
+      "new_sha256": "f4163b7a2cace67bb7ecb09e4308ceabd64cbd1811e40d390cda94049d31b68c"
+    },
+    {
+      "path": "opentelemetry/exporter/http/transport/_urllib3.py",
+      "old_sha256": null,
+      "new_sha256": "76ebdb7286831a70d41e5ba9bf2070cedfb0b3a88d5934ce937a5c385c0f6713"
+    },
+    {
+      "path": "opentelemetry/exporter/http/transport/py.typed",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry/exporter/http/transport/version/__init__.py",
+      "old_sha256": null,
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/common/__init__.py",
+      "old_sha256": null,
+      "new_sha256": "3fa0382266f4391506ddb92e64a5524b695cc09056c6269881af96444a3b13a3"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/common/_aggregation.py",
+      "old_sha256": null,
+      "new_sha256": "f24a179345d70bdb5c707af21ea6bc9d0d2c02dde4e752ae582669f88aa63eec"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/common/_exporter_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "21c0b43a9263b649d4f443647fbdd00a8fb62c49c01b0c934d8adfeed6dedc0f"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/common/http.py",
+      "old_sha256": null,
+      "new_sha256": "c18334d4c8ed189f4d824ebc15e31bee81b63e8bf789c157fc7bed6d3a836560"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/common/py.typed",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/common/version/__init__.py",
+      "old_sha256": null,
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/__init__.py",
+      "old_sha256": "616b6abcbf86eb3856e1f7ea2a8ad1617612d8069446dec346c7828aa064261d",
+      "new_sha256": "bb4651243f7576cf273c07edeea2570e0b65a31e228738c4e276c2fba8fba362"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/_internal/__init__.py",
+      "old_sha256": "e4a0df434a56b7a0226c944bdab48bee1760bf655b7ff5f442b915c4a1749725",
+      "new_sha256": "8c885a7f9ce5475fff811e4d2c7a0cc22cc53d5a5695741f5fc797573cde9b3d"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/_internal/_log_encoder/__init__.py",
+      "old_sha256": "38a5ac7468a73655ea06b3a5a1077d2f48ce0a16cfa4f069d2500047b1bfe87e",
+      "new_sha256": "fd91f166404ad73a6e848f5b924a678440ef6a720b7899da97f87623b3cfe358"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/_internal/metrics_encoder/__init__.py",
+      "old_sha256": "53709e0640ce7c8e613f8472da1dea7eca3786f5e11563a9e9c446dc5779ddda",
+      "new_sha256": "459d2a619397bf2d54d5eb77e0cdb3d47695aeda0c4cb17c60f2f3a835a2f65f"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/_internal/trace_encoder/__init__.py",
+      "old_sha256": "8f7d2f614410639943bf412e6f626dc97b35a2731bcc3935b41e7c6ae1f50af5",
+      "new_sha256": "286b1140e27f9c226795ad536db423a6781488c8e4ea4381cf91ee282caae498"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/_log_encoder.py",
+      "old_sha256": "67f6202cabf0160813142c18f571376b28cd10a59b7d5e53fe39eddd5f0f91c5",
+      "new_sha256": "a01e6d5154d48ec2ddc967be456ac6f4a0104241058604312bb22b5c43e5b7a5"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/metrics_encoder.py",
+      "old_sha256": "7e34e8a94ca7826135befd1b28e5803cdbc08e3e2b4231b9fa86acb354c05447",
+      "new_sha256": "f9b7b8f5da49338842a631107890977a46200abb41e0fee6cee1b4421dbbff7c"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/trace_encoder.py",
+      "old_sha256": "04b758e45ef7b9e8c040801e3015bb3e68b9b04ee7d466edb79f4fdb6185d239",
+      "new_sha256": "8a96602f29ed7a74552d86807416e943109dbdefc250cceb1305de9bab642163"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/common/version/__init__.py",
+      "old_sha256": "420f83b16cfb888dea77dc3e0d220cfd48ae5a7b8b63a49afd9ea2c88e9d3518",
+      "new_sha256": "5b0fe18ed3a8b5e373d3b94fa2738797d281f95f9d1af58ea3a768e1732c162c"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/__init__.py",
+      "old_sha256": "78b303f138fd5e73f9c869578026e2d5873e5ecc30888b72d845819598bb23b5",
+      "new_sha256": "9be0ec452234ba640f1ca2231b752d3e55eb3a2f6b9ed1f847b27eeea1719efa"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/_common/__init__.py",
+      "old_sha256": "ec5ec08b26a2b14382b151d84a5ef41cb4a2f9b63520410151baab8bb37c2251",
+      "new_sha256": "6731643e992c08323eb7e94817d8e5356d86fabd3856d460423b592202f2b95c"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/_log_exporter/__init__.py",
+      "old_sha256": "e378e7c027d3aab8400a45fa7db5a16f082f13edd99073a3ff23f639aaebef5a",
+      "new_sha256": "449366e56cba58ea1b0fe610e09f14eee3039c5f5e6bde442cf90e5ce6de0450"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/metric_exporter/__init__.py",
+      "old_sha256": "6ed743691edc5811d4a1543ef15f7b939e84c19c10ba255021ea38346dc39c6a",
+      "new_sha256": "30b24e0a9b1043ac9d9d7700a6d2231cb979aa9c7227168e5a2badba3f5331c2"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/trace_exporter/__init__.py",
+      "old_sha256": "8341ae31b67a7ed774d8b0d2e74b988a57ed47ee511fa84f7a9a2fb68c074a96",
+      "new_sha256": "5440d290201a5d997611e6b2919415d6321bff93f69b7919108bf8a73403f919"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/trace_exporter/encoder/__init__.py",
+      "old_sha256": "d33498ba9eef192025b27512c07b2c7fb27ecd4b59c8c6e1b3d7e79816a7acc7",
+      "new_sha256": "be1f2b7673dd4806026ed44f6abf1f1383093976db0702826ac482bbb48f9e1d"
+    },
+    {
+      "path": "opentelemetry/exporter/otlp/proto/http/version/__init__.py",
+      "old_sha256": "420f83b16cfb888dea77dc3e0d220cfd48ae5a7b8b63a49afd9ea2c88e9d3518",
+      "new_sha256": "5b0fe18ed3a8b5e373d3b94fa2738797d281f95f9d1af58ea3a768e1732c162c"
+    },
+    {
+      "path": "opentelemetry/instrumentation/_labeler/__init__.py",
+      "old_sha256": null,
+      "new_sha256": "e30fe988b374ecc01dcc1d091ae8cb8283b87cf7692ca954787c71b0d8d6e3a4"
+    },
+    {
+      "path": "opentelemetry/instrumentation/_labeler/_internal/__init__.py",
+      "old_sha256": null,
+      "new_sha256": "56d8e491fd2d769e00192548e1e53b57000f14af71d335b167d12727c8bd4968"
+    },
+    {
+      "path": "opentelemetry/instrumentation/_semconv.py",
+      "old_sha256": "6156220eb25818f6fc317c244b976965926e07a87fc1b1df4c11d55ed10d5f9c",
+      "new_sha256": "1f89514a8f5441bf0d39e4bdcff305e41f2de668d9ce7278a9e7590f8514580d"
+    },
+    {
+      "path": "opentelemetry/instrumentation/auto_instrumentation/__init__.py",
+      "old_sha256": "2eddb0c471a5b398787301bf15ff4a85c5cf8c4c8c2e67e8d17e7185ff0a59d0",
+      "new_sha256": "c25122d17c9e526cda26dcc93561b0b7efb985b2bd27a2188ce39fc1eb62d9f4"
+    },
+    {
+      "path": "opentelemetry/instrumentation/auto_instrumentation/_load.py",
+      "old_sha256": "b19b582223f4bb82ea1776083b36221302b2f820decd30ce2a6a2c9d43ed4e40",
+      "new_sha256": "33ba73acd4a60b1cf5a41f7abdc323b95690733d428757febc3f9e3e34494e05"
+    },
+    {
+      "path": "opentelemetry/instrumentation/auto_instrumentation/sitecustomize.py",
+      "old_sha256": "ddcfb83130a15563be3e97502e92073e9d0cf69643aa73c410dfa3721eafe265",
+      "new_sha256": "98689cff4294d57d4da5905f2891c4e1d61b0dd43923c08e3e6ca4d1fc98b562"
+    },
+    {
+      "path": "opentelemetry/instrumentation/bootstrap.py",
+      "old_sha256": "43ed63d46ed02974d3bc7e711861915f78c2a537ff36e841a32d97fccbccf6c8",
+      "new_sha256": "2d1670536ad9119241b81df3ed42f66c0d91229073c5baadd602e3ef51711718"
+    },
+    {
+      "path": "opentelemetry/instrumentation/bootstrap_gen.py",
+      "old_sha256": "2e766fb01eb5e26461f228010764865f5fe2416f4edd500a8d12c86dfd4baa23",
+      "new_sha256": "709cf1c740550470cf3036f919b64ecb0f4945aed733a1590e7fcbac5a16c0fd"
+    },
+    {
+      "path": "opentelemetry/instrumentation/cidict.py",
+      "old_sha256": null,
+      "new_sha256": "1cf6813a2a2035cc25ed47fd53bcd601d00e8853d12621d761bca2e192a8d8a8"
+    },
+    {
+      "path": "opentelemetry/instrumentation/dependencies.py",
+      "old_sha256": "e0a0491f6bbf20728bbf2047c8910d26036309aa7337e8b7d9131bda26d327cf",
+      "new_sha256": "40e74f6aabb82d098c231fd3720df856cb8ceaf48e26ce5c95d54ad5f2855887"
+    },
+    {
+      "path": "opentelemetry/instrumentation/distro.py",
+      "old_sha256": "97bc2333d791e385fe064eb0f9bdff916dff4205bcd8e8884d14ce638f2c8599",
+      "new_sha256": "01f4974d3cfc9514d994b36cbf0693d63a36eeca1d1de61e7e371f4cb504c8fc"
+    },
+    {
+      "path": "opentelemetry/instrumentation/environment_variables.py",
+      "old_sha256": "879330af286e7edc995025bd5eb5177a00bd0877cb4afa5c07f9a62a73195437",
+      "new_sha256": "481582cb750c31c78e52834584f0c112b5b4675f86eb18bd2ce4ad2f44b90d15"
+    },
+    {
+      "path": "opentelemetry/instrumentation/instrumentor.py",
+      "old_sha256": "e6728de721991ce88da223016db07f40e7636b2c81031dcf3f50bc2a95164626",
+      "new_sha256": "786fb9efc70b266069a0d3c60a1e77e2d300520e365f57dc628a64f39f57c593"
+    },
+    {
+      "path": "opentelemetry/instrumentation/log_utils.py",
+      "old_sha256": null,
+      "new_sha256": "d32d553e0c2a7f5a5cb7600ec36142f87d1b9a0e8a00ab38c46ff29a22f6761d"
+    },
+    {
+      "path": "opentelemetry/instrumentation/propagators.py",
+      "old_sha256": "841906ef42a53148938f13de8b23a191bfde13de83455cd1c98e1f108ccca83e",
+      "new_sha256": "4c133edd6935033c5d39cd7359a8d623f64f8fbc7ceecce45dbd138cc8cdea44"
+    },
+    {
+      "path": "opentelemetry/instrumentation/requests/__init__.py",
+      "old_sha256": "40150bb78e32d4c6667988f43d9a30658e574215fce518e3e1ac7daf5e3dd28c",
+      "new_sha256": "298afe23f3ea987651493acf33c90b8d4cad79d94e1f0a83727d932135fb6a76"
+    },
+    {
+      "path": "opentelemetry/instrumentation/requests/package.py",
+      "old_sha256": "f3894aef43720a845e7c04972a35397f86f22617f9a960cbe887588dc87e5133",
+      "new_sha256": "d8d8c21ac2d0a01f35bf8307698f8d3301fab96c222339ca06ebe09e4030d46b"
+    },
+    {
+      "path": "opentelemetry/instrumentation/requests/version.py",
+      "old_sha256": "7df3fea041072f2c50a9ace13e0a7b0ae35b56da7fb236f5328dbfccd65bf905",
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/instrumentation/sqlcommenter_utils.py",
+      "old_sha256": "a21f7bc035ec5ef53c19dc46469586c5c9de033e7f7704c16b553e395a74ccc5",
+      "new_sha256": "1d614e74f4f07d9a7dbdf48052ad2e68340211cf65e02892bea761898c72d854"
+    },
+    {
+      "path": "opentelemetry/instrumentation/threading/__init__.py",
+      "old_sha256": "d088921a5ed997ca34234016e7660fd318f9b51840b47cde9f668d4c1e5b37cd",
+      "new_sha256": "d66f3a9e15f833131ab642ec5135d8eb82bdaff2f4f45bed3c3e80381154d7d6"
+    },
+    {
+      "path": "opentelemetry/instrumentation/threading/package.py",
+      "old_sha256": "76e16faa33e0839bdadaac5349769062604149b20399476f9261080d95163a0f",
+      "new_sha256": "4a0683cdf7d48d8cb906d14f666cd3edbea81c15d720ffe799730b5b510e72ae"
+    },
+    {
+      "path": "opentelemetry/instrumentation/threading/version.py",
+      "old_sha256": "7df3fea041072f2c50a9ace13e0a7b0ae35b56da7fb236f5328dbfccd65bf905",
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/instrumentation/utils.py",
+      "old_sha256": "e86c47fb300a6b4a23ed5da522ec1df29d1398c0364a20bce2457aff015f7fd6",
+      "new_sha256": "42e337c6336ed8a7c1addd9d1f3b722d2e629b1e06e51aeed877196a95b6ceb8"
+    },
+    {
+      "path": "opentelemetry/instrumentation/version.py",
+      "old_sha256": "7df3fea041072f2c50a9ace13e0a7b0ae35b56da7fb236f5328dbfccd65bf905",
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/metrics/__init__.py",
+      "old_sha256": "3f46c63ac7fdea45278c53d02f452496078029ac931b2b7f8024af0f4405646d",
+      "new_sha256": "8aa01f0db8c21cf7b25f084c81f0f592861f4f87fb311d94464b0127e0023317"
+    },
+    {
+      "path": "opentelemetry/metrics/_internal/__init__.py",
+      "old_sha256": "ed585f637a65e062a91268d4da86412c96265fb24696c8e4a0b6ca791f60b288",
+      "new_sha256": "3c9fff182aeb63d9f3cbcd391388a610be6c17b232dbe63cf081bd15e179fc17"
+    },
+    {
+      "path": "opentelemetry/metrics/_internal/instrument.py",
+      "old_sha256": "1224975fa8cfb5399bdba16258d6ec01cf76cb38212bd709f800028714edd67e",
+      "new_sha256": "6ecfac691b9727bc80f9f60184e4bb70c39547dea6336ce095bab2c7c8f6fb23"
+    },
+    {
+      "path": "opentelemetry/metrics/_internal/observation.py",
+      "old_sha256": "33d67ec06a51d78d2fd5d4a0ed2aacdcdee71c20b57f679156ce2ac71217cec4",
+      "new_sha256": "f3c25f875fae07faef0ed96c9d97f163485a96f1709dcc6c5b79f085c97b6f56"
+    },
+    {
+      "path": "opentelemetry/propagate/__init__.py",
+      "old_sha256": "93fadc4a85844ca5326763b593c9d0a6eb3623c089880d4aaf4defe6b9533612",
+      "new_sha256": "0deefc2095253a3513bd00702a746d3b74bc1efc89c973b1f5efec75e8a0c3eb"
+    },
+    {
+      "path": "opentelemetry/propagators/_envcarrier.py",
+      "old_sha256": null,
+      "new_sha256": "49632cef601c16bff022b4722ffb595fbb8bb774c56a265bbf8ca7e935976ca6"
+    },
+    {
+      "path": "opentelemetry/propagators/composite.py",
+      "old_sha256": "981b8c1f3c01f58615b3114493ce3832d418682f35733248cdd293efc842de2c",
+      "new_sha256": "6b460146d4aea10f4411e28f8cb307b07875c179acc04554ea51954effa58bcd"
+    },
+    {
+      "path": "opentelemetry/propagators/textmap.py",
+      "old_sha256": "77d8f6f29c9c86995b3ece9b463483111cd02557fa212e8ba4eaccb4b3fa21b9",
+      "new_sha256": "d9cd853b30d309fdb7d80d88d9ac729e3927bfa011b384713be5bb627cdc6e33"
+    },
+    {
+      "path": "opentelemetry/proto/common/v1/common_pb2.py",
+      "old_sha256": "81ab7c87bed1e77a3f4d1740339440db9341510a9e88cfa34fc4185cab68eca6",
+      "new_sha256": "714a72d447de7a48ebf1276743a526d5bbdf6b5610109be6e5fd6ae707dafef8"
+    },
+    {
+      "path": "opentelemetry/proto/common/v1/common_pb2.pyi",
+      "old_sha256": "ae861df2af410f30f5a59574df32c39543e9be186519b06261d846d8ecd438a1",
+      "new_sha256": "60252c9b8e35ea7981c09be10d1d2125baedcc56c49cfb50eaa0252a88f9e3a0"
+    },
+    {
+      "path": "opentelemetry/proto/logs/v1/logs_pb2.pyi",
+      "old_sha256": "69541de834de8da1d64da62976c53932887c03cb5af84ee4234b9665a944be02",
+      "new_sha256": "ef000aec5f8ca194de359073fbd3c22cb0877c8cb6f932588cba54f86a08d550"
+    },
+    {
+      "path": "opentelemetry/proto/metrics/v1/metrics_pb2.pyi",
+      "old_sha256": "87e09aa69e3459845c1c5470ffc5e756725c61ad19f187c72a3bcc4a4e84934e",
+      "new_sha256": "a8393a2141f9edfac23d74b8236d670bfa55cb887fe7bf80cb6c81376951533d"
+    },
+    {
+      "path": "opentelemetry/proto/profiles/v1development/profiles_pb2.py",
+      "old_sha256": "909654ff53edba0c0338dd757851ff6831b261ae5523202f81b9a823012ec6b5",
+      "new_sha256": "4c3c348d738f2aebb0e981e6f395791efff81b144a0e039875b90634f19720ec"
+    },
+    {
+      "path": "opentelemetry/proto/profiles/v1development/profiles_pb2.pyi",
+      "old_sha256": "806f565d6d9ccbebf123b7e5280a174baffce33962ad518c0d38448316abb349",
+      "new_sha256": "11cc83f94bbff90022288351b3ca093a06ae13e2061cc6d1c8fc68e8c1c84838"
+    },
+    {
+      "path": "opentelemetry/proto/resource/v1/resource_pb2.pyi",
+      "old_sha256": "1aab70047e6c640fda4713cf5ab37e66f71d7ac76a4983bc003f42dc93b40778",
+      "new_sha256": "0e9f65777e5652542a81e5aa3d8e3508a7047ede32a2c0f48f7601ef8f8a966b"
+    },
+    {
+      "path": "opentelemetry/proto/trace/v1/trace_pb2.pyi",
+      "old_sha256": "f942b649490d870ad6969bcf9824a5eb12e2ef257efd73033861707920ea1f8d",
+      "new_sha256": "7074f0c170def4454c9b05630cafa0aa6696aff3f1831ddb6eb4cde7706a64e5"
+    },
+    {
+      "path": "opentelemetry/proto/version/__init__.py",
+      "old_sha256": "420f83b16cfb888dea77dc3e0d220cfd48ae5a7b8b63a49afd9ea2c88e9d3518",
+      "new_sha256": "5b0fe18ed3a8b5e373d3b94fa2738797d281f95f9d1af58ea3a768e1732c162c"
+    },
+    {
+      "path": "opentelemetry/sdk/_configuration/__init__.py",
+      "old_sha256": "560ca113da3170847bada5b6fa88887d66a607aa36e41abc9a7118ca1769496c",
+      "new_sha256": "01e6872c22509f309d321d41f8a262493cb61068163b7369f66dd463ade34fa7"
+    },
+    {
+      "path": "opentelemetry/sdk/_events/__init__.py",
+      "old_sha256": "7b3f81554a4d86617b2d8721f854cc770f26ac9a76b0911d7c2042bdd4b8268e",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/__init__.py",
+      "old_sha256": "4c4076fb777535c586c9b3cad4f7eb54ab303b5b0ed21f8c1244cf3b4fe640a6",
+      "new_sha256": "db27e8e7d398c3767d0258cdf08d520aa12cfd9cb2ad848c05a8fd337d2dc5a9"
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/_internal/__init__.py",
+      "old_sha256": "319e2817b669e0d8e37884d0a871f31898df570570fc08d6a2b311220b7ef721",
+      "new_sha256": "3858ff3f30516db64c14f148c09fa0ab4d4ea61e4636a3f8969cdb68677513b4"
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/_internal/_exceptions.py",
+      "old_sha256": null,
+      "new_sha256": "2138ece830fffbfb1fd6aa0b1d3e55112d3781feba2e676db74aeb45203542e5"
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/_internal/_logger_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "6c285c6cdc660dac673bddfdbc1321651ef5f78fbb2946780090a81ae87afa44"
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/_internal/export/__init__.py",
+      "old_sha256": "ff951d38e3d1d95c5e798b37702d6467212ccdddf2c68efe733eeb9592bae670",
+      "new_sha256": "b74e9e7eba25f9fc67c47a56ae5c6fe5aa82374a96b37ac7994d7124b7b47f82"
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/_internal/export/in_memory_log_exporter.py",
+      "old_sha256": "6e45509869e49315f7c050cd33fe80ba68e3a70ec98e7bdfcde97fe7d6f22005",
+      "new_sha256": "b74f1ce1aff2248d226beb9bc3d66b575395601b75ef4857e60bb08c5b2ac2a0"
+    },
+    {
+      "path": "opentelemetry/sdk/_logs/export/__init__.py",
+      "old_sha256": "9d41dd5cd830a9f0ded0aa0690d057ed797f9a8e3bee2c8adcdd03e411fd8368",
+      "new_sha256": "59b1242e493ac7626fdec3793b89d8c9019388b039976c08cccc9765a25b9c22"
+    },
+    {
+      "path": "opentelemetry/sdk/_shared_internal/__init__.py",
+      "old_sha256": "4458b342b79a4d22ad86f9ae08191f797fc8bb27dec8f35d9e0d3dadfbcae767",
+      "new_sha256": "94b3234bac977d9b7b4ab6cc3951ed8344f829f33ae4f8f7b52c3b7c261fce3a"
+    },
+    {
+      "path": "opentelemetry/sdk/_shared_internal/_processor_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "673e0cf2a92dd3810b046ed2965f952977aeea11dd5aa3551d6327888c4db9c4"
+    },
+    {
+      "path": "opentelemetry/sdk/environment_variables/__init__.py",
+      "old_sha256": "f8d86e21524ae7634653148d49fb7b3dc318854698ca188f192338864c8a208d",
+      "new_sha256": "a87e1b803e09e0c5b6aa72be14bea94b994fb780b96b8b845e2efd5551ca7313"
+    },
+    {
+      "path": "opentelemetry/sdk/environment_variables/_internal.py",
+      "old_sha256": null,
+      "new_sha256": "96ded11e01790fa8288f80dda7e8f5466ab2d3417c0cd4319a14740f137720a1"
+    },
+    {
+      "path": "opentelemetry/sdk/error_handler/__init__.py",
+      "old_sha256": "eb60cde85fe17dacd6aaf05d9705dc9b08242151e3ad915a3b112929e8eab99e",
+      "new_sha256": "11bb147d80cbaca16fc9b2d9e594b0959497c5822be13e5ae26de777f27aae52"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/__init__.py",
+      "old_sha256": "910e3aed6b7fdee40c6d5b2dbe0ba09ba2c306eb4578310defaa04949879cf7e",
+      "new_sha256": "83ceebc5dd25c86a623c1857b30c2d91c208e62cab69822ca39af2403fe73e60"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/__init__.py",
+      "old_sha256": "51d0c1fbfb05b0ad7e981058b0f5c4b509fa34d7663618e81bdee46580743f56",
+      "new_sha256": "df669a53a6352403fe225043c2ca4846f90ddbb1d479f9af4cac31ac71c97bf0"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/_view_instrument_match.py",
+      "old_sha256": "f1c4cb9c343a16546d4e374cabc578567fcd0fe29aea230f045f1e31e7313c31",
+      "new_sha256": "d392fa35c527bc2b220119564f9eba89cb4595569f9b323723c82aab583a922c"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/aggregation.py",
+      "old_sha256": "da529f9af5a48f9748ff594d5ed1d87320448f866d48a54997d7812c1b678114",
+      "new_sha256": "789c6fec50f61c8116f8d7e5d9885bb8ffecdde640b499b2bff034a990340226"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exceptions.py",
+      "old_sha256": "ff46cf837b2e628217289ede0aa1b74bf814295714007a75d6fc13870a7fc808",
+      "new_sha256": "81307791620e8548138718f5f21ed7393ee25a2254d427fad4f7dd06b59c510a"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exemplar/__init__.py",
+      "old_sha256": "ccfc75caa6da365e8f9d092d2114f358aa9426dba7c2106b07dbba059f12c0b6",
+      "new_sha256": "b6e0c7c02f787e0a992a00451a23321ca0338bc1df037bffe653073d8c3ac0c4"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exemplar/exemplar.py",
+      "old_sha256": "3e70ff6682c7e5e2e899679f67276f3db027c391537b004bc92fe06ff95cd97d",
+      "new_sha256": "ed4b26373c90f33746874e011505176d0b20b126d1da0f55f17d1b1dac3bec57"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exemplar/exemplar_filter.py",
+      "old_sha256": "413c8c9f87f1ea9c8fdd59a59fa74942dab8729a6586afc3c38a51aa21843f74",
+      "new_sha256": "6ec333cbe95fb5c69a815cc89b313a3cb85424befd6ce857252f64d3a6464e55"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exemplar/exemplar_reservoir.py",
+      "old_sha256": "8505d0ec536898429642361fb4d7e8c82726a5b83f7ad0988e18f34cec92e16e",
+      "new_sha256": "a399c48a6a4b8591fd047eb7b31deb55f2f00ef6a4386afffadf0d39f3281982"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exponential_histogram/buckets.py",
+      "old_sha256": "c179461c702780c50d198e69909f9802878a63ddff7ca0c7af2a8bc6b8438ad5",
+      "new_sha256": "1e20d4f2108b7f13f4cb8b7de5d08f512362427dbb3d242c977de9b854d67490"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exponential_histogram/mapping/__init__.py",
+      "old_sha256": "16a5ebad3914e67818341ff16fa72baba800a6692077c3f4a7f6df0974829ca8",
+      "new_sha256": "79ef3f64fd0560c95655cd9e0610667ac9d0b7cd0778db2ff1baf32dca45176f"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exponential_histogram/mapping/errors.py",
+      "old_sha256": "e90ea37ec565b842a9e51ffd1022d6f26ab7668a325f4c3d595cf97be60086e6",
+      "new_sha256": "0b6e65fe20074baa33db009e8652ad3a8075a4db78358646effb28fccce6f5cb"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exponential_histogram/mapping/exponent_mapping.py",
+      "old_sha256": "93bd28e8577acde768e15708d533932a1d91bab75a01431153cdfbb1de643b9e",
+      "new_sha256": "506d391d583cbdcc8fef2db2fc22e2d4eab3c2ee7c47d1618d6a0298f36655ba"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exponential_histogram/mapping/ieee_754.py",
+      "old_sha256": "6873f8f73c7a1088e96027c365cc2bce8612931de8935119ac678b1bc4faaab0",
+      "new_sha256": "5788fc04d82939f1d7bbe0e8d5fad6e2e01e20e16e0630a60ceebac33fbbf7ca"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/exponential_histogram/mapping/logarithm_mapping.py",
+      "old_sha256": "ea5f705df0fd4a6b4e1947927c36fca8859dc45f5a4a50e292eab4ff7885f47f",
+      "new_sha256": "d89733f1c4e129796089ffe1de2d3045ebbdd6d30638f845f84b21c0c1d1eb6e"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/export/__init__.py",
+      "old_sha256": "82255da115475d7d6ed77b2a7d6a0a5cacc2320e7a62ac4207295de182146643",
+      "new_sha256": "67570c43b99d72bac7f1a24d8c26ba0b1d9cda1de114c7451a6a780b9ba37d2a"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/export/_metric_reader_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "afa9e661fe31a66d3dac8dc153666ec2153130c972cd82793226dd29c1b27170"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/instrument.py",
+      "old_sha256": "9dff564d64f5584ea2c8a4536a96ef334bb05893afd55f669146fe954f95e65e",
+      "new_sha256": "f4ecaedf35fb613542192a0ef0e357e26a2dc135d82e8c1f2ea5b1ef12a445f9"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/measurement.py",
+      "old_sha256": "53d495d52203d2d08ebe251b4f89363749ccb03f1c76c9228483ce490490aca0",
+      "new_sha256": "3516624acb57d3b55f3547bd5f5d333bed0d604ac2dc7576f545947bcade9b23"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/measurement_consumer.py",
+      "old_sha256": "7d7e3008c0d4901bbcc3766399719806cee35a92f9ef244c6d8808aa6e055adf",
+      "new_sha256": "ee686e15ea750f644f89c17de08d2a95302863beb93293cdc36f4e286cf4736b"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/metric_reader_storage.py",
+      "old_sha256": "382c2f0d4086accc9d93f3a58b8fd436bc0de204f831dc9dc59a4a88046ec7d6",
+      "new_sha256": "453cffbd0f730f0b8940b642fe31c1045103c1bb0197eac97e7b7398ab94f242"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/point.py",
+      "old_sha256": "4b2584dc6416cde4a5964f8f5c77fe32fc20abde76464e8671a97376eb41f849",
+      "new_sha256": "e57670817128df62e636523e8c4115fbbff61aac1e8bd11745dacb4ed859c460"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/sdk_configuration.py",
+      "old_sha256": "dd375f2f40d691c78c3703d608cab9b3a8c786e881ef556365457e44381da5c2",
+      "new_sha256": "bddcd0d41e3a7ad3176f950d0d22af364347a18646706ce7e1688ad9200ad16d"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/_internal/view.py",
+      "old_sha256": "4b0578a4520632883d123648403880206eb756a94818b95cd9abaf0658909a08",
+      "new_sha256": "75fb8195fc3aa53e2a5443763374e6e795ceaeab144ea3a589ac4bafa9b45a80"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/export/__init__.py",
+      "old_sha256": "1a0e97da23151eb509ed49222993d4ccd851cbae47ab53c6f93940cfe47914a8",
+      "new_sha256": "58de4070a8b996889adfad839c314bd820ceb9e0eca19638724e7e709470b721"
+    },
+    {
+      "path": "opentelemetry/sdk/metrics/view/__init__.py",
+      "old_sha256": "90fa9de9841d20aa7502c3bc962e1389888062f6d374a099565fdf3874403a49",
+      "new_sha256": "4747fdbeed0309572c0178fcf30534c9b41ebe7572c655537784f27e0943449d"
+    },
+    {
+      "path": "opentelemetry/sdk/resources/__init__.py",
+      "old_sha256": "8a0c61d2fdad040e9128020d1f2ae4c3b34929a4611162e08ffe837117356a1a",
+      "new_sha256": "f39e2a688462c5d44c9f39341c26724b5824a51561cfdc9c2c4cec0dca585965"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/__init__.py",
+      "old_sha256": "89210c878ec958c694c9301f890ed06473ebf5d8ae181be82e668830f27daa07",
+      "new_sha256": "27cf9cca07c5a76dadcdf3de5d66b063aea11d45783acfd48810cfc5cea38db0"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/__init__.py",
+      "old_sha256": "8adbddc264a65a4321c6d4dce9eb75e756d2e095d8462c6b569b0cb2a45fb115",
+      "new_sha256": "a424b8324484bed51fd44387d4e951ff6334d15ab208f579df0b262304b2a786"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_always_off.py",
+      "old_sha256": "8f56083dc07a5fa76973760a9207c0e4eec0654954dc950831ce966e389349ea",
+      "new_sha256": "de9708e684e4deff2a1f55f2738e5997b2e8f6c7871aa2a74a0af4647a811240"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_always_on.py",
+      "old_sha256": "1886ba728aecc0cfe13743c0a20322bb0d1b421b1a45c8dc4e08050891ae449d",
+      "new_sha256": "4bafd9c205ffa93eebca0be2e5293029819d75cf762e4c7801da1eb0b9bac02f"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_composable.py",
+      "old_sha256": "2b8d787f55c57a5642f326a6680a0094d1c9ff4adeb22d913c04c13b94e38ea8",
+      "new_sha256": "31f19037f1afe1e46f9e1a8afd5d500124f80c881b1244f0d09c43a62833cb41"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_parent_threshold.py",
+      "old_sha256": "b45e6ad7625d479a08c0311399c7f65b5671a8f661a24756b699dfbb26ebbb12",
+      "new_sha256": "fe56433c6667029b25e0961632f596f1f00fbc261bc3e07557c07c031a80b8a0"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_rule_based.py",
+      "old_sha256": null,
+      "new_sha256": "6f8110e08cadfaee0485c8a69b2f5c28145bddb225b5b96374006bc7d54a0894"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_sampler.py",
+      "old_sha256": "c74e802d5fa71fa53c324df8ca2e2f9ce80232eb5e46dc30106d143ed8ac16e1",
+      "new_sha256": "2d57cfff748f5f044491af2974076885d171a22ae8c82acd356ed14da3db8da7"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_trace_state.py",
+      "old_sha256": "18cc8c4d4170726286e289eb9e23522bf2916de12134079f1d785430defaa4dc",
+      "new_sha256": "022e55175a4a012a45ad2683f24ddeca2d693662d5de037270803a4c796ee327"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_traceid_ratio.py",
+      "old_sha256": "be3c345d482c60064822b4f2860c1b134aec7ecef5f0f1759f294b12d04790a2",
+      "new_sha256": "48509054ada0719f7b90c25b11047627d918e28e0ba07691d81011df47c07895"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_sampling_experimental/_util.py",
+      "old_sha256": "63b6cbad0782c08dfe46d88b4d04cf55c342dbf374c54496fbc67cf6bd2a347d",
+      "new_sha256": "4dfcf44c8c7bef4bc831ce9252a7480df2566732be607b973f3f21bfd73ff288"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/_tracer_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "aa0deab148db5ec66bece18e9ba275bb3aeb4b960438a1b751455ad5e6947a39"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/export/__init__.py",
+      "old_sha256": "13141a7524fc12d82959eefaac55361ce0e000f25f702a25309d1a268b0baefd",
+      "new_sha256": "ea5e93aa63c87733ec6cfe0cdbd7686668650a15c424b4cdd2f4281ac150cfef"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/export/in_memory_span_exporter.py",
+      "old_sha256": "1ffe1345a4e130ed47eaf510d0ea50bf3264fdf647d0e3ac440335899417b11f",
+      "new_sha256": "67fcae7797d3b20af1c86dbacd1b8f2822edc4635d3a5455444fd082ecce15d4"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/id_generator.py",
+      "old_sha256": "61d311101e1470f6dd9e13000c5486d678ebbb83e3c8d1784430a9b63704e8b7",
+      "new_sha256": "c4ac75dde46e185dd03bbf876046bf5c4dad7409efdb30a45db904a5f73dfd1b"
+    },
+    {
+      "path": "opentelemetry/sdk/trace/sampling.py",
+      "old_sha256": "9f9900322cb7184d365036c6b8a175900b292d10a7a8e16d4a9274d0a66f1f0f",
+      "new_sha256": "e895f62d5659b6c94fa0a12b17afeb78f1c683e11b01201f032977777a9c6d5e"
+    },
+    {
+      "path": "opentelemetry/sdk/util/__init__.py",
+      "old_sha256": "679eef83485882aaa9b51c2ce81af5ee9fa32715efa96d8255d96cb2cb970a14",
+      "new_sha256": "21aa495f7062e352debbf19cbd04df3fd491474805d1881d62f26f6e0714e3e8"
+    },
+    {
+      "path": "opentelemetry/sdk/util/__init__.pyi",
+      "old_sha256": "95876bf46840b684c5fba9ca7352c7963752181454c94804b61f081230a83448",
+      "new_sha256": "c9fcb512145b7c78203eef48736b20b94d8288789e399358eea6506c4bd0a039"
+    },
+    {
+      "path": "opentelemetry/sdk/util/_configurator.py",
+      "old_sha256": null,
+      "new_sha256": "9a720ed87acc227ee4fcd342e4209f16ca8190c0c138d98481900384d04e4b64"
+    },
+    {
+      "path": "opentelemetry/sdk/util/instrumentation.py",
+      "old_sha256": "a339628754ec3ab95ad70426105bc1598487405ca6889e0e1b209122249c6343",
+      "new_sha256": "8a5968460142fa92c90840cc6f49f1763f1fec43a28794f6919bd74f56eedfe3"
+    },
+    {
+      "path": "opentelemetry/sdk/version/__init__.py",
+      "old_sha256": "420f83b16cfb888dea77dc3e0d220cfd48ae5a7b8b63a49afd9ea2c88e9d3518",
+      "new_sha256": "5b0fe18ed3a8b5e373d3b94fa2738797d281f95f9d1af58ea3a768e1732c162c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/app_attributes.py",
+      "old_sha256": "72e7f56221a81a4c593ee905c2db6263f53a9f05eb43fe11f281ca0461268f99",
+      "new_sha256": "3fc994435a116f1e64dcae2d75ae28cab8a9e69ab89875e2a0141d7e3e00e0ac"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/artifact_attributes.py",
+      "old_sha256": "60cb5de63dc16c75c43132c6d5460356b17ea702d55b33a2a8b0d219f92efa94",
+      "new_sha256": "05669aef4ef7c848c91843cc52f56d78d8409af3149295ac6e0574ae4a4c303c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/aws_attributes.py",
+      "old_sha256": "96d167acae1c0788dc25737bf98902ae7c5793a6d49815eefcbea0ab3def71ba",
+      "new_sha256": "05b907bf50243036c719f2aabb0c0a132270ecc65c8cad81c310b6165c59fb41"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/az_attributes.py",
+      "old_sha256": "cd2141657935952bab85aa85f85024dbc7a55c00e609fe6df9bbcee6c3b505cd",
+      "new_sha256": "3f5611b667b61a5c724b26a15d6a1b0f43727190e5c35a1afea15259db26236f"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/azure_attributes.py",
+      "old_sha256": "385354f75d17005ed7786b29b9621d4dd8869531bedc24ee1ba8f98ae4d55c51",
+      "new_sha256": "1c0672ea5fb7bf372b7415627496f10fbf2303093609356bf9cd837f92a2b330"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/browser_attributes.py",
+      "old_sha256": "1ce91da459092d1536f74d2de5bed43fbd66b86d291f8247e46f16d2eb701297",
+      "new_sha256": "39657eec492e57ffc27dd02510c79aa76449a82b956709bdd8ebf6b7bd282c74"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cassandra_attributes.py",
+      "old_sha256": "980885242c79913f449fdbb27642fd1ddc7e9b5479c6a55108055502297e1c8d",
+      "new_sha256": "28220631b0bd27da8cacd5be9ed50393e4163b44866ebd10224ce0a6b4100d8e"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cicd_attributes.py",
+      "old_sha256": "6022c59d0c688cbb15491f5866dc98f2cbba179545d250ea0fd1a6ccfa0c2d4d",
+      "new_sha256": "6d57f3405fb6f1873e9d7e68432e7474d78879f59363242e8b81e0cd22aa8f49"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/client_attributes.py",
+      "old_sha256": "39003cbcd0d385442f6271b3223d6da1fd6c60fe8a34e863653e722d3904d1c1",
+      "new_sha256": "ef9f1337945888e55ad1b7c7a12ef8bff3d38abf962d1240ec43e097c3a448ea"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cloud_attributes.py",
+      "old_sha256": "d7a77f27f4707cd52f30e2ee0ec4f32a3ab9b28b455af9fbc65f67b9d7d019a8",
+      "new_sha256": "152bc38800ab39dba03d8260b34f2c03db05cb144871dc57ce8697c96e5d5aad"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cloudevents_attributes.py",
+      "old_sha256": "3a8f9c3044dc513d7c84c7c91c5f72b404f38000dd5870bce11437735e6ff773",
+      "new_sha256": "0a1e11d9397a4f67688a5a77ea415f417c2adb36b6ed4c294485537c45cac9e6"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cloudfoundry_attributes.py",
+      "old_sha256": "24d38844338ff0470657ec9221d28369f80cc16069c41f6b5c0474781d9c230b",
+      "new_sha256": "2e932fcf30e388d8fb7a980c11f14cf70f23a0564bbef122abc144296fae8894"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/code_attributes.py",
+      "old_sha256": "1adb0cabfe5e1784dc96aa28164c81e4f508dc07e91d9da7517a86769f623e7b",
+      "new_sha256": "010e652c9a8b22a79a15c1af37dc68e6fd667d6c3e6de4520ae178c8cab9c61c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/container_attributes.py",
+      "old_sha256": "0999614972845fcdb2dfe8a7521db3551b8fd7a017fc431f9ac4d52344fa4583",
+      "new_sha256": "7b8ac676816b29cb381a12e3d3cfc0a996b5204d8763a404899c7ad5dc0fe192"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cpu_attributes.py",
+      "old_sha256": "656c5ca0f28dfe35fc86a270cf18d71553fca216e0d2adbf3590362c2928bf05",
+      "new_sha256": "a23ebcbdb8865377c868a03456fc63978c8af4685f5bf5c9b1db29e4f62f3796"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/cpython_attributes.py",
+      "old_sha256": "5b274b1b285ac9d68ae3c78c0242576b1f84fadf14e0b5415554696346a33d86",
+      "new_sha256": "0d4f33907b70d3bbd2fa5ca4e58ae979dcb78f4fed1503687215d86b710b432c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/db_attributes.py",
+      "old_sha256": "e8d83d85c5516250f2696dc1e9fa271aac2f14cc51a4e69e3a7dad5fbdca55f0",
+      "new_sha256": "873cf7997ff221163734fb23c5173c492092a900199814dd6718a8933a8469c0"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/deployment_attributes.py",
+      "old_sha256": "4643c844fa426a69612b612f5fea6ae3b6016e3fb5238d2083f6823ebe0d4b21",
+      "new_sha256": "f3a2c87f09dcca6f5f9a128e3382ff5595d9940124c91702a1f6463f57d74610"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/destination_attributes.py",
+      "old_sha256": "87238f3455d0d57be874a9022d34abd0a861033454f2db340d37f86df5fbfd78",
+      "new_sha256": "5f6d9aebb80d39c39e4dffa6c3100666cd2f9e5720a30cdb17d1a927fce22285"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/device_attributes.py",
+      "old_sha256": "048111a5485bb740f67c03ec6de138e312e3a00344fa92ee356d7e3c971b9bd1",
+      "new_sha256": "7f384d6707087978157946f467d0000cff1a62bc1668c4147a84fa4adc98c710"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/disk_attributes.py",
+      "old_sha256": "7fece1e7b67bcb45c9a95b6ec6c37aaf5b7f1606c877c71ea6cf305a0d255cf8",
+      "new_sha256": "0ed1e3313669be0ac5f004823f56c6f0e943573950092b208a7902a4a6345e7a"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/dns_attributes.py",
+      "old_sha256": "b1b7bd8f417be3b1854a62c9aaf91e1645208f86aff365f10f1f287c46c51990",
+      "new_sha256": "98def360f8bcf0ab717e47362128fc244acf73f5a8c09f6027e43c598cdb0c13"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/elasticsearch_attributes.py",
+      "old_sha256": "2fa85f9b2847b6a6e1dd790722308b890a85477c7720a85540eb4a73c442a3d0",
+      "new_sha256": "4f8d69b5b4b809685d8f51bdee2ee0821f55c59f3a5e4167d75efeea51e4414f"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/enduser_attributes.py",
+      "old_sha256": "8c9f471d36c4b70a02aff5a12ed6bf609942fcbc603275fa54528661e7f35158",
+      "new_sha256": "c5de6506eead91355639dc56f96c32375cb7889b6cb207964bc5b3ff29159bfc"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/error_attributes.py",
+      "old_sha256": "e1e9f013f58da6a1c71b83d33e0074f9a0177902dd71165847968b308419c85c",
+      "new_sha256": "7574882776c8621c86ec2cae662535f03deba15f33fb01fbdf60d864c1d7b012"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/event_attributes.py",
+      "old_sha256": "899f4ca2de57df9c93a24e19d646f3134f27c32f498fb613394c6098d8badbe9",
+      "new_sha256": "14e847b0f018ad44bff665e9eadf0fbfe85b756ac16bac7a7b7851541f3c86c0"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/exception_attributes.py",
+      "old_sha256": "25f70147087433d9c91ff9f3e36a93b8e8b7dee7067821b0a4b2c523e9a7472a",
+      "new_sha256": "9330a84112124d8b98b552f823a6134accac19e1313cb85c0a389fa0354fdfcc"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/faas_attributes.py",
+      "old_sha256": "955feb4a953b4f1b395554fce825672adc7d718b5fceca053f8daaf8e8d0be5a",
+      "new_sha256": "86f9b6e00cdaa972adf17f325cd5fd0efb3cd15425b37f95ea280501db9015b6"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/feature_flag_attributes.py",
+      "old_sha256": "50f6103d78bf6af7e25cb24c439435c81fd033210de6a142a3e88f4dca3af4c6",
+      "new_sha256": "515733415b01153656655308b69f5a3b0d14c95be6fc9cc9182cba00219ed1aa"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/file_attributes.py",
+      "old_sha256": "e0ab8c353244f0f4179bcf8efa260046fa0533654fd0165058acb8f1ed47c11f",
+      "new_sha256": "a1508f1120e3332816aa96784b8c04e389393f1150ab51a69cef4c5d8e7de53b"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/gcp_attributes.py",
+      "old_sha256": "fd60ca83d54cca23028847fa9f3cf16cd0aa691f80cbcd92eaa713a359844eb7",
+      "new_sha256": "e4e83dfdd246894b84098f5b3aaf7ae48fa68b75166328330a3dac4bad9952a6"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/gen_ai_attributes.py",
+      "old_sha256": "b90313e8cab8b36757fe01ab18534e708f0687a613ab9758a1495bf965caad7a",
+      "new_sha256": "6d858088d002f1d14378b66dbc61899c0db175a673eac0dee05c0938749a7ac8"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/geo_attributes.py",
+      "old_sha256": "12d517af6fb273db27fa5912336e7cc6ddf96446fd594e6b2d78de923b2164ee",
+      "new_sha256": "52d02893339a4098d16026606e578da6b2c82079abb80a92b2bed06f08cfaa7c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/graphql_attributes.py",
+      "old_sha256": "fcdd81ecb063bfed0db8163de36c7bf68e3e32c084a750021ce4c7d3b7845d64",
+      "new_sha256": "9fb79fa1c9df2a581d486053c832d5a0a4ef02a10f5b0a2a84ab1fb59f49565f"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/heroku_attributes.py",
+      "old_sha256": "2e439121f46dfd4137cde7eb960f7c6468e47719a060a06672f9d245f85870f2",
+      "new_sha256": "5a8e50317c35cdd2b2ed4e205b56eeb1ce7f417a61da257d8d5e60fe3e83dc22"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/host_attributes.py",
+      "old_sha256": "9cfebc97950d6a19b56e37bfadc98f6519011276a03a9b109ca4475e07f9bad9",
+      "new_sha256": "dfacf0f618d450fb4bb19b2fdf054a4ee38e3b727f2531a30d5dd5acc6a65c01"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/http_attributes.py",
+      "old_sha256": "3cb0698eba29d7540cc80062b17dd6a699e44e5b868ad7eb70f5ef6200d0a615",
+      "new_sha256": "d575a64b265d2ff2ea9784e1486757fc6fd6175856291da1b28235107d000eac"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/hw_attributes.py",
+      "old_sha256": "73b5e454fb4f07ea54cbb4672a2e19ac1aeea13b7ed16727cb76e6f19c113549",
+      "new_sha256": "5986a279a79a431f0cf8f5532827f641a2c80d4d50088936a0e00f0d23f5adca"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/jsonrpc_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "f09b524f0e939c64e310cdd82fc4cc122d5f7dbbcdfa6df58881db472ffe04c1"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/k8s_attributes.py",
+      "old_sha256": "0c65f107780cca6d624ec8048de738da08243a6e3aa57fadd9b1a36590bd59be",
+      "new_sha256": "987c1f15019ac7714ca13921b9a0f888bf443ce0eff8b9955e9d672eb8fdbe55"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/linux_attributes.py",
+      "old_sha256": "20007567794819a30bcb331e473b0d7b6cb22e63b38b5727feff26f8c5cccf1a",
+      "new_sha256": "e0282c3f1e40f9cea94a02483ccbdd4e0facb36d2d5691f0560c1fa267da69db"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/log_attributes.py",
+      "old_sha256": "24481e2176a2cc8622d0acdf374c13210db67f3ee1f0f95258b76c6a0b91e028",
+      "new_sha256": "cf89d3b6497bdc083ede6d3cf91623a9c5a1bc05d37c5fb0f510372fac863f95"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/mainframe_attributes.py",
+      "old_sha256": "40e01c708bf5f9f4eda57b2edc50b291bed836184b6dfa316c4e60b5163b6915",
+      "new_sha256": "78cc4e789c0e798fcc3290cff3818fba47adfdfb9a7f383703e143dbc71d2f5a"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/mcp_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "408a4545ec4a08a3bbd31171039ffad5fa25c38849d9917dd8feea207c230976"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/message_attributes.py",
+      "old_sha256": "6f1438b12a1030ffa624d4bda20a0eb42fae5e008354d667e5c032cbb6f4d25e",
+      "new_sha256": "c8bfc0b5258508e472888a657d6ca2fdd43bb93d06ae3567fb1301d7e56649a9"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/messaging_attributes.py",
+      "old_sha256": "1d5ba8a1d605f4c65057c2f2af2fbe6c1dcaf46ce34b1594ad675f8a21720429",
+      "new_sha256": "ce56902e3f5472226551ed421d8099fbed36338afe8360e0fdb82d7051a2f206"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/net_attributes.py",
+      "old_sha256": "510c0621e2f39593e4f98851d5979a7b3e4dba155174f424382995dd1c4e67bd",
+      "new_sha256": "1d081f2508e58c8a1f3f4e82c1dffa3cfdacd36874dd05e9e3b12085e73c9684"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/network_attributes.py",
+      "old_sha256": "db49546139473e885ab891976d171307186677768b2206e8ef50d507b8142922",
+      "new_sha256": "c17482c9bd8596dc1257f048e8d9c03a1f71d75c8e48482b37a932936b39cdde"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/nfs_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "695e928984bfe689c684cf7886ffa266a9f18af4a01381e4c4f405702671fede"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/oci_attributes.py",
+      "old_sha256": "e547194784b6b86b9b9b5eb7a495e87e4e17abea86ebb540ab6cb404503c1b4c",
+      "new_sha256": "fdc8c2560584f0463ff2dd7b00cb42d80381285295231b57f2917c84438b706b"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/onc_rpc_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "1d714d69c43c3793b98188a8fe171802208f91f5ef197bcdbc8aa368a091fa1d"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/openai_attributes.py",
+      "old_sha256": "c80446be52927b99fba7196078da03853f96f6542f85f4d46773f4c8ee04d31d",
+      "new_sha256": "45dc4effeba978886c2acce863c58a83bbd8f4e51c6dac75f3972fbc35e9ea11"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/openshift_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "4d6fd0e2439bf7a24f911ad1413f01ccdf371367de5c7e2f0cb61e83cbb70277"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/opentracing_attributes.py",
+      "old_sha256": "53dd45fc34c617277beefe6f8cd819f79b3ab51341d16849a3ac9c3bd90ac957",
+      "new_sha256": "5c9d33e05bdb44174fb6202f97540bb9da60c7e28f8ce5fac3fde8b285aa55bf"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/oracle_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "0415dbc05c8d8383c14243d8a3e8703731c4c5c254055f412d08519420d3e37c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/oracle_cloud_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "3779d60c0f7775dbb32e8a1f7fa5d4e0dac07f339a0013c0491dab662f11b36f"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/os_attributes.py",
+      "old_sha256": "ecb3f6dcee5bb939649493996c8e25f079ba46cf41031968f6d0b9968257bc04",
+      "new_sha256": "7856665eb4a235b70878f6cda0ca125abb0e76f4cfe5fdda818a8493604678d8"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/otel_attributes.py",
+      "old_sha256": "7daeb477f4ee166d29f7146c30256c2e7d69c771edc704e472f22234c3c272a2",
+      "new_sha256": "f496406bfdc8206d1758d8e54186982a5eae1525c0e540e27523c5a255a1ac1c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/other_attributes.py",
+      "old_sha256": "c284a48c69d6dc2810f0a54c01229a04a6ca2754f98d6633037feecd95527761",
+      "new_sha256": "1585e249435528fce765b208ad44567b9d9abfe2bb77dfeaf243a5d9ffb57c1a"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/peer_attributes.py",
+      "old_sha256": "0ea429dee0f3539807eb3cbc034a62b613b84f3b676c9a925b61092b4f27980c",
+      "new_sha256": "c4ff667e5d565969768fa0958eda0853b53c8cb74c51f2b694e71df7b1a64e13"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/pool_attributes.py",
+      "old_sha256": "a68eb7c1b195280a3b265e637b17b7780e5ec772d1611e686340fbfc0e5e2658",
+      "new_sha256": "791d7ca639111aa471c239d538ddfd3a39b176f556fd63bf848f857c61218070"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/pprof_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "c5feb8cbdcd6ac750f881f67bae2b79fb29801081ff06900ea53a6ddb37fb70f"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/process_attributes.py",
+      "old_sha256": "d6094ce17063c20cba917f8b82501c4f1cefb42a68e9684e905fbb129b844dfd",
+      "new_sha256": "22c3666e05186759037a47a63ebc6c5a96b99ac38ca7c39abfa018747b4097dd"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/profile_attributes.py",
+      "old_sha256": "bc8d99c4f3c24f7aef7f50260ce8e4f0f62add39b6048394b96d849203706b24",
+      "new_sha256": "252c66d4f85b717327b83092f54e1ad34f4922cce75e9c851096beae3ac7aa05"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/rpc_attributes.py",
+      "old_sha256": "8c7e9220a099210142ef439e8fa87154c6266594b3cac0c86590691becfe3a39",
+      "new_sha256": "d72eadae895150f6c0148549d03e463db810be15b95c2d894ac5f578d9b6b683"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/security_rule_attributes.py",
+      "old_sha256": "80f7e6ec0e769be26881963a4874cbb45a97bbe294153fbf955b9eba5fdbfa58",
+      "new_sha256": "0b419bbe500698a139275b52df2506c1e4cf127333d868a1683223ac1719587a"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/server_attributes.py",
+      "old_sha256": "727f138e20d0f7f7d38307fdba6e2e3ae7c3f9e5d94607b0b1dfb2a771de7c89",
+      "new_sha256": "3f3ead12f98c6a578bea1c3e56bcaa9efd5e68fba1fc62f4864b5fe190a85a3b"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/service_attributes.py",
+      "old_sha256": "4d3e1305a430e6d40f447a86fd506697fa3f2a4b08a7adfc267e4836785da470",
+      "new_sha256": "e187b321438b54033c2c508096fba621194fd62fae73c9c8f6cf5cdcd2faedbe"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/session_attributes.py",
+      "old_sha256": "c199146331023ae367dadf288c6ce6b655adf41f20987ed05a54e7ce770c4cce",
+      "new_sha256": "6a6531954e2f2f7b18629930dd1e01f9b19f4c33afdca60a4adfc89439491da3"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/source_attributes.py",
+      "old_sha256": "5bed1795f6a3487ab9d6e4c8819af0f6eebc6ffa8e55ea88659c0de4a078f0c7",
+      "new_sha256": "415fc7437140bd4dab474276f78c088ade729d715bc33bfc4983fa61bfc2e67e"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/system_attributes.py",
+      "old_sha256": "93dcb2a13e36908f004bf2d41132f1c147a448b6965f8e326fe759269d78862c",
+      "new_sha256": "f680b9b90655885d379f757130528f1eb0897261c148d98f80a84b13f4ca0b71"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/telemetry_attributes.py",
+      "old_sha256": "b1726dda9bc05751e72ae741d24e138a24e6a7ba7c7bc0c5991702cb5aa84183",
+      "new_sha256": "610883349cfd5b0ea9fee33f929890f4e7b57c869dfcada583a7d96dd16b07c5"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/test_attributes.py",
+      "old_sha256": "d81f45304a72efff3f9d7ac6293318f8ec14791a079966fa8afa14040543f76d",
+      "new_sha256": "f0c98d30ea1fd2a4932792accaf7a4ba6f15d1621b1df091806de89970e416d1"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/thread_attributes.py",
+      "old_sha256": "478e26a478c29576bfc93312f10983323b8d762ce854fb9e9b0d4a4f56f49489",
+      "new_sha256": "063ecfeb787122e825fd47dd79b7cb9c74b042fe7aa3983088a530909601c0db"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/tls_attributes.py",
+      "old_sha256": "f3f04c692836a0e0300481cabfde45d7941486123b06f8f5e09c8981ae37495e",
+      "new_sha256": "9f9b5e33e5c699e9e78860f31bdd43925877bf5b4f4a23a44e957e11761e0488"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/url_attributes.py",
+      "old_sha256": "49d15a08eff956033e53d56babec52eee043f515177667cab30c5bb664b73715",
+      "new_sha256": "5be0226500239aa73a09d2cec73e89d0203b97740a1a023368b87e2616ef74c0"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/user_agent_attributes.py",
+      "old_sha256": "679de5524eaec3a7c2a010f382b39fd6744c28f0094e54116adea8ba2b051ddb",
+      "new_sha256": "e3a7eca872bf0db8d795abacf40cbd77b124a5a6a258d222bc713df1ead6900a"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/user_attributes.py",
+      "old_sha256": "77727097b68df355032d028765e3aa5575f63870ebb3901a1738d53d45aebb96",
+      "new_sha256": "b541d2d94cf82bcce0a7f2713b63013602e51e5760758ed1df7b82b5a0568cb7"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/vcs_attributes.py",
+      "old_sha256": "0b5e07bc5d6f5dc2873d894e235646866bc4440c8ed621b61139c674a5344dc0",
+      "new_sha256": "7a04a47bada8af21eaa1e9337ff9f811ecbb5799f9a457c708887de6e5aa0087"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/webengine_attributes.py",
+      "old_sha256": "b9df12666b6f20014adcf4ce04e88aaff1ec33657092a09c348319051294bedc",
+      "new_sha256": "fa22435f270ba92f15f87301d68bc87fa0e1402e00e67e623e5a808a2de8af1c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/attributes/zos_attributes.py",
+      "old_sha256": "766006f0db22d50c427914d34a89ee1571cf3b0c4ede1273a77553f314703ce7",
+      "new_sha256": "b2dddd6931b25829a03516af3c7e0eee181556a16ad800404b4aae25d94d91f6"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/azure_metrics.py",
+      "old_sha256": "7348dda5af2b97c35c85e93814b06c6682da5d9e43ea938fa7b7bdd768d7bfc5",
+      "new_sha256": "76616dd2028de268c4b601b001d0986105f4905d058795fed115d2051d8601ab"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/cicd_metrics.py",
+      "old_sha256": "cfa987b582edaf6d518fa9a97e551331ea6f6328cc517ea7278e88f51333d861",
+      "new_sha256": "1f0bf40b46cfd3be15f7d5a136ce37efaf42ff59d94afee6a0a317bd05d7c91c"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/container_metrics.py",
+      "old_sha256": "e954c7db0be44433368b2c4d3c2eabe0c8332e22711ce0f58e1e04135e537de8",
+      "new_sha256": "16c071d623b0b44b978e50eb0fd1df27c7e928a982b0423cc2d26fcd41ce665b"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/cpu_metrics.py",
+      "old_sha256": "af507faefca2e4289f9327502319b568b01c3ac7eb6bed1d977a8fe84711f278",
+      "new_sha256": "c9b9eb12a7d92b499ea9ea7b15b653e067e25791edde00dce0cd3c86b5041956"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/cpython_metrics.py",
+      "old_sha256": "bfe081202225eb43728d83307c8cfede9f54936a3fc04185986891d1340201e5",
+      "new_sha256": "2202a1455f2d2cdd3e5558fb0851d75112a4bc318e5dcbdd17bf687e7dc51d34"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/db_metrics.py",
+      "old_sha256": "e3f5c86c841ebe1c22f9ea77feeb02474d2d74ee8a4083614a0f34283a7559c8",
+      "new_sha256": "9ca7192310e35cb2daffad6a089dcf3b6497b04f62d6fae3224a76908a8483cd"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/dns_metrics.py",
+      "old_sha256": "6c63f6b01afcd7b135176e5e2ea67f89c5cc24de76b02ece2d379f0093668391",
+      "new_sha256": "4b9d28010d904cf2c5b6bbaee54831845979f728dbd4d13653cc83e5e81b58dc"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/faas_metrics.py",
+      "old_sha256": "9f316b63b788de10f4d09626400b6a6ccdfe20f9dee23f58803ccdd11473db6b",
+      "new_sha256": "551695a70348797104dd250c97f9127e6fd761d397946bfbd64f084a3936ae19"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/gen_ai_metrics.py",
+      "old_sha256": "ebdf750fe6c5a0bdab4ba39e1685c274583a1dbf0717b1be3cb8caa6ec095358",
+      "new_sha256": "3bc46ead0739f7205cff326846c215009fda81843b9b7af3c22bdd084f327124"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/http_metrics.py",
+      "old_sha256": "ed422c6303eac3590fd9a44307f4aaa88964108598745332e2fc2e1bca31f3d5",
+      "new_sha256": "cf23b5d10342088cf5da31fb10b4db0822bd8bef51854f23d809b100022297fd"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/hw_metrics.py",
+      "old_sha256": "b0c9fd885b2d0a497b14179b4017cb1fc816430b19e866f6f281ad1a521ce032",
+      "new_sha256": "37f670856c28881c6580ef388c18745198a0e666366b6e9252cad3f0d977317d"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/k8s_metrics.py",
+      "old_sha256": "1eb6d582f207dac0b28f82d16a12ff7b80e5dfd3bfff342092dec63445bbe3c9",
+      "new_sha256": "30eb373df5077043592948a922139c16713f7aec626d09a28bb6a7640020662a"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/mcp_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "d0159d19a096b45c08a2c24909a0000ca05b14fa0397014cf3bf7677b5f10a09"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/messaging_metrics.py",
+      "old_sha256": "479b6d572d9d9403cad366f304af09bb33596acf92991242ac36e756f9347937",
+      "new_sha256": "78fea38ccf09e9f928807d3455217135953a4d10c20ad194105f6a0c1a2eda80"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/nfs_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "5397a6f1c8eee2f77ea4fa7bbcbb97e1e818568f434904d8f9605d0b0fb6ed41"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/openshift_metrics.py",
+      "old_sha256": null,
+      "new_sha256": "7bf3e5af50c884c64fc6d0123ba9e87b4bec10728041a9e8458f52dec9781b88"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/otel_metrics.py",
+      "old_sha256": "fd1c1d6c6f200bb5355511688a1bc40efac7a2fc7d45b321b34436c6f4c01fb0",
+      "new_sha256": "8b315930b140bc08445d3f046d675c9cc1d8fcb9479528a1e9a51e926da28b16"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/process_metrics.py",
+      "old_sha256": "104d698e79d6e10a2b4ab989bccd68163ccc4e2e3be3b9579e04484f5decb099",
+      "new_sha256": "f6edcd4c28eb254d0795de45214a3998b69ab78bb7034e9a400cd38718d85b68"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/rpc_metrics.py",
+      "old_sha256": "a0427aa02353b265d7272286f4f8e05921dad5ae1e8286fff7cc0d005ecc1165",
+      "new_sha256": "21703252b1e0803557499b81c4bc13688b531e76953f180aa9c159dc14ec546b"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/system_metrics.py",
+      "old_sha256": "517ef08db47f2b7a9bc60a25d9770ef9a518866ab34dfdd14288ab98c0cfc482",
+      "new_sha256": "17354ee4371f2cc2b65c4aa5b8a3727504160a8824752b205f7e6dcb4caf2a05"
+    },
+    {
+      "path": "opentelemetry/semconv/_incubating/metrics/vcs_metrics.py",
+      "old_sha256": "65a52e4d2ac2ac659c6fec868001f7c521cc253422b1d37a4b21ccc30ecc856b",
+      "new_sha256": "3a6edcb3d9eac36487c60be3704348acf0e496ca62940b31a9ae6f997900b141"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/client_attributes.py",
+      "old_sha256": "5dfefc1de1003e74b080de81120b6200fd173c768fea5355732060f865c6906e",
+      "new_sha256": "dd7ba098d6d9445c253f0897dd7f2d76c0f371934fafec08e7e3f17efb574718"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/code_attributes.py",
+      "old_sha256": "1b0b86a833d20ad2fb75f4acb26441caa1e3880232f56b00717444ce65ed61df",
+      "new_sha256": "d3d6444ab75b1ad72715414b2ea85a73e39d8f568117e47d30a72b98a617232e"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/container_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "cbd24094c6cd58bad5ca36d4cceadd4dd990f38708fb71a072c17fde43689b90"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/db_attributes.py",
+      "old_sha256": "be63258ac5de709b2dee94214be1804756852ed3676c21cf49eb46b9dfccae43",
+      "new_sha256": "3e6105fb45bd286af7cf7dec0e26c3ce08013bd5d837fbb53de032bd2962ed77"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/deployment_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "00d2c85bf5476463072a11e868e290a7cf7ef36a5e9a98e433c45e9ace26fed0"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/error_attributes.py",
+      "old_sha256": "2ac545027c23ecb9d0aa30c36a2c121b017712cf94e5b9824a50c080a0e54221",
+      "new_sha256": "fd27de40c710296f2fef3c6bc3869010c80917149395b5b7bd5f14b29a26d0df"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/exception_attributes.py",
+      "old_sha256": "84a6b2fa11fa4fdff764a93ed9fbf3f4e2b27a9aea4c1f868603254839fc2112",
+      "new_sha256": "59f4fad84c4d5237ac39df52054dc07a6738acc54a542ab17d6929ed19421786"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/http_attributes.py",
+      "old_sha256": "96e7757ecbdc78a02d842ff7ca3dfec6539c6d5a18890844aef04b92c7f65254",
+      "new_sha256": "a7d1f3a0692e5ddac06ffe3cba0a37e8addfc739898e1d5f01e68c0530c7e1b5"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/k8s_attributes.py",
+      "old_sha256": null,
+      "new_sha256": "dd7e0116c07a53a2e7fd576a6530ff672948d28de8be55cc00c479ea99f07ce2"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/network_attributes.py",
+      "old_sha256": "2d7a9bd044e949f807a13576d042ed4123678205e98a6b432f9fd2b76ac7c2f9",
+      "new_sha256": "f0f92d3f59ab57e8bfd6f5e3f69b17c94f99f84f8821ff037e724eb23d866467"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/otel_attributes.py",
+      "old_sha256": "f2fcdae87375adf511101d88c26755b8153f56dd0b16317ae319d14f5221e298",
+      "new_sha256": "a27034fa8a8d9575e78de4d534ee15d135dfd6ced73901764f52ed1d6fc38c6f"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/server_attributes.py",
+      "old_sha256": "fafbc13f5f96b270e7b38d3b83eda7985329fd736e4999ba2315b807ad5adf9d",
+      "new_sha256": "0b886fafaf48b4e33cf0c982be9e2ba17b46296062503ce1ef645a5cb02bd8f9"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/service_attributes.py",
+      "old_sha256": "60275a948a72f9176a61142362c48957bb31f14f894f5fb99f373c0691658eaa",
+      "new_sha256": "3852728bf1b8f514b2489038d42267bb862eea17044b0ade4c55c6527852e0b8"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/telemetry_attributes.py",
+      "old_sha256": "6475c0e4e530ee66aad3c6cf304ac4db212b8bf133b423a0c176f4b218105eaa",
+      "new_sha256": "b301e3997dbc878681c43fdb8796b8f3606414f52c2e5d0e2f1291e22ae76ce8"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/url_attributes.py",
+      "old_sha256": "15f4dd843c27484811d86d4a343334b0f107cc6045d4f7a1fbb161d2bc71f622",
+      "new_sha256": "4cd71ce77dcade0702c7e40d68b4731565b55ac71fdcdd09e53ac8dffb1cd9ca"
+    },
+    {
+      "path": "opentelemetry/semconv/attributes/user_agent_attributes.py",
+      "old_sha256": "3ac6b997a62e25891bc71acdec5c629fb8578388e46a89122020c9123300b5a3",
+      "new_sha256": "dfccc485775f921340df044d05de86da5bed3c893c34ac1aef5c7664cbff95e7"
+    },
+    {
+      "path": "opentelemetry/semconv/metrics/__init__.py",
+      "old_sha256": "26b734b95d3c8d170abf873bb46ebf77dcecb22f37fcb85ea678535b8871b99d",
+      "new_sha256": "123626ce309d060ee4de810370d1a50daaac687a2e4c84775b5d7547706b929f"
+    },
+    {
+      "path": "opentelemetry/semconv/metrics/db_metrics.py",
+      "old_sha256": "96d52312456879873d65ec79c77df8fb151f5997117bc3570fe1ae88d196f8a8",
+      "new_sha256": "e7bf12e84ea215bc16bbb1bcddd698697e7399f50ad7515957ccd4f0aff8cb0c"
+    },
+    {
+      "path": "opentelemetry/semconv/metrics/http_metrics.py",
+      "old_sha256": "83645d414f2aba7bce23445b6ba4abc0c29920dffa93d59309bdf867b791ac40",
+      "new_sha256": "8cd64377c87b9f4288da09572b4e413431e98e145f77dae6e41607a01183aaa9"
+    },
+    {
+      "path": "opentelemetry/semconv/resource/__init__.py",
+      "old_sha256": "f305ad8ef142f538ce25e37497d4ca56c6864f67fc3d0d7edd9a0c12bfd0aaec",
+      "new_sha256": "0d8c844d173296f1fd6ced92d3a76ef4173e3bfcebcfec54e420fb5cbfa62115"
+    },
+    {
+      "path": "opentelemetry/semconv/schemas.py",
+      "old_sha256": "14f7dff1af6d195dfe292bf64137b4df60c94e5e558d9428864395ba2c87dddd",
+      "new_sha256": "51da5d4758c707d18d5bc27000f0d9deb08f27d69194d31c1c016be52e18ea44"
+    },
+    {
+      "path": "opentelemetry/semconv/trace/__init__.py",
+      "old_sha256": "a291189c4f0e8eff7e9999a3792e55bbc4cb7ffe8f8d344a966014b4c04c58a0",
+      "new_sha256": "5da16fe989921c932993fd079c107636de6a44da3910f8d1b992e1b1fed4d489"
+    },
+    {
+      "path": "opentelemetry/semconv/version/__init__.py",
+      "old_sha256": "7df3fea041072f2c50a9ace13e0a7b0ae35b56da7fb236f5328dbfccd65bf905",
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/trace/__init__.py",
+      "old_sha256": "d03d8682b0e52f30928c956d8acc2a6a0c3a10a42ec3bfebe820ff838d2b5449",
+      "new_sha256": "395e280f8dc25cb5ffa8fdea946b00d3c76423c76ee239bdccaecad151317f78"
+    },
+    {
+      "path": "opentelemetry/trace/propagation/__init__.py",
+      "old_sha256": "619323d29f88720064c817dc64dd313bede25318bae59f3fcda21919746ee50e",
+      "new_sha256": "7f064ececa407f1a421113a4a7f82b73bec72a95ca6f1a7013940db0bbb2495d"
+    },
+    {
+      "path": "opentelemetry/trace/propagation/tracecontext.py",
+      "old_sha256": "7a7aeff08f7de76f6c41cbe892c72a7d9c98fd9e866e5815debd96fab8f12d30",
+      "new_sha256": "ac6fbcf1610a51ebf9d9161e42e9e98d4e22a50552c57bb37596a62963e00776"
+    },
+    {
+      "path": "opentelemetry/trace/span.py",
+      "old_sha256": "e1021cd18b8fbe42ec57ccd6a15882a3e0e116385350ec35fca9a2a289a43ccc",
+      "new_sha256": "67886d3802f7d87adcc6bc26d790ecef0b1fb89b1aed3e28f7c6d73b0b739e38"
+    },
+    {
+      "path": "opentelemetry/trace/status.py",
+      "old_sha256": "d8aedf44b57b803140829140e00bcc4e325f1147f266315ad8f4375638c70471",
+      "new_sha256": "a7e825e751ecb11fb09e7004d325bfc02d3cc327eb3edb04599108699a00e014"
+    },
+    {
+      "path": "opentelemetry/util/_decorator.py",
+      "old_sha256": "4a4011a0a388d8118dfb1bf0dbf48ce7619a7ba367f0e10092498cbe84d92089",
+      "new_sha256": "b6816ab8de35b9e58199d965b728e1d119e8da06e11967f36d0e5b351cccf7c4"
+    },
+    {
+      "path": "opentelemetry/util/_importlib_metadata.py",
+      "old_sha256": "5d869c26a8848687a2e60123974d017940aab2123c3fa7d89d83e21ebfcfb685",
+      "new_sha256": "ee33ffb4ff606bfd50f69fc0546450b6c9f12545569f75c92f34e260e478bfc2"
+    },
+    {
+      "path": "opentelemetry/util/_once.py",
+      "old_sha256": "a93b0f601628a53b00b55b6163cf2077c11047a8cd7bec96cd9077e77fd11036",
+      "new_sha256": "11211cea9c3c780219d84315d99284a5bc9fcc5e385261a1916e36aa78ae6ba8"
+    },
+    {
+      "path": "opentelemetry/util/_providers.py",
+      "old_sha256": "511c926b77b5ac2baa344b4c5852a278b058f2a6ad6b95acbc79dd6f1ff4b7f1",
+      "new_sha256": "96102aede9bf1699efd22e2663d22c82633e15c93feaf586aee6637aaececab8"
+    },
+    {
+      "path": "opentelemetry/util/http/__init__.py",
+      "old_sha256": "4c8b2397bca4e2b1a8827b141c2d0359c246ee469e7ca9ae839ba93ef2d7569e",
+      "new_sha256": "fc78fd211c8f43735844f53126d399c181ea476263270bdcee56a52a105fcc57"
+    },
+    {
+      "path": "opentelemetry/util/http/constants.py",
+      "old_sha256": null,
+      "new_sha256": "7652017adf43c02f95464ab9d863fd71c4e215c8e05f76f0d25731881c51e9c0"
+    },
+    {
+      "path": "opentelemetry/util/http/httplib.py",
+      "old_sha256": "8995de224defd24cc20c3b47e6d40138c850d4959aa0133f783bad3449c543e2",
+      "new_sha256": "4a92bc3269053c6ac5ff3075f16cf4104fe58b601d61e75a82164ebf7faf8da0"
+    },
+    {
+      "path": "opentelemetry/util/http/version.py",
+      "old_sha256": "7df3fea041072f2c50a9ace13e0a7b0ae35b56da7fb236f5328dbfccd65bf905",
+      "new_sha256": "68c553110d6fb1f682742b7c61bfd7185abda231fd1a6aa14b92a9190f385b03"
+    },
+    {
+      "path": "opentelemetry/util/re.py",
+      "old_sha256": "2b73414271890591281543b63b4e5884bbbb571a2a9be41b6e3178cfac0c998f",
+      "new_sha256": "5b3d01e8241ee9a693ef0eafd88a008ae567acabcb157835bbf66f6ef2a0d83d"
+    },
+    {
+      "path": "opentelemetry/util/types.py",
+      "old_sha256": "320c3420f424b35853906f102f1e808290f77dd6308761985cd2cc65a35d89d5",
+      "new_sha256": "ab652ee21c742044ce0d8f62e0ebc0f23d1be0ccfbb119ef94324c688a0aa2e6"
+    },
+    {
+      "path": "opentelemetry/version/__init__.py",
+      "old_sha256": "420f83b16cfb888dea77dc3e0d220cfd48ae5a7b8b63a49afd9ea2c88e9d3518",
+      "new_sha256": "5b0fe18ed3a8b5e373d3b94fa2738797d281f95f9d1af58ea3a768e1732c162c"
+    },
+    {
+      "path": "opentelemetry_api-1.37.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_api-1.37.0.dist-info/METADATA",
+      "old_sha256": "9fee7664c1c4835f53603aff734bcd47d06308727fbfd34a92844ccfd1f0aa62",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_api-1.37.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_api-1.37.0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_api-1.37.0.dist-info/entry_points.txt",
+      "old_sha256": "7713ead1845b4034b097c42447e23d037f2b6db7ca406e61dae3458e9bd4e95e",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_api-1.37.0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_api-1.45.1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_api-1.45.1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "5bc71e90cb421be92a43bf5ad5b0f25dccfa2a24ddceaa2877779879962a4c9e"
+    },
+    {
+      "path": "opentelemetry_api-1.45.1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_api-1.45.1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_api-1.45.1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "7713ead1845b4034b097c42447e23d037f2b6db7ca406e61dae3458e9bd4e95e"
+    },
+    {
+      "path": "opentelemetry_api-1.45.1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_exporter_http_transport-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_exporter_http_transport-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "13f918a456445f2ff6dc97b2f7ccca6ae803e649cf7888cc9fb70adc5504225d"
+    },
+    {
+      "path": "opentelemetry_exporter_http_transport-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_exporter_http_transport-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_exporter_http_transport-0.66b1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "ca6dd7d6405692210f2e6afec9367c5c4e2abb3c06a074cdba9fd84c49d9b077"
+    },
+    {
+      "path": "opentelemetry_exporter_http_transport-0.66b1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_common-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_common-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "a2fcd71a1e43d98acfb9fcb2c664d3d750a3b83fa68fa4330b90f948cea3b77d"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_common-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_common-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_common-0.66b1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.37.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.37.0.dist-info/METADATA",
+      "old_sha256": "7b2a122f4902f3a67f148264236a06578ebc88f02708e6ecacc217a6aa44572f",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.37.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.37.0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.37.0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.45.1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.45.1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "95aed04d7e4ca7cecd6813b04666d3f5d069bea793cbda5131dcc7a44192b7d6"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.45.1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.45.1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_common-1.45.1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.37.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.37.0.dist-info/METADATA",
+      "old_sha256": "e16ad067cd38c2f6c42104d9c748013bec22205c75d16c9de1656a12ef78e73b",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.37.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.37.0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.37.0.dist-info/entry_points.txt",
+      "old_sha256": "58e3d0bee8d6cd450c2182b2f042340b967f0c2e3631a850a8fdb4fe82faec1f",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.37.0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.45.1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.45.1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "93be2171f402c500e2b39ea70f4a6c7a9902c43e61e5987b3f23a576613947ce"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.45.1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.45.1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.45.1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "58e3d0bee8d6cd450c2182b2f042340b967f0c2e3631a850a8fdb4fe82faec1f"
+    },
+    {
+      "path": "opentelemetry_exporter_otlp_proto_http-1.45.1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.58b0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.58b0.dist-info/METADATA",
+      "old_sha256": "72f2315425ea51acb69b20788d53b5041f585acd6eb6833ca068f337a7550413",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.58b0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.58b0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.58b0.dist-info/entry_points.txt",
+      "old_sha256": "895bf7b794440743b9f2d15411041760bad309ad5554e1545dfadbbd493afda5",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.58b0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "40edc23759ab25af76a114dff17759ece9a573b747c885f345957e21a65e1f79"
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.66b1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "895bf7b794440743b9f2d15411041760bad309ad5554e1545dfadbbd493afda5"
+    },
+    {
+      "path": "opentelemetry_instrumentation-0.66b1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.58b0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.58b0.dist-info/METADATA",
+      "old_sha256": "b96485dfc471415445429c74850a7a68b0e20947cefe95a18012da5526dd9f80",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.58b0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.58b0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.58b0.dist-info/entry_points.txt",
+      "old_sha256": "c3f705569f61f485f35a6d9878168e11400d4a7f62b9494d025d100b73c37fde",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.58b0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "38c7cb40d12fc3759f0be114cba90013bb9dec10acfbeeef7b79b2ac0e67dbe5"
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.66b1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "c3f705569f61f485f35a6d9878168e11400d4a7f62b9494d025d100b73c37fde"
+    },
+    {
+      "path": "opentelemetry_instrumentation_requests-0.66b1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.58b0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.58b0.dist-info/METADATA",
+      "old_sha256": "9d19f3b4fbdeb3f4a2e51098aed56642c899476ac4fd2a4ff078d427d7fb3bfb",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.58b0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.58b0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.58b0.dist-info/entry_points.txt",
+      "old_sha256": "44e83db224ceba5170c0927a6a87f8cd2eeaeee6ca76070fc6208c5d027fa395",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.58b0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "b117d7e9be55de599a49fe4c9f6cad962d11b0183c505ac798fd4302f9596c2f"
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.66b1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "44e83db224ceba5170c0927a6a87f8cd2eeaeee6ca76070fc6208c5d027fa395"
+    },
+    {
+      "path": "opentelemetry_instrumentation_threading-0.66b1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_proto-1.37.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_proto-1.37.0.dist-info/METADATA",
+      "old_sha256": "53bc03c52d2963184f57bce77c1e98087a4f8fdbcf42e6cb795f0b0827f9bf70",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_proto-1.37.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_proto-1.37.0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_proto-1.37.0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_proto-1.45.1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_proto-1.45.1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "fb0c27d4250fd7f73926884d7788c3cdb8577a1c3485e3f73ebbd23f5ac6d30a"
+    },
+    {
+      "path": "opentelemetry_proto-1.45.1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_proto-1.45.1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_proto-1.45.1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_sdk-1.37.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_sdk-1.37.0.dist-info/METADATA",
+      "old_sha256": "381d6335eec6f6481b0da3bc4ee9c64bd71843b7d1d887a60b8c0af64a43307c",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_sdk-1.37.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_sdk-1.37.0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_sdk-1.37.0.dist-info/entry_points.txt",
+      "old_sha256": "f8ea276464b8c47758850b48fd7caa8f5136ec4a27a5b49fdfbd2d3be81960d9",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_sdk-1.37.0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_sdk-1.45.1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_sdk-1.45.1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "0a353d0fa633a7ece2b51f6f2dd3f64f75563d0d8bc8716480489fc2f9476e34"
+    },
+    {
+      "path": "opentelemetry_sdk-1.45.1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_sdk-1.45.1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_sdk-1.45.1.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "ebf9392532b2741c3fcc346f9051db62cf5dfe566b5cd7fad110375a0faff3de"
+    },
+    {
+      "path": "opentelemetry_sdk-1.45.1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.58b0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.58b0.dist-info/METADATA",
+      "old_sha256": "2a542b1dbe3764057df136a8358a51a100a7ec2c35f81abde3d7cf235a6a832e",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.58b0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.58b0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.58b0.dist-info/licenses/LICENSE",
+      "old_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "0b21fb9e6e2c2c79b61c110c3235757606fc2d2d11eaa22840f2f66794efd61c"
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    },
+    {
+      "path": "opentelemetry_semantic_conventions-0.66b1.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "opentelemetry_util_http-0.58b0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_util_http-0.58b0.dist-info/METADATA",
+      "old_sha256": "8a934f28bc3bb146682ca202b1190a46b0ac0090547eff74b0084d5097bd2f79",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_util_http-0.58b0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_util_http-0.58b0.dist-info/WHEEL",
+      "old_sha256": "aad0b0a12256807936d52d4a6f88a1773236ae527564a688bab4e3fe780e8724",
+      "new_sha256": null
+    },
+    {
+      "path": "opentelemetry_util_http-0.66b1.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "opentelemetry_util_http-0.66b1.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "e2e096a7c668374c0e01664fdc5e25ed53a811feab5593845d23ef9acb4a775c"
+    },
+    {
+      "path": "opentelemetry_util_http-0.66b1.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "opentelemetry_util_http-0.66b1.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "5b77e4a649bbfb07fdbc123967eeecd1e5a478cfaca6eefc23c35e6fdf037848"
+    }
+  ]
+}

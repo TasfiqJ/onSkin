@@ -1,0 +1,42 @@
+{
+  "observed_at": "2026-10-23T20:04:33.295321+00:00",
+  "rows": [
+    {
+      "case": "forged-wheel",
+      "argv": [
+        "/work/venv/bin/python",
+        "-B",
+        "-m",
+        "pip",
+        "--isolated",
+        "download",
+        "--index-url",
+        "https://pypi.org/simple",
+        "--only-binary=:all:",
+        "--no-deps",
+        "--require-hashes",
+        "--dest",
+        "/work/tmp/wave-forged-j1l16vgb/wheels",
+        "--requirement",
+        "/work/tmp/wave-forged-j1l16vgb/requirements.txt"
+      ],
+      "exit": 1,
+      "original_guard": "pip --require-hashes",
+      "log_sha256": "a0c125d68c09b0aaa6a6adbd2f25104f948b48d6724c2c02f79849f455ab108a",
+      "rejected": true
+    },
+    {
+      "case": "forged-requirements",
+      "original_guard": "bootstrap_tools.main",
+      "rejection": "REQUIREMENTS_DRIFT",
+      "rejected": true
+    },
+    {
+      "case": "forged-package-tree",
+      "original_guard": "collect.verify_semgrep",
+      "rejection": "SEMGREP_IMPLEMENTATION_DRIFT",
+      "rejected": true
+    }
+  ],
+  "admission": "NONE"
+}

@@ -1,0 +1,7 @@
+# Autonomous Codex work model (changed by founder)
+
+Codex chooses the most productive sequence of Workstreams A, B, C and D, selects authentic compatible versions and tooling, searches within permitted no-cost sources, owns troubleshooting, runs real negative tests and records intermediate proof. **Do not stop for minor implementation questions** or ask the founder to choose versions. Try up to three distinct sensible diagnoses per class, making meaningful progress in independent streams when an external limitation blocks one. Use only one writer and isolate scratch jobs. May make multiple coherent staged commits and normally push safe progress to the exact existing stage at milestones and session end. Check context health, compact only with an exact handoff checkpoint. Do not claim asynchronous/background work or have the founder wait.
+
+Authority boundaries are hard limits, not discretionary: never edit protected source/policy/expired approval or secret values, bypass original checks, create unbounded retries or spend. Need new exact Brain authorization if touching an excluded file is truly necessary; leave a measured candidate patch only. Distinguish CODE_FIX, DIAGNOSTIC_CANDIDATE, ORIGINAL_SECURITY_NO_GO, OWNER_ACTION, and RELEASE_PERMISSION. No GO despite local unit green.
+
+At end, deliver one coherent root handoff and checkpoint. Founder only returns `Codex is done`; Brain independently rechecks every new source edit, CI job and protected file before accepting or issuing next task. No self merge.

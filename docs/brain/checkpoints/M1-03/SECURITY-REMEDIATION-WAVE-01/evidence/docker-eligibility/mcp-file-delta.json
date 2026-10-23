@@ -1,0 +1,157 @@
+{
+  "label": "mcp",
+  "changed_files": 30,
+  "unexpected": [],
+  "rows": [
+    {
+      "path": "mcp-1.29.0.dist-info/INSTALLER",
+      "old_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/METADATA",
+      "old_sha256": "bc4b33ed1eea597cacf79c959094a51f127407cd82f776cb3430a7e7a92a8333",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/REQUESTED",
+      "old_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/WHEEL",
+      "old_sha256": "942926c567d0b1273d09f20295879abd37507845f6b683eab9f87d808df91100",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/entry_points.txt",
+      "old_sha256": "8271816e8df2185d1824d5df669824020d7e090b4ac67cf1ae5039ddcf2f8980",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.29.0.dist-info/licenses/LICENSE",
+      "old_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
+      "new_sha256": null
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/INSTALLER",
+      "old_sha256": null,
+      "new_sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/METADATA",
+      "old_sha256": null,
+      "new_sha256": "3880c29896149862971af57942e3e5c0ad2a909696a66b9811c62f6e47e65111"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/REQUESTED",
+      "old_sha256": null,
+      "new_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/WHEEL",
+      "old_sha256": null,
+      "new_sha256": "ccec20e2307acd7da453dd7437e70c6b08e2bc3ead3bc3445af135da37b56d59"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/entry_points.txt",
+      "old_sha256": null,
+      "new_sha256": "8271816e8df2185d1824d5df669824020d7e090b4ac67cf1ae5039ddcf2f8980"
+    },
+    {
+      "path": "mcp-1.30.0.dist-info/licenses/LICENSE",
+      "old_sha256": null,
+      "new_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d"
+    },
+    {
+      "path": "mcp/client/auth/extensions/client_credentials.py",
+      "old_sha256": "5ef09aac14270780d112e6045728196ded0ff568fbcfc752c7fdd2a9a8cc2b34",
+      "new_sha256": "3b2abf2710be1fb637971cd3d3da26ffd10148ebba81f95784bf25784d5d751f"
+    },
+    {
+      "path": "mcp/client/auth/oauth2.py",
+      "old_sha256": "5f5c34780e3fdde9fd5d572271c9196ec7bd2782a25805f668f454a95213d214",
+      "new_sha256": "748d563748a8b06f734540ae0f3417ac2bc98b58f0c06ab11fc91dff940ef89e"
+    },
+    {
+      "path": "mcp/client/auth/utils.py",
+      "old_sha256": "326e38de48fda47634f665187e59abf3d5bc8dec596a5bc34bde9bff7d6d5081",
+      "new_sha256": "73381e2c5457fba39b710e5b6db8dd2d252133b9faa54367bc00af0ae9465c65"
+    },
+    {
+      "path": "mcp/client/session.py",
+      "old_sha256": "92f812af17983f5a36b4703b065216cc49252fc59dbd04b753286fa78580b07a",
+      "new_sha256": "7606a75a9b65cfa21df57901df600a80fdf4bab10ef0bb92abe6aa1cc0db35c9"
+    },
+    {
+      "path": "mcp/client/sse.py",
+      "old_sha256": "99420030ad50e4c209d877ef469f91df457a9d4a62f88d1f77dfd4b4b79123d8",
+      "new_sha256": "e0639a016e6c8459531424be8b5bf00056dd58ac5c55ef49099137a9db02274f"
+    },
+    {
+      "path": "mcp/client/streamable_http.py",
+      "old_sha256": "8eb01c3d4da89c6e73d494a96029dbcf2fe05d0bfffe76071b1e409afdb62f5b",
+      "new_sha256": "b4bc6dfdf3b21bace5bb3d19403446ec31c351f786a3217a7686f55dc1bcd6e7"
+    },
+    {
+      "path": "mcp/server/auth/middleware/bearer_auth.py",
+      "old_sha256": "90451121f43c0d6f44d56339897ec5f022f77de89b9a7d258da1b4f6d6f2f8f4",
+      "new_sha256": "bc83a65fcbc83269310e108611e105ee93c53eecea9085f858233dfbfccbb95f"
+    },
+    {
+      "path": "mcp/server/auth/provider.py",
+      "old_sha256": "32c497b64bc8f3ecdeac33376405c397bd3ad2f8cf44463768cb6f2b5473a007",
+      "new_sha256": "73916a156a98f2bd851b450b31dee2084026871efb7b69e8d149c771269fc2da"
+    },
+    {
+      "path": "mcp/server/auth/routes.py",
+      "old_sha256": "8f80796f63f0d9526708eab76d6dadde646f831277a08e70cd09f4cf7025679d",
+      "new_sha256": "5a5c5cde95acdbf33c540ae0115e901205282162890fa98941e13f42272bbdd2"
+    },
+    {
+      "path": "mcp/server/auth/settings.py",
+      "old_sha256": "363f2d3425c0347302997ea7c426be194ac0f649c9f5ff330ae33130314de03e",
+      "new_sha256": "06d84ec25f75f48b72e15e8b527ca4cede7df4245414ac1c07dff21682d60ea8"
+    },
+    {
+      "path": "mcp/server/fastmcp/server.py",
+      "old_sha256": "ffeae9682b6776fe9d621f2dbfff33ac0dba7645e08aaeb8c47528a32fa08bb3",
+      "new_sha256": "1b1c8cd4f6e350f7d4f62627764ed7c0f51e85872d32aba9d9da560a2bd2c50c"
+    },
+    {
+      "path": "mcp/server/fastmcp/utilities/func_metadata.py",
+      "old_sha256": "72f72f1dc9195b91280b84c2ae8db466e8c289ca3069e18dfa8dfeb0df59deb2",
+      "new_sha256": "c951a064ea3f1488c2f9685168ab049a31d9772c5ff06340f1b435399e1db18c"
+    },
+    {
+      "path": "mcp/server/sse.py",
+      "old_sha256": "e95d03b40ddb68968d5cc1b0a386c378197f54410709123f485564f05e4fbd77",
+      "new_sha256": "b7a6885508c9d96107ff8564697d66428620da71b5227d5f914e95c13b58ad7d"
+    },
+    {
+      "path": "mcp/server/streamable_http.py",
+      "old_sha256": "b184f85a99c9bd3aacc8232f6ccd2cc24cbfd3964ecb23ab2c9565d9aa38b225",
+      "new_sha256": "bea279ba402b95c1bb3f3c2566db39c972ac76355b80719fb3b8fc356319b29f"
+    },
+    {
+      "path": "mcp/server/streamable_http_manager.py",
+      "old_sha256": "8ece055c2910570c642e9acdf935baee8858347ce512ce03f9acbbcc4705ce08",
+      "new_sha256": "d602d0b8e8c57138170e14f3c9901fc3feef5aa34457fd4a6ee3a114e6096f88"
+    },
+    {
+      "path": "mcp/server/transport_security.py",
+      "old_sha256": "3258d3d144cab8b472bbcf35526e81b85ea08ff67ddefb25616180fe121355fa",
+      "new_sha256": "a512b9c99ca3c45ce30d0bac8d5a3d1a99f24ab0a9702cb35397186fb4da0693"
+    },
+    {
+      "path": "mcp/shared/_httpx_utils.py",
+      "old_sha256": "6dfbf2a6ae73b1bbcbe1d82d35f5fe969f11fc5aa6cc3b5610aeb52bb63e4a8b",
+      "new_sha256": "8777ec1e0b61a3b02a06d6646f10583fc4274e4aa34006163eece64f0d209d52"
+    },
+    {
+      "path": "mcp/shared/auth.py",
+      "old_sha256": "491c6ce44e7c264b28ea96654f2fac0c55f10c28b6a73601ffc8066f3cf6e664",
+      "new_sha256": "c7237afdd49a6e47a79e0059c6a47a97bf38ff98a0504907a357a9ed4720c396"
+    }
+  ]
+}

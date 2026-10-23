@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-03",
+    "report",
+    "docs/brain/checkpoints/M1-03/SECURITY-CERTIFI-TOOLCHAIN-01/completion-report.json"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_M103_SECURITY_WAVE01_EXACT_05dc",
+  "exit": 1,
+  "started": "2026-10-23T20:05:21.758568+00:00",
+  "elapsed_seconds": 2.7969999999622814,
+  "output_sha256": "44b914119b6b2469ab078b946a0ac685e2d6322c28ec5d0b8471f6ca2f939f9c",
+  "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

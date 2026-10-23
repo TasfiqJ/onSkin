@@ -1,0 +1,729 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "SECURITY-REMEDIATION-WAVE-01",
+  "authorization_id": "M103-SECURITY-REMEDIATION-WAVE01-CONDITIONAL-SOURCE-EDIT-01",
+  "status": "WORK_IN_PROGRESS_CHECKPOINT",
+  "accepted_by_brain": false,
+  "admission": "NONE",
+  "protected_source_go": false,
+  "external_manifest_sha256": "249b00aae6198adca75225b911f1c8273ce94ff9a2b129fe4b1f45edd494e303",
+  "preimage_fingerprint": "9fe6fec09698e595def19a6f7304d1376f850e32d12051e8ebdd882f16fd3c2f",
+  "baseline": {
+    "commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+    "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+  },
+  "implementation": {
+    "source_edits": 0,
+    "commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+    "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+    "reason": "All three pinned dependency-aware candidates are incompatible with protected Semgrep requirements."
+  },
+  "measured_source": {
+    "commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+    "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+  },
+  "delivery": {
+    "branch": "stage/m1-gate-recovery",
+    "commit": null,
+    "tree": null,
+    "resolve_via": "Final normal push is independently read after commit. Manifest-only tail does not change measured implementation. No future self-hash."
+  },
+  "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "pr": {
+    "number": 10,
+    "draft": true,
+    "open": true,
+    "merged": false
+  },
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "incremental_spend_usd": 0,
+  "legacy_proposal_expiry": "2026-10-21T00:00:00Z",
+  "workstreams": {
+    "A": "BLOCKED_DEPENDENCY_CONSTRAINT; original and all candidate trees measured; stage unchanged",
+    "B": "DIAGNOSTIC_COMPLETE; 20407 paths, 8485 extra, 90 changed; 189/368 historical locations rebound",
+    "C": "DIAGNOSTIC_COMPLETE; safe provider triage and rejected installed npm candidate",
+    "D": "EXACT_CI_OBSERVED; final-head observation follows normal delivery push"
+  },
+  "measured_improvement": {
+    "stage_vulnerabilities_removed": 0,
+    "changed_candidate_python_versions_clear_target_advisories": 2,
+    "candidate_admission": false,
+    "original_tool_trees_reproduced": 2,
+    "candidate_trees_measured": 3,
+    "review_paths_bound": 20407,
+    "historical_failed_targets_bound": 189,
+    "historical_fixpoint_locations_bound": 368,
+    "secret_findings_suppressed": 0
+  },
+  "tests": [
+    {
+      "name": "expiry8",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/expiry8.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/expiry8.log",
+      "log_sha256": "7d9e0e43f57b7ef52a736933090be3f45059ccf3f272dbe6b6a5a683fb7c4cfe",
+      "unittest_total": null,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "npm-ci",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/npm-ci.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/npm-ci.log",
+      "log_sha256": "e0eb759c34a7aa682f059c3ad0e2f071e3212d9bbe11b162b4dc2984d800a53f",
+      "unittest_total": null,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "npm-tool",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/npm-tool.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/npm-tool.log",
+      "log_sha256": "50757a665bab7da045f03c60abfc5431ce8cb0fd971798700ecaddadb0a0591e",
+      "unittest_total": null,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "secret12",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/secret12.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/secret12.log",
+      "log_sha256": "bbc1deefb61efc2d22306da592f099ec288677a4c095643d10966713c067e882",
+      "unittest_total": 12,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "security70",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/security70.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/docker-checks/security70.log",
+      "log_sha256": "a7868dc757eb681efd325a4ae2756e06c28ef71adff40ba1ca4d9ca7c92c3300",
+      "unittest_total": 70,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "mobile-expo-correct-workspace",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/local-checks/mobile-expo-correct-workspace.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/local-checks/mobile-expo-correct-workspace.log",
+      "log_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+      "unittest_total": null,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "scope-adverse",
+      "exit": 0,
+      "status": "PASS",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/local-checks/scope-adverse.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/local-checks/scope-adverse.log",
+      "log_sha256": "d503ae2b0412feccfcfc0471b5d5f0295b6c8614649d126a3a9db42406b01c80",
+      "unittest_total": 8,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    },
+    {
+      "name": "strict-gf01-report",
+      "exit": 1,
+      "status": "RAW_NONZERO",
+      "receipt": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/local-checks/strict-gf01-report.receipt.json",
+      "log": "docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence/local-checks/strict-gf01-report.log",
+      "log_sha256": "44b914119b6b2469ab078b946a0ac685e2d6322c28ec5d0b8471f6ca2f939f9c",
+      "unittest_total": null,
+      "tap_counts": {},
+      "vitest_pass_counts": [],
+      "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+      "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+    }
+  ],
+  "ci": {
+    "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+    "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+    "quality": {
+      "run_id": 39997349019,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 120564220412,
+          "name": "Repository quality gates",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39997349019,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Initialize containers",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Verify tooling security backports",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Verify installed iOS native sources",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Verify store-only client delivery",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Verify governed release provenance",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Verify iOS Simulator compile workflow contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Check Expo dependency compatibility",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Run Expo Doctor",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14
+            },
+            {
+              "name": "Check export statistics analyzer",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Check deterministic optimization fixtures",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Check local Edge Function contracts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            },
+            {
+              "name": "Check catalog promotion, curation, and receipt contracts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18
+            },
+            {
+              "name": "Execute account service scrub migration rehearsal",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19
+            },
+            {
+              "name": "Typecheck",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20
+            },
+            {
+              "name": "Lint",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21
+            },
+            {
+              "name": "Test",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Check performance readiness docs",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            },
+            {
+              "name": "Check device support source contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24
+            },
+            {
+              "name": "Check source packet",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25
+            },
+            {
+              "name": "Post Setup Deno",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 47
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 48
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 49
+            },
+            {
+              "name": "Stop containers",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 50
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 51
+            }
+          ]
+        },
+        {
+          "id": 120564220844,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39997349019,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            }
+          ]
+        },
+        {
+          "id": 120564220911,
+          "name": "Credential-free Supabase reset and database tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_id": 39997349019,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Check local-only database contract",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Reset twice, test, lint, and prove zero drift",
+              "status": "completed",
+              "conclusion": "failure",
+              "number": 7
+            },
+            {
+              "name": "Retain generated public types for parity diagnosis",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        },
+        {
+          "id": 120564221281,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39997349019,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Execute all isolated PostgreSQL rehearsals",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            }
+          ]
+        },
+        {
+          "id": 120566473376,
+          "name": "Expo export (ios)",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39997349019,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Export ios with source maps",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Analyze ios export",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Upload content-free export statistics",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        },
+        {
+          "id": 120566473472,
+          "name": "Expo export (android)",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 39997349019,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Use reviewed npm",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install from lockfile",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Export android with source maps",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Analyze android export",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Upload content-free export statistics",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        }
+      ]
+    },
+    "security": {
+      "run_id": 39997349147,
+      "conclusion": "failure",
+      "secret_job": 120564221238,
+      "static_job": 120564221527,
+      "code_job": 120564221511,
+      "admission_job": 120566428156
+    },
+    "ios": {
+      "run_id": 39997349006,
+      "conclusion": "success",
+      "scope": "source-only"
+    },
+    "sanitized_log_excerpts": [
+      {
+        "job_id": 120564220911,
+        "lines": [
+          "2026-10-23T17:44:13.7895792Z       throw new Error(`H01_SQL_PROBE_FAILED: ${error.originReason}. ${error.diagnostic ?? ''}`, {",
+          "2026-10-23T17:44:13.7897530Z Error: H01_SQL_PROBE_FAILED: exit-nonzero. Error response from daemon: error from registry: Data limit exceeded"
+        ]
+      },
+      {
+        "job_id": 120564221527,
+        "lines": [
+          "2026-10-23T17:47:37.4428953Z contract.Rejected: SOURCE_INVENTORY_DRIFT"
+        ]
+      }
+    ]
+  },
+  "blockers": [
+    "Protected Semgrep dependency metadata excludes patched MCP/OpenTelemetry",
+    "Original source inventory drift and 61 classifier refusals",
+    "OWASP current registry bytes differ from original pin",
+    "Original current/history secret findings unreviewed",
+    "node-forge has no official patched release; root-only candidate leaves six high propagated findings",
+    "Expired original Security proposal and exception policy",
+    "Canonical ECR provider block remains separate; see exact run receipts"
+  ],
+  "environment": "Initial WSL ENOSPC/EIO interrupted a suite. Completed official Ubuntu24.04 Docker replacement uses Python3.12.3/glibc2.39, memory-backed disposable scratch and durable Windows receipts. See environment-fault.json and docker-runtime.json.",
+  "forbidden_axes": {
+    "main_promotion": false,
+    "m2": false,
+    "hosted_db_replay": false,
+    "signing": false,
+    "testflight": false,
+    "release": false,
+    "patient_data": false
+  },
+  "context_health": "Single issued ZIP only; exact inputs preserved; no union; one stage writer; independent Brain review required.",
+  "next_proposed_source_scope": "SCANNER-DEPENDENCY-METADATA-BRIDGE-01 (proposal only; NEXT_PROPOSED_SOURCE_SCOPE.md)",
+  "observed_at": "2026-10-23T20:14:18.592853+00:00",
+  "outstanding": "Original governance/root suites and final delivery CI still running/pending; this milestone is not the completed task."
+}

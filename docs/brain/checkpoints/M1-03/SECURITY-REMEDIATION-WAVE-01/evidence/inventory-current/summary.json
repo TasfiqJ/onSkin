@@ -1,0 +1,84 @@
+{
+  "observed_at": "2026-10-23T19:56:06.998017+00:00",
+  "source_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "source_tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_guard": {
+    "exit": 1,
+    "result": "SOURCE_INVENTORY_DRIFT"
+  },
+  "tracked": 20407,
+  "original_manifest_rows": 11920,
+  "counts": {
+    "unchanged": 11830,
+    "changed": 90,
+    "extra": 8485,
+    "binding-document": 2
+  },
+  "missing": 0,
+  "review_partitions": {
+    "extra": {
+      "root-or-other-review-required": 1,
+      "current-app-or-shared-package": 11,
+      "documentation-or-governance": 94,
+      "checkpoint-or-review-evidence": 8337,
+      "tool-test-or-ci": 39,
+      "protected-original-security": 3
+    },
+    "changed": {
+      "root-or-other-review-required": 3,
+      "tool-test-or-ci": 8,
+      "current-app-or-shared-package": 68,
+      "documentation-or-governance": 2,
+      "generated-document-or-evidence": 4,
+      "protected-original-security": 5
+    }
+  },
+  "rules": [
+    {
+      "name": "owasp-top-ten",
+      "expected_sha256": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+      "local_candidates": [],
+      "registry_probe": {
+        "url": "https://semgrep.dev/c/p/owasp-top-ten",
+        "bytes": 1499313,
+        "sha256": "d9578ae4a8d99f1c298ed0d8dab741a7e2bc3d9bafe90709f712672686a85ca5",
+        "matches_pin": false
+      }
+    },
+    {
+      "name": "react",
+      "expected_sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+      "local_candidates": [],
+      "registry_probe": {
+        "url": "https://semgrep.dev/c/p/react",
+        "bytes": 17090,
+        "sha256": "d773366e4e5658b0eb5224bd8f23ad74dbc87d42dda430ccbc582b96044b759d",
+        "matches_pin": true
+      }
+    },
+    {
+      "name": "secrets",
+      "expected_sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+      "local_candidates": [],
+      "registry_probe": {
+        "url": "https://semgrep.dev/c/p/secrets",
+        "bytes": 94643,
+        "sha256": "d1afb323ed493cf9d3ee5044447b989debf033b2b7cc8208662a81b8c162c66a",
+        "matches_pin": true
+      }
+    },
+    {
+      "name": "typescript",
+      "expected_sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+      "local_candidates": [],
+      "registry_probe": {
+        "url": "https://semgrep.dev/c/p/typescript",
+        "bytes": 221296,
+        "sha256": "967e551f37a9f27ce8b396ed121e5e127bf9ea60148e10589b794bd4ffe73395",
+        "matches_pin": true
+      }
+    }
+  ],
+  "original_sast_run": false,
+  "admission": "NONE"
+}

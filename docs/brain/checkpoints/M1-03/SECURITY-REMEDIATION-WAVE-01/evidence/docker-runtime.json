@@ -1,0 +1,43 @@
+{
+  "observed_at": "2026-10-23T20:11:33.570279+00:00",
+  "image": "ubuntu@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac",
+  "container_id": "7112d1328f36d6f7138156ceeba7fca5957a66f3df5c3223335783a20d354b75",
+  "mounts": [
+    {
+      "Type": "bind",
+      "Source": "/run/desktop/mnt/host/c/Users/jasim/Documents/ChatGPT/MasterV2Code/onSkin_M103_SECURITY_WAVE01_EXACT_05dc",
+      "Destination": "/issued",
+      "Mode": "",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/run/desktop/mnt/host/c/Users/jasim/Documents/ChatGPT/MasterV2Code/onSkin_M103_SECURITY_WAVE01_EXACT_05dc/docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/evidence",
+      "Destination": "/evidence",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "tmpfs",
+      "Source": "",
+      "Destination": "/work",
+      "Mode": "",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "tmpfs": {
+    "Type": "tmpfs",
+    "Target": "/work",
+    "TmpfsOptions": {
+      "SizeBytes": 8589934592
+    }
+  },
+  "versions": "Python 3.12.3\npip 24.0 from /work/venv/lib/python3.12/site-packages/pip (python 3.12)\nv24.19.0\n11.17.0\nldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39\n",
+  "source_read_only": true,
+  "scratch": "/work memory tmpfs",
+  "recovery_status": "Original WSL distro remains failed; replacement Docker runtime works. Initial governance run interrupted is not a pass. Final Docker receipts are authoritative for this run.",
+  "incremental_spend_usd": 0
+}
