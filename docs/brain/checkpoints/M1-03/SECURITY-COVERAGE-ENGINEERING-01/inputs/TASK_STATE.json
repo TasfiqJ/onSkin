@@ -1,0 +1,60 @@
+{
+  "accepted_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "actual_original_SAST": "NOT_RUN_DUE_TO_SOURCE_INVENTORY_DRIFT",
+  "authentic_owasp_rule_required_sha256": "5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1",
+  "base_commit": "455e3596876d85f5734f4ac3163df1de09647e1f",
+  "base_tree": "f873f4ba961b078465234f33eb2f30728f343515",
+  "historical_failed_targets": 189,
+  "historical_fixpoint_events": 368,
+  "hosted_db_go": false,
+  "independent_exact_issued_head_changed_reviewed": 90,
+  "independent_exact_issued_head_extra_classes": {
+    "app_package": 11,
+    "docs": 94,
+    "historical_checkpoint_review": 8747,
+    "other": 1,
+    "tool_or_workflow": 42
+  },
+  "independent_exact_issued_head_extra_paths": 8895,
+  "independent_exact_issued_head_missing_paths": 0,
+  "independent_exact_issued_head_tracked_files": 20817,
+  "latest_ios": {
+    "conclusion": "success_source_only",
+    "run_id": 40029099736,
+    "status": "completed"
+  },
+  "latest_quality": {
+    "conclusion": "failure",
+    "reason": "pinned canonical ECR acquisition failed; source jobs did pass",
+    "run_id": 40029099723,
+    "status": "completed"
+  },
+  "latest_registry_rule_sha256": "c552bf8aa0b9dfcb854cd4ae14108fae63f30ac237bb902c0f2f25e98b32b57b",
+  "latest_security": {
+    "conclusion": "failure",
+    "run_id": 40029099712,
+    "status": "completed"
+  },
+  "m2_authorized": false,
+  "main_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "main_promotion_authorized": false,
+  "measured_prior_source_changed": 90,
+  "measured_prior_source_extra": 8654,
+  "measured_prior_source_files": 20576,
+  "original_frozen_manifest_rows": 11920,
+  "pr10": {
+    "state": "DRAFT_OPEN_UNMERGED"
+  },
+  "project": "onSkin V2",
+  "safety": "No raw found secrets/JANUS/patient files; no paid spend, no source GO",
+  "schema_version": 1,
+  "source_security_go": false,
+  "stale_original_security_proposal_expiry": "2026-10-21T00:00:00Z",
+  "task": "M1-03/SECURITY-COVERAGE-ENGINEERING-01",
+  "working_branch": "stage/m1-gate-recovery"
+}

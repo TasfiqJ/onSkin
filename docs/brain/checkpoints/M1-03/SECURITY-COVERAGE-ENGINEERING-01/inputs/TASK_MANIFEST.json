@@ -1,0 +1,73 @@
+{
+  "authorization_id": "M103-SECURITY-COVERAGE-ENGINEERING01-CANDIDATE-01",
+  "base_commit": "455e3596876d85f5734f4ac3163df1de09647e1f",
+  "base_tree": "f873f4ba961b078465234f33eb2f30728f343515",
+  "branch": "stage/m1-gate-recovery",
+  "file_count": 12,
+  "files": [
+    {
+      "bytes": 2036,
+      "path": "00_READ_FIRST.md",
+      "sha256": "43f70f6c776e414c46d0ff832d86acb22c4a17eacf33a35d6ffdb775a08a9ee9"
+    },
+    {
+      "bytes": 2281,
+      "path": "01_INDEPENDENT_BRAIN_REVIEW.md",
+      "sha256": "0b15d50836b384d987234601dd5bf8e8b24473371b45ceeaedca6f75ceaccf7a"
+    },
+    {
+      "bytes": 4987,
+      "path": "02_ENGINEERING_MISSION.md",
+      "sha256": "f131d4480ec8e331917518f2495b35686e4665a030ccd7575a872d5e89cdd635"
+    },
+    {
+      "bytes": 1847,
+      "path": "03_EXACT_SOURCE_AUTHORITY.md",
+      "sha256": "dadf5b2db9215fa4f45e78dc275835c4c362382cea0f7c23d738466933d5b358"
+    },
+    {
+      "bytes": 2212,
+      "path": "04_ACCEPTANCE_TESTS.md",
+      "sha256": "d0564d272bee4f3899cdb5972b2db5f89a797ed2808f495f53ddaaed586bb360"
+    },
+    {
+      "bytes": 1484,
+      "path": "05_OWASP_AND_OWNER_GATES.md",
+      "sha256": "9159d13855105d910966dd15746802f39bc5b98d897584796080867269bd7f2f"
+    },
+    {
+      "bytes": 1910,
+      "path": "06_DELIVERY_AND_CI.md",
+      "sha256": "07520902f800851d119e980d6ce8f85102e6d13daab6e173c719f24e6128574c"
+    },
+    {
+      "bytes": 1192,
+      "path": "07_STOP_RULES.md",
+      "sha256": "9517e582bcd9bd6b1b37405ec8e2842b4a4ecf5269dcc8b7d252960126068755"
+    },
+    {
+      "bytes": 5888,
+      "path": "PREIMAGE_WITNESSES.json",
+      "sha256": "2052ee196937a19c288b6fb84631f7f6b5ec69f940929cf5c1766a28d86567cd"
+    },
+    {
+      "bytes": 1948,
+      "path": "SOURCE_AUTHORIZATION.json",
+      "sha256": "821dc186b2f49bda8c5ca0df84c11edcd5cb6569336245b80372e37fb633ca83"
+    },
+    {
+      "bytes": 2058,
+      "path": "TASK_STATE.json",
+      "sha256": "fb20d883b0aacf040364fe7c11cb0914ab05dd39257d6a959615a686c5f1f53d"
+    },
+    {
+      "bytes": 2184,
+      "path": "verify_context.py",
+      "sha256": "4665f6ac8be933ff8710d61ee376e80be921d21d37cb53254266575fa872142b"
+    }
+  ],
+  "iteration": "SECURITY-COVERAGE-ENGINEERING-01",
+  "repository": "TasfiqJ/onSkin",
+  "schema_version": 1,
+  "task_id": "M1-03"
+}
