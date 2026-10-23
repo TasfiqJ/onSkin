@@ -3,7 +3,11 @@ import collections, hashlib, json, pathlib, subprocess
 root=pathlib.Path.cwd(); prefix=root/'docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01'
 source=root/'docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/current-scan-summary.json'
 raw=source.read_bytes(); history=json.loads(raw)
-current={r['path']:r for r in json.loads((prefix/'evidence/inventory-reviewed/review-matrix.json').read_bytes())['rows']}
+matrix_path=prefix/'evidence/inventory-reviewed/review-matrix.json'; matrix=json.loads(matrix_path.read_bytes())
+matrix_rows=matrix.get('rows',[])
+for shard in matrix.get('shards',[]):
+    body=(matrix_path.parent/shard['path']).read_bytes();assert hashlib.sha256(body).hexdigest()==shard['sha256'];matrix_rows.extend(json.loads(body)['rows'])
+current={r['path']:r for r in matrix_rows}
 gitrows=subprocess.check_output(['git','ls-tree','-rz','HEAD']).split(b'\0'); blobs={}
 for row in gitrows:
     if not row:continue

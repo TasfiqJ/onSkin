@@ -7,6 +7,6 @@
 - node-forge1.4.0 has no officially patched release. Removing its direct root declaration leaves Expo transitive paths and the same six high propagated records; that installed disposable candidate is rejected.
 - Original proposal expiry2026-10-21 and exception expiry2026-10-17 remain expired. Owner-controlled source pins and all source admission remain closed.
 - Canonical pinned ECR SQL probe returned Data limit exceeded at issuance base. New-head CI is independently recorded; an old successful job or PG15/17 rehearsal is not a substitute. No ECR retry, image substitution or paid quota change occurred.
-- Initial WSL scratch failed after host ENOSPC/EIO. That partial governance run is not a pass. A memory-backed official Ubuntu Docker fallback reruns authorized checks and saves complete replacement receipts; original failed distro is left untouched after one restart attempt.
+- Initial WSL scratch failed after host ENOSPC/EIO. That partial governance run is not a pass. Official Ubuntu Docker reruns suites with durable receipts. Tmpfs noexec prevented Turbo; remount was OS-rejected, then a fresh executable overlay clone/ci completed original forced commands. Original failed distro is left untouched after one restart attempt.
 
 No main promotion, M2, hosted replay, clinical/patient data, deployment, signing/TestFlight, release or self-acceptance. The only next source scope is the proposal in NEXT_PROPOSED_SOURCE_SCOPE.md; it is not an issuance.

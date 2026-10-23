@@ -1,5 +1,5 @@
 """Read provider artifacts privately; export no finding text or secret values."""
-import collections, hashlib, json, pathlib, sys, zipfile
+import collections, hashlib, json, pathlib, re, sys, zipfile
 private=pathlib.Path(sys.argv[1]); root=pathlib.Path(sys.argv[2]); out=pathlib.Path(sys.argv[3]); out.mkdir(parents=True,exist_ok=True)
 sha=lambda b:hashlib.sha256(b).hexdigest()
 canon=lambda x:json.dumps(x,sort_keys=True,separators=(',',':')).encode()
@@ -32,13 +32,25 @@ with zipfile.ZipFile(private/'secret.zip') as z:
                      'range_sha256':sha(canon(coordinates)),'rule_id':row['ruleId'],'disposition':'OWNER_REVIEW_REQUIRED'})
     commands={name:{'argv_sha256':sha(canon(r['argv'])),'exit':r['exit'],'started':r['started'],'finished':r['finished'],
                     'stdout_sha256':r['stdout_sha256'],'stderr_sha256':r['stderr_sha256']} for name,r in proof['commands'].items()}
+    execution_errors=[]; verified=0
+    for name,row in proof['commands'].items():
+        if name.startswith('trufflehog'):
+            for index,line in enumerate(row['stderr'].splitlines()):
+                if not line.strip():continue
+                try:event=json.loads(line)
+                except ValueError:execution_errors.append({'command':name,'event':index,'error':'NON_JSON_STDERR'});continue
+                if event.get('level')=='error' or 'error' in event:execution_errors.append({'command':name,'event':index,'error':'SCANNER_ERROR_EVENT'})
+                if event.get('msg')=='finished scanning':verified+=event.get('verified_secrets',0)
+        elif re.search(r'\b(?:error|fatal)\b',row['stderr'],re.I):execution_errors.append({'command':name,'error':'SCANNER_STDERR_ERROR_MARKER'})
     summary={'run_id':proof['run_id'],'context':proof['context'],'source_ref':proof['source_ref'],
              'provider_checkout_head':proof['source']['head'],'provider_checkout_tree':proof['source']['tree'],
              'stage_head':'05dc51d6c945d31c66b921ae99dee603de464cdc','binding_note':'PR workflow checked the synthetic merge commit; its tree equals the issued stage tree. Findings are tree-bound, not represented as a stage-head commit scan.',
              'archive_sha256':sha((private/'secret.zip').read_bytes()),'proof_sha256':sha(proof_raw),'sarif_sha256':sha(sarif_raw),
              'counts':{'current_gitleaks':len(current),'history_gitleaks':len(historical),'current_unmatched_snapshot_paths':unmatched},
              'current_partitions':dict(categories),'current_rules':dict(rules),'commands':commands,
-             'verified_trufflehog_findings':0,'execution_errors_observed':0,'acceptance':'REJECTED_SECRET_CURRENT_SOURCE_FINDINGS_UNREVIEWED',
+             'verified_trufflehog_findings':verified,'execution_errors_observed':len(execution_errors),'execution_error_summary':execution_errors,
+             'tool_identities':{n:{k:v for k,v in tool.items() if k in ('version','asset','binary','url')} for n,tool in proof['tools'].items()},
+             'acceptance':'REJECTED_SECRET_CURRENT_SOURCE_FINDINGS_UNREVIEWED',
              'owner':'TasfiqJ (repository owner); security classification/rotation requires owner action; no owner receipt supplied',
              'raw_secret_output':False,'admission':'NONE'}
     (out/'safe-secret-locations.json').write_text(json.dumps({'source_run':proof['run_id'],'rows':rows},indent=2)+'\n')

@@ -1,0 +1,17 @@
+{
+  "name": "mobile-expo",
+  "argv": [
+    "node",
+    "/work/repo/node_modules/expo/bin/cli",
+    "install",
+    "--check"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:16:07.575872+00:00",
+  "ended": "2026-10-23T20:16:07.894427+00:00",
+  "seconds": 0.3185580870194826,
+  "exit": 0,
+  "log_sha256": "8152e1dfe2839254529bd71a5c9d6f299c93bc1132025c5930dcc5dc042489db",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

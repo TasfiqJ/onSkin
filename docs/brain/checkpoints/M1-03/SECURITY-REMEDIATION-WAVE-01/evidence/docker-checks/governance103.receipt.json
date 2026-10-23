@@ -1,0 +1,23 @@
+{
+  "name": "governance103",
+  "argv": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "cwd": "/work/repo",
+  "started": "2026-10-23T20:04:39.837110+00:00",
+  "ended": "2026-10-23T20:16:07.197657+00:00",
+  "seconds": 686.9985854350089,
+  "exit": 0,
+  "log_sha256": "6dadc09c79b028045865041e505e9e0b06130f8a88e353f0fb6dd85314449180",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b"
+}

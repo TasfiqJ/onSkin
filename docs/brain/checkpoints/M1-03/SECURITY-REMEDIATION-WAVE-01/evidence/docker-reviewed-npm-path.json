@@ -1,0 +1,10 @@
+{
+  "prior_observation": "Outer CLI was verified11.20.0, but Turbo workspace child notices identified ambient npm11.17.0; earlier overlay tests are not borrowed as reviewed-tool results.",
+  "source": "/work/npm-runtime/node_modules/npm",
+  "installed_cli": "/opt/wave-reviewed-npm",
+  "tool_tree": "b941f37688799d749409b6449dce4721c5e2ed96e9bfe43eaab79850fa11b7cd",
+  "expected": "b941f37688799d749409b6449dce4721c5e2ed96e9bfe43eaab79850fa11b7cd",
+  "ambient_and_child_npm_version": "11.20.0",
+  "source_repository_changed": false,
+  "decision": "Repeat fresh ci and forced root checks with reviewed npm on child PATH."
+}

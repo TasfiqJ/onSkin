@@ -30,7 +30,13 @@ counts=dict(collections.Counter(r['inventory_status'] for r in rows)); partition
 for status in ('extra','changed'):
     partitions[status]=dict(collections.Counter(r['review_partition'] for r in rows if r['inventory_status']==status))
 coverage=c.load(c.HERE,'scan-targets.json.gz')
-(out/'review-matrix.json').write_text(json.dumps({'source_commit':c.git(root,'rev-parse','HEAD').decode().strip(),'rows':rows,'missing':missing},indent=2)+'\n')
+shards=[]
+for index in range(0,len(rows),2000):
+    name=f'review-rows-{index//2000:02d}.json'
+    body=('{"rows":[\n'+',\n'.join(json.dumps(r,separators=(',',':')) for r in rows[index:index+2000])+'\n]}\n').encode()
+    assert len(body)<4*1024**2
+    (out/name).write_bytes(body);shards.append({'path':name,'rows':len(rows[index:index+2000]),'sha256':c.SHA(body),'bytes':len(body)})
+(out/'review-matrix.json').write_text(json.dumps({'source_commit':c.git(root,'rev-parse','HEAD').decode().strip(),'row_count':len(rows),'rows_sha256':c.SHA(c.CANON(rows)),'shards':shards,'missing':missing,'note':'All diagnostic rows retained in bounded shards; original source-manifest and 4MiB scanner limit unchanged.'},indent=2)+'\n')
 (out/'coverage-shape.json').write_text(json.dumps({'type':type(coverage).__name__,'keys':list(coverage) if isinstance(coverage,dict) else None,
     'entries':{k:len(v) if isinstance(v,(dict,list)) else v for k,v in coverage.items()} if isinstance(coverage,dict) else len(coverage)},indent=2)+'\n')
 rules=[]

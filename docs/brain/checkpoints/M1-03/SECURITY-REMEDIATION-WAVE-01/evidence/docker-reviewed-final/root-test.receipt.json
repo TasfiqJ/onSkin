@@ -1,0 +1,20 @@
+{
+  "name": "root-test",
+  "argv": [
+    "node",
+    "/work/npm-runtime/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "test",
+    "--",
+    "--force"
+  ],
+  "cwd": "/opt/wave-repo",
+  "started": "2026-10-23T20:27:13.276021+00:00",
+  "ended": "2026-10-23T20:27:26.881738+00:00",
+  "seconds": 13.605731155985268,
+  "exit": 0,
+  "log_sha256": "bfe4fc57a6a273f2404c9cfe6080707fad21283895e36c5d66e25c557146474a",
+  "head": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+  "tree": "fc579c91528aa285f28f6364d7f4da8ee2aafd3b",
+  "source_changes_after": ""
+}

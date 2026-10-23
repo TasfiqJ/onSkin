@@ -4,16 +4,39 @@ Measured source/test snapshot: `05dc51d6c945d31c66b921ae99dee603de464cdc`, tree 
 
 | Check | Actual exit | Measured count |
 | --- | ---: | --- |
-| expiry8 | 0 | See receipt |
-| npm-ci | 0 | See receipt |
-| npm-tool | 0 | See receipt |
-| secret12 | 0 | 12 |
-| security70 | 0 | 70 |
-| mobile-expo-correct-workspace | 0 | See receipt |
-| scope-adverse | 0 | 8 |
-| strict-gf01-report | 1 | See receipt |
+| docker-checks/expiry8 | 0 | 8 |
+| docker-checks/governance103 | 0 | 103 |
+| docker-checks/ios-source-check | 0 | See receipt |
+| docker-checks/ios-source-tests | 0 | 77 |
+| docker-checks/mobile-expo | 0 | See receipt |
+| docker-checks/npm-ci | 0 | See receipt |
+| docker-checks/npm-initial | 1 | See receipt |
+| docker-checks/npm-installed | 1 | See receipt |
+| docker-checks/npm-lock | 1 | See receipt |
+| docker-checks/npm-tool | 0 | See receipt |
+| docker-checks/root-lint | 126 | See receipt |
+| docker-checks/root-test | 126 | See receipt |
+| docker-checks/root-typecheck | 126 | See receipt |
+| docker-checks/secret12 | 0 | 12 |
+| docker-checks/security70 | 0 | 70 |
+| docker-checks/strict-original-report | 1 | See receipt |
+| docker-checks/worklist-check | 0 | See receipt |
+| docker-forced-rerun/root-lint | 126 | See receipt |
+| docker-forced-rerun/root-test | 126 | See receipt |
+| docker-forced-rerun/root-typecheck | 126 | See receipt |
+| docker-overlay-checks/npm-ci | 0 | See receipt |
+| docker-overlay-checks/root-lint | 0 | See receipt |
+| docker-overlay-checks/root-test | 0 | 24 + 6043 |
+| docker-overlay-checks/root-typecheck | 0 | See receipt |
+| docker-reviewed-final/npm-ci | 0 | See receipt |
+| docker-reviewed-final/root-lint | 0 | See receipt |
+| docker-reviewed-final/root-test | 0 | 24 + 6043 |
+| docker-reviewed-final/root-typecheck | 0 | See receipt |
+| local-checks/mobile-expo-correct-workspace | 0 | See receipt |
+| local-checks/scope-adverse | 0 | 8 |
+| local-checks/strict-gf01-report | 1 | See receipt |
 
-Raw nonzero exits stay nonzero. Strict report/profile refusals do not admit this task. The first root-directory Expo invocation, if refused, is separate from the passing check in the correct mobile workspace. Worklist drift is reported as such unless the unchanged canonical generator is separately run on a clean measured source.
+Raw nonzero exits stay nonzero. Original tmpfs root commands returned126 before execution because of noexec; a rejected remount did not fix it. Final docker-reviewed-final checks use a fresh no-hardlink executable clone, fresh npm ci and original forced commands. Turbo child npm was11.17.0 in the first overlay run; the final run places byte-verified11.20.0 on child PATH and repeats the checks. Strict report/profile refusals do not admit this task. Mobile Expo passes in its correct workspace. Worklist check passes on clean measured Linux source; an earlier dirty Windows invocation refused and is not substituted for that check.
 
 Measured engineering progress: 13 changed/new family wheels independently verified; original upstream/assembled identities reproduced; three candidate trees and family-only file deltas measured; 20,407 base paths classified; all 189 historical failed targets and 368 fixpoint locations bound to current blobs; original provider current/history secret artifacts safely partitioned; one real installed npm candidate rejected because its vulnerability remains.
 

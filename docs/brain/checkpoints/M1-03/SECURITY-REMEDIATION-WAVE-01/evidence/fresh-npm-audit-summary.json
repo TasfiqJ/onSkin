@@ -1,0 +1,59 @@
+{
+  "protocol": "One initial cold-cache audit, then installed and lock audits with same cache; raw nonzero exits preserved, no repeat until green. Logs combine stdout JSON and npm notice stderr; all bytes retained.",
+  "rows": [
+    {
+      "command": "npm-initial",
+      "exit": 1,
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 6,
+        "critical": 0,
+        "total": 6
+      },
+      "primary_advisory_ids": [
+        "GHSA-86w9-cpqp-85rv"
+      ],
+      "full_combined_log_sha256": "5dc31064e8ec805e90526829cf667622a28841a7abee1224be4f9874f2df689f",
+      "trailing_stderr_bytes": 210,
+      "trailing_stderr_sha256": "965ac1cb2b277371c18de69f4237bc60e7a4012a5bd71b859fbd38b543b02404"
+    },
+    {
+      "command": "npm-installed",
+      "exit": 1,
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 6,
+        "critical": 0,
+        "total": 6
+      },
+      "primary_advisory_ids": [
+        "GHSA-86w9-cpqp-85rv"
+      ],
+      "full_combined_log_sha256": "c50ba924fcb586cbda522a553c4aeae5019b75618526f227735fb9fcb44478e5",
+      "trailing_stderr_bytes": 1,
+      "trailing_stderr_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "command": "npm-lock",
+      "exit": 1,
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 6,
+        "critical": 0,
+        "total": 6
+      },
+      "primary_advisory_ids": [
+        "GHSA-86w9-cpqp-85rv"
+      ],
+      "full_combined_log_sha256": "c50ba924fcb586cbda522a553c4aeae5019b75618526f227735fb9fcb44478e5",
+      "trailing_stderr_bytes": 1,
+      "trailing_stderr_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    }
+  ]
+}

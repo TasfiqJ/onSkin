@@ -1,5 +1,5 @@
 """Independent finite-scope and committed-blob verifier for this diagnostic delivery."""
-import argparse, hashlib, json, pathlib, subprocess
+import argparse, hashlib, json, pathlib, stat, subprocess
 BASE='05dc51d6c945d31c66b921ae99dee603de464cdc'
 TREE='fc579c91528aa285f28f6364d7f4da8ee2aafd3b'
 BRANCH='stage/m1-gate-recovery'
@@ -23,6 +23,7 @@ def main():
     identity(git('branch','--show-current').decode().strip(),BASE,git('rev-parse',BASE+'^{tree}').decode().strip())
     names=set(git('diff','--name-only',BASE).decode().splitlines())|set(git('ls-files','--others','--exclude-standard').decode().splitlines())
     scope(names)
+    for commit in git('rev-list',BASE+'..HEAD').decode().splitlines():scope(git('diff-tree','--no-commit-id','--name-only','-r',commit).decode().splitlines())
     pre=json.loads((root/PREFIX/'inputs/PREIMAGE_WITNESSES.json').read_bytes())
     for row in pre['files']:
         if row['path']=='ONSKIN_BRAIN_HANDOFF.txt':continue
@@ -35,6 +36,8 @@ def main():
         manifest=json.loads((root/PREFIX/'SHA256SUMS.json').read_bytes())
         for row in manifest['files']:
             body=git('show','HEAD:'+row['path']); blob=git('rev-parse','HEAD:'+row['path']).decode().strip()
+            mode=git('ls-tree','HEAD','--',row['path']).decode().split()[0];s=(root/row['path']).lstat()
+            require(mode=='100644' and stat.S_ISREG(s.st_mode) and s.st_nlink==1 and not getattr(s,'st_file_attributes',0)&0x400,'NONREGULAR_EVIDENCE:'+row['path'])
             require(blob==row['git_blob'] and sha(body)==row['sha256'] and len(body)==row['bytes'] and (root/row['path']).read_bytes()==body,'EVIDENCE_BLOB_DRIFT:'+row['path']);checked+=1
     print(json.dumps({'status':'PASS','protected_preimages':24,'committed_artifacts_verified':checked,'source_edits':0,'admission':'NONE'}))
 if __name__=='__main__':main()
