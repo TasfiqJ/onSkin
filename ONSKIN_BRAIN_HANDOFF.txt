@@ -1,14 +1,38 @@
-onSkin V2 — M1-03 POSTMERGE-GATE-TRIAGE-01
-Authorization: M103-POSTMERGE-GATE-TRIAGE01-READONLY-CANDIDATE-01
-status=PARTIAL_DIAGNOSTIC; admission=NONE; source Security GO=false; database GO=false.
-Measured source d9912f4c8b30358593569c5b9b4e84773c6f463e; tree 389c2a09b62e78a225a2b41c8a1965a1b0e1ab80. All 18 issuance preimages matched.
-New causal proof: stale synthetic SBOM package inventory fails workflow_contract.mjs:129.
-Original 70 tests: 23 failure events, 2 errors. Disposable fixture-only candidate: 70 pass; reverse restores red.
-Candidate is checkpoint .patch only, never applied to stage/main. Real provider artifact remains rejected at line 117 for unreviewed advisories.
-Original Security and canonical ECR Quality failures remain open. No source/manifest/policy/workflow/DB edits or admission.
-Checkpoint: docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/README.md
-Next exact scope: NEXT_EDIT_PROPOSAL.md; one protected test file, requires new Brain authorization.
-Stage delivery is an evidence-only tail; final pushed SHA/tree observed externally after commit (no self-referential hash claim).
-Accepted tasks: M0-01/M0-02/M1-01/M1-02 only. Whole M1-03 blocked. M2/main promotion/release=false.
-Costs $0. Context health healthy; bounded experiment complete, no compaction or continuation needed.
-STOP. Founder relay: Codex is done.
+M1-03 SECURITY-SBOM-FIXTURE-01 — SUBMITTED_REVIEW_REQUIRED
+Authorization M103-SECURITY-SBOM-FIXTURE01-SOURCE-EDIT-01 only; no grant union.
+
+Exact source-only patch applied to scripts/phase9/security_acceptance/test_contract.py.
+Code/measured SHA: efc75bf119904f983e40380067f682d111da52dd
+Code/measured tree: 85568597205ccb6ee5a94fe16db063f78abbc70f
+Postimage SHA256: 661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8
+Postimage blob: e5c9a7cd575c35be768120ac8bdc146a0f50283d
+
+External context anchor VERIFIED; 25/25 preimages match. Original baseline RED.
+PASS on Node22.21.0/Python3.12.3: 70 original contracts; 12 original secret fixtures;
+6 original selected cases; 2 new disposable negatives; fresh npm ci; 6,067 forced
+repository tests; typecheck/lint with zero cache hits; strict Phase4 worklist.
+Ordinary unchanged governance discovery: 103 cases, 101 passed, 2 Windows-only skips.
+Frozen prior GF01 profile BLOCKED: Wrong GF01 branch. Its source is unchanged.
+
+Draft PR: https://github.com/TasfiqJ/onSkin/pull/10 (keep draft; no merge/auto-merge).
+Source-commit CI: Security 39890269391 FAILED; iOS 39890269367 SUCCESS (source only);
+Quality 39890269416 IN_PROGRESS at observation, canonical DB job FAILED:
+Data limit exceeded. Fresh code log retains both unreviewed @vitest/mocker GHSA IDs.
+Final evidence-head CI is separate: NOT_RUN at report seal, inspect after push.
+
+Latest live stage observed before evidence commit:
+efc75bf119904f983e40380067f682d111da52dd / 85568597205ccb6ee5a94fe16db063f78abbc70f.
+Final delivery ref: refs/heads/stage/m1-gate-recovery. Resolve the live SHA/tree
+AFTER the evidence-only commit/push; exact final values are in the Codex final
+response. No self-referential final commit/tree hash is fabricated inside its tree.
+Main read-only: d9912f4c8b30358593569c5b9b4e84773c6f463e.
+
+Checkpoint: docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/
+Includes immutable inputs, raw technical transcripts/exits, exact scope verifier,
+source-only patch copy, regular Git object hashes, RESULTS and BLOCKERS.
+
+Security admission CLOSED; protected_source_go=false. Original proposal expiry
+2026-10-21T00:00:00Z unchanged. Historical provider packet is stale and not re-dated.
+ECR image/policy/source manifest/owner pins/production validators remain frozen.
+No local ECR pull, hosted replay, credentials, spend, M2, signing, TestFlight or release.
+Independent Brain audit required. Founder returns: Codex is done.

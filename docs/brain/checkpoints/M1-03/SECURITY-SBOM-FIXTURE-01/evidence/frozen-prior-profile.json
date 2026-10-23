@@ -1,0 +1,22 @@
+{
+  "label": "frozen-prior-profile",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "python3.12",
+    "-B",
+    "scripts/brain/brain.py",
+    "--profile",
+    "M1-03",
+    "validate"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:30:06.295916+00:00",
+  "finished_utc": "2026-10-23T02:30:06.436719+00:00",
+  "seconds": 0.141,
+  "raw_exit": 1
+}

@@ -1,0 +1,33 @@
+{
+  "status": "TECHNICAL_CHECKS_PASS_GOVERNANCE_RUNNING",
+  "observed_utc": "2026-10-23T02:36:32.049808+00:00",
+  "infrastructure_issues": [
+    {
+      "attempt": "linux-preparation",
+      "raw_exit": 128,
+      "cause": "Windows command-line quoting broke the WSL shell string; no source mutation",
+      "resolution": "An explicit recorded shell script created the fresh no-hardlink clone and checksum-verified Node 22.21.0 runtime successfully"
+    },
+    {
+      "attempt": "root-forced-tests",
+      "raw_exit": 1,
+      "cause": "Turbo rejects combining --force and --cache; tests did not run in that invocation",
+      "resolution": "Used the documented --force flag alone; actual tests exited 0 and reported 0 cached tasks"
+    },
+    {
+      "attempt": "root-forced-tests-corrected presentation",
+      "wrapper_exit": 1,
+      "raw_test_exit": 0,
+      "cause": "The Windows Python 3.9 console could not print Unicode from the completed transcript",
+      "resolution": "Raw log and exit receipt were already preserved; configured only the new evidence runner stdout as UTF-8. No test rerun or result substitution"
+    },
+    {
+      "attempt": "checkpoint prose creation",
+      "raw_exit": 1,
+      "cause": "Python 3.9 pathlib.write_text has no newline argument; no files were created",
+      "resolution": "Created the authorized new Markdown files with the file editing tool"
+    }
+  ],
+  "protected_source_changes_beyond_exact_patch": false,
+  "original_test_failure_after_patch": false
+}

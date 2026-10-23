@@ -1,0 +1,34 @@
+{
+  "actual_provider_unreviewed": "@vitest/mocker GHSA-qxg6-89mg-rqv8 and GHSA-xp26-3454-mjgp; expired reviews, static/secret coverage outstanding",
+  "last_main_ios": {
+    "conclusion": "success",
+    "run": 39833311278,
+    "scope": "source-only"
+  },
+  "last_main_quality": {
+    "canonical_db": "failure: public.ecr.aws/supabase/postgres:15.8.1.085 Data limit exceeded",
+    "conclusion": "failure",
+    "exports": "success",
+    "repository_quality": "success",
+    "run": 39833311194
+  },
+  "last_main_security": {
+    "code_static_secret_source_acceptance": "failure",
+    "conclusion": "failure",
+    "run": 39833311172
+  },
+  "main_merge": "PR #9 already merged; DO NOT merge new fixture task",
+  "main_sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "main_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "note": "Historical main results are NOT final-head CI for the future patch. Check the exact new SHA after push; do not infer availability or GO.",
+  "original_security_contracts": {
+    "candidate_in_independent_clone": "70 passed; 6 targeted positive/adverse passed; reversal failed again",
+    "original_status": "23 failure events, 2 errors",
+    "run_count": 70
+  },
+  "schema_version": 1,
+  "source_security_proposal_expired_utc": "2026-10-21T00:00:00Z",
+  "stage_head_workflow_runs_observed": 0,
+  "stage_sha": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+  "stage_tree": "c7196a52c8d2e34a661841c3d4d92f3867b75e39"
+}

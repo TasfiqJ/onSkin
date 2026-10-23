@@ -1,0 +1,24 @@
+{
+  "label": "baseline-target-red",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022/scripts/phase9/security_acceptance",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+    "-v"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:24:34.152161+00:00",
+  "finished_utc": "2026-10-23T02:24:34.894671+00:00",
+  "seconds": 0.734,
+  "raw_exit": 1
+}

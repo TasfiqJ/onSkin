@@ -1,0 +1,28 @@
+{
+  "label": "governance-103-linux",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/brain",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:27:19.027690+00:00",
+  "finished_utc": "2026-10-23T02:40:15.963939+00:00",
+  "seconds": 776.937,
+  "raw_exit": 0
+}

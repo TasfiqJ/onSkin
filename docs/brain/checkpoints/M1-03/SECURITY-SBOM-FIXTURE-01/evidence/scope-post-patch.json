@@ -1,0 +1,13 @@
+{
+  "label": "scope-post-patch",
+  "command": [
+    "python",
+    "-B",
+    "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_scope.py"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:25:13.152125+00:00",
+  "finished_utc": "2026-10-23T02:25:15.019708+00:00",
+  "seconds": 1.859,
+  "raw_exit": 0
+}

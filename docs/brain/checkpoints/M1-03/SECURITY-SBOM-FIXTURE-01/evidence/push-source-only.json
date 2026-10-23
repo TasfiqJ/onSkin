@@ -1,0 +1,14 @@
+{
+  "label": "push-source-only",
+  "command": [
+    "git",
+    "push",
+    "origin",
+    "HEAD:refs/heads/stage/m1-gate-recovery"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:33:42.582169+00:00",
+  "finished_utc": "2026-10-23T02:33:44.763877+00:00",
+  "seconds": 2.187,
+  "raw_exit": 0
+}

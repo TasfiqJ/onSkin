@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "observed_utc": "2026-10-23T02:43:00.909419+00:00",
+  "files_checked": 75,
+  "method": "Review of only issued inputs, technical test logs, code and sanitized provider metadata; additional high-confidence private-key/access-token marker check",
+  "raw_scanner_findings_committed": false,
+  "patient_or_credential_material_included": false
+}

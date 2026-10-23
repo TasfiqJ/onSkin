@@ -1,0 +1,20 @@
+
+> layerwell@0.1.0 postinstall
+> node scripts/postinstall.mjs
+
+{"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+
+added 1037 packages, and audited 1041 packages in 22s
+
+203 packages are looking for funding
+  run `npm fund` for details
+
+27 vulnerabilities (2 moderate, 25 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.

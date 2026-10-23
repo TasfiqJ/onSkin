@@ -1,0 +1,23 @@
+{
+  "label": "lint-forced",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "npm",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:28:26.108889+00:00",
+  "finished_utc": "2026-10-23T02:29:03.385465+00:00",
+  "seconds": 37.281,
+  "raw_exit": 0
+}

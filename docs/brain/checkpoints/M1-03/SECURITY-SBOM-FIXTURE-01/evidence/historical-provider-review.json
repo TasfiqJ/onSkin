@@ -1,0 +1,36 @@
+{
+  "status": "HISTORICAL_FAILED_STALE_NOT_REPLAYED",
+  "observed_utc": "2026-10-23T02:31:34.637294+00:00",
+  "historical_run": 39833311172,
+  "source_commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "provider_artifact": {
+    "id": 12449687607,
+    "created_at": "2026-10-22T18:43:06Z",
+    "sha256": "560d7e4ec707b3fe7f9d01c6d5723a14f45e5fe0150d34e9b5727a15c4cc3fb8"
+  },
+  "summary_sha256": "185ffa9d5b517d43c21d0cd778b0143bef5b50a9442c6f6e9854d2aff2862c95",
+  "sbom_member": {
+    "sha256": "74fb69fdf3dd0f2c13b99e9a6ab5095634973d7cb8ceeaccf8054de492b0cc92",
+    "bytes": 306516
+  },
+  "sbom_package_count": 1113,
+  "raw_exit_codes": {
+    "dependency-sbom-audit.exit-code": "1",
+    "dependency-sbom.exit-code": "1",
+    "npm-audit-high.exit-code": "1",
+    "npm-exception-gate.exit-code": "1"
+  },
+  "historical_validator_refusal": "workflow_contract.mjs:117 blockers differed from exact two permitted expiry refusals",
+  "unreviewed_advisory_ids": [
+    "GHSA-qxg6-89mg-rqv8",
+    "GHSA-xp26-3454-mjgp"
+  ],
+  "freshness_limit_seconds": 21600,
+  "fresh_replay": "NOT_RUN: artifact itself is over six hours old; generatedAt is not changed or borrowed as current evidence",
+  "original_generatedAt": "Preserved in original immutable provider artifact; not re-dated, substituted, or copied to a new receipt",
+  "proposal_notAfter": "2026-10-21T00:00:00Z",
+  "raw_scanner_findings_committed": false,
+  "fresh_provider_CI": "PENDING_DRAFT_PR",
+  "security_admission": "CLOSED",
+  "protected_source_go": false
+}

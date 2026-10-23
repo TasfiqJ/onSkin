@@ -1,0 +1,1059 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "SECURITY-SBOM-FIXTURE-01",
+  "authorization_id": "M103-SECURITY-SBOM-FIXTURE01-SOURCE-EDIT-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "observed_utc": "2026-10-23T02:42:10.324023+00:00",
+  "external_manifest_sha256": "0b080328e308f3533afeb9b3764fd4f2d07f48a1ab5d5674e6fc08413a1cb50b",
+  "issued": {
+    "commit": "bfa2cf14110e701937d4b50b063565f3dea34f8a",
+    "tree": "c7196a52c8d2e34a661841c3d4d92f3867b75e39"
+  },
+  "measured": {
+    "commit": "efc75bf119904f983e40380067f682d111da52dd",
+    "tree": "85568597205ccb6ee5a94fe16db063f78abbc70f"
+  },
+  "delivery_ref": "refs/heads/stage/m1-gate-recovery",
+  "delivery_binding": "Resolve live ref after the evidence-only commit/push; exact final SHA/tree are reported in the Codex final response. No self-referential commit or tree hash is fabricated.",
+  "last_observed_live_stage": {
+    "commit": "efc75bf119904f983e40380067f682d111da52dd",
+    "tree": "85568597205ccb6ee5a94fe16db063f78abbc70f"
+  },
+  "main_read_only": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "draft_pr": "https://github.com/TasfiqJ/onSkin/pull/10",
+  "preimages": {
+    "count": 25,
+    "status": "PASS",
+    "receipt": "evidence/preflight.json"
+  },
+  "patch": {
+    "status": "PASS",
+    "applied_utc": "2026-10-23T02:25:13.076335+00:00",
+    "command": [
+      "git",
+      "apply",
+      "docs/brain/checkpoints/M1-03/POSTMERGE-GATE-TRIAGE-01/candidates/0001-unit-sbom-use-original-producer.patch"
+    ],
+    "patch_sha256": "8ca578ae875fb2012613604ab3f3f55326ef253267f5223a137034b9d868bf0a",
+    "postimage": {
+      "bytes": 49880,
+      "sha256": "661cfc2615689e3e64ee96d343e7e0bd76eeb6e8276c1483d04733248cd193f8",
+      "git_blob": "e5c9a7cd575c35be768120ac8bdc146a0f50283d"
+    },
+    "preimages_rechecked": 25,
+    "live_refs": [
+      "d9912f4c8b30358593569c5b9b4e84773c6f463e\trefs/heads/main",
+      "bfa2cf14110e701937d4b50b063565f3dea34f8a\trefs/heads/stage/m1-gate-recovery"
+    ]
+  },
+  "tests": {
+    "original_contracts": {
+      "discovered": 70,
+      "passed": 70,
+      "failed": 0,
+      "skipped": 0
+    },
+    "original_secret_fixtures": {
+      "discovered": 12,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0
+    },
+    "selected_original_cases": {
+      "passed": 6,
+      "failed": 0
+    },
+    "new_disposable_negatives": {
+      "passed": 2,
+      "failed": 0
+    },
+    "governance": {
+      "discovered": 103,
+      "passed": 101,
+      "failed": 0,
+      "skipped": 2,
+      "skip_reason": "Two original Windows junction tests on Linux"
+    },
+    "repository": {
+      "passed": 6067,
+      "failed": 0,
+      "mobile": 6043,
+      "console": 24,
+      "cached_tasks": 0
+    },
+    "typecheck": {
+      "status": "PASS",
+      "cached_tasks": 0
+    },
+    "lint": {
+      "status": "PASS",
+      "cached_tasks": 0
+    },
+    "phase4_strict_worklist": {
+      "status": "PASS",
+      "regenerated": false
+    }
+  },
+  "fresh_npm_ci": {
+    "status": "PASS",
+    "added": 1037,
+    "audited": 1041,
+    "reported_vulnerabilities": 27,
+    "audit_fix_run": false
+  },
+  "runtime": {
+    "node": "22.21.0",
+    "python": "3.12.3",
+    "platform": "Linux WSL onskin-r6-verification",
+    "fresh_no_hardlink_clone": true
+  },
+  "frozen_prior_profile": {
+    "status": "BLOCKED",
+    "raw_exit": 1,
+    "code": "Wrong GF01 branch",
+    "modified": false
+  },
+  "ci_source_commit": {
+    "observed_utc": "2026-10-23 02:40:57 UTC",
+    "source_commit": "efc75bf119904f983e40380067f682d111da52dd",
+    "source_tree": "85568597205ccb6ee5a94fe16db063f78abbc70f",
+    "draft_pr": "https://github.com/TasfiqJ/onSkin/pull/10",
+    "workflow_runs": [
+      {
+        "id": 39890269416,
+        "name": "Quality",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 402,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39890269416/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39890269416/logs",
+        "workflow_id": 312030668
+      },
+      {
+        "id": 39890269367,
+        "name": "iOS launch contract",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 402,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39890269367/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39890269367/logs",
+        "workflow_id": 312030667
+      },
+      {
+        "id": 39890269391,
+        "name": "Security",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_number": 934,
+        "jobs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39890269391/jobs",
+        "logs_url": "https://api.github.com/repos/TasfiqJ/onSkin/actions/runs/39890269391/logs",
+        "workflow_id": 308213475
+      }
+    ],
+    "security_jobs": [
+      {
+        "id": 120208081404,
+        "name": "Secret scanning",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 39890269391,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Test original secret scope and receipt refusals",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Acquire exact original secret executables",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Scan complete local refs and exact committed current source",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Gitleaks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "TruffleHog verified secrets",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Write secret scanner evidence manifest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Upload secret scanner evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Enforce secret scanner results",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 10
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 21
+          }
+        ]
+      },
+      {
+        "id": 120208081638,
+        "name": "Static analysis and OSV",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 39890269391,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Setup Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Prepare exact Linux scanners and npm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Install",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Semgrep OWASP/TypeScript/React/secrets",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Prepare OSV evidence directory",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "OSV scanner",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Enforce reviewed OSV advisory exceptions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Write static scanner evidence manifest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Stage verified technical receipt after all source checks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Upload static scanner evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Enforce static scanner results",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 14
+          },
+          {
+            "name": "Post Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 26
+          },
+          {
+            "name": "Post Setup Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 27
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 28
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29
+          }
+        ]
+      },
+      {
+        "id": 120208081790,
+        "name": "Code security gates",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 39890269391,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Setup Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Setup Deno",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Use reviewed npm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Install",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Phase 9 verification",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Dependency SBOM with audit metadata",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Capture high or critical npm advisories",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Test reviewed security exceptions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Enforce reviewed npm advisory exceptions",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Write code-gate evidence manifest",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Upload code-gate evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          },
+          {
+            "name": "Enforce code-gate results",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 14
+          },
+          {
+            "name": "Post Setup Deno",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 26
+          },
+          {
+            "name": "Post Setup Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 27
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 28
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 29
+          }
+        ]
+      },
+      {
+        "id": 120208082397,
+        "name": "Live Supabase adversarial evidence",
+        "status": "completed",
+        "conclusion": "skipped",
+        "run_id": 39890269391,
+        "logs_url": null,
+        "steps": null
+      },
+      {
+        "id": 120209279912,
+        "name": "Automated single-owner source-only Security acceptance",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 39890269391,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Setup Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Use reviewed npm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Install exact application dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Download original code evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Download original secret evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Download original static evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Require complete original and exact-source technical evidence",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 10
+          },
+          {
+            "name": "Publish automated source-only decision descriptor",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Post Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 20
+          },
+          {
+            "name": "Post Setup Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 22
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23
+          }
+        ]
+      }
+    ],
+    "note": "Source-only commit observation; later evidence-only delivery heads require separate actual observations.",
+    "security_admission": "CLOSED",
+    "protected_source_go": false
+  },
+  "final_delivery_head_ci": {
+    "status": "NOT_RUN_AT_REPORT_SEAL",
+    "reason": "Evidence-only delivery commit not yet created; query actual final head after push. Source commit observations are separate."
+  },
+  "executions": [
+    {
+      "receipt": "evidence/baseline-target-red.json",
+      "label": "baseline-target-red",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022/scripts/phase9/security_acceptance",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:24:34.152161+00:00",
+      "finished_utc": "2026-10-23T02:24:34.894671+00:00",
+      "seconds": 0.734,
+      "raw_exit": 1
+    },
+    {
+      "receipt": "evidence/context-copy-verification.json",
+      "label": "context-copy-verification",
+      "command": [
+        "python",
+        "-B",
+        "verify_context.py",
+        "--expected-manifest-sha256",
+        "0b080328e308f3533afeb9b3764fd4f2d07f48a1ab5d5674e6fc08413a1cb50b"
+      ],
+      "cwd": "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs",
+      "started_utc": "2026-10-23T02:30:50.668056+00:00",
+      "finished_utc": "2026-10-23T02:30:50.830950+00:00",
+      "seconds": 0.157,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/contracts-70-linux.json",
+      "label": "contracts-70-linux",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_contract.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:25:28.620792+00:00",
+      "finished_utc": "2026-10-23T02:28:29.330563+00:00",
+      "seconds": 180.703,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/disposable-negatives-2.json",
+      "label": "disposable-negatives-2",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/test_disposable_negatives.py"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:27:55.707697+00:00",
+      "finished_utc": "2026-10-23T02:27:59.379285+00:00",
+      "seconds": 3.672,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/frozen-prior-profile.json",
+      "label": "frozen-prior-profile",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "python3.12",
+        "-B",
+        "scripts/brain/brain.py",
+        "--profile",
+        "M1-03",
+        "validate"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:30:06.295916+00:00",
+      "finished_utc": "2026-10-23T02:30:06.436719+00:00",
+      "seconds": 0.141,
+      "raw_exit": 1
+    },
+    {
+      "receipt": "evidence/governance-103-linux.json",
+      "label": "governance-103-linux",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/brain",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:27:19.027690+00:00",
+      "finished_utc": "2026-10-23T02:40:15.963939+00:00",
+      "seconds": 776.937,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/lint-forced.json",
+      "label": "lint-forced",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "npm",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:28:26.108889+00:00",
+      "finished_utc": "2026-10-23T02:29:03.385465+00:00",
+      "seconds": 37.281,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/linux-preparation-retry.json",
+      "label": "linux-preparation-retry",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--exec",
+        "bash",
+        "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/prepare_linux.sh"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:21:41.401631+00:00",
+      "finished_utc": "2026-10-23T02:21:58.069955+00:00",
+      "seconds": 16.672,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/linux-preparation.json",
+      "label": "linux-preparation",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--",
+        "bash",
+        "-lc",
+        "set -e; task_repo=/tmp/onskin-security-sbom-fixture01-20261022; test ! -e \"$task_repo\"; git clone --no-hardlinks --branch stage/m1-gate-recovery /mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage \"$task_repo\"; test \"$(git -C \"$task_repo\" rev-parse HEAD)\" = bfa2cf14110e701937d4b50b063565f3dea34f8a; task_tools=/tmp/onskin-security-sbom-fixture01-tools; mkdir -p \"$task_tools\"; cd \"$task_tools\"; curl -fL --max-time 90 -o node-v22.21.0-linux-x64.tar.xz https://nodejs.org/dist/v22.21.0/node-v22.21.0-linux-x64.tar.xz; curl -fL --max-time 30 -o SHASUMS256.txt https://nodejs.org/dist/v22.21.0/SHASUMS256.txt; awk '$2 == \"node-v22.21.0-linux-x64.tar.xz\"' SHASUMS256.txt | sha256sum -c -; tar -xJf node-v22.21.0-linux-x64.tar.xz; ./node-v22.21.0-linux-x64/bin/node --version; python3.12 --version"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:21:13.198950+00:00",
+      "finished_utc": "2026-10-23T02:21:13.309227+00:00",
+      "seconds": 0.109,
+      "raw_exit": 128
+    },
+    {
+      "receipt": "evidence/linux-source-fast-forward.json",
+      "label": "linux-source-fast-forward",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "git",
+        "pull",
+        "--ff-only",
+        "origin",
+        "stage/m1-gate-recovery"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:25:27.032362+00:00",
+      "finished_utc": "2026-10-23T02:25:28.537387+00:00",
+      "seconds": 1.5,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/linux-test-source-binding.json",
+      "label": "linux-test-source-binding",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_test_source.py",
+        "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/inputs"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:31:57.080545+00:00",
+      "finished_utc": "2026-10-23T02:31:57.503965+00:00",
+      "seconds": 0.422,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/npm-ci.json",
+      "label": "npm-ci",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "npm",
+        "ci"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:22:26.599243+00:00",
+      "finished_utc": "2026-10-23T02:22:48.030930+00:00",
+      "seconds": 21.438,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/phase4-strict-worklist.json",
+      "label": "phase4-strict-worklist",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "npm",
+        "run",
+        "phase4:source-worklist:check"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:28:26.080250+00:00",
+      "finished_utc": "2026-10-23T02:28:26.487394+00:00",
+      "seconds": 0.406,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/push-source-only.json",
+      "label": "push-source-only",
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "HEAD:refs/heads/stage/m1-gate-recovery"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:33:42.582169+00:00",
+      "finished_utc": "2026-10-23T02:33:44.763877+00:00",
+      "seconds": 2.187,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/root-forced-tests-corrected.json",
+      "label": "root-forced-tests-corrected",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "npm",
+        "test",
+        "--",
+        "--force"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:27:55.706687+00:00",
+      "finished_utc": "2026-10-23T02:28:13.488216+00:00",
+      "seconds": 17.781,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/root-forced-tests.json",
+      "label": "root-forced-tests",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "npm",
+        "test",
+        "--",
+        "--force",
+        "--cache=local:"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:27:19.067465+00:00",
+      "finished_utc": "2026-10-23T02:27:19.381662+00:00",
+      "seconds": 0.328,
+      "raw_exit": 1
+    },
+    {
+      "receipt": "evidence/scope-post-patch.json",
+      "label": "scope-post-patch",
+      "command": [
+        "python",
+        "-B",
+        "docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/verify_scope.py"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:25:13.152125+00:00",
+      "finished_utc": "2026-10-23T02:25:15.019708+00:00",
+      "seconds": 1.859,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/secret-fixtures-12-linux.json",
+      "label": "secret-fixtures-12-linux",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_secret_scan.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:27:19.027690+00:00",
+      "finished_utc": "2026-10-23T02:27:22.975238+00:00",
+      "seconds": 3.953,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/targeted-original-6.json",
+      "label": "targeted-original-6",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022/scripts/phase9/security_acceptance",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_contract.ContractTests.test_original_workflow_valid_known_artifacts_are_technical_only",
+        "test_contract.ContractTests.test_original_workflow_sbom_unrelated_failure_or_fabrication_rejects",
+        "test_contract.ContractTests.test_original_workflow_sbom_execution_exit_cannot_be_waived",
+        "test_contract.ContractTests.test_original_workflow_unknown_npm_or_osv_finding_rejects",
+        "test_contract.ContractTests.test_SBOM_component_and_dependency_edge_omissions_rejected",
+        "test_contract.ContractTests.test_owner_receipt_requires_exact_binding_signature_and_time"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:27:59.536343+00:00",
+      "finished_utc": "2026-10-23T02:28:04.346838+00:00",
+      "seconds": 4.812,
+      "raw_exit": 0
+    },
+    {
+      "receipt": "evidence/typecheck-forced.json",
+      "label": "typecheck-forced",
+      "command": [
+        "wsl",
+        "-d",
+        "onskin-r6-verification",
+        "--cd",
+        "/tmp/onskin-security-sbom-fixture01-20261022",
+        "--exec",
+        "env",
+        "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+        "npm",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": ".",
+      "started_utc": "2026-10-23T02:28:26.069569+00:00",
+      "finished_utc": "2026-10-23T02:28:44.465479+00:00",
+      "seconds": 18.39,
+      "raw_exit": 0
+    }
+  ],
+  "artifact_manifest": "SHA256SUMS.json",
+  "security_admission": "CLOSED",
+  "protected_source_go": false,
+  "database_go": false,
+  "main_promotion_authorized": false,
+  "release_authorized": false,
+  "spending_usd": 0,
+  "hosted_replay_run": false,
+  "local_ecr_image_pull_run": false,
+  "m2_started": false,
+  "blockers": [
+    "Independent Brain review required",
+    "Real provider Security remains red; proposal and advisory reviews are expired",
+    "Canonical ECR data-limit refusal reproduced in fresh provider CI",
+    "Frozen prior GF01 profile does not authorize this disjoint interval"
+  ]
+}

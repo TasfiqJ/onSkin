@@ -1,0 +1,28 @@
+{
+  "label": "contracts-70-linux",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--cd",
+    "/tmp/onskin-security-sbom-fixture01-20261022",
+    "--exec",
+    "env",
+    "PATH=/tmp/onskin-security-sbom-fixture01-tools/node-v22.21.0-linux-x64/bin:/usr/local/bin:/usr/bin:/bin",
+    "python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_contract.py",
+    "-v"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:25:28.620792+00:00",
+  "finished_utc": "2026-10-23T02:28:29.330563+00:00",
+  "seconds": 180.703,
+  "raw_exit": 0
+}

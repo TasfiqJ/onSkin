@@ -1,0 +1,16 @@
+{
+  "label": "linux-preparation-retry",
+  "command": [
+    "wsl",
+    "-d",
+    "onskin-r6-verification",
+    "--exec",
+    "bash",
+    "/mnt/c/Users/jasim/Documents/ChatGPT/MasterV2Code/postmerge-gate-triage01-stage/docs/brain/checkpoints/M1-03/SECURITY-SBOM-FIXTURE-01/evidence/prepare_linux.sh"
+  ],
+  "cwd": ".",
+  "started_utc": "2026-10-23T02:21:41.401631+00:00",
+  "finished_utc": "2026-10-23T02:21:58.069955+00:00",
+  "seconds": 16.672,
+  "raw_exit": 0
+}
