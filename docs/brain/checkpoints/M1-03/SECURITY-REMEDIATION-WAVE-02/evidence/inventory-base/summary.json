@@ -1,0 +1,242 @@
+{
+  "source_commit": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "observed_at": "2026-10-23T21:13:28.285263+00:00",
+  "tracked": 20576,
+  "original_manifest_rows": 11920,
+  "inventory_counts": {
+    "unchanged": 11830,
+    "changed": 90,
+    "extra": 8654,
+    "binding-document": 2
+  },
+  "missing": [],
+  "classifier_counts": {
+    "required": 13969,
+    "excluded": 5095,
+    "REFUSED": 61,
+    "auxiliary": 1451
+  },
+  "classifier_refusals": {
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/code-gates-outcomes.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-inventory.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-sbom-audit.exit-code.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-sbom-audit.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/dependency-sbom.exit-code.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-audit-high.exit-code.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-audit-high.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-exception-gate.exit-code.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-exception-gate.stderr.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-code/npm-exception-gate.stdout.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-decision/g97-decision.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/gitleaks-results.sarif.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/gitleaks-tool.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/secret-scan-outcomes.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-secret/secret-scan-proof.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-exception-gate.exit-code.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-exception-gate.stderr.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-exception-gate.stdout.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-scan.exit-code.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/osv-scan.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/first-delivery/original-static/static-analysis-outcomes.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound/gitleaks-results.sarif.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound/gitleaks-tool.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-bound/secret-scan-proof.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final/gitleaks-results.sarif.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final/gitleaks-tool.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-final/secret-scan-proof.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial/gitleaks-results.sarif.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial/gitleaks-tool.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-initial/secret-scan-proof.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge/gitleaks-results.sarif.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge/gitleaks-tool.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/CONT-01/evidence/secret-merge/secret-scan-proof.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate05.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate06.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-coverage.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-owasp-top-ten.raw.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-partition.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-react.raw.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-source-inventory.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/final-typescript.raw.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/original-secret-reconciliation.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-coverage.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-partition.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/prior-source-inventory.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/bounded-probes.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/coverage-corrected.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/owasp-top-ten-rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/partition-corrected.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/react-rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secret-redacted.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/secrets-rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/source-inventory.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/tool-manifest.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SECURITY-HARDEN-01/evidence/typescript-rule-file-profile.json.gz": 1,
+    "REQUIRED_SOURCE_EXCEEDS_SCANNER_LIMIT:docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/current-bounded-probes.json": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/owasp-top-ten.rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/react.rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/secrets.rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-03/reconciliation-20261022/typescript.rule-file-profile.json.gz": 1,
+    "UNREVIEWED_COMPRESSED_SOURCE:scripts/phase9/security_acceptance/fixtures/m103-pre-vite-package-lock.json.gz": 1
+  },
+  "review_partitions": {
+    "extra": {
+      "root-or-other-review-required": 1,
+      "app-or-package-source": 11,
+      "documentation-or-governance": 94,
+      "checkpoint-or-review-evidence": 8506,
+      "tool-test-or-ci": 39,
+      "original-security-tooling": 3
+    },
+    "changed": {
+      "root-or-other-review-required": 3,
+      "tool-test-or-ci": 8,
+      "app-or-package-source": 68,
+      "documentation-or-governance": 2,
+      "generated-source-or-document": 4,
+      "original-security-tooling": 5
+    }
+  },
+  "frozen_coverage": {
+    "targets": 9206,
+    "required": 7755,
+    "auxiliary": 1451,
+    "explicit_sql": 26
+  },
+  "source_guard": {
+    "exit": 1,
+    "result": "SOURCE_INVENTORY_DRIFT"
+  },
+  "shards": [
+    {
+      "path": "paths-00.json",
+      "rows": 1000,
+      "bytes": 459181,
+      "sha256": "91efb627b1b56564616c10f60550cf4693cf8f162a69714723689aa5e584992f"
+    },
+    {
+      "path": "paths-01.json",
+      "rows": 1000,
+      "bytes": 499192,
+      "sha256": "1f858f6d0e4de371d362fa3de028266130c697d7aaa60dcf739f572c8b74cc9a"
+    },
+    {
+      "path": "paths-02.json",
+      "rows": 1000,
+      "bytes": 516731,
+      "sha256": "ebb2b0ed5655957493aa0efcf05e438f02c9ab0befdfc33838986f77f7f4d95b"
+    },
+    {
+      "path": "paths-03.json",
+      "rows": 1000,
+      "bytes": 519830,
+      "sha256": "acc5eac7c714691d8bc6bdcecf44ca49cefe4ba3098d129b36704152ddb4300f"
+    },
+    {
+      "path": "paths-04.json",
+      "rows": 1000,
+      "bytes": 517591,
+      "sha256": "f6123f42ee73c5930609883c535857cab81d443e6f74d8a79e6c6422371b1bce"
+    },
+    {
+      "path": "paths-05.json",
+      "rows": 1000,
+      "bytes": 515314,
+      "sha256": "3cb77716822a9f12cad58420a62f8217aeb2d2b272835d3fed56d44fbcbcc6fd"
+    },
+    {
+      "path": "paths-06.json",
+      "rows": 1000,
+      "bytes": 513586,
+      "sha256": "3a99b3cb752d5db59a905414229cc5303049cc1aa9cceef934eb161351c27b17"
+    },
+    {
+      "path": "paths-07.json",
+      "rows": 1000,
+      "bytes": 519050,
+      "sha256": "1fc1f59d7c0c3b4cb20bbba0d35eb312945cbfa250bdccede6fe93f25d11015e"
+    },
+    {
+      "path": "paths-08.json",
+      "rows": 1000,
+      "bytes": 525412,
+      "sha256": "dc62beb4fa0b18d6e1e4f40299fff7001110eabda67e02aa901ecb6ff4ca4110"
+    },
+    {
+      "path": "paths-09.json",
+      "rows": 1000,
+      "bytes": 499399,
+      "sha256": "d45cb17d242309305c2bdd58c0bca2fb094f69a55f6df87d46340e1ab12080a6"
+    },
+    {
+      "path": "paths-10.json",
+      "rows": 1000,
+      "bytes": 459905,
+      "sha256": "434f83c1ffe201dce6657251d62ded98af2aa2aae139f1a9d56e7a2efdb9edaa"
+    },
+    {
+      "path": "paths-11.json",
+      "rows": 1000,
+      "bytes": 501730,
+      "sha256": "8e9ecf4d9aa025882d41fca0ae400d36b1414231c897359275872c5a4429e2ad"
+    },
+    {
+      "path": "paths-12.json",
+      "rows": 1000,
+      "bytes": 513415,
+      "sha256": "d17348abb76ef35c6a67bbbe877dddf63e7a0fbcdb0155f9b994f4055e014bc8"
+    },
+    {
+      "path": "paths-13.json",
+      "rows": 1000,
+      "bytes": 511119,
+      "sha256": "808dd2affcadb285c4406afe5aec3e6bfe1e563ac7978b8c39e46a9bd3f69765"
+    },
+    {
+      "path": "paths-14.json",
+      "rows": 1000,
+      "bytes": 506441,
+      "sha256": "fb54c928ee951aab2d14c58771b0347d0e314467b1e724f983de16a07c3eec5f"
+    },
+    {
+      "path": "paths-15.json",
+      "rows": 1000,
+      "bytes": 501473,
+      "sha256": "85653af0989da809cfe824c54445d11529bcd67b02c507d24af026b57d08c046"
+    },
+    {
+      "path": "paths-16.json",
+      "rows": 1000,
+      "bytes": 506263,
+      "sha256": "41b7386d150f7502eccd628a505cd20335efd7e4d08ef1b3e50809a3ca6ea70f"
+    },
+    {
+      "path": "paths-17.json",
+      "rows": 1000,
+      "bytes": 509277,
+      "sha256": "7a9f497de1e1f8dcfe23af70add55ce89b38d5f2aed856806f354649dfc05223"
+    },
+    {
+      "path": "paths-18.json",
+      "rows": 1000,
+      "bytes": 508231,
+      "sha256": "e3521590a1fedfac9b2e052e5a240e43fc490911d6a1672bcec6578fdbf6bbce"
+    },
+    {
+      "path": "paths-19.json",
+      "rows": 1000,
+      "bytes": 522978,
+      "sha256": "602613cf61403585f3d9f818c0850a47fa12fd973ead501d389f5e0ea8293dcf"
+    },
+    {
+      "path": "paths-20.json",
+      "rows": 576,
+      "bytes": 291942,
+      "sha256": "4c8e47ba45fe937a9393d4acf2b0bfd80776b643e3a78158ac3a818b2761c1cb"
+    }
+  ],
+  "original_sast_run": false,
+  "current_sast_coverage_claim": false,
+  "admission": "NONE"
+}

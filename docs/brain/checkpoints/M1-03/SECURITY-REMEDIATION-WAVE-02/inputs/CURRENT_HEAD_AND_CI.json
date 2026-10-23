@@ -1,0 +1,52 @@
+{
+  "incremental_spend_usd": 0,
+  "ios": {
+    "conclusion": "success_source_only",
+    "run_id": 40020077467,
+    "status": "completed"
+  },
+  "last_passing_governance_platform_skips": 2,
+  "last_passing_governance_tests": 101,
+  "last_passing_local_security_contracts": 70,
+  "last_passing_root_tests": 6067,
+  "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "pr10": "draft_open_unmerged",
+  "prior_wave01": "SUBMITTED_INDEPENDENTLY_VERIFIED_DIAGNOSTIC_SOURCE_UNCHANGED",
+  "quality": {
+    "canonical_ECR_DB": "in_progress_while_checked;do_not_infer_green",
+    "latest_observed_status": "in_progress",
+    "run_id": 40020077445,
+    "source_tests": "passed"
+  },
+  "real_finding_observations": {
+    "current_gitleaks": 1121,
+    "history_gitleaks": 4351,
+    "node_forge_latest": "1.4.0_no_patched_release",
+    "npm_high_propagated": 6,
+    "owasp_rule_pin_status": "AUTHENTIC_PINNED_BYTES_NOT_RECOVERED",
+    "owner_admission": "NONE",
+    "semgrep_current": "1.181.0_pinned"
+  },
+  "schema_version": 1,
+  "security": {
+    "conclusion": "failure",
+    "failed_original_jobs": [
+      "Code security gates",
+      "Static analysis and OSV",
+      "Secret scanning",
+      "Automated single-owner source-only Security acceptance"
+    ],
+    "run_id": 40020077385,
+    "status": "completed"
+  },
+  "source_inventory_report": {
+    "at_measured_commit": "05dc51d6c945d31c66b921ae99dee603de464cdc",
+    "changed": 90,
+    "extra": 8485,
+    "missing": 0,
+    "original_SAST": "NOT_RUN_NO_EVIDENCE"
+  },
+  "stage": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "true_security_status": "RED_WITH_REAL_UNREVIEWED_FINDINGS"
+}
