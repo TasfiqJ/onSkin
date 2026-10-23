@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "task_id": "M1-03",
+  "iteration": "SECURITY-REMEDIATION-WAVE-02",
+  "authorization_id": "M103-SECURITY-REMEDIATION-WAVE02-CONDITIONAL-SOURCE-EDIT-01",
+  "status": "PARTIAL_DIAGNOSTIC",
+  "review_status": "SUBMITTED_INDEPENDENT_BRAIN_REVIEW_REQUIRED",
+  "observed_at": "2026-10-23T21:43:28.878829+00:00",
+  "tested_implementation": {
+    "sha": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+    "tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+    "technical_source_edits": 0
+  },
+  "evidence_milestones": [
+    {
+      "sha": "d53202d84b029b6ef783d2aeb24a5772b4846b9c",
+      "tree": "c0f4202f837559863890d040602001d71d8574c4"
+    },
+    {
+      "sha": "32d23e4d787b75fa81b1e8d414efa1e1930f0265",
+      "tree": "e5612a5dfb2dd989a10b023ccc50acc532928197"
+    }
+  ],
+  "delivery": {
+    "branch": "stage/m1-gate-recovery",
+    "sha": null,
+    "tree": null,
+    "observation": "Final SHA/tree/CI obtained externally after push to avoid self-reference; see final task response. Do not infer delivery CI from measured-source or milestone CI."
+  },
+  "context": {
+    "manifest_valid": true,
+    "external_manifest_sha256": "55663df49e98f5209d4c2b04d573d058042aa16e0d95ede4c17547f4edd12dff",
+    "preimage_count": 27,
+    "independent_fingerprint_sha256": "51bef23541f736bc2a890e25ae5ca8ac6c60104b2aef2906262f2038fee5a0d7",
+    "exact_archive_and_extracted_inputs_retained": true,
+    "authority_union": false
+  },
+  "candidate": {
+    "status": "CUSTOM_CANDIDATE_ONLY",
+    "official_semgrep_wheel_unchanged": true,
+    "old_wheels_verified": 66,
+    "new_wheels_verified": 13,
+    "metadata_patch_sha256": "672d3873545e1129a6a4bb6e49bce50aff92a9ab7bd6b30e70995b82c78abf2b",
+    "trees": {
+      "custom_originalPackageTree": "b28ca10171b511bf24b04fd42bc873a0d32dc8877f52f8cccbd0e97f78324395",
+      "custom_semgrepPackageTree": "8e23372f8942d03719e9cf15a1fc96e27e4cc05e5b01558a2aa052ac962b0449",
+      "official_wheel_unchanged": true,
+      "semgrep_non_metadata_distinfo_unchanged": true,
+      "upstream_metadata_sha256": "551bb8eea5dcbe0b884cd4c9012a394b0c7f7c55854ad7946a08b6f9b12a6b0e",
+      "custom_metadata_sha256": "23ee34f9baf0cb736e8d08b402d7b419bedf2c6c24d9db9fff3b20e2530cb0d9",
+      "canonical_unexplained_deltas": 0,
+      "custom": true
+    },
+    "full_dependency_aware_solver": true,
+    "pip_check": true,
+    "actual_runtime_smokes": true,
+    "full_four_rule_compatibility": false,
+    "source_bootstrap_schema_integration": "NOT_ATTEMPTED_INELIGIBLE",
+    "stage_technical_edit_eligible": false
+  },
+  "source_checks": [
+    {
+      "check": "initial npm-ci",
+      "exit": 0,
+      "seconds": 36.16,
+      "receipt": "evidence/source-checks/npm-ci.receipt.json"
+    },
+    {
+      "check": "initial security70",
+      "exit": 1,
+      "seconds": 159.1,
+      "receipt": "evidence/source-checks/security70.receipt.json"
+    },
+    {
+      "check": "initial secret12",
+      "exit": 0,
+      "seconds": 3.82,
+      "receipt": "evidence/source-checks/secret12.receipt.json"
+    },
+    {
+      "check": "initial expiry8",
+      "exit": 0,
+      "seconds": 0.12,
+      "receipt": "evidence/source-checks/expiry8.receipt.json"
+    },
+    {
+      "check": "initial governance103",
+      "exit": 124,
+      "seconds": 600.02,
+      "receipt": "evidence/source-checks/governance103.receipt.json"
+    },
+    {
+      "check": "initial mobile-expo",
+      "exit": 0,
+      "seconds": 0.37,
+      "receipt": "evidence/source-checks/mobile-expo.receipt.json"
+    },
+    {
+      "check": "initial ios-source-check",
+      "exit": 0,
+      "seconds": 1.17,
+      "receipt": "evidence/source-checks/ios-source-check.receipt.json"
+    },
+    {
+      "check": "initial worklist-check",
+      "exit": 0,
+      "seconds": 0.22,
+      "receipt": "evidence/source-checks/worklist-check.receipt.json"
+    },
+    {
+      "check": "initial strict-original-report",
+      "exit": 1,
+      "seconds": 0.17,
+      "receipt": "evidence/source-checks/strict-original-report.receipt.json"
+    },
+    {
+      "check": "initial strict-gf01-report",
+      "exit": 2,
+      "seconds": 0.07,
+      "receipt": "evidence/source-checks/strict-gf01-report.receipt.json"
+    },
+    {
+      "check": "initial npm-audit",
+      "exit": 1,
+      "seconds": 2.52,
+      "receipt": "evidence/source-checks/npm-audit.receipt.json"
+    },
+    {
+      "check": "after npm ci security70",
+      "exit": 0,
+      "seconds": 172.85,
+      "receipt": "evidence/after-install/security70.receipt.json"
+    },
+    {
+      "check": "after npm ci strict-gf01-report",
+      "exit": 1,
+      "seconds": 0.12,
+      "receipt": "evidence/after-install/strict-gf01-report.receipt.json"
+    }
+  ],
+  "governance": {
+    "exit": 124,
+    "timeout_seconds": 600,
+    "started_cases": 80,
+    "complete_103_suite": false
+  },
+  "large_root_suites": {
+    "test6067": "NOT_RUN_DIAGNOSTIC_ONLY",
+    "typecheck": "NOT_RUN_DIAGNOSTIC_ONLY",
+    "lint": "NOT_RUN_DIAGNOSTIC_ONLY",
+    "zero_cached_proof": false
+  },
+  "inventory": {
+    "tracked": 20576,
+    "extra": 8654,
+    "changed": 90,
+    "missing": 0,
+    "classifier_refusals": 61,
+    "original_required": 7755,
+    "original_auxiliary": 1451,
+    "original_targets": 9206,
+    "explicit_sql": 26,
+    "historical_failed_targets": 189,
+    "historical_fixpoints": 368,
+    "current_source_scan": false,
+    "checkpoint_growth": "Individually bound by final SHA256SUMS.json; review required, no admission"
+  },
+  "findings": {
+    "provider_run": 40020077385,
+    "current_gitleaks": 1126,
+    "history_gitleaks": 4361,
+    "provider_npm_high": 6,
+    "fresh_npm_high": 7,
+    "disposable_candidate_npm_high": 7,
+    "stage_vulnerabilities_removed": 0,
+    "credential_tests": 0,
+    "owner_disposition": "NONE"
+  },
+  "axes": {
+    "candidate_technical": "PARTIAL_PROOF_CUSTOM_ONLY",
+    "original_provider_security": "RED_FAILURE",
+    "independent_source_acceptance": "NOT_GRANTED",
+    "source_inventory": "REFUSED",
+    "current_sast_coverage": "NOT_RUN_NO_EVIDENCE",
+    "hosted_database": "NOT_AUTHORIZED_NOT_RUN",
+    "native_device_archive": "NOT_RUN_SOURCE_ONLY",
+    "release": "NOT_AUTHORIZED",
+    "source_quality_ci": "SUCCESS_40020077445",
+    "source_ios_ci": "SUCCESS_SOURCE_ONLY_40020077467",
+    "delivery_ci": "CHECK_AFTER_PUSH_PENDING_IS_PENDING"
+  },
+  "protected_source_go": false,
+  "main_promotion_authorized": false,
+  "hosted_database_go": false,
+  "m2_authorized": false,
+  "release_authorized": false,
+  "technical_owner_acceptance_authorized": false,
+  "incremental_spend_usd": 0,
+  "original_proposal_notAfter": "2026-10-21T00:00:00Z",
+  "accepted_roadmap_tasks": [
+    "M0-01",
+    "M0-02",
+    "M1-01",
+    "M1-02"
+  ],
+  "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "pr10": "DRAFT_OPEN_UNMERGED",
+  "next_repair_proposal": "Exact-source inventory/classifier admission; see NEXT_EXACT_SOURCE_SCOPE.md",
+  "founder_relay": "Codex is done"
+}

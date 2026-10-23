@@ -1,0 +1,241 @@
+{
+  "source_head": "0ecfa2a646ce9b30e717f6995097515f884cfdaf",
+  "source_tree": "b6b5ec635dd12e327a34904ebbd1e1252715bcd4",
+  "rows": [
+    {
+      "path": "supabase/tests/database/apple_auth_lifecycle.test.sql",
+      "git_blob": "38309fa589745f26f67582b2c0de7200b5c958bd",
+      "sha256": "6b3abfe2bfe753c0b5df554e87ec6f383170136855a2e91555c60fb68e3365cb",
+      "bytes": 54045,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/ask_consent_rebrand_hash_alignment.test.sql",
+      "git_blob": "a44d2a5e0bcbd11aaec7079a5afe4246ac38d472",
+      "sha256": "c3537102eae34830d76cbacf4eada29e99228766ec029606928ed754c1303c0b",
+      "bytes": 3924,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/cat07_truthful_freshness.test.sql",
+      "git_blob": "f290677e5f692f12dcc536e0add0f0e36b86632d",
+      "sha256": "64e24da5b791b6ffffbcf838dcb6b898e6d7c3f6d697147a81712b56d16b3955",
+      "bytes": 36184,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
+      "git_blob": "7e4777aaaf995b7cee1798759c89890a6971d552",
+      "sha256": "d543af34e2559d938a12ba4741181f170e3c04fa678c93c411f911118ef2a899",
+      "bytes": 109814,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/catalog_launch_curation.test.sql",
+      "git_blob": "b4a467626f75ab203766d55d9d14145117fc9579",
+      "sha256": "7272a899ade80123b990747c1f9402930ba8b07e7b71fbfe4c13b45a11d38b19",
+      "bytes": 202710,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/catalog_operator_authority.test.sql",
+      "git_blob": "ffa3c80ba5ae0f14c4372eb03f402e674b704e25",
+      "sha256": "5a1f34ae94cf87751dc2a0244d769bf6ce1660082c96f7a6082587514b7bc03a",
+      "bytes": 76546,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/catalog_release_temp_table_lint_contract.test.sql",
+      "git_blob": "dff28c60d8b2ddd378516fbace3725a882dccf44",
+      "sha256": "343f905d9931f1f85f13e87eeea6b10b73209dd6c36d9e5ad3aa1d8c9fb8158e",
+      "bytes": 3349,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/catalog_serving_gate.test.sql",
+      "git_blob": "776751a4db3710364794f19d2255d3680bc517fa",
+      "sha256": "1e9e54227161be38e27e2263aab27ec16aeb2ef4ead2316f0dc9daafd12879d9",
+      "bytes": 36707,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/clinical_content_legacy_seal.test.sql",
+      "git_blob": "8f92f169e873635c0c880f41f799a2f975fbdc0b",
+      "sha256": "eb04d56036ccd53d9505960e45bd5baff3417981bbbdadf8de9a36b3380924ae",
+      "bytes": 10097,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/commerce_zero_admission.test.sql",
+      "git_blob": "e9e76ff8edb1c8c71678e95c394029776bfe8d33",
+      "sha256": "789db37aea937e7abd68ba36034dffa0f51f4652d2101f89a85952162af26e9d",
+      "bytes": 13436,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/db06_acl_r2a.test.sql",
+      "git_blob": "4135921223eec30f3c816b706656747f15af91b5",
+      "sha256": "d0f6f21e7481e4190d214fbd7bdc967ff7f1c28065f887d3d7b46f61820496b7",
+      "bytes": 362587,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/health_consent_draft_successor_staging.test.sql",
+      "git_blob": "58041f7d9bec6e72e568f804f8df1a44e7c221c2",
+      "sha256": "dc100ac73bb1840bc725004f23087dff7f16198a94d7da67f63f0284029439f7",
+      "bytes": 14110,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/health_consent_lifecycle.test.sql",
+      "git_blob": "8f874591d074ce31ecd6e833f004bbe19b5775a8",
+      "sha256": "fdd45bcb4b2911ab209040933deb5b41abbad5635663830a60423999092d6c2d",
+      "bytes": 104933,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
+      "git_blob": "3f16dd40f568889ee1f4c5e9ac91d1044671dc06",
+      "sha256": "7c602249dad829c168a1d3ffdbf3f31feb743296fe9d2c85da0241f3769e3039",
+      "bytes": 17945,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/revenuecat_webhook_execute_acl.test.sql",
+      "git_blob": "776aea5c63565b3d0560caa0b999e3134548aebb",
+      "sha256": "94d758850728baba9deac587edec5b4eb72328464e382a0e5cfcd9cd819975ce",
+      "bytes": 6868,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/routine_adherence_authority.test.sql",
+      "git_blob": "3b8850872219ca1dd0fa8fa3384d286a57929e42",
+      "sha256": "3d922cced564bd808f2fc6d4a06704c06d07d33fdc98175495b1cd0377e96770",
+      "bytes": 38276,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/routine_completion_sync_bridge.test.sql",
+      "git_blob": "ffd0a3eddab3f554507259630aa822aa1fdc6d3e",
+      "sha256": "b976083dbc00cf5041b3aafe1e537198c60edc3d6c18e629823eaaa0a5b4cd7a",
+      "bytes": 50474,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/schema_contract.test.sql",
+      "git_blob": "1701970b611f844a121f5c4fc66b8c6a7cd064fc",
+      "sha256": "037c7e5896412872019381461b28e7cf5528e80ede97ae2832d76c41014b132d",
+      "bytes": 36239,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/skin_profile_quiz_contract_successor.test.sql",
+      "git_blob": "3aade5d5577fdb1fd35b8728c681d661a4c63c8b",
+      "sha256": "f5f7811ba4b111e6c75e66ed68d1da47024b8e65f4d3f54ce9b3bff8b2460b8b",
+      "bytes": 6732,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/database/skin_profile_quiz_provenance.test.sql",
+      "git_blob": "005add5f01f7141efd979b8fe44694bec713a629",
+      "sha256": "25bf44e93bcdcb3305ae7af9c4f9d7e704a3e5e959ea2bc85bfc8f4489cd891c",
+      "bytes": 21314,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/rehearsal/catalog_operator_revocation_race.test.sql",
+      "git_blob": "3b8bd9ea2e5336ddf92a551c561609f7b52e4b24",
+      "sha256": "93c9d03488f945e36887cb0f6a40cd2b254119ea593b00a07b02a6cdfd55314f",
+      "bytes": 18761,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/upgrade/commerce_zero_admission_0072_upgrade.test.sql",
+      "git_blob": "26363269f769dd6b2d37fbe221c620a038fb17b6",
+      "sha256": "5f3126751b234f07bd623e94dd732211788367b4cc9020121c885f36847b3769",
+      "bytes": 12122,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/upgrade/health_consent_draft_successor_0070_upgrade.test.sql",
+      "git_blob": "d753021d1b9dfd56ff9a9f1fc3ced4631edd8cf4",
+      "sha256": "186f5dd60f99514d7febe6a803b51f5fc67b42609f69efbcea6624df0fbba207",
+      "bytes": 7087,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+      "git_blob": "d757a865f1e18892c8b2e2f6e59981599000c21d",
+      "sha256": "011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77",
+      "bytes": 7912,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/upgrade/routine_adherence_0068_upgrade.test.sql",
+      "git_blob": "43a9bc6a520a8feb095a5031646876cc8a011c4e",
+      "sha256": "f09e6832782a6cdea8090410d8d08008eb3a11592fbc47d8e7d5b0b6a0bc884e",
+      "bytes": 8475,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    },
+    {
+      "path": "supabase/tests/upgrade/routine_completion_sync_bridge_0069_upgrade.test.sql",
+      "git_blob": "ea1e187cec92102fe5b6acd4855b64aa52edd8ec",
+      "sha256": "6ad21d15844a4a9fe4924e864619598837a26ea9c20e953c1ed7222fcc69a0c2",
+      "bytes": 8430,
+      "frozen_explicit_target": true,
+      "target_support": "NOT_NEWLY_SCANNED",
+      "disposition": "RETAIN_REQUIRED_SQL_NO_DATABASE_OR_COVERAGE_ADMISSION"
+    }
+  ],
+  "source_manifest_unchanged": true
+}

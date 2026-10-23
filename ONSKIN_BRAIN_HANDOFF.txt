@@ -1,21 +1,20 @@
-onSkin V2 | M1-03 SECURITY-REMEDIATION-WAVE-01 | SUBMITTED_REVIEW_REQUIRED
-Sole authority: M103-SECURITY-REMEDIATION-WAVE01-CONDITIONAL-SOURCE-EDIT-01
-External manifest: 249b00aae6198adca75225b911f1c8273ce94ff9a2b129fe4b1f45edd494e303
-Implementation and measured source unchanged: 05dc51d6c945d31c66b921ae99dee603de464cdc
-Measured source tree: fc579c91528aa285f28f6364d7f4da8ee2aafd3b
-Protected technical source edits: ZERO. All25 initial preimages passed; all24 other witness files remain unchanged.
-Evidence-only delivery ref: stage/m1-gate-recovery. Final SHA/tree resolved externally after normal push; never invent a future self-hash. SHA256SUMS binds previously committed regular blobs.
-Main remains d9912f4c8b30358593569c5b9b4e84773c6f463e. PR10 DRAFT/OPEN/UNMERGED; no auto-merge.
-Original66-distribution Semgrep upstream/assembled identities reproduce; MCP, OpenTelemetry and combined scratch trees measured. All3 dependency-aware candidate resolvers exit1 against protected Semgrep constraints. Stage vulnerabilities removed:0. No source fix is falsely claimed.
-Coverage base:20407 paths,8485 extra,90 changed,61 classifier refusals; issued8308/89 traced to earlier4f6a2d2. All189 historical failed targets and368 fixpoint locations now bound to current blobs;187 failed files unchanged,2 changed. Three rules reproduce, OWASP current bytes drift. Original SAST NOT RUN.
-Provider base Security39997349147 failed: current Gitleaks1121/history4351; TruffleHog0 verified; npm6 high propagated; OSV4 package/location records. Raw secret artifacts remain private. Root-only npm removal tested and rejected; no stage npm edits.
-Base Quality39997349019 failed canonical ECR Data limit exceeded; source QA,PG15/17,exports pass. iOS39997349006 source-only success. Later exact-head CI observations are separate in checkpoint evidence/delivery-ci.json and final external handoff.
-Milestone ab263f4f4a66e9aff96bed86239da23656edbb5d tree c382fa59ff9a9ea122b661091c4952f9871796e0: Quality40017736456 FAIL with new ECR120634048365 Data limit exceeded; repository QA,PG15/17 and exports PASS. Security40017736489 FAIL; iOS40017736455 PASS source-only. Final delivery-head CI is observed independently after push, never inherited from milestone.
-Tests: Security70,secret12,expiry8 pass; governance103 has101 passes and2 real skips; reviewed-npm forced root6067,typecheck/lint pass with0 cached tasks; mobile Expo,iOS privacy77/check and clean strict worklist pass.
-Durable tests/argv/exits/tree/log hashes: checkpoint completion-report.json,evidence/docker-checks and evidence/docker-reviewed-final. Initial WSL failure not a pass; Docker fallback persists replacement receipts. Strict original report refusals are not admission.
-Accepted tasks ONLY M0-01,M0-02,M1-01,M1-02. M1-03 NOT accepted. Proposal expiry2026-10-21T00:00:00Z unchanged; original exception expiry unchanged.
-protected_source_go=false; hosted_db_go=false; M2=false; main_promotion=false; release=false. Spend USD0.
-One proposal: SCANNER-DEPENDENCY-METADATA-BRIDGE-01. No self-issued next task.
-Checkpoint: docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-01/
-Context health: exact single issued ZIP retained; no prior authority union; one source writer; source preimages reverified after byte-preserving NTFS compression.
+onSkin V2 | M1-03 SECURITY-REMEDIATION-WAVE-02 | PARTIAL_DIAGNOSTIC / REVIEW_REQUIRED
+Sole non-union authority: M103-SECURITY-REMEDIATION-WAVE02-CONDITIONAL-SOURCE-EDIT-01
+External manifest: 55663df49e98f5209d4c2b04d573d058042aa16e0d95ede4c17547f4edd12dff
+Tested implementation/source unchanged: 0ecfa2a646ce9b30e717f6995097515f884cfdaf
+Tested source tree: b6b5ec635dd12e327a34904ebbd1e1252715bcd4
+All 27 initial Git objects and working bytes independently verified. Final 26 other witness files preserved; only factual handoff changes outside the new checkpoint.
+Protected technical source edits ZERO. Authentic CUSTOM installed-METADATA candidate retained under checkpoint; official wheel/core/engine unchanged. Real old/new pip solver/check and Semgrep/MCP/OTel runtime smoke pass; full four-rule compatibility blocked by missing authentic OWASP pin. No live patch/source integration.
+Source tests: after fresh npm ci, Security70 PASS; secret12/expiry8 PASS; Expo/strict iOS source privacy/original worklist PASS. Governance timeout124 at600s, not103 pass. Full forced6067/typecheck/lint NOT_RUN diagnostic-only. All initial failures and expected adverse nonzero exits retained.
+Inventory:20576 paths;8654 extra/90 changed/0 missing;61 classifier refusals;26 SQL targets retained. Historical189 failures/368 fixpoints remain open, not new scans. New checkpoint growth individually hash-bound and review-required.
+Original source-tree provider40020077385: Gitleaks1126 current/4361 history; no owner dispositions. Provider npm6 high; fresh audit7 high including newly authenticated Zod advisory. Same-SDK disposable candidate lock delta0 and vulnerabilities remain. No raw secrets or found-credential tests.
+Measured-source Quality40020077445 SUCCESS including canonical ECR-backed local verification; iOS40020077467 SUCCESS source-only; Security40020077385 FAILURE all four original source-facing jobs. Historical ECR Data limit exceeded remains true intermittent history. Later-head CI is separate; PENDING remains PENDING.
+Evidence milestones d53202d84b029b6ef783d2aeb24a5772b4846b9c and32d23e4d787b75fa81b1e8d414efa1e1930f0265; normal stage pushes. Final SHA/tree/actual CI resolved externally after final push, never fabricated into a future self-hash.
+Main unchanged d9912f4c8b30358593569c5b9b4e84773c6f463e; PR10 DRAFT/OPEN/UNMERGED; Brain retains sole PR/main decisions.
+Checkpoint: docs/brain/checkpoints/M1-03/SECURITY-REMEDIATION-WAVE-02/
+Receipts: RESULTS.md, BLOCKERS.md, SEMGREP_BRIDGE_PROOF.md, SAST_INVENTORY_REVIEW.md, SAFE_SECRET_ADVISORY_MATRIX.md, NEXT_EXACT_SOURCE_SCOPE.md, completion-report.json, SHA256SUMS.json, evidence/execution-index.json.
+One next proposed repair: source inventory/classifier admission at a newly Brain-issued exact delivered SHA/tree. This document grants no authority.
+Original proposal expiry2026-10-21T00:00:00Z and exceptions/owner/source-manifest/targets/rules unchanged. Accepted tasks only M0-01/M0-02/M1-01/M1-02.
+protected_source_go=false; hosted_db_go=false; main_promotion=false; M2=false; native/archive/device_approval=false; release=false. Spend USD0.
+Context health VALID; exact uploaded ZIP/extracted bytes retained; no authority union; designated no-hardlink checkout only; one stage writer.
 STOP for independent Brain review. Founder relay: Codex is done.

@@ -1,0 +1,11 @@
+{
+  "container_id": "30996705e3c89ae99241801da464b0dcd470c7065777b8b199093f40f46ff1e9",
+  "image_id": "sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac",
+  "image_reference": "ubuntu@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac",
+  "source_mount_read_only": true,
+  "scratch": "/work memory tmpfs",
+  "retained_candidate": "Exact METADATA patch, requirements, source/member/tree proofs and reproduction drivers in checkpoint; no modified upstream wheel",
+  "raw_scanner_archives_exported": false,
+  "disposal": "STOPPED_AND_REMOVED_OWN_TASK_CONTAINER_RAW_MEMORY_RELEASED",
+  "observed_at": "2026-10-23T21:44:24.6395854Z"
+}
