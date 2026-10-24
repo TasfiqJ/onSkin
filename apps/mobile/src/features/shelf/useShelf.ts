@@ -1,5 +1,5 @@
 import type { ProductStatus } from '@layerwell/types';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { focusManager, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import {
@@ -138,6 +138,7 @@ export function useShelf() {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
     const schedule = () => {
+      clearTimeout(timer);
       const now = new Date();
       const next = new Date(now);
       next.setHours(24, 0, 0, 100);
@@ -147,7 +148,15 @@ export function useShelf() {
       }, Math.max(100, next.getTime() - now.getTime()));
     };
     schedule();
-    return () => clearTimeout(timer);
+    const stopFocus = focusManager.subscribe((focused) => {
+      if (!focused) return;
+      setToday(localDateString());
+      schedule();
+    });
+    return () => {
+      stopFocus();
+      clearTimeout(timer);
+    };
   }, []);
   const published = useSyncExternalStore(
     subscribeActiveHealthProcessingLeaseChanges,

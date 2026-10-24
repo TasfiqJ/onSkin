@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, focusManager, onlineManager } from '@tanstack/react-query';
 import { createElement, type ComponentType } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -423,4 +423,37 @@ it('preserves canonical Shelf cache identity required by routine source-currentn
   await mount(CanonicalProbe);
   expect(visible?.items[0]?.name).toBe('Synthetic routine source');
   expect(visible).toBe(client.getQueryData(['shelf']));
+});
+
+it('refreshes admitted dates after a foreground timezone change without private IO', async () => {
+  const previousZone = process.env.TZ;
+  process.env.TZ = 'America/Toronto';
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-10-24T20:00:00Z'));
+  focusManager.setFocused(false);
+  client.setDefaultOptions({ queries: { retry: false, staleTime: Infinity, gcTime: Infinity } });
+  let visible: ShelfData | undefined;
+  function ZoneProbe() { visible = useShelf().data; return null; }
+  try {
+    await addProduct({ name: 'Synthetic travel date', addedVia: 'manual', expiryDate: '2026-10-24', expirySource: 'printed' });
+    await act(async () => { renderer = create(createElement(QueryClientProvider, { client }, createElement(ZoneProbe))); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(50); });
+    expect(visible?.items[0]?.badge.label).toBe('0 days left');
+    const ciphertext = new Map(ports.bytes);
+    ports.failRead = true;
+    // Process-local test timezone only; no host clock or OS setting changes.
+    process.env.TZ = 'Asia/Tokyo';
+    await act(async () => { focusManager.setFocused(true); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+    expect(visible?.items[0]?.badge.label).toBe('Time to replace');
+    expect(visible).toBe(client.getQueryData(['shelf']));
+    expect(ports.bytes).toEqual(ciphertext);
+  } finally {
+    await act(async () => { renderer?.unmount(); });
+    renderer = undefined;
+    focusManager.setFocused(undefined);
+    if (previousZone === undefined) delete process.env.TZ;
+    else process.env.TZ = previousZone;
+    vi.useRealTimers();
+  }
 });

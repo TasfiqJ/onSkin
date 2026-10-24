@@ -5,7 +5,7 @@ Use this checklist before marking UI-facing work done.
 ## M1 first-week experience 07 verification branches
 
 - [ ] Measure actual dock glyph/line bounds at 360×640/direct 200% text and 375/390/430 widths; retain all labels, 48px targets, safe scene reserve, active/inactive contrast, keyboard and reduced-motion behavior.
-- [ ] Hold Shelf open across local midnight and DST dates; supported expiry advances without private IO, unknown dates stay unknown, retired authority stays masked.
+- [ ] Hold Shelf open across local midnight and DST dates, then return after a timezone change; supported expiry advances without private IO, the next midnight is rearmed, unknown dates stay unknown, retired authority stays masked.
 - [ ] Confirm AM/PM completion before the optional next-visit card; exercise both existing links, their gates, no permission prompt, pending/read refusal, date and A→B→A/same-owner boundaries.
 - [ ] Repeat complete first-use/daily, Quick Find/filters/100+ rows, Archive/edit/retry, Progress, reminder intent and Local Recovery through actual synthetic Expo web. Preserve failures; separate browser, source and NOT_RUN native/external proof.
 
