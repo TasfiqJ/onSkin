@@ -26,6 +26,8 @@ vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
 }));
 vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
   HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+  captureHealthDataWriteLease: () => ({ ownerUserId: 'synthetic-owner-a' }),
+  assertHealthDataWriteLease: () => mocks.assertCurrent(),
   runHealthDataWriteOperation: async (_owner: string, operation: (lease: unknown) => unknown) =>
     operation({ assertCurrent: mocks.assertCurrent }),
 }));

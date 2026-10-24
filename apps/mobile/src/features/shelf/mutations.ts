@@ -4,10 +4,11 @@ import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
   runHealthDataWriteOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
-import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 
 import {
   addProduct,
@@ -26,16 +27,17 @@ import {
 // truth (D-029). Store v3 persists owner-free replay work in the same encrypted
 // transaction, so this hook has no crash-gap-prone direct mirror.
 
-function runShelfMutation<T>(
-  operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
-): Promise<T> {
-  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
-  if (!expectedOwnerUserId) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
-  return runHealthDataWriteOperation(expectedOwnerUserId, operation);
-}
-
 export function useShelfMutations() {
   const qc = useQueryClient();
+  // Delayed form/confirmation callbacks belong to the render that accepted
+  // them, even if a different owner or a fresh grant is active at dispatch.
+  let accepted: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+  try { accepted = captureHealthDataWriteLease(); } catch { /* admission closed */ }
+  async function runShelfMutation<T>(operation: (lease: HealthDataWriteOperationLease) => Promise<T>): Promise<T> {
+    if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+    assertHealthDataWriteLease(accepted);
+    return runHealthDataWriteOperation(accepted.ownerUserId, operation);
+  }
   const invalidate = async (lease: HealthDataWriteOperationLease) => {
     // Invalidation alone can join a data-less initial fetch started before the
     // commit. Cancel that snapshot before reading the durable local result.
