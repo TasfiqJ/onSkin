@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-24T18:28:29.506Z
+Generated: 2026-10-24T18:39:30.861Z
 Status: pass
-Git SHA: b460851da74f7c3eb75d18dd50923f62db9d1a81
+Git SHA: 494b818c217ab7b49d0f58040c8e55723311c339
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -446,7 +446,7 @@ Sources:
 - `apps/mobile/src/features/shelf/store.test.ts` - 57439 bytes - sha256 `ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2`
 - `apps/mobile/src/features/shelf/store.ts` - 58718 bytes - sha256 `b1c78581d5984f3c1f05efe56a320b28ec01453bb74fd97d4d121657d8d96f5a`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 5075 bytes - sha256 `2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9`
-- `apps/mobile/src/features/shelf/useShelf.ts` - 13272 bytes - sha256 `1349093a5175b140cfaf4f9e8a34653baeab9c324891b5815e06edfc4c65bfc0`
+- `apps/mobile/src/features/shelf/useShelf.ts` - 13377 bytes - sha256 `b907b825b22883db89d4a41762c87fe205b93f191d52e7337c011250eb86ab80`
 - `apps/mobile/src/app/shelf/[id].tsx` - 47238 bytes - sha256 `c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99`
 - `apps/mobile/src/app/shelf/search.tsx` - 24504 bytes - sha256 `193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087`
 - `apps/mobile/src/app/shelf/manual.tsx` - 17482 bytes - sha256 `75f5a8e3ccad7bf3e6478a086edecc8d4159abac990c78f8381131e412149088`
