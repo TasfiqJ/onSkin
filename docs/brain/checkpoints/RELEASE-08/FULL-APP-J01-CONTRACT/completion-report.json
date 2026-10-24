@@ -1,0 +1,458 @@
+{
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "self_accepted": false,
+  "source": "f0f743e5d8db586a1f9d98e417adb36416ede9fa",
+  "source_tree": "54d5645866d25681cae42a2a7a2869e12362edfa",
+  "contract_id": "onskin-full-app-j01-release08-v1",
+  "contract_sha256": "017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996",
+  "authorization": "BRAIN-RELEASE-FULLAPP-J01-REBASE08-CANDIDATE-01",
+  "scope": "PROPOSED_FULL_APP_J01_PRODUCT_CONTRACT_ONLY",
+  "evidence_only_tail": "This checkpoint and root handoff only; final delivery SHA is reported outside its own immutable content",
+  "new_validator": {
+    "current_exit": 0,
+    "negative_cases": 151,
+    "all_mutation_exits": 1,
+    "restored_exit": 0
+  },
+  "tests": {
+    "root": {
+      "command_exit": 0,
+      "mobile": 6166,
+      "console": 24,
+      "total": 6190,
+      "cached_tasks": 0
+    },
+    "lint": {
+      "exit": 0,
+      "cached_tasks": 0
+    },
+    "typecheck": {
+      "exit": 0,
+      "cached_tasks": 0
+    },
+    "legacy_launch_chain": {
+      "exit": 0
+    },
+    "primary_worklist": {
+      "exit": 0
+    },
+    "retained_source_contracts": {
+      "exit": 1,
+      "total": 113,
+      "passed": 111,
+      "failed": 2,
+      "classification": "UNCHANGED_SOURCE_AND_GUARDS_FROM_BASE"
+    },
+    "original_security_supported_python": {
+      "exit": 1,
+      "raw_log": "original-security-supported-python-final.log",
+      "python": "3.12.14",
+      "tests_run": 70,
+      "failure_events": 21,
+      "error_events": 19,
+      "skipped": 0
+    }
+  },
+  "execution_anomalies": [
+    "Original Security first invocation with default Python3.9 failed import on existing Python3.12 f-string syntax; raw failure retained, rerun with installed bundled3.12.14.",
+    "Root npm command exited0 and raw log/receipt were saved. The external receipt wrapper then exited1 while printing a Unicode tick through cp1252. This console-rendering failure does not change npm exit0. Wrapper printing was corrected; no root rerun or fabricated success."
+  ],
+  "protected": {
+    "files": 22957,
+    "frontier": 161,
+    "all_identities_equal": true
+  },
+  "original_blockers": {
+    "G97": "FAIL/NO_GO",
+    "DB": "H01_SQL_PROBE_FAILED (Data limit exceeded)",
+    "M1-03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2-01": "NOT_AUTHORIZED",
+    "public_release": "NOT_AUTHORIZED"
+  },
+  "unfinished_required_rows": [
+    {
+      "id": "F01",
+      "name": "Brand and legal identity",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-IDENTITY",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "Accounts, age, privacy and consent",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-LEDGER",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F03",
+      "name": "Full Shelf intake",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CATALOG",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F04",
+      "name": "Rights-reviewed catalog",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CATALOG",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "Reviewed conflict guidance",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CORE",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "Version-aware routine builder",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CORE",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "Today and adherence",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CORE",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F08",
+      "name": "Cycle, ramp and recovery",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CORE",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F09",
+      "name": "Private photo diary and comparison",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-NATIVE",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F10",
+      "name": "Local OS reminders",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-NATIVE",
+      "gaps": [
+        "Retained client acceptance is scoped; full requested behavior and all real-world axes remain unaccepted."
+      ]
+    },
+    {
+      "id": "F11",
+      "name": "Standard subscriptions",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PAY",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F12",
+      "name": "Compliant introductory offer",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PAY",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F13",
+      "name": "Reviewed recommendations",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-DECISIONS",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F14",
+      "name": "Provider-real safe Ask",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-DECISIONS",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F15",
+      "name": "Private-safe sharing",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-DECISIONS",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F16",
+      "name": "Commerce and replenishment",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-COMMERCE",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F17",
+      "name": "Moderated community / Skin Notes",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-COMMUNITY",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending. Legacy community store still describes16+ and uses communityAge16.v1; future separately authorized adult18+ review/migration required before public community."
+      ]
+    },
+    {
+      "id": "F19",
+      "name": "Widgets and Live Activities",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-NATIVE",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "F20",
+      "name": "Operator, support and administration",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-OPERATIONS",
+      "gaps": [
+        "Source/doc presence does not establish a functional admitted service; exact required behavior and owner proof remain pending."
+      ]
+    },
+    {
+      "id": "V2-C01",
+      "name": "Access/consent/rights",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-LEDGER",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C02",
+      "name": "Formula-aware intake",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CATALOG",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C03",
+      "name": "Change ledger",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-LEDGER",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C04",
+      "name": "Optional exceptions",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CORE",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C05",
+      "name": "Current plan/version",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-CORE",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C06",
+      "name": "Product decisions",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-DECISIONS",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C07",
+      "name": "Private progress/capture",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-NATIVE",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C08",
+      "name": "Appointment brief",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-DECISIONS",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C09",
+      "name": "Reminders",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-NATIVE",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C10",
+      "name": "Consumer packaging/billing",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PAY",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C11",
+      "name": "Accessible recovery/IA",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-INTEGRATION",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "V2-C12",
+      "name": "Support/measurement",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-OPERATIONS",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "P01",
+      "name": "Workspace roles",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PRO",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "P02",
+      "name": "Client grants/web",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PRO",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "P03",
+      "name": "Pro plans/templates",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PRO",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "P04",
+      "name": "Queue/reconciliation",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PRO",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "P05",
+      "name": "Pre-visit/offboarding",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PRO",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "P06",
+      "name": "Workspace billing/capacity",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-PRO",
+      "gaps": [
+        "Adopted contract is a target. Immutable ledger/professional integration and independent real-owner/provider evidence not supplied."
+      ]
+    },
+    {
+      "id": "J01",
+      "name": "Visible pores",
+      "status": "REQUIRED_PENDING",
+      "delivery_node": "R08-J01",
+      "gaps": [
+        "J01_Important_Documents.zip missing in authenticated intake; founder-reported research is not authenticated imaging rights/validation"
+      ]
+    }
+  ],
+  "unfinished_consumers": [
+    {
+      "id": "CUTOVER",
+      "status": "NOT_DONE",
+      "detail": "Byte-stable legacy launch scripts/JSON and their CI/runtime/report consumers retain lean-v1 semantics; exact inventory in precedence.v1.json"
+    },
+    {
+      "id": "NEW_VALIDATOR_CI",
+      "status": "NOT_WIRED",
+      "detail": "On-demand enforcement only; .github read-only"
+    },
+    {
+      "id": "READ_ONLY_DOCS",
+      "status": "HISTORICAL_SCOPE_REMAINS",
+      "detail": "Architecture, implementation prompts, founder register, mirrors and old generated artifacts require later finite reconciliation"
+    },
+    {
+      "id": "F17_AGE",
+      "status": "REQUIRED_PENDING",
+      "detail": "Legacy community store still references16+; public community needs separately authorized adult18+ migration and review"
+    },
+    {
+      "id": "ORIGINAL_SOURCE_ASSERTIONS",
+      "status": "FAIL",
+      "detail": "CORE05 notification regex and CORE06 migration-version assertions fail unchanged; unapplied finite blocker in inherited-source-failure-witnesses.json"
+    },
+    {
+      "id": "INDEPENDENT_CHECKOUT",
+      "status": "NOT_QUALIFIED",
+      "detail": "Only C:; approx762MB tracked source plus Git/dependencies/reserve exceeds usable headroom. No clone and no full-checkout0/1/0 claimed."
+    }
+  ],
+  "risks": [
+    "Governance consistency cannot prove a working full app, qualified reviewers, real providers/moderators/payments, optical fitness or independent accuracy",
+    "New files do not repair original Security source inventory/expired reviews or canonical DB custody",
+    "G1/G2/G3/G5 unaccepted; G4 absent and all J01 claims off; J02-J27/F18 remain deferred",
+    "Final-head GitHub CI is observed separately after push; pre-tail empty CI list is not success or skipped"
+  ],
+  "native_provider_clinical_apple": "NOT_RUN_OR_NOT_ADMITTED",
+  "independent_checkout": "NOT_QUALIFIED",
+  "public_release": "NO_GO",
+  "spend_usd": 0
+}

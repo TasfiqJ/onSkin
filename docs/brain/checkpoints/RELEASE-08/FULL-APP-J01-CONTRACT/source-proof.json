@@ -1,0 +1,1338 @@
+{
+  "base": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+  "base_tree": "f623b5bbd220fd6d9d10f967400081489a5dd7e0",
+  "source": "f0f743e5d8db586a1f9d98e417adb36416ede9fa",
+  "source_tree": "54d5645866d25681cae42a2a7a2869e12362edfa",
+  "changes": [
+    {
+      "path": "docs/DECISIONS.md",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "59e377d15683390e185402ac701096f9ba433845",
+        "bytes": 107403,
+        "sha256": "1061c2d2e8de1d7791e7e807b9c66750cac230f4a9671d4b600aeb43eb89be5f"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "52e3ca679ab8b3e1948959e93939400427d75d10",
+        "bytes": 108429,
+        "sha256": "12a2ec74f1d164bf8aa86d650a6cdfeed9179fd90cb7612416a6a87b00ceacab"
+      }
+    },
+    {
+      "path": "docs/FEATURE_INDEX.md",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "637ec987ab02551319c177fd353c21b956e15498",
+        "bytes": 9545,
+        "sha256": "173d78862669bb34c26e667ded47c580adb3b0989f564f0a41d77d28a326695c"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "b5969077354d0e29c165c15f1bec2c5476da0213",
+        "bytes": 10571,
+        "sha256": "2fc86c14ff77bce2988261388124d129976b6e4f25cc770e1a9d3e27e1004311"
+      }
+    },
+    {
+      "path": "docs/MASTER_PLAN.md",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "06f008a38c5851826f03ca8e27fcef13a9a02dac",
+        "bytes": 70537,
+        "sha256": "7584eac3911f7e4fda7edb36878b191ddccffc6a15c630a53f185d538135260f"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "86404ee2fa26849e80e4ff6be1b86dbab5f28c60",
+        "bytes": 71563,
+        "sha256": "12d7f6b318854fd3d236797167c814b1682b0a4e593ca6d18c3a81123bd8030f"
+      }
+    },
+    {
+      "path": "docs/PRODUCT_REQUIREMENTS.md",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "36cdc11c8be73d38ead93215a2e7f8d4eefd5a97",
+        "bytes": 6696,
+        "sha256": "a1d42cd4a6135d55a35b0df592076f68bc9cc2e0c77eed4858196fadaba489d7"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "fba13dfc486c5afc0a6a6620c8c38e63997e0998",
+        "bytes": 7722,
+        "sha256": "fa357f63cbe3aca6e12821a751f80cb33e4435ff4d1d9253bb8c13587cb7bc24"
+      }
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "9056745150b2eb9eb7bab0a8bb752f8019ecf782",
+        "bytes": 9377,
+        "sha256": "99d4b81f73819d7f79fdcb05353141b15f7bb59e9aab1ac4b4e755227fc83cfa"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "36079c2c3b482a44a31c612804eb25031f7f093d",
+        "bytes": 10403,
+        "sha256": "4d3ea488b7ee0ba191c984038c1c520862508e9367bbd2d1593287b6dbd0a96f"
+      }
+    },
+    {
+      "path": "docs/brain/contracts/RELEASE-08/PROPOSAL.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "f2e99bdbd4a991384bab3e1be29ad42fea90a29b",
+        "bytes": 721,
+        "sha256": "356ecaf9b9782eca95a5950125df99dbe41fce59c56b49058f2f9d24a8cc5fad"
+      }
+    },
+    {
+      "path": "docs/brain/task-specs/RELEASE-08/TASK.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "2bb38a8d47ae455454e6a1f12a9b5078c8a57d80",
+        "bytes": 760,
+        "sha256": "e486e120d8bb1599c1a420b434f4a226742c099a4efd71bada4fa504a340731a"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/ADR-RELEASE08-001.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "43ffdcab5069c816a8e7f66bf7e4909c685936c6",
+        "bytes": 1669,
+        "sha256": "1ecb59da2d188597180c37a4483e3cfbf144adb99e63f46cbe6119b0d646eb2a"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/README.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "c5f6a2afa9def53ab090461fdc22aae4a1724b5e",
+        "bytes": 1835,
+        "sha256": "534bc43894905359a3dea7b3c96a67d2dce505a6a3062b96bd207539e5051241"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/contract.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "67d6e5db9fadd7501557e7105ac930b67e2a2ffc",
+        "bytes": 8801,
+        "sha256": "017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/historical/adr_registry_51.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "bytes": 28659,
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/historical/roadmap_47.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "bytes": 50565,
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/history-crosswalk.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "01935d9b383dfbcb042eef94e03cf188dbf43e42",
+        "bytes": 82566,
+        "sha256": "2a4018895dc74fda87b265df22ff9aee2468a8ab49de41f39186bc42614563f3"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/j01-feasibility.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "c559ba0c57b02779b608d48dae671d40741c1491",
+        "bytes": 6322,
+        "sha256": "daa5f3368d3828f97362566c0d1bae7440ab40a5e045fbaa7ef2db6233b596d7"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/matrix.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "65bac193775ea13f01d9561e5688ec65e6818049",
+        "bytes": 163981,
+        "sha256": "3b3fd0bba1c668358326658f8a4dedeab7239ba8d0221dc01f415f506c080fe3"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/migration.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "d09d898ae636730c392e94f843173a16baf8c056",
+        "bytes": 4282,
+        "sha256": "2a7ec0506343b1856550aa587f3000170abb2d29482fad47266b8717fe7ca3e0"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/owner-packets.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "df0f386ce747398e2e47a868f1a3dc59113deeea",
+        "bytes": 4412,
+        "sha256": "dd193eeb5f6dba58fe2430a9f43583ac53793b5757a6945519e9a34eb9277bd9"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/precedence.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "5c940192a951fec1b474891d1b6422f62fcedf90",
+        "bytes": 10217,
+        "sha256": "330804dfc5d3e83c5f7da83aeb53a003b3d68c2cecc8935afc9edd1cbc7a5ec8"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/roadmap.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "1c81495f67fe85bc4916925b08199333b416d48d",
+        "bytes": 2530,
+        "sha256": "0620e0af3d737708a8d92596116f7f2fcfe88fc3f33b5a2761abac3a0014bdff"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/roadmap.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "bd587619a3a18a50fb5b372f9221e75c232b69cd",
+        "bytes": 11247,
+        "sha256": "35ea2bdb913ec62127765108c0e4484a2b9e78914b7f073a20040f8fc3a4d0da"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/schema.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "21e1ceaec582f9d067e87a669fee55525d20a576",
+        "bytes": 37082,
+        "sha256": "14d6f9b7bae3596d615a37714257d023ab41c6ab22629a3b92a13c44c0e45b3c"
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/check.py",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "affbac0ac0fd659c4938291e57807a9024879ca3",
+        "bytes": 21598,
+        "sha256": "7118308899a2b6b89e98680697d486b85dacd9b9fad8702cdf39a54751f6b822"
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/test_contract.py",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "bccb30b28278a03a1d4d65e7d1f08f3fd79c1c67",
+        "bytes": 9083,
+        "sha256": "191f74631da86413c687801c7a620bbe01c0bd7d98c83f6bdd72947faf2ec455"
+      }
+    }
+  ],
+  "intermediate_commits": [
+    {
+      "commit": "f0f743e5d8db586a1f9d98e417adb36416ede9fa",
+      "tree": "54d5645866d25681cae42a2a7a2869e12362edfa",
+      "changes": [
+        "M\tdocs/DECISIONS.md",
+        "M\tdocs/FEATURE_INDEX.md",
+        "M\tdocs/MASTER_PLAN.md",
+        "M\tdocs/PRODUCT_REQUIREMENTS.md",
+        "M\tdocs/ROADMAP.md",
+        "A\tdocs/brain/contracts/RELEASE-08/PROPOSAL.md",
+        "A\tdocs/brain/task-specs/RELEASE-08/TASK.md",
+        "A\tdocs/release/full-app-j01/ADR-RELEASE08-001.md",
+        "A\tdocs/release/full-app-j01/README.md",
+        "A\tdocs/release/full-app-j01/contract.v1.json",
+        "A\tdocs/release/full-app-j01/historical/adr_registry_51.json",
+        "A\tdocs/release/full-app-j01/historical/roadmap_47.json",
+        "A\tdocs/release/full-app-j01/history-crosswalk.v1.json",
+        "A\tdocs/release/full-app-j01/j01-feasibility.md",
+        "A\tdocs/release/full-app-j01/matrix.v1.json",
+        "A\tdocs/release/full-app-j01/migration.md",
+        "A\tdocs/release/full-app-j01/owner-packets.md",
+        "A\tdocs/release/full-app-j01/precedence.v1.json",
+        "A\tdocs/release/full-app-j01/roadmap.md",
+        "A\tdocs/release/full-app-j01/roadmap.v1.json",
+        "A\tdocs/release/full-app-j01/schema.v1.json",
+        "A\tscripts/release/full-app-j01/check.py",
+        "A\tscripts/release/full-app-j01/test_contract.py"
+      ],
+      "scope_valid": true
+    }
+  ],
+  "protected_files": 22957,
+  "protected_flat_digest": "a7ba3da6c6645baf7a0dee40302a1b7d50b69ce6e834625592a1c1892f348efa",
+  "protected_frontier": [
+    {
+      "path": ".claude",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "7b5b49a90074e4c9b0f14595247f87d37158aa52"
+    },
+    {
+      "path": ".env.example",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "cab6afc284674be2eca95f8f030a20df96fa377f"
+    },
+    {
+      "path": ".gitattributes",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "3c6f10f0aff17acb5e7438b17c8773431b1ae1e3"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "9148470436b9d21580fdf239fa1f43d4ac1a9758"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "2428307b283f3c9862049b8f4b8afba19e7371c0"
+    },
+    {
+      "path": ".prettierignore",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "098354dc3d870ed03ce1c969d33c1848b19296c3"
+    },
+    {
+      "path": ".prettierrc.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "04615fd35f4ec8496a04e1cce0c844a92984033a"
+    },
+    {
+      "path": "04_repo_docs",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "3b20b49b2bce6ae49fa0c9e03d02abf9a14d0970"
+    },
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0"
+    },
+    {
+      "path": "BLOCKERS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "a905ebd1795330cff9c709888b14c071c973367c"
+    },
+    {
+      "path": "CLAUDE.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "6d2cacba1f58032e3878c16b0868b6c4a58fcd42"
+    },
+    {
+      "path": "COMPLIANCE_SUPPORT_MAP.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "c668dc01fd7fd8930d42d5350ccae40c4fbc963a"
+    },
+    {
+      "path": "DATA_FLOW_MAP.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "bfc21fbdaf49fab627e686f9aec89d7de8896a2d"
+    },
+    {
+      "path": "DECISIONS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "754d91dcfb37866915935df1a47fbaac0fd2ad0c"
+    },
+    {
+      "path": "LAUNCH_READINESS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "a78e0fc399f7610b710c1b160f8bb34a9c1b9587"
+    },
+    {
+      "path": "PATCH_NOTES_SECURITY.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "27df34e69230433edb5107f9ad2fd33a44020232"
+    },
+    {
+      "path": "PROGRESS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "770a621106e84a094cfa0e6dbe8778d379b74404"
+    },
+    {
+      "path": "SECURITY_AUDIT_REPORT.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "95fcd4bd0f25dfeff348aa7682541ce0d7ae250b"
+    },
+    {
+      "path": "SECURITY_FIX_PLAN.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "872070de389d87ed8c9a0f1826f27b52bb988588"
+    },
+    {
+      "path": "SECURITY_INCIDENT_RUNBOOK.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "133d314942058b9906fa59109793ba179eb0ddd3"
+    },
+    {
+      "path": "SECURITY_TEST_PLAN.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "c7b1c9893b512418dea919fd6fc0fdf99bbdd245"
+    },
+    {
+      "path": "THREAT_MODEL.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "85ace57f3a23e3c0bfd678f38956ff5893eb8d98"
+    },
+    {
+      "path": "apps",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "9ffd8b0bf87cd8d9f823d2494dd57b9f72edf520"
+    },
+    {
+      "path": "blocker.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "fbe6897ff44c16dc3c0f14e3c3ca68e03b42b992"
+    },
+    {
+      "path": "docs/00-architecture.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "10a21825ed680863f015278b638994cc818d3cdc"
+    },
+    {
+      "path": "docs/01-auth-onboarding.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "3412bba1009cb20f57daf86f04f1a5bab93453aa"
+    },
+    {
+      "path": "docs/02-ingredient-intelligence.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "7a7025967a7064b332990c83da9741bc15b5d2f5"
+    },
+    {
+      "path": "docs/03-routine-builder.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "fc95f68adf2462af23ee4309cb8b39ab754cd788"
+    },
+    {
+      "path": "docs/04-smart-shelf.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "b1c1e030ba63726b4643ee54e9adde7491936447"
+    },
+    {
+      "path": "docs/05-actives-scheduler.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "66c644154b99b1f4f47f276eb10db01e5f9e5409"
+    },
+    {
+      "path": "docs/06-photo-progress.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "67d9daa621e7ea5c9321a05b9efda2bf47738fb3"
+    },
+    {
+      "path": "docs/07-reminders-streaks-widgets.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "b5f9ebab70917531d2786094a68da608327577a0"
+    },
+    {
+      "path": "docs/08-subscriptions-paywall.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "d225c1dfea97dc08dc16ac61ec4e94e05f77c516"
+    },
+    {
+      "path": "docs/09-personalized-recommendations.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "706aa9ec57d6fd1b951be08d692fd21dfb0dcc03"
+    },
+    {
+      "path": "docs/10-compass-artifact.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "4a85c3a6f4abe5ee21a094de27c51597dff6b673"
+    },
+    {
+      "path": "docs/10-creator-stacks-build-spec.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "0ca990d7b199a1e024ea9ba5761766105951858f"
+    },
+    {
+      "path": "docs/11-community-layer.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "5f40f1e7908bbef4c27e3265acbacc979d04051e"
+    },
+    {
+      "path": "docs/12-ai-trend-analysis.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "42f57e2f8e167faf4349e82f61d59e2f720698bf"
+    },
+    {
+      "path": "docs/13-ask-layerwell-assistant.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "18436311ce679af6e98a92074a38073601fdc7de"
+    },
+    {
+      "path": "docs/14-growth-to-seven-figures.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "8c07745cf5a21009fc920786d1349a4d17f7f0f1"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "09eb27e247ec8b7ee6b7488f28e6f57f23676e0a"
+    },
+    {
+      "path": "docs/CODEX_IMPLEMENTATION_PROMPT.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "b53ae8fa4f5d5529f5bf6d2276df80b5a073dcc7"
+    },
+    {
+      "path": "docs/CODE_REVIEW.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "0728a9251b622f095ac44c44e5eba3717f9de240"
+    },
+    {
+      "path": "docs/DEVICE_SUPPORT_POLICY.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "835595f5354c5cdedf4f366c12778c51239429f6"
+    },
+    {
+      "path": "docs/E2E_BUG_REPORT_TEMPLATE.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "d84950b909b8d104879298066a17e332764015af"
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "cc1ad162e34caac73eba28079da0f1274f8c1712"
+    },
+    {
+      "path": "docs/FOR_TAS_TO_DO.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "955e7441b740ef8c624ac8f90a30fd8c2ce7f248"
+    },
+    {
+      "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "fa13b7173d37364a34e6c783c09dae4decbf2e58"
+    },
+    {
+      "path": "docs/MAIN_INTEGRATION_2026-09-27.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "d1f67efecc99c738a6c01017526670c52b0caa2f"
+    },
+    {
+      "path": "docs/MASTER_PLAN_UPDATE_PATCH.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "17ecddce2fb311b1b1de67178a3d7ccab6b15fe1"
+    },
+    {
+      "path": "docs/MAXIMUM_OPTIMIZATION_CODEX_IMPLEMENTATION_PROMPT.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "44b1fb00511d63b32634617d9be7e28834d4b96d"
+    },
+    {
+      "path": "docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "93ca9ffefcb12125f2543011efb0fb5e90b5c2dd"
+    },
+    {
+      "path": "docs/TESTING_STRATEGY.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "12783be54037738ee1ea6aa988567e5b5940acf0"
+    },
+    {
+      "path": "docs/UPDATE_DELIVERY_POLICY.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "7dbf7b8aecf8566adac9737c1e6c0c558b1c1584"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "35f46c3322fc88b3118913da8a509b99ea71c6ac"
+    },
+    {
+      "path": "docs/brain/.gitattributes",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "afe654a1804a7d0a05829e31003a46c47d1bfd0c"
+    },
+    {
+      "path": "docs/brain/AGENTS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "b5aec7886df072024d616228077c1ee9a169f86c"
+    },
+    {
+      "path": "docs/brain/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "1cfff5bae153a408974a62dd8e357845b80caf2d"
+    },
+    {
+      "path": "docs/brain/active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "487a1cd5c7924ad71bd70417cbdfd88b1aba0f40"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-01",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "437bce7785789c9b2b1e0ca793ccb3a7f4c26860"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "8a07bafaa44c209555df23a1871d8c01e277e549"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "6793f93250e30db773a3adc676a984f68e3a0692"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "9c5ae0443f200abf6727e326db536958e2d86d00"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "553962a8d7844e88465e1d8f3801c9491e45a2d6"
+    },
+    {
+      "path": "docs/brain/contracts/FIX-01-v3.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "7ecd4b42d4e8d36ebcc0f0b7d6bcfeb5681fc1a7"
+    },
+    {
+      "path": "docs/brain/contracts/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "03b7e7b6de611f6a25cdd22d514cd4f8010a1f87"
+    },
+    {
+      "path": "docs/brain/contracts/completion-report.v2.schema.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "bc9ac54a58d0b4001e4b8b39dee0d55d7f43b7c1"
+    },
+    {
+      "path": "docs/brain/contracts/completion-report.v3.schema.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "09a1350c21f2aa154a20b46f6e4f92c946eeec91"
+    },
+    {
+      "path": "docs/brain/current.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "438e7d4388c9e04a13416e1acb216e0a920fa1d5"
+    },
+    {
+      "path": "docs/brain/m102-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "e13015e4dc878561a2368984f7727f7131901b12"
+    },
+    {
+      "path": "docs/brain/m102-cont01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "c276502f6c37be3b6a9c270407ac70bf0af8b358"
+    },
+    {
+      "path": "docs/brain/m103-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "7dfef448d59b30ea8a58ce4724e7e55a3f2df198"
+    },
+    {
+      "path": "docs/brain/m103-cont01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "6aeeab570cae0718db6eb50fde76efd05f195bc0"
+    },
+    {
+      "path": "docs/brain/m103-governance-fixture01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "c35aca6c9cd79e63cbb2033b9500355e43d6353d"
+    },
+    {
+      "path": "docs/brain/m103-overnight01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "22872e0c74bd0e2cbb47dc2f65941903eff66e42"
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "f0b948085fe9bf15531a12aaead38c82c00a91bc"
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery02-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "b3627c612b0ec20ff83daccf8d70a5d29903269e"
+    },
+    {
+      "path": "docs/brain/m103-quality-recovery03-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "1bfeaad1a9b32a472d77e11a52981d5ed6480f99"
+    },
+    {
+      "path": "docs/brain/m103-security-harden01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "965050ef2c60f56ee18fda7ea398f2a1f3257ba5"
+    },
+    {
+      "path": "docs/brain/m103-source-closure01-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "074ae5d06c9b6a477e45b138342712f15d09350b"
+    },
+    {
+      "path": "docs/brain/m103-source-closure03-active.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "e535400de6d49e16bc2c767fc8894c1c765b94d3"
+    },
+    {
+      "path": "docs/brain/reviews",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "84cffaef4694c8cc3bd843ff46163f9cb9df1a61"
+    },
+    {
+      "path": "docs/brain/state",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "713a0d090230d8831051d8a0bb97d3bdb14a523b"
+    },
+    {
+      "path": "docs/brain/task-specs/M0-02.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "f6d3e4137dac043156cc2f29f7977a47adb902c7"
+    },
+    {
+      "path": "docs/brain/task-specs/M1-01.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "18da8cc734a277d9567869f94f119ea5edf80442"
+    },
+    {
+      "path": "docs/brand-decision-memo.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "c8ac8b31675e61341696cffd6194228f01f93e22"
+    },
+    {
+      "path": "docs/brand-evidence.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "3cf86caa1c0bea9cb23b6ec25e35499332bc24c3"
+    },
+    {
+      "path": "docs/e2e-bug-reports",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "42c6350103a9418191013ebc7a0dfaa070cf6157"
+    },
+    {
+      "path": "docs/e2e",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "811e03d39d49eba30c04ec9c67ac4ef6e17de752"
+    },
+    {
+      "path": "docs/generated",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "2612e941c52affd481d9a549dd9620fc2554ad9d"
+    },
+    {
+      "path": "docs/hugeToDo",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "d16bfe50a37301ba5d036124355ce3db802ecd08"
+    },
+    {
+      "path": "docs/legal-readiness.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "b3b684356946cfe43fc4a152dae53e8c0e37b21f"
+    },
+    {
+      "path": "docs/main-integration-resolution.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "377d88cf46730381d253d911a57aa3d5df2950e5"
+    },
+    {
+      "path": "docs/optimization",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "7b2bf1725a315d79829e654e12e08afdd10ddf48"
+    },
+    {
+      "path": "docs/phase-10",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "4da0b3afcd20021bf0857d56a11eca69aadd88cf"
+    },
+    {
+      "path": "docs/phase-11",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "788fe05ead31863e04d807f04912de7c300ff468"
+    },
+    {
+      "path": "docs/phase-2-production-database-release-procedure.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "aab9a781a1b358fad1c210610c0c2383649b58d1"
+    },
+    {
+      "path": "docs/phase-2-production-infrastructure-runbook.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "4ffe73d7c0af4d07870a14e41db8b6fb22f288df"
+    },
+    {
+      "path": "docs/phase-2-readiness-checklist.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "da4977b0db5ccf42ad15f5dd0b64633b8282d2a8"
+    },
+    {
+      "path": "docs/phase-2-status.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "7916f23f7796c698f0c8f1d09bc56bf137f1e797"
+    },
+    {
+      "path": "docs/phase-2",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "92d25b7ed1e2a109315d4ab65fd65041f767f2b0"
+    },
+    {
+      "path": "docs/phase-3",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "5086e882d4fa26aa589a7c34443462a713e97df1"
+    },
+    {
+      "path": "docs/phase-4",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "c5b2fc7477c5d6faaffcbb7f2035ae749f95cf34"
+    },
+    {
+      "path": "docs/phase-5",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "19679431f736c5a9c498a2c7ac73ceb7ef99f7b7"
+    },
+    {
+      "path": "docs/phase-6",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "f9783fa24d3699bb3d4d3655eb27e44b78e41ac6"
+    },
+    {
+      "path": "docs/phase-7",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "25d5595fb02da980945fafff0e5cda2714542bb1"
+    },
+    {
+      "path": "docs/phase-8",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "a7f00a26399b170cef8d512ed7df04a2b3697b27"
+    },
+    {
+      "path": "docs/phase-9",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "a96b186baec45188347ea006ac8ecb983e5631c3"
+    },
+    {
+      "path": "docs/rebrand-and-core-loop-migration-checklist.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "908cdeded366575c1b153f44378ac4484502c903"
+    },
+    {
+      "path": "docs/seven-figure-readiness.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "38e0cd73b7ff76166d327c5397c4680fd71ad2e2"
+    },
+    {
+      "path": "docs/store-privacy-inventory.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "4066b7c072e6350e7e0b828889261abb1cb699cf"
+    },
+    {
+      "path": "docs/v1-scope-freeze.md",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "e2e57ba3404e728844270e295ef10320c77bdb20"
+    },
+    {
+      "path": "docs/v2",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "a61435040dba6d3bcbdaa79a9c11115cd7cdaadf"
+    },
+    {
+      "path": "package-lock.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "7b0522688c74c78328aa587cb9f9a07b65965061"
+    },
+    {
+      "path": "packages",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "a18309175fa4352b41c2320a5668147d3ca18dcb"
+    },
+    {
+      "path": "scripts/ask02",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "0c03cc155f69d0cd70d8dda0b6741c7aa05e4471"
+    },
+    {
+      "path": "scripts/brain",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "4e16f8d0be0c9cf6c2e43c774b13841eedf05b03"
+    },
+    {
+      "path": "scripts/brand-audit-lib.mjs",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "e86eb13bfb580824b1892bdca5abac40cf6dfd87"
+    },
+    {
+      "path": "scripts/brand-audit.mjs",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "bf0c6be6cacbae2bcfb46d661b691bfada316cc5"
+    },
+    {
+      "path": "scripts/brand-audit.test.mjs",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "489b8e1bda17e822131ccfa0b9c638286ca61980"
+    },
+    {
+      "path": "scripts/brand-legacy-compatibility.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "45cfd5872ca7862fb54b49b9d270c24188ab350f"
+    },
+    {
+      "path": "scripts/cat05",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "8e91e994edd97c3d9e74cbf5bed672688e9fbf58"
+    },
+    {
+      "path": "scripts/com01",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "5714d7e9c376507feb76dc49572a3d9bc9f4b1de"
+    },
+    {
+      "path": "scripts/core01",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "f31d310a36947963a81a164845badd5e9c2b0d58"
+    },
+    {
+      "path": "scripts/core02",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "be0a9c115b93def98121183c8d909b765558c429"
+    },
+    {
+      "path": "scripts/core03",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "4849a02a1072207eba42dd904a9bf7247092b62b"
+    },
+    {
+      "path": "scripts/core04",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "e59919d11f9cca6481c38d9d79832cec7abc9ea6"
+    },
+    {
+      "path": "scripts/core05",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "170a76d3a7a07edfae6a8d5d2f0fae0c625bdb20"
+    },
+    {
+      "path": "scripts/core06",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "05d702f5452b32befe327021cdbaf7ac77525d88"
+    },
+    {
+      "path": "scripts/core07",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "dfc739794da5058bfd7022fd40d65481e7778a26"
+    },
+    {
+      "path": "scripts/docs",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "a64fa3daac050ee44dfdc9bac868c0e8440abda8"
+    },
+    {
+      "path": "scripts/e2e",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "2edc722b3be9583e9e95db5047b4da812417782d"
+    },
+    {
+      "path": "scripts/g2",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "8720a4b1c31242a5758ed52b4bd6ad1024245f6d"
+    },
+    {
+      "path": "scripts/launch",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "436b92103d8f97224010be8a2aacbf81fab2ecc9"
+    },
+    {
+      "path": "scripts/optimization",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "5df7d614b5a1959a9f9d9a29cdf56304ef084d88"
+    },
+    {
+      "path": "scripts/pay07",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "2ad7f836effb64366813d601c9ee0e284b358fe3"
+    },
+    {
+      "path": "scripts/pay08",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "2cdff3cb56671bf38e73d23620fedea12f2b5cb0"
+    },
+    {
+      "path": "scripts/phase10-11",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "2a56f5cf0bee5ed358b0eb1022abb991a2bcac2b"
+    },
+    {
+      "path": "scripts/phase10",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "946f2ae5b7662fb2e87dc465cdbe77c2d255e091"
+    },
+    {
+      "path": "scripts/phase11",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "4352a2dc6993b7e45e178d7e7a38acebd215ea98"
+    },
+    {
+      "path": "scripts/phase2",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "5c12c45f33cf53f29361227afe100116869d1e42"
+    },
+    {
+      "path": "scripts/phase3",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "a847452268986fa86f25900f084a9869a411f896"
+    },
+    {
+      "path": "scripts/phase4",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "b68b15afd42318e31a7edd8fcb868494f02803ea"
+    },
+    {
+      "path": "scripts/phase5",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "fe72c5bc3f9b18613f2522dd1ecb5b3ada970e77"
+    },
+    {
+      "path": "scripts/phase6",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "1822efadf4363dfb40c61561cb92da1995838fcb"
+    },
+    {
+      "path": "scripts/phase7",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "2f288e659f143dd840540715cff2bc7280a33047"
+    },
+    {
+      "path": "scripts/phase8",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "313386d93cdf8d983d5824ec458f0e042d5789ee"
+    },
+    {
+      "path": "scripts/phase9",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae"
+    },
+    {
+      "path": "scripts/photo01",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "8a4d886efc1a8401439397fc8bc22bee6f3e2b09"
+    },
+    {
+      "path": "scripts/photo02",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "f6bd60c5d4a6a7d10b8bf5363e07aa33b2af09e6"
+    },
+    {
+      "path": "scripts/photo03",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "6cf9846886bcc7f9ed0e9ff70c76cccfa7f00786"
+    },
+    {
+      "path": "scripts/photo04",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "fc274e0e1ac13ed6d5f6947f980257bde18a3090"
+    },
+    {
+      "path": "scripts/photo05",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "354e4a7b384803898ee181b1fc7e4cf55a1f52dc"
+    },
+    {
+      "path": "scripts/photo07",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "77a0768a5a4370bd9cc1dcbae2c786e85820d7e8"
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "69123bd77b7af0c97f55d9e47b3bad975498cbd7"
+    },
+    {
+      "path": "scripts/security_readiness",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "89d918679e7877b3e2f652add3386f26add40d05"
+    },
+    {
+      "path": "supabase",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662"
+    },
+    {
+      "path": "test-results",
+      "mode": "040000",
+      "kind": "tree",
+      "blob": "ec71b095f20418271f9e3480ffd6fc01c6719c5e"
+    },
+    {
+      "path": "tsconfig.base.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "92a62e9839200bce445c95f450f627ea53d16da1"
+    },
+    {
+      "path": "turbo.json",
+      "mode": "100644",
+      "kind": "blob",
+      "blob": "3563c8e86dc22e772bf238eef33806ffb952a197"
+    }
+  ],
+  "absences": [
+    {
+      "path": "docs/release/full-app-j01",
+      "base_absent": true,
+      "source_absent": false
+    },
+    {
+      "path": "scripts/release/full-app-j01",
+      "base_absent": true,
+      "source_absent": false
+    },
+    {
+      "path": "docs/brain/contracts/RELEASE-08",
+      "base_absent": true,
+      "source_absent": false
+    },
+    {
+      "path": "docs/brain/task-specs/RELEASE-08",
+      "base_absent": true,
+      "source_absent": false
+    },
+    {
+      "path": "docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT",
+      "base_absent": true,
+      "source_absent": true
+    },
+    {
+      "path": "apps/professional-web",
+      "base_absent": true,
+      "source_absent": true
+    },
+    {
+      "path": "apps/client-web",
+      "base_absent": true,
+      "source_absent": true
+    },
+    {
+      "path": "apps/mobile/src/features/j01",
+      "base_absent": true,
+      "source_absent": true
+    }
+  ],
+  "contract_sha256": "017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996",
+  "all_protected_identities_equal": true,
+  "source_modes": "all additions/modifications100644; legacy modes preserved"
+}

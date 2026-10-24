@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "2dd612c4aba524688c432081cf6fe7cc47b02dd69bcac8d2db98ee3ec0e3676a"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_RELEASE08_25a09302a33d4761a71bd474fe6e8d8a",
+  "exit": 0,
+  "external_anchor": "2dd612c4aba524688c432081cf6fe7cc47b02dd69bcac8d2db98ee3ec0e3676a",
+  "zip_sha256": "98af9722541380a3266701bebf0256099e35470720d87705773b693bd688a40f",
+  "safely_extracted_members": 19,
+  "authenticated_regular_files": 17,
+  "expanded_bytes": 185179,
+  "initial_authentication": "VERIFIED before repository edits; initial tool invocation retained in task transcript",
+  "reverification_utc": "2026-10-24T20:43:04.743397+00:00",
+  "log_sha256": "177acd4d28ca0f7d781c1a40f79f25c67dd35257ba061f12f5e2a59cfcc06d6d",
+  "no_fallback_context": true,
+  "admission": "NONE"
+}

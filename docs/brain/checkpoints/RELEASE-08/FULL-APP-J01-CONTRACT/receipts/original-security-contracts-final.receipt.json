@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_contract.py",
+    "-v"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "f0f743e5d8db586a1f9d98e417adb36416ede9fa",
+  "tree": "54d5645866d25681cae42a2a7a2869e12362edfa",
+  "status_before": "",
+  "start_utc": "2026-10-24T20:38:33.689827+00:00",
+  "evidence_class": "CURRENT_CHECKOUT_SOURCE_TEST",
+  "cache": "NOT_APPLICABLE",
+  "exit": 1,
+  "seconds": 0.4,
+  "log": "original-security-contracts-final.log",
+  "log_sha256": "94e774ddc978fb123cdc46d9bc756e6be94843c03e052f3af39ee08356486de5",
+  "log_bytes": 1721,
+  "status_after": ""
+}

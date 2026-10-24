@@ -1,12 +1,13 @@
-onSkin M1 Campaign07 factual handoff — PARTIAL_BLOCKED, independent Brain review required.
-Authorization M1X-LEAN-V1-FIRST-WEEK-EXPERIENCE07-CANDIDATE-01; no self acceptance or main promotion.
-Accepted anchor f3543284d388334c7d9a6155fc408aea2a1b272e / tree fdb03951bcf8f236a48d34e0e079a76ed766f543.
-Measured source 3b7e212a7ae37f44759d52e1b4220507cf3965e0 / tree 0ad1570ec726bd7408c4b338e2ae5e8bd855729d; 13 source commits, 11 exact source/docs/worklist paths.
-Improved enlarged dock label reflow and scene reserve, Shelf midnight/DST/foreground timezone expiry while preserving canonical routine cache identity, and optional confirmed Today next-visit links without new persistence/route/entitlement.
-Clean measured source: root6190/6190, retained2343/2343, uncached forced typecheck/lint and original primary strict worklist exit0. Ten added cases; original safeguards preserved.
-Actual synthetic Expo/Chrome: final390 cross-owner+daily exit0; final360/text2 card+first-session/daily exit0; augmented375/104rows/eightdock reduced-motion checks completed but command exits1 on four Reanimated development reduced-motion warnings. Exact diagnostics retained, no false full PASS. Native/device/OSdelivery/provider/clinical/paid/release NOT_RUN.
-Fresh independent complete-checkout worklist0/1/0 remains NOT_QUALIFIED due safe disk budget; no clone/sparse/mock substitute. Task-only cleanup inventories retained; unknown projects/worktrees/packs untouched.
-New compact checkpoint docs/brain/checkpoints/M1-02/LEAN-V1-FIRST-WEEK-EXPERIENCE-07: source byte identities,345 protected witnesses+3 absences,29 screenshots, raw failed/success logs and standalone verifier. This is an evidence-only tail; read its final SHA/tree after commit.
-Source CI in ci-source3b7.json is an exact associated-source observation; canonical DB acquisition fails registry Data limit exceeded, Security remains FAIL, live Supabase skipped. Final evidence-head Quality/Security/iOS results must be read after push and reported separately in PR11/final relay; do not borrow earlier status.
-PR11 stage/m1-retained-resilience sole writer remains DRAFT/OPEN/UNMERGED, auto-merge off. Main d9912f4c8b30358593569c5b9b4e84773c6f463e and PR10 cd2bd51997f283c0b446bf2124f427f482550fa8 unchanged.
-M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; G97 FAIL/NO_GO; M2 NOT_AUTHORIZED; USD0. Brain alone accepts.
+RELEASE-08 SUBMITTED_REVIEW_REQUIRED — proposed full-app + J01 contract only; no acceptance or GO.
+Authorization BRAIN-RELEASE-FULLAPP-J01-REBASE08-CANDIDATE-01.
+Branch stage/full-app-j01-release-contract08; stacked draft base stage/m1-retained-resilience. Never merge/retarget PR11 or main.
+Measured source f0f743e5d8db586a1f9d98e417adb36416ede9fa; tree 54d5645866d25681cae42a2a7a2869e12362edfa.
+Contract onskin-full-app-j01-release08-v1 SHA256 017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996.
+Checkpoint docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT; manifest SHA256 cf4aee691cde924022092e91fcc8b1d9e8ffc969502fa6248daa4b66fb5a0ebc.
+Verify: python -B docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT/verify_checkpoint.py --expected-manifest-sha256 cf4aee691cde924022092e91fcc8b1d9e8ffc969502fa6248daa4b66fb5a0ebc
+65 identities/38 required scopes;47 historical tasks/51 ADRs preserved. New validator0;151 negative exits1; restored0. Forced root6190/6190, lint/typecheck0,0cached. Old full launch chain and primary worklist0.
+Broader untouched source contracts111pass/2fail; original Security3.12 suite exit1, raw failures retained. G97 FAIL/NO_GO; canonical DB H01_SQL_PROBE_FAILED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED.
+Legacy consumer cutover NOT_DONE; new validator CI NOT_WIRED; independent complete-checkout0/1/0 NOT_QUALIFIED. See structured completion-report.json for all unfinished scopes, risks and command anomalies.
+J01 NOT_IMPLEMENTED_OR_VALIDATED; authenticated intake missing, G1/G2/G3/G5 pending and G4 closed. F18/J02-J27 deferred; F09 diary/compare required. No paid/provider/clinical/native/Apple/public admission. Spend USD0. Brain alone audits/accepts source and later decides ordinary main promotion.
+Final delivery SHA/tree and actual final-head CI are reported after push, outside this self-referential handoff.
+Codex is done.

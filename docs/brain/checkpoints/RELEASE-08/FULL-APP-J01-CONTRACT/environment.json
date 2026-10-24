@@ -1,0 +1,14 @@
+{
+  "observed_utc": "2026-10-24T20:48:11.521743+00:00",
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "node": "v22.21.0",
+  "npm": "11.20.0",
+  "python_default": "3.9.13",
+  "python_security": "3.12.14",
+  "git": "git version 2.50.1.windows.1",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "free_c_bytes": 776691712,
+  "complete_tracked_source_files": 23002,
+  "independent_checkout": "NOT_QUALIFIED",
+  "reason": "No safe full-source clone headroom with Git/dependencies and host reserve; no cleanup of unknown files/caches/packs/worktrees"
+}

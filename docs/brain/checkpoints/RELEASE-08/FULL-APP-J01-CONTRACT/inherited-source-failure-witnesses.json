@@ -1,0 +1,45 @@
+{
+  "classification": "UNCHANGED_SOURCE_AND_TESTS_FROM_PINNED_BASE",
+  "failures": [
+    "CORE05 notification exact-source regex",
+    "CORE06 frozen migration head regex"
+  ],
+  "witnesses": [
+    {
+      "path": "scripts/core05/adherence-source-contract.test.mjs",
+      "mode": "100644",
+      "blob": "5d24ced2617cead8ff25ff340e8cbef5b4c105c3",
+      "sha256": "69458f6ca204f6855afb4e6cce3b5a19676248f32e6c5161899c7281abf5c592",
+      "byte_identical": true
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "mode": "100644",
+      "blob": "a11423ca654cd8e3b72a4c4593596a2d7dc2a535",
+      "sha256": "aac1b7bed1c4cab31d278a00c31de8460cf3181c3d37a5bb03c1d921194deaca",
+      "byte_identical": true
+    },
+    {
+      "path": "scripts/core06/recommendation-admission-source-contract.test.mjs",
+      "mode": "100644",
+      "blob": "10e14976cce60101aee619885e59bed9d8c11c37",
+      "sha256": "8e32aba423280da0f22dba3fbc07adfde1ce28262967cd33e7e8d3d8830c1677",
+      "byte_identical": true
+    },
+    {
+      "path": "supabase/tests/database/recommendation_zero_admission.test.sql",
+      "mode": "100644",
+      "blob": "3f16dd40f568889ee1f4c5e9ac91d1044671dc06",
+      "sha256": "7c602249dad829c168a1d3ffdbf3f31feb743296fe9d2c85da0241f3769e3039",
+      "byte_identical": true
+    },
+    {
+      "path": "supabase/tests/upgrade/recommendation_zero_admission_0071_upgrade.test.sql",
+      "mode": "100644",
+      "blob": "d757a865f1e18892c8b2e2f6e59981599000c21d",
+      "sha256": "011e2ffc2994475df1ece65e1503dd363c4d42206a4509d46195a01d4f324c77",
+      "byte_identical": true
+    }
+  ],
+  "remedy": "NOT_APPLIED; protected scripts/core05, scripts/core06, apps and supabase outside finite grant; independent Brain scopes any correction"
+}
