@@ -289,18 +289,21 @@ export function useShelf() {
       }),
   });
   const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
+  const cachedShelf = query.data;
+  const readingShelf = query.isFetching;
+  const failedShelf = query.isError;
   useEffect(() => {
-    if (!query.data || retired || query.isError || query.isFetching || query.data.sourceDate === today) return;
+    if (!cachedShelf || retired || failedShelf || readingShelf || cachedShelf.sourceDate === today) return;
     // Keep the hook's data identical to its canonical cache: usePlan checks that
     // exact identity. Only the admitted snapshot's calendar presentation changes;
     // no source read, private write or clinical evaluation is repeated.
-    queryClient.setQueryData<typeof query.data>(['shelf'], (previous) => {
-      if (!previous || previous !== query.data || previous.sourceGeneration !== activeHealthProcessingLeaseSnapshot()?.generation) return previous;
+    queryClient.setQueryData<typeof cachedShelf>(['shelf'], (previous) => {
+      if (!previous || previous !== cachedShelf || previous.sourceGeneration !== activeHealthProcessingLeaseSnapshot()?.generation) return previous;
       const next = applyConflictChoicesToShelfData(previous, previous.conflictChoices, today);
       next.items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
       return { ...next, sourceGeneration: previous.sourceGeneration, sourceDate: today };
     });
-  }, [queryClient, query.data, query.isError, query.isFetching, retired, today]);
+  }, [queryClient, cachedShelf, failedShelf, readingShelf, retired, today]);
   return {
     ...query,
     isError: query.isError || retired,
