@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-24T18:14:34.248Z",
+  "generatedAt": "2026-10-24T18:25:18.085Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "3c7d12829e9c91eb9345f74e186321477aba3170",
+  "gitSha": "01258fb825c291431e98f3ed4b9844c4288bc6e9",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1620,8 +1620,8 @@
         {
           "path": "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
           "exists": true,
-          "bytes": 15016,
-          "sha256": "27001227a5dbe8cfc4a818cf40ddee5222d836d548b03429840abc3035f07371"
+          "bytes": 15465,
+          "sha256": "cd6d470f4dbf340c4003cad8df9cec64315e1c7a6b79b0222a967cf2d0530d7f"
         },
         {
           "path": "apps/mobile/src/features/shelf/expiry.test.ts",
@@ -1836,8 +1836,8 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 12527,
-          "sha256": "974f679f6d1e30d3711dd52ea639884bb208a9a4f499bc15964e46743f3d188c"
+          "bytes": 13272,
+          "sha256": "1349093a5175b140cfaf4f9e8a34653baeab9c324891b5815e06edfc4c65bfc0"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
