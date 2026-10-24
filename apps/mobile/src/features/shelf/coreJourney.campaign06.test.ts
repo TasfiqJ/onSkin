@@ -302,6 +302,7 @@ it.each([1, 3, 20, 100])(
         )
         .map((node) => node.props.accessibilityLabel);
     expect(names()).toEqual(['Crème Sérum, Date unknown']);
+    expect(rendered()).not.toContain('Build my routine');
     await act(async () => {
       input().props.onChangeText('not on this shelf');
     });
@@ -311,6 +312,7 @@ it.each([1, 3, 20, 100])(
       input().props.onKeyPress({ nativeEvent: { key: 'Escape' } });
     });
     expect(input().props.value).toBe('');
+    expect(rendered()).toContain('Build my routine');
     expect(names()).toHaveLength(count);
     expect(ports.writes).toBe(writes);
     expect(ports.track).not.toHaveBeenCalled();
