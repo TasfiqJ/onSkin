@@ -30,7 +30,9 @@ vi.mock('expo-crypto', () => ({ randomUUID: () => 'synthetic-notification-id' })
 vi.mock('expo-notifications', () => ({
   setNotificationHandler() {}, setBadgeCountAsync: async () => true,
   setNotificationCategoryAsync: ports.category, setNotificationChannelAsync: async () => {},
-  getPermissionsAsync: async () => ({ status: ports.denied ? 'denied' : 'granted' }),
+  getPermissionsAsync: async () => ({
+    status: ports.denied ? 'denied' : 'granted', granted: !ports.denied, canAskAgain: true,
+  }),
   SchedulableTriggerInputTypes: { DAILY: 'daily', WEEKLY: 'weekly', DATE: 'date' },
   cancelAllScheduledNotificationsAsync: async () => { if (ports.failClear) throw new Error('cancel-failed'); ports.native.clear(); },
   clearLastNotificationResponseAsync: async () => {}, dismissAllNotificationsAsync: async () => {},
