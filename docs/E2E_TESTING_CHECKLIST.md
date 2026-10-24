@@ -2,6 +2,16 @@
 
 Use this checklist before marking UI-facing work done.
 
+## M1 core journey 06 verification branches
+
+- [ ] Adult/current-consent → quiz/re-answer → first three manual products → truthful pending guidance → explicit free continuation → routine/Today → saved check-off → Progress gate.
+- [ ] Saved-only Quick Find: 1/3/20/100 products, accent/name/brand matching, no match, Clear/Enter/Escape, All/Actives/Expiring combinations, no query writes/telemetry/provider requests.
+- [ ] Refused onboarding removal: one operation for repeated taps, unconfirmed result, durable read-back/retry, retired callback and unmount barriers.
+- [ ] Archive unavailable/loading/empty/populated and offline retry/Back are distinct.
+- [ ] Shelf identities and progress totals retire at withdrawal, expiry and A→B→A/same-owner regrant; delayed old reads cannot restore them.
+- [ ] Actual Expo web at 375×667, 390×844, 430×932 and 360×640/text ×2, with focus/keyboard, long names, overflow/hit targets, recovery and direct private-route denial.
+- [ ] Report native filesystem/camera/OS delivery, installed iPhone/VoiceOver, clinical, paid/provider, hosted DB and release results separately; source/web passes do not admit them.
+
 ## Setup
 
 - [ ] Read `AGENTS.md`.

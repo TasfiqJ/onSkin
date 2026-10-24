@@ -5,10 +5,12 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import ProductsScreen from '@/app/onboarding/products';
+import ShelfScreen from '@/app/(tabs)/shelf';
 import ArchiveScreen from '@/app/shelf/archive';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { IntakeProvider } from './IntakeContext';
 import { addProduct, loadShelf, updateProduct } from './store';
+import { useShelf } from './useShelf';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import {
   clearActiveHealthProcessingEpoch,
@@ -33,11 +35,13 @@ vi.mock('expo-crypto', () => ({
     createHash('sha256').update(value).digest('hex'),
 }));
 vi.mock('expo-secure-store', () => ({}));
+vi.mock('@/components/navigation/DockMotion', () => ({ reportDockScroll() {} }));
 vi.mock('react-native', () => ({
   View: 'View',
   Pressable: 'Pressable',
   ScrollView: 'ScrollView',
   TextInput: 'TextInput',
+  Keyboard: { dismiss: vi.fn() },
   Platform: { OS: 'web' },
   useWindowDimensions: () => ({ width: 375, height: 667, fontScale: 1 }),
   AccessibilityInfo: {
@@ -58,6 +62,9 @@ vi.mock('@/components/ui', () => ({
   StripedThumb: 'StripedThumb',
   StateLoading: 'StateLoading',
   StateNotice: 'StateNotice',
+  SegmentChip: 'SegmentChip',
+  ConflictBanner: 'ConflictBanner',
+  ExpiryBadge: 'ExpiryBadge',
 }));
 vi.mock('expo-router', () => ({
   router: { push: ports.push, replace: ports.push, canGoBack: () => false },
@@ -127,7 +134,8 @@ function rendered() {
 function removeButton() {
   return renderer!.root.findAll(
     (node) =>
-      node.type === 'Pressable' && node.props.accessibilityLabel === 'Remove Synthetic balm',
+      node.type === ('Pressable' as never) &&
+      node.props.accessibilityLabel === 'Remove Synthetic balm',
   )[0]!;
 }
 beforeEach(async () => {
@@ -170,7 +178,7 @@ it('archive refuses unreadable data instead of saying there is no history, and r
   ports.failRead = false;
   const retry = renderer!.root.findAll(
     (node) =>
-      node.type === 'Button' &&
+      node.type === ('Button' as never) &&
       node.props.accessibilityLabel === 'Retry loading private Shelf data',
   )[0]!;
   await act(async () => {
@@ -235,4 +243,137 @@ it('an old onboarding removal never starts a replacement grant read after its wr
   });
   await flush();
   expect(fetch).not.toHaveBeenCalled();
+});
+
+it.each(['synthetic-core-b', 'synthetic-core-a'])(
+  'Shelf withholds cached product identities for replacement grant %s',
+  async (owner) => {
+    await addProduct({ name: 'Synthetic private A name', addedVia: 'manual' });
+    let source!: ReturnType<typeof useShelf>;
+    function Probe() {
+      source = useShelf();
+      return null;
+    }
+    await mount(Probe);
+    expect(source.data?.items[0]?.name).toBe('Synthetic private A name');
+    clearActiveHealthProcessingEpoch();
+    ports.bytes.delete('layerwell.shelf.v1');
+    const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+    await act(async () => {
+      setActiveHealthProcessingEpoch(1, { ownerUserId: owner, accountGeneration });
+    });
+    expect(source.data).toBeUndefined();
+    expect(source.isError).toBe(true);
+    await act(async () => {
+      await source.refetch();
+    });
+    await flush();
+    expect(source.data?.items).toEqual([]);
+  },
+);
+
+it.each([1, 3, 20, 100])(
+  'Quick Find narrows %i real encrypted saved products without writes or analytics',
+  async (count) => {
+    for (let i = 0; i < count; i++)
+      await addProduct({
+        name: i === 0 ? 'Crème Sérum' : `Synthetic cleanser ${i}`,
+        brand: i === 0 ? 'Élan' : null,
+        addedVia: 'manual',
+      });
+    await mount(ShelfScreen);
+    const input = () =>
+      renderer!.root.findAll(
+        (node) =>
+          node.type === ('TextInput' as never) &&
+          node.props.accessibilityLabel === 'Quick Find saved products',
+      )[0]!;
+    const writes = ports.writes;
+    ports.track.mockClear();
+    await act(async () => {
+      input().props.onChangeText('  elan  creme ');
+    });
+    const names = () =>
+      renderer!.root
+        .findAll(
+          (node) =>
+            node.type === ('Pressable' as never) &&
+            String(node.props.accessibilityLabel).includes('Date unknown'),
+        )
+        .map((node) => node.props.accessibilityLabel);
+    expect(names()).toEqual(['Crème Sérum, Date unknown']);
+    await act(async () => {
+      input().props.onChangeText('not on this shelf');
+    });
+    expect(rendered()).toContain('No saved products match Quick Find');
+    expect(rendered()).not.toContain('empty for now');
+    await act(async () => {
+      input().props.onKeyPress({ nativeEvent: { key: 'Escape' } });
+    });
+    expect(input().props.value).toBe('');
+    expect(names()).toHaveLength(count);
+    expect(ports.writes).toBe(writes);
+    expect(ports.track).not.toHaveBeenCalled();
+  },
+);
+
+it('Quick Find combines with existing filters and never searches ingredients or unknown expiry', async () => {
+  await addProduct({
+    name: 'Synthetic balm',
+    brand: 'Test brand',
+    addedVia: 'manual',
+    ingredients: ['retinol'],
+  });
+  await addProduct({ name: 'Synthetic cleanser', addedVia: 'manual' });
+  await mount(ShelfScreen);
+  const input = () => renderer!.root.findAll((node) => node.type === ('TextInput' as never))[0]!;
+  await act(async () => {
+    input().props.onChangeText('retinol');
+  });
+  expect(rendered()).toContain('No saved products match Quick Find');
+  await act(async () => {
+    input().props.onChangeText('Synthetic');
+    renderer!.root
+      .findAll(
+        (node) => node.type === ('SegmentChip' as never) && node.props.label === 'Actives',
+      )[0]!
+      .props.onPress();
+  });
+  expect(rendered()).toContain('Synthetic balm, Date unknown');
+  expect(rendered()).not.toContain('Synthetic cleanser, Date unknown');
+  await act(async () => {
+    renderer!.root
+      .findAll(
+        (node) => node.type === ('SegmentChip' as never) && node.props.label === 'Expiring',
+      )[0]!
+      .props.onPress();
+  });
+  expect(rendered()).not.toContain('Synthetic balm, Date unknown');
+});
+
+it('Quick Find cannot survive a same-owner regrant or disclose a retired cache', async () => {
+  await addProduct({ name: 'Synthetic private A name', addedVia: 'manual' });
+  await mount(ShelfScreen);
+  const input = renderer!.root.findAll((node) => node.type === ('TextInput' as never))[0]!;
+  await act(async () => {
+    input.props.onChangeText('private A');
+  });
+  ports.bytes.delete('layerwell.shelf.v1');
+  clearActiveHealthProcessingEpoch();
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  await act(async () => {
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-core-a', accountGeneration });
+  });
+  expect(rendered()).not.toContain('Synthetic private A name');
+  expect(rendered()).not.toContain('private A');
+  const retry = renderer!.root.findAll(
+    (node) =>
+      node.type === ('Button' as never) &&
+      node.props.accessibilityLabel === 'Retry loading private Shelf data',
+  )[0]!;
+  await act(async () => {
+    retry.props.onPress();
+  });
+  await flush();
+  expect(rendered()).toContain('empty for now');
 });

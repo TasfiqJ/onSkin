@@ -1,5 +1,6 @@
 import type { ProductStatus } from '@layerwell/types';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import {
   evaluateConflicts,
@@ -21,6 +22,10 @@ import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import { functionalTagsForCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
@@ -129,8 +134,23 @@ export function applyConflictChoicesToShelfData(
 
 export function useShelf() {
   const today = localDateString();
+  const published = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
+  const [, checkExpiry] = useState(0);
+  useEffect(() => {
+    if (published?.expiresAt == null) return;
+    const timer = setTimeout(
+      () => checkExpiry((value) => value + 1),
+      Math.max(0, published.expiresAt - Date.now()) + 1,
+    );
+    return () => clearTimeout(timer);
+  }, [published]);
+  const authority = activeHealthProcessingLeaseSnapshot();
 
-  return useQuery<ShelfData>({
+  const query = useQuery<ShelfData & { sourceGeneration: number }>({
     queryKey: ['shelf'],
     // This projection reads encrypted local records, including just-saved
     // offline mutations. Connectivity must not pause its cache refresh.
@@ -236,6 +256,7 @@ export function useShelf() {
         items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
 
         const result = {
+          sourceGeneration: lease.generation,
           items,
           archive,
           conflicts,
@@ -251,6 +272,12 @@ export function useShelf() {
         return result;
       }),
   });
+  const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
+  return {
+    ...query,
+    isError: query.isError || retired,
+    data: authority === null || retired || query.isError ? undefined : query.data,
+  };
 }
 
 /** Chronological tiebreak within a sort bucket: soonest surfaced-expiry first, items

@@ -2,6 +2,21 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## M1 core journey 06: find saved products and recover local reads
+
+- Goal: Return to an owned product quickly, retain first-session choices, and see only current-grant daily observations.
+- Entry: Consenting adult with a readable device Shelf; existing `/shelf`, `/shelf/archive`, `/onboarding/products`, `/routine/streak` routes.
+- Happy path: Add three products manually, continue free, build the available routine, record Today, return to Shelf, type a name or brand in **Quick Find**, open the matching saved product, and clear to restore the existing filter.
+- Local-only rule: Quick Find scans admitted saved names/brands in their existing order. It has no catalog/provider query, persistence/index, query telemetry or clinical ranking. All/Actives/Expiring remain the original filters; archived products remain on Archive.
+- Critical: Empty Shelf, no match and unavailable storage remain distinct. A refused archive read offers read retry and Back without claiming empty history. Unknown dates never prove that no product needs replacement.
+- Critical: Refused onboarding removal shows an unconfirmed result, rereads the durable Shelf, and permits retry. Repeated taps admit one removal. A retired/unmounted operation cannot start a replacement grant read.
+- Critical: A→B→A, same-owner regrant, withdrawal and lease expiry retire cached Shelf identities and progress totals. Existing read errors remain unavailable until explicit retry or reentry; local progress never becomes remote verification.
+- Important: Quick Find supports accents, case, whitespace, combined name/brand words, existing filter combinations, input/clear/count names, Enter to dismiss the keyboard, Escape to clear, and keyboard focus on Clear.
+- Important: Exercise 1/3/20/100 synthetic stored products, offline read/retry, corrupt/refused bytes, long names, 375×667 and 390×844; also 430×932 and 360×640 with 200% text pressure.
+- Reentry: Query text is transient and resets with its owner/grant. Product details, Back and routine handoff use existing routes.
+- Automation: Real encrypted-store/mounted-route regressions plus actual Expo web with synthetic identities. Physical iPhone, VoiceOver and native delivery remain separate, unrun gates.
+- Evidence: `docs/brain/checkpoints/M1-02/LEAN-V1-CORE-JOURNEY-06/` after measured-source validation.
+
 ## Surface Inventory
 
 - Primary surface: Expo React Native mobile app in `apps/mobile`.
