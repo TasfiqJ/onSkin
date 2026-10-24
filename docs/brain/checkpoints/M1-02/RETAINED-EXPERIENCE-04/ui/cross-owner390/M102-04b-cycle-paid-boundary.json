@@ -1,0 +1,69 @@
+{
+  "bodyText": "Maybe later Build and track your routine. Organize the products you chose and keep daily check-offs together. Part of Layerwell Pro. Store pricing Checking price Subscribe to Pro Terms · Privacy · Restore",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Maybe later",
+      "role": "button",
+      "selected": false,
+      "width": 102.25,
+      "x": 263.75,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 533
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 96.89,
+      "y": 587
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "selected": false,
+      "width": 48.03,
+      "x": 170.25,
+      "y": 587
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "selected": false,
+      "width": 49.47,
+      "x": 243.64,
+      "y": 587
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8370/cycle/disruption",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

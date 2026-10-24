@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "external_manifest_sha256": "28ba8bbd2c3d531e77d92eb736f92c8bc49966a9684fec52ea46417f3ec8051b",
+  "command": "python -B verify_packet.py --expected-manifest-sha256 28ba8bbd2c3d531e77d92eb736f92c8bc49966a9684fec52ea46417f3ec8051b",
+  "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-context06-32c_64_2",
+  "exit": 0,
+  "authenticated_members": [
+    {
+      "bytes": 1515,
+      "path": "00_START_HERE.md",
+      "sha256": "2a0407f376112643e4c6b190a0db6c40f966b2fd03c6db6fab862befbc32a769"
+    },
+    {
+      "bytes": 1444,
+      "path": "01_LIVE_GIT_AND_CI.md",
+      "sha256": "86f2caec27dfbf7b18a90b8840e1eb41067f7cbe5ef851c07dffc6fc971f8e55"
+    },
+    {
+      "bytes": 2131,
+      "path": "02_INDEPENDENT_BRAIN_AUDIT.md",
+      "sha256": "ca490c38a1d74054ec9d8514d61be2257f318990c3d4694043f5578634019251"
+    },
+    {
+      "bytes": 1894,
+      "path": "03_PRODUCT_ROADMAP_AND_LEAN_V1.md",
+      "sha256": "4040492362f3527fa9b37bf1da72ee0772b41332944413d7da3ac7f2b758c07f"
+    },
+    {
+      "bytes": 2722,
+      "path": "04_MULTISTREAM_EXECUTION_PLAN.md",
+      "sha256": "8b0865de31bad4681c6e08b647440408e24275b39e3cb308e708649973b198b4"
+    },
+    {
+      "bytes": 1823,
+      "path": "05_OPTIONAL_OWNED_SHELF_QUICK_FIND.md",
+      "sha256": "4a4424cabd7f8d1b692fd190ab2d8056777a4130477e1f0dca46640e42731740"
+    },
+    {
+      "bytes": 2348,
+      "path": "06_ALLOWED_EDITS_AND_PROTECTED.md",
+      "sha256": "fe48d0f5f781a2937b0d960cb1535e6c75ae83d5026f2cfd7d84f8f8d9144476"
+    },
+    {
+      "bytes": 2239,
+      "path": "07_PROOF_AND_UI_MATRIX.md",
+      "sha256": "94d7bf3865d89e138e0473ec4eff4ba4e346500a7bf5040fc8d95ca8d4f9beb4"
+    },
+    {
+      "bytes": 1906,
+      "path": "08_DELIVERY_AND_GIT_PROCESS.md",
+      "sha256": "77bf862c659d8f6356ee83dd4b075f99c25299a600ed89c8a298cf742ffbe141"
+    },
+    {
+      "bytes": 1397,
+      "path": "09_PROTECTED_GATES.md",
+      "sha256": "7b00387ab5b0ea7f9f83811037ef4680f89a210e35644cbc2fcd844043989a34"
+    },
+    {
+      "bytes": 2037,
+      "path": "10_SOURCE_MAP.md",
+      "sha256": "4b964bd05cff7822a8d79f9ccad093c6bff58f1ab15892ceb85605994550f219"
+    },
+    {
+      "bytes": 1473,
+      "path": "11_ACCEPTANCE_RUBRIC.md",
+      "sha256": "3682036ec2c5d8a9a1da2a043fa418e4492846c91be84a10a2b5e52e16b3a77b"
+    },
+    {
+      "bytes": 2499,
+      "path": "HISTORICAL/06_CODEX_AUTONOMY_AND_COMMUNICATION.md",
+      "sha256": "f4afaa935498b56b6fd9dec4368353a5bc776a0aa2c8f40d3755ca23e705935b"
+    },
+    {
+      "bytes": 4752,
+      "path": "HISTORICAL/07_47_TASK_ROADMAP.md",
+      "sha256": "029427a8d84fde0c7b51f73f12e1df607f9d4727e5eee7634c73559a2d1037ab"
+    },
+    {
+      "bytes": 24999,
+      "path": "HISTORICAL/acceptance_ledger.json",
+      "sha256": "2ffdaddc30af7e74bf92a5ffcc87a2197eeed59117adc1e1004677492b73c4f2"
+    },
+    {
+      "bytes": 28659,
+      "path": "HISTORICAL/adr_registry_51.json",
+      "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+    },
+    {
+      "bytes": 15762,
+      "path": "HISTORICAL/executive_masterplan_blueprint.md",
+      "sha256": "409fc5d899463238c38debc819ae9b5c5fe0523f11ba7b7c32582ab26a361627"
+    },
+    {
+      "bytes": 50565,
+      "path": "HISTORICAL/roadmap_47.json",
+      "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+    },
+    {
+      "bytes": 4365,
+      "path": "verify_packet.py",
+      "sha256": "0d0a2495b928189c9477c9d040f11c2b684192ec5c0766564be71370201e2d0f"
+    }
+  ],
+  "verified_bytes": 154530,
+  "limit": "Transport integrity only. Pasted user instruction is execution authority; EXACT_PROMPT.md is not authenticated by this manifest."
+}

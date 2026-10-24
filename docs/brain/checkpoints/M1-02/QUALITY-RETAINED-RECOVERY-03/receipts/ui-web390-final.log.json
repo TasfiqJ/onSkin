@@ -1,0 +1,14 @@
+{
+  "command": [
+    "node",
+    "--import",
+    "file:///C:/Users/jasim/AppData/Local/Temp/onskin-quality-retained03-nh2mud4o/retained03-web.mjs",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop"
+  ],
+  "cwd": "C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience",
+  "start": "2026-10-24T02:21:08.805674+00:00",
+  "exit": 0,
+  "seconds": 77.219,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\ui-web390-final.log"
+}

@@ -1,0 +1,67 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/notifications/preferenceAvailability.campaign05.test.ts",
+    "--maxWorkers=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:59:54.417209+00:00",
+  "finished_at": "2026-10-24T04:59:56.621551+00:00",
+  "duration_seconds": 1.641,
+  "exit_code": 1,
+  "head": "7fcde90821af144b2821f779845e539d91b602be",
+  "tree": "fa513e2256d181dd954874984e6e35c92bb82f58",
+  "status_before": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "tracked_diff_sha256": "a3125d4382aa9f3ec6e8a23952202ff48f8479893b494ef8c8be827e484b43f7",
+  "working_files": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 36626,
+      "sha256": "241a8f6ff0ec8705841430564dd8d2a8925948e5e275ddb0c95983103aee6891"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/_layout.tsx",
+      "bytes": 512,
+      "sha256": "2d5cfe49dcc9f637a11321a79ecd6291c92369948e60e2ee19e6aa86533d9b09"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/local-recovery.tsx",
+      "bytes": 75,
+      "sha256": "7f0e71b1cd9248f6f9680a9ae0d8252d7e611937a11a1da55a895da29aae287c"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+      "bytes": 7447,
+      "sha256": "852c9510a12d220e26e7f5fdd8d1006720ca3e4146a1dd239e1798f43fc0153e"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+      "bytes": 9175,
+      "sha256": "e533f444158ce8dfe153758daaded02ece62ddd096542d821e634b7ad651521e"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+      "bytes": 4340,
+      "sha256": "3dcfa01eb9c95006b3ba219b370f44c351e00f33d3d0b9d1c2ce3e77d2430fb4"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 12429,
+      "sha256": "f0547ec99003cf209e3d1d00d6de9abe8795c9008bbcedb18edfce80110cc403"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 506802,
+      "sha256": "98cd6543609426c0bd4248ac3f8273d238f4baa91848ab45943b80aa4a3c6b0b"
+    }
+  ],
+  "status_after": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "log": "settings-cached-entry-red.log",
+  "log_bytes": 2378,
+  "log_sha256": "07339cdf8a9c6ca4a4d01bc4313d3a98b58e430d874542cbb9c7aa418e72597c"
+}

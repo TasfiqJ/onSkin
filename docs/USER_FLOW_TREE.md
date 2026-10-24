@@ -2,6 +2,32 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+
+## M1 first-week experience 07: accessible return visits
+
+- Entry: Existing adult/current-consent Shelf → routine/Today → Progress/You routes; launch tab names/order remain Today, Progress, Shelf, You.
+- Critical: Floating dock labels remain fully visible at 360×640 with direct 200% text. Labels wrap without font-scale suppression; the scene reserve follows measured label height and safe area. Check glyph bounds as well as hit rectangles, keyboard focus/Enter/Back, each active tab, light/PM colors and reduced motion at 360/375/390/430 widths.
+- Critical: An open Shelf advances supported printed/PAO expiry badges at local midnight using its admitted snapshot. Foreground return recomputes the local date and rearms midnight after a timezone change. Date-only refresh performs no private read or write; unknown/estimated dates remain unknown. Withdrawal, A→B→A and same-owner regrant continue masking retired snapshots. Include both DST transition dates.
+- Important: After all current-phase steps have confirmed local check-offs, Today offers **For your next visit**. AM explains the existing local 17:00 evening transition; PM offers a calm return. **Review this week** and **Reminder options** navigate existing routes and retain their ordinary admission/paywall gates.
+- Critical: The optional card is absent for an empty/example/unavailable plan, unchecked/partial/pending/unconfirmed completion, changed date or retired authority. A captured prior-grant action cannot navigate under a successor. It adds no persistence, provider read, telemetry, permission request, scheduling/delivery assertion or clinical advice.
+- Integrated regression: Real first-use age/consent/quiz/three manual products, honest pending guidance/free continuation, offline failed-write/read-back/duplicate completion, AM/PM reload, saved-only Quick Find/filter intersections at 100+ rows, Archive recovery/edit, reminders, Local Recovery, direct private-route denial and delayed A→B→A.
+- Evidence: `docs/brain/checkpoints/M1-02/LEAN-V1-FIRST-WEEK-EXPERIENCE-07/`; browser stress is separate from native Dynamic Type/VoiceOver, OS delivery, paid-positive and release evidence.
+
+## M1 core journey 06: find saved products and recover local reads
+
+- Goal: Return to an owned product quickly, retain first-session choices, and see only current-grant daily observations.
+- Entry: Consenting adult with a readable device Shelf; existing `/shelf`, `/shelf/archive`, `/onboarding/products`, `/routine/streak` routes.
+- Happy path: Add three products manually, continue free, build the available routine, record Today, return to Shelf, type a name or brand in **Quick Find**, open the matching saved product, and clear to restore the existing filter.
+- Local-only rule: Quick Find scans admitted saved names/brands in their existing order. It has no catalog/provider query, persistence/index, query telemetry or clinical ranking. All/Actives/Expiring remain the original filters; archived products remain on Archive.
+- Critical: Empty Shelf, no match and unavailable storage remain distinct. A refused archive read offers read retry and Back without claiming empty history. Unknown dates never prove that no product needs replacement.
+- Critical: Refused onboarding removal shows an unconfirmed result, rereads the durable Shelf, and permits retry. Repeated taps admit one removal. A retired/unmounted operation cannot start a replacement grant read.
+- Critical: A→B→A, same-owner regrant, withdrawal and lease expiry retire cached Shelf identities and progress totals. Existing read errors remain unavailable until explicit retry or reentry; local progress never becomes remote verification.
+- Important: Quick Find supports accents, case, whitespace, combined name/brand words, existing filter combinations, input/clear/count names, Enter to dismiss the keyboard, Escape to clear, and keyboard focus on Clear.
+- Important: Exercise 1/3/20/100 synthetic stored products, offline read/retry, corrupt/refused bytes, long names, 375×667 and 390×844; also 430×932 and 360×640 with 200% text pressure.
+- Reentry: Query text is transient and resets with its owner/grant. Product details, Back and routine handoff use existing routes.
+- Automation: Real encrypted-store/mounted-route regressions plus actual Expo web with synthetic identities. Physical iPhone, VoiceOver and native delivery remain separate, unrun gates.
+- Evidence: `docs/brain/checkpoints/M1-02/LEAN-V1-CORE-JOURNEY-06/` after measured-source validation.
+
 ## Surface Inventory
 
 - Primary surface: Expo React Native mobile app in `apps/mobile`.
@@ -346,6 +372,12 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Expected result: Historical evidence can prove that the earlier local gate hid quiz questions, but it cannot prove consent-before-goals, server lifecycle/epoch authority, withdrawal routing, or zero pre-grant persistence.
   - Evidence: Historical screenshot, route snapshot, and browser console logs; fresh current evidence belongs to the combined branch above.
   - Historical local evidence: 2026-07-07 Expo web 320 x 568 direct `/onboarding/quiz` with a clean local context redirects to `/onboarding/consent`, does not render the first quiz question before consent, stays on consent after refresh, then opens `/onboarding/quiz` with the first question only after `I agree. Continue`; all checked states have zero horizontal overflow and no visible sub-44 px controls.
+- Branch: repeated or queued quiz navigation
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Answer one question, repeat Next before the next render, repeat a queued old handler, navigate Back, and repeat the final profile action. Also use keyboard Enter on Next at supported web sizes.
+  - Expected result: Each answered question advances once; unanswered questions cannot be skipped, and the final action navigates once without an out-of-range question or lost answers.
+  - Evidence: Real-route component regressions and supported-viewport browser keyboard/click traces in `docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/`.
 - Branch: notification permission denied
   - Priority: Important
   - Automate later: Yes
@@ -866,6 +898,18 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Action: Submit opened/freshness intake, simulate an uncertain response, and retry the same submission before and after relaunch.
   - Expected result: A stable operation UUID returns the existing created row rather than duplicating it; choices remain available after failure; a reconnect candidate is consumed only after the same successful Shelf result is durably associated with it.
   - Evidence: Store/idempotency/queue tests, final Shelf row count, and reload trace.
+- Branch: committed Shelf mutation during an older initial read
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Delay the initial local Shelf read, then save, edit, archive or remove a product offline before the read resolves. Resolve the older snapshot last; repeat across an ended owner/consent lease.
+  - Expected result: A successful current-owner mutation refreshes from committed local state. An older snapshot cannot hide the saved product or resurrect pre-edit state. Ended authority cannot refresh a successor owner's cache.
+  - Evidence: Deterministic initial-read query/mutation regressions and actual Expo web background-read/offline-save traces in `docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/`.
+- Branch: unopened product quick action fails and recovers
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open an unopened product, fail a private write, tap Record opening date repeatedly, restore storage, and retry.
+  - Expected result: A failed write shows the route's accessible recovery feedback without an uncaught rejection, preserves the unopened product, and allows one deliberate retry.
+  - Evidence: Actual browser failure/retry traces and route regressions in `docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/`.
 - Branch: empty Shelf compact phone overflow
   - Priority: Important
   - Automate later: Yes
@@ -2776,3 +2820,22 @@ source tests, or fixture-only screenshots.
 - Save reminder preferences: distinguish storage failure, preferences saved with scheduling unconfirmed, permission denial, all-off, browser preference-only, and native scheduling acknowledgement. Acknowledgement never promises OS delivery. Retry after a saved failure reconciles the latest durable preferences; it cannot restore an earlier opt-in over a later opt-out.
 - Cross-owner/sign-out/privacy: an old view, queued save, native settlement or permission response cannot publish success under the replacement owner or reopened health generation. Paid denial remains denial; native/provider evidence remains separate.
 - Portable verification: development phase overrides require a clock-hook mount on every phase entry. Bind the visible date/heading and encrypted day/journal readback, including saved-AM re-entry. Clock-source integration exercises foreground, midnight and DST without modifying the host clock.
+
+
+### M1-02 Quality recovery and retained reliability 03
+
+- Local reminder preference race: keep a pre-save read pending, commit opt-in or opt-out, refuse native scheduling, then settle the older read. Preserve the saved intent and visible unconfirmed notice; explicit retry reconciles current durable intent. Withdrawal before settlement refuses cache publication. Synthetic Expo web drives unavailable permission, touch/keyboard save, delayed background read, offline retry and reload at 375x667 and 390x844; no OS scheduling proof.
+- Private diary source: cold offline local read, explicit storage-error retry, local capture save/refusal/retry and post-delete refresh must execute without waiting for network. Absent/withdrawn health authority still closes the source. Real QueryClient/hook tests use synthetic storage ports; the free browser keeps the existing paid diary denial closed. No paid positive, native capture or provider evidence is claimed.
+
+### M1-02 Retained experience 04
+
+- Critical local progress: the current local profile and admitted ramp queries must dispatch offline so routine source confirmation can settle; a missing local profile stays unavailable without contacting a provider. After a real PM check-off, read Today's streak indicator from an uncached offline projection. Read the durable completion log and show the same night/streak without a paused query. Configured cross-device reads are unavailable offline and make no provider request. Duplicate actions preserve one day marker. A failed local read hides retained totals. Today offers an accessible local streak retry while independently confirmed check-offs remain usable; retry offline, reconnect and reload preserve the durable count. A read crossing withdrawal/regrant refuses its old result. Synthetic Expo web at 375x667 and 390x844 covers Today's visible recovery and keyboard retry. The paid detailed streak screen remains denied; installed offline cold start and native storage remain NOT_RUN.
+- Critical reminder authorization: settings mount/foreground reconciles schedules, then observes current permission. During a pending read or native cancellation failure, a previous grant must not remain visible as current authorization. Revoked/unavailable permission leaves effective toggles off; explicit refetch recovers current state without requesting OS permission. Synthetic bridge changes in Expo web test granted-to-denied/unavailable transitions, failure/retry, overlapping refetch and reload. Actual browser permission stays unavailable; OS delivery remains NOT_RUN.
+
+### M1-02 Major retained campaign 05 — local recovery
+
+- You → Help → expand Local recovery; Close collapses the section without adding a route. Existing adult, owner, consent, private-storage and App Lock gates remain required. Recheck local age/consent before reading each domain. Show only generic status descriptors; no product names, photo content, notes, paths, owner IDs or health counts. No provider, permission prompt, scheduling, automatic cleanup or new persistent cache occurs on entry.
+- Independently read Shelf, this local day's check-offs, strict reminder preferences and the existing photo-deletion journal. Distinguish saved-device evidence, no local setup, unreadable records and outstanding cleanup/confirmation. Cloud status is not verified. A reminder failure cannot hide confirmed check-offs; a corrupt journal cannot claim deletion finished. “No pending cleanup” describes only the readable current journal.
+- Each “Check again” reuses its current read, with duplicate presses coalesced. Feature-specific links open existing Shelf/Today/reminder/Progress controls; Progress entitlement/lock protections still apply. Returning from another screen remounts the local checks. Retry/late reads across A→B→A, withdrawal/regrant, expiry, blur and local-day rollover cannot publish old status.
+- Reminder settings and Timing: unreadable/corrupt preferences show an accessible read retry and Back, never editable defaults or a blank page. Scheduler reads retain their all-off fallback. Preference queries and delayed writes belong to the exact owner/grant; an old OS callback cannot opt in its successor.
+- Shelf forms/lifecycle and photo capture: render-accepted leases travel with delayed actions. A retired callback cannot adopt a new owner or grant. Existing append-only completions, local mutation identities, photo encryption and deletion journals remain unchanged. Synthetic Expo web and source-port tests do not establish native camera/filesystem, OS delivery, paid-positive or provider behavior.

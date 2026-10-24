@@ -1,0 +1,24 @@
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/shelf/productOpeningRecovery.test.ts [ src/features/shelf/productOpeningRecovery.test.ts ]
+ReferenceError: __DEV__ is not defined
+ ❯ ../../node_modules/expo-modules-core/src/sweet/setUpJsLogger.fx.ts:9:1
+      7| };
+      8|
+      9| if (
+       | ^
+     10|   __DEV__ &&
+     11|   typeof window !== 'undefined' &&
+ ❯ ../../node_modules/expo-modules-core/src/index.ts:2:1
+ ❯ ../../node_modules/expo-crypto/src/Crypto.ts:2:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/shelf/productOpeningRecovery.test.ts --maxWorkers=1

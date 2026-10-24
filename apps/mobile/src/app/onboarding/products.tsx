@@ -25,6 +25,7 @@ import {
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
+import { activeHealthProcessingLeaseSnapshot } from '@/lib/consent/healthProcessingEpoch';
 import { colors } from '@/theme/tokens';
 
 const ONBOARDING_PRODUCT_TARGET = 3;
@@ -141,8 +142,20 @@ function ProductsScreenContent() {
   const inputRef = useRef<TextInput>(null);
   const { goals } = useOnboarding();
   const { reset: resetIntake } = useIntake();
-  const { data } = useShelf();
+  const dataQuery = useShelf();
+  const { data } = dataQuery;
   const m = useShelfMutations();
+  const acceptedGeneration = activeHealthProcessingLeaseSnapshot()?.generation;
+  const removing = useRef(new Set<string>());
+  const [removingIds, setRemovingIds] = useState<ReadonlySet<string>>(new Set());
+  const [removalError, setRemovalError] = useState(false);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [name, setName] = useState('');
   const [category, setCategory] = useState<ProductCategory | null>(null);
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
@@ -206,6 +219,33 @@ function ProductsScreenContent() {
   function selectCategory(nextCategory: ProductCategory | null) {
     setCategory(nextCategory);
     setCategoryPickerOpen(false);
+  }
+
+  async function remove(id: string) {
+    if (removing.current.has(id)) return;
+    removing.current.add(id);
+    setRemovingIds(new Set(removing.current));
+    setRemovalError(false);
+    try {
+      await m.remove(id);
+    } catch {
+      if (
+        !mounted.current ||
+        activeHealthProcessingLeaseSnapshot()?.generation !== acceptedGeneration
+      )
+        return;
+      if (mounted.current) setRemovalError(true);
+      // The result may be ambiguous. Reread the durable source before offering
+      // another removal; the existing availability gate owns read failure.
+      await dataQuery.refetch();
+    } finally {
+      removing.current.delete(id);
+      if (
+        mounted.current &&
+        activeHealthProcessingLeaseSnapshot()?.generation === acceptedGeneration
+      )
+        setRemovingIds(new Set(removing.current));
+    }
   }
 
   function add() {
@@ -348,6 +388,14 @@ function ProductsScreenContent() {
             ) : null}
           </Card>
 
+          {removalError ? (
+            <View accessibilityRole="alert" accessibilityLiveRegion="polite" className="mt-4">
+              <Text variant="bodySm" tone="muted">
+                Removal could not be confirmed. Check your Shelf below and try again if the product
+                is still there.
+              </Text>
+            </View>
+          ) : null}
           {added.length > 0 ? (
             <View className="mt-5">
               <Text variant="label" tone="muted" className="mb-2">
@@ -366,12 +414,19 @@ function ProductsScreenContent() {
                     <Pressable
                       accessibilityRole="button"
                       accessibilityLabel={`Remove ${it.name}`}
-                      onPress={() => void m.remove(it.id)}
+                      disabled={removingIds.has(it.id)}
+                      accessibilityState={{
+                        disabled: removingIds.has(it.id),
+                        busy: removingIds.has(it.id),
+                      }}
+                      onPress={() => {
+                        void remove(it.id);
+                      }}
                       className="h-12 w-12 items-center justify-center rounded-full"
                       style={({ pressed }) => (pressed ? { opacity: 0.72 } : undefined)}
                     >
                       <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
-                        ×
+                        {removingIds.has(it.id) ? '…' : '×'}
                       </Text>
                     </Pressable>
                   </View>

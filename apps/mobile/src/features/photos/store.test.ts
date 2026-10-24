@@ -399,6 +399,42 @@ describe('photo local store recovery', () => {
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 
+  it('reports committed metadata honestly when its publication-stage acknowledgement fails', async () => {
+    mocks.markPhotoRenditionPublication.mockImplementation(async (_identity, stage) => {
+      if (stage === 'metadata_committed') throw new Error('synthetic journal write failure');
+    });
+
+    const result = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+
+    expect(result).toMatchObject({ createdNow: true, sourceCleanupPending: true });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+    expect(mocks.settlePhotoRenditionPublication).not.toHaveBeenCalled();
+    const replay = await addPhotoWithOutcome({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      captureSessionId: CAPTURE_SESSION_ID,
+    });
+    expect(replay).toMatchObject({ createdNow: false, photo: { id: result.photo.id } });
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledOnce();
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+  });
+
+  it('does not publish committed-photo success after a journal failure crosses a health regrant', async () => {
+    mocks.markPhotoRenditionPublication.mockImplementation(async (_identity, stage) => {
+      if (stage !== 'metadata_committed') return;
+      clearActiveHealthProcessingEpoch();
+      setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: testAccountGeneration });
+      throw new Error('synthetic late journal failure');
+    });
+    await expect(addPhotoWithOutcome({ takenLocalDate: '2026-07-03', localUri: 'file:///captured.jpg' }))
+      .rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+  });
+
   it('returns one canonical capture replay without re-encrypting or replacing measured metadata', async () => {
     mocks.randomIds = ['photo-canonical', 'unused-photo-id'];
 

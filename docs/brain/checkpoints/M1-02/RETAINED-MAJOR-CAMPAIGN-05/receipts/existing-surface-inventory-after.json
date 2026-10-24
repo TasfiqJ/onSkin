@@ -1,0 +1,41 @@
+{
+  "command": [
+    "node",
+    "scripts/launch/validate-execution-baseline.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:47:40.147501+00:00",
+  "finished_at": "2026-10-24T05:47:41.241926+00:00",
+  "duration_seconds": 0.61,
+  "exit_code": 0,
+  "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+  "tree": "7982adf6760761edcd9316926b59a548928aa714",
+  "status_before": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n D apps/mobile/src/app/settings/local-recovery.tsx\n D apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n?? apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+  "tracked_diff_sha256": "08b522685a0e216ddd18d54e9de6b105313ec1bb01b65417a3cc3ed4e6fbe810",
+  "working_files": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 37030,
+      "sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/_layout.tsx",
+      "bytes": 467,
+      "sha256": "583403ef176335d6ac4175bb37dfd9c2c5e834175253a1c0276e24cdd851e33c"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+      "bytes": 9216,
+      "sha256": "01f048a59ec514703342edc206abffd5e961858c8837c8c1580474febf128beb"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 13594,
+      "sha256": "d3702f9597b79418cab596ab621043c4e64b2aa93f77a51622df311e6aa6a9f4"
+    }
+  ],
+  "status_after": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n D apps/mobile/src/app/settings/local-recovery.tsx\n D apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n?? apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+  "log": "existing-surface-inventory-after.log",
+  "log_bytes": 183,
+  "log_sha256": "81821c2dcdc796b40c0eaa1db63777b1d5e4353d2ed9a73d7d856eeb0d85a207"
+}

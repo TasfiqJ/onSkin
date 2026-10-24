@@ -1,0 +1,10 @@
+{
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13",
+  "node": "v22.21.0",
+  "npm": "11.20.0",
+  "git": "git version 2.50.1.windows.1",
+  "incremental_spend_usd": 0,
+  "dependencies": "fresh npm ci --no-audit --no-fund; 1028 platform-installed packages; original postinstall passed",
+  "disk_recovery": "User explicitly authorized cleanup; npm native cache clean succeeded. Source checkouts and personal documents preserved. Failed Git pack removal was rejected and file retained."
+}

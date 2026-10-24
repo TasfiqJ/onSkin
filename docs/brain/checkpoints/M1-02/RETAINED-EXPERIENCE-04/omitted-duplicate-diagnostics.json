@@ -1,0 +1,1010 @@
+[
+  {
+    "path": "ui/web375/01-welcome.json",
+    "sha256": "4d1e9489bfcd5f4f6321ddacfeadec9f746009fde9376d54ed493e5e68290107",
+    "bytes": 926,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/01a-direct-protected-age-gate.json",
+    "sha256": "f552f313f86b876cc0d58e18cc57b710d0fdae11e4f77b1f8209eb1e852e4e7a",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/02-age-empty.json",
+    "sha256": "f552f313f86b876cc0d58e18cc57b710d0fdae11e4f77b1f8209eb1e852e4e7a",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/03-age-filled.json",
+    "sha256": "02d3b58fa291985684d150084b77ed8cbedcb4855f6bf475fe0dc7920d2af342",
+    "bytes": 1428,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/03a-after-age-submit.json",
+    "sha256": "12811d3499118023645cec1b709bd38b7ccf4a8e430c9ee4537141bc92b79fee",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/04-consent.json",
+    "sha256": "12811d3499118023645cec1b709bd38b7ccf4a8e430c9ee4537141bc92b79fee",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/05-goals.json",
+    "sha256": "2b2c33f35647a5d9a47fa2542453d53986b2d5d96dfb8515b1fbb94db741993b",
+    "bytes": 2121,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/06-goals-selected.json",
+    "sha256": "068e6ec3bed4dd3388c7c1451f3675587d465ee9cee72ab73e42861dccecf0b7",
+    "bytes": 2131,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/07-quiz-01.json",
+    "sha256": "d852defc69486495abe85b12bb91fd3ccfc3602d40a1644c8eb4ace5df6e284b",
+    "bytes": 1416,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/08-quiz-after-04.json",
+    "sha256": "582994696c523bbcd559c2b4b519c736bc66682fe65e6bdb66b7934121b1f258",
+    "bytes": 1392,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/08-quiz-after-09.json",
+    "sha256": "7f7ac665faa93d17d2567ea792d42df6f1088147242a0a9f2047cce8102840f8",
+    "bytes": 2085,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/08-quiz-after-11.json",
+    "sha256": "67306710c49b71918dff9a46ca5b23e96534507f6238c095efc5bdb9b82f1803",
+    "bytes": 1665,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/09-products-empty.json",
+    "sha256": "f7ea6c1b1d5fdb486ae9a2434683aa65eb0c6fc3377f2a36392c6f6fc4355daa",
+    "bytes": 936,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/10-products-after-1.json",
+    "sha256": "0b6ca1da1044e18f96e45d0688e0e54ba7bc044bf0d65dd96d9e18547c5cacc9",
+    "bytes": 1456,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/11-products-after-2.json",
+    "sha256": "539a18b2018e7c8d33a0e1056f75624b61bc60a00f8d59299726986abd5f9fa2",
+    "bytes": 1699,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/12-products-after-3.json",
+    "sha256": "3a9e2864f13ac06ac242c60e63d19c11c0fa46a2d27a59cf9b7ee60c5aab906d",
+    "bytes": 1711,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/13-post-products-continue-current.json",
+    "sha256": "7650223f2654ab33b1fad30ddfb3ddc0c44849af113264b54b58dea5d634e617",
+    "bytes": 373,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/14-reveal-checks.json",
+    "sha256": "4be15f80b2fcb207d68bb0c14b7ce9327edae9e3be4b721444ca7c606ee4def5",
+    "bytes": 691,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/15-notifications.json",
+    "sha256": "86019ba572f8005fe389293703443bb55beef3de22e0865e40552ccc44eb38fd",
+    "bytes": 947,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/16-account.json",
+    "sha256": "c8eaa5dddf3fe263b0312832a3fc827a5305d6a5fb5fc2f552fe7005f568f8c0",
+    "bytes": 714,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/17-paywall-current.json",
+    "sha256": "2130f542303cdead7c26cd8afd8d7b177297082ecc3365ea888006598c3641d6",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/17-paywall.json",
+    "sha256": "2130f542303cdead7c26cd8afd8d7b177297082ecc3365ea888006598c3641d6",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/18-paywall-free-path-visible.json",
+    "sha256": "8b8ff1c85544b705056a7532c6ce89d5068dab6785182bc7e78adb6dae13f809",
+    "bytes": 2077,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/19-today-free-current.json",
+    "sha256": "f9c6811e7b96219504ddcf4600642530996dcbb36b6739fa5a9b28d3c6c00268",
+    "bytes": 1760,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/20-shelf-after-onboarding.json",
+    "sha256": "850c649139f41844f029704e49d2d1ddb041410ef0564728b216e55e7ac0e5a0",
+    "bytes": 4288,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/21-progress-after-onboarding.json",
+    "sha256": "46cd1ccdf638916c392dd18960ffa25c1d021aa3f33d4d3a71761ecc8a87e69e",
+    "bytes": 7291,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/22-you-after-onboarding.json",
+    "sha256": "c7c7a37fda215f2716abd02ca12407cc39954161017a2d98def363e0da7b2062",
+    "bytes": 9205,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/23-today-after-tab-round-trip.json",
+    "sha256": "a00ac3af0c23f080c349071a0b6fbb6ad0402c03ce1960e84f1bde414e23e339",
+    "bytes": 10401,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/ERROR.json",
+    "sha256": "fe8a1f716f96be6d92c86df6cacb070eafe366f900001a774ce788bd2146798c",
+    "bytes": 156,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-00-manual-plan-input.json",
+    "sha256": "c8c4d6699b0e51e94383ce7f37a8651f3498f3abe14b7b09f261e0d171380d10",
+    "bytes": 3066,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-01-am-ready.json",
+    "sha256": "9cdc136749e954d3545083fa801d7ee92dd5182fe07321df802ca64fc8ebaefc",
+    "bytes": 2003,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-02-rejected-write-recovery.json",
+    "sha256": "b51a91f1706581106d0425e909fd557829dbb385ce1d12716326c01b37d3ded4",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-03-offline-duplicate-append-only.json",
+    "sha256": "f96af15a84c50e238acdf46a9840320e5fe29da53a44f2a5ed03881c2b8cebbf",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-04-offline-timing.json",
+    "sha256": "114b80c35169983cc932e7efad026b2ed837316567b90d3b8a7719dfaa0d55ee",
+    "bytes": 1875,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-04a-offline-reminder-recovery.json",
+    "sha256": "f724b56945afb1d66abcd49af10cf58065a00b51fe25832aeb7269a29da737c3",
+    "bytes": 2112,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-04b-cycle-paid-boundary.json",
+    "sha256": "cb9b2f71374ce241dfd686a28bc49a6b9e596d01bfb196bd3492aeaf36f67b4d",
+    "bytes": 1349,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-04c-reorder-paid-boundary.json",
+    "sha256": "529777513b6f3ce6f5167345d7129ea26b133c90e4f2b010164cf7c0682cb7d6",
+    "bytes": 1347,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-05-reloaded-am.json",
+    "sha256": "82c6d827779443e4fee1feb85647972266f4da8c65a51ef8a1cd1206f2866f0c",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-06-pm.json",
+    "sha256": "4d7bd6c10f9e29c010767cfd5b8cdf5eb064e7b403f196730495990483590d15",
+    "bytes": 2093,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-07-plan-paid-boundary.json",
+    "sha256": "02a74e2700fb1db074b6c3581d31a069a86652be9a5258a449ccbdab0f2e7a02",
+    "bytes": 1415,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375/M102-09-web-reminder-availability.json",
+    "sha256": "f2669df89961443f7e242d5abe7587e72e20098d6b37372825625a5d6d31d8b2",
+    "bytes": 1352,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/01-welcome.json",
+    "sha256": "45976f0381616bfe2f2f0dc9e2226a78fd794b9ccf6bdbbf9402b2ae1f05246d",
+    "bytes": 926,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/01a-direct-protected-age-gate.json",
+    "sha256": "5c0c8d31d7630be3e2cd65ab2121782a97a3e7e39ef09361a8508d6af1554519",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/02-age-empty.json",
+    "sha256": "5c0c8d31d7630be3e2cd65ab2121782a97a3e7e39ef09361a8508d6af1554519",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/03-age-filled.json",
+    "sha256": "e40d7ab7b4f1155c9526958ae172bce5a04286c7f7cc292ec73dd2f4ee647ded",
+    "bytes": 1428,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/03a-after-age-submit.json",
+    "sha256": "07d53de90bc05824623da8c3a54d466cd26e065df69215ddda83c89cef456edc",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/04-consent.json",
+    "sha256": "07d53de90bc05824623da8c3a54d466cd26e065df69215ddda83c89cef456edc",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/05-goals.json",
+    "sha256": "f2a29f3537c94eb1bac0c34ee00735de9151a7f8048e4bde32a9908a1d47ea2b",
+    "bytes": 2121,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/06-goals-selected.json",
+    "sha256": "173482cea5a2a63862853f34c59b5a93e1ea52d40cbdeb689e6351fe55bb0db2",
+    "bytes": 2131,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/07-quiz-01.json",
+    "sha256": "66fef2004683b69728d08ee37f4e39f85a8a1f7e22ddcd994608bf54eec35b04",
+    "bytes": 1416,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/08-quiz-after-04.json",
+    "sha256": "7c2c8fd57ffb01d4090bf8ae36c9df25e4be604a5558100a4cdcb09cc13f8c09",
+    "bytes": 1392,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/08-quiz-after-09.json",
+    "sha256": "ba1230e2e194ba34538a9f2fb2f377c37189e6c64508125c245445e010182e81",
+    "bytes": 2085,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/08-quiz-after-11.json",
+    "sha256": "a5e187b1c33b5b0f103f63c2c43523020ef1c0afa84465b11de8716aa7e3e66f",
+    "bytes": 1665,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/09-products-empty.json",
+    "sha256": "6a9a687a52053a99b4297ca93242f84522392bf01e6ed1341abdc1a96ce6834c",
+    "bytes": 936,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/10-products-after-1.json",
+    "sha256": "97de46b2693bd8b75fdf7dc5775b3687c68b09a665f44744ca60346c8ff1685b",
+    "bytes": 1456,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/11-products-after-2.json",
+    "sha256": "bcebd20507fb5e771f1bbf661f9dabecec958fc750e8fac65803485184166476",
+    "bytes": 1699,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/12-products-after-3.json",
+    "sha256": "55562a52a3941c0458c0b670477e093591f3c622d38e4ce4335b556328696da1",
+    "bytes": 1711,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/13-post-products-continue-current.json",
+    "sha256": "d92b3e849bd0b4ce1b405f89b0fd33b77bd78fa7be39ecfc07d33a64fa09826e",
+    "bytes": 373,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/14-reveal-checks.json",
+    "sha256": "35c742b31e8c3362e618f065f578a01fb97d654f768b2aa483ee5b5aef558ab7",
+    "bytes": 691,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/15-notifications.json",
+    "sha256": "136bca370e2857e092b7cbcf357c230782527c9096af3b0e9ec690ff9928144b",
+    "bytes": 947,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/16-account.json",
+    "sha256": "35b835d4a423f51e5db570989ba763690b8cf121d8d70326b173e117b97dfb23",
+    "bytes": 714,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/17-paywall-current.json",
+    "sha256": "fd5c1df3593861e5db1bfd2dcabb7e3b16047bbc0af546ab91004d7e3856e666",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/17-paywall.json",
+    "sha256": "fd5c1df3593861e5db1bfd2dcabb7e3b16047bbc0af546ab91004d7e3856e666",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/18-paywall-free-path-visible.json",
+    "sha256": "9d19b8fd00c2f3408bca1811d5df39eb762dd8f3fb06b7e5260ea00438f3a49f",
+    "bytes": 2077,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/19-today-free-current.json",
+    "sha256": "c4f35686375f30d2fdf99ef311d4554d9ad36cc913df03ad1c23952b84a63f6a",
+    "bytes": 1760,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/20-shelf-after-onboarding.json",
+    "sha256": "92b5ac5fa0acbf283dce269564aebf680eff9490109ad2e0197bd9e910dea574",
+    "bytes": 4288,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/21-progress-after-onboarding.json",
+    "sha256": "7b0bcbd31199e2108adaa1be0e0f1cb463b1b8979c1c67e8f1cb2f635e445b1c",
+    "bytes": 7291,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/22-you-after-onboarding.json",
+    "sha256": "ff66f340f7916e7f61213f4f4ebc28ed1a4aebd179033b46088a39502b2ecb3f",
+    "bytes": 9205,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/23-today-after-tab-round-trip.json",
+    "sha256": "1cc1382f1637e4f25b3628fed5d817948cf265b9e072666783cb861346428d49",
+    "bytes": 10401,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/ERROR.json",
+    "sha256": "7065bf8858601f8c6bf6c5171850d89a59da9f047977c36c53a891d040066039",
+    "bytes": 163,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-00-manual-plan-input.json",
+    "sha256": "cfe421c2efee723b654608074f3481c1c813ff880f73c6aa903f310d3f1e46bd",
+    "bytes": 3066,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-01-am-ready.json",
+    "sha256": "d3c1936c5fa6ba85737192c86fd5efd8de04a0882c25a6f50e3031dfd6063bb1",
+    "bytes": 2003,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-02-rejected-write-recovery.json",
+    "sha256": "7478deea8819cccd8c3ca9d54371b203a98aa0dc572b5504b905154949783808",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-03-offline-duplicate-append-only.json",
+    "sha256": "250b0f4eeaf8bc8ee16fbd62d2375952fe2d3a8bdf41b72e9ab4b3bd1c817eeb",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-04-offline-timing.json",
+    "sha256": "989b7aabe53c835aa4280ac836eeec38d0769193f9cf3d063e65b2a9bace6b9e",
+    "bytes": 1875,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-04a-offline-reminder-recovery.json",
+    "sha256": "984233f96889a8f5d0f6b68b936aff6730aeafc509ab3d910dbfb53442ed09d1",
+    "bytes": 2112,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-04b-cycle-paid-boundary.json",
+    "sha256": "a0f8df2153d32965ff0eb135b8f5a742f395abe47d35559b0b5652bbeaeaf7b9",
+    "bytes": 1349,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-04c-reorder-paid-boundary.json",
+    "sha256": "740c9627dfd443a33d6820012f608709577c5f7ae549727d36e133785877a05f",
+    "bytes": 1347,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-05-reloaded-am.json",
+    "sha256": "250b0f4eeaf8bc8ee16fbd62d2375952fe2d3a8bdf41b72e9ab4b3bd1c817eeb",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-06-pm.json",
+    "sha256": "194928b6f8ff18a1b44b4600d94134232fa9ecb87f380c8338f4923d723591c4",
+    "bytes": 2093,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-07-plan-paid-boundary.json",
+    "sha256": "521f5f11a6487e24ddbe6d6cefc2147151b317b1124e09dd0bc1f666c12f5d8a",
+    "bytes": 1415,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-final/M102-09-web-reminder-availability.json",
+    "sha256": "600bd9e377386a80e00b2a45c61d3e061bc9c8b56bfb65cbdff3eceaa49e4c3b",
+    "bytes": 1352,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/01-welcome.json",
+    "sha256": "ace1838f9433dd50270060893c98131ca7b7954a4505e261970cba09ea19ecf0",
+    "bytes": 926,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/01a-direct-protected-age-gate.json",
+    "sha256": "ea3437f25f6dea28bf40578b1cb9c8bb2098d71a7438df4ae318e1785c0ecb73",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/02-age-empty.json",
+    "sha256": "ea3437f25f6dea28bf40578b1cb9c8bb2098d71a7438df4ae318e1785c0ecb73",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/03-age-filled.json",
+    "sha256": "764bac659483e984432718c08707b76bf674813fcd75f54765144b0455d118f5",
+    "bytes": 1428,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/03a-after-age-submit.json",
+    "sha256": "637ba3e4a79bbb5facad272ad4af3fa8a64215e59f36310908b3110463841384",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/04-consent.json",
+    "sha256": "637ba3e4a79bbb5facad272ad4af3fa8a64215e59f36310908b3110463841384",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/05-goals.json",
+    "sha256": "59849bcfe0bcc203f190515f1f17a6f6f8db09d2faad60d939ad84948ea987fa",
+    "bytes": 2121,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/06-goals-selected.json",
+    "sha256": "54179d4eebce7d67e9ab9aec796f8108877a35d1b4649eae3f21eb2ef4e6f8c9",
+    "bytes": 2131,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/07-quiz-01.json",
+    "sha256": "81a7fffea36f4b1e410edcbca3d20cdb4c58820f37bc8a8e36b01adac8f4accf",
+    "bytes": 1416,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/08-quiz-after-04.json",
+    "sha256": "7b9bc8e3a1bb5bb2ad3e8bd88dbe0c7b817214312a48ee2956d56af6b0c323d9",
+    "bytes": 1392,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/08-quiz-after-09.json",
+    "sha256": "2ef664aa6e4c55968b81230a5131c28db2b3e480021e65bc17d23e1d1a99feec",
+    "bytes": 2085,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/08-quiz-after-11.json",
+    "sha256": "898fd18868328a6a534d5271c55af1ce9f50542d0ca9fe7e99158d0aaae1e293",
+    "bytes": 1665,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/09-products-empty.json",
+    "sha256": "414d9243964bc23da93d0d58b391b2a584880dbac0dfcb23706c382065d601fc",
+    "bytes": 936,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/10-products-after-1.json",
+    "sha256": "433af2cf241ff1e22c9bd91b69a0cb7f5bfd3f0aef47c7bef0fa749000394c8e",
+    "bytes": 1456,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/11-products-after-2.json",
+    "sha256": "e0a8f168497903122ff917ddd91950972db1d14014a68b71768eda1d875e23ec",
+    "bytes": 1699,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/12-products-after-3.json",
+    "sha256": "c53866dbc598b4f48ac46ec0a0dbbd6778c3e0e93f2fab968f1f1c7ad9244c5f",
+    "bytes": 1711,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/13-post-products-continue-current.json",
+    "sha256": "0d3c8c5dd9fbfb94564f930b870908b16f27ff25dee1b54e74a372c69ded58cf",
+    "bytes": 373,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/14-reveal-checks.json",
+    "sha256": "85a6769764aa79997dca89651b0250a5f3ded15d1f4932a0c5002cf93a732f2d",
+    "bytes": 691,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/15-notifications.json",
+    "sha256": "978723eca474692274e431e26755bef5dcaac392becfed7a0cab5310074936ad",
+    "bytes": 947,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/16-account.json",
+    "sha256": "fa31138506143698094208cdf96693f2d1076583b9e643192d27a24df3f62348",
+    "bytes": 714,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/17-paywall-current.json",
+    "sha256": "16b0b319654ceba5c2d5a3682eb9f3a63c14e49a9bf506105ea5aaaf3c34d435",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/17-paywall.json",
+    "sha256": "16b0b319654ceba5c2d5a3682eb9f3a63c14e49a9bf506105ea5aaaf3c34d435",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/18-paywall-free-path-visible.json",
+    "sha256": "ec511d1b0350765df96dbac29530bc0deee5c80aeaf4c4c26a4d43e1afa17dfe",
+    "bytes": 2077,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/19-today-free-current.json",
+    "sha256": "c89d06b29eb49bfe32330f00ed90ba638d05c4704357c20715028a8754f62413",
+    "bytes": 1760,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/20-shelf-after-onboarding.json",
+    "sha256": "b8e7c774626f0d2b77c3a06c1db0289438a1eafffdebfcb08c92eb0e71436dd2",
+    "bytes": 4288,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/21-progress-after-onboarding.json",
+    "sha256": "2dd90daeaf1f5027cfc5fd6dfda5b7b3f55637905acaf0ddf804fd7169672ad2",
+    "bytes": 7291,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/22-you-after-onboarding.json",
+    "sha256": "e7427d303aff7174276428f4e54e4316caeea0f4337694a16951d1a1fdd0db41",
+    "bytes": 9205,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/23-today-after-tab-round-trip.json",
+    "sha256": "560fd074c865347ab8033e25a91ae98d9db23c9854e53a1dade18b7c500b6025",
+    "bytes": 10401,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/ERROR.json",
+    "sha256": "1393127ee54646f55d07c59d39718a2e537224ed7d7270ad7ac2d73a8c11a912",
+    "bytes": 151,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-00-manual-plan-input.json",
+    "sha256": "60ce262ca736fce10da8309c8fcf589cf42f6d1b3a112627fe080adb23b94c71",
+    "bytes": 3066,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-01-am-ready.json",
+    "sha256": "751f17fbf6aa65f9b1d4d6307345e106c1a75d4306f1f9f03d48440c97c5b064",
+    "bytes": 2003,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-02-rejected-write-recovery.json",
+    "sha256": "b65373dccd1b40385689bb24baf2b8f726535e1c5241c9ff2b6ae748e7d7af51",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-03-offline-duplicate-append-only.json",
+    "sha256": "347f48bd9679fb138529046d25cd44ac4ad49bfc5e02c9af029599ba3b2d2c17",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-04-offline-timing.json",
+    "sha256": "509073c34923a278668834d7c2a942527b468fdbe5e46b67e1cf63fc7335f464",
+    "bytes": 1875,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-04a-offline-reminder-recovery.json",
+    "sha256": "c5cde457bab9463d06db05c1824635eaafb72581107bd69617cb0c67d24fc5a0",
+    "bytes": 2112,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-04b-cycle-paid-boundary.json",
+    "sha256": "8eabcd102b698a88440b9455d36de7069db68382a97fcd1f012aac1d2dd49a8e",
+    "bytes": 1349,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-04c-reorder-paid-boundary.json",
+    "sha256": "188eaee4f10a406d11c1158143a8e3e7c6c8006d7251a397fe459b99168d16ee",
+    "bytes": 1347,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-05-reloaded-am.json",
+    "sha256": "347f48bd9679fb138529046d25cd44ac4ad49bfc5e02c9af029599ba3b2d2c17",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-06-pm.json",
+    "sha256": "d5c74ed332d41c1807f078a87079fe78bcf86787038a6cc34b4323dd8d1f97af",
+    "bytes": 2093,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-07-plan-paid-boundary.json",
+    "sha256": "842a65a37a190871edd2e09dfbbbd4787a1376bd58bd0c729f52cc7bbf2cce8b",
+    "bytes": 1415,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/M102-09-web-reminder-availability.json",
+    "sha256": "70cd1bedecb1e23689f495597135bd4477b4fa16df39fff76bddef52d01025a8",
+    "bytes": 1352,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/R04-01-offline-streak.png",
+    "sha256": "24c6e2aebe2733d37d26f09fa8edf3e070ec1c72c083c7bec47bce29cf7693bf",
+    "bytes": 110778,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/R04-02-progress-read-refusal.png",
+    "sha256": "537877a13463edcb62398f9e9b35f088fff78c1682bc841d9619735ba980e515",
+    "bytes": 106395,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/R04-03-offline-keyboard-retry.png",
+    "sha256": "24c6e2aebe2733d37d26f09fa8edf3e070ec1c72c083c7bec47bce29cf7693bf",
+    "bytes": 110778,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-profile-fix/R04-04-reloaded-streak.png",
+    "sha256": "5f66f79436ccb013546c62eabb211f9d4104099ff637b3db266983659c5b5239",
+    "bytes": 110786,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/01-welcome.json",
+    "sha256": "dd9fa56403604862e22ab10fefd262f8ab0f463e1e60fa939690f21c15a26843",
+    "bytes": 926,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/01a-direct-protected-age-gate.json",
+    "sha256": "4f75d69add37e48759ec21d572b3ecbea13487b8102d5fad7dcd06b00e6cc20f",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/02-age-empty.json",
+    "sha256": "4f75d69add37e48759ec21d572b3ecbea13487b8102d5fad7dcd06b00e6cc20f",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/03-age-filled.json",
+    "sha256": "7df2e58c3dab4780bef3c73aeecb1821642865fc55a97e19ec788b9356b92037",
+    "bytes": 1428,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/03a-after-age-submit.json",
+    "sha256": "78de2464d60696dc46780b99473d4f0973b07e0515f89048003060540eaffbef",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/04-consent.json",
+    "sha256": "78de2464d60696dc46780b99473d4f0973b07e0515f89048003060540eaffbef",
+    "bytes": 1593,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/05-goals.json",
+    "sha256": "ed5b86e316d6becd8b59e88e5c388e5ae5e7e5f003a95d9304c8a3194c88eafd",
+    "bytes": 2121,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/06-goals-selected.json",
+    "sha256": "e1beaada255ae0a4236f7416f763564ff459f40746338c1f91f7fec8afe632dc",
+    "bytes": 2131,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/07-quiz-01.json",
+    "sha256": "a40e1b8bb988d78367b0b9c4d5249ed2868912031789f6f7211d038657f5b5df",
+    "bytes": 1416,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/08-quiz-after-04.json",
+    "sha256": "89bcb7d3710356dd74c92fcccb436dfb923ed57177e7b5cb630fe666c73d749a",
+    "bytes": 1392,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/08-quiz-after-09.json",
+    "sha256": "3a40e71eaed570f4a4ff31ed5620968bf6d1636fab4db8e6e44f1f92709a749d",
+    "bytes": 2085,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/08-quiz-after-11.json",
+    "sha256": "d1392491c1c9e7e0b3e5ded79aa7185e54643099a32ab3ab509c445ed230cbfd",
+    "bytes": 1665,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/09-products-empty.json",
+    "sha256": "45205e56367e645e0088f562a8dfcef3dbde0214f1388a6d79c237a7eb4b8173",
+    "bytes": 936,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/10-products-after-1.json",
+    "sha256": "351cf3cae6f201aacd9044fda4eeae6b15a933413e82dd4186298e7731fa3d4c",
+    "bytes": 1456,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/11-products-after-2.json",
+    "sha256": "474f12d2f59cdb2bcc513c8b5b9589d6590bde430ebe98ffa27a0caa851a8fb9",
+    "bytes": 1699,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/12-products-after-3.json",
+    "sha256": "93d08237e0bf1219359753de383ca105668bad8a93e15b6e03fc42fcd5429544",
+    "bytes": 1711,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/13-post-products-continue-current.json",
+    "sha256": "8878873034ab30c12e3b40e3da14ec75fa8845f15474141e0c5d7a514038b529",
+    "bytes": 373,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/14-reveal-checks.json",
+    "sha256": "c1957f608cd61a7d71b45a018bdef4442a1617265ef90cdcbe37b01dbdd646b9",
+    "bytes": 691,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/15-notifications.json",
+    "sha256": "0391446d2cacf673f75c599f397001d2688645e8c6006399bd80161d16acffe3",
+    "bytes": 947,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/16-account.json",
+    "sha256": "e09364bf47d0655e6b522da561530270ed4078f2ac18dc2cffa8d62aafd5f099",
+    "bytes": 714,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/17-paywall-current.json",
+    "sha256": "2f8801676bc2b7eb32a86bf8da8b282be70a930d0de6ea413b5741d9ccd8a59a",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/17-paywall.json",
+    "sha256": "2f8801676bc2b7eb32a86bf8da8b282be70a930d0de6ea413b5741d9ccd8a59a",
+    "bytes": 2688,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/18-paywall-free-path-visible.json",
+    "sha256": "317fcc609e5899bd0b98e8b70d7bfa379ff7e1466e7f27e22e75029b3280ab01",
+    "bytes": 2077,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/19-today-free-current.json",
+    "sha256": "fe38629c5ce960299c8dd7436b8053b88ec8ff3e581332d3639088825501a1af",
+    "bytes": 1760,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/20-shelf-after-onboarding.json",
+    "sha256": "ccb28bba70fd21f207f2ed93e5a87e2accec37917c7038d984619ad4d3758ed0",
+    "bytes": 4288,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/21-progress-after-onboarding.json",
+    "sha256": "eb6bf8fe6c152cd28d9dd5554bb56f92846f751330c3bf577f1611f58b506590",
+    "bytes": 7291,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/22-you-after-onboarding.json",
+    "sha256": "18aa86df516088bb7338408b54309bfe165863a07325cf9eaf9a7958ea3a5ece",
+    "bytes": 9205,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/23-today-after-tab-round-trip.json",
+    "sha256": "c03b7ce0450bec0e264a2dce39af6739f6ba6a5ad110161b469ce8a4de5b4f55",
+    "bytes": 10401,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/ERROR.json",
+    "sha256": "7065bf8858601f8c6bf6c5171850d89a59da9f047977c36c53a891d040066039",
+    "bytes": 163,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-00-manual-plan-input.json",
+    "sha256": "22be9e02066ef076856130fb1db616bac1fa907e50a398413b463f2248ab2fea",
+    "bytes": 3066,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-01-am-ready.json",
+    "sha256": "3a5173c895734af02a3440d6bbcc9a9dd4fb8e38b168d80e376bc3d10ee6b462",
+    "bytes": 2003,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-02-rejected-write-recovery.json",
+    "sha256": "eec8c281bfc2d9902b6ccc1881563eb396f84679c04226a26c1a7dc2dcb3adfa",
+    "bytes": 1427,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-03-offline-duplicate-append-only.json",
+    "sha256": "adcd8d320e7829d589594e384628a6c45be12f176c2ff6d5ec8691909f94bcb1",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-04-offline-timing.json",
+    "sha256": "7da7b4f9a0b337fcc2dcd5c5478c3f3fbe0d451bb668675eaec286789dcd3cd4",
+    "bytes": 1875,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-04a-offline-reminder-recovery.json",
+    "sha256": "8c5e82053e4c022e884148f1bf4170624891724c9065d43a611f56752aad5c67",
+    "bytes": 2112,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-04b-cycle-paid-boundary.json",
+    "sha256": "f45473c13aac74e9d0c7f7b1ca6e100c52e4d289701234f4b0b5e6598106c6eb",
+    "bytes": 1349,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-04c-reorder-paid-boundary.json",
+    "sha256": "29b48383facfa38b3f0682c9a63814b5691f80f1b889502c013fcb9d8e1d6364",
+    "bytes": 1347,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-05-reloaded-am.json",
+    "sha256": "238277c63039aefb6df62b32c5690e414fdf5e74c07f32f3cb8bd60f51ba5529",
+    "bytes": 2024,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-06-pm.json",
+    "sha256": "0a893837592a009db5f2df4f66aba4d5cc57eb0514a166be984882bea481f27d",
+    "bytes": 2093,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-07-plan-paid-boundary.json",
+    "sha256": "e12d6b219e4f1b4699da6e9688067deefcee71aa8a767410eaf4b80f9bbe92ed",
+    "bytes": 1415,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  },
+  {
+    "path": "ui/web375-complete/M102-09-web-reminder-availability.json",
+    "sha256": "2cd96e9ab2c45fe05afc933d14757b784854ac17608191a71c6603da72c9fe9b",
+    "bytes": 1352,
+    "reason": "Repetitive intermediate diagnostic onboarding snapshot omitted; complete raw failure, action trace, driver binding and targeted state retained."
+  }
+]

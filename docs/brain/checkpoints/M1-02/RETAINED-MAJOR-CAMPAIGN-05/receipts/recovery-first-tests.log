@@ -1,0 +1,47 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/retainedRecovery --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+ ❯ src/features/retainedRecovery/localRecovery.campaign05.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/retainedRecovery/localRecovery.campaign05.test.ts [ src/features/retainedRecovery/localRecovery.campaign05.test.ts ]
+Error: [vitest] No "WHEN_UNLOCKED_THIS_DEVICE_ONLY" export is defined on the "expo-secure-store" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("expo-secure-store"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ❯ src/lib/storage/privateSecureStore.ts:13:37
+     11| export const PRIVATE_SECURE_STORE_OPTIONS: Readonly<SecureStore.Secure…
+     12|   {
+     13|     keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+       |                                     ^
+     14|   },
+     15| );
+ ❯ src/lib/supabase/largeSecureStore.ts:8:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  00:48:59
+   Duration  492ms (transform 186ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/retainedRecovery --maxWorkers=2

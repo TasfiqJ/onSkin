@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "authorization": "M1X-QUALITY-WORKLIST-AND-RETAINED03-CANDIDATE-01",
+  "status": "PARTIAL_BLOCKED",
+  "client_candidate_status": "SUBMITTED_REVIEW_REQUIRED",
+  "independent_acceptance": false,
+  "source_commit": "4d8ef8a029375512ddb29df402f4b77ca557be39",
+  "source_tree": "3e17c9b79b6603a4584cab0c200f4d9211951c58",
+  "starting_anchor": "704d3df5e01cd55023d9c08518ce2df8512e72ca",
+  "branch": "stage/m1-retained-resilience",
+  "pr": "https://github.com/TasfiqJ/onSkin/pull/11",
+  "pr_required_state": {
+    "draft": true,
+    "open": true,
+    "merged": false,
+    "base": "main",
+    "auto_merge": false
+  },
+  "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "main_tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+  "pr10_read_only_head": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+  "context_manifest_sha256": "972a733b44a14366e07af5fea7d5eda3105879dbcc631ee62361774dcb531a7a",
+  "context_exit": 0,
+  "source_paths": [
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceReadRace.retained03.test.ts",
+      "before_blob": null,
+      "before_sha256": null,
+      "blob": "1c0cb8c524426a78ec11beda84855ca7cfebe450",
+      "sha256": "dcbf5adb124c27f96e0e999c351595f26e6ac4b208ab21787ace4f284c62caae",
+      "bytes": 4487
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "before_blob": "464a1a0e67002fd5dfa1ccb3ef5d6e0d8ecb21f0",
+      "before_sha256": "e6957916fa285863b5c83668d23bb7e7b5db43b22da1b6d6d04221ce55d489a3",
+      "blob": "4b362dd042c56b4aba8452e6e4eb6e0eda70e127",
+      "sha256": "2b5207092d25bc74617f3d12a29e3e9437cec0bcb395a0eb1e50b2bca9353bf1",
+      "bytes": 4098
+    },
+    {
+      "path": "apps/mobile/src/features/photos/offlineDiary.retained03.test.ts",
+      "before_blob": null,
+      "before_sha256": null,
+      "blob": "a22997a598069364f0203a8423440b2ae9c1ae15",
+      "sha256": "59b44a4879abe8aade145e2e9d77bc465312169f3e6dfed7e989b6ba748d9a21",
+      "bytes": 5204
+    },
+    {
+      "path": "apps/mobile/src/features/photos/usePhotos.ts",
+      "before_blob": "34f36233fb7f503570e9c37b1fa680ea41bb9c1a",
+      "before_sha256": "384c254c78ddfa2550803444d7d33b46bc8c45703723da215e565ae163eb71f5",
+      "blob": "0383710ea416810d459434f6d6dcc1f9dc56541e",
+      "sha256": "a59d8eb99437c0f15fe601c0915f0bfec69eeecbdbf3eeda74cc9e06de6e2790",
+      "bytes": 15828
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before_blob": "3b3eb7a75b732e6e2611cab627d5f51165763f7b",
+      "before_sha256": "3e71aa693e8b32d78c176e7e1b463e4e76f234f1dc56c74f9ba21893e96068fa",
+      "blob": "d8e92538d99e246ddc7f1e385c3d8e624d62c1c8",
+      "sha256": "0217c39dc4498d717ebadbf08e062011b150fdf2e93284326ea0b97d353ac85c",
+      "bytes": 503208
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "before_blob": "a7f1ef62d6f95bf021f36644721d1b1e75441f5c",
+      "before_sha256": "9a23dcb35c5a92c8932c5f761c443ba84b1b9b429d1158d4860488388fda3839",
+      "blob": "8f6fdaf035fcf964124285dc8989afbc6aacf1ad",
+      "sha256": "d76e9196f5930025fac1a1cc1fbdeee626c020c7dbce198334b6ec2864c743a5",
+      "bytes": 137965
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "before_blob": "131edfa0b43a2a069636333e28b7aaa30a816257",
+      "before_sha256": "f0631ceef2c6976edd135bd178bbf1dd6aa3cda0cf36059a2edbfb23746ebf64",
+      "blob": "7f5054ae38ea288b8a3d07f71e0accc1ca21acfa",
+      "sha256": "1ece2c8c2959ce80d3c44f990e82dce6c26804042acca9ae7e13af6aff60185c",
+      "bytes": 82183
+    }
+  ],
+  "worklist": {
+    "producer_unchanged": true,
+    "producer_blob": "8dcfe8ced92b3b96f40a0628c1398c045767dd14",
+    "clean_complete_positive_exit": 0,
+    "disposable_positive_exit": 0,
+    "altered_input_negative_exit": 1,
+    "source_occurrences": 416,
+    "missing_inputs": 0,
+    "item_statuses": {
+      "blocked": 7,
+      "local-scaffold": 7
+    }
+  },
+  "tests": {
+    "focused": {
+      "passed": 11,
+      "failed": 0,
+      "exit": 0
+    },
+    "identical_original_source_overlay": {
+      "passed": 3,
+      "failed": 8,
+      "exit": 1,
+      "production_base": "219af21c4410fcadb425de03360bd4376cb5895e",
+      "production_bytes_same_as_starting_anchor": true,
+      "qualification": "Eight failing checks cover two defect families; the withdrawal case fails its offline-read prerequisite, not an independently demonstrated withdrawal leak."
+    },
+    "retained_families": {
+      "passed": 2029,
+      "files": 168,
+      "exit": 0
+    },
+    "clean_source_root": {
+      "passed": 6101,
+      "mobile": 6077,
+      "console": 24,
+      "files": 477,
+      "cached_tasks": 0,
+      "exit": 0
+    },
+    "clean_source_typecheck": {
+      "exit": 0,
+      "cached_tasks": 0
+    },
+    "clean_source_lint": {
+      "exit": 0,
+      "cached_tasks": 0
+    },
+    "clean_source_worklist": {
+      "exit": 0
+    }
+  },
+  "ui": {
+    "class": "ACTUAL_SYNTHETIC_EXPO_WEB",
+    "375x667": "PASS",
+    "390x844": "PASS",
+    "cross_owner_390x844": "PASS",
+    "cross_owner_render_samples": 5749,
+    "observed_content_leaks": 0,
+    "paid_diary_positive": "NOT_RUN_NOT_AUTHORIZED",
+    "photo_dispatch_positive": "SOURCE_HOOK_QUERYCLIENT_HEALTH_LEASE_WITH_SYNTHETIC_STORAGE_PORTS",
+    "native_os_device_provider": "NOT_RUN",
+    "failed_attempts_preserved": true
+  },
+  "unchanged": {
+    "baseline_regular_files": 20951,
+    "independently_sha256_compared_unchanged": 20946,
+    "existing_files_changed": 5,
+    "new_tests": 2,
+    "protected_objects_identical": true,
+    "prior_scoped_repairs_preserved": true
+  },
+  "admission": {
+    "M1-03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "original_G97": "FAIL/NO_GO",
+    "source_refusals": 61,
+    "sql_obligations": 26,
+    "historical_failed_targets": 189,
+    "historical_events": 368,
+    "count_attribution": "verified packet / prior Brain observation; not newly rerun",
+    "owasp_byte_custody": "OPEN",
+    "proposal_expiry": "2026-10-21T00:00:00Z",
+    "canonical_registry_sql": "BLOCKED_NO_SUCCESS_EVIDENCE",
+    "M2-01": "NOT_AUTHORIZED",
+    "db_hosted_clinical_native_paid_provider_signing_release": "NOT_AUTHORIZED"
+  },
+  "delivery": {
+    "source_measured_separately_from_evidence_tail": true,
+    "future_delivery_sha": null,
+    "final_remote_head_tree_and_workflows": "Read after evidence commit/push and returned externally in final response/PR11; no future self-hash."
+  },
+  "incremental_spend_usd": 0
+}

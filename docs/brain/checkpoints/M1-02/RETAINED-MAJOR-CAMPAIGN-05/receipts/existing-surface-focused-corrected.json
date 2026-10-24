@@ -1,0 +1,56 @@
+{
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--root",
+    "apps/mobile",
+    "src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+    "src/features/settings"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:48:06.777489+00:00",
+  "finished_at": "2026-10-24T05:48:09.350358+00:00",
+  "duration_seconds": 2.078,
+  "exit_code": 0,
+  "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+  "tree": "7982adf6760761edcd9316926b59a548928aa714",
+  "status_before": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n D apps/mobile/src/app/settings/local-recovery.tsx\n D apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M docs/E2E_TESTING_CHECKLIST.md\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+  "tracked_diff_sha256": "d27d2482fd7a454814b5aac4a3297cbc937143f9b42e6967ac3c36613b13512a",
+  "working_files": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 37030,
+      "sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/_layout.tsx",
+      "bytes": 467,
+      "sha256": "583403ef176335d6ac4175bb37dfd9c2c5e834175253a1c0276e24cdd851e33c"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+      "bytes": 9216,
+      "sha256": "01f048a59ec514703342edc206abffd5e961858c8837c8c1580474febf128beb"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 13627,
+      "sha256": "f76e23b55496484940f2f8b981dcc9ad823b4b1a32c8be4570ec4b3a06444b95"
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "bytes": 8571,
+      "sha256": "baec8818fa5c87b74d5ab3bc163e23a5ab180f259da208560408a839ce2ffa09"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 506861,
+      "sha256": "152f76145f5028b0f3bf31f5a08a6fdbc15a820d8c526863e4c880e1df1f2b12"
+    }
+  ],
+  "status_after": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n D apps/mobile/src/app/settings/local-recovery.tsx\n D apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx\n M apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts\n M docs/E2E_TESTING_CHECKLIST.md\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+  "log": "existing-surface-focused-corrected.log",
+  "log_bytes": 268,
+  "log_sha256": "ac5c82cbb57b0847321fc6c08857f1249b8eb2816dc1a175c2506c54fc943c07"
+}

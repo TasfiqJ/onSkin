@@ -1,0 +1,13 @@
+{
+  "command": [
+    "npm.cmd",
+    "test",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience",
+  "start": "2026-10-24T02:18:42.368975+00:00",
+  "exit": 0,
+  "seconds": 37.375,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\clean-source-root-tests.log"
+}

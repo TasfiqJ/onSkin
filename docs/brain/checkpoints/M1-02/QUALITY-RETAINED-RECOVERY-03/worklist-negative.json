@@ -1,0 +1,10 @@
+{
+  "checkout": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-worklist-adverse-_7w6k3df",
+  "source_commit": "219af21c4410fcadb425de03360bd4376cb5895e",
+  "altered_input": "apps/mobile/src/features/shelf/mutations.ts",
+  "before_sha256": "858a5447d5bade6fc1c2b8cb10c8db60f9ace48d706fc4c2042d230ab526af10",
+  "after_sha256": "dfc18282b6d4859aa26680280ca710183bdc9781e2bf15e85e3f5f16f725d651",
+  "positive_exit": 0,
+  "negative_exit": 1,
+  "original_working_input_unchanged": true
+}

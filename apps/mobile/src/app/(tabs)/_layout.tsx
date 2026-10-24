@@ -1,5 +1,6 @@
 import { router, Tabs, usePathname } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { DockButton, FloatingDock } from '@/components/navigation/DockMotion';
@@ -39,6 +40,10 @@ export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const backgroundColor = dark ? colors.night : colors.paper;
   const inactiveColor = dark ? colors.mutedLight : colors.mutedStrong;
+  const [labelHeights, setLabelHeights] = useState<Record<string, number>>({});
+  // Labels may wrap at large text sizes. Measure their intrinsic height rather
+  // than fitting scaled glyphs into the navigator's single-line label box.
+  const dockHeight = Math.max(72, 56 + Math.max(16, ...Object.values(labelHeights)));
 
   // One floating dock on every supported platform. Reserve space for controls
   // above it so the last row stays reachable without scrolling behind the bar.
@@ -51,7 +56,10 @@ export default function TabsLayout() {
         screenOptions={{
           headerShown: false,
           tabBarButton: (props) => <DockButton {...props} dark={dark} />,
-          sceneStyle: { backgroundColor, paddingBottom: 96 + insets.bottom },
+          sceneStyle: {
+            backgroundColor,
+            paddingBottom: dockHeight + Math.max(insets.bottom, 12) + 12,
+          },
           tabBarActiveTintColor: dark ? colors.cream : colors.ink,
           tabBarInactiveTintColor: inactiveColor,
           tabBarStyle: {
@@ -60,7 +68,7 @@ export default function TabsLayout() {
             borderColor: dark ? colors.hairlineDark : colors.hairlineStrong,
             borderWidth: 1,
             borderTopWidth: 1,
-            height: 72,
+            height: dockHeight,
             paddingTop: 4,
             paddingBottom: 4,
             paddingHorizontal: 8,
@@ -69,6 +77,29 @@ export default function TabsLayout() {
           tabBarItemStyle: { minHeight: 48 },
           tabBarLabelPosition: 'below-icon',
           tabBarIconStyle: { height: 32 },
+          tabBarLabel: ({ children, color }) => (
+            <Text
+              allowFontScaling
+              onLayout={({ nativeEvent }) => {
+                const height = Math.ceil(nativeEvent.layout.height);
+                setLabelHeights((previous) =>
+                  previous[children] === height ? previous : { ...previous, [children]: height },
+                );
+              }}
+              style={{
+                color,
+                fontSize: 11,
+                lineHeight: 16,
+                fontFamily: fontFamilies['sans-semibold'],
+                textAlign: 'center',
+                alignSelf: 'stretch',
+                flexShrink: 0,
+                marginTop: 2,
+              }}
+            >
+              {children}
+            </Text>
+          ),
           tabBarLabelStyle: {
             fontSize: 11,
             lineHeight: 16,

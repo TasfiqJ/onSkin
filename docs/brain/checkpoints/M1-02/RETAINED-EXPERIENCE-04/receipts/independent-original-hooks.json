@@ -1,0 +1,24 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/offlineProgress.retained04.test.ts",
+    "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+  "started_utc": "2026-10-24T03:43:06.182139+00:00",
+  "exit": 1,
+  "source_start": {
+    "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+    "tree": "bb42d6a63d77967d32a3f2aedbe7fdfdca4c9f29",
+    "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+  },
+  "seconds": 3.219,
+  "sha256": "e900f27b2b09b5f9f164d90aa4d97dc7333d5bfe4a441f5fed3258586894eba5",
+  "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+  "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+}

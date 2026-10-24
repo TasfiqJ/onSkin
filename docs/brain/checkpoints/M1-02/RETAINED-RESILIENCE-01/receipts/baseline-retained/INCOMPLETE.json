@@ -1,0 +1,6 @@
+{
+  "test_exit": null,
+  "wrapper_exit": 1,
+  "reason": "Python cp1252 output failed with UnicodeEncodeError before receipt/stderr could be saved. Raw stdout remains. The later baseline-retained-2 and baseline-retained-3 runs record actual exits.",
+  "classification": "INCOMPLETE_NOT_A_PASS"
+}

@@ -1,0 +1,25 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/useRamp.test.ts",
+    "-t",
+    "retained04"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+  "started_utc": "2026-10-24T03:48:43.671851+00:00",
+  "exit": 1,
+  "source_start": {
+    "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+    "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+    "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n"
+  },
+  "seconds": 1.797,
+  "sha256": "75291391e7969e6e6c6bce84c5a6d96f907af4a1557daf2e3a83b510a6dd5344",
+  "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+  "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n"
+}

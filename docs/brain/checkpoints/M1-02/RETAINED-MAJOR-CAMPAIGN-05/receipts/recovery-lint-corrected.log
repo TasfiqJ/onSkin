@@ -1,0 +1,67 @@
+
+> layerwell@0.1.0 lint
+> turbo run lint --force
+
+• turbo 2.9.18
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/types
+   • Running lint in 3 packages
+   • Remote caching disabled
+
+@layerwell/mobile:lint: cache bypass, force executing 52fd2c562fd99e02
+@layerwell/types:lint: cache bypass, force executing aa368475090ff033
+@layerwell/catalog-operator-console:lint: cache bypass, force executing 2e781eda96f1751a
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: > @layerwell/mobile@0.1.0 lint
+@layerwell/mobile:lint: > eslint . --max-warnings=0
+@layerwell/mobile:lint: 
+@layerwell/types:lint: 
+@layerwell/types:lint: > @layerwell/types@0.1.0 lint
+@layerwell/types:lint: > echo "(no lint configured for @layerwell/types)"
+@layerwell/types:lint: 
+@layerwell/catalog-operator-console:lint: 
+@layerwell/catalog-operator-console:lint: > @layerwell/catalog-operator-console@0.1.0 lint
+@layerwell/catalog-operator-console:lint: > tsc --noEmit
+@layerwell/catalog-operator-console:lint: 
+@layerwell/types:lint: "(no lint configured for @layerwell/types)"
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\retainedRecovery\LocalRecoveryScreen.tsx
+@layerwell/mobile:lint:   38:29  error  Compilation Skipped: Existing memoization could not be preserved
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. This value was memoized in source but not in compilation output.
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\retainedRecovery\LocalRecoveryScreen.tsx:38:29
+@layerwell/mobile:lint:   36 |   const flights = useRef(new Map<RecoveryDomain, Promise<void>>());
+@layerwell/mobile:lint:   37 |   const revisions = useRef({ shelf: 0, today: 0, reminders: 0, photoCleanup: 0 });
+@layerwell/mobile:lint: > 38 |   const retry = useCallback((domain: RecoveryDomain): Promise<void> => {
+@layerwell/mobile:lint:      |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@layerwell/mobile:lint: > 39 |     const existing = flights.current.get(domain);
+@layerwell/mobile:lint:      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@layerwell/mobile:lint: > 40 |     if (existing) return existing;
+@layerwell/mobile:lint:      …
+@layerwell/mobile:lint:      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@layerwell/mobile:lint: > 67 |     return pending;
+@layerwell/mobile:lint:      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+@layerwell/mobile:lint: > 68 |   }, [accepted, day]);
+@layerwell/mobile:lint:      | ^^^^ Could not preserve existing memoization
+@layerwell/mobile:lint:   69 |   useEffect(() => {
+@layerwell/mobile:lint:   70 |     mounted.current = true;
+@layerwell/mobile:lint:   71 |     const changed = (domain: RecoveryDomain) => {  react-hooks/preserve-manual-memoization
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: ✖ 1 problem (1 error, 0 warnings)
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: npm error Lifecycle script `lint` failed with error:
+@layerwell/mobile:lint: npm error code 1
+@layerwell/mobile:lint: npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+@layerwell/mobile:lint: npm error workspace @layerwell/mobile@0.1.0
+@layerwell/mobile:lint: npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+@layerwell/mobile:lint: npm error command failed
+@layerwell/mobile:lint: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint . --max-warnings=0
+ ERROR  @layerwell/mobile#lint: command (C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run lint exited (1)
+
+ Tasks:    2 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    41.161s 
+Failed:    @layerwell/mobile#lint
+
+ ERROR  run failed: command  exited (1)

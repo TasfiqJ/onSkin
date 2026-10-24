@@ -204,6 +204,31 @@ beforeEach(() => {
 
 describe('notification authorization', () => {
   it.each([
+    ['unknown iOS enum', { status: 'granted', granted: true, canAskAgain: true, ios: { status: 999 } }],
+    ['contradictory grant', { status: 'granted', granted: false, canAskAgain: true }],
+    ['missing request authority', { status: 'granted', granted: true }],
+    ['malformed iOS state', { status: 'granted', granted: true, canAskAgain: true, ios: null }],
+  ])('fails closed for %s and recovers only after a valid OS read', async (_label, value) => {
+    const { getPermissionStatus, requestPermission, rescheduleReminders } = await import('./deliver');
+    mocks.getPermissionsAsync.mockResolvedValue(value as never);
+    await expect(getPermissionStatus()).resolves.toBe('unavailable');
+    await expect(requestPermission()).resolves.toEqual({ kind: 'error', state: 'unavailable', requestAttempted: false });
+    expect(mocks.requestPermissionsAsync).not.toHaveBeenCalled();
+    await expect(rescheduleReminders(prefs)).rejects.toThrow('NOTIFICATION_AUTHORIZATION_UNAVAILABLE');
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+
+    mocks.getPermissionsAsync.mockResolvedValue({ status: 'granted', granted: true, canAskAgain: true, expires: 'never' });
+    await expect(getPermissionStatus()).resolves.toBe('authorized');
+  });
+
+  it('reports a malformed post-request response as unavailable, without inventing denial or authorization', async () => {
+    const { requestPermission } = await import('./deliver');
+    mocks.getPermissionsAsync.mockResolvedValueOnce({ status: 'undetermined', granted: false, canAskAgain: true, expires: 'never' });
+    mocks.requestPermissionsAsync.mockResolvedValueOnce({ status: 'granted', granted: true, canAskAgain: true, ios: { status: 999 } } as never);
+    await expect(requestPermission()).resolves.toEqual({ kind: 'error', state: 'unavailable', requestAttempted: true });
+  });
+
+  it.each([
     [0, 'not_determined'],
     [1, 'denied'],
     [2, 'authorized'],

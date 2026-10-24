@@ -1,0 +1,23 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf",
+    "src/features/today",
+    "src/features/routine",
+    "src/features/scheduler",
+    "src/features/streak",
+    "src/features/photos",
+    "src/features/notifications",
+    "src/features/onboarding"
+  ],
+  "cwd": "C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience",
+  "start": "2026-10-24T02:13:39.218630+00:00",
+  "exit": 0,
+  "seconds": 36.766,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\retained-families.log"
+}

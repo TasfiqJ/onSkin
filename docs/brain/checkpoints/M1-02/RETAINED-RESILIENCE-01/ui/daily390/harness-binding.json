@@ -1,0 +1,6 @@
+{
+  "original": "file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/retained-daily-loop.mjs",
+  "originalSha256": "c34fe25b7eccc59987517464fecb2d3ecf0c0ff3b73d5cb6da85b0dc31c0c31d",
+  "executedSha256": "8a6e2341d5077c5dd6c1944c1068a4431501319f8b071f30df242056f6f1f590",
+  "change": "After the real PM routine, open streak, verify one completed night, reload and verify again."
+}

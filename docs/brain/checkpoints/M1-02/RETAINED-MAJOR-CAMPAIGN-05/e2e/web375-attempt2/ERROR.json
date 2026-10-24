@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "message": "Timed out waiting for text \"Reminder preferences are unavailable.\": condition false",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

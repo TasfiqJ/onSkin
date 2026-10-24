@@ -1,5 +1,6 @@
 import type { ProductStatus } from '@layerwell/types';
-import { useQuery } from '@tanstack/react-query';
+import { focusManager, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import {
   evaluateConflicts,
@@ -21,6 +22,10 @@ import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import { functionalTagsForCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
@@ -128,9 +133,48 @@ export function applyConflictChoicesToShelfData(
 }
 
 export function useShelf() {
-  const today = localDateString();
+  const queryClient = useQueryClient();
+  const [today, setToday] = useState(localDateString);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      clearTimeout(timer);
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(24, 0, 0, 100);
+      timer = setTimeout(() => {
+        setToday(localDateString());
+        schedule();
+      }, Math.max(100, next.getTime() - now.getTime()));
+    };
+    schedule();
+    const stopFocus = focusManager.subscribe((focused) => {
+      if (!focused) return;
+      setToday(localDateString());
+      schedule();
+    });
+    return () => {
+      stopFocus();
+      clearTimeout(timer);
+    };
+  }, []);
+  const published = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
+  const [, checkExpiry] = useState(0);
+  useEffect(() => {
+    if (published?.expiresAt == null) return;
+    const timer = setTimeout(
+      () => checkExpiry((value) => value + 1),
+      Math.max(0, published.expiresAt - Date.now()) + 1,
+    );
+    return () => clearTimeout(timer);
+  }, [published]);
+  const authority = activeHealthProcessingLeaseSnapshot();
 
-  return useQuery<ShelfData>({
+  const query = useQuery<ShelfData & { sourceGeneration: number; sourceDate: string }>({
     queryKey: ['shelf'],
     // This projection reads encrypted local records, including just-saved
     // offline mutations. Connectivity must not pause its cache refresh.
@@ -236,6 +280,8 @@ export function useShelf() {
         items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
 
         const result = {
+          sourceGeneration: lease.generation,
+          sourceDate: today,
           items,
           archive,
           conflicts,
@@ -251,6 +297,27 @@ export function useShelf() {
         return result;
       }),
   });
+  const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
+  const cachedShelf = query.data;
+  const readingShelf = query.isFetching;
+  const failedShelf = query.isError;
+  useEffect(() => {
+    if (!cachedShelf || retired || failedShelf || readingShelf || cachedShelf.sourceDate === today) return;
+    // Keep the hook's data identical to its canonical cache: usePlan checks that
+    // exact identity. Only the admitted snapshot's calendar presentation changes;
+    // no source read, private write or clinical evaluation is repeated.
+    queryClient.setQueryData<typeof cachedShelf>(['shelf'], (previous) => {
+      if (!previous || previous !== cachedShelf || previous.sourceGeneration !== activeHealthProcessingLeaseSnapshot()?.generation) return previous;
+      const next = applyConflictChoicesToShelfData(previous, previous.conflictChoices, today);
+      next.items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
+      return { ...next, sourceGeneration: previous.sourceGeneration, sourceDate: today };
+    });
+  }, [queryClient, cachedShelf, failedShelf, readingShelf, retired, today]);
+  return {
+    ...query,
+    isError: query.isError || retired,
+    data: authority === null || retired || query.isError ? undefined : query.data,
+  };
 }
 
 /** Chronological tiebreak within a sort bucket: soonest surfaced-expiry first, items

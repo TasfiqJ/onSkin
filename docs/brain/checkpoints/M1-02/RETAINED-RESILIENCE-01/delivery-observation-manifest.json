@@ -1,0 +1,20 @@
+{
+  "scope": "Only the additive delivery observation/file list and updated root handoff; excludes this manifest. Initial checkpoint manifest remains unchanged.",
+  "entries": [
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 3492,
+      "sha256": "7c98c83892702d6255e033adc07609c9b9ffc7b2069fe406e850e2abeae3a324"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/delivery-observation.json",
+      "bytes": 2752,
+      "sha256": "fe711323d2b5c3b6ae9eb5f08efcc8ecd57a6c6a8e3265692b9763a8014d3ad1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/delivery-changed-files.txt",
+      "bytes": 51635,
+      "sha256": "bd8c9bb91dddf70000944a55880c72e52d49c38dc1c65ad14211164fcc9b0754"
+    }
+  ]
+}

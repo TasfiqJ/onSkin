@@ -2,6 +2,23 @@
 
 Use this checklist before marking UI-facing work done.
 
+## M1 first-week experience 07 verification branches
+
+- [ ] Measure actual dock glyph/line bounds at 360×640/direct 200% text and 375/390/430 widths; retain all labels, 48px targets, safe scene reserve, active/inactive contrast, keyboard and reduced-motion behavior.
+- [ ] Hold Shelf open across local midnight and DST dates, then return after a timezone change; supported expiry advances without private IO, the next midnight is rearmed, unknown dates stay unknown, retired authority stays masked.
+- [ ] Confirm AM/PM completion before the optional next-visit card; exercise both existing links, their gates, no permission prompt, pending/read refusal, date and A→B→A/same-owner boundaries.
+- [ ] Repeat complete first-use/daily, Quick Find/filters/100+ rows, Archive/edit/retry, Progress, reminder intent and Local Recovery through actual synthetic Expo web. Preserve failures; separate browser, source and NOT_RUN native/external proof.
+
+## M1 core journey 06 verification branches
+
+- [ ] Adult/current-consent → quiz/re-answer → first three manual products → truthful pending guidance → explicit free continuation → routine/Today → saved check-off → Progress gate.
+- [ ] Saved-only Quick Find: 1/3/20/100 products, accent/name/brand matching, no match, Clear/Enter/Escape, All/Actives/Expiring combinations, no query writes/telemetry/provider requests.
+- [ ] Refused onboarding removal: one operation for repeated taps, unconfirmed result, durable read-back/retry, retired callback and unmount barriers.
+- [ ] Archive unavailable/loading/empty/populated and offline retry/Back are distinct.
+- [ ] Shelf identities and progress totals retire at withdrawal, expiry and A→B→A/same-owner regrant; delayed old reads cannot restore them.
+- [ ] Actual Expo web at 375×667, 390×844, 430×932 and 360×640/text ×2, with focus/keyboard, long names, overflow/hit targets, recovery and direct private-route denial.
+- [ ] Report native filesystem/camera/OS delivery, installed iPhone/VoiceOver, clinical, paid/provider, hosted DB and release results separately; source/web passes do not admit them.
+
 ## Setup
 
 - [ ] Read `AGENTS.md`.
@@ -128,3 +145,11 @@ unchecked matrix below remains authoritative.
 - Which native mobile E2E harness should be installed first?
 - Which Expo web flows should be promoted to Playwright tests?
 - Which service-backed flows need local mocks before durable E2E can run safely?
+
+## M1 local recovery continuation
+
+- [ ] At 375×667 and 390×844, complete adult/consent/free-plan onboarding and the retained AM/PM daily loop, then open You → Local recovery with real clicks. Use a fresh synthetic browser profile and keep native/provider/paid-positive evidence separate.
+- [ ] Expand/collapse the section in You. Verify independent device-only Shelf/check-off evidence, unavailable preference reads, per-domain retry, visible keyboard focus + Enter, Close, settings Back, offline navigation, reload/reopen and the existing Progress paywall. A saved reminder choice must not claim OS delivery; no pending photo journal must not claim photo-content availability or cloud deletion completion.
+- [ ] Return to Notifications and Timing with the app's normal query freshness. Refuse the actual browser storage read, require visible retry + Back, restore only the synthetic port, and retry offline. Local choices must be reread on entry instead of inheriting a fresh-looking cache snapshot.
+- [ ] Run actual synthetic A→B cleanup failure/retry with a delayed Recovery read, B's own age/consent/Shelf admission, reload and closed return-to-A/direct You entry. Preserve failed attempts and observe rendered boundaries for old-owner content.
+- [ ] Check 430×932 and, where feasible, 360×640 with 200% direct text pressure. Record that this is browser stress, not physical Dynamic Type or VoiceOver. Keep a bounded screenshot set, source-bound actions, geometry snapshots, original driver/executed hashes and raw exits under the active campaign checkpoint.

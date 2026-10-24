@@ -1,0 +1,27 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/retiredActions.campaign05.test.ts",
+    "src/features/photos/captureOwner.campaign05.test.ts",
+    "src/features/notifications/preferenceAvailability.campaign05.test.ts",
+    "--maxWorkers=3"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:37:05.835631+00:00",
+  "finished_at": "2026-10-24T04:37:07.735209+00:00",
+  "duration_seconds": 1.61,
+  "exit_code": 1,
+  "head": "99596bfceac782d740415503bc25452cac623254",
+  "tree": "d45b9c1257c74ab61328600af0ac5a7d1350e388",
+  "status_before": "?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts\n?? apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status_after": "?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts\n?? apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+  "log": "original-new-regressions.log",
+  "log_bytes": 106982,
+  "log_sha256": "58bd55f6faddde265661c0c91e986299379e5bc3c272b3c65462a2114dc80099"
+}

@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications --maxWorkers=4
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  24 passed (24)
+      Tests  256 passed (256)
+   Start at  00:45:06
+   Duration  2.13s (transform 634ms, setup 0ms, import 2.12s, tests 1.64s, environment 3ms)
+

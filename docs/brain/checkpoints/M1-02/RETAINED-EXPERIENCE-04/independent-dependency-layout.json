@@ -1,0 +1,7 @@
+{
+  "root_dependency_junction": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience\\node_modules",
+  "workspace_noble_junction": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience\\apps\\mobile\\node_modules\\@noble",
+  "root_noble": "1.3.0",
+  "workspace_noble": "2.3.0",
+  "note": "First independent full run omitted nested workspace dependency resolution. Restored exact installed workspace path; no package install/version/lock change."
+}

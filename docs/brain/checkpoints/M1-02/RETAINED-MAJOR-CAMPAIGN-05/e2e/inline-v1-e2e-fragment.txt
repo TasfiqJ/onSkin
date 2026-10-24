@@ -1,0 +1,153 @@
+    const r05Find = `const find = suffix => { const m = [...__r.getModules().values()].find(m => (m.verboseName ?? '').replaceAll('\\\\','/').endsWith(suffix)); if (!m) throw new Error('Missing actual module: '+suffix); return m.publicModule.exports; };`;
+    const r05Capture = async name => {
+      const snapshot = await captureStep(client, name, { assertClean: true });
+      assert(snapshot.overflowX <= 1, 'Changed flow overflowed');
+      return snapshot;
+    };
+    const r05KeyEnter = async label => {
+      await client.send('Page.bringToFront');
+      await client.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+      await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+      await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+      const state = await evaluate(client, `(() => {
+        const el = document.querySelector('[aria-label=${JSON.stringify(label)}]');
+        if (!el) throw new Error('Missing keyboard action');
+        el.scrollIntoView({block:'center'}); el.focus();
+        const s=getComputedStyle(el); return { focused:document.activeElement===el, focusVisible:el.matches(':focus-visible'), outlineWidth:s.outlineWidth, outlineStyle:s.outlineStyle, boxShadow:s.boxShadow };
+      })()`);
+      assert(state.focused && state.focusVisible, 'Keyboard control has no visible focus');
+      assert((parseFloat(state.outlineWidth)>0 && state.outlineStyle!=='none') || state.boxShadow!=='none', 'Focused control has no visible indicator');
+      writeJson('R05-keyboard-'+label.replaceAll(' ','-')+'.json', state);
+      await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text:'\r', unmodifiedText:'\r', windowsVirtualKeyCode:13 });
+      await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode:13 });
+      writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({action:'keyboard Enter',label})+'\n',{flag:'a'});
+    };
+    await retainedRoute(client, '/you');
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    await clickByText(client, 'Local recovery', {exact:false});
+    await waitForPath(client, '/you');
+    await waitForText(client, 'No pending cleanup');
+    await r05Capture('R05-01-local-entry');
+    await r05KeyEnter('Close local recovery');
+    assert(!(await evaluate(client, 'document.body.innerText')).includes('No pending cleanup'), 'Close left local evidence mounted');
+    await waitForPath(client, '/you');
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    await clickByText(client, 'Local recovery', {exact:false});
+    await waitForText(client, 'No pending cleanup');
+    const r05InitialCipher = await evaluate(client, `localStorage.getItem('layerwell.completions.v1')`);
+    await client.send('Network.emulateNetworkConditions', {offline:true,latency:0,downloadThroughput:-1,uploadThroughput:-1});
+    await evaluate(client, `(() => {
+      const managers=[...__r.getModules().values()].map(m=>m.publicModule?.exports).find(e=>e?.onlineManager?.setOnline);
+      managers.onlineManager.setOnline(false);
+      const original=Storage.prototype.getItem;
+      globalThis.__R05_RESTORE_READ__=()=>{Storage.prototype.getItem=original;};
+      globalThis.__R05_FAIL_KEY__='layerwell.notifPrefs.v1';
+      Storage.prototype.getItem=function(key){if(key===__R05_FAIL_KEY__)throw new Error('Synthetic local read refusal');return original.call(this,key);};
+    })()`);
+    await scrollTextIntoView(client, 'Check Reminder choices again');
+    await clickByText(client, 'Check Reminder choices again');
+    await waitForText(client, 'Device records could not be read.');
+    assert((await evaluate(client,'document.body.innerText')).includes('Check-offs for this local day can be read'), 'Reminder failure hid independent check-offs');
+    await r05Capture('R05-02-isolated-read-refusal');
+    await evaluate(client, '__R05_RESTORE_READ__()');
+    await r05KeyEnter('Check Reminder choices again');
+    await waitForText(client, 'No reminder purpose is enabled');
+    await r05Capture('R05-03-offline-keyboard-retry');
+    assert(await evaluate(client, `localStorage.getItem('layerwell.completions.v1')`)===r05InitialCipher, 'Recovery changed durable completions');
+
+    // Real settings hooks/store, with a refusal only at the browser storage port.
+    await evaluate(client, `(() => { const original=Storage.prototype.getItem;
+      globalThis.__R05_RESTORE_READ__=()=>{Storage.prototype.getItem=original;};
+      Storage.prototype.getItem=function(key){if(key==='layerwell.notifPrefs.v1')throw new Error('Synthetic preference read refusal');return original.call(this,key);}; })()`);
+    await clickByText(client, 'Review reminder setup');
+    await waitForText(client, 'Reminder preferences are unavailable.');
+    await r05Capture('R05-04-settings-read-recovery');
+    await evaluate(client,'__R05_RESTORE_READ__()');
+    await r05KeyEnter('Try loading reminder preferences again');
+    await waitForText(client,'Morning routine');
+    await r05Capture('R05-05-settings-recovered-offline');
+    await retainedRoute(client,'/settings/timing');
+    await waitForText(client,'Lock screen privacy');
+    await evaluate(client, `(async () => { ${r05Find}
+      const original=Storage.prototype.getItem;
+      globalThis.__R05_RESTORE_READ__=()=>{Storage.prototype.getItem=original;};
+      Storage.prototype.getItem=function(key){if(key==='layerwell.notifPrefs.v1')throw new Error('Synthetic timing read refusal');return original.call(this,key);};
+      await find('/lib/query/queryClient.ts').queryClient.refetchQueries({queryKey:['notifPrefs']});
+    })()`,true);
+    await waitForText(client,'Reminder preferences are unavailable.');
+    await r05Capture('R05-06-timing-read-recovery');
+    await evaluate(client,'__R05_RESTORE_READ__()');
+    await r05KeyEnter('Try loading reminder preferences again');
+    await waitForText(client,'Lock screen privacy');
+
+    // Explicit user opt-in; only permission/native bridge ports are controlled.
+    await retainedRoute(client,'/settings/notifications');
+    await waitForText(client,'Morning routine');
+    await evaluate(client, `(async () => { ${r05Find}
+      const delivery=find('/features/notifications/deliver.ts');
+      const originalRead=delivery.getPermissionStatus;
+      globalThis.__R05_RESTORE_PERMISSION__=()=>{delivery.getPermissionStatus=originalRead;};
+      delivery.getPermissionStatus=async ()=>'authorized';
+      await find('/lib/query/queryClient.ts').queryClient.refetchQueries({queryKey:['notificationAuthorization']});
+    })()`,true);
+    const morning = await evaluate(client, `(() => {const el=document.querySelector('[role="switch"][aria-label="Morning routine"]');el.scrollIntoView({block:'center'});const r=el.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+    await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...morning,id:1}]});
+    await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await waitForText(client,'Preferences saved on this browser.');
+    await evaluate(client,'__R05_RESTORE_PERMISSION__()');
+    await retainedRoute(client, '/you');
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    if (!(await evaluate(client, `document.querySelector('[aria-label="Close local recovery"]') !== null`))) {
+      await clickByText(client, 'Local recovery', {exact:false});
+    }
+    await waitForText(client,'Needs confirmation');
+    await scrollTextIntoView(client,'Check Reminder choices again');
+    await r05Capture('R05-07-saved-intent-unconfirmed-delivery');
+    await scrollTextIntoView(client,'Review photo cleanup in Progress');
+    await clickByText(client,'Review photo cleanup in Progress');
+    await waitForText(client,'Unlock your private photo timeline.');
+    assert(!(await evaluate(client,'document.body.innerText')).includes('Photo cleanup'), 'Recovery bypassed the existing photo gate');
+    await clickByText(client,'Maybe later');
+    await retainedRoute(client, '/you');
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    if (!(await evaluate(client, `document.querySelector('[aria-label="Close local recovery"]') !== null`))) {
+      await clickByText(client, 'Local recovery', {exact:false});
+    }
+    await waitForText(client,'No pending cleanup');
+    await scrollTextIntoView(client,'Check Photo cleanup again');
+    await r05Capture('R05-08-photo-journal-and-existing-gate');
+
+    await client.send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
+    await client.send('Page.reload',{ignoreCache:true});
+    await waitForText(client, 'Local recovery', 60000);
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    await clickByText(client, 'Local recovery', {exact:false});
+    await waitForText(client,'No pending cleanup',60000);
+    await r05Capture('R05-09-reloaded-local-continuity');
+    if (viewport.width===390) {
+      await client.send('Emulation.setDeviceMetricsOverride',{deviceScaleFactor:1,width:430,height:932,mobile:true,scale:1});
+      await r05Capture('R05-10-wide430-entry');
+      await scrollTextIntoView(client,'Check Photo cleanup again');
+      await r05Capture('R05-11-wide430-cleanup');
+      await client.send('Emulation.setDeviceMetricsOverride',{deviceScaleFactor:1,width:360,height:640,mobile:true,scale:1});
+      await evaluate(client, `(() => {let scaled=0;for(const node of document.body.querySelectorAll('*')){
+        if(![...node.childNodes].some(c=>c.nodeType===Node.TEXT_NODE&&c.textContent.trim()))continue;
+        if(node.closest('[role="tab"]'))continue;
+        const s=getComputedStyle(node),f=parseFloat(s.fontSize),l=parseFloat(s.lineHeight);
+        if(!Number.isFinite(f)||f<8||f>72)continue;
+        node.style.fontSize=f*2+'px';if(Number.isFinite(l))node.style.lineHeight=l*2+'px';scaled++;
+      }return scaled;})()`);
+      await scrollTextIntoView(client,'Check Photo cleanup again');
+      await r05Capture('R05-12-360-text200-cleanup');
+      await scrollTextIntoView(client,'Check Shelf again');
+      await r05Capture('R05-13-360-text200-shelf');
+      await client.send('Emulation.setDeviceMetricsOverride',{deviceScaleFactor:2,width:viewport.width,height:viewport.height,mobile:true,scale:1});
+      await client.send('Page.reload',{ignoreCache:true});
+      await waitForText(client, 'Local recovery', 60000);
+      await scrollTextIntoView(client, 'Local recovery', {exact:false});
+      await clickByText(client, 'Local recovery', {exact:false});
+      await waitForText(client,'No pending cleanup',60000);
+    }
+    writeJson('R05-results.json',{verdict:'pass',existingYouSection:true,closeAndReopen:true,localReads:true,isolatedFailure:true,keyboardFocusAndEnter:true,offlineRetry:true,
+      noCompletionMutation:true,settingsAndTimingReadRecovery:true,savedIntentNotDelivery:true,photoPaidGatePreserved:true,reload:true,
+      nativeFilesystem:'NOT_RUN',osPermissionAndDelivery:'NOT_RUN',paidPositive:'NOT_RUN',provider:'NOT_RUN',textPressure:viewport.width===390?'360x640 direct text x2, synthetic web stress':'not in this run'});

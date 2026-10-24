@@ -1,0 +1,20 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/today/todayPersistence.t1.test.ts",
+    "-t",
+    "retained04"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:38:03.306824+00:00",
+  "exit": 1,
+  "seconds": 1.828,
+  "sha256": "7dca265e4c669c2f70834f107981e72fffd2d4891a7b24e86eb15ea9833fc380",
+  "head": "941357ebd246a8c08f340ec184be59513a82f096",
+  "dirty": " M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

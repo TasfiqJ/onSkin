@@ -1,0 +1,410 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/offlineProgress.retained04.test.ts src/features/notifications/authorizationSnapshot.retained04.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+stderr | src/features/notifications/authorizationSnapshot.retained04.test.ts > publishes current denied permission after native reconciliation settles
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/authorizationSnapshot.retained04.test.ts > publishes current unavailable permission after native reconciliation settles
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/authorizationSnapshot.retained04.test.ts > withholds cached authorization while a foreground reconciliation is pending
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/authorizationSnapshot.retained04.test.ts > does not expose cached granted status after a revoked-permission cancellation fails
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/authorizationSnapshot.retained04.test.ts (5 tests | 4 failed) 116ms
+   × publishes current denied permission after native reconciliation settles 23ms
+   × publishes current unavailable permission after native reconciliation settles 15ms
+   × withholds cached authorization while a foreground reconciliation is pending 31ms
+   × does not expose cached granted status after a revoked-permission cancellation fails 14ms
+stderr | src/features/routine/offlineProgress.retained04.test.ts > loads a durable completed PM night on a cold offline mount
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/routine/offlineProgress.retained04.test.ts > refreshes offline after a duplicate completion without losing the visible streak
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/routine/offlineProgress.retained04.test.ts > reports configured cross-device data unavailable offline without contacting the provider
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/routine/offlineProgress.retained04.test.ts > surfaces local storage refusal and allows an explicit offline retry
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/routine/offlineProgress.retained04.test.ts > does not turn absent health authority into an empty or successful offline projection
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/routine/offlineProgress.retained04.test.ts > does not present retained totals as current after a local read fails
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/routine/offlineProgress.retained04.test.ts > refuses a late offline read after owner withdrawal and regrant
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts (7 tests | 7 failed) 228ms
+   × loads a durable completed PM night on a cold offline mount 30ms
+   × refreshes offline after a duplicate completion without losing the visible streak 28ms
+   × reports configured cross-device data unavailable offline without contacting the provider 15ms
+   × surfaces local storage refusal and allows an explicit offline retry 34ms
+   × does not turn absent health authority into an empty or successful offline projection 42ms
+   × does not present retained totals as current after a local read fails 46ms
+   × refuses a late offline read after owner withdrawal and regrant 31ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/authorizationSnapshot.retained04.test.ts > publishes current denied permission after native reconciliation settles
+AssertionError: expected 'authorized' to be 'denied' // Object.is equality
+
+Expected: "denied"
+Received: "authorized"
+
+ ❯ src/features/notifications/authorizationSnapshot.retained04.test.ts:42:23
+     40|   ports.reconcile.mockImplementationOnce(async () => { ports.permissio…
+     41|   await mount();
+     42|   expect(source.data).toBe(permission);
+       |                       ^
+     43| });
+     44|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/features/notifications/authorizationSnapshot.retained04.test.ts > publishes current unavailable permission after native reconciliation settles
+AssertionError: expected 'authorized' to be 'unavailable' // Object.is equality
+
+Expected: "unavailable"
+Received: "authorized"
+
+ ❯ src/features/notifications/authorizationSnapshot.retained04.test.ts:42:23
+     40|   ports.reconcile.mockImplementationOnce(async () => { ports.permissio…
+     41|   await mount();
+     42|   expect(source.data).toBe(permission);
+       |                       ^
+     43| });
+     44|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/features/notifications/authorizationSnapshot.retained04.test.ts > withholds cached authorization while a foreground reconciliation is pending
+AssertionError: expected 'authorized' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"authorized"
+
+ ❯ src/features/notifications/authorizationSnapshot.retained04.test.ts:52:23
+     50|   await act(async () => { pending = source.refetch(); }); await flush(…
+     51|   expect(source.isFetching).toBe(true);
+     52|   expect(source.data).toBeUndefined();
+       |                       ^
+     53|   ports.permission = 'denied';
+     54|   await act(async () => { release(); await pending; }); await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/features/notifications/authorizationSnapshot.retained04.test.ts > does not expose cached granted status after a revoked-permission cancellation fails
+AssertionError: expected 'authorized' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"authorized"
+
+ ❯ src/features/notifications/authorizationSnapshot.retained04.test.ts:63:23
+     61|   await act(async () => { await source.refetch(); }); await flush();
+     62|   expect(source.isError).toBe(true);
+     63|   expect(source.data).toBeUndefined();
+       |                       ^
+     64|   await act(async () => { await source.refetch({ throwOnError: true })…
+     65|   expect(source.data).toBe('denied');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > loads a durable completed PM night on a cold offline mount
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:65:27
+     63|   expect((await getCompletionSummary()).completedDates).toContain(loca…
+     64|   await mount();
+     65|   expect(source.isPaused).toBe(false);
+       |                           ^
+     66|   expect(source.data).toMatchObject({ streak: 1, weeklyDone: 1, server…
+     67| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > refreshes offline after a duplicate completion without losing the visible streak
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:76:27
+     74|   await act(async () => { await client.invalidateQueries({ queryKey: […
+     75|   await flush();
+     76|   expect(source.isPaused).toBe(false);
+       |                           ^
+     77|   expect(source.data).toMatchObject({ streak: 1, weeklyDone: 1 });
+     78| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > reports configured cross-device data unavailable offline without contacting the provider
+AssertionError: expected undefined to match object { streak: 1, weeklyDone: 1, …(1) }
+
+- Expected:
+{
+  "serverStatus": "unavailable",
+  "streak": 1,
+  "weeklyDone": 1,
+}
+
++ Received:
+undefined
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:82:23
+     80| it('reports configured cross-device data unavailable offline without c…
+     81|   ports.configured = true; await mount();
+     82|   expect(source.data).toMatchObject({ streak: 1, weeklyDone: 1, server…
+       |                       ^
+     83|   expect(ports.rpc).not.toHaveBeenCalled();
+     84| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > surfaces local storage refusal and allows an explicit offline retry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:88:26
+     86| it('surfaces local storage refusal and allows an explicit offline retr…
+     87|   ports.readError = true; await mount(); await flush(); await flush();
+     88|   expect(source.isError).toBe(true);
+       |                          ^
+     89|   expect(source.data).toBeUndefined();
+     90|   ports.readError = false;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > does not turn absent health authority into an empty or successful offline projection
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:97:26
+     95| it('does not turn absent health authority into an empty or successful …
+     96|   clearActiveHealthProcessingEpoch(); await mount(); await flush(); aw…
+     97|   expect(source.isError).toBe(true);
+       |                          ^
+     98|   expect(source.data).toBeUndefined();
+     99|   expect(ports.rpc).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > does not present retained totals as current after a local read fails
+AssertionError: expected { streak: 1, longest: 1, …(8) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "frozenDates": [],
+  "graceUsed": false,
+  "heat": [
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 1,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+    {
+      "intensity": 0,
+    },
+  ],
+  "lapsed": false,
+  "longest": 1,
+  "monthLabel": "October",
+  "serverStatus": "not_configured",
+  "streak": 1,
+  "week": [
+    {
+      "label": "M",
+      "state": "missed",
+    },
+    {
+      "label": "T",
+      "state": "missed",
+    },
+    {
+      "label": "W",
+      "state": "missed",
+    },
+    {
+      "label": "T",
+      "state": "missed",
+    },
+    {
+      "label": "F",
+      "state": "done",
+    },
+    {
+      "label": "S",
+      "state": "future",
+    },
+    {
+      "label": "S",
+      "state": "future",
+    },
+  ],
+  "weeklyDone": 1,
+}
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:106:58
+    104|   ports.readError = true;
+    105|   await act(async () => { await source.refetch(); }); await flush();
+    106|   expect(source.isError).toBe(true); expect(source.data).toBeUndefined…
+       |                                                          ^
+    107| });
+    108|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  src/features/routine/offlineProgress.retained04.test.ts > refuses a late offline read after owner withdrawal and regrant
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/routine/offlineProgress.retained04.test.ts:118:26
+    116|   await act(async () => { release(); }); await flush(); await flush();
+    117|   expect(source.data).toBeUndefined();
+    118|   expect(source.isError).toBe(true);
+       |                          ^
+    119| });
+    120|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  11 failed | 1 passed (12)
+   Start at  23:32:44
+   Duration  669ms (transform 200ms, setup 0ms, import 478ms, tests 343ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/offlineProgress.retained04.test.ts src/features/notifications/authorizationSnapshot.retained04.test.ts

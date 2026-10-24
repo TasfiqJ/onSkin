@@ -1,5 +1,6 @@
 import { notificationPreferenceRetryPatch } from '@/features/notifications/applyPreferences';
 import { NotificationPreferenceSaveNotice, NotificationPreferenceSavedNotice } from '@/features/notifications/NotificationPreferenceSaveNotice';
+import { NotificationPreferenceReadState } from '@/features/notifications/NotificationPreferenceReadState';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
@@ -144,10 +145,13 @@ function TimePill({
 
 export default function TimingScreen() {
   const { height } = useWindowDimensions();
-  const { data: p } = useNotifPrefs();
+  const preferences = useNotifPrefs();
+  const p = preferences.data;
   const update = useUpdateNotifPrefs();
   const [picking, setPicking] = useState<Field | null>(null);
-  if (!p) return null;
+  if (!p) return <NotificationPreferenceReadState title="Timing" failed={preferences.isError}
+    retrying={preferences.isFetching} onRetry={() => { void preferences.refetch({ cancelRefetch: false }); }}
+    onBack={() => backOrReplace(router, APP_YOU_ROUTE)} />;
 
   const fieldKey: Record<Field, keyof typeof p> = {
     am: 'amTime',

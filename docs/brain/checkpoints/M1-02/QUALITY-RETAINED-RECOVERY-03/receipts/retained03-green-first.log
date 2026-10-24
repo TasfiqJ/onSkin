@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications/preferenceReadRace.retained03.test.ts src/features/photos/offlineDiary.retained03.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  22:12:51
+   Duration  489ms (transform 167ms, setup 0ms, import 431ms, tests 141ms, environment 0ms)
+

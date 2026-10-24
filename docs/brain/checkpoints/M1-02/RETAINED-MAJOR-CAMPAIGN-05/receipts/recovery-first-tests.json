@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/retainedRecovery",
+    "--maxWorkers=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:48:58.122309+00:00",
+  "finished_at": "2026-10-24T04:48:59.853183+00:00",
+  "duration_seconds": 1.406,
+  "exit_code": 1,
+  "head": "262aed6198f39cda7ae8c5924fd090e273adc01b",
+  "tree": "9f694e67bd7dcffbc80fca2598cb2cbf2e2bee46",
+  "status_before": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "tracked_diff_sha256": "8f7a46da7fef91668af0bf3b432109d0fce2f623952a05a715e6af69b2fde851",
+  "status_after": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "log": "recovery-first-tests.log",
+  "log_bytes": 1880,
+  "log_sha256": "5be00f8fd57de9c44fa887763f410126618423c7ae5c9bd939df2a78ef2752a3"
+}

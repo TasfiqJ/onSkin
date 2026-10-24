@@ -1,0 +1,20 @@
+{
+  "command": [
+    "node",
+    "scripts/launch/validate-execution-baseline.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:47:21.625987+00:00",
+  "finished_at": "2026-10-24T05:47:22.844856+00:00",
+  "duration_seconds": 0.719,
+  "exit_code": 1,
+  "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+  "tree": "7982adf6760761edcd9316926b59a548928aa714",
+  "status_before": "",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [],
+  "status_after": "",
+  "log": "route-inventory-before.log",
+  "log_bytes": 165,
+  "log_sha256": "bd94aea95ee25d7ca4e1673b40f823663271ac7b7bd16d0af2ad569190947903"
+}

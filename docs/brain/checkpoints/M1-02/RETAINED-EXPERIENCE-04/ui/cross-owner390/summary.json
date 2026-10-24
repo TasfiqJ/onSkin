@@ -1,0 +1,25 @@
+{
+  "verdict": "pass",
+  "scenario": "actual_cross_owner",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "noAFlash": true,
+  "delayedAOperationsRejected": true,
+  "duplicateAndFailedCleanupRetry": true,
+  "bOwnAdmission": true,
+  "bUsableManualShelfAndEdit": true,
+  "exactBOwnerCacheQueueHealth": true,
+  "bDocumentRelaunch": true,
+  "returnAClosedWithoutResurrection": true,
+  "noUncaughtErrors": true,
+  "limits": "DEV/web/development/unconfigured synthetic identity and preflight transport; real Auth reconciliation, owner proof, cleanup, encrypted storage/query, age/consent and routing. No live provider, paid authority, native process death or device proof.",
+  "evidenceFiles": [
+    "CO-03-cleanup-refused.png",
+    "CO-09-b-usable-shelf.png",
+    "CO-09b-b-product-detail.png",
+    "CO-13-return-a-age-closed.png"
+  ],
+  "screenshotSelection": "Bounded R04 selection; complete driver snapshots retained."
+}

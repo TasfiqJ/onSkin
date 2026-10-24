@@ -1,0 +1,1516 @@
+{
+  "raw_logs": [
+    {
+      "name": "baseline-glyph-red.log",
+      "offset": 0,
+      "bytes": 2276,
+      "sha256": "7c4a6134f6241da4c5252fda3d102bafa1d41ee7a1b2b0ce82285050d6d021e0",
+      "blob": "76fc6f88a12512f58e1537a0d9d5f1265a4db15b"
+    },
+    {
+      "name": "baseline-glyph-red2.log",
+      "offset": 2276,
+      "bytes": 2890,
+      "sha256": "664b434b64ba3a57ca9ba4749fd00ff6ce74e3931dced1036e8325f26c7be8f7",
+      "blob": "7b25cef7f2d328e0a9cf8253182c6fd4fba44594"
+    },
+    {
+      "name": "baseline-ui.log",
+      "offset": 5166,
+      "bytes": 120,
+      "sha256": "ad318d8627900c59ec843b0eb0c145bf5bfb41669742d04e0adc7255163f8793",
+      "blob": "1cb3ef9989ca888fdf2d9ccbde6d83539d852306"
+    },
+    {
+      "name": "canonical-identity-red.log",
+      "offset": 5286,
+      "bytes": 2208,
+      "sha256": "fb5cfb5515dc052690bf2a1c3e900760db8286785de5640490066abc1330f625",
+      "blob": "ddf8303406b239f6c980aace88a83c2300904d41"
+    },
+    {
+      "name": "canonical-midnight-green.log",
+      "offset": 7494,
+      "bytes": 3311,
+      "sha256": "f92cb2087b6a1e7ab430fdcdc55e28364606f27b4db83dc5ff46f5aaf80e4b2a",
+      "blob": "dfce052054a9ea6d3fa3da028c73d50eb8a9dd6e"
+    },
+    {
+      "name": "canonical-midnight-settled.log",
+      "offset": 10805,
+      "bytes": 410,
+      "sha256": "760ee0dc8167721cbe6402ad026abd72612a9c2f726f77fa5d082eb856a39d55",
+      "blob": "76f517a8e6b585521d75f58b7dbeaa8417a9b4a6"
+    },
+    {
+      "name": "context-reverify.log",
+      "offset": 11215,
+      "bytes": 230,
+      "sha256": "0cd0594885899a5032118a153085243c0f9f74a56b403d41ca344b167c8d014b",
+      "blob": "47ef9be8d184c6bf249e8adcfe65c0682ad1197b"
+    },
+    {
+      "name": "corrected-root-tests.log",
+      "offset": 11445,
+      "bytes": 377994,
+      "sha256": "e07586c23621df836206384d43f508c33e2f806e717fd465f220412b45eaf2f9",
+      "blob": "ce82b7956888fba9703dd0d8fb484496de4e3878"
+    },
+    {
+      "name": "corrected-ui375.log",
+      "offset": 389439,
+      "bytes": 539,
+      "sha256": "c6c20fc0a92aea5f83ecf116cbf28e760cba0a1552a339956b2a24b7b0bb2c4e",
+      "blob": "77fdb842b476b76005715003408c48b274dfcad4"
+    },
+    {
+      "name": "corrected-worklist-generate.log",
+      "offset": 389978,
+      "bytes": 130,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "blob": "0a4e271bbbb23018af30bd49e8d4dcf02bfe21f2"
+    },
+    {
+      "name": "dock-candidate.log",
+      "offset": 390108,
+      "bytes": 123,
+      "sha256": "9e5a3174ca2bc6f12bc5d8088f7ceb2593f8cb4c6d40967ec14e214edec0695d",
+      "blob": "68ef308a62ab813b6a5b590a1b2a2e10846b5b88"
+    },
+    {
+      "name": "dock-rendered-tests.log",
+      "offset": 390231,
+      "bytes": 392,
+      "sha256": "fa0ee1238cabc39ccaff0a80fc319d0782cacac34d3a5ee0d2c0f43654f5f204",
+      "blob": "e8b6984bf2b1f95efc36f446141c5aa0ca0143bf"
+    },
+    {
+      "name": "final-lint.log",
+      "offset": 390623,
+      "bytes": 2575,
+      "sha256": "4da387cec68ae4412a6168fedefe0116f2234b347ccce20b9bbd1ebde9c085fd",
+      "blob": "c0becfcc3050f6faa93999fe70c2582fb6a5c482"
+    },
+    {
+      "name": "final-retained.log",
+      "offset": 393198,
+      "bytes": 555,
+      "sha256": "b80993e8a517d4057b17ded20ff725d2f299ce5013f9c75ddb6030972d9ad93d",
+      "blob": "f4df264747a08899eecef6154d6e0c29e792a605"
+    },
+    {
+      "name": "final-root-tests.log",
+      "offset": 393753,
+      "bytes": 374137,
+      "sha256": "424a9cedc0640b4a85b947c875dc3482179fa5c41ec7a1964ac7254216fb9350",
+      "blob": "fc6a209dbd3f2753d120567c6d40a979335b1dde"
+    },
+    {
+      "name": "final-source-worklist.log",
+      "offset": 767890,
+      "bytes": 130,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "blob": "0a4e271bbbb23018af30bd49e8d4dcf02bfe21f2"
+    },
+    {
+      "name": "final-typecheck.log",
+      "offset": 768020,
+      "bytes": 1169,
+      "sha256": "b4cf06cc1b7d7a34f56ae770c61664e123bf0c510a0f8b891ae0f591767e6036",
+      "blob": "19c4a7364677164d8da8a3a540a3366a31cebd1b"
+    },
+    {
+      "name": "final-ui375-r2.log",
+      "offset": 769189,
+      "bytes": 1305,
+      "sha256": "e33fee0b9bbe8b00157fa6eb8019ce549d0112b90e55b84d8654bf002d92fde0",
+      "blob": "1e6fb3b5c5ec069492e1e4f5e40adbe59d5b1589"
+    },
+    {
+      "name": "final-ui375.log",
+      "offset": 770494,
+      "bytes": 513,
+      "sha256": "cbaa41e7dcbdf953bf775f58b25f9f3c7d4ad93e1a928ecbaf2cdea4157057ac",
+      "blob": "912403dc704c03c04db90edd90e1cf3898ad2bab"
+    },
+    {
+      "name": "final-worklist-generate.log",
+      "offset": 771007,
+      "bytes": 130,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "blob": "0a4e271bbbb23018af30bd49e8d4dcf02bfe21f2"
+    },
+    {
+      "name": "foreground-zone-green.log",
+      "offset": 771137,
+      "bytes": 457,
+      "sha256": "83a9fcf4ae1269c404f193c2e0339dc2d95d3eb6b222e8b1bb2703e8892d79e5",
+      "blob": "ee48089515a6031a81582d380b46ee2d9451c6f4"
+    },
+    {
+      "name": "foreground-zone-red-confirmed.log",
+      "offset": 771594,
+      "bytes": 2213,
+      "sha256": "2bf710dba0cdbdb20c0cd7af76cd6c404adffdbe47866135f542582f78610ef9",
+      "blob": "d329b82e794daf739949dbcac0f06bab78b03e33"
+    },
+    {
+      "name": "foreground-zone-red.log",
+      "offset": 773807,
+      "bytes": 569,
+      "sha256": "ba029b512bd32cb6d1db4b27678062fbea87714d6a8c6f2dd152c21ab769777a",
+      "blob": "c5db882f42c82b8463edbe4b2e16a7c0121fb0fd"
+    },
+    {
+      "name": "integrated-lint.log",
+      "offset": 774376,
+      "bytes": 1183,
+      "sha256": "e16e06a2ad1a99f8aeaae7d4116c1455fe1b640a8c58e0e6d7f05b5105b257ab",
+      "blob": "e2683b30ec63fa666c2677b92ea233a94471a18e"
+    },
+    {
+      "name": "integrated-typecheck.log",
+      "offset": 775559,
+      "bytes": 1169,
+      "sha256": "45494a8ac1e065e589bb72e9352b2281d229a42fcb7864148b7b8f9b65e9fe4f",
+      "blob": "2578bf8522c66ae7c776ccb712cc7e6317500a52"
+    },
+    {
+      "name": "launch-contract-smoke.log",
+      "offset": 776728,
+      "bytes": 44,
+      "sha256": "91f7ef73e53c52fb8b6e6c26adcdf625ae3bb0246e59c90e2a9dbd50ac8a1d52",
+      "blob": "43ce9d53396434fcdd3d59c9d96967b063aadd29"
+    },
+    {
+      "name": "launch-contract.log",
+      "offset": 776772,
+      "bytes": 306,
+      "sha256": "a78a5386841eda7e5f0f87a0851618c8c0c3f175101ce76edb406a6057aeafbf",
+      "blob": "c857574b172382ac4dd35bd025d118bb4ff77d35"
+    },
+    {
+      "name": "measured-lint.log",
+      "offset": 777078,
+      "bytes": 1181,
+      "sha256": "46783bf5a974b1afaaab0a7da608a8545b12c6c1ed01c085f9b374a2672403c7",
+      "blob": "c7b078ecb4f68b821f6fbfb05e8faffd5cfb7d71"
+    },
+    {
+      "name": "measured-retained.log",
+      "offset": 778259,
+      "bytes": 555,
+      "sha256": "3054aaf8fedf5e0752032dbaa02a5658bf7d0806a77e45546b5fde223ea6de49",
+      "blob": "0b5256ff8d010f2df50c5e13145c496cf96f3671"
+    },
+    {
+      "name": "measured-root-tests.log",
+      "offset": 778814,
+      "bytes": 372985,
+      "sha256": "12153ab6dc0c5435cf40b737cbca3510d171db50bbddd690fd229197ea5e82d2",
+      "blob": "a5c56833d62c40305472174870fa186183d28728"
+    },
+    {
+      "name": "measured-typecheck.log",
+      "offset": 1151799,
+      "bytes": 1169,
+      "sha256": "010eabac0c1befc03db650316959b53c51ea95c32a6343672784e0010d2631d2",
+      "blob": "81e90890fff859cd26f1cda5bddde26c809509fa"
+    },
+    {
+      "name": "measured-ui375-r2.log",
+      "offset": 1152968,
+      "bytes": 790,
+      "sha256": "058447f02d7a8d89a512e135817b4676cf7a61db5d2ee1a0aa7c3163c0304b23",
+      "blob": "f8d352bee3c6b525813631bd8ec576028443a19e"
+    },
+    {
+      "name": "measured-ui375.log",
+      "offset": 1153758,
+      "bytes": 1304,
+      "sha256": "d4deeef8190044f4a92f1c9f45084d0a77fc7d313ddf24a397cbeb4554627723",
+      "blob": "b4d785425e67e34fc3c5f7d8673b7724cf48669c"
+    },
+    {
+      "name": "measured-worklist-strict.log",
+      "offset": 1155062,
+      "bytes": 68,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "blob": "73aa86a5ad3944a643a3bbe0f81fa767533f2142"
+    },
+    {
+      "name": "next-visit-feature-red.log",
+      "offset": 1155130,
+      "bytes": 4861,
+      "sha256": "4e4d8bf631ff75b8cf16f32ed28a6e4162d89a3ce1bc4d46ee90dce4d876abc9",
+      "blob": "1c476f7cbfb8d83bcb10e1edea6850cf7be02bf3"
+    },
+    {
+      "name": "next-visit-green.log",
+      "offset": 1159991,
+      "bytes": 383,
+      "sha256": "296c22316b796fccdb69e267ed2cbb123951e03801d25b276ebd307a93c24fd6",
+      "blob": "0e09e47dd9d488ffd73caf7fc5fd2b037e5d0999"
+    },
+    {
+      "name": "qualified-ui375.log",
+      "offset": 1160374,
+      "bytes": 495,
+      "sha256": "d6489d99d859e7569a9e95c41690e67a0e13ffc806afe67fdbdf6b53c1e97515",
+      "blob": "104cd1e09057fe7a9dc73f37ae22efd846a775d1"
+    },
+    {
+      "name": "shelf-midnight-green.log",
+      "offset": 1160869,
+      "bytes": 488,
+      "sha256": "6d27f05792fea3ecb3ec89029a46a405bb3f3a9cd67f484c93e5aca909b6559b",
+      "blob": "d09be21b1fb05086e6eb156a64fe89302c820f49"
+    },
+    {
+      "name": "shelf-midnight-red.log",
+      "offset": 1161357,
+      "bytes": 3164,
+      "sha256": "0351f17efafe8e6dd94baf0e2debcc7ab78c357ca4d93d65305e3c812ce02d7a",
+      "blob": "b8c06ec322c1d37451b13d0db1f564ae8fd7d1ca"
+    },
+    {
+      "name": "source3b7-canonical-db-ci.log",
+      "offset": 1164521,
+      "bytes": 83671,
+      "sha256": "cd9fcad77d7459741d310b9954fc071bbe1d1f74169c029e3c1b21752eae64af",
+      "blob": "2344df5227c744be9651e13017531fa68baedcca"
+    },
+    {
+      "name": "source3b7-card360.log",
+      "offset": 1248192,
+      "bytes": 126,
+      "sha256": "294896582baa19bfea52e6e99b8873c8af1be94bb059a9862a6a8c2336a4c287",
+      "blob": "f05850caed3b21a7385144c621a5100a78b10b9d"
+    },
+    {
+      "name": "source3b7-cross390.log",
+      "offset": 1248318,
+      "bytes": 114,
+      "sha256": "bb9bb1fd3eeb840790fd7dda0ea2365be1432ed8271456808552060a1b31302a",
+      "blob": "20347a23c098bdc6f6186691113da59ab0cffd3d"
+    },
+    {
+      "name": "source3b7-lint.log",
+      "offset": 1248432,
+      "bytes": 1181,
+      "sha256": "7194647b75f426eef7d8d3b8fcf9f198d6d6cce577d91fa1ebcb189f875e8664",
+      "blob": "59638893315eb0018df6e24c2f4b96d2f2c35ed6"
+    },
+    {
+      "name": "source3b7-push.log",
+      "offset": 1249613,
+      "bytes": 103,
+      "sha256": "ef92c5d1b594e7562253a940f75640fbc53a692958bf8355c035bbe5cf7efd74",
+      "blob": "764ab4c64b4b3b47f4cb4d65c1734dac9609367e"
+    },
+    {
+      "name": "source3b7-retained.log",
+      "offset": 1249716,
+      "bytes": 569,
+      "sha256": "8c096fecedcf719992cade314819f53ffcd7a8f210dd6ebbc73fe2e5cc6f5b5e",
+      "blob": "9b55f59aa1a4abc1c2e607af278aab91a2579912"
+    },
+    {
+      "name": "source3b7-root.log",
+      "offset": 1250285,
+      "bytes": 372828,
+      "sha256": "b8292dd6ab806f52a90934db344c4667a1b6584c29cce8949dbd4b88f0a14dd9",
+      "blob": "2a4386ea666973a632746ac2d387b1a04803b84e"
+    },
+    {
+      "name": "source3b7-typecheck-bounded.log",
+      "offset": 1623113,
+      "bytes": 3956,
+      "sha256": "3b5dd7e0636198b3194adbf5796024a0bd21025ce8eadc9e40f08afa00825d10",
+      "blob": "71998cde581e70804afa9d2c2f643c724f3c324f"
+    },
+    {
+      "name": "source3b7-typecheck-final.log",
+      "offset": 1627069,
+      "bytes": 1168,
+      "sha256": "ef0c5776631acb500b0350d66f09d03e123bf4fe9421f4ecf093878a2009f219",
+      "blob": "d27014a38e58586813fffdf020c7d1a9b12be80d"
+    },
+    {
+      "name": "source3b7-typecheck.log",
+      "offset": 1628237,
+      "bytes": 3775,
+      "sha256": "ae2f7a1913a8e04f109ac9aaff17c91ebc494ca0af7ac70eada6f82c1ce5b654",
+      "blob": "19d5ff18ccdcd4ce4879e4e383f59f902cad7799"
+    },
+    {
+      "name": "source3b7-ui375.log",
+      "offset": 1632012,
+      "bytes": 317,
+      "sha256": "2b18fe9bcf487ac54c93093a6282db95e4fbfcafa6633946be4b39e44289654d",
+      "blob": "3bef8de6debd6c2a06f1c918b59e9f027050ae3d"
+    },
+    {
+      "name": "source3b7-worklist.log",
+      "offset": 1632329,
+      "bytes": 68,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "blob": "73aa86a5ad3944a643a3bbe0f81fa767533f2142"
+    },
+    {
+      "name": "verified-lint.log",
+      "offset": 1632397,
+      "bytes": 1182,
+      "sha256": "db4b416a6e67c041365b7ede8a0f5512563f24bf3ba8640f66231812d10632fc",
+      "blob": "10a338351dedd2a00717a3261952405a901c9ad2"
+    },
+    {
+      "name": "verified-root-tests.log",
+      "offset": 1633579,
+      "bytes": 374238,
+      "sha256": "aac5ca3975f1f6c3772a1cdf830b9e742a27248a1da53fd01f721d7b389a933e",
+      "blob": "2fa65bb7cb6a67daa108d9820be7b7f1bcd10867"
+    },
+    {
+      "name": "verified-source-push.log",
+      "offset": 2007817,
+      "bytes": 103,
+      "sha256": "fbc48e9509753928f636b47ad00d5be9976424eedb9c88eeb2553522b9417a60",
+      "blob": "03b513253aa8fdb7f9c209d2937e7836069408dd"
+    },
+    {
+      "name": "verified-typecheck.log",
+      "offset": 2007920,
+      "bytes": 1169,
+      "sha256": "1d4f87ac74faaa559fbc84b51e9354699ff83e41dc457dbde18a65809d884067",
+      "blob": "1781916e66ae3395409d5e711540fa626721b2c0"
+    },
+    {
+      "name": "verified-ui375-r2.log",
+      "offset": 2009089,
+      "bytes": 348,
+      "sha256": "b7afa7407b799b2083b6f7a029e37426d90a3c99c4f2b0e8ef936ef450f64341",
+      "blob": "82c5e505981fb770828683e267cc59ccd169b31a"
+    },
+    {
+      "name": "verified-ui375.log",
+      "offset": 2009437,
+      "bytes": 514,
+      "sha256": "623521189edcd78887ee9add33007bbd9351bae1f468c24e59b353e27019c2eb",
+      "blob": "b30362edaad577075ad42695be6ea26fbbfce6d1"
+    },
+    {
+      "name": "verified-worklist-generate.log",
+      "offset": 2009951,
+      "bytes": 130,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "blob": "0a4e271bbbb23018af30bd49e8d4dcf02bfe21f2"
+    },
+    {
+      "name": "worklist-generate.log",
+      "offset": 2010081,
+      "bytes": 130,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "blob": "0a4e271bbbb23018af30bd49e8d4dcf02bfe21f2"
+    }
+  ],
+  "receipts": {
+    "baseline-glyph-red": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-baseline.mjs"
+      ],
+      "start": "2026-10-24T18:02:09.180694+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 52.05,
+      "status_after": "",
+      "sha256": "7c4a6134f6241da4c5252fda3d102bafa1d41ee7a1b2b0ce82285050d6d021e0",
+      "bytes": 2276
+    },
+    "baseline-glyph-red2": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-baseline.mjs"
+      ],
+      "start": "2026-10-24T18:04:32.950230+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 52.25,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "sha256": "664b434b64ba3a57ca9ba4749fd00ff6ce74e3931dced1036e8325f26c7be8f7",
+      "bytes": 2890
+    },
+    "baseline-ui": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-baseline.mjs"
+      ],
+      "start": "2026-10-24T18:00:20.474734+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 63.46,
+      "status_after": "",
+      "sha256": "ad318d8627900c59ec843b0eb0c145bf5bfb41669742d04e0adc7255163f8793",
+      "bytes": 120
+    },
+    "canonical-identity-red": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "-t",
+        "canonical Shelf cache"
+      ],
+      "start": "2026-10-24T18:24:39.407190+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "exit": 1,
+      "seconds": 2.26,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "sha256": "fb5cfb5515dc052690bf2a1c3e900760db8286785de5640490066abc1330f625",
+      "bytes": 2208
+    },
+    "canonical-midnight-green": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "src/features/shelf/retainedSafety.integration.test.ts",
+        "src/features/routine/planRecovery.test.ts"
+      ],
+      "start": "2026-10-24T18:24:52.672620+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "exit": 1,
+      "seconds": 12.88,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "sha256": "f92cb2087b6a1e7ab430fdcdc55e28364606f27b4db83dc5ff46f5aaf80e4b2a",
+      "bytes": 3311
+    },
+    "canonical-midnight-settled": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "src/features/routine/planRecovery.test.ts"
+      ],
+      "start": "2026-10-24T18:26:40.846030+00:00",
+      "head": "5c0c939098da114bd3befd1f02108b88bf2b4243",
+      "tree": "4082f0bd80f3aedd52db8d2bb8ae7b643eb5ccf8",
+      "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "exit": 0,
+      "seconds": 12.85,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "sha256": "760ee0dc8167721cbe6402ad026abd72612a9c2f726f77fa5d082eb856a39d55",
+      "bytes": 410
+    },
+    "corrected-root-tests": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:25:38.502153+00:00",
+      "head": "5c0c939098da114bd3befd1f02108b88bf2b4243",
+      "tree": "4082f0bd80f3aedd52db8d2bb8ae7b643eb5ccf8",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 38.54,
+      "status_after": "",
+      "sha256": "e07586c23621df836206384d43f508c33e2f806e717fd465f220412b45eaf2f9",
+      "bytes": 377994
+    },
+    "corrected-ui375": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:25:28.329822+00:00",
+      "head": "5c0c939098da114bd3befd1f02108b88bf2b4243",
+      "tree": "4082f0bd80f3aedd52db8d2bb8ae7b643eb5ccf8",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 105.64,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "sha256": "c6c20fc0a92aea5f83ecf116cbf28e760cba0a1552a339956b2a24b7b0bb2c4e",
+      "bytes": 539
+    },
+    "corrected-worklist-generate": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "start": "2026-10-24T18:25:17.454577+00:00",
+      "head": "01258fb825c291431e98f3ed4b9844c4288bc6e9",
+      "tree": "fb934c6797e34950c93a7e3b5b664d079ca026a0",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.73,
+      "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "bytes": 130
+    },
+    "dock-candidate": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-baseline.mjs"
+      ],
+      "start": "2026-10-24T18:07:38.700358+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "exit": 0,
+      "seconds": 64.55,
+      "status_after": "M apps/mobile/src/app/(tabs)/_layout.tsx\nM  apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\nM  apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/components/navigation/dockAccessibility.test.ts",
+      "sha256": "9e5a3174ca2bc6f12bc5d8088f7ceb2593f8cb4c6d40967ec14e214edec0695d",
+      "bytes": 123
+    },
+    "dock-rendered-tests": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/components/navigation/dockAccessibility.test.ts",
+        "src/features/navigation"
+      ],
+      "start": "2026-10-24T18:08:19.341021+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/components/navigation/dockAccessibility.test.ts",
+      "exit": 0,
+      "seconds": 1.84,
+      "status_after": "M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/components/navigation/dockAccessibility.test.ts",
+      "sha256": "fa0ee1238cabc39ccaff0a80fc319d0782cacac34d3a5ee0d2c0f43654f5f204",
+      "bytes": 392
+    },
+    "final-lint": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:34:25.714414+00:00",
+      "head": "02f2b44e66847a414c3d2fdfc97c81a6349d00ee",
+      "tree": "100c7e3a3ffe07390197e64a6576f783b3930d71",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 54.66,
+      "status_after": "",
+      "sha256": "4da387cec68ae4412a6168fedefe0116f2234b347ccce20b9bbd1ebde9c085fd",
+      "bytes": 2575
+    },
+    "final-retained": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/notifications",
+        "src/features/photos",
+        "src/features/onboarding",
+        "src/features/settings",
+        "src/features/retainedRecovery"
+      ],
+      "start": "2026-10-24T18:34:25.714914+00:00",
+      "head": "02f2b44e66847a414c3d2fdfc97c81a6349d00ee",
+      "tree": "100c7e3a3ffe07390197e64a6576f783b3930d71",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 37.98,
+      "status_after": "",
+      "sha256": "b80993e8a517d4057b17ded20ff725d2f299ce5013f9c75ddb6030972d9ad93d",
+      "bytes": 555
+    },
+    "final-root-tests": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:30:20.931122+00:00",
+      "head": "02f2b44e66847a414c3d2fdfc97c81a6349d00ee",
+      "tree": "100c7e3a3ffe07390197e64a6576f783b3930d71",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 40.28,
+      "status_after": "",
+      "sha256": "424a9cedc0640b4a85b947c875dc3482179fa5c41ec7a1964ac7254216fb9350",
+      "bytes": 374137
+    },
+    "final-source-worklist": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "start": "2026-10-24T19:04:49.551180+00:00",
+      "head": "a66daeb7a531b22ad626d2ff1d8bf1e014a66ced",
+      "tree": "6f3988d0d1e22ee1c754a3d868f1007f23d236b4",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.74,
+      "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "bytes": 130
+    },
+    "final-typecheck": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:30:20.931122+00:00",
+      "head": "02f2b44e66847a414c3d2fdfc97c81a6349d00ee",
+      "tree": "100c7e3a3ffe07390197e64a6576f783b3930d71",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 35.74,
+      "status_after": "",
+      "sha256": "b4cf06cc1b7d7a34f56ae770c61664e123bf0c510a0f8b891ae0f591767e6036",
+      "bytes": 1169
+    },
+    "final-ui375-r2": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:34:15.839570+00:00",
+      "head": "02f2b44e66847a414c3d2fdfc97c81a6349d00ee",
+      "tree": "100c7e3a3ffe07390197e64a6576f783b3930d71",
+      "status_before": "",
+      "disk_guard": "Stopped this task process tree below 8 MiB free; no other process or file changed.",
+      "exit": 1,
+      "seconds": 125.0,
+      "status_after": "",
+      "sha256": "e33fee0b9bbe8b00157fa6eb8019ce549d0112b90e55b84d8654bf002d92fde0",
+      "bytes": 1305
+    },
+    "final-ui375": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:30:10.724692+00:00",
+      "head": "02f2b44e66847a414c3d2fdfc97c81a6349d00ee",
+      "tree": "100c7e3a3ffe07390197e64a6576f783b3930d71",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 89.19,
+      "status_after": "",
+      "sha256": "cbaa41e7dcbdf953bf775f58b25f9f3c7d4ad93e1a928ecbaf2cdea4157057ac",
+      "bytes": 513
+    },
+    "final-worklist-generate": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "start": "2026-10-24T18:28:28.886608+00:00",
+      "head": "b460851da74f7c3eb75d18dd50923f62db9d1a81",
+      "tree": "212561e58243bb135477be101e9c3b764a67b930",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.72,
+      "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "bytes": 130
+    },
+    "foreground-zone-green": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "src/components/navigation/dockAccessibility.test.ts",
+        "src/features/navigation",
+        "--maxWorkers=1"
+      ],
+      "start": "2026-10-24T19:00:52.364774+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "exit": 0,
+      "seconds": 4.76,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "sha256": "83a9fcf4ae1269c404f193c2e0339dc2d95d3eb6b222e8b1bb2703e8892d79e5",
+      "bytes": 457
+    },
+    "foreground-zone-red-confirmed": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "-t",
+        "foreground timezone",
+        "--maxWorkers=1"
+      ],
+      "start": "2026-10-24T19:00:19.481771+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "exit": 1,
+      "seconds": 2.25,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "sha256": "2bf710dba0cdbdb20c0cd7af76cd6c404adffdbe47866135f542582f78610ef9",
+      "bytes": 2213
+    },
+    "foreground-zone-red": {
+      "classification": "INCOMPLETE_RECEIPT_DURING_ENOSPC; zero tests, not a product defect",
+      "raw_receipt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      }
+    },
+    "integrated-lint": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:11:48.163070+00:00",
+      "head": "6544dde5d4c2b8c287fc95bcccaabb1a14d67b22",
+      "tree": "57c00270060c8aebd38cd1ec6ef531e787094e30",
+      "status_before": "M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/routine/planRecovery.test.ts\n?? apps/mobile/src/features/today/NextVisitCard.tsx",
+      "exit": 0,
+      "seconds": 71.39,
+      "status_after": "M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/routine/planRecovery.test.ts\n?? apps/mobile/src/features/today/NextVisitCard.tsx",
+      "sha256": "e16e06a2ad1a99f8aeaae7d4116c1455fe1b640a8c58e0e6d7f05b5105b257ab",
+      "bytes": 1183
+    },
+    "integrated-typecheck": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:11:48.163070+00:00",
+      "head": "6544dde5d4c2b8c287fc95bcccaabb1a14d67b22",
+      "tree": "57c00270060c8aebd38cd1ec6ef531e787094e30",
+      "status_before": "M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/routine/planRecovery.test.ts\n?? apps/mobile/src/features/today/NextVisitCard.tsx",
+      "exit": 0,
+      "seconds": 22.88,
+      "status_after": "M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/routine/planRecovery.test.ts\n?? apps/mobile/src/features/today/NextVisitCard.tsx",
+      "sha256": "45494a8ac1e065e589bb72e9352b2281d229a42fcb7864148b7b8f9b65e9fe4f",
+      "bytes": 1169
+    },
+    "launch-contract-smoke": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/launch/contract-smoke.mjs"
+      ],
+      "start": "2026-10-24T18:21:36.135029+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.74,
+      "status_after": "",
+      "sha256": "91f7ef73e53c52fb8b6e6c26adcdf625ae3bb0246e59c90e2a9dbd50ac8a1d52",
+      "bytes": 44
+    },
+    "launch-contract": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/launch/check-contract.mjs"
+      ],
+      "start": "2026-10-24T18:16:43.576524+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.75,
+      "status_after": "",
+      "sha256": "a78a5386841eda7e5f0f87a0851618c8c0c3f175101ce76edb406a6057aeafbf",
+      "bytes": 306
+    },
+    "measured-lint": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:15:53.447898+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 55.6,
+      "status_after": "",
+      "sha256": "46783bf5a974b1afaaab0a7da608a8545b12c6c1ed01c085f9b374a2672403c7",
+      "bytes": 1181
+    },
+    "measured-retained": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/notifications",
+        "src/features/photos",
+        "src/features/onboarding",
+        "src/features/settings",
+        "src/features/retainedRecovery"
+      ],
+      "start": "2026-10-24T18:15:53.453912+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 37.94,
+      "status_after": "",
+      "sha256": "3054aaf8fedf5e0752032dbaa02a5658bf7d0806a77e45546b5fde223ea6de49",
+      "bytes": 555
+    },
+    "measured-root-tests": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:14:48.792840+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 37.23,
+      "status_after": "",
+      "sha256": "12153ab6dc0c5435cf40b737cbca3510d171db50bbddd690fd229197ea5e82d2",
+      "bytes": 372985
+    },
+    "measured-typecheck": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:15:53.444400+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 29.35,
+      "status_after": "",
+      "sha256": "010eabac0c1befc03db650316959b53c51ea95c32a6343672784e0010d2631d2",
+      "bytes": 1169
+    },
+    "measured-ui375-r2": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:21:11.041611+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 114.87,
+      "status_after": "",
+      "sha256": "058447f02d7a8d89a512e135817b4676cf7a61db5d2ee1a0aa7c3163c0304b23",
+      "bytes": 790
+    },
+    "measured-ui375": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:16:54.316299+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "disk_guard": "Stopped this task process tree below 8 MiB free; no other process or file changed.",
+      "exit": 1,
+      "seconds": 96.39,
+      "status_after": "",
+      "sha256": "d4deeef8190044f4a92f1c9f45084d0a77fc7d313ddf24a397cbeb4554627723",
+      "bytes": 1304
+    },
+    "measured-worklist-strict": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "start": "2026-10-24T18:16:42.660981+00:00",
+      "head": "3de85a1676f95aa51f0a748350c3f0f9d17c7356",
+      "tree": "47049514824decf230295d6ba2b639dfe69b8816",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.74,
+      "status_after": "",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "bytes": 68
+    },
+    "next-visit-feature-red": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/routine/planRecovery.test.ts",
+        "-t",
+        "next-visit"
+      ],
+      "start": "2026-10-24T18:09:46.715850+00:00",
+      "head": "6544dde5d4c2b8c287fc95bcccaabb1a14d67b22",
+      "tree": "57c00270060c8aebd38cd1ec6ef531e787094e30",
+      "status_before": "M apps/mobile/src/features/routine/planRecovery.test.ts",
+      "exit": 1,
+      "seconds": 2.05,
+      "status_after": "M apps/mobile/src/features/routine/planRecovery.test.ts",
+      "sha256": "4e4d8bf631ff75b8cf16f32ed28a6e4162d89a3ce1bc4d46ee90dce4d876abc9",
+      "bytes": 4861
+    },
+    "next-visit-green": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/routine/planRecovery.test.ts",
+        "src/features/today"
+      ],
+      "start": "2026-10-24T18:10:28.846617+00:00",
+      "head": "6544dde5d4c2b8c287fc95bcccaabb1a14d67b22",
+      "tree": "57c00270060c8aebd38cd1ec6ef531e787094e30",
+      "status_before": "M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/routine/planRecovery.test.ts\n?? apps/mobile/src/features/today/NextVisitCard.tsx",
+      "exit": 0,
+      "seconds": 21.33,
+      "status_after": "M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/routine/planRecovery.test.ts\n?? apps/mobile/src/features/today/NextVisitCard.tsx",
+      "sha256": "296c22316b796fccdb69e267ed2cbb123951e03801d25b276ebd307a93c24fd6",
+      "bytes": 383
+    },
+    "qualified-ui375": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:53:08.708916+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 99.67,
+      "status_after": "",
+      "sha256": "d6489d99d859e7569a9e95c41690e67a0e13ffc806afe67fdbdf6b53c1e97515",
+      "bytes": 495
+    },
+    "shelf-midnight-green": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "src/features/shelf/retainedSafety.integration.test.ts",
+        "src/features/routine/planRecovery.test.ts",
+        "src/features/navigation"
+      ],
+      "start": "2026-10-24T18:06:54.904958+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "exit": 0,
+      "seconds": 11.97,
+      "status_after": "M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+      "sha256": "6d27f05792fea3ecb3ec89029a46a405bb3f3a9cd67f484c93e5aca909b6559b",
+      "bytes": 488
+    },
+    "shelf-midnight-red": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf/coreJourney.campaign06.test.ts",
+        "-t",
+        "local midnight"
+      ],
+      "start": "2026-10-24T18:05:23.830859+00:00",
+      "head": "f3543284d388334c7d9a6155fc408aea2a1b272e",
+      "tree": "fdb03951bcf8f236a48d34e0e079a76ed766f543",
+      "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "exit": 1,
+      "seconds": 2.08,
+      "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "sha256": "0351f17efafe8e6dd94baf0e2debcc7ab78c357ca4d93d65305e3c812ce02d7a",
+      "bytes": 3164
+    },
+    "source3b7-card360": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-card.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T19:15:45.040744+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 73.07,
+      "status_after": "",
+      "sha256": "294896582baa19bfea52e6e99b8873c8af1be94bb059a9862a6a8c2336a4c287",
+      "bytes": 126
+    },
+    "source3b7-cross390": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--cross-owner",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T19:13:29.618523+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 86.28,
+      "status_after": "",
+      "sha256": "bb9bb1fd3eeb840790fd7dda0ea2365be1432ed8271456808552060a1b31302a",
+      "bytes": 114
+    },
+    "source3b7-lint": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T19:07:20.561534+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 46.19,
+      "status_after": "",
+      "sha256": "7194647b75f426eef7d8d3b8fcf9f198d6d6cce577d91fa1ebcb189f875e8664",
+      "bytes": 1181
+    },
+    "source3b7-push": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "HEAD:refs/heads/stage/m1-retained-resilience"
+      ],
+      "start": "2026-10-24T19:09:22.963587+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 2.24,
+      "status_after": "",
+      "sha256": "ef92c5d1b594e7562253a940f75640fbc53a692958bf8355c035bbe5cf7efd74",
+      "bytes": 103
+    },
+    "source3b7-retained": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "--run",
+        "src/features/shelf",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/notifications",
+        "src/features/photos",
+        "src/features/onboarding",
+        "src/features/settings",
+        "src/features/retainedRecovery",
+        "--maxWorkers=2"
+      ],
+      "start": "2026-10-24T19:09:02.071138+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 87.21,
+      "status_after": "",
+      "sha256": "8c096fecedcf719992cade314819f53ffcd7a8f210dd6ebbc73fe2e5cc6f5b5e",
+      "bytes": 569
+    },
+    "source3b7-root": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force",
+        "--",
+        "--maxWorkers=1"
+      ],
+      "start": "2026-10-24T19:04:58.766144+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 265.27,
+      "status_after": "",
+      "sha256": "b8292dd6ab806f52a90934db344c4667a1b6584c29cce8949dbd4b88f0a14dd9",
+      "bytes": 372828
+    },
+    "source3b7-typecheck-bounded": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T19:07:36.424258+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 134,
+      "seconds": 16.98,
+      "status_after": "",
+      "sha256": "3b5dd7e0636198b3194adbf5796024a0bd21025ce8eadc9e40f08afa00825d10",
+      "bytes": 3956
+    },
+    "source3b7-typecheck-final": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T19:08:12.281636+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 15.92,
+      "status_after": "",
+      "sha256": "ef0c5776631acb500b0350d66f09d03e123bf4fe9421f4ecf093878a2009f219",
+      "bytes": 1168
+    },
+    "source3b7-typecheck": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T19:07:13.092377+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 134,
+      "seconds": 7.29,
+      "status_after": "",
+      "sha256": "ae2f7a1913a8e04f109ac9aaff17c91ebc494ca0af7ac70eada6f82c1ce5b654",
+      "bytes": 3775
+    },
+    "source3b7-ui375": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T19:10:51.039519+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 89.83,
+      "status_after": "",
+      "sha256": "2b18fe9bcf487ac54c93093a6282db95e4fbfcafa6633946be4b39e44289654d",
+      "bytes": 317
+    },
+    "source3b7-worklist": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "start": "2026-10-24T19:08:06.946552+00:00",
+      "head": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+      "tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.73,
+      "status_after": "",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "bytes": 68
+    },
+    "verified-lint": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:39:58.790109+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 63.57,
+      "status_after": "",
+      "sha256": "db4b416a6e67c041365b7ede8a0f5512563f24bf3ba8640f66231812d10632fc",
+      "bytes": 1182
+    },
+    "verified-root-tests": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:39:58.752057+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 40.23,
+      "status_after": "",
+      "sha256": "aac5ca3975f1f6c3772a1cdf830b9e742a27248a1da53fd01f721d7b389a933e",
+      "bytes": 374238
+    },
+    "verified-source-push": {
+      "exit": 0,
+      "before": "d9912f4c8b30358593569c5b9b4e84773c6f463e\trefs/heads/main\ncd2bd51997f283c0b446bf2124f427f482550fa8\trefs/heads/stage/m1-gate-recovery\n3de85a1676f95aa51f0a748350c3f0f9d17c7356\trefs/heads/stage/m1-retained-resilience",
+      "after": "d9912f4c8b30358593569c5b9b4e84773c6f463e\trefs/heads/main\ncd2bd51997f283c0b446bf2124f427f482550fa8\trefs/heads/stage/m1-gate-recovery\n4913544fa5c47014a9a6fe052839dd36409102a1\trefs/heads/stage/m1-retained-resilience",
+      "source": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "observed_utc": "2026-10-24T18:45:11.612297+00:00",
+      "free_bytes": 1683910656
+    },
+    "verified-typecheck": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "start": "2026-10-24T18:39:58.774081+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 37.26,
+      "status_after": "",
+      "sha256": "1d4f87ac74faaa559fbc84b51e9354699ff83e41dc457dbde18a65809d884067",
+      "bytes": 1169
+    },
+    "verified-ui375-r2": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:48:29.166260+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 123.9,
+      "status_after": "",
+      "sha256": "b7afa7407b799b2083b6f7a029e37426d90a3c99c4f2b0e8ef936ef450f64341",
+      "bytes": 348
+    },
+    "verified-ui375": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/campaign07-run/ui-final.mjs",
+        "--daily-loop"
+      ],
+      "start": "2026-10-24T18:44:38.695069+00:00",
+      "head": "4913544fa5c47014a9a6fe052839dd36409102a1",
+      "tree": "5cc2a11d4402cf951710c3ec5e3a7f25085d5bbe",
+      "status_before": "",
+      "exit": 1,
+      "seconds": 69.5,
+      "status_after": "",
+      "sha256": "623521189edcd78887ee9add33007bbd9351bae1f468c24e59b353e27019c2eb",
+      "bytes": 514
+    },
+    "verified-worklist-generate": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "start": "2026-10-24T18:39:30.219081+00:00",
+      "head": "494b818c217ab7b49d0f58040c8e55723311c339",
+      "tree": "c9a73a4f2833d3ab6dfb02d2e0eec89dec5b6fff",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.74,
+      "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "bytes": 130
+    },
+    "worklist-generate": {
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "start": "2026-10-24T18:14:33.589193+00:00",
+      "head": "3c7d12829e9c91eb9345f74e186321477aba3170",
+      "tree": "38bb4187bb16bf2da3860b84dbfd3d2b2a5d5e1f",
+      "status_before": "",
+      "exit": 0,
+      "seconds": 0.68,
+      "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "bytes": 130
+    }
+  },
+  "extraction": "gzip.decompress, then slice offset:offset+bytes; verify SHA-256 and Git blob. No log byte normalization."
+}

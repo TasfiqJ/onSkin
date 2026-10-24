@@ -1,0 +1,16 @@
+  await scrollTextIntoView(client, 'Record opening date');
+  await evaluate(client, `(() => {
+    const original = Storage.prototype.setItem;
+    globalThis.__J02_RESTORE_WRITE__ = () => { Storage.prototype.setItem = original; };
+    Storage.prototype.setItem = function(key, value) {
+      if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic local write failure', 'QuotaExceededError');
+      return original.call(this, key, value);
+    };
+  })()`);
+  await clickByText(client, 'Record opening date');
+  await waitForText(client, 'Your change was not confirmed.', 5000);
+  await captureStep(client, 'J02-quick-open-error', { assertClean: false });
+  await evaluate(client, 'globalThis.__J02_RESTORE_WRITE__()');
+  await clickByText(client, 'Record opening date');
+  await waitForCondition(client, `!document.body.innerText.includes('Your change was not confirmed.')`, 30000, 'opening retry');
+  await captureStep(client, 'J02-quick-open-recovered');

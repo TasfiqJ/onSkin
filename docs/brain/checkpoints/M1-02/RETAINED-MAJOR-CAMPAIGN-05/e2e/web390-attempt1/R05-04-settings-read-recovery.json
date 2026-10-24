@@ -1,0 +1,36 @@
+{
+  "bodyText": "< Notifications Reminder preferences are unavailable. Your saved choices have not been replaced. Try again",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 20,
+      "y": 20
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Try loading reminder preferences again",
+      "role": "button",
+      "selected": false,
+      "width": 318,
+      "x": 36,
+      "y": 140
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8392/settings/notifications",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

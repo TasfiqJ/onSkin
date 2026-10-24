@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/useRamp.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  23:48:07
+   Duration  4.85s (transform 87ms, setup 0ms, import 195ms, tests 4.48s, environment 0ms)
+

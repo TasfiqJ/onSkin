@@ -1,0 +1,13 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "cwd": "C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience",
+  "start": "2026-10-24T02:28:44.241438+00:00",
+  "exit": 2,
+  "seconds": 0.234,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\raw-all-staged-whitespace.log"
+}

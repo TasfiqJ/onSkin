@@ -1,0 +1,21 @@
+{
+  "command": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--force",
+    "--concurrency=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+  "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:12:07.313734+00:00",
+  "exit": 0,
+  "elapsed_seconds": 66.047,
+  "stdout_sha256": "d150afe703d7865bcb4d5cfeb0c1813d85ac0b57acc0c3a175a74521d5f2b221",
+  "stdout_bytes": 1181,
+  "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4",
+  "stderr_bytes": 17
+}

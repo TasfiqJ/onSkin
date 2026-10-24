@@ -1,0 +1,23 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/productOpeningRecovery.test.ts",
+    "--maxWorkers=1"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+  "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:52:09.424723+00:00",
+  "exit": 0,
+  "elapsed_seconds": 1.422,
+  "stdout_sha256": "1904744d893d1b3c4ad709ba3f23ac627fb0d711cccd2b60803c242af56d7821",
+  "stdout_bytes": 372,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_bytes": 0
+}

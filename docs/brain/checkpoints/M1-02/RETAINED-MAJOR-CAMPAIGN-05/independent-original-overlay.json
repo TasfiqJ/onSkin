@@ -1,0 +1,45 @@
+{
+  "anchor": "99596bfceac782d740415503bc25452cac623254",
+  "tree": "d45b9c1257c74ab61328600af0ac5a7d1350e388",
+  "sparse_source_only": true,
+  "note": "Negative tests used every mobile source path and installed dependencies, with no tracked production changes. Full-root and generator qualification use complete checkouts separately.",
+  "tests": [
+    {
+      "path": "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+      "sha256": "8692eea0a11010580da3bba8a1e6e3a044804cc7e444ed1a87293358078ed345",
+      "bytes": 4148
+    },
+    {
+      "path": "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+      "sha256": "ab991d01b18d280d5927758ee26725ca3890c69e00923edb87d88b653de873ea",
+      "bytes": 3024
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+      "sha256": "852c9510a12d220e26e7f5fdd8d1006720ca3e4146a1dd239e1798f43fc0153e",
+      "bytes": 7447
+    }
+  ],
+  "original_production": [
+    {
+      "path": "apps/mobile/src/features/shelf/mutations.ts",
+      "blob": "82b8191b372941e066be32a18f83f9d42bc6f08e",
+      "sha256": "858a5447d5bade6fc1c2b8cb10c8db60f9ace48d706fc4c2042d230ab526af10"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/usePhotos.ts",
+      "blob": "0383710ea416810d459434f6d6dcc1f9dc56541e",
+      "sha256": "a59d8eb99437c0f15fe601c0915f0bfec69eeecbdbf3eeda74cc9e06de6e2790"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "blob": "8f1ae49d87cea66f3aec3141d571a6b5a33037a6",
+      "sha256": "6eadc56df031ee9b6f329a34c8c2376d02ac6712c2deb9ec69ce298bdeeb838e"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/store.ts",
+      "blob": "5e5fe543dba50a49eb697c9dd58bb041d8629931",
+      "sha256": "396f23be42696512500e46c8250b149f07a7100f0c2e503805fe1bf28cae1b88"
+    }
+  ]
+}

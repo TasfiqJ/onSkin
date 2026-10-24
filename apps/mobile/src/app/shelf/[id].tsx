@@ -1016,7 +1016,7 @@ export default function ProductDetailScreen() {
           {!p.isOpened ? (
             <Pressable
               accessibilityRole="button"
-              onPress={() => m.setOpened(id, { openedAt: localDateString(), isOpened: true })}
+              onPress={() => setOpened(0)}
               className="mt-2.5 min-h-[48px] items-center justify-center rounded-[14px] border border-hairline bg-paper-raised py-3"
             >
               <Text variant="bodySm" className="font-sans-semibold text-clay-deep">

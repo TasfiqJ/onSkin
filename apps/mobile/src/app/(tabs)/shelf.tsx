@@ -1,8 +1,15 @@
 import { reportDockScroll } from '@/components/navigation/DockMotion';
 import { useQuery } from '@tanstack/react-query';
 import { router, type Href } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  Keyboard,
+  Pressable,
+  ScrollView,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import {
   Button,
@@ -19,6 +26,11 @@ import { trackProductAddStarted, type ProductAddStartSource } from '@/features/s
 import type { ShelfMirrorIncompatibility } from '@/features/shelf/store';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
+import { findSavedProducts } from '@/features/shelf/quickFind';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 import { readReadyCatalogLookups, type ReadyCatalogLookup } from '@/lib/offline/catalogLookupQueue';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -29,6 +41,7 @@ import { colors } from '@/theme/tokens';
 // and calm, with unsupported dates left unknown.
 type Filter = 'all' | 'actives' | 'expiring';
 const ACTIVE_TAGS = new Set(['retinoid', 'aha', 'bha', 'benzoyl_peroxide', 'vitamin_c']);
+const EMPTY_ITEMS: readonly ShelfItem[] = [];
 const SUBHEAD: Record<Filter, string> = {
   all: 'Everything on your shelf, ordered by supported tracked dates.',
   actives: 'The potent ingredients in your routine.',
@@ -178,11 +191,11 @@ function ProductCard({ item }: { item: ShelfItem }) {
           haptics.select();
           router.push(`/shelf/${item.id}`);
         }}
-        style={({ pressed }) => [pressed ? { opacity: 0.85 } : null]}
+        style={({ pressed }) => [{ flexWrap: 'wrap' }, pressed ? { opacity: 0.85 } : null]}
         className="flex-row items-center gap-3.5"
       >
         <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
-        <View className="flex-1">
+        <View className="min-w-[100px] flex-1">
           <Text variant="body" className="font-sans-semibold">
             {item.name}
           </Text>
@@ -428,7 +441,13 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
           Shelf
         </Text>
       </View>
-      <View className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}>
+      <View
+        className={
+          compactFilterLabels
+            ? 'mt-3.5 flex-row flex-wrap gap-2'
+            : 'mt-3.5 flex-row flex-wrap gap-2.5'
+        }
+      >
         {(['All', 'Actives', 'Expiring'] as const).map((l, i) => (
           <SegmentChip
             key={l}
@@ -449,9 +468,14 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
 }
 
 export default function ShelfScreen() {
+  const authority = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
   return (
     <ShelfDataAvailabilityGate>
-      <ShelfScreenContent />
+      <ShelfScreenContent key={authority?.generation ?? 'closed'} />
     </ShelfDataAvailabilityGate>
   );
 }
@@ -466,19 +490,30 @@ function ShelfScreenContent() {
     refetchOnMount: 'always',
   });
   const [filter, setFilter] = useState<Filter>('all');
+  const [query, setQuery] = useState('');
+  const finding = query.trim().length > 0;
+  const findInput = useRef<TextInput>(null);
   const { height } = useWindowDimensions();
   const compactShelf = height < 640;
   const shortShelf = height < 520;
   const splitShortShelf = height < 410;
   const compactFilterLabels = compactShelf;
 
-  const items = data?.items ?? [];
+  const items = data?.items ?? EMPTY_ITEMS;
   const archiveCount = data?.archive.length ?? 0;
-  const filtered = items.filter((i) => {
-    if (filter === 'actives') return i.engineProduct.tags.some((t) => ACTIVE_TAGS.has(t));
-    if (filter === 'expiring') return i.badge.kind === 'countdown' || i.badge.kind === 'expired';
-    return true;
-  });
+  const filtered = useMemo(
+    () =>
+      findSavedProducts(
+        items.filter((i) => {
+          if (filter === 'actives') return i.engineProduct.tags.some((t) => ACTIVE_TAGS.has(t));
+          if (filter === 'expiring')
+            return i.badge.kind === 'countdown' || i.badge.kind === 'expired';
+          return true;
+        }),
+        query,
+      ),
+    [items, filter, query],
+  );
 
   const showLoading = isLoading && items.length === 0;
   const isEmpty = !isLoading && items.length === 0;
@@ -548,6 +583,7 @@ function ShelfScreenContent() {
           scrollEventThrottle={32}
           showsVerticalScrollIndicator={false}
           contentContainerClassName="pb-32"
+          keyboardShouldPersistTaps="handled"
         >
           <View className="mt-2 flex-row items-start justify-between gap-4">
             <View className="flex-1">
@@ -574,8 +610,60 @@ function ShelfScreenContent() {
             </Pressable>
           </View>
 
+          <View className="mt-4">
+            <Text variant="label" tone="muted">
+              QUICK FIND · SAVED PRODUCTS
+            </Text>
+            <View className="mt-2 flex-row items-center gap-2">
+              <TextInput
+                ref={findInput}
+                accessibilityLabel="Quick Find saved products"
+                accessibilityHint="Searches only names and brands saved on this device."
+                value={query}
+                onChangeText={setQuery}
+                placeholder="Find by name or brand"
+                placeholderTextColor={colors.mutedLight}
+                maxLength={200}
+                autoCorrect={false}
+                autoCapitalize="none"
+                returnKeyType="search"
+                onSubmitEditing={() => Keyboard.dismiss()}
+                onKeyPress={(event) => {
+                  if (event.nativeEvent.key === 'Escape') {
+                    if (query) setQuery('');
+                    else findInput.current?.blur();
+                  }
+                }}
+                className="min-h-[48px] min-w-0 flex-1 rounded-card border border-hairline bg-paper-raised px-4 py-3 font-sans text-base text-ink"
+              />
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Clear Quick Find"
+                disabled={query.length === 0}
+                accessibilityState={{ disabled: query.length === 0 }}
+                onPress={() => {
+                  setQuery('');
+                  findInput.current?.focus();
+                }}
+                className="min-h-[48px] min-w-[48px] items-center justify-center rounded-pill px-2"
+              >
+                <Text variant="bodySm" tone="muted">
+                  Clear
+                </Text>
+              </Pressable>
+            </View>
+            <Text variant="bodySm" tone="muted" accessibilityLiveRegion="polite" className="mt-2">
+              {filtered.length} of {items.length} saved products
+              {filter === 'all' ? '' : ` · ${filter === 'actives' ? 'Actives' : 'Expiring'}`}
+            </Text>
+          </View>
+
           <View
-            className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}
+            className={
+              compactFilterLabels
+                ? 'mt-3.5 flex-row flex-wrap gap-2'
+                : 'mt-3.5 flex-row flex-wrap gap-2.5'
+            }
           >
             {(['all', 'actives', 'expiring'] as Filter[]).map((f) => (
               <SegmentChip
@@ -597,35 +685,40 @@ function ShelfScreenContent() {
             ))}
           </View>
 
-          <Text variant="bodySm" tone="muted" className="mt-3">
-            {SUBHEAD[filter]}
-          </Text>
+          {!finding ? (
+            <Text variant="bodySm" tone="muted" className="mt-3">
+              {SUBHEAD[filter]}
+            </Text>
+          ) : null}
 
           {recoverySurface}
           {repairSurface}
 
-          {data?.banner ? (
-            <ConflictBanner
-              className="mt-4"
-              title={bannerTitle(data.banner)}
-              subhead={bannerSubhead(data.banner)}
-              severityPill={severityLabel(data.banner)}
-              actionLabel={data.banner.rule.copy.primaryActionLabel}
-              onReview={() => {
-                haptics.select();
-                router.push(conflictDetailRoute(data.banner!));
-              }}
-            />
-          ) : data?.conflictCoverageStatus === 'unsupported_unreviewed' &&
-            data.unsupportedConflictPairs.length > 0 ? (
-            <ConflictBanner
-              className="mt-4"
-              title="Interaction guidance is unavailable"
-              subhead="We won't show a compatibility result for these products until that review is complete."
-            />
-          ) : null}
+          {!finding &&
+            (data?.banner ? (
+              <ConflictBanner
+                className="mt-4"
+                title={bannerTitle(data.banner)}
+                subhead={bannerSubhead(data.banner)}
+                severityPill={severityLabel(data.banner)}
+                actionLabel={data.banner.rule.copy.primaryActionLabel}
+                onReview={() => {
+                  haptics.select();
+                  router.push(conflictDetailRoute(data.banner!));
+                }}
+              />
+            ) : data?.conflictCoverageStatus === 'unsupported_unreviewed' &&
+              data.unsupportedConflictPairs.length > 0 ? (
+              <ConflictBanner
+                className="mt-4"
+                title="Interaction guidance is unavailable"
+                subhead="We won't show a compatibility result for these products until that review is complete."
+              />
+            ) : null)}
 
-          <RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />
+          {!finding ? (
+            <RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />
+          ) : null}
 
           <View className="mt-4 gap-2.5">
             {filtered.map((item) => (
@@ -633,9 +726,11 @@ function ShelfScreenContent() {
             ))}
             {filtered.length === 0 ? (
               <Text variant="bodySm" tone="muted" className="mt-4 text-center">
-                {filter === 'expiring'
-                  ? 'Nothing needs replacing right now.'
-                  : 'No products match this filter.'}
+                {query.trim()
+                  ? 'No saved products match Quick Find and this filter. Try another name or brand, or clear Quick Find.'
+                  : filter === 'expiring'
+                    ? 'No products match this filter. Unknown dates aren’t included.'
+                    : 'No products match this filter.'}
               </Text>
             ) : null}
           </View>

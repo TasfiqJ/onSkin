@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/retainedRecovery --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  00:54:39
+   Duration  1.04s (transform 243ms, setup 0ms, import 439ms, tests 425ms, environment 0ms)
+

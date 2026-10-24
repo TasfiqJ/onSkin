@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "--import",
+    "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop",
+    "--cross-owner"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:50:15.145330+00:00",
+  "exit": 0,
+  "source_start": {
+    "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+    "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+    "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+  },
+  "seconds": 93.078,
+  "sha256": "e889d741e56555ff4c5e5406c03c1392b7b71d6fb95c2b56a2948b11e689a3ad",
+  "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+  "dirty": " M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

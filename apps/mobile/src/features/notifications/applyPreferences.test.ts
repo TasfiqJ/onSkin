@@ -132,8 +132,8 @@ describe('notification preference application', () => {
 
     expect(source).toContain('applyNotificationPreferencePatch');
     expect(source).toContain('runHealthDataOperation(expectedOwnerUserId');
-    expect(source).toContain('const prefs = await loadNotifPrefs()');
-    expect(source).toContain('qc.setQueryData<NotifPrefs>(KEY, next)');
+    expect(source).toContain('const prefs = await loadNotifPrefs({ strict: true })');
+    expect(source).toContain('qc.setQueryData<NotifPrefs>(queryKey, next)');
     expect(source).toContain('await qc.invalidateQueries({ queryKey: KEY })');
     expect(source).not.toContain('onSuccess:');
     expect(source).not.toContain('onMutate');

@@ -1,0 +1,40 @@
+stderr | src/features/shelf/productOpeningRecovery.test.ts > unopened product quick action through the real detail route > announces write failure and allows a successful retry
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/productOpeningRecovery.test.ts > unopened product quick action through the real detail route > joins no duplicate write while the first tap is pending
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/shelf/productOpeningRecovery.test.ts > unopened product quick action through the real detail route > announces write failure and allows a successful retry
+Error: SYNTHETIC_STORAGE_UNAVAILABLE
+ ❯ src/features/shelf/productOpeningRecovery.test.ts:63:43
+     61| describe('unopened product quick action through the real detail route'…
+     62|   it('announces write failure and allows a successful retry', async ()…
+     63|     mocks.setOpened.mockRejectedValueOnce(new Error('SYNTHETIC_STORAGE…
+       |                                           ^
+     64|     await act(async () => { await opening().props.onPress(); });
+     65|     expect(alerts()).toEqual([expect.stringContaining('Your change was…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/features/shelf/productOpeningRecovery.test.ts > unopened product quick action through the real detail route > joins no duplicate write while the first tap is pending
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/features/shelf/productOpeningRecovery.test.ts:82:29
+     80|       await Promise.all([first, second]);
+     81|     });
+     82|     expect(mocks.setOpened).toHaveBeenCalledTimes(1);
+       |                             ^
+     83|   });
+     84| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/shelf/productOpeningRecovery.test.ts --maxWorkers=1

@@ -1,0 +1,44 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/retiredActions.campaign05.test.ts",
+    "src/features/photos/captureOwner.campaign05.test.ts",
+    "src/features/notifications/preferenceAvailability.campaign05.test.ts",
+    "--maxWorkers=3"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m1x05-original-329853b7",
+  "started_at": "2026-10-24T05:01:58.028148+00:00",
+  "finished_at": "2026-10-24T05:02:00.239446+00:00",
+  "duration_seconds": 1.719,
+  "exit_code": 1,
+  "head": "99596bfceac782d740415503bc25452cac623254",
+  "tree": "d45b9c1257c74ab61328600af0ac5a7d1350e388",
+  "status_before": "?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts\n?? apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+      "bytes": 7447,
+      "sha256": "852c9510a12d220e26e7f5fdd8d1006720ca3e4146a1dd239e1798f43fc0153e"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+      "bytes": 3024,
+      "sha256": "ab991d01b18d280d5927758ee26725ca3890c69e00923edb87d88b653de873ea"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+      "bytes": 4148,
+      "sha256": "8692eea0a11010580da3bba8a1e6e3a044804cc7e444ed1a87293358078ed345"
+    }
+  ],
+  "status_after": "?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts\n?? apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+  "log": "independent-original-production.log",
+  "log_bytes": 110664,
+  "log_sha256": "1c3a72a6c28d23d3f77762d3d25e878f167481540bf26984ae60ad04a411494c"
+}

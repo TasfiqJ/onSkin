@@ -4,10 +4,11 @@ import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
   runHealthDataWriteOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
-import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 
 import {
   addProduct,
@@ -26,17 +27,25 @@ import {
 // truth (D-029). Store v3 persists owner-free replay work in the same encrypted
 // transaction, so this hook has no crash-gap-prone direct mirror.
 
-function runShelfMutation<T>(
-  operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
-): Promise<T> {
-  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
-  if (!expectedOwnerUserId) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
-  return runHealthDataWriteOperation(expectedOwnerUserId, operation);
-}
-
 export function useShelfMutations() {
   const qc = useQueryClient();
-  const invalidate = () => qc.invalidateQueries({ queryKey: ['shelf'] });
+  // Delayed form/confirmation callbacks belong to the render that accepted
+  // them, even if a different owner or a fresh grant is active at dispatch.
+  let accepted: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+  try { accepted = captureHealthDataWriteLease(); } catch { /* admission closed */ }
+  async function runShelfMutation<T>(operation: (lease: HealthDataWriteOperationLease) => Promise<T>): Promise<T> {
+    if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+    assertHealthDataWriteLease(accepted);
+    const expectedOwnerUserId = accepted.ownerUserId;
+    return runHealthDataWriteOperation(expectedOwnerUserId, operation);
+  }
+  const invalidate = async (lease: HealthDataWriteOperationLease) => {
+    // Invalidation alone can join a data-less initial fetch started before the
+    // commit. Cancel that snapshot before reading the durable local result.
+    await qc.cancelQueries({ queryKey: ['shelf'] });
+    lease.assertCurrent();
+    await qc.invalidateQueries({ queryKey: ['shelf'] });
+  };
 
   return {
     async add(input: NewShelfProduct): Promise<ShelfProduct> {
@@ -44,7 +53,7 @@ export function useShelfMutations() {
         const product = await addProduct(input);
         lease.assertCurrent();
         track('product_added', { added_via: input.addedVia });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
         return product;
       });
@@ -56,7 +65,7 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         const result = await applyCatalogRecoveryProductUpdate(input);
         lease.assertCurrent();
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
         return result;
       });
@@ -75,7 +84,7 @@ export function useShelfMutations() {
         });
         lease.assertCurrent();
         track('opened_date_set', { is_opened: patch.isOpened });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -84,7 +93,7 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         await updateProduct(id, patch);
         lease.assertCurrent();
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -97,7 +106,7 @@ export function useShelfMutations() {
         });
         lease.assertCurrent();
         track('product_finished', { source: 'shelf' });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -110,7 +119,7 @@ export function useShelfMutations() {
         });
         lease.assertCurrent();
         track('product_discarded', { source: 'shelf' });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -119,7 +128,7 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         await removeProduct(id);
         lease.assertCurrent();
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -134,7 +143,7 @@ export function useShelfMutations() {
         const fresh = await reAddProduct(id, opening, operationId);
         lease.assertCurrent();
         track('replenishment_nudge_tapped', { action: 're_add' });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
         return fresh;
       });

@@ -1,0 +1,19 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/offlineProgress.retained04.test.ts",
+    "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:31:56.797255+00:00",
+  "exit": 1,
+  "seconds": 1.547,
+  "sha256": "31f297ff05b3b3c2409e2434718f630866e2a09dabe394df2ecd1863c70e72ba",
+  "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+  "dirty": "?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

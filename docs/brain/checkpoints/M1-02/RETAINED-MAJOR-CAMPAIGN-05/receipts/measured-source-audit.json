@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Python39\\python.exe",
+    "-B",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\Campaign05-run-20261024-329853b7\\audit_scope.py",
+    "4205deb09d0117dde456917c4672e4539d898ec5"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:11:54.476807+00:00",
+  "finished_at": "2026-10-24T05:12:10.535716+00:00",
+  "duration_seconds": 15.578,
+  "exit_code": 0,
+  "head": "4205deb09d0117dde456917c4672e4539d898ec5",
+  "tree": "fd778492374d694d082808382054b68e635e2a37",
+  "status_before": "",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [],
+  "status_after": "",
+  "log": "measured-source-audit.log",
+  "log_bytes": 184,
+  "log_sha256": "a640d14811031c1991cc3dd5604c0d843bd6194303f758dae4c5b3e29b93991f"
+}

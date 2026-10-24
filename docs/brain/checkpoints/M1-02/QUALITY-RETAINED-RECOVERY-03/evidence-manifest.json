@@ -1,0 +1,2185 @@
+{
+  "schema_version": 1,
+  "source_commit": "4d8ef8a029375512ddb29df402f4b77ca557be39",
+  "self_exclusion": "This manifest excludes itself; its Git blob is bound by the final delivery tree.",
+  "entries": [
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/anchor-ci-diagnosis.json",
+      "bytes": 2991,
+      "sha256": "f05b2d819e1714fea603908bf0e133bc2cc22e3038c754d1cf35d7e40ab4dcfc",
+      "git_blob": "5c7ba79f957f16a796eaa43b59d6946da859fb8c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/anchor-working-hashes.json",
+      "bytes": 4291912,
+      "sha256": "5992579f6acd29740eafc5ea9e7924ae6c8dda0aa50a87d6a47981972432dc25",
+      "git_blob": "7fd1e9119ae14a795207d224e3f75bef3b8c9f36"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/CI_AND_BLOCKERS.md",
+      "bytes": 2530,
+      "sha256": "833257620b0a0efc68a76ac5f4980b7e1b0601f9a19ed4bfa3781a92c16a2259",
+      "git_blob": "4cb81e09c4b646ae3ad8566892f816a29d9ec8e4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/completion-report.json",
+      "bytes": 6446,
+      "sha256": "97ff494a82d030d7f0be6d6d0d657c34728e37c1b2457955d3007c17ac6e08b8",
+      "git_blob": "753cbfec1a7768d00e87c5ec32a771e721891bd9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/00_READ_FIRST.md",
+      "bytes": 800,
+      "sha256": "487322c9049709eddb4d3cbedbaf8ad6df68946fee1750e2cfde6a1302296da8",
+      "git_blob": "de7eca8953e0edf8200fe7879ff033f7448e08c3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/01_SOURCE_IDENTITY.md",
+      "bytes": 1119,
+      "sha256": "f8de97167d85344b96fc6cf2e584792b3642b24badccf926db1ebad9cea51d02",
+      "git_blob": "15fd592c45682d24de5614189707d936adfcd1a9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/02_BRAIN_SCOPED_VERDICT.md",
+      "bytes": 1560,
+      "sha256": "bcb80806a321e0843478ea8490e44309e9c7c694bad2125347024c099b0c4484",
+      "git_blob": "cdcf1d09752b4553d7e9013506af20803153ed95"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/03_QUALITY_CI_FAILURE_TRUTH.md",
+      "bytes": 1982,
+      "sha256": "048559174315707f3ac1c3bdc96ec9b7f7f19de1fb82d3583ee48d5388eca025",
+      "git_blob": "8c4c0f638d2f31cfe32f552c958fc4678ba96ccd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/04_EXACT_QUALITY_SCOPE.md",
+      "bytes": 1464,
+      "sha256": "3c418561c69be93e82821ef575e5469f0812218801886ca09db53c1a0d343d67",
+      "git_blob": "0f29428f85b74b76c26ba216ce9a9db7faa14577"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/05_AUTONOMOUS_M1_SCOPE.md",
+      "bytes": 1939,
+      "sha256": "3be77b9dd85abe09f39652107721d8a4e3a5fd226725eea9be643d50ad8eb4b3",
+      "git_blob": "8f7cbdc60c7e4927e270aa14f50dc9ad1b75a5c6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/06_AUTHORIZED_EDIT_SCOPE.md",
+      "bytes": 1739,
+      "sha256": "5c18da3fdb9c86d8c0e7df5a5fba5815d4710b1c790b0ba26005d5285cbe87c2",
+      "git_blob": "5020204784a2db245e3daa7cb318539b5b478a6c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/07_TESTS_AND_EVIDENCE.md",
+      "bytes": 1772,
+      "sha256": "492a8092220224640ae92b16bb9c2c4548bd0d711e2830a3728683211704f345",
+      "git_blob": "88dfa46350c0ad68d6c90d5bc7b9bf692d5cdb6c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/08_DELIVERY_AND_STOP.md",
+      "bytes": 1748,
+      "sha256": "1cba9b22917c7b9d034970e4c5b1e435293ce22d4a2836f65f54871beb4e536c",
+      "git_blob": "bd383c7aad56845ad3764a00c33b6edd90f160ee"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/manifest.json",
+      "bytes": 1753,
+      "sha256": "972a733b44a14366e07af5fea7d5eda3105879dbcc631ee62361774dcb531a7a",
+      "git_blob": "104f92639a0221b6a26cbb6fa4b6b79e31cd115e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/verification.json",
+      "bytes": 539,
+      "sha256": "5bf3ef309e69c5e1f2156b9bbec1508dc917b8dd814bd84caf28c9e8aeeed53c",
+      "git_blob": "e29f4af4fd08912ca2bee7f8ec00b17b39567a7f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/context/verify_packet.py",
+      "bytes": 1415,
+      "sha256": "ec32f666884afcbfe6de74769b3f28aab48a7ab8c520b90869d3c459079619ef",
+      "git_blob": "a9fcb897a4ef879741b0e4dcb288d204629f7b63"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/environment.json",
+      "bytes": 554,
+      "sha256": "0990108adb0e258effd8a26e64caa4e2fcc8d5eb849511eac5516cc6fe018788",
+      "git_blob": "bf7fbc42894b37e615cdce69b84758eda0d4bfd0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/executor-notes.json",
+      "bytes": 891,
+      "sha256": "8a75b96c9e06de478f4b48d640089ad792c7c37eaacca6c2fdd811756049ede4",
+      "git_blob": "1ffbadeb6a04fdc4c085e623976b31724d3fd4a4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/final-test-overlay.json",
+      "bytes": 434,
+      "sha256": "a5a8ba141214840243d74166f59c34db80d5d759df4ec28e2e1f5ed4a04e67b0",
+      "git_blob": "697f746d2478dfddd5f818d27e1f74ce635bf341"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/final-working-byte-comparison.json",
+      "bytes": 1683,
+      "sha256": "49e2bdee5e505a9170eb1eb74192ab37dfcb5db6a5205bd8d7a132521015b99c",
+      "git_blob": "5a33706f021d780de312075ffe7c10a5eef31dc4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race-attempt1.fragment.txt",
+      "bytes": 5677,
+      "sha256": "bae74ef051341872bc0c80849775c2e217185511506b434211d56d134120d557",
+      "git_blob": "508f5b94f4d6b180f6aa3da9558a79fb10bfdac8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt",
+      "bytes": 6194,
+      "sha256": "0de8158f2a404982c60886bb43da2b858c5af5921f2a77f4bf86730738d3a088",
+      "git_blob": "ab3b3241336acd0110418faa304be77074e020e0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/README.md",
+      "bytes": 2823,
+      "sha256": "73b8117737fa4d7d64eb974779dfe01b680a4a59af888034f5a77e433be388b5",
+      "git_blob": "b0879a33b560f2eb95f3528828567e27995b64ba"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/authored-evidence-diff-check.log",
+      "bytes": 15960,
+      "sha256": "e463873f9a69425167c634f7516a0f43183d40ac6370fd3df21d78b465f2fd19",
+      "git_blob": "19d8411eff4691f5d019b1cb9aa26ebb06b4cc81"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/authored-evidence-diff-check.log.json",
+      "bytes": 1372,
+      "sha256": "e5582061db866ad6e822aa1276fbe6ce2051ad62df857ae1d1c3fbafd2aec538",
+      "git_blob": "5bff83f5ba90e89481b8cfa0ccfebd1904bfbdbf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/authored-final-whitespace.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/authored-final-whitespace.log.json",
+      "bytes": 1166,
+      "sha256": "ac54d2a1ca7a14177a626cd3836f6e7f55e2d6e2a872e61a77fb75501c346fdb",
+      "git_blob": "d3a606710b28fd18eb24722f5c787ddfb7481ed8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/authored-source-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/authored-source-diff-check.log.json",
+      "bytes": 453,
+      "sha256": "949d7c444116c2097735921555353a20ada06300be64fe781b65fe80d9002b73",
+      "git_blob": "8cf1eae68fd31348d003c09c9138d4b811a9af27"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-lint.log",
+      "bytes": 1181,
+      "sha256": "e1eecbf13349d9b5c2915bd1efa840362360e008339ab61955bc42f80c353902",
+      "git_blob": "abf7fc1966047199200f027134415eaedbe041dd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-lint.log.json",
+      "bytes": 374,
+      "sha256": "7424a88f7a4c1b42e76a47099d948bee0123aa23480cc1f636dc3a87a7f0dee6",
+      "git_blob": "8d5fe1187130d7b26927e3f41be2a7a9aa748ce1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-root-tests.log",
+      "bytes": 285906,
+      "sha256": "f9bd2c903f83efb5a5f1206f87b24a47f3a9dfdfea0e5ed1605dc90dca647bfb",
+      "git_blob": "8acb8ac2d58e0874e86ec144771317ec574f5f84"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-root-tests.log.json",
+      "bytes": 368,
+      "sha256": "ffc6ca9d883fadf1d53146f38b46edc911d8c928680916d7e2fba6c0a76d7247",
+      "git_blob": "c7ce56b3203b81812bf12cbe61bb4c85cad7fcfe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-typecheck.log",
+      "bytes": 1169,
+      "sha256": "a55e5e87a5556d9be43a6b7bb513a7cc3ae6817aeb0c3eb08429cf2969451383",
+      "git_blob": "b53858aadebe3bb43b8e4d94ab67c16111b27aa9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-typecheck.log.json",
+      "bytes": 384,
+      "sha256": "1eb996f4b0feb34e8b7e09958b2c756c84586470ad04d9b3139f2d2cf4029fb3",
+      "git_blob": "6ff85d16513288f3996392f8c4da26e9749b146c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-worklist-check.log",
+      "bytes": 182,
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "git_blob": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/clean-source-worklist-check.log.json",
+      "bytes": 380,
+      "sha256": "c4628a1656c26c4093d2fb802bba8c9ae246d47a72d565d8dda12146ad167dc1",
+      "git_blob": "7587aab8ca228138977235c3459871b28fffc1f1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/final-overlay-original-source.log",
+      "bytes": 9248,
+      "sha256": "89dea5adbe5b750e0097095add5122bf3418e67160e7e698de2cf9c902dfb531",
+      "git_blob": "da80df196acafeba6ebb735972d6e684ed6202bc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/final-overlay-original-source.log.json",
+      "bytes": 543,
+      "sha256": "eccb9817dddadf0627b9ff18c9eb017d75f2700e55b58540d03785162718a729",
+      "git_blob": "d4848466b7d3a1addde536be8e534bbea0d77754"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/final-tests-original-source.log",
+      "bytes": 9248,
+      "sha256": "6cdda91bac663c9fbe60efb574b35c7e74e43a08079dfd835ce766ffa69c5f05",
+      "git_blob": "87575bf015488ced23dc160a24120d939e955ca6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/final-tests-original-source.log.json",
+      "bytes": 540,
+      "sha256": "d0c9fc8c03538b3e5d913f3d02b3973e25c667c9105393d96c9ccd267016743c",
+      "git_blob": "8db5d9f84818915faa0aae0940ab3b31d2b2dc2a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/focused-final.log",
+      "bytes": 427,
+      "sha256": "540a3a70e3d7c5fc1871eaad85690781ec80833c3d36d0d10976319915fa6313",
+      "git_blob": "cf12be52a733ced64ad24d40d1e00daa39700444"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/focused-final.log.json",
+      "bytes": 526,
+      "sha256": "52a61c13ee2565903e0ea88af17be20a958cacc00d1394dbbcc7cefd3be3c03d",
+      "git_blob": "7e291d76133b14a20d8513f14dade0b41c3fe467"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/lint-forced-final.log",
+      "bytes": 1181,
+      "sha256": "14f4f1ba900b55d58236bcd4a3cbc86110d7bb34577a37cf797998ccea7808bc",
+      "git_blob": "ec71b25b5f1426ffd97b3fb9a695dd49f3acc448"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/lint-forced-final.log.json",
+      "bytes": 374,
+      "sha256": "f3c35bdd38fd507d4c7d2ac91a8a804253addb5a8199abf19eaf0d1ae91b78e8",
+      "git_blob": "3cbdff4ec7ea82f1c2821339befdb770b38c8cc5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/lint-forced.log",
+      "bytes": 7377,
+      "sha256": "9deb18dda4a656580151fce1c501654f0e56f7f918aa6438a3f422a60dcdb01b",
+      "git_blob": "d174d73ab487f9016ff1ce143ccfe0c0d1c3006c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/lint-forced.log.json",
+      "bytes": 368,
+      "sha256": "adf4ea962eeaf4e4cf4427313c8788060f6c5af32f0033d87efeb05fb0c40b04",
+      "git_blob": "17f6647adb513f1348f5541c7dc0664b78fe9c0d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/raw-all-staged-whitespace.log",
+      "bytes": 3145,
+      "sha256": "9f0489b89f6a220d172f8cae71f8bb61fcb915c026901a9a821efd780064cc40",
+      "git_blob": "cc41dc58ee930a1a824f07c20e435103386e6197"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/raw-all-staged-whitespace.log.json",
+      "bytes": 371,
+      "sha256": "cd6fd8844cc0bda0f5f63651bf9534af1852e788e19aed461eeddac6b6e42932",
+      "git_blob": "890343be729111c72c961975b427b3f103bb5b87"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/retained-families.log",
+      "bytes": 497,
+      "sha256": "e4c3c3ca512f2bb0bb76018865de473fdefecf02dc30b0ebb131a03f52f2cc9c",
+      "git_blob": "e42bc39d2f7d28d0b0d94d998c4771735b9210e3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/retained-families.log.json",
+      "bytes": 635,
+      "sha256": "1941ed910a34644b808c1581ca3920a8b525e1cb93c917d2f090a663a5eeb6cc",
+      "git_blob": "6beb72f1dc6e6d465f4e5f98ada52dafce6bcc12"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/retained03-green-first.log",
+      "bytes": 425,
+      "sha256": "50c358f6f5b13a23b8d0fefd64e47bfb8b633e4e10c8528a3ba76e3d01a55e71",
+      "git_blob": "f1c8311072e57258976aa531f163952d4d2d1179"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/retained03-green-first.log.json",
+      "bytes": 535,
+      "sha256": "79ec1cf0b05fd1ba7e18de72ee6d23e780c4a4827618a7d50a451b4fefb4dd2c",
+      "git_blob": "d86c64060e0bc40472483484b5767512fe8a27bc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/retained03-red.log",
+      "bytes": 5138,
+      "sha256": "225b0089b360b527268c96b186da985c1b347774f3d94eab78e9d6e6aa472602",
+      "git_blob": "a00f4ea8fc478e093cf62f02de3ff6e1af757f44"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/retained03-red.log.json",
+      "bytes": 527,
+      "sha256": "79e96dea900eb5be056367d7d015a83896acf570140d478dd291b044dfedbcb6",
+      "git_blob": "d24e34ed28a679b1df0e1faa1d2113f3187f532d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/root-tests-forced.log",
+      "bytes": 285974,
+      "sha256": "9fc647cf17ed92e4a8fef2d6086971f952ac3e853a59a3d97d38a7abf03cf044",
+      "git_blob": "7c48b0e90dd3e83417680af7e422e8f2e73ceaa0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/root-tests-forced.log.json",
+      "bytes": 362,
+      "sha256": "e8dea5dc6b20d425dbefc2569cb45f00d6287ea1101c90bac668fba5c4e9d06e",
+      "git_blob": "132895f6f1cec4085a82aafc3ce058ccd7269482"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/typecheck-forced.log",
+      "bytes": 1169,
+      "sha256": "4e823a52e2d55f9c37075c824ea48e89914f9f3f23316840b6f707cceb8f3ea7",
+      "git_blob": "fd61dfb73584934ab63c914899a3c4c408d88e0c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/typecheck-forced.log.json",
+      "bytes": 378,
+      "sha256": "76bd212cb3138862689fe53781c983f3c0605133348b1d6db95967b62ee39f0b",
+      "git_blob": "656dba91546e4689da808a0c76ad6797df2137f8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-cross-owner390.log",
+      "bytes": 121,
+      "sha256": "1f03e586ec6a3f57e4437c57335204f432cfcf2cfb27c54e937268c62fe6495e",
+      "git_blob": "1e4e63f2bdcc8192c966780b6651f2c118990818"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-cross-owner390.log.json",
+      "bytes": 511,
+      "sha256": "6d9a87321c699caec659bf8b4b22ced972bd402ca60fc5d339d9af95540602f1",
+      "git_blob": "740550fbe9b2b913fa96e28d6b3a7fc75cfec8a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375-final.log",
+      "bytes": 132,
+      "sha256": "856572202c307feccfeb51c02735fe15790b366b6964c89a44e6afcdaf585a22",
+      "git_blob": "5eeaecfc31abd0089bc1707fdc915bef002b2781"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375-final.log.json",
+      "bytes": 508,
+      "sha256": "bda9214a020bf92eecdc34c03103400ac28d2e626cf6eed22ab9164b3212062d",
+      "git_blob": "769f9d9966d5fe884a55f0b630b50f15758815ca"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375-run1.log",
+      "bytes": 858,
+      "sha256": "38ac464ac368b0efa1ed6b90d83bc58659059e83dfb5741bb95abc5699426d95",
+      "git_blob": "2827a59b2eb1ec026942f878d9986000154c0152"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375-run1.log.json",
+      "bytes": 506,
+      "sha256": "14b7c36608ee4aeb55201a167bcec9270375b9fd3c1d9658ad8b3fb1a4f9a0f0",
+      "git_blob": "d7497f8bf3d5db23c102fddb909f17c8deaa997a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375-run2.log",
+      "bytes": 572,
+      "sha256": "c10a62933c59fb0c178286feabc0cb897f9abd01c04e04cdc5d5e2b67903c62d",
+      "git_blob": "da22978616b69438a8073521505482af5b30db15"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375-run2.log.json",
+      "bytes": 508,
+      "sha256": "05156208ae7117400a935804222bc06a7b87288996f6a5c4457ec673e9652578",
+      "git_blob": "cc4d437a01c7aae13aa9d9bef5210e6827197a35"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375.log",
+      "bytes": 988,
+      "sha256": "eef265f76d158acd675a83b1439468e9c82ea73e0a9b8d0461ceaf125241df1b",
+      "git_blob": "bd707d112b0d192e6e312d09ab3be4f86fd093a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web375.log.json",
+      "bytes": 493,
+      "sha256": "4ac4b95d5d6f8bbca2a414e3207ea32352bb045c7a20b96f1a502b71aa4c7927",
+      "git_blob": "b621c49c93d2188333734b015a24d02a40939c5b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web390-final.log",
+      "bytes": 132,
+      "sha256": "574d6e79f7444c2710fad8fc620df8fae4ca08ae89261147b9eb42ad6df8cc55",
+      "git_blob": "af346acbc1b07396cf3e0bda64ee72997196e194"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/ui-web390-final.log.json",
+      "bytes": 508,
+      "sha256": "a12fe0cf61b02bfef94bd693310b5afdc2494e76cd969df2506a4fe84b4b767a",
+      "git_blob": "b503368e911fbd21f37c76801bba70d58e104548"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/whitespace-retention.json",
+      "bytes": 563,
+      "sha256": "39c7f84be4b090caeda698759ee90369d666621488a12a363abb25d4b0c0d6d5",
+      "git_blob": "c71028f3bcc76c4c21a16671d3ffe8505b727204"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-before-final-refresh.log",
+      "bytes": 302,
+      "sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb",
+      "git_blob": "721c090e65b742c6e8747d113eb3cf6fa9f0eade"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-before-final-refresh.log.json",
+      "bytes": 382,
+      "sha256": "5af300caf5882765ba34c654bd2266738837e1c40b5910e70162911fc2a6d214",
+      "git_blob": "4128ebf86a9c6ebf801f21e3e6ee41691cb570d0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-clean-positive.log",
+      "bytes": 182,
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "git_blob": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-clean-positive.log.json",
+      "bytes": 376,
+      "sha256": "2223eceeddfb10d095c3c8ad162b905b4ea46c98a57a049f753eaa2f6fb0c04f",
+      "git_blob": "06b4187408a90f641b1f967ae289736de6f1b5ff"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-complete-before.log",
+      "bytes": 302,
+      "sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb",
+      "git_blob": "721c090e65b742c6e8747d113eb3cf6fa9f0eade"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-complete-before.log.json",
+      "bytes": 377,
+      "sha256": "ab947e0fb304bf633b2827f496b7e1725cea288225f6e18c4f66bcb2c8b909fe",
+      "git_blob": "b0d86f37db61b8367f6ef1b9f89ca88d8c94f72e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-disposable-negative.log",
+      "bytes": 302,
+      "sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb",
+      "git_blob": "721c090e65b742c6e8747d113eb3cf6fa9f0eade"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-disposable-negative.log.json",
+      "bytes": 387,
+      "sha256": "f94da98c040429c4cbb1e3c440ab0fbb89e62da3ef3f2333c1e36a56314bed7e",
+      "git_blob": "d40a75eff30377f2b3864526d81771930d1382cc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-disposable-positive.log",
+      "bytes": 182,
+      "sha256": "29de00683f9f0c2149b8ab79e2d324700279aae6a242673c41f08bac1ad2376f",
+      "git_blob": "35ebef0a2cbaffa0e655f792a0110ace8b3ec465"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-disposable-positive.log.json",
+      "bytes": 388,
+      "sha256": "0fa81fd6070044ac3a300ab2b4fd5e2b9c0ae302e84fe1b3da6b1b2f568b684f",
+      "git_blob": "a1c9ec8fd486eac830737e3f5384952237730489"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-final-generate.log",
+      "bytes": 237,
+      "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb",
+      "git_blob": "75cf4b879859dc18c34c3a4f52ff202594d42afb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-final-generate.log.json",
+      "bytes": 377,
+      "sha256": "72273d7e163a33286b15dfd63274fde7ef61696e0a97ad859c74aa5bffe3c714",
+      "git_blob": "93b3b197d70652b63ccb3fa8fc6cbf979cff61a1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-generate.log",
+      "bytes": 237,
+      "sha256": "c8b7dc67da6a71f4132fb7d6bc0ecf075b240dfa69fcf6795cf37f5aae547fdb",
+      "git_blob": "75cf4b879859dc18c34c3a4f52ff202594d42afb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-generate.log.json",
+      "bytes": 371,
+      "sha256": "c8748c9b82f8a498366b3c6eeda87385b8c629b6878d81a5651981196f70a6a1",
+      "git_blob": "42c8dc098e1c9069b48b852abf8ea3a63c5bd174"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-sparse-before.log",
+      "bytes": 12160,
+      "sha256": "2924c79741a95c0a397022a7e50faa084643722c38d0500d91e85845fe94dfc1",
+      "git_blob": "1c64790f2b5e0159bb31016c28871f899ff8b663"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/receipts/worklist-sparse-before.log.json",
+      "bytes": 375,
+      "sha256": "de770d838a215042e5e0fe900bd1c7f4d41854a87ebb58975bd84865604ab4c4",
+      "git_blob": "701b9ca1481e28cfaf7739b4bd4c1076296fa00d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/RESULTS.md",
+      "bytes": 5281,
+      "sha256": "f3e4ab90e06cb9c1c203fdb8dfd7203bbef8f1544b34d88528523ff93138d8bc",
+      "git_blob": "a3b4ed8cc2fe4be82cd0c55bdb38087a279cefd7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/retained03-web.mjs",
+      "bytes": 2648,
+      "sha256": "9bbc8a154de3f337fd7c415bc26b9be68b36021ec3f1f970c159913c2cb61469",
+      "git_blob": "2b7981712d74df2847b8ffc2c51b70bd733e8edf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/run_capture.py",
+      "bytes": 715,
+      "sha256": "87cff144334ff1f9ea4e1dc6b9a6a1056a254cef8b3d9375c5771abda6c1b49e",
+      "git_blob": "3cec532238da40cf1b2fdb208235a0a3f0d2008f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/source-commits.json",
+      "bytes": 1444,
+      "sha256": "df2351e307c586a585c288c4f734edf18aa04ba0b0cdb0d9dcf3cb364c9498e6",
+      "git_blob": "f4bf139c7051e31e3f0b82698e52e70b0c50f3cf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/source-scope.json",
+      "bytes": 6614,
+      "sha256": "6a189f7704e7f0492d2cf839a2bed6202750ea1c0c1434192016e60ab3daf511",
+      "git_blob": "3b874a25e0f5335ec19d87569ae79df19d38e5c0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/TEST_MATRIX.md",
+      "bytes": 5356,
+      "sha256": "dbda4479464ec57f725a06d4d217cd8d23fc58519baffd6c226e043b1cb5ba2f",
+      "git_blob": "68847221b6ad397cdb869a37452931327c72f6de"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/01-retained-owner-age-closed.json",
+      "bytes": 1457,
+      "sha256": "71ffc7b825fd007ab624eac337e73cbed1fe296e5fa08ead98c56b781a48b6ef",
+      "git_blob": "a89571035baa30b387acc2ee0d819ca5b9f8f2ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/02-age-empty.json",
+      "bytes": 1457,
+      "sha256": "71ffc7b825fd007ab624eac337e73cbed1fe296e5fa08ead98c56b781a48b6ef",
+      "git_blob": "a89571035baa30b387acc2ee0d819ca5b9f8f2ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/03-age-filled.json",
+      "bytes": 1458,
+      "sha256": "c1227ac652c3df037cb0f4d923702b1b9cfa904819bfc0bb96fd17330a6fd6ab",
+      "git_blob": "018fd6712031263261db49d1d03c6a3bf1baf21c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/03a-after-age-submit.json",
+      "bytes": 1593,
+      "sha256": "deb4773a502243181edf18a8b0d0340eab136a7863a27f409a0d2d2b434e4d57",
+      "git_blob": "0014c43f1e50d6f7fecd03ad8cf8d0ca11674a9b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/04-consent.json",
+      "bytes": 1593,
+      "sha256": "deb4773a502243181edf18a8b0d0340eab136a7863a27f409a0d2d2b434e4d57",
+      "git_blob": "0014c43f1e50d6f7fecd03ad8cf8d0ca11674a9b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/04-consent.png",
+      "bytes": 167559,
+      "sha256": "022cc0f3b7c023d559198841a66f21e9deae50ee268105b690eb0f84d6bec7d2",
+      "git_blob": "9c6a0d9125512ba162815df423fe1493a0327eef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/05-goals.json",
+      "bytes": 2121,
+      "sha256": "96590f3db2bc836f0a35e900e31fa23bf9e4a8601dbc67c12c032917e8c7077e",
+      "git_blob": "9ab4b131e235d1409d65acca7bb6b53f86aa223a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/06-goals-selected.json",
+      "bytes": 2132,
+      "sha256": "122e9a9e36321901ac02ede927dee96c036ff96323531586995f440808045ba0",
+      "git_blob": "6f5ed8b629217da15e1c39b9312143c93e0161a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/07-quiz-01.json",
+      "bytes": 1416,
+      "sha256": "9f2976facb6746d64eddfbf1852c531dd4deaad6d5954c5d2101072b2aa960cb",
+      "git_blob": "aaa673add9bb29aa635d45c51a8f53a7c45429d2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/08-quiz-after-04.json",
+      "bytes": 1392,
+      "sha256": "17c95c6d4328c5575930e6d201aa73cdb2dc4ec820019b32816d3e9b089fadeb",
+      "git_blob": "4eae071c95179af064d450f8fdf45212b039a857"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/08-quiz-after-09.json",
+      "bytes": 2086,
+      "sha256": "40fda38db1ca7987118573c0e1ce4df4aa92a074774d0b69367f5b2d10458b86",
+      "git_blob": "a1530cda29884387c78b812079ca956fcd7ed9e4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/08-quiz-after-11.json",
+      "bytes": 1669,
+      "sha256": "512b71792ea691cb61cf4acfb84fc973b89495c40135d32abc7dba9ded4c022e",
+      "git_blob": "8a55e5247c9b6c73f9bebed3d8759ad051ad1572"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/09-products-empty.json",
+      "bytes": 700,
+      "sha256": "395a0b13a0351e932bb1ee0d2b3bbea431508f624ed50d0ca8254f9db8d6f10b",
+      "git_blob": "44a0ba8609f393e0b94e7367741f9a141b8219bb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/09-products-empty.png",
+      "bytes": 43610,
+      "sha256": "24e58cb927b74276d0dacad78283b8417e3c7fff0cdb54d39b399fae7010095c",
+      "git_blob": "c9231260eba1af614d33c3781b306cbc3a6612bd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/10-products-after-1.json",
+      "bytes": 1252,
+      "sha256": "475cdf820459b07d6c0208e33bb8cc622f614c60aa378fa1f61475c66bb89b06",
+      "git_blob": "e46696980b5fdcd19f8881b2ddfa4fab3b6fd374"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/11-products-after-2.json",
+      "bytes": 1496,
+      "sha256": "8a2878ad282f930dc8760baef299dcf29ecb1e0d930e8470bd176bb0e2a33bca",
+      "git_blob": "7e4eaaac7667adee2cfa74f6c48c44a9a3eaa3e6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/12-products-after-3.json",
+      "bytes": 1482,
+      "sha256": "98a875368ab6dc06951f47afb30f6faf159e119989d4fa9fb8408046b0b204e5",
+      "git_blob": "3c4d8f520f545a9a6e9aedf99dcfb49ef9fdba5d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/13-post-products-continue-current.json",
+      "bytes": 373,
+      "sha256": "84e8c961571238b61619dd84a8065da35245708812bc439c5b04979a5685b263",
+      "git_blob": "f3a62a54ab8c2e3e25d6bef2524042033fef4b4a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/14-reveal-checks.json",
+      "bytes": 691,
+      "sha256": "f65110d8d7744b3b50f0cec5e6d67d6132983075fdda298f05e5840bba7430b5",
+      "git_blob": "155b8286eb747d901a24c96fb65ee8030e2ee34c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/15-notifications.json",
+      "bytes": 947,
+      "sha256": "ba6230a28808a4590b9cd981ecc1f6aedaa47df9536f43c56bc1fee07ebe1635",
+      "git_blob": "0fc177ee281f46355b1b924d7865daefcf7d933c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/16-account.json",
+      "bytes": 714,
+      "sha256": "3a2af3831fa42a609ccbde72f3af2ea2b0c8b474c06c82697b78d1ab45f3091e",
+      "git_blob": "75eacf44897a3cf3b318fe762c59160193c4cb32"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/17-paywall-current.json",
+      "bytes": 2695,
+      "sha256": "2d280d6fe6573f9e72a2d0b9479bb23d27960cfa930c700b6e1e42493334b221",
+      "git_blob": "0ff560e89ec186885f579fa27c15cab9bca6565f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/17-paywall.json",
+      "bytes": 2695,
+      "sha256": "2d280d6fe6573f9e72a2d0b9479bb23d27960cfa930c700b6e1e42493334b221",
+      "git_blob": "0ff560e89ec186885f579fa27c15cab9bca6565f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/18-paywall-free-path-visible.json",
+      "bytes": 2695,
+      "sha256": "b91e661ef0e3880efb89b227aa00196b10603a89e16b6d3087da5026ea0c9dc8",
+      "git_blob": "629fd783b2ab549807126096ecdaba05f777ced1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/19-today-free-current.json",
+      "bytes": 1743,
+      "sha256": "06d452b59033beae581ec62215c6c97ad318c695b8072b27d620dbcdcaa63520",
+      "git_blob": "9e967a0533632c1ec8b368607be59f26f755f423"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/19-today-free-current.png",
+      "bytes": 91049,
+      "sha256": "ebcb4d2f35b708652a2482bd64b819d0e2f9d53d7f64611e5d7c495469756972",
+      "git_blob": "393679944415116584916973bc47d9c5c2b566b0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/20-shelf-after-onboarding.json",
+      "bytes": 4501,
+      "sha256": "bea27dbfb3c9c652bb3240e12583c8a1c7171e414d6176816f4d0c14fbe28905",
+      "git_blob": "79fe9d242ac338da7df43da273e81d93a465aeaa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/actions.jsonl",
+      "bytes": 3987,
+      "sha256": "57bb2442b081ec0f1e4d49161faec74c268d4c6189883ef808b064398afb0f8f",
+      "git_blob": "4660ce56014a2d78ec6d1d0df6ea5fd019588213"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/browser-warn-error-logs.json",
+      "bytes": 144278,
+      "sha256": "66b95faea3c88be627b1640d24d3d14ff46422a64a287fe28d2c42ec991a9367",
+      "git_blob": "25a38601176493fe1523bf3c7abd673bc3378a78"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/bundle-crypto-provenance.json",
+      "bytes": 713,
+      "sha256": "8f4b84a42f03db8ea543107f6fbacb7b5c0658eb751b603c6d567c4b34874084",
+      "git_blob": "bb65107e9a96745f749ebdd53bdde8bdc2520ae1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-01-owner-a.json",
+      "bytes": 10165,
+      "sha256": "fbdb03aa006b401e03407c877739ed52565830945cfd42ee008539854ee3ab93",
+      "git_blob": "f0f582bb0bac0be11a24f1beaf59dbf73d84e8bd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-02-draining-old-owner.json",
+      "bytes": 239,
+      "sha256": "131fbada6afaf1602937f6526deaa3aa71221deac29acd2604537bbb7d301cd7",
+      "git_blob": "777ea8d9a50157f8b578043d0e21946ea6310c29"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-03-cleanup-refused.json",
+      "bytes": 561,
+      "sha256": "ae4b2c9ac6575590e03b4698591c92cd1c8225031cfd43234d175d5a2967d5be",
+      "git_blob": "5c8516712095fcf5b5bbdd7ca051fe558b94daac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-03-cleanup-refused.png",
+      "bytes": 47375,
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe",
+      "git_blob": "fc7e0877fd7e2ed72e810e1ca073e91084e6ec2d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-04-repeated-refusal.json",
+      "bytes": 561,
+      "sha256": "ae4b2c9ac6575590e03b4698591c92cd1c8225031cfd43234d175d5a2967d5be",
+      "git_blob": "5c8516712095fcf5b5bbdd7ca051fe558b94daac"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-04-repeated-refusal.png",
+      "bytes": 47375,
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe",
+      "git_blob": "fc7e0877fd7e2ed72e810e1ca073e91084e6ec2d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-05-b-age-required.json",
+      "bytes": 1457,
+      "sha256": "71ffc7b825fd007ab624eac337e73cbed1fe296e5fa08ead98c56b781a48b6ef",
+      "git_blob": "a89571035baa30b387acc2ee0d819ca5b9f8f2ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-06-b-consent-required.json",
+      "bytes": 1593,
+      "sha256": "deb4773a502243181edf18a8b0d0340eab136a7863a27f409a0d2d2b434e4d57",
+      "git_blob": "0014c43f1e50d6f7fecd03ad8cf8d0ca11674a9b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-07-b-empty-shelf.json",
+      "bytes": 700,
+      "sha256": "395a0b13a0351e932bb1ee0d2b3bbea431508f624ed50d0ca8254f9db8d6f10b",
+      "git_blob": "44a0ba8609f393e0b94e7367741f9a141b8219bb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-08-b-manual-created.json",
+      "bytes": 1268,
+      "sha256": "257fbb1206e8244294791bdc18e32d8e3490987160c0f4f291fde6f899934941",
+      "git_blob": "a50080b9d504877b2661b14390d1d9e106c0540d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-09-b-usable-shelf.json",
+      "bytes": 4291,
+      "sha256": "fb1325cdeed04df7aced33f7107263b20e57a7c34ae51fb80bbf45da9df818de",
+      "git_blob": "b066772c6ab40c82339352c552482bd60107392d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-09-b-usable-shelf.png",
+      "bytes": 122788,
+      "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba",
+      "git_blob": "45151cf89fbdd96ebf965e08a4da2004ff4f0a05"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-09b-b-product-detail.json",
+      "bytes": 2869,
+      "sha256": "e35605fd3993c4cb78941189051229d1388f3f4aa03d46e569beec082b90269b",
+      "git_blob": "f3a0f5f4dc7f3c4aebaf2b75c4f0b88fe52db9fc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-09b-b-product-detail.png",
+      "bytes": 130159,
+      "sha256": "2c86630570c766a3abd4d1a0930635d8872485cf428ae090f36b32e473a8fd2b",
+      "git_blob": "bc1f88c749b294ab34c50804724f4e83828cb8f9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-10-b-usable-edit.json",
+      "bytes": 2871,
+      "sha256": "fa4544600f69e2b20be6011d4f5b232eed08acc177853bea4b9eb40eb6316e50",
+      "git_blob": "b8db525cc4b994c06128c6be6f137c0e09125ef9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-11-b-identity.json",
+      "bytes": 4587,
+      "sha256": "1dc2e86e9249f302d1bdd982b62c7c4745cd188c86c5c7e96322ef734e8a5f2d",
+      "git_blob": "4319478e60e1b815979a07d1f0a1b17a1cccbd19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-12-b-document-relaunch.json",
+      "bytes": 2923,
+      "sha256": "52d53baccabc789b673098a8c4d8c7f91522ba5151e7358504fe7c4e3d40dadd",
+      "git_blob": "7f647d60c8405e827665656fd85fbbceff55193b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-13-return-a-age-closed.json",
+      "bytes": 1457,
+      "sha256": "71ffc7b825fd007ab624eac337e73cbed1fe296e5fa08ead98c56b781a48b6ef",
+      "git_blob": "a89571035baa30b387acc2ee0d819ca5b9f8f2ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-13-return-a-age-closed.png",
+      "bytes": 67634,
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+      "git_blob": "bbadc0154560743fa357cf2094a26307f2d11607"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-14-return-a-relaunch-closed.json",
+      "bytes": 1457,
+      "sha256": "71ffc7b825fd007ab624eac337e73cbed1fe296e5fa08ead98c56b781a48b6ef",
+      "git_blob": "a89571035baa30b387acc2ee0d819ca5b9f8f2ec"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-B-07-quiz-01.json",
+      "bytes": 1416,
+      "sha256": "9f2976facb6746d64eddfbf1852c531dd4deaad6d5954c5d2101072b2aa960cb",
+      "git_blob": "aaa673add9bb29aa635d45c51a8f53a7c45429d2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-B-08-quiz-after-04.json",
+      "bytes": 1392,
+      "sha256": "17c95c6d4328c5575930e6d201aa73cdb2dc4ec820019b32816d3e9b089fadeb",
+      "git_blob": "4eae071c95179af064d450f8fdf45212b039a857"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-B-08-quiz-after-09.json",
+      "bytes": 2086,
+      "sha256": "40fda38db1ca7987118573c0e1ce4df4aa92a074774d0b69367f5b2d10458b86",
+      "git_blob": "a1530cda29884387c78b812079ca956fcd7ed9e4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-B-08-quiz-after-11.json",
+      "bytes": 1669,
+      "sha256": "512b71792ea691cb61cf4acfb84fc973b89495c40135d32abc7dba9ded4c022e",
+      "git_blob": "8a55e5247c9b6c73f9bebed3d8759ad051ad1572"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-b-boundaries.json",
+      "bytes": 317,
+      "sha256": "a3098f8af824a5b58959a4e0aa220a106da4f8caebd4ed4940b4ee62248729a2",
+      "git_blob": "267abf7b9c4f2eb0e1ef7bc76681950704c13e33"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-b-relaunch-boundaries.json",
+      "bytes": 260,
+      "sha256": "03d8acf695827fe49c4f503db2b672da68bac8d9b6540b18346ea42517fe9a47",
+      "git_blob": "57c50780c579af76af13db62db3ca90a49d3cf91"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/CO-immediate-authority-closure.json",
+      "bytes": 77,
+      "sha256": "ef0352c2d189d05058bfad0553ab4eb0721d861e27dac55d275177b678be5889",
+      "git_blob": "655e92af6393df0fe5684bb312c34b46607c712e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/cross-owner-races.json",
+      "bytes": 273,
+      "sha256": "fa81a1e98f0cf202536925532745e34bb5381560e9f147150e0387c7a01611c0",
+      "git_blob": "185c4afd7b6a1029befb26f3379d99856af00e64"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/driver-binding.json",
+      "bytes": 468,
+      "sha256": "c925a725bbe173e7f35c8bdd237478fefdf6dd05919a5a37f1d25bdaa717ada4",
+      "git_blob": "e698405c9033014b8b28be23a7b7ad65186a3140"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/expo-web.log",
+      "bytes": 5061,
+      "sha256": "99bf20bb5e5687e588da94cd5e32254456cfdc28f924d7d82291c47ab97dc677",
+      "git_blob": "a90c47d265d84d2529cbeacabb28c62ed3f3fa4d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/cross-owner390/summary.json",
+      "bytes": 1047,
+      "sha256": "1ea32bf01bb63d14604dd7f2f717d12e87897eee717809b9cf2e6a9ad00f0abf",
+      "git_blob": "a88a66cfbee7b243605f863230679ee73a7e71be"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375/driver-binding.json",
+      "bytes": 468,
+      "sha256": "d0cb9fadd65b0261da0b4c3704f5cfb0b4609fdabe90db1bcc2e9a2901ed7a9b",
+      "git_blob": "4b1ab3e56a9cf53e6f31f459dc11129cfc2e0df8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/01-welcome.json",
+      "bytes": 926,
+      "sha256": "25ba0af72a8ea9995f70b5eaedd3da11b98f3cbbffc557cc6ea388cc2fb22f21",
+      "git_blob": "aaa8f0c08c5a268c80532d6788eb8f2b07ca5000"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/01a-direct-protected-age-gate.json",
+      "bytes": 1427,
+      "sha256": "17c89f539e806d354780103f24fa1c84ccbc44ebcbb78ff02549324976a2a599",
+      "git_blob": "3f88a906fdab34ef8f80ee5ac637a57b8ddc7afd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/01a-direct-protected-age-gate.png",
+      "bytes": 55000,
+      "sha256": "71f6b40d60e7773d0709edb597e35329cfa6bed4789e58fbd9ac5311215dd37c",
+      "git_blob": "2384ae8b87448d171f8d441aea73dace4a3d7f9d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/02-age-empty.json",
+      "bytes": 1427,
+      "sha256": "17c89f539e806d354780103f24fa1c84ccbc44ebcbb78ff02549324976a2a599",
+      "git_blob": "3f88a906fdab34ef8f80ee5ac637a57b8ddc7afd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/03-age-filled.json",
+      "bytes": 1428,
+      "sha256": "92cdef48967c3546830f4adf06f457ab73ae2c9abb361ea617b0b7f0c3b28604",
+      "git_blob": "13375354d8da236870f1f6e80f7585f83bd1317d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/03a-after-age-submit.json",
+      "bytes": 1593,
+      "sha256": "01afb176f8888539bee36f671b221fc32d99fc634b091f908b933a7746eb6a97",
+      "git_blob": "bc4a48b2eab9c15d69c1a1ea86ddd68cb582bee8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/04-consent.json",
+      "bytes": 1593,
+      "sha256": "01afb176f8888539bee36f671b221fc32d99fc634b091f908b933a7746eb6a97",
+      "git_blob": "bc4a48b2eab9c15d69c1a1ea86ddd68cb582bee8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/04-consent.png",
+      "bytes": 126184,
+      "sha256": "f5fb76a75b7ce6de7a8090a055b129d798ffc94a42bd06b824ea57c510749ab0",
+      "git_blob": "73783bbf89dea09d36af8170381b6c56aae83c41"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/05-goals.json",
+      "bytes": 2121,
+      "sha256": "2780930770a3b7449a9c2d46c81627295e3fb67368ede6e39b3a954629cb36f8",
+      "git_blob": "8435ea9d7afda99698ebfffd753eaa2a2b78c019"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/06-goals-selected.json",
+      "bytes": 2131,
+      "sha256": "ab86d474e38e1945d9fd5e61c2a027943b5c3cd59163d3a654a77e4be5a96a74",
+      "git_blob": "0efda90ef2abfe93877757a41a8c2e2f99565191"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/07-quiz-01.json",
+      "bytes": 1416,
+      "sha256": "71417ca6d7cad0d709d27210d1dfb48265742e365de9881ea0fafc6a35a1700b",
+      "git_blob": "cca4df62f1fe859105361a3f51e2b12074d5ed76"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/08-quiz-after-04.json",
+      "bytes": 1392,
+      "sha256": "3b403bbf598037453f3ad0c168bb95eb2523f54aa092ceb65ad8bd2e62a81802",
+      "git_blob": "b959d335b2bdf1418028963249f933a388d0dfbb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/08-quiz-after-09.json",
+      "bytes": 2085,
+      "sha256": "78504d002cd91fa4597732c04b149ae469ec475d65f124356bc863bc0a529d98",
+      "git_blob": "acb124096aa047006400f6e3108e2d2039b7c43a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/08-quiz-after-11.json",
+      "bytes": 1665,
+      "sha256": "426c943e980069c741d17d34c10e27c5ac935244be7fc174c8d159b5689518f2",
+      "git_blob": "0aa14081c110c597ba335d8878779376cd811d00"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/09-products-empty.json",
+      "bytes": 936,
+      "sha256": "8445bd31aa7163bb642086602b1515eacb907fcec42f729a2ed3e4b3fc19d55c",
+      "git_blob": "23d04d9bb7a93ba9eac3acc275bea73422281c15"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/09-products-empty.png",
+      "bytes": 87928,
+      "sha256": "a76e587408eab0e5b23b68b3a63fc7a2b9d8db9bec0001f3b13af5081991983b",
+      "git_blob": "3968bfc904395bcb648ae5b78ef413598a762094"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/10-products-after-1.json",
+      "bytes": 1456,
+      "sha256": "2d79560ddb341ad58d4ea6d5f5460fd7035ed721238a2fcf51c37faf981d966d",
+      "git_blob": "02427e930e34dc943476404119b3d938721f6b97"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/11-products-after-2.json",
+      "bytes": 1699,
+      "sha256": "5f6adf51f072fa97ee30f14b5e3321dc6b6906d47dac3f500aea89396232a5ef",
+      "git_blob": "74f379fc19e4a260a3cab29f8dbd711d1fa95c9d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/12-products-after-3.json",
+      "bytes": 1711,
+      "sha256": "2fb928cbbc7ef0fed887b59c0b4f505147a9cc6a5284ab4d141cd44f6d6c5e49",
+      "git_blob": "d23f6914fe4e9ffe5f154e59b03b27255c1f2569"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/13-post-products-continue-current.json",
+      "bytes": 373,
+      "sha256": "75996ae51e26b7720666676160a8f5247803d6dc4948721c66d1d82ea64cb2c1",
+      "git_blob": "1ffb62298d65cb41f25ff3e7ff83c4fdecc91267"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/14-reveal-checks.json",
+      "bytes": 691,
+      "sha256": "9e8886b729108c650f4140c906098b2dd50ed61b0f685040094724f80636def1",
+      "git_blob": "6ef840a3688dbe41d6eff94c742af8298a3f9ecf"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/15-notifications.json",
+      "bytes": 947,
+      "sha256": "0d5eab558e0960fa6c07dc3fc475c46236f57c51d3d24a0edb1a0aa7021fa371",
+      "git_blob": "b5e275ed30c0dea2816c779447475c64f0f82b50"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/16-account.json",
+      "bytes": 714,
+      "sha256": "0ae4e4d46a3f4e728957e02ab6f388fce5e4f53963d520646d76f85907bb71ea",
+      "git_blob": "734109839a4e6cd0fd7bd0f51b1376c41358e299"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/17-paywall-current.json",
+      "bytes": 2688,
+      "sha256": "d8687cc0901f437bab9733683def154d8c8ca84db7581b2e0e3e1134a3bed630",
+      "git_blob": "1cbba4f0b0da59459f4eaca4257301c03d035f21"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/17-paywall.json",
+      "bytes": 2688,
+      "sha256": "d8687cc0901f437bab9733683def154d8c8ca84db7581b2e0e3e1134a3bed630",
+      "git_blob": "1cbba4f0b0da59459f4eaca4257301c03d035f21"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/18-paywall-free-path-visible.json",
+      "bytes": 2077,
+      "sha256": "60ed6cea7cb815b2de16248aa3a9d758fc2333103346f0ebac622a247a483b5f",
+      "git_blob": "f34b9c0bad80dc06e2985402487a7b4852b0a203"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/19-today-free-current.json",
+      "bytes": 1760,
+      "sha256": "49da05fea5c32c2ffcea978eb61a11401f7c79c5e6c48ee069cd5855ac151426",
+      "git_blob": "105c9d9f82c4231f8ef6a25d8a7f05524c889a10"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/19-today-free-current.png",
+      "bytes": 89747,
+      "sha256": "0215edd764f070cbb224927986af77b7d76c225fa5ab497e8b1d0366383c9724",
+      "git_blob": "46f782a0a4563e9a468943438bf781f026ac6108"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/20-shelf-after-onboarding.json",
+      "bytes": 4288,
+      "sha256": "eaa0a604add96b2b249cda004007c651cdddae4b7712e87348f3509350635b99",
+      "git_blob": "9aa1a8aa4dfbbed660f1a2e5c931ea95d5d3853c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/21-progress-after-onboarding.json",
+      "bytes": 7291,
+      "sha256": "40084005a4aec4ea60e6b16a4e41c4f784a45cdaa7c6022e6b57d4cf3d5f8c68",
+      "git_blob": "3b445ded92e5955d92d402d095d11ea121ffa63d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/21-progress-after-onboarding.png",
+      "bytes": 72353,
+      "sha256": "bb94f20a9babf2a0f4cfa52308b9f3bc9bf4db6a46fdc2c272a9f2085ef585bf",
+      "git_blob": "16351e19e56ecfd49a1acabe931cb8f520d7a3e3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/22-you-after-onboarding.json",
+      "bytes": 9205,
+      "sha256": "43bde1b34a3d6864121757579b3730fa32373901d485eea047243918add882a1",
+      "git_blob": "70864810cad8a5468de01c57015033cdfaf86c80"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/23-today-after-tab-round-trip.json",
+      "bytes": 10401,
+      "sha256": "a4bf3b80151c4da06f1a3dcbedf35f30894c761363e827cdaf23ba20220538a6",
+      "git_blob": "8dc0c6dd10684052067f879068021b8df4ce7c94"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/25-age-reverification-before-submit.json",
+      "bytes": 1197,
+      "sha256": "7acc910123f76d431c3b07e8e91c4c0f6cc38e1f0e00044ccb50b1ebc261e916",
+      "git_blob": "d9069cce3beb3325f2fa844379436fa942d8de14"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/26-age-reverification-blocked.json",
+      "bytes": 1472,
+      "sha256": "c15908fa05bd0cf8bddbabd8bffccc94a4ad04fbda302d213be5d331bdb7a077",
+      "git_blob": "af5307d60386d83e9d47eadb897579660b95db14"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/26-age-reverification-blocked.png",
+      "bytes": 62263,
+      "sha256": "7fa25f17764a7b4477eae51f7f7823f7f2eb9c2b7cd0c1ede0b30cff69ef7cd9",
+      "git_blob": "b35bcce82b21274da637106875be3330d802c001"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/27-age-reverification-direct-today-blocked.json",
+      "bytes": 1427,
+      "sha256": "17c89f539e806d354780103f24fa1c84ccbc44ebcbb78ff02549324976a2a599",
+      "git_blob": "3f88a906fdab34ef8f80ee5ac637a57b8ddc7afd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/28-age-reverification-reload-today-blocked.json",
+      "bytes": 1427,
+      "sha256": "17c89f539e806d354780103f24fa1c84ccbc44ebcbb78ff02549324976a2a599",
+      "git_blob": "3f88a906fdab34ef8f80ee5ac637a57b8ddc7afd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/actions.jsonl",
+      "bytes": 2934,
+      "sha256": "e0778d619cd60f05080081dc119014010852178219164f5756f277dc8c65bd46",
+      "git_blob": "49107b568e88673ed18877ede398aae9ecbba64b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/browser-warn-error-logs.json",
+      "bytes": 571169,
+      "sha256": "2a9e57c860a282da45d504c354f4958be8b374fcb881e427015b51c7fda8e54d",
+      "git_blob": "fb88d536f70d60db6d92b25d64648ace4dc57fd4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/bundle-crypto-provenance.json",
+      "bytes": 713,
+      "sha256": "8f4b84a42f03db8ea543107f6fbacb7b5c0658eb751b603c6d567c4b34874084",
+      "git_blob": "bb65107e9a96745f749ebdd53bdde8bdc2520ae1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/driver-binding.json",
+      "bytes": 468,
+      "sha256": "2ad41697244140a40d5c87e9b95eb7a1bdd1d7f8a90f3a95b0dc9c1dea0fa585",
+      "git_blob": "3e9f0e09d9b0bb6962fea5e5619f614a2e0b1e40"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/expo-web.log",
+      "bytes": 16498,
+      "sha256": "f67e2f34212dee925f15d5a7a566b1ad136cb8cfed7ba948ecfb1df669c33588",
+      "git_blob": "736efa28b6bc6ff389b76d6526261cfe250dfbd7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-00-manual-plan-input.json",
+      "bytes": 3066,
+      "sha256": "e394ca39583b78bfd3b9108ce22dff2b4fd4332e7ade6e1b711638680b1c168b",
+      "git_blob": "3db2ccbb9e94cad2635381201a82c3ef1573b1e7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-01-am-ready.json",
+      "bytes": 2003,
+      "sha256": "5a547e84d1166a66cecb94b4161274672c50140d0b8fcbed9e901ab5ef7af3ec",
+      "git_blob": "86ce71ab36ccdc90fd45eaf30b511b891048f749"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-02-rejected-write-recovery.json",
+      "bytes": 1427,
+      "sha256": "e4f534010e5d964e15ac5f21cd987f9cecbd8a1da32370cb97556c17d03f7330",
+      "git_blob": "0018df32da04ebf2b3673b3740d4ef9ae8fc5ef8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-03-offline-duplicate-append-only.json",
+      "bytes": 2024,
+      "sha256": "007862d7bc8032fb86f61c4c87ee93e3a37aedf002823b05cfe0982f2edb9b23",
+      "git_blob": "de372a6cd24d4c4a69f7f07e43b8d759cfec55c5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-04-offline-timing.json",
+      "bytes": 1875,
+      "sha256": "f16bbecf8faabff25dd6632efea53754137a7ea10044cea0819be4f923b71ab9",
+      "git_blob": "b20aeabe9017fef32dd60ada447560ea8843688d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-04a-offline-reminder-recovery.json",
+      "bytes": 2112,
+      "sha256": "367928c27294e264be15ffe9c1f1e76167362481e8c1d10f68dbca8f3ed0c845",
+      "git_blob": "42d93259fab6f93b9ab997e5936f7a4a6fb25cae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-04a-offline-reminder-recovery.png",
+      "bytes": 92515,
+      "sha256": "7b11e67608a72a47be77835880c6cf5de79912f0af7c0268629605b72441908c",
+      "git_blob": "1942baa2708a366ca195b47769e7097d74b22414"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-04b-cycle-paid-boundary.json",
+      "bytes": 1349,
+      "sha256": "0928503ed337732983a66ac5472a8ccf23afeb32ffbdca9afb7d14185175aeda",
+      "git_blob": "c9c648a472bfee2d0fe54e43cce998d6717ab8d6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-04c-reorder-paid-boundary.json",
+      "bytes": 1347,
+      "sha256": "cd4c9bae31c27d0668854e2c80991f78c9be321e753684e37e502ff9900bf9d4",
+      "git_blob": "66e403ba95e88e7561b62e6ac72e7606acff30ae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-05-reloaded-am.json",
+      "bytes": 2024,
+      "sha256": "007862d7bc8032fb86f61c4c87ee93e3a37aedf002823b05cfe0982f2edb9b23",
+      "git_blob": "de372a6cd24d4c4a69f7f07e43b8d759cfec55c5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-06-pm.json",
+      "bytes": 2093,
+      "sha256": "9a1cebc6719fefc699e25fbb96626db03c3feb459930f56065d2eb6dca47742a",
+      "git_blob": "b99c005abd7ab45918962bb9466d192751522ef1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-07-plan-paid-boundary.json",
+      "bytes": 1415,
+      "sha256": "4e70c84976837fc69934000cc30ceec7ccf18defeebdc10b7af883b5f7b1e996",
+      "git_blob": "4690fb2d0e254cb78ca8ec04e1f045918ab478e4"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-09-web-reminder-availability.json",
+      "bytes": 1352,
+      "sha256": "a8c2f8ae40c9770259575ba7762105174cc366536035dfc21038f1eb2c4d3c13",
+      "git_blob": "0bbbc605e0da10d27e6e84582c9a1ade924c307e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-09-web-reminder-availability.png",
+      "bytes": 67963,
+      "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+      "git_blob": "5bf8032616dc686ed20b24a3311254d5d46c8d5c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/M102-daily-loop.json",
+      "bytes": 825,
+      "sha256": "21d3ae31acda0022232a1c4ce97dfb3a5fb78daab778cfb951cc9ba99e05b6ab",
+      "git_blob": "e11c37ef6bfea7ddaa8ed29ba2393c66bb194172"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-durable-preference.json",
+      "bytes": 75,
+      "sha256": "c70b2a3b7ab38afdc609d82debf72c205a711a4165a334264827262fc706490c",
+      "git_blob": "90511b91c9ad97bda7aad69aa5c8833c252a2b4d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-keyboard-focus.json",
+      "bytes": 74,
+      "sha256": "61f42f1ef17a31d9ccceced1e8505d628a5802f1a61e04d9c08834004527d016",
+      "git_blob": "a7f56ccc7ae59903cbe067354c7dffe193327206"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-offline-keyboard-retry.json",
+      "bytes": 1359,
+      "sha256": "bbe163da49f3f0ace42f34a4b90b29bf042f5a42a541b5ce2e09bdc961b575c0",
+      "git_blob": "44229a1b2a4e3412cf6b6a444ec308e3fe4c874e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-offline-keyboard-retry.png",
+      "bytes": 69871,
+      "sha256": "5e0accba7dac65631ca53bb618e4530aae000254e7e0d0265bdf12eaf7105288",
+      "git_blob": "4b8c760e97e32afd11af6f0470f03d457a19bbf1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-reload-delivery-unavailable.json",
+      "bytes": 1340,
+      "sha256": "04e077698109ee47082dbfee722ad77973f4eddbb888f6fae97af241e3a1a8f2",
+      "git_blob": "0d3f0b13f2e52ee349df7bc58fea55d6dab97f44"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-reload-delivery-unavailable.png",
+      "bytes": 66657,
+      "sha256": "d65a2d8ec1456eef6a573c5c706ea487f34af13b727e9343366765e517cca852",
+      "git_blob": "457f4d4dd38a2f5c8b2930a1de032fa7c4f8df69"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-saved-unconfirmed-after-late-read.json",
+      "bytes": 1624,
+      "sha256": "8b6388dfba18e1fe8ecfa9c4d487140f46f611277e5a6b0ed5d0898363b1fc1e",
+      "git_blob": "47ddfdf90e044d5311251962ebe28126f6e46556"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-saved-unconfirmed-after-late-read.png",
+      "bytes": 70377,
+      "sha256": "620808fec10d5182ba03692f68494c8508d074fbc88e158b88a63851da0dc7db",
+      "git_blob": "2c7e48a863144debd457471849ca4cc5e8ad97dd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-unavailable-permission.json",
+      "bytes": 1352,
+      "sha256": "a8c2f8ae40c9770259575ba7762105174cc366536035dfc21038f1eb2c4d3c13",
+      "git_blob": "0bbbc605e0da10d27e6e84582c9a1ade924c307e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/R03-unavailable-permission.png",
+      "bytes": 67963,
+      "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+      "git_blob": "5bf8032616dc686ed20b24a3311254d5d46c8d5c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/report.md",
+      "bytes": 1429,
+      "sha256": "10035c6974ed6ae54da6d10432ea1d39ddf5511395cef98f118bd43b1c6bec23",
+      "git_blob": "ed7d5698f72d0c9731d2db62cc35ae80908605a3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-final/summary.json",
+      "bytes": 5639,
+      "sha256": "a08f4db5c48b00eb16be7955d0401e9332ae1ceff07918cd4bc25fe034afda9e",
+      "git_blob": "25bc163cfd06a2a70aef264062d35c9affcfc55d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/01-welcome.json",
+      "bytes": 926,
+      "sha256": "426ced2291922e5968ff6af00247272dee54c930431a0db461f805baf63b9a44",
+      "git_blob": "5ee23bfc3869101c5200f7442e85df3142981f65"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/01a-direct-protected-age-gate.json",
+      "bytes": 1427,
+      "sha256": "f1fd8f6847240171b885eef586523092c7fc9cf417d66b9d6b994a2f648bd808",
+      "git_blob": "9f5588a15e5b418ab776aad76df928d85f67d7b3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/01a-direct-protected-age-gate.png",
+      "bytes": 55000,
+      "sha256": "71f6b40d60e7773d0709edb597e35329cfa6bed4789e58fbd9ac5311215dd37c",
+      "git_blob": "2384ae8b87448d171f8d441aea73dace4a3d7f9d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/02-age-empty.json",
+      "bytes": 1427,
+      "sha256": "f1fd8f6847240171b885eef586523092c7fc9cf417d66b9d6b994a2f648bd808",
+      "git_blob": "9f5588a15e5b418ab776aad76df928d85f67d7b3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/03-age-filled.json",
+      "bytes": 1428,
+      "sha256": "065281bbf19b4bdddd65372361ec549c223fdd33a00dd4a47a64175d69b44879",
+      "git_blob": "3320c77821ae4b67ef053c6e756c014f550ab42b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/03a-after-age-submit.json",
+      "bytes": 1593,
+      "sha256": "0613f44aecde16829b05a4c175d6d5cc2a9a86aa15e7af7edd2756971d9ac1d6",
+      "git_blob": "46d4cbba8e26fe18e4745cd1327d6e8a5f1889a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/04-consent.json",
+      "bytes": 1593,
+      "sha256": "0613f44aecde16829b05a4c175d6d5cc2a9a86aa15e7af7edd2756971d9ac1d6",
+      "git_blob": "46d4cbba8e26fe18e4745cd1327d6e8a5f1889a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/04-consent.png",
+      "bytes": 126184,
+      "sha256": "f5fb76a75b7ce6de7a8090a055b129d798ffc94a42bd06b824ea57c510749ab0",
+      "git_blob": "73783bbf89dea09d36af8170381b6c56aae83c41"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/05-goals.json",
+      "bytes": 2121,
+      "sha256": "2e293308c34c9d2c1c01527b3fac069f7c4d7bdfd9442253fa525ed65eed5f83",
+      "git_blob": "7645c97c3d51f0b2013d786f719f39f94e3e2870"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/06-goals-selected.json",
+      "bytes": 2131,
+      "sha256": "f34a8698583bf36afc98c8f49fdc9cbd14667673d08bf8acb46bf950aa600e71",
+      "git_blob": "bf90a01e9e36faf970a3f6dbe8eda3fd3455025b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/07-quiz-01.json",
+      "bytes": 1416,
+      "sha256": "3ee4a0ab823d1e384ab1e900e8197a0be487722f0a7da04ef3649aa1b5770dc0",
+      "git_blob": "a65114d13e8a55066b109995c1d233638660e530"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/08-quiz-after-04.json",
+      "bytes": 1392,
+      "sha256": "11977550fb2131c8c4170c46159ae616869de454d43eee8f143fe63e7a203b65",
+      "git_blob": "3c86357fe3c6b3eace0d7a6ae085c898d9cb7485"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/08-quiz-after-09.json",
+      "bytes": 2085,
+      "sha256": "4c1bc6a324e3ae7640c4e7af8d268de732b1a16905565f47d8279c6f96526170",
+      "git_blob": "d0c574f711afe0880d5c0b2e69894e2494b18e04"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/08-quiz-after-11.json",
+      "bytes": 1665,
+      "sha256": "fa33c798e0635e9259339841a7ef3b7b5dc2040c391d3e2d394654e474b7b06b",
+      "git_blob": "65ca298e0534c5a47a323141bba2d46ab2bca355"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/09-products-empty.json",
+      "bytes": 936,
+      "sha256": "31c30ad723e1b5036b2f46e621c823d2b0eb14cd70c12c881219746666b24b78",
+      "git_blob": "b9003b6208c5aa4f3ea7b5903c4dd06881c90ed7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/09-products-empty.png",
+      "bytes": 87928,
+      "sha256": "a76e587408eab0e5b23b68b3a63fc7a2b9d8db9bec0001f3b13af5081991983b",
+      "git_blob": "3968bfc904395bcb648ae5b78ef413598a762094"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/10-products-after-1.json",
+      "bytes": 1456,
+      "sha256": "69a74850caa9db3e2440962f32464d462ea8b2a836def0af2f30f91e7616bd0f",
+      "git_blob": "13c17660048c8b229fb816a7b24f1805131ccd66"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/11-products-after-2.json",
+      "bytes": 1699,
+      "sha256": "65bf05777ca74a29a36003555f37e6510aa47243b5d5e940eeb9bcf468ba9f2a",
+      "git_blob": "9ebcd1e442e836bdad4d6084c3a8e867b2c38d79"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/12-products-after-3.json",
+      "bytes": 1711,
+      "sha256": "a21fdbcb1763fccc5d991d33acd0e405c6f4aa75b54d3e13c1da70f0b5e60867",
+      "git_blob": "192bfdda187beee470299a7d7bfb3939ee5270da"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/13-post-products-continue-current.json",
+      "bytes": 373,
+      "sha256": "9ad580ad5b4e6474e05e8814bdf6162b33a6e97b6b91922f6be9683b851024f5",
+      "git_blob": "fbb92d1a07dcb9e1e6853a85ab701abf7571ebb8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/14-reveal-checks.json",
+      "bytes": 691,
+      "sha256": "31942b30d5209c43b9fe916fb6a3b3b8bd485bd6bbc53ca86f52b5a58434b102",
+      "git_blob": "29a843e0bd6b5486a7b134e4b697267643f7da61"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/15-notifications.json",
+      "bytes": 947,
+      "sha256": "99d3ff82d72910c2d8f1660b955d47643ada43ce3abb1a11a38f6a62b8fae0a0",
+      "git_blob": "e59444f55430b61e49fc05a44abafee8e997e3e0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/16-account.json",
+      "bytes": 714,
+      "sha256": "65236687f9756ad674d8e159e0caf346faf796b2cda67c8a78773ae3bc6cde15",
+      "git_blob": "bfde9fde2f815126c9ce12bc99fa556e16e2f786"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/17-paywall-current.json",
+      "bytes": 2688,
+      "sha256": "87bcf11f65caff7e28f8b4e79c087fc6392c67a6e7ca35dbf1591444f4d290c0",
+      "git_blob": "fbb3130f9d0a7404fea1cd4315be5c956884ae0e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/17-paywall.json",
+      "bytes": 2688,
+      "sha256": "87bcf11f65caff7e28f8b4e79c087fc6392c67a6e7ca35dbf1591444f4d290c0",
+      "git_blob": "fbb3130f9d0a7404fea1cd4315be5c956884ae0e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/18-paywall-free-path-visible.json",
+      "bytes": 2077,
+      "sha256": "d5af3c400b8df7f66462b0ccef87c18162bd9ab3fc220054f29eaf34af72d6f6",
+      "git_blob": "2cad79797bc7f44d382dffe4d36c53d1d9602bb3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/19-today-free-current.json",
+      "bytes": 1760,
+      "sha256": "bf9e33dd525596efe7b6389caf30ce0a1e3846f894d27b62d6127cb36fc2f04e",
+      "git_blob": "654fdc75cd4c2b735d61baf9490bdf0417df90d5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/19-today-free-current.png",
+      "bytes": 89981,
+      "sha256": "85cbeb7b39d47c95808fed8ee9023be399b1b9f821b9479e030c1f18c8938d7b",
+      "git_blob": "fe12698b2962b6a7b1ffa1ac59b5049a8ab18305"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/20-shelf-after-onboarding.json",
+      "bytes": 4288,
+      "sha256": "293f218d700386df7f3c357ecc526e95879db56f39e7374bd48f19fab8442579",
+      "git_blob": "742ed20b5744570e4fc2fba75dd251f388d46a4a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/21-progress-after-onboarding.json",
+      "bytes": 7291,
+      "sha256": "cc1802903c467ae80d9d3eeb942b528c0da8169cedb65bd98011918437ca2703",
+      "git_blob": "133bb27f09651cbb5832de3e2b647200fd0f5f65"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/21-progress-after-onboarding.png",
+      "bytes": 72353,
+      "sha256": "bb94f20a9babf2a0f4cfa52308b9f3bc9bf4db6a46fdc2c272a9f2085ef585bf",
+      "git_blob": "16351e19e56ecfd49a1acabe931cb8f520d7a3e3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/22-you-after-onboarding.json",
+      "bytes": 9205,
+      "sha256": "94249b93ceae7324600bc9df9d81cf21a5e29e0d8ea582426ea86c2fba3fcfb3",
+      "git_blob": "35db4d91aab46a3c2bd807265fbc58ad2fe0c47e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/23-today-after-tab-round-trip.json",
+      "bytes": 10401,
+      "sha256": "3065d5f6b6f50a61cb7cfbcc2cb1b9af8091ac762715d971e36a33857950ca3b",
+      "git_blob": "4c908870263f5e0ca635277e52bb4efc5727a9e6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/actions.jsonl",
+      "bytes": 2896,
+      "sha256": "3a40637df9213bc3a08c47701af90bc415095114d5fda561740ebaa0ba6c34f1",
+      "git_blob": "bf45bafcba152585cfd74f76641ab73caa0c5778"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/bundle-crypto-provenance.json",
+      "bytes": 713,
+      "sha256": "8f4b84a42f03db8ea543107f6fbacb7b5c0658eb751b603c6d567c4b34874084",
+      "git_blob": "bb65107e9a96745f749ebdd53bdde8bdc2520ae1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/driver-binding.json",
+      "bytes": 468,
+      "sha256": "d0cb9fadd65b0261da0b4c3704f5cfb0b4609fdabe90db1bcc2e9a2901ed7a9b",
+      "git_blob": "4b1ab3e56a9cf53e6f31f459dc11129cfc2e0df8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/ERROR.json",
+      "bytes": 227,
+      "sha256": "9912a75590376a8ccfa0df3b3199fbbc9ca740e1d846ea4df364dfc210d19c6c",
+      "git_blob": "9567c7f6082db52deed25cebd30b00a00e3baa19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/expo-web.log",
+      "bytes": 10616,
+      "sha256": "cd160fc7b078a7860c523171f06a42fb0bffeeb4d52b89a09c82617a3cdec910",
+      "git_blob": "2e3e684caed3ff2cd5125a64f664af1937d08bc5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/FAILURE-race-state.json",
+      "bytes": 5,
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+      "git_blob": "19765bd501b636fce433540d9e6735f51d66151d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/FAILURE-runtime-events.json",
+      "bytes": 338646,
+      "sha256": "ea2b6b978c3f8c41c1c8621d79a293b5f8bf582247c62eef09ca2ff546105478",
+      "git_blob": "d47894250bb337ba538785904b465b9388b5cf9d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/FAILURE.json",
+      "bytes": 1624,
+      "sha256": "e1c41081a0b0df6341fe07cc74c3621211efea042a12575640e743ff0f669cd7",
+      "git_blob": "c9cade5bdd8aa79a619ac3f847beee4ca479133a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/FAILURE.png",
+      "bytes": 70819,
+      "sha256": "0c850747b3d1e784c120c4917335f2a5dc6e76f59f385629a46243df03b31651",
+      "git_blob": "ab05f0248dde4dd4b68ee1f870233e2dae79b547"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-00-manual-plan-input.json",
+      "bytes": 3066,
+      "sha256": "c4ad578b5354e3ba5ca1b0e7e6faefbac873c280035869d2eed9c756ee83dd29",
+      "git_blob": "60d86f5678f8299dbde58444e3c2b931cbf5f219"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-01-am-ready.json",
+      "bytes": 2003,
+      "sha256": "73b0de7d2f4146df07da5d5d6e9d9780bd089b43f7afc9cfc61fd17ee58d3f7c",
+      "git_blob": "57684153609b6689b6b8b84e8a0d75da73f4268d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-02-rejected-write-recovery.json",
+      "bytes": 1427,
+      "sha256": "48d41550b1c459d58623cb8d3a82b1c779d55c5d28e134c359392d74f9234193",
+      "git_blob": "ae6c4c0b314b26e40bc60e5bf37a591b258811fe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-03-offline-duplicate-append-only.json",
+      "bytes": 2024,
+      "sha256": "4be5fd4625f6ad08de48a9f12dc26b04788c308fe40dd1269d7ba42067ab7ee6",
+      "git_blob": "a72cdbf6aabc028ad5596c439f5c2f84e63406b5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-04-offline-timing.json",
+      "bytes": 1875,
+      "sha256": "719f92c5ffe3c6d7f8123688caba3e1634432eac19d0e66ee1751c1a78f89eeb",
+      "git_blob": "f54043193b340abd3c531d42bce6a937f10add4e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-04a-offline-reminder-recovery.json",
+      "bytes": 2112,
+      "sha256": "070d0f216e5791f0b104881d4f39cfe2008b563daf6ca0d9cf852514da40c7f4",
+      "git_blob": "5554e72419e59352972aad3dd9d5566a97bfc722"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-04a-offline-reminder-recovery.png",
+      "bytes": 92515,
+      "sha256": "7b11e67608a72a47be77835880c6cf5de79912f0af7c0268629605b72441908c",
+      "git_blob": "1942baa2708a366ca195b47769e7097d74b22414"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-04b-cycle-paid-boundary.json",
+      "bytes": 1349,
+      "sha256": "97958e3d67fc0f059f7b7fe3b9ea5a44009d983bad3792ae4a4a4d8b22698ef8",
+      "git_blob": "96be664ffeb0cc51835c00a0fbd2090aae53f395"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-04c-reorder-paid-boundary.json",
+      "bytes": 1347,
+      "sha256": "b02c38ac846ef6218af88b58e3a468e65b3a71007d1a66a4e661abb3fb23bf45",
+      "git_blob": "da1acac4595eac59b15dd9ca0538a6aa2913eef0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-05-reloaded-am.json",
+      "bytes": 2024,
+      "sha256": "4be5fd4625f6ad08de48a9f12dc26b04788c308fe40dd1269d7ba42067ab7ee6",
+      "git_blob": "a72cdbf6aabc028ad5596c439f5c2f84e63406b5"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-06-pm.json",
+      "bytes": 2093,
+      "sha256": "6b38e012216c5afd89f9ee2931dc531692706ddad53dcbfb70b275c5ea6d0ee6",
+      "git_blob": "e9f4965fcec4d89d055aa7e54e739de17d0125cd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-07-plan-paid-boundary.json",
+      "bytes": 1415,
+      "sha256": "9e0416d54445219049d8ca4d4139e610c42e76cba056ce84236235de723abd4f",
+      "git_blob": "dc6cdc0253b67d22cde77752c131766115df5568"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-09-web-reminder-availability.json",
+      "bytes": 1352,
+      "sha256": "080362645b300e481232f2667af8d84ff08cdae271a15f6718a876390c21d1d1",
+      "git_blob": "40d995a2d899c0e5d4d51130ac282433a2638e9b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-09-web-reminder-availability.png",
+      "bytes": 67963,
+      "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+      "git_blob": "5bf8032616dc686ed20b24a3311254d5d46c8d5c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/M102-daily-loop.json",
+      "bytes": 825,
+      "sha256": "21d3ae31acda0022232a1c4ce97dfb3a5fb78daab778cfb951cc9ba99e05b6ab",
+      "git_blob": "e11c37ef6bfea7ddaa8ed29ba2393c66bb194172"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/R03-durable-preference.json",
+      "bytes": 75,
+      "sha256": "c70b2a3b7ab38afdc609d82debf72c205a711a4165a334264827262fc706490c",
+      "git_blob": "90511b91c9ad97bda7aad69aa5c8833c252a2b4d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/R03-saved-unconfirmed-after-late-read.json",
+      "bytes": 1624,
+      "sha256": "e1c41081a0b0df6341fe07cc74c3621211efea042a12575640e743ff0f669cd7",
+      "git_blob": "c9cade5bdd8aa79a619ac3f847beee4ca479133a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/R03-saved-unconfirmed-after-late-read.png",
+      "bytes": 70377,
+      "sha256": "620808fec10d5182ba03692f68494c8508d074fbc88e158b88a63851da0dc7db",
+      "git_blob": "2c7e48a863144debd457471849ca4cc5e8ad97dd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/R03-unavailable-permission.json",
+      "bytes": 1352,
+      "sha256": "080362645b300e481232f2667af8d84ff08cdae271a15f6718a876390c21d1d1",
+      "git_blob": "40d995a2d899c0e5d4d51130ac282433a2638e9b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web375-run2/R03-unavailable-permission.png",
+      "bytes": 67963,
+      "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+      "git_blob": "5bf8032616dc686ed20b24a3311254d5d46c8d5c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/01-welcome.json",
+      "bytes": 1350,
+      "sha256": "64ba8af6e233a13eb366c4d96e09c92c174bebce1fe44c3b4de7bc4b14e073b3",
+      "git_blob": "7d6d1b26a36db65893416551e42b5e57265cbba3"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/01a-direct-protected-age-gate.json",
+      "bytes": 1457,
+      "sha256": "131fcaee0c03cb11132b28848d0419e93ec306023786f25ede4207f3b25f77af",
+      "git_blob": "8fc9a293cd03da8544839e7b4963877c3f6e8575"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/01a-direct-protected-age-gate.png",
+      "bytes": 67634,
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+      "git_blob": "bbadc0154560743fa357cf2094a26307f2d11607"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/02-age-empty.json",
+      "bytes": 1457,
+      "sha256": "131fcaee0c03cb11132b28848d0419e93ec306023786f25ede4207f3b25f77af",
+      "git_blob": "8fc9a293cd03da8544839e7b4963877c3f6e8575"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/03-age-filled.json",
+      "bytes": 1458,
+      "sha256": "90aadecef9ff37036ca88d5ea25d168383cddefe15248c1c59946c5dd1f13672",
+      "git_blob": "035cc5f4a53c8c9afff9c71933fb9beaa00214fe"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/03a-after-age-submit.json",
+      "bytes": 1593,
+      "sha256": "ee30cac6f81ce3ddd63683a5f717f1de7daa7292d9c0c96d90ba7a667cbe5f06",
+      "git_blob": "f59927bd4cb40cc82276fcf6eb2169274664277e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/04-consent.json",
+      "bytes": 1593,
+      "sha256": "ee30cac6f81ce3ddd63683a5f717f1de7daa7292d9c0c96d90ba7a667cbe5f06",
+      "git_blob": "f59927bd4cb40cc82276fcf6eb2169274664277e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/04-consent.png",
+      "bytes": 167559,
+      "sha256": "022cc0f3b7c023d559198841a66f21e9deae50ee268105b690eb0f84d6bec7d2",
+      "git_blob": "9c6a0d9125512ba162815df423fe1493a0327eef"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/05-goals.json",
+      "bytes": 2121,
+      "sha256": "7f436a1cf3579ef0d563ef31c06cad0e3d4ad8605a47a9c54c0814fb56332383",
+      "git_blob": "10421c31f296063c65504ad93c00990a523e6f30"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/06-goals-selected.json",
+      "bytes": 2132,
+      "sha256": "f7cb324641769e6e721dc7e4a3e4daa8f491400a1ace87b917d1824f63bc0396",
+      "git_blob": "de7ad8a76595ae313f16b3a0a84dc8666bd58b30"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/07-quiz-01.json",
+      "bytes": 1416,
+      "sha256": "e1aaac2b23011ed9b027149b7588096906f9fc521fbca1bf674aa68ba18a8c2b",
+      "git_blob": "0563356680ea7ea46b75b7ed957d8a7849345706"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/08-quiz-after-04.json",
+      "bytes": 1392,
+      "sha256": "551a7aedac17afb844f62506dff533c3c27507131a98d8f9df3d000c68410e12",
+      "git_blob": "11e353fd15a67e605d460f6d08fa66f26946e68e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/08-quiz-after-09.json",
+      "bytes": 2086,
+      "sha256": "4b298a4a633601a4e6d542b8cf927e2ce6fbfc1f507634addcd789bf977ee9d1",
+      "git_blob": "73ed63d1a66b5ac485280e2d478d98090256233c"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/08-quiz-after-11.json",
+      "bytes": 1669,
+      "sha256": "2d5efd3e96dbca38694c7d6a30ceaf1c659758f87af614a201006e7d378337f0",
+      "git_blob": "1219f0ba0ed6b6babf448b90c70bab9825ac5ea9"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/09-products-empty.json",
+      "bytes": 700,
+      "sha256": "e473d0451e206dfae62fe938e3dedc8822fe2246fb6976bd9f378eb6d2093da7",
+      "git_blob": "756f95cb4d6941e13c6311343a6ae217ebc3e48f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/09-products-empty.png",
+      "bytes": 43610,
+      "sha256": "24e58cb927b74276d0dacad78283b8417e3c7fff0cdb54d39b399fae7010095c",
+      "git_blob": "c9231260eba1af614d33c3781b306cbc3a6612bd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/10-products-after-1.json",
+      "bytes": 1252,
+      "sha256": "8334a98bc45c710deb6f1fa64628c4a78644ab8ac4b5573a64904c0c3332afe2",
+      "git_blob": "300c1cc318edae417199fb49448f6cba3e2498c6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/11-products-after-2.json",
+      "bytes": 1496,
+      "sha256": "7c3ab91bc3ccf172659f0a8219a833a5d64c54915d651f3e19305942dde9c008",
+      "git_blob": "4d3363b5f61ac3aa74fcf664992cf5910e7f7afa"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/12-products-after-3.json",
+      "bytes": 1482,
+      "sha256": "4179392a3692784f23c8d6983553b25b82db326232378a99fb7f1d9e76fbaf67",
+      "git_blob": "0ff763505bf7970d2651798302dc59df8cf98f07"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/13-post-products-continue-current.json",
+      "bytes": 373,
+      "sha256": "1d72b98dfa2545de65d715f08e64eb7468d1057553ada9ac971339001ddc53fb",
+      "git_blob": "70e0858d730f7d71bca0b1d87277f5f2330ce393"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/14-reveal-checks.json",
+      "bytes": 691,
+      "sha256": "ea7f0f8e302807d73c08c612956856efd471cb84e92f20343244f04ddca7cb8a",
+      "git_blob": "4e865c9983238cf6fc7451ca8490302cd651a258"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/15-notifications.json",
+      "bytes": 947,
+      "sha256": "0d491ddf2fc4a4d6a9f71e37e5b423ae45f9b91f0e80b5f5bba8ddc2b7418c7d",
+      "git_blob": "ebd8234bce2346674a3bd7e9586fc86137ae591f"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/16-account.json",
+      "bytes": 714,
+      "sha256": "d0c2f07b72de5d497c610d8dc9cbff531b1fcd086c5ef097968eca3f69b407db",
+      "git_blob": "4bd92b34c44343000d7f7f63051745f72894a630"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/17-paywall-current.json",
+      "bytes": 2695,
+      "sha256": "d07533ae60606651eea286b0e2691080372c86d56ca3c0eb2a54210d52ad37b8",
+      "git_blob": "3fb5def6b3c4314c14488d6d4ef722e8334e91db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/17-paywall.json",
+      "bytes": 2695,
+      "sha256": "d07533ae60606651eea286b0e2691080372c86d56ca3c0eb2a54210d52ad37b8",
+      "git_blob": "3fb5def6b3c4314c14488d6d4ef722e8334e91db"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/18-paywall-free-path-visible.json",
+      "bytes": 2695,
+      "sha256": "c000db32121cfb87b5842039be729c62ea920d685bfeb61ba72c0d8e51eff2d6",
+      "git_blob": "a9e20b6c94b5c1b33d23fa4c2a538902c9644cfd"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/19-today-free-current.json",
+      "bytes": 1743,
+      "sha256": "52f4ddf6a558b0dde3d5c0b7bb39d20d76267a6ede9a97c5e4bb2048270ffafe",
+      "git_blob": "33c63e45d6661cb72855e2b390b86ea3eb6662a0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/19-today-free-current.png",
+      "bytes": 90983,
+      "sha256": "2c85483b4827f8de2bbe06167ba18afe62e5dfcd7188cd7f7c7506ee73f04835",
+      "git_blob": "61dba292f3e5e3ad2a06755b57c823613366762d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/20-shelf-after-onboarding.json",
+      "bytes": 4501,
+      "sha256": "db444f5a0cbd3f0d4b23fd4c9ba21307e33d63efb36cc3583ac378e769036d4e",
+      "git_blob": "26592e1884801688739c8ae219acb58f4672fd26"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/21-progress-after-onboarding.json",
+      "bytes": 7923,
+      "sha256": "eb5940b47245d6d524a0a24cb3612d39fb04b1b18dbff787eeba05670f8abd75",
+      "git_blob": "50fe8d0f62c5058d14abce4c01e814ec06e8e36e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/21-progress-after-onboarding.png",
+      "bytes": 103818,
+      "sha256": "5d15a029d7b860a5218234fc0fecc9fb65fef3a97313c1fc897db7c5a0aa1cea",
+      "git_blob": "f2f941050bc5a0c58ad3f61e3c3a91a6884f824e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/22-you-after-onboarding.json",
+      "bytes": 10156,
+      "sha256": "f102f37d62e3782f71362e2a26bba34b5340cab274a2c7df5e991d11b75235d7",
+      "git_blob": "ca52c48410875e4df73351d4e5729e1ea0bf4708"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/23-today-after-tab-round-trip.json",
+      "bytes": 11941,
+      "sha256": "175b545fca12ddb39e8edde12576675e67502c50b70a28b394eb1414fceadc6c",
+      "git_blob": "05b2816a74087765e82a60873c7eb8334f2bb009"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/25-age-reverification-before-submit.json",
+      "bytes": 1227,
+      "sha256": "e66da6feddbc95aed5c2eb51f4db80d8546746a7b67020a4b92e027cf0e929f4",
+      "git_blob": "841ea64db6c3e1f69b55695fb7bb31ff4ea1d7fb"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/26-age-reverification-blocked.json",
+      "bytes": 1502,
+      "sha256": "7e2d19f41d253289a28d4b53eae275f1fdbc6b172c08dd7aa8013b29e83d2761",
+      "git_blob": "21ac5516dde33bf281a0c3bc792abb6f93dd9553"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/26-age-reverification-blocked.png",
+      "bytes": 76665,
+      "sha256": "32a60ee3aabc00ed420ed4c0c831c55cf7d3e221acc1000465c4f59fcbce737e",
+      "git_blob": "021f4c8c0bb71e1fe5c558ee984c3f00ec38ea19"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/27-age-reverification-direct-today-blocked.json",
+      "bytes": 1457,
+      "sha256": "131fcaee0c03cb11132b28848d0419e93ec306023786f25ede4207f3b25f77af",
+      "git_blob": "8fc9a293cd03da8544839e7b4963877c3f6e8575"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/28-age-reverification-reload-today-blocked.json",
+      "bytes": 1457,
+      "sha256": "131fcaee0c03cb11132b28848d0419e93ec306023786f25ede4207f3b25f77af",
+      "git_blob": "8fc9a293cd03da8544839e7b4963877c3f6e8575"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/actions.jsonl",
+      "bytes": 2934,
+      "sha256": "e0778d619cd60f05080081dc119014010852178219164f5756f277dc8c65bd46",
+      "git_blob": "49107b568e88673ed18877ede398aae9ecbba64b"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/browser-warn-error-logs.json",
+      "bytes": 571147,
+      "sha256": "ce5a8a0997172fd8ddd4ba78bd0b2f581b9fd24fa11ede26563d4fb57885cc10",
+      "git_blob": "faf151af1083469a06648b3de14fcf85fa0b04ae"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/bundle-crypto-provenance.json",
+      "bytes": 713,
+      "sha256": "8f4b84a42f03db8ea543107f6fbacb7b5c0658eb751b603c6d567c4b34874084",
+      "git_blob": "bb65107e9a96745f749ebdd53bdde8bdc2520ae1"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/driver-binding.json",
+      "bytes": 468,
+      "sha256": "2ad41697244140a40d5c87e9b95eb7a1bdd1d7f8a90f3a95b0dc9c1dea0fa585",
+      "git_blob": "3e9f0e09d9b0bb6962fea5e5619f614a2e0b1e40"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/expo-web.log",
+      "bytes": 16486,
+      "sha256": "872a25130c2a40e4f721192c1496a37364a00ea1ecd538c7b1f8463d586b22bc",
+      "git_blob": "ba1a8fc79df6bb01cbb524bb1ab9628e58a85098"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-00-manual-plan-input.json",
+      "bytes": 3276,
+      "sha256": "49116043c4043687b8d8a683832cce3b5afc85d5ace7638301b4a9476024ccb3",
+      "git_blob": "785e1e82f6e8061d9b0dd548ff64e6bb5d96ee63"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-01-am-ready.json",
+      "bytes": 2257,
+      "sha256": "a5a73eecd0319305a0fd3e66edabc25c7833c3d758633441ac7d6ed14081e156",
+      "git_blob": "964356c5ede20789eb21d03e8690ceeb243c70a8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-02-rejected-write-recovery.json",
+      "bytes": 1410,
+      "sha256": "8356dd68a3606383763ee01394f4b1c5daaaff7681e93fda9622a6a39d90c359",
+      "git_blob": "03d672e85d7268c1858dc6a54351da3a86d63768"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-03-offline-duplicate-append-only.json",
+      "bytes": 2279,
+      "sha256": "fa1ec7c6267691f7fd110605a35aaeb8d80b447442e4fc0975cafbf31da78b87",
+      "git_blob": "ecf0a05c8876b7af14c1decaf24a342a1fca1be0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-04-offline-timing.json",
+      "bytes": 1875,
+      "sha256": "5d7538da69e3da1cbcea15d6db3c1a288207b0c2b725b0f5036711890be8f672",
+      "git_blob": "8748ba5fe3d6a8c7f7bc2315f36e2aa67f49cf72"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-04a-offline-reminder-recovery.json",
+      "bytes": 2112,
+      "sha256": "6f0298da78838b5c2a93f8c36d7bc85a2f104e498b2c5128353492f9a6a7620a",
+      "git_blob": "8ea4b211420c373e934e787b6bb7f8317f6847b8"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-04a-offline-reminder-recovery.png",
+      "bytes": 126439,
+      "sha256": "30ab59c83998a15b1727c407d69c7ad2682ea535e0292a7104036d143156fdde",
+      "git_blob": "91c525627cd13c148f287c8cb81e2fa0960f1767"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-04b-cycle-paid-boundary.json",
+      "bytes": 1473,
+      "sha256": "0c435d4a5f1cde5ad6665b7114a2aadad2d4443f4394701e57d3f6ffca8021da",
+      "git_blob": "9308bd1d394a393492dfe62e51de6497df33431e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-04c-reorder-paid-boundary.json",
+      "bytes": 1469,
+      "sha256": "e971449c9a03fe5d389ebf41d79f3d5fe569054ea99ea9fa80e6ef5410a2426a",
+      "git_blob": "4aa7e7d893efa6d540d90b9f50cd0e3f90421bfc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-05-reloaded-am.json",
+      "bytes": 2279,
+      "sha256": "fa1ec7c6267691f7fd110605a35aaeb8d80b447442e4fc0975cafbf31da78b87",
+      "git_blob": "ecf0a05c8876b7af14c1decaf24a342a1fca1be0"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-06-pm.json",
+      "bytes": 2291,
+      "sha256": "c98939cd97f649e373df067a6e12105f1c4de09c5f7959b6aea93a438408e298",
+      "git_blob": "7ba4f1fc09bcfbe8342d62d12c5598a1f0764989"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-07-plan-paid-boundary.json",
+      "bytes": 1537,
+      "sha256": "f88c172a8d5a13e8c12ab1cbee357670c8820c79fe08cee07b4f1d299e07aa27",
+      "git_blob": "d963bd177057eb9b16500021daf26131fbc31389"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-09-web-reminder-availability.json",
+      "bytes": 1352,
+      "sha256": "a17cd2be80a168a45aa4ee5f35d26eb16719c9de66e65e755935f550cb427ac4",
+      "git_blob": "d6dfaeda7f482a1ba28519614cc079461775aaf2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-09-web-reminder-availability.png",
+      "bytes": 110235,
+      "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d",
+      "git_blob": "83adc24c03dc2336dd792376b2dea2735df0ece2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/M102-daily-loop.json",
+      "bytes": 825,
+      "sha256": "21d3ae31acda0022232a1c4ce97dfb3a5fb78daab778cfb951cc9ba99e05b6ab",
+      "git_blob": "e11c37ef6bfea7ddaa8ed29ba2393c66bb194172"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-durable-preference.json",
+      "bytes": 75,
+      "sha256": "c70b2a3b7ab38afdc609d82debf72c205a711a4165a334264827262fc706490c",
+      "git_blob": "90511b91c9ad97bda7aad69aa5c8833c252a2b4d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-keyboard-focus.json",
+      "bytes": 74,
+      "sha256": "61f42f1ef17a31d9ccceced1e8505d628a5802f1a61e04d9c08834004527d016",
+      "git_blob": "a7f56ccc7ae59903cbe067354c7dffe193327206"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-offline-keyboard-retry.json",
+      "bytes": 1359,
+      "sha256": "61f6370f7b658d14befbe3133e008a68c1048809e641a45f3d2c47934f49e43b",
+      "git_blob": "8ff29e6919214f9dea4e45c3bf6559cb1ec08fab"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-offline-keyboard-retry.png",
+      "bytes": 111812,
+      "sha256": "e8abec752bf2273aee2b22d75d9760b5d8cfae7c2f02af1408eb32b1ed71ce0b",
+      "git_blob": "95d081950cf5fa6d58d903a5a085205c3ef38a1d"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-reload-delivery-unavailable.json",
+      "bytes": 1340,
+      "sha256": "f031f94490a130d23c076f67da4332e9471c875032c98957d4f48416fdfca0e2",
+      "git_blob": "81b6fd399db5ad42c2ad76392ba47afdb470848e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-reload-delivery-unavailable.png",
+      "bytes": 108816,
+      "sha256": "8c00256844a1f52f9ccd04929d6933e22aa77f041cae552ce5d694aa3077e649",
+      "git_blob": "162d87ace733e1194d34e9f2b31d43f6c53250ea"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-saved-unconfirmed-after-late-read.json",
+      "bytes": 1624,
+      "sha256": "ab378658ce5eb43d63487746d3b862ecdc14cf57d379ec2789afa21ccaeeaad8",
+      "git_blob": "17fb3afa219254d384acd81a071242f7c66f9758"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-saved-unconfirmed-after-late-read.png",
+      "bytes": 99782,
+      "sha256": "1b1cd1a307911999e15c5777edccbd399d4167cb8be454a9fa5907aacf59e46b",
+      "git_blob": "e573c1be426cc528e622952247844afde15285f7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-unavailable-permission.json",
+      "bytes": 1352,
+      "sha256": "a17cd2be80a168a45aa4ee5f35d26eb16719c9de66e65e755935f550cb427ac4",
+      "git_blob": "d6dfaeda7f482a1ba28519614cc079461775aaf2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/R03-unavailable-permission.png",
+      "bytes": 110235,
+      "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d",
+      "git_blob": "83adc24c03dc2336dd792376b2dea2735df0ece2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/report.md",
+      "bytes": 1429,
+      "sha256": "c85b54f7ee193bff78c207de9f39f78ab9d77ec7c7cd9d3ad455f6eb550fc257",
+      "git_blob": "07613a53bac98faa2564933746d1f9bfbd85624e"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/ui/web390-final/summary.json",
+      "bytes": 5639,
+      "sha256": "cd6d3214ffb27450bb605863d72fbb9f60de83efc1d003aade2451dd2c677598",
+      "git_blob": "f4716e3a2ab391d2c64a448ed2b393a6b806f1a7"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/UI_REPORT.md",
+      "bytes": 3249,
+      "sha256": "393361615b0d4fcdeb576ec7e4ae95a314dc765affab74aea779224787089cbc",
+      "git_blob": "d669b7b4a0787f58061f1648bafc61d4c58cfe61"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/verify_checkpoint.py",
+      "bytes": 2288,
+      "sha256": "da241dad7ebd9ad96f5e69473c6bc6ba8c19cfa2ee4c6c0ba9c7736fda30ea5a",
+      "git_blob": "a5d9ea6111bb480adb1d1e34ece29fa2d1f52144"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/working-byte-comparison.json",
+      "bytes": 1822,
+      "sha256": "f2fb4705cdac0ba2e91f438cd0977c7b8f9d1eb6d632c5b6b81f54ff42934706",
+      "git_blob": "3a23712fe4d23a443290b459333713c8c8b1d3f6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/worklist-negative.json",
+      "bytes": 493,
+      "sha256": "7637bac674e51085e957d5a44fbfa1cd7f56d7f7822f054f2c38311d7b8bfda1",
+      "git_blob": "e55d061ab97c1ddb28f3f834de226c9fad76b1e7"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "bytes": 4531,
+      "sha256": "291d58450040ed1c0ecd6a36b215e177e6d2dc927b8cd5240ae191d21569a1a9",
+      "git_blob": "52c2bbd9a3b1028da24bec50beb1895b330a9801"
+    }
+  ]
+}

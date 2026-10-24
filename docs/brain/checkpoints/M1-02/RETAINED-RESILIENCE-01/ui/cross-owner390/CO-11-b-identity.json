@@ -1,0 +1,146 @@
+{
+  "bodyText": "You ACCOUNT tas.account-b.e2e@example.com Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > FOR YOU Pregnancy & breastfeeding Review your routine safety setting. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Progress photo storage Encrypted on this device. Cloud backup is not available in this build. Device only REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Pauses health use; starts active-data deletion; keeps billing. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using Layerwell and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to request and read your export. > YOUR DATA Export my data Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, Progress notes, and pending or terminal shelf and completion sync records. Photo files and thumbnails stay encrypted here; share images individually from Progress. Delete account Progress photos stay encrypted here unless you share one. No ads. No data sales. Layerwell gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Sign out",
+      "role": "button",
+      "selected": false,
+      "width": 90.3,
+      "x": 254.7,
+      "y": 92
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Manage subscription. Free plan",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 210
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Your plan",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 328
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Edit the order",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 376
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Retinoid ramp",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 424
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Streak & adherence",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 550
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Weekly check-in",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 598
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Recent changes",
+      "role": "button",
+      "selected": false,
+      "width": 300,
+      "x": 45,
+      "y": 646
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 25,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 195,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62.24,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 279.84,
+      "y": 760.58
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8384/you",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

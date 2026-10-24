@@ -1,0 +1,22 @@
+    if (index === 0) {
+      await client.send('Page.bringToFront');
+      await client.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+      const focus = await evaluate(client, `(() => {
+        const next = [...document.querySelectorAll('[role="button"],button')].find(n => n.textContent.trim() === 'Next');
+        globalThis.__J02_KEYS__ = [];
+        for (const type of ['keydown', 'keyup', 'click']) document.addEventListener(type, e => globalThis.__J02_KEYS__.push({type, key:e.key, target:e.target.textContent}));
+        next.focus(); return { label: next.textContent, focused: document.activeElement === next };
+      })()`);
+      await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', unmodifiedText: '\r', windowsVirtualKeyCode: 13 });
+      await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+      writeJson('J02-keyboard-attempt.json', { focus, observed: await evaluate(client, '({events:globalThis.__J02_KEYS__, text:document.body.innerText})') });
+      await waitForText(client, '2 OF 12', 5000);
+      await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', unmodifiedText: '\r', windowsVirtualKeyCode: 13 });
+      await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+      await waitForText(client, '2 OF 12');
+      const keyboard = await captureStep(client, 'J02-quiz-keyboard-repeat');
+      assert(keyboard.bodyText.includes('2 OF 12'), 'Repeated key skipped a question.');
+      writeJson('J02-keyboard.json', { action: 'focus Next, Enter twice', observed: keyboard });
+    } else {
+      await clickByText(client, index < answers.length - 1 ? 'Next' : 'See my profile');
+    }

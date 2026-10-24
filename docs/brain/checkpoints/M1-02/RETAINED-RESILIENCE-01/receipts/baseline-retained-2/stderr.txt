@@ -1,0 +1,74 @@
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/notificationDeliveryOutboxMigration.test.ts [ src/features/notifications/notificationDeliveryOutboxMigration.test.ts ]
+Error: ENOENT: no such file or directory, open 'C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\supabase\migrations\20260718000049_notification_delivery_outbox_rpc.sql'
+ ❯ src/features/notifications/notificationDeliveryOutboxMigration.test.ts:5:19
+      3| import { describe, expect, it } from 'vitest';
+      4|
+      5| const migration = readFileSync(
+       |                   ^
+      6|   fileURLToPath(
+      7|     new URL(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/features/notifications/notificationOutboxMigration.test.ts [ src/features/notifications/notificationOutboxMigration.test.ts ]
+Error: ENOENT: no such file or directory, open 'C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\supabase\migrations\20260718000047_notification_preferences_outbox_rpc.sql'
+ ❯ src/features/notifications/notificationOutboxMigration.test.ts:5:19
+      3| import { describe, expect, it } from 'vitest';
+      4|
+      5| const migration = readFileSync(
+       |                   ^
+      6|   fileURLToPath(
+      7|     new URL(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/features/notifications/replenishmentOptInMigration.test.ts [ src/features/notifications/replenishmentOptInMigration.test.ts ]
+Error: ENOENT: no such file or directory, open 'C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\supabase\migrations\20260711000039_replenishment_alert_opt_in.sql'
+ ❯ src/features/notifications/replenishmentOptInMigration.test.ts:5:19
+      3| import { describe, expect, it } from 'vitest';
+      4|
+      5| const migration = readFileSync(
+       |                   ^
+      6|   fileURLToPath(
+      7|     new URL(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/features/photos/photoDeleteOutboxMigration.test.ts [ src/features/photos/photoDeleteOutboxMigration.test.ts ]
+Error: ENOENT: no such file or directory, open 'C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\supabase\migrations\20260726000058_photo_delete_outbox_rpc.sql'
+ ❯ src/features/photos/photoDeleteOutboxMigration.test.ts:5:19
+      3| import { describe, expect, it } from 'vitest';
+      4|
+      5| const migration = readFileSync(
+       |                   ^
+      6|   fileURLToPath(
+      7|     new URL(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/photos/qualityProvenance.test.ts > Progress quality provenance contract > keeps measured values local and rejects unproven future server metadata
+Error: ENOENT: no such file or directory, open 'C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\supabase\migrations\20260710000036_photo_quality_provenance.sql'
+ ❯ readRepo src/features/photos/qualityProvenance.test.ts:8:10
+      6|
+      7| function readRepo(path: string): string {
+      8|   return readFileSync(`${REPO_DIR}/${path}`, 'utf8');
+       |          ^
+      9| }
+     10|
+ ❯ src/features/photos/qualityProvenance.test.ts:13:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/today src/features/routine src/features/scheduler src/features/streak src/features/photos src/features/notifications --maxWorkers=2

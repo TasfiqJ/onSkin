@@ -1,0 +1,23 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/onboarding/quizNavigation.test.ts src/features/shelf/mutationsRecovery.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+ ❯ src/features/onboarding/quizNavigation.test.ts (4 tests | 4 failed) 37ms
+     × advances one answered question for repeated Next taps in one render 20ms
+     × does not let a queued old Next handler skip an unanswered successor 3ms
+     × does not advance an unanswered question even if its handler is invoked 2ms
+     × keeps Back, re-answering and one final navigation usable 9ms
+ ❯ src/features/shelf/mutationsRecovery.test.ts (4 tests | 4 failed) 267ms
+     × publishes the durable add result instead of joining the pre-write read, including offline 85ms
+     × publishes the durable edit result instead of joining the pre-write read, including offline 56ms
+     × publishes the durable archive result instead of joining the pre-write read, including offline 63ms
+     × publishes the durable remove result instead of joining the pre-write read, including offline 61ms
+
+ Test Files  2 failed (2)
+      Tests  8 failed (8)
+   Start at  20:46:59
+   Duration  634ms (transform 117ms, setup 0ms, import 329ms, tests 304ms, environment 0ms)
+

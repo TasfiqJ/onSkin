@@ -7,6 +7,7 @@ import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'reac
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER } from '@/features/healthConsent/lifecycle';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
+import LocalRecoverySection from '@/features/retainedRecovery/LocalRecoverySection';
 import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from '@/features/settings/accountDeletionCopy';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
@@ -112,12 +113,14 @@ function Row({
   hint,
   children,
   compact,
+  expanded,
   onPress,
 }: {
   label: string;
   hint?: string;
   children?: React.ReactNode;
   compact?: boolean;
+  expanded?: boolean;
   onPress?: () => void;
 }) {
   const labelContent = (
@@ -158,6 +161,7 @@ function Row({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={hint ? `${label}. ${hint}` : label}
+        accessibilityState={expanded === undefined ? undefined : { expanded }}
         onPress={onPress}
         className={
           compact
@@ -299,6 +303,7 @@ export default function YouScreen() {
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
+  const [localRecoveryOpen, setLocalRecoveryOpen] = useState(false);
   const [savingPrivacy, setSavingPrivacy] = useState<'marketing' | null>(null);
   const [privacyFeedback, setPrivacyFeedback] = useState<{
     key: PrivacyFeedbackKey;
@@ -818,6 +823,9 @@ export default function YouScreen() {
             <Text variant="label" tone="muted" className="mb-1">
               HELP
             </Text>
+            <Row label="Local recovery" hint="Check device records and find each feature’s recovery controls."
+              expanded={localRecoveryOpen} onPress={() => setLocalRecoveryOpen(value => !value)} />
+            {localRecoveryOpen ? <LocalRecoverySection onClose={() => setLocalRecoveryOpen(false)} /> : null}
             <Row
               label="Beta feedback"
               hint="Send a categorized issue through support."

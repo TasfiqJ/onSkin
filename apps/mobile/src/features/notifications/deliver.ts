@@ -37,6 +37,7 @@ import {
 import { reserveNotificationSlotLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
 import { configureNotifications } from './startup';
+import { classifyNotificationPermission } from './permission';
 
 export { configureNotifications } from './startup';
 
@@ -232,6 +233,7 @@ export function isDeliverableAuthorizationState(
 function authorizationState(
   status: Notifications.NotificationPermissionsStatus,
 ): NotificationAuthorizationState {
+  if (classifyNotificationPermission(status).status === 'unavailable') return 'unavailable';
   if (Platform.OS === 'ios' && status.ios) {
     switch (status.ios.status) {
       case Notifications.IosAuthorizationStatus.AUTHORIZED:
@@ -256,7 +258,8 @@ async function readAuthorization(): Promise<{
   canAskAgain: boolean;
 }> {
   const status = await Notifications.getPermissionsAsync();
-  return { state: authorizationState(status), canAskAgain: status.canAskAgain };
+  const state = authorizationState(status);
+  return { state, canAskAgain: state !== 'unavailable' && status.canAskAgain === true };
 }
 
 export async function getPermissionStatus(): Promise<NotificationAuthorizationState> {
@@ -272,6 +275,9 @@ export async function requestPermission(): Promise<NotificationPermissionOutcome
   let requestAttempted = false;
   try {
     const before = await readAuthorization();
+    if (before.state === 'unavailable') {
+      return { kind: 'error', state: 'unavailable', requestAttempted: false };
+    }
     if (isDeliverableAuthorizationState(before.state)) {
       return {
         kind: 'already_authorized',
@@ -291,6 +297,9 @@ export async function requestPermission(): Promise<NotificationPermissionOutcome
       },
     });
     const state = authorizationState(after);
+    if (state === 'unavailable') {
+      return { kind: 'error', state: 'unavailable', requestAttempted: true };
+    }
     if (isDeliverableAuthorizationState(state)) {
       return { kind: 'authorized', state, requestAttempted: true };
     }

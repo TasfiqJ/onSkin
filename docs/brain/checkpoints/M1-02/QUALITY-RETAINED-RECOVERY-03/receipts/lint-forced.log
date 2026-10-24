@@ -1,0 +1,96 @@
+
+> layerwell@0.1.0 lint
+> turbo run lint --force
+
+• turbo 2.9.18
+
+   • Packages in scope: @layerwell/catalog-operator-console, @layerwell/mobile, @layerwell/types
+   • Running lint in 3 packages
+   • Remote caching disabled
+
+@layerwell/types:lint: cache bypass, force executing aa368475090ff033
+@layerwell/catalog-operator-console:lint: cache bypass, force executing 2e781eda96f1751a
+@layerwell/mobile:lint: cache bypass, force executing eb6b6e0658dfe73f
+@layerwell/types:lint: 
+@layerwell/types:lint: > @layerwell/types@0.1.0 lint
+@layerwell/types:lint: > echo "(no lint configured for @layerwell/types)"
+@layerwell/types:lint: 
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: > @layerwell/mobile@0.1.0 lint
+@layerwell/catalog-operator-console:lint: 
+@layerwell/mobile:lint: > eslint . --max-warnings=0
+@layerwell/catalog-operator-console:lint: > @layerwell/catalog-operator-console@0.1.0 lint
+@layerwell/catalog-operator-console:lint: > tsc --noEmit
+@layerwell/catalog-operator-console:lint: 
+@layerwell/mobile:lint: 
+@layerwell/types:lint: "(no lint configured for @layerwell/types)"
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\notifications\preferenceReadRace.retained03.test.ts
+@layerwell/mobile:lint:   22:3  error  Error: Cannot reassign variables declared outside of the component/hook
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Variable `update` is declared outside of the component/hook. Reassigning this value during render is a form of side effect, which can cause unpredictable behavior depending on when the component happens to re-render. If this variable is used in rendering, use useState instead. Otherwise, consider updating it in an effect. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#side-effects-must-run-outside-of-render).
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\notifications\preferenceReadRace.retained03.test.ts:22:3
+@layerwell/mobile:lint:   20 | let releaseRead: (value: typeof durable) => void;
+@layerwell/mobile:lint:   21 | function Probe() {
+@layerwell/mobile:lint: > 22 |   update = useUpdateNotifPrefs();
+@layerwell/mobile:lint:      |   ^^^^^^ `update` cannot be reassigned
+@layerwell/mobile:lint:   23 |   observed = useNotifPrefs();
+@layerwell/mobile:lint:   24 |   return null;
+@layerwell/mobile:lint:   25 | }  react-hooks/globals
+@layerwell/mobile:lint:   23:3  error  Error: Cannot reassign variables declared outside of the component/hook
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Variable `observed` is declared outside of the component/hook. Reassigning this value during render is a form of side effect, which can cause unpredictable behavior depending on when the component happens to re-render. If this variable is used in rendering, use useState instead. Otherwise, consider updating it in an effect. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#side-effects-must-run-outside-of-render).
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\notifications\preferenceReadRace.retained03.test.ts:23:3
+@layerwell/mobile:lint:   21 | function Probe() {
+@layerwell/mobile:lint:   22 |   update = useUpdateNotifPrefs();
+@layerwell/mobile:lint: > 23 |   observed = useNotifPrefs();
+@layerwell/mobile:lint:      |   ^^^^^^^^ `observed` cannot be reassigned
+@layerwell/mobile:lint:   24 |   return null;
+@layerwell/mobile:lint:   25 | }
+@layerwell/mobile:lint:   26 | async function flush() {                     react-hooks/globals
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\photos\offlineDiary.retained03.test.ts
+@layerwell/mobile:lint:   19:3  error  Error: Cannot reassign variables declared outside of the component/hook
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Variable `source` is declared outside of the component/hook. Reassigning this value during render is a form of side effect, which can cause unpredictable behavior depending on when the component happens to re-render. If this variable is used in rendering, use useState instead. Otherwise, consider updating it in an effect. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#side-effects-must-run-outside-of-render).
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\photos\offlineDiary.retained03.test.ts:19:3
+@layerwell/mobile:lint:   17 | let actions: ReturnType<typeof usePhotoActions>;
+@layerwell/mobile:lint:   18 | function Probe() {
+@layerwell/mobile:lint: > 19 |   source = usePhotos();
+@layerwell/mobile:lint:      |   ^^^^^^ `source` cannot be reassigned
+@layerwell/mobile:lint:   20 |   actions = usePhotoActions();
+@layerwell/mobile:lint:   21 |   return null;
+@layerwell/mobile:lint:   22 | }  react-hooks/globals
+@layerwell/mobile:lint:   20:3  error  Error: Cannot reassign variables declared outside of the component/hook
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: Variable `actions` is declared outside of the component/hook. Reassigning this value during render is a form of side effect, which can cause unpredictable behavior depending on when the component happens to re-render. If this variable is used in rendering, use useState instead. Otherwise, consider updating it in an effect. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#side-effects-must-run-outside-of-render).
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile\src\features\photos\offlineDiary.retained03.test.ts:20:3
+@layerwell/mobile:lint:   18 | function Probe() {
+@layerwell/mobile:lint:   19 |   source = usePhotos();
+@layerwell/mobile:lint: > 20 |   actions = usePhotoActions();
+@layerwell/mobile:lint:      |   ^^^^^^^ `actions` cannot be reassigned
+@layerwell/mobile:lint:   21 |   return null;
+@layerwell/mobile:lint:   22 | }
+@layerwell/mobile:lint:   23 | async function flush() {                       react-hooks/globals
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: ✖ 4 problems (4 errors, 0 warnings)
+@layerwell/mobile:lint: 
+@layerwell/mobile:lint: npm error Lifecycle script `lint` failed with error:
+@layerwell/mobile:lint: npm error code 1
+@layerwell/mobile:lint: npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+@layerwell/mobile:lint: npm error workspace @layerwell/mobile@0.1.0
+@layerwell/mobile:lint: npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+@layerwell/mobile:lint: npm error command failed
+@layerwell/mobile:lint: npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint . --max-warnings=0
+ ERROR  @layerwell/mobile#lint: command (C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run lint exited (1)
+
+ Tasks:    2 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    1m14.017s 
+Failed:    @layerwell/mobile#lint
+
+ ERROR  run failed: command  exited (1)

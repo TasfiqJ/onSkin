@@ -1,0 +1,29 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf",
+    "src/features/onboarding",
+    "src/features/today",
+    "src/features/routine",
+    "src/features/scheduler",
+    "src/features/streak",
+    "src/features/photos",
+    "--maxWorkers=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+  "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:44:51.022605+00:00",
+  "exit": 0,
+  "elapsed_seconds": 74.297,
+  "stdout_sha256": "404b02e2d0d3ba6da39dc8c433594750429ed6e84a42fe6e4aca59ed7590e51c",
+  "stdout_bytes": 483,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_bytes": 0
+}

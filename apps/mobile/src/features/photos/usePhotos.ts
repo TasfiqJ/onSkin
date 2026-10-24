@@ -12,7 +12,6 @@ import type { PhotoSeries } from '@layerwell/types';
 
 import {
   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
-  runCurrentHealthDataOperation,
   runHealthDataOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
@@ -233,6 +232,8 @@ export function usePhotos(series: PhotoSeries = 'front') {
   const capturedAuthority = authority;
   const query = useQuery({
     queryKey,
+    // Encrypted device reads and explicit retries do not require connectivity.
+    networkMode: 'always',
     enabled: capturedAuthority !== null,
     queryFn: () => {
       if (capturedAuthority === null) {
@@ -325,23 +326,6 @@ export function usePhotoActions(options: { authenticatedOwnerUserId?: string | n
     authority.ownerUserId, authority.generation, authority.epoch, authority.accountGeneration,
   ]);
   const isCurrent = () => authority !== null && samePhotoReadAuthority(authority, currentPhotoReadAuthority());
-  const mutateAndInvalidate = <T>(operation: () => Promise<T>): Promise<T> =>
-    runCurrentHealthDataOperation(async (lease) => {
-      try {
-        lease.assertCurrent();
-        return await operation();
-      } finally {
-        // Invalidating is itself a cache publication boundary. Keep it under
-        // the same immutable lease as the local mutation that triggered it.
-        lease.assertCurrent();
-        await qc.invalidateQueries({ queryKey: KEY });
-        lease.assertCurrent();
-      }
-    });
-
-  const add = useMutation({
-    mutationFn: (input: NewPhoto) => mutateAndInvalidate(() => addPhotoWithOutcome(input)),
-  });
   type Accepted<T> = { value: T; authority: PhotoReadAuthority | null };
   const detailMutation = <T>(accepted: PhotoReadAuthority | null, operation: () => Promise<T>, deleting = false) => {
     if (accepted === null) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
@@ -373,6 +357,12 @@ export function usePhotoActions(options: { authenticatedOwnerUserId?: string | n
   };
   // React Query may replace observer options after a render. The accepted
   // authority travels in the variables, never just in mutationFn's closure.
+  const addMutation = useMutation({
+    networkMode: 'always',
+    retry: false,
+    mutationFn: ({ value, authority: accepted }: Accepted<NewPhoto>) =>
+      detailMutation(accepted, () => addPhotoWithOutcome(value)),
+  });
   const referenceMutation = useMutation({
     // Local persistence must execute offline; retry belongs to the visible UI.
     networkMode: 'always',
@@ -398,6 +388,12 @@ export function usePhotoActions(options: { authenticatedOwnerUserId?: string | n
     ...referenceMutation,
     mutateAsync: (id: string) => referenceMutation.mutateAsync({ value: id, authority }),
     mutate: (id: string) => { referenceMutation.mutate({ value: id, authority }); },
+  };
+  const add = {
+    ...addMutation,
+    variables: addMutation.variables?.value,
+    mutateAsync: (value: NewPhoto) => addMutation.mutateAsync({ value, authority }),
+    mutate: (value: NewPhoto) => { addMutation.mutate({ value, authority }); },
   };
   const remove = {
     ...removeMutation,

@@ -1,0 +1,2331 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications/preferenceAvailability.campaign05.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > keeps unavailable preferences unavailable instead of publishing defaults
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > keeps corrupt preferences unavailable instead of publishing defaults
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > keeps unsupported preferences unavailable instead of publishing defaults
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > hides a retained snapshot on failed reread and explicitly recovers offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > renders an accessible storage retry and Back on function NotificationSettingsScreen() {
+	const { height, width } = (0,__vite_ssr_import_4__.useWindowDimensions)();
+	const { data: p } = (0,__vite_ssr_import_9__.useNotifPrefs)();
+	const authorization = (0,__vite_ssr_import_9__.useNotificationAuthorization)();
+	const update = (0,__vite_ssr_import_9__.useUpdateNotifPrefs)();
+	const [settingsOpenFailed, setSettingsOpenFailed] = (0,__vite_ssr_import_3__.useState)(false);
+	const set = (patch) => update.mutate(patch);
+	const compactNotifications = height < 600;
+	const ultraShortNotifications = height < 460;
+	const splitShortNotifications = height < 600;
+	const microShortNotifications = height < 380;
+	const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;
+	const androidMidTextPressureNotifications = width <= 390 && height >= 700 && height < 780;
+	const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;
+	const deferCaptureNudge = splitShortNotifications || iphoneTextPressureNotifications;
+	const deferredNudgeRowStyle = { marginTop: iphoneTextPressureNotifications ? 96 : microShortNotifications ? 72 : height < 520 ? 184 : 88 };
+	const nudgesSectionStyle = supportTextPressureNotifications ? { marginTop: 152 } : androidMidTextPressureNotifications ? { marginTop: 184 } : microShortNotifications ? { marginTop: 136 } : ultraShortNotifications ? { marginTop: 64 } : undefined;
+	const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
+	if (!p) return null;
+	const authorizationState = authorization.data ?? "unavailable";
+	const authorizationPending = authorization.isPending;
+	const deliveryAuthorized = (0,__vite_ssr_import_8__.isDeliverableAuthorizationState)(authorizationState);
+	const canOpenDeviceSettings = __vite_ssr_import_4__.Platform.OS !== "web";
+	const openDeviceSettings = async () => {
+		if (!canOpenDeviceSettings) return;
+		setSettingsOpenFailed(false);
+		const opened = await (0,__vite_ssr_import_10__.openAppSettings)({ alertOnFailure: false });
+		setSettingsOpenFailed(!opened);
+	};
+	const setAuthorizedToggle = async (key, value) => {
+		if (authorizationPending) return;
+		setSettingsOpenFailed(false);
+		if (!value || deliveryAuthorized) {
+			set({ [key]: value });
+			return;
+		};
+		if (authorizationState === "denied") {
+			await openDeviceSettings();
+			return;
+		};
+		const outcome = await (0,__vite_ssr_import_8__.requestPermission)();
+		await authorization.refetch();
+		if ((0,__vite_ssr_import_8__.isDeliverableAuthorizationState)(outcome.state)) set({ [key]: true });
+	};
+	const effective = (value) => value && deliveryAuthorized;
+	return /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_5__.SafeAreaView), {
+		className: "flex-1",
+		style: { backgroundColor: __vite_ssr_import_12__.colors.greige },
+		edges: ["top"],
+		children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.ScrollView), {
+			showsVerticalScrollIndicator: false,
+			contentContainerClassName: microShortNotifications ? "px-5 pb-6" : compactNotifications ? "px-5 pb-8" : "px-5 pb-10",
+			children: [
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: microShortNotifications ? "mb-0 flex-row items-center gap-2 pt-0" : compactNotifications ? "mb-0 flex-row items-center gap-3 pt-1" : "mb-1 flex-row items-center gap-3 pt-1",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.RouteIconButton), {
+						accessibilityLabel: "Back",
+						onPress: () => (0,__vite_ssr_import_11__.backOrReplace)((0,__vite_ssr_import_2__.router), (0,__vite_ssr_import_11__.APP_YOU_ROUTE))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 237,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "title",
+						style: { fontSize: microShortNotifications ? 24 : ultraShortNotifications ? 26 : 28 },
+						children: "Notifications"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 241,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 228,
+					columnNumber: 9
+				}, this),
+				authorizationPending ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "mb-2 rounded-[14px] bg-paper-raised px-4 py-3",
+					children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "bodySm",
+						tone: "muted",
+						children: "Checking notification access…"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 251,
+						columnNumber: 13
+					}, this)
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 250,
+					columnNumber: 11
+				}, this) : !deliveryAuthorized ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "mb-2 rounded-[14px] bg-paper-raised px-4 py-3",
+					children: [
+						/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "bodySm",
+							tone: "muted",
+							children: authorizationState === "denied" ? __vite_ssr_import_4__.Platform.OS === "web" ? "Notification permission is unavailable in this browser preview." : `Notifications are blocked in ${__vite_ssr_import_4__.Platform.OS === "ios" ? "iOS" : "device"} Settings.` : authorizationState === "not_determined" ? "Notification permission has not been granted. Turn on a reminder to choose." : "Notification authorization is unavailable right now. Reminders stay off."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 257,
+							columnNumber: 13
+						}, this),
+						authorizationState === "denied" && canOpenDeviceSettings ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.Pressable), {
+							accessibilityRole: "button",
+							className: "min-h-[48px] justify-center",
+							onPress: () => void openDeviceSettings(),
+							children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "bodySm",
+								className: "font-sans-semibold",
+								children: "Open Settings"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 272,
+								columnNumber: 17
+							}, this)
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 267,
+							columnNumber: 15
+						}, this) : null,
+						settingsOpenFailed ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							accessibilityRole: "alert",
+							variant: "bodySm",
+							tone: "muted",
+							children: "Open Settings manually to allow notifications."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 278,
+							columnNumber: 15
+						}, this) : null
+					]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 256,
+					columnNumber: 11
+				}, this) : null,
+				update.isSuccess && update.data ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSavedNotice), { scheduling: update.data.scheduling }, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 285,
+					columnNumber: 44
+				}, this) : null,
+				update.isError ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSaveNotice), {
+					pending: update.isPending,
+					error: update.error,
+					onRetry: () => update.mutate((0,__vite_ssr_import_0__.notificationPreferenceRetryPatch)(update.error, update.variables))
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 287,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+					compact: compactNotifications,
+					micro: microShortNotifications,
+					children: "UTILITY · YOUR ROUTINE"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 294,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+						title: "Morning routine",
+						subtitle: fmtTime(p.amTime),
+						value: effective(p.amEnabled),
+						onChange: (v) => void setAuthorizedToggle("amEnabled", v),
+						onPress: () => __vite_ssr_import_2__.router.push("/settings/timing"),
+						compact: compactNotifications,
+						disabled: authorizationPending
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 298,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+						title: "Evening · tonight’s step",
+						subtitle: fmtTime(p.pmTime),
+						value: effective(p.pmEnabled),
+						onChange: (v) => void setAuthorizedToggle("pmEnabled", v),
+						onPress: () => __vite_ssr_import_2__.router.push("/settings/timing"),
+						last: true,
+						compact: compactNotifications,
+						disabled: authorizationPending
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 307,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 297,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: nudgesSectionStyle,
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+						compact: compactNotifications,
+						micro: microShortNotifications,
+						children: "OPTIONAL REMINDERS"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 320,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: [
+							/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Routine pacing suggestions",
+								value: effective(p.streakNudges),
+								onChange: (v) => void setAuthorizedToggle("streakNudges", v),
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 324,
+								columnNumber: 13
+							}, this),
+							/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Replenishment",
+								value: effective(p.replenishmentAlerts),
+								onChange: (v) => void setAuthorizedToggle("replenishmentAlerts", v),
+								last: deferCaptureNudge,
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 331,
+								columnNumber: 13
+							}, this),
+							deferCaptureNudge ? null : /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Progress-photo nudge",
+								value: effective(p.captureReminders),
+								onChange: (v) => void setAuthorizedToggle("captureReminders", v),
+								last: true,
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 340,
+								columnNumber: 15
+							}, this)
+						]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 323,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 319,
+					columnNumber: 9
+				}, this),
+				deferCaptureNudge ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: deferredNudgeRowStyle,
+					children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+							title: "Progress-photo nudge",
+							value: effective(p.captureReminders),
+							onChange: (v) => void setAuthorizedToggle("captureReminders", v),
+							last: true,
+							compact: compactNotifications,
+							disabled: authorizationPending
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 355,
+							columnNumber: 15
+						}, this)
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 354,
+						columnNumber: 13
+					}, this)
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 353,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: promotionalSectionStyle,
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+						compact: compactNotifications,
+						micro: microShortNotifications,
+						children: "PROMOTIONAL"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 368,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+							title: "Tips & announcements",
+							subtitle: "off by default",
+							value: effective(p.promotionalOptIn),
+							onChange: (v) => void setAuthorizedToggle("promotionalOptIn", v),
+							last: true,
+							compact: compactNotifications,
+							disabled: authorizationPending
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 372,
+							columnNumber: 13
+						}, this)
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 371,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 367,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: "mt-6 text-center",
+					style: { fontSize: 10.5 },
+					children: __vite_ssr_import_7__.SETTINGS_COPY.capNote
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 384,
+					columnNumber: 9
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 222,
+			columnNumber: 7
+		}, this)
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 221,
+		columnNumber: 5
+	}, this);
+}
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > renders an accessible storage retry and Back on function TimingScreen() {
+	const { height } = (0,__vite_ssr_import_4__.useWindowDimensions)();
+	const { data: p } = (0,__vite_ssr_import_8__.useNotifPrefs)();
+	const update = (0,__vite_ssr_import_8__.useUpdateNotifPrefs)();
+	const [picking, setPicking] = (0,__vite_ssr_import_3__.useState)(null);
+	if (!p) return null;
+	const fieldKey = {
+		am: "amTime",
+		pm: "pmTime",
+		qstart: "quietStart",
+		qend: "quietEnd"
+	};
+	const currentValue = picking ? p[fieldKey[picking]] ?? "22:00" : "22:00";
+	const amTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.amTime);
+	const pmTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.pmTime);
+	const quietStartTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.quietStart ?? "22:00");
+	const quietEndTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.quietEnd ?? "07:00");
+	const compactTiming = height < 460;
+	const splitShortTiming = height < 380;
+	function choose(hm) {
+		if (picking) update.mutate({ [fieldKey[picking]]: hm });
+		setPicking(null);
+	}
+	const discreetBody = __vite_ssr_import_7__.REMINDER_COPY.pm_step.discreet;
+	return /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_5__.SafeAreaView), {
+		className: "flex-1",
+		style: { backgroundColor: __vite_ssr_import_12__.colors.greige },
+		edges: ["top"],
+		children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.ScrollView), {
+			showsVerticalScrollIndicator: false,
+			contentContainerClassName: compactTiming ? "px-5 pb-8" : "px-5 pb-10",
+			children: [
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: compactTiming ? "mb-1 flex-row items-center gap-2 pt-0" : "mb-3 flex-row items-center gap-3 pt-1",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.RouteIconButton), {
+						accessibilityLabel: "Back",
+						onPress: () => (0,__vite_ssr_import_11__.backOrReplace)((0,__vite_ssr_import_2__.router), (0,__vite_ssr_import_11__.APP_YOU_ROUTE))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 186,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "title",
+						style: { fontSize: compactTiming ? 26 : 28 },
+						children: "Timing"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 190,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 179,
+					columnNumber: 9
+				}, this),
+				update.isSuccess && update.data ? /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSavedNotice), { scheduling: update.data.scheduling }, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 195,
+					columnNumber: 44
+				}, this) : null,
+				update.isError ? /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSaveNotice), {
+					pending: update.isPending,
+					error: update.error,
+					onRetry: () => update.mutate((0,__vite_ssr_import_0__.notificationPreferenceRetryPatch)(update.error, update.variables))
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 197,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "min-h-[48px] flex-row items-center justify-between py-0" : "flex-row items-center justify-between py-3.5",
+						style: {
+							borderBottomWidth: 1,
+							borderBottomColor: "rgba(32,27,21,0.06)"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							children: "Morning"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 214,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+							accessibilityLabel: `Morning reminder time, ${amTimeLabel}`,
+							label: amTimeLabel,
+							onPress: () => setPicking("am")
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 217,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 206,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "min-h-[48px] flex-row items-center justify-between py-0" : "flex-row items-center justify-between py-3.5",
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							children: "Evening"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 230,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+							accessibilityLabel: `Evening reminder time, ${pmTimeLabel}`,
+							label: pmTimeLabel,
+							onPress: () => setPicking("pm")
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 233,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 223,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 205,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: splitShortTiming ? "mb-1 ml-2 mt-2" : compactTiming ? "mb-1.5 ml-2 mt-3" : "mb-2 ml-2 mt-5",
+					style: {
+						fontSize: compactTiming ? 9.5 : 10,
+						letterSpacing: 1
+					},
+					children: "QUIET HOURS"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 242,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: compactTiming ? "rounded-[18px] bg-paper-raised px-[18px] py-2" : "rounded-[18px] bg-paper-raised px-[18px] py-4",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "gap-2" : "gap-3",
+						style: {
+							alignItems: "center",
+							flexDirection: "row",
+							flexWrap: "wrap",
+							justifyContent: "space-between"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							style: {
+								flexShrink: 1,
+								minWidth: 0
+							},
+							children: __vite_ssr_import_7__.SETTINGS_COPY.quietLabel
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 272,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-row items-center gap-2",
+							children: [
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+									accessibilityLabel: `Quiet hours start, ${quietStartTimeLabel}`,
+									label: quietStartTimeLabel,
+									onPress: () => setPicking("qstart")
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 280,
+									columnNumber: 15
+								}, this),
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									tone: "muted",
+									children: "→"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 285,
+									columnNumber: 15
+								}, this),
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+									accessibilityLabel: `Quiet hours end, ${quietEndTimeLabel}`,
+									label: quietEndTimeLabel,
+									onPress: () => setPicking("qend")
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 286,
+									columnNumber: 15
+								}, this)
+							]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 279,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 263,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "bodySm",
+						tone: "muted",
+						className: compactTiming ? "mt-1 text-[12px]" : "mt-2",
+						style: compactTiming ? { lineHeight: 15 } : undefined,
+						children: p.quietStart === p.quietEnd ? "Quiet hours are off because the start and end match." : "Routine and weekly photo reminders scheduled inside this window move to its end. Event-triggered suggestions are skipped. Trial billing reminders follow the date shown at checkout."
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 293,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 256,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: "mb-2 ml-2 mt-5",
+					style: {
+						fontSize: 10,
+						letterSpacing: 1
+					},
+					children: "LOCK SCREEN"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 306,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "flex-row items-center justify-between py-3.5",
+						style: {
+							borderBottomWidth: 1,
+							borderBottomColor: "rgba(32,27,21,0.06)"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-1 pr-3",
+							children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "body",
+								className: "font-sans-semibold",
+								children: __vite_ssr_import_7__.SETTINGS_COPY.discreetLabel
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 320,
+								columnNumber: 15
+							}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "bodySm",
+								tone: "muted",
+								children: __vite_ssr_import_7__.SETTINGS_COPY.discreetHint
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 323,
+								columnNumber: 15
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 319,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "rounded-[8px] px-3 py-1.5",
+							style: { backgroundColor: __vite_ssr_import_12__.colors.greigeChip },
+							children: /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								className: "font-sans-semibold",
+								style: {
+									color: __vite_ssr_import_12__.colors.clay,
+									fontSize: 13
+								},
+								children: "On"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 331,
+								columnNumber: 15
+							}, this)
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 327,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 315,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "py-3.5",
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-row items-center gap-2.5 rounded-[12px] p-3",
+							style: { backgroundColor: "#16130F" },
+							children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+								className: "h-6 w-6 rounded-[7px]",
+								style: { backgroundColor: __vite_ssr_import_12__.colors.clay }
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 342,
+								columnNumber: 15
+							}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+								className: "flex-1",
+								children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									className: "font-sans-bold",
+									style: {
+										color: __vite_ssr_import_12__.colors.cream,
+										fontSize: 12.5
+									},
+									children: __vite_ssr_import_10__.BRAND.appName
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 344,
+									columnNumber: 17
+								}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									style: {
+										color: "rgba(244,239,231,0.7)",
+										fontSize: 12,
+										fontFamily: "HankenGrotesk-Regular"
+									},
+									children: discreetBody
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 347,
+									columnNumber: 17
+								}, this)]
+							}, void 0, true, {
+								fileName: _jsxFileName,
+								lineNumber: 343,
+								columnNumber: 15
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 338,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "label",
+							tone: "muted",
+							className: "mt-2 text-center",
+							style: { fontSize: 11 },
+							children: "Always generic on the lock screen"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 358,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 337,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 314,
+					columnNumber: 9
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 175,
+			columnNumber: 7
+		}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePickerModal, {
+			field: picking,
+			value: currentValue,
+			onSelect: choose,
+			onClose: () => setPicking(null)
+		}, void 0, false, {
+			fileName: _jsxFileName,
+			lineNumber: 370,
+			columnNumber: 7
+		}, this)]
+	}, void 0, true, {
+		fileName: _jsxFileName,
+		lineNumber: 174,
+		columnNumber: 5
+	}, this);
+}
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > a delayed old reminder opt-in cannot write under the next owner after rerender
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > an owner change cannot render the prior grant preferences from QueryClient
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > withdrawal immediately hides current preferences without waiting for a private read
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts (9 tests | 9 failed) 187ms
+   × keeps unavailable preferences unavailable instead of publishing defaults 35ms
+   × keeps corrupt preferences unavailable instead of publishing defaults 10ms
+   × keeps unsupported preferences unavailable instead of publishing defaults 16ms
+   × hides a retained snapshot on failed reread and explicitly recovers offline 30ms
+   × renders an accessible storage retry and Back on function NotificationSettingsScreen() {
+	const { height, width } = (0,__vite_ssr_import_4__.useWindowDimensions)();
+	const { data: p } = (0,__vite_ssr_import_9__.useNotifPrefs)();
+	const authorization = (0,__vite_ssr_import_9__.useNotificationAuthorization)();
+	const update = (0,__vite_ssr_import_9__.useUpdateNotifPrefs)();
+	const [settingsOpenFailed, setSettingsOpenFailed] = (0,__vite_ssr_import_3__.useState)(false);
+	const set = (patch) => update.mutate(patch);
+	const compactNotifications = height < 600;
+	const ultraShortNotifications = height < 460;
+	const splitShortNotifications = height < 600;
+	const microShortNotifications = height < 380;
+	const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;
+	const androidMidTextPressureNotifications = width <= 390 && height >= 700 && height < 780;
+	const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;
+	const deferCaptureNudge = splitShortNotifications || iphoneTextPressureNotifications;
+	const deferredNudgeRowStyle = { marginTop: iphoneTextPressureNotifications ? 96 : microShortNotifications ? 72 : height < 520 ? 184 : 88 };
+	const nudgesSectionStyle = supportTextPressureNotifications ? { marginTop: 152 } : androidMidTextPressureNotifications ? { marginTop: 184 } : microShortNotifications ? { marginTop: 136 } : ultraShortNotifications ? { marginTop: 64 } : undefined;
+	const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
+	if (!p) return null;
+	const authorizationState = authorization.data ?? "unavailable";
+	const authorizationPending = authorization.isPending;
+	const deliveryAuthorized = (0,__vite_ssr_import_8__.isDeliverableAuthorizationState)(authorizationState);
+	const canOpenDeviceSettings = __vite_ssr_import_4__.Platform.OS !== "web";
+	const openDeviceSettings = async () => {
+		if (!canOpenDeviceSettings) return;
+		setSettingsOpenFailed(false);
+		const opened = await (0,__vite_ssr_import_10__.openAppSettings)({ alertOnFailure: false });
+		setSettingsOpenFailed(!opened);
+	};
+	const setAuthorizedToggle = async (key, value) => {
+		if (authorizationPending) return;
+		setSettingsOpenFailed(false);
+		if (!value || deliveryAuthorized) {
+			set({ [key]: value });
+			return;
+		};
+		if (authorizationState === "denied") {
+			await openDeviceSettings();
+			return;
+		};
+		const outcome = await (0,__vite_ssr_import_8__.requestPermission)();
+		await authorization.refetch();
+		if ((0,__vite_ssr_import_8__.isDeliverableAuthorizationState)(outcome.state)) set({ [key]: true });
+	};
+	const effective = (value) => value && deliveryAuthorized;
+	return /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_5__.SafeAreaView), {
+		className: "flex-1",
+		style: { backgroundColor: __vite_ssr_import_12__.colors.greige },
+		edges: ["top"],
+		children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.ScrollView), {
+			showsVerticalScrollIndicator: false,
+			contentContainerClassName: microShortNotifications ? "px-5 pb-6" : compactNotifications ? "px-5 pb-8" : "px-5 pb-10",
+			children: [
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: microShortNotifications ? "mb-0 flex-row items-center gap-2 pt-0" : compactNotifications ? "mb-0 flex-row items-center gap-3 pt-1" : "mb-1 flex-row items-center gap-3 pt-1",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.RouteIconButton), {
+						accessibilityLabel: "Back",
+						onPress: () => (0,__vite_ssr_import_11__.backOrReplace)((0,__vite_ssr_import_2__.router), (0,__vite_ssr_import_11__.APP_YOU_ROUTE))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 237,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "title",
+						style: { fontSize: microShortNotifications ? 24 : ultraShortNotifications ? 26 : 28 },
+						children: "Notifications"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 241,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 228,
+					columnNumber: 9
+				}, this),
+				authorizationPending ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "mb-2 rounded-[14px] bg-paper-raised px-4 py-3",
+					children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "bodySm",
+						tone: "muted",
+						children: "Checking notification access…"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 251,
+						columnNumber: 13
+					}, this)
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 250,
+					columnNumber: 11
+				}, this) : !deliveryAuthorized ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "mb-2 rounded-[14px] bg-paper-raised px-4 py-3",
+					children: [
+						/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "bodySm",
+							tone: "muted",
+							children: authorizationState === "denied" ? __vite_ssr_import_4__.Platform.OS === "web" ? "Notification permission is unavailable in this browser preview." : `Notifications are blocked in ${__vite_ssr_import_4__.Platform.OS === "ios" ? "iOS" : "device"} Settings.` : authorizationState === "not_determined" ? "Notification permission has not been granted. Turn on a reminder to choose." : "Notification authorization is unavailable right now. Reminders stay off."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 257,
+							columnNumber: 13
+						}, this),
+						authorizationState === "denied" && canOpenDeviceSettings ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.Pressable), {
+							accessibilityRole: "button",
+							className: "min-h-[48px] justify-center",
+							onPress: () => void openDeviceSettings(),
+							children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "bodySm",
+								className: "font-sans-semibold",
+								children: "Open Settings"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 272,
+								columnNumber: 17
+							}, this)
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 267,
+							columnNumber: 15
+						}, this) : null,
+						settingsOpenFailed ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							accessibilityRole: "alert",
+							variant: "bodySm",
+							tone: "muted",
+							children: "Open Settings manually to allow notifications."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 278,
+							columnNumber: 15
+						}, this) : null
+					]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 256,
+					columnNumber: 11
+				}, this) : null,
+				update.isSuccess && update.data ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSavedNotice), { scheduling: update.data.scheduling }, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 285,
+					columnNumber: 44
+				}, this) : null,
+				update.isError ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSaveNotice), {
+					pending: update.isPending,
+					error: update.error,
+					onRetry: () => update.mutate((0,__vite_ssr_import_0__.notificationPreferenceRetryPatch)(update.error, update.variables))
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 287,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+					compact: compactNotifications,
+					micro: microShortNotifications,
+					children: "UTILITY · YOUR ROUTINE"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 294,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+						title: "Morning routine",
+						subtitle: fmtTime(p.amTime),
+						value: effective(p.amEnabled),
+						onChange: (v) => void setAuthorizedToggle("amEnabled", v),
+						onPress: () => __vite_ssr_import_2__.router.push("/settings/timing"),
+						compact: compactNotifications,
+						disabled: authorizationPending
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 298,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+						title: "Evening · tonight’s step",
+						subtitle: fmtTime(p.pmTime),
+						value: effective(p.pmEnabled),
+						onChange: (v) => void setAuthorizedToggle("pmEnabled", v),
+						onPress: () => __vite_ssr_import_2__.router.push("/settings/timing"),
+						last: true,
+						compact: compactNotifications,
+						disabled: authorizationPending
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 307,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 297,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: nudgesSectionStyle,
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+						compact: compactNotifications,
+						micro: microShortNotifications,
+						children: "OPTIONAL REMINDERS"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 320,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: [
+							/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Routine pacing suggestions",
+								value: effective(p.streakNudges),
+								onChange: (v) => void setAuthorizedToggle("streakNudges", v),
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 324,
+								columnNumber: 13
+							}, this),
+							/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Replenishment",
+								value: effective(p.replenishmentAlerts),
+								onChange: (v) => void setAuthorizedToggle("replenishmentAlerts", v),
+								last: deferCaptureNudge,
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 331,
+								columnNumber: 13
+							}, this),
+							deferCaptureNudge ? null : /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Progress-photo nudge",
+								value: effective(p.captureReminders),
+								onChange: (v) => void setAuthorizedToggle("captureReminders", v),
+								last: true,
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 340,
+								columnNumber: 15
+							}, this)
+						]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 323,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 319,
+					columnNumber: 9
+				}, this),
+				deferCaptureNudge ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: deferredNudgeRowStyle,
+					children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+							title: "Progress-photo nudge",
+							value: effective(p.captureReminders),
+							onChange: (v) => void setAuthorizedToggle("captureReminders", v),
+							last: true,
+							compact: compactNotifications,
+							disabled: authorizationPending
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 355,
+							columnNumber: 15
+						}, this)
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 354,
+						columnNumber: 13
+					}, this)
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 353,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: promotionalSectionStyle,
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+						compact: compactNotifications,
+						micro: microShortNotifications,
+						children: "PROMOTIONAL"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 368,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+							title: "Tips & announcements",
+							subtitle: "off by default",
+							value: effective(p.promotionalOptIn),
+							onChange: (v) => void setAuthorizedToggle("promotionalOptIn", v),
+							last: true,
+							compact: compactNotifications,
+							disabled: authorizationPending
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 372,
+							columnNumber: 13
+						}, this)
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 371,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 367,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: "mt-6 text-center",
+					style: { fontSize: 10.5 },
+					children: __vite_ssr_import_7__.SETTINGS_COPY.capNote
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 384,
+					columnNumber: 9
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 222,
+			columnNumber: 7
+		}, this)
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 221,
+		columnNumber: 5
+	}, this);
+} 19ms
+   × renders an accessible storage retry and Back on function TimingScreen() {
+	const { height } = (0,__vite_ssr_import_4__.useWindowDimensions)();
+	const { data: p } = (0,__vite_ssr_import_8__.useNotifPrefs)();
+	const update = (0,__vite_ssr_import_8__.useUpdateNotifPrefs)();
+	const [picking, setPicking] = (0,__vite_ssr_import_3__.useState)(null);
+	if (!p) return null;
+	const fieldKey = {
+		am: "amTime",
+		pm: "pmTime",
+		qstart: "quietStart",
+		qend: "quietEnd"
+	};
+	const currentValue = picking ? p[fieldKey[picking]] ?? "22:00" : "22:00";
+	const amTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.amTime);
+	const pmTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.pmTime);
+	const quietStartTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.quietStart ?? "22:00");
+	const quietEndTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.quietEnd ?? "07:00");
+	const compactTiming = height < 460;
+	const splitShortTiming = height < 380;
+	function choose(hm) {
+		if (picking) update.mutate({ [fieldKey[picking]]: hm });
+		setPicking(null);
+	}
+	const discreetBody = __vite_ssr_import_7__.REMINDER_COPY.pm_step.discreet;
+	return /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_5__.SafeAreaView), {
+		className: "flex-1",
+		style: { backgroundColor: __vite_ssr_import_12__.colors.greige },
+		edges: ["top"],
+		children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.ScrollView), {
+			showsVerticalScrollIndicator: false,
+			contentContainerClassName: compactTiming ? "px-5 pb-8" : "px-5 pb-10",
+			children: [
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: compactTiming ? "mb-1 flex-row items-center gap-2 pt-0" : "mb-3 flex-row items-center gap-3 pt-1",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.RouteIconButton), {
+						accessibilityLabel: "Back",
+						onPress: () => (0,__vite_ssr_import_11__.backOrReplace)((0,__vite_ssr_import_2__.router), (0,__vite_ssr_import_11__.APP_YOU_ROUTE))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 186,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "title",
+						style: { fontSize: compactTiming ? 26 : 28 },
+						children: "Timing"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 190,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 179,
+					columnNumber: 9
+				}, this),
+				update.isSuccess && update.data ? /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSavedNotice), { scheduling: update.data.scheduling }, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 195,
+					columnNumber: 44
+				}, this) : null,
+				update.isError ? /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSaveNotice), {
+					pending: update.isPending,
+					error: update.error,
+					onRetry: () => update.mutate((0,__vite_ssr_import_0__.notificationPreferenceRetryPatch)(update.error, update.variables))
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 197,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "min-h-[48px] flex-row items-center justify-between py-0" : "flex-row items-center justify-between py-3.5",
+						style: {
+							borderBottomWidth: 1,
+							borderBottomColor: "rgba(32,27,21,0.06)"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							children: "Morning"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 214,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+							accessibilityLabel: `Morning reminder time, ${amTimeLabel}`,
+							label: amTimeLabel,
+							onPress: () => setPicking("am")
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 217,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 206,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "min-h-[48px] flex-row items-center justify-between py-0" : "flex-row items-center justify-between py-3.5",
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							children: "Evening"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 230,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+							accessibilityLabel: `Evening reminder time, ${pmTimeLabel}`,
+							label: pmTimeLabel,
+							onPress: () => setPicking("pm")
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 233,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 223,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 205,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: splitShortTiming ? "mb-1 ml-2 mt-2" : compactTiming ? "mb-1.5 ml-2 mt-3" : "mb-2 ml-2 mt-5",
+					style: {
+						fontSize: compactTiming ? 9.5 : 10,
+						letterSpacing: 1
+					},
+					children: "QUIET HOURS"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 242,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: compactTiming ? "rounded-[18px] bg-paper-raised px-[18px] py-2" : "rounded-[18px] bg-paper-raised px-[18px] py-4",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "gap-2" : "gap-3",
+						style: {
+							alignItems: "center",
+							flexDirection: "row",
+							flexWrap: "wrap",
+							justifyContent: "space-between"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							style: {
+								flexShrink: 1,
+								minWidth: 0
+							},
+							children: __vite_ssr_import_7__.SETTINGS_COPY.quietLabel
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 272,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-row items-center gap-2",
+							children: [
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+									accessibilityLabel: `Quiet hours start, ${quietStartTimeLabel}`,
+									label: quietStartTimeLabel,
+									onPress: () => setPicking("qstart")
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 280,
+									columnNumber: 15
+								}, this),
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									tone: "muted",
+									children: "→"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 285,
+									columnNumber: 15
+								}, this),
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+									accessibilityLabel: `Quiet hours end, ${quietEndTimeLabel}`,
+									label: quietEndTimeLabel,
+									onPress: () => setPicking("qend")
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 286,
+									columnNumber: 15
+								}, this)
+							]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 279,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 263,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "bodySm",
+						tone: "muted",
+						className: compactTiming ? "mt-1 text-[12px]" : "mt-2",
+						style: compactTiming ? { lineHeight: 15 } : undefined,
+						children: p.quietStart === p.quietEnd ? "Quiet hours are off because the start and end match." : "Routine and weekly photo reminders scheduled inside this window move to its end. Event-triggered suggestions are skipped. Trial billing reminders follow the date shown at checkout."
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 293,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 256,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: "mb-2 ml-2 mt-5",
+					style: {
+						fontSize: 10,
+						letterSpacing: 1
+					},
+					children: "LOCK SCREEN"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 306,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "flex-row items-center justify-between py-3.5",
+						style: {
+							borderBottomWidth: 1,
+							borderBottomColor: "rgba(32,27,21,0.06)"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-1 pr-3",
+							children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "body",
+								className: "font-sans-semibold",
+								children: __vite_ssr_import_7__.SETTINGS_COPY.discreetLabel
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 320,
+								columnNumber: 15
+							}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "bodySm",
+								tone: "muted",
+								children: __vite_ssr_import_7__.SETTINGS_COPY.discreetHint
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 323,
+								columnNumber: 15
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 319,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "rounded-[8px] px-3 py-1.5",
+							style: { backgroundColor: __vite_ssr_import_12__.colors.greigeChip },
+							children: /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								className: "font-sans-semibold",
+								style: {
+									color: __vite_ssr_import_12__.colors.clay,
+									fontSize: 13
+								},
+								children: "On"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 331,
+								columnNumber: 15
+							}, this)
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 327,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 315,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "py-3.5",
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-row items-center gap-2.5 rounded-[12px] p-3",
+							style: { backgroundColor: "#16130F" },
+							children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+								className: "h-6 w-6 rounded-[7px]",
+								style: { backgroundColor: __vite_ssr_import_12__.colors.clay }
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 342,
+								columnNumber: 15
+							}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+								className: "flex-1",
+								children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									className: "font-sans-bold",
+									style: {
+										color: __vite_ssr_import_12__.colors.cream,
+										fontSize: 12.5
+									},
+									children: __vite_ssr_import_10__.BRAND.appName
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 344,
+									columnNumber: 17
+								}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									style: {
+										color: "rgba(244,239,231,0.7)",
+										fontSize: 12,
+										fontFamily: "HankenGrotesk-Regular"
+									},
+									children: discreetBody
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 347,
+									columnNumber: 17
+								}, this)]
+							}, void 0, true, {
+								fileName: _jsxFileName,
+								lineNumber: 343,
+								columnNumber: 15
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 338,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "label",
+							tone: "muted",
+							className: "mt-2 text-center",
+							style: { fontSize: 11 },
+							children: "Always generic on the lock screen"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 358,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 337,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 314,
+					columnNumber: 9
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 175,
+			columnNumber: 7
+		}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePickerModal, {
+			field: picking,
+			value: currentValue,
+			onSelect: choose,
+			onClose: () => setPicking(null)
+		}, void 0, false, {
+			fileName: _jsxFileName,
+			lineNumber: 370,
+			columnNumber: 7
+		}, this)]
+	}, void 0, true, {
+		fileName: _jsxFileName,
+		lineNumber: 174,
+		columnNumber: 5
+	}, this);
+} 13ms
+   × a delayed old reminder opt-in cannot write under the next owner after rerender 20ms
+   × an owner change cannot render the prior grant preferences from QueryClient 26ms
+   × withdrawal immediately hides current preferences without waiting for a private read 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > keeps unavailable preferences unavailable instead of publishing defaults
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > keeps corrupt preferences unavailable instead of publishing defaults
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > keeps unsupported preferences unavailable instead of publishing defaults
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:54:26
+     52|   ports.failure = kind === 'unavailable'; ports.raw = kind === 'corrup…
+     53|   await mount();
+     54|   expect(source.isError).toBe(true); expect(source.data).toBeUndefined…
+       |                          ^
+     55|   // The existing scheduler keeps its conservative off fallback.
+     56|   expect(await loadNotifPrefs()).toMatchObject({ amEnabled: false, pmE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > hides a retained snapshot on failed reread and explicitly recovers offline
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:63:26
+     61|   ports.failure = true;
+     62|   await act(async () => { await source.refetch(); }); await flush();
+     63|   expect(source.isError).toBe(true); expect(source.data).toBeUndefined…
+       |                          ^
+     64|   ports.failure = false;
+     65|   await act(async () => { await source.refetch(); }); await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > renders an accessible storage retry and Back on function NotificationSettingsScreen() {
+	const { height, width } = (0,__vite_ssr_import_4__.useWindowDimensions)();
+	const { data: p } = (0,__vite_ssr_import_9__.useNotifPrefs)();
+	const authorization = (0,__vite_ssr_import_9__.useNotificationAuthorization)();
+	const update = (0,__vite_ssr_import_9__.useUpdateNotifPrefs)();
+	const [settingsOpenFailed, setSettingsOpenFailed] = (0,__vite_ssr_import_3__.useState)(false);
+	const set = (patch) => update.mutate(patch);
+	const compactNotifications = height < 600;
+	const ultraShortNotifications = height < 460;
+	const splitShortNotifications = height < 600;
+	const microShortNotifications = height < 380;
+	const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;
+	const androidMidTextPressureNotifications = width <= 390 && height >= 700 && height < 780;
+	const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;
+	const deferCaptureNudge = splitShortNotifications || iphoneTextPressureNotifications;
+	const deferredNudgeRowStyle = { marginTop: iphoneTextPressureNotifications ? 96 : microShortNotifications ? 72 : height < 520 ? 184 : 88 };
+	const nudgesSectionStyle = supportTextPressureNotifications ? { marginTop: 152 } : androidMidTextPressureNotifications ? { marginTop: 184 } : microShortNotifications ? { marginTop: 136 } : ultraShortNotifications ? { marginTop: 64 } : undefined;
+	const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
+	if (!p) return null;
+	const authorizationState = authorization.data ?? "unavailable";
+	const authorizationPending = authorization.isPending;
+	const deliveryAuthorized = (0,__vite_ssr_import_8__.isDeliverableAuthorizationState)(authorizationState);
+	const canOpenDeviceSettings = __vite_ssr_import_4__.Platform.OS !== "web";
+	const openDeviceSettings = async () => {
+		if (!canOpenDeviceSettings) return;
+		setSettingsOpenFailed(false);
+		const opened = await (0,__vite_ssr_import_10__.openAppSettings)({ alertOnFailure: false });
+		setSettingsOpenFailed(!opened);
+	};
+	const setAuthorizedToggle = async (key, value) => {
+		if (authorizationPending) return;
+		setSettingsOpenFailed(false);
+		if (!value || deliveryAuthorized) {
+			set({ [key]: value });
+			return;
+		};
+		if (authorizationState === "denied") {
+			await openDeviceSettings();
+			return;
+		};
+		const outcome = await (0,__vite_ssr_import_8__.requestPermission)();
+		await authorization.refetch();
+		if ((0,__vite_ssr_import_8__.isDeliverableAuthorizationState)(outcome.state)) set({ [key]: true });
+	};
+	const effective = (value) => value && deliveryAuthorized;
+	return /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_5__.SafeAreaView), {
+		className: "flex-1",
+		style: { backgroundColor: __vite_ssr_import_12__.colors.greige },
+		edges: ["top"],
+		children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.ScrollView), {
+			showsVerticalScrollIndicator: false,
+			contentContainerClassName: microShortNotifications ? "px-5 pb-6" : compactNotifications ? "px-5 pb-8" : "px-5 pb-10",
+			children: [
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: microShortNotifications ? "mb-0 flex-row items-center gap-2 pt-0" : compactNotifications ? "mb-0 flex-row items-center gap-3 pt-1" : "mb-1 flex-row items-center gap-3 pt-1",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.RouteIconButton), {
+						accessibilityLabel: "Back",
+						onPress: () => (0,__vite_ssr_import_11__.backOrReplace)((0,__vite_ssr_import_2__.router), (0,__vite_ssr_import_11__.APP_YOU_ROUTE))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 237,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "title",
+						style: { fontSize: microShortNotifications ? 24 : ultraShortNotifications ? 26 : 28 },
+						children: "Notifications"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 241,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 228,
+					columnNumber: 9
+				}, this),
+				authorizationPending ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "mb-2 rounded-[14px] bg-paper-raised px-4 py-3",
+					children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "bodySm",
+						tone: "muted",
+						children: "Checking notification access…"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 251,
+						columnNumber: 13
+					}, this)
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 250,
+					columnNumber: 11
+				}, this) : !deliveryAuthorized ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "mb-2 rounded-[14px] bg-paper-raised px-4 py-3",
+					children: [
+						/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "bodySm",
+							tone: "muted",
+							children: authorizationState === "denied" ? __vite_ssr_import_4__.Platform.OS === "web" ? "Notification permission is unavailable in this browser preview." : `Notifications are blocked in ${__vite_ssr_import_4__.Platform.OS === "ios" ? "iOS" : "device"} Settings.` : authorizationState === "not_determined" ? "Notification permission has not been granted. Turn on a reminder to choose." : "Notification authorization is unavailable right now. Reminders stay off."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 257,
+							columnNumber: 13
+						}, this),
+						authorizationState === "denied" && canOpenDeviceSettings ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.Pressable), {
+							accessibilityRole: "button",
+							className: "min-h-[48px] justify-center",
+							onPress: () => void openDeviceSettings(),
+							children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "bodySm",
+								className: "font-sans-semibold",
+								children: "Open Settings"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 272,
+								columnNumber: 17
+							}, this)
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 267,
+							columnNumber: 15
+						}, this) : null,
+						settingsOpenFailed ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							accessibilityRole: "alert",
+							variant: "bodySm",
+							tone: "muted",
+							children: "Open Settings manually to allow notifications."
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 278,
+							columnNumber: 15
+						}, this) : null
+					]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 256,
+					columnNumber: 11
+				}, this) : null,
+				update.isSuccess && update.data ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSavedNotice), { scheduling: update.data.scheduling }, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 285,
+					columnNumber: 44
+				}, this) : null,
+				update.isError ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSaveNotice), {
+					pending: update.isPending,
+					error: update.error,
+					onRetry: () => update.mutate((0,__vite_ssr_import_0__.notificationPreferenceRetryPatch)(update.error, update.variables))
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 287,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+					compact: compactNotifications,
+					micro: microShortNotifications,
+					children: "UTILITY · YOUR ROUTINE"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 294,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+						title: "Morning routine",
+						subtitle: fmtTime(p.amTime),
+						value: effective(p.amEnabled),
+						onChange: (v) => void setAuthorizedToggle("amEnabled", v),
+						onPress: () => __vite_ssr_import_2__.router.push("/settings/timing"),
+						compact: compactNotifications,
+						disabled: authorizationPending
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 298,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+						title: "Evening · tonight’s step",
+						subtitle: fmtTime(p.pmTime),
+						value: effective(p.pmEnabled),
+						onChange: (v) => void setAuthorizedToggle("pmEnabled", v),
+						onPress: () => __vite_ssr_import_2__.router.push("/settings/timing"),
+						last: true,
+						compact: compactNotifications,
+						disabled: authorizationPending
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 307,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 297,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: nudgesSectionStyle,
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+						compact: compactNotifications,
+						micro: microShortNotifications,
+						children: "OPTIONAL REMINDERS"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 320,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: [
+							/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Routine pacing suggestions",
+								value: effective(p.streakNudges),
+								onChange: (v) => void setAuthorizedToggle("streakNudges", v),
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 324,
+								columnNumber: 13
+							}, this),
+							/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Replenishment",
+								value: effective(p.replenishmentAlerts),
+								onChange: (v) => void setAuthorizedToggle("replenishmentAlerts", v),
+								last: deferCaptureNudge,
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 331,
+								columnNumber: 13
+							}, this),
+							deferCaptureNudge ? null : /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+								title: "Progress-photo nudge",
+								value: effective(p.captureReminders),
+								onChange: (v) => void setAuthorizedToggle("captureReminders", v),
+								last: true,
+								compact: compactNotifications,
+								disabled: authorizationPending
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 340,
+								columnNumber: 15
+							}, this)
+						]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 323,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 319,
+					columnNumber: 9
+				}, this),
+				deferCaptureNudge ? /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: deferredNudgeRowStyle,
+					children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+							title: "Progress-photo nudge",
+							value: effective(p.captureReminders),
+							onChange: (v) => void setAuthorizedToggle("captureReminders", v),
+							last: true,
+							compact: compactNotifications,
+							disabled: authorizationPending
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 355,
+							columnNumber: 15
+						}, this)
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 354,
+						columnNumber: 13
+					}, this)
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 353,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					style: promotionalSectionStyle,
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(SectionLabel, {
+						compact: compactNotifications,
+						micro: microShortNotifications,
+						children: "PROMOTIONAL"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 368,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "rounded-[18px] bg-paper-raised px-[18px]",
+						children: /* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)(Row, {
+							title: "Tips & announcements",
+							subtitle: "off by default",
+							value: effective(p.promotionalOptIn),
+							onChange: (v) => void setAuthorizedToggle("promotionalOptIn", v),
+							last: true,
+							compact: compactNotifications,
+							disabled: authorizationPending
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 372,
+							columnNumber: 13
+						}, this)
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 371,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 367,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_13__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: "mt-6 text-center",
+					style: { fontSize: 10.5 },
+					children: __vite_ssr_import_7__.SETTINGS_COPY.capNote
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 384,
+					columnNumber: 9
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 222,
+			columnNumber: 7
+		}, this)
+	}, void 0, false, {
+		fileName: _jsxFileName,
+		lineNumber: 221,
+		columnNumber: 5
+	}, this);
+}
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > renders an accessible storage retry and Back on function TimingScreen() {
+	const { height } = (0,__vite_ssr_import_4__.useWindowDimensions)();
+	const { data: p } = (0,__vite_ssr_import_8__.useNotifPrefs)();
+	const update = (0,__vite_ssr_import_8__.useUpdateNotifPrefs)();
+	const [picking, setPicking] = (0,__vite_ssr_import_3__.useState)(null);
+	if (!p) return null;
+	const fieldKey = {
+		am: "amTime",
+		pm: "pmTime",
+		qstart: "quietStart",
+		qend: "quietEnd"
+	};
+	const currentValue = picking ? p[fieldKey[picking]] ?? "22:00" : "22:00";
+	const amTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.amTime);
+	const pmTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.pmTime);
+	const quietStartTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.quietStart ?? "22:00");
+	const quietEndTimeLabel = (0,__vite_ssr_import_13__.fmtTime)(p.quietEnd ?? "07:00");
+	const compactTiming = height < 460;
+	const splitShortTiming = height < 380;
+	function choose(hm) {
+		if (picking) update.mutate({ [fieldKey[picking]]: hm });
+		setPicking(null);
+	}
+	const discreetBody = __vite_ssr_import_7__.REMINDER_COPY.pm_step.discreet;
+	return /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_5__.SafeAreaView), {
+		className: "flex-1",
+		style: { backgroundColor: __vite_ssr_import_12__.colors.greige },
+		edges: ["top"],
+		children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.ScrollView), {
+			showsVerticalScrollIndicator: false,
+			contentContainerClassName: compactTiming ? "px-5 pb-8" : "px-5 pb-10",
+			children: [
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: compactTiming ? "mb-1 flex-row items-center gap-2 pt-0" : "mb-3 flex-row items-center gap-3 pt-1",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.RouteIconButton), {
+						accessibilityLabel: "Back",
+						onPress: () => (0,__vite_ssr_import_11__.backOrReplace)((0,__vite_ssr_import_2__.router), (0,__vite_ssr_import_11__.APP_YOU_ROUTE))
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 186,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "title",
+						style: { fontSize: compactTiming ? 26 : 28 },
+						children: "Timing"
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 190,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 179,
+					columnNumber: 9
+				}, this),
+				update.isSuccess && update.data ? /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSavedNotice), { scheduling: update.data.scheduling }, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 195,
+					columnNumber: 44
+				}, this) : null,
+				update.isError ? /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_1__.NotificationPreferenceSaveNotice), {
+					pending: update.isPending,
+					error: update.error,
+					onRetry: () => update.mutate((0,__vite_ssr_import_0__.notificationPreferenceRetryPatch)(update.error, update.variables))
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 197,
+					columnNumber: 11
+				}, this) : null,
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "min-h-[48px] flex-row items-center justify-between py-0" : "flex-row items-center justify-between py-3.5",
+						style: {
+							borderBottomWidth: 1,
+							borderBottomColor: "rgba(32,27,21,0.06)"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							children: "Morning"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 214,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+							accessibilityLabel: `Morning reminder time, ${amTimeLabel}`,
+							label: amTimeLabel,
+							onPress: () => setPicking("am")
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 217,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 206,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "min-h-[48px] flex-row items-center justify-between py-0" : "flex-row items-center justify-between py-3.5",
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							children: "Evening"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 230,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+							accessibilityLabel: `Evening reminder time, ${pmTimeLabel}`,
+							label: pmTimeLabel,
+							onPress: () => setPicking("pm")
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 233,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 223,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 205,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: splitShortTiming ? "mb-1 ml-2 mt-2" : compactTiming ? "mb-1.5 ml-2 mt-3" : "mb-2 ml-2 mt-5",
+					style: {
+						fontSize: compactTiming ? 9.5 : 10,
+						letterSpacing: 1
+					},
+					children: "QUIET HOURS"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 242,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: compactTiming ? "rounded-[18px] bg-paper-raised px-[18px] py-2" : "rounded-[18px] bg-paper-raised px-[18px] py-4",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: compactTiming ? "gap-2" : "gap-3",
+						style: {
+							alignItems: "center",
+							flexDirection: "row",
+							flexWrap: "wrap",
+							justifyContent: "space-between"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "body",
+							className: "font-sans-semibold",
+							style: {
+								flexShrink: 1,
+								minWidth: 0
+							},
+							children: __vite_ssr_import_7__.SETTINGS_COPY.quietLabel
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 272,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-row items-center gap-2",
+							children: [
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+									accessibilityLabel: `Quiet hours start, ${quietStartTimeLabel}`,
+									label: quietStartTimeLabel,
+									onPress: () => setPicking("qstart")
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 280,
+									columnNumber: 15
+								}, this),
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									tone: "muted",
+									children: "→"
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 285,
+									columnNumber: 15
+								}, this),
+								/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePill, {
+									accessibilityLabel: `Quiet hours end, ${quietEndTimeLabel}`,
+									label: quietEndTimeLabel,
+									onPress: () => setPicking("qend")
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 286,
+									columnNumber: 15
+								}, this)
+							]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 279,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 263,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+						variant: "bodySm",
+						tone: "muted",
+						className: compactTiming ? "mt-1 text-[12px]" : "mt-2",
+						style: compactTiming ? { lineHeight: 15 } : undefined,
+						children: p.quietStart === p.quietEnd ? "Quiet hours are off because the start and end match." : "Routine and weekly photo reminders scheduled inside this window move to its end. Event-triggered suggestions are skipped. Trial billing reminders follow the date shown at checkout."
+					}, void 0, false, {
+						fileName: _jsxFileName,
+						lineNumber: 293,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 256,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+					variant: "label",
+					tone: "muted",
+					className: "mb-2 ml-2 mt-5",
+					style: {
+						fontSize: 10,
+						letterSpacing: 1
+					},
+					children: "LOCK SCREEN"
+				}, void 0, false, {
+					fileName: _jsxFileName,
+					lineNumber: 306,
+					columnNumber: 9
+				}, this),
+				/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+					className: "rounded-[18px] bg-paper-raised px-[18px]",
+					children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "flex-row items-center justify-between py-3.5",
+						style: {
+							borderBottomWidth: 1,
+							borderBottomColor: "rgba(32,27,21,0.06)"
+						},
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-1 pr-3",
+							children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "body",
+								className: "font-sans-semibold",
+								children: __vite_ssr_import_7__.SETTINGS_COPY.discreetLabel
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 320,
+								columnNumber: 15
+							}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								variant: "bodySm",
+								tone: "muted",
+								children: __vite_ssr_import_7__.SETTINGS_COPY.discreetHint
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 323,
+								columnNumber: 15
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 319,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "rounded-[8px] px-3 py-1.5",
+							style: { backgroundColor: __vite_ssr_import_12__.colors.greigeChip },
+							children: /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+								className: "font-sans-semibold",
+								style: {
+									color: __vite_ssr_import_12__.colors.clay,
+									fontSize: 13
+								},
+								children: "On"
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 331,
+								columnNumber: 15
+							}, this)
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 327,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 315,
+						columnNumber: 11
+					}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+						className: "py-3.5",
+						children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+							className: "flex-row items-center gap-2.5 rounded-[12px] p-3",
+							style: { backgroundColor: "#16130F" },
+							children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+								className: "h-6 w-6 rounded-[7px]",
+								style: { backgroundColor: __vite_ssr_import_12__.colors.clay }
+							}, void 0, false, {
+								fileName: _jsxFileName,
+								lineNumber: 342,
+								columnNumber: 15
+							}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_4__.View), {
+								className: "flex-1",
+								children: [/* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									className: "font-sans-bold",
+									style: {
+										color: __vite_ssr_import_12__.colors.cream,
+										fontSize: 12.5
+									},
+									children: __vite_ssr_import_10__.BRAND.appName
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 344,
+									columnNumber: 17
+								}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+									style: {
+										color: "rgba(244,239,231,0.7)",
+										fontSize: 12,
+										fontFamily: "HankenGrotesk-Regular"
+									},
+									children: discreetBody
+								}, void 0, false, {
+									fileName: _jsxFileName,
+									lineNumber: 347,
+									columnNumber: 17
+								}, this)]
+							}, void 0, true, {
+								fileName: _jsxFileName,
+								lineNumber: 343,
+								columnNumber: 15
+							}, this)]
+						}, void 0, true, {
+							fileName: _jsxFileName,
+							lineNumber: 338,
+							columnNumber: 13
+						}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)((0,__vite_ssr_import_6__.Text), {
+							variant: "label",
+							tone: "muted",
+							className: "mt-2 text-center",
+							style: { fontSize: 11 },
+							children: "Always generic on the lock screen"
+						}, void 0, false, {
+							fileName: _jsxFileName,
+							lineNumber: 358,
+							columnNumber: 13
+						}, this)]
+					}, void 0, true, {
+						fileName: _jsxFileName,
+						lineNumber: 337,
+						columnNumber: 11
+					}, this)]
+				}, void 0, true, {
+					fileName: _jsxFileName,
+					lineNumber: 314,
+					columnNumber: 9
+				}, this)
+			]
+		}, void 0, true, {
+			fileName: _jsxFileName,
+			lineNumber: 175,
+			columnNumber: 7
+		}, this), /* @__PURE__ */ (0,__vite_ssr_import_14__.jsxDEV)(TimePickerModal, {
+			field: picking,
+			value: currentValue,
+			onSelect: choose,
+			onClose: () => setPicking(null)
+		}, void 0, false, {
+			fileName: _jsxFileName,
+			lineNumber: 370,
+			columnNumber: 7
+		}, this)]
+	}, void 0, true, {
+		fileName: _jsxFileName,
+		lineNumber: 174,
+		columnNumber: 5
+	}, this);
+}
+AssertionError: expected undefined to be defined
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:71:17
+     69|   ports.failure = true; await mount(component);
+     70|   const retry = renderer.root.findAll(node => node.props.accessibility…
+     71|   expect(retry).toBeDefined();
+       |                 ^
+     72|   expect(renderer.root.findAll(node => node.props.accessibilityLabel =…
+     73|   ports.failure = false;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > a delayed old reminder opt-in cannot write under the next owner after rerender
+AssertionError: promise resolved "{ …(2) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "prefs": {
++     "amEnabled": true,
++     "amTime": "07:30",
++     "captureReminders": false,
++     "liveActivityEnabled": false,
++     "lockscreenDiscreet": true,
++     "pmEnabled": false,
++     "pmTime": "21:30",
++     "promotionalOptIn": false,
++     "quietEnd": "07:00",
++     "quietStart": "22:00",
++     "replenishmentAlerts": false,
++     "streakNudges": false,
++     "timezone": "America/Toronto",
++   },
++   "scheduling": "web_preferences_only",
+  }
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:81:69
+     79|   await mount(); const retired = update.mutateAsync;
+     80|   await act(async () => { await grant('synthetic-b'); renderer.update(…
+     81|   await act(async () => { await expect(retired({ amEnabled: true })).r…
+       |                                                                     ^
+     82|   expect(ports.raw).toBeNull(); expect(ports.schedule).not.toHaveBeenC…
+     83|   await act(async () => { await update.mutateAsync({ amEnabled: true }…
+ ❯ Proxy.process.env.NODE_ENV.exports.act ../../node_modules/react/cjs/react.development.js:814:22
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:81:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > an owner change cannot render the prior grant preferences from QueryClient
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:92:34
+     90|   await act(async () => { await grant('synthetic-b'); renderer.update(…
+     91|   await flush();
+     92|   expect(source.data?.amEnabled).toBe(false);
+       |                                  ^
+     93| });
+     94|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > withdrawal immediately hides current preferences without waiting for a private read
+AssertionError: expected { amEnabled: true, …(12) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "amEnabled": true,
+  "amTime": "07:30",
+  "captureReminders": false,
+  "liveActivityEnabled": false,
+  "lockscreenDiscreet": true,
+  "pmEnabled": false,
+  "pmTime": "21:30",
+  "promotionalOptIn": false,
+  "quietEnd": "07:00",
+  "quietStart": "22:00",
+  "replenishmentAlerts": false,
+  "streakNudges": false,
+  "timezone": "America/Toronto",
+}
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:98:23
+     96|   await saveNotifPrefs({ amEnabled: true }); await mount();
+     97|   await act(async () => { clearActiveHealthProcessingEpoch(); });
+     98|   expect(source.data).toBeUndefined();
+       |                       ^
+     99| });
+    100|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+   Start at  00:39:16
+   Duration  658ms (transform 132ms, setup 0ms, import 290ms, tests 187ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/notifications/preferenceAvailability.campaign05.test.ts --maxWorkers=2

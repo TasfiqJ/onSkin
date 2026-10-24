@@ -1,0 +1,12 @@
+[
+  {
+    "path": "docs/phase-4/generated/source-worklist.json",
+    "producer_output_sha256": "636f77ec7eb5bc6faf5af665da3b8d60531f4c76a5345646bdbe907b7cded623",
+    "copied_stage_sha256": "636f77ec7eb5bc6faf5af665da3b8d60531f4c76a5345646bdbe907b7cded623"
+  },
+  {
+    "path": "docs/phase-4/generated/source-worklist.md",
+    "producer_output_sha256": "5bac2379fb2a10ef8d96f1c7fe280b55234d13b55fbd6c8bd8b4e38a0141b5a9",
+    "copied_stage_sha256": "5bac2379fb2a10ef8d96f1c7fe280b55234d13b55fbd6c8bd8b4e38a0141b5a9"
+  }
+]

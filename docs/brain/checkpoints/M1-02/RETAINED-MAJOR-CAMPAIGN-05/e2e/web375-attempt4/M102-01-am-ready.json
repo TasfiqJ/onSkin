@@ -1,0 +1,91 @@
+{
+  "bodyText": "SATURDAY, OCTOBER 24 Good morning. 2 steps left in your morning routine. Morning routine 0 of 2 M102 synthetic moisturizer Seal everything in. NEXT Mineral SPF 50 Always the last morning step. Reapply through the day. ✦ A few honest suggestions 1 thing we’d gently suggest › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 191
+    },
+    {
+      "disabled": false,
+      "height": 73,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 247
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 341
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 24.85,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8391/today?routine=AM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

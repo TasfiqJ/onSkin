@@ -1,0 +1,91 @@
+{
+  "bodyText": "FRIDAY, OCTOBER 23 Good morning. 1 step left in your morning routine. Morning routine 1 of 2 Recorded - cannot undo M102 synthetic moisturizer Seal everything in. Mineral SPF 50 Always the last morning step. Reapply through the day. NEXT ✦ A few honest suggestions 1 thing we’d gently suggest › Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 191
+    },
+    {
+      "disabled": false,
+      "height": 73,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 267
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 361
+    },
+    {
+      "disabled": false,
+      "height": 62.24,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.56,
+      "x": 24.85,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8380/today?routine=AM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

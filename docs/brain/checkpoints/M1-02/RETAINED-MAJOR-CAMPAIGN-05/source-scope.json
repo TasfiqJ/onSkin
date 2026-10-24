@@ -1,0 +1,1279 @@
+{
+  "anchor": "99596bfceac782d740415503bc25452cac623254",
+  "source_commit": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+  "source_tree": "02f5a55250b0fbf4b924314f8c4aac7ee6f46bc5",
+  "entries": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "cf45efd9c6e62306aa1c083485250de649a58a94",
+        "bytes": 36440,
+        "sha256": "d5a4e2d5149c2abe8649d310d1a476b9098a52acb00bb18d72bde12930f02d1e"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "4364793dbcd1468873b22963c60dca6f28cff586",
+        "bytes": 37030,
+        "sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23"
+      }
+    },
+    {
+      "path": "apps/mobile/src/app/settings/notifications.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "580788097c94016904af993faf782fe3fd55d8cd",
+        "bytes": 13762,
+        "sha256": "07df7d36f1891e63586b20e70ae9da17a0a7440a996eef2b25602b407a0f7d6d"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "677e83a1c6b125180fa6ff30db11c5f82eb480ab",
+        "bytes": 14148,
+        "sha256": "002c4cb60951474db1a2b87a1897602e98bfbb4ee0e1a541cf95a6ef52592b28"
+      }
+    },
+    {
+      "path": "apps/mobile/src/app/settings/timing.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "d6738a75b9c24886bf49eaec1921c2cb37a04554",
+        "bytes": 13242,
+        "sha256": "38ec549d4ffc991f6b4846ec7b64e3394d4c42d537794ca56a375cc3829365dc"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "fdc491c24509768739efd46fcccfe2c519c5eb2b",
+        "bytes": 13621,
+        "sha256": "5802da8343d2654259d55530ba72fc78f9c82e17b3b1c6aa44848bb062f61dc9"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "3909f16278d9c9cb467241e0e17a473b982351d8",
+        "bytes": 1844,
+        "sha256": "9d0d35e2020ab25b8021414e80118b6bbed43646da2f5aaaddcc0934be4af255"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/applyPreferences.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "9fe30284bb681a5d804a6a0f0c746748fe7a648e",
+        "bytes": 6015,
+        "sha256": "360849dcbdfc79e1572cff76be2ed3e9fed44b2a055b4ab264857647a4316fa2"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "c7cdb74ba65d1a4017116b7bd66106dbd82921f2",
+        "bytes": 6036,
+        "sha256": "9bee882fd91fb04af943613165f9f1056942de13c443a95fa3c3190a09d4489c"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "4530c0c7ab10ad55f2566bd9220ac4d03c961879",
+        "bytes": 7447,
+        "sha256": "852c9510a12d220e26e7f5fdd8d1006720ca3e4146a1dd239e1798f43fc0153e"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/store.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "5e5fe543dba50a49eb697c9dd58bb041d8629931",
+        "bytes": 9910,
+        "sha256": "396f23be42696512500e46c8250b149f07a7100f0c2e503805fe1bf28cae1b88"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "55b7ea9329eccbbbd351d7e7ff2c9706bb89667e",
+        "bytes": 10149,
+        "sha256": "9527267222bc445823a34a87084305666211e5d207d48669c663c2b6e516e843"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "160807041ae8364a84bbd22ed28bfd082c75c798",
+        "bytes": 12965,
+        "sha256": "5031e7acbe866f51bedf93bcaeffa9eb91213485fd14c56f3e2c01bf7f8aef08"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "5ecb778427eab76dde04aa1520fe2476d5a661d7",
+        "bytes": 13136,
+        "sha256": "a7dc7ee963314f5ec7f88bca5bcb0d26be51073bd58e7fa63ac424d770d9a17e"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "8f1ae49d87cea66f3aec3141d571a6b5a33037a6",
+        "bytes": 4480,
+        "sha256": "6eadc56df031ee9b6f329a34c8c2376d02ac6712c2deb9ec69ce298bdeeb838e"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "a11423ca654cd8e3b72a4c4593596a2d7dc2a535",
+        "bytes": 6669,
+        "sha256": "aac1b7bed1c4cab31d278a00c31de8460cf3181c3d37a5bb03c1d921194deaca"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "6e9fae1394a4823c21445fcffc108ff81ed6fb51",
+        "bytes": 3024,
+        "sha256": "ab991d01b18d280d5927758ee26725ca3890c69e00923edb87d88b653de873ea"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/photos/usePhotos.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "0383710ea416810d459434f6d6dcc1f9dc56541e",
+        "bytes": 15828,
+        "sha256": "a59d8eb99437c0f15fe601c0915f0bfec69eeecbdbf3eeda74cc9e06de6e2790"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "85d68b788e8da7b5bf23edc4ed761c246cb564d5",
+        "bytes": 15524,
+        "sha256": "1d4252d29eec3a6413d3dbf09be36397d2af2ff2f65303b87b090029d1834718"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "4e2391dc635f53b452f10f20d32ed65f936938df",
+        "bytes": 9216,
+        "sha256": "01f048a59ec514703342edc206abffd5e961858c8837c8c1580474febf128beb"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "c79cb97ee49b52f8094e473000334f6b2ac48a71",
+        "bytes": 4340,
+        "sha256": "3dcfa01eb9c95006b3ba219b370f44c351e00f33d3d0b9d1c2ce3e77d2430fb4"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "6b43ca42b8b3d559375b44dbe43273e0cc6c8250",
+        "bytes": 13627,
+        "sha256": "f76e23b55496484940f2f8b981dcc9ad823b4b1a32c8be4570ec4b3a06444b95"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/mutations.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "82b8191b372941e066be32a18f83f9d42bc6f08e",
+        "bytes": 4991,
+        "sha256": "858a5447d5bade6fc1c2b8cb10c8db60f9ace48d706fc4c2042d230ab526af10"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "f5a46ce138983605d83d32d685f157850c5afea6",
+        "bytes": 5286,
+        "sha256": "24e230cf3a6767dac833f6d07ab73bbf54050e2f8b26464c79fe17cfa7fd96b2"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "8a707134c1e4af273660d065b5c82431029ee920",
+        "bytes": 5869,
+        "sha256": "7e656dda9399f48cab62234854446118fb264efb1056d883a4652ccb04b2871e"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "e78eb9a4d2ed57e3fe5d0c391ebcb245af750ae7",
+        "bytes": 6005,
+        "sha256": "0ece694c4c4f3fc7c751b6243bee39542e244dde1527d83b560612426ffc7288"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "e755f9b81221e049f88c70c65d1f20a427e75e4b",
+        "bytes": 4148,
+        "sha256": "8692eea0a11010580da3bba8a1e6e3a044804cc7e444ed1a87293358078ed345"
+      }
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "before": {
+        "mode": "100644",
+        "blob": "9a2e63702a920dd77c985750ae04843d1c010670",
+        "bytes": 6998,
+        "sha256": "34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "e5e5a2b41ef1bba74284c7c670f1086676b0e44a",
+        "bytes": 8571,
+        "sha256": "baec8818fa5c87b74d5ab3bc163e23a5ab180f259da208560408a839ce2ffa09"
+      }
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before": {
+        "mode": "100644",
+        "blob": "5c5b58a38ba081fea22563f3d569c4b85fc50248",
+        "bytes": 504821,
+        "sha256": "938db17dcfc5508740176a2ede69acaf6dabccf6ebac57a8b72beddb6ed74056"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "7b581ae63b24c13c81a76259a53701d72292cfab",
+        "bytes": 506861,
+        "sha256": "152f76145f5028b0f3bf31f5a08a6fdbc15a820d8c526863e4c880e1df1f2b12"
+      }
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "before": {
+        "mode": "100644",
+        "blob": "5d7297c54aa89d08b5c366cc1476845ac5edf0b3",
+        "bytes": 137965,
+        "sha256": "79c4b37320d469558b85737cab8bc441afec5bf65971cb51a0b73ffbf01ecbcb"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "bcf335e2ec1a5ee19ed05a510222ad3846e1bd59",
+        "bytes": 138212,
+        "sha256": "7079c2ca93c9039fdef12638319d5ea9a6dd08f40846708fbd805862f13d08a5"
+      }
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "before": {
+        "mode": "100644",
+        "blob": "0805263940726b7c727e50435adc573273437972",
+        "bytes": 82183,
+        "sha256": "de6a4e22fdfc54d9749ca3b2627cbff6c799a98bd6a79381ed7e6337375fe9e3"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "c27ff7155b30eb27153b61398ca7904f139c6c19",
+        "bytes": 82342,
+        "sha256": "5b50328cce8ebb6949eda116d48af71a00e0765d35c3a4182c9f0acb037f0559"
+      }
+    }
+  ],
+  "protected_objects": [
+    {
+      "path": ".github",
+      "anchor_entry": "040000 tree 9148470436b9d21580fdf239fa1f43d4ac1a9758\t.github",
+      "source_entry": "040000 tree 9148470436b9d21580fdf239fa1f43d4ac1a9758\t.github"
+    },
+    {
+      "path": "AGENTS.md",
+      "anchor_entry": "100644 blob ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0\tAGENTS.md",
+      "source_entry": "100644 blob ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0\tAGENTS.md"
+    },
+    {
+      "path": "CLAUDE.md",
+      "anchor_entry": "100644 blob 6d2cacba1f58032e3878c16b0868b6c4a58fcd42\tCLAUDE.md",
+      "source_entry": "100644 blob 6d2cacba1f58032e3878c16b0868b6c4a58fcd42\tCLAUDE.md"
+    },
+    {
+      "path": "apps/mobile/android",
+      "anchor_entry": null,
+      "source_entry": null
+    },
+    {
+      "path": "apps/mobile/app.base.json",
+      "anchor_entry": "100644 blob 94855cf2de181e5c9066ab46cab99a08d9b1fcf1\tapps/mobile/app.base.json",
+      "source_entry": "100644 blob 94855cf2de181e5c9066ab46cab99a08d9b1fcf1\tapps/mobile/app.base.json"
+    },
+    {
+      "path": "apps/mobile/app.config.ts",
+      "anchor_entry": null,
+      "source_entry": null
+    },
+    {
+      "path": "apps/mobile/eas.json",
+      "anchor_entry": "100644 blob 93051b08a3d0bf353a0d09cf1e51d82b3a74a349\tapps/mobile/eas.json",
+      "source_entry": "100644 blob 93051b08a3d0bf353a0d09cf1e51d82b3a74a349\tapps/mobile/eas.json"
+    },
+    {
+      "path": "apps/mobile/ios",
+      "anchor_entry": null,
+      "source_entry": null
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "anchor_entry": "100644 blob 6217bd03730c530445861cc3e1e438a92f401b83\tapps/mobile/package.json",
+      "source_entry": "100644 blob 6217bd03730c530445861cc3e1e438a92f401b83\tapps/mobile/package.json"
+    },
+    {
+      "path": "apps/mobile/src/app/onboarding/quiz.tsx",
+      "anchor_entry": "100644 blob dc9bdb09004238ac7dcfc0005661f3cec8b97616\tapps/mobile/src/app/onboarding/quiz.tsx",
+      "source_entry": "100644 blob dc9bdb09004238ac7dcfc0005661f3cec8b97616\tapps/mobile/src/app/onboarding/quiz.tsx"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/[id].tsx",
+      "anchor_entry": "100644 blob 346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a\tapps/mobile/src/app/shelf/[id].tsx",
+      "source_entry": "100644 blob 346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a\tapps/mobile/src/app/shelf/[id].tsx"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/permission.ts",
+      "anchor_entry": "100644 blob 60576f1d7ef80d3378ffdeb883e03edc7beeaeb3\tapps/mobile/src/features/notifications/permission.ts",
+      "source_entry": "100644 blob 60576f1d7ef80d3378ffdeb883e03edc7beeaeb3\tapps/mobile/src/features/notifications/permission.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "anchor_entry": "100644 blob 55aafc5dec99fe89dd092e961b389076ef05d555\tapps/mobile/src/features/photos/encryptedStorage.ts",
+      "source_entry": "100644 blob 55aafc5dec99fe89dd092e961b389076ef05d555\tapps/mobile/src/features/photos/encryptedStorage.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressCaptureAuthority.ts",
+      "anchor_entry": "100644 blob 2d370c434983bcdacf415fd9b8b33253873d2598\tapps/mobile/src/features/photos/progressCaptureAuthority.ts",
+      "source_entry": "100644 blob 2d370c434983bcdacf415fd9b8b33253873d2598\tapps/mobile/src/features/photos/progressCaptureAuthority.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "anchor_entry": "100644 blob 6ff52e8e9bfde498d1169abc233ea26b3363ef8a\tapps/mobile/src/features/photos/store.ts",
+      "source_entry": "100644 blob 6ff52e8e9bfde498d1169abc233ea26b3363ef8a\tapps/mobile/src/features/photos/store.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.ts",
+      "anchor_entry": "100644 blob 07a5fa0b274c42b1414d0ea9539ed885d4f44dd7\tapps/mobile/src/features/streak/streak.ts",
+      "source_entry": "100644 blob 07a5fa0b274c42b1414d0ea9539ed885d4f44dd7\tapps/mobile/src/features/streak/streak.ts"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth",
+      "anchor_entry": "040000 tree cc3c8a72cd49818e1a6166240970fa783a5febdd\tapps/mobile/src/lib/auth",
+      "source_entry": "040000 tree cc3c8a72cd49818e1a6166240970fa783a5febdd\tapps/mobile/src/lib/auth"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent",
+      "anchor_entry": "040000 tree df3d819603ea233bc1af41b064d9e0f99ab7cb63\tapps/mobile/src/lib/consent",
+      "source_entry": "040000 tree df3d819603ea233bc1af41b064d9e0f99ab7cb63\tapps/mobile/src/lib/consent"
+    },
+    {
+      "path": "apps/mobile/src/lib/offline",
+      "anchor_entry": "040000 tree 22134ba450bf8b976d9042bf71a8fb00483561c6\tapps/mobile/src/lib/offline",
+      "source_entry": "040000 tree 22134ba450bf8b976d9042bf71a8fb00483561c6\tapps/mobile/src/lib/offline"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage",
+      "anchor_entry": "040000 tree 31811c7d921536a50dae1a8569f8f7b059e9dbe3\tapps/mobile/src/lib/storage",
+      "source_entry": "040000 tree 31811c7d921536a50dae1a8569f8f7b059e9dbe3\tapps/mobile/src/lib/storage"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-01",
+      "anchor_entry": "040000 tree 437bce7785789c9b2b1e0ca793ccb3a7f4c26860\tdocs/brain/checkpoints/M0-01",
+      "source_entry": "040000 tree 437bce7785789c9b2b1e0ca793ccb3a7f4c26860\tdocs/brain/checkpoints/M0-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02",
+      "anchor_entry": "040000 tree 8a07bafaa44c209555df23a1871d8c01e277e549\tdocs/brain/checkpoints/M0-02",
+      "source_entry": "040000 tree 8a07bafaa44c209555df23a1871d8c01e277e549\tdocs/brain/checkpoints/M0-02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01",
+      "anchor_entry": "040000 tree 6793f93250e30db773a3adc676a984f68e3a0692\tdocs/brain/checkpoints/M1-01",
+      "source_entry": "040000 tree 6793f93250e30db773a3adc676a984f68e3a0692\tdocs/brain/checkpoints/M1-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md",
+      "anchor_entry": "100644 blob eef043e677f4ed9b667278d15ec0fd544615ad4d\tdocs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md",
+      "source_entry": "100644 blob eef043e677f4ed9b667278d15ec0fd544615ad4d\tdocs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01",
+      "anchor_entry": "040000 tree 908be745d9db76234e8b33daa2c42d83ec7b2202\tdocs/brain/checkpoints/M1-02/CONT-01",
+      "source_entry": "040000 tree 908be745d9db76234e8b33daa2c42d83ec7b2202\tdocs/brain/checkpoints/M1-02/CONT-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md",
+      "anchor_entry": "100644 blob 0b56e159fe191fed7142c79a3e60057e7991f5a5\tdocs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md",
+      "source_entry": "100644 blob 0b56e159fe191fed7142c79a3e60057e7991f5a5\tdocs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03",
+      "anchor_entry": "040000 tree c91f1c3c1b09defc6a4a378e6e55c3851c6ca8da\tdocs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03",
+      "source_entry": "040000 tree c91f1c3c1b09defc6a4a378e6e55c3851c6ca8da\tdocs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/README.md",
+      "anchor_entry": "100644 blob 356a7526d129024cd150ecb2d6201c4f275bfe1d\tdocs/brain/checkpoints/M1-02/README.md",
+      "source_entry": "100644 blob 356a7526d129024cd150ecb2d6201c4f275bfe1d\tdocs/brain/checkpoints/M1-02/README.md"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04",
+      "anchor_entry": "040000 tree a3c5f0e3a47b41049bc8032800b3e803219d96db\tdocs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04",
+      "source_entry": "040000 tree a3c5f0e3a47b41049bc8032800b3e803219d96db\tdocs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01",
+      "anchor_entry": "040000 tree ed433f37a986d372a702aa72e9731f1b6c07c432\tdocs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01",
+      "source_entry": "040000 tree ed433f37a986d372a702aa72e9731f1b6c07c432\tdocs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02",
+      "anchor_entry": "040000 tree fef84ab25175bdd8077f70472d335b073cc2a816\tdocs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02",
+      "source_entry": "040000 tree fef84ab25175bdd8077f70472d335b073cc2a816\tdocs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ci-initial.json",
+      "anchor_entry": "100644 blob 6449858fcbbc322f81dec44b1908e6430830bd70\tdocs/brain/checkpoints/M1-02/ci-initial.json",
+      "source_entry": "100644 blob 6449858fcbbc322f81dec44b1908e6430830bd70\tdocs/brain/checkpoints/M1-02/ci-initial.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ci-review.json",
+      "anchor_entry": "100644 blob 898ac4da27b8aa21638a4402337784f2c7b2fe43\tdocs/brain/checkpoints/M1-02/ci-review.json",
+      "source_entry": "100644 blob 898ac4da27b8aa21638a4402337784f2c7b2fe43\tdocs/brain/checkpoints/M1-02/ci-review.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/completion-report.json",
+      "anchor_entry": "100644 blob 1295d8a4158943eab49b024bacbe6eb6bbe53434\tdocs/brain/checkpoints/M1-02/completion-report.json",
+      "source_entry": "100644 blob 1295d8a4158943eab49b024bacbe6eb6bbe53434\tdocs/brain/checkpoints/M1-02/completion-report.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence",
+      "anchor_entry": "040000 tree 9981148fdfa96afed3b1e060a4e980cfdb51b1c4\tdocs/brain/checkpoints/M1-02/evidence",
+      "source_entry": "040000 tree 9981148fdfa96afed3b1e060a4e980cfdb51b1c4\tdocs/brain/checkpoints/M1-02/evidence"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/execution-inventory.json",
+      "anchor_entry": "100644 blob 1abd0cb13b40810afe8ea55787e53b7b74c63fd7\tdocs/brain/checkpoints/M1-02/execution-inventory.json",
+      "source_entry": "100644 blob 1abd0cb13b40810afe8ea55787e53b7b74c63fd7\tdocs/brain/checkpoints/M1-02/execution-inventory.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/final-custody.json",
+      "anchor_entry": "100644 blob 3e15eaa8f20fd1ab1fd43ec00b1d82310acc684e\tdocs/brain/checkpoints/M1-02/final-custody.json",
+      "source_entry": "100644 blob 3e15eaa8f20fd1ab1fd43ec00b1d82310acc684e\tdocs/brain/checkpoints/M1-02/final-custody.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/historical-references.json",
+      "anchor_entry": "100644 blob eb9820ab357810bf7252336789bc5b5a6601ee0c\tdocs/brain/checkpoints/M1-02/historical-references.json",
+      "source_entry": "100644 blob eb9820ab357810bf7252336789bc5b5a6601ee0c\tdocs/brain/checkpoints/M1-02/historical-references.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs",
+      "anchor_entry": "040000 tree 7ec8ab1b1b375c73cc044d59f3c79f4830dd0f60\tdocs/brain/checkpoints/M1-02/inputs",
+      "source_entry": "040000 tree 7ec8ab1b1b375c73cc044d59f3c79f4830dd0f60\tdocs/brain/checkpoints/M1-02/inputs"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/source-custody.json",
+      "anchor_entry": "100644 blob e0ff876c8ab83f76d728805d63a11cd08918a87f\tdocs/brain/checkpoints/M1-02/source-custody.json",
+      "source_entry": "100644 blob e0ff876c8ab83f76d728805d63a11cd08918a87f\tdocs/brain/checkpoints/M1-02/source-custody.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/surface-impact.json",
+      "anchor_entry": "100644 blob 6b02e4cc20964d7f416cee9897c6a37cfb1e4c17\tdocs/brain/checkpoints/M1-02/surface-impact.json",
+      "source_entry": "100644 blob 6b02e4cc20964d7f416cee9897c6a37cfb1e4c17\tdocs/brain/checkpoints/M1-02/surface-impact.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/visual-inspections.json",
+      "anchor_entry": "100644 blob 3ca7930f08eb8ff891e8f302f59fddf9e7ea68df\tdocs/brain/checkpoints/M1-02/visual-inspections.json",
+      "source_entry": "100644 blob 3ca7930f08eb8ff891e8f302f59fddf9e7ea68df\tdocs/brain/checkpoints/M1-02/visual-inspections.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03",
+      "anchor_entry": "040000 tree 553962a8d7844e88465e1d8f3801c9491e45a2d6\tdocs/brain/checkpoints/M1-03",
+      "source_entry": "040000 tree 553962a8d7844e88465e1d8f3801c9491e45a2d6\tdocs/brain/checkpoints/M1-03"
+    },
+    {
+      "path": "docs/brain/reviews",
+      "anchor_entry": "040000 tree 84cffaef4694c8cc3bd843ff46163f9cb9df1a61\tdocs/brain/reviews",
+      "source_entry": "040000 tree 84cffaef4694c8cc3bd843ff46163f9cb9df1a61\tdocs/brain/reviews"
+    },
+    {
+      "path": "docs/brain/state",
+      "anchor_entry": "040000 tree 713a0d090230d8831051d8a0bb97d3bdb14a523b\tdocs/brain/state",
+      "source_entry": "040000 tree 713a0d090230d8831051d8a0bb97d3bdb14a523b\tdocs/brain/state"
+    },
+    {
+      "path": "docs/hugeToDo/feature-inventory.json",
+      "anchor_entry": "100644 blob 45f5ff54f3849c55340530c223e62b440fec2dae\tdocs/hugeToDo/feature-inventory.json",
+      "source_entry": "100644 blob 45f5ff54f3849c55340530c223e62b440fec2dae\tdocs/hugeToDo/feature-inventory.json"
+    },
+    {
+      "path": "package-lock.json",
+      "anchor_entry": "100644 blob e53de80bf46db8f7a7fcd97781971911e2d328bd\tpackage-lock.json",
+      "source_entry": "100644 blob e53de80bf46db8f7a7fcd97781971911e2d328bd\tpackage-lock.json"
+    },
+    {
+      "path": "package.json",
+      "anchor_entry": "100644 blob 7b0522688c74c78328aa587cb9f9a07b65965061\tpackage.json",
+      "source_entry": "100644 blob 7b0522688c74c78328aa587cb9f9a07b65965061\tpackage.json"
+    },
+    {
+      "path": "scripts/launch",
+      "anchor_entry": "040000 tree 436b92103d8f97224010be8a2aacbf81fab2ecc9\tscripts/launch",
+      "source_entry": "040000 tree 436b92103d8f97224010be8a2aacbf81fab2ecc9\tscripts/launch"
+    },
+    {
+      "path": "scripts/phase4",
+      "anchor_entry": "040000 tree b68b15afd42318e31a7edd8fcb868494f02803ea\tscripts/phase4",
+      "source_entry": "040000 tree b68b15afd42318e31a7edd8fcb868494f02803ea\tscripts/phase4"
+    },
+    {
+      "path": "scripts/phase9",
+      "anchor_entry": "040000 tree 6e832d4c069786b00ad47d9ab9d44a4e7d29dfae\tscripts/phase9",
+      "source_entry": "040000 tree 6e832d4c069786b00ad47d9ab9d44a4e7d29dfae\tscripts/phase9"
+    },
+    {
+      "path": "scripts/security_readiness",
+      "anchor_entry": "040000 tree 89d918679e7877b3e2f652add3386f26add40d05\tscripts/security_readiness",
+      "source_entry": "040000 tree 89d918679e7877b3e2f652add3386f26add40d05\tscripts/security_readiness"
+    },
+    {
+      "path": "supabase",
+      "anchor_entry": "040000 tree d2f9c13695ec1f83cc820e001d5525eb9dfd9662\tsupabase",
+      "source_entry": "040000 tree d2f9c13695ec1f83cc820e001d5525eb9dfd9662\tsupabase"
+    }
+  ],
+  "source_path_count": 21,
+  "intermediate_commits": [
+    {
+      "commit": "41f329acd96dd7c14cbbeb4b88634f723628d695",
+      "tree": "de76f0768fd6d2fea19b1b3f01ae53f00b081511",
+      "paths": [
+        "apps/mobile/src/features/shelf/mutations.ts",
+        "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",
+        "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts"
+      ],
+      "subject": "fix(shelf): bind retained actions to their accepted health grant"
+    },
+    {
+      "commit": "5e1d9a6ae42527518e0b0dc0e994478ed2092f7a",
+      "tree": "7c3c3ee444a68c4dbf943f65f0fd03db9c9ca71c",
+      "paths": [
+        "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+        "apps/mobile/src/features/photos/usePhotos.ts"
+      ],
+      "subject": "fix(photos): retain capture authority through mutation dispatch"
+    },
+    {
+      "commit": "262aed6198f39cda7ae8c5924fd090e273adc01b",
+      "tree": "9f694e67bd7dcffbc80fca2598cb2cbf2e2bee46",
+      "paths": [
+        "apps/mobile/src/app/settings/notifications.tsx",
+        "apps/mobile/src/app/settings/timing.tsx",
+        "apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx",
+        "apps/mobile/src/features/notifications/applyPreferences.test.ts",
+        "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+        "apps/mobile/src/features/notifications/store.ts",
+        "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+        "apps/mobile/src/features/notifications/useNotifications.ts"
+      ],
+      "subject": "fix(notifications): isolate preference receipts and expose read recovery"
+    },
+    {
+      "commit": "7fcde90821af144b2821f779845e539d91b602be",
+      "tree": "fa513e2256d181dd954874984e6e35c92bb82f58",
+      "paths": [
+        "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+        "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+        "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts"
+      ],
+      "subject": "test(mobile): publish retained hook probes after render"
+    },
+    {
+      "commit": "6606713c935e4597ec58fc00b7e226ee3a55faec",
+      "tree": "5d637248d1e4961411cb6632d38bebe07a4d886d",
+      "paths": [
+        "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+        "apps/mobile/src/features/notifications/useNotifications.ts"
+      ],
+      "subject": "fix(notifications): verify device preferences on settings entry"
+    },
+    {
+      "commit": "98e2a638c125267dcaf5e06b237fc019800029c4",
+      "tree": "14e52e0fb23774a675f06f68636f2d7562cbce15",
+      "paths": [
+        "apps/mobile/src/app/(tabs)/you.tsx",
+        "apps/mobile/src/app/settings/_layout.tsx",
+        "apps/mobile/src/app/settings/local-recovery.tsx",
+        "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+        "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+        "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+        "docs/USER_FLOW_TREE.md"
+      ],
+      "subject": "feat(mobile): add guarded device-local recovery and continuity"
+    },
+    {
+      "commit": "f4a802a245b8b122cc348c5a5f978950d85c739e",
+      "tree": "492fa4a6cb56a2db889f62fc69579c32a8de19be",
+      "paths": [
+        "docs/E2E_TESTING_CHECKLIST.md"
+      ],
+      "subject": "docs(e2e): specify local continuity and recovery verification"
+    },
+    {
+      "commit": "4205deb09d0117dde456917c4672e4539d898ec5",
+      "tree": "fd778492374d694d082808382054b68e635e2a37",
+      "paths": [
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "subject": "chore(worklist): regenerate original source inventory after M1 campaign"
+    },
+    {
+      "commit": "0affb025e224b1d36f6b29035c82688c11c3ac1c",
+      "tree": "137ca639b7cd46f9864de1561d0d3659566e60d2",
+      "paths": [
+        "apps/mobile/src/features/shelf/mutations.ts"
+      ],
+      "subject": "fix(shelf): preserve the original source-owner contract"
+    },
+    {
+      "commit": "d76cbd2742920895522e3e9018d554319c777741",
+      "tree": "44bd5a747df37f46e8d4b49475648c00f7857905",
+      "paths": [
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "subject": "chore(worklist): refresh after final preserved Shelf contract"
+    },
+    {
+      "commit": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "tree": "7982adf6760761edcd9316926b59a548928aa714",
+      "paths": [
+        "ONSKIN_BRAIN_HANDOFF.txt",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/BLOCKERS.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/DESIGN_DECISIONS.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/E2E_SUMMARY.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/README.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/RESULTS.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/SOURCE_SCOPE.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/TEST_MATRIX.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/completion-report.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/01-retained-owner-age-closed.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/CO-01-owner-a.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/ERROR.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/FAILURE-race-state.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/FAILURE-runtime-events.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/FAILURE.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/FAILURE.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/R05-CO-a-local-status.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt1/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/01-retained-owner-age-closed.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-01-owner-a.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-02-draining-old-owner.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-03-cleanup-refused.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-03-cleanup-refused.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-04-repeated-refusal.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-05-b-age-required.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-06-b-consent-required.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-07-b-empty-shelf.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-08-b-manual-created.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-09-b-usable-shelf.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-09-b-usable-shelf.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-09b-b-product-detail.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-10-b-usable-edit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-11-b-identity.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-12-b-document-relaunch.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-13-return-a-age-closed.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-13-return-a-age-closed.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-14-return-a-relaunch-closed.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-B-07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-B-08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-B-08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-B-08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-b-boundaries.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-b-relaunch-boundaries.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/CO-immediate-authority-closure.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-a-delayed-local-read.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-a-delayed-local-read.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-a-local-status.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-a-local-status.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-b-own-local-status.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-b-own-local-status.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-return-a-recovery-closed.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/R05-CO-return-a-recovery-closed.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/browser-warn-error-logs.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/cross-owner-races.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/cross390-attempt2/summary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/e2e-fragment.txt",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/e2e-wrapper.mjs",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/01-welcome.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/01a-direct-protected-age-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/21-progress-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/22-you-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/23-today-after-tab-round-trip.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/ERROR.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/FAILURE-race-state.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/FAILURE-runtime-events.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/FAILURE.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/FAILURE.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/R05-01-local-entry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/R05-02-isolated-read-refusal.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/R05-03-offline-keyboard-retry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/R05-keyboard-Check-Reminder-choices-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt2/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/01-welcome.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/01a-direct-protected-age-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/21-progress-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/22-you-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/23-today-after-tab-round-trip.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/ERROR.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/FAILURE-race-state.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/FAILURE-runtime-events.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/FAILURE.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/FAILURE.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-01-local-entry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-02-isolated-read-refusal.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-03-offline-keyboard-retry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-04-settings-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-05-settings-recovered-offline.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-keyboard-Check-Reminder-choices-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/R05-keyboard-Try-loading-reminder-preferences-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt3/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/01-welcome.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/01a-direct-protected-age-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/21-progress-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/22-you-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/23-today-after-tab-round-trip.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/25-age-reverification-before-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/26-age-reverification-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/27-age-reverification-direct-today-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/28-age-reverification-reload-today-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-01-local-entry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-02-isolated-read-refusal.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-03-offline-keyboard-retry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-04-settings-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-05-settings-recovered-offline.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-06-timing-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-07-saved-intent-unconfirmed-delivery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-08-photo-journal-and-existing-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-09-reloaded-local-continuity.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-keyboard-Back.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-keyboard-Check-Reminder-choices-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-keyboard-Try-loading-reminder-preferences-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/R05-results.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/browser-warn-error-logs.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/report.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-attempt4/summary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/01-welcome.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/01a-direct-protected-age-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/21-progress-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/22-you-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/23-today-after-tab-round-trip.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/25-age-reverification-before-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/26-age-reverification-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/27-age-reverification-direct-today-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/28-age-reverification-reload-today-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-01-local-entry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-01-local-entry.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-02-isolated-read-refusal.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-02-isolated-read-refusal.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-03-offline-keyboard-retry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-03-offline-keyboard-retry.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-04-settings-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-04-settings-read-recovery.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-05-settings-recovered-offline.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-05-settings-recovered-offline.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-06-timing-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-06-timing-read-recovery.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-07-saved-intent-unconfirmed-delivery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-07-saved-intent-unconfirmed-delivery.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-08-photo-journal-and-existing-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-08-photo-journal-and-existing-gate.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-09-reloaded-local-continuity.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-09-reloaded-local-continuity.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-keyboard-Back.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-keyboard-Check-Reminder-choices-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-keyboard-Try-loading-reminder-preferences-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/R05-results.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/browser-warn-error-logs.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/executed-driver.mjs",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/report.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web375-measured-final/summary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/01-welcome.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/01a-direct-protected-age-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/02-age-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/03-age-filled.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/03a-after-age-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/04-consent.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/05-goals.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/06-goals-selected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/07-quiz-01.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/08-quiz-after-04.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/08-quiz-after-09.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/08-quiz-after-11.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/09-products-empty.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/10-products-after-1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/11-products-after-2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/12-products-after-3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/13-post-products-continue-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/14-reveal-checks.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/15-notifications.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/16-account.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/17-paywall-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/17-paywall.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/18-paywall-free-path-visible.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/19-today-free-current.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/20-shelf-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/21-progress-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/22-you-after-onboarding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/23-today-after-tab-round-trip.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/25-age-reverification-before-submit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/26-age-reverification-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/27-age-reverification-direct-today-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/28-age-reverification-reload-today-blocked.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-00-manual-plan-input.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-01-am-ready.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-02-rejected-write-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-03-offline-duplicate-append-only.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-04-offline-timing.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-04a-offline-reminder-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-04b-cycle-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-04c-reorder-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-05-reloaded-am.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-06-pm.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-07-plan-paid-boundary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-09-web-reminder-availability.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/M102-daily-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-01-local-entry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-01-local-entry.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-02-isolated-read-refusal.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-02-isolated-read-refusal.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-03-offline-keyboard-retry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-03-offline-keyboard-retry.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-04-settings-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-04-settings-read-recovery.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-05-settings-recovered-offline.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-05-settings-recovered-offline.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-06-timing-read-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-06-timing-read-recovery.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-07-saved-intent-unconfirmed-delivery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-07-saved-intent-unconfirmed-delivery.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-08-photo-journal-and-existing-gate.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-08-photo-journal-and-existing-gate.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-09-reloaded-local-continuity.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-09-reloaded-local-continuity.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-10-wide430-entry.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-10-wide430-entry.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-11-wide430-cleanup.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-11-wide430-cleanup.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-12-360-text200-cleanup.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-12-360-text200-cleanup.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-13-360-text200-shelf.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-13-360-text200-shelf.png",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-keyboard-Back.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-keyboard-Check-Reminder-choices-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-keyboard-Try-loading-reminder-preferences-again.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/R05-results.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/actions.jsonl",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/browser-warn-error-logs.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/bundle-crypto-provenance.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/driver-binding.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/expo-web.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/report.md",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/e2e/web390-attempt1/summary.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/evidence-manifest.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/independent-original-overlay.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/intake-ci-observation.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/intake-local-preflight.txt",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/omitted-duplicate-images.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/pre-delivery-state.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/cross390-attempt1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/cross390-attempt1.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/cross390-attempt2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/cross390-attempt2.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-intermediate-protection-audit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-intermediate-protection-audit.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-retained-and-recovery.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-retained-and-recovery.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-root-lint.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-root-lint.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-root-tests.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-root-tests.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-root-typecheck.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-root-typecheck.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-source-audit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-source-audit.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-source-types.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-source-types.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-worklist-generation.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/final-worklist-generation.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/independent-original-production.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/independent-original-production.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/independent-worklist-contract.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/independent-worklist-contract.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/initial-full-retained.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/initial-full-retained.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-root-lint.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-root-lint.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-root-tests.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-root-tests.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-root-typecheck.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-root-typecheck.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-source-audit.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/measured-source-audit.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notification-boundaries-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notification-boundaries-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-family-corrected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-family-corrected.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-family-final.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-family-final.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-family-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-family-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-final-discriminated.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/notifications-final-discriminated.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/original-corrected-regressions.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/original-corrected-regressions.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/original-new-regressions.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/original-new-regressions.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/original-preference-boundaries.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/original-preference-boundaries.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/photo-render-authority-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/photo-render-authority-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/pre-recovery-typecheck.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/pre-recovery-typecheck.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-first-tests.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-first-tests.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-foreground-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-foreground-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-lint-corrected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-lint-corrected.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-lint-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-lint-loop.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-lint.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-lint.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-mounted-corrected.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-mounted-corrected.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-ready-types.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-ready-types.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-singleflight-loop.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-singleflight-loop.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-source-currentness-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-source-currentness-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-source-currentness-red.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-source-currentness-red.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-typecheck.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/recovery-typecheck.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/reminder-entry-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/reminder-entry-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/reminder-types-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/reminder-types-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/settings-cached-entry-red.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/settings-cached-entry-red.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/shelf-render-authority-green.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/shelf-render-authority-green.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/source-contract-retained.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/source-contract-retained.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt1.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt2.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt2.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt3.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt3.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt4.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-attempt4.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-measured-final.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-measured-final.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-measured.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web375-measured.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web390-attempt1.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/web390-attempt1.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/worklist-altered-input.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/worklist-authentic-generation.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/worklist-authentic-generation.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/worklist-current.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/receipts/worklist-restored.log",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/source-scope.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/tools/audit_scope.py",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/tools/build_checkpoint.py",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/tools/prepare_worktree.py",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/tools/run_check.py",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/tools/worklist_probe.py",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/ui-review.json",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/verify_checkpoint.py",
+        "docs/brain/checkpoints/M1-02/RETAINED-MAJOR-CAMPAIGN-05/worklist-contract.json"
+      ],
+      "subject": "docs(m1): submit Campaign05 source and bounded recovery evidence"
+    },
+    {
+      "commit": "e2f64e876bdd98996ceb737d999174b80519b57f",
+      "tree": "8b51711afff45b4a63ea9a620a5b1f6d35301c0e",
+      "paths": [
+        "apps/mobile/src/app/(tabs)/you.tsx",
+        "apps/mobile/src/app/settings/_layout.tsx",
+        "apps/mobile/src/app/settings/local-recovery.tsx",
+        "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+        "apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx",
+        "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+        "docs/E2E_TESTING_CHECKLIST.md",
+        "docs/USER_FLOW_TREE.md"
+      ],
+      "subject": "feat(recovery): keep local continuity within the existing You surface"
+    },
+    {
+      "commit": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "tree": "02f5a55250b0fbf4b924314f8c4aac7ee6f46bc5",
+      "paths": [
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "subject": "chore(worklist): regenerate for the existing-surface recovery feature"
+    }
+  ],
+  "prior_witness_note": "Shelf mutations were a negative-scope witness in M1X-04; Campaign05 explicitly authorizes this path. Its changed bytes and preserved cancellation behavior are audited as source here, not falsely listed as immutable. All prior checkpoint blobs remain unchanged."
+}

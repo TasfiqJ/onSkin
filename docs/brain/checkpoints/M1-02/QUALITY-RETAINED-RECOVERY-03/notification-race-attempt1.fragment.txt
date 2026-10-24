@@ -1,0 +1,78 @@
+    await retainedRoute(client, '/settings/notifications');
+    await waitForText(client, 'Morning routine');
+    await waitForCondition(client, `!document.body.innerText.includes('Checking notification access')`, 30000, 'permission read settled');
+    await captureStep(client, 'R03-unavailable-permission', { assertClean: false });
+    const switchState = () => evaluate(client, `document.querySelector('[role="switch"][aria-label="Morning routine"]')?.getAttribute('aria-checked')`);
+    async function touchMorning() {
+      const rect = await evaluate(client, `(() => {
+        const el = document.querySelector('[role="switch"][aria-label="Morning routine"]');
+        if (!el) throw new Error('Missing accessible morning switch');
+        el.scrollIntoView({ block: 'center' });
+        const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      })()`);
+      writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'touch', label: 'Morning routine switch' }) + '\n', { flag: 'a' });
+      await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...rect, id: 1, force: 1, radiusX: 2, radiusY: 2 }] });
+      await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await delay(300);
+    }
+    await touchMorning();
+    assert(await switchState() === 'false', 'Unavailable browser permission must keep delivery off');
+    await evaluate(client, `(async () => {
+      const find = pattern => [...__r.getModules().values()].find(m => pattern.test(m.verboseName ?? '')).publicModule.exports;
+      const delivery = find(/features[\\/]notifications[\\/]deliver\.ts$/);
+      const store = find(/features[\\/]notifications[\\/]store\.ts$/);
+      const qc = find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient;
+      const originalPermission = delivery.getPermissionStatus;
+      const originalSchedule = delivery.rescheduleReminders;
+      const originalRead = store.loadNotifPrefs;
+      // Controlled external bridge status only; this never authorizes native delivery.
+      delivery.getPermissionStatus = async () => 'authorized';
+      await qc.invalidateQueries({ queryKey: ['notificationAuthorization'] });
+      let release, entered;
+      const gate = new Promise(r => { release = r; });
+      const started = new Promise(r => { entered = r; });
+      let first = true;
+      store.loadNotifPrefs = async (...args) => {
+        const snapshot = await originalRead(...args);
+        if (first) { first = false; entered(); await gate; }
+        return snapshot;
+      };
+      let fail = true;
+      delivery.rescheduleReminders = async (...args) => {
+        if (fail) { fail = false; throw new Error('Synthetic scheduling bridge refusal'); }
+        return originalSchedule(...args);
+      };
+      globalThis.__R03_RELEASE_READ__ = release;
+      globalThis.__R03_RESTORE__ = () => { release(); store.loadNotifPrefs = originalRead; delivery.rescheduleReminders = originalSchedule; delivery.getPermissionStatus = originalPermission; };
+      globalThis.__R03_READ_DURABLE__ = () => originalRead();
+      void qc.refetchQueries({ queryKey: ['notifPrefs'] });
+      await started;
+      return { delayedActualLocalRead: true, controlledBridgeFailure: true };
+    })()`, true);
+    await client.send('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: 0, uploadThroughput: 0 });
+    await touchMorning();
+    await waitForText(client, 'Your preferences are saved, but reminders were not confirmed.');
+    await evaluate(client, 'globalThis.__R03_RELEASE_READ__()');
+    await delay(400);
+    assert(await switchState() === 'true', 'Late read replaced the saved opt-in');
+    const saved = await evaluate(client, `(async () => {
+      const p = await __R03_READ_DURABLE__(); return { amEnabled: p.amEnabled, amTime: p.amTime, syntheticLocalOnly: true };
+    })()`, true);
+    writeJson('R03-durable-preference.json', saved);
+    assert(saved.amEnabled === true, 'Synthetic preference was not durably saved');
+    await captureStep(client, 'R03-saved-unconfirmed-after-late-read', { assertClean: false });
+    await scrollTextIntoView(client, 'Try saving reminder preferences again');
+    await evaluate(client, `document.querySelector('[aria-label="Try saving reminder preferences again"]').focus()`);
+    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+    writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'keyboard Enter', label: 'Try saving reminder preferences again' }) + '\n', { flag: 'a' });
+    await waitForText(client, 'Preferences saved on this browser. Native reminder scheduling is unavailable here.');
+    await captureStep(client, 'R03-offline-keyboard-retry', { assertClean: false });
+    await evaluate(client, '__R03_RESTORE__()');
+    await client.send('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+    await client.send('Page.reload', { ignoreCache: true });
+    await waitForText(client, 'Morning routine');
+    await waitForCondition(client, `!document.body.innerText.includes('Checking notification access')`, 30000, 'reloaded permission settled');
+    assert(await switchState() === 'false', 'Browser reload must not claim native authorization');
+    await captureStep(client, 'R03-reload-delivery-unavailable', { assertClean: false });
+    await retainedRoute(client, '/today');

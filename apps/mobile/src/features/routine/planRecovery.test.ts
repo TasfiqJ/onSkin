@@ -28,7 +28,7 @@ const mocks = vi.hoisted(() => ({
   get: vi.fn(), unsynced: vi.fn(), toggle: vi.fn(), recover: vi.fn(), progressGet: vi.fn(),
   shelfRead: vi.fn(), profileRead: vi.fn(), orderRead: vi.fn(),
   success: vi.fn(), track: vi.fn(), review: vi.fn(), push: vi.fn(),
-  phase: 'AM' as 'AM' | 'PM',
+  phase: 'AM' as 'AM' | 'PM', pmStable: false,
   replace: vi.fn(), back: vi.fn(), start: vi.fn(), cadence: false,
   cycleData: undefined as { cycle: object } | undefined,
   assert: (expected: HealthDataWriteLease | undefined): void => {
@@ -96,7 +96,10 @@ vi.mock('@/features/routine/generate', () => ({
       order: index, cadence: 'stable', role: 'cleanser',
     })),
     // The existing awaited-start case needs an actual cycle-relevant fixture.
-    pm: mocks.cadence && mocks.cycleData ? products.slice(0, 1).map((product) => ({
+    pm: mocks.pmStable ? products.map((product, index) => ({
+      productId: product.id, name: product.name, instruction: 'Use as directed.',
+      order: index, cadence: 'stable', role: 'moisturiser',
+    })) : mocks.cadence && mocks.cycleData ? products.slice(0, 1).map((product) => ({
       productId: product.id, name: product.name, instruction: 'Use as directed.',
       order: 40, cadence: 'cycle', role: 'treatment',
     })) : [], cycle: null, ramp: [], safetyExclusions: [], cadenceWithheld: [],
@@ -264,7 +267,7 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date(2026, 6, 8, 12, 0, 0));
   onlineManager.setOnline(true);
-  route = PlanScreen; mocks.cadence = false; mocks.cycleData = undefined;
+  route = PlanScreen; mocks.cadence = false; mocks.cycleData = undefined; mocks.pmStable = false;
   for (const mock of [mocks.replace, mocks.back, mocks.start]) mock.mockReset();
   mocks.start.mockResolvedValue(undefined);
   // Model a closed authority between tests; remounts inside a test do NOT reset it.
@@ -724,5 +727,49 @@ describe('PLAN-R2 exact-authority canonical freshness', () => {
     await assert.rejects(old.retry); assert.deepEqual(readCounts(), reads);
     await flush(() => delayed.resolve(null)); await settlement;
     noPlanPublication(); assert.equal(latest.sourceReady, false);
+  });
+});
+
+
+// Campaign07: a local first-week return path after a confirmed routine.
+describe('Today next-visit affordance', () => {
+  it.each(['AM', 'PM'] as const)('offers optional existing routes only after confirmed %s check-offs', async (phase) => {
+    route = TodayScreen; mocks.phase = phase; mocks.pmStable = phase === 'PM';
+    vi.setSystemTime(new Date(2026, 6, 8, phase === 'PM' ? 18 : 12));
+    await mount();
+    assert.ok(!text(renderer!.root).includes('For your next visit'));
+    await press('Test product');
+    assert.match(text(renderer!.root), /For your next visit/);
+    assert.match(text(renderer!.root), /saved on this device/);
+    await press('Review this week');
+    assert.equal(mocks.push.mock.lastCall?.[0], '/routine/streak');
+    await press('Reminder options');
+    assert.equal(mocks.push.mock.lastCall?.[0], '/settings/notifications');
+  });
+
+  it('withholds unconfirmed completion and retires a prior-grant next-visit action', async () => {
+    route = TodayScreen;
+    await mount();
+    const commit = deferred<ToggleCompletionResult>();
+    mocks.toggle.mockReturnValueOnce(commit.promise);
+    await press('Test product');
+    assert.ok(!text(renderer!.root).includes('For your next visit'));
+    mocks.disk.add('AM:product');
+    await flush(() => commit.resolve(result('AM:product')));
+    assert.match(text(renderer!.root), /For your next visit/);
+    const priorAction = control('Reminder options');
+    const before = mocks.push.mock.calls.length;
+    mocks.active = { ...mocks.active!, generation: 2, ownerUserId: 'owner-b' };
+    // A captured handler cannot navigate even before observer notification.
+    click(priorAction);
+    assert.equal(mocks.push.mock.calls.length, before);
+    mocks.active = { ...mocks.active!, generation: 3, ownerUserId: 'owner-a' };
+    click(priorAction);
+    assert.equal(mocks.push.mock.calls.length, before);
+    const pending = deferred<Set<string>>(); mocks.get.mockReturnValue(pending.promise);
+    await rerender();
+    assert.ok(!text(renderer!.root).includes('For your next visit'));
+    await flush(() => pending.resolve(new Set()));
+    assert.ok(!text(renderer!.root).includes('For your next visit'));
   });
 });

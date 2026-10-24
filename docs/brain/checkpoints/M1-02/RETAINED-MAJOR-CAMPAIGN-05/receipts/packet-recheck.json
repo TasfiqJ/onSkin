@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "41a5baa8afaf732c8fc4a836a3cb7e8662aaeb8b7ab459701e9ca0d9b5d370dc"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\Campaign05-context-329853b77d8c4f188ea1130831316bd9",
+  "recorded_at": "2026-10-24T06:09:27.072432+00:00",
+  "exit_code": 0,
+  "log": "packet-recheck.log",
+  "log_sha256": "a90df0eb817802dde53334ed6731b554628e86669051e04ae6be512e58633c31",
+  "original_zip_sha256": "6c6a7f525db1242431d0b2d5a40b7a59144518724b71b3b08b729508423e5aae",
+  "authority": "Digest supplied externally in pasted prompt; transport only, no gate/acceptance authority",
+  "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7"
+}

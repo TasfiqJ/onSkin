@@ -1,0 +1,69 @@
+{
+  "bodyText": "Maybe later Unlock your full routine. Build and edit daily routine steps around the products you chose. Part of Layerwell Pro. Subscribe for $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Subscribe to Pro Terms · Privacy · Restore",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Maybe later",
+      "role": "button",
+      "selected": false,
+      "width": 102.25,
+      "x": 263.75,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 554
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 96.89,
+      "y": 608
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "selected": false,
+      "width": 48.03,
+      "x": 170.25,
+      "y": 608
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "selected": false,
+      "width": 49.47,
+      "x": 243.64,
+      "y": 608
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8295/routine/adaptation",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

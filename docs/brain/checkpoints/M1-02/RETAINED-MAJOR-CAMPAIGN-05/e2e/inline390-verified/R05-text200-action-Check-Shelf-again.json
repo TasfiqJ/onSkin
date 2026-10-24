@@ -1,0 +1,12 @@
+{
+  "x": 180,
+  "y": 272,
+  "width": 238,
+  "height": 48,
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "hit": true,
+  "focused": false
+}

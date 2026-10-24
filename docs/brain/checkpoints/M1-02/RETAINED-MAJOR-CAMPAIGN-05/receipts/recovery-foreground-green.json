@@ -1,0 +1,62 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/retainedRecovery",
+    "--maxWorkers=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:03:55.909454+00:00",
+  "finished_at": "2026-10-24T05:03:58.356375+00:00",
+  "duration_seconds": 1.938,
+  "exit_code": 0,
+  "head": "6606713c935e4597ec58fc00b7e226ee3a55faec",
+  "tree": "5d637248d1e4961411cb6632d38bebe07a4d886d",
+  "status_before": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "tracked_diff_sha256": "8f7a46da7fef91668af0bf3b432109d0fce2f623952a05a715e6af69b2fde851",
+  "working_files": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 36626,
+      "sha256": "241a8f6ff0ec8705841430564dd8d2a8925948e5e275ddb0c95983103aee6891"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/_layout.tsx",
+      "bytes": 512,
+      "sha256": "2d5cfe49dcc9f637a11321a79ecd6291c92369948e60e2ee19e6aa86533d9b09"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/local-recovery.tsx",
+      "bytes": 75,
+      "sha256": "7f0e71b1cd9248f6f9680a9ae0d8252d7e611937a11a1da55a895da29aae287c"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+      "bytes": 9214,
+      "sha256": "1655e7c192a86d152c527c45d14151879810bb59112700eb620841572328ead5"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+      "bytes": 4340,
+      "sha256": "3dcfa01eb9c95006b3ba219b370f44c351e00f33d3d0b9d1c2ce3e77d2430fb4"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 13015,
+      "sha256": "6b8b70ab1c2997cfe4c9c537a622dfb4a3578fd389508676abb9f434fd6eed93"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 506802,
+      "sha256": "98cd6543609426c0bd4248ac3f8273d238f4baa91848ab45943b80aa4a3c6b0b"
+    }
+  ],
+  "status_after": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "log": "recovery-foreground-green.log",
+  "log_bytes": 355,
+  "log_sha256": "ba6d7e4de68394ad242db33fc34f8c9cfbdc9ec1fc99f98d2fb24d6c7c6beb0b"
+}

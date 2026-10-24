@@ -1,5 +1,5 @@
 import type { GoalId, PregnancyStatus } from '@layerwell/types';
-import { useQuery } from '@tanstack/react-query';
+import { onlineManager, useQuery } from '@tanstack/react-query';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
 import {
@@ -115,7 +115,7 @@ export async function readProfileBits(): Promise<ProfileBits> {
       return { ...UNKNOWN_PROFILE, consentCurrent: true };
     }
 
-    if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
+    if (!isSupabaseConfigured || !onlineManager.isOnline()) return { ...UNKNOWN_PROFILE, consentCurrent: true };
 
     try {
       lease.assertCurrent();
@@ -170,5 +170,6 @@ export async function savePregnancyStatus(status: PregnancyStatus): Promise<Prof
 }
 
 export function useProfileBits() {
-  return useQuery({ queryKey: ['skinProfileBits'], queryFn: readProfileBits });
+  // The authoritative local profile and consent read must also execute offline.
+  return useQuery({ queryKey: ['skinProfileBits'], queryFn: readProfileBits, networkMode: 'always' });
 }

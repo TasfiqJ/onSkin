@@ -1,0 +1,4 @@
+Error: Text stress action is not visibly reachable: Check Photo cleanup again
+    at assert (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:78:25)
+    at r05VisibleAction (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:1773:7)
+    at async run (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:1891:7)

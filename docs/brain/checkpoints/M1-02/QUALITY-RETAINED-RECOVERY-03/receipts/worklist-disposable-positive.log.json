@@ -1,0 +1,12 @@
+{
+  "command": [
+    "npm.cmd",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-worklist-adverse-_7w6k3df",
+  "start": "2026-10-24T02:11:19.472196+00:00",
+  "exit": 0,
+  "seconds": 0.906,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\worklist-disposable-positive.log"
+}

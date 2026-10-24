@@ -1,0 +1,108 @@
+    const r04Find = `const find = pattern => { const m = [...__r.getModules().values()].find(m => pattern.test(m.verboseName ?? '')); if (!m) throw new Error('Missing actual module: ' + pattern); return m.publicModule.exports; };`;
+    await client.send('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+    const offlineProof = await evaluate(client, `(() => {
+      ${r04Find}
+      const managers = [...__r.getModules().values()].map(m => m.publicModule?.exports).find(e => e?.onlineManager?.setOnline);
+      if (!managers) throw new Error('Missing real onlineManager');
+      managers.onlineManager.setOnline(false);
+      find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient.removeQueries({ queryKey: ['progress'] });
+      return { online: managers.onlineManager.isOnline(), navigatorOnline: navigator.onLine };
+    })()`);
+    assert(offlineProof.online === false, 'Progress test must use offline QueryClient');
+    writeJson('R04-offline-proof.json', offlineProof);
+    await retainedRoute(client, '/today?routine=PM');
+    await waitForCondition(client, `document.querySelector('[aria-label="View your streak and adherence"]')?.innerText.trim() === '1 day'`, 30000, 'actual Today one-day streak');
+    await captureStep(client, 'R04-01-offline-streak', { assertClean: false });
+    await evaluate(client, `(async () => {
+      ${r04Find}
+      const original = Storage.prototype.getItem;
+      globalThis.__R04_RESTORE_READ__ = () => { Storage.prototype.getItem = original; };
+      Storage.prototype.getItem = function(key) {
+        if (key === 'layerwell.completions.v1') throw new Error('Synthetic local progress read failure');
+        return original.call(this, key);
+      };
+      await find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient.invalidateQueries({ queryKey: ['progress'] });
+    })()`, true);
+    await waitForText(client, 'Streak is unavailable. Your saved check-offs are unchanged.');
+    assert(!(await evaluate(client, `document.querySelector('[aria-label="View your streak and adherence"]')`)), 'Failed local read retained authoritative streak pill');
+    await captureStep(client, 'R04-02-progress-read-refusal', { assertClean: false });
+    await evaluate(client, '__R04_RESTORE_READ__()');
+    await client.send('Page.bringToFront');
+    await client.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+    const focus = await evaluate(client, `(() => {
+      const el = document.querySelector('[aria-label="Try loading your streak again"]');
+      if (!el) throw new Error('Missing actual progress retry button');
+      el.scrollIntoView({ block: 'center' }); el.focus(); return { focused: document.activeElement === el, label: el.innerText.trim() };
+    })()`);
+    assert(focus.focused, 'Progress retry must receive keyboard focus');
+    writeJson('R04-keyboard-focus.json', focus);
+    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', unmodifiedText: '\r', windowsVirtualKeyCode: 13 });
+    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+    writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'keyboard Enter', label: 'Progress retry' }) + '\n', { flag: 'a' });
+    await waitForCondition(client, `document.querySelector('[aria-label="View your streak and adherence"]')?.innerText.trim() === '1 day'`, 30000, 'actual Today one-day streak');
+    await captureStep(client, 'R04-03-offline-keyboard-retry', { assertClean: false });
+    await client.send('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+    await client.send('Page.reload', { ignoreCache: true });
+    await waitForCondition(client, `document.querySelector('[aria-label="View your streak and adherence"]')?.innerText.trim() === '1 day'`, 30000, 'actual Today one-day streak');
+    await captureStep(client, 'R04-04-reloaded-streak', { assertClean: false });
+    await clickByText(client, 'Shelf');
+    await clickByText(client, 'Today');
+
+    await retainedRoute(client, '/settings/notifications');
+    await waitForText(client, 'Morning routine');
+    await waitForCondition(client, `!document.body.innerText.includes('Checking notification access')`, 30000, 'actual browser permission settled');
+    const morningState = () => evaluate(client, `document.querySelector('[role="switch"][aria-label="Morning routine"]')?.getAttribute('aria-checked')`);
+    assert(await morningState() === 'false', 'Actual browser must keep effective delivery off');
+    await evaluate(client, `(async () => {
+      ${r04Find}
+      const delivery = find(/features[\\/]notifications[\\/]deliver\.ts$/);
+      const originalRead = delivery.getPermissionStatus, originalSchedule = delivery.rescheduleReminders;
+      globalThis.__R04_PERMISSION__ = 'authorized';
+      delivery.getPermissionStatus = async () => __R04_PERMISSION__;
+      globalThis.__R04_RESTORE_BRIDGE__ = () => { delivery.getPermissionStatus = originalRead; delivery.rescheduleReminders = originalSchedule; };
+      globalThis.__R04_NORMAL_SCHEDULE__ = () => { delivery.rescheduleReminders = originalSchedule; };
+      await find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient.refetchQueries({ queryKey: ['notificationAuthorization'] });
+    })()`, true);
+    await clickByText(client, 'Morning routine');
+    await waitForCondition(client, `document.querySelector('[role="switch"][aria-label="Morning routine"]')?.getAttribute('aria-checked') === 'true'`, 30000, 'synthetic bridge grant and saved opt-in');
+    await captureStep(client, 'R04-05-controlled-grant', { assertClean: false });
+    await evaluate(client, `(() => {
+      ${r04Find}
+      const delivery = find(/features[\\/]notifications[\\/]deliver\.ts$/);
+      delivery.rescheduleReminders = () => new Promise(resolve => { globalThis.__R04_RELEASE_SCHEDULE__ = resolve; });
+      void find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient.refetchQueries({ queryKey: ['notificationAuthorization'] });
+    })()`);
+    await waitForCondition(client, `document.querySelector('[role="switch"][aria-label="Morning routine"]')?.getAttribute('aria-checked') === 'false'`, 30000, 'pending permission must hide old grant');
+    await captureStep(client, 'R04-06-pending-grant-withheld', { assertClean: false });
+    await evaluate(client, `__R04_PERMISSION__ = 'denied'; __R04_RELEASE_SCHEDULE__(); __R04_NORMAL_SCHEDULE__();`);
+    await waitForText(client, 'Notification permission is unavailable in this browser preview.');
+    assert(await morningState() === 'false', 'Reconciliation published its old permission grant');
+    await captureStep(client, 'R04-07-revoked-after-settlement', { assertClean: false });
+    await evaluate(client, `(async () => {
+      ${r04Find}
+      const qc = find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient;
+      __R04_PERMISSION__ = 'authorized'; await qc.refetchQueries({ queryKey: ['notificationAuthorization'] });
+      __R04_PERMISSION__ = 'denied';
+      find(/features[\\/]notifications[\\/]deliver\.ts$/).rescheduleReminders = async () => { throw new Error('Synthetic native cancellation refusal'); };
+      await qc.refetchQueries({ queryKey: ['notificationAuthorization'] });
+    })()`, true);
+    await waitForText(client, 'Notification authorization is unavailable right now. Reminders stay off.');
+    assert(await morningState() === 'false', 'Failed cancellation exposed cached granted permission');
+    await captureStep(client, 'R04-08-cancellation-refusal', { assertClean: false });
+    await evaluate(client, `(async () => {
+      ${r04Find}
+      __R04_NORMAL_SCHEDULE__();
+      await find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient.refetchQueries({ queryKey: ['notificationAuthorization'] });
+    })()`, true);
+    await waitForText(client, 'Notification permission is unavailable in this browser preview.');
+    await captureStep(client, 'R04-09-permission-retry', { assertClean: false });
+    await evaluate(client, '__R04_RESTORE_BRIDGE__()');
+    await client.send('Page.reload', { ignoreCache: true });
+    await waitForText(client, 'Morning routine');
+    await waitForCondition(client, `!document.body.innerText.includes('Checking notification access')`, 30000, 'restored real browser permission');
+    assert(await morningState() === 'false', 'Reload must not claim native permission');
+    await captureStep(client, 'R04-10-actual-browser-restored', { assertClean: false });
+    writeJson('R04-result.json', { verdict: 'pass', offlineProgress: true, localReadFailureHidesTotals: true,
+      keyboardRetry: true, reload: true, permissionSnapshots: true, staleGrantWithheld: true,
+      controlledBridgeOnly: true, nativeDelivery: 'NOT_RUN', installedOfflineColdStart: 'NOT_RUN' });
+    await retainedRoute(client, '/today');

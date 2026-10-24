@@ -1,0 +1,674 @@
+{
+  "anchor": "99596bfceac782d740415503bc25452cac623254",
+  "source_commit": "d76cbd2742920895522e3e9018d554319c777741",
+  "source_tree": "44bd5a747df37f46e8d4b49475648c00f7857905",
+  "entries": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "cf45efd9c6e62306aa1c083485250de649a58a94",
+        "bytes": 36440,
+        "sha256": "d5a4e2d5149c2abe8649d310d1a476b9098a52acb00bb18d72bde12930f02d1e"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "a04a02c884f05ecea533e6fbee0a244251151f63",
+        "bytes": 36626,
+        "sha256": "241a8f6ff0ec8705841430564dd8d2a8925948e5e275ddb0c95983103aee6891"
+      }
+    },
+    {
+      "path": "apps/mobile/src/app/settings/_layout.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "973bdf5b7146d572bcb6a445cf9cf53b44ba14b1",
+        "bytes": 467,
+        "sha256": "583403ef176335d6ac4175bb37dfd9c2c5e834175253a1c0276e24cdd851e33c"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "d0f18a4e59b3ae01e6d4dcc023bfce64d7a51172",
+        "bytes": 512,
+        "sha256": "2d5cfe49dcc9f637a11321a79ecd6291c92369948e60e2ee19e6aa86533d9b09"
+      }
+    },
+    {
+      "path": "apps/mobile/src/app/settings/local-recovery.tsx",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "b105b5044fd44ea7838a1e75bcfad65198c94df2",
+        "bytes": 75,
+        "sha256": "7f0e71b1cd9248f6f9680a9ae0d8252d7e611937a11a1da55a895da29aae287c"
+      }
+    },
+    {
+      "path": "apps/mobile/src/app/settings/notifications.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "580788097c94016904af993faf782fe3fd55d8cd",
+        "bytes": 13762,
+        "sha256": "07df7d36f1891e63586b20e70ae9da17a0a7440a996eef2b25602b407a0f7d6d"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "677e83a1c6b125180fa6ff30db11c5f82eb480ab",
+        "bytes": 14148,
+        "sha256": "002c4cb60951474db1a2b87a1897602e98bfbb4ee0e1a541cf95a6ef52592b28"
+      }
+    },
+    {
+      "path": "apps/mobile/src/app/settings/timing.tsx",
+      "before": {
+        "mode": "100644",
+        "blob": "d6738a75b9c24886bf49eaec1921c2cb37a04554",
+        "bytes": 13242,
+        "sha256": "38ec549d4ffc991f6b4846ec7b64e3394d4c42d537794ca56a375cc3829365dc"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "fdc491c24509768739efd46fcccfe2c519c5eb2b",
+        "bytes": 13621,
+        "sha256": "5802da8343d2654259d55530ba72fc78f9c82e17b3b1c6aa44848bb062f61dc9"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "3909f16278d9c9cb467241e0e17a473b982351d8",
+        "bytes": 1844,
+        "sha256": "9d0d35e2020ab25b8021414e80118b6bbed43646da2f5aaaddcc0934be4af255"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/applyPreferences.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "9fe30284bb681a5d804a6a0f0c746748fe7a648e",
+        "bytes": 6015,
+        "sha256": "360849dcbdfc79e1572cff76be2ed3e9fed44b2a055b4ab264857647a4316fa2"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "c7cdb74ba65d1a4017116b7bd66106dbd82921f2",
+        "bytes": 6036,
+        "sha256": "9bee882fd91fb04af943613165f9f1056942de13c443a95fa3c3190a09d4489c"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "4530c0c7ab10ad55f2566bd9220ac4d03c961879",
+        "bytes": 7447,
+        "sha256": "852c9510a12d220e26e7f5fdd8d1006720ca3e4146a1dd239e1798f43fc0153e"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/store.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "5e5fe543dba50a49eb697c9dd58bb041d8629931",
+        "bytes": 9910,
+        "sha256": "396f23be42696512500e46c8250b149f07a7100f0c2e503805fe1bf28cae1b88"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "55b7ea9329eccbbbd351d7e7ff2c9706bb89667e",
+        "bytes": 10149,
+        "sha256": "9527267222bc445823a34a87084305666211e5d207d48669c663c2b6e516e843"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "160807041ae8364a84bbd22ed28bfd082c75c798",
+        "bytes": 12965,
+        "sha256": "5031e7acbe866f51bedf93bcaeffa9eb91213485fd14c56f3e2c01bf7f8aef08"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "5ecb778427eab76dde04aa1520fe2476d5a661d7",
+        "bytes": 13136,
+        "sha256": "a7dc7ee963314f5ec7f88bca5bcb0d26be51073bd58e7fa63ac424d770d9a17e"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "8f1ae49d87cea66f3aec3141d571a6b5a33037a6",
+        "bytes": 4480,
+        "sha256": "6eadc56df031ee9b6f329a34c8c2376d02ac6712c2deb9ec69ce298bdeeb838e"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "a11423ca654cd8e3b72a4c4593596a2d7dc2a535",
+        "bytes": 6669,
+        "sha256": "aac1b7bed1c4cab31d278a00c31de8460cf3181c3d37a5bb03c1d921194deaca"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "6e9fae1394a4823c21445fcffc108ff81ed6fb51",
+        "bytes": 3024,
+        "sha256": "ab991d01b18d280d5927758ee26725ca3890c69e00923edb87d88b653de873ea"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/photos/usePhotos.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "0383710ea416810d459434f6d6dcc1f9dc56541e",
+        "bytes": 15828,
+        "sha256": "a59d8eb99437c0f15fe601c0915f0bfec69eeecbdbf3eeda74cc9e06de6e2790"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "85d68b788e8da7b5bf23edc4ed761c246cb564d5",
+        "bytes": 15524,
+        "sha256": "1d4252d29eec3a6413d3dbf09be36397d2af2ff2f65303b87b090029d1834718"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "858293b4251f3d4d3f4212607ded4b35a987859f",
+        "bytes": 9214,
+        "sha256": "1655e7c192a86d152c527c45d14151879810bb59112700eb620841572328ead5"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "c79cb97ee49b52f8094e473000334f6b2ac48a71",
+        "bytes": 4340,
+        "sha256": "3dcfa01eb9c95006b3ba219b370f44c351e00f33d3d0b9d1c2ce3e77d2430fb4"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "641c4b16afe890a2430f8c4021d83f2ec1ab2469",
+        "bytes": 13015,
+        "sha256": "6b8b70ab1c2997cfe4c9c537a622dfb4a3578fd389508676abb9f434fd6eed93"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/mutations.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "82b8191b372941e066be32a18f83f9d42bc6f08e",
+        "bytes": 4991,
+        "sha256": "858a5447d5bade6fc1c2b8cb10c8db60f9ace48d706fc4c2042d230ab526af10"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "f5a46ce138983605d83d32d685f157850c5afea6",
+        "bytes": 5286,
+        "sha256": "24e230cf3a6767dac833f6d07ab73bbf54050e2f8b26464c79fe17cfa7fd96b2"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",
+      "before": {
+        "mode": "100644",
+        "blob": "8a707134c1e4af273660d065b5c82431029ee920",
+        "bytes": 5869,
+        "sha256": "7e656dda9399f48cab62234854446118fb264efb1056d883a4652ccb04b2871e"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "e78eb9a4d2ed57e3fe5d0c391ebcb245af750ae7",
+        "bytes": 6005,
+        "sha256": "0ece694c4c4f3fc7c751b6243bee39542e244dde1527d83b560612426ffc7288"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "e755f9b81221e049f88c70c65d1f20a427e75e4b",
+        "bytes": 4148,
+        "sha256": "8692eea0a11010580da3bba8a1e6e3a044804cc7e444ed1a87293358078ed345"
+      }
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "before": {
+        "mode": "100644",
+        "blob": "9a2e63702a920dd77c985750ae04843d1c010670",
+        "bytes": 6998,
+        "sha256": "34248253ee5234d7a92a7733f4579a191ff3bd398152da8941886ab79a786026"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "82153db0ff8d13cd30cca33c5575d6cc26d75324",
+        "bytes": 8517,
+        "sha256": "12727ea360b2f799ba2da8f7ac529b722f8bdab79d1ec56f9b1b57b38c9ed86f"
+      }
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before": {
+        "mode": "100644",
+        "blob": "5c5b58a38ba081fea22563f3d569c4b85fc50248",
+        "bytes": 504821,
+        "sha256": "938db17dcfc5508740176a2ede69acaf6dabccf6ebac57a8b72beddb6ed74056"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "44d3a2fb836014713bc6416f575bbea54fcc2012",
+        "bytes": 506802,
+        "sha256": "98cd6543609426c0bd4248ac3f8273d238f4baa91848ab45943b80aa4a3c6b0b"
+      }
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "before": {
+        "mode": "100644",
+        "blob": "5d7297c54aa89d08b5c366cc1476845ac5edf0b3",
+        "bytes": 137965,
+        "sha256": "79c4b37320d469558b85737cab8bc441afec5bf65971cb51a0b73ffbf01ecbcb"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "24304043548c48eb01e455f619e8594b889bd79d",
+        "bytes": 138211,
+        "sha256": "054c51d1b49d0e1e718babc1201971d86bc18423fbd99590a470f5b859223c7d"
+      }
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "before": {
+        "mode": "100644",
+        "blob": "0805263940726b7c727e50435adc573273437972",
+        "bytes": 82183,
+        "sha256": "de6a4e22fdfc54d9749ca3b2627cbff6c799a98bd6a79381ed7e6337375fe9e3"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "28d05be1f6e4f033a966f0875def2cabe5f78d61",
+        "bytes": 82342,
+        "sha256": "7b6f51ba83f70f345d32d362ff61f25b7cb2027daddb8b2698786c5bdfd640ba"
+      }
+    }
+  ],
+  "protected_objects": [
+    {
+      "path": ".github",
+      "anchor_entry": "040000 tree 9148470436b9d21580fdf239fa1f43d4ac1a9758\t.github",
+      "source_entry": "040000 tree 9148470436b9d21580fdf239fa1f43d4ac1a9758\t.github"
+    },
+    {
+      "path": "AGENTS.md",
+      "anchor_entry": "100644 blob ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0\tAGENTS.md",
+      "source_entry": "100644 blob ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0\tAGENTS.md"
+    },
+    {
+      "path": "CLAUDE.md",
+      "anchor_entry": "100644 blob 6d2cacba1f58032e3878c16b0868b6c4a58fcd42\tCLAUDE.md",
+      "source_entry": "100644 blob 6d2cacba1f58032e3878c16b0868b6c4a58fcd42\tCLAUDE.md"
+    },
+    {
+      "path": "apps/mobile/android",
+      "anchor_entry": null,
+      "source_entry": null
+    },
+    {
+      "path": "apps/mobile/app.base.json",
+      "anchor_entry": "100644 blob 94855cf2de181e5c9066ab46cab99a08d9b1fcf1\tapps/mobile/app.base.json",
+      "source_entry": "100644 blob 94855cf2de181e5c9066ab46cab99a08d9b1fcf1\tapps/mobile/app.base.json"
+    },
+    {
+      "path": "apps/mobile/app.config.ts",
+      "anchor_entry": null,
+      "source_entry": null
+    },
+    {
+      "path": "apps/mobile/eas.json",
+      "anchor_entry": "100644 blob 93051b08a3d0bf353a0d09cf1e51d82b3a74a349\tapps/mobile/eas.json",
+      "source_entry": "100644 blob 93051b08a3d0bf353a0d09cf1e51d82b3a74a349\tapps/mobile/eas.json"
+    },
+    {
+      "path": "apps/mobile/ios",
+      "anchor_entry": null,
+      "source_entry": null
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "anchor_entry": "100644 blob 6217bd03730c530445861cc3e1e438a92f401b83\tapps/mobile/package.json",
+      "source_entry": "100644 blob 6217bd03730c530445861cc3e1e438a92f401b83\tapps/mobile/package.json"
+    },
+    {
+      "path": "apps/mobile/src/app/onboarding/quiz.tsx",
+      "anchor_entry": "100644 blob dc9bdb09004238ac7dcfc0005661f3cec8b97616\tapps/mobile/src/app/onboarding/quiz.tsx",
+      "source_entry": "100644 blob dc9bdb09004238ac7dcfc0005661f3cec8b97616\tapps/mobile/src/app/onboarding/quiz.tsx"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/[id].tsx",
+      "anchor_entry": "100644 blob 346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a\tapps/mobile/src/app/shelf/[id].tsx",
+      "source_entry": "100644 blob 346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a\tapps/mobile/src/app/shelf/[id].tsx"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/permission.ts",
+      "anchor_entry": "100644 blob 60576f1d7ef80d3378ffdeb883e03edc7beeaeb3\tapps/mobile/src/features/notifications/permission.ts",
+      "source_entry": "100644 blob 60576f1d7ef80d3378ffdeb883e03edc7beeaeb3\tapps/mobile/src/features/notifications/permission.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "anchor_entry": "100644 blob 55aafc5dec99fe89dd092e961b389076ef05d555\tapps/mobile/src/features/photos/encryptedStorage.ts",
+      "source_entry": "100644 blob 55aafc5dec99fe89dd092e961b389076ef05d555\tapps/mobile/src/features/photos/encryptedStorage.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/progressCaptureAuthority.ts",
+      "anchor_entry": "100644 blob 2d370c434983bcdacf415fd9b8b33253873d2598\tapps/mobile/src/features/photos/progressCaptureAuthority.ts",
+      "source_entry": "100644 blob 2d370c434983bcdacf415fd9b8b33253873d2598\tapps/mobile/src/features/photos/progressCaptureAuthority.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "anchor_entry": "100644 blob 6ff52e8e9bfde498d1169abc233ea26b3363ef8a\tapps/mobile/src/features/photos/store.ts",
+      "source_entry": "100644 blob 6ff52e8e9bfde498d1169abc233ea26b3363ef8a\tapps/mobile/src/features/photos/store.ts"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.ts",
+      "anchor_entry": "100644 blob 07a5fa0b274c42b1414d0ea9539ed885d4f44dd7\tapps/mobile/src/features/streak/streak.ts",
+      "source_entry": "100644 blob 07a5fa0b274c42b1414d0ea9539ed885d4f44dd7\tapps/mobile/src/features/streak/streak.ts"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth",
+      "anchor_entry": "040000 tree cc3c8a72cd49818e1a6166240970fa783a5febdd\tapps/mobile/src/lib/auth",
+      "source_entry": "040000 tree cc3c8a72cd49818e1a6166240970fa783a5febdd\tapps/mobile/src/lib/auth"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent",
+      "anchor_entry": "040000 tree df3d819603ea233bc1af41b064d9e0f99ab7cb63\tapps/mobile/src/lib/consent",
+      "source_entry": "040000 tree df3d819603ea233bc1af41b064d9e0f99ab7cb63\tapps/mobile/src/lib/consent"
+    },
+    {
+      "path": "apps/mobile/src/lib/offline",
+      "anchor_entry": "040000 tree 22134ba450bf8b976d9042bf71a8fb00483561c6\tapps/mobile/src/lib/offline",
+      "source_entry": "040000 tree 22134ba450bf8b976d9042bf71a8fb00483561c6\tapps/mobile/src/lib/offline"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage",
+      "anchor_entry": "040000 tree 31811c7d921536a50dae1a8569f8f7b059e9dbe3\tapps/mobile/src/lib/storage",
+      "source_entry": "040000 tree 31811c7d921536a50dae1a8569f8f7b059e9dbe3\tapps/mobile/src/lib/storage"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-01",
+      "anchor_entry": "040000 tree 437bce7785789c9b2b1e0ca793ccb3a7f4c26860\tdocs/brain/checkpoints/M0-01",
+      "source_entry": "040000 tree 437bce7785789c9b2b1e0ca793ccb3a7f4c26860\tdocs/brain/checkpoints/M0-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M0-02",
+      "anchor_entry": "040000 tree 8a07bafaa44c209555df23a1871d8c01e277e549\tdocs/brain/checkpoints/M0-02",
+      "source_entry": "040000 tree 8a07bafaa44c209555df23a1871d8c01e277e549\tdocs/brain/checkpoints/M0-02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-01",
+      "anchor_entry": "040000 tree 6793f93250e30db773a3adc676a984f68e3a0692\tdocs/brain/checkpoints/M1-01",
+      "source_entry": "040000 tree 6793f93250e30db773a3adc676a984f68e3a0692\tdocs/brain/checkpoints/M1-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md",
+      "anchor_entry": "100644 blob eef043e677f4ed9b667278d15ec0fd544615ad4d\tdocs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md",
+      "source_entry": "100644 blob eef043e677f4ed9b667278d15ec0fd544615ad4d\tdocs/brain/checkpoints/M1-02/ACCEPTANCE_CLOSEOUT.md"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/CONT-01",
+      "anchor_entry": "040000 tree 908be745d9db76234e8b33daa2c42d83ec7b2202\tdocs/brain/checkpoints/M1-02/CONT-01",
+      "source_entry": "040000 tree 908be745d9db76234e8b33daa2c42d83ec7b2202\tdocs/brain/checkpoints/M1-02/CONT-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md",
+      "anchor_entry": "100644 blob 0b56e159fe191fed7142c79a3e60057e7991f5a5\tdocs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md",
+      "source_entry": "100644 blob 0b56e159fe191fed7142c79a3e60057e7991f5a5\tdocs/brain/checkpoints/M1-02/FOUNDER_ISSUANCE.md"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03",
+      "anchor_entry": "040000 tree c91f1c3c1b09defc6a4a378e6e55c3851c6ca8da\tdocs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03",
+      "source_entry": "040000 tree c91f1c3c1b09defc6a4a378e6e55c3851c6ca8da\tdocs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/README.md",
+      "anchor_entry": "100644 blob 356a7526d129024cd150ecb2d6201c4f275bfe1d\tdocs/brain/checkpoints/M1-02/README.md",
+      "source_entry": "100644 blob 356a7526d129024cd150ecb2d6201c4f275bfe1d\tdocs/brain/checkpoints/M1-02/README.md"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04",
+      "anchor_entry": "040000 tree a3c5f0e3a47b41049bc8032800b3e803219d96db\tdocs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04",
+      "source_entry": "040000 tree a3c5f0e3a47b41049bc8032800b3e803219d96db\tdocs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01",
+      "anchor_entry": "040000 tree ed433f37a986d372a702aa72e9731f1b6c07c432\tdocs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01",
+      "source_entry": "040000 tree ed433f37a986d372a702aa72e9731f1b6c07c432\tdocs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02",
+      "anchor_entry": "040000 tree fef84ab25175bdd8077f70472d335b073cc2a816\tdocs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02",
+      "source_entry": "040000 tree fef84ab25175bdd8077f70472d335b073cc2a816\tdocs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ci-initial.json",
+      "anchor_entry": "100644 blob 6449858fcbbc322f81dec44b1908e6430830bd70\tdocs/brain/checkpoints/M1-02/ci-initial.json",
+      "source_entry": "100644 blob 6449858fcbbc322f81dec44b1908e6430830bd70\tdocs/brain/checkpoints/M1-02/ci-initial.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/ci-review.json",
+      "anchor_entry": "100644 blob 898ac4da27b8aa21638a4402337784f2c7b2fe43\tdocs/brain/checkpoints/M1-02/ci-review.json",
+      "source_entry": "100644 blob 898ac4da27b8aa21638a4402337784f2c7b2fe43\tdocs/brain/checkpoints/M1-02/ci-review.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/completion-report.json",
+      "anchor_entry": "100644 blob 1295d8a4158943eab49b024bacbe6eb6bbe53434\tdocs/brain/checkpoints/M1-02/completion-report.json",
+      "source_entry": "100644 blob 1295d8a4158943eab49b024bacbe6eb6bbe53434\tdocs/brain/checkpoints/M1-02/completion-report.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/evidence",
+      "anchor_entry": "040000 tree 9981148fdfa96afed3b1e060a4e980cfdb51b1c4\tdocs/brain/checkpoints/M1-02/evidence",
+      "source_entry": "040000 tree 9981148fdfa96afed3b1e060a4e980cfdb51b1c4\tdocs/brain/checkpoints/M1-02/evidence"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/execution-inventory.json",
+      "anchor_entry": "100644 blob 1abd0cb13b40810afe8ea55787e53b7b74c63fd7\tdocs/brain/checkpoints/M1-02/execution-inventory.json",
+      "source_entry": "100644 blob 1abd0cb13b40810afe8ea55787e53b7b74c63fd7\tdocs/brain/checkpoints/M1-02/execution-inventory.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/final-custody.json",
+      "anchor_entry": "100644 blob 3e15eaa8f20fd1ab1fd43ec00b1d82310acc684e\tdocs/brain/checkpoints/M1-02/final-custody.json",
+      "source_entry": "100644 blob 3e15eaa8f20fd1ab1fd43ec00b1d82310acc684e\tdocs/brain/checkpoints/M1-02/final-custody.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/historical-references.json",
+      "anchor_entry": "100644 blob eb9820ab357810bf7252336789bc5b5a6601ee0c\tdocs/brain/checkpoints/M1-02/historical-references.json",
+      "source_entry": "100644 blob eb9820ab357810bf7252336789bc5b5a6601ee0c\tdocs/brain/checkpoints/M1-02/historical-references.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/inputs",
+      "anchor_entry": "040000 tree 7ec8ab1b1b375c73cc044d59f3c79f4830dd0f60\tdocs/brain/checkpoints/M1-02/inputs",
+      "source_entry": "040000 tree 7ec8ab1b1b375c73cc044d59f3c79f4830dd0f60\tdocs/brain/checkpoints/M1-02/inputs"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/source-custody.json",
+      "anchor_entry": "100644 blob e0ff876c8ab83f76d728805d63a11cd08918a87f\tdocs/brain/checkpoints/M1-02/source-custody.json",
+      "source_entry": "100644 blob e0ff876c8ab83f76d728805d63a11cd08918a87f\tdocs/brain/checkpoints/M1-02/source-custody.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/surface-impact.json",
+      "anchor_entry": "100644 blob 6b02e4cc20964d7f416cee9897c6a37cfb1e4c17\tdocs/brain/checkpoints/M1-02/surface-impact.json",
+      "source_entry": "100644 blob 6b02e4cc20964d7f416cee9897c6a37cfb1e4c17\tdocs/brain/checkpoints/M1-02/surface-impact.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/visual-inspections.json",
+      "anchor_entry": "100644 blob 3ca7930f08eb8ff891e8f302f59fddf9e7ea68df\tdocs/brain/checkpoints/M1-02/visual-inspections.json",
+      "source_entry": "100644 blob 3ca7930f08eb8ff891e8f302f59fddf9e7ea68df\tdocs/brain/checkpoints/M1-02/visual-inspections.json"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-03",
+      "anchor_entry": "040000 tree 553962a8d7844e88465e1d8f3801c9491e45a2d6\tdocs/brain/checkpoints/M1-03",
+      "source_entry": "040000 tree 553962a8d7844e88465e1d8f3801c9491e45a2d6\tdocs/brain/checkpoints/M1-03"
+    },
+    {
+      "path": "docs/brain/reviews",
+      "anchor_entry": "040000 tree 84cffaef4694c8cc3bd843ff46163f9cb9df1a61\tdocs/brain/reviews",
+      "source_entry": "040000 tree 84cffaef4694c8cc3bd843ff46163f9cb9df1a61\tdocs/brain/reviews"
+    },
+    {
+      "path": "docs/brain/state",
+      "anchor_entry": "040000 tree 713a0d090230d8831051d8a0bb97d3bdb14a523b\tdocs/brain/state",
+      "source_entry": "040000 tree 713a0d090230d8831051d8a0bb97d3bdb14a523b\tdocs/brain/state"
+    },
+    {
+      "path": "package-lock.json",
+      "anchor_entry": "100644 blob e53de80bf46db8f7a7fcd97781971911e2d328bd\tpackage-lock.json",
+      "source_entry": "100644 blob e53de80bf46db8f7a7fcd97781971911e2d328bd\tpackage-lock.json"
+    },
+    {
+      "path": "package.json",
+      "anchor_entry": "100644 blob 7b0522688c74c78328aa587cb9f9a07b65965061\tpackage.json",
+      "source_entry": "100644 blob 7b0522688c74c78328aa587cb9f9a07b65965061\tpackage.json"
+    },
+    {
+      "path": "scripts/phase4",
+      "anchor_entry": "040000 tree b68b15afd42318e31a7edd8fcb868494f02803ea\tscripts/phase4",
+      "source_entry": "040000 tree b68b15afd42318e31a7edd8fcb868494f02803ea\tscripts/phase4"
+    },
+    {
+      "path": "scripts/phase9",
+      "anchor_entry": "040000 tree 6e832d4c069786b00ad47d9ab9d44a4e7d29dfae\tscripts/phase9",
+      "source_entry": "040000 tree 6e832d4c069786b00ad47d9ab9d44a4e7d29dfae\tscripts/phase9"
+    },
+    {
+      "path": "scripts/security_readiness",
+      "anchor_entry": "040000 tree 89d918679e7877b3e2f652add3386f26add40d05\tscripts/security_readiness",
+      "source_entry": "040000 tree 89d918679e7877b3e2f652add3386f26add40d05\tscripts/security_readiness"
+    },
+    {
+      "path": "supabase",
+      "anchor_entry": "040000 tree d2f9c13695ec1f83cc820e001d5525eb9dfd9662\tsupabase",
+      "source_entry": "040000 tree d2f9c13695ec1f83cc820e001d5525eb9dfd9662\tsupabase"
+    }
+  ],
+  "source_path_count": 23,
+  "intermediate_commits": [
+    {
+      "commit": "41f329acd96dd7c14cbbeb4b88634f723628d695",
+      "tree": "de76f0768fd6d2fea19b1b3f01ae53f00b081511",
+      "paths": [
+        "apps/mobile/src/features/shelf/mutations.ts",
+        "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",
+        "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts"
+      ],
+      "subject": "fix(shelf): bind retained actions to their accepted health grant"
+    },
+    {
+      "commit": "5e1d9a6ae42527518e0b0dc0e994478ed2092f7a",
+      "tree": "7c3c3ee444a68c4dbf943f65f0fd03db9c9ca71c",
+      "paths": [
+        "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+        "apps/mobile/src/features/photos/usePhotos.ts"
+      ],
+      "subject": "fix(photos): retain capture authority through mutation dispatch"
+    },
+    {
+      "commit": "262aed6198f39cda7ae8c5924fd090e273adc01b",
+      "tree": "9f694e67bd7dcffbc80fca2598cb2cbf2e2bee46",
+      "paths": [
+        "apps/mobile/src/app/settings/notifications.tsx",
+        "apps/mobile/src/app/settings/timing.tsx",
+        "apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx",
+        "apps/mobile/src/features/notifications/applyPreferences.test.ts",
+        "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+        "apps/mobile/src/features/notifications/store.ts",
+        "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+        "apps/mobile/src/features/notifications/useNotifications.ts"
+      ],
+      "subject": "fix(notifications): isolate preference receipts and expose read recovery"
+    },
+    {
+      "commit": "7fcde90821af144b2821f779845e539d91b602be",
+      "tree": "fa513e2256d181dd954874984e6e35c92bb82f58",
+      "paths": [
+        "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+        "apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+        "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts"
+      ],
+      "subject": "test(mobile): publish retained hook probes after render"
+    },
+    {
+      "commit": "6606713c935e4597ec58fc00b7e226ee3a55faec",
+      "tree": "5d637248d1e4961411cb6632d38bebe07a4d886d",
+      "paths": [
+        "apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+        "apps/mobile/src/features/notifications/useNotifications.ts"
+      ],
+      "subject": "fix(notifications): verify device preferences on settings entry"
+    },
+    {
+      "commit": "98e2a638c125267dcaf5e06b237fc019800029c4",
+      "tree": "14e52e0fb23774a675f06f68636f2d7562cbce15",
+      "paths": [
+        "apps/mobile/src/app/(tabs)/you.tsx",
+        "apps/mobile/src/app/settings/_layout.tsx",
+        "apps/mobile/src/app/settings/local-recovery.tsx",
+        "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+        "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+        "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+        "docs/USER_FLOW_TREE.md"
+      ],
+      "subject": "feat(mobile): add guarded device-local recovery and continuity"
+    },
+    {
+      "commit": "f4a802a245b8b122cc348c5a5f978950d85c739e",
+      "tree": "492fa4a6cb56a2db889f62fc69579c32a8de19be",
+      "paths": [
+        "docs/E2E_TESTING_CHECKLIST.md"
+      ],
+      "subject": "docs(e2e): specify local continuity and recovery verification"
+    },
+    {
+      "commit": "4205deb09d0117dde456917c4672e4539d898ec5",
+      "tree": "fd778492374d694d082808382054b68e635e2a37",
+      "paths": [
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "subject": "chore(worklist): regenerate original source inventory after M1 campaign"
+    },
+    {
+      "commit": "0affb025e224b1d36f6b29035c82688c11c3ac1c",
+      "tree": "137ca639b7cd46f9864de1561d0d3659566e60d2",
+      "paths": [
+        "apps/mobile/src/features/shelf/mutations.ts"
+      ],
+      "subject": "fix(shelf): preserve the original source-owner contract"
+    },
+    {
+      "commit": "d76cbd2742920895522e3e9018d554319c777741",
+      "tree": "44bd5a747df37f46e8d4b49475648c00f7857905",
+      "paths": [
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "subject": "chore(worklist): refresh after final preserved Shelf contract"
+    }
+  ],
+  "prior_witness_note": "Shelf mutations were a negative-scope witness in M1X-04; Campaign05 explicitly authorizes this path. Its changed bytes and preserved cancellation behavior are audited as source here, not falsely listed as immutable. All prior checkpoint blobs remain unchanged."
+}

@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/streak/streak.test.ts src/features/photos/store.test.ts src/features/notifications/deliver.test.ts src/features/notifications/transaction.cont01.test.ts --maxWorkers=3
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  105 passed (105)
+   Start at  20:09:08
+   Duration  1000ms (transform 584ms, setup 0ms, import 847ms, tests 387ms, environment 0ms)
+

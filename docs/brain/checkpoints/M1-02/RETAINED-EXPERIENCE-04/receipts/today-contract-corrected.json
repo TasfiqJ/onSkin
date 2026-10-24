@@ -1,0 +1,24 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/today/todayRoute.test.ts",
+    "src/features/today/todayPersistence.t1.test.ts"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:44:43.694068+00:00",
+  "exit": 0,
+  "source_start": {
+    "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+    "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+    "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+  },
+  "seconds": 20.797,
+  "sha256": "f6c7e7dcac00dff7a928262349e26c817541de2c1e00eff2f54e51ee98cf0af4",
+  "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+  "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

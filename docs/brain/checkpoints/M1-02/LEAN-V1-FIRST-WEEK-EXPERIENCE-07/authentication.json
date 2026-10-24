@@ -1,0 +1,19 @@
+{
+  "externally_pasted_anchor": "424b3561ab2f6d216cba33d44239e8ff9fef516f8d153da4365b86d2d52719cb",
+  "zip_sha256": "1cbbede7bbe78536b05247eb487969873b1eb00e9713261c373c48efd0bce7f0",
+  "fresh_extraction": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_FIRST_WEEK07_8422a916b44a49d0bb4ed70192e82ee3",
+  "regular_members": 23,
+  "expanded_bytes": 177103,
+  "command": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "424b3561ab2f6d216cba33d44239e8ff9fef516f8d153da4365b86d2d52719cb"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_FIRST_WEEK07_8422a916b44a49d0bb4ed70192e82ee3",
+  "exit": 0,
+  "log_sha256": "0cd0594885899a5032118a153085243c0f9f74a56b403d41ca344b167c8d014b",
+  "note": "Initial fresh extraction and anchored PASS preceded repository work. This is a later read-only revalidation; EXACT_PROMPT is excluded and pasted prompt governs. Authentication is orientation only.",
+  "observed_utc": "2026-10-24T19:10:33.175697+00:00"
+}

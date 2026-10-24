@@ -1,0 +1,16 @@
+{
+  "exactB": true,
+  "noRetainedADailyState": true,
+  "healthOwnerB": true,
+  "noAInCache": true,
+  "noAInShelfOrQueue": true,
+  "hasB": true,
+  "bEditPersisted": true,
+  "ciphertextOnly": true,
+  "noWidgetCapabilities": true,
+  "renderedObservation": {
+    "closed": true,
+    "samples": 4448,
+    "leaks": 0
+  }
+}

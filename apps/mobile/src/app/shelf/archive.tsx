@@ -4,6 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { calendarWeeksUsed, localDateMonthLabel } from '@/features/shelf/expiry';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
+import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
@@ -53,6 +54,14 @@ function ArchiveCard({ item }: { item: ShelfItem }) {
 }
 
 export default function ArchiveScreen() {
+  return (
+    <ShelfDataAvailabilityGate onExit={() => backOrReplace(router, APP_SHELF_ROUTE)}>
+      <ArchiveScreenContent />
+    </ShelfDataAvailabilityGate>
+  );
+}
+
+function ArchiveScreenContent() {
   const { data } = useShelf();
   const archive = data?.archive ?? [];
 

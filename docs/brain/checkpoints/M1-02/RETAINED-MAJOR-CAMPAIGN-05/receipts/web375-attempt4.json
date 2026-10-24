@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "file:///C:/Users/jasim/Documents/ChatGPT/Campaign05-run-20261024-329853b7/e2e-wrapper.mjs",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:03:59.755924+00:00",
+  "finished_at": "2026-10-24T05:05:23.813359+00:00",
+  "duration_seconds": 83.578,
+  "exit_code": 0,
+  "head": "98e2a638c125267dcaf5e06b237fc019800029c4",
+  "tree": "14e52e0fb23774a675f06f68636f2d7562cbce15",
+  "status_before": "",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [],
+  "status_after": "",
+  "log": "web375-attempt4.log",
+  "log_bytes": 129,
+  "log_sha256": "87c5862ca9f1a61b97e06aee61a0ce7d387a7e979a989e379d449e19d40a1bc6"
+}

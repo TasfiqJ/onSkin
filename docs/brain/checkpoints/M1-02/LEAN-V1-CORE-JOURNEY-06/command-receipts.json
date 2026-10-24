@@ -1,0 +1,1211 @@
+{
+  "baseline-retained.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf",
+      "src/features/today",
+      "src/features/routine",
+      "src/features/scheduler",
+      "src/features/streak",
+      "src/features/notifications",
+      "src/features/photos",
+      "src/features/onboarding",
+      "src/features/settings",
+      "src/features/retainedRecovery"
+    ],
+    "start": "2026-10-24T15:07:52.829754+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 41.08,
+    "status_after": "",
+    "sha256": "3411d9a1ba3292fde8528aeda2e2392d6dea3aa9a509419bf659ca5f3c38511d",
+    "bytes": 555
+  },
+  "baseline-web375.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/e2e/onboarding-first-session.mjs"
+    ],
+    "start": "2026-10-24T15:08:03.162166+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 95.21,
+    "status_after": "",
+    "sha256": "2aad965490d35293459e846d451c0b5afd81a8aeb95095f0f3832d97ee40daf4",
+    "bytes": 120
+  },
+  "committed-retained.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf",
+      "src/features/today",
+      "src/features/routine",
+      "src/features/scheduler",
+      "src/features/streak",
+      "src/features/notifications",
+      "src/features/photos",
+      "src/features/onboarding",
+      "src/features/settings",
+      "src/features/retainedRecovery"
+    ],
+    "start": "2026-10-24T16:10:52.435776+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 36.86,
+    "status_after": "",
+    "sha256": "9b490984a4a0854cd3e6d772de79cd82ae30d35faf66824ea80928108f860e95",
+    "bytes": 555
+  },
+  "committed-root-lint.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T16:09:30.160323+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 60.06,
+    "status_after": "",
+    "sha256": "f26eada7bff51f4c99f06205c8f58d1bce3d9fa4041d3ff34de57c352d512ca7",
+    "bytes": 1181
+  },
+  "committed-root-tests.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T16:09:30.150799+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 39.4,
+    "status_after": "",
+    "sha256": "d089f8d0978a85e16e21f1bd9a58d1dab9d56dfdd93d4c0a139f374f4ea57798",
+    "bytes": 371198
+  },
+  "committed-root-typecheck.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T16:09:30.150799+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 34.17,
+    "status_after": "",
+    "sha256": "8157b599f2a6574dc599dacc65a0c08da3d2a422b8076057b135e1d621466766",
+    "bytes": 1169
+  },
+  "committed-worklist-strict.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/phase4/build-source-worklist.mjs",
+      "--strict",
+      "--check"
+    ],
+    "start": "2026-10-24T16:14:46.846178+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 0.7,
+    "status_after": "",
+    "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+    "bytes": 68
+  },
+  "context-authentication.json": {
+    "status": "PASS",
+    "external_manifest_sha256": "28ba8bbd2c3d531e77d92eb736f92c8bc49966a9684fec52ea46417f3ec8051b",
+    "command": "python -B verify_packet.py --expected-manifest-sha256 28ba8bbd2c3d531e77d92eb736f92c8bc49966a9684fec52ea46417f3ec8051b",
+    "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-context06-32c_64_2",
+    "exit": 0,
+    "authenticated_members": [
+      {
+        "bytes": 1515,
+        "path": "00_START_HERE.md",
+        "sha256": "2a0407f376112643e4c6b190a0db6c40f966b2fd03c6db6fab862befbc32a769"
+      },
+      {
+        "bytes": 1444,
+        "path": "01_LIVE_GIT_AND_CI.md",
+        "sha256": "86f2caec27dfbf7b18a90b8840e1eb41067f7cbe5ef851c07dffc6fc971f8e55"
+      },
+      {
+        "bytes": 2131,
+        "path": "02_INDEPENDENT_BRAIN_AUDIT.md",
+        "sha256": "ca490c38a1d74054ec9d8514d61be2257f318990c3d4694043f5578634019251"
+      },
+      {
+        "bytes": 1894,
+        "path": "03_PRODUCT_ROADMAP_AND_LEAN_V1.md",
+        "sha256": "4040492362f3527fa9b37bf1da72ee0772b41332944413d7da3ac7f2b758c07f"
+      },
+      {
+        "bytes": 2722,
+        "path": "04_MULTISTREAM_EXECUTION_PLAN.md",
+        "sha256": "8b0865de31bad4681c6e08b647440408e24275b39e3cb308e708649973b198b4"
+      },
+      {
+        "bytes": 1823,
+        "path": "05_OPTIONAL_OWNED_SHELF_QUICK_FIND.md",
+        "sha256": "4a4424cabd7f8d1b692fd190ab2d8056777a4130477e1f0dca46640e42731740"
+      },
+      {
+        "bytes": 2348,
+        "path": "06_ALLOWED_EDITS_AND_PROTECTED.md",
+        "sha256": "fe48d0f5f781a2937b0d960cb1535e6c75ae83d5026f2cfd7d84f8f8d9144476"
+      },
+      {
+        "bytes": 2239,
+        "path": "07_PROOF_AND_UI_MATRIX.md",
+        "sha256": "94d7bf3865d89e138e0473ec4eff4ba4e346500a7bf5040fc8d95ca8d4f9beb4"
+      },
+      {
+        "bytes": 1906,
+        "path": "08_DELIVERY_AND_GIT_PROCESS.md",
+        "sha256": "77bf862c659d8f6356ee83dd4b075f99c25299a600ed89c8a298cf742ffbe141"
+      },
+      {
+        "bytes": 1397,
+        "path": "09_PROTECTED_GATES.md",
+        "sha256": "7b00387ab5b0ea7f9f83811037ef4680f89a210e35644cbc2fcd844043989a34"
+      },
+      {
+        "bytes": 2037,
+        "path": "10_SOURCE_MAP.md",
+        "sha256": "4b964bd05cff7822a8d79f9ccad093c6bff58f1ab15892ceb85605994550f219"
+      },
+      {
+        "bytes": 1473,
+        "path": "11_ACCEPTANCE_RUBRIC.md",
+        "sha256": "3682036ec2c5d8a9a1da2a043fa418e4492846c91be84a10a2b5e52e16b3a77b"
+      },
+      {
+        "bytes": 2499,
+        "path": "HISTORICAL/06_CODEX_AUTONOMY_AND_COMMUNICATION.md",
+        "sha256": "f4afaa935498b56b6fd9dec4368353a5bc776a0aa2c8f40d3755ca23e705935b"
+      },
+      {
+        "bytes": 4752,
+        "path": "HISTORICAL/07_47_TASK_ROADMAP.md",
+        "sha256": "029427a8d84fde0c7b51f73f12e1df607f9d4727e5eee7634c73559a2d1037ab"
+      },
+      {
+        "bytes": 24999,
+        "path": "HISTORICAL/acceptance_ledger.json",
+        "sha256": "2ffdaddc30af7e74bf92a5ffcc87a2197eeed59117adc1e1004677492b73c4f2"
+      },
+      {
+        "bytes": 28659,
+        "path": "HISTORICAL/adr_registry_51.json",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      {
+        "bytes": 15762,
+        "path": "HISTORICAL/executive_masterplan_blueprint.md",
+        "sha256": "409fc5d899463238c38debc819ae9b5c5fe0523f11ba7b7c32582ab26a361627"
+      },
+      {
+        "bytes": 50565,
+        "path": "HISTORICAL/roadmap_47.json",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      {
+        "bytes": 4365,
+        "path": "verify_packet.py",
+        "sha256": "0d0a2495b928189c9477c9d040f11c2b684192ec5c0766564be71370201e2d0f"
+      }
+    ],
+    "verified_bytes": 154530,
+    "limit": "Transport integrity only. Pasted user instruction is execution authority; EXACT_PROMPT.md is not authenticated by this manifest."
+  },
+  "core-green-retired.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/onboarding/onboardingRoutes.test.ts",
+      "src/features/shelf/shelfRoutes.test.ts"
+    ],
+    "start": "2026-10-24T15:16:11.611682+00:00",
+    "head": "fc6dcc2dc5bb70924309126cb31df69af787ef2b",
+    "tree": "09d0e3e4b1d413476c633a709644d2d9ed435db1",
+    "status_before": "M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/shelf/archive.tsx\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "exit": 0,
+    "seconds": 2.23,
+    "status_after": "M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/shelf/archive.tsx\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "sha256": "27bcb30891a94f8570c3c41f2eb1c1955d013cdfe1d0858d46dafc229c5516e4",
+    "bytes": 454
+  },
+  "core-green.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/onboarding/onboardingRoutes.test.ts",
+      "src/features/shelf/shelfRoutes.test.ts"
+    ],
+    "start": "2026-10-24T15:14:19.311650+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/shelf/archive.tsx\n M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "exit": 0,
+    "seconds": 2.15,
+    "status_after": "M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/shelf/archive.tsx\n M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "sha256": "eec6c2272f93ee474d8f81f70f8fdb36dc510af4e480513935bc11fa4da2df6c",
+    "bytes": 454
+  },
+  "core-original-red.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts"
+    ],
+    "start": "2026-10-24T15:13:23.893557+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "exit": 1,
+    "seconds": 1.98,
+    "status_after": "M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "sha256": "e39e40b1049add56897a9b0c3c7c148ccb68abd48f69e95abc8f38c58b8805f0",
+    "bytes": 8171
+  },
+  "feature-types.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "start": "2026-10-24T15:17:42.424284+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "exit": 2,
+    "seconds": 16.25,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "sha256": "d1cebf4111ec68ce62513d05ff6bf20c744f3578b55b9dd1937cdca5848ce537",
+    "bytes": 820
+  },
+  "final-retained.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf",
+      "src/features/today",
+      "src/features/routine",
+      "src/features/scheduler",
+      "src/features/streak",
+      "src/features/notifications",
+      "src/features/photos",
+      "src/features/onboarding",
+      "src/features/settings",
+      "src/features/retainedRecovery"
+    ],
+    "start": "2026-10-24T15:39:45.777848+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 40.38,
+    "status_after": "",
+    "sha256": "7a40e2007711687c21a79155b05979a420777a89ecdd66b65c9435d58f563955",
+    "bytes": 555
+  },
+  "final-root-lint.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T15:25:31.334472+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 75.41,
+    "status_after": "",
+    "sha256": "f1cccfeb72f9a490988fed97e687237444af870d21e6d03f1fa481f8118f91a0",
+    "bytes": 1183
+  },
+  "final-root-tests.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T15:25:31.333974+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 40.14,
+    "status_after": "",
+    "sha256": "74ddff7a70089e1f18892b11e78876fce17d359797e72701b78c167b33119bd9",
+    "bytes": 371620
+  },
+  "final-root-typecheck.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T15:25:31.334975+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 35.44,
+    "status_after": "",
+    "sha256": "895948cbbb400a039fd5bc490887dd407aea538b6f7e7db90d1d99fbe06cd0aa",
+    "bytes": 1169
+  },
+  "final-web360.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:26:13.410228+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 55.69,
+    "status_after": "",
+    "sha256": "463937f414b359055ab86d0e223d1b1ac980442af330e257a64c09b4ae0d7ae6",
+    "bytes": 417
+  },
+  "final-web375.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:25:41.888937+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 126.52,
+    "status_after": "",
+    "sha256": "1de7c2c2b3aa2c44348817b9ee2c2ffbdc7d1c9cce03fd1789b53c2fcd2674bf",
+    "bytes": 514
+  },
+  "final-web430.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:26:45.132740+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 23.7,
+    "status_after": "",
+    "sha256": "f9560ac930dc80a2dd47e71e039378144c0ad79245a7b75c6eebdee7eb2db77b",
+    "bytes": 632
+  },
+  "final-worklist-strict.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/phase4/build-source-worklist.mjs",
+      "--strict",
+      "--check"
+    ],
+    "start": "2026-10-24T15:40:17.139272+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 0.69,
+    "status_after": "",
+    "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+    "bytes": 68
+  },
+  "focused-finder-priority.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/shelf/quickFind.test.ts"
+    ],
+    "start": "2026-10-24T15:25:02.546621+00:00",
+    "head": "be7ad28efc1f53ddbdecd6dc9706bf41b8ca7f1b",
+    "tree": "c1ae3e03a1484e8c742e992caa19d8e613d9e89a",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "exit": 0,
+    "seconds": 3.21,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "sha256": "ccf4f8748288c3437158d1de1a4e1e5c2933c76576b8b945259b10f3f0c64a6f",
+    "bytes": 403
+  },
+  "independent-original-correct-runtime.json": {
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\original-source\\node_modules\\vitest\\vitest.mjs",
+      "run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/routine/progressAuthority.campaign06.test.ts",
+      "-t",
+      "archive refuses|onboarding removal|Shelf withholds|readable empty archive|cached totals|withdrawal|A to B to A|current read|delayed old read|bounded grant"
+    ],
+    "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\original-source\\apps\\mobile",
+    "anchor": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "started_at": "2026-10-24T15:41:21.648638+00:00",
+    "exit": 1,
+    "log_sha256": "1547be0739436c22d5370838a7bb972ddba6d63a27773a42b58bd43dc819a5cc",
+    "note": "Exact original mobile production source plus exact final tests; source-complete mobile subset, no dependency installation. New-feature cases excluded from regression defect claims.",
+    "runtime_note": "Both unchanged root and mobile nested dependency locations are reused; first attempt omitted the mobile nested ciphers path and is SETUP_FAILURE, never old-source regression evidence."
+  },
+  "independent-original-final-tests.json": {
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\original-source\\node_modules\\vitest\\vitest.mjs",
+      "run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/routine/progressAuthority.campaign06.test.ts",
+      "-t",
+      "archive refuses|onboarding removal|Shelf withholds|readable empty archive|cached totals|withdrawal|A to B to A|current read|delayed old read|bounded grant"
+    ],
+    "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\original-source\\apps\\mobile",
+    "anchor": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "started_at": "2026-10-24T15:40:56.128995+00:00",
+    "exit": 1,
+    "log_sha256": "7de7ef0f7b2d4e9aefa335af46c9a55e57764618f250ba48ae43332a2b14d56c",
+    "note": "Exact original mobile production source plus exact final tests; source-complete mobile subset, no dependency installation. New-feature cases excluded from regression defect claims."
+  },
+  "independent-original-nested-runtime.json": {
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\original-source\\node_modules\\vitest\\vitest.mjs",
+      "run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/routine/progressAuthority.campaign06.test.ts",
+      "-t",
+      "archive refuses|onboarding removal|Shelf withholds|readable empty archive|cached totals|withdrawal|A to B to A|current read|delayed old read|bounded grant"
+    ],
+    "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\original-source\\apps\\mobile",
+    "anchor": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "started_at": "2026-10-24T15:41:35.517960+00:00",
+    "exit": 1,
+    "log_sha256": "02b27a527fd23cd5393319dd3f84a268c7c362c9103c450abf1dfdf4d097aadf",
+    "note": "Exact original mobile production source plus exact final tests; source-complete mobile subset, no dependency installation. New-feature cases excluded from regression defect claims.",
+    "runtime_note": "Exact existing root and mobile @noble nested dependency locations; two earlier missing-nested-runtime probes are SETUP_FAILURE, excluded from regression counts."
+  },
+  "integrated-lint.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "lint"
+    ],
+    "start": "2026-10-24T15:19:21.277676+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "exit": 1,
+    "seconds": 69.63,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M docs/E2E_TESTING_CHECKLIST.md\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "sha256": "73db24a5385050142317ff102192d24aac3e7a32a5f54fb121060e5690a90afa",
+    "bytes": 892
+  },
+  "integrated-retained.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf",
+      "src/features/today",
+      "src/features/routine",
+      "src/features/scheduler",
+      "src/features/streak",
+      "src/features/notifications",
+      "src/features/photos",
+      "src/features/onboarding",
+      "src/features/settings",
+      "src/features/retainedRecovery"
+    ],
+    "start": "2026-10-24T15:19:21.277676+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "exit": 0,
+    "seconds": 36.92,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "sha256": "a6484d3a4c3f512d104af9b74479e50ceb536036f1d5b24a1987dded41b2dd20",
+    "bytes": 555
+  },
+  "integrated-types.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "typecheck"
+    ],
+    "start": "2026-10-24T15:19:21.286701+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "exit": 0,
+    "seconds": 20.15,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "sha256": "b54d549108f4472a08b801ce1f5455705f22a9c1f23d9f647d1f884131bd5290",
+    "bytes": 53
+  },
+  "lean-web390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs"
+    ],
+    "start": "2026-10-24T15:50:20.858166+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 81.81,
+    "status_after": "",
+    "sha256": "a8f139b2d158c09c652d86af3972e0b653ef0f33cf266b36b5c50800a1270cd8",
+    "bytes": 503
+  },
+  "measured-root-tests.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T15:23:27.135995+00:00",
+    "head": "be7ad28efc1f53ddbdecd6dc9706bf41b8ca7f1b",
+    "tree": "c1ae3e03a1484e8c742e992caa19d8e613d9e89a",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 38.65,
+    "status_after": "",
+    "sha256": "4c40f3991cfc6f615a56f2aa556fbc93fffb70a31a13cbd9066ec0f8796905b1",
+    "bytes": 369751
+  },
+  "measured-web390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:23:37.147598+00:00",
+    "head": "be7ad28efc1f53ddbdecd6dc9706bf41b8ca7f1b",
+    "tree": "c1ae3e03a1484e8c742e992caa19d8e613d9e89a",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 112.43,
+    "status_after": "",
+    "sha256": "7650bf21c27f307afb48f8e44db1b0c1cb1c94aff4ea347d62612a66fdce24c1",
+    "bytes": 653
+  },
+  "progress-green-preserved.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/routine/progressAuthority.campaign06.test.ts",
+      "src/features/routine/offlineProgress.retained04.test.ts",
+      "src/features/routine/useProgress.test.ts"
+    ],
+    "start": "2026-10-24T15:12:09.805586+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts",
+    "exit": 0,
+    "seconds": 2.32,
+    "status_after": "M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts",
+    "sha256": "998ed5e676b27f2813578f625981abede1994173805a9fc1b690c1ddb705492f",
+    "bytes": 471
+  },
+  "progress-green.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/routine/progressAuthority.campaign06.test.ts",
+      "src/features/routine/offlineProgress.retained04.test.ts",
+      "src/features/routine/useProgress.test.ts"
+    ],
+    "start": "2026-10-24T15:11:05.508738+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts",
+    "exit": 1,
+    "seconds": 2.11,
+    "status_after": "M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts",
+    "sha256": "1e1a943c65a0ddb6d9d7a233b8d1df30bc8bcdb1097b6383c203a9af35a3f6a8",
+    "bytes": 7753
+  },
+  "progress-original-red.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/routine/progressAuthority.campaign06.test.ts"
+    ],
+    "start": "2026-10-24T15:10:38.561404+00:00",
+    "head": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+    "tree": "2c9a8c15bc64ef070dd34c7b39da92cb444c45f9",
+    "status_before": "?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts",
+    "exit": 1,
+    "seconds": 2.02,
+    "status_after": "?? apps/mobile/src/features/routine/progressAuthority.campaign06.test.ts",
+    "sha256": "aa1fe2e6a989283f02a6c13f032bf7d9d3bc44d27baba39d8dd65941c429e717",
+    "bytes": 14171
+  },
+  "prototype-web375.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:21:47.334135+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M docs/E2E_TESTING_CHECKLIST.md\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "exit": 1,
+    "seconds": 106.59,
+    "status_after": "",
+    "sha256": "7650bf21c27f307afb48f8e44db1b0c1cb1c94aff4ea347d62612a66fdce24c1",
+    "bytes": 653
+  },
+  "qualified-cross390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--cross-owner"
+    ],
+    "start": "2026-10-24T16:14:36.661253+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 75.32,
+    "status_after": "",
+    "sha256": "b814006062fe8bf4363bddd574dd1c0fdf7b608f30b2298ca97ccd3ca0a9f50b",
+    "bytes": 114
+  },
+  "qualified-web375.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T16:10:42.230908+00:00",
+    "head": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 93.83,
+    "status_after": "",
+    "sha256": "de4c8c313923176f6947f46dbd29e216bca7eb9c2f749d0d718978e794567dc7",
+    "bytes": 121
+  },
+  "quickfind-focused.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/shelf/quickFind.test.ts"
+    ],
+    "start": "2026-10-24T15:18:40.843424+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "exit": 0,
+    "seconds": 3.08,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx\n M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n?? apps/mobile/src/features/shelf/quickFind.test.ts\n?? apps/mobile/src/features/shelf/quickFind.ts",
+    "sha256": "018f85dbfb2f80316e28a147cda7403ba320c236530774bd7c7ef30e0331c535",
+    "bytes": 403
+  },
+  "reflow-class-contract.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/shelfRoutes.test.ts",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/shelf/quickFind.test.ts"
+    ],
+    "start": "2026-10-24T16:08:35.477657+00:00",
+    "head": "492ea405f80ee091d340b59376a13e57a3b2cf1c",
+    "tree": "3a31026808ff9f3ee506cfcd2d7bf35ac838cf0a",
+    "status_before": "M apps/mobile/src/app/(tabs)/shelf.tsx",
+    "exit": 0,
+    "seconds": 3.42,
+    "status_after": "M apps/mobile/src/app/(tabs)/shelf.tsx",
+    "sha256": "0b17855daee763a7c65f3cb8e4b585cdb6fa3643be76d51b460e5ae780bf791e",
+    "bytes": 442
+  },
+  "reflow-root-lint.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T16:05:04.938057+00:00",
+    "head": "492ea405f80ee091d340b59376a13e57a3b2cf1c",
+    "tree": "3a31026808ff9f3ee506cfcd2d7bf35ac838cf0a",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 86.84,
+    "status_after": "",
+    "sha256": "10351b73c4415657e7a6d56bb6b104208621d1c08985f0ee5e07e8278983b07a",
+    "bytes": 1183
+  },
+  "reflow-root-tests.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T16:05:04.928050+00:00",
+    "head": "492ea405f80ee091d340b59376a13e57a3b2cf1c",
+    "tree": "3a31026808ff9f3ee506cfcd2d7bf35ac838cf0a",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 40.92,
+    "status_after": "",
+    "sha256": "f4b1d286b21117e923bb74c095334e5cc527136e86b6cc9dbfb60d0e4feedd85",
+    "bytes": 424650
+  },
+  "reflow-root-typecheck.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "start": "2026-10-24T16:05:04.924051+00:00",
+    "head": "492ea405f80ee091d340b59376a13e57a3b2cf1c",
+    "tree": "3a31026808ff9f3ee506cfcd2d7bf35ac838cf0a",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 40.22,
+    "status_after": "",
+    "sha256": "c246260d857bf31eecd357e9df19b6c2288c3013b2c223b587e160dd2c82aebc",
+    "bytes": 1169
+  },
+  "reflow-web375.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T16:07:35.519532+00:00",
+    "head": "492ea405f80ee091d340b59376a13e57a3b2cf1c",
+    "tree": "3a31026808ff9f3ee506cfcd2d7bf35ac838cf0a",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 85.53,
+    "status_after": "",
+    "sha256": "5e36c14ab9b60a4cddc07f102f450ed95aae3084fc1a6a74ee5daa1e7315842c",
+    "bytes": 118
+  },
+  "reflow-web390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs"
+    ],
+    "start": "2026-10-24T16:05:15.412285+00:00",
+    "head": "492ea405f80ee091d340b59376a13e57a3b2cf1c",
+    "tree": "3a31026808ff9f3ee506cfcd2d7bf35ac838cf0a",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 94.95,
+    "status_after": "",
+    "sha256": "099b535029da812f6c6b6f695eff2db6d2c505b63d851aad93257bdbaf777de6",
+    "bytes": 118
+  },
+  "removal-retirement-red.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts"
+    ],
+    "start": "2026-10-24T15:15:58.222586+00:00",
+    "head": "fc6dcc2dc5bb70924309126cb31df69af787ef2b",
+    "tree": "09d0e3e4b1d413476c633a709644d2d9ed435db1",
+    "status_before": "M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/shelf/archive.tsx\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "exit": 1,
+    "seconds": 2.21,
+    "status_after": "M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/shelf/archive.tsx\n?? apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "sha256": "ae8a4d7985807705950009b337cfcef34834f8c343762f526fb8caa5e3164bd0",
+    "bytes": 2472
+  },
+  "shelf-generation-green.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts",
+      "src/features/shelf/retainedSafety.integration.test.ts",
+      "src/features/routine/planRecovery.test.ts"
+    ],
+    "start": "2026-10-24T15:16:49.114456+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+    "exit": 0,
+    "seconds": 11.75,
+    "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts\n M apps/mobile/src/features/shelf/useShelf.ts",
+    "sha256": "37b2200a92919b7a8ca49cd0052557c2a26563b6de87c45b6d3e34934491e141",
+    "bytes": 464
+  },
+  "shelf-generation-original-red.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "--run",
+      "src/features/shelf/coreJourney.campaign06.test.ts"
+    ],
+    "start": "2026-10-24T15:16:30.962666+00:00",
+    "head": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "tree": "e7bc5b7b06b91b3131a2f102a764b98152813b38",
+    "status_before": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "exit": 1,
+    "seconds": 2.26,
+    "status_after": "M apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "sha256": "af4f349a847459e09e2db304236e2331c0d28aeb30f4113cf9e638dd5de90b74",
+    "bytes": 7489
+  },
+  "single-web390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs"
+    ],
+    "start": "2026-10-24T15:59:48.127739+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 64.61,
+    "status_after": "",
+    "sha256": "a3334b23b36b12daf8a3a21fc25824b7f2b39a93cb041934ae57ab7eb5a0b2ef",
+    "bytes": 566
+  },
+  "sweep-web390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs"
+    ],
+    "start": "2026-10-24T15:56:07.446152+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 123.54,
+    "status_after": "",
+    "sha256": "9d3abf4cfdf6b4a1560301670dbf93889ff490d397727304c1ae41c13bbc3ac0",
+    "bytes": 348
+  },
+  "verified-web375.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:35:43.745189+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 86.59,
+    "status_after": "",
+    "sha256": "729df7e79e1274642b38fc1fcb95550d11d42aef0a8e13067418abb6d38b6a69",
+    "bytes": 120
+  },
+  "verified-web390.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:39:35.235389+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 4294967295,
+    "seconds": 325.86,
+    "status_after": "",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "verified-web390r2.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:45:01.802541+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 64.66,
+    "status_after": "",
+    "sha256": "826709d372e4cd6829fbd7c69cc18ba65239cdf8926b4519fc98c81e7bbc6f10",
+    "bytes": 495
+  },
+  "verified-web390r3.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:46:19.938713+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 64.49,
+    "status_after": "",
+    "sha256": "826709d372e4cd6829fbd7c69cc18ba65239cdf8926b4519fc98c81e7bbc6f10",
+    "bytes": 495
+  },
+  "verified-web390r4.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\ui-wrapper.mjs",
+      "--daily-loop"
+    ],
+    "start": "2026-10-24T15:47:20.623129+00:00",
+    "head": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "tree": "2602aa00344aab0b124713d1f865d98714a7f2cf",
+    "status_before": "",
+    "exit": 1,
+    "seconds": 124.34,
+    "status_after": "",
+    "sha256": "86c916b183c3c51c68e7f82dcf598c62eeae6c61ef5c52b09162cf7969caa2c6",
+    "bytes": 791
+  },
+  "worklist-contract-generation.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/phase4/build-source-worklist.mjs",
+      "--strict"
+    ],
+    "start": "2026-10-24T16:08:39.442056+00:00",
+    "head": "72c88f5918ae132b339a634a535f1ff3e653f0e3",
+    "tree": "85498273e7f1467a8b0576c4a59aa10901d637e7",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 0.63,
+    "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+    "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+    "bytes": 130
+  },
+  "worklist-final-generation.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/phase4/build-source-worklist.mjs",
+      "--strict"
+    ],
+    "start": "2026-10-24T15:25:06.317299+00:00",
+    "head": "8c68c1ce49669ab212b865e791fb7115031cf013",
+    "tree": "9ec2ed9061f1e7c517669ed09ebe2269c2747040",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 0.63,
+    "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+    "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+    "bytes": 130
+  },
+  "worklist-generation.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/phase4/build-source-worklist.mjs",
+      "--strict"
+    ],
+    "start": "2026-10-24T15:23:16.383334+00:00",
+    "head": "0e54f7402e35dfe2dfbf4ef1a9b48b9e5ef7ef1f",
+    "tree": "58b58af33886818119a2caf7dbefd2eb4fe07a08",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 0.67,
+    "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+    "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+    "bytes": 130
+  },
+  "worklist-reflow-generation.json": {
+    "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+    "command": [
+      "node",
+      "scripts/phase4/build-source-worklist.mjs",
+      "--strict"
+    ],
+    "start": "2026-10-24T16:04:30.844202+00:00",
+    "head": "a6a450c36237c93e36196c57525acc438e38ff02",
+    "tree": "fb3e801d190025d933005ed9da9fdced1cc62bbb",
+    "status_before": "",
+    "exit": 0,
+    "seconds": 0.77,
+    "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+    "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+    "bytes": 130
+  }
+}

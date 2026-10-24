@@ -30,6 +30,7 @@ import {
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { projectTodayRoutine } from '@/features/today/routineProjection';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
+import { NextVisitCard, type NextVisitRoute } from '@/features/today/NextVisitCard';
 import { currentRoutineType, localDateString } from '@/features/today/useToday';
 import {
   completionQueryScope,
@@ -417,6 +418,27 @@ function CompletionStatusNotice({
   );
 }
 
+function StreakStatusNotice({ dark, retrying, onRetry }: {
+  dark: boolean;
+  retrying: boolean;
+  onRetry: () => void;
+}) {
+  return (
+    <View accessibilityRole="alert" className="mt-4 rounded-card px-4 py-3.5"
+      style={{ backgroundColor: dark ? colors.nightSurface : colors.greige }}>
+      <Text variant="bodySm" tone={dark ? 'inverse' : 'ink'}>
+        Streak is unavailable. Your saved check-offs are unchanged.
+      </Text>
+      <Pressable accessibilityRole="button" accessibilityLabel="Try loading your streak again"
+        disabled={retrying} onPress={onRetry} className="mt-2 min-h-[48px] justify-center">
+        <Text variant="bodySm" tone={dark ? 'inverse' : 'ink'} className="font-sans-semibold">
+          {retrying ? 'Trying…' : 'Try again'}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function CompletionSyncUnavailableNotice({
   dark,
   hasIdentityRepair,
@@ -474,7 +496,11 @@ export default function TodayScreen() {
   const planSource = usePlan();
   const sourceState = planSourceViewState(planSource);
   const completionLease = planSource.orderLease;
-  const { data: progress } = useProgress();
+  const { data: progressData, isError: progressFailed, isFetching: progressReading, refetch: retryProgress } = useProgress();
+  const progress = progressFailed ? undefined : progressData;
+  const streakNotice = progressFailed ? (
+    <StreakStatusNotice dark={dark} retrying={progressReading} onRetry={() => void retryProgress()} />
+  ) : null;
   const cycleSource = useCycle();
   const cycleState = routineCycleViewState(planSource, cycleSource);
   const planData = sourceState === 'ready' &&
@@ -868,6 +894,18 @@ export default function TodayScreen() {
     !compactPhone &&
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
+  const phaseRoutine = dark ? routine.pm : routine.am;
+  const nextVisit = !hasExamplePlan && !completionUnavailable && completionPendingKey === null &&
+    phaseRoutine.steps.length > 0 && phaseRoutine.completedCount === phaseRoutine.steps.length ? (
+    <NextVisitCard phase={type} onNavigate={(route: NextVisitRoute) => {
+      // Recheck captured actions as well as the rendered state. No prior grant
+      // or in-flight/unconfirmed completion can supply navigation authority.
+      const action = actionState.getSnapshot();
+      if (completionViewCurrent() && cycleCurrent() && action.pendingKey === null && !action.failed) {
+        router.push(route);
+      }
+    }} />
+  ) : null;
 
   // Plan admission is additional to (never a replacement for) T1 read-back.
   // Neither absent data nor retained cached data can become a current routine.
@@ -933,6 +971,7 @@ export default function TodayScreen() {
             hasRoutine={hasRealRoutine}
             streakDays={progress?.streak ?? 0}
           />
+          {streakNotice}
 
           {cadenceWithheldCount > 0 ? (
             <CadenceWithheldNotice
@@ -1019,6 +1058,7 @@ export default function TodayScreen() {
             </View>
           )}
 
+          {nextVisit}
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           {showRecommendations ? (
             <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
@@ -1117,6 +1157,7 @@ export default function TodayScreen() {
           hasRoutine={hasRealRoutine}
           streakDays={progress?.streak ?? 0}
         />
+        {streakNotice}
 
         {/* Recovery / pause banner. The scheduler's disruption state (docs/05 §7) */}
         {cycleData?.recovery.active ? (
@@ -1338,6 +1379,7 @@ export default function TodayScreen() {
           </>
         )}
 
+        {nextVisit}
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (
           <View

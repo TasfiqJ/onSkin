@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { onlineManager, useQuery } from '@tanstack/react-query';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import {
   bestStreak,
@@ -18,7 +19,10 @@ import {
   runHealthDataWriteOperation,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
-import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -70,6 +74,9 @@ async function loadServerAdherence(
   if (!isSupabaseConfigured) {
     return { status: 'not_configured', completions: [], projection: null };
   }
+  if (!onlineManager.isOnline()) {
+    return { status: 'unavailable', completions: [], projection: null };
+  }
   const timezone = currentCompletionSyncTimezone();
   if (timezone === null) {
     return { status: 'unavailable', completions: [], projection: null };
@@ -113,14 +120,34 @@ async function loadServerAdherence(
 
 export function useProgress() {
   const todayISO = useRoutineClock().localDate;
+  const published = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
+  const [, checkExpiry] = useState(0);
+  useEffect(() => {
+    if (published?.expiresAt == null) return;
+    const timer = setTimeout(
+      () => checkExpiry((value) => value + 1),
+      Math.max(0, published.expiresAt - Date.now()) + 1,
+    );
+    return () => clearTimeout(timer);
+  }, [published]);
+  const authority = activeHealthProcessingLeaseSnapshot();
 
-  return useQuery<ProgressData>({
+  const query = useQuery<ProgressData & { sourceGeneration: number }>({
     queryKey: ['progress', todayISO],
-    retry: 1,
+    // Local check-offs remain readable offline. A failed/retired read requires
+    // explicit retry rather than silently starting again under a new owner.
+    networkMode: 'always',
+    retry: false,
     queryFn: async () => {
-      const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
-      if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+      const expectedOwnerUserId = authority?.ownerUserId;
+      if (!authority || !expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+        if (lease.generation !== authority.generation)
+          throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
         const today = new Date();
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
         const [localSummary, server] = await Promise.all([
@@ -173,6 +200,7 @@ export function useProgress() {
 
         lease.assertCurrent();
         return {
+          sourceGeneration: lease.generation,
           streak: s.current,
           longest,
           weeklyDone: weeklyDone(week),
@@ -187,4 +215,13 @@ export function useProgress() {
       });
     },
   });
+  // React Query retains old totals on a read error; the existing route's
+  // unavailable/retry view must receive no purportedly current projection.
+  const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
+  return {
+    ...query,
+    isError: query.isError || retired,
+    data:
+      authority === null || retired || query.isFetching || query.isError ? undefined : query.data,
+  };
 }

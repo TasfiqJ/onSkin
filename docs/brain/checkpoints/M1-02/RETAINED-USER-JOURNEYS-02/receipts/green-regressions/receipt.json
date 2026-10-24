@@ -1,0 +1,24 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/onboarding/quizNavigation.test.ts",
+    "src/features/shelf/mutationsRecovery.test.ts",
+    "--maxWorkers=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+  "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:47:50.276056+00:00",
+  "exit": 0,
+  "elapsed_seconds": 1.547,
+  "stdout_sha256": "9c266280a5a2bc9c60a1ea31455c1749d96cb9485bd0f69b9acd9256488314e6",
+  "stdout_bytes": 415,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_bytes": 0
+}

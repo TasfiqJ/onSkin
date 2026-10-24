@@ -1,0 +1,55 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/today/todayPersistence.t1.test.ts -t retained04
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+stderr | src/features/today/todayPersistence.t1.test.ts > retained04 Today progress recovery > offers a local streak retry on AM without blocking confirmed check-offs
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/today/todayPersistence.t1.test.ts > retained04 Today progress recovery > offers a local streak retry on PM without blocking confirmed check-offs
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/today/todayPersistence.t1.test.ts (74 tests | 2 failed | 72 skipped) 268ms
+     × offers a local streak retry on AM without blocking confirmed check-offs 157ms
+     × offers a local streak retry on PM without blocking confirmed check-offs 109ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/today/todayPersistence.t1.test.ts > retained04 Today progress recovery > offers a local streak retry on AM without blocking confirmed check-offs
+ FAIL  src/features/today/todayPersistence.t1.test.ts > retained04 Today progress recovery > offers a local streak retry on PM without blocking confirmed check-offs
+AssertionError: The expression evaluated to a falsy value:
+
+  ok(text(renderer.root).includes("Streak is unavailable. Your saved check-offs are unchanged."))
+
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/today/todayPersistence.t1.test.ts:273:12
+    271|     mocks.progressGet.mockRejectedValue(new Error('SYNTHETIC_PROGRESS_…
+    272|     await act(async () => { await client.invalidateQueries({ queryKey:…
+    273|     assert.ok(text(renderer!.root).includes('Streak is unavailable. Yo…
+       |            ^
+    274|     assert.equal(renderer!.root.findAll(node => node.type === 'TodayFo…
+    275|     if (phase === 'AM') assert.equal(control('Test product').props.dis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 72 skipped (74)
+   Start at  23:38:04
+   Duration  841ms (transform 222ms, setup 0ms, import 389ms, tests 268ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/today/todayPersistence.t1.test.ts -t retained04

@@ -1,0 +1,11 @@
+{
+  "observed_utc": "2026-10-24T02:23:35.263870+00:00",
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13",
+  "node": "v22.21.0",
+  "npm": "11.20.0",
+  "vitest_runtime": "4.1.11 (observed runner)",
+  "dependencies": "Existing unchanged installation reused; no installs, lock/package/native edits. This is Windows local evidence, not clean Linux dependency installation.",
+  "incremental_spend_usd": 0,
+  "disk_cleanup": "No existing files/worktrees removed; existing sparse checkout safely completed; disposable test copy preserved."
+}

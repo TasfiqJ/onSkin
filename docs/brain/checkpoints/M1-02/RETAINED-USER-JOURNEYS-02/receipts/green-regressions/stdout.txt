@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/onboarding/quizNavigation.test.ts src/features/shelf/mutationsRecovery.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  20:47:51
+   Duration  622ms (transform 106ms, setup 0ms, import 309ms, tests 298ms, environment 0ms)
+

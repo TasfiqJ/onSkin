@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "run",
+    "typecheck",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:43:32.629523+00:00",
+  "finished_at": "2026-10-24T04:43:49.063643+00:00",
+  "duration_seconds": 16.125,
+  "exit_code": 0,
+  "head": "5e1d9a6ae42527518e0b0dc0e994478ed2092f7a",
+  "tree": "7c3c3ee444a68c4dbf943f65f0fd03db9c9ca71c",
+  "status_before": "M apps/mobile/src/app/settings/notifications.tsx\n M apps/mobile/src/app/settings/timing.tsx\n M apps/mobile/src/features/notifications/applyPreferences.test.ts\n M apps/mobile/src/features/notifications/store.ts\n M apps/mobile/src/features/notifications/transaction.cont01.test.ts\n M apps/mobile/src/features/notifications/useNotifications.ts\n?? apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+  "tracked_diff_sha256": "29dec4c73a6d1237631c46515849ec8a03a2706c971997f40ee6ffe441843874",
+  "status_after": "M apps/mobile/src/app/settings/notifications.tsx\n M apps/mobile/src/app/settings/timing.tsx\n M apps/mobile/src/features/notifications/applyPreferences.test.ts\n M apps/mobile/src/features/notifications/store.ts\n M apps/mobile/src/features/notifications/transaction.cont01.test.ts\n M apps/mobile/src/features/notifications/useNotifications.ts\n?? apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+  "log": "reminder-types-green.log",
+  "log_bytes": 1169,
+  "log_sha256": "4903703c0a4b429dc8a9d150c7987e8177b70dec41460efab7db512216bbcba8"
+}

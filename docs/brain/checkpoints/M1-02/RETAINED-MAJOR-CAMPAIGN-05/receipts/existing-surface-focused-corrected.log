@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  20 passed (20)
+      Tests  244 passed (244)
+   Start at  01:48:07
+   Duration  1.64s (transform 5.09s, setup 0ms, import 7.04s, tests 1.59s, environment 3ms)
+

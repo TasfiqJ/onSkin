@@ -1,0 +1,9 @@
+{
+  "raw_command_exit": 2,
+  "original_bytes": 14208255,
+  "original_sha256": "e4b81dcdc2a87e87534a90d26146bc698f9c92f3b44d7fc322502c0c6a9fe435",
+  "original_path": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\raw-all-staged-whitespace.log",
+  "committed_excerpt": "raw-all-staged-whitespace.log",
+  "selection": "first 20 and final 20 original lines, unchanged line bytes; explicit omission marker",
+  "reason": "Bound repetitive whitespace diagnostics; original source/test errors and all test receipts remain complete."
+}

@@ -1,0 +1,61 @@
+{
+  "head": "d76cbd2742920895522e3e9018d554319c777741",
+  "tree": "44bd5a747df37f46e8d4b49475648c00f7857905",
+  "full_checkout": true,
+  "exits": [
+    0,
+    1,
+    0
+  ],
+  "input": "apps/mobile/src/features/shelf/mutations.ts",
+  "restored_sha256": "24e230cf3a6767dac833f6d07ab73bbf54050e2f8b26464c79fe17cfa7fd96b2",
+  "producer_sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+  "outputs": {
+    "source-worklist.json": "054c51d1b49d0e1e718babc1201971d86bc18423fbd99590a470f5b859223c7d",
+    "source-worklist.md": "7b6f51ba83f70f345d32d362ff61f25b7cb2027daddb8b2698786c5bdfd640ba"
+  },
+  "receipts": [
+    {
+      "label": "current",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m1x05-original-329853b7",
+      "exit": 0,
+      "log": "worklist-current.log",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "utc": "2026-10-24T05:16:10.595511+00:00"
+    },
+    {
+      "label": "altered-input",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m1x05-original-329853b7",
+      "exit": 1,
+      "log": "worklist-altered-input.log",
+      "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "utc": "2026-10-24T05:16:11.011333+00:00"
+    },
+    {
+      "label": "restored",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m1x05-original-329853b7",
+      "exit": 0,
+      "log": "worklist-restored.log",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "utc": "2026-10-24T05:16:11.423063+00:00"
+    }
+  ]
+}

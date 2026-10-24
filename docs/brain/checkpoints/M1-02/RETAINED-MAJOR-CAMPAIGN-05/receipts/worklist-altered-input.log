@@ -1,0 +1,2 @@
+FAIL docs/phase-4/generated/source-worklist.json is stale. Run npm run phase4:source-worklist.
+FAIL docs/phase-4/generated/source-worklist.md is stale. Run npm run phase4:source-worklist.

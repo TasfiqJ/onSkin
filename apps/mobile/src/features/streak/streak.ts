@@ -136,7 +136,7 @@ export function buildWeek(
     d.setDate(monday.getDate() + i);
     const iso = fmt(d);
     let state: DayState = 'future';
-    if (iso === todayISO) state = 'today';
+    if (iso === todayISO) state = completed.has(iso) ? 'done' : 'today';
     else if (parse(iso) < parse(todayISO)) {
       state = completed.has(iso) ? 'done' : frozen.has(iso) ? 'frozen' : 'missed';
     }

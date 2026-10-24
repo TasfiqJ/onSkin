@@ -1,0 +1,9 @@
+{
+  "originalSha256": "381f4a70172c6fd8418813b6896e7e26906b1a0ea0857bd36d57f14c90742e67",
+  "executedSha256": "95b5d8bc48a4040fdee3606fb48bf6b763fddadee1d55a7dffd9d71870d39804",
+  "changes": [
+    "bounded screenshots",
+    "action trace",
+    "offline progress/read failure/retry and reminder authorization snapshot branches"
+  ]
+}

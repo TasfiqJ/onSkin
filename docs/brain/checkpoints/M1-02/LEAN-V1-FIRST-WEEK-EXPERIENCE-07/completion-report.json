@@ -1,0 +1,94 @@
+{
+  "status": "PARTIAL_BLOCKED",
+  "review_required": true,
+  "self_accepted": false,
+  "authorization": "M1X-LEAN-V1-FIRST-WEEK-EXPERIENCE07-CANDIDATE-01",
+  "source_commit": "3b7e212a7ae37f44759d52e1b4220507cf3965e0",
+  "source_tree": "0ad1570ec726bd7408c4b338e2ae5e8bd855729d",
+  "source_paths": [
+    "apps/mobile/src/app/(tabs)/_layout.tsx",
+    "apps/mobile/src/app/(tabs)/today.tsx",
+    "apps/mobile/src/components/navigation/dockAccessibility.test.ts",
+    "apps/mobile/src/features/routine/planRecovery.test.ts",
+    "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+    "apps/mobile/src/features/shelf/useShelf.ts",
+    "apps/mobile/src/features/today/NextVisitCard.tsx",
+    "docs/E2E_TESTING_CHECKLIST.md",
+    "docs/USER_FLOW_TREE.md",
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md"
+  ],
+  "source_commits": 13,
+  "added_tests": 10,
+  "root_tests": {
+    "passed": 6190,
+    "failed": 0,
+    "exit": 0,
+    "mobile": 6166,
+    "console": 24,
+    "cached_tasks": 0
+  },
+  "retained_tests": {
+    "passed": 2343,
+    "failed": 0,
+    "files": 196,
+    "exit": 0
+  },
+  "typecheck_exit": 0,
+  "lint_exit": 0,
+  "primary_worklist_exit": 0,
+  "independent_worklist": "NOT_QUALIFIED",
+  "independent_0_1_0": null,
+  "browser": {
+    "cross_owner_daily_exit": 0,
+    "card_pressure_first_session_daily_exit": 0,
+    "augmented_exit": 1,
+    "augmented_failure": "Final unchanged log assertion: four Reanimated development reduced-motion warnings; all earlier actions and eight glyph assertions completed. No waiver or false whole-run PASS.",
+    "widths": [
+      360,
+      375,
+      390,
+      430
+    ],
+    "text_scales": [
+      1,
+      2
+    ],
+    "screenshots": 29,
+    "contrast_ratios": {
+      "light_active": 15.99,
+      "light_inactive": 5.23,
+      "pm_active": 13.79,
+      "pm_inactive": 5.67
+    },
+    "native_dynamic_type": "NOT_RUN",
+    "voiceover": "NOT_RUN",
+    "offline_browser_cold_start": "NOT_RUN"
+  },
+  "protected": {
+    "main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+    "pr10": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+    "witnesses": 345,
+    "absences": 3,
+    "g97": "FAIL/NO_GO",
+    "m1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "m2": "NOT_AUTHORIZED"
+  },
+  "delivery": {
+    "branch": "stage/m1-retained-resilience",
+    "pr": 11,
+    "draft": true,
+    "merged": false,
+    "auto_merge": false,
+    "final_evidence_identity": "Read from the evidence-only descendant after commit; never precomputed inside itself.",
+    "final_head_ci": "Must be refreshed after evidence push and reported in PR11 and final relay."
+  },
+  "spend_usd": 0,
+  "not_run": [
+    "native iPhone / VoiceOver / Dynamic Type",
+    "native camera / encrypted filesystem",
+    "OS permission prompt / notification delivery",
+    "paid-positive / provider / clinical",
+    "hosted Supabase / signing / TestFlight / release"
+  ]
+}

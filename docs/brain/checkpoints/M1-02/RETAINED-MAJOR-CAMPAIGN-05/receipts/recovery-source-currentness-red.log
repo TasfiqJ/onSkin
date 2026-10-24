@@ -1,0 +1,69 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/retainedRecovery --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+stderr | src/features/retainedRecovery/localRecovery.campaign05.test.ts > a same-owner Shelf write retires its earlier in-flight empty snapshot
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecovery.campaign05.test.ts > rechecks age admission after an in-flight domain read
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/retainedRecovery/localRecovery.campaign05.test.ts > rechecks consent admission after an in-flight domain read
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/retainedRecovery/localRecovery.campaign05.test.ts (15 tests | 3 failed) 412ms
+   × a same-owner Shelf write retires its earlier in-flight empty snapshot 37ms
+   × rechecks age admission after an in-flight domain read 29ms
+   × rechecks consent admission after an in-flight domain read 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/retainedRecovery/localRecovery.campaign05.test.ts > a same-owner Shelf write retires its earlier in-flight empty snapshot
+AssertionError: expected 'Shelf Not configured No products are …' to contain 'Saved on this device'
+
+Expected: "Saved on this device"
+Received: "Shelf Not configured No products are recorded in this device’s Shelf. Check again Open Shelf"
+
+ ❯ src/features/retainedRecovery/localRecovery.campaign05.test.ts:171:28
+    169|   await act(async () => { await addProduct({ name: 'Synthetic later in…
+    170|   await act(async () => { ports.release!(); }); await flush();
+    171|   expect(rowText('Shelf')).toContain('Saved on this device');
+       |                            ^
+    172| });
+    173|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/features/retainedRecovery/localRecovery.campaign05.test.ts > rechecks age admission after an in-flight domain read
+ FAIL  src/features/retainedRecovery/localRecovery.campaign05.test.ts > rechecks consent admission after an in-flight domain read
+AssertionError: expected '{"type":"Screen","props":{},"children…' not to contain 'Today check-offs'
+
+Expected: "Today check-offs"
+Received: "{"type":"Screen","props":{},"children":[{"type":"ScrollView","props":{"showsVerticalScrollIndicator":false,"contentContainerStyle":{"paddingBottom":40}},"children":[{"type":"View","props":{"className":"mb-4 flex-row items-center gap-3 pt-2"},"children":[{"type":"RouteIconButton","props":{"accessibilityLabel":"Back"},"children":null},{"type":"Text","props":{"variant":"title","style":{"flexShrink":1}},"children":["Local recovery"]}]},{"type":"Text","props":{"variant":"bodySm","tone":"muted","className":"mb-4"},"children":["Check what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls."]},{"type":"View","props":{"className":"mb-4 rounded-card bg-paper-raised p-4","accessibilityState":{"busy":false}},"children":[{"type":"Text","props":{"variant":"label"},"children":["Shelf"]},{"type":"View","props":{"accessibilityLiveRegion":"polite"},"children":[{"type":"Text","props":{"variant":"body","className":"mt-1 font-sans-semibold"},"children":["Not configured"]},{"type":"Text","props":{"variant":"bodySm","tone":"muted","className":"mt-2"},"children":["No products are recorded in this device’s Shelf."]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Check Shelf again","accessibilityState":{"disabled":false,"busy":false},"disabled":false,"style":{"minHeight":48,"justifyContent":"center","marginTop":8}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Check again"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Open Shelf","style":{"minHeight":48,"justifyContent":"center"}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Open Shelf"]}]}]},{"type":"View","props":{"className":"mb-4 rounded-card bg-paper-raised p-4","accessibilityState":{"busy":false}},"children":[{"type":"Text","props":{"variant":"label"},"children":["Today check-offs"]},{"type":"View","props":{"accessibilityLiveRegion":"polite"},"children":[{"type":"Text","props":{"variant":"body","className":"mt-1 font-sans-semibold"},"children":["Not configured"]},{"type":"Text","props":{"variant":"bodySm","tone":"muted","className":"mt-2"},"children":["No check-offs are recorded for this local day."]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Check Today check-offs again","accessibilityState":{"disabled":false,"busy":false},"disabled":false,"style":{"minHeight":48,"justifyContent":"center","marginTop":8}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Check again"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Open Today","style":{"minHeight":48,"justifyContent":"center"}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Open Today"]}]}]},{"type":"View","props":{"className":"mb-4 rounded-card bg-paper-raised p-4","accessibilityState":{"busy":false}},"children":[{"type":"Text","props":{"variant":"label"},"children":["Reminder choices"]},{"type":"View","props":{"accessibilityLiveRegion":"polite"},"children":[{"type":"Text","props":{"variant":"body","className":"mt-1 font-sans-semibold"},"children":["Not configured"]},{"type":"Text","props":{"variant":"bodySm","tone":"muted","className":"mt-2"},"children":["No reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here."]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Check Reminder choices again","accessibilityState":{"disabled":false,"busy":false},"disabled":false,"style":{"minHeight":48,"justifyContent":"center","marginTop":8}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Check again"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Review reminder setup","style":{"minHeight":48,"justifyContent":"center"}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Review reminder setup"]}]}]},{"type":"View","props":{"className":"mb-4 rounded-card bg-paper-raised p-4","accessibilityState":{"busy":false}},"children":[{"type":"Text","props":{"variant":"label"},"children":["Photo cleanup"]},{"type":"View","props":{"accessibilityLiveRegion":"polite"},"children":[{"type":"Text","props":{"variant":"body","className":"mt-1 font-sans-semibold"},"children":["No pending cleanup"]},{"type":"Text","props":{"variant":"bodySm","tone":"muted","className":"mt-2"},"children":["No outstanding deletion was found in the current local journal. Photo content is checked only in Progress."]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Check Photo cleanup again","accessibilityState":{"disabled":false,"busy":false},"disabled":false,"style":{"minHeight":48,"justifyContent":"center","marginTop":8}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Check again"]}]},{"type":"Pressable","props":{"accessibilityRole":"button","accessibilityLabel":"Review photo cleanup in Progress","style":{"minHeight":48,"justifyContent":"center"}},"children":[{"type":"Text","props":{"variant":"bodySm","className":"font-sans-semibold"},"children":["Review photo cleanup in Progress"]}]}]}]}]}"
+
+ ❯ src/features/retainedRecovery/localRecovery.campaign05.test.ts:179:26
+    177|   else await setHealthDataCollectionConsentLocal({ granted: false, ver…
+    178|   await act(async () => { ports.release!(); }); await flush();
+    179|   expect(rendered()).not.toContain('Today check-offs');
+       |                          ^
+    180|   expect(rendered()).not.toContain('Not configured');
+    181| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 12 passed (15)
+   Start at  00:53:40
+   Duration  984ms (transform 244ms, setup 0ms, import 394ms, tests 412ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/retainedRecovery --maxWorkers=2

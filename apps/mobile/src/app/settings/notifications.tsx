@@ -1,5 +1,6 @@
 import { notificationPreferenceRetryPatch } from '@/features/notifications/applyPreferences';
 import { NotificationPreferenceSaveNotice, NotificationPreferenceSavedNotice } from '@/features/notifications/NotificationPreferenceSaveNotice';
+import { NotificationPreferenceReadState } from '@/features/notifications/NotificationPreferenceReadState';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
@@ -145,7 +146,8 @@ function Row({
 
 export default function NotificationSettingsScreen() {
   const { height, width } = useWindowDimensions();
-  const { data: p } = useNotifPrefs();
+  const preferences = useNotifPrefs();
+  const p = preferences.data;
   const authorization = useNotificationAuthorization();
   const update = useUpdateNotifPrefs();
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
@@ -177,7 +179,9 @@ export default function NotificationSettingsScreen() {
           ? { marginTop: 64 }
           : undefined;
   const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
-  if (!p) return null;
+  if (!p) return <NotificationPreferenceReadState title="Notifications" failed={preferences.isError}
+    retrying={preferences.isFetching} onRetry={() => { void preferences.refetch({ cancelRefetch: false }); }}
+    onBack={() => backOrReplace(router, APP_YOU_ROUTE)} />;
   const authorizationState = authorization.data ?? 'unavailable';
   const authorizationPending = authorization.isPending;
   const deliveryAuthorized = isDeliverableAuthorizationState(authorizationState);

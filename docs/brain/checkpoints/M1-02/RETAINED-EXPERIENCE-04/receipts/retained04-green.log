@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/offlineProgress.retained04.test.ts src/features/notifications/authorizationSnapshot.retained04.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  23:33:02
+   Duration  699ms (transform 194ms, setup 0ms, import 470ms, tests 424ms, environment 0ms)
+

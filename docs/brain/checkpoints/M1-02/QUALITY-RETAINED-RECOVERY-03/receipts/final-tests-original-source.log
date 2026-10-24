@@ -1,0 +1,194 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications/preferenceReadRace.retained03.test.ts src/features/photos/offlineDiary.retained03.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/AppData/Local/Temp/onskin-worklist-adverse-_7w6k3df/apps/mobile
+
+stderr | src/features/notifications/preferenceReadRace.retained03.test.ts > a pre-save read cannot replace saved amEnabled=true when native scheduling needs retry
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceReadRace.retained03.test.ts > a pre-save read cannot replace saved amEnabled=false when native scheduling needs retry
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/preferenceReadRace.retained03.test.ts (4 tests | 2 failed) 99ms
+   × a pre-save read cannot replace saved amEnabled=true when native scheduling needs retry 22ms
+   × a pre-save read cannot replace saved amEnabled=false when native scheduling needs retry 8ms
+stderr | src/features/photos/offlineDiary.retained03.test.ts > opens the device-local diary on a cold offline mount
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/offlineDiary.retained03.test.ts > reports a local read refusal and retries it offline without waiting for connectivity
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/offlineDiary.retained03.test.ts > persists a captured photo offline instead of pausing a local mutation
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/offlineDiary.retained03.test.ts > refreshes the diary after an offline deletion without leaving the storage gate pending
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/offlineDiary.retained03.test.ts > keeps a local capture failure retryable offline without automatic replay
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/photos/offlineDiary.retained03.test.ts > rejects an offline read crossing withdrawal instead of publishing the old diary
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/photos/offlineDiary.retained03.test.ts (7 tests | 6 failed) 152ms
+   × opens the device-local diary on a cold offline mount 32ms
+   × reports a local read refusal and retries it offline without waiting for connectivity 14ms
+   × persists a captured photo offline instead of pausing a local mutation 29ms
+   × refreshes the diary after an offline deletion without leaving the storage gate pending 29ms
+   × keeps a local capture failure retryable offline without automatic replay 16ms
+   × rejects an offline read crossing withdrawal instead of publishing the old diary 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/preferenceReadRace.retained03.test.ts > a pre-save read cannot replace saved amEnabled=true when native scheduling needs retry
+AssertionError: expected { amEnabled: false, amTime: '07:30' } to match object { amEnabled: true }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "amEnabled": true,
++   "amEnabled": false,
+  }
+
+ ❯ src/features/notifications/preferenceReadRace.retained03.test.ts:70:25
+     68|   await flush();
+     69|   expect(durable.amEnabled).toBe(enabled);
+     70|   expect(observed.data).toMatchObject({ amEnabled: enabled });
+       |                         ^
+     71|   expect(update.isError).toBe(true);
+     72| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/features/notifications/preferenceReadRace.retained03.test.ts > a pre-save read cannot replace saved amEnabled=false when native scheduling needs retry
+AssertionError: expected { amEnabled: true, amTime: '07:30' } to match object { amEnabled: false }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "amEnabled": false,
++   "amEnabled": true,
+  }
+
+ ❯ src/features/notifications/preferenceReadRace.retained03.test.ts:70:25
+     68|   await flush();
+     69|   expect(durable.amEnabled).toBe(enabled);
+     70|   expect(observed.data).toMatchObject({ amEnabled: enabled });
+       |                         ^
+     71|   expect(update.isError).toBe(true);
+     72| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/features/photos/offlineDiary.retained03.test.ts > opens the device-local diary on a cold offline mount
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/features/photos/offlineDiary.retained03.test.ts:50:22
+     48| it('opens the device-local diary on a cold offline mount', async () =>…
+     49|   await mount();
+     50|   expect(ports.read).toHaveBeenCalledOnce();
+       |                      ^
+     51|   expect(source.isPaused).toBe(false);
+     52|   expect(source.sourceReady).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/features/photos/offlineDiary.retained03.test.ts > reports a local read refusal and retries it offline without waiting for connectivity
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/photos/offlineDiary.retained03.test.ts:59:26
+     57|   ports.read.mockRejectedValueOnce(new Error('synthetic encrypted stor…
+     58|   await mount();
+     59|   expect(source.isError).toBe(true);
+       |                          ^
+     60|   await act(async () => { await source.retry(); });
+     61|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/features/photos/offlineDiary.retained03.test.ts > persists a captured photo offline instead of pausing a local mutation
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/features/photos/offlineDiary.retained03.test.ts:71:21
+     69|   await act(async () => { actions.add.mutate({ series: 'front', takenL…
+     70|   await flush();
+     71|   expect(ports.add).toHaveBeenCalledOnce();
+       |                     ^
+     72|   expect(actions.add.isPaused).toBe(false);
+     73|   expect(actions.add.isSuccess).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/features/photos/offlineDiary.retained03.test.ts > refreshes the diary after an offline deletion without leaving the storage gate pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/photos/offlineDiary.retained03.test.ts:82:30
+     80|   expect(ports.remove).toHaveBeenCalledOnce();
+     81|   expect(actions.remove.isSuccess).toBe(true);
+     82|   expect(source.sourceReady).toBe(true);
+       |                              ^
+     83| });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/features/photos/offlineDiary.retained03.test.ts > keeps a local capture failure retryable offline without automatic replay
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/photos/offlineDiary.retained03.test.ts:91:31
+     89|   await act(async () => { actions.add.mutate(input); });
+     90|   await flush();
+     91|   expect(actions.add.isError).toBe(true);
+       |                               ^
+     92|   expect(ports.add).toHaveBeenCalledOnce();
+     93|   await act(async () => { await actions.add.mutateAsync(input); });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/features/photos/offlineDiary.retained03.test.ts > rejects an offline read crossing withdrawal instead of publishing the old diary
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/features/photos/offlineDiary.retained03.test.ts:103:22
+    101|   ports.read.mockImplementationOnce(() => new Promise<[]>(resolve => {…
+    102|   await mount();
+    103|   expect(ports.read).toHaveBeenCalledOnce();
+       |                      ^
+    104|   await act(async () => { clearActiveHealthProcessingEpoch(); release(…
+    105|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 3 passed (11)
+   Start at  22:15:01
+   Duration  649ms (transform 262ms, setup 0ms, import 579ms, tests 250ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\AppData\Local\Temp\onskin-worklist-adverse-_7w6k3df\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\AppData\Local\Temp\onskin-worklist-adverse-_7w6k3df\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/notifications/preferenceReadRace.retained03.test.ts src/features/photos/offlineDiary.retained03.test.ts

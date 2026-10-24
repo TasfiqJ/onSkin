@@ -1,0 +1,604 @@
+[
+  {
+    "run": "web375-attempt2",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt2",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt2",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 35609,
+    "sha256": "3a623d175d848b75aaf6aeea13d7d5a8e83a8537de8251e6605599f2be443e6d",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 35609,
+    "sha256": "3a623d175d848b75aaf6aeea13d7d5a8e83a8537de8251e6605599f2be443e6d",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33024,
+    "sha256": "eda8db0c55dfa9577092d91c83eca206cf3f984bac6ed27597f6c56aa1e8d923",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 103911,
+    "sha256": "2a54328610e829734b3913d7fb7d489f12f00deae33d1326620c20cdc765b9e4",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 90798,
+    "sha256": "f277c52deedc5ede4ab7617e86b66d3c4cb77b5a256afb2dcc2e5f5dc7920bcd",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 94817,
+    "sha256": "ca9660dd416c3296bde138880a905a5f0e4f4b768724ec78bcddf34f36555c6f",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "cross390-attempt1",
+    "path": "R05-CO-a-local-status.png",
+    "bytes": 122973,
+    "sha256": "2dfa80595ea54afdf4d3b05f9de330864b41cc2b3bdac8385152f3bf480044ca",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 35609,
+    "sha256": "3a623d175d848b75aaf6aeea13d7d5a8e83a8537de8251e6605599f2be443e6d",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33024,
+    "sha256": "eda8db0c55dfa9577092d91c83eca206cf3f984bac6ed27597f6c56aa1e8d923",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 103911,
+    "sha256": "2a54328610e829734b3913d7fb7d489f12f00deae33d1326620c20cdc765b9e4",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 90798,
+    "sha256": "f277c52deedc5ede4ab7617e86b66d3c4cb77b5a256afb2dcc2e5f5dc7920bcd",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web375-measured-final",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 94817,
+    "sha256": "ca9660dd416c3296bde138880a905a5f0e4f4b768724ec78bcddf34f36555c6f",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-01-local-entry.png",
+    "bytes": 122973,
+    "sha256": "2dfa80595ea54afdf4d3b05f9de330864b41cc2b3bdac8385152f3bf480044ca",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 106288,
+    "sha256": "f49ede048f5324cf0f633b4bcf32e5d264879f73c242e7e5df9b76c88b184496",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 109299,
+    "sha256": "23bf3518a5eac064aeea080e7bc16c38ca240eca6bd3c6c55f462a2c82f7ebd3",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 36168,
+    "sha256": "656dd594a9ab53ec8ae3e030dec4ee4d97ae87a1fced94a1429f29500b4bd6fa",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 110235,
+    "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33545,
+    "sha256": "d25efc9984acc9c5e422b63b0ad094c6cca0e5b27fe0dcbd94a3981f1f59d848",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 114870,
+    "sha256": "1dee7028354a2237dbb18ee8a5c97f6f08d1150ebe921305d928964883fb1a9c",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 114870,
+    "sha256": "1dee7028354a2237dbb18ee8a5c97f6f08d1150ebe921305d928964883fb1a9c",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 129067,
+    "sha256": "758b01503a920265b3b6b3a6a3cf127afd1c7a7b5121c2dfa34d9a355fad34a3",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-10-wide430-entry.png",
+    "bytes": 57676,
+    "sha256": "9b8b14d7b43f86d84642157d27e5e8bc6ca91ba383990e06359a0409ac76d24e",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-11-wide430-cleanup.png",
+    "bytes": 50064,
+    "sha256": "77165ff51c95f92bdb2177858744ead59c84d0d05b06f04a270d897dfc059801",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-12-360-text200-cleanup.png",
+    "bytes": 42698,
+    "sha256": "ec47a2bf9d00371a7d147c54b24e5e6a334f92220353cf337cb363d635eb7777",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "web390-attempt1",
+    "path": "R05-13-360-text200-shelf.png",
+    "bytes": 42447,
+    "sha256": "4147bee0c3beb79705759bffd1974a17a55fdcc7ed594b4f5f777f552e00c138",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "CO-03-cleanup-refused.png",
+    "bytes": 47375,
+    "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "CO-09-b-usable-shelf.png",
+    "bytes": 122788,
+    "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "CO-13-return-a-age-closed.png",
+    "bytes": 67634,
+    "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "R05-CO-a-delayed-local-read.png",
+    "bytes": 120600,
+    "sha256": "df24936425a1e26156293df1887f2951b0f5445058f35dea216f9176490b1595",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "R05-CO-a-local-status.png",
+    "bytes": 122973,
+    "sha256": "2dfa80595ea54afdf4d3b05f9de330864b41cc2b3bdac8385152f3bf480044ca",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "R05-CO-b-own-local-status.png",
+    "bytes": 120190,
+    "sha256": "a8ab007d31ea02151acc1d1ea6a66704063c8e17f458959e5dfe832f8c051979",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "cross390-attempt2",
+    "path": "R05-CO-return-a-recovery-closed.png",
+    "bytes": 67634,
+    "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+    "reason": "Superseded routed-candidate image; original Git checkpoint and raw snapshots/actions/bindings retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-01-local-entry.png",
+    "bytes": 116419,
+    "sha256": "0d65ddcd8e11786e397b39a917db234c53798158525c9253af052e81aeecfb61",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 93747,
+    "sha256": "1ee00a875de658a80780d5eaa28c4701f506a184b7a234a2a16f7045b0ccb806",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96407,
+    "sha256": "f35806a3961aab37af431c3ac692001144c1be0c68c95392397ae4a7a6f006b6",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 35609,
+    "sha256": "3a623d175d848b75aaf6aeea13d7d5a8e83a8537de8251e6605599f2be443e6d",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33024,
+    "sha256": "eda8db0c55dfa9577092d91c83eca206cf3f984bac6ed27597f6c56aa1e8d923",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 102901,
+    "sha256": "71514db6ede1fb3c4aee6797c46ce9a217494c36adb4659b28af9df470a67608",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 100992,
+    "sha256": "315ccc37163a72d762e8c3913dc91b11047b2df841ebf5b7b97533f871c92cf0",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline375-attempt1",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 116419,
+    "sha256": "0d65ddcd8e11786e397b39a917db234c53798158525c9253af052e81aeecfb61",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-01-local-entry.png",
+    "bytes": 145953,
+    "sha256": "b1a5502956dba353b95ee35b435cbc275f1490c8debea58a07a61320ce18a0a8",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 119849,
+    "sha256": "8c47e9aa60f04dea732d138b7f6af74f3d5d6ba7f6ff3ede9963b1237618d906",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 122396,
+    "sha256": "158b70d6add5b8ab750c4263b72ee12e45e59731208193861d543c3d511d507e",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 36168,
+    "sha256": "656dd594a9ab53ec8ae3e030dec4ee4d97ae87a1fced94a1429f29500b4bd6fa",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 110235,
+    "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33545,
+    "sha256": "d25efc9984acc9c5e422b63b0ad094c6cca0e5b27fe0dcbd94a3981f1f59d848",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 125628,
+    "sha256": "d445d0f1175ef36ee9ebdbc9c334635657f34ef71129e3458f5104646a23f46f",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 147595,
+    "sha256": "e59cc6a95879edca94decb4c33ffa716abb092703942267f010f0c28313a1fb7",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 145953,
+    "sha256": "b1a5502956dba353b95ee35b435cbc275f1490c8debea58a07a61320ce18a0a8",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-10-wide430-entry.png",
+    "bytes": 65836,
+    "sha256": "f190eef15c09658cc79135a29e6f01303ed73b0599531842d62556747756ab29",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-11-wide430-cleanup.png",
+    "bytes": 64311,
+    "sha256": "2f201aea875d593b3ee888192502b1146466247be48ff0c73974877a98dee735",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-12-360-text200-cleanup.png",
+    "bytes": 44997,
+    "sha256": "c95f3cd9cba93ff12392a7f989c4fab30403dbc2bca2b934e0a250b6e03869a3",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-final",
+    "path": "R05-13-360-text200-shelf.png",
+    "bytes": 42760,
+    "sha256": "8923e52e86c4299a10e1f7f764ef1b365fdfbf6ef553da1842bbecff0e4dee33",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-01-local-entry.png",
+    "bytes": 145953,
+    "sha256": "b1a5502956dba353b95ee35b435cbc275f1490c8debea58a07a61320ce18a0a8",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 119849,
+    "sha256": "8c47e9aa60f04dea732d138b7f6af74f3d5d6ba7f6ff3ede9963b1237618d906",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 122396,
+    "sha256": "158b70d6add5b8ab750c4263b72ee12e45e59731208193861d543c3d511d507e",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 36168,
+    "sha256": "656dd594a9ab53ec8ae3e030dec4ee4d97ae87a1fced94a1429f29500b4bd6fa",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 110235,
+    "sha256": "e5ac08b33386c451a7e2f5a5ad103f6447409137698e16356381e522ed9a441d",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33545,
+    "sha256": "d25efc9984acc9c5e422b63b0ad094c6cca0e5b27fe0dcbd94a3981f1f59d848",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 125701,
+    "sha256": "d2556c556f11415ab430621ace2559b0acc3e7d75446de676d561b64477ef297",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 147641,
+    "sha256": "0d54ba87435c08ac98822bbb99db922a18efd1cfda47d25f0c3edcd798fbbe1e",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 145953,
+    "sha256": "b1a5502956dba353b95ee35b435cbc275f1490c8debea58a07a61320ce18a0a8",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-10-wide430-entry.png",
+    "bytes": 65836,
+    "sha256": "f190eef15c09658cc79135a29e6f01303ed73b0599531842d62556747756ab29",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline390-visible",
+    "path": "R05-11-wide430-cleanup.png",
+    "bytes": 64311,
+    "sha256": "2f201aea875d593b3ee888192502b1146466247be48ff0c73974877a98dee735",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline-cross390-final",
+    "path": "CO-03-cleanup-refused.png",
+    "bytes": 47375,
+    "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline-cross390-final",
+    "path": "CO-09-b-usable-shelf.png",
+    "bytes": 122788,
+    "sha256": "d8b9b34917956dc7c99883ddd39b51d63deab70a6d4dcc3994400d8c2e956cba",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline-cross390-final",
+    "path": "CO-13-return-a-age-closed.png",
+    "bytes": 67634,
+    "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline-cross390-final",
+    "path": "R05-CO-a-delayed-local-read.png",
+    "bytes": 121902,
+    "sha256": "fe9a84a83de274abf2e80997185ce80eff2f06fbc46056eb5e1ce4d15923830a",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline-cross390-final",
+    "path": "R05-CO-a-local-status.png",
+    "bytes": 145953,
+    "sha256": "b1a5502956dba353b95ee35b435cbc275f1490c8debea58a07a61320ce18a0a8",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  },
+  {
+    "run": "inline-cross390-final",
+    "path": "R05-CO-b-own-local-status.png",
+    "bytes": 145924,
+    "sha256": "c924bd488c028df34ac086d77e66ae7fd098517f965d98dcded5c11410729b87",
+    "reason": "Earlier inline/diagnostic duplicate; raw snapshots/actions/logs retained."
+  }
+]

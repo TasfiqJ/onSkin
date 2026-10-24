@@ -1,0 +1,21 @@
+{
+  "command": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:43:06.219206+00:00",
+  "exit": 0,
+  "source_start": {
+    "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+    "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+    "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+  },
+  "seconds": 62.359,
+  "sha256": "827e85a756b98b7f455e71d993d6e372d81daaa3555134057f7650c17fa38f96",
+  "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+  "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

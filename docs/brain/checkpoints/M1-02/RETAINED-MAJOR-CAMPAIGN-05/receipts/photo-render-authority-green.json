@@ -1,0 +1,28 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/photos/captureOwner.campaign05.test.ts",
+    "src/features/photos/offlineDiary.retained03.test.ts",
+    "src/features/photos/store.test.ts",
+    "src/features/photos/progressDetailUX.c08b2.test.ts",
+    "--maxWorkers=3"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:38:32.280531+00:00",
+  "finished_at": "2026-10-24T04:38:53.657565+00:00",
+  "duration_seconds": 21.093,
+  "exit_code": 0,
+  "head": "41f329acd96dd7c14cbbeb4b88634f723628d695",
+  "tree": "de76f0768fd6d2fea19b1b3f01ae53f00b081511",
+  "status_before": "M apps/mobile/src/features/photos/usePhotos.ts\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+  "tracked_diff_sha256": "ec2d77b7ec670eca32e95c26347626a976d60ab6c807601d5e30cd0e37b60eb0",
+  "status_after": "M apps/mobile/src/features/photos/usePhotos.ts\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts",
+  "log": "photo-render-authority-green.log",
+  "log_bytes": 516,
+  "log_sha256": "a9a7b6eee48503161299cb5698a0bb8fb79ab3e8d4988416be3a51d61e0d76f1"
+}

@@ -101,6 +101,17 @@ describe('longest streak. Non-decreasing best (D-011)', () => {
 });
 
 describe('weekly adherence + heat-map (docs/07 §4.3)', () => {
+  it.each(['2026-06-08', '2026-06-13', '2026-06-14'])(
+    'counts a completed current day immediately on %s, without counting future rows',
+    (today) => {
+      const week = buildWeek(set(today, '2026-06-15'), today);
+      expect(weeklyDone(week)).toBe(1);
+      expect(week.filter((day) => day.state === 'done')).toHaveLength(1);
+      expect(weeklyDone(buildWeek(new Set(), today))).toBe(0);
+      expect(buildWeek(new Set(), today).some((day) => day.state === 'today')).toBe(true);
+    },
+  );
+
   it('builds Mon→Sun with done / missed / today / frozen states', () => {
     const today = '2026-06-13'; // Saturday
     const completed = set('2026-06-08', '2026-06-09', '2026-06-11');

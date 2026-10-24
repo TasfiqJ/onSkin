@@ -1,0 +1,23 @@
+{
+  "checkout": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+  "baseline": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+  "test_overlay": [
+    {
+      "path": "apps/mobile/src/features/routine/offlineProgress.retained04.test.ts",
+      "sha256": "ae6b2a7cfea1ef0c394a8c9e95f55bae5bcdc73071c1d67ce995b5a8abeba81e"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts",
+      "sha256": "b6e6fc6348cf5ffbb55b89d158c3917316ecc6383fac6861054a1609fe3b3332"
+    },
+    {
+      "path": "apps/mobile/src/features/today/todayPersistence.t1.test.ts",
+      "sha256": "929fc2313d3b31a1a3f0cd1fe0748aed999b6dc7d99a3fe4d286d809f82e494a"
+    },
+    {
+      "path": "apps/mobile/src/features/scheduler/profile.test.ts",
+      "sha256": "c3f579f353cad0a54dd894b00133a284c74dca1492dcd39b5ed980bca5a39741"
+    }
+  ],
+  "production": "All four repaired production paths are original anchored bytes."
+}

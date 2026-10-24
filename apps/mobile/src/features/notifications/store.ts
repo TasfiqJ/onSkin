@@ -243,13 +243,16 @@ function encodeNotifPrefs(prefs: NotifPrefs): string {
   } satisfies NotifPrefsEnvelope);
 }
 
-export async function loadNotifPrefs(): Promise<NotifPrefs> {
+export async function loadNotifPrefs({ strict = false }: { strict?: boolean } = {}): Promise<NotifPrefs> {
   try {
     const raw = await getPrivateItem(KEY);
     return raw === null
       ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() }
       : decodeNotifPrefs(raw);
-  } catch {
+  } catch (error) {
+    // Settings/recovery must distinguish an unreadable receipt from a new
+    // all-off setup. Delivery retains its conservative no-notification fallback.
+    if (strict) throw error;
     // Corrupt, unsupported, or unavailable private state disables every optional
     // notification instead of silently treating it as fresh opt-in state.
     return failClosedPrefs();

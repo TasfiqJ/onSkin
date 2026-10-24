@@ -1,0 +1,50 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/routine/useRamp.test.ts -t retained04
+
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/retained04-clean-check/apps/mobile
+
+stderr | src/features/routine/useRamp.test.ts > retained04 refreshes admitted local ramp state offline without pausing Today
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/routine/useRamp.test.ts (16 tests | 1 failed | 15 skipped) 271ms
+   × retained04 refreshes admitted local ramp state offline without pausing Today 269ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/routine/useRamp.test.ts > retained04 refreshes admitted local ramp state offline without pausing Today
+AssertionError: Expected values to be strictly equal:
+
+1 !== 2
+
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/features/routine/useRamp.test.ts:318:12
+    316|     await act(async () => { await client.invalidateQueries({ queryKey:…
+    317|     await flush();
+    318|     assert.equal(mocks.getStoredRamps.mock.calls.length, before + 1);
+       |            ^
+    319|     assert.equal(latest.ramp.sourceReady, true);
+    320|     assert.equal(latest.ramp.isSourceCurrent(), true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  23:48:44
+   Duration  658ms (transform 98ms, setup 0ms, import 206ms, tests 271ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Documents\ChatGPT\MasterV2Code\retained04-clean-check\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Documents\ChatGPT\MasterV2Code\retained04-clean-check\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/routine/useRamp.test.ts -t retained04

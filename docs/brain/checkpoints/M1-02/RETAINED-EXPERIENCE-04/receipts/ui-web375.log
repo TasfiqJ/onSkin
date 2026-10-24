@@ -1,0 +1,5 @@
+Error: Timed out waiting for path /routine/streak: condition false
+    at waitForCondition (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:424:9)
+    at async waitForPath (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:436:3)
+    at async retainedRoute (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:836:3)
+    at async run (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:1753:5)

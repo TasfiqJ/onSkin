@@ -1,0 +1,36 @@
+{
+  "bodyText": "SETUP 4 OF 5 A gentle nudge at your routine times? Start with these two times for routine reminders. No pressure, and you can change either time anytime. ✓ Morning at 7:30 AM ✓ Evening at 9:30 PM ✓ Discreet on your lock screen Use these times Not now You can change this anytime in You → Reminders.",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Use these times",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 780
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "selected": false,
+      "width": 382,
+      "x": 24,
+      "y": 844
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8382/onboarding/notifications",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  }
+}
