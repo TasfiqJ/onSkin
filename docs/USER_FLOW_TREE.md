@@ -2794,3 +2794,9 @@ source tests, or fixture-only screenshots.
 - Save reminder preferences: distinguish storage failure, preferences saved with scheduling unconfirmed, permission denial, all-off, browser preference-only, and native scheduling acknowledgement. Acknowledgement never promises OS delivery. Retry after a saved failure reconciles the latest durable preferences; it cannot restore an earlier opt-in over a later opt-out.
 - Cross-owner/sign-out/privacy: an old view, queued save, native settlement or permission response cannot publish success under the replacement owner or reopened health generation. Paid denial remains denial; native/provider evidence remains separate.
 - Portable verification: development phase overrides require a clock-hook mount on every phase entry. Bind the visible date/heading and encrypted day/journal readback, including saved-AM re-entry. Clock-source integration exercises foreground, midnight and DST without modifying the host clock.
+
+
+### M1-02 Quality recovery and retained reliability 03
+
+- Local reminder preference race: keep a pre-save read pending, commit opt-in or opt-out, refuse native scheduling, then settle the older read. Preserve the saved intent and visible unconfirmed notice; explicit retry reconciles current durable intent. Withdrawal before settlement refuses cache publication. Synthetic Expo web drives unavailable permission, touch/keyboard save, delayed background read, offline retry and reload at 375x667 and 390x844; no OS scheduling proof.
+- Private diary source: cold offline local read, explicit storage-error retry, local capture save/refusal/retry and post-delete refresh must execute without waiting for network. Absent/withdrawn health authority still closes the source. Real QueryClient/hook tests use synthetic storage ports; the free browser keeps the existing paid diary denial closed. No paid positive, native capture or provider evidence is claimed.

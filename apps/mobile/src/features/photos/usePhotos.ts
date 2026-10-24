@@ -233,6 +233,8 @@ export function usePhotos(series: PhotoSeries = 'front') {
   const capturedAuthority = authority;
   const query = useQuery({
     queryKey,
+    // Encrypted device reads and explicit retries do not require connectivity.
+    networkMode: 'always',
     enabled: capturedAuthority !== null,
     queryFn: () => {
       if (capturedAuthority === null) {
@@ -340,6 +342,8 @@ export function usePhotoActions(options: { authenticatedOwnerUserId?: string | n
     });
 
   const add = useMutation({
+    // Captures commit to local storage before any separately governed replay.
+    networkMode: 'always',
     mutationFn: (input: NewPhoto) => mutateAndInvalidate(() => addPhotoWithOutcome(input)),
   });
   type Accepted<T> = { value: T; authority: PhotoReadAuthority | null };
