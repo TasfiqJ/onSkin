@@ -191,8 +191,8 @@ function ProductCard({ item }: { item: ShelfItem }) {
           haptics.select();
           router.push(`/shelf/${item.id}`);
         }}
-        style={({ pressed }) => [pressed ? { opacity: 0.85 } : null]}
-        className="flex-row flex-wrap items-center gap-3.5"
+        style={({ pressed }) => [{ flexWrap: 'wrap' }, pressed ? { opacity: 0.85 } : null]}
+        className="flex-row items-center gap-3.5"
       >
         <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
         <View className="min-w-[100px] flex-1">
