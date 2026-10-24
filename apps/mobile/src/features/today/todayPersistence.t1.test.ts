@@ -263,6 +263,23 @@ afterEach(async () => {
   renderer = undefined; client.clear(); onlineManager.setOnline(true); vi.useRealTimers();
 });
 
+describe('retained04 Today progress recovery', () => {
+  it.each(['AM', 'PM'] as const)('offers a local streak retry on %s without blocking confirmed check-offs', async (phase) => {
+    mocks.phase = phase;
+    await mount();
+    assert.equal(renderer!.root.findAll(node => node.type === 'TodayFocusHeader')[0]!.props.streakDays, 6);
+    mocks.progressGet.mockRejectedValue(new Error('SYNTHETIC_PROGRESS_READ_REFUSAL'));
+    await act(async () => { await client.invalidateQueries({ queryKey: ['progress'] }); }); await flush();
+    assert.ok(text(renderer!.root).includes('Streak is unavailable. Your saved check-offs are unchanged.'));
+    assert.equal(renderer!.root.findAll(node => node.type === 'TodayFocusHeader')[0]!.props.streakDays, 0);
+    if (phase === 'AM') assert.equal(control('Test product').props.disabled, false);
+    mocks.progressGet.mockResolvedValue({ streak: 6 });
+    await press('Try loading your streak again');
+    assert.ok(!text(renderer!.root).includes('Streak is unavailable.'));
+    assert.equal(renderer!.root.findAll(node => node.type === 'TodayFocusHeader')[0]!.props.streakDays, 6);
+  });
+});
+
 describe('T1 Today local persistence and recovery surface', () => {
   it('loads, checks off, and restores from local storage while React Query is offline', async () => {
     onlineManager.setOnline(false);

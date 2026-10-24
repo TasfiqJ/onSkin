@@ -417,6 +417,27 @@ function CompletionStatusNotice({
   );
 }
 
+function StreakStatusNotice({ dark, retrying, onRetry }: {
+  dark: boolean;
+  retrying: boolean;
+  onRetry: () => void;
+}) {
+  return (
+    <View accessibilityRole="alert" className="mt-4 rounded-card px-4 py-3.5"
+      style={{ backgroundColor: dark ? colors.nightSurface : colors.greige }}>
+      <Text variant="bodySm" tone={dark ? 'inverse' : 'ink'}>
+        Streak is unavailable. Your saved check-offs are unchanged.
+      </Text>
+      <Pressable accessibilityRole="button" accessibilityLabel="Try loading your streak again"
+        disabled={retrying} onPress={onRetry} className="mt-2 min-h-[48px] justify-center">
+        <Text variant="bodySm" tone={dark ? 'inverse' : 'ink'} className="font-sans-semibold">
+          {retrying ? 'Trying…' : 'Try again'}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function CompletionSyncUnavailableNotice({
   dark,
   hasIdentityRepair,
@@ -474,7 +495,10 @@ export default function TodayScreen() {
   const planSource = usePlan();
   const sourceState = planSourceViewState(planSource);
   const completionLease = planSource.orderLease;
-  const { data: progress } = useProgress();
+  const { data: progress, isError: progressFailed, isFetching: progressReading, refetch: retryProgress } = useProgress();
+  const streakNotice = progressFailed ? (
+    <StreakStatusNotice dark={dark} retrying={progressReading} onRetry={() => void retryProgress()} />
+  ) : null;
   const cycleSource = useCycle();
   const cycleState = routineCycleViewState(planSource, cycleSource);
   const planData = sourceState === 'ready' &&
@@ -931,8 +955,9 @@ export default function TodayScreen() {
             total={steps.length}
             completed={doneCount}
             hasRoutine={hasRealRoutine}
-            streakDays={progress?.streak ?? 0}
+            streakDays={progressFailed ? 0 : progress?.streak ?? 0}
           />
+          {streakNotice}
 
           {cadenceWithheldCount > 0 ? (
             <CadenceWithheldNotice
@@ -1115,8 +1140,9 @@ export default function TodayScreen() {
           total={pmSteps.length}
           completed={donePm}
           hasRoutine={hasRealRoutine}
-          streakDays={progress?.streak ?? 0}
+          streakDays={progressFailed ? 0 : progress?.streak ?? 0}
         />
+        {streakNotice}
 
         {/* Recovery / pause banner. The scheduler's disruption state (docs/05 §7) */}
         {cycleData?.recovery.active ? (
