@@ -2,6 +2,17 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+
+## M1 first-week experience 07: accessible return visits
+
+- Entry: Existing adult/current-consent Shelf → routine/Today → Progress/You routes; launch tab names/order remain Today, Progress, Shelf, You.
+- Critical: Floating dock labels remain fully visible at 360×640 with direct 200% text. Labels wrap without font-scale suppression; the scene reserve follows measured label height and safe area. Check glyph bounds as well as hit rectangles, keyboard focus/Enter/Back, each active tab, light/PM colors and reduced motion at 360/375/390/430 widths.
+- Critical: An open Shelf advances supported printed/PAO expiry badges at local midnight using its admitted snapshot. Date-only refresh performs no private read or write; unknown/estimated dates remain unknown. Withdrawal, A→B→A and same-owner regrant continue masking retired snapshots. Include both DST transition dates.
+- Important: After all current-phase steps have confirmed local check-offs, Today offers **For your next visit**. AM explains the existing local 17:00 evening transition; PM offers a calm return. **Review this week** and **Reminder options** navigate existing routes and retain their ordinary admission/paywall gates.
+- Critical: The optional card is absent for an empty/example/unavailable plan, unchecked/partial/pending/unconfirmed completion, changed date or retired authority. A captured prior-grant action cannot navigate under a successor. It adds no persistence, provider read, telemetry, permission request, scheduling/delivery assertion or clinical advice.
+- Integrated regression: Real first-use age/consent/quiz/three manual products, honest pending guidance/free continuation, offline failed-write/read-back/duplicate completion, AM/PM reload, saved-only Quick Find/filter intersections at 100+ rows, Archive recovery/edit, reminders, Local Recovery, direct private-route denial and delayed A→B→A.
+- Evidence: `docs/brain/checkpoints/M1-02/LEAN-V1-FIRST-WEEK-EXPERIENCE-07/`; browser stress is separate from native Dynamic Type/VoiceOver, OS delivery, paid-positive and release evidence.
+
 ## M1 core journey 06: find saved products and recover local reads
 
 - Goal: Return to an owned product quickly, retain first-session choices, and see only current-grant daily observations.
