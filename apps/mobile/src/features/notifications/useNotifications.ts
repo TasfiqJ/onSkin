@@ -31,20 +31,24 @@ export function useNotificationAuthorization() {
     });
     return () => subscription.remove();
   }, [qc]);
-  return useQuery({
+  const query = useQuery({
     queryKey: AUTHORIZATION_KEY,
     networkMode: 'always',
     queryFn: async () => {
-      const state = await getPermissionStatus();
       // Reconcile on every settings mount/foreground read. Revocation cancels
       // existing native schedules; a later user-granted state rebuilds only the
       // still-stored, independently controlled purposes.
       await rescheduleReminders();
-      return state;
+      // Reconciliation can outlive a permission change. Publish the status
+      // observed after it settles, never its earlier authorization snapshot.
+      return getPermissionStatus();
     },
     retry: 0,
     staleTime: 0,
   });
+  // A foreground read or failed native cancellation cannot keep an old grant
+  // visible as current permission. Settings already renders undefined as unavailable.
+  return { ...query, data: query.isFetching || query.isError ? undefined : query.data };
 }
 
 export function useNotifPrefs() {
