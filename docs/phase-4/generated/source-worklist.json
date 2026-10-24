@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-24T18:39:30.861Z",
+  "generatedAt": "2026-10-24T19:04:50.249Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "494b818c217ab7b49d0f58040c8e55723311c339",
+  "gitSha": "a66daeb7a531b22ad626d2ff1d8bf1e014a66ced",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1620,8 +1620,8 @@
         {
           "path": "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
           "exists": true,
-          "bytes": 15737,
-          "sha256": "282775e19c1121d8a7883708ec9f0431c1f14b3ea3b2e94935a792a538a7aadd"
+          "bytes": 17390,
+          "sha256": "4454962d96be7ee3040757ab9dea4aaea4b38d6388f9bf3b7f7d5dad9d53e518"
         },
         {
           "path": "apps/mobile/src/features/shelf/expiry.test.ts",
@@ -1836,8 +1836,8 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 13377,
-          "sha256": "b907b825b22883db89d4a41762c87fe205b93f191d52e7337c011250eb86ab80"
+          "bytes": 13601,
+          "sha256": "ab7cea36364411d80658bc712c20c1551feb8d7ca58f62bce41c64e25a3e0535"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
@@ -2254,8 +2254,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 511289,
-          "sha256": "d0e1b846d710bd98e1810d57d35d7f10e4629860eeda0324c52e137e2810bfad"
+          "bytes": 511378,
+          "sha256": "dd5882381d0de4a7fea72cc41f762889edcfd3fefb707fc12bd83e2606975f2f"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
