@@ -1,0 +1,43 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications/preferenceAvailability.campaign05.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > settings rereads local preferences on entry even with the app’s one-minute query freshness
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/preferenceAvailability.campaign05.test.ts > settings rereads local preferences on entry even with the app’s one-minute query freshness
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts (10 tests | 1 failed) 271ms
+   × settings rereads local preferences on entry even with the app’s one-minute query freshness 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/preferenceAvailability.campaign05.test.ts > settings rereads local preferences on entry even with the app’s one-minute query freshness
+AssertionError: expected 0 to be greater than 0
+ ❯ src/features/notifications/preferenceAvailability.campaign05.test.ts:112:124
+    110|   ports.failure = true;
+    111|   await mount(NotificationSettingsScreen);
+    112|   expect(renderer.root.findAll(node => node.props.accessibilityLabel =…
+       |                                                                                                                            ^
+    113| });
+    114|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  00:59:55
+   Duration  756ms (transform 144ms, setup 0ms, import 303ms, tests 271ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/notifications/preferenceAvailability.campaign05.test.ts --maxWorkers=2

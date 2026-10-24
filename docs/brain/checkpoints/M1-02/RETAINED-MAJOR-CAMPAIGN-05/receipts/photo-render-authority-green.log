@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/photos/captureOwner.campaign05.test.ts src/features/photos/offlineDiary.retained03.test.ts src/features/photos/store.test.ts src/features/photos/progressDetailUX.c08b2.test.ts --maxWorkers=3
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  69 passed (69)
+   Start at  00:38:33
+   Duration  20.20s (transform 387ms, setup 0ms, import 1.02s, tests 19.85s, environment 0ms)
+

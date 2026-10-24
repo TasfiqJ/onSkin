@@ -1,0 +1,80 @@
+{
+  "bodyText": "< Local recovery Check what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls. Shelf Saved on this device Your Shelf records can be read on this device. Check again Open Shelf Today check-offs Saved on this device Check-offs for this local day can be read on this device. Check again Open Today Reminder choices Needs confirmation Reminder choices are saved on this device. Check permission and scheduling in reminder settings; delivery is controlled by your device. Check again Review reminder setup Photo cleanup No pending cleanup No outstanding deletion was found in the current local journal. Photo content is checked only in Progress. Check again Review photo cleanup in Progress",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check Today check-offs again",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 148
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Open Today",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 196
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check Reminder choices again",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 412
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Review reminder setup",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 460
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check Photo cleanup again",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 676
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Review photo cleanup in Progress",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 724
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8392/settings/local-recovery",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

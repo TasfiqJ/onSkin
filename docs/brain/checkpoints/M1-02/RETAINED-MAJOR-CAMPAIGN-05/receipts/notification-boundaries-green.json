@@ -1,0 +1,29 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/notifications/preferenceAvailability.campaign05.test.ts",
+    "src/features/notifications/preferenceReadRace.retained03.test.ts",
+    "src/features/notifications/preferenceOffline.m102.test.ts",
+    "src/features/notifications/store.test.ts",
+    "src/features/notifications/authorizationSnapshot.retained04.test.ts",
+    "--maxWorkers=3"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:40:20.358042+00:00",
+  "finished_at": "2026-10-24T04:40:22.474640+00:00",
+  "duration_seconds": 1.813,
+  "exit_code": 0,
+  "head": "5e1d9a6ae42527518e0b0dc0e994478ed2092f7a",
+  "tree": "7c3c3ee444a68c4dbf943f65f0fd03db9c9ca71c",
+  "status_before": "M apps/mobile/src/app/settings/notifications.tsx\n M apps/mobile/src/app/settings/timing.tsx\n M apps/mobile/src/features/notifications/store.ts\n M apps/mobile/src/features/notifications/useNotifications.ts\n?? apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+  "tracked_diff_sha256": "26813cf30bd22ac9fd22b75629330ff2f8cc233fb3a715bd3c56540201845c74",
+  "status_after": "M apps/mobile/src/app/settings/notifications.tsx\n M apps/mobile/src/app/settings/timing.tsx\n M apps/mobile/src/features/notifications/store.ts\n M apps/mobile/src/features/notifications/useNotifications.ts\n?? apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts",
+  "log": "notification-boundaries-green.log",
+  "log_bytes": 626,
+  "log_sha256": "cc91135aeffff3d7142dfc798689382b8e2c13d6ca1851089c7f6622f544029f"
+}

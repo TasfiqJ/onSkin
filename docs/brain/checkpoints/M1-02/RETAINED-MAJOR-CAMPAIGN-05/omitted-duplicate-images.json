@@ -1,0 +1,128 @@
+[
+  {
+    "run": "web375-attempt2",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt2",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt2",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 35609,
+    "sha256": "3a623d175d848b75aaf6aeea13d7d5a8e83a8537de8251e6605599f2be443e6d",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt3",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-01-local-entry.png",
+    "bytes": 94004,
+    "sha256": "001b9f338176c85c6deb529d64cc5cf8f656c28cd58ee4d8cbc2f8ca64cfd55a",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-02-isolated-read-refusal.png",
+    "bytes": 95550,
+    "sha256": "b86b988f9397030f0a7985f4f040cf2ca6776094d1bee0f2bf14dae308318133",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-03-offline-keyboard-retry.png",
+    "bytes": 96845,
+    "sha256": "9e07dd3070dc9806a5d05158ff8ac328675f7091971f94b9478fea2076c4c2fc",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-04-settings-read-recovery.png",
+    "bytes": 35609,
+    "sha256": "3a623d175d848b75aaf6aeea13d7d5a8e83a8537de8251e6605599f2be443e6d",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-05-settings-recovered-offline.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-06-timing-read-recovery.png",
+    "bytes": 33024,
+    "sha256": "eda8db0c55dfa9577092d91c83eca206cf3f984bac6ed27597f6c56aa1e8d923",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-07-saved-intent-unconfirmed-delivery.png",
+    "bytes": 103911,
+    "sha256": "2a54328610e829734b3913d7fb7d489f12f00deae33d1326620c20cdc765b9e4",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-08-photo-journal-and-existing-gate.png",
+    "bytes": 90798,
+    "sha256": "f277c52deedc5ede4ab7617e86b66d3c4cb77b5a256afb2dcc2e5f5dc7920bcd",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "web375-attempt4",
+    "path": "R05-09-reloaded-local-continuity.png",
+    "bytes": 94817,
+    "sha256": "ca9660dd416c3296bde138880a905a5f0e4f4b768724ec78bcddf34f36555c6f",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  },
+  {
+    "run": "cross390-attempt1",
+    "path": "R05-CO-a-local-status.png",
+    "bytes": 122973,
+    "sha256": "2dfa80595ea54afdf4d3b05f9de330864b41cc2b3bdac8385152f3bf480044ca",
+    "reason": "Duplicate diagnostic/earlier-success image; raw state, actions, failure and logs retained."
+  }
+]

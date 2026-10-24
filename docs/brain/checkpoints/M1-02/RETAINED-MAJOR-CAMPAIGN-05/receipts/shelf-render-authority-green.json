@@ -1,0 +1,28 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf/retiredActions.campaign05.test.ts",
+    "src/features/shelf/mutationsRecovery.test.ts",
+    "src/features/shelf/productOpeningRecovery.test.ts",
+    "src/features/shelf/store.test.ts",
+    "--maxWorkers=3"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:38:11.884140+00:00",
+  "finished_at": "2026-10-24T04:38:13.993653+00:00",
+  "duration_seconds": 1.813,
+  "exit_code": 0,
+  "head": "99596bfceac782d740415503bc25452cac623254",
+  "tree": "d45b9c1257c74ab61328600af0ac5a7d1350e388",
+  "status_before": "M apps/mobile/src/features/shelf/mutations.ts\n M apps/mobile/src/features/shelf/mutationsRecovery.test.ts\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts\n?? apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+  "tracked_diff_sha256": "5e45663793f39dd5774b8773baf40936af24aefe890104f948d034b6fa022115",
+  "status_after": "M apps/mobile/src/features/shelf/mutations.ts\n M apps/mobile/src/features/shelf/mutationsRecovery.test.ts\n?? apps/mobile/src/features/notifications/preferenceAvailability.campaign05.test.ts\n?? apps/mobile/src/features/photos/captureOwner.campaign05.test.ts\n?? apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+  "log": "shelf-render-authority-green.log",
+  "log_bytes": 506,
+  "log_sha256": "d3ee3f31364f76e3b88f92ac9627136a1fadd8b101aa1ac9ad052e6f18e0690a"
+}

@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications/preferenceAvailability.campaign05.test.ts src/features/notifications/preferenceReadRace.retained03.test.ts src/features/notifications/preferenceOffline.m102.test.ts src/features/notifications/store.test.ts src/features/notifications/authorizationSnapshot.retained04.test.ts --maxWorkers=3
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  5 passed (5)
+      Tests  31 passed (31)
+   Start at  00:40:21
+   Duration  898ms (transform 326ms, setup 0ms, import 938ms, tests 577ms, environment 0ms)
+

@@ -1,0 +1,342 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/notifications src/features/settings/settingsRoutes.test.ts --maxWorkers=4
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+stderr | src/features/notifications/transaction.cont01.test.ts > startup unavailable -> durable save -> visible notice -> recovered port -> actual Retry -> schedule acknowledgement
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/transaction.cont01.test.ts > concurrent saves converge to the latest purpose/time with one fixed native ID
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/transaction.cont01.test.ts > compensates commit-then-reject, retains independent billing reconciliation, and retries
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/applyPreferences.test.ts (6 tests | 1 failed) 18ms
+     × keeps the hook from applying visible state before persistence succeeds 11ms
+stderr | src/features/notifications/transaction.cont01.test.ts > never publishes an old saved/scheduled result after health generation replacement
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/transaction.cont01.test.ts > cancel failure remains saved/unconfirmed until a full safe retry
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/transaction.cont01.test.ts > permission revoked at native settlement compensates and cannot claim scheduling
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/transaction.cont01.test.ts > a saved failure Retry cannot restore an older opt-in after a later durable opt-out
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/notifications/transaction.cont01.test.ts > a partially scheduled multi-purpose save is fully compensated before Retry
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/notifications/transaction.cont01.test.ts (10 tests | 8 failed) 5156ms
+   × startup unavailable -> durable save -> visible notice -> recovered port -> actual Retry -> schedule acknowledgement 33ms
+   × concurrent saves converge to the latest purpose/time with one fixed native ID 19ms
+   × compensates commit-then-reject, retains independent billing reconciliation, and retries 14ms
+   × never publishes an old saved/scheduled result after health generation replacement 5016ms
+   × cancel failure remains saved/unconfirmed until a full safe retry 6ms
+   × permission revoked at native settlement compensates and cannot claim scheduling 10ms
+   × a saved failure Retry cannot restore an older opt-in after a later durable opt-out 16ms
+   × a partially scheduled multi-purpose save is fully compensated before Retry 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/applyPreferences.test.ts > notification preference application > keeps the hook from applying visible state before persistence succeeds
+AssertionError: expected 'import { useMutation, useQuery, useQu…' to contain 'runHealthDataOperation(expectedOwnerU…'
+
+- Expected
++ Received
+
+- runHealthDataOperation(expectedOwnerUserId
++ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
++ import { useEffect, useState, useSyncExternalStore } from 'react';
++ import { AppState } from 'react-native';
++
++ import {
++   HEALTH_DATA_WRITE_ADMISSION_CLOSED,
++   captureHealthDataWriteLease,
++   assertHealthDataWriteLease,
++   runHealthDataOperation,
++   runHealthDataWriteOperation,
++ } from '@/lib/consent/healthDataWriteAdmission';
++ import {
++   activeHealthProcessingLeaseSnapshot,
++   subscribeActiveHealthProcessingLeaseChanges,
++ } from '@/lib/consent/healthProcessingEpoch';
++
++ import { applyNotificationPreferencePatch, NotificationPreferenceSaveError } from './applyPreferences';
++ import { getPermissionStatus, rescheduleReminders } from './deliver';
++ import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
++
++ // Reads/writes the local-first notification preferences and reschedules the
++ // utility reminders whenever they change (docs/07 §3.4). Visible state updates
++ // only after local private persistence succeeds.
++ const KEY = ['notifPrefs'] as const;
++ const AUTHORIZATION_KEY = ['notificationAuthorization'] as const;
++
++ export function useNotificationAuthorization() {
++   const qc = useQueryClient();
++   useEffect(() => {
++     const subscription = AppState.addEventListener('change', (state) => {
++       if (state === 'active') {
++         void qc.invalidateQueries({ queryKey: AUTHORIZATION_KEY });
++       }
++     });
++     return () => subscription.remove();
++   }, [qc]);
++   const query = useQuery({
++     queryKey: AUTHORIZATION_KEY,
++     networkMode: 'always',
++     queryFn: async () => {
++       // Reconcile on every settings mount/foreground read. Revocation cancels
++       // existing native schedules; a later user-granted state rebuilds only the
++       // still-stored, independently controlled purposes.
++       await rescheduleReminders();
++       // Reconciliation can outlive a permission change. Publish the status
++       // observed after it settles, never its earlier authorization snapshot.
++       return getPermissionStatus();
++     },
++     retry: 0,
++     staleTime: 0,
++   });
++   // A foreground read or failed native cancellation cannot keep an old grant
++   // visible as current permission. Settings already renders undefined as unavailable.
++   return { ...query, data: query.isFetching || query.isError ? undefined : query.data };
++ }
++
++ export function useNotifPrefs() {
++   const published = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
++   const [, checkExpiry] = useState(0);
++   useEffect(() => {
++     if (published?.expiresAt == null) return;
++     const timer = setTimeout(() => checkExpiry(value => value + 1), Math.max(0, published.expiresAt - Date.now()) + 1);
++     return () => clearTimeout(timer);
++   }, [published]);
++   const authority = activeHealthProcessingLeaseSnapshot();
++   const query = useQuery({
++     queryKey: authority ? [...KEY, authority.generation, authority.ownerUserId, authority.accountGeneration] : [...KEY, 'closed'],
++     networkMode: 'always',
++     enabled: authority?.ownerUserId != null && authority.accountGeneration != null,
++     queryFn: async () => {
++       if (!authority?.ownerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
++       return runHealthDataOperation(authority.ownerUserId, async (lease) => {
++         if (lease.generation !== authority.generation) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
++         const prefs = await loadNotifPrefs({ strict: true });
++         lease.assertCurrent();
++         return prefs;
++       });
++     },
++     retry: 0,
++   });
++   return { ...query, data: authority === null || query.isError ? undefined : query.data };
++ }
++
++ export function useUpdateNotifPrefs() {
++   const qc = useQueryClient();
++   // A permission response may outlive this screen and its owner.
++   let expectedLease: ReturnType<typeof captureHealthDataWriteLease> | undefined;
++   try { expectedLease = captureHealthDataWriteLease(); } catch { /* admission closed */ }
++   const mutation = useMutation({
++     networkMode: 'always',
++     retry: false,
++     mutationFn: async ({ patch, accepted }: { patch: Partial<NotifPrefs>; accepted: typeof expectedLease }) => {
++       if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
++       assertHealthDataWriteLease(accepted);
++       const expectedOwnerUserId = accepted.ownerUserId;
++       const queryKey = [...KEY, accepted.generation, accepted.ownerUserId, accepted.accountGeneration];
++       return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
++         let result: Awaited<ReturnType<typeof applyNotificationPreferencePatch>>;
++         try {
++           result = await applyNotificationPreferencePatch(
++             patch,
++             {
++               save: saveNotifPrefs,
++               reschedule: rescheduleReminders,
++             },
++             lease,
++           );
++         } catch (error) {
++           lease.assertCurrent();
++           if (error instanceof NotificationPreferenceSaveError) {
++             // A data-less initial read can still publish its pre-save snapshot.
++             // Retire it before exposing the durable intent that needs retry.
++             await qc.cancelQueries({ queryKey: KEY });
++             lease.assertCurrent();
++             qc.setQueryData<NotifPrefs>(queryKey, error.prefs);
++           }
++           throw error;
++         }
++         lease.assertCurrent();
++         const next = result.prefs;
++         qc.setQueryData<NotifPrefs>(queryKey, next);
++         lease.assertCurrent();
++         await qc.invalidateQueries({ queryKey: KEY });
++         lease.assertCurrent();
++         return result;
++       });
++     },
++   });
++   const current = expectedLease !== undefined && mutation.variables?.accepted?.generation === expectedLease.generation;
++   return {
++     ...mutation,
++     data: current ? mutation.data : undefined,
++     error: current ? mutation.error : null,
++     isSuccess: current && mutation.isSuccess,
++     isError: current && mutation.isError,
++     isPending: current && mutation.isPending,
++     variables: current ? mutation.variables?.patch : undefined,
++     // Observer options may change while an OS permission request is pending.
++     // Carry the render's lease in variables instead of adopting its successor.
++     mutateAsync: (patch: Partial<NotifPrefs>) => mutation.mutateAsync({ patch, accepted: expectedLease }),
++     mutate: (patch: Partial<NotifPrefs>) => { mutation.mutate({ patch, accepted: expectedLease }); },
++   };
++ }
++
+
+ ❯ src/features/notifications/applyPreferences.test.ts:134:20
+    132|
+    133|     expect(source).toContain('applyNotificationPreferencePatch');
+    134|     expect(source).toContain('runHealthDataOperation(expectedOwnerUser…
+       |                    ^
+    135|     expect(source).toContain('const prefs = await loadNotifPrefs()');
+    136|     expect(source).toContain('qc.setQueryData<NotifPrefs>(KEY, next)');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > startup unavailable -> durable save -> visible notice -> recovered port -> actual Retry -> schedule acknowledgement
+AssertionError: expected undefined to match object { amEnabled: true }
+
+- Expected:
+{
+  "amEnabled": true,
+}
+
++ Received:
+undefined
+
+ ❯ src/features/notifications/transaction.cont01.test.ts:100:47
+     98|   await flush();
+     99|   expect(await loadNotifPrefs()).toMatchObject({ amEnabled: true, pmEn…
+    100|   expect(client.getQueryData(['notifPrefs'])).toMatchObject({ amEnable…
+       |                                               ^
+    101|   expect(JSON.stringify(renderer!.toJSON())).toContain('Your preferenc…
+    102|   expect(ports.native.size).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > concurrent saves converge to the latest purpose/time with one fixed native ID
+ FAIL  src/features/notifications/transaction.cont01.test.ts > compensates commit-then-reject, retains independent billing reconciliation, and retries
+NotificationPreferenceSaveError: PREFERENCES_SAVED_REMINDERS_UNCONFIRMED
+ ❯ execute src/features/notifications/applyPreferences.ts:40:15
+     38|       } catch (error) {
+     39|         lease.assertCurrent();
+     40|         throw new NotificationPreferenceSaveError(next, error);
+       |               ^
+     41|       }
+     42|       lease.assertCurrent();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > never publishes an old saved/scheduled result after health generation replacement
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/features/notifications/transaction.cont01.test.ts:158:1
+    156| });
+    157|
+    158| it('never publishes an old saved/scheduled result after health generat…
+       | ^
+    159|   await mount();
+    160|   let release!: () => void;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > cancel failure remains saved/unconfirmed until a full safe retry
+AssertionError: expected [Function] to throw error including 'PREFERENCES_SAVED_REMINDERS_UNCONFIRM…' but got 'HEALTH_DATA_WRITE_ADMISSION_CLOSED'
+
+Expected: "PREFERENCES_SAVED_REMINDERS_UNCONFIRMED"
+Received: "HEALTH_DATA_WRITE_ADMISSION_CLOSED"
+
+ ❯ src/features/notifications/transaction.cont01.test.ts:180:82
+    178| it('cancel failure remains saved/unconfirmed until a full safe retry',…
+    179|   await mount(); ports.failClear = true;
+    180|   await act(async () => { await expect(mutation.mutateAsync({ amEnable…
+       |                                                                                  ^
+    181|   expect(ports.schedule).not.toHaveBeenCalled();
+    182|   // Failed global cleanup quarantines all native work, including bill…
+ ❯ Proxy.process.env.NODE_ENV.exports.act ../../node_modules/react/cjs/react.development.js:814:22
+ ❯ src/features/notifications/transaction.cont01.test.ts:180:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > permission revoked at native settlement compensates and cannot claim scheduling
+AssertionError: expected [Function] to throw error including 'PREFERENCES_SAVED_REMINDERS_UNCONFIRM…' but got 'HEALTH_DATA_WRITE_ADMISSION_CLOSED'
+
+Expected: "PREFERENCES_SAVED_REMINDERS_UNCONFIRMED"
+Received: "HEALTH_DATA_WRITE_ADMISSION_CLOSED"
+
+ ❯ src/features/notifications/transaction.cont01.test.ts:194:82
+    192|     ports.native.set(request.identifier, request); ports.denied = true…
+    193|   });
+    194|   await act(async () => { await expect(mutation.mutateAsync({ amEnable…
+       |                                                                                  ^
+    195|   expect(ports.native.size).toBe(0);
+    196|   await act(async () => { await mutation.mutateAsync({ amEnabled: true…
+ ❯ Proxy.process.env.NODE_ENV.exports.act ../../node_modules/react/cjs/react.development.js:814:22
+ ❯ src/features/notifications/transaction.cont01.test.ts:194:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > a saved failure Retry cannot restore an older opt-in after a later durable opt-out
+AssertionError: expected { amEnabled: true } to deeply equal {}
+
+- Expected
++ Received
+
+- {}
++ {
++   "amEnabled": true,
++ }
+
+ ❯ src/features/notifications/transaction.cont01.test.ts:211:17
+    209|   await saveNotifPrefs({ amEnabled: false });
+    210|   const patch = notificationPreferenceRetryPatch(failed, { amEnabled: …
+    211|   expect(patch).toEqual({});
+       |                 ^
+    212|   await act(async () => { await mutation.mutateAsync(patch); });
+    213|   await vi.waitFor(async () => { await flush(); expect(mutation.isSucc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/features/notifications/transaction.cont01.test.ts > a partially scheduled multi-purpose save is fully compensated before Retry
+AssertionError: expected [Function] to throw error including 'PREFERENCES_SAVED_REMINDERS_UNCONFIRM…' but got 'HEALTH_DATA_WRITE_ADMISSION_CLOSED'
+
+Expected: "PREFERENCES_SAVED_REMINDERS_UNCONFIRMED"
+Received: "HEALTH_DATA_WRITE_ADMISSION_CLOSED"
+
+ ❯ src/features/notifications/transaction.cont01.test.ts:226:99
+    224|     ports.native.set(request.identifier, request); throw new Error('se…
+    225|   });
+    226|   await act(async () => { await expect(mutation.mutateAsync({ amEnable…
+       |                                                                                                   ^
+    227|     .rejects.toThrow('PREFERENCES_SAVED_REMINDERS_UNCONFIRMED'); });
+    228|   expect(ports.native.size).toBe(0);
+ ❯ Proxy.process.env.NODE_ENV.exports.act ../../node_modules/react/cjs/react.development.js:814:22
+ ❯ src/features/notifications/transaction.cont01.test.ts:226:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+
+ Test Files  2 failed | 23 passed (25)
+      Tests  9 failed | 263 passed (272)
+   Start at  00:41:35
+   Duration  5.71s (transform 707ms, setup 0ms, import 2.12s, tests 6.55s, environment 3ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/notifications src/features/settings/settingsRoutes.test.ts --maxWorkers=4

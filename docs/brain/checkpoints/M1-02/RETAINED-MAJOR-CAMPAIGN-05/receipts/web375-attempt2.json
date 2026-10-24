@@ -1,0 +1,59 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "file:///C:/Users/jasim/Documents/ChatGPT/Campaign05-run-20261024-329853b7/e2e-wrapper.mjs",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--daily-loop"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T04:57:06.806329+00:00",
+  "finished_at": "2026-10-24T04:58:47.362679+00:00",
+  "duration_seconds": 100.063,
+  "exit_code": 1,
+  "head": "7fcde90821af144b2821f779845e539d91b602be",
+  "tree": "fa513e2256d181dd954874984e6e35c92bb82f58",
+  "status_before": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "tracked_diff_sha256": "8f7a46da7fef91668af0bf3b432109d0fce2f623952a05a715e6af69b2fde851",
+  "working_files": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 36626,
+      "sha256": "241a8f6ff0ec8705841430564dd8d2a8925948e5e275ddb0c95983103aee6891"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/_layout.tsx",
+      "bytes": 512,
+      "sha256": "2d5cfe49dcc9f637a11321a79ecd6291c92369948e60e2ee19e6aa86533d9b09"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/local-recovery.tsx",
+      "bytes": 75,
+      "sha256": "7f0e71b1cd9248f6f9680a9ae0d8252d7e611937a11a1da55a895da29aae287c"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx",
+      "bytes": 9112,
+      "sha256": "a5d7a70e5db5c4da87ba979cbc7c0f89d4ae98a77cf1708e7a762c43769f8d5f"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localEvidence.ts",
+      "bytes": 4340,
+      "sha256": "3dcfa01eb9c95006b3ba219b370f44c351e00f33d3d0b9d1c2ce3e77d2430fb4"
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 12429,
+      "sha256": "f0547ec99003cf209e3d1d00d6de9abe8795c9008bbcedb18edfce80110cc403"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 506802,
+      "sha256": "98cd6543609426c0bd4248ac3f8273d238f4baa91848ab45943b80aa4a3c6b0b"
+    }
+  ],
+  "status_after": "M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/settings/_layout.tsx\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/app/settings/local-recovery.tsx\n?? apps/mobile/src/features/retainedRecovery/",
+  "log": "web375-attempt2.log",
+  "log_bytes": 527,
+  "log_sha256": "34cc50ae5eaceb8a36027b85cf359a02aa9c75afc0f51763cf6a5a8dc259abb3"
+}

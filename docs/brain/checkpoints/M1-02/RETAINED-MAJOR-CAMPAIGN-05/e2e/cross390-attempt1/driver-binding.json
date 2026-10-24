@@ -1,0 +1,9 @@
+{
+  "originalSha256": "381f4a70172c6fd8418813b6896e7e26906b1a0ea0857bd36d57f14c90742e67",
+  "executedSha256": "277608177e3f0a10c6cf150ae95f50c1bf2fd2ad9d84b778bb8ef2ed8084eed1",
+  "changes": [
+    "bounded screenshots and action trace",
+    "real local Recovery, reminder read retry and keyboard/offline flows",
+    "synthetic underlying IO delay during actual cross-owner reconciliation"
+  ]
+}

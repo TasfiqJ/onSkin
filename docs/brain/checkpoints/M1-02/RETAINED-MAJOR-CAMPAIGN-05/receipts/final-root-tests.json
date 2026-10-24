@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "test",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:09:58.750103+00:00",
+  "finished_at": "2026-10-24T05:10:37.924658+00:00",
+  "duration_seconds": 38.609,
+  "exit_code": 1,
+  "head": "4205deb09d0117dde456917c4672e4539d898ec5",
+  "tree": "fd778492374d694d082808382054b68e635e2a37",
+  "status_before": "",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [],
+  "status_after": "",
+  "log": "final-root-tests.log",
+  "log_bytes": 366163,
+  "log_sha256": "37dc21fc0590f7eeb6a91119c0f6be5c83157dfa608821d7da9f918d93e6f79e"
+}

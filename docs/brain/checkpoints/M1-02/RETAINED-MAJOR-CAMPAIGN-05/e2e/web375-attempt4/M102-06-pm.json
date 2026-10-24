@@ -1,0 +1,91 @@
+{
+  "bodyText": "SATURDAY, OCTOBER 24 · 1:05 AM 1 day Good evening. Evening routine complete. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 2 of 2 Recorded - cannot undo Glycolic 7% toner On exfoliation nights only. Recorded - cannot undo M102 synthetic moisturizer Seal everything in. Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 99
+    },
+    {
+      "disabled": true,
+      "height": 76,
+      "hitOk": true,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "selected": false,
+      "width": 287,
+      "x": 44,
+      "y": 306
+    },
+    {
+      "disabled": true,
+      "height": 77,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 287,
+      "x": 44,
+      "y": 382
+    },
+    {
+      "disabled": false,
+      "height": 61.61,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 80.74,
+      "x": 26.47,
+      "y": 587.9
+    },
+    {
+      "disabled": false,
+      "height": 61.38,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 80.44,
+      "x": 107.06,
+      "y": 588.31
+    },
+    {
+      "disabled": false,
+      "height": 61.38,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 80.44,
+      "x": 187.5,
+      "y": 588.31
+    },
+    {
+      "disabled": false,
+      "height": 61.38,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 80.44,
+      "x": 267.94,
+      "y": 588.31
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8391/today?routine=PM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

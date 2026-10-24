@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/retiredActions.campaign05.test.ts src/features/shelf/mutationsRecovery.test.ts src/features/shelf/productOpeningRecovery.test.ts src/features/shelf/store.test.ts --maxWorkers=3
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  72 passed (72)
+   Start at  00:38:13
+   Duration  864ms (transform 391ms, setup 0ms, import 862ms, tests 509ms, environment 0ms)
+

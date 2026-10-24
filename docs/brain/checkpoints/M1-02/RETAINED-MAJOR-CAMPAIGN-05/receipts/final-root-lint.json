@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:09:58.751104+00:00",
+  "finished_at": "2026-10-24T05:10:55.052194+00:00",
+  "duration_seconds": 55.703,
+  "exit_code": 0,
+  "head": "4205deb09d0117dde456917c4672e4539d898ec5",
+  "tree": "fd778492374d694d082808382054b68e635e2a37",
+  "status_before": "",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [],
+  "status_after": "",
+  "log": "final-root-lint.log",
+  "log_bytes": 1181,
+  "log_sha256": "3b68083cc443f04c72a6d4cc2bb8b9cad4b80051023dfe26adc086dae5f2ebdf"
+}

@@ -1,0 +1,91 @@
+{
+  "bodyText": "< Local recovery Check what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls. Shelf Saved on this device Your Shelf records can be read on this device. Check again Open Shelf Today check-offs Saved on this device Check-offs for this local day can be read on this device. Check again Open Today Reminder choices Not configured No reminder purpose is enabled in the device preferences. Scheduling and permission are not checked here. Check again Review reminder setup Photo cleanup No pending cleanup No outstanding deletion was found in the current local journal. Photo content is checked only in Progress. Check again Review photo cleanup in Progress",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check Shelf again",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 244
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Open Shelf",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 292
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check Today check-offs again",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 488
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Open Today",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 536
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Check Reminder choices again",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 752
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Review reminder setup",
+      "role": "button",
+      "selected": false,
+      "width": 310,
+      "x": 40,
+      "y": 800
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8392/settings/local-recovery",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

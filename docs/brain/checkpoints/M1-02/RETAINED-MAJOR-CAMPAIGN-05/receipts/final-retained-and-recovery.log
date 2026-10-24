@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf src/features/today src/features/routine src/features/scheduler src/features/streak src/features/notifications src/features/photos src/features/onboarding src/features/retainedRecovery src/features/settings --maxWorkers=4
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  193 passed (193)
+      Tests  2312 passed (2312)
+   Start at  01:04:53
+   Duration  41.81s (transform 4.89s, setup 0ms, import 15.73s, tests 115.64s, environment 21ms)
+
