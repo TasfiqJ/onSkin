@@ -36,7 +36,13 @@ function runShelfMutation<T>(
 
 export function useShelfMutations() {
   const qc = useQueryClient();
-  const invalidate = () => qc.invalidateQueries({ queryKey: ['shelf'] });
+  const invalidate = async (lease: HealthDataWriteOperationLease) => {
+    // Invalidation alone can join a data-less initial fetch started before the
+    // commit. Cancel that snapshot before reading the durable local result.
+    await qc.cancelQueries({ queryKey: ['shelf'] });
+    lease.assertCurrent();
+    await qc.invalidateQueries({ queryKey: ['shelf'] });
+  };
 
   return {
     async add(input: NewShelfProduct): Promise<ShelfProduct> {
@@ -44,7 +50,7 @@ export function useShelfMutations() {
         const product = await addProduct(input);
         lease.assertCurrent();
         track('product_added', { added_via: input.addedVia });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
         return product;
       });
@@ -56,7 +62,7 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         const result = await applyCatalogRecoveryProductUpdate(input);
         lease.assertCurrent();
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
         return result;
       });
@@ -75,7 +81,7 @@ export function useShelfMutations() {
         });
         lease.assertCurrent();
         track('opened_date_set', { is_opened: patch.isOpened });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -84,7 +90,7 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         await updateProduct(id, patch);
         lease.assertCurrent();
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -97,7 +103,7 @@ export function useShelfMutations() {
         });
         lease.assertCurrent();
         track('product_finished', { source: 'shelf' });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -110,7 +116,7 @@ export function useShelfMutations() {
         });
         lease.assertCurrent();
         track('product_discarded', { source: 'shelf' });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -119,7 +125,7 @@ export function useShelfMutations() {
       return runShelfMutation(async (lease) => {
         await removeProduct(id);
         lease.assertCurrent();
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
       });
     },
@@ -134,7 +140,7 @@ export function useShelfMutations() {
         const fresh = await reAddProduct(id, opening, operationId);
         lease.assertCurrent();
         track('replenishment_nudge_tapped', { action: 're_add' });
-        await invalidate();
+        await invalidate(lease);
         lease.assertCurrent();
         return fresh;
       });
