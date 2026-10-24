@@ -1,11 +1,15 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
-import { ONBOARDING_QUIZ, toggleExclusiveNoneSelection } from '@/features/onboarding/quiz';
+import {
+  isQuizQuestionAnswered,
+  ONBOARDING_QUIZ,
+  toggleExclusiveNoneSelection,
+} from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
 export default function QuizScreen() {
@@ -13,6 +17,7 @@ export default function QuizScreen() {
   const compact = height < 740;
   const { quizAnswers, setAnswer } = useOnboarding();
   const [index, setIndex] = useState(0);
+  const navigationIndex = useRef(0);
   const [consentChecked, setConsentChecked] = useState(false);
 
   useEffect(() => {
@@ -53,9 +58,7 @@ export default function QuizScreen() {
   const question = ONBOARDING_QUIZ[index]!;
   const current = quizAnswers[question.id];
   const isMulti = question.multiSelect === true;
-  const answered = isMulti
-    ? Array.isArray(current) && current.length > 0
-    : typeof current === 'string';
+  const answered = isQuizQuestionAnswered(question, current);
 
   function selectSingle(optionId: string) {
     setAnswer(question.id, optionId);
@@ -68,8 +71,10 @@ export default function QuizScreen() {
   }
 
   function next() {
+    if (!answered || navigationIndex.current !== index) return;
+    navigationIndex.current = index + 1;
     if (index < total - 1) {
-      setIndex((i) => i + 1);
+      setIndex(index + 1);
       return;
     }
     track('quiz_completed');
@@ -138,7 +143,10 @@ export default function QuizScreen() {
             label="Back"
             variant="ghost"
             className="mb-1 min-h-[48px] py-2"
-            onPress={() => setIndex((i) => Math.max(0, i - 1))}
+            onPress={() => {
+              navigationIndex.current = Math.max(0, index - 1);
+              setIndex(navigationIndex.current);
+            }}
           />
         ) : null}
         <Button
