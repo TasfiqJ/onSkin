@@ -1,0 +1,39 @@
+[
+  {
+    "sha": "219af21c4410fcadb425de03360bd4376cb5895e",
+    "tree": "705122a3af30b20972a89ecc0d6d94142b3e914f",
+    "title": "fix(quality): refresh authentic catalog source worklist",
+    "paths": [
+      "docs/phase-4/generated/source-worklist.json",
+      "docs/phase-4/generated/source-worklist.md"
+    ]
+  },
+  {
+    "sha": "de15095604c88f577ce7c85697e8c7c59a4c39d5",
+    "tree": "cef38a88ff2558d2de8e9f47613637c2e9fdb5b7",
+    "title": "fix(notifications): retire stale reads after saved scheduling failure",
+    "paths": [
+      "apps/mobile/src/features/notifications/preferenceReadRace.retained03.test.ts",
+      "apps/mobile/src/features/notifications/useNotifications.ts"
+    ]
+  },
+  {
+    "sha": "3bcc21fe8a4533847e007b49704cad2e6329600d",
+    "tree": "357f92ffbf7659110e8f3bd365ef54c30cf6fb80",
+    "title": "fix(photos): execute private diary reads and capture saves offline",
+    "paths": [
+      "apps/mobile/src/features/photos/offlineDiary.retained03.test.ts",
+      "apps/mobile/src/features/photos/usePhotos.ts",
+      "docs/USER_FLOW_TREE.md"
+    ]
+  },
+  {
+    "sha": "4d8ef8a029375512ddb29df402f4b77ca557be39",
+    "tree": "3e17c9b79b6603a4584cab0c200f4d9211951c58",
+    "title": "docs(quality): bind worklist to retained recovery flow evidence",
+    "paths": [
+      "docs/phase-4/generated/source-worklist.json",
+      "docs/phase-4/generated/source-worklist.md"
+    ]
+  }
+]

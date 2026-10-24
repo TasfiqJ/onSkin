@@ -1,0 +1,24 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    "ONSKIN_BRAIN_HANDOFF.txt",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/README.md",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/RESULTS.md",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/TEST_MATRIX.md",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/UI_REPORT.md",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/CI_AND_BLOCKERS.md",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/completion-report.json",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/executor-notes.json",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/verify_checkpoint.py",
+    "docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/retained03-web.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "start": "2026-10-24T02:29:41.685244+00:00",
+  "exit": 0,
+  "seconds": 0.094,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\authored-final-whitespace.log"
+}

@@ -1,0 +1,41 @@
+{
+  "anchor": "704d3df5e01cd55023d9c08518ce2df8512e72ca",
+  "tracked_baseline_count": 20951,
+  "unchanged_count": 20946,
+  "unchanged_path_hash_pairs_sha256": "9ae3042c9ba83a576a204f123eb488f86cecc46967694d4a46c2c9f9bf5620c0",
+  "changes": [
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "before_sha256": "e6957916fa285863b5c83668d23bb7e7b5db43b22da1b6d6d04221ce55d489a3",
+      "after_sha256": "2b5207092d25bc74617f3d12a29e3e9437cec0bcb395a0eb1e50b2bca9353bf1",
+      "bytes": 4098
+    },
+    {
+      "path": "apps/mobile/src/features/photos/usePhotos.ts",
+      "before_sha256": "384c254c78ddfa2550803444d7d33b46bc8c45703723da215e565ae163eb71f5",
+      "after_sha256": "a59d8eb99437c0f15fe601c0915f0bfec69eeecbdbf3eeda74cc9e06de6e2790",
+      "bytes": 15828
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before_sha256": "3e71aa693e8b32d78c176e7e1b463e4e76f234f1dc56c74f9ba21893e96068fa",
+      "after_sha256": "0217c39dc4498d717ebadbf08e062011b150fdf2e93284326ea0b97d353ac85c",
+      "bytes": 503208
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "before_sha256": "9a23dcb35c5a92c8932c5f761c443ba84b1b9b429d1158d4860488388fda3839",
+      "after_sha256": "7c906f7db3a2222ae9aee127510013343ae746034dc0a771a77ae24cd5c86446",
+      "bytes": 137965
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "before_sha256": "f0631ceef2c6976edd135bd178bbf1dd6aa3cda0cf36059a2edbfb23746ebf64",
+      "after_sha256": "9ea586b092e3bdb400e0e48b69c4534e376c121ac153085d7b919b625c0fd018",
+      "bytes": 82183
+    }
+  ],
+  "missing": [],
+  "protected_working_bytes_unchanged": true,
+  "baseline_manifest_sha256": "5992579f6acd29740eafc5ea9e7924ae6c8dda0aa50a87d6a47981972432dc25"
+}

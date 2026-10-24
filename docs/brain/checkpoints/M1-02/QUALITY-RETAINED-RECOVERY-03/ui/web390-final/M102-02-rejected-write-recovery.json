@@ -1,0 +1,69 @@
+{
+  "bodyText": "Today Friday, October 23 Check-offs aren't available right now. Reload to confirm your saved progress, then try again. Try again Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Try loading saved check-offs again",
+      "role": "button",
+      "selected": false,
+      "width": 89.06,
+      "x": 41,
+      "y": 143
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 24.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 195,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8295/today?routine=AM",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

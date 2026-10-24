@@ -1,0 +1,16 @@
+{
+  "raw_receipts_unchanged": true,
+  "receipt_source_binding": "Command starts after stable observed HEAD 4d8ef8a02 and before checkpoint writes are clean measured-source checks. source-scope and source-commits bind exact Git/working bytes. Original receipt files are not retroactively changed.",
+  "setup_failures": [
+    {
+      "operation": "first raw test receipt printing",
+      "result": "UnicodeEncodeError under Windows cp1252 after recording genuine test exit 1 and raw bytes",
+      "repair": "UTF-8 receipt display; original log and original receipt preserved"
+    },
+    {
+      "operation": "first handoff evidence builder",
+      "result": "Python 3.9 pathlib.write_text does not support newline argument; structured report and copied evidence already saved, handoff not written",
+      "repair": "write_bytes with explicit UTF-8/LF; no source behavior affected"
+    }
+  ]
+}

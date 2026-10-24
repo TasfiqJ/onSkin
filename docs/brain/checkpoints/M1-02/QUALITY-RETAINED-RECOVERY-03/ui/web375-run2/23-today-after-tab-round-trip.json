@@ -1,0 +1,381 @@
+{
+  "bodyText": "FRIDAY, OCTOBER 23 · 10:18 PM Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 0 of 1 Glycolic 7% toner On exfoliation nights only. NEXT Shelf 3 products ＋ Add All Actives Expiring Everything on your shelf, ordered by supported tracked dates. Interaction guidance is unavailable We won't show a compatibility result for these products until that review is complete. FIRST ROUTINE Your routine is ready to draft. Uses the products you added, and keeps missing steps visible instead of inventing them. Build my routine Mineral SPF 50 Sunscreen (SPF) · opened Oct · Date unknown Date unknown Glycolic 7% toner Toner / essence · opened Oct · Date unknown Date unknown Retinol 0.3% serum Retinol / retinoid serum · opened Oct · Date unknown Date unknown Add a product You ACCOUNT Guest (not saved) Create SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Pregnancy & breastfeeding Review your routine safety setting. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Progress photo storage Encrypted on this device. Cloud backup is not available in this build. Device only REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Pauses health use; starts active-data deletion; keeps billing. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using Layerwell and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to request and read your export. > YOUR DATA Export my data Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, Progress notes, and pending or terminal shelf and completion sync records. Photo files and thumbnails stay encrypted here; share images individually from Progress. Delete account Progress photos stay encrypted here unless you share one. No ads. No data sales. Layerwell gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 140
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "selected": false,
+      "width": 287,
+      "x": 44,
+      "y": 347
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 267.94,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Build my routine",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 450
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": false,
+      "label": "Mineral SPF 50, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 293,
+      "x": 41,
+      "y": 556
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Create an account",
+      "role": "button",
+      "selected": false,
+      "width": 81.23,
+      "x": 248.77,
+      "y": 92
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Manage subscription. Free plan",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 210
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Your plan",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 328
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Edit the order",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 454
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Retinoid ramp",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 502
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Streak & adherence",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 550
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 24.85,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 12,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Add a product to your shelf",
+        "role": "button",
+        "selected": false,
+        "width": 83.06,
+        "x": 267.94,
+        "y": 8
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "All",
+        "role": "button",
+        "selected": false,
+        "width": 57.19,
+        "x": 24,
+        "y": 82
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Actives",
+        "role": "button",
+        "selected": false,
+        "width": 90.88,
+        "x": 91.19,
+        "y": 82
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Expiring",
+        "role": "button",
+        "selected": false,
+        "width": 96.73,
+        "x": 192.06,
+        "y": 82
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Build my routine",
+        "role": "button",
+        "selected": false,
+        "width": 293,
+        "x": 41,
+        "y": 450
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 86,
+        "hitOk": false,
+        "label": "Mineral SPF 50, Date unknown",
+        "role": "button",
+        "selected": false,
+        "width": 293,
+        "x": 41,
+        "y": 556
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Create an account",
+        "role": "button",
+        "selected": false,
+        "width": 81.23,
+        "x": 248.77,
+        "y": 92
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Manage subscription. Free plan",
+        "role": "button",
+        "selected": false,
+        "width": 285,
+        "x": 45,
+        "y": 210
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Your plan",
+        "role": "button",
+        "selected": false,
+        "width": 285,
+        "x": 45,
+        "y": 328
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Edit the order",
+        "role": "button",
+        "selected": false,
+        "width": 285,
+        "x": 45,
+        "y": 454
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Retinoid ramp",
+        "role": "button",
+        "selected": false,
+        "width": 285,
+        "x": 45,
+        "y": 502
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Streak & adherence",
+        "role": "button",
+        "selected": false,
+        "width": 285,
+        "x": 45,
+        "y": 550
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8293/today",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

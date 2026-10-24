@@ -1,0 +1,56 @@
+{
+  "files": [
+    {
+      "bytes": 800,
+      "path": "00_READ_FIRST.md",
+      "sha256": "487322c9049709eddb4d3cbedbaf8ad6df68946fee1750e2cfde6a1302296da8"
+    },
+    {
+      "bytes": 1119,
+      "path": "01_SOURCE_IDENTITY.md",
+      "sha256": "f8de97167d85344b96fc6cf2e584792b3642b24badccf926db1ebad9cea51d02"
+    },
+    {
+      "bytes": 1560,
+      "path": "02_BRAIN_SCOPED_VERDICT.md",
+      "sha256": "bcb80806a321e0843478ea8490e44309e9c7c694bad2125347024c099b0c4484"
+    },
+    {
+      "bytes": 1982,
+      "path": "03_QUALITY_CI_FAILURE_TRUTH.md",
+      "sha256": "048559174315707f3ac1c3bdc96ec9b7f7f19de1fb82d3583ee48d5388eca025"
+    },
+    {
+      "bytes": 1464,
+      "path": "04_EXACT_QUALITY_SCOPE.md",
+      "sha256": "3c418561c69be93e82821ef575e5469f0812218801886ca09db53c1a0d343d67"
+    },
+    {
+      "bytes": 1939,
+      "path": "05_AUTONOMOUS_M1_SCOPE.md",
+      "sha256": "3be77b9dd85abe09f39652107721d8a4e3a5fd226725eea9be643d50ad8eb4b3"
+    },
+    {
+      "bytes": 1739,
+      "path": "06_AUTHORIZED_EDIT_SCOPE.md",
+      "sha256": "5c18da3fdb9c86d8c0e7df5a5fba5815d4710b1c790b0ba26005d5285cbe87c2"
+    },
+    {
+      "bytes": 1772,
+      "path": "07_TESTS_AND_EVIDENCE.md",
+      "sha256": "492a8092220224640ae92b16bb9c2c4548bd0d711e2830a3728683211704f345"
+    },
+    {
+      "bytes": 1748,
+      "path": "08_DELIVERY_AND_STOP.md",
+      "sha256": "1cba9b22917c7b9d034970e4c5b1e435293ce22d4a2836f65f54871beb4e536c"
+    },
+    {
+      "bytes": 1415,
+      "path": "verify_packet.py",
+      "sha256": "ec32f666884afcbfe6de74769b3f28aab48a7ab8c520b90869d3c459079619ef"
+    }
+  ],
+  "purpose": "transport integrity of all context docs and verifier; pasted exact prompt separately authoritative; no source admission",
+  "schema": 1
+}

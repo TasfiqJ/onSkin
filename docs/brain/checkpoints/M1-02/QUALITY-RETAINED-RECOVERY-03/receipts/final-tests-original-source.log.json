@@ -1,0 +1,17 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/notifications/preferenceReadRace.retained03.test.ts",
+    "src/features/photos/offlineDiary.retained03.test.ts"
+  ],
+  "cwd": "C:/Users/jasim/AppData/Local/Temp/onskin-worklist-adverse-_7w6k3df",
+  "start": "2026-10-24T02:15:00.686205+00:00",
+  "exit": 1,
+  "seconds": 1.75,
+  "log": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o\\logs\\final-tests-original-source.log"
+}

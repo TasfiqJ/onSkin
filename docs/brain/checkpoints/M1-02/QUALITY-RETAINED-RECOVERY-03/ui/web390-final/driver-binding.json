@@ -1,0 +1,10 @@
+{
+  "original": "file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs",
+  "originalSha256": "381f4a70172c6fd8418813b6896e7e26906b1a0ea0857bd36d57f14c90742e67",
+  "executedSha256": "7c20c918a77cf76068cb11f14556638bb94be2e9194678bc0f8042f7a0f06737",
+  "changes": [
+    "bounded screenshots",
+    "touch trace",
+    "synthetic unavailable permission and offline saved-preference read race/retry/reload"
+  ]
+}

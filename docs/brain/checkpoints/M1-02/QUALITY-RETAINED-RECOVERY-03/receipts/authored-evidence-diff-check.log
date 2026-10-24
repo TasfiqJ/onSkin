@@ -1,0 +1,170 @@
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:1: trailing whitespace.
++    await retainedRoute(client, '/settings/notifications');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:2: trailing whitespace.
++    await waitForText(client, 'Morning routine');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:3: trailing whitespace.
++    await waitForCondition(client, `!document.body.innerText.includes('Checking notification access')`, 30000, 'permission read settled');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:4: trailing whitespace.
++    await captureStep(client, 'R03-unavailable-permission', { assertClean: false });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:5: trailing whitespace.
++    const switchState = () => evaluate(client, `document.querySelector('[role="switch"][aria-label="Morning routine"]')?.getAttribute('aria-checked')`);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:6: trailing whitespace.
++    async function touchMorning() {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:7: trailing whitespace.
++      const rect = await evaluate(client, `(() => {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:8: trailing whitespace.
++        const el = document.querySelector('[role="switch"][aria-label="Morning routine"]');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:9: trailing whitespace.
++        if (!el) throw new Error('Missing accessible morning switch');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:10: trailing whitespace.
++        el.scrollIntoView({ block: 'center' });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:11: trailing whitespace.
++        const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:12: trailing whitespace.
++      })()`);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:13: trailing whitespace.
++      writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'touch', label: 'Morning routine switch' }) + '\n', { flag: 'a' });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:14: trailing whitespace.
++      await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...rect, id: 1, force: 1, radiusX: 2, radiusY: 2 }] });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:15: trailing whitespace.
++      await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:16: trailing whitespace.
++      await delay(300);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:17: trailing whitespace.
++    }
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:18: trailing whitespace.
++    await touchMorning();
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:19: trailing whitespace.
++    assert(await switchState() === 'false', 'Unavailable browser permission must keep delivery off');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:20: trailing whitespace.
++    await evaluate(client, `(async () => {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:21: trailing whitespace.
++      const find = pattern => [...__r.getModules().values()].find(m => pattern.test(m.verboseName ?? '')).publicModule.exports;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:22: trailing whitespace.
++      const delivery = find(/features[\\/]notifications[\\/]deliver\.ts$/);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:23: trailing whitespace.
++      const store = find(/features[\\/]notifications[\\/]store\.ts$/);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:24: trailing whitespace.
++      const qc = find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:25: trailing whitespace.
++      const originalPermission = delivery.getPermissionStatus;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:26: trailing whitespace.
++      const originalSchedule = delivery.rescheduleReminders;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:27: trailing whitespace.
++      const originalRead = store.loadNotifPrefs;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:28: trailing whitespace.
++      // Controlled external bridge status only; this never authorizes native delivery.
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:29: trailing whitespace.
++      delivery.getPermissionStatus = async () => 'authorized';
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:30: trailing whitespace.
++      await qc.invalidateQueries({ queryKey: ['notificationAuthorization'] });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:31: trailing whitespace.
++      let release, entered;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:32: trailing whitespace.
++      const gate = new Promise(r => { release = r; });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:33: trailing whitespace.
++      const started = new Promise(r => { entered = r; });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:34: trailing whitespace.
++      let first = true;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:35: trailing whitespace.
++      store.loadNotifPrefs = async (...args) => {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:36: trailing whitespace.
++        const snapshot = await originalRead(...args);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:37: trailing whitespace.
++        if (first) { first = false; entered(); await gate; }
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:38: trailing whitespace.
++        return snapshot;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:39: trailing whitespace.
++      };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:40: trailing whitespace.
++      let fail = true;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:41: trailing whitespace.
++      delivery.rescheduleReminders = async (...args) => {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:42: trailing whitespace.
++        if (fail) { fail = false; throw new Error('Synthetic scheduling bridge refusal'); }
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:43: trailing whitespace.
++        return originalSchedule(...args);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:44: trailing whitespace.
++      };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:45: trailing whitespace.
++      globalThis.__R03_RELEASE_READ__ = release;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:46: trailing whitespace.
++      globalThis.__R03_RESTORE__ = () => { release(); store.loadNotifPrefs = originalRead; delivery.rescheduleReminders = originalSchedule; delivery.getPermissionStatus = originalPermission; };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:47: trailing whitespace.
++      globalThis.__R03_READ_DURABLE__ = () => originalRead();
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:48: trailing whitespace.
++      void qc.refetchQueries({ queryKey: ['notifPrefs'] });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:49: trailing whitespace.
++      await started;
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:50: trailing whitespace.
++      return { delayedActualLocalRead: true, controlledBridgeFailure: true };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:51: trailing whitespace.
++    })()`, true);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:52: trailing whitespace.
++    await client.send('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: 0, uploadThroughput: 0 });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:53: trailing whitespace.
++    await touchMorning();
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:54: trailing whitespace.
++    await waitForText(client, 'Your preferences are saved, but reminders were not confirmed.');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:55: trailing whitespace.
++    await evaluate(client, 'globalThis.__R03_RELEASE_READ__()');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:56: trailing whitespace.
++    await delay(400);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:57: trailing whitespace.
++    assert(await switchState() === 'true', 'Late read replaced the saved opt-in');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:58: trailing whitespace.
++    const saved = await evaluate(client, `(async () => {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:59: trailing whitespace.
++      const p = await __R03_READ_DURABLE__(); return { amEnabled: p.amEnabled, amTime: p.amTime, syntheticLocalOnly: true };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:60: trailing whitespace.
++    })()`, true);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:61: trailing whitespace.
++    writeJson('R03-durable-preference.json', saved);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:62: trailing whitespace.
++    assert(saved.amEnabled === true, 'Synthetic preference was not durably saved');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:63: trailing whitespace.
++    await captureStep(client, 'R03-saved-unconfirmed-after-late-read', { assertClean: false });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:64: trailing whitespace.
++    await scrollTextIntoView(client, 'Try saving reminder preferences again');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:65: trailing whitespace.
++    await client.send('Page.bringToFront');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:66: trailing whitespace.
++    await client.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:67: trailing whitespace.
++    const retryFocus = await evaluate(client, `(() => {
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:68: trailing whitespace.
++      const el = document.querySelector('[aria-label="Try saving reminder preferences again"]');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:69: trailing whitespace.
++      el.focus(); return { focused: document.activeElement === el, label: el.getAttribute('aria-label') };
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:70: trailing whitespace.
++    })()`);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:71: trailing whitespace.
++    assert(retryFocus.focused, 'Retry must have keyboard focus');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:72: trailing whitespace.
++    writeJson('R03-keyboard-focus.json', retryFocus);
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:73: trailing whitespace.
++    await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', unmodifiedText: '\r', windowsVirtualKeyCode: 13 });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:74: trailing whitespace.
++    await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:75: trailing whitespace.
++    writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'keyboard Enter', label: 'Try saving reminder preferences again' }) + '\n', { flag: 'a' });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:76: trailing whitespace.
++    await waitForText(client, 'Preferences saved on this browser. Native reminder scheduling is unavailable here.');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:77: trailing whitespace.
++    await captureStep(client, 'R03-offline-keyboard-retry', { assertClean: false });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:78: trailing whitespace.
++    await evaluate(client, '__R03_RESTORE__()');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:79: trailing whitespace.
++    await client.send('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:80: trailing whitespace.
++    await client.send('Page.reload', { ignoreCache: true });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:81: trailing whitespace.
++    await waitForText(client, 'Morning routine');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:82: trailing whitespace.
++    await waitForCondition(client, `!document.body.innerText.includes('Checking notification access')`, 30000, 'reloaded permission settled');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:83: trailing whitespace.
++    assert(await switchState() === 'false', 'Browser reload must not claim native authorization');
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:84: trailing whitespace.
++    await captureStep(client, 'R03-reload-delivery-unavailable', { assertClean: false });
+docs/brain/checkpoints/M1-02/QUALITY-RETAINED-RECOVERY-03/notification-race.fragment.txt:85: trailing whitespace.
++    await retainedRoute(client, '/today');

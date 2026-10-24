@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "972a733b44a14366e07af5fea7d5eda3105879dbcc631ee62361774dcb531a7a"
+  ],
+  "exit": 0,
+  "output": "VERIFIED 10 context files against externally supplied manifest SHA256; orientation prompt copy is not a manifest member; admission NONE",
+  "extracted_root": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-quality-retained03-nh2mud4o",
+  "authority": "Externally pasted human prompt; unverified orientation copy excluded."
+}

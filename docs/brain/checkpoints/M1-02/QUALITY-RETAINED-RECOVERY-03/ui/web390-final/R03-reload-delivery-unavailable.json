@@ -1,0 +1,47 @@
+{
+  "bodyText": "< Notifications Notification permission is unavailable in this browser preview. UTILITY · YOUR ROUTINE Morning routine 8:00 AM Evening · tonight’s step 9:30 PM OPTIONAL REMINDERS Routine pacing suggestions Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default On this device, routine pacing and replenishment suggestions are limited to 3 scheduling attempts in 7 days; tips and announcements to 1. Progress-photo reminders are weekly.",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 20,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Morning routine 8:00 AM",
+      "role": "button",
+      "selected": false,
+      "width": 262,
+      "x": 38,
+      "y": 182
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Evening · tonight’s step 9:30 PM",
+      "role": "button",
+      "selected": false,
+      "width": 262,
+      "x": 38,
+      "y": 275
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8295/settings/notifications",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

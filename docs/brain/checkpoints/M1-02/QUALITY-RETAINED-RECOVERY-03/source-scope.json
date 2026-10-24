@@ -1,0 +1,161 @@
+{
+  "anchor": "704d3df5e01cd55023d9c08518ce2df8512e72ca",
+  "source_commit": "4d8ef8a029375512ddb29df402f4b77ca557be39",
+  "source_tree": "3e17c9b79b6603a4584cab0c200f4d9211951c58",
+  "entries": [
+    {
+      "path": "apps/mobile/src/features/notifications/preferenceReadRace.retained03.test.ts",
+      "before_blob": null,
+      "before_sha256": null,
+      "blob": "1c0cb8c524426a78ec11beda84855ca7cfebe450",
+      "sha256": "dcbf5adb124c27f96e0e999c351595f26e6ac4b208ab21787ace4f284c62caae",
+      "bytes": 4487
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "before_blob": "464a1a0e67002fd5dfa1ccb3ef5d6e0d8ecb21f0",
+      "before_sha256": "e6957916fa285863b5c83668d23bb7e7b5db43b22da1b6d6d04221ce55d489a3",
+      "blob": "4b362dd042c56b4aba8452e6e4eb6e0eda70e127",
+      "sha256": "2b5207092d25bc74617f3d12a29e3e9437cec0bcb395a0eb1e50b2bca9353bf1",
+      "bytes": 4098
+    },
+    {
+      "path": "apps/mobile/src/features/photos/offlineDiary.retained03.test.ts",
+      "before_blob": null,
+      "before_sha256": null,
+      "blob": "a22997a598069364f0203a8423440b2ae9c1ae15",
+      "sha256": "59b44a4879abe8aade145e2e9d77bc465312169f3e6dfed7e989b6ba748d9a21",
+      "bytes": 5204
+    },
+    {
+      "path": "apps/mobile/src/features/photos/usePhotos.ts",
+      "before_blob": "34f36233fb7f503570e9c37b1fa680ea41bb9c1a",
+      "before_sha256": "384c254c78ddfa2550803444d7d33b46bc8c45703723da215e565ae163eb71f5",
+      "blob": "0383710ea416810d459434f6d6dcc1f9dc56541e",
+      "sha256": "a59d8eb99437c0f15fe601c0915f0bfec69eeecbdbf3eeda74cc9e06de6e2790",
+      "bytes": 15828
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before_blob": "3b3eb7a75b732e6e2611cab627d5f51165763f7b",
+      "before_sha256": "3e71aa693e8b32d78c176e7e1b463e4e76f234f1dc56c74f9ba21893e96068fa",
+      "blob": "d8e92538d99e246ddc7f1e385c3d8e624d62c1c8",
+      "sha256": "0217c39dc4498d717ebadbf08e062011b150fdf2e93284326ea0b97d353ac85c",
+      "bytes": 503208
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "before_blob": "a7f1ef62d6f95bf021f36644721d1b1e75441f5c",
+      "before_sha256": "9a23dcb35c5a92c8932c5f761c443ba84b1b9b429d1158d4860488388fda3839",
+      "blob": "8f6fdaf035fcf964124285dc8989afbc6aacf1ad",
+      "sha256": "d76e9196f5930025fac1a1cc1fbdeee626c020c7dbce198334b6ec2864c743a5",
+      "bytes": 137965
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "before_blob": "131edfa0b43a2a069636333e28b7aaa30a816257",
+      "before_sha256": "f0631ceef2c6976edd135bd178bbf1dd6aa3cda0cf36059a2edbfb23746ebf64",
+      "blob": "7f5054ae38ea288b8a3d07f71e0accc1ca21acfa",
+      "sha256": "1ece2c8c2959ce80d3c44f990e82dce6c26804042acca9ae7e13af6aff60185c",
+      "bytes": 82183
+    }
+  ],
+  "protected_objects": [
+    {
+      "path": ".github",
+      "anchor_object": "9148470436b9d21580fdf239fa1f43d4ac1a9758",
+      "source_object": "9148470436b9d21580fdf239fa1f43d4ac1a9758"
+    },
+    {
+      "path": "scripts/phase4",
+      "anchor_object": "b68b15afd42318e31a7edd8fcb868494f02803ea",
+      "source_object": "b68b15afd42318e31a7edd8fcb868494f02803ea"
+    },
+    {
+      "path": "scripts/phase9",
+      "anchor_object": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae",
+      "source_object": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae"
+    },
+    {
+      "path": "scripts/security_readiness",
+      "anchor_object": "89d918679e7877b3e2f652add3386f26add40d05",
+      "source_object": "89d918679e7877b3e2f652add3386f26add40d05"
+    },
+    {
+      "path": "supabase",
+      "anchor_object": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662",
+      "source_object": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662"
+    },
+    {
+      "path": "docs/brain/state",
+      "anchor_object": "713a0d090230d8831051d8a0bb97d3bdb14a523b",
+      "source_object": "713a0d090230d8831051d8a0bb97d3bdb14a523b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth",
+      "anchor_object": "cc3c8a72cd49818e1a6166240970fa783a5febdd",
+      "source_object": "cc3c8a72cd49818e1a6166240970fa783a5febdd"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent",
+      "anchor_object": "df3d819603ea233bc1af41b064d9e0f99ab7cb63",
+      "source_object": "df3d819603ea233bc1af41b064d9e0f99ab7cb63"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage",
+      "anchor_object": "31811c7d921536a50dae1a8569f8f7b059e9dbe3",
+      "source_object": "31811c7d921536a50dae1a8569f8f7b059e9dbe3"
+    },
+    {
+      "path": "package.json",
+      "anchor_object": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "source_object": "7b0522688c74c78328aa587cb9f9a07b65965061"
+    },
+    {
+      "path": "package-lock.json",
+      "anchor_object": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "source_object": "e53de80bf46db8f7a7fcd97781971911e2d328bd"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "anchor_object": "6217bd03730c530445861cc3e1e438a92f401b83",
+      "source_object": "6217bd03730c530445861cc3e1e438a92f401b83"
+    },
+    {
+      "path": "apps/mobile/app.base.json",
+      "anchor_object": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1",
+      "source_object": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/permission.ts",
+      "anchor_object": "60576f1d7ef80d3378ffdeb883e03edc7beeaeb3",
+      "source_object": "60576f1d7ef80d3378ffdeb883e03edc7beeaeb3"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/mutations.ts",
+      "anchor_object": "82b8191b372941e066be32a18f83f9d42bc6f08e",
+      "source_object": "82b8191b372941e066be32a18f83f9d42bc6f08e"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/[id].tsx",
+      "anchor_object": "346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a",
+      "source_object": "346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a"
+    },
+    {
+      "path": "apps/mobile/src/app/onboarding/quiz.tsx",
+      "anchor_object": "dc9bdb09004238ac7dcfc0005661f3cec8b97616",
+      "source_object": "dc9bdb09004238ac7dcfc0005661f3cec8b97616"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "anchor_object": "6ff52e8e9bfde498d1169abc233ea26b3363ef8a",
+      "source_object": "6ff52e8e9bfde498d1169abc233ea26b3363ef8a"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.ts",
+      "anchor_object": "07a5fa0b274c42b1414d0ea9539ed885d4f44dd7",
+      "source_object": "07a5fa0b274c42b1414d0ea9539ed885d4f44dd7"
+    }
+  ],
+  "git_status": ""
+}
