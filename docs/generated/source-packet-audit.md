@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-10-03T17:29:36.675Z
+Generated: 2026-10-24T21:43:50.151Z
 Status: pass
 Strict mode: yes
 
@@ -9,6 +9,11 @@ verifies that its strategy docs are represented in the active `docs/` tree.
 Non-strict mode fails on missing packet files or active mirror files; strict
 mode also fails if a mirrored active doc differs from the packet copy, or if
 the top-level packet markdown shape changes without updating the audit.
+Release09 separately authenticates the entire immutable original packet and
+exactly five measured Release08 additive notices. These byte-different docs
+are authorizedSupersession, never identical. Missing/altered notices fail.
+Supersession manifest: docs/release/full-app-j01/source-packet-supersession09.v1.json (SHA-256 46be42762da54173473953a1d621aba60e80d699ee4ea717ee048b3de1f00a51).
+Planning consistency only; source acceptance REVIEW_REQUIRED; legacy cutover NOT_DONE; release NO_GO.
 
 ## Summary
 
@@ -17,24 +22,25 @@ the top-level packet markdown shape changes without updating the audit.
 - Unexpected top-level packet markdown files: 0
 - Source docs: 10
 - Active mirrors: 10
-- Identical mirrors: 10
+- Identical mirrors: 5
+- Authorized supersessions: 5
 - Blockers: 0
 - Warnings: 0
 
 ## Docs Crosswalk
 
-| Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
-| ------------------------------ | ------------------ | --------- | --------- | -------------- |
-| ARCHITECTURE.md                | identical          | yes       | yes       | 6f7e362d5591   |
-| CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | f7832b2448b2   |
-| CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | 1061c2d2e8de   |
-| FEATURE_INDEX.md               | identical          | yes       | yes       | 173d78862669   |
-| MASTER_PLAN.md                 | identical          | yes       | yes       | 7584eac3911f   |
-| MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 2982c3f151b5   |
-| PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | a1d42cd4a613   |
-| ROADMAP.md                     | identical          | yes       | yes       | 99d4b81f7381   |
-| TESTING_STRATEGY.md            | identical          | yes       | yes       | cecef05fea26   |
+| Packet doc                     | Active docs status     | AGENTS.md | CLAUDE.md | Packet SHA-256 |
+| ------------------------------ | ---------------------- | --------- | --------- | -------------- |
+| ARCHITECTURE.md                | identical              | yes       | yes       | 6f7e362d5591   |
+| CODEX_IMPLEMENTATION_PROMPT.md | identical              | yes       | yes       | f7832b2448b2   |
+| CODE_REVIEW.md                 | identical              | yes       | yes       | 83db5ca6e5ad   |
+| DECISIONS.md                   | authorizedSupersession | yes       | yes       | 1061c2d2e8de   |
+| FEATURE_INDEX.md               | authorizedSupersession | yes       | yes       | 173d78862669   |
+| MASTER_PLAN.md                 | authorizedSupersession | yes       | yes       | 7584eac3911f   |
+| MASTER_PLAN_UPDATE_PATCH.md    | identical              | yes       | yes       | 2982c3f151b5   |
+| PRODUCT_REQUIREMENTS.md        | authorizedSupersession | yes       | yes       | a1d42cd4a613   |
+| ROADMAP.md                     | authorizedSupersession | yes       | yes       | 99d4b81f7381   |
+| TESTING_STRATEGY.md            | identical              | yes       | yes       | cecef05fea26   |
 
 ## Top-Level Packet Files
 

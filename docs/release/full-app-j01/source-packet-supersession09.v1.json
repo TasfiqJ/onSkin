@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "id": "onskin-source-packet-supersession09-v1",
+  "authorization": "BRAIN-RELEASE09-SOURCE-PACKET-CI-CANDIDATE-01",
+  "noticeAuthorization": "BRAIN-RELEASE-FULLAPP-J01-REBASE08-CANDIDATE-01",
+  "base": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+  "release08": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "release08Tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+  "originalPacketFiles": [
+    {
+      "path": "04_repo_docs/AGENTS.md",
+      "bytes": 3388,
+      "sha256": "da1897ba9f50743b94a5237e5a71f225e07b7dcae03157181d297b63e9ebc4fb",
+      "blob": "b4947dae3e7fb4e2016418b75516b1225f16726d"
+    },
+    {
+      "path": "04_repo_docs/README.md",
+      "bytes": 2986,
+      "sha256": "40ed273c037f23232fd687f0cd9f933562b2c628f714172b49991523b570d75c",
+      "blob": "c76313d739f2ef012207bb390249123332c33eb4"
+    },
+    {
+      "path": "04_repo_docs/docs/ARCHITECTURE.md",
+      "bytes": 49671,
+      "sha256": "6f7e362d5591dfb58f10e04a2f5664fb48318aadb21d9d9601a2ea13cc0de768",
+      "blob": "09eb27e247ec8b7ee6b7488f28e6f57f23676e0a"
+    },
+    {
+      "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
+      "bytes": 9528,
+      "sha256": "f7832b2448b2c273ac483e39d59b9c132f97375cb9fb70848d30cc1cdb734d40",
+      "blob": "b53ae8fa4f5d5529f5bf6d2276df80b5a073dcc7"
+    },
+    {
+      "path": "04_repo_docs/docs/CODE_REVIEW.md",
+      "bytes": 1985,
+      "sha256": "83db5ca6e5ad2289cedbcedf24574f134b4fe63907464d1b34dad2456200f64a",
+      "blob": "0728a9251b622f095ac44c44e5eba3717f9de240"
+    },
+    {
+      "path": "04_repo_docs/docs/DECISIONS.md",
+      "bytes": 107403,
+      "sha256": "1061c2d2e8de1d7791e7e807b9c66750cac230f4a9671d4b600aeb43eb89be5f",
+      "blob": "59e377d15683390e185402ac701096f9ba433845"
+    },
+    {
+      "path": "04_repo_docs/docs/FEATURE_INDEX.md",
+      "bytes": 9545,
+      "sha256": "173d78862669bb34c26e667ded47c580adb3b0989f564f0a41d77d28a326695c",
+      "blob": "637ec987ab02551319c177fd353c21b956e15498"
+    },
+    {
+      "path": "04_repo_docs/docs/MASTER_PLAN.md",
+      "bytes": 70537,
+      "sha256": "7584eac3911f7e4fda7edb36878b191ddccffc6a15c630a53f185d538135260f",
+      "blob": "06f008a38c5851826f03ca8e27fcef13a9a02dac"
+    },
+    {
+      "path": "04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md",
+      "bytes": 2304,
+      "sha256": "2982c3f151b50dda9817cd22501e56a68b7e36a51a621a1a12eb4eeb2c18a9a3",
+      "blob": "17ecddce2fb311b1b1de67178a3d7ccab6b15fe1"
+    },
+    {
+      "path": "04_repo_docs/docs/PRODUCT_REQUIREMENTS.md",
+      "bytes": 6696,
+      "sha256": "a1d42cd4a6135d55a35b0df592076f68bc9cc2e0c77eed4858196fadaba489d7",
+      "blob": "36cdc11c8be73d38ead93215a2e7f8d4eefd5a97"
+    },
+    {
+      "path": "04_repo_docs/docs/ROADMAP.md",
+      "bytes": 9377,
+      "sha256": "99d4b81f73819d7f79fdcb05353141b15f7bb59e9aab1ac4b4e755227fc83cfa",
+      "blob": "9056745150b2eb9eb7bab0a8bb752f8019ecf782"
+    },
+    {
+      "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
+      "bytes": 25868,
+      "sha256": "cecef05fea26f2aa88dae9807e97a1987263b1a878c0de85a37b825b708f9b08",
+      "blob": "12783be54037738ee1ea6aa988567e5b5940acf0"
+    }
+  ],
+  "insertBase64": "CiMjIFJlbGVhc2UwOCBwcm9wb3NlZCBwdWJsaWMtcHJvZHVjdCBzY29wZSDigJQgMjAyNi0xMC0yNAoKVGhlIHByb3Bvc2VkIFtmdWxsLWFwcCArIEowMSBjb250cmFjdF0ocmVsZWFzZS9mdWxsLWFwcC1qMDEvUkVBRE1FLm1kKSwgdW5kZXIKYEJSQUlOLVJFTEVBU0UtRlVMTEFQUC1KMDEtUkVCQVNFMDgtQ0FORElEQVRFLTAxYCwgcmVxdWlyZXMgRjAx4oCTRjE3L0YxOeKAk0YyMCwKVjItQzAx4oCTQzEyIGFuZCBQMDHigJNQMDYsIHBsdXMgSjAxIFZpc2libGUgUG9yZXMgb25seS4gRjE4IGF1dG9tYXRlZCBUcmVuZCBhbmQKSjAy4oCTSjI3IChpbmNsdWRpbmcgSjA1KSBkZWZlcjsgRjA5IHByaXZhdGUgaGlzdG9yeS9tYW51YWwgY29tcGFyaXNvbiByZW1haW5zIHJlcXVpcmVkLgpGMTIgdXNlcyBhIHRydXRoZnVsIGFwcHJvdmVkIEFwcGxlLW1hbmFnZWQgb2ZmZXIsIHdpdGggbm8gdW5zYWZlIGN1c3RvbSByZXZlcnNlIGdyYW50LgpUaGlzIGlzIGEgcHJvcG9zZWQgc291cmNlIG1pZ3JhdGlvbiBhd2FpdGluZyBpbmRlcGVuZGVudCBCcmFpbiBhY2NlcHRhbmNlLCBub3QKYWNjZXB0ZWQgcmVwb3NpdG9yeSByZWxlYXNlIGF1dGhvcml0eSBvciBjb21wbGV0ZWQgYXBwIGZ1bmN0aW9uYWxpdHkuIFRoZSBvbGQKU2VwMjcgaW5jbHVzaW9uIHN0YXRlbWVudHMgYmVsb3cgYXJlIGhpc3RvcmljYWwgcHJvZHVjdCBzY29wZTsgdGhlIHVuY2hhbmdlZApsZWdhY3kgbGF1bmNoIEpTT04vc2NyaXB0cyByZW1haW4gdGVjaG5pY2FsIHNhZmV0eSBndWFyZHMuIFRoZWlyIGNvbnN1bWVyL0NJCmN1dG92ZXIgaXMgKipOT1RfRE9ORSoqLCBleHBsaWNpdGx5IGdvdmVybmVkIGJ5IHRoZSBuZXcgcHJlY2VkZW5jZSBkZWNsYXJhdGlvbi4KQWxsIFNlY3VyaXR5L0RCL00xLTAzL00yL25hdGl2ZS9wcm92aWRlci9wYWlkL2NsaW5pY2FsL0FwcGxlL3B1YmxpYyBnYXRlcyByZW1haW4KY2xvc2VkLiBObyByZWxlYXNlIGRhdGUsIG1haW4gcHJvbW90aW9uIG9yIHBvc2l0aXZlIEowMSBjbGFpbSBpcyBhdXRob3JpemVkLgoK",
+  "insertSha256": "f9f9ec6aa100c64c490f06571a399d78f5b2c7b3ecb55e6735d9445fa2c03633",
+  "supersessions": [
+    {
+      "sourcePath": "04_repo_docs/docs/DECISIONS.md",
+      "activePath": "docs/DECISIONS.md",
+      "baseBlob": "59e377d15683390e185402ac701096f9ba433845",
+      "postimageBlob": "52e3ca679ab8b3e1948959e93939400427d75d10",
+      "baseSha256": "1061c2d2e8de1d7791e7e807b9c66750cac230f4a9671d4b600aeb43eb89be5f",
+      "postimageSha256": "12a2ec74f1d164bf8aa86d650a6cdfeed9179fd90cb7612416a6a87b00ceacab",
+      "insertOffset": 12
+    },
+    {
+      "sourcePath": "04_repo_docs/docs/FEATURE_INDEX.md",
+      "activePath": "docs/FEATURE_INDEX.md",
+      "baseBlob": "637ec987ab02551319c177fd353c21b956e15498",
+      "postimageBlob": "b5969077354d0e29c165c15f1bec2c5476da0213",
+      "baseSha256": "173d78862669bb34c26e667ded47c580adb3b0989f564f0a41d77d28a326695c",
+      "postimageSha256": "2fc86c14ff77bce2988261388124d129976b6e4f25cc770e1a9d3e27e1004311",
+      "insertOffset": 16
+    },
+    {
+      "sourcePath": "04_repo_docs/docs/MASTER_PLAN.md",
+      "activePath": "docs/MASTER_PLAN.md",
+      "baseBlob": "06f008a38c5851826f03ca8e27fcef13a9a02dac",
+      "postimageBlob": "86404ee2fa26849e80e4ff6be1b86dbab5f28c60",
+      "baseSha256": "7584eac3911f7e4fda7edb36878b191ddccffc6a15c630a53f185d538135260f",
+      "postimageSha256": "12d7f6b318854fd3d236797167c814b1682b0a4e593ca6d18c3a81123bd8030f",
+      "insertOffset": 14
+    },
+    {
+      "sourcePath": "04_repo_docs/docs/PRODUCT_REQUIREMENTS.md",
+      "activePath": "docs/PRODUCT_REQUIREMENTS.md",
+      "baseBlob": "36cdc11c8be73d38ead93215a2e7f8d4eefd5a97",
+      "postimageBlob": "fba13dfc486c5afc0a6a6620c8c38e63997e0998",
+      "baseSha256": "a1d42cd4a6135d55a35b0df592076f68bc9cc2e0c77eed4858196fadaba489d7",
+      "postimageSha256": "fa357f63cbe3aca6e12821a751f80cb33e4435ff4d1d9253bb8c13587cb7bc24",
+      "insertOffset": 23
+    },
+    {
+      "sourcePath": "04_repo_docs/docs/ROADMAP.md",
+      "activePath": "docs/ROADMAP.md",
+      "baseBlob": "9056745150b2eb9eb7bab0a8bb752f8019ecf782",
+      "postimageBlob": "36079c2c3b482a44a31c612804eb25031f7f093d",
+      "baseSha256": "99d4b81f73819d7f79fdcb05353141b15f7bb59e9aab1ac4b4e755227fc83cfa",
+      "postimageSha256": "4d3ea488b7ee0ba191c984038c1c520862508e9367bbd2d1593287b6dbd0a96f",
+      "insertOffset": 10
+    }
+  ],
+  "scope": "EXACT_ADDITIVE_PLANNING_COPY_ONLY",
+  "sourceAcceptance": "REVIEW_REQUIRED",
+  "legacyCutover": "NOT_DONE",
+  "release": "NO_GO"
+}

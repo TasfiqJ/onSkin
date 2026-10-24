@@ -1,9 +1,45 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 
 const root = process.cwd();
+const supersessionPath = 'docs/release/full-app-j01/source-packet-supersession09.v1.json';
+// Independently measured immutable Release08 preimages/postimages; changing this
+// authority requires a new reviewed version, never a generated hash refresh.
+const supersessionSha256 = '46be42762da54173473953a1d621aba60e80d699ee4ea717ee048b3de1f00a51';
+const digest = (raw) => createHash('sha256').update(raw).digest('hex');
+const blob = (raw) => createHash('sha1').update(`blob ${raw.length}\0`).update(raw).digest('hex');
+
+function safePath(path) {
+  if (typeof path !== 'string' || !path || isAbsolute(path) ||
+      path.includes('\\') || path.includes(':') ||
+      path.split('/').some((x) => !x || x === '.' || x === '..' ||
+        /[\x00-\x1f]/u.test(x) || /[. ]$/u.test(x) ||
+        /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/iu.test(x))) {
+    throw new Error(`Unsafe source-packet path: ${path}`);
+  }
+  let current = resolve(root, path);
+  while (true) {
+    if (existsSync(current) || current === resolve(root, path)) {
+      try {
+        const info = lstatSync(current);
+        if (info.isSymbolicLink() || (!info.isFile() && !info.isDirectory())) {
+          throw new Error(`Nonregular/link source-packet path: ${path}`);
+        }
+        if (current !== resolve(root, path) && !info.isDirectory()) {
+          throw new Error(`Non-directory source-packet parent: ${path}`);
+        }
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+      }
+    }
+    if (dirname(current) === current) break;
+    current = dirname(current);
+  }
+  return resolve(root, path);
+}
+
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 const sourceRoot = '04_repo_docs';
@@ -14,7 +50,7 @@ const outMd = process.env.SOURCE_PACKET_AUDIT_MD ?? 'docs/generated/source-packe
 const expectedTopLevelPacketFileNames = ['README.md', 'AGENTS.md'];
 
 function abs(path) {
-  return resolve(root, path);
+  return safePath(path);
 }
 
 function rel(path) {
@@ -42,11 +78,13 @@ function bytes(path) {
 function walkFiles(path) {
   if (!exists(path)) return [];
   const entries = readdirSync(abs(path), { withFileTypes: true });
+  const names = entries.map((entry) => entry.name.normalize('NFKC').toLowerCase());
+  if (new Set(names).size !== names.length) throw new Error(`Packet filename collision: ${path}`);
   return entries.flatMap((entry) => {
     const child = `${path}/${entry.name}`;
     if (entry.isDirectory()) return walkFiles(child);
-    if (entry.isFile()) return [child];
-    return [];
+    if (entry.isFile()) { safePath(child); return [child]; }
+    throw new Error(`Nonregular packet entry: ${child}`);
   });
 }
 
@@ -73,6 +111,11 @@ function normalizeGeneratedMarkdown(text) {
 
 function normalizeGeneratedJson(text) {
   const parsed = JSON.parse(text);
+  // Requiring the producer's canonical serialization also rejects duplicate keys
+  // that JSON.parse would otherwise silently collapse to a forged final value.
+  if (text.replace(/\r\n/g, '\n').trimEnd() !== JSON.stringify(parsed, null, 2)) {
+    throw new Error('Noncanonical generated JSON');
+  }
   delete parsed.generatedAt;
   return JSON.stringify(parsed, null, 2);
 }
@@ -83,7 +126,9 @@ function checkGeneratedFile(path, expectedContent, normalize) {
     return false;
   }
   const current = read(path);
-  if (normalize(current) !== normalize(expectedContent)) {
+  let matches = false;
+  try { matches = normalize(current) === normalize(expectedContent); } catch { /* malformed is stale */ }
+  if (!matches) {
     console.error(`FAIL ${path} is stale. Run npm run docs:source-packet-audit:strict.`);
     return false;
   }
@@ -132,6 +177,39 @@ if (strict && unexpectedTopLevelMarkdownNames.length > 0) {
 const rootAgentsText = exists('AGENTS.md') ? read('AGENTS.md') : '';
 const claudeText = exists('CLAUDE.md') ? read('CLAUDE.md') : '';
 
+// Authenticate the *entire* original packet before considering any exception.
+const authorityRaw = readFileSync(abs(supersessionPath));
+if (digest(authorityRaw) !== supersessionSha256) throw new Error('SUPERSESSION_MANIFEST_IDENTITY');
+const authority = JSON.parse(authorityRaw.toString('utf8'));
+const expectedInventory = authority.originalPacketFiles;
+if (JSON.stringify(sourcePacketFiles) !== JSON.stringify(expectedInventory.map((row) => row.path).sort())) {
+  blockers.push('Original packet inventory differs from immutable Release08.');
+}
+for (const row of expectedInventory) {
+  if (!exists(row.path)) { blockers.push(`Missing original packet file: ${row.path}`); continue; }
+  const raw = readFileSync(abs(row.path));
+  if (raw.length !== row.bytes || digest(raw) !== row.sha256 || blob(raw) !== row.blob) {
+    blockers.push(`Original packet identity changed: ${row.path}`);
+  }
+}
+const insert = Buffer.from(authority.insertBase64, 'base64');
+if (digest(insert) !== authority.insertSha256) throw new Error('SUPERSESSION_INSERT_IDENTITY');
+const supersessions = new Map(authority.supersessions.map((row) => [row.activePath, row]));
+function authorizedInsert(sourcePath, activePath) {
+  const row = supersessions.get(activePath);
+  if (!row || row.sourcePath !== sourcePath || !exists(activePath)) return false;
+  const original = readFileSync(abs(sourcePath));
+  const current = readFileSync(abs(activePath));
+  const offset = original.indexOf(10) + 1;
+  // Compare the complete original body and exact insert as bytes, including order,
+  // line endings and encoding. Hashes additionally bind measured Git objects.
+  return offset === row.insertOffset && digest(original) === row.baseSha256 &&
+    blob(original) === row.baseBlob && digest(current) === row.postimageSha256 &&
+    blob(current) === row.postimageBlob && current.equals(Buffer.concat([
+      original.subarray(0, offset), insert, original.subarray(offset),
+    ]));
+}
+
 const docs = sourceDocNames.map((name) => {
   const sourcePath = `${sourceDocsDir}/${name}`;
   const activePath = `${activeDocsDir}/${name}`;
@@ -139,6 +217,10 @@ const docs = sourceDocNames.map((name) => {
   const sourceHash = hash(sourcePath);
   const activeHash = activeExists ? hash(activePath) : null;
   const identical = activeExists && sourceHash === activeHash;
+  const authorizedSupersession = authorizedInsert(sourcePath, activePath);
+  if (supersessions.has(activePath) && !authorizedSupersession) {
+    blockers.push(`Required exact Release08 supersession missing or altered: ${activePath}`);
+  }
   const mentionedInRootAgents =
     rootAgentsText.includes(activePath.replaceAll('/', '\\')) ||
     rootAgentsText.includes(activePath);
@@ -146,7 +228,7 @@ const docs = sourceDocNames.map((name) => {
     claudeText.includes(activePath.replaceAll('/', '\\')) || claudeText.includes(activePath);
 
   if (!activeExists) blockers.push(`Missing active docs mirror for ${sourcePath}.`);
-  if (strict && activeExists && !identical) {
+  if (strict && activeExists && !identical && !authorizedSupersession) {
     blockers.push(`${activePath} differs from ${sourcePath} in strict mode.`);
   }
   if (!mentionedInRootAgents && !mentionedInClaude) {
@@ -165,6 +247,7 @@ const docs = sourceDocNames.map((name) => {
     sourceSha256: sourceHash,
     activeSha256: activeHash,
     identical,
+    authorizedSupersession,
     mentionedInRootAgents,
     mentionedInClaude,
   };
@@ -203,6 +286,11 @@ const packet = {
   unexpectedTopLevelMarkdownNames,
   packetFiles,
   docs,
+  authorizedSupersession: {
+    id: authority.id, manifestPath: supersessionPath, manifestSha256: supersessionSha256,
+    authorization: authority.authorization, sourceAcceptance: authority.sourceAcceptance,
+    legacyCutover: authority.legacyCutover, release: authority.release,
+  },
   summary: {
     totalPacketFileCount: sourcePacketFiles.length,
     topLevelPacketFileCount: topLevelPacketFiles.filter((file) => file.exists).length,
@@ -211,6 +299,7 @@ const packet = {
     sourceDocCount: docs.length,
     activeMirrorCount: docs.filter((doc) => doc.activeSha256).length,
     identicalMirrorCount: docs.filter((doc) => doc.identical).length,
+    authorizedSupersessionCount: docs.filter((doc) => doc.authorizedSupersession).length,
     blockerCount: blockers.length,
     warningCount: warnings.length,
   },
@@ -222,7 +311,7 @@ const jsonContent = `${JSON.stringify(packet, null, 2)}\n`;
 
 const docRows = docs.map((doc) => [
   doc.name,
-  doc.identical ? 'identical' : doc.activeSha256 ? 'differs' : 'missing',
+  doc.identical ? 'identical' : doc.authorizedSupersession ? 'authorizedSupersession' : doc.activeSha256 ? 'differs' : 'missing',
   doc.mentionedInRootAgents ? 'yes' : 'no',
   doc.mentionedInClaude ? 'yes' : 'no',
   doc.sourceSha256.slice(0, 12),
@@ -240,6 +329,11 @@ const mdContent = [
   'Non-strict mode fails on missing packet files or active mirror files; strict',
   'mode also fails if a mirrored active doc differs from the packet copy, or if',
   'the top-level packet markdown shape changes without updating the audit.',
+  'Release09 separately authenticates the entire immutable original packet and',
+  'exactly five measured Release08 additive notices. These byte-different docs',
+  'are authorizedSupersession, never identical. Missing/altered notices fail.',
+  `Supersession manifest: ${supersessionPath} (SHA-256 ${supersessionSha256}).`,
+  'Planning consistency only; source acceptance REVIEW_REQUIRED; legacy cutover NOT_DONE; release NO_GO.',
   '',
   '## Summary',
   '',
@@ -249,6 +343,7 @@ const mdContent = [
   `- Source docs: ${packet.summary.sourceDocCount}`,
   `- Active mirrors: ${packet.summary.activeMirrorCount}`,
   `- Identical mirrors: ${packet.summary.identicalMirrorCount}`,
+  `- Authorized supersessions: ${packet.summary.authorizedSupersessionCount}`,
   `- Blockers: ${packet.summary.blockerCount}`,
   `- Warnings: ${packet.summary.warningCount}`,
   '',
@@ -304,6 +399,13 @@ if (check) {
   process.exit(0);
 }
 
+const inputPaths = new Set([
+  ...sourcePacketFiles, ...docs.map((doc) => doc.activePath),
+  'AGENTS.md', 'CLAUDE.md', supersessionPath, 'scripts/docs/source-packet-audit.mjs',
+].map(abs));
+if (abs(outJson) === abs(outMd) || inputPaths.has(abs(outJson)) || inputPaths.has(abs(outMd))) {
+  throw new Error('Audit output must not overwrite an input or its paired output');
+}
 mkdirSync(dirname(abs(outJson)), { recursive: true });
 writeFileSync(abs(outJson), jsonContent);
 writeFileSync(abs(outMd), mdContent);
