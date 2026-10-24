@@ -1,12 +1,10 @@
 # Exact source scope
 
-Measured source `d76cbd2742920895522e3e9018d554319c777741`, tree `44bd5a747df37f46e8d4b49475648c00f7857905`, descends from the authenticated/pinned anchor through ten forward commits. All 23 changed source/doc/worklist paths and their exact pre/post mode, Git blob, byte length and SHA-256 are in source-scope.json. All ten intermediate path sets pass the campaign allowlist.
+Measured implementation `74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7`, tree `02f5a55250b0fbf4b924314f8c4aac7ee6f46bc5`, descends from the pinned anchor through 12 source/doc/worklist commits and historical evidence commit `54033f7c150b08721779ed02e51e68de02fa5544`. The final evidence refresh follows it. All 21 cumulative source/doc/worklist paths have pre/post Git blobs and SHA-256 in source-scope.json. All 13 intermediate commits through this measured source were checked against the literal grant, including the route added then removed during forward refinement.
 
-There are 51 protected path witnesses: 48 existing Git objects and three absence witnesses. Every existing checkpoint child, original Security/DB/workflow/producer, auth/consent/storage/offline and selected encryption/native/dependency boundary remains unchanged. The witness list explicitly distinguishes the previously narrow M1X-04 Shelf preservation witness from this campaign's now-authorized Shelf edit.
+There are 53 protected identity/absence witnesses: 50 existing Git objects and three absence witnesses. The unchanged launch producer and feature inventory are explicit additional witnesses. Every old checkpoint, original Security/DB/workflow/producer, auth/consent/storage/offline and selected encryption/native/dependency boundary remains unchanged. Campaign05 explicitly authorizes the Shelf mutations path that was a narrow preservation witness in M1X-04; no false unchanged claim is made for that path.
 
 - `apps/mobile/src/app/(tabs)/you.tsx`
-- `apps/mobile/src/app/settings/_layout.tsx`
-- `apps/mobile/src/app/settings/local-recovery.tsx`
 - `apps/mobile/src/app/settings/notifications.tsx`
 - `apps/mobile/src/app/settings/timing.tsx`
 - `apps/mobile/src/features/notifications/NotificationPreferenceReadState.tsx`
@@ -17,7 +15,7 @@ There are 51 protected path witnesses: 48 existing Git objects and three absence
 - `apps/mobile/src/features/notifications/useNotifications.ts`
 - `apps/mobile/src/features/photos/captureOwner.campaign05.test.ts`
 - `apps/mobile/src/features/photos/usePhotos.ts`
-- `apps/mobile/src/features/retainedRecovery/LocalRecoveryScreen.tsx`
+- `apps/mobile/src/features/retainedRecovery/LocalRecoverySection.tsx`
 - `apps/mobile/src/features/retainedRecovery/localEvidence.ts`
 - `apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts`
 - `apps/mobile/src/features/shelf/mutations.ts`

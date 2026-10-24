@@ -4,12 +4,12 @@
   "authorization": "M1X-RETAINED-MAJOR-CAMPAIGN05-CLIENT-CANDIDATE-01",
   "acceptance_authority": "Independent ChatGPT Brain only",
   "anchor": "99596bfceac782d740415503bc25452cac623254",
-  "measured_source": "d76cbd2742920895522e3e9018d554319c777741",
-  "measured_tree": "44bd5a747df37f46e8d4b49475648c00f7857905",
-  "source_paths": 23,
-  "source_commits": 10,
-  "protected_path_witnesses": 51,
-  "existing_protected_objects": 48,
+  "measured_source": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+  "measured_tree": "02f5a55250b0fbf4b924314f8c4aac7ee6f46bc5",
+  "source_paths": 21,
+  "source_commits": 12,
+  "protected_path_witnesses": 53,
+  "existing_protected_objects": 50,
   "absence_witnesses": 3,
   "implementation": {
     "families": [
@@ -17,7 +17,7 @@
       "unavailable/cross-grant reminder preference state",
       "cached settings entry"
     ],
-    "feature": "Device-local recovery under You; no new persisted cache, provider, permission prompt, scheduling or automatic fix"
+    "feature": "Expandable device-local recovery section in existing You \u2192 Help, with accessible Close; no new route, persistence, provider, permission prompt, scheduling or automatic fix"
   },
   "tests": {
     "original_production": {
@@ -26,22 +26,22 @@
       "exit": 1
     },
     "new_feature": {
-      "passed": 16
+      "passed": 17
     },
     "retained_recovery_settings": {
-      "passed": 2312,
+      "passed": 2313,
       "files": 193,
       "exit": 0
     },
     "root": {
-      "mobile": 6133,
+      "mobile": 6134,
       "console": 24,
-      "total": 6157,
+      "total": 6158,
       "files": 483,
       "exit": 0,
       "cached_tasks": 0,
       "skips_reported": 0,
-      "renderer_deprecation_lines": 637,
+      "renderer_deprecation_lines": 638,
       "act_warning_lines": 33
     },
     "typecheck": {
@@ -60,17 +60,26 @@
         0
       ],
       "producer_unchanged": true,
-      "complete_independent_checkout": true
+      "complete_independent_checkout": false,
+      "complete_final_checkout": true,
+      "historical_independent_checkout_proof": true,
+      "final_checkout_note": "Clean complete authorized checkout at final measured source"
+    },
+    "execution_baseline": {
+      "before_exit": 1,
+      "after_exit": 0,
+      "inventory_unchanged": true,
+      "producer_unchanged": true
     }
   },
   "e2e": {
     "surface": "Actual headless Chrome / Expo web, synthetic owners/products and controlled platform ports",
     "passed": [
-      "web375-measured-final",
-      "web390-attempt1",
-      "cross390-attempt2"
+      "inline375-verified",
+      "inline390-verified",
+      "inline-cross390-verified"
     ],
-    "screenshots": 32,
+    "screenshots": 34,
     "changed_flow_states": 26,
     "overflow_failures": 0,
     "control_issues": 0,
@@ -83,11 +92,32 @@
       "paid-positive",
       "real provider/hosted",
       "clinical/signing/release"
-    ]
+    ],
+    "text200_actual_action_hit_tests": 2
   },
   "github_ci": {
     "anchor_only": "See intake-ci-observation.json; final anchor Quality/canonical DB and source-only iOS passed, Security failed",
-    "final_head": "Observed separately after evidence commit/push in PR11/final relay; not predicted or borrowed here"
+    "final_head": "Read authentic actual evidence-tail head after push; report time-bound state in PR11/final relay. No prior success borrowed.",
+    "first_pushed_candidate": {
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "quality": "FAIL: canonical DB image acquisition; repository/rehearsals/exports PASS",
+      "ios_source_only": "FAIL: route inventory, repaired in forward client design",
+      "security": "FAIL protected acceptance",
+      "logs": "first-push-ci-*.json and receipts/first-push-*-failure.log"
+    },
+    "measured_source_observation": "See measured-inline-ci-observation.json: actual pushed measured-source API state; source-only iOS PASS, canonical DB image acquisition FAIL, remaining jobs time-bound as recorded.",
+    "measured_source_final": {
+      "source": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "quality": "FAIL canonical DB image acquisition",
+      "repository_gates": "PASS",
+      "pg15": "PASS",
+      "pg17": "PASS",
+      "ios_export": "PASS",
+      "android_export": "PASS",
+      "ios_launch": "PASS SOURCE-ONLY",
+      "security": "FAIL protected obligations",
+      "observation": "measured-source-final-ci-observation.json"
+    }
   },
   "delivery": {
     "branch": "stage/m1-retained-resilience",
@@ -115,6 +145,66 @@
       "exit": 0,
       "head": "d76cbd2742920895522e3e9018d554319c777741",
       "log_sha256": "001146bf64224fcfe37a27a757a215a0bde0f33473c8ff2ca9f8bd416d2ecd6b"
+    },
+    {
+      "path": "receipts/existing-surface-focused-corrected.json",
+      "exit": 0,
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "log_sha256": "ac5c82cbb57b0847321fc6c08857f1249b8eb2816dc1a175c2506c54fc943c07"
+    },
+    {
+      "path": "receipts/existing-surface-focused.json",
+      "exit": 1,
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "log_sha256": "f1c157984323cc1191c1ea4f52eacb4e08f7eae785d009d36afc9115b711bfb3"
+    },
+    {
+      "path": "receipts/existing-surface-inventory-after.json",
+      "exit": 0,
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "log_sha256": "81821c2dcdc796b40c0eaa1db63777b1d5e4353d2ed9a73d7d856eeb0d85a207"
+    },
+    {
+      "path": "receipts/existing-surface-lint.json",
+      "exit": 0,
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "log_sha256": "d407636b2c30935f36d4608bb582289f5162bf46d2ee46e86b4221d656033ad6"
+    },
+    {
+      "path": "receipts/existing-surface-types.json",
+      "exit": 0,
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "log_sha256": "b69119df2467f6ee21ff95bdce636dcd80b1dbdb39b5a977e53d37142d8a7da3"
+    },
+    {
+      "path": "receipts/final-inline-retained.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "9fbf3d5005d890f5ac1315cc1e4f208757ca6edd43689358fcda73e7461d5f22"
+    },
+    {
+      "path": "receipts/final-inline-root-lint.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "a2f5a7d5c6cc90372add419ad666aa191bd9af5ce5dead50801a25d915b2787a"
+    },
+    {
+      "path": "receipts/final-inline-root-tests.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "d67577242955146af7a86e0fc4253d988990d41cf83ed511ebdb68ff877e0236"
+    },
+    {
+      "path": "receipts/final-inline-root-typecheck.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "799488023b15bcbc1159bff57813af4189d6ea16e1747cfb6e9382570807880e"
+    },
+    {
+      "path": "receipts/final-inline-worklist-contract.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "0069459cd8cff13bd0c226a9f2229cf67fae780d9e83adbbdf08486d389e54cc"
     },
     {
       "path": "receipts/final-intermediate-protection-audit.json",
@@ -181,6 +271,60 @@
       "exit": 0,
       "head": "7fcde90821af144b2821f779845e539d91b602be",
       "log_sha256": "bda75ac69b7b5450903c53f8462eb96fcc2f945dcbcbdedf5081b9654d972610"
+    },
+    {
+      "path": "receipts/inline-cross390-final.json",
+      "exit": 1,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "ed37f6f0a2419f2859205650ea4c027c01ddcae8084eb93af6d69480905570a1"
+    },
+    {
+      "path": "receipts/inline-cross390-verified.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "9b38057afe00752c12ee4bb18b1e02d05e72f62a24372e92c80171bf584c3bcd"
+    },
+    {
+      "path": "receipts/inline-scope-audit.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "67fd400762cfabd2342dd441e0edcf6110d1d39df13ca09b6b8aab7e97590579"
+    },
+    {
+      "path": "receipts/inline-worklist-generation.json",
+      "exit": 0,
+      "head": "e2f64e876bdd98996ceb737d999174b80519b57f",
+      "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad"
+    },
+    {
+      "path": "receipts/inline375-attempt1.json",
+      "exit": 0,
+      "head": "e2f64e876bdd98996ceb737d999174b80519b57f",
+      "log_sha256": "bfb1201d854850d169e699097097e4473404fb72f1fb677cd49fcc3e764313c6"
+    },
+    {
+      "path": "receipts/inline375-verified.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "c383d7eebc274bb07381207d2b14b96044ac1b81efe52878a522eb8da9834376"
+    },
+    {
+      "path": "receipts/inline390-final.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "49ab212dc27df6e7065aefbd4acfe5e1d5178687b9f224106fdbf1f90e787c34"
+    },
+    {
+      "path": "receipts/inline390-verified.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "ecf6558d3d1b0733cb86c3a28ef06775dbff3f4619cb24e8ada252c27cf5d09a"
+    },
+    {
+      "path": "receipts/inline390-visible.json",
+      "exit": 1,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "790fca4dfc18b92daad904116a2b27393ca9e81f94c9db23b0eeb372ccc2206e"
     },
     {
       "path": "receipts/measured-root-lint.json",
@@ -345,6 +489,12 @@
       "log_sha256": "4903703c0a4b429dc8a9d150c7987e8177b70dec41460efab7db512216bbcba8"
     },
     {
+      "path": "receipts/route-inventory-before.json",
+      "exit": 1,
+      "head": "54033f7c150b08721779ed02e51e68de02fa5544",
+      "log_sha256": "bd94aea95ee25d7ca4e1673b40f823663271ac7b7bd16d0af2ad569190947903"
+    },
+    {
       "path": "receipts/settings-cached-entry-red.json",
       "exit": 1,
       "head": "7fcde90821af144b2821f779845e539d91b602be",
@@ -361,6 +511,12 @@
       "exit": 0,
       "head": "4205deb09d0117dde456917c4672e4539d898ec5",
       "log_sha256": "ffe8eb9af8c41380ce98a3be402fa2e1a5dd7f23e0e6fb134ed633b7552896a3"
+    },
+    {
+      "path": "receipts/text-stress-driver-assertions.json",
+      "exit": 0,
+      "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+      "log_sha256": "5b66d8bbcc1987ff89d22dbbf64f5f5a674307291afa8bba1acabe879ac9cb2c"
     },
     {
       "path": "receipts/web375-attempt1.json",
@@ -410,5 +566,7 @@
       "head": "f4a802a245b8b122cc348c5a5f978950d85c739e",
       "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad"
     }
-  ]
+  ],
+  "intermediate_commits": 13,
+  "historical_candidate": "54033f7c150b08721779ed02e51e68de02fa5544"
 }

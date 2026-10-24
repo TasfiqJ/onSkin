@@ -22,13 +22,32 @@
       await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode:13 });
       writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({action:'keyboard Enter',label})+'\n',{flag:'a'});
     };
+    const r05VisibleAction = async label => {
+      await r05KeyEnter(label);
+      await delay(600);
+      const geometry = await evaluate(client, `(() => {
+        const el = document.querySelector('[aria-label=${JSON.stringify(label)}]');
+        el.scrollIntoView({block:'center',inline:'nearest'});
+        return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => {
+          const r=el.getBoundingClientRect(), x=r.x+r.width/2, y=r.y+r.height/2;
+          const hit=document.elementFromPoint(x,y);
+          resolve({x,y,width:r.width,height:r.height,viewport:{width:innerWidth,height:innerHeight},hit:hit===el||el.contains(hit),focused:document.activeElement===el});
+        })));
+      })()`, true);
+      writeJson('R05-text200-action-'+label.replaceAll(' ','-')+'.json',geometry);
+      // Focus and its visible outline were asserted before Enter. The normal
+      // busy/disabled interval may move activeElement after dispatch; prove
+      // post-settlement visibility and hit testing independently of that.
+      assert(geometry.x>0 && geometry.x<geometry.viewport.width && geometry.y>0 && geometry.y<geometry.viewport.height && geometry.hit, 'Text stress action is not visibly reachable: '+label);
+    };
     await retainedRoute(client, '/you');
     await scrollTextIntoView(client, 'Local recovery', {exact:false});
     await clickByText(client, 'Local recovery', {exact:false});
-    await waitForPath(client, '/settings/local-recovery');
+    await waitForPath(client, '/you');
     await waitForText(client, 'No pending cleanup');
     await r05Capture('R05-01-local-entry');
-    await r05KeyEnter('Back');
+    await r05KeyEnter('Close local recovery');
+    assert(!(await evaluate(client, 'document.body.innerText')).includes('No pending cleanup'), 'Close left local evidence mounted');
     await waitForPath(client, '/you');
     await scrollTextIntoView(client, 'Local recovery', {exact:false});
     await clickByText(client, 'Local recovery', {exact:false});
@@ -94,7 +113,11 @@
     await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     await waitForText(client,'Preferences saved on this browser.');
     await evaluate(client,'__R05_RESTORE_PERMISSION__()');
-    await retainedRoute(client,'/settings/local-recovery');
+    await retainedRoute(client, '/you');
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    if (!(await evaluate(client, `document.querySelector('[aria-label="Close local recovery"]') !== null`))) {
+      await clickByText(client, 'Local recovery', {exact:false});
+    }
     await waitForText(client,'Needs confirmation');
     await scrollTextIntoView(client,'Check Reminder choices again');
     await r05Capture('R05-07-saved-intent-unconfirmed-delivery');
@@ -103,13 +126,20 @@
     await waitForText(client,'Unlock your private photo timeline.');
     assert(!(await evaluate(client,'document.body.innerText')).includes('Photo cleanup'), 'Recovery bypassed the existing photo gate');
     await clickByText(client,'Maybe later');
-    await retainedRoute(client,'/settings/local-recovery');
+    await retainedRoute(client, '/you');
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    if (!(await evaluate(client, `document.querySelector('[aria-label="Close local recovery"]') !== null`))) {
+      await clickByText(client, 'Local recovery', {exact:false});
+    }
     await waitForText(client,'No pending cleanup');
     await scrollTextIntoView(client,'Check Photo cleanup again');
     await r05Capture('R05-08-photo-journal-and-existing-gate');
 
     await client.send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
     await client.send('Page.reload',{ignoreCache:true});
+    await waitForText(client, 'Local recovery', 60000);
+    await scrollTextIntoView(client, 'Local recovery', {exact:false});
+    await clickByText(client, 'Local recovery', {exact:false});
     await waitForText(client,'No pending cleanup',60000);
     await r05Capture('R05-09-reloaded-local-continuity');
     if (viewport.width===390) {
@@ -125,14 +155,17 @@
         if(!Number.isFinite(f)||f<8||f>72)continue;
         node.style.fontSize=f*2+'px';if(Number.isFinite(l))node.style.lineHeight=l*2+'px';scaled++;
       }return scaled;})()`);
-      await scrollTextIntoView(client,'Check Photo cleanup again');
+      await r05VisibleAction('Check Photo cleanup again');
       await r05Capture('R05-12-360-text200-cleanup');
-      await scrollTextIntoView(client,'Check Shelf again');
+      await r05VisibleAction('Check Shelf again');
       await r05Capture('R05-13-360-text200-shelf');
       await client.send('Emulation.setDeviceMetricsOverride',{deviceScaleFactor:2,width:viewport.width,height:viewport.height,mobile:true,scale:1});
       await client.send('Page.reload',{ignoreCache:true});
+      await waitForText(client, 'Local recovery', 60000);
+      await scrollTextIntoView(client, 'Local recovery', {exact:false});
+      await clickByText(client, 'Local recovery', {exact:false});
       await waitForText(client,'No pending cleanup',60000);
     }
-    writeJson('R05-results.json',{verdict:'pass',localReads:true,isolatedFailure:true,keyboardFocusAndEnter:true,offlineRetry:true,
+    writeJson('R05-results.json',{verdict:'pass',existingYouSection:true,closeAndReopen:true,localReads:true,isolatedFailure:true,keyboardFocusAndEnter:true,offlineRetry:true,
       noCompletionMutation:true,settingsAndTimingReadRecovery:true,savedIntentNotDelivery:true,photoPaidGatePreserved:true,reload:true,
       nativeFilesystem:'NOT_RUN',osPermissionAndDelivery:'NOT_RUN',paidPositive:'NOT_RUN',provider:'NOT_RUN',textPressure:viewport.width===390?'360x640 direct text x2, synthetic web stress':'not in this run'});

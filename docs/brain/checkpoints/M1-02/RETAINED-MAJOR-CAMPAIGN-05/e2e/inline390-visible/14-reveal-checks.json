@@ -1,0 +1,25 @@
+{
+  "bodyText": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined INTERACTION CHECKING Pair review in progress We won't show a compatibility result for these products until that review is complete. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 772
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/reveal",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "node",
+    "scripts/phase4/build-source-worklist.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_at": "2026-10-24T05:50:56.868684+00:00",
+  "finished_at": "2026-10-24T05:50:57.639603+00:00",
+  "duration_seconds": 0.297,
+  "exit_code": 0,
+  "head": "e2f64e876bdd98996ceb737d999174b80519b57f",
+  "tree": "8b51711afff45b4a63ea9a620a5b1f6d35301c0e",
+  "status_before": "",
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "working_files": [],
+  "status_after": "M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md",
+  "log": "inline-worklist-generation.log",
+  "log_bytes": 130,
+  "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad"
+}

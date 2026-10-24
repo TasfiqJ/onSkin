@@ -1,0 +1,19 @@
+{
+  "verdict": "pass",
+  "existingYouSection": true,
+  "closeAndReopen": true,
+  "localReads": true,
+  "isolatedFailure": true,
+  "keyboardFocusAndEnter": true,
+  "offlineRetry": true,
+  "noCompletionMutation": true,
+  "settingsAndTimingReadRecovery": true,
+  "savedIntentNotDelivery": true,
+  "photoPaidGatePreserved": true,
+  "reload": true,
+  "nativeFilesystem": "NOT_RUN",
+  "osPermissionAndDelivery": "NOT_RUN",
+  "paidPositive": "NOT_RUN",
+  "provider": "NOT_RUN",
+  "textPressure": "360x640 direct text x2, synthetic web stress"
+}

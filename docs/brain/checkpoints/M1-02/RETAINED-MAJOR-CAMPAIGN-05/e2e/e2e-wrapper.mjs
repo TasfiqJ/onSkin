@@ -22,7 +22,9 @@ registerHooks({ load(url, context, nextLoad) {
   if (!process.argv.includes('--cross-owner')) replace('    let ageReverificationBefore = null;', fragment + '\n    let ageReverificationBefore = null;');
   else {
     replace("  await captureStep(client, 'CO-01-owner-a', { assertClean: false });", `  await captureStep(client, 'CO-01-owner-a', { assertClean: false });
-      await navigateClientSide(client, '/settings/local-recovery');
+      await navigateClientSide(client, '/you');
+      await scrollTextIntoView(client, 'Local recovery', {exact:false});
+      await clickByText(client, 'Local recovery', {exact:false});
       await waitForText(client, 'No pending cleanup');
       await captureStep(client, 'R05-CO-a-local-status', { assertClean: true });`);
     replace("if (key === 'layerwell.shelf.v1' && !state.readEntered) { state.readEntered = true; await readGate; }", "if (key === 'layerwell.shelf.v1' && (!state.readEntered || state.holdRecovery)) { state.readEntered = true; state.holdRecovery = false; await readGate; }");
@@ -34,14 +36,17 @@ registerHooks({ load(url, context, nextLoad) {
       await evaluate(
     client,
     \`(() => { __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); __LAYERWELL_E2E_ACCOUNT_EVENT__('b'); })()\`,`);
-    replace("  const liveState = await inspect('CO-b-boundaries');", `  await navigateClientSide(client, '/settings/local-recovery');
+    replace("  const liveState = await inspect('CO-b-boundaries');", `  await navigateClientSide(client, '/you');
+      await scrollTextIntoView(client, 'Local recovery', {exact:false});
+      await clickByText(client, 'Local recovery', {exact:false});
       await waitForText(client, 'No pending cleanup');
       await captureStep(client, 'R05-CO-b-own-local-status', { assertClean: true });
       assert(!(await evaluate(client, 'document.body.innerText')).includes('late-owner-a'), 'Old A reached Recovery');
+      await clickByText(client, 'Close local recovery');
       await navigateClientSide(client, '/you');
       const liveState = await inspect('CO-b-boundaries');`);
     replace("  await captureStep(client, 'CO-14-return-a-relaunch-closed');", `  await captureStep(client, 'CO-14-return-a-relaunch-closed');
-      await navigateClientSide(client, '/settings/local-recovery');
+      await navigateClientSide(client, '/you');
       await waitForText(client, 'First, your');
       const refusedRecovery = await captureStep(client, 'R05-CO-return-a-recovery-closed', { assertClean: true });
       assert(!refusedRecovery.bodyText.includes('No pending cleanup'), 'Closed A saw local status');`);

@@ -1,42 +1,44 @@
 {
   "selected_screenshots": [
-    "e2e/web375-measured-final/R05-01-local-entry.png",
-    "e2e/web375-measured-final/R05-02-isolated-read-refusal.png",
-    "e2e/web375-measured-final/R05-03-offline-keyboard-retry.png",
-    "e2e/web375-measured-final/R05-04-settings-read-recovery.png",
-    "e2e/web375-measured-final/R05-05-settings-recovered-offline.png",
-    "e2e/web375-measured-final/R05-06-timing-read-recovery.png",
-    "e2e/web375-measured-final/R05-07-saved-intent-unconfirmed-delivery.png",
-    "e2e/web375-measured-final/R05-08-photo-journal-and-existing-gate.png",
-    "e2e/web375-measured-final/R05-09-reloaded-local-continuity.png",
-    "e2e/web390-attempt1/R05-01-local-entry.png",
-    "e2e/web390-attempt1/R05-02-isolated-read-refusal.png",
-    "e2e/web390-attempt1/R05-03-offline-keyboard-retry.png",
-    "e2e/web390-attempt1/R05-04-settings-read-recovery.png",
-    "e2e/web390-attempt1/R05-05-settings-recovered-offline.png",
-    "e2e/web390-attempt1/R05-06-timing-read-recovery.png",
-    "e2e/web390-attempt1/R05-07-saved-intent-unconfirmed-delivery.png",
-    "e2e/web390-attempt1/R05-08-photo-journal-and-existing-gate.png",
-    "e2e/web390-attempt1/R05-09-reloaded-local-continuity.png",
-    "e2e/web390-attempt1/R05-10-wide430-entry.png",
-    "e2e/web390-attempt1/R05-11-wide430-cleanup.png",
-    "e2e/web390-attempt1/R05-12-360-text200-cleanup.png",
-    "e2e/web390-attempt1/R05-13-360-text200-shelf.png",
-    "e2e/cross390-attempt2/CO-03-cleanup-refused.png",
-    "e2e/cross390-attempt2/CO-09-b-usable-shelf.png",
-    "e2e/cross390-attempt2/CO-13-return-a-age-closed.png",
-    "e2e/cross390-attempt2/R05-CO-a-delayed-local-read.png",
-    "e2e/cross390-attempt2/R05-CO-a-local-status.png",
-    "e2e/cross390-attempt2/R05-CO-b-own-local-status.png",
-    "e2e/cross390-attempt2/R05-CO-return-a-recovery-closed.png",
+    "e2e/cross390-attempt1/FAILURE.png",
+    "e2e/inline-cross390-final/FAILURE.png",
+    "e2e/inline-cross390-verified/CO-03-cleanup-refused.png",
+    "e2e/inline-cross390-verified/CO-09-b-usable-shelf.png",
+    "e2e/inline-cross390-verified/CO-13-return-a-age-closed.png",
+    "e2e/inline-cross390-verified/R05-CO-a-delayed-local-read.png",
+    "e2e/inline-cross390-verified/R05-CO-a-local-status.png",
+    "e2e/inline-cross390-verified/R05-CO-b-own-local-status.png",
+    "e2e/inline-cross390-verified/R05-CO-return-a-recovery-closed.png",
+    "e2e/inline375-verified/R05-01-local-entry.png",
+    "e2e/inline375-verified/R05-02-isolated-read-refusal.png",
+    "e2e/inline375-verified/R05-03-offline-keyboard-retry.png",
+    "e2e/inline375-verified/R05-04-settings-read-recovery.png",
+    "e2e/inline375-verified/R05-05-settings-recovered-offline.png",
+    "e2e/inline375-verified/R05-06-timing-read-recovery.png",
+    "e2e/inline375-verified/R05-07-saved-intent-unconfirmed-delivery.png",
+    "e2e/inline375-verified/R05-08-photo-journal-and-existing-gate.png",
+    "e2e/inline375-verified/R05-09-reloaded-local-continuity.png",
+    "e2e/inline390-verified/R05-01-local-entry.png",
+    "e2e/inline390-verified/R05-02-isolated-read-refusal.png",
+    "e2e/inline390-verified/R05-03-offline-keyboard-retry.png",
+    "e2e/inline390-verified/R05-04-settings-read-recovery.png",
+    "e2e/inline390-verified/R05-05-settings-recovered-offline.png",
+    "e2e/inline390-verified/R05-06-timing-read-recovery.png",
+    "e2e/inline390-verified/R05-07-saved-intent-unconfirmed-delivery.png",
+    "e2e/inline390-verified/R05-08-photo-journal-and-existing-gate.png",
+    "e2e/inline390-verified/R05-09-reloaded-local-continuity.png",
+    "e2e/inline390-verified/R05-10-wide430-entry.png",
+    "e2e/inline390-verified/R05-11-wide430-cleanup.png",
+    "e2e/inline390-verified/R05-12-360-text200-cleanup.png",
+    "e2e/inline390-verified/R05-13-360-text200-shelf.png",
+    "e2e/inline390-visible/FAILURE.png",
     "e2e/web375-attempt2/FAILURE.png",
-    "e2e/web375-attempt3/FAILURE.png",
-    "e2e/cross390-attempt1/FAILURE.png"
+    "e2e/web375-attempt3/FAILURE.png"
   ],
   "changed_flow_states": [
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-01-local-entry.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-01-local-entry.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -45,8 +47,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-02-isolated-read-refusal.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-02-isolated-read-refusal.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -55,8 +57,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-03-offline-keyboard-retry.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-03-offline-keyboard-retry.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -65,8 +67,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-04-settings-read-recovery.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-04-settings-read-recovery.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -75,8 +77,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-05-settings-recovered-offline.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-05-settings-recovered-offline.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -85,8 +87,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-06-timing-read-recovery.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-06-timing-read-recovery.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -95,8 +97,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-07-saved-intent-unconfirmed-delivery.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-07-saved-intent-unconfirmed-delivery.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -105,8 +107,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-08-photo-journal-and-existing-gate.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-08-photo-journal-and-existing-gate.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -115,8 +117,8 @@
       "issueCount": 0
     },
     {
-      "run": "web375-measured-final",
-      "path": "e2e/web375-measured-final/R05-09-reloaded-local-continuity.json",
+      "run": "inline375-verified",
+      "path": "e2e/inline375-verified/R05-09-reloaded-local-continuity.json",
       "viewport": {
         "height": 667,
         "width": 375
@@ -125,8 +127,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-01-local-entry.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-01-local-entry.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -135,8 +137,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-02-isolated-read-refusal.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-02-isolated-read-refusal.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -145,8 +147,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-03-offline-keyboard-retry.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-03-offline-keyboard-retry.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -155,8 +157,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-04-settings-read-recovery.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-04-settings-read-recovery.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -165,8 +167,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-05-settings-recovered-offline.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-05-settings-recovered-offline.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -175,8 +177,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-06-timing-read-recovery.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-06-timing-read-recovery.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -185,8 +187,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-07-saved-intent-unconfirmed-delivery.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-07-saved-intent-unconfirmed-delivery.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -195,8 +197,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-08-photo-journal-and-existing-gate.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-08-photo-journal-and-existing-gate.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -205,8 +207,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-09-reloaded-local-continuity.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-09-reloaded-local-continuity.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -215,8 +217,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-10-wide430-entry.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-10-wide430-entry.json",
       "viewport": {
         "height": 932,
         "width": 430
@@ -225,8 +227,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-11-wide430-cleanup.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-11-wide430-cleanup.json",
       "viewport": {
         "height": 932,
         "width": 430
@@ -235,8 +237,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-12-360-text200-cleanup.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-12-360-text200-cleanup.json",
       "viewport": {
         "height": 640,
         "width": 360
@@ -245,8 +247,8 @@
       "issueCount": 0
     },
     {
-      "run": "web390-attempt1",
-      "path": "e2e/web390-attempt1/R05-13-360-text200-shelf.json",
+      "run": "inline390-verified",
+      "path": "e2e/inline390-verified/R05-13-360-text200-shelf.json",
       "viewport": {
         "height": 640,
         "width": 360
@@ -255,8 +257,8 @@
       "issueCount": 0
     },
     {
-      "run": "cross390-attempt2",
-      "path": "e2e/cross390-attempt2/R05-CO-a-delayed-local-read.json",
+      "run": "inline-cross390-verified",
+      "path": "e2e/inline-cross390-verified/R05-CO-a-delayed-local-read.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -265,8 +267,8 @@
       "issueCount": 0
     },
     {
-      "run": "cross390-attempt2",
-      "path": "e2e/cross390-attempt2/R05-CO-a-local-status.json",
+      "run": "inline-cross390-verified",
+      "path": "e2e/inline-cross390-verified/R05-CO-a-local-status.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -275,8 +277,8 @@
       "issueCount": 0
     },
     {
-      "run": "cross390-attempt2",
-      "path": "e2e/cross390-attempt2/R05-CO-b-own-local-status.json",
+      "run": "inline-cross390-verified",
+      "path": "e2e/inline-cross390-verified/R05-CO-b-own-local-status.json",
       "viewport": {
         "height": 844,
         "width": 390
@@ -285,8 +287,8 @@
       "issueCount": 0
     },
     {
-      "run": "cross390-attempt2",
-      "path": "e2e/cross390-attempt2/R05-CO-return-a-recovery-closed.json",
+      "run": "inline-cross390-verified",
+      "path": "e2e/inline-cross390-verified/R05-CO-return-a-recovery-closed.json",
       "viewport": {
         "height": 844,
         "width": 390

@@ -1,5 +1,7 @@
 # Commands, raw exits and limits
 
+The first table and its following measurements describe the earlier routed-candidate pass, with exact original counts and SHAs retained. The final existing-surface measurements are below.
+
 All receipts contain exact argv, cwd, UTC, head/tree, actual exit, complete-log SHA-256 and working status; later receipts also hash each working source/test file. Installed Node 22.21.0, npm 11.20.0, Python 3.9.13 and Vitest 4.1.11 were reused. No dependency, lock, policy or native version changed.
 
 | Receipt | Actual result | Exit |
@@ -24,3 +26,16 @@ The combined retained command is `npm --workspace apps/mobile run test -- src/fe
 The measured forced root runs start/end clean at d76cbd2742920895522e3e9018d554319c777741. No skips are reported. The complete root log retains 637 renderer-deprecation lines and 33 “not wrapped in act” warning lines. These are raw line counts, not independent defects; they were not suppressed. Final lint has zero warnings. Earlier nonzero exits and raw logs remain beside the final passes.
 
 The complete disposable worktree used installed-dependency junctions, no source hard links or install. After the 0/1/0 audit and exact restore, its known junctions were removed without recursion and its clean owned worktree was removed. Existing Brain worktrees, including their negative overlays, were preserved. Final current-state evidence is in pre-delivery-state.json; post-push readback is reported externally.
+
+## Final measured existing-surface validation
+
+| Command / final receipt | Raw exit | Result |
+| --- | --- | --- |
+| `npm test -- --force` / final-inline-root-tests | 0 | Mobile 6,134 + console 24 = 6,158; 483 files, 2 tasks, 0 cached, no skips reported |
+| `npm run typecheck -- --force` / final-inline-root-typecheck | 0 | 3 tasks, 0 cached |
+| `npm run lint -- --force` / final-inline-root-lint | 0 | 3 tasks, 0 cached, 0 lint warnings |
+| All eight retained feature families + Recovery/settings / final-inline-retained | 0 | 2,313 tests, 193 files |
+| Original execution-baseline validator | 1 / 0 | Routed candidate refused; existing-surface implementation accepted, inventory unchanged |
+| Original source-worklist strict check with one disposable input tamper / inline-worklist-contract | 0 / 1 / 0 | Clean complete final checkout; both outputs refuse; exact restoration; unchanged producer/output hashes |
+
+The final forced root run retains 638 renderer-deprecation lines and 33 act-warning lines. Earlier clean source measurement and independent complete-checkout producer proof are historical receipts, not substituted for these final measurements. No native/provider/release result follows from any local pass.

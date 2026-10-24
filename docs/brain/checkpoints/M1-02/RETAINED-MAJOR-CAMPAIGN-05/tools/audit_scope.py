@@ -41,7 +41,7 @@ for path in paths:
     assert hashlib.sha256(current).hexdigest() == pair['after']['sha256'], path
     entries.append(dict(path=path, **pair))
 
-protected = ['.github','scripts/phase4','scripts/phase9','scripts/security_readiness','supabase','docs/brain/state',
+protected = ['.github','scripts/phase4','scripts/phase9','scripts/security_readiness','scripts/launch','docs/hugeToDo/feature-inventory.json','supabase','docs/brain/state',
     'docs/brain/reviews','apps/mobile/src/lib/auth','apps/mobile/src/lib/consent','apps/mobile/src/lib/storage',
     'apps/mobile/src/lib/offline','apps/mobile/src/features/photos/encryptedStorage.ts','apps/mobile/src/features/photos/progressCaptureAuthority.ts',
     'apps/mobile/src/features/photos/store.ts','apps/mobile/src/features/notifications/permission.ts',
