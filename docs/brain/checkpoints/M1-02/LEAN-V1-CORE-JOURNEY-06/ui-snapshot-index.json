@@ -1,0 +1,173 @@
+[
+  {
+    "path": "screens/qualified375-04-consent.png",
+    "bytes": 126184,
+    "sha256": "f5fb76a75b7ce6de7a8090a055b129d798ffc94a42bd06b824ea57c510749ab0",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\04-consent.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-14-reveal-checks.png",
+    "bytes": 70092,
+    "sha256": "70af890cc6c701d4c9759e1aeefc729b334184f5c1ded7f155b63618da94b16c",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\14-reveal-checks.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-20-shelf-after-onboarding.png",
+    "bytes": 129075,
+    "sha256": "cda2afbf87cc86ed4e68f706ab7b45ba844220327e956a26ce7dcd5d0b212fe9",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\20-shelf-after-onboarding.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-M102-03-offline-duplicate-append-only.png",
+    "bytes": 106963,
+    "sha256": "194db4d04f19e2ad9e1803a78adbd6df94dd189d8bbcc4918870141a8bfdb4d6",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\M102-03-offline-duplicate-append-only.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-01-find-three-owned.png",
+    "bytes": 95301,
+    "sha256": "8a045b570e41e07cebca66d4ce1d94355b78e0a79e90022c6067416e42952334",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-01-find-three-owned.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-02-no-match.png",
+    "bytes": 88404,
+    "sha256": "ff780ec923f4244214ad6d554a9da83c3dcc7be755335146fcae298b7ecfa975",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-02-no-match.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-03-volume-match.png",
+    "bytes": 101994,
+    "sha256": "73dd7944b836abb6572aa50914d33c0d0383a2a08f7cd82923f84df1321b0bd2",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-03-volume-match.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-04-archive-unavailable.png",
+    "bytes": 49081,
+    "sha256": "1e5561172f2c7734d07f6efb607bb31f0df158b760b5553718bec5a82a408a3e",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-04-archive-unavailable.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-05-removal-unconfirmed.png",
+    "bytes": 87772,
+    "sha256": "49ca86bbc21fb3f84f2fab9c8bf7e8f74167172ff732fec082fc3813e62230f3",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-05-removal-unconfirmed.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-06-existing-free-gate.png",
+    "bytes": 47792,
+    "sha256": "2b16889e54f5e11476a6c95a6df0c2ed4442e0ca1647d7c353d1e298e31a885a",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-06-existing-free-gate.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-07-local-recovery.png",
+    "bytes": 116419,
+    "sha256": "0d65ddcd8e11786e397b39a917db234c53798158525c9253af052e81aeecfb61",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-07-local-recovery.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-08-reminders-truthful.png",
+    "bytes": 67963,
+    "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-08-reminders-truthful.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-09-text-pressure360.png",
+    "bytes": 99211,
+    "sha256": "44ea474e54e3365b037febc07e44fb9bfb322a4481255ef2648cdabab47a8f1e",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-09-text-pressure360.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-10-wide430.png",
+    "bytes": 106432,
+    "sha256": "68ad3096c7eefccf5d0eabecb29a73612474493fdc91946be6f266f71ee0d571",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-10-wide430.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified375-J06-11-modern390.png",
+    "bytes": 105474,
+    "sha256": "1d98375a5cd8b9cdd26a39a194d02fa4690d80e362d7b4528b1f76b45a7822cc",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified375\\J06-11-modern390.png",
+    "receipt": "qualified-web375.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified-cross390-CO-03-cleanup-refused.png",
+    "bytes": 47375,
+    "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified-cross390\\CO-03-cleanup-refused.png",
+    "receipt": "qualified-cross390.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/qualified-cross390-CO-13-return-a-age-closed.png",
+    "bytes": 67634,
+    "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\qualified-cross390\\CO-13-return-a-age-closed.png",
+    "receipt": "qualified-cross390.json",
+    "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "classification": "final source web observation"
+  },
+  {
+    "path": "screens/prototype375-J06-03-volume-match.png",
+    "bytes": 127965,
+    "sha256": "9b8b070327c6a44830be54733781d00afae12c61c03daed3552047b257f7cf31",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\prototype375\\J06-03-volume-match.png",
+    "receipt": "prototype-web375.json",
+    "source": "4818797aba04180276e4cc3f55ba8bbb947e75ce",
+    "classification": "pre-fix prototype/source observation; not accepted-anchor regression"
+  },
+  {
+    "path": "screens/single390-J06-09-text-pressure360.png",
+    "bytes": 98141,
+    "sha256": "ac441b85654f2e67c38962d459ade3ebbb3991aeaf64dbca1789563d89f2f5e4",
+    "origin": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-campaign06-j68rjqlz\\single390\\J06-09-text-pressure360.png",
+    "receipt": "single-web390.json",
+    "source": "ee6c4361a617cf5a6deec49ae80bfa8ad66648ff",
+    "classification": "pre-fix prototype/source observation; not accepted-anchor regression"
+  }
+]

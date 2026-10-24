@@ -1,0 +1,281 @@
+{
+  "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+  "anchor": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+  "evidence_commit": null,
+  "note": "Manifest excludes itself to avoid self-reference; external committed evidence SHA/tree supplied after push. No future self hash.",
+  "files": [
+    {
+      "path": "archive-members.json",
+      "bytes": 35494,
+      "sha256": "b5c92c040e6c4f9b111cf7eee57d320b816a32ead9a98d5484999182fa027443",
+      "blob": "694e7151fb93cfc59bca36d825012949d8b51d3e",
+      "mode": "100644"
+    },
+    {
+      "path": "BLOCKERS_AND_CI.md",
+      "bytes": 4000,
+      "sha256": "e5e38fbd76f78679a2340f389036100de940d851b93df951cf5a1747827d3bec",
+      "blob": "dbd04f5b29b0d45d333c718ecf7dbc4670627e85",
+      "mode": "100644"
+    },
+    {
+      "path": "command-receipts.json",
+      "bytes": 47723,
+      "sha256": "73d1076d1b6dc17cd63af1e435ecc07a22d81f0a612f2b0808a65452349ec2ee",
+      "blob": "88324361592a80eb9a82b45b15dd6797cd06aefb",
+      "mode": "100644"
+    },
+    {
+      "path": "completion-report.json",
+      "bytes": 2156,
+      "sha256": "c30396ddf540afaba1a77a48d36a4223e3f3577ed2fafc8e4c8d824ffc33cf44",
+      "blob": "0097155c05353bd9bd349e4356592ab2fb6a5278",
+      "mode": "100644"
+    },
+    {
+      "path": "context-authentication.json",
+      "bytes": 3667,
+      "sha256": "aae8beae83ec8511eda543d09b66f0142753f1e0f1f3d75b1a02a1c3b4bc38a2",
+      "blob": "35376e1032c05a7161d63e94205fc4caf1c46cee",
+      "mode": "100644"
+    },
+    {
+      "path": "context-manifest-authenticated.json.gz",
+      "bytes": 1451,
+      "sha256": "103b8d003bbdce8091937ad643b4a96b7099e02f81848f1313ec91b3ebf5a850",
+      "blob": "c3113a46f9d5b5f6b8c7e3fad49ea14d998c79a7",
+      "mode": "100644"
+    },
+    {
+      "path": "environment-and-git.json",
+      "bytes": 2160,
+      "sha256": "5cc06a2773f540795ce76f0637e0c2bf3bd50fb29f7b78c62c8af92498b6affd",
+      "blob": "c1c6752eb4c20ff723e535ce595b14a9b88916de",
+      "mode": "100644"
+    },
+    {
+      "path": "EXPERIENCE_AND_SCOPE.md",
+      "bytes": 3152,
+      "sha256": "adbba018e7c59edc9f0189fde15a8b99a44704578608f119721504101d5f4144",
+      "blob": "6ad830e79dd6a68ac0e7c7e7646a7993d4a895e3",
+      "mode": "100644"
+    },
+    {
+      "path": "measured92-ci.json",
+      "bytes": 28534,
+      "sha256": "42e4c5a8c6e8a4de516338b8ee032952e676b737946b01796afb9d665d43b08d",
+      "blob": "aff1c78494eb9c4aa6363682bbac3eac66b80f77",
+      "mode": "100644"
+    },
+    {
+      "path": "raw-command-logs.tar.gz",
+      "bytes": 208106,
+      "sha256": "eb1fa2f45dd056cde1a9dbbad6ecd8cb204b28630be1e14d618fb346251e7fd1",
+      "blob": "dbda110e8867b4ed273d2e11a3dc656eef3b173f",
+      "mode": "100644"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4209,
+      "sha256": "514d3c7745ef480e771db58dba78cc117acd2768c61c7a48aade9faed07bdd35",
+      "blob": "a8f7ddd8aa19e9b69e7d13992e2897af2c87aafb",
+      "mode": "100644"
+    },
+    {
+      "path": "REGRESSIONS_AND_TESTS.md",
+      "bytes": 4428,
+      "sha256": "a3455eed43d3c5a56412bf99f64881b3aeb665acefeee7f495f19f8c49b8c8b9",
+      "blob": "9aeae90810ce4a2ff755a152d5ebc51ed6e15d27",
+      "mode": "100644"
+    },
+    {
+      "path": "reproduction-and-host-receipts.tar.gz",
+      "bytes": 165910,
+      "sha256": "d092b08cf76c0285313fba936fb57b30fad9f3d13be35f236da0f3903278b9c6",
+      "blob": "b72b564668017a8bc534f64ae0c78255750010ed",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/prototype375-J06-03-volume-match.png",
+      "bytes": 127965,
+      "sha256": "9b8b070327c6a44830be54733781d00afae12c61c03daed3552047b257f7cf31",
+      "blob": "7be8fd487941d957a8d2d901cc397d8e09dca72d",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified-cross390-CO-03-cleanup-refused.png",
+      "bytes": 47375,
+      "sha256": "742cc143ca32e2b598b03f8442000d6e1a2991de505962aee6be47d037bb0cbe",
+      "blob": "fc7e0877fd7e2ed72e810e1ca073e91084e6ec2d",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified-cross390-CO-13-return-a-age-closed.png",
+      "bytes": 67634,
+      "sha256": "5a302312e56b65e6d3d7cbdd6f6bcdd69ab3fe0237a34819ab6b97984438e60d",
+      "blob": "bbadc0154560743fa357cf2094a26307f2d11607",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-04-consent.png",
+      "bytes": 126184,
+      "sha256": "f5fb76a75b7ce6de7a8090a055b129d798ffc94a42bd06b824ea57c510749ab0",
+      "blob": "73783bbf89dea09d36af8170381b6c56aae83c41",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-14-reveal-checks.png",
+      "bytes": 70092,
+      "sha256": "70af890cc6c701d4c9759e1aeefc729b334184f5c1ded7f155b63618da94b16c",
+      "blob": "3240fe4a031e00bfd2cb8e225e5be1dc5c65251b",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-20-shelf-after-onboarding.png",
+      "bytes": 129075,
+      "sha256": "cda2afbf87cc86ed4e68f706ab7b45ba844220327e956a26ce7dcd5d0b212fe9",
+      "blob": "7d9e91a12551653cc0b3f5760935a1ad528892ee",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-01-find-three-owned.png",
+      "bytes": 95301,
+      "sha256": "8a045b570e41e07cebca66d4ce1d94355b78e0a79e90022c6067416e42952334",
+      "blob": "83367e208219137a1b3c464c06eafb26b0f3dfec",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-02-no-match.png",
+      "bytes": 88404,
+      "sha256": "ff780ec923f4244214ad6d554a9da83c3dcc7be755335146fcae298b7ecfa975",
+      "blob": "eeda7f10240294980550e976c00e5bab9e945c85",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-03-volume-match.png",
+      "bytes": 101994,
+      "sha256": "73dd7944b836abb6572aa50914d33c0d0383a2a08f7cd82923f84df1321b0bd2",
+      "blob": "1b90e3ec36b60d034c7e14e65fe987485c5b1b3d",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-04-archive-unavailable.png",
+      "bytes": 49081,
+      "sha256": "1e5561172f2c7734d07f6efb607bb31f0df158b760b5553718bec5a82a408a3e",
+      "blob": "71990cc7b6e7fae68c57c5ecdea22c45b58339b2",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-05-removal-unconfirmed.png",
+      "bytes": 87772,
+      "sha256": "49ca86bbc21fb3f84f2fab9c8bf7e8f74167172ff732fec082fc3813e62230f3",
+      "blob": "e7577bebf69abc816556f1e92407ae9d8f772e6e",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-06-existing-free-gate.png",
+      "bytes": 47792,
+      "sha256": "2b16889e54f5e11476a6c95a6df0c2ed4442e0ca1647d7c353d1e298e31a885a",
+      "blob": "aede05e9953a25b7f6527555a455fe6a0851d09b",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-07-local-recovery.png",
+      "bytes": 116419,
+      "sha256": "0d65ddcd8e11786e397b39a917db234c53798158525c9253af052e81aeecfb61",
+      "blob": "b29b3386aa516634457ed4194f32b1567904c469",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-08-reminders-truthful.png",
+      "bytes": 67963,
+      "sha256": "f688e10dc7fe24ce3584db651a1d4be77e6b8d94d4c749a27544d3c5fcc81f29",
+      "blob": "5bf8032616dc686ed20b24a3311254d5d46c8d5c",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-09-text-pressure360.png",
+      "bytes": 99211,
+      "sha256": "44ea474e54e3365b037febc07e44fb9bfb322a4481255ef2648cdabab47a8f1e",
+      "blob": "05e578629621855ae5d8748a6da6d2fc32a0b81b",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-10-wide430.png",
+      "bytes": 106432,
+      "sha256": "68ad3096c7eefccf5d0eabecb29a73612474493fdc91946be6f266f71ee0d571",
+      "blob": "a811e6452722cb992d7a25067ce200bbe6b3f736",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-J06-11-modern390.png",
+      "bytes": 105474,
+      "sha256": "1d98375a5cd8b9cdd26a39a194d02fa4690d80e362d7b4528b1f76b45a7822cc",
+      "blob": "96970cbf9f41934bf6768aacdd4903e16ce1f9be",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/qualified375-M102-03-offline-duplicate-append-only.png",
+      "bytes": 106963,
+      "sha256": "194db4d04f19e2ad9e1803a78adbd6df94dd189d8bbcc4918870141a8bfdb4d6",
+      "blob": "0c0c54f9d0477c17637145838e94df5fc561fa51",
+      "mode": "100644"
+    },
+    {
+      "path": "screens/single390-J06-09-text-pressure360.png",
+      "bytes": 98141,
+      "sha256": "ac441b85654f2e67c38962d459ade3ebbb3991aeaf64dbca1789563d89f2f5e4",
+      "blob": "6d385c1689244547ff61a13b62367e6ef9cb42d1",
+      "mode": "100644"
+    },
+    {
+      "path": "source-scope.json",
+      "bytes": 67520,
+      "sha256": "8cacc61e9b2d439f5b93aa160d7e28c67f9b19ab162ced449039eebfe80fb113",
+      "blob": "e1e27848fbad4a59e4aea0275a3cb79e9733cbd0",
+      "mode": "100644"
+    },
+    {
+      "path": "ui-run-inventory.tar.gz",
+      "bytes": 32320,
+      "sha256": "97ba75b5575952a309a7d18ded19edfabfdd7721a7241240dc08067d9fe84955",
+      "blob": "29ad9f82427ee7e0c13d474e7267e17b13348611",
+      "mode": "100644"
+    },
+    {
+      "path": "ui-snapshot-index.json",
+      "bytes": 8661,
+      "sha256": "a7dfdf9d00b660b7855caadad6d901eab5ca219cd6cb668a1552052cfb075ce2",
+      "blob": "0422182d2961d3bad04781a79000db7016108287",
+      "mode": "100644"
+    },
+    {
+      "path": "ui-traces.tar.gz",
+      "bytes": 173196,
+      "sha256": "0dc105cf9277aa4978a1862147b78786a9d21929e84152cc8b45365eec9a8e64",
+      "blob": "f371ae81a30b40cbdf4cff7861d75b1931f959e3",
+      "mode": "100644"
+    },
+    {
+      "path": "UI_AND_INTEGRATION.md",
+      "bytes": 5328,
+      "sha256": "c613b7d064e6cd09bdf94d25dc5666abf6a475449a670cc5dfde013098181dee",
+      "blob": "db81c986dec26d368a46b12c90e46731a303ff6b",
+      "mode": "100644"
+    },
+    {
+      "path": "verify_checkpoint.py",
+      "bytes": 5239,
+      "sha256": "da8a04ade844e12ae5e3f6fe9a60ba2e4f73cfc8cce9d04b8d7acba5bac32d8b",
+      "blob": "c6a048c201a9f3dda23ff54110736f2123abb600",
+      "mode": "100644"
+    }
+  ],
+  "handoff": {
+    "path": "ONSKIN_BRAIN_HANDOFF.txt",
+    "bytes": 2082,
+    "sha256": "afb60941d6701359fcbe13260f67c4c9e14e5efa3017973bdd2ab9cc581bd409",
+    "blob": "2e158244c31222d0d4a8be976e3172af7d1043e6",
+    "mode": "100644"
+  }
+}

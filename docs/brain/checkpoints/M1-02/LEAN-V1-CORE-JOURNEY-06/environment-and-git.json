@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-24T16:46:16.731527+00:00",
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13",
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+  "node": "v22.21.0",
+  "npm": "11.20.0",
+  "git": "git version 2.50.1.windows.1",
+  "chrome": "155.0.8059.85",
+  "source_status_at_measurement": "",
+  "spend_usd": 0,
+  "note": "Chrome version read from actual headless browser during runs; platform/native boundaries are synthetic. No installation or dependency changes.",
+  "worktrees": "worktree C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience\nHEAD 92aee6b2cfe058c144698a3f935ed7f31e643747\nbranch refs/heads/stage/m1-retained-resilience\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-campaign05-negative-audit\nHEAD 99596bfceac782d740415503bc25452cac623254\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-journeys02-baseline-audit\nHEAD 21ceb8c9562070f0af067f5ce803265bb527cdf0\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-negative-baseline-audit\nHEAD d9912f4c8b30358593569c5b9b4e84773c6f463e\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-retained03-negative-audit\nHEAD 704d3df5e01cd55023d9c08518ce2df8512e72ca\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-retained04-negative-audit\nHEAD a84eb53c7a3217862bb18ec795c5113f8e2a10f2\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-source-worktree-audit\nHEAD 74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-worklist03-negative-audit\nHEAD 4d8ef8a029375512ddb29df402f4b77ca557be39\ndetached\n\n",
+  "refs": {
+    "HEAD": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "HEAD^{tree}": "3785d5c00667f037586d9c293c5e8b422189be10",
+    "origin/stage/m1-retained-resilience": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+    "origin/main": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+    "origin/stage/m1-gate-recovery": "cd2bd51997f283c0b446bf2124f427f482550fa8"
+  }
+}

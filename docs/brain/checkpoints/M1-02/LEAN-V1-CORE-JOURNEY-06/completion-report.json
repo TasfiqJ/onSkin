@@ -1,0 +1,78 @@
+{
+  "verdict": "PARTIAL_BLOCKED",
+  "authorization": "M1X-LEAN-V1-CORE-EXPERIENCE06-CANDIDATE-01",
+  "source": "92aee6b2cfe058c144698a3f935ed7f31e643747",
+  "source_tree": "3785d5c00667f037586d9c293c5e8b422189be10",
+  "anchor": "f78e3d4662b0a1b886544435b6bf4d8101d7cc3c",
+  "evidence_commit": null,
+  "evidence_commit_note": "Intentionally unknown before evidence commit; final remote readback is in PR11/final relay.",
+  "source_paths": 13,
+  "new_test_cases": 22,
+  "retained": {
+    "passed": 2335,
+    "files": 196,
+    "exit": 0
+  },
+  "root_tests": {
+    "passed": 6180,
+    "mobile": 6156,
+    "console": 24,
+    "files": 486,
+    "exit": 0,
+    "cached_tasks": 0
+  },
+  "typecheck": {
+    "exit": 0,
+    "cached_tasks": 0
+  },
+  "lint": {
+    "exit": 0,
+    "warnings": 0,
+    "cached_tasks": 0
+  },
+  "old_source": {
+    "failing_vectors": 9,
+    "passing_safeguards": 4,
+    "deselected_new_feature_vectors": 6,
+    "unhandled_errors": 3,
+    "source_complete_mobile_files": 1071,
+    "not_full_repo": true
+  },
+  "worklist": {
+    "primary_full_clean_strict_exit": 0,
+    "disposable_full_checkout_0_1_0": "NOT_QUALIFIED",
+    "reason": "ENOSPC"
+  },
+  "protected": {
+    "object_frontier_witnesses": 338,
+    "absence_witnesses": 3
+  },
+  "screenshots": 19,
+  "web": {
+    "final_375_full": true,
+    "final_390_changed_shelf": true,
+    "final_390_cross_owner": true,
+    "predecessor_390_full": "492ea405f",
+    "final_360_text2_changed_shelf": true,
+    "final_430_changed_shelf": true,
+    "physical_device": "NOT_RUN",
+    "geometry_does_not_prove_glyph_visibility": true
+  },
+  "source_ci": {
+    "quality": 40110253550,
+    "quality_result": "failure_canonical_image_acquisition",
+    "ios": 40110253582,
+    "ios_result": "success_source_only",
+    "security": 40110253748,
+    "security_result": "failure"
+  },
+  "remaining_source_issue": "Protected tabs/_layout fixed dock clips enlarged labels",
+  "final_head_ci": "PENDING_POST_PUSH_READBACK",
+  "gates": {
+    "M1_03": "BLOCKED_EXTERNAL_CUSTODY / NOT_ACCEPTED",
+    "G97": "FAIL / NO_GO",
+    "M2_and_successors": "NOT_AUTHORIZED"
+  },
+  "spend_usd": 0,
+  "self_accepted": false
+}
