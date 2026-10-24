@@ -1,0 +1,57 @@
+{
+  "id": "O08-SOURCE-PACKET-CUTOVER",
+  "status": "BLOCKED_OUTSIDE_FINITE_EDIT_AUTHORITY_NOT_APPLIED",
+  "observed_head": "a56cfed1bef038aff4dbaec503beb7ac91ca02f8",
+  "observed_tree": "789113b02d38161c62fd00d57cfe725e9dd89758",
+  "trigger": "The five explicitly authorized additive product-scope notices differ from the preserved 04_repo_docs packet mirrors; the unchanged strict source-packet consumer requires exact equality.",
+  "ci": {
+    "run_id": 40131736507,
+    "job_id": 120984972014,
+    "conclusion": "failure",
+    "url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131736507/job/120984972014"
+  },
+  "local_reproduction": {
+    "argv": [
+      "npm.cmd",
+      "run",
+      "docs:source-packet-audit:check"
+    ],
+    "exit": 1,
+    "receipt": "delivery-observations/source-packet-audit-delivery.receipt.json",
+    "raw_log": "logs/source-packet-audit-delivery.log"
+  },
+  "five_authorized_changes": [
+    "docs/MASTER_PLAN.md",
+    "docs/PRODUCT_REQUIREMENTS.md",
+    "docs/FEATURE_INDEX.md",
+    "docs/ROADMAP.md",
+    "docs/DECISIONS.md"
+  ],
+  "read_only_legacy_inputs": [
+    "04_repo_docs/docs/MASTER_PLAN.md",
+    "04_repo_docs/docs/PRODUCT_REQUIREMENTS.md",
+    "04_repo_docs/docs/FEATURE_INDEX.md",
+    "04_repo_docs/docs/ROADMAP.md",
+    "04_repo_docs/docs/DECISIONS.md"
+  ],
+  "blocked_change_paths": [
+    "scripts/docs/source-packet-audit.mjs",
+    "docs/generated/source-packet-audit.json",
+    "docs/generated/source-packet-audit.md"
+  ],
+  "proposed_bounded_successor": "After independent Brain source review, separately authorize a versioned source-packet supersession consumer and regenerate its two current audit projections. Preserve original packet bytes and existing strict negative cases; do not add a broad ignore/equivalence rule or mechanically rotate hashes.",
+  "acceptance": [
+    "Exact old packet identity preserved",
+    "Only independently accepted finite supersession is recognized",
+    "Unexpected body edits, missing/duplicate notices and undeclared authority still fail",
+    "Current/tampered/restored consumer cases fail closed at exact successor SHA",
+    "Derived outputs regenerated with unchanged obligations, not hand-pinned green",
+    "No other Security/DB/native/provider/public admission changes"
+  ],
+  "applied": false,
+  "original_guard_weakened": false,
+  "founder_technical_choice_requested": false,
+  "required_next_authority": "Independent Brain exact-path source/consumer migration grant; no automatic expansion of this release08 task",
+  "delivery_status": "PARTIAL_BLOCKED; contract proposal submitted for independent review",
+  "spend_usd": 0
+}

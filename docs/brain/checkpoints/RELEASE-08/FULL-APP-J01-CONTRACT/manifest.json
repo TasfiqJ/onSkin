@@ -19,9 +19,30 @@
     },
     {
       "path": "completion-report.json",
-      "bytes": 16088,
-      "sha256": "52074b376deb01dbd476e36416334b0e7ac6050f13750212be1c62af136298a2",
-      "blob": "b580e3cf2da887533758f79bc73685f98832084b",
+      "bytes": 19061,
+      "sha256": "117d5f4e80c0ba52b18f0feb0db9836521bdb52b8e1ca87bb2c963f8ba28af6d",
+      "blob": "3ac260a35af2c8121fcfd8bf0ea037805b84a14f",
+      "mode": "100644"
+    },
+    {
+      "path": "consumer-cutover-blocker.json",
+      "bytes": 2627,
+      "sha256": "bb81e9b497a5a4f1e13706d3fd009da11050e2cb7326558330d55729e75fcdd6",
+      "blob": "575359fcc2101589f16d5f48da418926539dd27d",
+      "mode": "100644"
+    },
+    {
+      "path": "delivery-observations/a56-completed-ci.json",
+      "bytes": 6476,
+      "sha256": "09157044ff1bbfbb5e6bdd0db7331c51d658e286d8c871663cddc46a10bc9eee",
+      "blob": "00e658e6d47727be4aac12322b8cd07ea788a4c0",
+      "mode": "100644"
+    },
+    {
+      "path": "delivery-observations/source-packet-audit-delivery.receipt.json",
+      "bytes": 633,
+      "sha256": "5da88ddb987575037d3b74f232f1d8f7cfb1cc652b70ebd62bc9c00848df8bc7",
+      "blob": "ea7fe572f2d181f18a36cdf8c24940cafc6bd8e6",
       "mode": "100644"
     },
     {
@@ -64,6 +85,13 @@
       "bytes": 242,
       "sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
       "blob": "cec2517c155ff020134ba43ed22964b316f76437",
+      "mode": "100644"
+    },
+    {
+      "path": "logs/final-quality-source-packet-excerpt.log",
+      "bytes": 1402,
+      "sha256": "1de280ef450cfa552c0a619494e7d65d6e1ad3bee6df3311d342cdbaaab655b9",
+      "blob": "267dc88738f08f673bb38f5400c47e0e3276571f",
       "mode": "100644"
     },
     {
@@ -130,6 +158,13 @@
       "mode": "100644"
     },
     {
+      "path": "logs/source-packet-audit-delivery.log",
+      "bytes": 755,
+      "sha256": "e939b3ed52ad4783bdc67ae08d92937af5c7193e60a2ec07961af5fb5f77b9f1",
+      "blob": "3be76d320d25f4bc4412b49558a65a2f3cf64e53",
+      "mode": "100644"
+    },
+    {
       "path": "logs/typecheck-final.log",
       "bytes": 1169,
       "sha256": "8cde07bb1af2e35d897898a26db5173d484d37326aec8d7acc904d3eb48b49c5",
@@ -152,9 +187,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 4082,
-      "sha256": "39354aee03a26636ed42e2b6c6b0c8f8c091b89648382fe698de54c430bf41d1",
-      "blob": "4c10e82d3afcefd0a048869f3f8f89c3001ebe95",
+      "bytes": 4550,
+      "sha256": "1e0eeb0ab8549651ed7f2dfd788902ea2afe580f01f00f16000cf4e29e60fefe",
+      "blob": "2196ff736c78f461a984798cd9d67cdda4753209",
       "mode": "100644"
     },
     {

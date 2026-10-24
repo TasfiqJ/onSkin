@@ -1,0 +1,17 @@
+2026-10-24T20:59:32.5436819Z   CI: true
+2026-10-24T20:59:32.5437134Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T20:59:32.5437499Z ##[endgroup]
+2026-10-24T20:59:32.6783497Z 
+2026-10-24T20:59:32.6784177Z > layerwell@0.1.0 docs:source-packet-audit:check
+2026-10-24T20:59:32.6785073Z > node scripts/docs/source-packet-audit.mjs --strict --check
+2026-10-24T20:59:32.6785555Z 
+2026-10-24T20:59:32.7333823Z FAIL docs/generated/source-packet-audit.json is stale. Run npm run docs:source-packet-audit:strict.
+2026-10-24T20:59:32.7340623Z FAIL docs/generated/source-packet-audit.md is stale. Run npm run docs:source-packet-audit:strict.
+2026-10-24T20:59:32.7342413Z FAIL docs/DECISIONS.md differs from 04_repo_docs/docs/DECISIONS.md in strict mode.
+2026-10-24T20:59:32.7344283Z FAIL docs/FEATURE_INDEX.md differs from 04_repo_docs/docs/FEATURE_INDEX.md in strict mode.
+2026-10-24T20:59:32.7346005Z FAIL docs/MASTER_PLAN.md differs from 04_repo_docs/docs/MASTER_PLAN.md in strict mode.
+2026-10-24T20:59:32.7347999Z FAIL docs/PRODUCT_REQUIREMENTS.md differs from 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md in strict mode.
+2026-10-24T20:59:32.7350452Z FAIL docs/ROADMAP.md differs from 04_repo_docs/docs/ROADMAP.md in strict mode.
+2026-10-24T20:59:32.7462590Z ##[error]Process completed with exit code 1.
+2026-10-24T20:59:32.7551473Z Post job cleanup.
+2026-10-24T20:59:32.8865863Z Caching is not enabled. Caching is skipped.

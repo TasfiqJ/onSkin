@@ -1,6 +1,6 @@
 # RELEASE-08 full-app + J01 checkpoint
 
-**SUBMITTED_REVIEW_REQUIRED.** This is a proposed public-product contract and source-governance migration, awaiting independent Brain source acceptance. No feature, main promotion or public release is accepted. Spend USD0.
+**PARTIAL_BLOCKED — proposal SUBMITTED_REVIEW_REQUIRED.** This is a proposed public-product contract and source-governance migration, awaiting independent Brain source acceptance. No feature, main promotion or public release is accepted. Spend USD0.
 
 Base `50f25abeafaa6127e105e2a9d825e6d15dc1dcdb` / tree `f623b5bbd220fd6d9d10f967400081489a5dd7e0`. Measured source `f0f743e5d8db586a1f9d98e417adb36416ede9fa` / tree `54d5645866d25681cae42a2a7a2869e12362edfa`. Contract `onskin-full-app-j01-release08-v1`, SHA256 `017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996`. Evidence-only delivery is its descendant; its exact self-hash is reported in the root handoff/PR response externally, never fabricated inside its own tree.
 
@@ -28,3 +28,5 @@ Legacy consumer/CI cutover is NOT_DONE and new validator CI wiring NOT_WIRED; th
 Fresh independent complete-checkout0/1/0 remains NOT_QUALIFIED for disk capacity; the bundle-fixture sequence and primary-worklist PASS are distinct evidence classes. Final-head GitHub CI/PR/ref observations are reported after push; `pre-tail-observation.json` is explicitly pre-push with no runs and supplies no final CI claim.
 
 The first post-push verifier run at457fe6d0 failed on its own allowed checkpoint-directory absence. `verifier-correction.json` and the raw failure retain that mistake. The evidence-only correction checks source absences at SOURCE and keeps protected app/J01 absences enforced at HEAD; no measured source was changed.
+
+`consumer-cutover-blocker.json` records the actual new Quality consumer failure: the authorized five notices diverge from read-only packet mirrors and generated source-packet audit outputs. Local exact command exits1, matching the a56-head CI log. The required script/output paths are outside this grant, so no repair or weakened guard is applied. This evidence tail records the blocker; final new-head CI remains a separate observation.

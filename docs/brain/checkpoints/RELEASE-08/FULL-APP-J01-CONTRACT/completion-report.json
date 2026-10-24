@@ -1,5 +1,5 @@
 {
-  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "status": "PARTIAL_BLOCKED",
   "self_accepted": false,
   "source": "f0f743e5d8db586a1f9d98e417adb36416ede9fa",
   "source_tree": "54d5645866d25681cae42a2a7a2869e12362edfa",
@@ -449,10 +449,69 @@
     "Governance consistency cannot prove a working full app, qualified reviewers, real providers/moderators/payments, optical fitness or independent accuracy",
     "New files do not repair original Security source inventory/expired reviews or canonical DB custody",
     "G1/G2/G3/G5 unaccepted; G4 absent and all J01 claims off; J02-J27/F18 remain deferred",
-    "Final-head GitHub CI is observed separately after push; pre-tail empty CI list is not success or skipped"
+    "Final-head GitHub CI is observed separately after push; pre-tail empty CI list is not success or skipped",
+    "Current Quality repository gate rejects the authorized notices versus read-only packet mirrors. Exact consumer cutover is unimplemented, not a green CI result."
   ],
   "native_provider_clinical_apple": "NOT_RUN_OR_NOT_ADMITTED",
   "independent_checkout": "NOT_QUALIFIED",
   "public_release": "NO_GO",
-  "spend_usd": 0
+  "spend_usd": 0,
+  "proposal_status": "SUBMITTED_REVIEW_REQUIRED",
+  "new_consumer_blocker": {
+    "id": "O08-SOURCE-PACKET-CUTOVER",
+    "status": "BLOCKED_OUTSIDE_FINITE_EDIT_AUTHORITY_NOT_APPLIED",
+    "observed_head": "a56cfed1bef038aff4dbaec503beb7ac91ca02f8",
+    "observed_tree": "789113b02d38161c62fd00d57cfe725e9dd89758",
+    "trigger": "The five explicitly authorized additive product-scope notices differ from the preserved 04_repo_docs packet mirrors; the unchanged strict source-packet consumer requires exact equality.",
+    "ci": {
+      "run_id": 40131736507,
+      "job_id": 120984972014,
+      "conclusion": "failure",
+      "url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131736507/job/120984972014"
+    },
+    "local_reproduction": {
+      "argv": [
+        "npm.cmd",
+        "run",
+        "docs:source-packet-audit:check"
+      ],
+      "exit": 1,
+      "receipt": "delivery-observations/source-packet-audit-delivery.receipt.json",
+      "raw_log": "logs/source-packet-audit-delivery.log"
+    },
+    "five_authorized_changes": [
+      "docs/MASTER_PLAN.md",
+      "docs/PRODUCT_REQUIREMENTS.md",
+      "docs/FEATURE_INDEX.md",
+      "docs/ROADMAP.md",
+      "docs/DECISIONS.md"
+    ],
+    "read_only_legacy_inputs": [
+      "04_repo_docs/docs/MASTER_PLAN.md",
+      "04_repo_docs/docs/PRODUCT_REQUIREMENTS.md",
+      "04_repo_docs/docs/FEATURE_INDEX.md",
+      "04_repo_docs/docs/ROADMAP.md",
+      "04_repo_docs/docs/DECISIONS.md"
+    ],
+    "blocked_change_paths": [
+      "scripts/docs/source-packet-audit.mjs",
+      "docs/generated/source-packet-audit.json",
+      "docs/generated/source-packet-audit.md"
+    ],
+    "proposed_bounded_successor": "After independent Brain source review, separately authorize a versioned source-packet supersession consumer and regenerate its two current audit projections. Preserve original packet bytes and existing strict negative cases; do not add a broad ignore/equivalence rule or mechanically rotate hashes.",
+    "acceptance": [
+      "Exact old packet identity preserved",
+      "Only independently accepted finite supersession is recognized",
+      "Unexpected body edits, missing/duplicate notices and undeclared authority still fail",
+      "Current/tampered/restored consumer cases fail closed at exact successor SHA",
+      "Derived outputs regenerated with unchanged obligations, not hand-pinned green",
+      "No other Security/DB/native/provider/public admission changes"
+    ],
+    "applied": false,
+    "original_guard_weakened": false,
+    "founder_technical_choice_requested": false,
+    "required_next_authority": "Independent Brain exact-path source/consumer migration grant; no automatic expansion of this release08 task",
+    "delivery_status": "PARTIAL_BLOCKED; contract proposal submitted for independent review",
+    "spend_usd": 0
+  }
 }
