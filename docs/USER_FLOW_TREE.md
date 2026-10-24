@@ -346,6 +346,12 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Expected result: Historical evidence can prove that the earlier local gate hid quiz questions, but it cannot prove consent-before-goals, server lifecycle/epoch authority, withdrawal routing, or zero pre-grant persistence.
   - Evidence: Historical screenshot, route snapshot, and browser console logs; fresh current evidence belongs to the combined branch above.
   - Historical local evidence: 2026-07-07 Expo web 320 x 568 direct `/onboarding/quiz` with a clean local context redirects to `/onboarding/consent`, does not render the first quiz question before consent, stays on consent after refresh, then opens `/onboarding/quiz` with the first question only after `I agree. Continue`; all checked states have zero horizontal overflow and no visible sub-44 px controls.
+- Branch: repeated or queued quiz navigation
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Answer one question, repeat Next before the next render, repeat a queued old handler, navigate Back, and repeat the final profile action. Also use keyboard Enter on Next at supported web sizes.
+  - Expected result: Each answered question advances once; unanswered questions cannot be skipped, and the final action navigates once without an out-of-range question or lost answers.
+  - Evidence: Real-route component regressions and supported-viewport browser keyboard/click traces in `docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/`.
 - Branch: notification permission denied
   - Priority: Important
   - Automate later: Yes
@@ -866,6 +872,18 @@ This file maps human-simulated E2E branches for Layerwell. Update it before test
   - Action: Submit opened/freshness intake, simulate an uncertain response, and retry the same submission before and after relaunch.
   - Expected result: A stable operation UUID returns the existing created row rather than duplicating it; choices remain available after failure; a reconnect candidate is consumed only after the same successful Shelf result is durably associated with it.
   - Evidence: Store/idempotency/queue tests, final Shelf row count, and reload trace.
+- Branch: committed Shelf mutation during an older initial read
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Delay the initial local Shelf read, then save, edit, archive or remove a product offline before the read resolves. Resolve the older snapshot last; repeat across an ended owner/consent lease.
+  - Expected result: A successful current-owner mutation refreshes from committed local state. An older snapshot cannot hide the saved product or resurrect pre-edit state. Ended authority cannot refresh a successor owner's cache.
+  - Evidence: Deterministic initial-read query/mutation regressions and actual Expo web background-read/offline-save traces in `docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/`.
+- Branch: unopened product quick action fails and recovers
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open an unopened product, fail a private write, tap Record opening date repeatedly, restore storage, and retry.
+  - Expected result: A failed write shows the route's accessible recovery feedback without an uncaught rejection, preserves the unopened product, and allows one deliberate retry.
+  - Evidence: Actual browser failure/retry traces and route regressions in `docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/`.
 - Branch: empty Shelf compact phone overflow
   - Priority: Important
   - Automate later: Yes
