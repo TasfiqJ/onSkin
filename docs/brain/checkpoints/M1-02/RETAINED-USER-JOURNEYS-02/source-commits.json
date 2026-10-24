@@ -1,0 +1,30 @@
+[
+  {
+    "sha": "5311e5e6dae55340c5f0f2a25cc7a1c218f76f2f",
+    "tree": "6de436e61af9622e2e56676422c2c68941548ff1",
+    "subject": "fix(shelf): refresh committed state after delayed initial reads",
+    "files": [
+      "apps/mobile/src/features/shelf/mutations.ts",
+      "apps/mobile/src/features/shelf/mutationsRecovery.test.ts"
+    ]
+  },
+  {
+    "sha": "c7bac6d97caed104aed9fcd285aa6cb24b8ab55b",
+    "tree": "f8399ebe9c0448294995162674d733df595076fd",
+    "subject": "fix(onboarding): advance each answered quiz question once",
+    "files": [
+      "apps/mobile/src/app/onboarding/quiz.tsx",
+      "apps/mobile/src/features/onboarding/quizNavigation.test.ts"
+    ]
+  },
+  {
+    "sha": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "subject": "fix(shelf): recover failed quick opening actions",
+    "files": [
+      "apps/mobile/src/app/shelf/[id].tsx",
+      "apps/mobile/src/features/shelf/productOpeningRecovery.test.ts",
+      "docs/USER_FLOW_TREE.md"
+    ]
+  }
+]

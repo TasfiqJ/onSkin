@@ -1,0 +1,1830 @@
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/README.md:45: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/RESULTS.md:84: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/TEST_MATRIX.md:46: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/UI_REPORT.md:48: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/cache-observation.fragment.txt:1: trailing whitespace.
++  writeJson('J02-cache-read-race.json', await evaluate(client, `({ reads: globalThis.__J02_READS__, visible: document.body.innerText.includes('Synthetic manual moisturizer') })`));
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/cache-observation.fragment.txt:2: trailing whitespace.
++  await evaluate(client, 'globalThis.__J02_RESTORE_READ__()');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/cache-observation.fragment.txt:3: trailing whitespace.
++  await captureStep(client, 'J02-saved-during-refresh');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/cache-observation.fragment.txt:4: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/cache-observation.fragment.txt:4: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:1: trailing whitespace.
++  await evaluate(client, `(async () => {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:2: trailing whitespace.
++    const find = (pattern) => [...__r.getModules().values()].find(m => pattern.test(m.verboseName ?? '')).publicModule.exports;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:3: trailing whitespace.
++    const store = find(/features[\\/]shelf[\\/]store\.ts$/);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:4: trailing whitespace.
++    const qc = find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:5: trailing whitespace.
++    const original = store.loadShelf;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:6: trailing whitespace.
++    let release, started;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:7: trailing whitespace.
++    const gate = new Promise(r => { release = r; });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:8: trailing whitespace.
++    const reading = new Promise(r => { started = r; });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:9: trailing whitespace.
++    let first = true;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:10: trailing whitespace.
++    globalThis.__J02_READS__ = 0;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:11: trailing whitespace.
++    store.loadShelf = async (...args) => {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:12: trailing whitespace.
++      globalThis.__J02_READS__++;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:13: trailing whitespace.
++      const snapshot = await original(...args);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:14: trailing whitespace.
++      if (first) { first = false; started(); await gate; }
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:15: trailing whitespace.
++      return snapshot;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:16: trailing whitespace.
++    };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:17: trailing whitespace.
++    globalThis.__J02_RESTORE_READ__ = () => { release(); store.loadShelf = original; };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:18: trailing whitespace.
++    await qc.cancelQueries({ queryKey: ['shelf'], exact: true });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:19: trailing whitespace.
++    void qc.refetchQueries({ queryKey: ['shelf'], exact: true });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:20: trailing whitespace.
++    await reading;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:21: trailing whitespace.
++    setTimeout(release, 2000);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:22: trailing whitespace.
++    return { delayedBackgroundRead: true, actualStoreAndQuery: true };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/delayed-read.fragment.txt:23: trailing whitespace.
++  })()`, true);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:1: trailing whitespace.
++// Checkpoint-only extension of the unchanged repository CDP/Expo web driver.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:2: trailing whitespace.
++import { createHash } from 'node:crypto';
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:3: trailing whitespace.
++import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:4: trailing whitespace.
++import { registerHooks } from 'node:module';
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:5: trailing whitespace.
++import { resolve } from 'node:path';
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:6: trailing whitespace.
++import { pathToFileURL } from 'node:url';
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:7: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:8: trailing whitespace.
++const target = pathToFileURL(resolve('scripts/e2e/onboarding-first-session.mjs')).href;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:9: trailing whitespace.
++const bindings = [];
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:10: trailing whitespace.
++process.once('exit', () => {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:11: trailing whitespace.
++  mkdirSync(process.env.ONBOARDING_E2E_EVIDENCE_DIR, { recursive: true });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:12: trailing whitespace.
++  writeFileSync(resolve(process.env.ONBOARDING_E2E_EVIDENCE_DIR, 'journey02-binding.json'),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:13: trailing whitespace.
++    JSON.stringify(bindings, null, 2) + '\n');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:14: trailing whitespace.
++});
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:15: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:16: trailing whitespace.
++const fragment = (name) => readFileSync(new URL(name + '.fragment.txt', import.meta.url), 'utf8');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:17: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:18: trailing whitespace.
++registerHooks({
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:19: trailing whitespace.
++  load(url, context, nextLoad) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:20: trailing whitespace.
++    const result = nextLoad(url, context);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:21: trailing whitespace.
++    if (url !== target) return result;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:22: trailing whitespace.
++    const original = String(result.source);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:23: trailing whitespace.
++    let source = original;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:24: trailing whitespace.
++    function replace(needle, replacement) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:25: trailing whitespace.
++      if (source.split(needle).length !== 2) throw new Error('Unexpected harness anchor: ' + needle);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:26: trailing whitespace.
++      source = source.replace(needle, replacement);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:27: trailing whitespace.
++    }
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:28: trailing whitespace.
++    replace('async function screenshot(client, name) {', `async function screenshot(client, name) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:29: trailing whitespace.
++      if (!/^(J02-|FAILURE|01a-direct|04-consent|09-products-empty|19-today|M1-02-offline|M1-05-archive|M1-07-corruption|26-age|CO-03|CO-04|CO-07|CO-09|CO-12|CO-13)/.test(name)) return;`);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:30: trailing whitespace.
++    replace('async function fillByLabel(client, label, value) {', `async function fillByLabel(client, label, value) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:31: trailing whitespace.
++      writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'fill', label, value }) + '\\n', { flag: 'a' });`);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:32: trailing whitespace.
++    replace('async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {', `async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:33: trailing whitespace.
++      writeFileSync(path.join(evidenceDir, 'actions.jsonl'), JSON.stringify({ action: 'click', label }) + '\\n', { flag: 'a' });`);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:34: trailing whitespace.
++    if (!process.argv.includes('--cross-owner')) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:35: trailing whitespace.
++    const next = "    await clickByText(client, index < answers.length - 1 ? 'Next' : 'See my profile');";
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:36: trailing whitespace.
++    replace(next, fragment('quiz-keyboard'));
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:37: trailing whitespace.
++    const ready = "  assert(manualReady.overflowX <= 1, 'Manual modal overflowed horizontally.');";
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:38: trailing whitespace.
++    replace(ready, ready + fragment('delayed-read'));
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:39: trailing whitespace.
++    const row = "  await captureStep(client, 'M1-02-offline-double-save');";
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:40: trailing whitespace.
++    replace(row, row + fragment('cache-observation'));
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:41: trailing whitespace.
++    const edit = "  await clickByText(client, 'Synthetic manual moisturizer', { exact: false });";
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:42: trailing whitespace.
++    replace(edit, edit + fragment('quick-opening'));
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:43: trailing whitespace.
++    }
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:44: trailing whitespace.
++    replace('function writeJson(name, value) {', `function writeJson(name, value) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:45: trailing whitespace.
++      if (name === 'summary.json') value = { ...value,
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:46: trailing whitespace.
++        driverRequestedEvidenceFiles: value.evidenceFiles,
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:47: trailing whitespace.
++        evidenceFiles: readdirSync(evidenceDir).filter(name => name.endsWith('.png')),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:48: trailing whitespace.
++        screenshotSelection: 'Checkpoint wrapper retains a bounded selection; all UI snapshots and action logs remain.' };`);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:49: trailing whitespace.
++    bindings.push({ original: target, originalSha256: createHash('sha256').update(original).digest('hex'),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:50: trailing whitespace.
++      executedSha256: createHash('sha256').update(source).digest('hex'),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:51: trailing whitespace.
++      changes: ['bounded screenshot selection', 'synthetic click/input trace', 'real keyboard repeat',
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:52: trailing whitespace.
++        'delayed actual Shelf background query before durable offline save; initial-read race covered by deterministic hook regressions', 'quick opening failure and retry'] });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:53: trailing whitespace.
++    return { ...result, source };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:54: trailing whitespace.
++  },
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:55: trailing whitespace.
++});
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:1: trailing whitespace.
++  await scrollTextIntoView(client, 'Record opening date');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:2: trailing whitespace.
++  await evaluate(client, `(() => {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:3: trailing whitespace.
++    const original = Storage.prototype.setItem;
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:4: trailing whitespace.
++    globalThis.__J02_RESTORE_WRITE__ = () => { Storage.prototype.setItem = original; };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:5: trailing whitespace.
++    Storage.prototype.setItem = function(key, value) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:6: trailing whitespace.
++      if (key === 'layerwell.shelf.v1') throw new DOMException('Synthetic local write failure', 'QuotaExceededError');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:7: trailing whitespace.
++      return original.call(this, key, value);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:8: trailing whitespace.
++    };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:9: trailing whitespace.
++  })()`);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:10: trailing whitespace.
++  await clickByText(client, 'Record opening date');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:11: trailing whitespace.
++  await waitForText(client, 'Your change was not confirmed.', 5000);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:12: trailing whitespace.
++  await captureStep(client, 'J02-quick-open-error', { assertClean: false });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:13: trailing whitespace.
++  await evaluate(client, 'globalThis.__J02_RESTORE_WRITE__()');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:14: trailing whitespace.
++  await clickByText(client, 'Record opening date');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:15: trailing whitespace.
++  await waitForCondition(client, `!document.body.innerText.includes('Your change was not confirmed.')`, 30000, 'opening retry');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quick-opening.fragment.txt:16: trailing whitespace.
++  await captureStep(client, 'J02-quick-open-recovered');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:1: trailing whitespace.
++    if (index === 0) {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:2: trailing whitespace.
++      await client.send('Page.bringToFront');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:3: trailing whitespace.
++      await client.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:4: trailing whitespace.
++      const focus = await evaluate(client, `(() => {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:5: trailing whitespace.
++        const next = [...document.querySelectorAll('[role="button"],button')].find(n => n.textContent.trim() === 'Next');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:6: trailing whitespace.
++        globalThis.__J02_KEYS__ = [];
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:7: trailing whitespace.
++        for (const type of ['keydown', 'keyup', 'click']) document.addEventListener(type, e => globalThis.__J02_KEYS__.push({type, key:e.key, target:e.target.textContent}));
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:8: trailing whitespace.
++        next.focus(); return { label: next.textContent, focused: document.activeElement === next };
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:9: trailing whitespace.
++      })()`);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:10: trailing whitespace.
++      await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', unmodifiedText: '\r', windowsVirtualKeyCode: 13 });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:11: trailing whitespace.
++      await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:12: trailing whitespace.
++      writeJson('J02-keyboard-attempt.json', { focus, observed: await evaluate(client, '({events:globalThis.__J02_KEYS__, text:document.body.innerText})') });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:13: trailing whitespace.
++      await waitForText(client, '2 OF 12', 5000);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:14: trailing whitespace.
++      await client.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', unmodifiedText: '\r', windowsVirtualKeyCode: 13 });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:15: trailing whitespace.
++      await client.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:16: trailing whitespace.
++      await waitForText(client, '2 OF 12');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:17: trailing whitespace.
++      const keyboard = await captureStep(client, 'J02-quiz-keyboard-repeat');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:18: trailing whitespace.
++      assert(keyboard.bodyText.includes('2 OF 12'), 'Repeated key skipped a question.');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:19: trailing whitespace.
++      writeJson('J02-keyboard.json', { action: 'focus Next, Enter twice', observed: keyboard });
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:20: trailing whitespace.
++    } else {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:21: trailing whitespace.
++      await clickByText(client, index < answers.length - 1 ? 'Next' : 'See my profile');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/quiz-keyboard.fragment.txt:22: trailing whitespace.
++    }
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/baseline-retained/stdout.txt:13: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/final-retained/stdout.txt:13: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:13: trailing whitespace.
++@layerwell/catalog-operator-console:lint: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:16: trailing whitespace.
++@layerwell/catalog-operator-console:lint: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:17: trailing whitespace.
++@layerwell/types:lint: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:20: trailing whitespace.
++@layerwell/types:lint: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:21: trailing whitespace.
++@layerwell/mobile:lint: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:24: trailing whitespace.
++@layerwell/mobile:lint: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:25: trailing whitespace.
++@layerwell/types:lint: "(no lint configured for @layerwell/types)"
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:29: trailing whitespace.
++  Time:    46.37s 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-lint/stdout.txt:30: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:12: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:15: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:16: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:19: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:20: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:22: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:23: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:25: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:32: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:36: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:39: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:44: trailing whitespace.
++@layerwell/catalog-operator-console:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:47: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:50: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:53: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:56: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:59: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:62: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:65: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:68: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:71: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:74: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:77: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:80: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:83: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:86: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:89: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:92: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:95: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:98: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:101: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:104: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:107: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:110: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:113: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:116: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:119: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:122: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:125: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:128: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:131: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:134: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:137: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:140: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:143: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:146: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:149: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:152: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:155: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:158: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:161: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:164: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:167: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:170: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:173: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:176: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:179: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:182: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:185: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:188: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:191: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:194: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:197: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:200: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:203: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:206: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:209: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:212: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:215: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:241: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:244: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:247: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:250: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:253: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:256: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:259: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:262: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:265: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:268: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:271: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:274: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:277: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:280: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:283: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:286: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:289: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:292: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:295: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:298: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:301: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:304: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:307: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:310: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:313: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:316: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:319: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:322: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:325: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:328: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:331: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:334: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:337: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:340: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:343: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:346: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:349: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:352: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:355: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:358: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:361: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:364: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:367: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:370: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:373: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:376: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:379: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:382: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:385: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:388: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:391: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:394: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:397: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:400: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:403: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:406: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:409: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:412: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:415: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:418: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:421: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:424: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:427: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:430: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:433: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:436: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:439: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:442: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:445: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:448: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:451: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:454: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:457: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:460: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:463: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:466: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:469: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:472: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:475: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:478: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:530: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:533: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:536: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:539: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:542: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:545: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:548: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:551: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:554: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:557: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:560: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:563: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:566: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:569: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:572: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:575: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:578: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:581: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:584: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:587: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:590: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:593: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:596: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:599: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:602: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:605: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:608: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:611: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:614: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:617: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:620: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:623: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:626: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:629: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:632: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:635: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:638: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:641: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:644: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:647: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:650: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:653: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:656: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:659: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:662: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:665: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:668: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:671: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:674: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:677: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:680: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:683: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:686: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:689: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:692: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:695: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:698: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:701: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:704: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:731: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:734: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:737: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:740: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:743: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:746: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:749: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:752: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:755: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:758: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:761: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:764: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:767: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:770: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:773: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:776: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:779: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:782: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:785: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:788: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:791: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:794: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:797: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:800: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:803: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:806: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:809: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:812: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:815: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:818: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:821: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:824: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:827: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:830: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:833: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:836: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:839: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:842: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:845: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:848: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:852: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:855: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:858: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:861: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:864: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:867: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:870: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:873: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:876: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:879: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:882: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:885: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:888: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:891: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:894: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:897: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:900: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:903: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:906: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:909: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:933: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:936: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:939: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:942: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:945: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:952: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:955: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:958: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:961: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:964: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:967: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:970: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:973: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:976: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:979: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:982: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:985: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:988: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:991: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:994: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1005: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1008: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1011: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1021: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1024: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1027: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1030: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1033: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1036: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1041: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1050: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1053: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1057: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1060: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1063: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1066: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1069: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1072: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1075: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1078: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1081: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1086: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1090: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1093: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1096: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1099: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1102: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1105: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1108: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1111: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1117: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1120: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1123: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1127: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1130: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1133: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1144: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1147: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1150: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1156: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1159: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1162: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1165: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1168: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1171: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1174: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1188: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1191: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1194: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1197: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1200: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1203: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1206: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1209: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1212: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1216: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1219: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1222: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1225: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1228: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1231: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1234: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1237: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1240: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1243: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1249: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1252: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1255: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1258: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1261: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1264: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1267: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1270: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1273: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1276: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1279: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1282: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1285: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1288: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1291: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1294: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1297: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1300: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1303: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1306: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1309: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1312: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1315: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1318: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1321: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1324: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1327: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1330: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1333: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1336: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1339: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1342: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1345: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1348: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1351: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1354: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1357: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1360: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1363: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1366: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1369: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1372: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1375: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1378: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1381: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1384: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1387: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1390: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1393: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1396: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1399: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1402: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1405: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1408: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1411: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1414: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1417: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1420: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1423: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1426: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1429: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1432: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1441: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1445: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1447: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1452: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1455: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1457: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1462: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1465: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1467: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1472: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1475: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1477: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1482: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1485: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1487: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1492: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1495: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1497: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1502: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1505: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1507: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1512: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1515: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1517: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1522: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1524: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1527: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1529: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1534: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1537: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1539: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1544: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1547: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1549: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1554: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1556: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1559: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1561: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1566: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1569: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1571: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1576: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1579: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1581: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1586: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1588: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1591: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1594: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1596: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1601: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1604: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1606: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1611: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1614: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1616: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1621: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1624: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1626: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1631: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1634: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1636: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1641: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1644: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1646: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1651: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1654: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1656: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1661: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1664: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1666: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1671: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1673: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1676: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1679: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1681: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1686: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1689: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1691: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1696: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1699: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1701: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1706: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1709: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1711: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1716: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1719: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1721: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1726: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1729: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1731: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1736: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1739: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1741: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1746: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1749: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1751: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1756: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1758: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1772: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1775: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1778: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1781: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1784: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1787: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1790: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1793: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1801: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1804: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1807: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1812: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1815: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1818: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1821: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1824: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1827: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1830: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1833: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1836: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1839: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1842: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1845: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1848: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1851: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1856: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1859: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1870: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1873: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1876: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1879: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1882: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1885: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1888: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1891: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1894: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1897: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1900: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1903: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1906: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1915: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1918: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1921: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1924: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1927: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1930: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1933: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1936: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1939: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1942: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1945: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1948: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1951: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1954: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1957: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1960: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1963: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1966: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1969: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1973: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1976: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1979: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1982: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1985: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1988: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1991: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1994: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:1997: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2000: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2003: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2006: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2009: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2012: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2015: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2020: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2024: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2028: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2035: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2038: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2041: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2045: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2050: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2053: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2056: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2059: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2064: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2067: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2070: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2073: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2076: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2080: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2084: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2087: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2090: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2093: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2096: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2099: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2102: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2105: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2108: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2111: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2114: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2117: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2120: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2123: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2126: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2137: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2140: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2143: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2146: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2149: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2152: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2155: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2158: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2164: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2167: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2170: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2173: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2176: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2179: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2182: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2185: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2188: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2191: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2194: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2197: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2201: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2205: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2208: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2211: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2214: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2217: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2220: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2223: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2226: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2229: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2241: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2244: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2249: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2252: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2257: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2260: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2263: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2266: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2271: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2275: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2283: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2286: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2302: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2305: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2320: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2337: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2340: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2357: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2361: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2370: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2373: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2376: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2379: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2382: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2385: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2388: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2398: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2401: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2404: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2407: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2410: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2433: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2436: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2689: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2694: trailing whitespace.
++@layerwell/mobile:test: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2698: trailing whitespace.
++  Time:    1m59.897s 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-tests/stdout.txt:2699: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:12: trailing whitespace.
++@layerwell/types:typecheck: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:15: trailing whitespace.
++@layerwell/types:typecheck: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:16: trailing whitespace.
++@layerwell/catalog-operator-console:typecheck: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:19: trailing whitespace.
++@layerwell/catalog-operator-console:typecheck: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:21: trailing whitespace.
++@layerwell/mobile:typecheck: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:24: trailing whitespace.
++@layerwell/mobile:typecheck: 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:28: trailing whitespace.
++  Time:    20.624s 
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/forced-root-typecheck/stdout.txt:29: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/green-all-regressions/stdout.txt:13: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/green-opening/stdout.txt:13: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/green-regressions/stdout.txt:13: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/packet-recheck/stdout.txt:1: trailing whitespace.
++PASS: verified 10 members; external manifest SHA256 f680c7a3bcac6489fba284498edfdfbcf26cae71db3a6a1fb966e5cf6b0f4184 ; source admission NONE
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/red-opening-2/stdout.txt:16: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/red-opening/stdout.txt:14: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/red-regressions/stdout.txt:23: new blank line at EOF.
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:1: trailing whitespace.
++file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:25
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:2: trailing whitespace.
++      if (source.split(needle).length !== 2) throw new Error('Unexpected harness anchor: ' + needle);
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:3: trailing whitespace.
++                                                   ^
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:4: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:5: trailing whitespace.
++Error: Unexpected harness anchor:   await scrollTextIntoView(client, 'Edit opened date');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:6: trailing whitespace.
++    at replace (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:25:52)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:7: trailing whitespace.
++    at load (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:41:5)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:8: trailing whitespace.
++    at nextStep (node:internal/modules/customization_hooks:189:26)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:9: trailing whitespace.
++    at loadWithHooks (node:internal/modules/customization_hooks:352:18)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:10: trailing whitespace.
++    at #loadSync (node:internal/modules/esm/loader:849:14)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:11: trailing whitespace.
++    at ModuleLoader.load (node:internal/modules/esm/loader:808:28)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:12: trailing whitespace.
++    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:594:31)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:13: trailing whitespace.
++    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:14: trailing whitespace.
++    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:15: trailing whitespace.
++    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:16: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390-2/stderr.txt:17: trailing whitespace.
++Node.js v22.21.0
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:1: trailing whitespace.
++file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:57
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:2: trailing whitespace.
++  await waitForCondition(client, `!document.body.innerText.includes('Your change was not confirmed.')`, 30000, 'opening retry');
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:3: trailing whitespace.
++                                  ^
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:4: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:5: trailing whitespace.
++SyntaxError: Unexpected token '!'
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:6: trailing whitespace.
++    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:7: trailing whitespace.
++    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:107:18)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:8: trailing whitespace.
++    at #translate (node:internal/modules/esm/loader:546:20)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:9: trailing whitespace.
++    at afterLoad (node:internal/modules/esm/loader:596:29)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:10: trailing whitespace.
++    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:601:12)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:11: trailing whitespace.
++    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:12: trailing whitespace.
++    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:13: trailing whitespace.
++    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:14: trailing whitespace.
++    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:664:25)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:15: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/ui-red-quick390/stderr.txt:16: trailing whitespace.
++Node.js v22.21.0
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:1: trailing whitespace.
++"""Record a real command, its source revision, raw output and exit status."""
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:2: trailing whitespace.
++import datetime
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:3: trailing whitespace.
++import hashlib
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:4: trailing whitespace.
++import json
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:5: trailing whitespace.
++import pathlib
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:6: trailing whitespace.
++import subprocess
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:7: trailing whitespace.
++import sys
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:8: trailing whitespace.
++import time
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:9: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:10: trailing whitespace.
++sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:11: trailing whitespace.
++label, *command = sys.argv[1:]
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:12: trailing whitespace.
++if not command or not label.replace('-', '').replace('_', '').isalnum():
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:13: trailing whitespace.
++    raise SystemExit('Usage: python -B run_check.py LABEL COMMAND [ARGS...]')
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:14: trailing whitespace.
++destination = pathlib.Path(__file__).parent / 'receipts' / label
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:15: trailing whitespace.
++destination.mkdir(parents=True, exist_ok=False)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:16: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:17: trailing whitespace.
++def git(*args):
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:18: trailing whitespace.
++    return subprocess.check_output(['git', *args], text=True).strip()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:19: trailing whitespace.
++
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:20: trailing whitespace.
++receipt = {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:21: trailing whitespace.
++    'command': command,
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:22: trailing whitespace.
++    'cwd': str(pathlib.Path.cwd()),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:23: trailing whitespace.
++    'head': git('rev-parse', 'HEAD'),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:24: trailing whitespace.
++    'tree': git('rev-parse', 'HEAD^{tree}'),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:25: trailing whitespace.
++    'branch': git('branch', '--show-current'),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:26: trailing whitespace.
++    'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:27: trailing whitespace.
++}
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:28: trailing whitespace.
++receipt['tracked_diff_sha256'] = hashlib.sha256(subprocess.check_output(['git', 'diff', '--binary', 'HEAD'])).hexdigest()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:29: trailing whitespace.
++receipt['source_files_sha256'] = {
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:30: trailing whitespace.
++    str(path).replace('\\', '/'): hashlib.sha256(path.read_bytes()).hexdigest()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:31: trailing whitespace.
++    for folder in ['shelf', 'onboarding']
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:32: trailing whitespace.
++    for path in (pathlib.Path('apps/mobile/src/features') / folder).glob('*') if path.is_file()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:33: trailing whitespace.
++}
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:34: trailing whitespace.
++receipt['lockfile_sha256'] = hashlib.sha256(pathlib.Path('package-lock.json').read_bytes()).hexdigest()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:35: trailing whitespace.
++started = time.monotonic()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:36: trailing whitespace.
++try:
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:37: trailing whitespace.
++    result = subprocess.run(command, capture_output=True)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:38: trailing whitespace.
++    receipt['exit'] = result.returncode
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:39: trailing whitespace.
++    outputs = {'stdout': result.stdout, 'stderr': result.stderr}
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:40: trailing whitespace.
++except OSError as error:
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:41: trailing whitespace.
++    receipt['exit'] = None
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:42: trailing whitespace.
++    receipt['execution_error'] = str(error)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:43: trailing whitespace.
++    outputs = {'stdout': b'', 'stderr': str(error).encode()}
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:44: trailing whitespace.
++receipt['elapsed_seconds'] = round(time.monotonic() - started, 3)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:45: trailing whitespace.
++for stream, data in outputs.items():
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:46: trailing whitespace.
++    (destination / (stream + '.txt')).write_bytes(data)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:47: trailing whitespace.
++    receipt[stream + '_sha256'] = hashlib.sha256(data).hexdigest()
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:48: trailing whitespace.
++    receipt[stream + '_bytes'] = len(data)
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:49: trailing whitespace.
++(destination / 'receipt.json').write_bytes((json.dumps(receipt, indent=2) + '\n').encode())
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:50: trailing whitespace.
++for stream, data in outputs.items():
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:51: trailing whitespace.
++    print(stream.upper(), data.decode('utf-8', errors='replace')[-3500:])
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:52: trailing whitespace.
++print(json.dumps({key: value for key, value in receipt.items() if key != 'source_files_sha256'}, indent=2))
+docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/run_check.py:53: trailing whitespace.
++raise SystemExit(receipt['exit'] if receipt['exit'] is not None else 127)

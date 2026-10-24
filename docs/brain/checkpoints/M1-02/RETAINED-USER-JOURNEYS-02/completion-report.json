@@ -1,0 +1,112 @@
+{
+  "authorization": "M1X-RETAINED-USER-JOURNEYS02-CLIENT-01",
+  "disposition": "SUBMITTED_REVIEW_REQUIRED",
+  "self_accepted": false,
+  "source": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+  "source_tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+  "anchor": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+  "branch": "stage/m1-retained-resilience",
+  "pr": 11,
+  "draft_required": true,
+  "merged": false,
+  "implementation_commit_count": 3,
+  "changed_problem_families": [
+    "Shelf post-commit cache refresh and failure recovery",
+    "onboarding quiz repeated/stale navigation"
+  ],
+  "repairs": [
+    "cancel earlier Shelf snapshots and reassert authority before post-commit refresh",
+    "claim each answered quiz transition once using the existing strict answer validator",
+    "reuse existing guarded quick-opening save/retry handler"
+  ],
+  "production_paths": 3,
+  "new_test_paths": 3,
+  "user_flow_tree": "three additive branch descriptions",
+  "baseline_retained": 1768,
+  "expected_pre_repair_failures": 10,
+  "final_new_regressions": 12,
+  "final_retained": {
+    "files": 145,
+    "passed": 1780,
+    "failed": 0
+  },
+  "forced_repository_tests": {
+    "mobile": 6066,
+    "console": 24,
+    "total": 6090,
+    "cached_tasks": 0,
+    "exit": 0
+  },
+  "forced_typecheck": {
+    "exit": 0,
+    "cached_tasks": 0
+  },
+  "forced_lint": {
+    "exit": 0,
+    "cached_tasks": 0,
+    "types_package": "repository declares no lint task implementation"
+  },
+  "browser_runs": [
+    {
+      "folder": "ui/green390-2",
+      "viewport": [
+        390,
+        844
+      ],
+      "exit": 0
+    },
+    {
+      "folder": "ui/green375",
+      "viewport": [
+        375,
+        667
+      ],
+      "exit": 0
+    },
+    {
+      "folder": "ui/cross-owner390",
+      "viewport": [
+        390,
+        844
+      ],
+      "scenario": "actual synthetic A-to-B transition",
+      "exit": 0
+    }
+  ],
+  "evidence_distinctions": [
+    "initial-read race reproduced by deterministic real-query/hook tests; browser initial read correctly closes save UI",
+    "successful browser race fixture delays a background read with retained data",
+    "same-render quiz race is real-route component proof; browser proves ordinary keyboard/touch progression",
+    "source simulations do not grant native/OS/paid/provider authority",
+    "warnings and failed setup/driver attempts retained; no failed wrapper counted as PASS"
+  ],
+  "not_run": [
+    "native/simulator/device/OS",
+    "physical VoiceOver/Dynamic Type",
+    "installed-native offline cold start/process death",
+    "paid positive plan/weekly/diary views",
+    "hosted DB replay",
+    "live account/provider linking",
+    "live day rollover",
+    "signing/TestFlight/release/deployment",
+    "clinical/professional validation"
+  ],
+  "prior_accepted_repairs": "unchanged weekly-count/photo-recovery/native-permission source objects",
+  "protected_paths_changed": [],
+  "new_protected_path_blockers": [],
+  "M1-03": "BLOCKED_EXTERNAL_CUSTODY / NOT_ACCEPTED",
+  "M2-01": "NOT_AUTHORIZED",
+  "security_g97": "FAIL / NO_GO; expired 2026-10-21T00:00:00Z; no pins/rules/expiry/policy changes",
+  "historic_open": {
+    "refused_paths": 61,
+    "sql_obligations": 26,
+    "failed_targets": 189,
+    "historical_events": 368,
+    "exact_OWASP_custody": "open"
+  },
+  "spend_usd": 0,
+  "dependencies_modified": false,
+  "dependency_installs": false,
+  "old_worktrees_or_pack_deleted": false,
+  "delivery_observation": "Final evidence tail SHA/tree, clean checkout, pushed refs, PR and final-head CI are observed after creation and reported externally."
+}

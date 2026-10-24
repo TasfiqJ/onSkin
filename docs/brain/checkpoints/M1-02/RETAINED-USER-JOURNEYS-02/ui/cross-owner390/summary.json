@@ -1,0 +1,31 @@
+{
+  "verdict": "pass",
+  "scenario": "actual_cross_owner",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "noAFlash": true,
+  "delayedAOperationsRejected": true,
+  "duplicateAndFailedCleanupRetry": true,
+  "bOwnAdmission": true,
+  "bUsableManualShelfAndEdit": true,
+  "exactBOwnerCacheQueueHealth": true,
+  "bDocumentRelaunch": true,
+  "returnAClosedWithoutResurrection": true,
+  "noUncaughtErrors": true,
+  "limits": "DEV/web/development/unconfigured synthetic identity and preflight transport; real Auth reconciliation, owner proof, cleanup, encrypted storage/query, age/consent and routing. No live provider, paid authority, native process death or device proof.",
+  "evidenceFiles": [
+    "04-consent.png",
+    "09-products-empty.png",
+    "19-today-free-current.png",
+    "CO-03-cleanup-refused.png",
+    "CO-04-repeated-refusal.png",
+    "CO-07-b-empty-shelf.png",
+    "CO-09-b-usable-shelf.png",
+    "CO-09b-b-product-detail.png",
+    "CO-12-b-document-relaunch.png",
+    "CO-13-return-a-age-closed.png"
+  ],
+  "screenshotSelection": "Checkpoint wrapper retains a bounded selection; all UI snapshots and action logs remain."
+}

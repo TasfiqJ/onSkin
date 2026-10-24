@@ -1,0 +1,8 @@
+{
+  "screen_count": 43,
+  "ui_bytes": 6453105,
+  "synthetic_only": true,
+  "sanitization": "Fresh synthetic fixture corpus only; screenshot selection and input logs inspected. No real account, patient, photo, service token or provider used.",
+  "postprocessing": "Successful 375/390 summaries have actual PNG inventory plus original requested names; payload observations and raw logs unchanged.",
+  "credential_pattern_findings": []
+}

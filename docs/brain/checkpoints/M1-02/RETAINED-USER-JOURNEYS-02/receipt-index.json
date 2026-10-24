@@ -1,0 +1,412 @@
+{
+  "authored-whitespace": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":(exclude)docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/**",
+      ":(exclude)docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/ui/**"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 2,
+    "elapsed_seconds": 0.094,
+    "stdout_sha256": "eece8ba5a1ad806404329bc34c546e6ca33263248cac73aed12fb19c0c4f4816",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "authored-whitespace-final": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":(exclude)docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/receipts/**",
+      ":(exclude)docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/ui/**"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 0,
+    "elapsed_seconds": 0.094,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "baseline-retained": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf",
+      "src/features/onboarding",
+      "src/features/today",
+      "src/features/routine",
+      "src/features/scheduler",
+      "src/features/streak",
+      "src/features/photos",
+      "--maxWorkers=2"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 74.297,
+    "stdout_sha256": "404b02e2d0d3ba6da39dc8c433594750429ed6e84a42fe6e4aca59ed7590e51c",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "final-retained": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf",
+      "src/features/onboarding",
+      "src/features/today",
+      "src/features/routine",
+      "src/features/scheduler",
+      "src/features/streak",
+      "src/features/photos",
+      "--maxWorkers=2"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 0,
+    "elapsed_seconds": 75.734,
+    "stdout_sha256": "7e922e4c886ec9b90b7b5c3e408907c80d672d9df273053cac7187fad738932a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "forced-root-lint": {
+    "command": [
+      "npm.cmd",
+      "run",
+      "lint",
+      "--",
+      "--force"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 47.031,
+    "stdout_sha256": "7c5212510c332a5545cdf56406247cabde00c7e43dfffb813272d05d5a716360",
+    "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4"
+  },
+  "forced-root-tests": {
+    "command": [
+      "npm.cmd",
+      "test",
+      "--",
+      "--force",
+      "--",
+      "--maxWorkers=2"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 120.484,
+    "stdout_sha256": "8ff50e389a7341d19b3cede53124add0491488bfba64eebb4a795f6cd6cb9cad",
+    "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4"
+  },
+  "forced-root-typecheck": {
+    "command": [
+      "npm.cmd",
+      "run",
+      "typecheck",
+      "--",
+      "--force"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 21.281,
+    "stdout_sha256": "14e1068ae7e93520cf6d69fd5487593c143384880537569f2f3e7d0e04d8dd50",
+    "stderr_sha256": "a6052069f52915d75bf1cd6f441c4ea945b949f416a2eb62f2a69ce234408bd4"
+  },
+  "green-all-regressions": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/onboarding/quizNavigation.test.ts",
+      "src/features/shelf/mutationsRecovery.test.ts",
+      "src/features/shelf/productOpeningRecovery.test.ts",
+      "--maxWorkers=2"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 1.781,
+    "stdout_sha256": "5438ac7f6311a0916fba2da0aa846f6ef6502ba151d67b00382b8d0cc33fd21b",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "green-opening": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/productOpeningRecovery.test.ts",
+      "--maxWorkers=1"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 1.422,
+    "stdout_sha256": "1904744d893d1b3c4ad709ba3f23ac627fb0d711cccd2b60803c242af56d7821",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "green-regressions": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/onboarding/quizNavigation.test.ts",
+      "src/features/shelf/mutationsRecovery.test.ts",
+      "--maxWorkers=2"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 1.547,
+    "stdout_sha256": "9c266280a5a2bc9c60a1ea31455c1749d96cb9485bd0f69b9acd9256488314e6",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "packet-recheck": {
+    "command": [
+      "python",
+      "-B",
+      "../retained-user-journeys02-context/verify_packet.py",
+      "--expected-manifest-sha256",
+      "f680c7a3bcac6489fba284498edfdfbcf26cae71db3a6a1fb966e5cf6b0f4184"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 0,
+    "elapsed_seconds": 0.078,
+    "stdout_sha256": "0115ec7c7883e91054fd79fa39bc5bf9090daa8246b103c03dfc304c47ef1665",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw-log-whitespace": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 0,
+    "elapsed_seconds": 0.078,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw-log-whitespace-final": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 2,
+    "elapsed_seconds": 0.156,
+    "stdout_sha256": "053a451e7028fc70b633eecda918611f80eb05ea5f46eefedbe1ac8f03fb13ce",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "raw-log-whitespace-staged": {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 2,
+    "elapsed_seconds": 0.157,
+    "stdout_sha256": "8ac5ad83e5dd75d1aecd1ba3707dd88d776c736fe5ed4d74fb2ee8df0b80a24f",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "red-opening": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/productOpeningRecovery.test.ts",
+      "--maxWorkers=1"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 1.437,
+    "stdout_sha256": "12eb66ca7cef47118e9ca6a3e95a6ab2494b2cfb6409ee85c498c12cdc63a7b8",
+    "stderr_sha256": "c20946473ebd307a1266617419659357845f488d5e48797dac7e003448ddd960"
+  },
+  "red-opening-2": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/shelf/productOpeningRecovery.test.ts",
+      "--maxWorkers=1"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 1.422,
+    "stdout_sha256": "d01b94be2ab73ddcb008b1d4764d736e70ce01c069475f63ad0d7567b5719671",
+    "stderr_sha256": "797b2943604fe47f24941afc31ab6448a4721f06478c44e69a2229906eb477a6"
+  },
+  "red-regressions": {
+    "command": [
+      "npm.cmd",
+      "--workspace",
+      "apps/mobile",
+      "run",
+      "test",
+      "--",
+      "src/features/onboarding/quizNavigation.test.ts",
+      "src/features/shelf/mutationsRecovery.test.ts",
+      "--maxWorkers=2"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 1.578,
+    "stdout_sha256": "ed60390968064292766d4ecf0267df885dfaceebbeab7bbc9ea78de1f200cf91",
+    "stderr_sha256": "31b3f00de3115f1a67fabefd3951108709dd9c1ebce7d4e91c84bbb6306a0161"
+  },
+  "ui-cross-owner390": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--cross-owner"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 0,
+    "elapsed_seconds": 73.906,
+    "stdout_sha256": "0e3a0f70f90fa390631b3bdc62f3bc509ff4d99776fe107d413dbb6dbffcd1f5",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ui-green375": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--retained-safety",
+      "--daily-loop"
+    ],
+    "head": "40f04d017079b201f8f1b2e93a0de1be722aeedc",
+    "tree": "1fbbf93009417f7868879c79ff2daae2f7f8f5d8",
+    "exit": 0,
+    "elapsed_seconds": 99.61,
+    "stdout_sha256": "da9e84ae4ac603a2df134301f40347637cd6e867f5d1d40deb497e86b4f8ee54",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ui-green390": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--retained-safety",
+      "--daily-loop"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 70.344,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "9a64acd2503f62b8901a21cc20eceeeb6bae4365fe7493b9667ac784afbcce6f"
+  },
+  "ui-green390-2": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--retained-safety",
+      "--daily-loop"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 0,
+    "elapsed_seconds": 99.36,
+    "stdout_sha256": "0e0ae69ea4f1e22fac2cd6f1dcab91172de270a6b9a933d6db6b2900092f8930",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ui-red-quick390": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--retained-safety",
+      "--daily-loop"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 0.047,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7ed045868702ddbfcc3ecb4220f7c0bb59b317bc8066882095dfbc2727e80ff9"
+  },
+  "ui-red-quick390-2": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--retained-safety",
+      "--daily-loop"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 0.063,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "535442da005df59fa4dced877112a24b65dcda7ec31b0b8bf9cb1f7b40166290"
+  },
+  "ui-red-quick390-3": {
+    "command": [
+      "node",
+      "--import",
+      "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+      "scripts/e2e/onboarding-first-session.mjs",
+      "--retained-safety",
+      "--daily-loop"
+    ],
+    "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+    "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+    "exit": 1,
+    "elapsed_seconds": 55.266,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "c1546c7467bd39563ccd7fe4cbb1101c89f0e55f22c7cfde9e0811b41dac6f2a"
+  }
+}

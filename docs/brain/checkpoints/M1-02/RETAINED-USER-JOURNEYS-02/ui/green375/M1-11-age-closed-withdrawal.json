@@ -1,0 +1,58 @@
+{
+  "bodyText": "PRIVACY & ACCOUNT Your account is still here. Age confirmation is still required for health features. Your existing data rights remain available. Billing does not stop automatically; use Manage subscription below whenever you need it. Active-system withdrawal is complete. PRIVACY REQUEST Status: withdrawn. Local cleanup complete. ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support Back to age confirmation",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Manage subscription",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 425
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Restore purchases",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 489
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Export my data",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 553
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to age confirmation",
+      "role": "button",
+      "selected": false,
+      "width": 375,
+      "x": 0,
+      "y": 611
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8326/",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

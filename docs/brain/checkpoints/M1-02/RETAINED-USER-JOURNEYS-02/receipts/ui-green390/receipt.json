@@ -1,0 +1,21 @@
+{
+  "command": [
+    "node",
+    "--import",
+    "./docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--retained-safety",
+    "--daily-loop"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "21ceb8c9562070f0af067f5ce803265bb527cdf0",
+  "tree": "c3111c5365f4aed248f7672e559f800ffa1e978c",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:52:36.129964+00:00",
+  "exit": 1,
+  "elapsed_seconds": 70.344,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 0,
+  "stderr_sha256": "9a64acd2503f62b8901a21cc20eceeeb6bae4365fe7493b9667ac784afbcce6f",
+  "stderr_bytes": 474
+}

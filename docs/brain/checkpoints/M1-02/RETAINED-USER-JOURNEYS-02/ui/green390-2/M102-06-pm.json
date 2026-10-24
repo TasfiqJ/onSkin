@@ -1,0 +1,102 @@
+{
+  "bodyText": "FRIDAY, OCTOBER 23 · 8:55 PM 1 day Good evening. Evening routine complete. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 2 of 2 Recorded - cannot undo Glycolic 7% toner On exfoliation nights only. Recorded - cannot undo M102 synthetic moisturizer Seal everything in. Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "View your streak and adherence",
+      "role": "button",
+      "selected": false,
+      "width": 85.41,
+      "x": 280.59,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 172
+    },
+    {
+      "disabled": true,
+      "height": 94,
+      "hitOk": true,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "selected": false,
+      "width": 302,
+      "x": 44,
+      "y": 379
+    },
+    {
+      "disabled": true,
+      "height": 95,
+      "hitOk": true,
+      "label": "M102 synthetic moisturizer",
+      "role": "checkbox",
+      "selected": false,
+      "width": 302,
+      "x": 44,
+      "y": 473
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 24.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 110,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 195,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8325/today?routine=PM",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

@@ -1,0 +1,3 @@
+  writeJson('J02-cache-read-race.json', await evaluate(client, `({ reads: globalThis.__J02_READS__, visible: document.body.innerText.includes('Synthetic manual moisturizer') })`));
+  await evaluate(client, 'globalThis.__J02_RESTORE_READ__()');
+  await captureStep(client, 'J02-saved-during-refresh');

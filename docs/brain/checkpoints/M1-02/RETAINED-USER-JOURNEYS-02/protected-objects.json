@@ -1,0 +1,98 @@
+[
+  {
+    "path": ".github",
+    "anchor_object": "9148470436b9d21580fdf239fa1f43d4ac1a9758",
+    "source_object": "9148470436b9d21580fdf239fa1f43d4ac1a9758",
+    "identical": true
+  },
+  {
+    "path": "supabase",
+    "anchor_object": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662",
+    "source_object": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662",
+    "identical": true
+  },
+  {
+    "path": "scripts/phase9",
+    "anchor_object": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae",
+    "source_object": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae",
+    "identical": true
+  },
+  {
+    "path": "scripts/security_readiness",
+    "anchor_object": "89d918679e7877b3e2f652add3386f26add40d05",
+    "source_object": "89d918679e7877b3e2f652add3386f26add40d05",
+    "identical": true
+  },
+  {
+    "path": "package.json",
+    "anchor_object": "7b0522688c74c78328aa587cb9f9a07b65965061",
+    "source_object": "7b0522688c74c78328aa587cb9f9a07b65965061",
+    "identical": true
+  },
+  {
+    "path": "package-lock.json",
+    "anchor_object": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+    "source_object": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/package.json",
+    "anchor_object": "6217bd03730c530445861cc3e1e438a92f401b83",
+    "source_object": "6217bd03730c530445861cc3e1e438a92f401b83",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/app.base.json",
+    "anchor_object": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1",
+    "source_object": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/src/lib/auth",
+    "anchor_object": "cc3c8a72cd49818e1a6166240970fa783a5febdd",
+    "source_object": "cc3c8a72cd49818e1a6166240970fa783a5febdd",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/src/lib/consent",
+    "anchor_object": "df3d819603ea233bc1af41b064d9e0f99ab7cb63",
+    "source_object": "df3d819603ea233bc1af41b064d9e0f99ab7cb63",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/src/lib/storage",
+    "anchor_object": "31811c7d921536a50dae1a8569f8f7b059e9dbe3",
+    "source_object": "31811c7d921536a50dae1a8569f8f7b059e9dbe3",
+    "identical": true
+  },
+  {
+    "path": "docs/brain/state",
+    "anchor_object": "713a0d090230d8831051d8a0bb97d3bdb14a523b",
+    "source_object": "713a0d090230d8831051d8a0bb97d3bdb14a523b",
+    "identical": true
+  },
+  {
+    "path": "docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01",
+    "anchor_object": "ed433f37a986d372a702aa72e9731f1b6c07c432",
+    "source_object": "ed433f37a986d372a702aa72e9731f1b6c07c432",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/src/features/photos",
+    "anchor_object": "4fdba7d8492a95b278d44e21bb42880ed9dd954f",
+    "source_object": "4fdba7d8492a95b278d44e21bb42880ed9dd954f",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/src/features/streak",
+    "anchor_object": "29084d7e0708ff0f32c504782c1a91244eb7d895",
+    "source_object": "29084d7e0708ff0f32c504782c1a91244eb7d895",
+    "identical": true
+  },
+  {
+    "path": "apps/mobile/src/features/notifications",
+    "anchor_object": "8793ad95f2ee1de0271ed26d675afc89ff0c597e",
+    "source_object": "8793ad95f2ee1de0271ed26d675afc89ff0c597e",
+    "identical": true
+  }
+]

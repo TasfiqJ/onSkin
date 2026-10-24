@@ -1,0 +1,23 @@
+  await evaluate(client, `(async () => {
+    const find = (pattern) => [...__r.getModules().values()].find(m => pattern.test(m.verboseName ?? '')).publicModule.exports;
+    const store = find(/features[\\/]shelf[\\/]store\.ts$/);
+    const qc = find(/lib[\\/]query[\\/]queryClient\.ts$/).queryClient;
+    const original = store.loadShelf;
+    let release, started;
+    const gate = new Promise(r => { release = r; });
+    const reading = new Promise(r => { started = r; });
+    let first = true;
+    globalThis.__J02_READS__ = 0;
+    store.loadShelf = async (...args) => {
+      globalThis.__J02_READS__++;
+      const snapshot = await original(...args);
+      if (first) { first = false; started(); await gate; }
+      return snapshot;
+    };
+    globalThis.__J02_RESTORE_READ__ = () => { release(); store.loadShelf = original; };
+    await qc.cancelQueries({ queryKey: ['shelf'], exact: true });
+    void qc.refetchQueries({ queryKey: ['shelf'], exact: true });
+    await reading;
+    setTimeout(release, 2000);
+    return { delayedBackgroundRead: true, actualStoreAndQuery: true };
+  })()`, true);

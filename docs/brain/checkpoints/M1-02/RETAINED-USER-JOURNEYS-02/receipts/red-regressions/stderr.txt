@@ -1,0 +1,176 @@
+stderr | src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > advances one answered question for repeated Next taps in one render
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > does not let a queued old Next handler skip an unanswered successor
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > does not advance an unanswered question even if its handler is invoked
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > keeps Back, re-answering and one final navigation usable
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable add result instead of joining the pre-write read, including offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable edit result instead of joining the pre-write read, including offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable archive result instead of joining the pre-write read, including offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable remove result instead of joining the pre-write read, including offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > advances one answered question for repeated Next taps in one render
+AssertionError: expected 3 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/features/onboarding/quizNavigation.test.ts:55:21
+     53|     const next = button('Next').props.onPress;
+     54|     await act(async () => { next(); next(); });
+     55|     expect(index()).toBe(2);
+       |                     ^
+     56|     expect(button('Next').props.disabled).toBe(true);
+     57|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > does not let a queued old Next handler skip an unanswered successor
+AssertionError: expected 3 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/features/onboarding/quizNavigation.test.ts:64:21
+     62|     await act(async () => next());
+     63|     await act(async () => next());
+     64|     expect(index()).toBe(2);
+       |                     ^
+     65|   });
+     66|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > does not advance an unanswered question even if its handler is invoked
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/features/onboarding/quizNavigation.test.ts:69:21
+     67|   it('does not advance an unanswered question even if its handler is i…
+     68|     await act(async () => button('Next').props.onPress());
+     69|     expect(index()).toBe(1);
+       |                     ^
+     70|     expect(mocks.push).not.toHaveBeenCalled();
+     71|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/features/onboarding/quizNavigation.test.ts > quiz navigation through the real route > keeps Back, re-answering and one final navigation usable
+TypeError: Cannot read properties of undefined (reading 'id')
+ ❯ QuizScreen src/app/onboarding/quiz.tsx:54:40
+     52|   const total = ONBOARDING_QUIZ.length;
+     53|   const question = ONBOARDING_QUIZ[index]!;
+     54|   const current = quizAnswers[question.id];
+       |                                        ^
+     55|   const isMulti = question.multiSelect === true;
+     56|   const answered = isMulti
+ ❯ Object.react_stack_bottom_frame ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:15670:20
+ ❯ renderWithHooks ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:4863:22
+ ❯ updateFunctionComponent ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7018:19
+ ❯ beginWork ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8499:18
+ ❯ runWithFiberInDEV ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2315:13
+ ❯ performUnitOfWork ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13224:22
+ ❯ workLoopSync ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13068:41
+ ❯ renderRootSync ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13049:11
+ ❯ performWorkOnRoot ../../node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12253:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable add result instead of joining the pre-write read, including offline
+AssertionError: expected [] to deeply equal [ 'Synthetic balm' ]
+
+- Expected
++ Received
+
+- [
+-   "Synthetic balm",
+- ]
++ []
+
+ ❯ src/features/shelf/mutationsRecovery.test.ts:98:23
+     96|         await new Promise((resolve) => setTimeout(resolve, 20));
+     97|       });
+     98|       expect(visible).toEqual(durable);
+       |                       ^
+     99|       expect(reads).toBeGreaterThanOrEqual(2);
+    100|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable edit result instead of joining the pre-write read, including offline
+ FAIL  src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable archive result instead of joining the pre-write read, including offline
+AssertionError: expected [ 'Original synthetic balm' ] to deeply equal [ 'Edited synthetic balm' ]
+
+- Expected
++ Received
+
+  [
+-   "Edited synthetic balm",
++   "Original synthetic balm",
+  ]
+
+ ❯ src/features/shelf/mutationsRecovery.test.ts:98:23
+     96|         await new Promise((resolve) => setTimeout(resolve, 20));
+     97|       });
+     98|       expect(visible).toEqual(durable);
+       |                       ^
+     99|       expect(reads).toBeGreaterThanOrEqual(2);
+    100|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/features/shelf/mutationsRecovery.test.ts > committed Shelf changes versus an older initial query > publishes the durable remove result instead of joining the pre-write read, including offline
+AssertionError: expected [ 'Original synthetic balm' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Original synthetic balm",
++ ]
+
+ ❯ src/features/shelf/mutationsRecovery.test.ts:98:23
+     96|         await new Promise((resolve) => setTimeout(resolve, 20));
+     97|       });
+     98|       expect(visible).toEqual(durable);
+       |                       ^
+     99|       expect(reads).toBeGreaterThanOrEqual(2);
+    100|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/onboarding/quizNavigation.test.ts src/features/shelf/mutationsRecovery.test.ts --maxWorkers=2

@@ -1,0 +1,10 @@
+{
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "3.9.13",
+  "node": "v22.21.0",
+  "npm": "11.20.0",
+  "dependencies": "existing unchanged node_modules reused; no installs or dependency/lock modifications",
+  "lockfile_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+  "incremental_spend_usd": 0,
+  "disk_cleanup": "none; existing worktrees and failed pack preserved"
+}

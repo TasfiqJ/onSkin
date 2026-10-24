@@ -1,0 +1,47 @@
+{
+  "bodyText": "PRIVACY & ACCOUNT Your account is still here. Age confirmation is still required for health features. Your existing data rights remain available. Billing does not stop automatically; use Manage subscription below whenever you need it. PRIVACY REQUEST Status: active. Local cleanup complete. Retry / check status [DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent WITHDRAWN. Collected health-purpose data is to be deleted. The account, billing, subscription entitlement, App Lock setting, and store-transaction safety record are preserved. Withdraw health-data consent ACCOUNT & BILLING Manage subscription Restore purchases Export my data Sign out Delete account HELP & POLICIES Consumer health data policy Privacy policy Support Back to age confirmation",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Retry / check status",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 298
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Withdraw health-data consent",
+      "role": "button",
+      "selected": false,
+      "width": 285,
+      "x": 45,
+      "y": 564
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back to age confirmation",
+      "role": "button",
+      "selected": false,
+      "width": 375,
+      "x": 0,
+      "y": 611
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8326/",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "original": "file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs",
+    "originalSha256": "381f4a70172c6fd8418813b6896e7e26906b1a0ea0857bd36d57f14c90742e67",
+    "executedSha256": "5cc9733e007facf4818b81b4e0313f351ca8877b240ded2ec16de70c23953432",
+    "changes": [
+      "bounded screenshot selection",
+      "synthetic click/input trace",
+      "real keyboard repeat",
+      "delayed actual Shelf background query before durable offline save; initial-read race covered by deterministic hook regressions",
+      "quick opening failure and retry"
+    ]
+  }
+]

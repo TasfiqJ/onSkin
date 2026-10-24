@@ -1,0 +1,17 @@
+file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:25
+      if (source.split(needle).length !== 2) throw new Error('Unexpected harness anchor: ' + needle);
+                                                   ^
+
+Error: Unexpected harness anchor:   await scrollTextIntoView(client, 'Edit opened date');
+    at replace (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:25:52)
+    at load (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-USER-JOURNEYS-02/journeys-web.mjs:41:5)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at loadWithHooks (node:internal/modules/customization_hooks:352:18)
+    at #loadSync (node:internal/modules/esm/loader:849:14)
+    at ModuleLoader.load (node:internal/modules/esm/loader:808:28)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:594:31)
+    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41)
+
+Node.js v22.21.0

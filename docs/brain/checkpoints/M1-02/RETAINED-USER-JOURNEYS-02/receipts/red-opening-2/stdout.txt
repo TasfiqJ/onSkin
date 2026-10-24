@@ -1,0 +1,16 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/shelf/productOpeningRecovery.test.ts --maxWorkers=1
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+ ❯ src/features/shelf/productOpeningRecovery.test.ts (2 tests | 2 failed) 20ms
+     × announces write failure and allows a successful retry 16ms
+     × joins no duplicate write while the first tap is pending 3ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:51:29
+   Duration  497ms (transform 167ms, setup 0ms, import 290ms, tests 20ms, environment 0ms)
+

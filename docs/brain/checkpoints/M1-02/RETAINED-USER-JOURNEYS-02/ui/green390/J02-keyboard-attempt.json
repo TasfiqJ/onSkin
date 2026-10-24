@@ -1,0 +1,16 @@
+{
+  "focus": {
+    "label": "Next",
+    "focused": true
+  },
+  "observed": {
+    "events": [
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "target": "SETUP1 OF 5What brings you here?Choose up to two. We'll use these to keep your plan focused.Clear skinBreakouts & congestion✓Even toneDark spots & textureHydrationTightness & dullnessFine linesFirmness & elasticitySensitivityStinging & flushingBarrier repairRedness & reactivity✓2 selected · up to 2ContinueSKIN PROFILE2 OF 12OIL + MOISTUREHow often does your skin ask for more moisture during the day?Most daysSome daysRarelyBackNext\n"
+      }
+    ],
+    "text": "SKIN PROFILE\n2 OF 12\nOIL + MOISTURE\nHow often does your skin ask for more moisture during the day?\nMost days\nSome days\nRarely\nBack\nNext"
+  }
+}
