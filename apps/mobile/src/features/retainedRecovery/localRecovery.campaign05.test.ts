@@ -5,7 +5,7 @@ import { Pressable } from 'react-native';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
-import LocalRecoveryScreen from '@/app/settings/local-recovery';
+import LocalRecoverySection from './LocalRecoverySection';
 import { CURRENT_AGE_POLICY_RECEIPT_BYTES, setAgeVerified } from '@/features/onboarding/ageGateStore';
 import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
@@ -19,10 +19,10 @@ import { runHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 
 // Platform ports only. Domain loaders, age/consent parsers, leases, photo
-// deletion journal, stores and mounted route are the actual production source.
+// deletion journal, stores and mounted section are the actual production source.
 const ports = vi.hoisted(() => ({
   bytes: new Map<string, string>(), vault: new Map<string, string>(), failed: new Set<string>(),
-  reads: new Map<string, number>(), write: vi.fn(), provider: vi.fn(), push: vi.fn(), back: vi.fn(),
+  reads: new Map<string, number>(), write: vi.fn(), provider: vi.fn(), push: vi.fn(), close: vi.fn(), back: vi.fn(),
   listeners: new Set<(state: string) => void>(),
   delayKey: null as string | null, release: null as (() => void) | null,
 }));
@@ -80,7 +80,12 @@ async function grant(owner = 'synthetic-recovery-a') {
   setActiveHealthProcessingEpoch(1, { ownerUserId: owner, accountGeneration });
 }
 async function flush() { await act(async () => { await new Promise(resolve => setTimeout(resolve, 5)); }); }
-async function mount() { await act(async () => { renderer = create(createElement(QueryClientProvider, { client }, createElement(LocalRecoveryScreen))); }); await flush(); }
+async function mount() {
+  await act(async () => {
+    renderer = create(createElement(QueryClientProvider, { client }, createElement(LocalRecoverySection, { onClose: ports.close })));
+  });
+  await flush();
+}
 function row(title: string) {
   const heading = renderer!.root.findAll(node => node.type === ('Text' as never) && node.props.children === title)[0]!;
   return heading.parent!;
@@ -93,7 +98,7 @@ function check(title: string) {
 beforeEach(async () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   ports.bytes.clear(); ports.vault.clear(); ports.failed.clear(); ports.reads.clear(); ports.write.mockClear(); ports.provider.mockReset();
-  ports.delayKey = null; ports.release = null; renderer = undefined;
+  ports.delayKey = null; ports.release = null; ports.close.mockClear(); ports.push.mockClear(); renderer = undefined;
   client = new QueryClient();
   await grant(); ports.write.mockClear(); ports.reads.clear();
 });
@@ -115,6 +120,16 @@ it('reads existing local evidence without writing, networking, scheduling or ope
   expect(rendered()).not.toContain('Synthetic private name');
   expect(ports.reads.has('layerwell.photos.v1')).toBe(false);
   expect(ports.write).not.toHaveBeenCalled(); expect(ports.provider).not.toHaveBeenCalled();
+});
+
+it('exposes an accessible close action within the existing You surface', async () => {
+  await mount();
+  const close = renderer!.root.findAll(node => node.type === Pressable && node.props.accessibilityLabel === 'Close local recovery')[0]!;
+  expect(close.props.accessibilityRole).toBe('button');
+  expect(close.props.style.minHeight).toBeGreaterThanOrEqual(48);
+  await act(async () => { close.props.onPress(); });
+  expect(ports.close).toHaveBeenCalledTimes(1);
+  expect(ports.push).not.toHaveBeenCalled();
 });
 
 it('isolates unavailable reminder storage from saved check-offs and unfinished photo cleanup', async () => {

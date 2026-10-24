@@ -1,16 +1,15 @@
 import { router, useFocusEffect, type Href } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-import { RouteIconButton, Screen, Text } from '@/components/ui';
+import { Text } from '@/components/ui';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { subscribeShelfMirrorOutboxChanges } from '@/features/shelf/store';
 import { subscribeCompletionSyncOutboxChanges } from '@/features/today/completionsStore';
 import { subscribePhotoDeleteChanges } from '@/features/photos/photoDeleteJournal';
 import { captureHealthDataWriteLease, assertHealthDataWriteLease, type HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingLeaseSnapshot, subscribeActiveHealthProcessingLeaseChanges } from '@/lib/consent/healthProcessingEpoch';
-import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 
 import { LocalRecoveryAccessClosed, readLocalRecoveryEvidence, RECOVERY_DOMAINS, type LocalEvidence, type RecoveryDomain } from './localEvidence';
 
@@ -125,7 +124,7 @@ function LocalRecoveryPanel({ accepted, day, onRetryAccess }: {
   });
 }
 
-export default function LocalRecoveryScreen() {
+export default function LocalRecoverySection({ onClose }: { onClose: () => void }) {
   const published = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
   const [, checkExpiry] = useState(0);
   const [focused, setFocused] = useState(false);
@@ -143,11 +142,13 @@ export default function LocalRecoveryScreen() {
     try { return captureHealthDataWriteLease(); } catch { return null; }
   }, [published]);
   return (
-    <Screen>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
-        <View className="mb-4 flex-row items-center gap-3 pt-2">
-          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router, APP_YOU_ROUTE)} />
-          <Text variant="title" style={{ flexShrink: 1 }}>Local recovery</Text>
+    <View className="pt-2">
+        <View className="mb-4 flex-row items-center justify-between gap-3">
+          <Text variant="title" style={{ flex: 1 }}>Local recovery</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel="Close local recovery"
+            onPress={onClose} style={{ minHeight: 48, minWidth: 48, justifyContent: 'center' }}>
+            <Text variant="bodySm" className="font-sans-semibold">Close</Text>
+          </Pressable>
         </View>
         <Text variant="bodySm" tone="muted" className="mb-4">
           Check what can be read on this device. Cloud status not verified. Each feature keeps its own recovery controls.
@@ -156,7 +157,6 @@ export default function LocalRecoveryScreen() {
           accepted={accepted} day={day} onRetryAccess={() => setVisit(value => value + 1)} /> : (
           <Text variant="bodySm">Local recovery is unavailable until your age, consent, and account checks are current.</Text>
         )}
-      </ScrollView>
-    </Screen>
+    </View>
   );
 }
