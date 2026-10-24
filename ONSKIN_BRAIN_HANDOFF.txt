@@ -1,13 +1,12 @@
-onSkin M1 campaign06 factual handoff — PARTIAL_BLOCKED, independent review required.
-Authorization M1X-LEAN-V1-CORE-EXPERIENCE06-CANDIDATE-01. Brain alone accepts; no main promotion.
-Accepted start f78e3d4662b0a1b886544435b6bf4d8101d7cc3c / tree2c9a8c15bc64ef070dd34c7b39da92cb444c45f9.
-Measured source92aee6b2cfe058c144698a3f935ed7f31e643747 / tree3785d5c00667f037586d9c293c5e8b422189be10.
-PR11 stage/m1-retained-resilience remains sole writer, draft/open/unmerged, auto-merge off.
-13 source/docs/worklist paths: local saved Shelf Quick Find, Shelf/progress grant-cache closure, honest Archive recovery, single-flight intake removal, Shelf text reflow; 22 added tests; original tests unchanged.
-Clean measured source: root6180/6180, retained2335/2335, uncached typecheck/lint/strict worklist exit0. Exact original mobile overlay9 failing vectors +4 safeguards; no full independent checkout implied.
-Actual synthetic Expo/headless Chrome final375 daily/first session and final390 cross-owner pass; changed Shelf captures390/360-text2/430. Native/device/provider/clinical/release NOT_RUN.
-Mandatory disposable full independently sourced worklist0/1/0 remains NOT_QUALIFIED due disk exhaustion. Protected tabs/_layout fixed-height dock clips enlarged label glyphs; surgical owner-action recorded, unapplied.
-Source92 Quality40110253550 fails canonical DB image Data limit exceeded only; repository gates/PG15/PG17/Expo exports pass. iOS40110253582 PASS SOURCE-ONLY. Security40110253748 FAIL. Final evidence-head CI must be read separately after push; no future self hash embedded.
-New checkpoint docs/brain/checkpoints/M1-02/LEAN-V1-CORE-JOURNEY-06 has finite evidence, exact source pre/post hashes,338 protected objects +3 absences, verifier and honest failures/NOT_RUN.
-Main d9912f4c8b30358593569c5b9b4e84773c6f463e and PR10 cd2bd51997f283c0b446bf2124f427f482550fa8 unchanged. Original Security/DB/auth/consent/storage/crypto/native/dependencies/state/checkpoints untouched.
-M1-03 BLOCKED_EXTERNAL_CUSTODY / NOT_ACCEPTED; G97 FAIL / NO_GO; M2 and successors NOT_AUTHORIZED. USD0.
+onSkin M1 Campaign07 factual handoff — PARTIAL_BLOCKED, independent Brain review required.
+Authorization M1X-LEAN-V1-FIRST-WEEK-EXPERIENCE07-CANDIDATE-01; no self acceptance or main promotion.
+Accepted anchor f3543284d388334c7d9a6155fc408aea2a1b272e / tree fdb03951bcf8f236a48d34e0e079a76ed766f543.
+Measured source 3b7e212a7ae37f44759d52e1b4220507cf3965e0 / tree 0ad1570ec726bd7408c4b338e2ae5e8bd855729d; 13 source commits, 11 exact source/docs/worklist paths.
+Improved enlarged dock label reflow and scene reserve, Shelf midnight/DST/foreground timezone expiry while preserving canonical routine cache identity, and optional confirmed Today next-visit links without new persistence/route/entitlement.
+Clean measured source: root6190/6190, retained2343/2343, uncached forced typecheck/lint and original primary strict worklist exit0. Ten added cases; original safeguards preserved.
+Actual synthetic Expo/Chrome: final390 cross-owner+daily exit0; final360/text2 card+first-session/daily exit0; augmented375/104rows/eightdock reduced-motion checks completed but command exits1 on four Reanimated development reduced-motion warnings. Exact diagnostics retained, no false full PASS. Native/device/OSdelivery/provider/clinical/paid/release NOT_RUN.
+Fresh independent complete-checkout worklist0/1/0 remains NOT_QUALIFIED due safe disk budget; no clone/sparse/mock substitute. Task-only cleanup inventories retained; unknown projects/worktrees/packs untouched.
+New compact checkpoint docs/brain/checkpoints/M1-02/LEAN-V1-FIRST-WEEK-EXPERIENCE-07: source byte identities,345 protected witnesses+3 absences,29 screenshots, raw failed/success logs and standalone verifier. This is an evidence-only tail; read its final SHA/tree after commit.
+Source CI in ci-source3b7.json is an exact associated-source observation; canonical DB acquisition fails registry Data limit exceeded, Security remains FAIL, live Supabase skipped. Final evidence-head Quality/Security/iOS results must be read after push and reported separately in PR11/final relay; do not borrow earlier status.
+PR11 stage/m1-retained-resilience sole writer remains DRAFT/OPEN/UNMERGED, auto-merge off. Main d9912f4c8b30358593569c5b9b4e84773c6f463e and PR10 cd2bd51997f283c0b446bf2124f427f482550fa8 unchanged.
+M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; G97 FAIL/NO_GO; M2 NOT_AUTHORIZED; USD0. Brain alone accepts.
