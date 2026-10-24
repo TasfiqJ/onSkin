@@ -732,9 +732,6 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
     };
     try {
       await persist([rec, ...items], lease);
-      if (sourceNeedsCleanup) {
-        await markPhotoRenditionPublication(publicationIdentity, 'metadata_committed');
-      }
     } catch (error) {
       try {
         lease.assertCurrent();
@@ -751,6 +748,9 @@ export async function addPhotoWithOutcome(input: NewPhoto): Promise<AddPhotoOutc
     let sourceCleanupPending = false;
     if (sourceNeedsCleanup) {
       try {
+        // Metadata already committed. Stage acknowledgement and raw cleanup
+        // are recoverable work, never evidence that the photo was not saved.
+        await markPhotoRenditionPublication(publicationIdentity, 'metadata_committed');
         await deleteCapturedPhotoSource(input.localUri);
         await markPhotoRenditionPublication(publicationIdentity, 'raw_cleaned');
         await settlePhotoRenditionPublication(publicationIdentity);

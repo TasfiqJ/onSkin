@@ -47,7 +47,8 @@ import {
   writePhotoDeleteJournal,
   type PhotoDeleteCommand,
 } from './photoDeleteJournal';
-import { getPhotoDeleteStatus, loadPhotos, removePhoto, retryPhotoDeletes, updatePhoto } from './store';
+import { addPhotoWithOutcome, getPhotoDeleteStatus, loadPhotos, removePhoto, retryPhotoDeletes, updatePhoto } from './store';
+import { createEncryptedPhotoThumbnail } from './photoThumbnail';
 import { usePhotos } from './usePhotos';
 import { LargeSecureStore } from '@/lib/supabase/largeSecureStore';
 import {
@@ -82,6 +83,7 @@ const mocks = vi.hoisted(() => ({
   moves: [] as { from: string; to: string }[],
   blockEncryptedFileDelete: false,
   failVaultWrite: false,
+  failPublicationStage: false,
   failVaultErase: false,
   failSingleJournalRemoval: false,
   failBatchJournalRemoval: false,
@@ -111,6 +113,10 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
     multiGet: async (keys: string[]) => keys.map((key) => [key, mocks.storage.get(key) ?? null]),
     setItem: async (key: string, value: string) => {
       mocks.writes.push(key);
+      if (key === 'layerwell.photo.publication_journal.v1' && mocks.failPublicationStage &&
+          JSON.parse(value).stage === 'metadata_committed') {
+        throw new Error('SYNTHETIC_PUBLICATION_STAGE_FAILED');
+      }
       if (key === PHOTO_DELETE_CLEANUP_VAULT_KEY && mocks.failVaultWrite)
         throw new Error('VAULT_WRITE_FAILED');
       if (key === 'layerwell.photos.deleteJournal.v1') {
@@ -412,6 +418,7 @@ function assertNoOldRecovery(command: PhotoDeleteCommand) {
   }
 }
 beforeEach(async () => {
+  mocks.failPublicationStage = false;
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   await waitForAccountGenerationOperationsToSettle();
   endPrivateKVAccountBoundary();
@@ -458,6 +465,35 @@ afterEach(async () => {
 });
 
 describe.sequential('C-08B2-R3 real encrypted deletion/file/sign-out recovery', () => {
+  it('recovers a committed encrypted photo after the publication acknowledgement fails', async () => {
+    const raw = 'file://cache/synthetic-publication.png';
+    mocks.files.set(raw, PNG);
+    mocks.failPublicationStage = true;
+    vi.mocked(createEncryptedPhotoThumbnail).mockImplementation(async ({ sourceUri, photoId, captureSessionId }) =>
+      encryptPhotoRendition(sourceUri, { photoId, captureSessionId, rendition: 'thumbnail' }));
+    try {
+      const result = await addPhotoWithOutcome({ takenLocalDate: '2026-10-23', localUri: raw, notes: 'synthetic note' });
+      expect(result).toMatchObject({ createdNow: true, sourceCleanupPending: true });
+      expect(mocks.files.has(raw)).toBe(true);
+      expect(JSON.parse(mocks.storage.get('layerwell.photo.publication_journal.v1')!).stage).toBe('pair_adopted');
+      expect(mocks.storage.get(PHOTO_KEY)).not.toContain('synthetic note');
+      expect(mocks.files.get(result.photo.encryptedLocalUri!)).not.toContain(PNG);
+
+      mocks.failPublicationStage = false;
+      const recovered = await loadPhotos();
+      expect(recovered).toHaveLength(1);
+      expect(recovered[0]!.id).toBe(result.photo.id);
+      expect(recovered[0]!.notes).toBe('synthetic note');
+      expect(mocks.files.has(raw)).toBe(false);
+      expect(mocks.storage.has('layerwell.photo.publication_journal.v1')).toBe(false);
+      await expect(decryptPhotoToDataUri(result.photo.encryptedLocalUri!, {
+        photoId: result.photo.id, captureSessionId: null, rendition: 'original',
+      })).resolves.toBe(`data:image/png;base64,${PNG}`);
+    } finally {
+      vi.mocked(createEncryptedPhotoThumbnail).mockReset();
+    }
+  });
+
   it.each(['original', 'thumbnail', 'both'] as const)(
     'deletes safely with %s already absent, retaining authenticated intent',
     async (missing) => {
