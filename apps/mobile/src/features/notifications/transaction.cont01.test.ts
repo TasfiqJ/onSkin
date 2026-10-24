@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+import { activeHealthProcessingLeaseSnapshot, clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import { notificationPreferenceRetryPatch } from './applyPreferences';
 import { configureNotifications } from './startup';
 import { rescheduleReminders } from './deliver';
@@ -97,7 +97,8 @@ it('startup unavailable -> durable save -> visible notice -> recovered port -> a
   await act(async () => { await expect(mutation.mutateAsync({ amEnabled: true })).rejects.toThrow('PREFERENCES_SAVED_REMINDERS_UNCONFIRMED'); });
   await flush();
   expect(await loadNotifPrefs()).toMatchObject({ amEnabled: true, pmEnabled: false, captureReminders: false });
-  expect(client.getQueryData(['notifPrefs'])).toMatchObject({ amEnabled: true });
+  const authority = activeHealthProcessingLeaseSnapshot()!;
+  expect(client.getQueryData(['notifPrefs', authority.generation, authority.ownerUserId, authority.accountGeneration])).toMatchObject({ amEnabled: true });
   expect(JSON.stringify(renderer!.toJSON())).toContain('Your preferences are saved, but reminders were not confirmed');
   expect(ports.native.size).toBe(0);
   expect(ports.category).toHaveBeenCalledTimes(8);
