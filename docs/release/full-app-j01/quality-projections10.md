@@ -71,6 +71,14 @@ new grant is allowed, with regular 100644 blobs, correct create/edit classificat
 linear ancestry, normal index flags and no protected edits/deletions/renames. The
 unproven conditional readiness-script grant is deliberately excluded.
 
+The initial source-head CI exposed an overly strict rejection of GitHub's synthetic
+PR merge checkout. The corrected orchestration accepts only PR14's immutable
+workflow/event context, exact PR13 base, exact new-branch head, and a synthetic
+merge tree identical to that source head. It still validates every real source
+commit and rejects ordinary merges, altered integration trees, wrong events and
+wrong base/head identities. This does not create a source merge or readiness
+provenance, and the failed initial CI remains recorded in the checkpoint.
+
 `source_consumer10.test.py` uses actual Git deltas and histories based on the exact
 Release09 tree through private read-only object alternates. It tests rejected
 protected paths, old evidence, modes, deletions, collisions, ancestry, merges and

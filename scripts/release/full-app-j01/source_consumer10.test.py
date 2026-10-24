@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('release10_check', HERE/'check.py')
@@ -117,6 +118,41 @@ def main():
                         data=b'forbidden merge\n').decode().strip()
             git('update-ref', 'HEAD', merge)
             expect('actual-history-merge', check.source10_history, 1)
+            # A GitHub integration ref may only expose the identical source tree,
+            # exact pinned base, exact PR14 event and exact branch head. This does
+            # not qualify local source history as merged or independently accepted.
+            git('read-tree', authentic)
+            integration = git('-c', 'user.name=Release10 fixture', '-c', 'user.email=fixture@example.invalid',
+                'commit-tree', git('write-tree').decode().strip(), '-p', check.RELEASE09, '-p', authentic,
+                data=b'synthetic PR14 integration fixture\n').decode().strip()
+            git('update-ref', 'HEAD', integration)
+            event_path = fixture/'.git/event10.json'
+            event = dict(number=14, repository=dict(full_name='TasfiqJ/onSkin'), pull_request=dict(number=14,
+                base=dict(sha=check.RELEASE09, ref='stage/full-app-j01-source-packet-ci09'),
+                head=dict(sha=authentic, ref='stage/full-app-j01-quality-projections10', repo=dict(full_name='TasfiqJ/onSkin'))))
+            event_path.write_bytes(json.dumps(event).encode())
+            env = dict(GITHUB_EVENT_NAME='pull_request', GITHUB_REPOSITORY='TasfiqJ/onSkin',
+                GITHUB_REF='refs/pull/14/merge', GITHUB_SHA=integration, GITHUB_EVENT_PATH=str(event_path))
+            with patch.dict(check.os.environ, env):
+                expect('exact-synthetic-integration-tree-and-event', check.source10_history, 0)
+                for key, bad in [('GITHUB_EVENT_NAME', 'push'), ('GITHUB_REF', 'refs/pull/15/merge'),
+                                 ('GITHUB_SHA', authentic), ('GITHUB_REPOSITORY', 'other/repo')]:
+                    with patch.dict(check.os.environ, {key:bad}):
+                        expect('synthetic-context-tampered:'+key, check.source10_history, 1)
+                event['pull_request']['head']['sha'] = check.RELEASE09
+                event_path.write_bytes(json.dumps(event).encode())
+                expect('synthetic-event-head-tampered', check.source10_history, 1)
+                event['pull_request']['head']['sha'] = authentic
+                event_path.write_bytes(json.dumps(event).encode())
+                put(worklist, b'altered integration tree\n')
+                bad_tree_merge = git('-c', 'user.name=Release10 fixture', '-c', 'user.email=fixture@example.invalid',
+                    'commit-tree', git('write-tree').decode().strip(), '-p', check.RELEASE09, '-p', authentic,
+                    data=b'forged integration tree\n').decode().strip()
+                git('update-ref', 'HEAD', bad_tree_merge)
+                with patch.dict(check.os.environ, {'GITHUB_SHA':bad_tree_merge}):
+                    expect('synthetic-integration-tree-tampered', check.source10_history, 1)
+                git('update-ref', 'HEAD', integration)
+                expect('exact-synthetic-integration-restored', check.source10_history, 0)
             unrelated = git('-c', 'user.name=Release10 fixture', '-c', 'user.email=fixture@example.invalid',
                             'commit-tree', base_tree, data=b'unrelated root\n').decode().strip()
             git('update-ref', 'HEAD', unrelated)

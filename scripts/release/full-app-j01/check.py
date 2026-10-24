@@ -240,12 +240,45 @@ def validate10_diff(raw, read_after):
         read_after(path)  # Every changed working path is checked for links/reparse components.
 
 
+def source10_endpoint():
+    """Authenticate only PR14's tree-identical GitHub synthetic merge checkout.
+
+    This is not permission to merge source history. Every source commit remains
+    linear and checked; the immutable workflow/event binds the integration ref.
+    """
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2:
+        return head
+    require(len(parents) == 3, 'R10_LINEAR_HISTORY:'+head)
+    require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/14/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R10_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R10_CI_EVENT')
+    event = load(event_path)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == 14 and pr.get('number') == 14 and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE09 and parents[1] == RELEASE09 and
+            pr.get('base', {}).get('ref') == 'stage/full-app-j01-source-packet-ci09' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/full-app-j01-quality-projections10' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin',
+            'R10_CI_EVENT_IDENTITY')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'),
+            'R10_CI_MERGE_TREE')
+    return parents[2]
+
+
 def source10_history():
     require(git('rev-parse', RELEASE09+'^{tree}').decode().strip() ==
             'a59fc7ea1cc57901f6d848ff5009734f446bdff2', 'R10_BASE_TREE')
-    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE09, 'HEAD'],
+    endpoint = source10_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE09, endpoint],
                    cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    for commit in git('rev-list', '--reverse', RELEASE09+'..HEAD').decode().splitlines():
+    for commit in git('rev-list', '--reverse', RELEASE09+'..'+endpoint).decode().splitlines():
         parents = git('rev-list', '--parents', '-n', '1', commit).decode().split()
         require(len(parents) == 2, 'R10_LINEAR_HISTORY:'+commit)
         validate10_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE09, commit),
