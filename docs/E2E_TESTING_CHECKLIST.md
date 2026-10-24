@@ -128,3 +128,11 @@ unchecked matrix below remains authoritative.
 - Which native mobile E2E harness should be installed first?
 - Which Expo web flows should be promoted to Playwright tests?
 - Which service-backed flows need local mocks before durable E2E can run safely?
+
+## M1 local recovery continuation
+
+- [ ] At 375×667 and 390×844, complete adult/consent/free-plan onboarding and the retained AM/PM daily loop, then open You → Local recovery with real clicks. Use a fresh synthetic browser profile and keep native/provider/paid-positive evidence separate.
+- [ ] Verify independent device-only Shelf/check-off evidence, unavailable preference reads, per-domain retry, visible keyboard focus + Enter, Back, offline navigation, reload and the existing Progress paywall. A saved reminder choice must not claim OS delivery; no pending photo journal must not claim photo-content availability or cloud deletion completion.
+- [ ] Return to Notifications and Timing with the app's normal query freshness. Refuse the actual browser storage read, require visible retry + Back, restore only the synthetic port, and retry offline. Local choices must be reread on entry instead of inheriting a fresh-looking cache snapshot.
+- [ ] Run actual synthetic A→B cleanup failure/retry with a delayed Recovery read, B's own age/consent/Shelf admission, reload and closed return-to-A/direct-Recovery entry. Preserve failed attempts and observe rendered boundaries for old-owner content.
+- [ ] Check 430×932 and, where feasible, 360×640 with 200% direct text pressure. Record that this is browser stress, not physical Dynamic Type or VoiceOver. Keep a bounded screenshot set, source-bound actions, geometry snapshots, original driver/executed hashes and raw exits under the active campaign checkpoint.
