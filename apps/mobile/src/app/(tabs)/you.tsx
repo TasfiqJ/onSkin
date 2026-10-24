@@ -818,6 +818,8 @@ export default function YouScreen() {
             <Text variant="label" tone="muted" className="mb-1">
               HELP
             </Text>
+            <Row label="Local recovery" hint="Check device records and find each feature’s recovery controls."
+              onPress={() => router.push('/settings/local-recovery')} />
             <Row
               label="Beta feedback"
               hint="Send a categorized issue through support."
