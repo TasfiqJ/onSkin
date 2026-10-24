@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-24T18:25:18.085Z
+Generated: 2026-10-24T18:28:29.506Z
 Status: pass
-Git SHA: 01258fb825c291431e98f3ed4b9844c4288bc6e9
+Git SHA: b460851da74f7c3eb75d18dd50923f62db9d1a81
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -410,7 +410,7 @@ Sources:
 - `apps/mobile/src/features/shelf/catalogRecoveryAsync.test.ts` - 13373 bytes - sha256 `b336d46440752fe9463c5fc479f5f1abd0c344b8d14b99ae2d1396d2ff78c56a`
 - `apps/mobile/src/features/shelf/categories.test.ts` - 1325 bytes - sha256 `a6f69552408d01ddfd0f5d44d0c296101f77eda35f0affcbbde580d3dd950a42`
 - `apps/mobile/src/features/shelf/categories.ts` - 2393 bytes - sha256 `1a8449afa7536dca3ec6b744016af047f3e98c97b8e2a71412e0d3d90b3d1864`
-- `apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts` - 15465 bytes - sha256 `cd6d470f4dbf340c4003cad8df9cec64315e1c7a6b79b0222a967cf2d0530d7f`
+- `apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts` - 15737 bytes - sha256 `282775e19c1121d8a7883708ec9f0431c1f14b3ea3b2e94935a792a538a7aadd`
 - `apps/mobile/src/features/shelf/expiry.test.ts` - 2602 bytes - sha256 `dca407f4572147d1368e0f2b108e4a59ed2bb0f63e541bdeb0f1264bbb73d952`
 - `apps/mobile/src/features/shelf/expiry.ts` - 2778 bytes - sha256 `43e97ea2d296532af742bd23643e9ca48ed0193d756ba5c163f421703a15508d`
 - `apps/mobile/src/features/shelf/freshness.test.ts` - 8351 bytes - sha256 `fee1fd4da816079fe1e3cd10a33af16c74e7244ec996905605013f7884699a0a`

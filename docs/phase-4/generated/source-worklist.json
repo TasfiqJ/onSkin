@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-24T18:25:18.085Z",
+  "generatedAt": "2026-10-24T18:28:29.506Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "01258fb825c291431e98f3ed4b9844c4288bc6e9",
+  "gitSha": "b460851da74f7c3eb75d18dd50923f62db9d1a81",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1620,8 +1620,8 @@
         {
           "path": "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
           "exists": true,
-          "bytes": 15465,
-          "sha256": "cd6d470f4dbf340c4003cad8df9cec64315e1c7a6b79b0222a967cf2d0530d7f"
+          "bytes": 15737,
+          "sha256": "282775e19c1121d8a7883708ec9f0431c1f14b3ea3b2e94935a792a538a7aadd"
         },
         {
           "path": "apps/mobile/src/features/shelf/expiry.test.ts",
