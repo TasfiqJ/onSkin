@@ -30,6 +30,7 @@ import {
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { projectTodayRoutine } from '@/features/today/routineProjection';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
+import { NextVisitCard, type NextVisitRoute } from '@/features/today/NextVisitCard';
 import { currentRoutineType, localDateString } from '@/features/today/useToday';
 import {
   completionQueryScope,
@@ -893,6 +894,18 @@ export default function TodayScreen() {
     !compactPhone &&
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
+  const phaseRoutine = dark ? routine.pm : routine.am;
+  const nextVisit = !hasExamplePlan && !completionUnavailable && completionPendingKey === null &&
+    phaseRoutine.steps.length > 0 && phaseRoutine.completedCount === phaseRoutine.steps.length ? (
+    <NextVisitCard phase={type} onNavigate={(route: NextVisitRoute) => {
+      // Recheck captured actions as well as the rendered state. No prior grant
+      // or in-flight/unconfirmed completion can supply navigation authority.
+      const action = actionState.getSnapshot();
+      if (completionViewCurrent() && cycleCurrent() && action.pendingKey === null && !action.failed) {
+        router.push(route);
+      }
+    }} />
+  ) : null;
 
   // Plan admission is additional to (never a replacement for) T1 read-back.
   // Neither absent data nor retained cached data can become a current routine.
@@ -1045,6 +1058,7 @@ export default function TodayScreen() {
             </View>
           )}
 
+          {nextVisit}
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           {showRecommendations ? (
             <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
@@ -1365,6 +1379,7 @@ export default function TodayScreen() {
           </>
         )}
 
+        {nextVisit}
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (
           <View
