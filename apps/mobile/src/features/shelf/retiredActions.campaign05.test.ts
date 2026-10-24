@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createElement } from 'react';
+import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
@@ -24,7 +24,11 @@ vi.mock('@/lib/storage/privateKV', () => ({
 let client: QueryClient;
 let renderer: ReactTestRenderer;
 let actions: ReturnType<typeof useShelfMutations>;
-function Probe() { actions = useShelfMutations(); return null; }
+function Probe() {
+  const next = useShelfMutations();
+  useEffect(() => { actions = next; }, [next]);
+  return null;
+}
 async function grant(owner = 'synthetic-a') {
   clearActiveHealthProcessingEpoch();
   const accountGeneration = await runAccountGenerationOperation(lease => lease.generation);

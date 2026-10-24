@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
-import { createElement, type ComponentType } from 'react';
+import { createElement, useEffect, type ComponentType } from 'react';
 import { Pressable } from 'react-native';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -30,7 +30,11 @@ let client: QueryClient;
 let renderer: ReactTestRenderer;
 let source: ReturnType<typeof useNotifPrefs>;
 let update: ReturnType<typeof useUpdateNotifPrefs>;
-function Probe() { source = useNotifPrefs(); update = useUpdateNotifPrefs(); return null; }
+function Probe() {
+  const nextSource = useNotifPrefs(); const nextUpdate = useUpdateNotifPrefs();
+  useEffect(() => { source = nextSource; update = nextUpdate; }, [nextSource, nextUpdate]);
+  return null;
+}
 async function grant(owner = 'synthetic-a') {
   clearActiveHealthProcessingEpoch();
   const accountGeneration = await runAccountGenerationOperation(lease => lease.generation);

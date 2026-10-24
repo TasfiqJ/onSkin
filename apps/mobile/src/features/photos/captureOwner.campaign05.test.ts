@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
-import { createElement } from 'react';
+import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
@@ -14,7 +14,11 @@ let renderer: ReactTestRenderer;
 let client: QueryClient;
 let actions: ReturnType<typeof usePhotoActions>;
 const input = { takenLocalDate: '2026-10-24', localUri: 'synthetic:camera-port' };
-function Probe() { actions = usePhotoActions(); return null; }
+function Probe() {
+  const next = usePhotoActions();
+  useEffect(() => { actions = next; }, [next]);
+  return null;
+}
 async function grant(owner = 'synthetic-a') {
   clearActiveHealthProcessingEpoch();
   const accountGeneration = await runAccountGenerationOperation(lease => lease.generation);
