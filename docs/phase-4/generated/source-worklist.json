@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-24T03:48:46.820Z",
+  "generatedAt": "2026-10-24T05:09:46.178Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "7d88e61eae0d59f4ff6ecfbd43334c99c0229958",
+  "gitSha": "f4a802a245b8b122cc348c5a5f978950d85c739e",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 7
     },
-    "sourcePathCount": 416,
+    "sourcePathCount": 417,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -1698,14 +1698,14 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 4991,
-          "sha256": "858a5447d5bade6fc1c2b8cb10c8db60f9ace48d706fc4c2042d230ab526af10"
+          "bytes": 5233,
+          "sha256": "ff050a785da8180ccd9e577520d1afdbf212f5e43a0313965cb0ae73601899eb"
         },
         {
           "path": "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",
           "exists": true,
-          "bytes": 5869,
-          "sha256": "7e656dda9399f48cab62234854446118fb264efb1056d883a4652ccb04b2871e"
+          "bytes": 6005,
+          "sha256": "0ece694c4c4f3fc7c751b6243bee39542e244dde1527d83b560612426ffc7288"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -1736,6 +1736,12 @@
           "exists": true,
           "bytes": 8124,
           "sha256": "21e5531c400cfbb67f7aa42fb4a2990aa944ba7df79dc7e7f6b4c9ae53113230"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts",
+          "exists": true,
+          "bytes": 4148,
+          "sha256": "8692eea0a11010580da3bba8a1e6e3a044804cc7e444ed1a87293358078ed345"
         },
         {
           "path": "apps/mobile/src/features/shelf/scanLog.test.ts",
@@ -2230,8 +2236,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 504821,
-          "sha256": "938db17dcfc5508740176a2ede69acaf6dabccf6ebac57a8b72beddb6ed74056"
+          "bytes": 506802,
+          "sha256": "98cd6543609426c0bd4248ac3f8273d238f4baa91848ab45943b80aa4a3c6b0b"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -2296,8 +2302,8 @@
         {
           "path": "apps/mobile/src/features/notifications/store.ts",
           "exists": true,
-          "bytes": 9910,
-          "sha256": "396f23be42696512500e46c8250b149f07a7100f0c2e503805fe1bf28cae1b88"
+          "bytes": 10149,
+          "sha256": "9527267222bc445823a34a87084305666211e5d207d48669c663c2b6e516e843"
         },
         {
           "path": "apps/mobile/src/features/notifications/store.test.ts",
