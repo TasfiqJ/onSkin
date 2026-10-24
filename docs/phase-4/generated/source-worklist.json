@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-22T16:16:59.646Z",
+  "generatedAt": "2026-10-24T02:10:42.805Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "30bbe8b5b75d1708aabcf630711767a1cb84506c",
+  "gitSha": "704d3df5e01cd55023d9c08518ce2df8512e72ca",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 7
     },
-    "sourcePathCount": 414,
+    "sourcePathCount": 416,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -1698,8 +1698,14 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 4655,
-          "sha256": "13dfde9b8a5490f67b5269271ae0bdf6bb3910ba5b55b4db60560690d7a56eac"
+          "bytes": 4991,
+          "sha256": "858a5447d5bade6fc1c2b8cb10c8db60f9ace48d706fc4c2042d230ab526af10"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",
+          "exists": true,
+          "bytes": 5869,
+          "sha256": "7e656dda9399f48cab62234854446118fb264efb1056d883a4652ccb04b2871e"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -1718,6 +1724,12 @@
           "exists": true,
           "bytes": 511,
           "sha256": "a9688d11fda1c37ac1aae3d66426d82f470ba7a04252d7b4558cb9e361c90910"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/productOpeningRecovery.test.ts",
+          "exists": true,
+          "bytes": 4767,
+          "sha256": "04ea43a4493e789774fa1b8337daaeea3b11f10ef8fa2ddd9836c83f5eecdb92"
         },
         {
           "path": "apps/mobile/src/features/shelf/retainedSafety.integration.test.ts",
@@ -1806,8 +1818,8 @@
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
           "exists": true,
-          "bytes": 47290,
-          "sha256": "fe2e986307ee439a7d462ed3a02f5873523b569d933f6fda3ea0c68a626d1105"
+          "bytes": 47238,
+          "sha256": "c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99"
         },
         {
           "path": "apps/mobile/src/app/shelf/search.tsx",
@@ -2218,8 +2230,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 500332,
-          "sha256": "d27c4d7a522da38a0c0665e4983954ff57710d0d3a3caaf230bd050a0c1019e7"
+          "bytes": 502251,
+          "sha256": "3e71aa693e8b32d78c176e7e1b463e4e76f234f1dc56c74f9ba21893e96068fa"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -2230,8 +2242,8 @@
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
           "exists": true,
-          "bytes": 47290,
-          "sha256": "fe2e986307ee439a7d462ed3a02f5873523b569d933f6fda3ea0c68a626d1105"
+          "bytes": 47238,
+          "sha256": "c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99"
         },
         {
           "path": "apps/mobile/src/app/shelf/opened.tsx",
