@@ -16,7 +16,9 @@ def main():
     original = json.loads((ROOT/OUTPUTS[0]).read_bytes())
     paths = {s['path'] for item in original['items'] for s in item['sourcePaths']}
     paths.update([PRODUCER, *OUTPUTS, 'scripts/phase9/lib.mjs', 'scripts/launch/contract.mjs',
-                  'scripts/launch/governed-evidence-chain.mjs', 'scripts/phase9/release-qa-integrity.mjs'])
+                  'scripts/launch/governed-evidence-chain.mjs', 'scripts/phase9/release-qa-integrity.mjs',
+                  'scripts/e2e/cat07-committed-evidence.mjs', 'scripts/e2e/evidence-diagnostic-hygiene.mjs',
+                  'scripts/e2e/human-e2e-manifest-render.mjs'])
     total = sum((ROOT/p).stat().st_size for p in paths)
     assert shutil.disk_usage(ROOT).free > total*4+128*1024*1024, 'fixture headroom unavailable'
     def check(root, name, expected):
