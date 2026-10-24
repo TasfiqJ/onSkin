@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-24T05:09:46.178Z",
+  "generatedAt": "2026-10-24T05:13:07.961Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "f4a802a245b8b122cc348c5a5f978950d85c739e",
+  "gitSha": "0affb025e224b1d36f6b29035c82688c11c3ac1c",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1698,8 +1698,8 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 5233,
-          "sha256": "ff050a785da8180ccd9e577520d1afdbf212f5e43a0313965cb0ae73601899eb"
+          "bytes": 5286,
+          "sha256": "24e230cf3a6767dac833f6d07ab73bbf54050e2f8b26464c79fe17cfa7fd96b2"
         },
         {
           "path": "apps/mobile/src/features/shelf/mutationsRecovery.test.ts",

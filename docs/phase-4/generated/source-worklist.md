@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-24T05:09:46.178Z
+Generated: 2026-10-24T05:13:07.961Z
 Status: pass
-Git SHA: f4a802a245b8b122cc348c5a5f978950d85c739e
+Git SHA: 0affb025e224b1d36f6b29035c82688c11c3ac1c
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -423,7 +423,7 @@ Sources:
 - `apps/mobile/src/features/shelf/limits.ts` - 222 bytes - sha256 `8f469d2cafccc1f3ebb14b4ac4e09951d4e58ab63df7bea88c4906a3b8aa8449`
 - `apps/mobile/src/features/shelf/LocalDateField.tsx` - 1878 bytes - sha256 `e5cf3e8c0700e99944dcf1d515e511d4d78464277643599a6ba704daec7b9503`
 - `apps/mobile/src/features/shelf/metadata.ts` - 1606 bytes - sha256 `e7da08df3d733c91f2464b7de96fdabbfa45c283fbf47659d1e2996821f16546`
-- `apps/mobile/src/features/shelf/mutations.ts` - 5233 bytes - sha256 `ff050a785da8180ccd9e577520d1afdbf212f5e43a0313965cb0ae73601899eb`
+- `apps/mobile/src/features/shelf/mutations.ts` - 5286 bytes - sha256 `24e230cf3a6767dac833f6d07ab73bbf54050e2f8b26464c79fe17cfa7fd96b2`
 - `apps/mobile/src/features/shelf/mutationsRecovery.test.ts` - 6005 bytes - sha256 `0ece694c4c4f3fc7c751b6243bee39542e244dde1527d83b560612426ffc7288`
 - `apps/mobile/src/features/shelf/pairedConflicts.ts` - 766 bytes - sha256 `eb4cc3b857828ae8d123890b0771a44fe57e73e29da3e6207604fd3ed640a918`
 - `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
