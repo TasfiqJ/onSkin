@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "npm.cmd",
+    "run",
+    "docs:source-packet-audit:strict"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+  "status_before": "M scripts/docs/source-packet-audit.mjs\n?? docs/release/full-app-j01/source-packet-supersession09.v1.json\n?? scripts/docs/source-packet-supersession09.test.mjs",
+  "start_utc": "2026-10-24T21:43:49.477635+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 0,
+  "seconds": 0.71,
+  "log": "generate-source-packet.log",
+  "log_sha256": "e05b440070ee04b52984bd612e66e8bc29a6df8abb5040480bd60e4a6497812c",
+  "log_bytes": 223,
+  "status_after": "M docs/generated/source-packet-audit.json\n M docs/generated/source-packet-audit.md\n M scripts/docs/source-packet-audit.mjs\n?? docs/release/full-app-j01/source-packet-supersession09.v1.json\n?? scripts/docs/source-packet-supersession09.test.mjs"
+}

@@ -1,0 +1,6 @@
+
+> layerwell@0.1.0 docs:source-packet-audit:check
+> node scripts/docs/source-packet-audit.mjs --strict --check
+
+Source packet audit is current.
+Source packet audit passed.

@@ -1,0 +1,11 @@
+
+> layerwell@0.1.0 docs:source-packet-audit:check
+> node scripts/docs/source-packet-audit.mjs --strict --check
+
+FAIL docs/generated/source-packet-audit.json is stale. Run npm run docs:source-packet-audit:strict.
+FAIL docs/generated/source-packet-audit.md is stale. Run npm run docs:source-packet-audit:strict.
+FAIL docs/DECISIONS.md differs from 04_repo_docs/docs/DECISIONS.md in strict mode.
+FAIL docs/FEATURE_INDEX.md differs from 04_repo_docs/docs/FEATURE_INDEX.md in strict mode.
+FAIL docs/MASTER_PLAN.md differs from 04_repo_docs/docs/MASTER_PLAN.md in strict mode.
+FAIL docs/PRODUCT_REQUIREMENTS.md differs from 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md in strict mode.
+FAIL docs/ROADMAP.md differs from 04_repo_docs/docs/ROADMAP.md in strict mode.

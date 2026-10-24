@@ -1,0 +1,40 @@
+{
+  "status": "UNAPPLIED",
+  "actual_failing_argv": [
+    "npm.cmd",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "failure_exit": 1,
+  "required_outside_grant": [
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md"
+  ],
+  "diagnostic_argv": [
+    "node",
+    "scripts/phase4/build-source-worklist.mjs",
+    "--strict"
+  ],
+  "diagnostic_output_class": "EXTERNAL_TASK_SCRATCH_ONLY_NOT_APPLIED",
+  "diagnostic_exit": 0,
+  "source_identity_differences": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "before": {
+        "path": ".github/workflows/quality.yml",
+        "exists": true,
+        "bytes": 13201,
+        "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8"
+      },
+      "after": {
+        "path": ".github/workflows/quality.yml",
+        "exists": true,
+        "bytes": 13714,
+        "sha256": "51a295770e798707507048bc56cf10765b308b18ed9ce9922c05bf699b660c49"
+      }
+    }
+  ],
+  "reason": "Read-only original worklist hashes allowed Quality workflow source; generated projections become stale. No writer/check bypass or protected regeneration authorized.",
+  "release": "NO_GO"
+}

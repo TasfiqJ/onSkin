@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "packet_id": "onskin-release09-source-packet-ci-2026-10-24",
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1157,
+      "sha256": "b7ecb75169f83cf0b3ffbd478f306f782159756198731298874d14f14fd1b935"
+    },
+    {
+      "path": "01_PINNED_REFS_AND_CI.md",
+      "bytes": 1970,
+      "sha256": "13e60bbabdfaad68aba4a5fe6066ca0a7ea08cf103cde2093d6dfd97eb97c6dc"
+    },
+    {
+      "path": "02_BRAIN_AUDIT_RELEASE08.md",
+      "bytes": 2620,
+      "sha256": "591023ee5178c7e59973c55c9c503ed8561529e148e7996c1f1d4536e2dff8bd"
+    },
+    {
+      "path": "03_REPRODUCTION_AND_SOURCE_IDENTITIES.md",
+      "bytes": 2937,
+      "sha256": "d6e951b685faa8efd4a067bf2f718b238ec8663f60ecde852efe35a345403bf3"
+    },
+    {
+      "path": "04_GUARDS_AND_TOOL_CONSTRAINTS.md",
+      "bytes": 2401,
+      "sha256": "37a404ddf36cbb2b297e5d77a40b8951aad5915176c6fd2b28142f330ab81259"
+    },
+    {
+      "path": "05_EXPECTED_NEGATIVE_EVIDENCE.md",
+      "bytes": 1700,
+      "sha256": "8e44ef470ea75d25a04782fdb6cba7efadad6964403a267b5a6f04c28f1125f9"
+    },
+    {
+      "path": "06_AUTHORITY_AND_HARD_GATES.md",
+      "bytes": 2152,
+      "sha256": "0626f575270f096867675523ebcb5219a95120b40e268406866e276563b1f0b4"
+    },
+    {
+      "path": "PROMPT_TEMPLATE.md",
+      "bytes": 15735,
+      "sha256": "7a0078fe115d3eb58dae2a58a4a49950f4bdbe3f9836878a2c6ece13aa54ca26"
+    },
+    {
+      "path": "verify_packet.py",
+      "bytes": 4384,
+      "sha256": "5a6d10582da532e65b9c1fc79234872174592e05681db626d1187de685afdfeb"
+    }
+  ]
+}

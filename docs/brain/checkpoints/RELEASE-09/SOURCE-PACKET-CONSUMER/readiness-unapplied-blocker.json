@@ -1,0 +1,21 @@
+{
+  "status": "UNAPPLIED",
+  "argv": [
+    "node",
+    "scripts/docs/readiness-status-audit.mjs",
+    "--strict",
+    "--check"
+  ],
+  "exit": 1,
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "paths": [
+    "docs/generated/readiness-status-audit.json",
+    "docs/generated/readiness-status-audit.md"
+  ],
+  "findings": [
+    "Both generated projections stale",
+    "Readiness status audit inputs drifted during check mode"
+  ],
+  "scope_limit": "No reader, lifecycle guard or projection outside this grant is changed. Original 33 readiness tests passed; six publication coverage tests passed. Compatibility keeps existing command and byte-identity meanings. This does not assert that refreshing projections alone repairs the separate snapshot drift diagnostic."
+}

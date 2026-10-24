@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/test_contract.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:07.199137+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 0,
+  "seconds": 372.02,
+  "log": "negative-final.log",
+  "log_sha256": "5b40620bd0f6c0a89d0a3ce4bd06e6541c0a80f5c263ae721415473868fc417a",
+  "log_bytes": 74582,
+  "status_after": ""
+}

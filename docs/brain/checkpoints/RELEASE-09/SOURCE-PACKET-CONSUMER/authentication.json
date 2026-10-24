@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "4d4d3ddc4a33976fa56fbfb5a09c2b4b1a8ddfc4cddde7be2cd33efc2665c265"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\context_RELEASE09_3b7c2017ad354cec831902b0b33a28dd",
+  "exit": 0,
+  "zip_sha256": "2fcc5973b1309c46831174572e2c86dcccea0239f36fc9f51282caea168242c0",
+  "external_manifest_sha256": "4d4d3ddc4a33976fa56fbfb5a09c2b4b1a8ddfc4cddde7be2cd33efc2665c265",
+  "result": "VERIFIED: external manifest, 9 declared entries, exact prompt derivation; integrity only, no code or release acceptance.",
+  "safe_extraction": "NEW_TASK_DIRECTORY_11_ENTRIES_NO_PATH_COLLISIONS_LINKS_SPECIALS_OR_TRAVERSAL",
+  "integrity_only": true
+}

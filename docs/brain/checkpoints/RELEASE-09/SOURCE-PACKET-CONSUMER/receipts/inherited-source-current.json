@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "node",
+    "--test",
+    "scripts/core02/clinical-rule-source-contract.test.mjs",
+    "scripts/core03/routine-guidance-source-contract.test.mjs",
+    "scripts/core04/persistence-source-contract.test.mjs",
+    "scripts/core05/adherence-source-contract.test.mjs",
+    "scripts/core06/recommendation-admission-source-contract.test.mjs",
+    "scripts/core07/share-admission-source-contract.test.mjs",
+    "scripts/pay07/entitlement-admission-source-contract.test.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:41.138225+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 1,
+  "seconds": 5.37,
+  "log": "inherited-source-current.log",
+  "log_sha256": "9d7c444fb7ae2155a3ed7627b165cae1441c74edf4684c7bb903303b131330c0",
+  "log_bytes": 77777,
+  "status_after": ""
+}

@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "npm.cmd",
+    "run",
+    "lint",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:07.234214+00:00",
+  "cache": "Cached:    0 cached, 3 total",
+  "exit": 0,
+  "seconds": 74.79,
+  "log": "lint-current.log",
+  "log_sha256": "4d0efa6737661c18db8504fdef3697a4c7db18c69f99f4f2cb76a41a8cf7644d",
+  "log_bytes": 1183,
+  "status_after": ""
+}

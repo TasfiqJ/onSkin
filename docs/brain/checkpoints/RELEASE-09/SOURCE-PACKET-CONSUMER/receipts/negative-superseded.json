@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/test_contract.py"
+  ],
+  "head": "eb86be5298afd0fae3344ef6bf2a4db3b7ada116",
+  "status": "INTERRUPTED_FOR_NECESSARY_CI_PLACEMENT_FIX",
+  "completed_cases": 41,
+  "completed_negative_exits1": 40,
+  "complete_suite": false
+}

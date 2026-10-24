@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/source_consumer09.test.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:41.094163+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 0,
+  "seconds": 5.15,
+  "log": "source-guard-current.log",
+  "log_sha256": "4b81ccc7d702ba8843e4b701769314aad61563d1a2947d2f8f552f053e1fb332",
+  "log_bytes": 6257,
+  "status_after": ""
+}

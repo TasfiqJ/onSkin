@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "node",
+    "scripts/docs/readiness-status-audit.mjs",
+    "--strict",
+    "--check"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:53:46.778972+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 1,
+  "seconds": 9.4,
+  "log": "readiness-current.log",
+  "log_sha256": "ac0fe6b5973f13d99e863ae209364e4ae6c5cbc71005f174fb6242b3e1d218c9",
+  "log_bytes": 272,
+  "status_after": ""
+}

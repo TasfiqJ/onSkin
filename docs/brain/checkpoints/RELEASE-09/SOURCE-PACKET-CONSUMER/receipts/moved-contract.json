@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/check.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "eb86be5298afd0fae3344ef6bf2a4db3b7ada116",
+  "tree": "216d113be43d461c388687f8bc13d06bc56374da",
+  "status_before": "M .github/workflows/quality.yml\n M scripts/release/full-app-j01/check.py\n M scripts/release/full-app-j01/source_consumer09.test.py",
+  "start_utc": "2026-10-24T21:50:59.726169+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 1,
+  "seconds": 1.4,
+  "log": "moved-contract.log",
+  "log_sha256": "624c505cf3d857d43f0049d7d64277f47bbdc5bdced52ec6d814c8dd3e165008",
+  "log_bytes": 78,
+  "status_after": "M .github/workflows/quality.yml\n M scripts/release/full-app-j01/check.py\n M scripts/release/full-app-j01/source_consumer09.test.py"
+}

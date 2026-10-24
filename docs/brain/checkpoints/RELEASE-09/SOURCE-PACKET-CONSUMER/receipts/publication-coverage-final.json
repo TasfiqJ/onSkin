@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "npm.cmd",
+    "run",
+    "phase9:governed-publication-coverage:test"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "eb86be5298afd0fae3344ef6bf2a4db3b7ada116",
+  "tree": "216d113be43d461c388687f8bc13d06bc56374da",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:49:44.770285+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 0,
+  "seconds": 1.23,
+  "log": "publication-coverage-final.log",
+  "log_sha256": "d35c7a86afcbbfdb7bb3110b72b95315db63bba8a593dad195fb4b14bd959c79",
+  "log_bytes": 1523,
+  "status_after": ""
+}

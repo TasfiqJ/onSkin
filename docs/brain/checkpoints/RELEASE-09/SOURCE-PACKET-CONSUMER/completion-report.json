@@ -1,0 +1,90 @@
+{
+  "status": "PARTIAL_BLOCKED",
+  "source_submission": "SUBMITTED_REVIEW_REQUIRED",
+  "authorization": "BRAIN-RELEASE09-SOURCE-PACKET-CI-CANDIDATE-01",
+  "source": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "source_tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "source_paths": 9,
+  "branch": "stage/full-app-j01-source-packet-ci09",
+  "draft_pr": "https://github.com/TasfiqJ/onSkin/pull/13",
+  "base_branch": "stage/full-app-j01-release-contract08",
+  "base": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "authentic_packet": {
+    "files": 12,
+    "source_docs": 10,
+    "identical_mirrors": 5,
+    "authorized_supersessions": 5,
+    "permitted_insert_bytes": 1026,
+    "manifest_sha256": "46be42762da54173473953a1d621aba60e80d699ee4ea717ee048b3de1f00a51"
+  },
+  "outcomes": {
+    "original_audit_exit": 1,
+    "current_audit_exit": 0,
+    "semantic_current_exit": 0,
+    "preserved_negative_cases": 151,
+    "semantic_tampered_exits": 1,
+    "semantic_restored_exit": 0,
+    "windows_producer_rejections": 30,
+    "windows_not_run": [
+      "four file-symlink cases: EPERM",
+      "case-collision creation: case-insensitive host"
+    ],
+    "linux_producer_rejections": 35,
+    "linux_not_run": [],
+    "source_scope_rejections": 23,
+    "root_tests_passed": 6190,
+    "root_tests_cached": 0,
+    "lint_exit": 0,
+    "typecheck_exit": 0,
+    "legacy_launch_exit": 0,
+    "legacy_worklist_exit": 1,
+    "readiness_direct_exit": 1,
+    "readiness_regression_tests_passed": 33,
+    "publication_coverage_tests_passed": 6
+  },
+  "inherited": {
+    "source_contract_pass": 111,
+    "source_contract_fail": 2,
+    "failures": [
+      "CORE05 notification regex",
+      "CORE06 migration-version assertion"
+    ],
+    "original_security_tests": 70,
+    "original_security_failures": 21,
+    "original_security_errors": 19,
+    "g97": "FAIL/NO_GO",
+    "canonical_db": "H01_SQL_PROBE_FAILED / Data limit exceeded (inherited baseline; exact current run observed separately)",
+    "m103": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "m2": "NOT_AUTHORIZED"
+  },
+  "protected": {
+    "files": 23015,
+    "flat_digest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b",
+    "every_intermediate_commit_checked": true,
+    "original_151_test_sha256": "191f74631da86413c687801c7a620bbe01c0bd7d98c83f6bdd72947faf2ec455",
+    "original_release08_checkpoint": "IMMUTABLE_HISTORICAL_NOT_RUN_AS_CURRENT_VERIFIER",
+    "root_package_and_lock": "UNCHANGED",
+    "old_source_docs_and_packet": "UNCHANGED"
+  },
+  "ci": {
+    "source_head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+    "candidate_step": "SUCCESS",
+    "quality_checks": "FAILURE: original source worklist stale",
+    "source_packet_original_step": "SKIPPED after earlier failure; real audit also executed successfully inside candidate guard",
+    "exports": "SKIPPED",
+    "security": "FAILURE",
+    "ios": "SUCCESS_SOURCE_ONLY",
+    "canonical_db": "See source-ci-reviewed.json; final delivery CI observed after evidence push, never borrowed from source head"
+  },
+  "limitations": [
+    "Phase4 worklist projections and readiness projections/lifecycle diagnostic outside the finite edit grant remain UNAPPLIED",
+    "Full legacy release/runtime consumer migration NOT_DONE / NOT_ACCEPTED",
+    "Independent complete-checkout current/tampered/restored 0/1/0 NOT_QUALIFIED due host space",
+    "One interrupted 40-negative diagnostic precedes the final complete 151-case suite; not counted as complete",
+    "Initial later-step CI placement was moved earlier; the exact immutable first candidate is preserved in the source chain"
+  ],
+  "source_acceptance": "REVIEW_REQUIRED",
+  "spend_usd": 0,
+  "main_merge": false,
+  "release": "NO_GO"
+}

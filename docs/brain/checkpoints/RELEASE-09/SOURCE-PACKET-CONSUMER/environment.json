@@ -1,0 +1,13 @@
+{
+  "observed_utc": "2026-10-24T21:56:13.456008+00:00",
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "python_default": "3.9.13",
+  "node": "v22.21.0",
+  "git": "git version 2.50.1.windows.1",
+  "free_bytes": 767119360,
+  "tracked_source_files": 23026,
+  "tracked_blob_bytes": 765929887,
+  "independent_complete_checkout": "NOT_QUALIFIED",
+  "reason": "Complete source plus Git and host reserve exceed near-full C: headroom. No independent clone attempted. Existing clean checkout reused on new branch; no unknown data/worktree cleanup.",
+  "spend_usd": 0
+}

@@ -1,0 +1,1977 @@
+TAP version 13
+# Subtest: the bundled corpus remains a zero-publication draft with empty detached authority
+ok 1 - the bundled corpus remains a zero-publication draft with empty detached authority
+  ---
+  duration_ms: 135.3886
+  type: 'test'
+  ...
+# Subtest: positive admission is source-artifact bound and aligned with the Lean conflict-engine review contract
+ok 2 - positive admission is source-artifact bound and aligned with the Lean conflict-engine review contract
+  ---
+  duration_ms: 293.7273
+  type: 'test'
+  ...
+# Subtest: admission requires three independent roles and cryptographic, module-private provenance
+ok 3 - admission requires three independent roles and cryptographic, module-private provenance
+  ---
+  duration_ms: 137.8426
+  type: 'test'
+  ...
+# Subtest: the corpus is pinned to the exact US-only Wave 1 legal-policy bytes
+ok 4 - the corpus is pinned to the exact US-only Wave 1 legal-policy bytes
+  ---
+  duration_ms: 7.6326
+  type: 'test'
+  ...
+# Subtest: all candidate rules carry participant-specific applicability and stay review-required
+ok 5 - all candidate rules carry participant-specific applicability and stay review-required
+  ---
+  duration_ms: 3.9349
+  type: 'test'
+  ...
+# Subtest: production consumers cannot import previews or bypass coverage-aware evaluation
+ok 6 - production consumers cannot import previews or bypass coverage-aware evaluation
+  ---
+  duration_ms: 2442.4406
+  type: 'test'
+  ...
+# Subtest: stored conflict choices require exact hashes and legacy state remains dormant
+ok 7 - stored conflict choices require exact hashes and legacy state remains dormant
+  ---
+  duration_ms: 4.4228
+  type: 'test'
+  ...
+# Subtest: no client or Edge Function mirrors conflict choices before hashes exist in the schema
+ok 8 - no client or Edge Function mirrors conflict choices before hashes exist in the schema
+  ---
+  duration_ms: 356.8055
+  type: 'test'
+  ...
+# Subtest: claim-bearing private conflict surfaces require production admission and canonical rule.copy
+ok 9 - claim-bearing private conflict surfaces require production admission and canonical rule.copy
+  ---
+  duration_ms: 6.9222
+  type: 'test'
+  ...
+# Subtest: analytics cannot encode conflict existence or resolution
+ok 10 - analytics cannot encode conflict existence or resolution
+  ---
+  duration_ms: 333.6835
+  type: 'test'
+  ...
+# Subtest: conflict-only detail, share, and public landing routes emit no analytics
+ok 11 - conflict-only detail, share, and public landing routes emit no analytics
+  ---
+  duration_ms: 12.7925
+  type: 'test'
+  ...
+# Subtest: conflict public-link URLs carry no conflict-identifying attribution
+ok 12 - conflict public-link URLs carry no conflict-identifying attribution
+  ---
+  duration_ms: 1.0259
+  type: 'test'
+  ...
+# Subtest: zero-admission paywalls do not sell unavailable clinical guidance
+ok 13 - zero-admission paywalls do not sell unavailable clinical guidance
+  ---
+  duration_ms: 316.7162
+  type: 'test'
+  ...
+# Subtest: migration 0066 seals legacy clinical tables and 0067 preserves the exact lint exception
+ok 14 - migration 0066 seals legacy clinical tables and 0067 preserves the exact lint exception
+  ---
+  duration_ms: 1.5194
+  type: 'test'
+  ...
+# Subtest: the database contract is exactly 97 migrations through head 0081
+ok 15 - the database contract is exactly 97 migrations through head 0081
+  ---
+  duration_ms: 5.9791
+  type: 'test'
+  ...
+# Subtest: all 13 candidate IDs and both gap audits are in the Phase 3 packet contract
+ok 16 - all 13 candidate IDs and both gap audits are in the Phase 3 packet contract
+  ---
+  duration_ms: 2.6218
+  type: 'test'
+  ...
+# Subtest: the source contract is mandatory in Phase 3 and launch verification
+ok 17 - the source contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.5998
+  type: 'test'
+  ...
+# Subtest: the routine sequencing corpus is exact-hash bound and zero-admission
+ok 18 - the routine sequencing corpus is exact-hash bound and zero-admission
+  ---
+  duration_ms: 7.521
+  type: 'test'
+  ...
+# Subtest: free-text review metadata and structural injection cannot publish sequencing
+ok 19 - free-text review metadata and structural injection cannot publish sequencing
+  ---
+  duration_ms: 87.7833
+  type: 'test'
+  ...
+# Subtest: cadence arithmetic rejects malformed numbers and avoids unsafe multiplication
+ok 20 - cadence arithmetic rejects malformed numbers and avoids unsafe multiplication
+  ---
+  duration_ms: 18.1415
+  type: 'test'
+  ...
+# Subtest: cadence publication has no Boolean or conservative numeric fallback
+ok 21 - cadence publication has no Boolean or conservative numeric fallback
+  ---
+  duration_ms: 35.5396
+  type: 'test'
+  ...
+# Subtest: executable cadence values and copy come from the exact admitted corpus
+ok 22 - executable cadence values and copy come from the exact admitted corpus
+  ---
+  duration_ms: 11.3617
+  type: 'test'
+  ...
+# Subtest: unavailable stop/refer authority cannot open recovery or irritation writes
+ok 23 - unavailable stop/refer authority cannot open recovery or irritation writes
+  ---
+  duration_ms: 4.1562
+  type: 'test'
+  ...
+# Subtest: unbound claim-bearing explainability copy remains production-closed
+ok 24 - unbound claim-bearing explainability copy remains production-closed
+  ---
+  duration_ms: 4.6972
+  type: 'test'
+  ...
+# Subtest: cycle and ramp mutations refuse before storage, cache, or analytics
+ok 25 - cycle and ramp mutations refuse before storage, cache, or analytics
+  ---
+  duration_ms: 4.0338
+  type: 'test'
+  ...
+# Subtest: real shelves cannot inherit the synthetic example profile
+ok 26 - real shelves cannot inherit the synthetic example profile
+  ---
+  duration_ms: 2.2858
+  type: 'test'
+  ...
+# Subtest: ramp state and cadence-derived notifications close before reads or side effects
+ok 27 - ramp state and cadence-derived notifications close before reads or side effects
+  ---
+  duration_ms: 2.5633
+  type: 'test'
+  ...
+# Subtest: plan and streak surfaces do not synthesize sequencing or cycle authority
+ok 28 - plan and streak surfaces do not synthesize sequencing or cycle authority
+  ---
+  duration_ms: 0.8717
+  type: 'test'
+  ...
+# Subtest: closed recovery publication preserves stored bytes while exposing only neutral state
+ok 29 - closed recovery publication preserves stored bytes while exposing only neutral state
+  ---
+  duration_ms: 2.2844
+  type: 'test'
+  ...
+# Subtest: every direct-entry cadence route closes before sensitive hooks or guidance analytics mount
+ok 30 - every direct-entry cadence route closes before sensitive hooks or guidance analytics mount
+  ---
+  duration_ms: 91.5099
+  type: 'test'
+  ...
+# Subtest: the CORE-03 source contract is mandatory in Phase 3 and launch verification
+ok 31 - the CORE-03 source contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.7721
+  type: 'test'
+  ...
+# Subtest: private persistence bounds one serialized guarded transform and verified rollback
+ok 32 - private persistence bounds one serialized guarded transform and verified rollback
+  ---
+  duration_ms: 5.7439
+  type: 'test'
+  ...
+# Subtest: malformed, future-version, read-failure, and write-failure state stays preserved
+ok 33 - malformed, future-version, read-failure, and write-failure state stays preserved
+  ---
+  duration_ms: 5.4189
+  type: 'test'
+  ...
+# Subtest: routine-order phase transactions merge independent concurrent edits
+ok 34 - routine-order phase transactions merge independent concurrent edits
+  ---
+  duration_ms: 1.8387
+  type: 'test'
+  ...
+# Subtest: routine-order success publishes cache, analytics, and navigation only after persistence
+ok 35 - routine-order success publishes cache, analytics, and navigation only after persistence
+  ---
+  duration_ms: 1.1609
+  type: 'test'
+  ...
+# Subtest: custom-cycle cache and analytics publication follows the committed atomic value
+ok 36 - custom-cycle cache and analytics publication follows the committed atomic value
+  ---
+  duration_ms: 2.9069
+  type: 'test'
+  ...
+# Subtest: relaunch loaders decode versioned state and never silently replace unsupported bytes
+ok 37 - relaunch loaders decode versioned state and never silently replace unsupported bytes
+  ---
+  duration_ms: 6.0152
+  type: 'test'
+  ...
+# Subtest: named Node/Vitest timezone cases remain explicit and bounded
+ok 38 - named Node/Vitest timezone cases remain explicit and bounded
+  ---
+  duration_ms: 1.6234
+  type: 'test'
+  ...
+# Subtest: routine and custom-cycle intent uses stable shelf-product identities
+ok 39 - routine and custom-cycle intent uses stable shelf-product identities
+  ---
+  duration_ms: 5.3243
+  type: 'test'
+  ...
+# Subtest: cleanup and purpose-limited export register both current persistence records
+ok 40 - cleanup and purpose-limited export register both current persistence records
+  ---
+  duration_ms: 4.321
+  type: 'test'
+  ...
+# Subtest: ordering preference cannot create cadence authority and custom-cycle writes cannot bypass it
+ok 41 - ordering preference cannot create cadence authority and custom-cycle writes cannot bypass it
+  ---
+  duration_ms: 2.9138
+  type: 'test'
+  ...
+# Subtest: the CORE-04 persistence contract is mandatory in Phase 3 and launch verification
+ok 42 - the CORE-04 persistence contract is mandatory in Phase 3 and launch verification
+  ---
+  duration_ms: 0.7304
+  type: 'test'
+  ...
+# (node:59108) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile/src/features/streak/streak.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience\\apps\\mobile\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: completion state is strict v3 and legacy versions never invent adherence or replay work
+ok 43 - completion state is strict v3 and legacy versions never invent adherence or replay work
+  ---
+  duration_ms: 6.7037
+  type: 'test'
+  ...
+# Subtest: only a complete projected PM or recovery routine creates an adherence day or remote work
+ok 44 - only a complete projected PM or recovery routine creates an adherence day or remote work
+  ---
+  duration_ms: 4.4627
+  type: 'test'
+  ...
+# Subtest: Today publishes success only after persistence and fails closed on unreadable state
+ok 45 - Today publishes success only after persistence and fails closed on unreadable state
+  ---
+  duration_ms: 3.0251
+  type: 'test'
+  ...
+# Subtest: completion replay uses exact dispositions and a durable Shelf dependency barrier
+ok 46 - completion replay uses exact dispositions and a durable Shelf dependency barrier
+  ---
+  duration_ms: 125.4972
+  type: 'test'
+  ...
+# Subtest: future tolerance rows cannot affect today and live clocks cross routine boundaries
+ok 47 - future tolerance rows cannot affect today and live clocks cross routine boundaries
+  ---
+  duration_ms: 40.7774
+  type: 'test'
+  ...
+# Subtest: streak and welcome-back routes do not turn load failures into fake zero or lapse states
+ok 48 - streak and welcome-back routes do not turn load failures into fake zero or lapse states
+  ---
+  duration_ms: 1.1891
+  type: 'test'
+  ...
+# Subtest: routine milestones describe verified check-offs without outcome claims
+ok 49 - routine milestones describe verified check-offs without outcome claims
+  ---
+  duration_ms: 24.2552
+  type: 'test'
+  ...
+# Subtest: notification opt-in is exact-time, authorization-aware, local-only, and cap-safe
+not ok 50 - notification opt-in is exact-time, authorization-aware, local-only, and cap-safe
+  ---
+  duration_ms: 46.8162
+  type: 'test'
+  location: 'C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience\\scripts\\core05\\adherence-source-contract.test.mjs:565:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /const state = await getPermissionStatus\(\)/u. Input:
+    
+    "import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';\n" +
+      "import { useEffect, useState, useSyncExternalStore } from 'react';\n" +
+      "import { AppState } from 'react-native';\n" +
+      '\n' +
+      'import {\n' +
+      '  HEALTH_DATA_WRITE_ADMISSION_CLOSED,\n' +
+      '  captureHealthDataWriteLease,\n' +
+      '  assertHealthDataWriteLease,\n' +
+      '  runHealthDataOperation,\n' +
+      '  runHealthDataWriteOperation,\n' +
+      "} from '@/lib/consent/healthDataWriteAdmission';\n" +
+      'import {\n' +
+      '  activeHealthProcessingLeaseSnapshot,\n' +
+      '  subscribeActiveHealthProcessingLeaseChanges,\n' +
+      "} from '@/lib/consent/healthProcessingEpoch';\n" +
+      '\n' +
+      "import { applyNotificationPreferencePatch, NotificationPreferenceSaveError } from './applyPreferences';\n" +
+      "import { getPermissionStatus, rescheduleReminders } from './deliver';\n" +
+      "import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';\n" +
+      '\n' +
+      '// Reads/writes the local-first notification preferences and reschedules the\n' +
+      '// utility reminders whenever they change (docs/07 §3.4). Visible state updates\n' +
+      '// only after local private persistence succeeds.\n' +
+      "const KEY = ['notifPrefs'] as const;\n" +
+      "const AUTHORIZATION_KEY = ['notificationAuthorization'] as const;\n" +
+      '\n' +
+      'export function useNotificationAuthorization() {\n' +
+      '  const qc = useQueryClient();\n' +
+      '  useEffect(() => {\n' +
+      "    const subscription = AppState.addEventListener('change', (state) => {\n" +
+      "      if (state === 'active') {\n" +
+      '        void qc.invalidateQueries({ queryKey: AUTHORIZATION_KEY });\n' +
+      '      }\n' +
+      '    });\n' +
+      '    return () => subscription.remove();\n' +
+      '  }, [qc]);\n' +
+      '  const query = useQuery({\n' +
+      '    queryKey: AUTHORIZATION_KEY,\n' +
+      "    networkMode: 'always',\n" +
+      '    queryFn: async () => {\n' +
+      '      // Reconcile on every settings mount/foreground read. Revocation cancels\n' +
+      '      // existing native schedules; a later user-granted state rebuilds only the\n' +
+      '      // still-stored, independently controlled purposes.\n' +
+      '      await rescheduleReminders();\n' +
+      '      // Reconciliation can outlive a permission change. Publish the status\n' +
+      '      // observed after it settles, never its earlier authorization snapshot.\n' +
+      '      return getPermissionStatus();\n' +
+      '    },\n' +
+      '    retry: 0,\n' +
+      '    staleTime: 0,\n' +
+      '  });\n' +
+      '  // A foreground read or failed native cancellation cannot keep an old grant\n' +
+      '  // visible as current permission. Settings already renders undefined as unavailable.\n' +
+      '  return { ...query, data: query.isFetching || query.isError ? undefined : query.data };\n' +
+      '}\n' +
+      '\n' +
+      'export function useNotifPrefs() {\n' +
+      '  const published = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);\n' +
+      '  const [, checkExpiry] = useState(0);\n' +
+      '  useEffect(() => {\n' +
+      '    if (published?.expiresAt == null) return;\n' +
+      '    const timer = setTimeout(() => checkExpiry(value => value + 1), Math.max(0, published.expiresAt - Date.now()) + 1);\n' +
+      '    return () => clearTimeout(timer);\n' +
+      '  }, [published]);\n' +
+      '  const authority = activeHealthProcessingLeaseSnapshot();\n' +
+      '  const query = useQuery({\n' +
+      "    queryKey: authority ? [...KEY, authority.generation, authority.ownerUserId, authority.accountGeneration] : [...KEY, 'closed'],\n" +
+      "    networkMode: 'always',\n" +
+      '    enabled: authority?.ownerUserId != null && authority.accountGeneration != null,\n' +
+      '    // The app-wide one-minute freshness cannot stand in for a device read\n' +
+      '    // when returning to settings after storage or local intent changes.\n' +
+      '    staleTime: 0,\n' +
+      '    queryFn: async () => {\n' +
+      '      const expectedOwnerUserId = authority?.ownerUserId;\n' +
+      '      if (!authority || !expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);\n' +
+      '      return runHealthDataOperation(expectedOwnerUserId, async (lease) => {\n' +
+      '        if (lease.generation !== authority.generation) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);\n' +
+      '        const prefs = await loadNotifPrefs({ strict: true });\n' +
+      '        lease.assertCurrent();\n' +
+      '        return prefs;\n' +
+      '      });\n' +
+      '    },\n' +
+      '    retry: 0,\n' +
+      '  });\n' +
+      '  return { ...query, data: authority === null || query.isFetching || query.isError ? undefined : query.data };\n' +
+      '}\n' +
+      '\n' +
+      'export function useUpdateNotifPrefs() {\n' +
+      '  const qc = useQueryClient();\n' +
+      '  // A permission response may outlive this screen and its owner.\n' +
+      '  let expectedLease: ReturnType<typeof captureHealthDataWriteLease> | undefined;\n' +
+      '  try { expectedLease = captureHealthDataWriteLease(); } catch { /* admission closed */ }\n' +
+      '  const mutation = useMutation({\n' +
+      "    networkMode: 'always',\n" +
+      '    retry: false,\n' +
+      '    mutationFn: async ({ patch, accepted }: { patch: Partial<NotifPrefs>; accepted: typeof expectedLease }) => {\n' +
+      '      if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);\n' +
+      '      assertHealthDataWriteLease(accepted);\n' +
+      '      const expectedOwnerUserId = accepted.ownerUserId;\n' +
+      '      const queryKey = [...KEY, accepted.generation, accepted.ownerUserId, accepted.accountGeneration];\n' +
+      '      return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {\n' +
+      '        let result: Awaited<ReturnType<typeof applyNotificationPreferencePatch>>;\n' +
+      '        try {\n' +
+      '          result = await applyNotificationPreferencePatch(\n' +
+      '            patch,\n' +
+      '            {\n' +
+      '              save: saveNotifPrefs,\n' +
+      '              reschedule: rescheduleReminders,\n' +
+      '            },\n' +
+      '            lease,\n' +
+      '          );\n' +
+      '        } catch (error) {\n' +
+      '          lease.assertCurrent();\n' +
+      '          if (error instanceof NotificationPreferenceSaveError) {\n' +
+      '            // A data-less initial read can still publish its pre-save snapshot.\n' +
+      '            // Retire it before exposing the durable intent that needs retry.\n' +
+      '            await qc.cancelQueries({ queryKey: KEY });\n' +
+      '            lease.assertCurrent();\n' +
+      '            qc.setQueryData<NotifPrefs>(queryKey, error.prefs);\n' +
+      '          }\n' +
+      '          throw error;\n' +
+      '        }\n' +
+      '        lease.assertCurrent();\n' +
+      '        const next = result.prefs;\n' +
+      '        qc.setQueryData<NotifPrefs>(queryKey, next);\n' +
+      '        lease.assertCurrent();\n' +
+      '        await qc.invalidateQueries({ queryKey: KEY });\n' +
+      '        lease.assertCurrent();\n' +
+      '        return result;\n' +
+      '      });\n' +
+      '    },\n' +
+      '  });\n' +
+      '  const current = expectedLease !== undefined && mutation.variables?.accepted?.generation === expectedLease.generation;\n' +
+      '  const actions = {\n' +
+      '    // Observer options may change while an OS permission request is pending.\n' +
+      "    // Carry the render's lease in variables instead of adopting its successor.\n" +
+      '    mutateAsync: (patch: Partial<NotifPrefs>) => mutation.mutateAsync({ patch, accepted: expectedLease }),\n' +
+      '    mutate: (patch: Partial<NotifPrefs>) => { mutation.mutate({ patch, accepted: expectedLease }); },\n' +
+      '  };\n' +
+      '  return current ? { ...mutation, variables: mutation.variables?.patch, ...actions } : {\n' +
+      '    ...mutation, ...actions, data: undefined, error: null, variables: undefined,\n' +
+      "    status: 'idle' as const, isIdle: true as const, isSuccess: false as const,\n" +
+      '    isError: false as const, isPending: false as const, isPaused: false,\n' +
+      '  };\n' +
+      '}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+    import { useEffect, useState, useSyncExternalStore } from 'react';
+    import { AppState } from 'react-native';
+    
+    import {
+      HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+      captureHealthDataWriteLease,
+      assertHealthDataWriteLease,
+      runHealthDataOperation,
+      runHealthDataWriteOperation,
+    } from '@/lib/consent/healthDataWriteAdmission';
+    import {
+      activeHealthProcessingLeaseSnapshot,
+      subscribeActiveHealthProcessingLeaseChanges,
+    } from '@/lib/consent/healthProcessingEpoch';
+    
+    import { applyNotificationPreferencePatch, NotificationPreferenceSaveError } from './applyPreferences';
+    import { getPermissionStatus, rescheduleReminders } from './deliver';
+    import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
+    
+    // Reads/writes the local-first notification preferences and reschedules the
+    // utility reminders whenever they change (docs/07 §3.4). Visible state updates
+    // only after local private persistence succeeds.
+    const KEY = ['notifPrefs'] as const;
+    const AUTHORIZATION_KEY = ['notificationAuthorization'] as const;
+    
+    export function useNotificationAuthorization() {
+      const qc = useQueryClient();
+      useEffect(() => {
+        const subscription = AppState.addEventListener('change', (state) => {
+          if (state === 'active') {
+            void qc.invalidateQueries({ queryKey: AUTHORIZATION_KEY });
+          }
+        });
+        return () => subscription.remove();
+      }, [qc]);
+      const query = useQuery({
+        queryKey: AUTHORIZATION_KEY,
+        networkMode: 'always',
+        queryFn: async () => {
+          // Reconcile on every settings mount/foreground read. Revocation cancels
+          // existing native schedules; a later user-granted state rebuilds only the
+          // still-stored, independently controlled purposes.
+          await rescheduleReminders();
+          // Reconciliation can outlive a permission change. Publish the status
+          // observed after it settles, never its earlier authorization snapshot.
+          return getPermissionStatus();
+        },
+        retry: 0,
+        staleTime: 0,
+      });
+      // A foreground read or failed native cancellation cannot keep an old grant
+      // visible as current permission. Settings already renders undefined as unavailable.
+      return { ...query, data: query.isFetching || query.isError ? undefined : query.data };
+    }
+    
+    export function useNotifPrefs() {
+      const published = useSyncExternalStore(subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot, () => null);
+      const [, checkExpiry] = useState(0);
+      useEffect(() => {
+        if (published?.expiresAt == null) return;
+        const timer = setTimeout(() => checkExpiry(value => value + 1), Math.max(0, published.expiresAt - Date.now()) + 1);
+        return () => clearTimeout(timer);
+      }, [published]);
+      const authority = activeHealthProcessingLeaseSnapshot();
+      const query = useQuery({
+        queryKey: authority ? [...KEY, authority.generation, authority.ownerUserId, authority.accountGeneration] : [...KEY, 'closed'],
+        networkMode: 'always',
+        enabled: authority?.ownerUserId != null && authority.accountGeneration != null,
+        // The app-wide one-minute freshness cannot stand in for a device read
+        // when returning to settings after storage or local intent changes.
+        staleTime: 0,
+        queryFn: async () => {
+          const expectedOwnerUserId = authority?.ownerUserId;
+          if (!authority || !expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+          return runHealthDataOperation(expectedOwnerUserId, async (lease) => {
+            if (lease.generation !== authority.generation) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+            const prefs = await loadNotifPrefs({ strict: true });
+            lease.assertCurrent();
+            return prefs;
+          });
+        },
+        retry: 0,
+      });
+      return { ...query, data: authority === null || query.isFetching || query.isError ? undefined : query.data };
+    }
+    
+    export function useUpdateNotifPrefs() {
+      const qc = useQueryClient();
+      // A permission response may outlive this screen and its owner.
+      let expectedLease: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+      try { expectedLease = captureHealthDataWriteLease(); } catch { /* admission closed */ }
+      const mutation = useMutation({
+        networkMode: 'always',
+        retry: false,
+        mutationFn: async ({ patch, accepted }: { patch: Partial<NotifPrefs>; accepted: typeof expectedLease }) => {
+          if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+          assertHealthDataWriteLease(accepted);
+          const expectedOwnerUserId = accepted.ownerUserId;
+          const queryKey = [...KEY, accepted.generation, accepted.ownerUserId, accepted.accountGeneration];
+          return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+            let result: Awaited<ReturnType<typeof applyNotificationPreferencePatch>>;
+            try {
+              result = await applyNotificationPreferencePatch(
+                patch,
+                {
+                  save: saveNotifPrefs,
+                  reschedule: rescheduleReminders,
+                },
+                lease,
+              );
+            } catch (error) {
+              lease.assertCurrent();
+              if (error instanceof NotificationPreferenceSaveError) {
+                // A data-less initial read can still publish its pre-save snapshot.
+                // Retire it before exposing the durable intent that needs retry.
+                await qc.cancelQueries({ queryKey: KEY });
+                lease.assertCurrent();
+                qc.setQueryData<NotifPrefs>(queryKey, error.prefs);
+              }
+              throw error;
+            }
+            lease.assertCurrent();
+            const next = result.prefs;
+            qc.setQueryData<NotifPrefs>(queryKey, next);
+            lease.assertCurrent();
+            await qc.invalidateQueries({ queryKey: KEY });
+            lease.assertCurrent();
+            return result;
+          });
+        },
+      });
+      const current = expectedLease !== undefined && mutation.variables?.accepted?.generation === expectedLease.generation;
+      const actions = {
+        // Observer options may change while an OS permission request is pending.
+        // Carry the render's lease in variables instead of adopting its successor.
+        mutateAsync: (patch: Partial<NotifPrefs>) => mutation.mutateAsync({ patch, accepted: expectedLease }),
+        mutate: (patch: Partial<NotifPrefs>) => { mutation.mutate({ patch, accepted: expectedLease }); },
+      };
+      return current ? { ...mutation, variables: mutation.variables?.patch, ...actions } : {
+        ...mutation, ...actions, data: undefined, error: null, variables: undefined,
+        status: 'idle' as const, isIdle: true as const, isSuccess: false as const,
+        isError: false as const, isPending: false as const, isPaused: false,
+      };
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/core05/adherence-source-contract.test.mjs:624:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: database adherence and atomic Shelf/completion sync retain server authority and frozen history
+ok 51 - database adherence and atomic Shelf/completion sync retain server authority and frozen history
+  ---
+  duration_ms: 10.0689
+  type: 'test'
+  ...
+# Subtest: history descriptions may change without changing the asserted SQL contract
+ok 52 - history descriptions may change without changing the asserted SQL contract
+  ---
+  duration_ms: 8.436
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong count in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 53 - database authority rejects wrong count in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 9.4168
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong head in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 54 - database authority rejects wrong head in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 9.4251
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong history table in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 55 - database authority rejects wrong history table in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 606.9989
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong aggregate in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 56 - database authority rejects wrong aggregate in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 9.5893
+  type: 'test'
+  ...
+# Subtest: database authority rejects removed count assertion in supabase/tests/database/routine_completion_sync_bridge.test.sql
+ok 57 - database authority rejects removed count assertion in supabase/tests/database/routine_completion_sync_bridge.test.sql
+  ---
+  duration_ms: 7.4921
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong count in supabase/tests/database/schema_contract.test.sql
+ok 58 - database authority rejects wrong count in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 7.0482
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong head in supabase/tests/database/schema_contract.test.sql
+ok 59 - database authority rejects wrong head in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 8.3042
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong history table in supabase/tests/database/schema_contract.test.sql
+ok 60 - database authority rejects wrong history table in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 8.8337
+  type: 'test'
+  ...
+# Subtest: database authority rejects wrong aggregate in supabase/tests/database/schema_contract.test.sql
+ok 61 - database authority rejects wrong aggregate in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 6.8446
+  type: 'test'
+  ...
+# Subtest: database authority rejects removed count assertion in supabase/tests/database/schema_contract.test.sql
+ok 62 - database authority rejects removed count assertion in supabase/tests/database/schema_contract.test.sql
+  ---
+  duration_ms: 7.6986
+  type: 'test'
+  ...
+# Subtest: database authority rejects missing required source
+ok 63 - database authority rejects missing required source
+  ---
+  duration_ms: 83.3284
+  type: 'test'
+  ...
+# Subtest: database authority rejects renamed required source
+ok 64 - database authority rejects renamed required source
+  ---
+  duration_ms: 6.5963
+  type: 'test'
+  ...
+# Subtest: database authority rejects removed server-owned guard
+ok 65 - database authority rejects removed server-owned guard
+  ---
+  duration_ms: 7.0981
+  type: 'test'
+  ...
+# Subtest: database authority rejects altered consent protection
+ok 66 - database authority rejects altered consent protection
+  ---
+  duration_ms: 9.4373
+  type: 'test'
+  ...
+# Subtest: the hashed corpus executes the actual client streak implementation and binds SQL parity
+ok 67 - the hashed corpus executes the actual client streak implementation and binds SQL parity
+  ---
+  duration_ms: 78.4599
+  type: 'test'
+  ...
+# Subtest: completion records remain registered for cleanup/export and this contract is mandatory
+ok 68 - completion records remain registered for cleanup/export and this contract is mandatory
+  ---
+  duration_ms: 4.7243
+  type: 'test'
+  ...
+# Subtest: product-specific recommendation admission is a literal zero-product boundary
+ok 69 - product-specific recommendation admission is a literal zero-product boundary
+  ---
+  duration_ms: 130.8998
+  type: 'test'
+  ...
+# Subtest: current recommendation provenance is type-first or Shelf-context only
+ok 70 - current recommendation provenance is type-first or Shelf-context only
+  ---
+  duration_ms: 1287.6101
+  type: 'test'
+  ...
+# Subtest: zero-product recommendation detail copy cannot claim a specific product
+ok 71 - zero-product recommendation detail copy cannot claim a specific product
+  ---
+  duration_ms: 2.1211
+  type: 'test'
+  ...
+# Subtest: runtime commerce admission rejects every current or forged provenance
+ok 72 - runtime commerce admission rejects every current or forged provenance
+  ---
+  duration_ms: 2.4329
+  type: 'test'
+  ...
+# Subtest: goal-active output requires flag, consent, exact provenance, and positive review clearance
+ok 73 - goal-active output requires flag, consent, exact provenance, and positive review clearance
+  ---
+  duration_ms: 9.6469
+  type: 'test'
+  ...
+# Subtest: recommendation detection and ranking have no commerce import path
+ok 74 - recommendation detection and ranking have no commerce import path
+  ---
+  duration_ms: 6.3225
+  type: 'test'
+  ...
+# Subtest: migration 0071 seals product recommendation admission and the legacy cache
+ok 75 - migration 0071 seals product recommendation admission and the legacy cache
+  ---
+  duration_ms: 1.5373
+  type: 'test'
+  ...
+# Subtest: the mobile preference mirror uses the exact closed-vocabulary owner RPC
+ok 76 - the mobile preference mirror uses the exact closed-vocabulary owner RPC
+  ---
+  duration_ms: 10.7964
+  type: 'test'
+  ...
+# Subtest: recommendation route semantics are not exported to analytics or crash vendors
+ok 77 - recommendation route semantics are not exported to analytics or crash vendors
+  ---
+  duration_ms: 487.0193
+  type: 'test'
+  ...
+# Subtest: database and forward-upgrade tests execute the checked-in 0071 boundary
+not ok 78 - database and forward-upgrade tests execute the checked-in 0071 boundary
+  ---
+  duration_ms: 2.9171
+  type: 'test'
+  location: 'C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience\\scripts\\core06\\recommendation-admission-source-contract.test.mjs:652:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /'20260926000078'::text/u. Input:
+    
+    'begin;\n' +
+      '\n' +
+      'create extension if not exists pgtap with schema extensions;\n' +
+      'set local search_path = extensions, public, pg_catalog;\n' +
+      '\n' +
+      'select plan(35);\n' +
+      '\n' +
+      'select is(\n' +
+      '  (select max(version) from supabase_migrations.schema_migrations),\n' +
+      "  '20261010000081'::text,\n" +
+      "  'CORE-06A recommendation zero admission remains intact through the current head'\n" +
+      ');\n' +
+      '\n' +
+      'select has_table(\n' +
+      "  'private',\n" +
+      "  'recommendation_admission_control',\n" +
+      "  'the private recommendation admission singleton exists'\n" +
+      ');\n' +
+      '\n' +
+      'select is(\n' +
+      '  (\n' +
+      '    select pg_catalog.jsonb_build_object(\n' +
+      "      'rows', count(*),\n" +
+      "      'closedRows', count(*) filter (\n" +
+      '        where control.singleton\n' +
+      "          and control.admission_state = 'closed'\n" +
+      "          and control.checkpoint = 'core06a_zero_admission'\n" +
+      "          and control.reason_code = 'reviewed_corpus_not_admitted'\n" +
+      '      )\n' +
+      '    )\n' +
+      '      from private.recommendation_admission_control as control\n' +
+      '  ),\n' +
+      `  '{"rows":1,"closedRows":1}'::jsonb,\n` +
+      "  'the control is exactly one constrained closed checkpoint'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  (\n' +
+      '    select relations.relrowsecurity and relations.relforcerowsecurity\n' +
+      '      from pg_catalog.pg_class as relations\n' +
+      '     where relations.oid =\n' +
+      "       'private.recommendation_admission_control'::regclass\n" +
+      '  )\n' +
+      '    and not exists (\n' +
+      '      select 1\n' +
+      '        from pg_catalog.pg_policies as policies\n' +
+      "       where policies.schemaname = 'private'\n" +
+      "         and policies.tablename = 'recommendation_admission_control'\n" +
+      '    )\n' +
+      '    and not exists (\n' +
+      '      select 1\n' +
+      "        from unnest(array['anon', 'authenticated', 'service_role']) as roles(name)\n" +
+      '       where pg_catalog.has_table_privilege(\n' +
+      '               roles.name,\n' +
+      "               'private.recommendation_admission_control',\n" +
+      "               'SELECT'\n" +
+      '             )\n' +
+      '          or pg_catalog.has_table_privilege(\n' +
+      '               roles.name,\n' +
+      "               'private.recommendation_admission_control',\n" +
+      "               'INSERT'\n" +
+      '             )\n' +
+      '          or pg_catalog.has_table_privilege(\n' +
+      '               roles.name,\n' +
+      "               'private.recommendation_admission_control',\n" +
+      "               'UPDATE'\n" +
+      '             )\n' +
+      '          or pg_catalog.has_table_privilege(\n' +
+      '               roles.name,\n' +
+      "               'private.recommendation_admission_control',\n" +
+      "               'DELETE'\n" +
+      '             )\n' +
+      '    ),\n' +
+      "  'the control has forced RLS, no policy, and no runtime table privilege'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  exists (\n' +
+      '    select 1\n' +
+      '      from pg_catalog.pg_trigger as triggers\n' +
+      '     where triggers.tgrelid =\n' +
+      "       'private.recommendation_admission_control'::regclass\n" +
+      "       and triggers.tgname = 'recommendation_admission_control_immutable'\n" +
+      '       and not triggers.tgisinternal\n' +
+      "       and triggers.tgenabled = 'O'\n" +
+      '  ),\n' +
+      "  'the singleton cannot be updated, deleted, or truncated in place'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  exists (\n' +
+      '    select 1\n' +
+      '      from pg_catalog.pg_constraint as constraints\n' +
+      "     where constraints.conrelid = 'public.products'::regclass\n" +
+      '       and constraints.conname =\n' +
+      "         'products_recommendation_eligibility_closed'\n" +
+      '       and constraints.convalidated\n' +
+      '       and pg_catalog.pg_get_constraintdef(constraints.oid)\n' +
+      "         ilike '%recommendation_eligible IS FALSE%'\n" +
+      '  ),\n' +
+      "  'products carry a validated relational false-only eligibility constraint'\n" +
+      ');\n' +
+      '\n' +
+      'select is(\n' +
+      '  (\n' +
+      '    select count(*)\n' +
+      '      from public.products as products\n' +
+      '     where products.recommendation_eligible is not false\n' +
+      '  ),\n' +
+      '  0::bigint,\n' +
+      "  'every product is recommendation-ineligible at the checkpoint'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  exists (\n' +
+      '    select 1\n' +
+      '      from pg_catalog.pg_trigger as triggers\n' +
+      "     where triggers.tgrelid = 'public.products'::regclass\n" +
+      "       and triggers.tgname = 'products_recommendation_eligibility_closed'\n" +
+      '       and not triggers.tgisinternal\n' +
+      "       and triggers.tgenabled = 'O'\n" +
+      '  )\n' +
+      '    and pg_catalog.pg_get_functiondef(\n' +
+      "      'private.force_recommendation_eligibility_closed()'::regprocedure\n" +
+      "    ) ilike '%new.recommendation_eligible := false%',\n" +
+      "  'every import or refresh assignment is coerced back to false'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  pg_catalog.pg_get_functiondef(\n' +
+      "    'public.refresh_product_correction_count(uuid)'::regprocedure\n" +
+      "  ) ilike '%recommendation_eligible = false%'\n" +
+      '    and pg_catalog.pg_get_functiondef(\n' +
+      "      'public.refresh_product_correction_count(uuid)'::regprocedure\n" +
+      "    ) not ilike '%quality_grade in%',\n" +
+      "  'the current correction refresh explicitly preserves zero admission'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  pg_catalog.pg_get_functiondef(\n' +
+      "    'private.catalog_product_is_servable(uuid)'::regprocedure\n" +
+      "  ) not ilike '%recommendation_eligible%'\n" +
+      '    and pg_catalog.pg_get_functiondef(\n' +
+      "      'private.catalog_product_is_servable(uuid)'::regprocedure\n" +
+      "    ) ilike '%catalog_launch_curation_head_is_active%'\n" +
+      '    and pg_catalog.pg_get_functiondef(\n' +
+      "      'private.catalog_product_is_servable(uuid)'::regprocedure\n" +
+      "    ) ilike '%catalog_operator_product_holds%',\n" +
+      "  'Shelf serving remains independently CAT-03 and hold gated'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  pg_catalog.pg_get_functiondef(\n' +
+      "    'private.catalog_launch_curation_record_is_valid_v0058(uuid)'::regprocedure\n" +
+      "  ) not ilike '%product.recommendation_eligible is true%'\n" +
+      '    and pg_catalog.pg_get_functiondef(\n' +
+      "      'private.catalog_launch_curation_campaign_record_validity(uuid)'::regprocedure\n" +
+      "    ) not ilike '%product.recommendation_eligible is true%',\n" +
+      "  'CAT-03 scalar and set-based live validators do not depend on recommendation admission'\n" +
+      ');\n' +
+      '\n' +
+      'select is(\n' +
+      '  (\n' +
+      '    select pg_catalog.array_agg(\n' +
+      '      columns.column_name::text order by columns.ordinal_position\n' +
+      '    )\n' +
+      '      from information_schema.columns as columns\n' +
+      "     where columns.table_schema = 'public'\n" +
+      "       and columns.table_name = 'recommendable_catalog_products'\n" +
+      '  ),\n' +
+      '  array[\n' +
+      "    'id',\n" +
+      "    'name',\n" +
+      "    'brand',\n" +
+      "    'category',\n" +
+      "    'product_type',\n" +
+      "    'region',\n" +
+      "    'quality_grade',\n" +
+      "    'data_quality_score',\n" +
+      "    'ingredient_quality_score'\n" +
+      '  ]::text[],\n' +
+      "  'the recommendation candidate projection has one exact column allowlist'\n" +
+      ');\n' +
+      '\n' +
+      'select is(\n' +
+      '  (select count(*) from public.recommendable_catalog_products),\n' +
+      '  0::bigint,\n' +
+      "  'the recommendation candidate projection is empty while closed'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  pg_catalog.has_table_privilege(\n' +
+      "    'service_role',\n" +
+      "    'public.recommendable_catalog_products',\n" +
+      "    'SELECT'\n" +
+      '  )\n' +
+      '    and not pg_catalog.has_table_privilege(\n' +
+      "      'anon',\n" +
+      "      'public.recommendable_catalog_products',\n" +
+      "      'SELECT'\n" +
+      '    )\n' +
+      '    and not pg_catalog.has_table_privilege(\n' +
+      "      'authenticated',\n" +
+      "      'public.recommendable_catalog_products',\n" +
+      "      'SELECT'\n" +
+      '    ),\n' +
+      "  'only the service role can select the closed projection'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  pg_catalog.pg_get_viewdef(\n' +
+      "    'public.recommendable_catalog_products'::regclass,\n" +
+      '    true\n' +
+      "  ) ilike '%recommendation_admission_control%'\n" +
+      '    and pg_catalog.pg_get_viewdef(\n' +
+      "      'public.recommendable_catalog_products'::regclass,\n" +
+      '      true\n' +
+      "    ) ilike '%admission_state = ''open''%'\n" +
+      '    and pg_catalog.pg_get_viewdef(\n' +
+      "      'public.recommendable_catalog_products'::regclass,\n" +
+      '      true\n' +
+      "    ) !~* '(commission|affiliate|partnership|order_attributions)',\n" +
+      "  'the exact projection is closed by control and contains no commerce input'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  exists (\n' +
+      '    select 1\n' +
+      '      from pg_catalog.pg_constraint as constraints\n' +
+      "     where constraints.conrelid = 'public.recommendations'::regclass\n" +
+      "       and constraints.conname = 'recommendations_catalog_product_closed'\n" +
+      '       and constraints.convalidated\n' +
+      '       and pg_catalog.pg_get_constraintdef(constraints.oid)\n' +
+      "         ilike '%catalog_product_id IS NULL%'\n" +
+      '  ),\n' +
+      "  'recommendation cache rows have a validated null-only catalog reference'\n" +
+      ');\n' +
+      '\n' +
+      'select is(\n' +
+      '  (\n' +
+      '    select count(*)\n' +
+      '      from public.recommendations\n' +
+      '     where catalog_product_id is not null\n' +
+      '  ),\n' +
+      '  0::bigint,\n' +
+      "  'no catalog-linked recommendation cache row survives'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  exists (\n' +
+      '    select 1\n' +
+      '      from pg_catalog.pg_trigger as triggers\n' +
+      "     where triggers.tgrelid = 'public.recommendations'::regclass\n" +
+      "       and triggers.tgname = 'recommendations_admission_control'\n" +
+      '       and not triggers.tgisinternal\n' +
+      "       and triggers.tgenabled = 'O'\n" +
+      '  ),\n' +
+      "  'the cache has an enabled admission-control write trigger'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  (\n' +
+      '    select functions.prosecdef\n' +
+      `      and functions.proconfig @> array['search_path=""']::text[]\n` +
+      '      from pg_catalog.pg_proc as functions\n' +
+      '     where functions.oid =\n' +
+      "       'private.guard_recommendation_cache_write()'::regprocedure\n" +
+      '  )\n' +
+      '    and pg_catalog.pg_get_functiondef(\n' +
+      "      'private.guard_recommendation_cache_write()'::regprocedure\n" +
+      "    ) ilike '%RECOMMENDATION_ADMISSION_CLOSED%',\n" +
+      "  'the cache guard is a search-path-sealed definer with a stable closed error'\n" +
+      ');\n' +
+      '\n' +
+      'select is(\n' +
+      '  (\n' +
+      '    select pg_catalog.array_agg(\n' +
+      "      policies.policyname || ':' || policies.cmd\n" +
+      '      order by policies.policyname\n' +
+      '    )\n' +
+      '      from pg_catalog.pg_policies as policies\n' +
+      "     where policies.schemaname = 'public'\n" +
+      "       and policies.tablename = 'recommendations'\n" +
+      '  ),\n' +
+      '  array[\n' +
+      "    'account_deletion_write_barrier_delete:DELETE',\n" +
+      "    'account_deletion_write_barrier_insert:INSERT',\n" +
+      "    'account_deletion_write_barrier_update:UPDATE',\n" +
+      "    'apple_auth_read_barrier:SELECT',\n" +
+      "    'health_processing_read_fence:SELECT',\n" +
+      "    'recommendations_select_own:SELECT'\n" +
+      '  ]::text[],\n' +
+      "  'the cache retains exact read and restrictive account-lifecycle barriers without an owner write policy'\n" +
+      ');\n' +
+      '\n' +
+      'select ok(\n' +
+      '  not exists (\n' +
+      '    select 1\n' +
+      '      from unnest(array[\n' +
+      "        'public',\n" +
+      "        'anon',\n" +
+      "        'authenticated',\n" +
+      "        'service_role'\n" +
+      '      ]) as roles(name)\n' +
+      '      cross join unnest(array[\n' +
+      "        'INSERT',\n" +
+      "        'UPDATE',\n" +
+      "        'DELETE',\n" +
+      "        'TRUNCATE',\n" +
+      "        'TRIGGER',\n" +
+      "        'REFERENCES'\n" +
+      '      ]) as privileges(name)\n' +
+      '     where pg_catalog.has_table_privilege(\n' +
+      '       roles.name,\n' +
+      "       'public.recommendations',\n" +
+      '       privileges.name\n' +
+      '     )\n' +
+      '  )\n' +
+      '    and pg_catalog.has_table_privilege(\n' +
+      "      'authenticated',\n" +
+      "      'public.recommendations',\n" +
+      "      'SELECT'\n" +
+      '    )\n' +
+      '    and pg_catalog.has_table_privilege(\n' +
+      "      'service_role',\n" +
+      "      'public.recommendations',\n" +
+      "      'SELECT'\n" +
+      '    )\n' +
+      '    and not pg_catalog.has_table_privilege(\n' +
+      "      'anon',\n" +
+      "      'public.recommendations',\n" +
+      "      'SELECT'\n" +
+      '    )\n' +
+      '    and not pg_catalog.has_table_privilege(\n' +
+      "      'public'"... 7945 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    begin;
+    
+    create extension if not exists pgtap with schema extensions;
+    set local search_path = extensions, public, pg_catalog;
+    
+    select plan(35);
+    
+    select is(
+      (select max(version) from supabase_migrations.schema_migrations),
+      '20261010000081'::text,
+      'CORE-06A recommendation zero admission remains intact through the current head'
+    );
+    
+    select has_table(
+      'private',
+      'recommendation_admission_control',
+      'the private recommendation admission singleton exists'
+    );
+    
+    select is(
+      (
+        select pg_catalog.jsonb_build_object(
+          'rows', count(*),
+          'closedRows', count(*) filter (
+            where control.singleton
+              and control.admission_state = 'closed'
+              and control.checkpoint = 'core06a_zero_admission'
+              and control.reason_code = 'reviewed_corpus_not_admitted'
+          )
+        )
+          from private.recommendation_admission_control as control
+      ),
+      '{"rows":1,"closedRows":1}'::jsonb,
+      'the control is exactly one constrained closed checkpoint'
+    );
+    
+    select ok(
+      (
+        select relations.relrowsecurity and relations.relforcerowsecurity
+          from pg_catalog.pg_class as relations
+         where relations.oid =
+           'private.recommendation_admission_control'::regclass
+      )
+        and not exists (
+          select 1
+            from pg_catalog.pg_policies as policies
+           where policies.schemaname = 'private'
+             and policies.tablename = 'recommendation_admission_control'
+        )
+        and not exists (
+          select 1
+            from unnest(array['anon', 'authenticated', 'service_role']) as roles(name)
+           where pg_catalog.has_table_privilege(
+                   roles.name,
+                   'private.recommendation_admission_control',
+                   'SELECT'
+                 )
+              or pg_catalog.has_table_privilege(
+                   roles.name,
+                   'private.recommendation_admission_control',
+                   'INSERT'
+                 )
+              or pg_catalog.has_table_privilege(
+                   roles.name,
+                   'private.recommendation_admission_control',
+                   'UPDATE'
+                 )
+              or pg_catalog.has_table_privilege(
+                   roles.name,
+                   'private.recommendation_admission_control',
+                   'DELETE'
+                 )
+        ),
+      'the control has forced RLS, no policy, and no runtime table privilege'
+    );
+    
+    select ok(
+      exists (
+        select 1
+          from pg_catalog.pg_trigger as triggers
+         where triggers.tgrelid =
+           'private.recommendation_admission_control'::regclass
+           and triggers.tgname = 'recommendation_admission_control_immutable'
+           and not triggers.tgisinternal
+           and triggers.tgenabled = 'O'
+      ),
+      'the singleton cannot be updated, deleted, or truncated in place'
+    );
+    
+    select ok(
+      exists (
+        select 1
+          from pg_catalog.pg_constraint as constraints
+         where constraints.conrelid = 'public.products'::regclass
+           and constraints.conname =
+             'products_recommendation_eligibility_closed'
+           and constraints.convalidated
+           and pg_catalog.pg_get_constraintdef(constraints.oid)
+             ilike '%recommendation_eligible IS FALSE%'
+      ),
+      'products carry a validated relational false-only eligibility constraint'
+    );
+    
+    select is(
+      (
+        select count(*)
+          from public.products as products
+         where products.recommendation_eligible is not false
+      ),
+      0::bigint,
+      'every product is recommendation-ineligible at the checkpoint'
+    );
+    
+    select ok(
+      exists (
+        select 1
+          from pg_catalog.pg_trigger as triggers
+         where triggers.tgrelid = 'public.products'::regclass
+           and triggers.tgname = 'products_recommendation_eligibility_closed'
+           and not triggers.tgisinternal
+           and triggers.tgenabled = 'O'
+      )
+        and pg_catalog.pg_get_functiondef(
+          'private.force_recommendation_eligibility_closed()'::regprocedure
+        ) ilike '%new.recommendation_eligible := false%',
+      'every import or refresh assignment is coerced back to false'
+    );
+    
+    select ok(
+      pg_catalog.pg_get_functiondef(
+        'public.refresh_product_correction_count(uuid)'::regprocedure
+      ) ilike '%recommendation_eligible = false%'
+        and pg_catalog.pg_get_functiondef(
+          'public.refresh_product_correction_count(uuid)'::regprocedure
+        ) not ilike '%quality_grade in%',
+      'the current correction refresh explicitly preserves zero admission'
+    );
+    
+    select ok(
+      pg_catalog.pg_get_functiondef(
+        'private.catalog_product_is_servable(uuid)'::regprocedure
+      ) not ilike '%recommendation_eligible%'
+        and pg_catalog.pg_get_functiondef(
+          'private.catalog_product_is_servable(uuid)'::regprocedure
+        ) ilike '%catalog_launch_curation_head_is_active%'
+        and pg_catalog.pg_get_functiondef(
+          'private.catalog_product_is_servable(uuid)'::regprocedure
+        ) ilike '%catalog_operator_product_holds%',
+      'Shelf serving remains independently CAT-03 and hold gated'
+    );
+    
+    select ok(
+      pg_catalog.pg_get_functiondef(
+        'private.catalog_launch_curation_record_is_valid_v0058(uuid)'::regprocedure
+      ) not ilike '%product.recommendation_eligible is true%'
+        and pg_catalog.pg_get_functiondef(
+          'private.catalog_launch_curation_campaign_record_validity(uuid)'::regprocedure
+        ) not ilike '%product.recommendation_eligible is true%',
+      'CAT-03 scalar and set-based live validators do not depend on recommendation admission'
+    );
+    
+    select is(
+      (
+        select pg_catalog.array_agg(
+          columns.column_name::text order by columns.ordinal_position
+        )
+          from information_schema.columns as columns
+         where columns.table_schema = 'public'
+           and columns.table_name = 'recommendable_catalog_products'
+      ),
+      array[
+        'id',
+        'name',
+        'brand',
+        'category',
+        'product_type',
+        'region',
+        'quality_grade',
+        'data_quality_score',
+        'ingredient_quality_score'
+      ]::text[],
+      'the recommendation candidate projection has one exact column allowlist'
+    );
+    
+    select is(
+      (select count(*) from public.recommendable_catalog_products),
+      0::bigint,
+      'the recommendation candidate projection is empty while closed'
+    );
+    
+    select ok(
+      pg_catalog.has_table_privilege(
+        'service_role',
+        'public.recommendable_catalog_products',
+        'SELECT'
+      )
+        and not pg_catalog.has_table_privilege(
+          'anon',
+          'public.recommendable_catalog_products',
+          'SELECT'
+        )
+        and not pg_catalog.has_table_privilege(
+          'authenticated',
+          'public.recommendable_catalog_products',
+          'SELECT'
+        ),
+      'only the service role can select the closed projection'
+    );
+    
+    select ok(
+      pg_catalog.pg_get_viewdef(
+        'public.recommendable_catalog_products'::regclass,
+        true
+      ) ilike '%recommendation_admission_control%'
+        and pg_catalog.pg_get_viewdef(
+          'public.recommendable_catalog_products'::regclass,
+          true
+        ) ilike '%admission_state = ''open''%'
+        and pg_catalog.pg_get_viewdef(
+          'public.recommendable_catalog_products'::regclass,
+          true
+        ) !~* '(commission|affiliate|partnership|order_attributions)',
+      'the exact projection is closed by control and contains no commerce input'
+    );
+    
+    select ok(
+      exists (
+        select 1
+          from pg_catalog.pg_constraint as constraints
+         where constraints.conrelid = 'public.recommendations'::regclass
+           and constraints.conname = 'recommendations_catalog_product_closed'
+           and constraints.convalidated
+           and pg_catalog.pg_get_constraintdef(constraints.oid)
+             ilike '%catalog_product_id IS NULL%'
+      ),
+      'recommendation cache rows have a validated null-only catalog reference'
+    );
+    
+    select is(
+      (
+        select count(*)
+          from public.recommendations
+         where catalog_product_id is not null
+      ),
+      0::bigint,
+      'no catalog-linked recommendation cache row survives'
+    );
+    
+    select ok(
+      exists (
+        select 1
+          from pg_catalog.pg_trigger as triggers
+         where triggers.tgrelid = 'public.recommendations'::regclass
+           and triggers.tgname = 'recommendations_admission_control'
+           and not triggers.tgisinternal
+           and triggers.tgenabled = 'O'
+      ),
+      'the cache has an enabled admission-control write trigger'
+    );
+    
+    select ok(
+      (
+        select functions.prosecdef
+          and functions.proconfig @> array['search_path=""']::text[]
+          from pg_catalog.pg_proc as functions
+         where functions.oid =
+           'private.guard_recommendation_cache_write()'::regprocedure
+      )
+        and pg_catalog.pg_get_functiondef(
+          'private.guard_recommendation_cache_write()'::regprocedure
+        ) ilike '%RECOMMENDATION_ADMISSION_CLOSED%',
+      'the cache guard is a search-path-sealed definer with a stable closed error'
+    );
+    
+    select is(
+      (
+        select pg_catalog.array_agg(
+          policies.policyname || ':' || policies.cmd
+          order by policies.policyname
+        )
+          from pg_catalog.pg_policies as policies
+         where policies.schemaname = 'public'
+           and policies.tablename = 'recommendations'
+      ),
+      array[
+        'account_deletion_write_barrier_delete:DELETE',
+        'account_deletion_write_barrier_insert:INSERT',
+        'account_deletion_write_barrier_update:UPDATE',
+        'apple_auth_read_barrier:SELECT',
+        'health_processing_read_fence:SELECT',
+        'recommendations_select_own:SELECT'
+      ]::text[],
+      'the cache retains exact read and restrictive account-lifecycle barriers without an owner write policy'
+    );
+    
+    select ok(
+      not exists (
+        select 1
+          from unnest(array[
+            'public',
+            'anon',
+            'authenticated',
+            'service_role'
+          ]) as roles(name)
+          cross join unnest(array[
+            'INSERT',
+            'UPDATE',
+            'DELETE',
+            'TRUNCATE',
+            'TRIGGER',
+            'REFERENCES'
+          ]) as privileges(name)
+         where pg_catalog.has_table_privilege(
+           roles.name,
+           'public.recommendations',
+           privileges.name
+         )
+      )
+        and pg_catalog.has_table_privilege(
+          'authenticated',
+          'public.recommendations',
+          'SELECT'
+        )
+        and pg_catalog.has_table_privilege(
+          'service_role',
+          'public.recommendations',
+          'SELECT'
+        )
+        and not pg_catalog.has_table_privilege(
+          'anon',
+          'public.recommendations',
+          'SELECT'
+        )
+        and not pg_catalog.has_table_privilege(
+          'public',
+          'public.recommendations',
+          'SELECT'
+        ),
+      'cache ACL exposes only exact authenticated/service reads and no unused privilege'
+    );
+    
+    select is(
+      (
+        select pg_catalog.array_agg(
+          policies.policyname || ':' || policies.cmd
+          order by policies.policyname
+        )
+          from pg_catalog.pg_policies as policies
+         where policies.schemaname = 'public'
+           and policies.tablename = 'recommendation_preferences'
+      ),
+      array[
+        'account_deletion_write_barrier_delete:DELETE',
+        'account_deletion_write_barrier_insert:INSERT',
+        'account_deletion_write_barrier_update:UPDATE',
+        'apple_auth_read_barrier:SELECT',
+        'health_processing_read_fence:SELECT',
+        'recommendation_preferences_select_own:SELECT'
+      ]::text[],
+      'preferences retain exact read and restrictive account-lifecycle barriers without an owner write policy'
+    );
+    
+    select ok(
+      not exists (
+        select 1
+          from unnest(array[
+            'public',
+            'anon',
+            'authenticated',
+            'service_role'
+          ]) as roles(name)
+          cross join unnest(array[
+            'INSERT',
+            'UPDATE',
+            'DELETE',
+            'TRUNCATE',
+            'TRIGGER',
+            'REFERENCES'
+          ]) as privileges(name)
+         where pg_catalog.has_table_privilege(
+           roles.name,
+           'public.recommendation_preferences',
+           privileges.name
+         )
+      )
+        and pg_catalog.has_table_privilege(
+          'authenticated',
+          'public.recommendation_preferences',
+          'SELECT'
+        )
+        and pg_catalog.has_table_privilege(
+          'service_role',
+          'public.recommendation_preferences',
+          'SELECT'
+        )
+        and not pg_catalog.has_table_privilege(
+          'anon',
+          'public.recommendation_preferences',
+          'SELECT'
+        )
+        and not pg_catalog.has_table_privilege(
+          'public',
+          'public.recommendation_preferences',
+          'SELECT'
+        ),
+      'preference ACL exposes only exact authenticated/service reads and no unused privilege'
+    );
+    
+    select ok(
+      (
+        select functions.prosecdef
+          and functions.provolatile = 'v'
+          and functions.proconfig @> array['search_path=""']::text[]
+          from pg_catalog.pg_proc as functions
+         where functions.oid =
+           'public.set_recommendation_preferences(text[],text,text[])'::regprocedure
+      ),
+      'the exact owner preference RPC is a volatile search-path-sealed definer'
+    );
+    
+    select ok(
+      pg_catalog.has_function_privilege(
+        'authenticated',
+        'public.set_recommendation_preferences(text[],text,text[])',
+        'EXECUTE'
+      )
+        and not pg_catalog.has_function_privilege(
+          'anon',
+          'public.set_recommendation_preferences(text[],text,text[])',
+          'EXECUTE'
+        )
+        and not pg_catalog.has_function_privilege(
+          'service_role',
+          'public.set_recommendation_preferences(text[],text,text[])',
+          'EXECUTE'
+        ),
+      'only authenticated owners can execute the preference RPC'
+    );
+    
+    select ok(
+      pg_catalog.pg_get_functiondef(
+        'public.set_recommendation_preferences(text[],text,text[])'::regprocedure
+      ) ilike '%_assert_current_health_session%'
+        and pg_catalog.pg_get_functiondef(
+          'public.set_recommendation_preferences(text[],text,text[])'::regprocedure
+        ) ilike '%_assert_health_processing_active_locked%'
+        and pg_catalog.pg_get_functiondef(
+          'public.set_recommendation_preferences(text[],text,text[])'::regprocedure
+        ) ilike '%_account_access_allowed%'
+        and pg_catalog.pg_get_functiondef(
+          'public.set_recommendation_preferences(text[],text,text[])'::regprocedure
+        ) ilike '%on conflict on constraint recommendation_preferences_pkey%',
+      'the preference RPC binds exact session, epoch, account access, and owner upsert'
+    );
+    
+    select ok(
+      not pg_catalog.has_table_privilege(
+        'anon',
+        'public.order_attributions',
+        'SELECT'
+      )
+        and not pg_catalog.has_table_privilege(
+          'authenticated',
+          'public.order_attributions',
+          'SELECT'
+        )
+        and not exists (
+          select 1
+            from pg_catalog.pg_policies as policies
+           where policies.schemaname = 'public'
+             and policies.tablename = 'order_attributions'
+        ),
+      'commission/order storage has no client privilege or policy'
+    );
+    
+    select throws_ok(
+      $$update private.recommendation_admission_control
+           set established_at = pg_catalog.clock_timestamp()$$,
+      '55000',
+      'RECOMMENDATION_ADMISSION_CONTROL_MIGRATION_OWNED',
+      'even the database owner cannot mutate the closed singleton in place'
+    );
+    
+    insert into auth.users (id)
+    values ('71100000-0000-4000-8000-000000000001');
+    insert into auth.sessions (id, user_id)
+    values (
+      '71110000-0000-4000-8000-000000000001',
+      '71100000-0000-4000-8000-000000000001'
+    );
+    
+    select throws_ok(
+      $$insert into public.recommendations (
+          user_id, trigger, product_type, catalog_product_id, fit_rationale
+        ) values (
+          '71100000-0000-4000-8000-000000000001',
+          'gap',
+          'spf',
+          null,
+          'Closed checkpoint'
+        )$$,
+      '55000',
+      'RECOMMENDATION_ADMISSION_CLOSED',
+      'no privileged cache publisher can bypass closed admission'
+    );
+    
+    select throws_ok(
+      $$select * from public.set_recommendation_preferences(
+        array['vegan', 'vegan'],
+        null,
+        array[]::text[]
+      )$$,
+      '28000',
+      'RECOMMENDATION_PREFERENCES_SESSION_REJECTED',
+      'an unauthenticated caller is rejected before preference validation'
+    );
+    
+    do $$
+    begin
+      perform *
+        from public.promote_health_consent_copy_for_release(
+          'health_data_collection',
+          'grant',
+          'draft-v1-2026-07-10',
+          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+          'PGTAP-CORE06A-REVIEW-2026-07-26',
+          'pgtap.db-owner',
+          pg_catalog.repeat('6', 64)
+        );
+    end;
+    $$;
+    
+    update public.health_processing_states
+       set state = 'active',
+           epoch = 1,
+           consent_version = 'draft-v1-2026-07-10',
+           consent_text_hash =
+             '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+           last_server_verified_at = pg_catalog.statement_timestamp()
+     where user_id = '71100000-0000-4000-8000-000000000001';
+    
+    set local role authenticated;
+    select pg_catalog.set_config(
+      'request.jwt.claims',
+      '{"sub":"71100000-0000-4000-8000-000000000001","role":"authenticated","session_id":"71110000-0000-4000-8000-000000000001"}',
+      true
+    );
+    select pg_catalog.set_config(
+      'request.headers',
+      '{"x-health-processing-epoch":"1"}',
+      true
+    );
+    
+    select throws_ok(
+      $$insert into public.recommendation_preferences (
+          user_id, values_filters, budget_band, format_prefs
+        ) values (
+          '71100000-0000-4000-8000-000000000001',
+          array['vegan'],
+          'mid',
+          array['gel']
+        )$$,
+      '42501',
+      'permission denied for table recommendation_preferences',
+      'an exact owner cannot bypass the preference RPC with table DML'
+    );
+    
+    select throws_ok(
+      $$select * from public.set_recommendation_preferences(
+        array['vegan', 'vegan'],
+        null,
+        array[]::text[]
+      )$$,
+      '22023',
+      'RECOMMENDATION_PREFERENCES_INVALID',
+      'the owner RPC rejects a duplicated preference value'
+    );
+    
+    select results_eq(
+      $$select values_filters, budget_band, format_prefs
+          from public.set_recommendation_preferences(
+            array['fragrance_free', 'vegan'],
+            'mid',
+            array['gel', 'cream']
+          )$$,
+      $$values (
+        array['fragrance_free', 'vegan']::text[],
+        'mid'::text,
+        array['gel', 'cream']::text[]
+      )$$,
+      'an exact current owner can atomically persist bounded preferences'
+    );
+    
+    select results_eq(
+      $$select values_filters, budget_band, format_prefs
+          from public.set_recommendation_preferences(
+            array[]::text[],
+            null,
+            array['fluid']
+          )$$,
+      $$values (
+        array[]::text[],
+        null::text,
+        array['fluid']::text[]
+      )$$,
+      'the exact owner RPC replaces its singleton preference row'
+    );
+    
+    select is(
+      (
+        select count(*)
+          from public.recommendation_preferences
+         where user_id = '71100000-0000-4000-8000-000000000001'
+      ),
+      1::bigint,
+      'preference replacement never appends duplicate owner rows'
+    );
+    
+    select * from finish();
+    rollback;
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/core06/recommendation-admission-source-contract.test.mjs:658:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: the launch contract requires exact recommendation professional roles
+ok 79 - the launch contract requires exact recommendation professional roles
+  ---
+  duration_ms: 1.6877
+  type: 'test'
+  ...
+# Subtest: the source-of-truth docs preserve zero admission and explicit external gates
+ok 80 - the source-of-truth docs preserve zero admission and explicit external gates
+  ---
+  duration_ms: 8.0631
+  type: 'test'
+  ...
+# Subtest: CORE-06 source and database contracts are mandatory verification gates
+ok 81 - CORE-06 source and database contracts are mandatory verification gates
+  ---
+  duration_ms: 0.7883
+  type: 'test'
+  ...
+# Subtest: the real CORE-07A source is literal-zero-admission and side-effect free
+ok 82 - the real CORE-07A source is literal-zero-admission and side-effect free
+  ---
+  duration_ms: 225.5737
+  type: 'test'
+  ...
+# Subtest: the audit is deterministic, immutable, and path-sorted
+ok 83 - the audit is deterministic, immutable, and path-sorted
+  ---
+  duration_ms: 70.7948
+  type: 'test'
+  ...
+# Subtest: missing mandatory admission, projection, renderer, route, and public HTML sources fail closed
+ok 84 - missing mandatory admission, projection, renderer, route, and public HTML sources fail closed
+  ---
+  duration_ms: 11.5262
+  type: 'test'
+  ...
+# Subtest: raw DetectedConflict renderer authority is rejected
+ok 85 - raw DetectedConflict renderer authority is rejected
+  ---
+  duration_ms: 31.3229
+  type: 'test'
+  ...
+# Subtest: share and public-link capabilities cannot be opened by literals or flags
+ok 86 - share and public-link capabilities cannot be opened by literals or flags
+  ---
+  duration_ms: 81.4329
+  type: 'test'
+  ...
+# Subtest: environment, development, and E2E admission bypasses are rejected
+ok 87 - environment, development, and E2E admission bypasses are rejected
+  ---
+  duration_ms: 106.391
+  type: 'test'
+  ...
+# Subtest: capture, temporary-file, network, and native-share side effects are rejected
+ok 88 - capture, temporary-file, network, and native-share side effects are rejected
+  ---
+  duration_ms: 45.1012
+  type: 'test'
+  ...
+# Subtest: public-link identifier, crypto, digest, and URL creation side effects are rejected
+ok 89 - public-link identifier, crypto, digest, and URL creation side effects are rejected
+  ---
+  duration_ms: 25.1241
+  type: 'test'
+  ...
+# Subtest: projection fields are an exact public allowlist and private aliases are rejected
+ok 90 - projection fields are an exact public allowlist and private aliases are rejected
+  ---
+  duration_ms: 24.1101
+  type: 'test'
+  ...
+# Subtest: record-implying native and static public copy is rejected
+ok 91 - record-implying native and static public copy is rejected
+  ---
+  duration_ms: 39.6576
+  type: 'test'
+  ...
+# Subtest: public-link analytics, token parsing, beacons, and destinations are rejected
+ok 92 - public-link analytics, token parsing, beacons, and destinations are rejected
+  ---
+  duration_ms: 37.1839
+  type: 'test'
+  ...
+# Subtest: future receipt, confirmation, and public-link authority types remain issuerless
+ok 93 - future receipt, confirmation, and public-link authority types remain issuerless
+  ---
+  duration_ms: 40.5932
+  type: 'test'
+  ...
+# Subtest: future authority schemas cannot drift review roles or exact confirmation literals
+ok 94 - future authority schemas cannot drift review roles or exact confirmation literals
+  ---
+  duration_ms: 54.8905
+  type: 'test'
+  ...
+# Subtest: CORE-07A enforcement is mandatory in every bound phase and launch verification
+ok 95 - CORE-07A enforcement is mandatory in every bound phase and launch verification
+  ---
+  duration_ms: 3.4565
+  type: 'test'
+  ...
+# Subtest: current PAY-07 entitlement-admission source snapshot passes
+ok 96 - current PAY-07 entitlement-admission source snapshot passes
+  ---
+  duration_ms: 504.6953
+  type: 'test'
+  ...
+# Subtest: missing authority files fail closed
+ok 97 - missing authority files fail closed
+  ---
+  duration_ms: 63.6845
+  type: 'test'
+  ...
+# Subtest: positive entitlement fixtures are rejected from base and native modules
+ok 98 - positive entitlement fixtures are rejected from base and native modules
+  ---
+  duration_ms: 87.264
+  type: 'test'
+  ...
+# Subtest: web fixture cannot grant outside development or leak into native resolution
+ok 99 - web fixture cannot grant outside development or leak into native resolution
+  ---
+  duration_ms: 70.6775
+  type: 'test'
+  ...
+# Subtest: runtime hook cannot regain a direct environment entitlement bypass
+ok 100 - runtime hook cannot regain a direct environment entitlement bypass
+  ---
+  duration_ms: 40.6373
+  type: 'test'
+  ...
+# Subtest: unconfigured Supabase cannot mint or persist a local reverse trial
+ok 101 - unconfigured Supabase cannot mint or persist a local reverse trial
+  ---
+  duration_ms: 63.5203
+  type: 'test'
+  ...
+# Subtest: server custom grant authority rejects hosted and bypassed admission
+ok 102 - server custom grant authority rejects hosted and bypassed admission
+  ---
+  duration_ms: 78.4289
+  type: 'test'
+  ...
+# Subtest: success route cannot default or synthesize a purchase confirmation
+ok 103 - success route cannot default or synthesize a purchase confirmation
+  ---
+  duration_ms: 55.6329
+  type: 'test'
+  ...
+# Subtest: success route requires both current Pro and exact expiry evidence
+ok 104 - success route requires both current Pro and exact expiry evidence
+  ---
+  duration_ms: 41.8783
+  type: 'test'
+  ...
+# Subtest: success admission rejects pre-mount cache and stale verification
+ok 105 - success admission rejects pre-mount cache and stale verification
+  ---
+  duration_ms: 73.5906
+  type: 'test'
+  ...
+# Subtest: success route forces a fresh exact-owner query after mount
+ok 106 - success route forces a fresh exact-owner query after mount
+  ---
+  duration_ms: 115.292
+  type: 'test'
+  ...
+# Subtest: success claims separate non-billing grants from exact renewing store evidence
+ok 107 - success claims separate non-billing grants from exact renewing store evidence
+  ---
+  duration_ms: 54.2064
+  type: 'test'
+  ...
+# Subtest: app config and EAS profiles reject environment drift
+ok 108 - app config and EAS profiles reject environment drift
+  ---
+  duration_ms: 63.0688
+  type: 'test'
+  ...
+# Subtest: release JavaScript cannot accept a development public environment label
+ok 109 - release JavaScript cannot accept a development public environment label
+  ---
+  duration_ms: 35.5106
+  type: 'test'
+  ...
+# Subtest: RevenueCat NOT_REQUESTED cannot become active or legacy-positive evidence
+ok 110 - RevenueCat NOT_REQUESTED cannot become active or legacy-positive evidence
+  ---
+  duration_ms: 52.6594
+  type: 'test'
+  ...
+# Subtest: introductory-offer copy cannot bypass exact per-product eligibility
+ok 111 - introductory-offer copy cannot bypass exact per-product eligibility
+  ---
+  duration_ms: 68.3208
+  type: 'test'
+  ...
+# Subtest: Phase 6, Phase 9, and launch verification cannot drop PAY-07 contracts
+ok 112 - Phase 6, Phase 9, and launch verification cannot drop PAY-07 contracts
+  ---
+  duration_ms: 105.8285
+  type: 'test'
+  ...
+# Subtest: Phase 6 cannot drop the production Trusted Entitlements evidence gate
+ok 113 - Phase 6 cannot drop the production Trusted Entitlements evidence gate
+  ---
+  duration_ms: 54.6169
+  type: 'test'
+  ...
+1..113
+# tests 113
+# suites 0
+# pass 111
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5034.7224

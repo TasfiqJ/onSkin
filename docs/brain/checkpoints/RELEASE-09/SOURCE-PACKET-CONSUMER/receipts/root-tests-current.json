@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "npm.cmd",
+    "test",
+    "--",
+    "--force"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:07.233215+00:00",
+  "cache": "Cached:    0 cached, 2 total",
+  "exit": 0,
+  "seconds": 41.95,
+  "log": "root-tests-current.log",
+  "log_sha256": "211940bb8810536b403e23f228ac2bfa1656074ca8fc59bb68d0c8ef427bbaaf",
+  "log_bytes": 374147,
+  "status_after": ""
+}

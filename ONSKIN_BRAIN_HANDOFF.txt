@@ -1,15 +1,7 @@
-RELEASE-08 PARTIAL_BLOCKED; proposal SUBMITTED_REVIEW_REQUIRED — proposed full-app + J01 contract only; no acceptance or GO.
-Authorization BRAIN-RELEASE-FULLAPP-J01-REBASE08-CANDIDATE-01.
-Branch stage/full-app-j01-release-contract08; stacked draft base stage/m1-retained-resilience. Never merge/retarget PR11 or main.
-Measured source f0f743e5d8db586a1f9d98e417adb36416ede9fa; tree 54d5645866d25681cae42a2a7a2869e12362edfa.
-Contract onskin-full-app-j01-release08-v1 SHA256 017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996.
-Checkpoint docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT; manifest SHA256 eb16aba45d33333d708535e705336b4ae929ceb7f579bcff23cbd05f7e7ea248.
-Verify: python -B docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT/verify_checkpoint.py --expected-manifest-sha256 eb16aba45d33333d708535e705336b4ae929ceb7f579bcff23cbd05f7e7ea248
-65 identities/38 required scopes;47 historical tasks/51 ADRs preserved. New validator0;151 negative exits1; restored0. Forced root6190/6190, lint/typecheck0,0cached. Old full launch chain and primary worklist0.
-Broader untouched source contracts111pass/2fail; original Security3.12 suite exit1, raw failures retained. G97 FAIL/NO_GO; canonical DB H01_SQL_PROBE_FAILED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED.
-Quality source-packet consumer rejects the five authorized notices versus read-only mirrors; consumer-cutover-blocker.json records exact unapplied script/output paths. No weakened guard.
-Legacy consumer cutover NOT_DONE; new validator CI NOT_WIRED; independent complete-checkout0/1/0 NOT_QUALIFIED. See structured completion-report.json for all unfinished scopes, risks and command anomalies.
-J01 NOT_IMPLEMENTED_OR_VALIDATED; authenticated intake missing, G1/G2/G3/G5 pending and G4 closed. F18/J02-J27 deferred; F09 diary/compare required. No paid/provider/clinical/native/Apple/public admission. Spend USD0. Brain alone audits/accepts source and later decides ordinary main promotion.
-Evidence verifier source-versus-delivery absence correction is recorded in verifier-correction.json; original failed run retained.
-Final delivery SHA/tree and actual final-head CI are reported after push, outside this self-referential handoff.
-Codex is done.
+RELEASE09 source-packet / candidate CI — PARTIAL_BLOCKED; SUBMITTED_REVIEW_REQUIRED.
+Authority: BRAIN-RELEASE09-SOURCE-PACKET-CI-CANDIDATE-01.
+New branch stage/full-app-j01-source-packet-ci09; DRAFT PR https://github.com/TasfiqJ/onSkin/pull/13 targets immutable PR12 stage/full-app-j01-release-contract08.
+Measured source 3d951357163d2abd1b02b456c6f52cfb0dbf70ce; tree 02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e. Exact source/bytes, logs and new external-digest verifier: docs/brain/checkpoints/RELEASE-09/SOURCE-PACKET-CONSUMER/README.md.
+Original packet authenticated; exactly five Release08 additive notices classified separately from identical mirrors. Source-only candidate CI guard passes; old worklist/readiness projection blockers outside grant remain UNAPPLIED. Full legacy release/runtime consumer migration NOT_DONE/NOT_ACCEPTED.
+151 original semantic negatives preserved/reexecuted, source scopes and protected witnesses checked. Independent complete-checkout0/1/0 NOT_QUALIFIED due host space. Current delivery-head CI is separately observed after push; no earlier-head result is borrowed.
+All older checkpoints/accepted M1 source/PRs remain immutable. G97 FAIL/NO_GO; DB H01_SQL_PROBE_FAILED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. Brain alone audits source and decides later ordinary main promotion. No main merge, release/clinical/J01/provider/payment/native admission or public GO. Spend USD0.

@@ -1,0 +1,184 @@
+{
+  "observed_utc": "2026-10-24T21:51:54.612683+00:00",
+  "base": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "base_tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "head_tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "intermediate_commits": [
+    {
+      "commit": "22697295a33ecd095849e883bbd9d9847f089a17",
+      "tree": "d9a92bae59bf86fc88f294ef9de154c7f66540e1",
+      "paths": [
+        "docs/generated/source-packet-audit.json",
+        "docs/generated/source-packet-audit.md",
+        "docs/release/full-app-j01/source-packet-supersession09.v1.json",
+        "scripts/docs/source-packet-audit.mjs",
+        "scripts/docs/source-packet-supersession09.test.mjs"
+      ],
+      "protectedDigest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b"
+    },
+    {
+      "commit": "eb86be5298afd0fae3344ef6bf2a4db3b7ada116",
+      "tree": "216d113be43d461c388687f8bc13d06bc56374da",
+      "paths": [
+        ".github/workflows/quality.yml",
+        "docs/release/full-app-j01/consumer-scope09.md",
+        "scripts/release/full-app-j01/check.py",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "protectedDigest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b"
+    },
+    {
+      "commit": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+      "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+      "paths": [
+        ".github/workflows/quality.yml",
+        "scripts/release/full-app-j01/check.py",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "protectedDigest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b"
+    }
+  ],
+  "protected_files": 23015,
+  "protected_flat_digest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b",
+  "protected_absences": [
+    "apps/professional-web",
+    "apps/client-web",
+    "apps/mobile/src/features/j01"
+  ],
+  "status": "",
+  "release": "NO_GO",
+  "source": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "source_tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "changes": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "7efb90aaabbeca82149d4efa0067943abb251351",
+        "bytes": 13201,
+        "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "92400c74fe776dd7766a15befdefdff852074f4e",
+        "bytes": 13714,
+        "sha256": "51a295770e798707507048bc56cf10765b308b18ed9ce9922c05bf699b660c49"
+      }
+    },
+    {
+      "path": "docs/generated/source-packet-audit.json",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "fc7d26d1719507fde5637554effcbb16992d3f87",
+        "bytes": 8411,
+        "sha256": "03bff69892afedb47e63d57310c577af9099601034274a15c406a2d0cd44110a"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "876a1a3642834364e08121ef2429ace9864f23ff",
+        "bytes": 9272,
+        "sha256": "db2607cea8d8458a403d8e479497143fff16787ec0a0c3dae0b24592671d2bb5"
+      }
+    },
+    {
+      "path": "docs/generated/source-packet-audit.md",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "63d1fd3c471301f3c73de07a097502a28a6c58ef",
+        "bytes": 3283,
+        "sha256": "e982ed36a0b8d5e46c09481b37420568aae1455a992e26eef22f273592ba00de"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "82a5d11eff9acd72e56601fc1f1ab4a7e8d2b629",
+        "bytes": 3851,
+        "sha256": "b4e2001eed1f07924e446a9376094174550ee1e3c5362097cdbff82ab8c6a188"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/consumer-scope09.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "8629a7ee6e5f825279360c41a8893255b58a0443",
+        "bytes": 4144,
+        "sha256": "a52bf23c06bc7d85327c2be8185f70a50f35dc6514e54b81a82cb277a0abe707"
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/source-packet-supersession09.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "94f3e776f397c5fa98a8de4a00af8a1c60c40fca",
+        "bytes": 7039,
+        "sha256": "46be42762da54173473953a1d621aba60e80d699ee4ea717ee048b3de1f00a51"
+      }
+    },
+    {
+      "path": "scripts/docs/source-packet-audit.mjs",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "c9087e63e9063e9a3d514d7d57175d30f2ae7bf8",
+        "bytes": 10295,
+        "sha256": "eb09fd7df3e3d6330611a1c102645d4125862f14f52a17052497b7a82704344a"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "207247deb040de78593daa6a0eca32f3e9696a0b",
+        "bytes": 16097,
+        "sha256": "abe52438c324c60ea9c977c527e438e49502f8156a2d086b4f0135a4939dcaf9"
+      }
+    },
+    {
+      "path": "scripts/docs/source-packet-supersession09.test.mjs",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "b010307122c3b351c7c1738c0a01b68574a0c4f2",
+        "bytes": 9510,
+        "sha256": "d0f562dd76794ab2e81982b3434812220daa5b2ca6cde84885cd2b639c15e3b1"
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/check.py",
+      "before": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "affbac0ac0fd659c4938291e57807a9024879ca3",
+        "bytes": 21598,
+        "sha256": "7118308899a2b6b89e98680697d486b85dacd9b9fad8702cdf39a54751f6b822"
+      },
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "c2d2bee4b2ab71965fa3cd7689f6211fff30a3ce",
+        "bytes": 26721,
+        "sha256": "56692f8dc560be98bb0a482dfea76324c53a8e7d330affb9e1a96df90b952dad"
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_consumer09.test.py",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "355ff61bf5848e04d4f7be3928a26b921499f58d",
+        "bytes": 6386,
+        "sha256": "6cc413fc7be61ec7fe47eeba79e09a55ffbafe5c96c6c6f6e6d119465a627ddd"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "npm.cmd",
+    "run",
+    "phase4:source-worklist:check"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:07.284369+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 1,
+  "seconds": 1.72,
+  "log": "legacy-worklist-current.log",
+  "log_sha256": "59043052da41a2a970a05d4ed4332faf63d2cb3a4d65778a51e5ddee476d4fdb",
+  "log_bytes": 302,
+  "status_after": ""
+}

@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "node",
+    "scripts/docs/source-packet-supersession09.test.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:53:56.567617+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 0,
+  "seconds": 24.26,
+  "log": "source-fixtures-current.log",
+  "log_sha256": "16c86662a59600d8468da78a06ea901dbee2a95dfcce5cb217b1bf1179d15ced",
+  "log_bytes": 38310,
+  "status_after": ""
+}

@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_contract.py",
+    "-v"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "3d951357163d2abd1b02b456c6f52cfb0dbf70ce",
+  "tree": "02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e",
+  "status_before": "",
+  "start_utc": "2026-10-24T21:52:41.102691+00:00",
+  "cache": "NOT_APPLICABLE",
+  "exit": 1,
+  "seconds": 422.28,
+  "log": "inherited-security-current.log",
+  "log_sha256": "244672397154e4944b89f118ab1c141e3c958e84eb5d2b8d30ca8bcbe124f9e4",
+  "log_bytes": 65338,
+  "status_after": ""
+}

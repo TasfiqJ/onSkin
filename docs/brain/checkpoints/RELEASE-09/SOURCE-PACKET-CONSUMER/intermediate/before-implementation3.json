@@ -1,0 +1,41 @@
+{
+  "observed_utc": "2026-10-24T21:51:46.503890+00:00",
+  "base": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "base_tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+  "head": "eb86be5298afd0fae3344ef6bf2a4db3b7ada116",
+  "head_tree": "216d113be43d461c388687f8bc13d06bc56374da",
+  "intermediate_commits": [
+    {
+      "commit": "22697295a33ecd095849e883bbd9d9847f089a17",
+      "tree": "d9a92bae59bf86fc88f294ef9de154c7f66540e1",
+      "paths": [
+        "docs/generated/source-packet-audit.json",
+        "docs/generated/source-packet-audit.md",
+        "docs/release/full-app-j01/source-packet-supersession09.v1.json",
+        "scripts/docs/source-packet-audit.mjs",
+        "scripts/docs/source-packet-supersession09.test.mjs"
+      ],
+      "protectedDigest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b"
+    },
+    {
+      "commit": "eb86be5298afd0fae3344ef6bf2a4db3b7ada116",
+      "tree": "216d113be43d461c388687f8bc13d06bc56374da",
+      "paths": [
+        ".github/workflows/quality.yml",
+        "docs/release/full-app-j01/consumer-scope09.md",
+        "scripts/release/full-app-j01/check.py",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "protectedDigest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b"
+    }
+  ],
+  "protected_files": 23015,
+  "protected_flat_digest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b",
+  "protected_absences": [
+    "apps/professional-web",
+    "apps/client-web",
+    "apps/mobile/src/features/j01"
+  ],
+  "status": "M  .github/workflows/quality.yml\nM  scripts/release/full-app-j01/check.py\nM  scripts/release/full-app-j01/source_consumer09.test.py",
+  "release": "NO_GO"
+}

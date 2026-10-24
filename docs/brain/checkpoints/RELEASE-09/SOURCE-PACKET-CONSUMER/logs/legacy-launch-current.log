@@ -1,0 +1,881 @@
+
+> layerwell@0.1.0 launch:contract:verify
+> npm run launch:contract:check && npm run launch:contract:smoke && npm run ask02:gateway-source-contract:test && npm run photo01:source-contract:test && npm run photo02:source-contract:test && npm run photo03:source-contract:test && npm run photo04:source-contract:test && npm run photo05:trend-admission-source-contract:test && npm run photo07:source-contract:test && npm run com01:commerce-admission-source-contract:test && npm run pay08:ios-win-back-source-contract:test
+
+
+> layerwell@0.1.0 launch:contract:check
+> node scripts/launch/check-contract.mjs
+
+iOS lean V1 launch contract
+Path: docs/hugeToDo/launch-contract.json
+Program: ios-lean-v1-2026
+Platforms: ios
+Mode: lean-v1
+Required features: 10
+Deferred features: 10
+Required optional Phase 7/8 surfaces: 0
+iOS release evidence: required
+Android release evidence: not_applicable
+Launch contract is valid.
+
+> layerwell@0.1.0 launch:contract:smoke
+> node scripts/launch/contract-smoke.mjs
+
+Lean V1 launch contract smoke tests passed.
+
+> layerwell@0.1.0 ask02:gateway-source-contract:test
+> node --test scripts/ask02/ask-gateway-source-contract.test.mjs && deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/ask-layerwell/*.test.ts
+
+TAP version 13
+# Subtest: current ASK-02 executable source contract passes
+ok 1 - current ASK-02 executable source contract passes
+  ---
+  duration_ms: 114.1843
+  type: 'test'
+  ...
+# Subtest: comments and dead text cannot forge disabled executable admission
+ok 2 - comments and dead text cannot forge disabled executable admission
+  ---
+  duration_ms: 40.5316
+  type: 'test'
+  ...
+# Subtest: auth and adjacent purpose-consent ordering are AST anchored
+ok 3 - auth and adjacent purpose-consent ordering are AST anchored
+  ---
+  duration_ms: 197.9619
+  type: 'test'
+  ...
+# Subtest: dead comments cannot forge registry-authority quarantine
+ok 4 - dead comments cannot forge registry-authority quarantine
+  ---
+  duration_ms: 19.1776
+  type: 'test'
+  ...
+# Subtest: provider SDK imports and credential environment reads are rejected
+ok 5 - provider SDK imports and credential environment reads are rejected
+  ---
+  duration_ms: 71.4583
+  type: 'test'
+  ...
+# Subtest: endpoint cannot inject a fingerprint implementation
+ok 6 - endpoint cannot inject a fingerprint implementation
+  ---
+  duration_ms: 30.6696
+  type: 'test'
+  ...
+# Subtest: manifest, config, package, and launch wiring mutations fail closed
+ok 7 - manifest, config, package, and launch wiring mutations fail closed
+  ---
+  duration_ms: 87.8887
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1546.8447
+running 2 tests from ./supabase/functions/ask-layerwell/consentAdmission.test.ts
+purpose consent requires exact owner-scoped generation and base-health epoch ... ok (1ms)
+purpose consent rejects missing, withdrawn, placeholder, malformed, and unavailable receipts ... ok (0ms)
+running 2 tests from ./supabase/functions/ask-layerwell/contract.test.ts
+ASK gateway request accepts only the exact minimized English contract ... ok (1ms)
+ASK gateway request rejects malformed identity, purpose, locale, and unbounded fields ... ok (0ms)
+running 13 tests from ./supabase/functions/ask-layerwell/gatewayCore.test.ts
+full canonical request fingerprint is bound atomically before provider work ... ok (5ms)
+strict runtime config rejects malformed and out-of-range values before quota/provider ... ok (0ms)
+throwing request coercion is redacted before fingerprint and reservation ... ok (1ms)
+every reservation variant is exact and identity-bound before provider work ... ok (15ms)
+provider and stored outputs require exact keys and canonical construction ... ok (1ms)
+live provider output is snapshotted once before validation and delivery ... ok (0ms)
+stored replay output is snapshotted once before validation and delivery ... ok (0ms)
+replay fingerprint mismatch fails and replay bypasses circuit admission ... ok (8ms)
+circuit admission is exact, bounded, and releases before failing closed ... ok (5ms)
+throwing reservation and replay proxies are redacted before provider ... ok (0ms)
+ambiguous timeout receives exactly one provider attempt ... ok (271ms)
+rate-limit failures receive exactly one provider attempt ... ok (0ms)
+quota denials, disabled gateway, bounds, and commit failures fail closed ... ok (3ms)
+
+ok | 17 passed | 0 failed (599ms)
+
+
+> layerwell@0.1.0 photo01:source-contract:test
+> node --test scripts/photo01/photo01-source-contract.test.mjs
+
+TAP version 13
+# Subtest: the repository satisfies the aggregate PHOTO-01 source contract
+ok 1 - the repository satisfies the aggregate PHOTO-01 source contract
+  ---
+  duration_ms: 13.7892
+  type: 'test'
+  ...
+# Subtest: the contract rejects thumbnail network capability
+ok 2 - the contract rejects thumbnail network capability
+  ---
+  duration_ms: 10.0087
+  type: 'test'
+  ...
+# Subtest: the contract rejects raw deletion before metadata publication
+ok 3 - the contract rejects raw deletion before metadata publication
+  ---
+  duration_ms: 4.6277
+  type: 'test'
+  ...
+# Subtest: the contract rejects omission of thumbnail deletion
+ok 4 - the contract rejects omission of thumbnail deletion
+  ---
+  duration_ms: 5.2366
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 179.1299
+
+> layerwell@0.1.0 photo02:source-contract:test
+> node --test scripts/photo02/photo02-source-contract.test.mjs
+
+TAP version 13
+# Subtest: the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+ok 1 - the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+  ---
+  duration_ms: 243.5379
+  type: 'test'
+  ...
+# Subtest: rejects an additive Stack mounted before AppLockProvider
+ok 2 - rejects an additive Stack mounted before AppLockProvider
+  ---
+  duration_ms: 80.3967
+  type: 'test'
+  ...
+# Subtest: rejects additive children mounted before the loaded decision
+ok 3 - rejects additive children mounted before the loaded decision
+  ---
+  duration_ms: 128.1088
+  type: 'test'
+  ...
+# Subtest: rejects an early corrupt preference unlock
+ok 4 - rejects an early corrupt preference unlock
+  ---
+  duration_ms: 79.8585
+  type: 'test'
+  ...
+# Subtest: rejects an early unsupported_version preference unlock
+ok 5 - rejects an early unsupported_version preference unlock
+  ---
+  duration_ms: 65.6063
+  type: 'test'
+  ...
+# Subtest: rejects unauthenticated preference disable
+ok 6 - rejects unauthenticated preference disable
+  ---
+  duration_ms: 55.5526
+  type: 'test'
+  ...
+# Subtest: rejects an additive unauthenticated setLocked(false)
+ok 7 - rejects an additive unauthenticated setLocked(false)
+  ---
+  duration_ms: 84.4672
+  type: 'test'
+  ...
+# Subtest: rejects usePhotos in the route component before PhotoTimelineLockGate
+ok 8 - rejects usePhotos in the route component before PhotoTimelineLockGate
+  ---
+  duration_ms: 61.1575
+  type: 'test'
+  ...
+# Subtest: rejects malformed-preference deletion moved before authentication
+ok 9 - rejects malformed-preference deletion moved before authentication
+  ---
+  duration_ms: 68.6743
+  type: 'test'
+  ...
+# Subtest: rejects native success publication without current-request revalidation
+ok 10 - rejects native success publication without current-request revalidation
+  ---
+  duration_ms: 51.5959
+  type: 'test'
+  ...
+# Subtest: rejects a preference authentication failure guard weakened with && false
+ok 11 - rejects a preference authentication failure guard weakened with && false
+  ---
+  duration_ms: 66.5408
+  type: 'test'
+  ...
+# Subtest: rejects a reset authentication failure guard weakened with && false
+ok 12 - rejects a reset authentication failure guard weakened with && false
+  ---
+  duration_ms: 55.1358
+  type: 'test'
+  ...
+# Subtest: rejects provider success dominance weakened with || true
+ok 13 - rejects provider success dominance weakened with || true
+  ---
+  duration_ms: 62.9175
+  type: 'test'
+  ...
+# Subtest: rejects timeline unlock predicate weakened with || true
+ok 14 - rejects timeline unlock predicate weakened with || true
+  ---
+  duration_ms: 91.8923
+  type: 'test'
+  ...
+# Subtest: rejects private readiness predicate weakened with || true
+ok 15 - rejects private readiness predicate weakened with || true
+  ---
+  duration_ms: 63.6691
+  type: 'test'
+  ...
+# Subtest: rejects an aliased photo hook call before the timeline gate
+ok 16 - rejects an aliased photo hook call before the timeline gate
+  ---
+  duration_ms: 93.6354
+  type: 'test'
+  ...
+# Subtest: rejects preference authentication failure falling through after its return is removed
+ok 17 - rejects preference authentication failure falling through after its return is removed
+  ---
+  duration_ms: 63.075
+  type: 'test'
+  ...
+# Subtest: rejects reset authentication failure falling through after its return is removed
+ok 18 - rejects reset authentication failure falling through after its return is removed
+  ---
+  duration_ms: 61.9906
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2279.8933
+
+> layerwell@0.1.0 photo03:source-contract:test
+> node --test scripts/photo03/photo03-source-contract.test.mjs
+
+TAP version 13
+# Subtest: repository satisfies aggregate PHOTO-03 AST/dataflow contract
+ok 1 - repository satisfies aggregate PHOTO-03 AST/dataflow contract
+  ---
+  duration_ms: 147.006
+  type: 'test'
+  ...
+# Subtest: rejects enabling native face tracking
+ok 2 - rejects enabling native face tracking
+  ---
+  duration_ms: 43.9705
+  type: 'test'
+  ...
+# Subtest: rejects adding identity-capable face observation fields
+ok 3 - rejects adding identity-capable face observation fields
+  ---
+  duration_ms: 40.1388
+  type: 'test'
+  ...
+# Subtest: rejects matched framing without complete pose signals
+ok 4 - rejects matched framing without complete pose signals
+  ---
+  duration_ms: 36.0802
+  type: 'test'
+  ...
+# Subtest: rejects raw native face publication
+ok 5 - rejects raw native face publication
+  ---
+  duration_ms: 25.1287
+  type: 'test'
+  ...
+# Subtest: rejects lighting success before plaintext cleanup
+ok 6 - rejects lighting success before plaintext cleanup
+  ---
+  duration_ms: 34.6052
+  type: 'test'
+  ...
+# Subtest: rejects network egress added to capture analysis
+ok 7 - rejects network egress added to capture analysis
+  ---
+  duration_ms: 25.7839
+  type: 'test'
+  ...
+# Subtest: rejects production-accessible analysis fixtures
+ok 8 - rejects production-accessible analysis fixtures
+  ---
+  duration_ms: 32.8606
+  type: 'test'
+  ...
+# Subtest: rejects an object spread that overrides disabled detector options
+ok 9 - rejects an object spread that overrides disabled detector options
+  ---
+  duration_ms: 23.6926
+  type: 'test'
+  ...
+# Subtest: rejects pose completeness replaced with a true initializer
+ok 10 - rejects pose completeness replaced with a true initializer
+  ---
+  duration_ms: 21.971
+  type: 'test'
+  ...
+# Subtest: rejects an effective 4096px lighting resize while the bounded constant remains
+ok 11 - rejects an effective 4096px lighting resize while the bounded constant remains
+  ---
+  duration_ms: 32.6199
+  type: 'test'
+  ...
+# Subtest: rejects cleanupOwnedSample returning before owned cleanup
+ok 12 - rejects cleanupOwnedSample returning before owned cleanup
+  ---
+  duration_ms: 125.6793
+  type: 'test'
+  ...
+# Subtest: rejects aliased expo fetch egress
+ok 13 - rejects aliased expo fetch egress
+  ---
+  duration_ms: 40.6817
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1360.9111
+
+> layerwell@0.1.0 photo04:source-contract:test
+> node --test scripts/photo04/photo04-source-contract.test.mjs
+
+TAP version 13
+# Subtest: repository satisfies aggregate PHOTO-04 AST/control-flow contract
+ok 1 - repository satisfies aggregate PHOTO-04 AST/control-flow contract
+  ---
+  duration_ms: 144.3565
+  type: 'test'
+  ...
+# Subtest: rejects background playback that remains active
+ok 2 - rejects background playback that remains active
+  ---
+  duration_ms: 28.0018
+  type: 'test'
+  ...
+# Subtest: rejects foreground auto-resume
+ok 3 - rejects foreground auto-resume
+  ---
+  duration_ms: 40.5117
+  type: 'test'
+  ...
+# Subtest: rejects playback admission without Reduce Motion protection
+ok 4 - rejects playback admission without Reduce Motion protection
+  ---
+  duration_ms: 18.5835
+  type: 'test'
+  ...
+# Subtest: rejects stale frame readiness starting playback
+ok 5 - rejects stale frame readiness starting playback
+  ---
+  duration_ms: 32.8168
+  type: 'test'
+  ...
+# Subtest: rejects dwell timers that do not require a ready displayed frame
+ok 6 - rejects dwell timers that do not require a ready displayed frame
+  ---
+  duration_ms: 49.8079
+  type: 'test'
+  ...
+# Subtest: rejects animated modal transitions
+ok 7 - rejects animated modal transitions
+  ---
+  duration_ms: 35.7637
+  type: 'test'
+  ...
+# Subtest: rejects removal of accessibility escape
+ok 8 - rejects removal of accessibility escape
+  ---
+  duration_ms: 23.0838
+  type: 'test'
+  ...
+# Subtest: rejects direct network capability
+ok 9 - rejects direct network capability
+  ---
+  duration_ms: 27.1173
+  type: 'test'
+  ...
+# Subtest: rejects time-lapse content mounted outside the timeline lock
+ok 10 - rejects time-lapse content mounted outside the timeline lock
+  ---
+  duration_ms: 23.0008
+  type: 'test'
+  ...
+# Subtest: rejects an early active app-state branch that resumes playback
+ok 11 - rejects an early active app-state branch that resumes playback
+  ---
+  duration_ms: 15.7323
+  type: 'test'
+  ...
+# Subtest: rejects reversing frames after the checked oldest-first sort
+ok 12 - rejects reversing frames after the checked oldest-first sort
+  ---
+  duration_ms: 17.1693
+  type: 'test'
+  ...
+# Subtest: rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+ok 13 - rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+  ---
+  duration_ms: 21.2716
+  type: 'test'
+  ...
+# Subtest: rejects an early Reduce Motion branch that keeps playback active
+ok 14 - rejects an early Reduce Motion branch that keeps playback active
+  ---
+  duration_ms: 13.4617
+  type: 'test'
+  ...
+# Subtest: rejects aliased axios network capability
+ok 15 - rejects aliased axios network capability
+  ---
+  duration_ms: 75.88
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1474.0466
+
+> layerwell@0.1.0 photo05:trend-admission-source-contract:test
+> node --test scripts/photo05/trend-admission-source-contract.test.mjs
+
+TAP version 13
+# Subtest: real PHOTO-05A sources enforce immutable literal-zero Trend admission
+ok 1 - real PHOTO-05A sources enforce immutable literal-zero Trend admission
+  ---
+  duration_ms: 4082.5566
+  type: 'test'
+  ...
+# Subtest: the audit is deterministic, frozen, path-sorted, and inventory-complete
+ok 2 - the audit is deterministic, frozen, path-sorted, and inventory-complete
+  ---
+  duration_ms: 5437.5695
+  type: 'test'
+  ...
+# Subtest: missing checkpoint, runtime, contract, type, and database authority sources fail closed
+ok 3 - missing checkpoint, runtime, contract, type, and database authority sources fail closed
+  ---
+  duration_ms: 3061.9127
+  type: 'test'
+  ...
+# Subtest: capability and surface flags cannot be opened or made environment-driven
+ok 4 - capability and surface flags cannot be opened or made environment-driven
+  ---
+  duration_ms: 5906.9403
+  type: 'test'
+  ...
+# Subtest: every machine admission field is immutable false and extra keys are rejected
+ok 5 - every machine admission field is immutable false and extra keys are rejected
+  ---
+  duration_ms: 7609.0223
+  type: 'test'
+  ...
+# Subtest: simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+ok 6 - simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+  ---
+  duration_ms: 4484.8857
+  type: 'test'
+  ...
+# Subtest: isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+ok 7 - isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+  ---
+  duration_ms: 2774.3465
+  type: 'test'
+  ...
+# Subtest: disabled routes cannot load or invoke a dynamically required positive receipt factory
+ok 8 - disabled routes cannot load or invoke a dynamically required positive receipt factory
+  ---
+  duration_ms: 1153.9194
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+ok 9 - ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+  ---
+  duration_ms: 1114.1617
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+ok 10 - ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+  ---
+  duration_ms: 1622.3042
+  type: 'test'
+  ...
+# Subtest: ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+ok 11 - ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+  ---
+  duration_ms: 2569.6693
+  type: 'test'
+  ...
+# Subtest: photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+ok 12 - photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+  ---
+  duration_ms: 3043.5043
+  type: 'test'
+  ...
+# Subtest: caller, fixture, legacy, E2E, and development bypasses are rejected
+ok 13 - caller, fixture, legacy, E2E, and development bypasses are rejected
+  ---
+  duration_ms: 4097.1192
+  type: 'test'
+  ...
+# Subtest: positive consent grants and enabled consent-choice delegation are rejected
+ok 14 - positive consent grants and enabled consent-choice delegation are rejected
+  ---
+  duration_ms: 2070.9078
+  type: 'test'
+  ...
+# Subtest: direct route analytics and hidden enabled fairness or consent branches are rejected
+ok 15 - direct route analytics and hidden enabled fairness or consent branches are rejected
+  ---
+  duration_ms: 2081.4083
+  type: 'test'
+  ...
+# Subtest: Progress and any future production consumer cannot import disabled Trend runtime code
+ok 16 - Progress and any future production consumer cannot import disabled Trend runtime code
+  ---
+  duration_ms: 1098.407
+  type: 'test'
+  ...
+# Subtest: package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+ok 17 - package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+  ---
+  duration_ms: 1088.5827
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 54185.9911
+
+> layerwell@0.1.0 photo07:source-contract:test
+> node --test scripts/photo07/photo07-source-contract.test.mjs
+
+TAP version 13
+# Subtest: repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+ok 1 - repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+  ---
+  duration_ms: 50.5464
+  type: 'test'
+  ...
+# Subtest: rejects absolute welcome no-egress copy that omits explicit sharing
+ok 2 - rejects absolute welcome no-egress copy that omits explicit sharing
+  ---
+  duration_ms: 18.8405
+  type: 'test'
+  ...
+# Subtest: rejects capture disclosure without device-loss risk
+ok 3 - rejects capture disclosure without device-loss risk
+  ---
+  duration_ms: 15.0816
+  type: 'test'
+  ...
+# Subtest: rejects capture disclosure without the explicit-share exception
+ok 4 - rejects capture disclosure without the explicit-share exception
+  ---
+  duration_ms: 14.3812
+  type: 'test'
+  ...
+# Subtest: rejects enabling Trend while no validated engine ships
+ok 5 - rejects enabling Trend while no validated engine ships
+  ---
+  duration_ms: 11.3465
+  type: 'test'
+  ...
+# Subtest: rejects photo bytes being included in local export
+ok 6 - rejects photo bytes being included in local export
+  ---
+  duration_ms: 9.8465
+  type: 'test'
+  ...
+# Subtest: rejects omission of encrypted photo cleanup
+ok 7 - rejects omission of encrypted photo cleanup
+  ---
+  duration_ms: 10.2687
+  type: 'test'
+  ...
+# Subtest: rejects deletion that hides partial cleanup failure
+ok 8 - rejects deletion that hides partial cleanup failure
+  ---
+  duration_ms: 11.3044
+  type: 'test'
+  ...
+# Subtest: rejects contradictory visible automatic-upload copy appended to welcome
+ok 9 - rejects contradictory visible automatic-upload copy appended to welcome
+  ---
+  duration_ms: 9.1989
+  type: 'test'
+  ...
+# Subtest: rejects visible automatic-backup copy with an intervening also
+ok 10 - rejects visible automatic-backup copy with an intervening also
+  ---
+  duration_ms: 8.9352
+  type: 'test'
+  ...
+# Subtest: rejects a spread overriding the literal disabled Trend flag
+ok 11 - rejects a spread overriding the literal disabled Trend flag
+  ---
+  duration_ms: 9.1401
+  type: 'test'
+  ...
+# Subtest: rejects local cleanup returning immediately at function entry
+ok 12 - rejects local cleanup returning immediately at function entry
+  ---
+  duration_ms: 8.0297
+  type: 'test'
+  ...
+# Subtest: rejects returning immediately before terminal partial-failure propagation
+ok 13 - rejects returning immediately before terminal partial-failure propagation
+  ---
+  duration_ms: 8.2207
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 573.6297
+
+> layerwell@0.1.0 com01:commerce-admission-source-contract:test
+> node --test scripts/com01/commerce-admission-source-contract.test.mjs
+
+TAP version 13
+# Subtest: current COM-01A commerce source snapshot passes
+ok 1 - current COM-01A commerce source snapshot passes
+  ---
+  duration_ms: 1082.2873
+  type: 'test'
+  ...
+# Subtest: missing authority files fail closed
+ok 2 - missing authority files fail closed
+  ---
+  duration_ms: 333.6862
+  type: 'test'
+  ...
+# Subtest: environment and literal capability bypasses are rejected
+ok 3 - environment and literal capability bypasses are rejected
+  ---
+  duration_ms: 1293.0496
+  type: 'test'
+  ...
+# Subtest: machine admission cannot be opened or extended
+ok 4 - machine admission cannot be opened or extended
+  ---
+  duration_ms: 1312.4653
+  type: 'test'
+  ...
+# Subtest: direct commerce routes cannot add consent, analytics, or state reads
+ok 5 - direct commerce routes cannot add consent, analytics, or state reads
+  ---
+  duration_ms: 1298.2036
+  type: 'test'
+  ...
+# Subtest: commerce layout must remain a transparent Slot without refusal or canonicalization
+ok 6 - commerce layout must remain a transparent Slot without refusal or canonicalization
+  ---
+  duration_ms: 2235.8267
+  type: 'test'
+  ...
+# Subtest: shared commerce recovery cannot regain analytics, network, or unguarded telemetry
+ok 7 - shared commerce recovery cannot regain analytics, network, or unguarded telemetry
+  ---
+  duration_ms: 1304.3911
+  type: 'test'
+  ...
+# Subtest: concrete commerce routes cannot redirect or canonicalize direct URLs
+ok 8 - concrete commerce routes cannot redirect or canonicalize direct URLs
+  ---
+  duration_ms: 792.8895
+  type: 'test'
+  ...
+# Subtest: development retailer fixtures and reviewer bypasses are rejected
+ok 9 - development retailer fixtures and reviewer bypasses are rejected
+  ---
+  duration_ms: 1258.7618
+  type: 'test'
+  ...
+# Subtest: catalog reads and click writes are rejected
+ok 10 - catalog reads and click writes are rejected
+  ---
+  duration_ms: 1285.9887
+  type: 'test'
+  ...
+# Subtest: dormant consent, disclosure, and attribution helpers cannot issue a positive result
+ok 11 - dormant consent, disclosure, and attribution helpers cannot issue a positive result
+  ---
+  duration_ms: 2204.4007
+  type: 'test'
+  ...
+# Subtest: dormant presentation modules cannot gain a production consumer
+ok 12 - dormant presentation modules cannot gain a production consumer
+  ---
+  duration_ms: 1249.9976
+  type: 'test'
+  ...
+# Subtest: computed commerce imports and retired environment consumers are rejected globally
+ok 13 - computed commerce imports and retired environment consumers are rejected globally
+  ---
+  duration_ms: 1750.2652
+  type: 'test'
+  ...
+# Subtest: positive consent mutation is rejected while withdrawal cleanup remains required
+ok 14 - positive consent mutation is rejected while withdrawal cleanup remains required
+  ---
+  duration_ms: 1286.2186
+  type: 'test'
+  ...
+# Subtest: Shelf replenishment and You cannot retain commerce entry points
+ok 15 - Shelf replenishment and You cannot retain commerce entry points
+  ---
+  duration_ms: 1251.812
+  type: 'test'
+  ...
+# Subtest: provider credentials cannot activate order polling
+ok 16 - provider credentials cannot activate order polling
+  ---
+  duration_ms: 792.6018
+  type: 'test'
+  ...
+# Subtest: dormant order-attribution core and alternate server consumers stay inventoried
+ok 17 - dormant order-attribution core and alternate server consumers stay inventoried
+  ---
+  duration_ms: 1741.4193
+  type: 'test'
+  ...
+# Subtest: database publication reads and click inserts cannot be restored
+ok 18 - database publication reads and click inserts cannot be restored
+  ---
+  duration_ms: 809.3281
+  type: 'test'
+  ...
+# Subtest: legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary
+ok 19 - legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary
+  ---
+  duration_ms: 2057.8195
+  type: 'test'
+  ...
+# Subtest: stale pollers cannot regain order-attribution publication authority
+ok 20 - stale pollers cannot regain order-attribution publication authority
+  ---
+  duration_ms: 1791.4658
+  type: 'test'
+  ...
+# Subtest: WhereToBuy cannot inspect provenance or mount runtime effects
+ok 21 - WhereToBuy cannot inspect provenance or mount runtime effects
+  ---
+  duration_ms: 991.1524
+  type: 'test'
+  ...
+# Subtest: un-inventoried commerce source is rejected
+ok 22 - un-inventoried commerce source is rejected
+  ---
+  duration_ms: 1013.1199
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29544.9977
+
+> layerwell@0.1.0 pay08:ios-win-back-source-contract:test
+> node --test scripts/pay08/ios-win-back-source-contract.test.mjs
+
+TAP version 13
+# Subtest: current PAY-08 no-offer source contract passes
+ok 1 - current PAY-08 no-offer source contract passes
+  ---
+  duration_ms: 99.3781
+  type: 'test'
+  ...
+# Subtest: missing governed source fails closed
+ok 2 - missing governed source fails closed
+  ---
+  duration_ms: 9.8727
+  type: 'test'
+  ...
+# Subtest: forged positive launch admission is rejected
+ok 3 - forged positive launch admission is rejected
+  ---
+  duration_ms: 47.6962
+  type: 'test'
+  ...
+# Subtest: EAS profile or app-config override cannot enable the closed admission
+ok 4 - EAS profile or app-config override cannot enable the closed admission
+  ---
+  duration_ms: 67.9101
+  type: 'test'
+  ...
+# Subtest: automatic or unconditional StoreKit win-back messages are rejected
+ok 5 - automatic or unconditional StoreKit win-back messages are rejected
+  ---
+  duration_ms: 125.1049
+  type: 'test'
+  ...
+# Subtest: disabled discovery and purchase must return before provider calls
+ok 6 - disabled discovery and purchase must return before provider calls
+  ---
+  duration_ms: 59.4803
+  type: 'test'
+  ...
+# Subtest: manual recovery-message retry cannot lose binding, cache, or foreground reachability
+ok 7 - manual recovery-message retry cannot lose binding, cache, or foreground reachability
+  ---
+  duration_ms: 79.7308
+  type: 'test'
+  ...
+# Subtest: hardcoded discount claims and ungoverned wiring are rejected
+ok 8 - hardcoded discount claims and ungoverned wiring are rejected
+  ---
+  duration_ms: 79.5145
+  type: 'test'
+  ...
+# Subtest: source checkpoint cannot erase the external App Store Connect boundary
+ok 9 - source checkpoint cannot erase the external App Store Connect boundary
+  ---
+  duration_ms: 30.9666
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 976.9587

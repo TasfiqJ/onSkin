@@ -1,0 +1,7 @@
+
+> layerwell@0.1.0 docs:source-packet-audit:strict
+> node scripts/docs/source-packet-audit.mjs --strict
+
+Wrote docs/generated/source-packet-audit.json
+Wrote docs/generated/source-packet-audit.md
+Source packet audit passed.

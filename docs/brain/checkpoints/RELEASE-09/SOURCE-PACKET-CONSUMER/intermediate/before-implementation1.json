@@ -1,0 +1,17 @@
+{
+  "observed_utc": "2026-10-24T21:48:22.062964+00:00",
+  "base": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "base_tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+  "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+  "head_tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+  "intermediate_commits": [],
+  "protected_files": 23015,
+  "protected_flat_digest": "7f96560bd33f78514cb6ab43d95ba29eb1c4d623bdd2f39802a2ff918275821b",
+  "protected_absences": [
+    "apps/professional-web",
+    "apps/client-web",
+    "apps/mobile/src/features/j01"
+  ],
+  "status": "M .github/workflows/quality.yml\nM  docs/generated/source-packet-audit.json\nM  docs/generated/source-packet-audit.md\nA  docs/release/full-app-j01/source-packet-supersession09.v1.json\nM  scripts/docs/source-packet-audit.mjs\nA  scripts/docs/source-packet-supersession09.test.mjs\n M scripts/release/full-app-j01/check.py\n?? docs/release/full-app-j01/consumer-scope09.md\n?? scripts/release/full-app-j01/source_consumer09.test.py",
+  "release": "NO_GO"
+}
