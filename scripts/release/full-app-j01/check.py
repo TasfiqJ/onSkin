@@ -116,6 +116,77 @@ def allowed_path(path):
     return path in SAFE_DOCS or path == 'ONSKIN_BRAIN_HANDOFF.txt' or path.startswith(NEW_PREFIXES)
 
 
+
+RELEASE08 = 'd08347f0011672cd309d835628c094b5e9f4725d'
+RELEASE09_AUTHORITY = 'BRAIN-RELEASE09-SOURCE-PACKET-CI-CANDIDATE-01'
+RELEASE09_EXISTING = {
+    'scripts/docs/source-packet-audit.mjs',
+    'docs/generated/source-packet-audit.json', 'docs/generated/source-packet-audit.md',
+    '.github/workflows/quality.yml', 'scripts/release/full-app-j01/check.py',
+    'scripts/release/full-app-j01/test_contract.py', 'ONSKIN_BRAIN_HANDOFF.txt',
+}
+RELEASE09_NEW = {
+    'docs/release/full-app-j01/source-packet-supersession09.v1.json',
+    'docs/release/full-app-j01/consumer-scope09.md',
+    'scripts/docs/source-packet-supersession09.test.mjs',
+    'scripts/release/full-app-j01/source_consumer09.test.py',
+}
+RELEASE09_PREFIXES = ('docs/brain/contracts/RELEASE-09/',
+    'docs/brain/task-specs/RELEASE-09/',
+    'docs/brain/checkpoints/RELEASE-09/SOURCE-PACKET-CONSUMER/')
+# Exactly one additive step; the rest of quality.yml remains byte-authenticated.
+RELEASE09_STEP = b'\n      - name: Check Release09 candidate full-app J01 governance\n        run: |\n          set -euo pipefail\n          if [ "$(git rev-parse --is-shallow-repository)" = true ]; then\n            git fetch --no-tags --unshallow origin\n          fi\n          python3 -B scripts/release/full-app-j01/check.py\n          python3 -B scripts/release/full-app-j01/test_contract.py\n          python3 -B scripts/release/full-app-j01/source_consumer09.test.py\n          node scripts/docs/source-packet-supersession09.test.mjs\n'
+
+
+def allowed09(path):
+    return (isinstance(path, str) and not re.search(r'(^/|\\|:|(^|/)\.\.?(/|$))', path)
+            and (path in RELEASE09_EXISTING or path in RELEASE09_NEW
+                 or path.startswith(RELEASE09_PREFIXES)))
+
+
+def validate09_diff(raw, read_after):
+    """Parse actual --raw -z Git deltas: no rename, deletion, symlink or broad prefix grant."""
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R09_DIFF_SHAPE')
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode().split()
+        path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5 and metadata[0].startswith(':'), 'R09_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed09(path) and status in ('A', 'M'), 'R09_SCOPE:'+path)
+        require(newmode == '100644' and oldmode in (':000000', ':100644'), 'R09_MODE:'+path)
+        require((path in RELEASE09_EXISTING) == (oldmode != ':000000'), 'R09_CREATE_EDIT:'+path)
+        if path == '.github/workflows/quality.yml':
+            before = git('show', RELEASE08+':'+path)
+            expected = before.replace(b'\n  expo-export:\n', RELEASE09_STEP+b'\n  expo-export:\n')
+            require(read_after(path) == expected, 'R09_WORKFLOW_EXACT_ADDITION')
+
+
+def source09_guard():
+    require(git('rev-parse', RELEASE08+'^{tree}').decode().strip() ==
+            '0998881bc543840395dca375769ea1b7c9a8d4c7', 'R09_BASE_TREE')
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE08, 'HEAD'],
+                   cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Authenticate every intermediate committed state against the immutable R08
+    # endpoint, then the index/working tree and every untracked path separately.
+    for commit in git('rev-list', '--reverse', RELEASE08+'..HEAD').decode().splitlines():
+        raw = git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE08, commit)
+        validate09_diff(raw, lambda path: git('show', commit+':'+path))
+    validate09_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE08),
+                    lambda path: regular(ROOT/path))
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed09(path) and path not in RELEASE09_EXISTING, 'R09_UNTRACKED_SCOPE:'+path)
+            regular(ROOT/path)
+    for path in SAFE_DOCS:
+        require(regular(ROOT/path) == git('show', RELEASE08+':'+path), 'R09_NOTICE_IMMUTABLE:'+path)
+    # Invoke the real source producer in read-only/current mode. This also binds
+    # the fixed manifest, every original packet byte and exact additive inserts.
+    result = subprocess.run(['node', 'scripts/docs/source-packet-audit.mjs', '--strict', '--check'],
+                            cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+    require(result.returncode == 0, 'R09_SOURCE_PACKET:'+result.stdout+result.stderr)
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -125,17 +196,18 @@ def source_guard():
         index[path] = (mode, kind, blob)
     require(git('rev-parse', BASE+'^{tree}').decode().strip() ==
             'f623b5bbd220fd6d9d10f967400081489a5dd7e0', 'BASE_TREE')
-    intervals = [BASE] + git('rev-list', '--reverse', BASE+'..HEAD').decode().splitlines()
+    intervals = [BASE] + git('rev-list', '--reverse', BASE+'..'+RELEASE08).decode().splitlines()
     for commit in intervals:
         for line in git('diff-tree', '--root', '--no-commit-id', '--name-status', '-r',
                         BASE, commit).decode().splitlines():
             status, path = line.split('\t', 1)
             require(allowed_path(path) and not status.startswith(('D', 'R', 'C')),
                     'COMMIT_SCOPE:'+commit+':'+path)
+    source09_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)

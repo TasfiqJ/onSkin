@@ -294,6 +294,17 @@ jobs:
       - name: Check source packet
         run: npm run docs:source-packet-audit:check
 
+      - name: Check Release09 candidate full-app J01 governance
+        run: |
+          set -euo pipefail
+          if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+            git fetch --no-tags --unshallow origin
+          fi
+          python3 -B scripts/release/full-app-j01/check.py
+          python3 -B scripts/release/full-app-j01/test_contract.py
+          python3 -B scripts/release/full-app-j01/source_consumer09.test.py
+          node scripts/docs/source-packet-supersession09.test.mjs
+
   expo-export:
     name: Expo export (${{ matrix.platform }})
     needs: checks
