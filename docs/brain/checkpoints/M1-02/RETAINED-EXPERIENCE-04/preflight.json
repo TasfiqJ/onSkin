@@ -1,0 +1,100 @@
+{
+  "observed_utc": "2026-10-24T03:39:44.095941+00:00",
+  "authorization": "M1X-RETAINED-EXPERIENCE04-CLIENT-CANDIDATE-01",
+  "packet": {
+    "external_manifest_sha256": "eace2a35b78eea85798a3ff86b4e42fefe25656518779abcb7cb9bbf8b949b76",
+    "verification": "PASS:9 anchored members",
+    "command": "python -B verify_packet.py --expected-manifest-sha256 eace2a35b78eea85798a3ff86b4e42fefe25656518779abcb7cb9bbf8b949b76"
+  },
+  "anchor": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+  "anchor_tree": "bb42d6a63d77967d32a3f2aedbe7fdfdca4c9f29",
+  "branch": "stage/m1-retained-resilience",
+  "remotes": "d9912f4c8b30358593569c5b9b4e84773c6f463e\trefs/heads/main\ncd2bd51997f283c0b446bf2124f427f482550fa8\trefs/heads/stage/m1-gate-recovery\na84eb53c7a3217862bb18ec795c5113f8e2a10f2\trefs/heads/stage/m1-retained-resilience",
+  "worktrees": "worktree C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience\nHEAD 941357ebd246a8c08f340ec184be59513a82f096\nbranch refs/heads/stage/m1-retained-resilience\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-journeys02-baseline-audit\nHEAD 21ceb8c9562070f0af067f5ce803265bb527cdf0\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-negative-baseline-audit\nHEAD d9912f4c8b30358593569c5b9b4e84773c6f463e\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-retained03-negative-audit\nHEAD 704d3df5e01cd55023d9c08518ce2df8512e72ca\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-source-worktree-audit\nHEAD 4d8ef8a029375512ddb29df402f4b77ca557be39\ndetached\n\nworktree C:/Users/jasim/Desktop/WeddingCards/work/brain-pr11-worklist03-negative-audit\nHEAD 4d8ef8a029375512ddb29df402f4b77ca557be39\ndetached",
+  "versions": {
+    "node": "v22.21.0",
+    "npm": "11.20.0",
+    "python": "Python 3.9.13"
+  },
+  "protected": [
+    {
+      "path": ".github",
+      "object": "9148470436b9d21580fdf239fa1f43d4ac1a9758"
+    },
+    {
+      "path": "scripts/phase4",
+      "object": "b68b15afd42318e31a7edd8fcb868494f02803ea"
+    },
+    {
+      "path": "scripts/phase9",
+      "object": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae"
+    },
+    {
+      "path": "scripts/security_readiness",
+      "object": "89d918679e7877b3e2f652add3386f26add40d05"
+    },
+    {
+      "path": "supabase",
+      "object": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662"
+    },
+    {
+      "path": "docs/brain/state",
+      "object": "713a0d090230d8831051d8a0bb97d3bdb14a523b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth",
+      "object": "cc3c8a72cd49818e1a6166240970fa783a5febdd"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent",
+      "object": "df3d819603ea233bc1af41b064d9e0f99ab7cb63"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage",
+      "object": "31811c7d921536a50dae1a8569f8f7b059e9dbe3"
+    },
+    {
+      "path": "apps/mobile/src/lib/offline",
+      "object": "22134ba450bf8b976d9042bf71a8fb00483561c6"
+    },
+    {
+      "path": "package-lock.json",
+      "object": "e53de80bf46db8f7a7fcd97781971911e2d328bd"
+    },
+    {
+      "path": "package.json",
+      "object": "7b0522688c74c78328aa587cb9f9a07b65965061"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "object": "6217bd03730c530445861cc3e1e438a92f401b83"
+    },
+    {
+      "path": "apps/mobile/app.base.json",
+      "object": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/permission.ts",
+      "object": "60576f1d7ef80d3378ffdeb883e03edc7beeaeb3"
+    }
+  ],
+  "local_context": "Existing stage checkout was clean at intake. Unrelated dirty founder checkout preserved. No stage competing process observed by Windows process scan. WSL alternatives failed to start; existing Windows stage reused.",
+  "baseline_ci": {
+    "sha": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+    "quality": {
+      "run": 40054524073,
+      "status": "SUCCESS",
+      "canonical_database_job": 120754428519,
+      "canonical_status": "SUCCESS"
+    },
+    "ios": {
+      "run": 40054524089,
+      "status": "SUCCESS_SOURCE_ONLY"
+    },
+    "security": {
+      "run": 40054524092,
+      "status": "FAILURE"
+    }
+  },
+  "spend_usd": 0
+}

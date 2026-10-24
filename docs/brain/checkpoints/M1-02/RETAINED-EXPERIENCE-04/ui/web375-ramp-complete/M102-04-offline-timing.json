@@ -1,0 +1,69 @@
+{
+  "bodyText": "< Timing Preferences saved on this browser. Native reminder scheduling is unavailable here. Morning 8:00 AM Evening 9:30 PM QUIET HOURS Routine quiet hours 10:00 PM → 7:00 AM Routine and weekly photo reminders scheduled inside this window move to its end. Event-triggered suggestions are skipped. Trial billing reminders follow the date shown at checkout. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On Layerwell Your evening routine’s ready. Always generic on the lock screen",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 20,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Morning reminder time, 8:00 AM",
+      "role": "button",
+      "selected": false,
+      "width": 75.19,
+      "x": 261.81,
+      "y": 118
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Evening reminder time, 9:30 PM",
+      "role": "button",
+      "selected": false,
+      "width": 74.03,
+      "x": 262.97,
+      "y": 195
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Quiet hours start, 10:00 PM",
+      "role": "button",
+      "selected": false,
+      "width": 81.88,
+      "x": 38,
+      "y": 353
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Quiet hours end, 7:00 AM",
+      "role": "button",
+      "selected": false,
+      "width": 75.19,
+      "x": 153.58,
+      "y": 353
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8368/settings/timing",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

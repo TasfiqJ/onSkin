@@ -1,0 +1,1175 @@
+{
+  "schema_version": 1,
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "evidence_class": "CODEX_REPRODUCED_SOURCE_AND_SYNTHETIC_WEB",
+  "authorization": "M1X-RETAINED-EXPERIENCE04-CLIENT-CANDIDATE-01",
+  "created_utc": "2026-10-24T03:59:10.793663+00:00",
+  "branch": "stage/m1-retained-resilience",
+  "pr": 11,
+  "anchor": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+  "source_commit": "6e8084484851b1bb13239f871f37c3acac9530f3",
+  "source_tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+  "source_paths": 13,
+  "production_paths": 5,
+  "test_paths": 5,
+  "flow_paths": 1,
+  "generated_paths": 2,
+  "delivery_commit": null,
+  "delivery_tree": null,
+  "delivery_note": "Actual evidence-tail identity and its CI are read after push and reported in PR11/final response; no future self-hash.",
+  "validation": {
+    "new_regressions": 18,
+    "original_failure_vectors": 17,
+    "original_safeguards": 1,
+    "retained_passed": 2047,
+    "retained_files": 170,
+    "root_passed": 6119,
+    "mobile_passed": 6095,
+    "console_passed": 24,
+    "root_files": 479,
+    "forced_root_exit": 0,
+    "forced_typecheck_exit": 0,
+    "forced_lint_exit": 0,
+    "cached_tasks": 0,
+    "worklist_exits": [
+      0,
+      1,
+      0
+    ],
+    "protected_identities": 22,
+    "web375": "PASS",
+    "web390": "PASS",
+    "cross_owner390": "PASS",
+    "screenshots": 28,
+    "changed_geometry_snapshots": 20,
+    "visible_control_issues": 0,
+    "horizontal_overflow": 0
+  },
+  "versions": {
+    "node": "v22.21.0",
+    "npm": "11.20.0",
+    "python": "Python 3.9.13"
+  },
+  "intake_ci": {
+    "sha": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+    "quality": {
+      "run": 40054524073,
+      "status": "SUCCESS",
+      "canonical_database_job": 120754428519,
+      "canonical_status": "SUCCESS"
+    },
+    "ios": {
+      "run": 40054524089,
+      "status": "SUCCESS_SOURCE_ONLY"
+    },
+    "security": {
+      "run": 40054524092,
+      "status": "FAILURE"
+    }
+  },
+  "final_head_ci": "Separate actual post-push readback; no borrowed status.",
+  "source_scope": "source-scope.json",
+  "source_history": "source-commits.json",
+  "receipts": [
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/authored-source-diff.json",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+        "6e8084484851b1bb13239f871f37c3acac9530f3"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:59:05.604562+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": " M ONSKIN_BRAIN_HANDOFF.txt\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 0.281,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": " M ONSKIN_BRAIN_HANDOFF.txt\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/clean-generator.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:40:54.362703+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+        "tree": "108cc25d7c6ec00ec7a166b9445b6d1cfc7c74a2",
+        "dirty": ""
+      },
+      "seconds": 0.89,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+      "dirty": " M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/clean-source-root-tests.json",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:45:45.188415+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": ""
+      },
+      "seconds": 40.468,
+      "sha256": "566cc4966581e64f141327fc16cbae7700ca637445f19d27176da22f61bf8a4d",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/complete-clean-lint.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:49:16.086194+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": ""
+      },
+      "seconds": 66.578,
+      "sha256": "cf02a52d49a1edaca6bd3d7e35b6f8656843bb755caeda63debd2cdf572db7fd",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/complete-clean-root-tests.json",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:49:16.050624+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": ""
+      },
+      "seconds": 40.422,
+      "sha256": "3a6aaa49b67c86bc1a5239b1dc2247030b98778e8b314de53970433820a1678c",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/complete-clean-typecheck.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:49:16.050624+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": ""
+      },
+      "seconds": 36.031,
+      "sha256": "dcd65a19feb79c1d9ba5b5c4845e630fee2017d841e04fd111883f8e3086cfa9",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/create-independent-clean-checkout.json",
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/retained04-clean-check",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:40:19.709814+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+        "tree": "108cc25d7c6ec00ec7a166b9445b6d1cfc7c74a2",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 12.063,
+      "sha256": "30b84dc3055285692116f60a5440defb10e0dcdf7043fcfd873ef6fffcd49f59",
+      "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-all-retained.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/notifications",
+        "src/features/photos",
+        "src/features/onboarding"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:50:36.350138+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 36.562,
+      "sha256": "3cc3c480f152f58f997f04aa1cf74f2a35ec7d6cdbbcc7e1b8c69a97eebb4891",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-clean-generator.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:45:24.213758+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "5b5ad9e52dde075e52e914133a0f15510abc9926",
+        "tree": "1e6642d18e0f56f3400b9ef02720e4a26951c531",
+        "dirty": ""
+      },
+      "seconds": 0.688,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "head": "5b5ad9e52dde075e52e914133a0f15510abc9926",
+      "dirty": " M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-generated-after-ramp.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:48:46.177922+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "7d88e61eae0d59f4ff6ecfbd43334c99c0229958",
+        "tree": "e383633c100dfcf2ee974509e07e7f0efd6c507b",
+        "dirty": ""
+      },
+      "seconds": 0.656,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "head": "7d88e61eae0d59f4ff6ecfbd43334c99c0229958",
+      "dirty": " M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-retained-families.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/notifications",
+        "src/features/photos",
+        "src/features/onboarding"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:45:45.195919+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 37.343,
+      "sha256": "e390f4db72954067d50c43490596f94b664940eea937734d2985e78e7b496f3f",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-source-lint.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:39:17.475962+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "941357ebd246a8c08f340ec184be59513a82f096",
+        "tree": "dfc852e60310b9448520e8380ce96878be2693c3",
+        "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 50.578,
+      "sha256": "75ee6e832a15c8a5bc63ff49025bd848b0eb57c3634667fa918c1e75406294ba",
+      "head": "941357ebd246a8c08f340ec184be59513a82f096",
+      "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-source-typecheck.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:39:17.486975+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "941357ebd246a8c08f340ec184be59513a82f096",
+        "tree": "dfc852e60310b9448520e8380ce96878be2693c3",
+        "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 21.765,
+      "sha256": "caa8f9725eb8948782e1b6a87f3a0a0244ca711b9b1e56aca5c2574865cf3d87",
+      "head": "941357ebd246a8c08f340ec184be59513a82f096",
+      "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-worklist-altered.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:49:13.815810+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": " M apps/mobile/src/features/shelf/useShelf.ts\n"
+      },
+      "seconds": 0.703,
+      "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": " M apps/mobile/src/features/shelf/useShelf.ts\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-worklist-positive.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:49:12.888867+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": ""
+      },
+      "seconds": 0.703,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-worklist-restored.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:49:14.718049+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": ""
+      },
+      "seconds": 0.641,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/full-root-forced.json",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:43:06.178635+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+        "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 41.156,
+      "sha256": "f49588ef3a647daaf47dc6eb88249d49d23f346cc1b9605bdddf4b743184e948",
+      "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-original-hooks.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:43:06.182139+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+        "tree": "bb42d6a63d77967d32a3f2aedbe7fdfdca4c9f29",
+        "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+      },
+      "seconds": 3.219,
+      "sha256": "e900f27b2b09b5f9f164d90aa4d97dc7333d5bfe4a441f5fed3258586894eba5",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-original-profile.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/scheduler/profile.test.ts",
+        "-t",
+        "retained04"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:43:31.305094+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+        "tree": "bb42d6a63d77967d32a3f2aedbe7fdfdca4c9f29",
+        "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+      },
+      "seconds": 6.188,
+      "sha256": "26d6e7a6ae9c7802008cd357ff9a54827b4bb13653b43da733bf54b33ebc58c5",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-original-ramp.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/useRamp.test.ts",
+        "-t",
+        "retained04"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:48:43.671851+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n"
+      },
+      "seconds": 1.797,
+      "sha256": "75291391e7969e6e6c6bce84c5a6d96f907af4a1557daf2e3a83b510a6dd5344",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-original-today.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/todayPersistence.t1.test.ts",
+        "-t",
+        "retained04"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:43:31.461959+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+        "tree": "bb42d6a63d77967d32a3f2aedbe7fdfdca4c9f29",
+        "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+      },
+      "seconds": 6.672,
+      "sha256": "2cb6eaf18dc6096c865c5b63b802463df647e51d950aa6ad21b2935405b9525d",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-worklist-altered-reference.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:45:43.035298+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": " M apps/mobile/src/features/shelf/useShelf.ts\n"
+      },
+      "seconds": 0.672,
+      "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": " M apps/mobile/src/features/shelf/useShelf.ts\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-worklist-positive.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:45:42.197532+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": ""
+      },
+      "seconds": 0.625,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/independent-worklist-restored.json",
+      "command": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+      "started_utc": "2026-10-24T03:45:43.896800+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": ""
+      },
+      "seconds": 0.64,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": ""
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/lint-forced-final.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:35:59.152153+00:00",
+      "exit": 0,
+      "seconds": 47.125,
+      "sha256": "7245dff5abdae1c0bb89105a24d4ed794a7aa7f19ee885f604a8255a94361f1a",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/routine/useProgress.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/lint-forced.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:34:12.935076+00:00",
+      "exit": 1,
+      "seconds": 52.656,
+      "sha256": "d39f721f8adaeb1b0bdd01b5d513c99b97f1a87de521f4e57da31d67a4aec5ab",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/routine/useProgress.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/measured-lint.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:43:06.219206+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+        "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 62.359,
+      "sha256": "827e85a756b98b7f455e71d993d6e372d81daaa3555134057f7650c17fa38f96",
+      "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/measured-typecheck.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:43:06.197674+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+        "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 35.703,
+      "sha256": "8fc9e17fede796723fd31f7ab0508abfc3734b63bb75e08566527ca450c21db2",
+      "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/profile-green.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/scheduler/profile.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:42:03.716241+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+        "tree": "108cc25d7c6ec00ec7a166b9445b6d1cfc7c74a2",
+        "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/scheduler/profile.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 1.609,
+      "sha256": "dab8615f9f378d1250e6fe7db0a073da434fc10117af4ce5de2cf20ce2b99878",
+      "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+      "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/scheduler/profile.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/profile-original-red.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/scheduler/profile.test.ts",
+        "-t",
+        "retained04"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:41:53.531885+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+        "tree": "108cc25d7c6ec00ec7a166b9445b6d1cfc7c74a2",
+        "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 1.688,
+      "sha256": "6fdb109ae4167c4a5ef2138924f078c9071d6bfe8a96225980c5b18d6db21cb6",
+      "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+      "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ramp-green.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/useRamp.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:48:05.998031+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n M apps/mobile/src/features/routine/useRamp.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 5.938,
+      "sha256": "ee796396f03171834a554b8b3dbc5e2a68eeed6965807222ff7a215a3f8b4dfa",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n M apps/mobile/src/features/routine/useRamp.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ramp-original-red.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/useRamp.test.ts",
+        "-t",
+        "retained04"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:47:50.274317+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+        "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+        "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 1.797,
+      "sha256": "f4d66c68939cce43785a0b25feaa1a4103c65c619edcac21c07208fcc67df0a2",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/retained-families.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/shelf",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/notifications",
+        "src/features/photos",
+        "src/features/onboarding"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:34:12.920553+00:00",
+      "exit": 0,
+      "seconds": 38.0,
+      "sha256": "c3f2e125827f75d06d4f780963e1aeb287a29f0d0294bfb6fd7857edd88e7506",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/routine/useProgress.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/retained04-final-overlay-original.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:32:43.797562+00:00",
+      "exit": 1,
+      "seconds": 1.563,
+      "sha256": "adaa340066c91db242effc8e883a78db1e65ae59eeae612b9bc3d7c1db8237ec",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": "?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/retained04-focused-final.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:36:44.382186+00:00",
+      "exit": 0,
+      "seconds": 1.75,
+      "sha256": "57d7923f08bbf76ae27383687abb8b3b450e2692b2cb3489b9c79c46e8a57b97",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/routine/useProgress.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/retained04-green.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:33:01.703546+00:00",
+      "exit": 0,
+      "seconds": 1.578,
+      "sha256": "d6774c380a2313dcb5471a3dcf6e54b8617a20ac6bc95b26ef73a8069535a640",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/routine/useProgress.ts\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/retained04-original-red-final.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:32:22.421743+00:00",
+      "exit": 1,
+      "seconds": 1.516,
+      "sha256": "b900e98b4eff9dcb560a40ac286ae2fcbe8fe55ef79653774929f3e310e9047f",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": "?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/retained04-original-red.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:31:56.797255+00:00",
+      "exit": 1,
+      "seconds": 1.547,
+      "sha256": "31f297ff05b3b3c2409e2434718f630866e2a09dabe394df2ecd1863c70e72ba",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": "?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/today-contract-corrected.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/todayRoute.test.ts",
+        "src/features/today/todayPersistence.t1.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:44:43.694068+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+        "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+        "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 20.797,
+      "sha256": "f6c7e7dcac00dff7a928262349e26c817541de2c1e00eff2f54e51ee98cf0af4",
+      "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+      "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/today-recovery-green.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/todayPersistence.t1.test.ts",
+        "src/features/routine/offlineProgress.retained04.test.ts",
+        "src/features/notifications/authorizationSnapshot.retained04.test.ts"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:38:15.954718+00:00",
+      "exit": 0,
+      "seconds": 20.61,
+      "sha256": "eb1790d9702b741e308d8e50ec89d1d4cc0dc6167261d3976a88357e5d26c4a0",
+      "head": "941357ebd246a8c08f340ec184be59513a82f096",
+      "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/today-recovery-original-red.json",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today/todayPersistence.t1.test.ts",
+        "-t",
+        "retained04"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:38:03.306824+00:00",
+      "exit": 1,
+      "seconds": 1.828,
+      "sha256": "7dca265e4c669c2f70834f107981e72fffd2d4891a7b24e86eb15ea9833fc380",
+      "head": "941357ebd246a8c08f340ec184be59513a82f096",
+      "dirty": " M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/typecheck-forced.json",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:34:12.920553+00:00",
+      "exit": 0,
+      "seconds": 26.625,
+      "sha256": "7d8f9a95545d11d9aaa3630122369562710723a558c441ceba434b349271f5af",
+      "head": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+      "dirty": " M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/routine/useProgress.ts\n M docs/USER_FLOW_TREE.md\n?? apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts\n?? apps/mobile/src/features/routine/offlineProgress.retained04.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-cross-owner390.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop",
+        "--cross-owner"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:50:15.145330+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 93.078,
+      "sha256": "e889d741e56555ff4c5e5406c03c1392b7b71d6fb95c2b56a2948b11e689a3ad",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": " M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-web375-complete.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:45:02.020093+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+        "tree": "5c0c32bf10311d9ded207ecdc24c5fa442b20e0e",
+        "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 102.797,
+      "sha256": "04736a93ae20a10095298b2b167fc17a0ba9bc40fab2841ca7bed3eaf94c1660",
+      "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-web375-final.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:39:07.330360+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "941357ebd246a8c08f340ec184be59513a82f096",
+        "tree": "dfc852e60310b9448520e8380ce96878be2693c3",
+        "dirty": " M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/features/today/todayPersistence.t1.test.ts\n M docs/USER_FLOW_TREE.md\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 99.5,
+      "sha256": "04736a93ae20a10095298b2b167fc17a0ba9bc40fab2841ca7bed3eaf94c1660",
+      "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-web375-profile-fix.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:42:05.866540+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
+        "tree": "108cc25d7c6ec00ec7a166b9445b6d1cfc7c74a2",
+        "dirty": " M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/scheduler/profile.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 125.14,
+      "sha256": "e2a0d505b6a7bee66d6ad22a7548070aebef2a8db52d4272fff9f74f8ed5b04f",
+      "head": "d6d5a6785fd5ad26e9db631133c88bf91279ef92",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-web375-ramp-complete.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:48:12.708136+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "7d88e61eae0d59f4ff6ecfbd43334c99c0229958",
+        "tree": "e383633c100dfcf2ee974509e07e7f0efd6c507b",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 91.157,
+      "sha256": "c8321431555842e0349b009c92d2d9617645116f4927db0991fc262f553aab94",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-web375.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:35:32.803693+00:00",
+      "exit": 1,
+      "seconds": 99.141,
+      "sha256": "38660ea0d574903a85a723a4f9819996cb09f9adcef76cbaa6189301b456535d",
+      "head": "941357ebd246a8c08f340ec184be59513a82f096",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/ui-web390-complete.json",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/ui-wrapper.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T03:50:15.144330+00:00",
+      "exit": 0,
+      "source_start": {
+        "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+        "tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+        "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+      },
+      "seconds": 86.047,
+      "sha256": "df208ffdf2a8946659248a3b02c4fabb67eeb120308f67e2307a98bb912f1901",
+      "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+      "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    }
+  ],
+  "limitations": [
+    "Native/device photo filesystem and camera NOT_RUN",
+    "OS permission/delivery NOT_RUN",
+    "Installed offline cold start NOT_RUN",
+    "Paid-positive/provider/hosted replay NOT_RUN",
+    "Clinical/native/signing/TestFlight/release NOT_AUTHORIZED"
+  ],
+  "gates": {
+    "original_g97": "FAIL/NO_GO",
+    "m103": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "m201": "NOT_AUTHORIZED",
+    "main_promotion": false,
+    "proposal_expiry_utc": "2026-10-21T00:00:00Z"
+  },
+  "spend_usd": 0
+}

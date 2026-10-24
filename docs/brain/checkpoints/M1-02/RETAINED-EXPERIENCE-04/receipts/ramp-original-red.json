@@ -1,0 +1,25 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/routine/useRamp.test.ts",
+    "-t",
+    "retained04"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:47:50.274317+00:00",
+  "exit": 1,
+  "source_start": {
+    "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+    "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+    "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+  },
+  "seconds": 1.797,
+  "sha256": "f4d66c68939cce43785a0b25feaa1a4103c65c619edcac21c07208fcc67df0a2",
+  "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+  "dirty": " M apps/mobile/src/features/routine/useRamp.test.ts\n?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

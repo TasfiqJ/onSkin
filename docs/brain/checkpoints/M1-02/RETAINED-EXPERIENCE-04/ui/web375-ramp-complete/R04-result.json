@@ -1,0 +1,12 @@
+{
+  "verdict": "pass",
+  "offlineProgress": true,
+  "localReadFailureHidesTotals": true,
+  "keyboardRetry": true,
+  "reload": true,
+  "permissionSnapshots": true,
+  "staleGrantWithheld": true,
+  "controlledBridgeOnly": true,
+  "nativeDelivery": "NOT_RUN",
+  "installedOfflineColdStart": "NOT_RUN"
+}

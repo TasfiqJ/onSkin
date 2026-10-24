@@ -1,0 +1,69 @@
+{
+  "bodyText": "Loading your routine… Confirming your saved routine, products and profile. Back Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "selected": false,
+      "width": 327,
+      "x": 24,
+      "y": 315
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": true,
+      "width": 81.55,
+      "x": 24.85,
+      "y": 583.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 106.25,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 187.5,
+      "y": 584
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 81.25,
+      "x": 268.75,
+      "y": 584
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8365/today?routine=PM",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  }
+}

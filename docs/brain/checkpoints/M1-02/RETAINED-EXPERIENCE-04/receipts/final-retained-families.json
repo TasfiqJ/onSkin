@@ -1,0 +1,30 @@
+{
+  "command": [
+    "npm.cmd",
+    "--workspace",
+    "apps/mobile",
+    "run",
+    "test",
+    "--",
+    "src/features/shelf",
+    "src/features/today",
+    "src/features/routine",
+    "src/features/scheduler",
+    "src/features/streak",
+    "src/features/notifications",
+    "src/features/photos",
+    "src/features/onboarding"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T03:45:45.195919+00:00",
+  "exit": 0,
+  "source_start": {
+    "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+    "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+    "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+  },
+  "seconds": 37.343,
+  "sha256": "e390f4db72954067d50c43490596f94b664940eea937734d2985e78e7b496f3f",
+  "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+  "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+}

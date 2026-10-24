@@ -1,0 +1,13 @@
+{
+  "command": [
+    "git",
+    "worktree",
+    "remove",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check"
+  ],
+  "exit": 0,
+  "output": "",
+  "target_validated": true,
+  "external_dependency_junctions_detached_without_traversal": true,
+  "only_task_owned_disposable_checkout_removed": true
+}

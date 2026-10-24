@@ -1,0 +1,20 @@
+{
+  "command": [
+    "node",
+    "scripts/phase4/build-source-worklist.mjs",
+    "--strict",
+    "--check"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\retained04-clean-check",
+  "started_utc": "2026-10-24T03:45:43.035298+00:00",
+  "exit": 1,
+  "source_start": {
+    "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+    "tree": "7d86353dd8efab965e726d0fb9a3bdf39d87e753",
+    "dirty": " M apps/mobile/src/features/shelf/useShelf.ts\n"
+  },
+  "seconds": 0.672,
+  "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+  "head": "cd33cd9838629041c0b2c29766c295d761f6d7ec",
+  "dirty": " M apps/mobile/src/features/shelf/useShelf.ts\n"
+}

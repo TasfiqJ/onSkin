@@ -1,0 +1,12 @@
+{
+  "head": "6e8084484851b1bb13239f871f37c3acac9530f3",
+  "exits": [
+    0,
+    1,
+    0
+  ],
+  "input": "apps/mobile/src/features/shelf/useShelf.ts",
+  "input_sha256": "89267a8478de7ee0dfc8f45f48d455b792e4621174df94c48108779660f423c8",
+  "restored": true,
+  "clean": true
+}

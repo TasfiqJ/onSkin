@@ -1,0 +1,245 @@
+{
+  "anchor": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
+  "source_commit": "6e8084484851b1bb13239f871f37c3acac9530f3",
+  "source_tree": "a607875a06753abd29d2ad8af23cf57ec86c87ac",
+  "entries": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/today.tsx",
+      "blob": "4f4a96a14467811b7e466ebeeebd2a652045585d",
+      "sha256": "531665ee3bb7908ec5547b8727aa7083cbfcdfc2a7dd96bcf02b53c5b5184362",
+      "bytes": 53177,
+      "before_blob": "c9a19c068707e091fba1a4e895cb5fcbb0526707",
+      "before_sha256": "545364508f77e29677b171829355c8f3fc38eec3864b5ab49216e99d48b71435",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/authorizationSnapshot.retained04.test.ts",
+      "blob": "4e2c380857eea8c91949034db5e4f408ae84b25c",
+      "sha256": "b6e6fc6348cf5ffbb55b89d158c3917316ecc6383fac6861054a1609fe3b3332",
+      "bytes": 3894,
+      "before_blob": null,
+      "before_sha256": null,
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/useNotifications.ts",
+      "blob": "8f1ae49d87cea66f3aec3141d571a6b5a33037a6",
+      "sha256": "6eadc56df031ee9b6f329a34c8c2376d02ac6712c2deb9ec69ce298bdeeb838e",
+      "bytes": 4480,
+      "before_blob": "4b362dd042c56b4aba8452e6e4eb6e0eda70e127",
+      "before_sha256": "2b5207092d25bc74617f3d12a29e3e9437cec0bcb395a0eb1e50b2bca9353bf1",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/routine/offlineProgress.retained04.test.ts",
+      "blob": "a31bce6b5b1cb84ba2e4e1114c1a335343f70983",
+      "sha256": "ae6b2a7cfea1ef0c394a8c9e95f55bae5bcdc73071c1d67ce995b5a8abeba81e",
+      "bytes": 6232,
+      "before_blob": null,
+      "before_sha256": null,
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/routine/useProgress.ts",
+      "blob": "2ee42ada816c1fcac36d2d2b39976570d5a25235",
+      "sha256": "d9642c43a0a9c3c2825f6cfa441dd745559ebd6f3c5bedbcee7e638262a332af",
+      "bytes": 8314,
+      "before_blob": "2e2eb5ca67f6e6ba867f5de396cee9c3f52091e0",
+      "before_sha256": "26e3041c08af64449755ca6c4e6144474e74a3c18f3b2eed2a68bae1df9ca7de",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/routine/useRamp.test.ts",
+      "blob": "645c1d7a02f8cd08f1fa7c7dc2ac4297a6740f3b",
+      "sha256": "a172b14013e37efc185b44381b68c5352bf2bff1be2ab688e823e9199f16b07f",
+      "bytes": 17299,
+      "before_blob": "2dedcde9915a1a7ffe597666228b7ab405c0e216",
+      "before_sha256": "74cbc0f48c51e0196f040c889458e66506f26cf6a49501199d63e7e7124a684b",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/routine/useRamp.ts",
+      "blob": "1f405fd14b1309d2b3ff70527d56d2d040d01664",
+      "sha256": "19a79a0423965725ccffa070852cbce1d366c7a69a8b4b06f3d1f97797e62306",
+      "bytes": 5571,
+      "before_blob": "da013f2b91d247a09faf5dab8aa6b1df31a8b7fd",
+      "before_sha256": "0a4a18c4b998ae169678fb3fa1210cd29ddd3f31d226fab10f8ce7d6ae333491",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/scheduler/profile.test.ts",
+      "blob": "ddd70fae818eb08a94d0127a0c42bf386620340a",
+      "sha256": "c3f579f353cad0a54dd894b00133a284c74dca1492dcd39b5ed980bca5a39741",
+      "bytes": 13093,
+      "before_blob": "135434a22198824990872beade9698c5a83f116f",
+      "before_sha256": "ca69bfb059f6d8d608574c05c49b88097afa69895bc6963c4823e766a1549985",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/scheduler/profile.ts",
+      "blob": "4920716b53f940cebbce986bcee02ec910e4d76c",
+      "sha256": "a139d4dc26c6675e719e9cb915b2baa428a97ffcd278f199bcbf050d7491fd64",
+      "bytes": 6756,
+      "before_blob": "b08e12b4ae99bc90c9b15c8f9f6d9c646b6e1087",
+      "before_sha256": "b973abeefc9753eac218965d0e3bdbc437faab7191b3cfc141c5b979a116f63a",
+      "working_matches": true
+    },
+    {
+      "path": "apps/mobile/src/features/today/todayPersistence.t1.test.ts",
+      "blob": "fb8f07f53d1ad513401ccd8f4e2dec3bd1f73daa",
+      "sha256": "929fc2313d3b31a1a3f0cd1fe0748aed999b6dc7d99a3fe4d286d809f82e494a",
+      "bytes": 66218,
+      "before_blob": "103289113513fc197a69e3f02967d485a3daae6c",
+      "before_sha256": "f44bf60efbeb6b13d7993811148c97eea062455982b2d4ef12b7207431febc4d",
+      "working_matches": true
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "blob": "5c5b58a38ba081fea22563f3d569c4b85fc50248",
+      "sha256": "938db17dcfc5508740176a2ede69acaf6dabccf6ebac57a8b72beddb6ed74056",
+      "bytes": 504821,
+      "before_blob": "d8e92538d99e246ddc7f1e385c3d8e624d62c1c8",
+      "before_sha256": "0217c39dc4498d717ebadbf08e062011b150fdf2e93284326ea0b97d353ac85c",
+      "working_matches": true
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "blob": "5d7297c54aa89d08b5c366cc1476845ac5edf0b3",
+      "sha256": "79c4b37320d469558b85737cab8bc441afec5bf65971cb51a0b73ffbf01ecbcb",
+      "bytes": 137965,
+      "before_blob": "8f6fdaf035fcf964124285dc8989afbc6aacf1ad",
+      "before_sha256": "d76e9196f5930025fac1a1cc1fbdeee626c020c7dbce198334b6ec2864c743a5",
+      "working_matches": true
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "blob": "0805263940726b7c727e50435adc573273437972",
+      "sha256": "de6a4e22fdfc54d9749ca3b2627cbff6c799a98bd6a79381ed7e6337375fe9e3",
+      "bytes": 82183,
+      "before_blob": "7f5054ae38ea288b8a3d07f71e0accc1ca21acfa",
+      "before_sha256": "1ece2c8c2959ce80d3c44f990e82dce6c26804042acca9ae7e13af6aff60185c",
+      "working_matches": true
+    }
+  ],
+  "protected_objects": [
+    {
+      "path": ".github",
+      "anchor": "9148470436b9d21580fdf239fa1f43d4ac1a9758",
+      "source": "9148470436b9d21580fdf239fa1f43d4ac1a9758"
+    },
+    {
+      "path": "scripts/phase4",
+      "anchor": "b68b15afd42318e31a7edd8fcb868494f02803ea",
+      "source": "b68b15afd42318e31a7edd8fcb868494f02803ea"
+    },
+    {
+      "path": "scripts/phase9",
+      "anchor": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae",
+      "source": "6e832d4c069786b00ad47d9ab9d44a4e7d29dfae"
+    },
+    {
+      "path": "scripts/security_readiness",
+      "anchor": "89d918679e7877b3e2f652add3386f26add40d05",
+      "source": "89d918679e7877b3e2f652add3386f26add40d05"
+    },
+    {
+      "path": "supabase",
+      "anchor": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662",
+      "source": "d2f9c13695ec1f83cc820e001d5525eb9dfd9662"
+    },
+    {
+      "path": "docs/brain/state",
+      "anchor": "713a0d090230d8831051d8a0bb97d3bdb14a523b",
+      "source": "713a0d090230d8831051d8a0bb97d3bdb14a523b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth",
+      "anchor": "cc3c8a72cd49818e1a6166240970fa783a5febdd",
+      "source": "cc3c8a72cd49818e1a6166240970fa783a5febdd"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent",
+      "anchor": "df3d819603ea233bc1af41b064d9e0f99ab7cb63",
+      "source": "df3d819603ea233bc1af41b064d9e0f99ab7cb63"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage",
+      "anchor": "31811c7d921536a50dae1a8569f8f7b059e9dbe3",
+      "source": "31811c7d921536a50dae1a8569f8f7b059e9dbe3"
+    },
+    {
+      "path": "package.json",
+      "anchor": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "source": "7b0522688c74c78328aa587cb9f9a07b65965061"
+    },
+    {
+      "path": "package-lock.json",
+      "anchor": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "source": "e53de80bf46db8f7a7fcd97781971911e2d328bd"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "anchor": "6217bd03730c530445861cc3e1e438a92f401b83",
+      "source": "6217bd03730c530445861cc3e1e438a92f401b83"
+    },
+    {
+      "path": "apps/mobile/app.base.json",
+      "anchor": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1",
+      "source": "94855cf2de181e5c9066ab46cab99a08d9b1fcf1"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/permission.ts",
+      "anchor": "60576f1d7ef80d3378ffdeb883e03edc7beeaeb3",
+      "source": "60576f1d7ef80d3378ffdeb883e03edc7beeaeb3"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/mutations.ts",
+      "anchor": "82b8191b372941e066be32a18f83f9d42bc6f08e",
+      "source": "82b8191b372941e066be32a18f83f9d42bc6f08e"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/[id].tsx",
+      "anchor": "346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a",
+      "source": "346c05cb4977fff9f8af4fdc468b6c3fa4d26e0a"
+    },
+    {
+      "path": "apps/mobile/src/app/onboarding/quiz.tsx",
+      "anchor": "dc9bdb09004238ac7dcfc0005661f3cec8b97616",
+      "source": "dc9bdb09004238ac7dcfc0005661f3cec8b97616"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "anchor": "6ff52e8e9bfde498d1169abc233ea26b3363ef8a",
+      "source": "6ff52e8e9bfde498d1169abc233ea26b3363ef8a"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.ts",
+      "anchor": "07a5fa0b274c42b1414d0ea9539ed885d4f44dd7",
+      "source": "07a5fa0b274c42b1414d0ea9539ed885d4f44dd7"
+    },
+    {
+      "path": "apps/mobile/src/lib/offline",
+      "anchor": "22134ba450bf8b976d9042bf71a8fb00483561c6",
+      "source": "22134ba450bf8b976d9042bf71a8fb00483561c6"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02",
+      "anchor": "580d83159d8e366210c71ce31c5d42e993300b9f",
+      "source": "580d83159d8e366210c71ce31c5d42e993300b9f"
+    },
+    {
+      "path": "docs/brain/reviews",
+      "anchor": "84cffaef4694c8cc3bd843ff46163f9cb9df1a61",
+      "source": "84cffaef4694c8cc3bd843ff46163f9cb9df1a61"
+    }
+  ],
+  "source_path_count": 13,
+  "working_eol_normalization": [
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "before_sha256": "d79cba791e4a247105ed4e2cacdbf1160ca24f770ecec794e3b8876421135e14",
+      "after_sha256": "938db17dcfc5508740176a2ede69acaf6dabccf6ebac57a8b72beddb6ed74056",
+      "reason": "Restore exact committed LF bytes after Windows text write"
+    }
+  ]
+}

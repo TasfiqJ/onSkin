@@ -1,0 +1,125 @@
+{
+  "retainedSafetyMode": false,
+  "accountIsolationMode": false,
+  "accountIsolation": null,
+  "accountUpgradeMode": false,
+  "accountUpgrade": null,
+  "browserProblemLogCount": 47,
+  "date": "2026-10-24",
+  "endUrl": "http://localhost:8369/onboarding/age",
+  "evidenceFiles": [
+    "R04-01-offline-streak.png",
+    "R04-02-progress-read-refusal.png",
+    "R04-03-offline-keyboard-retry.png",
+    "R04-04-reloaded-streak.png",
+    "R04-05-controlled-grant.png",
+    "R04-06-pending-grant-withheld.png",
+    "R04-07-revoked-after-settlement.png",
+    "R04-08-cancellation-refusal.png",
+    "R04-09-permission-retry.png",
+    "R04-10-actual-browser-restored.png"
+  ],
+  "flowResult": "Completed onboarding through the truthful free-plan path to Today without granting Pro, then proved an under-threshold re-verification immediately closed protected providers and remained closed across direct Today navigation and reload.",
+  "overflowXByStep": {
+    "welcome": 0,
+    "reveal": 0,
+    "account": 0,
+    "paywall": 0,
+    "paywallFreePath": 0,
+    "todayFree": 0,
+    "ageReverificationBefore": 0,
+    "ageReverificationBlocked": 0,
+    "ageReverificationDirectToday": 0,
+    "ageReverificationReloadedToday": 0
+  },
+  "productNames": [
+    "Retinol 0.3% serum",
+    "Glycolic 7% toner",
+    "Mineral SPF 50"
+  ],
+  "reveal": {
+    "hasContinue": true,
+    "hasDerivedInsightBody": false,
+    "hasFirstInsightLabel": false,
+    "hasPendingReview": true,
+    "hasRoutinePreviewFallback": false,
+    "hasSeeMyRoutine": false,
+    "hasTimingHandled": false,
+    "text": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined INTERACTION CHECKING Pair review in progress We won't show a compatibility result for these products until that review is complete. Continue"
+  },
+  "freePlan": {
+    "hasContinueAction": true,
+    "hasProActiveCopy": false,
+    "text": "FRIDAY, OCTOBER 23 · 11:51 PM Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 0 of 1 Glycolic 7% toner On exfoliation nights only. NEXT Today Progress Shelf You",
+    "url": "http://localhost:8369/today"
+  },
+  "keyTabs": {
+    "progressUrl": "http://localhost:8369/progress",
+    "shelfRetainedProducts": true,
+    "shelfUrl": "http://localhost:8369/shelf",
+    "todayRoundTripUrl": "http://localhost:8369/today",
+    "youUrl": "http://localhost:8369/you"
+  },
+  "routeCheck": {
+    "accountLedToPaywall": true,
+    "accountUpgradeErrorRecovered": true,
+    "freePlanLedToToday": true,
+    "freePlanDidNotGrantPro": true,
+    "keyTabRoundTripPassed": true,
+    "notificationSkipLedToAccount": true,
+    "ageReverificationClosedProtectedProviders": true,
+    "ageReverificationDirectTodayStayedClosed": true,
+    "ageReverificationReloadStayedClosed": true,
+    "signedOutShelfIsAgeClosed": true,
+    "signedOutTodayIsAgeClosed": true,
+    "revealContinueLedToNotifications": true,
+    "revealRoute": "http://localhost:8369/onboarding/reveal"
+  },
+  "startCommand": "EXPO_NO_DOTENV=1 EXPO_PUBLIC_APP_ENV=development EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH=anonymous_owner EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port 8369 --host localhost",
+  "startUrl": "http://localhost:8369/?e2eReset=local",
+  "steps": [
+    "Reset local private state with dev-only fixture.",
+    "Verified direct protected-route entry failed closed to the age gate before any private Today content mounted.",
+    "Began onboarding and entered a valid adult DOB.",
+    "Granted explicit health-data collection consent before health-purpose inputs mounted.",
+    "Selected Clear skin and Barrier repair.",
+    "Answered 12-question quiz with visible option buttons.",
+    "Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.",
+    "Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.",
+    "Used Continue with the free plan and reached Today without granting or implying Pro authority."
+  ],
+  "surface": "Headless Chrome Expo web",
+  "today": {
+    "text": "FRIDAY, OCTOBER 23 · 11:51 PM Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 0 of 1 Glycolic 7% toner On exfoliation nights only. NEXT Today Progress Shelf You",
+    "url": "http://localhost:8369/today"
+  },
+  "verdict": "pass",
+  "viewport": {
+    "height": 844,
+    "width": 390,
+    "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+  },
+  "driverRequestedEvidenceFiles": [
+    "01-welcome.png",
+    "01a-direct-protected-age-gate.png",
+    "03-age-filled.png",
+    "06-goals-selected.png",
+    "09-products-empty.png",
+    "12-products-after-3.png",
+    "14-reveal-insight.png",
+    "15-notifications.png",
+    "16-account.png",
+    "17-paywall-current.png",
+    "18-paywall-free-path-visible.png",
+    "19-today-free-current.png",
+    "20-shelf-after-onboarding.png",
+    "21-progress-after-onboarding.png",
+    "22-you-after-onboarding.png",
+    "23-today-after-tab-round-trip.png",
+    "25-age-reverification-before-submit.png",
+    "26-age-reverification-blocked.png",
+    "27-age-reverification-direct-today-blocked.png",
+    "28-age-reverification-reload-today-blocked.png"
+  ],
+  "screenshotSelection": "Bounded R04 selection; complete driver snapshots retained."
+}
