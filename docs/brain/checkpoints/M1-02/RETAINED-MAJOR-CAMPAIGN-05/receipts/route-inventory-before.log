@@ -1,0 +1,2 @@
+Execution baseline validation failed (1):
+- docs/hugeToDo/feature-inventory.json is stale. Run node scripts/launch/build-execution-baseline.mjs and review the diff.

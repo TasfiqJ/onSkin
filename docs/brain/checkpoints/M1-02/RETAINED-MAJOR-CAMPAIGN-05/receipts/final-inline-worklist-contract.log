@@ -1,0 +1,62 @@
+{
+  "head": "74c08a37a761d3bb44601c2d6b4b52a8f9e9c6b7",
+  "tree": "02f5a55250b0fbf4b924314f8c4aac7ee6f46bc5",
+  "full_checkout": true,
+  "checkout": "clean complete authorized implementation checkout; no Expo or test process reads during probe",
+  "exits": [
+    0,
+    1,
+    0
+  ],
+  "input": "apps/mobile/src/features/shelf/mutations.ts",
+  "restored_sha256": "24e230cf3a6767dac833f6d07ab73bbf54050e2f8b26464c79fe17cfa7fd96b2",
+  "producer_sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+  "outputs": {
+    "source-worklist.json": "7079c2ca93c9039fdef12638319d5ea9a6dd08f40846708fbd805862f13d08a5",
+    "source-worklist.md": "5b50328cce8ebb6949eda116d48af71a00e0765d35c3a4182c9f0acb037f0559"
+  },
+  "receipts": [
+    {
+      "label": "current",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "exit": 0,
+      "log": "inline-worklist-current.log",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "utc": "2026-10-24T06:04:35.821176+00:00"
+    },
+    {
+      "label": "altered-input",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "exit": 1,
+      "log": "inline-worklist-altered-input.log",
+      "sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "utc": "2026-10-24T06:04:36.093976+00:00"
+    },
+    {
+      "label": "restored",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "exit": 0,
+      "log": "inline-worklist-restored.log",
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "utc": "2026-10-24T06:04:36.394055+00:00"
+    }
+  ]
+}

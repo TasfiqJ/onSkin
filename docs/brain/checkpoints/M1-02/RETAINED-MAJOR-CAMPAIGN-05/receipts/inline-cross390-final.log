@@ -1,0 +1,5 @@
+Error: Could not find text to scroll into view: Local recovery
+    at assert (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:78:25)
+    at scrollTextIntoView (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:565:3)
+    at async crossOwnerFlow (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:1100:7)
+    at async run (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:1709:7)

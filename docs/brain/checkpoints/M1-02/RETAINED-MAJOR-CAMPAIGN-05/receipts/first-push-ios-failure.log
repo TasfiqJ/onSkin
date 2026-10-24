@@ -1,0 +1,1098 @@
+﻿2026-10-24T05:39:02.3361478Z Current runner version: '2.338.0'
+2026-10-24T05:39:02.3430395Z ##[group]Runner Image Provisioner
+2026-10-24T05:39:02.3431802Z Hosted Compute Agent
+2026-10-24T05:39:02.3432811Z Version: 20261012.601
+2026-10-24T05:39:02.3433978Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-24T05:39:02.3435717Z Build Date: 2026-10-12T17:48:21Z
+2026-10-24T05:39:02.3437026Z Worker ID: {d31a1826-5ec5-4084-9d29-2a993654b727}
+2026-10-24T05:39:02.3438542Z Region: eastus
+2026-10-24T05:39:02.3439535Z Cloud: Azure
+2026-10-24T05:39:02.3440558Z ##[endgroup]
+2026-10-24T05:39:02.3443007Z ##[group]Operating System
+2026-10-24T05:39:02.3444450Z Ubuntu
+2026-10-24T05:39:02.3445464Z 26.04.1
+2026-10-24T05:39:02.3446328Z LTS
+2026-10-24T05:39:02.3447463Z ##[endgroup]
+2026-10-24T05:39:02.3448413Z ##[group]Runner Image
+2026-10-24T05:39:02.3449538Z Image: ubuntu-26.04
+2026-10-24T05:39:02.3450668Z Version: 20261012.163.1
+2026-10-24T05:39:02.3452935Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261012.163/images/ubuntu/Ubuntu2604-Readme.md
+2026-10-24T05:39:02.3456038Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261012.163
+2026-10-24T05:39:02.3457955Z ##[endgroup]
+2026-10-24T05:39:02.3459911Z ##[group]GITHUB_TOKEN Permissions
+2026-10-24T05:39:02.3463177Z Contents: read
+2026-10-24T05:39:02.3464493Z Metadata: read
+2026-10-24T05:39:02.3465784Z ##[endgroup]
+2026-10-24T05:39:02.3468837Z Secret source: Actions
+2026-10-24T05:39:02.3470496Z Cache mode: write
+2026-10-24T05:39:02.3472176Z Prepare workflow directory
+2026-10-24T05:39:02.3977897Z Prepare all required actions
+2026-10-24T05:39:02.4028550Z Getting action download info
+2026-10-24T05:39:02.5847416Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-24T05:39:02.7656421Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-24T05:39:02.8810176Z Download action repository 'denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282' (SHA:667a34cdef165d8d2b2e98dde39547c9daac7282)
+2026-10-24T05:39:03.0701303Z Complete job name: iOS all-features contract
+2026-10-24T05:39:03.1682505Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-24T05:39:03.1683583Z with:
+2026-10-24T05:39:03.1684231Z   persist-credentials: false
+2026-10-24T05:39:03.1684781Z   repository: TasfiqJ/onSkin
+2026-10-24T05:39:03.1688746Z   token: ***
+2026-10-24T05:39:03.1689176Z   ssh-strict: true
+2026-10-24T05:39:03.1689617Z   ssh-user: git
+2026-10-24T05:39:03.1690048Z   clean: true
+2026-10-24T05:39:03.1690494Z   sparse-checkout-cone-mode: true
+2026-10-24T05:39:03.1691014Z   fetch-depth: 1
+2026-10-24T05:39:03.1691491Z   fetch-tags: false
+2026-10-24T05:39:03.1691938Z   show-progress: true
+2026-10-24T05:39:03.1692384Z   lfs: false
+2026-10-24T05:39:03.1692800Z   submodules: false
+2026-10-24T05:39:03.1693249Z   set-safe-directory: true
+2026-10-24T05:39:03.1694160Z ##[endgroup]
+2026-10-24T05:39:03.2753919Z Syncing repository: TasfiqJ/onSkin
+2026-10-24T05:39:03.2756835Z ##[group]Getting Git version info
+2026-10-24T05:39:03.2758053Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-24T05:39:03.2759770Z [command]/usr/bin/git version
+2026-10-24T05:39:03.2761191Z git version 2.55.0
+2026-10-24T05:39:03.2794651Z ##[endgroup]
+2026-10-24T05:39:03.2814528Z Temporarily overriding HOME='/home/runner/work/_temp/ef58c7a1-bfcb-4f4f-8100-2d7f8c3d7238' before making global git config changes
+2026-10-24T05:39:03.2817306Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T05:39:03.2820643Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-24T05:39:03.2899075Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-24T05:39:03.2909041Z ##[group]Determining repository object format
+2026-10-24T05:39:03.2911088Z ##[endgroup]
+2026-10-24T05:39:03.2912780Z ##[group]Initializing the repository
+2026-10-24T05:39:03.2917940Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-24T05:39:03.3070714Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-24T05:39:03.3079674Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-24T05:39:03.3081810Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-24T05:39:03.3084286Z hint: call:
+2026-10-24T05:39:03.3085371Z hint:
+2026-10-24T05:39:03.3086530Z hint: 	git config --global init.defaultBranch <name>
+2026-10-24T05:39:03.3087996Z hint:
+2026-10-24T05:39:03.3089408Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-24T05:39:03.3091486Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-24T05:39:03.3093142Z hint:
+2026-10-24T05:39:03.3094379Z hint: 	git branch -m <name>
+2026-10-24T05:39:03.3095654Z hint:
+2026-10-24T05:39:03.3097200Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-24T05:39:03.3099417Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-24T05:39:03.3103744Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-24T05:39:03.3159185Z ##[endgroup]
+2026-10-24T05:39:03.3161017Z ##[group]Disabling automatic garbage collection
+2026-10-24T05:39:03.3164248Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-24T05:39:03.3214243Z ##[endgroup]
+2026-10-24T05:39:03.3216426Z ##[group]Setting up auth
+2026-10-24T05:39:03.3217796Z Removing SSH command configuration
+2026-10-24T05:39:03.3224647Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T05:39:03.3272384Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T05:39:03.3836694Z Removing HTTP extra header
+2026-10-24T05:39:03.3846261Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T05:39:03.3889304Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T05:39:03.4162164Z Removing includeIf entries pointing to credentials config files
+2026-10-24T05:39:03.4168924Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T05:39:03.4203187Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T05:39:03.4469610Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-24T05:39:03.4509987Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:03.4543763Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:03.4578436Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:03.4610978Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:03.4646743Z ##[endgroup]
+2026-10-24T05:39:03.4647544Z ##[group]Fetching the repository
+2026-10-24T05:39:03.4655187Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +932d5422bfdaf12eaa294a60501765ffa2a12525:refs/remotes/pull/11/merge
+2026-10-24T05:39:12.1767506Z From https://github.com/TasfiqJ/onSkin
+2026-10-24T05:39:12.1769279Z  * [new ref]           932d5422bfdaf12eaa294a60501765ffa2a12525 -> pull/11/merge
+2026-10-24T05:39:12.1775789Z ##[endgroup]
+2026-10-24T05:39:12.1782773Z ##[group]Determining the checkout info
+2026-10-24T05:39:12.1784874Z ##[endgroup]
+2026-10-24T05:39:12.1786108Z [command]/usr/bin/git sparse-checkout disable
+2026-10-24T05:39:12.1844854Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-24T05:39:12.1877917Z ##[group]Checking out the ref
+2026-10-24T05:39:12.1879982Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/11/merge
+2026-10-24T05:39:13.2442181Z Updating files:  26% (5803/22307)
+2026-10-24T05:39:13.2838023Z Updating files:  27% (6023/22307)
+2026-10-24T05:39:13.3029477Z Updating files:  28% (6246/22307)
+2026-10-24T05:39:13.3208556Z Updating files:  29% (6470/22307)
+2026-10-24T05:39:13.3368686Z Updating files:  30% (6693/22307)
+2026-10-24T05:39:13.3542508Z Updating files:  31% (6916/22307)
+2026-10-24T05:39:13.3667565Z Updating files:  32% (7139/22307)
+2026-10-24T05:39:13.3825602Z Updating files:  33% (7362/22307)
+2026-10-24T05:39:13.4191329Z Updating files:  34% (7585/22307)
+2026-10-24T05:39:13.4668160Z Updating files:  35% (7808/22307)
+2026-10-24T05:39:13.4960393Z Updating files:  36% (8031/22307)
+2026-10-24T05:39:13.5147043Z Updating files:  37% (8254/22307)
+2026-10-24T05:39:13.5494319Z Updating files:  38% (8477/22307)
+2026-10-24T05:39:13.5949127Z Updating files:  39% (8700/22307)
+2026-10-24T05:39:13.6247497Z Updating files:  40% (8923/22307)
+2026-10-24T05:39:13.6672051Z Updating files:  41% (9146/22307)
+2026-10-24T05:39:13.7179965Z Updating files:  42% (9369/22307)
+2026-10-24T05:39:13.7513053Z Updating files:  43% (9593/22307)
+2026-10-24T05:39:13.7925846Z Updating files:  44% (9816/22307)
+2026-10-24T05:39:13.8049609Z Updating files:  45% (10039/22307)
+2026-10-24T05:39:13.8178023Z Updating files:  46% (10262/22307)
+2026-10-24T05:39:13.8497936Z Updating files:  47% (10485/22307)
+2026-10-24T05:39:13.8904980Z Updating files:  48% (10708/22307)
+2026-10-24T05:39:13.9125534Z Updating files:  49% (10931/22307)
+2026-10-24T05:39:13.9233485Z Updating files:  50% (11154/22307)
+2026-10-24T05:39:13.9350641Z Updating files:  51% (11377/22307)
+2026-10-24T05:39:13.9586982Z Updating files:  52% (11600/22307)
+2026-10-24T05:39:13.9778312Z Updating files:  53% (11823/22307)
+2026-10-24T05:39:14.0003492Z Updating files:  54% (12046/22307)
+2026-10-24T05:39:14.0242509Z Updating files:  55% (12269/22307)
+2026-10-24T05:39:14.2504749Z Updating files:  56% (12492/22307)
+2026-10-24T05:39:14.2603007Z Updating files:  56% (12640/22307)
+2026-10-24T05:39:14.2762132Z Updating files:  57% (12715/22307)
+2026-10-24T05:39:14.2983867Z Updating files:  58% (12939/22307)
+2026-10-24T05:39:14.3138259Z Updating files:  59% (13162/22307)
+2026-10-24T05:39:14.3288900Z Updating files:  60% (13385/22307)
+2026-10-24T05:39:14.3419554Z Updating files:  61% (13608/22307)
+2026-10-24T05:39:14.3563829Z Updating files:  62% (13831/22307)
+2026-10-24T05:39:14.3731913Z Updating files:  63% (14054/22307)
+2026-10-24T05:39:14.3870263Z Updating files:  64% (14277/22307)
+2026-10-24T05:39:14.4062997Z Updating files:  65% (14500/22307)
+2026-10-24T05:39:14.4241460Z Updating files:  66% (14723/22307)
+2026-10-24T05:39:14.4442041Z Updating files:  67% (14946/22307)
+2026-10-24T05:39:14.4617819Z Updating files:  68% (15169/22307)
+2026-10-24T05:39:14.4779579Z Updating files:  69% (15392/22307)
+2026-10-24T05:39:14.5003086Z Updating files:  70% (15615/22307)
+2026-10-24T05:39:14.5217243Z Updating files:  71% (15838/22307)
+2026-10-24T05:39:14.5451858Z Updating files:  72% (16062/22307)
+2026-10-24T05:39:14.5709689Z Updating files:  73% (16285/22307)
+2026-10-24T05:39:14.5905543Z Updating files:  74% (16508/22307)
+2026-10-24T05:39:14.6282549Z Updating files:  75% (16731/22307)
+2026-10-24T05:39:14.6644650Z Updating files:  76% (16954/22307)
+2026-10-24T05:39:14.7069898Z Updating files:  77% (17177/22307)
+2026-10-24T05:39:14.7491390Z Updating files:  78% (17400/22307)
+2026-10-24T05:39:14.7868261Z Updating files:  79% (17623/22307)
+2026-10-24T05:39:14.8146709Z Updating files:  80% (17846/22307)
+2026-10-24T05:39:14.8483779Z Updating files:  81% (18069/22307)
+2026-10-24T05:39:14.8964352Z Updating files:  82% (18292/22307)
+2026-10-24T05:39:14.9469701Z Updating files:  83% (18515/22307)
+2026-10-24T05:39:14.9972799Z Updating files:  84% (18738/22307)
+2026-10-24T05:39:15.0371917Z Updating files:  85% (18961/22307)
+2026-10-24T05:39:15.0841636Z Updating files:  86% (19185/22307)
+2026-10-24T05:39:15.1334399Z Updating files:  87% (19408/22307)
+2026-10-24T05:39:15.1674879Z Updating files:  88% (19631/22307)
+2026-10-24T05:39:15.1983572Z Updating files:  89% (19854/22307)
+2026-10-24T05:39:15.2073164Z Updating files:  90% (20077/22307)
+2026-10-24T05:39:15.2246793Z Updating files:  90% (20185/22307)
+2026-10-24T05:39:15.2415586Z Updating files:  91% (20300/22307)
+2026-10-24T05:39:15.2709792Z Updating files:  92% (20523/22307)
+2026-10-24T05:39:15.3225926Z Updating files:  93% (20746/22307)
+2026-10-24T05:39:15.3468824Z Updating files:  94% (20969/22307)
+2026-10-24T05:39:15.3849762Z Updating files:  95% (21192/22307)
+2026-10-24T05:39:15.4087795Z Updating files:  96% (21415/22307)
+2026-10-24T05:39:15.4301133Z Updating files:  97% (21638/22307)
+2026-10-24T05:39:15.4657352Z Updating files:  98% (21861/22307)
+2026-10-24T05:39:15.5217148Z Updating files:  99% (22084/22307)
+2026-10-24T05:39:15.5217787Z Updating files: 100% (22307/22307)
+2026-10-24T05:39:15.5218295Z Updating files: 100% (22307/22307), done.
+2026-10-24T05:39:15.5439955Z Note: switching to 'refs/remotes/pull/11/merge'.
+2026-10-24T05:39:15.5440413Z 
+2026-10-24T05:39:15.5440813Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-24T05:39:15.5441695Z changes and commit them, and you can discard any commits you make in this
+2026-10-24T05:39:15.5442497Z state without impacting any branches by switching back to a branch.
+2026-10-24T05:39:15.5442971Z 
+2026-10-24T05:39:15.5443286Z If you want to create a new branch to retain commits you create, you may
+2026-10-24T05:39:15.5444317Z do so (now or later) by using -c with the switch command. Example:
+2026-10-24T05:39:15.5444786Z 
+2026-10-24T05:39:15.5445260Z   git switch -c <new-branch-name>
+2026-10-24T05:39:15.5445575Z 
+2026-10-24T05:39:15.5445740Z Or undo this operation with:
+2026-10-24T05:39:15.5446021Z 
+2026-10-24T05:39:15.5446168Z   git switch -
+2026-10-24T05:39:15.5446369Z 
+2026-10-24T05:39:15.5446739Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-24T05:39:15.5447284Z 
+2026-10-24T05:39:15.5447878Z HEAD is now at 932d5422 Merge 54033f7c150b08721779ed02e51e68de02fa5544 into d9912f4c8b30358593569c5b9b4e84773c6f463e
+2026-10-24T05:39:15.5540449Z ##[endgroup]
+2026-10-24T05:39:15.5587239Z [command]/usr/bin/git log -1 --format=%H
+2026-10-24T05:39:15.5612093Z 932d5422bfdaf12eaa294a60501765ffa2a12525
+2026-10-24T05:39:15.5622090Z ##[group]Removing auth
+2026-10-24T05:39:15.5622397Z Removing SSH command configuration
+2026-10-24T05:39:15.5627219Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T05:39:15.5658478Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T05:39:15.5956680Z Removing HTTP extra header
+2026-10-24T05:39:15.5961610Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T05:39:15.5993700Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T05:39:15.6288320Z Removing includeIf entries pointing to credentials config files
+2026-10-24T05:39:15.6288891Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T05:39:15.6312538Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-24T05:39:15.6313669Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-24T05:39:15.6314370Z includeif.gitdir:/github/workspace/.git.path
+2026-10-24T05:39:15.6314782Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T05:39:15.6322511Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-24T05:39:15.6345651Z /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6356454Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6423063Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-24T05:39:15.6446410Z /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6455938Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6489954Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-24T05:39:15.6512426Z /github/runner_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6521848Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6565026Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T05:39:15.6587842Z /github/runner_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6597891Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config
+2026-10-24T05:39:15.6630053Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T05:39:15.6920520Z Removing credentials config '/home/runner/work/_temp/git-credentials-fe0a61fb-418f-4967-8f79-bb59062c41ec.config'
+2026-10-24T05:39:15.6930102Z ##[endgroup]
+2026-10-24T05:39:15.7180938Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-24T05:39:15.7181337Z with:
+2026-10-24T05:39:15.7181542Z   node-version: 20
+2026-10-24T05:39:15.7181742Z   cache: npm
+2026-10-24T05:39:15.7181947Z   check-latest: false
+2026-10-24T05:39:15.7185151Z   token: ***
+2026-10-24T05:39:15.7185379Z   package-manager-cache: true
+2026-10-24T05:39:15.7185628Z ##[endgroup]
+2026-10-24T05:39:15.8841351Z Attempting to download 20...
+2026-10-24T05:39:16.3718600Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+2026-10-24T05:39:16.6609412Z Extracting ...
+2026-10-24T05:39:16.6729395Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/98ace052-bee7-41f7-ab19-a36539054dbf -f /home/runner/work/_temp/ccf720c4-db9f-42ba-b018-754679b339f2
+2026-10-24T05:39:17.3104388Z Adding to the cache ...
+2026-10-24T05:39:19.6131012Z ##[group]Environment details
+2026-10-24T05:39:19.8476037Z node: v20.20.2
+2026-10-24T05:39:19.8476484Z npm: 10.8.2
+2026-10-24T05:39:19.8476832Z yarn: 1.22.22
+2026-10-24T05:39:19.8477561Z ##[endgroup]
+2026-10-24T05:39:19.8495613Z [command]/opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+2026-10-24T05:39:19.9550852Z /home/runner/.npm
+2026-10-24T05:39:20.0303185Z Cache hit for: node-cache-Linux-x64-npm-8391cdf1f6b452b0ec512a88b8f385ff73baae0cccb68b67678e657eb698907f
+2026-10-24T05:39:21.0975155Z Received 243269632 of 401329874 (60.6%), 231.3 MBs/sec
+2026-10-24T05:39:21.7412004Z Received 401329874 of 401329874 (100.0%), 231.8 MBs/sec
+2026-10-24T05:39:21.7413251Z Cache Size: ~383 MB (401329874 B)
+2026-10-24T05:39:21.7478716Z [command]/usr/bin/tar -xf /home/runner/work/_temp/b50784c9-0e8d-4a31-a59e-66d2be06a748/cache.tzst -P -C /home/runner/work/onSkin/onSkin --use-compress-program unzstd
+2026-10-24T05:39:22.5690540Z Cache restored successfully
+2026-10-24T05:39:22.5859206Z Cache restored from key: node-cache-Linux-x64-npm-8391cdf1f6b452b0ec512a88b8f385ff73baae0cccb68b67678e657eb698907f
+2026-10-24T05:39:22.6474606Z ##[group]Run denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282
+2026-10-24T05:39:22.6475055Z with:
+2026-10-24T05:39:22.6475273Z   deno-version: v2.7.5
+2026-10-24T05:39:22.6475519Z   deno-binary-name: deno
+2026-10-24T05:39:22.6475763Z   cache: false
+2026-10-24T05:39:22.6475975Z ##[endgroup]
+2026-10-24T05:39:22.9483732Z Going to install stable version 2.7.5.
+2026-10-24T05:39:22.9493437Z Downloading Deno from https://github.com/denoland/deno/releases/download/v2.7.5/deno-x86_64-unknown-linux-gnu.zip.
+2026-10-24T05:39:23.3304319Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/6185fe77-d76c-4e7d-8faf-95a329773c75
+2026-10-24T05:39:24.3187246Z Cached Deno to /opt/hostedtoolcache/deno/2.7.5/x64.
+2026-10-24T05:39:24.3201396Z Installation complete.
+2026-10-24T05:39:24.3365311Z ##[group]Run npm ci
+2026-10-24T05:39:24.3365595Z [36;1mnpm ci[0m
+2026-10-24T05:39:24.3616924Z shell: /usr/bin/bash -e {0}
+2026-10-24T05:39:24.3617203Z ##[endgroup]
+2026-10-24T05:39:35.2426854Z npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-24T05:39:42.0020752Z 
+2026-10-24T05:39:42.0021781Z > layerwell@0.1.0 postinstall
+2026-10-24T05:39:42.0022980Z > node scripts/postinstall.mjs
+2026-10-24T05:39:42.0026649Z 
+2026-10-24T05:39:42.2185092Z {"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+2026-10-24T05:39:42.2388095Z 
+2026-10-24T05:39:42.2389385Z added 1037 packages, and audited 1041 packages in 18s
+2026-10-24T05:39:42.2389881Z 
+2026-10-24T05:39:42.2390224Z 203 packages are looking for funding
+2026-10-24T05:39:42.2391027Z   run `npm fund` for details
+2026-10-24T05:39:42.2785530Z 
+2026-10-24T05:39:42.2786181Z 9 vulnerabilities (2 moderate, 7 high)
+2026-10-24T05:39:42.2786665Z 
+2026-10-24T05:39:42.2787064Z To address issues that do not require attention, run:
+2026-10-24T05:39:42.2787692Z   npm audit fix
+2026-10-24T05:39:42.2787916Z 
+2026-10-24T05:39:42.2788319Z To address all issues (including breaking changes), run:
+2026-10-24T05:39:42.2788940Z   npm audit fix --force
+2026-10-24T05:39:42.2789206Z 
+2026-10-24T05:39:42.2789429Z Run `npm audit` for details.
+2026-10-24T05:39:42.4415188Z ##[group]Run npm run launch:contract:verify
+2026-10-24T05:39:42.4415787Z [36;1mnpm run launch:contract:verify[0m
+2026-10-24T05:39:42.4494769Z shell: /usr/bin/bash -e {0}
+2026-10-24T05:39:42.4495198Z ##[endgroup]
+2026-10-24T05:39:42.6254297Z 
+2026-10-24T05:39:42.6255224Z > layerwell@0.1.0 launch:contract:verify
+2026-10-24T05:39:42.6259997Z > npm run launch:contract:check && npm run launch:contract:smoke && npm run ask02:gateway-source-contract:test && npm run photo01:source-contract:test && npm run photo02:source-contract:test && npm run photo03:source-contract:test && npm run photo04:source-contract:test && npm run photo05:trend-admission-source-contract:test && npm run photo07:source-contract:test && npm run com01:commerce-admission-source-contract:test && npm run pay08:ios-win-back-source-contract:test
+2026-10-24T05:39:42.6263465Z 
+2026-10-24T05:39:42.7448797Z 
+2026-10-24T05:39:42.7449667Z > layerwell@0.1.0 launch:contract:check
+2026-10-24T05:39:42.7450487Z > node scripts/launch/check-contract.mjs
+2026-10-24T05:39:42.7450866Z 
+2026-10-24T05:39:42.7788200Z iOS lean V1 launch contract
+2026-10-24T05:39:42.7792699Z Path: docs/hugeToDo/launch-contract.json
+2026-10-24T05:39:42.7793389Z Program: ios-lean-v1-2026
+2026-10-24T05:39:42.7794242Z Platforms: ios
+2026-10-24T05:39:42.7794787Z Mode: lean-v1
+2026-10-24T05:39:42.7795272Z Required features: 10
+2026-10-24T05:39:42.7796138Z Deferred features: 10
+2026-10-24T05:39:42.7796745Z Required optional Phase 7/8 surfaces: 0
+2026-10-24T05:39:42.7797438Z iOS release evidence: required
+2026-10-24T05:39:42.7798209Z Android release evidence: not_applicable
+2026-10-24T05:39:42.7798913Z Launch contract is valid.
+2026-10-24T05:39:42.8983029Z 
+2026-10-24T05:39:42.8983493Z > layerwell@0.1.0 launch:contract:smoke
+2026-10-24T05:39:42.8983941Z > node scripts/launch/contract-smoke.mjs
+2026-10-24T05:39:42.8984486Z 
+2026-10-24T05:39:42.9352189Z Lean V1 launch contract smoke tests passed.
+2026-10-24T05:39:43.0488929Z 
+2026-10-24T05:39:43.0489726Z > layerwell@0.1.0 ask02:gateway-source-contract:test
+2026-10-24T05:39:43.0492171Z > node --test scripts/ask02/ask-gateway-source-contract.test.mjs && deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/ask-layerwell/*.test.ts
+2026-10-24T05:39:43.0493911Z 
+2026-10-24T05:39:43.0944969Z TAP version 13
+2026-10-24T05:39:43.9868745Z # Subtest: current ASK-02 executable source contract passes
+2026-10-24T05:39:43.9876168Z ok 1 - current ASK-02 executable source contract passes
+2026-10-24T05:39:43.9877122Z   ---
+2026-10-24T05:39:43.9877735Z   duration_ms: 66.940554
+2026-10-24T05:39:43.9878342Z   ...
+2026-10-24T05:39:43.9884267Z # Subtest: comments and dead text cannot forge disabled executable admission
+2026-10-24T05:39:43.9885877Z ok 2 - comments and dead text cannot forge disabled executable admission
+2026-10-24T05:39:43.9887055Z   ---
+2026-10-24T05:39:43.9887467Z   duration_ms: 32.240801
+2026-10-24T05:39:43.9887920Z   ...
+2026-10-24T05:39:43.9889156Z # Subtest: auth and adjacent purpose-consent ordering are AST anchored
+2026-10-24T05:39:43.9890725Z ok 3 - auth and adjacent purpose-consent ordering are AST anchored
+2026-10-24T05:39:43.9891946Z   ---
+2026-10-24T05:39:43.9892355Z   duration_ms: 134.023052
+2026-10-24T05:39:43.9892796Z   ...
+2026-10-24T05:39:43.9893926Z # Subtest: dead comments cannot forge registry-authority quarantine
+2026-10-24T05:39:43.9954871Z ok 4 - dead comments cannot forge registry-authority quarantine
+2026-10-24T05:39:43.9955762Z   ---
+2026-10-24T05:39:43.9956007Z   duration_ms: 9.597469
+2026-10-24T05:39:43.9956240Z   ...
+2026-10-24T05:39:43.9956670Z # Subtest: provider SDK imports and credential environment reads are rejected
+2026-10-24T05:39:43.9957281Z ok 5 - provider SDK imports and credential environment reads are rejected
+2026-10-24T05:39:43.9957667Z   ---
+2026-10-24T05:39:43.9957965Z   duration_ms: 43.380368
+2026-10-24T05:39:43.9958202Z   ...
+2026-10-24T05:39:43.9958550Z # Subtest: endpoint cannot inject a fingerprint implementation
+2026-10-24T05:39:43.9959471Z ok 6 - endpoint cannot inject a fingerprint implementation
+2026-10-24T05:39:43.9959818Z   ---
+2026-10-24T05:39:43.9960029Z   duration_ms: 22.462686
+2026-10-24T05:39:43.9960249Z   ...
+2026-10-24T05:39:43.9960653Z # Subtest: manifest, config, package, and launch wiring mutations fail closed
+2026-10-24T05:39:43.9961248Z ok 7 - manifest, config, package, and launch wiring mutations fail closed
+2026-10-24T05:39:43.9961628Z   ---
+2026-10-24T05:39:43.9961831Z   duration_ms: 50.92841
+2026-10-24T05:39:43.9962058Z   ...
+2026-10-24T05:39:44.0162307Z 1..7
+2026-10-24T05:39:44.0162701Z # tests 7
+2026-10-24T05:39:44.0163503Z # suites 0
+2026-10-24T05:39:44.0164185Z # pass 7
+2026-10-24T05:39:44.0166608Z # fail 0
+2026-10-24T05:39:44.0167272Z # cancelled 0
+2026-10-24T05:39:44.0167917Z # skipped 0
+2026-10-24T05:39:44.0168539Z # todo 0
+2026-10-24T05:39:44.0174809Z # duration_ms 930.871973
+2026-10-24T05:39:45.1176176Z [0m[38;5;245mrunning 2 tests from ./supabase/functions/ask-layerwell/consentAdmission.test.ts[0m
+2026-10-24T05:39:45.1183402Z purpose consent requires exact owner-scoped generation and base-health epoch ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.1187308Z purpose consent rejects missing, withdrawn, placeholder, malformed, and unavailable receipts ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.1877398Z [0m[38;5;245mrunning 2 tests from ./supabase/functions/ask-layerwell/contract.test.ts[0m
+2026-10-24T05:39:45.1888458Z ASK gateway request accepts only the exact minimized English contract ... [0m[32mok[0m [0m[38;5;245m(1ms)[0m
+2026-10-24T05:39:45.1892470Z ASK gateway request rejects malformed identity, purpose, locale, and unbounded fields ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.2631433Z [0m[38;5;245mrunning 13 tests from ./supabase/functions/ask-layerwell/gatewayCore.test.ts[0m
+2026-10-24T05:39:45.2757807Z full canonical request fingerprint is bound atomically before provider work ... [0m[32mok[0m [0m[38;5;245m(12ms)[0m
+2026-10-24T05:39:45.2762069Z strict runtime config rejects malformed and out-of-range values before quota/provider ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.2769787Z throwing request coercion is redacted before fingerprint and reservation ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.2797245Z every reservation variant is exact and identity-bound before provider work ... [0m[32mok[0m [0m[38;5;245m(2ms)[0m
+2026-10-24T05:39:45.2807907Z provider and stored outputs require exact keys and canonical construction ... [0m[32mok[0m [0m[38;5;245m(1ms)[0m
+2026-10-24T05:39:45.2811816Z live provider output is snapshotted once before validation and delivery ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.2816328Z stored replay output is snapshotted once before validation and delivery ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.2821151Z replay fingerprint mismatch fails and replay bypasses circuit admission ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.2840115Z circuit admission is exact, bounded, and releases before failing closed ... [0m[32mok[0m [0m[38;5;245m(1ms)[0m
+2026-10-24T05:39:45.2847583Z throwing reservation and replay proxies are redacted before provider ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.5369580Z ambiguous timeout receives exactly one provider attempt ... [0m[32mok[0m [0m[38;5;245m(251ms)[0m
+2026-10-24T05:39:45.5374456Z rate-limit failures receive exactly one provider attempt ... [0m[32mok[0m [0m[38;5;245m(0ms)[0m
+2026-10-24T05:39:45.5398188Z quota denials, disabled gateway, bounds, and commit failures fail closed ... [0m[32mok[0m [0m[38;5;245m(2ms)[0m
+2026-10-24T05:39:45.5462837Z 
+2026-10-24T05:39:45.5466094Z [0m[32mok[0m | 17 passed | 0 failed [0m[38;5;245m(428ms)[0m
+2026-10-24T05:39:45.5466592Z 
+2026-10-24T05:39:45.6751255Z 
+2026-10-24T05:39:45.6751842Z > layerwell@0.1.0 photo01:source-contract:test
+2026-10-24T05:39:45.6752694Z > node --test scripts/photo01/photo01-source-contract.test.mjs
+2026-10-24T05:39:45.6753013Z 
+2026-10-24T05:39:45.7124191Z TAP version 13
+2026-10-24T05:39:45.7566276Z # Subtest: the repository satisfies the aggregate PHOTO-01 source contract
+2026-10-24T05:39:45.7574419Z ok 1 - the repository satisfies the aggregate PHOTO-01 source contract
+2026-10-24T05:39:45.7575361Z   ---
+2026-10-24T05:39:45.7575935Z   duration_ms: 3.202849
+2026-10-24T05:39:45.7576518Z   ...
+2026-10-24T05:39:45.7580926Z # Subtest: the contract rejects thumbnail network capability
+2026-10-24T05:39:45.7582660Z ok 2 - the contract rejects thumbnail network capability
+2026-10-24T05:39:45.7583344Z   ---
+2026-10-24T05:39:45.7583758Z   duration_ms: 0.89967
+2026-10-24T05:39:45.7584461Z   ...
+2026-10-24T05:39:45.7587314Z # Subtest: the contract rejects raw deletion before metadata publication
+2026-10-24T05:39:45.7588652Z ok 3 - the contract rejects raw deletion before metadata publication
+2026-10-24T05:39:45.7589631Z   ---
+2026-10-24T05:39:45.7590211Z   duration_ms: 1.072282
+2026-10-24T05:39:45.7590775Z   ...
+2026-10-24T05:39:45.7594557Z # Subtest: the contract rejects omission of thumbnail deletion
+2026-10-24T05:39:45.7596014Z ok 4 - the contract rejects omission of thumbnail deletion
+2026-10-24T05:39:45.7596830Z   ---
+2026-10-24T05:39:45.7597401Z   duration_ms: 0.499542
+2026-10-24T05:39:45.7597949Z   ...
+2026-10-24T05:39:45.7672622Z 1..4
+2026-10-24T05:39:45.7673840Z # tests 4
+2026-10-24T05:39:45.7675141Z # suites 0
+2026-10-24T05:39:45.7675792Z # pass 4
+2026-10-24T05:39:45.7676533Z # fail 0
+2026-10-24T05:39:45.7677171Z # cancelled 0
+2026-10-24T05:39:45.7678121Z # skipped 0
+2026-10-24T05:39:45.7678728Z # todo 0
+2026-10-24T05:39:45.7683442Z # duration_ms 63.870471
+2026-10-24T05:39:45.8820023Z 
+2026-10-24T05:39:45.8820566Z > layerwell@0.1.0 photo02:source-contract:test
+2026-10-24T05:39:45.8821326Z > node --test scripts/photo02/photo02-source-contract.test.mjs
+2026-10-24T05:39:45.8821656Z 
+2026-10-24T05:39:45.9218514Z TAP version 13
+2026-10-24T05:39:47.1319791Z # Subtest: the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+2026-10-24T05:39:47.1332100Z ok 1 - the repository satisfies the aggregate PHOTO-02 AST/control-flow contract
+2026-10-24T05:39:47.1332916Z   ---
+2026-10-24T05:39:47.1333411Z   duration_ms: 151.967544
+2026-10-24T05:39:47.1333875Z   ...
+2026-10-24T05:39:47.1341108Z # Subtest: rejects an additive Stack mounted before AppLockProvider
+2026-10-24T05:39:47.1343330Z ok 2 - rejects an additive Stack mounted before AppLockProvider
+2026-10-24T05:39:47.1344391Z   ---
+2026-10-24T05:39:47.1344637Z   duration_ms: 54.606108
+2026-10-24T05:39:47.1344874Z   ...
+2026-10-24T05:39:47.1347041Z # Subtest: rejects additive children mounted before the loaded decision
+2026-10-24T05:39:47.1348899Z ok 3 - rejects additive children mounted before the loaded decision
+2026-10-24T05:39:47.1355016Z   ---
+2026-10-24T05:39:47.1355654Z   duration_ms: 45.311987
+2026-10-24T05:39:47.1356326Z   ...
+2026-10-24T05:39:47.1357240Z # Subtest: rejects an early corrupt preference unlock
+2026-10-24T05:39:47.1358244Z ok 4 - rejects an early corrupt preference unlock
+2026-10-24T05:39:47.1359029Z   ---
+2026-10-24T05:39:47.1359593Z   duration_ms: 37.403563
+2026-10-24T05:39:47.1360178Z   ...
+2026-10-24T05:39:47.1361373Z # Subtest: rejects an early unsupported_version preference unlock
+2026-10-24T05:39:47.1364310Z ok 5 - rejects an early unsupported_version preference unlock
+2026-10-24T05:39:47.1393152Z   ---
+2026-10-24T05:39:47.1393742Z   duration_ms: 34.151999
+2026-10-24T05:39:47.1394622Z   ...
+2026-10-24T05:39:47.1395426Z # Subtest: rejects unauthenticated preference disable
+2026-10-24T05:39:47.1396867Z ok 6 - rejects unauthenticated preference disable
+2026-10-24T05:39:47.1397620Z   ---
+2026-10-24T05:39:47.1398161Z   duration_ms: 41.839279
+2026-10-24T05:39:47.1398737Z   ...
+2026-10-24T05:39:47.1400850Z # Subtest: rejects an additive unauthenticated setLocked(false)
+2026-10-24T05:39:47.1402472Z ok 7 - rejects an additive unauthenticated setLocked(false)
+2026-10-24T05:39:47.1403269Z   ---
+2026-10-24T05:39:47.1404427Z   duration_ms: 22.250295
+2026-10-24T05:39:47.1405090Z   ...
+2026-10-24T05:39:47.1406250Z # Subtest: rejects usePhotos in the route component before PhotoTimelineLockGate
+2026-10-24T05:39:47.1408608Z ok 8 - rejects usePhotos in the route component before PhotoTimelineLockGate
+2026-10-24T05:39:47.1434535Z   ---
+2026-10-24T05:39:47.1464489Z   duration_ms: 34.568226
+2026-10-24T05:39:47.1465027Z   ...
+2026-10-24T05:39:47.1483785Z # Subtest: rejects malformed-preference deletion moved before authentication
+2026-10-24T05:39:47.1485289Z ok 9 - rejects malformed-preference deletion moved before authentication
+2026-10-24T05:39:47.1486092Z   ---
+2026-10-24T05:39:47.1486642Z   duration_ms: 26.088546
+2026-10-24T05:39:47.1487051Z   ...
+2026-10-24T05:39:47.1487834Z # Subtest: rejects native success publication without current-request revalidation
+2026-10-24T05:39:47.1489001Z ok 10 - rejects native success publication without current-request revalidation
+2026-10-24T05:39:47.1489701Z   ---
+2026-10-24T05:39:47.1490061Z   duration_ms: 22.343019
+2026-10-24T05:39:47.1490383Z   ...
+2026-10-24T05:39:47.1490831Z # Subtest: rejects a preference authentication failure guard weakened with && false
+2026-10-24T05:39:47.1491481Z ok 11 - rejects a preference authentication failure guard weakened with && false
+2026-10-24T05:39:47.1491894Z   ---
+2026-10-24T05:39:47.1492102Z   duration_ms: 25.945719
+2026-10-24T05:39:47.1492598Z   ...
+2026-10-24T05:39:47.1493138Z # Subtest: rejects a reset authentication failure guard weakened with && false
+2026-10-24T05:39:47.1494298Z ok 12 - rejects a reset authentication failure guard weakened with && false
+2026-10-24T05:39:47.1494757Z   ---
+2026-10-24T05:39:47.1494972Z   duration_ms: 23.903975
+2026-10-24T05:39:47.1495206Z   ...
+2026-10-24T05:39:47.1495577Z # Subtest: rejects provider success dominance weakened with || true
+2026-10-24T05:39:47.1496101Z ok 13 - rejects provider success dominance weakened with || true
+2026-10-24T05:39:47.1496446Z   ---
+2026-10-24T05:39:47.1496655Z   duration_ms: 18.395595
+2026-10-24T05:39:47.1496883Z   ...
+2026-10-24T05:39:47.1497278Z # Subtest: rejects timeline unlock predicate weakened with || true
+2026-10-24T05:39:47.1497914Z ok 14 - rejects timeline unlock predicate weakened with || true
+2026-10-24T05:39:47.1498486Z   ---
+2026-10-24T05:39:47.1498755Z   duration_ms: 25.60917
+2026-10-24T05:39:47.1499086Z   ...
+2026-10-24T05:39:47.1499732Z # Subtest: rejects private readiness predicate weakened with || true
+2026-10-24T05:39:47.1500667Z ok 15 - rejects private readiness predicate weakened with || true
+2026-10-24T05:39:47.1501261Z   ---
+2026-10-24T05:39:47.1501588Z   duration_ms: 22.84143
+2026-10-24T05:39:47.1501960Z   ...
+2026-10-24T05:39:47.1502602Z # Subtest: rejects an aliased photo hook call before the timeline gate
+2026-10-24T05:39:47.1503549Z ok 16 - rejects an aliased photo hook call before the timeline gate
+2026-10-24T05:39:47.1504357Z   ---
+2026-10-24T05:39:47.1504699Z   duration_ms: 23.813546
+2026-10-24T05:39:47.1505073Z   ...
+2026-10-24T05:39:47.1506077Z # Subtest: rejects preference authentication failure falling through after its return is removed
+2026-10-24T05:39:47.1507431Z ok 17 - rejects preference authentication failure falling through after its return is removed
+2026-10-24T05:39:47.1508221Z   ---
+2026-10-24T05:39:47.1508592Z   duration_ms: 22.769766
+2026-10-24T05:39:47.1508966Z   ...
+2026-10-24T05:39:47.1509794Z # Subtest: rejects reset authentication failure falling through after its return is removed
+2026-10-24T05:39:47.1511057Z ok 18 - rejects reset authentication failure falling through after its return is removed
+2026-10-24T05:39:47.1511804Z   ---
+2026-10-24T05:39:47.1512132Z   duration_ms: 21.155534
+2026-10-24T05:39:47.1512506Z   ...
+2026-10-24T05:39:47.1728791Z 1..18
+2026-10-24T05:39:47.1729207Z # tests 18
+2026-10-24T05:39:47.1730289Z # suites 0
+2026-10-24T05:39:47.1730733Z # pass 18
+2026-10-24T05:39:47.1731377Z # fail 0
+2026-10-24T05:39:47.1731780Z # cancelled 0
+2026-10-24T05:39:47.1732314Z # skipped 0
+2026-10-24T05:39:47.1733284Z # todo 0
+2026-10-24T05:39:47.1738676Z # duration_ms 1259.861881
+2026-10-24T05:39:47.2916023Z 
+2026-10-24T05:39:47.2916669Z > layerwell@0.1.0 photo03:source-contract:test
+2026-10-24T05:39:47.2917690Z > node --test scripts/photo03/photo03-source-contract.test.mjs
+2026-10-24T05:39:47.2918234Z 
+2026-10-24T05:39:47.3299178Z TAP version 13
+2026-10-24T05:39:48.1291674Z # Subtest: repository satisfies aggregate PHOTO-03 AST/dataflow contract
+2026-10-24T05:39:48.1302600Z ok 1 - repository satisfies aggregate PHOTO-03 AST/dataflow contract
+2026-10-24T05:39:48.1303373Z   ---
+2026-10-24T05:39:48.1303839Z   duration_ms: 82.566481
+2026-10-24T05:39:48.1304559Z   ...
+2026-10-24T05:39:48.1312617Z # Subtest: rejects enabling native face tracking
+2026-10-24T05:39:48.1314836Z ok 2 - rejects enabling native face tracking
+2026-10-24T05:39:48.1315463Z   ---
+2026-10-24T05:39:48.1315813Z   duration_ms: 31.209872
+2026-10-24T05:39:48.1316213Z   ...
+2026-10-24T05:39:48.1319358Z # Subtest: rejects adding identity-capable face observation fields
+2026-10-24T05:39:48.1320914Z ok 3 - rejects adding identity-capable face observation fields
+2026-10-24T05:39:48.1321803Z   ---
+2026-10-24T05:39:48.1322171Z   duration_ms: 17.446251
+2026-10-24T05:39:48.1322555Z   ...
+2026-10-24T05:39:48.1324349Z # Subtest: rejects matched framing without complete pose signals
+2026-10-24T05:39:48.1326349Z ok 4 - rejects matched framing without complete pose signals
+2026-10-24T05:39:48.1327358Z   ---
+2026-10-24T05:39:48.1327706Z   duration_ms: 17.408601
+2026-10-24T05:39:48.1328089Z   ...
+2026-10-24T05:39:48.1333648Z # Subtest: rejects raw native face publication
+2026-10-24T05:39:48.1336517Z ok 5 - rejects raw native face publication
+2026-10-24T05:39:48.1337264Z   ---
+2026-10-24T05:39:48.1337611Z   duration_ms: 16.189975
+2026-10-24T05:39:48.1338004Z   ...
+2026-10-24T05:39:48.1342375Z # Subtest: rejects lighting success before plaintext cleanup
+2026-10-24T05:39:48.1343346Z ok 6 - rejects lighting success before plaintext cleanup
+2026-10-24T05:39:48.1355048Z   ---
+2026-10-24T05:39:48.1355569Z   duration_ms: 14.537107
+2026-10-24T05:39:48.1356066Z   ...
+2026-10-24T05:39:48.1356780Z # Subtest: rejects network egress added to capture analysis
+2026-10-24T05:39:48.1394915Z ok 7 - rejects network egress added to capture analysis
+2026-10-24T05:39:48.1433638Z   ---
+2026-10-24T05:39:48.1434435Z   duration_ms: 17.266635
+2026-10-24T05:39:48.1434886Z   ...
+2026-10-24T05:39:48.1435542Z # Subtest: rejects production-accessible analysis fixtures
+2026-10-24T05:39:48.1436400Z ok 8 - rejects production-accessible analysis fixtures
+2026-10-24T05:39:48.1436968Z   ---
+2026-10-24T05:39:48.1437325Z   duration_ms: 15.412272
+2026-10-24T05:39:48.1437710Z   ...
+2026-10-24T05:39:48.1438326Z # Subtest: rejects an object spread that overrides disabled detector options
+2026-10-24T05:39:48.1438941Z ok 9 - rejects an object spread that overrides disabled detector options
+2026-10-24T05:39:48.1439312Z   ---
+2026-10-24T05:39:48.1439519Z   duration_ms: 9.957521
+2026-10-24T05:39:48.1439744Z   ...
+2026-10-24T05:39:48.1440128Z # Subtest: rejects pose completeness replaced with a true initializer
+2026-10-24T05:39:48.1440671Z ok 10 - rejects pose completeness replaced with a true initializer
+2026-10-24T05:39:48.1441011Z   ---
+2026-10-24T05:39:48.1441220Z   duration_ms: 15.854066
+2026-10-24T05:39:48.1441445Z   ...
+2026-10-24T05:39:48.1441910Z # Subtest: rejects an effective 4096px lighting resize while the bounded constant remains
+2026-10-24T05:39:48.1442602Z ok 11 - rejects an effective 4096px lighting resize while the bounded constant remains
+2026-10-24T05:39:48.1443011Z   ---
+2026-10-24T05:39:48.1443212Z   duration_ms: 10.791931
+2026-10-24T05:39:48.1443444Z   ...
+2026-10-24T05:39:48.1443824Z # Subtest: rejects cleanupOwnedSample returning before owned cleanup
+2026-10-24T05:39:48.1444907Z ok 12 - rejects cleanupOwnedSample returning before owned cleanup
+2026-10-24T05:39:48.1445429Z   ---
+2026-10-24T05:39:48.1445634Z   duration_ms: 12.87948
+2026-10-24T05:39:48.1445852Z   ...
+2026-10-24T05:39:48.1446424Z # Subtest: rejects aliased expo fetch egress
+2026-10-24T05:39:48.1446814Z ok 13 - rejects aliased expo fetch egress
+2026-10-24T05:39:48.1447087Z   ---
+2026-10-24T05:39:48.1447287Z   duration_ms: 13.787526
+2026-10-24T05:39:48.1447519Z   ...
+2026-10-24T05:39:48.1660535Z 1..13
+2026-10-24T05:39:48.1660857Z # tests 13
+2026-10-24T05:39:48.1661454Z # suites 0
+2026-10-24T05:39:48.1661924Z # pass 13
+2026-10-24T05:39:48.1662470Z # fail 0
+2026-10-24T05:39:48.1663043Z # cancelled 0
+2026-10-24T05:39:48.1663763Z # skipped 0
+2026-10-24T05:39:48.1664283Z # todo 0
+2026-10-24T05:39:48.1670471Z # duration_ms 845.143531
+2026-10-24T05:39:48.2795447Z 
+2026-10-24T05:39:48.2796137Z > layerwell@0.1.0 photo04:source-contract:test
+2026-10-24T05:39:48.2796748Z > node --test scripts/photo04/photo04-source-contract.test.mjs
+2026-10-24T05:39:48.2797075Z 
+2026-10-24T05:39:48.3175365Z TAP version 13
+2026-10-24T05:39:49.1438233Z # Subtest: repository satisfies aggregate PHOTO-04 AST/control-flow contract
+2026-10-24T05:39:49.1445444Z ok 1 - repository satisfies aggregate PHOTO-04 AST/control-flow contract
+2026-10-24T05:39:49.1446375Z   ---
+2026-10-24T05:39:49.1446935Z   duration_ms: 74.869138
+2026-10-24T05:39:49.1447504Z   ...
+2026-10-24T05:39:49.1451947Z # Subtest: rejects background playback that remains active
+2026-10-24T05:39:49.1453187Z ok 2 - rejects background playback that remains active
+2026-10-24T05:39:49.1454563Z   ---
+2026-10-24T05:39:49.1455617Z   duration_ms: 34.497632
+2026-10-24T05:39:49.1456065Z   ...
+2026-10-24T05:39:49.1458829Z # Subtest: rejects foreground auto-resume
+2026-10-24T05:39:49.1459696Z ok 3 - rejects foreground auto-resume
+2026-10-24T05:39:49.1460349Z   ---
+2026-10-24T05:39:49.1460864Z   duration_ms: 20.702162
+2026-10-24T05:39:49.1461410Z   ...
+2026-10-24T05:39:49.1462301Z # Subtest: rejects playback admission without Reduce Motion protection
+2026-10-24T05:39:49.1463528Z ok 4 - rejects playback admission without Reduce Motion protection
+2026-10-24T05:39:49.1464622Z   ---
+2026-10-24T05:39:49.1465246Z   duration_ms: 12.952345
+2026-10-24T05:39:49.1465881Z   ...
+2026-10-24T05:39:49.1469695Z # Subtest: rejects stale frame readiness starting playback
+2026-10-24T05:39:49.1494924Z ok 5 - rejects stale frame readiness starting playback
+2026-10-24T05:39:49.1495854Z   ---
+2026-10-24T05:39:49.1524848Z   duration_ms: 15.9951
+2026-10-24T05:39:49.1554602Z   ...
+2026-10-24T05:39:49.1555534Z # Subtest: rejects dwell timers that do not require a ready displayed frame
+2026-10-24T05:39:49.1562766Z ok 6 - rejects dwell timers that do not require a ready displayed frame
+2026-10-24T05:39:49.1563590Z   ---
+2026-10-24T05:39:49.1564407Z   duration_ms: 12.553871
+2026-10-24T05:39:49.1565122Z   ...
+2026-10-24T05:39:49.1565924Z # Subtest: rejects animated modal transitions
+2026-10-24T05:39:49.1574837Z ok 7 - rejects animated modal transitions
+2026-10-24T05:39:49.1575685Z   ---
+2026-10-24T05:39:49.1576349Z   duration_ms: 14.090231
+2026-10-24T05:39:49.1576973Z   ...
+2026-10-24T05:39:49.1577453Z # Subtest: rejects removal of accessibility escape
+2026-10-24T05:39:49.1578032Z ok 8 - rejects removal of accessibility escape
+2026-10-24T05:39:49.1578481Z   ---
+2026-10-24T05:39:49.1578832Z   duration_ms: 9.196259
+2026-10-24T05:39:49.1579194Z   ...
+2026-10-24T05:39:49.1579615Z # Subtest: rejects direct network capability
+2026-10-24T05:39:49.1580334Z ok 9 - rejects direct network capability
+2026-10-24T05:39:49.1580870Z   ---
+2026-10-24T05:39:49.1581467Z   duration_ms: 13.900637
+2026-10-24T05:39:49.1582029Z   ...
+2026-10-24T05:39:49.1582870Z # Subtest: rejects time-lapse content mounted outside the timeline lock
+2026-10-24T05:39:49.1584257Z ok 10 - rejects time-lapse content mounted outside the timeline lock
+2026-10-24T05:39:49.1585092Z   ---
+2026-10-24T05:39:49.1585612Z   duration_ms: 18.225532
+2026-10-24T05:39:49.1586180Z   ...
+2026-10-24T05:39:49.1587026Z # Subtest: rejects an early active app-state branch that resumes playback
+2026-10-24T05:39:49.1588221Z ok 11 - rejects an early active app-state branch that resumes playback
+2026-10-24T05:39:49.1589025Z   ---
+2026-10-24T05:39:49.1590047Z   duration_ms: 9.75852
+2026-10-24T05:39:49.1590741Z   ...
+2026-10-24T05:39:49.1591593Z # Subtest: rejects reversing frames after the checked oldest-first sort
+2026-10-24T05:39:49.1592748Z ok 12 - rejects reversing frames after the checked oldest-first sort
+2026-10-24T05:39:49.1593548Z   ---
+2026-10-24T05:39:49.1594255Z   duration_ms: 13.970056
+2026-10-24T05:39:49.1594952Z   ...
+2026-10-24T05:39:49.1596045Z # Subtest: rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+2026-10-24T05:39:49.1597379Z ok 13 - rejects a direct PhotoTimelapse mount before PhotoTimelineLockGate
+2026-10-24T05:39:49.1597962Z   ---
+2026-10-24T05:39:49.1598317Z   duration_ms: 14.921705
+2026-10-24T05:39:49.1598683Z   ...
+2026-10-24T05:39:49.1599222Z # Subtest: rejects an early Reduce Motion branch that keeps playback active
+2026-10-24T05:39:49.1599930Z ok 14 - rejects an early Reduce Motion branch that keeps playback active
+2026-10-24T05:39:49.1600473Z   ---
+2026-10-24T05:39:49.1600822Z   duration_ms: 7.004635
+2026-10-24T05:39:49.1601188Z   ...
+2026-10-24T05:39:49.1601625Z # Subtest: rejects aliased axios network capability
+2026-10-24T05:39:49.1602175Z ok 15 - rejects aliased axios network capability
+2026-10-24T05:39:49.1602603Z   ---
+2026-10-24T05:39:49.1602942Z   duration_ms: 11.661945
+2026-10-24T05:39:49.1603311Z   ...
+2026-10-24T05:39:49.1785188Z 1..15
+2026-10-24T05:39:49.1785649Z # tests 15
+2026-10-24T05:39:49.1786334Z # suites 0
+2026-10-24T05:39:49.1786693Z # pass 15
+2026-10-24T05:39:49.1787234Z # fail 0
+2026-10-24T05:39:49.1787754Z # cancelled 0
+2026-10-24T05:39:49.1788254Z # skipped 0
+2026-10-24T05:39:49.1788749Z # todo 0
+2026-10-24T05:39:49.1795525Z # duration_ms 869.912598
+2026-10-24T05:39:49.2961047Z 
+2026-10-24T05:39:49.2961830Z > layerwell@0.1.0 photo05:trend-admission-source-contract:test
+2026-10-24T05:39:49.2962581Z > node --test scripts/photo05/trend-admission-source-contract.test.mjs
+2026-10-24T05:39:49.2962924Z 
+2026-10-24T05:39:49.3349070Z TAP version 13
+2026-10-24T05:40:15.6496391Z # Subtest: real PHOTO-05A sources enforce immutable literal-zero Trend admission
+2026-10-24T05:40:15.6508196Z ok 1 - real PHOTO-05A sources enforce immutable literal-zero Trend admission
+2026-10-24T05:40:15.6509194Z   ---
+2026-10-24T05:40:15.6509641Z   duration_ms: 1049.667416
+2026-10-24T05:40:15.6510015Z   ...
+2026-10-24T05:40:15.6518085Z # Subtest: the audit is deterministic, frozen, path-sorted, and inventory-complete
+2026-10-24T05:40:15.6520387Z ok 2 - the audit is deterministic, frozen, path-sorted, and inventory-complete
+2026-10-24T05:40:15.6521100Z   ---
+2026-10-24T05:40:15.6521453Z   duration_ms: 1004.032292
+2026-10-24T05:40:15.6521833Z   ...
+2026-10-24T05:40:15.6523977Z # Subtest: missing checkpoint, runtime, contract, type, and database authority sources fail closed
+2026-10-24T05:40:15.6526613Z ok 3 - missing checkpoint, runtime, contract, type, and database authority sources fail closed
+2026-10-24T05:40:15.6527412Z   ---
+2026-10-24T05:40:15.6527752Z   duration_ms: 28.551886
+2026-10-24T05:40:15.6528126Z   ...
+2026-10-24T05:40:15.6530232Z # Subtest: capability and surface flags cannot be opened or made environment-driven
+2026-10-24T05:40:15.6531639Z ok 4 - capability and surface flags cannot be opened or made environment-driven
+2026-10-24T05:40:15.6532565Z   ---
+2026-10-24T05:40:15.6533054Z   duration_ms: 1364.362276
+2026-10-24T05:40:15.6533566Z   ...
+2026-10-24T05:40:15.6555203Z # Subtest: every machine admission field is immutable false and extra keys are rejected
+2026-10-24T05:40:15.6585027Z ok 5 - every machine admission field is immutable false and extra keys are rejected
+2026-10-24T05:40:15.6585835Z   ---
+2026-10-24T05:40:15.6586200Z   duration_ms: 5262.956537
+2026-10-24T05:40:15.6586596Z   ...
+2026-10-24T05:40:15.6587598Z # Subtest: simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+2026-10-24T05:40:15.6588570Z ok 6 - simulated delta, lighting, MDC, fairness, score, age, percentage, and redness output paths are rejected
+2026-10-24T05:40:15.6589079Z   ---
+2026-10-24T05:40:15.6648929Z   duration_ms: 3054.739308
+2026-10-24T05:40:15.6649491Z   ...
+2026-10-24T05:40:15.6650630Z # Subtest: isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+2026-10-24T05:40:15.6652348Z ok 7 - isolated receipt primitives cannot add network, server writes, content telemetry, or fabricated thresholds
+2026-10-24T05:40:15.6653332Z   ---
+2026-10-24T05:40:15.6653718Z   duration_ms: 1748.067444
+2026-10-24T05:40:15.6654361Z   ...
+2026-10-24T05:40:15.6655296Z # Subtest: disabled routes cannot load or invoke a dynamically required positive receipt factory
+2026-10-24T05:40:15.6656668Z ok 8 - disabled routes cannot load or invoke a dynamically required positive receipt factory
+2026-10-24T05:40:15.6657499Z   ---
+2026-10-24T05:40:15.6657857Z   duration_ms: 480.849697
+2026-10-24T05:40:15.6658285Z   ...
+2026-10-24T05:40:15.6659245Z # Subtest: ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+2026-10-24T05:40:15.6660769Z ok 9 - ordinary production surfaces cannot hide a Trend import behind a computed module specifier
+2026-10-24T05:40:15.6661623Z   ---
+2026-10-24T05:40:15.6661995Z   duration_ms: 470.505031
+2026-10-24T05:40:15.6662415Z   ...
+2026-10-24T05:40:15.6663294Z # Subtest: ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+2026-10-24T05:40:15.6665168Z ok 10 - ordinary production surfaces cannot re-export the disabled Trend receipt runtime
+2026-10-24T05:40:15.6666073Z   ---
+2026-10-24T05:40:15.6666450Z   duration_ms: 876.431073
+2026-10-24T05:40:15.6666867Z   ...
+2026-10-24T05:40:15.6667754Z # Subtest: ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+2026-10-24T05:40:15.6669144Z ok 11 - ordinary production surfaces cannot alias CommonJS or executable runtime loaders
+2026-10-24T05:40:15.6669958Z   ---
+2026-10-24T05:40:15.6670306Z   duration_ms: 1727.758123
+2026-10-24T05:40:15.6670734Z   ...
+2026-10-24T05:40:15.6671772Z # Subtest: photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+2026-10-24T05:40:15.6673408Z ok 12 - photo, profile, consent, classifier, query, network, analytics, and storage side effects are rejected
+2026-10-24T05:40:15.6674530Z   ---
+2026-10-24T05:40:15.6674916Z   duration_ms: 2191.146273
+2026-10-24T05:40:15.6675350Z   ...
+2026-10-24T05:40:15.6676121Z # Subtest: caller, fixture, legacy, E2E, and development bypasses are rejected
+2026-10-24T05:40:15.6677240Z ok 13 - caller, fixture, legacy, E2E, and development bypasses are rejected
+2026-10-24T05:40:15.6677968Z   ---
+2026-10-24T05:40:15.6678315Z   duration_ms: 2980.589287
+2026-10-24T05:40:15.6678740Z   ...
+2026-10-24T05:40:15.6679572Z # Subtest: positive consent grants and enabled consent-choice delegation are rejected
+2026-10-24T05:40:15.6680850Z ok 14 - positive consent grants and enabled consent-choice delegation are rejected
+2026-10-24T05:40:15.6681590Z   ---
+2026-10-24T05:40:15.6681963Z   duration_ms: 1304.677988
+2026-10-24T05:40:15.6682405Z   ...
+2026-10-24T05:40:15.6683328Z # Subtest: direct route analytics and hidden enabled fairness or consent branches are rejected
+2026-10-24T05:40:15.6684854Z ok 15 - direct route analytics and hidden enabled fairness or consent branches are rejected
+2026-10-24T05:40:15.6685692Z   ---
+2026-10-24T05:40:15.6686065Z   duration_ms: 1325.877898
+2026-10-24T05:40:15.6686486Z   ...
+2026-10-24T05:40:15.6687429Z # Subtest: Progress and any future production consumer cannot import disabled Trend runtime code
+2026-10-24T05:40:15.6688843Z ok 16 - Progress and any future production consumer cannot import disabled Trend runtime code
+2026-10-24T05:40:15.6689674Z   ---
+2026-10-24T05:40:15.6690051Z   duration_ms: 464.319457
+2026-10-24T05:40:15.6690584Z   ...
+2026-10-24T05:40:15.6691477Z # Subtest: package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+2026-10-24T05:40:15.6692871Z ok 17 - package verification wiring cannot omit PHOTO-05A from launch, Phase 7, or Phase 9
+2026-10-24T05:40:15.6693897Z   ---
+2026-10-24T05:40:15.6694471Z   duration_ms: 447.376648
+2026-10-24T05:40:15.6694901Z   ...
+2026-10-24T05:40:15.6879044Z 1..17
+2026-10-24T05:40:15.6879441Z # tests 17
+2026-10-24T05:40:15.6880070Z # suites 0
+2026-10-24T05:40:15.6880817Z # pass 17
+2026-10-24T05:40:15.6881232Z # fail 0
+2026-10-24T05:40:15.6881966Z # cancelled 0
+2026-10-24T05:40:15.6882480Z # skipped 0
+2026-10-24T05:40:15.6883074Z # todo 0
+2026-10-24T05:40:15.6887779Z # duration_ms 26362.059254
+2026-10-24T05:40:15.8045856Z 
+2026-10-24T05:40:15.8046457Z > layerwell@0.1.0 photo07:source-contract:test
+2026-10-24T05:40:15.8047039Z > node --test scripts/photo07/photo07-source-contract.test.mjs
+2026-10-24T05:40:15.8047349Z 
+2026-10-24T05:40:15.8425475Z TAP version 13
+2026-10-24T05:40:16.5831510Z # Subtest: repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+2026-10-24T05:40:16.5842109Z ok 1 - repository satisfies aggregate PHOTO-07 disclosure/lifecycle contract
+2026-10-24T05:40:16.5854892Z   ---
+2026-10-24T05:40:16.5855672Z   duration_ms: 55.61209
+2026-10-24T05:40:16.5856350Z   ...
+2026-10-24T05:40:16.5857365Z # Subtest: rejects absolute welcome no-egress copy that omits explicit sharing
+2026-10-24T05:40:16.5865017Z ok 2 - rejects absolute welcome no-egress copy that omits explicit sharing
+2026-10-24T05:40:16.5868655Z   ---
+2026-10-24T05:40:16.5869266Z   duration_ms: 26.304736
+2026-10-24T05:40:16.5870376Z   ...
+2026-10-24T05:40:16.5871230Z # Subtest: rejects capture disclosure without device-loss risk
+2026-10-24T05:40:16.5872301Z ok 3 - rejects capture disclosure without device-loss risk
+2026-10-24T05:40:16.5873033Z   ---
+2026-10-24T05:40:16.5972131Z   duration_ms: 20.681575
+2026-10-24T05:40:16.5972615Z   ...
+2026-10-24T05:40:16.5973098Z # Subtest: rejects capture disclosure without the explicit-share exception
+2026-10-24T05:40:16.5973722Z ok 4 - rejects capture disclosure without the explicit-share exception
+2026-10-24T05:40:16.5974443Z   ---
+2026-10-24T05:40:16.5974810Z   duration_ms: 11.632274
+2026-10-24T05:40:16.5975195Z   ...
+2026-10-24T05:40:16.5975641Z # Subtest: rejects enabling Trend while no validated engine ships
+2026-10-24T05:40:16.5976157Z ok 5 - rejects enabling Trend while no validated engine ships
+2026-10-24T05:40:16.5976494Z   ---
+2026-10-24T05:40:16.5976709Z   duration_ms: 12.028274
+2026-10-24T05:40:16.5976941Z   ...
+2026-10-24T05:40:16.5977286Z # Subtest: rejects photo bytes being included in local export
+2026-10-24T05:40:16.5977783Z ok 6 - rejects photo bytes being included in local export
+2026-10-24T05:40:16.5978113Z   ---
+2026-10-24T05:40:16.5978319Z   duration_ms: 10.328559
+2026-10-24T05:40:16.5978548Z   ...
+2026-10-24T05:40:16.5979490Z # Subtest: rejects omission of encrypted photo cleanup
+2026-10-24T05:40:16.5980502Z ok 7 - rejects omission of encrypted photo cleanup
+2026-10-24T05:40:16.5981084Z   ---
+2026-10-24T05:40:16.5981440Z   duration_ms: 9.403692
+2026-10-24T05:40:16.5981823Z   ...
+2026-10-24T05:40:16.5982448Z # Subtest: rejects deletion that hides partial cleanup failure
+2026-10-24T05:40:16.5983092Z ok 8 - rejects deletion that hides partial cleanup failure
+2026-10-24T05:40:16.5983416Z   ---
+2026-10-24T05:40:16.5983630Z   duration_ms: 10.037346
+2026-10-24T05:40:16.5983866Z   ...
+2026-10-24T05:40:16.5984736Z # Subtest: rejects contradictory visible automatic-upload copy appended to welcome
+2026-10-24T05:40:16.5985890Z ok 9 - rejects contradictory visible automatic-upload copy appended to welcome
+2026-10-24T05:40:16.5986662Z   ---
+2026-10-24T05:40:16.5987003Z   duration_ms: 8.512057
+2026-10-24T05:40:16.5987360Z   ...
+2026-10-24T05:40:16.5988012Z # Subtest: rejects visible automatic-backup copy with an intervening also
+2026-10-24T05:40:16.5988949Z ok 10 - rejects visible automatic-backup copy with an intervening also
+2026-10-24T05:40:16.5989544Z   ---
+2026-10-24T05:40:16.5989868Z   duration_ms: 9.003064
+2026-10-24T05:40:16.5990216Z   ...
+2026-10-24T05:40:16.5990816Z # Subtest: rejects a spread overriding the literal disabled Trend flag
+2026-10-24T05:40:16.5992131Z ok 11 - rejects a spread overriding the literal disabled Trend flag
+2026-10-24T05:40:16.5992714Z   ---
+2026-10-24T05:40:16.5993086Z   duration_ms: 7.961169
+2026-10-24T05:40:16.5993454Z   ...
+2026-10-24T05:40:16.5994379Z # Subtest: rejects local cleanup returning immediately at function entry
+2026-10-24T05:40:16.5995356Z ok 12 - rejects local cleanup returning immediately at function entry
+2026-10-24T05:40:16.5995974Z   ---
+2026-10-24T05:40:16.5996335Z   duration_ms: 8.433089
+2026-10-24T05:40:16.5996561Z   ...
+2026-10-24T05:40:16.5997005Z # Subtest: rejects returning immediately before terminal partial-failure propagation
+2026-10-24T05:40:16.5997678Z ok 13 - rejects returning immediately before terminal partial-failure propagation
+2026-10-24T05:40:16.5998086Z   ---
+2026-10-24T05:40:16.5998289Z   duration_ms: 7.511518
+2026-10-24T05:40:16.5998512Z   ...
+2026-10-24T05:40:16.6195316Z 1..13
+2026-10-24T05:40:16.6195732Z # tests 13
+2026-10-24T05:40:16.6196171Z # suites 0
+2026-10-24T05:40:16.6196696Z # pass 13
+2026-10-24T05:40:16.6197461Z # fail 0
+2026-10-24T05:40:16.6197947Z # cancelled 0
+2026-10-24T05:40:16.6198374Z # skipped 0
+2026-10-24T05:40:16.6198961Z # todo 0
+2026-10-24T05:40:16.6203598Z # duration_ms 785.976023
+2026-10-24T05:40:16.7398706Z 
+2026-10-24T05:40:16.7399387Z > layerwell@0.1.0 com01:commerce-admission-source-contract:test
+2026-10-24T05:40:16.7400078Z > node --test scripts/com01/commerce-admission-source-contract.test.mjs
+2026-10-24T05:40:16.7400694Z 
+2026-10-24T05:40:16.7788086Z TAP version 13
+2026-10-24T05:40:42.6545819Z # Subtest: current COM-01A commerce source snapshot passes
+2026-10-24T05:40:42.6575180Z ok 1 - current COM-01A commerce source snapshot passes
+2026-10-24T05:40:42.6583975Z   ---
+2026-10-24T05:40:42.6584932Z   duration_ms: 1218.02049
+2026-10-24T05:40:42.6585693Z   ...
+2026-10-24T05:40:42.6586442Z # Subtest: missing authority files fail closed
+2026-10-24T05:40:42.6587353Z ok 2 - missing authority files fail closed
+2026-10-24T05:40:42.6588055Z   ---
+2026-10-24T05:40:42.6588601Z   duration_ms: 20.322003
+2026-10-24T05:40:42.6589186Z   ...
+2026-10-24T05:40:42.6590120Z # Subtest: environment and literal capability bypasses are rejected
+2026-10-24T05:40:42.6591332Z ok 3 - environment and literal capability bypasses are rejected
+2026-10-24T05:40:42.6592176Z   ---
+2026-10-24T05:40:42.6592712Z   duration_ms: 1231.791254
+2026-10-24T05:40:42.6593296Z   ...
+2026-10-24T05:40:42.6594395Z # Subtest: machine admission cannot be opened or extended
+2026-10-24T05:40:42.6595487Z ok 4 - machine admission cannot be opened or extended
+2026-10-24T05:40:42.6596276Z   ---
+2026-10-24T05:40:42.6596819Z   duration_ms: 1144.126252
+2026-10-24T05:40:42.6597400Z   ...
+2026-10-24T05:40:42.6598379Z # Subtest: direct commerce routes cannot add consent, analytics, or state reads
+2026-10-24T05:40:42.6625105Z ok 5 - direct commerce routes cannot add consent, analytics, or state reads
+2026-10-24T05:40:42.6634816Z   ---
+2026-10-24T05:40:42.6635249Z   duration_ms: 1123.572414
+2026-10-24T05:40:42.6635705Z   ...
+2026-10-24T05:40:42.6636660Z # Subtest: commerce layout must remain a transparent Slot without refusal or canonicalization
+2026-10-24T05:40:42.6638065Z ok 6 - commerce layout must remain a transparent Slot without refusal or canonicalization
+2026-10-24T05:40:42.6638916Z   ---
+2026-10-24T05:40:42.6639322Z   duration_ms: 2243.050328
+2026-10-24T05:40:42.6639761Z   ...
+2026-10-24T05:40:42.6640665Z # Subtest: shared commerce recovery cannot regain analytics, network, or unguarded telemetry
+2026-10-24T05:40:42.6642057Z ok 7 - shared commerce recovery cannot regain analytics, network, or unguarded telemetry
+2026-10-24T05:40:42.6642879Z   ---
+2026-10-24T05:40:42.6643267Z   duration_ms: 1121.579821
+2026-10-24T05:40:42.6643721Z   ...
+2026-10-24T05:40:42.6644771Z # Subtest: concrete commerce routes cannot redirect or canonicalize direct URLs
+2026-10-24T05:40:42.6645972Z ok 8 - concrete commerce routes cannot redirect or canonicalize direct URLs
+2026-10-24T05:40:42.6646723Z   ---
+2026-10-24T05:40:42.6647071Z   duration_ms: 567.258937
+2026-10-24T05:40:42.6647490Z   ...
+2026-10-24T05:40:42.6648702Z # Subtest: development retailer fixtures and reviewer bypasses are rejected
+2026-10-24T05:40:42.6649890Z ok 9 - development retailer fixtures and reviewer bypasses are rejected
+2026-10-24T05:40:42.6650652Z   ---
+2026-10-24T05:40:42.6651015Z   duration_ms: 1121.525529
+2026-10-24T05:40:42.6651394Z   ...
+2026-10-24T05:40:42.6651986Z # Subtest: catalog reads and click writes are rejected
+2026-10-24T05:40:42.6652836Z ok 10 - catalog reads and click writes are rejected
+2026-10-24T05:40:42.6653423Z   ---
+2026-10-24T05:40:42.6653812Z   duration_ms: 1114.776756
+2026-10-24T05:40:42.6654502Z   ...
+2026-10-24T05:40:42.6655454Z # Subtest: dormant consent, disclosure, and attribution helpers cannot issue a positive result
+2026-10-24T05:40:42.6656872Z ok 11 - dormant consent, disclosure, and attribution helpers cannot issue a positive result
+2026-10-24T05:40:42.6657730Z   ---
+2026-10-24T05:40:42.6658126Z   duration_ms: 2211.370136
+2026-10-24T05:40:42.6658552Z   ...
+2026-10-24T05:40:42.6659317Z # Subtest: dormant presentation modules cannot gain a production consumer
+2026-10-24T05:40:42.6660440Z ok 12 - dormant presentation modules cannot gain a production consumer
+2026-10-24T05:40:42.6661136Z   ---
+2026-10-24T05:40:42.6661507Z   duration_ms: 1111.94075
+2026-10-24T05:40:42.6661926Z   ...
+2026-10-24T05:40:42.6662822Z # Subtest: computed commerce imports and retired environment consumers are rejected globally
+2026-10-24T05:40:42.6664924Z ok 13 - computed commerce imports and retired environment consumers are rejected globally
+2026-10-24T05:40:42.6665763Z   ---
+2026-10-24T05:40:42.6666147Z   duration_ms: 1671.365106
+2026-10-24T05:40:42.6666573Z   ...
+2026-10-24T05:40:42.6667443Z # Subtest: positive consent mutation is rejected while withdrawal cleanup remains required
+2026-10-24T05:40:42.6668750Z ok 14 - positive consent mutation is rejected while withdrawal cleanup remains required
+2026-10-24T05:40:42.6669534Z   ---
+2026-10-24T05:40:42.6669886Z   duration_ms: 1105.591368
+2026-10-24T05:40:42.6670286Z   ...
+2026-10-24T05:40:42.6671021Z # Subtest: Shelf replenishment and You cannot retain commerce entry points
+2026-10-24T05:40:42.6672094Z ok 15 - Shelf replenishment and You cannot retain commerce entry points
+2026-10-24T05:40:42.6672777Z   ---
+2026-10-24T05:40:42.6673137Z   duration_ms: 1109.336572
+2026-10-24T05:40:42.6673549Z   ...
+2026-10-24T05:40:42.6674458Z # Subtest: provider credentials cannot activate order polling
+2026-10-24T05:40:42.6675356Z ok 16 - provider credentials cannot activate order polling
+2026-10-24T05:40:42.6675957Z   ---
+2026-10-24T05:40:42.6676333Z   duration_ms: 563.638488
+2026-10-24T05:40:42.6676732Z   ...
+2026-10-24T05:40:42.6677606Z # Subtest: dormant order-attribution core and alternate server consumers stay inventoried
+2026-10-24T05:40:42.6678901Z ok 17 - dormant order-attribution core and alternate server consumers stay inventoried
+2026-10-24T05:40:42.6679671Z   ---
+2026-10-24T05:40:42.6680045Z   duration_ms: 1654.787577
+2026-10-24T05:40:42.6680449Z   ...
+2026-10-24T05:40:42.6681178Z # Subtest: database publication reads and click inserts cannot be restored
+2026-10-24T05:40:42.6682297Z ok 18 - database publication reads and click inserts cannot be restored
+2026-10-24T05:40:42.6693808Z   ---
+2026-10-24T05:40:42.6694595Z   duration_ms: 579.822723
+2026-10-24T05:40:42.6695201Z   ...
+2026-10-24T05:40:42.6696091Z # Subtest: legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary
+2026-10-24T05:40:42.6697473Z ok 19 - legacy ambient commerce ACLs converge on the deterministic cleanup-only boundary
+2026-10-24T05:40:42.6698301Z   ---
+2026-10-24T05:40:42.6698704Z   duration_ms: 1648.236325
+2026-10-24T05:40:42.6699148Z   ...
+2026-10-24T05:40:42.6699958Z # Subtest: stale pollers cannot regain order-attribution publication authority
+2026-10-24T05:40:42.6709205Z ok 20 - stale pollers cannot regain order-attribution publication authority
+2026-10-24T05:40:42.6724883Z   ---
+2026-10-24T05:40:42.6735043Z   duration_ms: 1652.936923
+2026-10-24T05:40:42.6735505Z   ...
+2026-10-24T05:40:42.6736390Z # Subtest: WhereToBuy cannot inspect provenance or mount runtime effects
+2026-10-24T05:40:42.6737047Z ok 21 - WhereToBuy cannot inspect provenance or mount runtime effects
+2026-10-24T05:40:42.6737457Z   ---
+2026-10-24T05:40:42.6737694Z   duration_ms: 556.757108
+2026-10-24T05:40:42.6737945Z   ...
+2026-10-24T05:40:42.6738286Z # Subtest: un-inventoried commerce source is rejected
+2026-10-24T05:40:42.6738763Z ok 22 - un-inventoried commerce source is rejected
+2026-10-24T05:40:42.6739084Z   ---
+2026-10-24T05:40:42.6739304Z   duration_ms: 559.481044
+2026-10-24T05:40:42.6739553Z   ...
+2026-10-24T05:40:42.6933365Z 1..22
+2026-10-24T05:40:42.6933741Z # tests 22
+2026-10-24T05:40:42.6934770Z # suites 0
+2026-10-24T05:40:42.6935439Z # pass 22
+2026-10-24T05:40:42.6935901Z # fail 0
+2026-10-24T05:40:42.6936520Z # cancelled 0
+2026-10-24T05:40:42.6937153Z # skipped 0
+2026-10-24T05:40:42.6937773Z # todo 0
+2026-10-24T05:40:42.6943155Z # duration_ms 25924.311471
+2026-10-24T05:40:42.8058212Z 
+2026-10-24T05:40:42.8059048Z > layerwell@0.1.0 pay08:ios-win-back-source-contract:test
+2026-10-24T05:40:42.8060165Z > node --test scripts/pay08/ios-win-back-source-contract.test.mjs
+2026-10-24T05:40:42.8060754Z 
+2026-10-24T05:40:42.8440744Z TAP version 13
+2026-10-24T05:40:44.0008776Z # Subtest: current PAY-08 no-offer source contract passes
+2026-10-24T05:40:44.0019987Z ok 1 - current PAY-08 no-offer source contract passes
+2026-10-24T05:40:44.0021940Z   ---
+2026-10-24T05:40:44.0022826Z   duration_ms: 140.697273
+2026-10-24T05:40:44.0023610Z   ...
+2026-10-24T05:40:44.0024683Z # Subtest: missing governed source fails closed
+2026-10-24T05:40:44.0029331Z ok 2 - missing governed source fails closed
+2026-10-24T05:40:44.0029947Z   ---
+2026-10-24T05:40:44.0030356Z   duration_ms: 1.619706
+2026-10-24T05:40:44.0030781Z   ...
+2026-10-24T05:40:44.0037678Z # Subtest: forged positive launch admission is rejected
+2026-10-24T05:40:44.0039414Z ok 3 - forged positive launch admission is rejected
+2026-10-24T05:40:44.0040230Z   ---
+2026-10-24T05:40:44.0040814Z   duration_ms: 50.125555
+2026-10-24T05:40:44.0041352Z   ...
+2026-10-24T05:40:44.0042692Z # Subtest: EAS profile or app-config override cannot enable the closed admission
+2026-10-24T05:40:44.0043899Z ok 4 - EAS profile or app-config override cannot enable the closed admission
+2026-10-24T05:40:44.0045053Z   ---
+2026-10-24T05:40:44.0045430Z   duration_ms: 81.615112
+2026-10-24T05:40:44.0045950Z   ...
+2026-10-24T05:40:44.0047136Z # Subtest: automatic or unconditional StoreKit win-back messages are rejected
+2026-10-24T05:40:44.0048824Z ok 5 - automatic or unconditional StoreKit win-back messages are rejected
+2026-10-24T05:40:44.0049759Z   ---
+2026-10-24T05:40:44.0050297Z   duration_ms: 119.753593
+2026-10-24T05:40:44.0050894Z   ...
+2026-10-24T05:40:44.0054402Z # Subtest: disabled discovery and purchase must return before provider calls
+2026-10-24T05:40:44.0055628Z ok 6 - disabled discovery and purchase must return before provider calls
+2026-10-24T05:40:44.0056399Z   ---
+2026-10-24T05:40:44.0056796Z   duration_ms: 58.731718
+2026-10-24T05:40:44.0057253Z   ...
+2026-10-24T05:40:44.0058860Z # Subtest: manual recovery-message retry cannot lose binding, cache, or foreground reachability
+2026-10-24T05:40:44.0060525Z ok 7 - manual recovery-message retry cannot lose binding, cache, or foreground reachability
+2026-10-24T05:40:44.0061572Z   ---
+2026-10-24T05:40:44.0062113Z   duration_ms: 76.154603
+2026-10-24T05:40:44.0062699Z   ...
+2026-10-24T05:40:44.0063586Z # Subtest: hardcoded discount claims and ungoverned wiring are rejected
+2026-10-24T05:40:44.0065148Z ok 8 - hardcoded discount claims and ungoverned wiring are rejected
+2026-10-24T05:40:44.0066303Z   ---
+2026-10-24T05:40:44.0067033Z   duration_ms: 81.807722
+2026-10-24T05:40:44.0067824Z   ...
+2026-10-24T05:40:44.0068930Z # Subtest: source checkpoint cannot erase the external App Store Connect boundary
+2026-10-24T05:40:44.0070214Z ok 9 - source checkpoint cannot erase the external App Store Connect boundary
+2026-10-24T05:40:44.0071028Z   ---
+2026-10-24T05:40:44.0071435Z   duration_ms: 26.31809
+2026-10-24T05:40:44.0072184Z   ...
+2026-10-24T05:40:44.0245419Z 1..9
+2026-10-24T05:40:44.0245822Z # tests 9
+2026-10-24T05:40:44.0246338Z # suites 0
+2026-10-24T05:40:44.0246899Z # pass 9
+2026-10-24T05:40:44.0247462Z # fail 0
+2026-10-24T05:40:44.0248028Z # cancelled 0
+2026-10-24T05:40:44.0248571Z # skipped 0
+2026-10-24T05:40:44.0249117Z # todo 0
+2026-10-24T05:40:44.0255211Z # duration_ms 1189.456944
+2026-10-24T05:40:44.0418320Z ##[group]Run npm run launch:execution-baseline:check
+2026-10-24T05:40:44.0418757Z [36;1mnpm run launch:execution-baseline:check[0m
+2026-10-24T05:40:44.0419100Z [36;1mnpm run launch:execution-baseline:smoke[0m
+2026-10-24T05:40:44.0479213Z shell: /usr/bin/bash -e {0}
+2026-10-24T05:40:44.0479484Z ##[endgroup]
+2026-10-24T05:40:44.1663024Z 
+2026-10-24T05:40:44.1663626Z > layerwell@0.1.0 launch:execution-baseline:check
+2026-10-24T05:40:44.1664612Z > node scripts/launch/validate-execution-baseline.mjs
+2026-10-24T05:40:44.1664903Z 
+2026-10-24T05:40:44.5527527Z Execution baseline validation failed (1):
+2026-10-24T05:40:44.5532002Z - docs/hugeToDo/feature-inventory.json is stale. Run node scripts/launch/build-execution-baseline.mjs and review the diff.
+2026-10-24T05:40:44.5660397Z ##[error]Process completed with exit code 1.
+2026-10-24T05:40:44.5750785Z Post job cleanup.
+2026-10-24T05:40:44.6959785Z Caching is not enabled. Caching is skipped.
+2026-10-24T05:40:44.7133594Z Post job cleanup.
+2026-10-24T05:40:44.8034542Z [command]/usr/bin/git version
+2026-10-24T05:40:44.8070700Z git version 2.55.0
+2026-10-24T05:40:44.8115378Z Temporarily overriding HOME='/home/runner/work/_temp/7692925a-64b0-4970-b9cb-86793400c6b3' before making global git config changes
+2026-10-24T05:40:44.8116930Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T05:40:44.8120352Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-24T05:40:44.8153616Z Removing SSH command configuration
+2026-10-24T05:40:44.8160741Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T05:40:44.8198989Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T05:40:44.8521637Z Removing HTTP extra header
+2026-10-24T05:40:44.8528530Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T05:40:44.8585293Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T05:40:44.8986945Z Removing includeIf entries pointing to credentials config files
+2026-10-24T05:40:44.8989005Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T05:40:44.9029933Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T05:40:44.9495726Z Cleaning up orphan processes
+
