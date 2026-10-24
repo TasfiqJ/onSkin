@@ -404,7 +404,11 @@ it.each([
     // the admitted snapshot, without turning a new read into empty/success.
     ports.failRead = true;
     await act(async () => { await vi.advanceTimersByTimeAsync(1250); });
+    // The date effect updates the existing QueryClient; deliver its queued
+    // observer notification after React has committed that effect.
+    await act(async () => { await vi.advanceTimersByTimeAsync(1); });
     expect(visible?.items[0]?.badge.label).toBe('Time to replace');
+    expect(visible).toBe(client.getQueryData(['shelf']));
     expect(ports.bytes).toEqual(ciphertext);
     await act(async () => { clearActiveHealthProcessingEpoch(); });
     expect(visible).toBeUndefined();
