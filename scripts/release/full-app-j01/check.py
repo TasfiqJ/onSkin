@@ -144,7 +144,7 @@ def allowed09(path):
                  or path.startswith(RELEASE09_PREFIXES)))
 
 
-def validate09_diff(raw, read_after):
+def validate09_diff(raw, read_after, historical_commit=None):
     """Parse actual --raw -z Git deltas: no rename, deletion, symlink or broad prefix grant."""
     fields = raw.split(b'\0')
     require(fields[-1] == b'' and len(fields) % 2 == 1, 'R09_DIFF_SHAPE')
@@ -158,7 +158,12 @@ def validate09_diff(raw, read_after):
         require((path in RELEASE09_EXISTING) == (oldmode != ':000000'), 'R09_CREATE_EDIT:'+path)
         if path == '.github/workflows/quality.yml':
             before = git('show', RELEASE08+':'+path)
-            expected = before.replace(b'\n  expo-export:\n', RELEASE09_STEP+b'\n  expo-export:\n')
+            expected = before.replace(b'      - name: Verify tooling security backports\n', RELEASE09_STEP.lstrip(b'\n')+b'\n      - name: Verify tooling security backports\n')
+            # Preserve the immutable first candidate's exact last-step placement.
+            # Working/future states must use the current early placement so this
+            # independent guard is exercised before the blocked legacy worklist.
+            if historical_commit == 'eb86be5298afd0fae3344ef6bf2a4db3b7ada116':
+                expected = before.replace(b'\n  expo-export:\n', RELEASE09_STEP+b'\n  expo-export:\n')
             require(read_after(path) == expected, 'R09_WORKFLOW_EXACT_ADDITION')
 
 
@@ -171,7 +176,7 @@ def source09_guard():
     # endpoint, then the index/working tree and every untracked path separately.
     for commit in git('rev-list', '--reverse', RELEASE08+'..HEAD').decode().splitlines():
         raw = git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE08, commit)
-        validate09_diff(raw, lambda path: git('show', commit+':'+path))
+        validate09_diff(raw, lambda path: git('show', commit+':'+path), historical_commit=commit)
     validate09_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE08),
                     lambda path: regular(ROOT/path))
     for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):

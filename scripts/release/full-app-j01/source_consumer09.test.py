@@ -36,7 +36,7 @@ def main():
     workflow = '.github/workflows/quality.yml'
     audit = 'scripts/docs/source-packet-audit.mjs'
     before_workflow = check.git('show', check.RELEASE08+':'+workflow)
-    exact_workflow = before_workflow.replace(b'\n  expo-export:\n', check.RELEASE09_STEP+b'\n  expo-export:\n')
+    exact_workflow = before_workflow.replace(b'      - name: Verify tooling security backports\n', check.RELEASE09_STEP.lstrip(b'\n')+b'\n      - name: Verify tooling security backports\n')
     with tempfile.TemporaryDirectory(prefix='onskin-git09-') as temporary:
         fixture = Path(temporary)
         def git(*args):
@@ -58,11 +58,11 @@ def main():
                          'docs/release/full-app-j01/consumer-scope09.md']:
                 p = fixture/path
                 if p.exists(): p.unlink()
-        def run(name, expected):
+        def run(name, expected, historical_commit=None):
             nonlocal rejected
             raw = git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', tree)
             try:
-                check.validate09_diff(raw, lambda path: (fixture/path).read_bytes())
+                check.validate09_diff(raw, lambda path: (fixture/path).read_bytes(), historical_commit=historical_commit)
                 actual = 0; error = None
             except ValueError as e:
                 actual = 1; error = str(e)
@@ -74,6 +74,12 @@ def main():
         put(workflow, exact_workflow); put(audit, b'authorized bounded implementation\n')
         put('docs/release/full-app-j01/consumer-scope09.md', b'candidate scope\n')
         git('add', '--all'); run('authentic-exact-workflow-addition', 0); reset_fixture()
+        historical = before_workflow.replace(b'\n  expo-export:\n', check.RELEASE09_STEP+b'\n  expo-export:\n')
+        put(workflow, historical); git('add', '--all')
+        run('exact-immutable-first-candidate-placement', 0, 'eb86be5298afd0fae3344ef6bf2a4db3b7ada116')
+        run('historical-placement-rejected-for-current-source', 1)
+        run('historical-placement-rejected-for-forged-commit', 1, '0'*40)
+        reset_fixture()
         for name, raw in [
             ('workflow-existing-step-tamper', exact_workflow.replace(b'run: npm test', b'run: true', 1)),
             ('workflow-job-dependency-tamper', exact_workflow.replace(b'needs: checks', b'needs: []', 1)),
