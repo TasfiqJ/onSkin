@@ -36,7 +36,8 @@ export function useShelfMutations() {
   async function runShelfMutation<T>(operation: (lease: HealthDataWriteOperationLease) => Promise<T>): Promise<T> {
     if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
     assertHealthDataWriteLease(accepted);
-    return runHealthDataWriteOperation(accepted.ownerUserId, operation);
+    const expectedOwnerUserId = accepted.ownerUserId;
+    return runHealthDataWriteOperation(expectedOwnerUserId, operation);
   }
   const invalidate = async (lease: HealthDataWriteOperationLease) => {
     // Invalidation alone can join a data-less initial fetch started before the
