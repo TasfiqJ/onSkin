@@ -1,0 +1,3 @@
+FAIL docs/generated/readiness-status-audit.json is stale. Run npm run docs:readiness-status-audit:strict.
+FAIL docs/generated/readiness-status-audit.md is stale. Run npm run docs:readiness-status-audit:strict.
+FAIL Readiness status audit inputs drifted during check mode.

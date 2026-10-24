@@ -1,0 +1,25 @@
+{
+  "name": "security-inherited",
+  "argv": [
+    "py",
+    "-3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_*.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "262b41ca772830228fcd7b76cc0729c506855b3f",
+    "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:10:33.549009+00:00",
+  "finished": "2026-10-24T23:10:33.877579+00:00",
+  "exit": 103,
+  "disk_free": 835039232
+}

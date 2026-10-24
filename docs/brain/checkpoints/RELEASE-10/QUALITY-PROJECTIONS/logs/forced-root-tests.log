@@ -1,0 +1,10 @@
+
+> layerwell@0.1.0 test
+> turbo run test --force --cache=local:r
+
+ ERROR  the argument '--force [<FORCE>]' cannot be used with '--cache <CACHE>'
+
+Usage: turbo.exe run --force [<FORCE>]
+
+For more information, try '--help'.
+

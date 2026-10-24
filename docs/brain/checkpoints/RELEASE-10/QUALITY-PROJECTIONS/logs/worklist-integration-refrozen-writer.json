@@ -1,0 +1,18 @@
+{
+  "name": "worklist-integration-refrozen-writer",
+  "argv": [
+    "npm.cmd",
+    "run",
+    "phase4:source-worklist:strict"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "e37d13566624e87d4257c09d85489d7ee77ca7d0",
+    "5a3b1e9bb205e78fdb59650b3f0116f33158c06e"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:18:19.899860+00:00",
+  "finished": "2026-10-24T23:18:20.831772+00:00",
+  "exit": 0,
+  "disk_free": 825393152
+}

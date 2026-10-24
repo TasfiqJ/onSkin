@@ -1,0 +1,13 @@
+{
+  "exit": 1,
+  "unchanged_before_restore": {
+    "docs/generated/readiness-status-audit.json": true,
+    "docs/generated/readiness-status-audit.md": true
+  },
+  "sha256": {
+    "docs/generated/readiness-status-audit.json": "e5f05ce6642f2b6e9b47724b750549ae4cdc15e48fe56588d5dc31b1576d4cb7",
+    "docs/generated/readiness-status-audit.md": "3fe94c9e851bd47e6fee061b43b3688ea152a669a9955c2b5782a9ec82639a85"
+  },
+  "status": "BLOCKED_OUTSIDE_SCOPE",
+  "provenance": "No valid real governed source/evidence/RC chain available"
+}

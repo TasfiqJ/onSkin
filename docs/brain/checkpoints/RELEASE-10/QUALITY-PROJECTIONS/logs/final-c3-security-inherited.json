@@ -1,0 +1,24 @@
+{
+  "name": "final-c3-security-inherited",
+  "argv": [
+    "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "scripts/phase9/security_acceptance",
+    "-p",
+    "test_*.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+    "47e469bb900ff57488043a027490c469703881d0"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:18:44.847744+00:00",
+  "finished": "2026-10-24T23:26:02.649200+00:00",
+  "exit": 1,
+  "disk_free": 810221568
+}

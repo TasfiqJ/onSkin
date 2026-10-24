@@ -1,0 +1,50 @@
+
+> layerwell@0.1.0 phase9:governed-publication-coverage:test
+> node --test scripts/launch/governed-publication-coverage.test.mjs
+
+TAP version 13
+# Subtest: exports exact structural and deterministic coverage for all 35 units
+ok 1 - exports exact structural and deterministic coverage for all 35 units
+  ---
+  duration_ms: 2.7054
+  type: 'test'
+  ...
+# Subtest: every unit maps to a real strict release writer when one exists
+ok 2 - every unit maps to a real strict release writer when one exists
+  ---
+  duration_ms: 0.2627
+  type: 'test'
+  ...
+# Subtest: deterministic replay inventory is exact and every command is real
+ok 3 - deterministic replay inventory is exact and every command is real
+  ---
+  duration_ms: 0.3976
+  type: 'test'
+  ...
+# Subtest: post-F aggregate contains every deterministic replay once in dependency order
+ok 4 - post-F aggregate contains every deterministic replay once in dependency order
+  ---
+  duration_ms: 0.6296
+  type: 'test'
+  ...
+# Subtest: store inspection is labeled non-replay and Phase 10/11 packet limits stay truthful
+ok 5 - store inspection is labeled non-replay and Phase 10/11 packet limits stay truthful
+  ---
+  duration_ms: 0.3088
+  type: 'test'
+  ...
+# Subtest: Phase 10/11 verification is source-only and cannot hide a batch writer chain
+ok 6 - Phase 10/11 verification is source-only and cannot hide a batch writer chain
+  ---
+  duration_ms: 1.1704
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 157.1084

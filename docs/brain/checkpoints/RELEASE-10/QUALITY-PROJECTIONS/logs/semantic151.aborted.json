@@ -1,0 +1,12 @@
+{
+  "status": "NOT_COMPLETED",
+  "reason": "Stopped own measurement before source correction for independently observed GitHub merge-ref regression",
+  "process_ids": [
+    69908,
+    61124,
+    64752,
+    49508,
+    32224
+  ],
+  "utc": "2026-10-24T23:15:24.6470957Z"
+}

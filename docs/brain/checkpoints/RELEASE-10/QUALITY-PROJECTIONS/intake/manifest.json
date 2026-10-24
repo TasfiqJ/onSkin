@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "kind": "onskin-release10-context",
+  "files": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 1263,
+      "sha256": "630aa1c313455c8e4853d3062a3f453a1f6c4dbb46b2d1fd0dbbbf56e95e76a2"
+    },
+    {
+      "path": "01_LIVE_REFS_AND_CI.md",
+      "bytes": 2647,
+      "sha256": "bf5383f69884ae071c15a10d7eb6e01619599905a772464c5a0b38444aea69f2"
+    },
+    {
+      "path": "02_BRAIN_CAMPAIGN09_VERDICT.md",
+      "bytes": 2165,
+      "sha256": "f4dc08cd4055f00764c3f5427d4dc4aed37c3babe5d8c8fbf73f5dfa1d6ea98c"
+    },
+    {
+      "path": "03_PHASE4_WORKLIST_DEFECT.md",
+      "bytes": 1730,
+      "sha256": "a736158715f61cd9de719252d33ac1a46e19cb2f4785121d1f22bfa193bc7b61"
+    },
+    {
+      "path": "04_READINESS_AND_CONSUMER_DIAGNOSTIC.md",
+      "bytes": 3030,
+      "sha256": "85f4c76ca1f9d870d4f2f557de6cc760c6aa49d24dcfc732abf7032521daf100"
+    },
+    {
+      "path": "05_HARD_GATES_PRODUCT_AND_HISTORY.md",
+      "bytes": 1844,
+      "sha256": "6655b18c4dd22dfc28211bec1b4cf2b8ef6a347dc72bdf1ddb8110f754befb0b"
+    },
+    {
+      "path": "06_FALSIFICATION_AND_DELIVERY.md",
+      "bytes": 2177,
+      "sha256": "9f7e143cd9b2abcd16c37767dd5fab75dc9ce447cc5c0800200476aede0d9fd3"
+    },
+    {
+      "path": "PROMPT_TEMPLATE.md",
+      "bytes": 14874,
+      "sha256": "a591683988af87b2e4e38d4867ad86520361987493e48f3ecdd6205b12594a80"
+    },
+    {
+      "path": "verify_packet.py",
+      "bytes": 3368,
+      "sha256": "390cfa4b9895ad40d6a80d91b188cf2fad60eb076e42bad4cbee4fa11fa82d15"
+    }
+  ]
+}

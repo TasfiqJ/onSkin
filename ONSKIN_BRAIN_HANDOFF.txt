@@ -1,7 +1,8 @@
-RELEASE09 source-packet / candidate CI — PARTIAL_BLOCKED; SUBMITTED_REVIEW_REQUIRED.
-Authority: BRAIN-RELEASE09-SOURCE-PACKET-CI-CANDIDATE-01.
-New branch stage/full-app-j01-source-packet-ci09; DRAFT PR https://github.com/TasfiqJ/onSkin/pull/13 targets immutable PR12 stage/full-app-j01-release-contract08.
-Measured source 3d951357163d2abd1b02b456c6f52cfb0dbf70ce; tree 02c58ff4cc87f7a9feb1b1fd5828ac4406cd0f5e. Exact source/bytes, logs and new external-digest verifier: docs/brain/checkpoints/RELEASE-09/SOURCE-PACKET-CONSUMER/README.md.
-Original packet authenticated; exactly five Release08 additive notices classified separately from identical mirrors. Source-only candidate CI guard passes; old worklist/readiness projection blockers outside grant remain UNAPPLIED. Full legacy release/runtime consumer migration NOT_DONE/NOT_ACCEPTED.
-151 original semantic negatives preserved/reexecuted, source scopes and protected witnesses checked. Independent complete-checkout0/1/0 NOT_QUALIFIED due host space. Current delivery-head CI is separately observed after push; no earlier-head result is borrowed.
-All older checkpoints/accepted M1 source/PRs remain immutable. G97 FAIL/NO_GO; DB H01_SQL_PROBE_FAILED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. Brain alone audits source and decides later ordinary main promotion. No main merge, release/clinical/J01/provider/payment/native admission or public GO. Spend USD0.
+RELEASE10 quality projections — PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED. No self-acceptance.
+Authority BRAIN-RELEASE10-QUALITY-PROJECTIONS-CONSUMERS-CANDIDATE-01.
+DRAFT PR https://github.com/TasfiqJ/onSkin/pull/14; new branch stage/full-app-j01-quality-projections10 targets pinned PR13; auto-merge OFF.
+Measured source c3c868f86313a9f42b10adfef37cdbbeb1c2e289; tree 47e469bb900ff57488043a027490c469703881d0.
+Report and complete source/evidence/raw logs: docs/brain/checkpoints/RELEASE-10/QUALITY-PROJECTIONS/README.md and completion-report.json.
+External checkpoint manifest SHA256 b86dd807e22f009456cb8085c2829047bfe68b2700f7dae0b5382fb5ede256df. Standalone verify_checkpoint.py requires this external digest.
+Phase4 original producer current/tampered/restored 0/1/0; readiness BLOCKED_OUTSIDE_SCOPE, unchanged. Legacy cutover UNAPPLIED. Final delivery-head CI is observed after push and reported separately.
+G97 FAIL/NO_GO; DB H01_SQL_PROBE_FAILED prior custody unaccepted; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 intake missing and all qualified gates intact. Spend USD0; no main merge/public release.

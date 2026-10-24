@@ -1,0 +1,538 @@
+﻿2026-10-24T23:22:58.6381697Z Current runner version: '2.338.0'
+2026-10-24T23:22:58.6406362Z ##[group]Runner Image Provisioner
+2026-10-24T23:22:58.6407743Z Hosted Compute Agent
+2026-10-24T23:22:58.6408367Z Version: 20261021.618
+2026-10-24T23:22:58.6409099Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-24T23:22:58.6409864Z Build Date: 2026-10-21T00:45:21Z
+2026-10-24T23:22:58.6410526Z Worker ID: {3a523036-d8b3-43a3-9895-d52072a3b4a7}
+2026-10-24T23:22:58.6411297Z Region: eastus
+2026-10-24T23:22:58.6411844Z Cloud: Azure
+2026-10-24T23:22:58.6412381Z ##[endgroup]
+2026-10-24T23:22:58.6413903Z ##[group]Operating System
+2026-10-24T23:22:58.6414565Z Ubuntu
+2026-10-24T23:22:58.6415189Z 24.04.5
+2026-10-24T23:22:58.6415704Z LTS
+2026-10-24T23:22:58.6416256Z ##[endgroup]
+2026-10-24T23:22:58.6417252Z ##[group]Runner Image
+2026-10-24T23:22:58.6417882Z Image: ubuntu-24.04
+2026-10-24T23:22:58.6418609Z Version: 20261012.334.1
+2026-10-24T23:22:58.6419962Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-24T23:22:58.6421708Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-24T23:22:58.6422684Z ##[endgroup]
+2026-10-24T23:22:58.6423823Z ##[group]GITHUB_TOKEN Permissions
+2026-10-24T23:22:58.6425805Z Contents: read
+2026-10-24T23:22:58.6426488Z Metadata: read
+2026-10-24T23:22:58.6427283Z ##[endgroup]
+2026-10-24T23:22:58.6429814Z Secret source: Actions
+2026-10-24T23:22:58.6430849Z Cache mode: write
+2026-10-24T23:22:58.6431647Z Prepare workflow directory
+2026-10-24T23:22:58.6821699Z Prepare all required actions
+2026-10-24T23:22:58.6870560Z Getting action download info
+2026-10-24T23:22:58.9085989Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-24T23:22:59.1093803Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-24T23:22:59.1954220Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-24T23:22:59.2662058Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-10-24T23:22:59.4431812Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-24T23:22:59.6703312Z Complete job name: Automated single-owner source-only Security acceptance
+2026-10-24T23:22:59.7726433Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-24T23:22:59.7727881Z with:
+2026-10-24T23:22:59.7728355Z   fetch-depth: 0
+2026-10-24T23:22:59.7728830Z   persist-credentials: false
+2026-10-24T23:22:59.7729375Z   repository: TasfiqJ/onSkin
+2026-10-24T23:22:59.7734099Z   token: ***
+2026-10-24T23:22:59.7734539Z   ssh-strict: true
+2026-10-24T23:22:59.7734985Z   ssh-user: git
+2026-10-24T23:22:59.7735431Z   clean: true
+2026-10-24T23:22:59.7735892Z   sparse-checkout-cone-mode: true
+2026-10-24T23:22:59.7736447Z   fetch-tags: false
+2026-10-24T23:22:59.7737094Z   show-progress: true
+2026-10-24T23:22:59.7737605Z   lfs: false
+2026-10-24T23:22:59.7738037Z   submodules: false
+2026-10-24T23:22:59.7738494Z   set-safe-directory: true
+2026-10-24T23:22:59.7739485Z env:
+2026-10-24T23:22:59.7739938Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:22:59.7740461Z   CI: 1
+2026-10-24T23:22:59.7740879Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:22:59.7741454Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:22:59.7742045Z ##[endgroup]
+2026-10-24T23:22:59.8774356Z Syncing repository: TasfiqJ/onSkin
+2026-10-24T23:22:59.8777055Z ##[group]Getting Git version info
+2026-10-24T23:22:59.8778388Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-24T23:22:59.8780573Z [command]/usr/bin/git version
+2026-10-24T23:22:59.8906844Z git version 2.55.0
+2026-10-24T23:22:59.8932422Z ##[endgroup]
+2026-10-24T23:22:59.8948669Z Temporarily overriding HOME='/home/runner/work/_temp/83713593-304b-4562-ae79-3f466574408f' before making global git config changes
+2026-10-24T23:22:59.8952336Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T23:22:59.8954791Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-24T23:22:59.9007063Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-24T23:22:59.9012221Z ##[group]Determining repository object format
+2026-10-24T23:22:59.9014819Z ##[endgroup]
+2026-10-24T23:22:59.9016277Z ##[group]Initializing the repository
+2026-10-24T23:22:59.9022281Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-24T23:22:59.9158423Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-24T23:22:59.9160653Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-24T23:22:59.9162547Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-24T23:22:59.9164173Z hint: call:
+2026-10-24T23:22:59.9164992Z hint:
+2026-10-24T23:22:59.9165951Z hint: 	git config --global init.defaultBranch <name>
+2026-10-24T23:22:59.9167747Z hint:
+2026-10-24T23:22:59.9169111Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-24T23:22:59.9171374Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-24T23:22:59.9172865Z hint:
+2026-10-24T23:22:59.9173729Z hint: 	git branch -m <name>
+2026-10-24T23:22:59.9174700Z hint:
+2026-10-24T23:22:59.9176027Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-24T23:22:59.9178346Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-24T23:22:59.9186573Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-24T23:22:59.9259702Z ##[endgroup]
+2026-10-24T23:22:59.9261008Z ##[group]Disabling automatic garbage collection
+2026-10-24T23:22:59.9262195Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-24T23:22:59.9293966Z ##[endgroup]
+2026-10-24T23:22:59.9295475Z ##[group]Setting up auth
+2026-10-24T23:22:59.9296359Z Removing SSH command configuration
+2026-10-24T23:22:59.9303155Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T23:22:59.9347320Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T23:22:59.9699341Z Removing HTTP extra header
+2026-10-24T23:22:59.9706269Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T23:22:59.9743705Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T23:22:59.9960059Z Removing includeIf entries pointing to credentials config files
+2026-10-24T23:22:59.9966469Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T23:23:00.0002928Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T23:23:00.0236941Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-24T23:23:00.0282539Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:00.0318458Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:00.0356160Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:00.0399700Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:00.0431253Z ##[endgroup]
+2026-10-24T23:23:00.0432026Z ##[group]Fetching the repository
+2026-10-24T23:23:00.0440483Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +5bfc55e4a36349b8e59a207eebb220243da2dc7d:refs/remotes/pull/14/merge
+2026-10-24T23:23:05.7912719Z From https://github.com/TasfiqJ/onSkin
+2026-10-24T23:23:05.7914126Z  * [new branch]        ai-v1-finish                             -> origin/ai-v1-finish
+2026-10-24T23:23:05.7915578Z  * [new branch]        c07a-cycle-route-readiness               -> origin/c07a-cycle-route-readiness
+2026-10-24T23:23:05.7917237Z  * [new branch]        c08a1-progress-data-authority            -> origin/c08a1-progress-data-authority
+2026-10-24T23:23:05.7918716Z  * [new branch]        c08a2-progress-lock-authority            -> origin/c08a2-progress-lock-authority
+2026-10-24T23:23:05.7920151Z  * [new branch]        codex/ci-q-h01-diagnostic-20261012       -> origin/codex/ci-q-h01-diagnostic-20261012
+2026-10-24T23:23:05.7921601Z  * [new branch]        codex/core-loop-first-insight-gate       -> origin/codex/core-loop-first-insight-gate
+2026-10-24T23:23:05.7923039Z  * [new branch]        codex/ios-privacy-source                 -> origin/codex/ios-privacy-source
+2026-10-24T23:23:05.7924245Z  * [new branch]        main                                     -> origin/main
+2026-10-24T23:23:05.7925641Z  * [new branch]        progress-authority-render-warning        -> origin/progress-authority-render-warning
+2026-10-24T23:23:05.7927363Z  * [new branch]        stage/full-app-j01-quality-projections10 -> origin/stage/full-app-j01-quality-projections10
+2026-10-24T23:23:05.7929245Z  * [new branch]        stage/full-app-j01-release-contract08    -> origin/stage/full-app-j01-release-contract08
+2026-10-24T23:23:05.7930793Z  * [new branch]        stage/full-app-j01-source-packet-ci09    -> origin/stage/full-app-j01-source-packet-ci09
+2026-10-24T23:23:05.7932146Z  * [new branch]        stage/m0-baseline                        -> origin/stage/m0-baseline
+2026-10-24T23:23:05.7933565Z  * [new branch]        stage/m1-gate-recovery                   -> origin/stage/m1-gate-recovery
+2026-10-24T23:23:05.7935390Z  * [new branch]        stage/m1-retained-resilience             -> origin/stage/m1-retained-resilience
+2026-10-24T23:23:05.7936909Z  * [new branch]        stage/m1-retained-safety                 -> origin/stage/m1-retained-safety
+2026-10-24T23:23:05.7938172Z  * [new ref]           5bfc55e4a36349b8e59a207eebb220243da2dc7d -> pull/14/merge
+2026-10-24T23:23:05.7941580Z ##[endgroup]
+2026-10-24T23:23:05.7942334Z ##[group]Determining the checkout info
+2026-10-24T23:23:05.7942898Z ##[endgroup]
+2026-10-24T23:23:05.7943218Z [command]/usr/bin/git sparse-checkout disable
+2026-10-24T23:23:05.7997495Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-24T23:23:05.8028824Z ##[group]Checking out the ref
+2026-10-24T23:23:05.8034114Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/14/merge
+2026-10-24T23:23:06.8746881Z Updating files:  25% (5776/23103)
+2026-10-24T23:23:06.9072759Z Updating files:  26% (6007/23103)
+2026-10-24T23:23:06.9503040Z Updating files:  27% (6238/23103)
+2026-10-24T23:23:06.9716131Z Updating files:  28% (6469/23103)
+2026-10-24T23:23:06.9850755Z Updating files:  29% (6700/23103)
+2026-10-24T23:23:07.0044465Z Updating files:  30% (6931/23103)
+2026-10-24T23:23:07.0174247Z Updating files:  31% (7162/23103)
+2026-10-24T23:23:07.0343245Z Updating files:  32% (7393/23103)
+2026-10-24T23:23:07.0449928Z Updating files:  33% (7624/23103)
+2026-10-24T23:23:07.0570801Z Updating files:  34% (7856/23103)
+2026-10-24T23:23:07.0758067Z Updating files:  35% (8087/23103)
+2026-10-24T23:23:07.1216750Z Updating files:  36% (8318/23103)
+2026-10-24T23:23:07.1715422Z Updating files:  37% (8549/23103)
+2026-10-24T23:23:07.1891657Z Updating files:  38% (8780/23103)
+2026-10-24T23:23:07.2120104Z Updating files:  39% (9011/23103)
+2026-10-24T23:23:07.2578059Z Updating files:  40% (9242/23103)
+2026-10-24T23:23:07.2902624Z Updating files:  41% (9473/23103)
+2026-10-24T23:23:07.3348085Z Updating files:  42% (9704/23103)
+2026-10-24T23:23:07.3865607Z Updating files:  43% (9935/23103)
+2026-10-24T23:23:07.4238052Z Updating files:  44% (10166/23103)
+2026-10-24T23:23:07.4513978Z Updating files:  45% (10397/23103)
+2026-10-24T23:23:07.4882210Z Updating files:  46% (10628/23103)
+2026-10-24T23:23:07.5001026Z Updating files:  47% (10859/23103)
+2026-10-24T23:23:07.5331781Z Updating files:  48% (11090/23103)
+2026-10-24T23:23:07.5592252Z Updating files:  49% (11321/23103)
+2026-10-24T23:23:07.5952528Z Updating files:  50% (11552/23103)
+2026-10-24T23:23:07.6099807Z Updating files:  51% (11783/23103)
+2026-10-24T23:23:07.6230913Z Updating files:  52% (12014/23103)
+2026-10-24T23:23:07.6351387Z Updating files:  53% (12245/23103)
+2026-10-24T23:23:07.6657513Z Updating files:  54% (12476/23103)
+2026-10-24T23:23:07.6958463Z Updating files:  55% (12707/23103)
+2026-10-24T23:23:07.7252941Z Updating files:  56% (12938/23103)
+2026-10-24T23:23:07.7518741Z Updating files:  57% (13169/23103)
+2026-10-24T23:23:07.9381573Z Updating files:  58% (13400/23103)
+2026-10-24T23:23:07.9581207Z Updating files:  58% (13431/23103)
+2026-10-24T23:23:07.9804785Z Updating files:  59% (13631/23103)
+2026-10-24T23:23:07.9985889Z Updating files:  60% (13862/23103)
+2026-10-24T23:23:08.0136993Z Updating files:  61% (14093/23103)
+2026-10-24T23:23:08.0283069Z Updating files:  62% (14324/23103)
+2026-10-24T23:23:08.0427714Z Updating files:  63% (14555/23103)
+2026-10-24T23:23:08.0600303Z Updating files:  64% (14786/23103)
+2026-10-24T23:23:08.0755211Z Updating files:  65% (15017/23103)
+2026-10-24T23:23:08.0949840Z Updating files:  66% (15248/23103)
+2026-10-24T23:23:08.1132612Z Updating files:  67% (15480/23103)
+2026-10-24T23:23:08.1346685Z Updating files:  68% (15711/23103)
+2026-10-24T23:23:08.1526544Z Updating files:  69% (15942/23103)
+2026-10-24T23:23:08.1695791Z Updating files:  70% (16173/23103)
+2026-10-24T23:23:08.1867465Z Updating files:  71% (16404/23103)
+2026-10-24T23:23:08.2086878Z Updating files:  72% (16635/23103)
+2026-10-24T23:23:08.2336992Z Updating files:  73% (16866/23103)
+2026-10-24T23:23:08.2595495Z Updating files:  74% (17097/23103)
+2026-10-24T23:23:08.2799538Z Updating files:  75% (17328/23103)
+2026-10-24T23:23:08.3214592Z Updating files:  76% (17559/23103)
+2026-10-24T23:23:08.3588450Z Updating files:  77% (17790/23103)
+2026-10-24T23:23:08.4047638Z Updating files:  78% (18021/23103)
+2026-10-24T23:23:08.4458493Z Updating files:  79% (18252/23103)
+2026-10-24T23:23:08.4824589Z Updating files:  80% (18483/23103)
+2026-10-24T23:23:08.5098138Z Updating files:  81% (18714/23103)
+2026-10-24T23:23:08.5522481Z Updating files:  82% (18945/23103)
+2026-10-24T23:23:08.6028158Z Updating files:  83% (19176/23103)
+2026-10-24T23:23:08.6531781Z Updating files:  84% (19407/23103)
+2026-10-24T23:23:08.7007624Z Updating files:  85% (19638/23103)
+2026-10-24T23:23:08.7462259Z Updating files:  86% (19869/23103)
+2026-10-24T23:23:08.7965687Z Updating files:  87% (20100/23103)
+2026-10-24T23:23:08.8262189Z Updating files:  88% (20331/23103)
+2026-10-24T23:23:08.8390353Z Updating files:  88% (20469/23103)
+2026-10-24T23:23:08.8736009Z Updating files:  89% (20562/23103)
+2026-10-24T23:23:08.8996548Z Updating files:  90% (20793/23103)
+2026-10-24T23:23:08.9201326Z Updating files:  91% (21024/23103)
+2026-10-24T23:23:08.9441277Z Updating files:  92% (21255/23103)
+2026-10-24T23:23:09.0063273Z Updating files:  93% (21486/23103)
+2026-10-24T23:23:09.0317693Z Updating files:  94% (21717/23103)
+2026-10-24T23:23:09.0540515Z Updating files:  95% (21948/23103)
+2026-10-24T23:23:09.0975522Z Updating files:  96% (22179/23103)
+2026-10-24T23:23:09.1209531Z Updating files:  97% (22410/23103)
+2026-10-24T23:23:09.1565919Z Updating files:  98% (22641/23103)
+2026-10-24T23:23:09.2021022Z Updating files:  99% (22872/23103)
+2026-10-24T23:23:09.2021582Z Updating files: 100% (23103/23103)
+2026-10-24T23:23:09.2022108Z Updating files: 100% (23103/23103), done.
+2026-10-24T23:23:09.2253973Z Note: switching to 'refs/remotes/pull/14/merge'.
+2026-10-24T23:23:09.2254334Z 
+2026-10-24T23:23:09.2254655Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-24T23:23:09.2255362Z changes and commit them, and you can discard any commits you make in this
+2026-10-24T23:23:09.2256044Z state without impacting any branches by switching back to a branch.
+2026-10-24T23:23:09.2256495Z 
+2026-10-24T23:23:09.2257168Z If you want to create a new branch to retain commits you create, you may
+2026-10-24T23:23:09.2257938Z do so (now or later) by using -c with the switch command. Example:
+2026-10-24T23:23:09.2258378Z 
+2026-10-24T23:23:09.2258562Z   git switch -c <new-branch-name>
+2026-10-24T23:23:09.2258877Z 
+2026-10-24T23:23:09.2259043Z Or undo this operation with:
+2026-10-24T23:23:09.2259318Z 
+2026-10-24T23:23:09.2259480Z   git switch -
+2026-10-24T23:23:09.2259674Z 
+2026-10-24T23:23:09.2260033Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-24T23:23:09.2260555Z 
+2026-10-24T23:23:09.2261148Z HEAD is now at 5bfc55e4 Merge c3c868f86313a9f42b10adfef37cdbbeb1c2e289 into 8ac97c32901272d97d1bff05f2abc294811055a6
+2026-10-24T23:23:09.2384577Z ##[endgroup]
+2026-10-24T23:23:09.2442133Z [command]/usr/bin/git log -1 --format=%H
+2026-10-24T23:23:09.2470437Z 5bfc55e4a36349b8e59a207eebb220243da2dc7d
+2026-10-24T23:23:09.2481213Z ##[group]Removing auth
+2026-10-24T23:23:09.2481695Z Removing SSH command configuration
+2026-10-24T23:23:09.2488792Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T23:23:09.2521865Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T23:23:09.2760414Z Removing HTTP extra header
+2026-10-24T23:23:09.2765722Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T23:23:09.2803275Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T23:23:09.3042061Z Removing includeIf entries pointing to credentials config files
+2026-10-24T23:23:09.3046424Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T23:23:09.3078137Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-24T23:23:09.3078963Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-24T23:23:09.3079443Z includeif.gitdir:/github/workspace/.git.path
+2026-10-24T23:23:09.3079829Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T23:23:09.3098014Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-24T23:23:09.3115813Z /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3128695Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3168229Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-24T23:23:09.3194897Z /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3205706Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3244134Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-24T23:23:09.3279701Z /github/runner_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3287886Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3330734Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T23:23:09.3355765Z /github/runner_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3364588Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config
+2026-10-24T23:23:09.3401975Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T23:23:09.3635807Z Removing credentials config '/home/runner/work/_temp/git-credentials-f56718d7-e4c2-4a20-90b2-ce14eeff0119.config'
+2026-10-24T23:23:09.3645551Z ##[endgroup]
+2026-10-24T23:23:09.3894940Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-24T23:23:09.3895349Z with:
+2026-10-24T23:23:09.3895548Z   node-version: 22.21.0
+2026-10-24T23:23:09.3895772Z   check-latest: false
+2026-10-24T23:23:09.3899429Z   token: ***
+2026-10-24T23:23:09.3899670Z   package-manager-cache: true
+2026-10-24T23:23:09.3899911Z env:
+2026-10-24T23:23:09.3900110Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:09.3900349Z   CI: 1
+2026-10-24T23:23:09.3900531Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:09.3900770Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:09.3901039Z ##[endgroup]
+2026-10-24T23:23:09.5377893Z Attempting to download 22.21.0...
+2026-10-24T23:23:10.1424856Z Acquiring 22.21.0 - x64 from https://github.com/actions/node-versions/releases/download/22.21.0-18671149699/node-22.21.0-linux-x64.tar.gz
+2026-10-24T23:23:10.5906224Z Extracting ...
+2026-10-24T23:23:10.6024563Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/4258c344-be5e-4f80-9fa4-63140318c3d0 -f /home/runner/work/_temp/e5ef3909-302f-4c65-9383-4f7b4801d951
+2026-10-24T23:23:11.8582269Z Adding to the cache ...
+2026-10-24T23:23:14.0937576Z ##[group]Environment details
+2026-10-24T23:23:14.3217104Z node: v22.21.0
+2026-10-24T23:23:14.3217508Z npm: 10.9.4
+2026-10-24T23:23:14.3217719Z yarn: 1.22.22
+2026-10-24T23:23:14.3218224Z ##[endgroup]
+2026-10-24T23:23:14.3229671Z Detected npm as the package manager from package.json's packageManager field. Auto caching has been enabled for npm. If you want to disable it, set package-manager-cache input to false
+2026-10-24T23:23:14.3245933Z [command]/opt/hostedtoolcache/node/22.21.0/x64/bin/npm config get cache
+2026-10-24T23:23:14.4305644Z /home/runner/.npm
+2026-10-24T23:23:14.5086454Z Cache hit for: node-cache-Linux-x64-npm-8391cdf1f6b452b0ec512a88b8f385ff73baae0cccb68b67678e657eb698907f
+2026-10-24T23:23:15.5796450Z Received 226492416 of 401329874 (56.4%), 216.0 MBs/sec
+2026-10-24T23:23:16.2113438Z Received 401329874 of 401329874 (100.0%), 233.9 MBs/sec
+2026-10-24T23:23:16.2115958Z Cache Size: ~383 MB (401329874 B)
+2026-10-24T23:23:16.2245481Z [command]/usr/bin/tar -xf /home/runner/work/_temp/40b29939-600d-47e5-8b89-d338a2cfbc05/cache.tzst -P -C /home/runner/work/onSkin/onSkin --use-compress-program unzstd
+2026-10-24T23:23:17.1245019Z Cache restored successfully
+2026-10-24T23:23:17.1487245Z Cache restored from key: node-cache-Linux-x64-npm-8391cdf1f6b452b0ec512a88b8f385ff73baae0cccb68b67678e657eb698907f
+2026-10-24T23:23:17.2464408Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-24T23:23:17.2464843Z with:
+2026-10-24T23:23:17.2465050Z   python-version: 3.12
+2026-10-24T23:23:17.2465288Z   check-latest: false
+2026-10-24T23:23:17.2468329Z   token: ***
+2026-10-24T23:23:17.2468555Z   update-environment: true
+2026-10-24T23:23:17.2469006Z   allow-prereleases: false
+2026-10-24T23:23:17.2469363Z   freethreaded: false
+2026-10-24T23:23:17.2469587Z env:
+2026-10-24T23:23:17.2469784Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:17.2470030Z   CI: 1
+2026-10-24T23:23:17.2470217Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:17.2470460Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:17.2470731Z ##[endgroup]
+2026-10-24T23:23:17.3834417Z ##[group]Installed versions
+2026-10-24T23:23:17.3943726Z Successfully set up CPython (3.12.15)
+2026-10-24T23:23:17.3944520Z ##[endgroup]
+2026-10-24T23:23:17.4077951Z ##[group]Run npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+2026-10-24T23:23:17.4106331Z [36;1mnpm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund[0m
+2026-10-24T23:23:17.4471649Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:23:17.4471965Z env:
+2026-10-24T23:23:17.4472353Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:17.4472618Z   CI: 1
+2026-10-24T23:23:17.4472828Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:17.4473099Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:17.4473587Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:17.4474034Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:17.4474575Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:17.4475005Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:17.4475388Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:17.4475962Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:17.4476293Z ##[endgroup]
+2026-10-24T23:23:21.0479613Z 
+2026-10-24T23:23:21.0480418Z removed 74 packages, and changed 105 packages in 4s
+2026-10-24T23:23:21.0982898Z ##[group]Run npm ci --no-audit --no-fund
+2026-10-24T23:23:21.0983274Z [36;1mnpm ci --no-audit --no-fund[0m
+2026-10-24T23:23:21.1047265Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:23:21.1047528Z env:
+2026-10-24T23:23:21.1047748Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:21.1048019Z   CI: 1
+2026-10-24T23:23:21.1048216Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:21.1048469Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:21.1048825Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:21.1049270Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:21.1049716Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:21.1050104Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:21.1050493Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:21.1050890Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:21.1051263Z ##[endgroup]
+2026-10-24T23:23:33.9897817Z npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-24T23:23:41.0186441Z 
+2026-10-24T23:23:41.0187245Z > layerwell@0.1.0 postinstall
+2026-10-24T23:23:41.0187714Z > node scripts/postinstall.mjs
+2026-10-24T23:23:41.0187915Z 
+2026-10-24T23:23:41.2002509Z {"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+2026-10-24T23:23:41.3438086Z 
+2026-10-24T23:23:41.3438743Z added 1032 packages in 20s
+2026-10-24T23:23:41.3450695Z npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+2026-10-24T23:23:41.3451466Z npm warn install-scripts   @sentry/cli@2.58.4 (postinstall: node ./scripts/install.js)
+2026-10-24T23:23:41.3452152Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-24T23:23:41.3452711Z npm warn install-scripts
+2026-10-24T23:23:41.3453347Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-24T23:23:41.6089719Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-10-24T23:23:41.6090451Z with:
+2026-10-24T23:23:41.6090845Z   name: code-security-evidence-40142190906
+2026-10-24T23:23:41.6091665Z   path: /home/runner/work/_temp/g97-workflow/code/
+2026-10-24T23:23:41.6092225Z   merge-multiple: false
+2026-10-24T23:23:41.6092635Z   repository: TasfiqJ/onSkin
+2026-10-24T23:23:41.6093046Z   run-id: 40142190906
+2026-10-24T23:23:41.6093398Z env:
+2026-10-24T23:23:41.6093755Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:41.6094169Z   CI: 1
+2026-10-24T23:23:41.6094500Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:41.6094928Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:41.6095541Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:41.6096290Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:41.6097277Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:41.6097756Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:41.6098144Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:41.6098564Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:41.6098908Z ##[endgroup]
+2026-10-24T23:23:41.7732280Z Downloading single artifact
+2026-10-24T23:23:41.7888432Z (node:2497) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T23:23:41.7889455Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T23:23:41.8763220Z Preparing to download the following artifacts:
+2026-10-24T23:23:41.8765216Z - code-security-evidence-40142190906 (ID: 12579435613, Size: 32122, Expected Digest: sha256:7c2f81965869c9c336b0fcc2b6092843182a6e74ff6bc4f5462b0368e0f511d0)
+2026-10-24T23:23:42.0040440Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/79c4e469-90ce-8afd-9ed0-aee5874a14c1/workflow-job-run-d5b7c4fa-583e-5f26-afc8-12a1d6118284/artifacts/a32bb1259b96366d7906c4a0ccf8e927c59d587a8812c57e9a0066e0b7f1e28a.zip
+2026-10-24T23:23:42.0043204Z Starting download of artifact to: /home/runner/work/_temp/g97-workflow/code
+2026-10-24T23:23:42.0419188Z (node:2497) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-24T23:23:42.0574932Z SHA256 digest of downloaded artifact is 7c2f81965869c9c336b0fcc2b6092843182a6e74ff6bc4f5462b0368e0f511d0
+2026-10-24T23:23:42.0575594Z Artifact download completed successfully.
+2026-10-24T23:23:42.0575968Z Total of 1 artifact(s) downloaded
+2026-10-24T23:23:42.0591738Z Download artifact has finished successfully
+2026-10-24T23:23:42.0965185Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-10-24T23:23:42.0965964Z with:
+2026-10-24T23:23:42.0966363Z   name: secret-scanner-evidence-40142190906
+2026-10-24T23:23:42.0967183Z   path: /home/runner/work/_temp/g97-workflow/secret/
+2026-10-24T23:23:42.0967743Z   merge-multiple: false
+2026-10-24T23:23:42.0968162Z   repository: TasfiqJ/onSkin
+2026-10-24T23:23:42.0968593Z   run-id: 40142190906
+2026-10-24T23:23:42.0968955Z env:
+2026-10-24T23:23:42.0969362Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:42.0969743Z   CI: 1
+2026-10-24T23:23:42.0970092Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:42.0970495Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:42.0971100Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.0971876Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:42.0972615Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.0973356Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.0974043Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.0974727Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:42.0975312Z ##[endgroup]
+2026-10-24T23:23:42.2607934Z Downloading single artifact
+2026-10-24T23:23:42.2760905Z (node:2509) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T23:23:42.2762224Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T23:23:42.3612435Z Preparing to download the following artifacts:
+2026-10-24T23:23:42.3614145Z - secret-scanner-evidence-40142190906 (ID: 12578714788, Size: 1665442, Expected Digest: sha256:09e6374304311efec647f524f2013b064c37c840114359ecd53a57ed64eac6e6)
+2026-10-24T23:23:42.4709489Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/79c4e469-90ce-8afd-9ed0-aee5874a14c1/workflow-job-run-b2209929-6449-54cc-8ed5-805e59e0244b/artifacts/65af7b180653f09d8481c64e746cd128b0a0c4848246211784d0f26ef78ffb9a.zip
+2026-10-24T23:23:42.4712415Z Starting download of artifact to: /home/runner/work/_temp/g97-workflow/secret
+2026-10-24T23:23:42.5499316Z (node:2509) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-24T23:23:42.6296816Z SHA256 digest of downloaded artifact is 09e6374304311efec647f524f2013b064c37c840114359ecd53a57ed64eac6e6
+2026-10-24T23:23:42.6297681Z Artifact download completed successfully.
+2026-10-24T23:23:42.6298360Z Total of 1 artifact(s) downloaded
+2026-10-24T23:23:42.6303318Z Download artifact has finished successfully
+2026-10-24T23:23:42.6456216Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-10-24T23:23:42.6457080Z with:
+2026-10-24T23:23:42.6457501Z   name: static-scanner-evidence-40142190906
+2026-10-24T23:23:42.6457946Z   path: /home/runner/work/_temp/g97-workflow/static/
+2026-10-24T23:23:42.6458283Z   merge-multiple: false
+2026-10-24T23:23:42.6458553Z   repository: TasfiqJ/onSkin
+2026-10-24T23:23:42.6458812Z   run-id: 40142190906
+2026-10-24T23:23:42.6459028Z env:
+2026-10-24T23:23:42.6459243Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:42.6459489Z   CI: 1
+2026-10-24T23:23:42.6459686Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:42.6459953Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:42.6460311Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.6460742Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:42.6461180Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.6461635Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.6462026Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:42.6462424Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:42.6462760Z ##[endgroup]
+2026-10-24T23:23:42.7958520Z Downloading single artifact
+2026-10-24T23:23:42.8107371Z (node:2521) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T23:23:42.8109015Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T23:23:42.8948345Z Preparing to download the following artifacts:
+2026-10-24T23:23:42.8950141Z - static-scanner-evidence-40142190906 (ID: 12579272681, Size: 23566, Expected Digest: sha256:ecab9cf4b059f12b356dbeaa0844a229eebdcdd73db5874d119ca406ae1fee20)
+2026-10-24T23:23:43.0234987Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/79c4e469-90ce-8afd-9ed0-aee5874a14c1/workflow-job-run-9bba0f69-cff2-57f8-a686-6a61a28eb4e4/artifacts/a19839dc568285642475c65c6bfea727a6410c57502a2c72a2da08b4d486587d.zip
+2026-10-24T23:23:43.0237086Z Starting download of artifact to: /home/runner/work/_temp/g97-workflow/static
+2026-10-24T23:23:43.0611748Z (node:2521) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-24T23:23:43.0697915Z SHA256 digest of downloaded artifact is ecab9cf4b059f12b356dbeaa0844a229eebdcdd73db5874d119ca406ae1fee20
+2026-10-24T23:23:43.0699165Z Artifact download completed successfully.
+2026-10-24T23:23:43.0700221Z Total of 1 artifact(s) downloaded
+2026-10-24T23:23:43.0705014Z Download artifact has finished successfully
+2026-10-24T23:23:43.0854165Z ##[group]Run original_jobs="$G97_ORIGINAL_JOBS"
+2026-10-24T23:23:43.0854583Z [36;1moriginal_jobs="$G97_ORIGINAL_JOBS"[0m
+2026-10-24T23:23:43.0855068Z [36;1mpython -B scripts/phase9/security_acceptance/workflow_admission.py accept \[0m
+2026-10-24T23:23:43.0855619Z [36;1m  --evidence "$RUNNER_TEMP/g97-workflow/static/g97-evidence" \[0m
+2026-10-24T23:23:43.0856083Z [36;1m  --workflow-evidence "$RUNNER_TEMP/g97-workflow" \[0m
+2026-10-24T23:23:43.0857420Z [36;1m  --original-jobs "$original_jobs" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"             --expected-commit "$G97_REVIEWED_SOURCE_COMMIT"             --expected-proposal-sha256 "$G97_REVIEWED_PROPOSAL_SHA256" > "$RUNNER_TEMP/g97-decision.json"[0m
+2026-10-24T23:23:43.0858432Z [36;1mcat "$RUNNER_TEMP/g97-decision.json"[0m
+2026-10-24T23:23:43.0923222Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:23:43.0923528Z env:
+2026-10-24T23:23:43.0923757Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:43.0924029Z   CI: 1
+2026-10-24T23:23:43.0924270Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:43.0924540Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:43.0924908Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.0925370Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:43.0925820Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.0926223Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.0926898Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.0927344Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:43.0928184Z   G97_ORIGINAL_JOBS: {
+  "code-gates": {
+    "result": "failure",
+    "outputs": {}
+  },
+  "secret-scan": {
+    "result": "failure",
+    "outputs": {}
+  },
+  "static-analysis": {
+    "result": "failure",
+    "outputs": {}
+  }
+}
+2026-10-24T23:23:43.0929073Z   G97_REVIEWED_SOURCE_COMMIT: bbc28dc3d1f945191a81be56945b8bda7bb6ef73
+2026-10-24T23:23:43.0929649Z   G97_REVIEWED_PROPOSAL_SHA256: 359ad8e7c0efb400c179a0a20cd26932c950ef05a3261db7f9502490f3371685
+2026-10-24T23:23:43.0930120Z ##[endgroup]
+2026-10-24T23:23:43.2755185Z ##[error]Process completed with exit code 1.
+2026-10-24T23:23:43.2827932Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-24T23:23:43.2828396Z with:
+2026-10-24T23:23:43.2828652Z   name: g97-security-decision-40142190906
+2026-10-24T23:23:43.2829050Z   path: /home/runner/work/_temp/g97-decision.json
+2026-10-24T23:23:43.2829389Z   if-no-files-found: error
+2026-10-24T23:23:43.2829650Z   retention-days: 30
+2026-10-24T23:23:43.2829890Z   compression-level: 6
+2026-10-24T23:23:43.2830130Z   overwrite: false
+2026-10-24T23:23:43.2830373Z   include-hidden-files: false
+2026-10-24T23:23:43.2830628Z env:
+2026-10-24T23:23:43.2830851Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-24T23:23:43.2831126Z   CI: 1
+2026-10-24T23:23:43.2831327Z   EXPO_NO_TELEMETRY: 1
+2026-10-24T23:23:43.2831594Z   NODE_OPTIONS: --max-old-space-size=768
+2026-10-24T23:23:43.2831961Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.2832404Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-24T23:23:43.2832907Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.2833311Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.2833719Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-24T23:23:43.2834128Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-24T23:23:43.2834479Z ##[endgroup]
+2026-10-24T23:23:43.4467977Z (node:2536) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T23:23:43.4469336Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T23:23:43.4514828Z With the provided path, there will be 1 file uploaded
+2026-10-24T23:23:43.4527653Z Artifact name is valid!
+2026-10-24T23:23:43.4551772Z Root directory input is valid!
+2026-10-24T23:23:43.6655797Z Beginning upload of artifact content to blob storage
+2026-10-24T23:23:43.6858266Z (node:2536) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-24T23:23:43.7112378Z Uploaded bytes 252
+2026-10-24T23:23:43.7263841Z Finished uploading artifact content to blob storage!
+2026-10-24T23:23:43.7265494Z SHA256 digest of uploaded artifact zip is d5daafaa0c412347df675538be85b4ff3b8db5ca425f8e0548ed8a171ddd137f
+2026-10-24T23:23:43.7267301Z Finalizing artifact upload
+2026-10-24T23:23:44.2237992Z Artifact g97-security-decision-40142190906.zip successfully finalized. Artifact ID 12579072911
+2026-10-24T23:23:44.2240107Z Artifact g97-security-decision-40142190906 has been successfully uploaded! Final size is 252 bytes. Artifact ID is 12579072911
+2026-10-24T23:23:44.2246556Z Artifact download URL: https://github.com/TasfiqJ/onSkin/actions/runs/40142190906/artifacts/12579072911
+2026-10-24T23:23:44.2441188Z Post job cleanup.
+2026-10-24T23:23:44.3286905Z [command]/usr/bin/git version
+2026-10-24T23:23:44.3330613Z git version 2.55.0
+2026-10-24T23:23:44.3373437Z Temporarily overriding HOME='/home/runner/work/_temp/366104e5-cfbb-40a8-aea5-16bbe19fa0f9' before making global git config changes
+2026-10-24T23:23:44.3374944Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T23:23:44.3381007Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-24T23:23:44.3414241Z Removing SSH command configuration
+2026-10-24T23:23:44.3421904Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T23:23:44.3463998Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T23:23:44.3742982Z Removing HTTP extra header
+2026-10-24T23:23:44.3750856Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T23:23:44.3793945Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T23:23:44.4056018Z Removing includeIf entries pointing to credentials config files
+2026-10-24T23:23:44.4064741Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T23:23:44.4109629Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T23:23:44.4528330Z Cleaning up orphan processes
+2026-10-24T23:23:44.4899086Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

@@ -1,0 +1,13 @@
+{
+  "interrupted_measurements": [
+    "semantic151: stopped before source correction, NOT_COMPLETED",
+    "security-inherited-runtime: source correction invalidated in-progress snapshot, stopped and rerun"
+  ],
+  "initial_harness_failure": "quality_projection10 fixture omitted static import closure; corrected only new test, then real producer controls passed",
+  "rejected_root_argv": "--force and --cache=local:r incompatible; corrected to --cache=local:w, no cache reads, remote caching disabled, all tasks force-executed",
+  "launcher_python": "py -3.12 unavailable; installed bundled Python 3.12 used instead, no installation",
+  "context_recheck": "Initial packet verification passed before work. Later repeat against the task/scratch directory rejected extra inventory files. Re-extracted the same original ZIP safely into context-authenticated/, proved all 11 original files unchanged, and exact external-digest verification passed again; no stale substitution",
+  "root_test_wrapper": "Root npm test exited0; receipt persisted before stdout cp1252 encoding exception. Raw log independently contains 480/6166 + 7/24 pass and 0 cached. Wrapper UTF-8 presentation corrected; no result rewritten",
+  "preflight": "An initial extra PR10-to-PR11 ancestry assumption failed; these are independent main-based PRs per live metadata. All required pins/trees/stack ancestry passed before branch creation",
+  "initial_ci": "Source262 Quality failed new R10_LINEAR_HISTORY on GitHub synthetic merge checkout; failed log retained, narrowly corrected and tested with actual Git synthetic histories"
+}

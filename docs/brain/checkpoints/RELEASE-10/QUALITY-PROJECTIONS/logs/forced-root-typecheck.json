@@ -1,0 +1,21 @@
+{
+  "name": "forced-root-typecheck",
+  "argv": [
+    "npm.cmd",
+    "run",
+    "typecheck",
+    "--",
+    "--force",
+    "--cache=local:r"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "97a65c3c967d2f407718a1a9d5c3f18ac48043f2",
+    "12591b111c94aa17114f89349d4cae08480c3100"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:09:22.821225+00:00",
+  "finished": "2026-10-24T23:09:24.988669+00:00",
+  "exit": 1,
+  "disk_free": 848592896
+}

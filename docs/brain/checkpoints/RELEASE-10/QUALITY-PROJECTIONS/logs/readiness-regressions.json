@@ -1,0 +1,18 @@
+{
+  "name": "readiness-regressions",
+  "argv": [
+    "node",
+    "--test",
+    "scripts/docs/readiness-status-audit.test.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "8ac97c32901272d97d1bff05f2abc294811055a6",
+    "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+  ],
+  "status_before": " M scripts/release/full-app-j01/check.py\n?? scripts/release/full-app-j01/source_consumer10.test.py\n",
+  "started": "2026-10-24T23:03:31.145260+00:00",
+  "finished": "2026-10-24T23:06:04.616068+00:00",
+  "exit": 0,
+  "disk_free": 795852800
+}

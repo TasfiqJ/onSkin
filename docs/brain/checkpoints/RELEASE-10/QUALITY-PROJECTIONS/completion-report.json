@@ -1,0 +1,429 @@
+{
+  "status": "PARTIAL_BLOCKED",
+  "source_submission": "SUBMITTED_REVIEW_REQUIRED",
+  "authorization": "BRAIN-RELEASE10-QUALITY-PROJECTIONS-CONSUMERS-CANDIDATE-01",
+  "branch": "stage/full-app-j01-quality-projections10",
+  "pr": "https://github.com/TasfiqJ/onSkin/pull/14",
+  "draft": true,
+  "auto_merge": false,
+  "base": "stage/full-app-j01-source-packet-ci09",
+  "source": "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+  "source_tree": "47e469bb900ff57488043a027490c469703881d0",
+  "writer_source": "e37d13566624e87d4257c09d85489d7ee77ca7d0",
+  "writer_tree": "5a3b1e9bb205e78fdb59650b3f0116f33158c06e",
+  "evidence_head": "RESOLVE_FROM_PUSHED_BRANCH_AFTER_EVIDENCE_ONLY_COMMIT",
+  "source_paths": [
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md",
+    "docs/release/full-app-j01/legacy-consumer-cutover10.unapplied.json",
+    "docs/release/full-app-j01/quality-projections10.md",
+    "scripts/release/full-app-j01/check.py",
+    "scripts/release/full-app-j01/quality_projection10.test.py",
+    "scripts/release/full-app-j01/source_consumer10.test.py"
+  ],
+  "protected_files": 23095,
+  "protections": "Every file in source-proof.json binds Git blob/mode/SHA256; every protected identity compared at every intermediate commit. All prior checkpoints/accepted guards protected; live checker scope orchestration is sole validator exception",
+  "worklist": {
+    "current": 0,
+    "tampered": 1,
+    "restored": 0,
+    "source_occurrences": 420,
+    "unique_paths": 250,
+    "item_count": 14,
+    "blocked": 7,
+    "local_scaffold": 7,
+    "warnings": 0,
+    "only_source_change": ".github/workflows/quality.yml expected Release09 identity"
+  },
+  "readiness": {
+    "status": "BLOCKED_OUTSIDE_SCOPE",
+    "owner": [
+      "Readiness owner",
+      "CAT07 evidence owner",
+      "Release provenance owner",
+      "Independent Brain"
+    ],
+    "source": "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+    "source_tree": "47e469bb900ff57488043a027490c469703881d0",
+    "diagnosis": "Stable snapshot and mobile inventory; unavailable governed evidence-chain binding, missing recorded source head; expected fail-closed refusal",
+    "script_bug_demonstrated": false,
+    "conditional_script_edit_activated": false,
+    "outputs_unchanged": true,
+    "readiness_current_exit": 1,
+    "readiness_tamper": "NOT_RUN_CANONICAL_BASELINE_ALREADY_FAILS",
+    "readiness_restored_exit": 1,
+    "original_readiness_fixture_controls": "33 PASS; immutable source/owner/provenance/atomic/HEAD/status controls retained",
+    "existing_paths_requiring_separate_grant": [
+      "LAUNCH_READINESS.md",
+      "BLOCKERS.md",
+      "docs/TESTING_STRATEGY.md",
+      "docs/e2e/generated/human-e2e-manifest.json",
+      "docs/e2e/generated/human-e2e-manifest.md",
+      "scripts/docs/readiness-status-audit.mjs",
+      "scripts/docs/readiness-status-audit.test.mjs"
+    ],
+    "protected_chain_paths": [
+      "scripts/launch/governed-evidence-chain.mjs",
+      "scripts/launch/governed-publication-coverage.mjs",
+      "scripts/phase9/build-evidence-chain-ledger.mjs",
+      "docs/phase-9/release-candidates/README.md"
+    ],
+    "missing_future_rc_path_pattern": "docs/phase-9/release-candidates/rc-<reviewed-id>/evidence-chain.json",
+    "acceptance": [
+      "Authentic corrected CAT07 evidence and reviewed test/doc baseline",
+      "Real S/direct-E/ledger custody and exact generated tail through R",
+      "Readiness-only final F child; no synthetic merge-ref or evidence-only-checkpoint substitute",
+      "All 33 original controls preserved plus current/tampered/restored strict producer proof"
+    ],
+    "safety": "No fabricated tests, owner approval, provenance, provider/device/clinical evidence or positive J01 outputs"
+  },
+  "tests": {
+    "final-c3-semantic151": {
+      "name": "final-c3-semantic151",
+      "argv": [
+        "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/test_contract.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.810098+00:00",
+      "finished": "2026-10-24T23:30:16.395456+00:00",
+      "exit": 0,
+      "disk_free": 830373888
+    },
+    "final-c3-source10-controls": {
+      "name": "final-c3-source10-controls",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer10.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.828645+00:00",
+      "finished": "2026-10-24T23:19:06.001987+00:00",
+      "exit": 0,
+      "disk_free": 815849472
+    },
+    "final-c3-source09-controls": {
+      "name": "final-c3-source09-controls",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.827138+00:00",
+      "finished": "2026-10-24T23:18:48.719520+00:00",
+      "exit": 0,
+      "disk_free": 803897344
+    },
+    "final-c3-projection-controls": {
+      "name": "final-c3-projection-controls",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/quality_projection10.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.827645+00:00",
+      "finished": "2026-10-24T23:18:51.277435+00:00",
+      "exit": 0,
+      "disk_free": 810037248
+    },
+    "final-c3-security-inherited": {
+      "name": "final-c3-security-inherited",
+      "argv": [
+        "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.847744+00:00",
+      "finished": "2026-10-24T23:26:02.649200+00:00",
+      "exit": 1,
+      "disk_free": 810221568
+    },
+    "final-c3-live-contract": {
+      "name": "final-c3-live-contract",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.885905+00:00",
+      "finished": "2026-10-24T23:18:59.063727+00:00",
+      "exit": 0,
+      "disk_free": 812167168
+    },
+    "final-c3-worklist-check": {
+      "name": "final-c3-worklist-check",
+      "argv": [
+        "npm.cmd",
+        "run",
+        "phase4:source-worklist:check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.872862+00:00",
+      "finished": "2026-10-24T23:18:46.478464+00:00",
+      "exit": 0,
+      "disk_free": 807403520
+    },
+    "final-c3-readiness": {
+      "name": "final-c3-readiness",
+      "argv": [
+        "node",
+        "scripts/docs/readiness-status-audit.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+        "47e469bb900ff57488043a027490c469703881d0"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:18:44.918979+00:00",
+      "finished": "2026-10-24T23:18:54.821139+00:00",
+      "exit": 1,
+      "disk_free": 812118016
+    },
+    "root-tests-forced-local": {
+      "name": "root-tests-forced-local",
+      "argv": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--cache=local:w"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:10:33.493812+00:00",
+      "finished": "2026-10-24T23:11:19.281959+00:00",
+      "exit": 0,
+      "disk_free": 816508928
+    },
+    "root-lint-forced-local": {
+      "name": "root-lint-forced-local",
+      "argv": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--cache=local:w"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:10:33.511357+00:00",
+      "finished": "2026-10-24T23:12:09.194821+00:00",
+      "exit": 0,
+      "disk_free": 808574976
+    },
+    "root-typecheck-forced-local": {
+      "name": "root-typecheck-forced-local",
+      "argv": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--cache=local:w"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:10:33.514868+00:00",
+      "finished": "2026-10-24T23:11:11.578700+00:00",
+      "exit": 0,
+      "disk_free": 791437312
+    },
+    "launch-contract-original": {
+      "name": "launch-contract-original",
+      "argv": [
+        "npm.cmd",
+        "run",
+        "launch:contract:verify"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:10:33.546499+00:00",
+      "finished": "2026-10-24T23:12:13.863174+00:00",
+      "exit": 0,
+      "disk_free": 800522240
+    },
+    "readiness-regressions": {
+      "name": "readiness-regressions",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/docs/readiness-status-audit.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+      ],
+      "status_before": " M scripts/release/full-app-j01/check.py\n?? scripts/release/full-app-j01/source_consumer10.test.py\n",
+      "started": "2026-10-24T23:03:31.145260+00:00",
+      "finished": "2026-10-24T23:06:04.616068+00:00",
+      "exit": 0,
+      "disk_free": 795852800
+    },
+    "publication6-final-source": {
+      "name": "publication6-final-source",
+      "argv": [
+        "npm.cmd",
+        "run",
+        "phase9:governed-publication-coverage:test"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:11:50.954470+00:00",
+      "finished": "2026-10-24T23:11:52.630922+00:00",
+      "exit": 0,
+      "disk_free": 810106880
+    },
+    "source-contracts-inherited": {
+      "name": "source-contracts-inherited",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/core02/clinical-rule-source-contract.test.mjs",
+        "scripts/core03/routine-guidance-source-contract.test.mjs",
+        "scripts/core04/persistence-source-contract.test.mjs",
+        "scripts/core05/adherence-source-contract.test.mjs",
+        "scripts/core06/recommendation-admission-source-contract.test.mjs",
+        "scripts/core07/share-admission-source-contract.test.mjs",
+        "scripts/pay07/entitlement-admission-source-contract.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:10:33.546996+00:00",
+      "finished": "2026-10-24T23:10:38.938768+00:00",
+      "exit": 1,
+      "disk_free": 821866496
+    },
+    "packet09-final-source": {
+      "name": "packet09-final-source",
+      "argv": [
+        "node",
+        "scripts/docs/source-packet-supersession09.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "source": [
+        "262b41ca772830228fcd7b76cc0729c506855b3f",
+        "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+      ],
+      "status_before": "",
+      "started": "2026-10-24T23:11:50.909890+00:00",
+      "finished": "2026-10-24T23:12:22.577595+00:00",
+      "exit": 0,
+      "disk_free": 800346112
+    }
+  },
+  "counts": {
+    "identities": 65,
+    "required_rows": 38,
+    "historical_tasks": 47,
+    "historical_adrs": 51,
+    "semantic_negatives": 151,
+    "source09_controls": 23,
+    "source10_rejections": 44,
+    "packet09_windows_rejections": 30,
+    "packet09_windows_not_run": 5,
+    "readiness_tests": 33,
+    "publication_tests": 6,
+    "root_tests": 6190
+  },
+  "inherited": {
+    "source_contracts": "111 pass / 2 fail: CORE05 notification regex and CORE06 migration assertion",
+    "security": "Original 70 contract tests reproduce 21 failures / 19 errors. Broader 82-test discovery additionally reports 10 secret-scan errors and 1 skipped case: overall 21 failures / 29 errors / 1 skipped. Module breakdown and raw log retained",
+    "canonical_db": "Prior authenticated H01_SQL_PROBE_FAILED / registry Data limit exceeded remains unaccepted; exact source and evidence-head CI job states are reported separately, never inferred"
+  },
+  "ci_policy": "Committed ci/ observations belong to exact measured source c3. Exact final evidence-head CI is observed after push and reported in PR/final relay; never borrowed from source CI. This avoids self-referential log commits",
+  "legacy_cutover": "UNAPPLIED / NOT_DONE; 52 direct references, 133 mapped files, 208 relative-import edges, three workflows, exact owner/dependency/acceptance plan",
+  "disk": {
+    "free_bytes": 790401024,
+    "tracked_source_bytes": 767634787,
+    "independent_complete_checkout": "NOT_QUALIFIED",
+    "reason": "Source alone approaches free space before Git/dependencies/host reserve; no full clone or unknown cleanup"
+  },
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "DB": "H01_SQL_PROBE_FAILED",
+    "M1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED",
+    "J01_INTAKE": "MISSING",
+    "J01_SINGLE_SCAN": "G1/G2/G3/G5 and qualified review required",
+    "J01_CHANGE": "G4 additionally required",
+    "PUBLIC": "NOT_AUTHORIZED"
+  },
+  "product": "19 non-Korean F01-F17/F19-F20 + 12 consumer + 6 professional + ONLY J01; F09 local history/manual comparison required; F18/J02-J27 including J05 deferred; no positive pore count/size/score/improvement/diagnosis/percentage/accuracy evidence",
+  "spend_usd": 0,
+  "main_merge": false,
+  "source_self_accepted": false,
+  "observed_utc": "2026-10-24T23:31:37.653554+00:00"
+}

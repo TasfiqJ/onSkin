@@ -1,0 +1,18 @@
+{
+  "name": "source10-controls-final",
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/source_consumer10.test.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "8ac97c32901272d97d1bff05f2abc294811055a6",
+    "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+  ],
+  "status_before": " M scripts/release/full-app-j01/check.py\n?? docs/release/full-app-j01/legacy-consumer-cutover10.unapplied.json\n?? docs/release/full-app-j01/quality-projections10.md\n?? scripts/release/full-app-j01/quality_projection10.test.py\n?? scripts/release/full-app-j01/source_consumer10.test.py\n",
+  "started": "2026-10-24T23:08:15.926822+00:00",
+  "finished": "2026-10-24T23:08:29.650269+00:00",
+  "exit": 0,
+  "disk_free": 859308032
+}

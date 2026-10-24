@@ -1,0 +1,20 @@
+{
+  "name": "baseline-release09-checkpoint",
+  "argv": [
+    "python",
+    "-B",
+    "docs/brain/checkpoints/RELEASE-09/SOURCE-PACKET-CONSUMER/verify_checkpoint.py",
+    "--expected-manifest-sha256",
+    "1f96dc0489a2665a1adb3e24b8e3726a1c4da9ba53dac770a33d097d8dfc0863"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "8ac97c32901272d97d1bff05f2abc294811055a6",
+    "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:00:55.090189+00:00",
+  "finished": "2026-10-24T23:01:07.278669+00:00",
+  "exit": 0,
+  "disk_free": 850935808
+}

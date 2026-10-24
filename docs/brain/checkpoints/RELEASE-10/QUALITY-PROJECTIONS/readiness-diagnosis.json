@@ -1,0 +1,47 @@
+{
+  "snapshot": {
+    "errors": [],
+    "status": "pass"
+  },
+  "inventory": [],
+  "chain": [
+    "governed evidence-chain binding is unavailable during readiness publication"
+  ],
+  "blockers": [
+    "docs/e2e/generated/human-e2e-manifest.json status is blocked.",
+    "docs/e2e/generated/human-e2e-manifest.json cat07-shelf-freshness-supported-phone.status must be \"pass\"; received \"fail\".",
+    "docs/e2e/generated/human-e2e-manifest.json cat07-shelf-freshness-supported-phone.verdict must be \"pass\"; received \"fail\".",
+    "docs/e2e/generated/human-e2e-manifest.json cat07-shelf-freshness-supported-phone.failureCount must be 0; received 1.",
+    "docs/e2e/generated/human-e2e-manifest.json cat07-shelf-freshness-supported-phone.requirementFailures must be an empty array.",
+    "Expected 337 mobile test files, but found 480. Update the reviewed readiness constants and source-of-truth docs only after a verified full mobile test run.",
+    "LAUNCH_READINESS.md Date is 2026-08-05, expected 2026-08-08.",
+    "LAUNCH_READINESS.md contains stale test-count pattern(s): /\\b301\\s+(?:mobile\\s+)?test files?\\b/i, /\\b3,?529\\s+tests?\\b/i.",
+    "LAUNCH_READINESS.md contains contradictory test baseline(s): 301 mobile test files /\n  3,529 tests, 301 mobile test files /\n  3,529 tests. Expected 337 mobile test files / 4,204 tests.",
+    "LAUNCH_READINESS.md does not mention npm run docs:device-support-policy-audit:check.",
+    "LAUNCH_READINESS.md does not mention npm run release:governed-packets:check.",
+    "LAUNCH_READINESS.md does not mention current human-E2E manifest evidence: CAT07 Shelf freshness and replacement provenance lifecycle.",
+    "LAUNCH_READINESS.md does not mention current human-E2E manifest evidence: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current.",
+    "BLOCKERS.md Date is 2026-08-05, expected 2026-08-08.",
+    "BLOCKERS.md contains stale test-count pattern(s): /\\b301\\s+(?:mobile\\s+)?test files?\\b/i, /\\b3,?529\\s+tests?\\b/i.",
+    "BLOCKERS.md contains contradictory test baseline(s): 301 mobile test files / 3,529 tests. Expected 337 mobile test files / 4,204 tests.",
+    "BLOCKERS.md does not mention current test baseline 337 mobile test files / 4,204 tests.",
+    "BLOCKERS.md does not mention current human-E2E manifest evidence: CAT07 Shelf freshness and replacement provenance lifecycle.",
+    "BLOCKERS.md does not mention current human-E2E manifest evidence: test-results/human-e2e/2026-08-08/cat07-shelf-freshness-current.",
+    "docs/TESTING_STRATEGY.md does not mention npm run docs:device-support-policy-audit:check.",
+    "docs/TESTING_STRATEGY.md does not mention npm run phase10-11:verify.",
+    "Generated JSON sourceSnapshot.headSha is not one full Git commit SHA."
+  ],
+  "sourceHead": "8ac97c32901272d97d1bff05f2abc294811055a6",
+  "recorded": {
+    "provenanceContract": "governed-evidence-chain-final-output-pair-v2",
+    "headSha": "8ac97c32901272d97d1bff05f2abc294811055a6",
+    "governedEvidenceChain": null,
+    "gitStatusSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gitStatusDirty": false,
+    "inputCount": 506,
+    "inputInventorySha256": "22b0528b75fbcccffc1ac41d792c3bea83a748e2cc68ac0e2b25e008d9bb2fd8",
+    "inputSha256Basis": "pinned-head-blob-bytes",
+    "mobileTestInventorySha256": "abc3a039d5010b497baaf80344630193ac0230cefa0ab8b760375e75044b2d90",
+    "integrityIssues": []
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "process_ids": [
+    65328,
+    22600,
+    48032
+  ],
+  "utc": "2026-10-24T23:18:18.9473854Z",
+  "status": "NOT_COMPLETED",
+  "reason": "Source correction invalidated this in-progress current-source observation; rerun after freeze"
+}

@@ -1,0 +1,381 @@
+﻿2026-10-24T23:18:32.2138870Z Current runner version: '2.338.0'
+2026-10-24T23:18:32.2176331Z ##[group]Runner Image Provisioner
+2026-10-24T23:18:32.2178259Z Hosted Compute Agent
+2026-10-24T23:18:32.2179330Z Version: 20261021.618
+2026-10-24T23:18:32.2180529Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-24T23:18:32.2182170Z Build Date: 2026-10-21T00:45:21Z
+2026-10-24T23:18:32.2183615Z Worker ID: {0183e414-f5df-4cc6-bf3a-cd6ad93a00af}
+2026-10-24T23:18:32.2184908Z Region: northcentralus
+2026-10-24T23:18:32.2186061Z Cloud: Azure
+2026-10-24T23:18:32.2186982Z ##[endgroup]
+2026-10-24T23:18:32.2189469Z ##[group]Operating System
+2026-10-24T23:18:32.2190544Z Ubuntu
+2026-10-24T23:18:32.2191690Z 26.04.1
+2026-10-24T23:18:32.2192733Z LTS
+2026-10-24T23:18:32.2193586Z ##[endgroup]
+2026-10-24T23:18:32.2194750Z ##[group]Runner Image
+2026-10-24T23:18:32.2195887Z Image: ubuntu-26.04
+2026-10-24T23:18:32.2196995Z Version: 20261012.163.1
+2026-10-24T23:18:32.2199273Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261012.163/images/ubuntu/Ubuntu2604-Readme.md
+2026-10-24T23:18:32.2202663Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261012.163
+2026-10-24T23:18:32.2204606Z ##[endgroup]
+2026-10-24T23:18:32.2206837Z ##[group]GITHUB_TOKEN Permissions
+2026-10-24T23:18:32.2210057Z Contents: read
+2026-10-24T23:18:32.2211307Z Metadata: read
+2026-10-24T23:18:32.2212390Z PullRequests: read
+2026-10-24T23:18:32.2213355Z ##[endgroup]
+2026-10-24T23:18:32.2216662Z Secret source: Actions
+2026-10-24T23:18:32.2218237Z Cache mode: write
+2026-10-24T23:18:32.2219642Z Prepare workflow directory
+2026-10-24T23:18:32.2736759Z Prepare all required actions
+2026-10-24T23:18:32.2812367Z Getting action download info
+2026-10-24T23:18:32.4994808Z Download action repository 'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0' (SHA:9f698171ed81b15d1823a05fc7211befd50c8ae0)
+2026-10-24T23:18:32.7792328Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-24T23:18:32.9530709Z Complete job name: Secret scanning
+2026-10-24T23:18:33.0431164Z ##[group]Run actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+2026-10-24T23:18:33.0432289Z with:
+2026-10-24T23:18:33.0432734Z   fetch-depth: 0
+2026-10-24T23:18:33.0433203Z   persist-credentials: false
+2026-10-24T23:18:33.0433751Z   repository: TasfiqJ/onSkin
+2026-10-24T23:18:33.0437403Z   token: ***
+2026-10-24T23:18:33.0437841Z   ssh-strict: true
+2026-10-24T23:18:33.0438287Z   ssh-user: git
+2026-10-24T23:18:33.0438721Z   clean: true
+2026-10-24T23:18:33.0439170Z   sparse-checkout-cone-mode: true
+2026-10-24T23:18:33.0439756Z   fetch-tags: false
+2026-10-24T23:18:33.0440499Z   show-progress: true
+2026-10-24T23:18:33.0441196Z   lfs: false
+2026-10-24T23:18:33.0441668Z   submodules: false
+2026-10-24T23:18:33.0442124Z   set-safe-directory: true
+2026-10-24T23:18:33.0442954Z ##[endgroup]
+2026-10-24T23:18:33.1522930Z Syncing repository: TasfiqJ/onSkin
+2026-10-24T23:18:33.1525140Z ##[group]Getting Git version info
+2026-10-24T23:18:33.1526071Z Working directory is '/home/runner/work/onSkin/onSkin'
+2026-10-24T23:18:33.1527205Z [command]/usr/bin/git version
+2026-10-24T23:18:33.1528926Z git version 2.55.0
+2026-10-24T23:18:33.1567785Z ##[endgroup]
+2026-10-24T23:18:33.1575487Z Temporarily overriding HOME='/home/runner/work/_temp/d268c19c-7a52-4e13-bd3a-c64006a14190' before making global git config changes
+2026-10-24T23:18:33.1578038Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T23:18:33.1582084Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-24T23:18:33.1673612Z Deleting the contents of '/home/runner/work/onSkin/onSkin'
+2026-10-24T23:18:33.1695975Z ##[group]Determining repository object format
+2026-10-24T23:18:33.1699441Z ##[endgroup]
+2026-10-24T23:18:33.1701227Z ##[group]Initializing the repository
+2026-10-24T23:18:33.1708666Z [command]/usr/bin/git init /home/runner/work/onSkin/onSkin
+2026-10-24T23:18:33.1835461Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-24T23:18:33.1837516Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-24T23:18:33.1839166Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-24T23:18:33.1841306Z hint: call:
+2026-10-24T23:18:33.1842481Z hint:
+2026-10-24T23:18:33.1843825Z hint: 	git config --global init.defaultBranch <name>
+2026-10-24T23:18:33.1845302Z hint:
+2026-10-24T23:18:33.1846706Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-24T23:18:33.1848564Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-24T23:18:33.1850569Z hint:
+2026-10-24T23:18:33.1852068Z hint: 	git branch -m <name>
+2026-10-24T23:18:33.1853270Z hint:
+2026-10-24T23:18:33.1854696Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-24T23:18:33.1856734Z Initialized empty Git repository in /home/runner/work/onSkin/onSkin/.git/
+2026-10-24T23:18:33.1860324Z [command]/usr/bin/git remote add origin https://github.com/TasfiqJ/onSkin
+2026-10-24T23:18:33.1940530Z ##[endgroup]
+2026-10-24T23:18:33.1942265Z ##[group]Disabling automatic garbage collection
+2026-10-24T23:18:33.1945534Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-24T23:18:33.1982927Z ##[endgroup]
+2026-10-24T23:18:33.1984249Z ##[group]Setting up auth
+2026-10-24T23:18:33.1985173Z Removing SSH command configuration
+2026-10-24T23:18:33.1990690Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T23:18:33.2038504Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T23:18:33.2493604Z Removing HTTP extra header
+2026-10-24T23:18:33.2502586Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T23:18:33.2543220Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T23:18:33.2843245Z Removing includeIf entries pointing to credentials config files
+2026-10-24T23:18:33.2850737Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T23:18:33.2887848Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T23:18:33.3169522Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-24T23:18:33.3211722Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:33.3248137Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:33.3283551Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:33.3317540Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:33.3348224Z ##[endgroup]
+2026-10-24T23:18:33.3349013Z ##[group]Fetching the repository
+2026-10-24T23:18:33.3357359Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +5bfc55e4a36349b8e59a207eebb220243da2dc7d:refs/remotes/pull/14/merge
+2026-10-24T23:18:39.3953844Z From https://github.com/TasfiqJ/onSkin
+2026-10-24T23:18:39.3955382Z  * [new branch]        ai-v1-finish                             -> origin/ai-v1-finish
+2026-10-24T23:18:39.3956567Z  * [new branch]        c07a-cycle-route-readiness               -> origin/c07a-cycle-route-readiness
+2026-10-24T23:18:39.3957877Z  * [new branch]        c08a1-progress-data-authority            -> origin/c08a1-progress-data-authority
+2026-10-24T23:18:39.3960171Z  * [new branch]        c08a2-progress-lock-authority            -> origin/c08a2-progress-lock-authority
+2026-10-24T23:18:39.3961970Z  * [new branch]        codex/ci-q-h01-diagnostic-20261012       -> origin/codex/ci-q-h01-diagnostic-20261012
+2026-10-24T23:18:39.3963705Z  * [new branch]        codex/core-loop-first-insight-gate       -> origin/codex/core-loop-first-insight-gate
+2026-10-24T23:18:39.3965699Z  * [new branch]        codex/ios-privacy-source                 -> origin/codex/ios-privacy-source
+2026-10-24T23:18:39.3967617Z  * [new branch]        main                                     -> origin/main
+2026-10-24T23:18:39.3969386Z  * [new branch]        progress-authority-render-warning        -> origin/progress-authority-render-warning
+2026-10-24T23:18:39.3971919Z  * [new branch]        stage/full-app-j01-quality-projections10 -> origin/stage/full-app-j01-quality-projections10
+2026-10-24T23:18:39.3974288Z  * [new branch]        stage/full-app-j01-release-contract08    -> origin/stage/full-app-j01-release-contract08
+2026-10-24T23:18:39.3976470Z  * [new branch]        stage/full-app-j01-source-packet-ci09    -> origin/stage/full-app-j01-source-packet-ci09
+2026-10-24T23:18:39.3978393Z  * [new branch]        stage/m0-baseline                        -> origin/stage/m0-baseline
+2026-10-24T23:18:39.3980554Z  * [new branch]        stage/m1-gate-recovery                   -> origin/stage/m1-gate-recovery
+2026-10-24T23:18:39.3982866Z  * [new branch]        stage/m1-retained-resilience             -> origin/stage/m1-retained-resilience
+2026-10-24T23:18:39.3984632Z  * [new branch]        stage/m1-retained-safety                 -> origin/stage/m1-retained-safety
+2026-10-24T23:18:39.3986176Z  * [new ref]           5bfc55e4a36349b8e59a207eebb220243da2dc7d -> pull/14/merge
+2026-10-24T23:18:39.3988554Z ##[endgroup]
+2026-10-24T23:18:39.3989364Z ##[group]Determining the checkout info
+2026-10-24T23:18:39.3990282Z ##[endgroup]
+2026-10-24T23:18:39.3990855Z [command]/usr/bin/git sparse-checkout disable
+2026-10-24T23:18:39.4039327Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-24T23:18:39.4076925Z ##[group]Checking out the ref
+2026-10-24T23:18:39.4078260Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/14/merge
+2026-10-24T23:18:40.4345050Z Updating files:  24% (5749/23103)
+2026-10-24T23:18:40.4867810Z Updating files:  25% (5776/23103)
+2026-10-24T23:18:40.5203507Z Updating files:  26% (6007/23103)
+2026-10-24T23:18:40.5653285Z Updating files:  27% (6238/23103)
+2026-10-24T23:18:40.5870289Z Updating files:  28% (6469/23103)
+2026-10-24T23:18:40.6003523Z Updating files:  29% (6700/23103)
+2026-10-24T23:18:40.6197693Z Updating files:  30% (6931/23103)
+2026-10-24T23:18:40.6328620Z Updating files:  31% (7162/23103)
+2026-10-24T23:18:40.6496818Z Updating files:  32% (7393/23103)
+2026-10-24T23:18:40.6601138Z Updating files:  33% (7624/23103)
+2026-10-24T23:18:40.6726414Z Updating files:  34% (7856/23103)
+2026-10-24T23:18:40.6914285Z Updating files:  35% (8087/23103)
+2026-10-24T23:18:40.7376461Z Updating files:  36% (8318/23103)
+2026-10-24T23:18:40.7883032Z Updating files:  37% (8549/23103)
+2026-10-24T23:18:40.8060696Z Updating files:  38% (8780/23103)
+2026-10-24T23:18:40.8334881Z Updating files:  39% (9011/23103)
+2026-10-24T23:18:40.8799106Z Updating files:  40% (9242/23103)
+2026-10-24T23:18:40.9127274Z Updating files:  41% (9473/23103)
+2026-10-24T23:18:40.9580902Z Updating files:  42% (9704/23103)
+2026-10-24T23:18:41.0086797Z Updating files:  43% (9935/23103)
+2026-10-24T23:18:41.0464644Z Updating files:  44% (10166/23103)
+2026-10-24T23:18:41.0747443Z Updating files:  45% (10397/23103)
+2026-10-24T23:18:41.1103008Z Updating files:  46% (10628/23103)
+2026-10-24T23:18:41.1231711Z Updating files:  47% (10859/23103)
+2026-10-24T23:18:41.1679159Z Updating files:  48% (11090/23103)
+2026-10-24T23:18:41.2018337Z Updating files:  49% (11321/23103)
+2026-10-24T23:18:41.2381676Z Updating files:  50% (11552/23103)
+2026-10-24T23:18:41.2527412Z Updating files:  51% (11783/23103)
+2026-10-24T23:18:41.2653916Z Updating files:  52% (12014/23103)
+2026-10-24T23:18:41.2775111Z Updating files:  53% (12245/23103)
+2026-10-24T23:18:41.3082326Z Updating files:  54% (12476/23103)
+2026-10-24T23:18:41.3367463Z Updating files:  55% (12707/23103)
+2026-10-24T23:18:41.3665881Z Updating files:  56% (12938/23103)
+2026-10-24T23:18:41.4022709Z Updating files:  57% (13169/23103)
+2026-10-24T23:18:41.6210598Z Updating files:  58% (13400/23103)
+2026-10-24T23:18:41.6409689Z Updating files:  58% (13431/23103)
+2026-10-24T23:18:41.6632871Z Updating files:  59% (13631/23103)
+2026-10-24T23:18:41.6815258Z Updating files:  60% (13862/23103)
+2026-10-24T23:18:41.6967928Z Updating files:  61% (14093/23103)
+2026-10-24T23:18:41.7113265Z Updating files:  62% (14324/23103)
+2026-10-24T23:18:41.7255892Z Updating files:  63% (14555/23103)
+2026-10-24T23:18:41.7425671Z Updating files:  64% (14786/23103)
+2026-10-24T23:18:41.7580985Z Updating files:  65% (15017/23103)
+2026-10-24T23:18:41.7775939Z Updating files:  66% (15248/23103)
+2026-10-24T23:18:41.7958801Z Updating files:  67% (15480/23103)
+2026-10-24T23:18:41.8172527Z Updating files:  68% (15711/23103)
+2026-10-24T23:18:41.8353730Z Updating files:  69% (15942/23103)
+2026-10-24T23:18:41.8563941Z Updating files:  70% (16173/23103)
+2026-10-24T23:18:41.8736401Z Updating files:  71% (16404/23103)
+2026-10-24T23:18:41.8957814Z Updating files:  72% (16635/23103)
+2026-10-24T23:18:41.9210500Z Updating files:  73% (16866/23103)
+2026-10-24T23:18:41.9473947Z Updating files:  74% (17097/23103)
+2026-10-24T23:18:41.9678821Z Updating files:  75% (17328/23103)
+2026-10-24T23:18:42.0105572Z Updating files:  76% (17559/23103)
+2026-10-24T23:18:42.0485699Z Updating files:  77% (17790/23103)
+2026-10-24T23:18:42.0952436Z Updating files:  78% (18021/23103)
+2026-10-24T23:18:42.1366922Z Updating files:  79% (18252/23103)
+2026-10-24T23:18:42.1738286Z Updating files:  80% (18483/23103)
+2026-10-24T23:18:42.2016470Z Updating files:  81% (18714/23103)
+2026-10-24T23:18:42.2440030Z Updating files:  82% (18945/23103)
+2026-10-24T23:18:42.2950454Z Updating files:  83% (19176/23103)
+2026-10-24T23:18:42.3460340Z Updating files:  84% (19407/23103)
+2026-10-24T23:18:42.3940714Z Updating files:  85% (19638/23103)
+2026-10-24T23:18:42.4286519Z Updating files:  86% (19869/23103)
+2026-10-24T23:18:42.4406470Z Updating files:  86% (20041/23103)
+2026-10-24T23:18:42.4916561Z Updating files:  87% (20100/23103)
+2026-10-24T23:18:42.5344723Z Updating files:  88% (20331/23103)
+2026-10-24T23:18:42.5695056Z Updating files:  89% (20562/23103)
+2026-10-24T23:18:42.5960796Z Updating files:  90% (20793/23103)
+2026-10-24T23:18:42.6168548Z Updating files:  91% (21024/23103)
+2026-10-24T23:18:42.6410137Z Updating files:  92% (21255/23103)
+2026-10-24T23:18:42.7106067Z Updating files:  93% (21486/23103)
+2026-10-24T23:18:42.7365082Z Updating files:  94% (21717/23103)
+2026-10-24T23:18:42.7590114Z Updating files:  95% (21948/23103)
+2026-10-24T23:18:42.8039965Z Updating files:  96% (22179/23103)
+2026-10-24T23:18:42.8274825Z Updating files:  97% (22410/23103)
+2026-10-24T23:18:42.8636817Z Updating files:  98% (22641/23103)
+2026-10-24T23:18:42.9098240Z Updating files:  99% (22872/23103)
+2026-10-24T23:18:42.9099228Z Updating files: 100% (23103/23103)
+2026-10-24T23:18:42.9099836Z Updating files: 100% (23103/23103), done.
+2026-10-24T23:18:42.9334487Z Note: switching to 'refs/remotes/pull/14/merge'.
+2026-10-24T23:18:42.9335017Z 
+2026-10-24T23:18:42.9335325Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-24T23:18:42.9336285Z changes and commit them, and you can discard any commits you make in this
+2026-10-24T23:18:42.9337404Z state without impacting any branches by switching back to a branch.
+2026-10-24T23:18:42.9338452Z 
+2026-10-24T23:18:42.9338887Z If you want to create a new branch to retain commits you create, you may
+2026-10-24T23:18:42.9339902Z do so (now or later) by using -c with the switch command. Example:
+2026-10-24T23:18:42.9340494Z 
+2026-10-24T23:18:42.9340725Z   git switch -c <new-branch-name>
+2026-10-24T23:18:42.9341333Z 
+2026-10-24T23:18:42.9341515Z Or undo this operation with:
+2026-10-24T23:18:42.9341798Z 
+2026-10-24T23:18:42.9341957Z   git switch -
+2026-10-24T23:18:42.9342167Z 
+2026-10-24T23:18:42.9342552Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-24T23:18:42.9343116Z 
+2026-10-24T23:18:42.9343689Z HEAD is now at 5bfc55e4 Merge c3c868f86313a9f42b10adfef37cdbbeb1c2e289 into 8ac97c32901272d97d1bff05f2abc294811055a6
+2026-10-24T23:18:42.9472352Z ##[endgroup]
+2026-10-24T23:18:42.9525945Z [command]/usr/bin/git log -1 --format=%H
+2026-10-24T23:18:42.9553119Z 5bfc55e4a36349b8e59a207eebb220243da2dc7d
+2026-10-24T23:18:42.9564430Z ##[group]Removing auth
+2026-10-24T23:18:42.9564917Z Removing SSH command configuration
+2026-10-24T23:18:42.9568200Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T23:18:42.9601333Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T23:18:42.9911782Z Removing HTTP extra header
+2026-10-24T23:18:42.9917253Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T23:18:42.9953131Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T23:18:43.0258870Z Removing includeIf entries pointing to credentials config files
+2026-10-24T23:18:43.0263118Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T23:18:43.0289045Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-24T23:18:43.0289693Z includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-24T23:18:43.0290155Z includeif.gitdir:/github/workspace/.git.path
+2026-10-24T23:18:43.0290524Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T23:18:43.0298690Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path
+2026-10-24T23:18:43.0322834Z /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0333265Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git.path /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0368598Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path
+2026-10-24T23:18:43.0391524Z /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0400820Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/onSkin/onSkin/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0435732Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-24T23:18:43.0459786Z /github/runner_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0468101Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0518577Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T23:18:43.0542561Z /github/runner_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0551608Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config
+2026-10-24T23:18:43.0584288Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T23:18:43.0884716Z Removing credentials config '/home/runner/work/_temp/git-credentials-19fac803-0d4b-4c4b-89ee-ff9e43ec81da.config'
+2026-10-24T23:18:43.0894268Z ##[endgroup]
+2026-10-24T23:18:43.1095803Z ##[group]Run python3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v
+2026-10-24T23:18:43.1096641Z [36;1mpython3 -B -m unittest discover -s scripts/phase9/security_acceptance -p test_secret_scan.py -v[0m
+2026-10-24T23:18:43.1276789Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:18:43.1277081Z ##[endgroup]
+2026-10-24T23:18:43.2868936Z test_inherited_auto_maintenance_and_hooks_cannot_escape_fixture (test_secret_scan.FixtureLifecycleTests.test_inherited_auto_maintenance_and_hooks_cannot_escape_fixture) ... ok
+2026-10-24T23:18:43.3097527Z test_owned_process_is_joined_before_git_directory_cleanup (test_secret_scan.FixtureLifecycleTests.test_owned_process_is_joined_before_git_directory_cleanup) ... ok
+2026-10-24T23:18:43.6001805Z test_CI_repository_job_attempt_and_local_receipts_cannot_be_substituted (test_secret_scan.SecretScanTests.test_CI_repository_job_attempt_and_local_receipts_cannot_be_substituted) ... ok
+2026-10-24T23:18:43.8132301Z test_actual_history_reproduces_first30_cutoff_and_newest_scope (test_secret_scan.SecretScanTests.test_actual_history_reproduces_first30_cutoff_and_newest_scope) ... ok
+2026-10-24T23:18:44.0194602Z test_binary_and_deletion_commits_remain_in_reachable_history (test_secret_scan.SecretScanTests.test_binary_and_deletion_commits_remain_in_reachable_history) ... ok
+2026-10-24T23:18:44.3752112Z test_exact_tool_asset_executable_and_version_mismatches_reject (test_secret_scan.SecretScanTests.test_exact_tool_asset_executable_and_version_mismatches_reject) ... ok
+2026-10-24T23:18:44.5900406Z test_merge_only_content_is_part_of_the_required_patch_scope (test_secret_scan.SecretScanTests.test_merge_only_content_is_part_of_the_required_patch_scope) ... ok
+2026-10-24T23:18:44.9263950Z test_missing_truncated_stale_output_and_forged_range_rejects (test_secret_scan.SecretScanTests.test_missing_truncated_stale_output_and_forged_range_rejects) ... ok
+2026-10-24T23:18:45.2286254Z test_omitted_newest_ref_source_run_or_snapshot_substitution_rejects (test_secret_scan.SecretScanTests.test_omitted_newest_ref_source_run_or_snapshot_substitution_rejects) ... ok
+2026-10-24T23:18:45.5062298Z test_raw_reports_findings_and_exits_remain_independent (test_secret_scan.SecretScanTests.test_raw_reports_findings_and_exits_remain_independent) ... ok
+2026-10-24T23:18:45.7005361Z test_ref_drift_or_new_commit_invalidates_prior_receipt (test_secret_scan.SecretScanTests.test_ref_drift_or_new_commit_invalidates_prior_receipt) ... ok
+2026-10-24T23:18:45.8795401Z test_safe_archive_and_byte_substitution_refuse_before_execution (test_secret_scan.SecretScanTests.test_safe_archive_and_byte_substitution_refuse_before_execution) ... ok
+2026-10-24T23:18:45.8796565Z 
+2026-10-24T23:18:45.8796802Z ----------------------------------------------------------------------
+2026-10-24T23:18:45.8797398Z Ran 12 tests in 2.610s
+2026-10-24T23:18:45.8797600Z 
+2026-10-24T23:18:45.8797716Z OK
+2026-10-24T23:18:45.9003949Z ##[group]Run python3 -B scripts/phase9/security_acceptance/secret_scan.py acquire --tools "$RUNNER_TEMP/original-secret-tools"
+2026-10-24T23:18:45.9004901Z [36;1mpython3 -B scripts/phase9/security_acceptance/secret_scan.py acquire --tools "$RUNNER_TEMP/original-secret-tools"[0m
+2026-10-24T23:18:45.9068363Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:18:45.9068622Z ##[endgroup]
+2026-10-24T23:18:48.0250989Z {"status": "DIAGNOSTIC_RECORDED", "acceptanceGranted": false}
+2026-10-24T23:18:48.0410655Z ##[group]Run git show-ref --verify --quiet "$GITHUB_REF" || git update-ref "$GITHUB_REF" "$GITHUB_SHA"
+2026-10-24T23:18:48.0411963Z [36;1mgit show-ref --verify --quiet "$GITHUB_REF" || git update-ref "$GITHUB_REF" "$GITHUB_SHA"[0m
+2026-10-24T23:18:48.0412489Z [36;1mtest "$(git rev-parse "$GITHUB_REF")" = "$GITHUB_SHA"[0m
+2026-10-24T23:18:48.0412955Z [36;1mpython3 -B scripts/phase9/security_acceptance/secret_scan.py scan \[0m
+2026-10-24T23:18:48.0413468Z [36;1m  --tools "$RUNNER_TEMP/original-secret-tools" \[0m
+2026-10-24T23:18:48.0413836Z [36;1m  --work "$RUNNER_TEMP/original-secret-scope" \[0m
+2026-10-24T23:18:48.0414215Z [36;1m  --output docs/phase-9/generated/ci-scanner-evidence \[0m
+2026-10-24T23:18:48.0414673Z [36;1m  --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --source-ref "$GITHUB_REF"[0m
+2026-10-24T23:18:48.0473917Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:18:48.0474168Z ##[endgroup]
+2026-10-24T23:21:13.3750543Z {"status": "DIAGNOSTIC_RECORDED", "acceptanceGranted": false}
+2026-10-24T23:21:13.4475609Z ##[group]Run set +e
+2026-10-24T23:21:13.4475890Z [36;1mset +e[0m
+2026-10-24T23:21:13.4476505Z [36;1mpython3 -B scripts/phase9/security_acceptance/secret_scan.py outcome --scanner gitleaks --output docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-24T23:21:13.4477154Z [36;1mcode=$?[0m
+2026-10-24T23:21:13.4477395Z [36;1mecho "exit-code=$code" >> "$GITHUB_OUTPUT"[0m
+2026-10-24T23:21:13.4477690Z [36;1mexit "$code"[0m
+2026-10-24T23:21:13.4538805Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:21:13.4539057Z ##[endgroup]
+2026-10-24T23:21:13.5850594Z {"command": ["/home/runner/work/_temp/original-secret-tools/gitleaks", "detect", "--source=/home/runner/work/_temp/original-secret-scope/history.git", "--log-opts=--all --full-history --diff-merges=first-parent", "--redact=100", "--exit-code=2", "--log-level=info", "--report-format=sarif", "--report-path=/home/runner/work/onSkin/onSkin/docs/phase-9/generated/ci-scanner-evidence/gitleaks-results.sarif"], "raw_exit": 2}
+2026-10-24T23:21:13.5854151Z {"command": ["/home/runner/work/_temp/original-secret-tools/gitleaks", "detect", "--no-git", "--source=/home/runner/work/_temp/original-secret-scope/current-source", "--redact=100", "--exit-code=2", "--log-level=info", "--report-format=json", "--report-path=/home/runner/work/_temp/original-secret-scope/current-gitleaks.json"], "raw_exit": 2}
+2026-10-24T23:21:13.5976092Z ##[error]Process completed with exit code 2.
+2026-10-24T23:21:13.6045898Z ##[group]Run python3 -B scripts/phase9/security_acceptance/secret_scan.py outcome --scanner trufflehog --output docs/phase-9/generated/ci-scanner-evidence
+2026-10-24T23:21:13.6047008Z [36;1mpython3 -B scripts/phase9/security_acceptance/secret_scan.py outcome --scanner trufflehog --output docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-24T23:21:13.6108272Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:21:13.6108525Z ##[endgroup]
+2026-10-24T23:21:13.7410254Z {"command": ["/home/runner/work/_temp/original-secret-tools/trufflehog", "git", "file:///home/runner/work/_temp/original-secret-scope/history.git", "--bare", "--fail", "--no-update", "--json", "--only-verified", "--concurrency=1"], "raw_exit": 0}
+2026-10-24T23:21:13.7413669Z {"command": ["/home/runner/work/_temp/original-secret-tools/trufflehog", "filesystem", "/home/runner/work/_temp/original-secret-scope/current-source", "--fail", "--no-update", "--json", "--only-verified", "--concurrency=1"], "raw_exit": 0}
+2026-10-24T23:21:13.7596616Z ##[group]Run mkdir -p docs/phase-9/generated/ci-scanner-evidence
+2026-10-24T23:21:13.7597153Z [36;1mmkdir -p docs/phase-9/generated/ci-scanner-evidence[0m
+2026-10-24T23:21:13.7597677Z [36;1mcat > docs/phase-9/generated/ci-scanner-evidence/secret-scan-outcomes.json <<JSON[0m
+2026-10-24T23:21:13.7598123Z [36;1m{[0m
+2026-10-24T23:21:13.7598334Z [36;1m  "job": "secret-scan",[0m
+2026-10-24T23:21:13.7598598Z [36;1m  "sha": "${GITHUB_SHA}",[0m
+2026-10-24T23:21:13.7598878Z [36;1m  "run_id": "${GITHUB_RUN_ID}",[0m
+2026-10-24T23:21:13.7599199Z [36;1m  "gitleaks": "${G97_GITLEAKS_OUTCOME}",[0m
+2026-10-24T23:21:13.7599536Z [36;1m  "gitleaks_exit": "${G97_GITLEAKS_EXIT}",[0m
+2026-10-24T23:21:13.7600053Z [36;1m  "trufflehog": "${G97_TRUFFLEHOG_OUTCOME}"[0m
+2026-10-24T23:21:13.7600335Z [36;1m}[0m
+2026-10-24T23:21:13.7600517Z [36;1mJSON[0m
+2026-10-24T23:21:13.7662752Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:21:13.7663007Z env:
+2026-10-24T23:21:13.7663238Z   G97_GITLEAKS_OUTCOME: failure
+2026-10-24T23:21:13.7663484Z   G97_GITLEAKS_EXIT: 2
+2026-10-24T23:21:13.7663709Z   G97_TRUFFLEHOG_OUTCOME: success
+2026-10-24T23:21:13.7663950Z ##[endgroup]
+2026-10-24T23:21:13.7893902Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-24T23:21:13.7894340Z with:
+2026-10-24T23:21:13.7894569Z   name: secret-scanner-evidence-40142190906
+2026-10-24T23:21:13.7894914Z   path: docs/phase-9/generated/ci-scanner-evidence/
+2026-10-24T23:21:13.7895224Z   if-no-files-found: error
+2026-10-24T23:21:13.7895452Z   retention-days: 30
+2026-10-24T23:21:13.7895669Z   compression-level: 6
+2026-10-24T23:21:13.7895875Z   overwrite: false
+2026-10-24T23:21:13.7896099Z   include-hidden-files: false
+2026-10-24T23:21:13.7896327Z ##[endgroup]
+2026-10-24T23:21:13.9552129Z (node:4017) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T23:21:13.9553015Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T23:21:13.9683449Z With the provided path, there will be 4 files uploaded
+2026-10-24T23:21:13.9731717Z Artifact name is valid!
+2026-10-24T23:21:13.9745085Z Root directory input is valid!
+2026-10-24T23:21:14.2199126Z Beginning upload of artifact content to blob storage
+2026-10-24T23:21:14.4097946Z (node:4017) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-24T23:21:14.6655748Z Uploaded bytes 1665442
+2026-10-24T23:21:14.7033020Z Finished uploading artifact content to blob storage!
+2026-10-24T23:21:14.7034233Z SHA256 digest of uploaded artifact zip is 09e6374304311efec647f524f2013b064c37c840114359ecd53a57ed64eac6e6
+2026-10-24T23:21:14.7036162Z Finalizing artifact upload
+2026-10-24T23:21:15.1491877Z Artifact secret-scanner-evidence-40142190906.zip successfully finalized. Artifact ID 12578714788
+2026-10-24T23:21:15.1493523Z Artifact secret-scanner-evidence-40142190906 has been successfully uploaded! Final size is 1665442 bytes. Artifact ID is 12578714788
+2026-10-24T23:21:15.1500831Z Artifact download URL: https://github.com/TasfiqJ/onSkin/actions/runs/40142190906/artifacts/12578714788
+2026-10-24T23:21:15.1659200Z ##[group]Run test "${G97_TRUFFLEHOG_OUTCOME}" = "success"
+2026-10-24T23:21:15.1659611Z [36;1mtest "${G97_TRUFFLEHOG_OUTCOME}" = "success"[0m
+2026-10-24T23:21:15.1660059Z [36;1mpython3 -B scripts/phase9/security_acceptance/secret_scan.py check \[0m
+2026-10-24T23:21:15.1660559Z [36;1m  --output docs/phase-9/generated/ci-scanner-evidence \[0m
+2026-10-24T23:21:15.1661328Z [36;1m  --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID"[0m
+2026-10-24T23:21:15.1720193Z shell: /usr/bin/bash -e {0}
+2026-10-24T23:21:15.1720446Z env:
+2026-10-24T23:21:15.1720642Z   G97_GITLEAKS_OUTCOME: failure
+2026-10-24T23:21:15.1721145Z   G97_TRUFFLEHOG_OUTCOME: success
+2026-10-24T23:21:15.1721459Z ##[endgroup]
+2026-10-24T23:21:25.5452109Z {"status": "REJECTED", "code": "SECRET_CURRENT_SOURCE_FINDINGS_UNREVIEWED", "acceptanceGranted": false}
+2026-10-24T23:21:25.6186671Z ##[error]Process completed with exit code 1.
+2026-10-24T23:21:25.6308934Z Post job cleanup.
+2026-10-24T23:21:25.7171592Z [command]/usr/bin/git version
+2026-10-24T23:21:25.7219722Z git version 2.55.0
+2026-10-24T23:21:25.7263283Z Temporarily overriding HOME='/home/runner/work/_temp/382f561d-69d3-4b33-971a-141493d2f08d' before making global git config changes
+2026-10-24T23:21:25.7264711Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T23:21:25.7268771Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/onSkin/onSkin
+2026-10-24T23:21:25.7308238Z Removing SSH command configuration
+2026-10-24T23:21:25.7315927Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T23:21:25.7363375Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T23:21:25.7694668Z Removing HTTP extra header
+2026-10-24T23:21:25.7700385Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T23:21:25.7743359Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T23:21:25.8113986Z Removing includeIf entries pointing to credentials config files
+2026-10-24T23:21:25.8114686Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T23:21:25.8152330Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T23:21:25.8669772Z Cleaning up orphan processes
+2026-10-24T23:21:25.9056929Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

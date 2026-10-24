@@ -1,0 +1,310 @@
+TAP version 13
+# Subtest: builds a 2,000-record, six-category envelope and reserves clear for DB readback
+ok 1 - builds a 2,000-record, six-category envelope and reserves clear for DB readback
+  ---
+  duration_ms: 15595.8299
+  type: 'test'
+  ...
+# Subtest: validates independent signed CAT-02 membership and final DB readback authorities
+ok 2 - validates independent signed CAT-02 membership and final DB readback authorities
+  ---
+  duration_ms: 2081.5983
+  type: 'test'
+  ...
+# Subtest: full pre-holdout commitment rejects any authority-bearing record mutation
+ok 3 - full pre-holdout commitment rejects any authority-bearing record mutation
+  ---
+  duration_ms: 215.1564
+  type: 'test'
+  ...
+# Subtest: append-only served-state mutation roots reject missing, tampered, and pre-record stale review authority
+ok 4 - append-only served-state mutation roots reject missing, tampered, and pre-record stale review authority
+  ---
+  duration_ms: 1903.1622
+  type: 'test'
+  ...
+# Subtest: activation operator is independent from every outcome reviewer
+ok 5 - activation operator is independent from every outcome reviewer
+  ---
+  duration_ms: 92.2571
+  type: 'test'
+  ...
+# Subtest: outcome reviewers seal first and activation authorization is strictly later
+ok 6 - outcome reviewers seal first and activation authorization is strictly later
+  ---
+  duration_ms: 7014.3299
+  type: 'test'
+  ...
+# Subtest: hard inventory floor cannot be satisfied by a token record or null priorities
+ok 7 - hard inventory floor cannot be satisfied by a token record or null priorities
+  ---
+  duration_ms: 85.7326
+  type: 'test'
+  ...
+# Subtest: every unsuppressed demand commitment maps once and to the same category
+ok 8 - every unsuppressed demand commitment maps once and to the same category
+  ---
+  duration_ms: 222.2038
+  type: 'test'
+  ...
+# Subtest: stratum Wilson gates expose a bad required category hidden by a passing aggregate
+ok 9 - stratum Wilson gates expose a bad required category hidden by a passing aggregate
+  ---
+  duration_ms: 1.3033
+  type: 'test'
+  ...
+# Subtest: contributors, bucket counts, overlap, and nonzero operational denominators fail closed
+ok 10 - contributors, bucket counts, overlap, and nonzero operational denominators fail closed
+  ---
+  duration_ms: 106.0628
+  type: 'test'
+  ...
+# Subtest: tampered or untrusted external timestamp/log receipt is rejected
+ok 11 - tampered or untrusted external timestamp/log receipt is rejected
+  ---
+  duration_ms: 2.329
+  type: 'test'
+  ...
+# Subtest: CAT-02 proof requires production-integral batches, variable ingredient entities, and zero DB variance
+ok 12 - CAT-02 proof requires production-integral batches, variable ingredient entities, and zero DB variance
+  ---
+  duration_ms: 5526.0162
+  type: 'test'
+  ...
+# Subtest: database readback rejects subsets, extras, and current-serving mismatches
+ok 13 - database readback rejects subsets, extras, and current-serving mismatches
+  ---
+  duration_ms: 10683.9577
+  type: 'test'
+  ...
+# Subtest: CAT-03 review and readback reject pre-0062 schema authority
+ok 14 - CAT-03 review and readback reject pre-0062 schema authority
+  ---
+  duration_ms: 2431.7811
+  type: 'test'
+  ...
+# Subtest: CAT-03 review binds the exact current migration and database-contract bytes
+ok 15 - CAT-03 review binds the exact current migration and database-contract bytes
+  ---
+  duration_ms: 187.5955
+  type: 'test'
+  ...
+# Subtest: target inventory declaration cannot weaken 2,000/six-category consistency
+ok 16 - target inventory declaration cannot weaken 2,000/six-category consistency
+  ---
+  duration_ms: 1.5678
+  type: 'test'
+  ...
+# Subtest: database eligibility policy canonical text and digest match the fixed JS/PostgreSQL golden vector
+ok 17 - database eligibility policy canonical text and digest match the fixed JS/PostgreSQL golden vector
+  ---
+  duration_ms: 0.2294
+  type: 'test'
+  ...
+# Subtest: 0058 and JS canonical bridges use identical mapping/auth/record-set vocabulary
+ok 18 - 0058 and JS canonical bridges use identical mapping/auth/record-set vocabulary
+  ---
+  duration_ms: 562.1327
+  type: 'test'
+  ...
+# Subtest: CAT-03 operator templates expose the current exact schema while remaining blocked
+ok 19 - CAT-03 operator templates expose the current exact schema while remaining blocked
+  ---
+  duration_ms: 1135.761
+  type: 'test'
+  ...
+# Subtest: participant-level Wilson units, caps, reconciliation, and small cells fail closed
+ok 20 - participant-level Wilson units, caps, reconciliation, and small cells fail closed
+  ---
+  duration_ms: 144.2107
+  type: 'test'
+  ...
+# Subtest: category ingredient and operational route/network strata cannot hide aggregate failures
+ok 21 - category ingredient and operational route/network strata cannot hide aggregate failures
+  ---
+  duration_ms: 1.3093
+  type: 'test'
+  ...
+# Subtest: below-usable recommendations require both zero observations and a Wilson upper bound
+ok 22 - below-usable recommendations require both zero observations and a Wilson upper bound
+  ---
+  duration_ms: 0.5461
+  type: 'test'
+  ...
+# Subtest: missing strata and zero denominators are explicit unavailable evidence
+ok 23 - missing strata and zero denominators are explicit unavailable evidence
+  ---
+  duration_ms: 0.5833
+  type: 'test'
+  ...
+# Subtest: holdout access, reuse, build, HMAC, suppression, and registry receipt tampering fails closed
+ok 24 - holdout access, reuse, build, HMAC, suppression, and registry receipt tampering fails closed
+  ---
+  duration_ms: 429.1553
+  type: 'test'
+  ...
+# Subtest: Wilson calculation is conservative and parser remains bounded above a 2,000-row artifact
+ok 25 - Wilson calculation is conservative and parser remains bounded above a 2,000-row artifact
+  ---
+  duration_ms: 58.9661
+  type: 'test'
+  ...
+# Subtest: builds deterministic content-addressed envelopes and exact per-record hashes
+ok 26 - builds deterministic content-addressed envelopes and exact per-record hashes
+  ---
+  duration_ms: 67.753
+  type: 'test'
+  ...
+# Subtest: admits benzoyl peroxide only through a signed evidence-bound category override
+ok 27 - admits benzoyl peroxide only through a signed evidence-bound category override
+  ---
+  duration_ms: 1426.6443
+  type: 'test'
+  ...
+# Subtest: pre-production v2 cutover invalidates every legacy row-review and stage domain
+ok 28 - pre-production v2 cutover invalidates every legacy row-review and stage domain
+  ---
+  duration_ms: 44.4203
+  type: 'test'
+  ...
+# Subtest: materializes exact database receipts, minimal evidence, and receipt-bound review decisions
+ok 29 - materializes exact database receipts, minimal evidence, and receipt-bound review decisions
+  ---
+  duration_ms: 372.5582
+  type: 'test'
+  ...
+# Subtest: receipt completion rejects drift in every normalized field and the canonical record hash
+ok 30 - receipt completion rejects drift in every normalized field and the canonical record hash
+  ---
+  duration_ms: 75.3255
+  type: 'test'
+  ...
+# Subtest: rejects fixture, candidate, forged, and missing approval bindings
+ok 31 - rejects fixture, candidate, forged, and missing approval bindings
+  ---
+  duration_ms: 78.2292
+  type: 'test'
+  ...
+# Subtest: rejects duplicate JSON keys before parser last-value recovery
+ok 32 - rejects duplicate JSON keys before parser last-value recovery
+  ---
+  duration_ms: 14.8626
+  type: 'test'
+  ...
+# Subtest: rejects QA blockers, warnings, dirty state, and payload drift
+ok 33 - rejects QA blockers, warnings, dirty state, and payload drift
+  ---
+  duration_ms: 135.3876
+  type: 'test'
+  ...
+# Subtest: signed batch provenance rejects identical candidates with a different QA artifact
+ok 34 - signed batch provenance rejects identical candidates with a different QA artifact
+  ---
+  duration_ms: 18.9854
+  type: 'test'
+  ...
+# Subtest: does not trust forged zero QA counts for incomplete OBF records
+ok 35 - does not trust forged zero QA counts for incomplete OBF records
+  ---
+  duration_ms: 16.8155
+  type: 'test'
+  ...
+# Subtest: requires a database-executable OBF source modification date
+ok 36 - requires a database-executable OBF source modification date
+  ---
+  duration_ms: 45.7568
+  type: 'test'
+  ...
+# Subtest: rejects checksum-invalid and noncanonical padded OBF natural keys
+ok 37 - rejects checksum-invalid and noncanonical padded OBF natural keys
+  ---
+  duration_ms: 80.6698
+  type: 'test'
+  ...
+# Subtest: preserves the governed 20,000-code-unit OBF ingredient-text boundary
+ok 38 - preserves the governed 20,000-code-unit OBF ingredient-text boundary
+  ---
+  duration_ms: 114.0695
+  type: 'test'
+  ...
+# Subtest: requires complete explicit reviews, exact fields, and independent reviewer evidence
+ok 39 - requires complete explicit reviews, exact fields, and independent reviewer evidence
+  ---
+  duration_ms: 418.1499
+  type: 'test'
+  ...
+# Subtest: real Ed25519 row reviewers bind the v2 regulated override and cannot reuse source approvers
+ok 40 - real Ed25519 row reviewers bind the v2 regulated override and cannot reuse source approvers
+  ---
+  duration_ms: 24.5116
+  type: 'test'
+  ...
+# Subtest: rejects Unicode-normalized CosIng collisions when any colliding row is accepted
+ok 41 - rejects Unicode-normalized CosIng collisions when any colliding row is accepted
+  ---
+  duration_ms: 18.4791
+  type: 'test'
+  ...
+# Subtest: CosIng canonical keys use NFKC, collapsed whitespace, and deterministic uppercase
+ok 42 - CosIng canonical keys use NFKC, collapsed whitespace, and deterministic uppercase
+  ---
+  duration_ms: 1.0439
+  type: 'test'
+  ...
+# Subtest: database candidate digest canonicalizes key order and binds Unicode, nulls, controls, and arrays
+ok 43 - database candidate digest canonicalizes key order and binds Unicode, nulls, controls, and arrays
+  ---
+  duration_ms: 235.7819
+  type: 'test'
+  ...
+# Subtest: database plan carries the exact compatibility-normalized CosIng canonical key
+ok 44 - database plan carries the exact compatibility-normalized CosIng canonical key
+  ---
+  duration_ms: 20.1568
+  type: 'test'
+  ...
+# Subtest: rejects cross-record CAS, source-reference, and INCI/synonym collisions
+ok 45 - rejects cross-record CAS, source-reference, and INCI/synonym collisions
+  ---
+  duration_ms: 52.279
+  type: 'test'
+  ...
+# Subtest: structural QA permits an evidence-only descendant HEAD while binding the build source
+ok 46 - structural QA permits an evidence-only descendant HEAD while binding the build source
+  ---
+  duration_ms: 20.5476
+  type: 'test'
+  ...
+# Subtest: current QA source hash verifier requires the exact ordered committed authority inventory
+ok 47 - current QA source hash verifier requires the exact ordered committed authority inventory
+  ---
+  duration_ms: 6158.4357
+  type: 'test'
+  ...
+# Subtest: CosIng rows outside the database annex enum must be explicitly rejected
+ok 48 - CosIng rows outside the database annex enum must be explicitly rejected
+  ---
+  duration_ms: 30.7578
+  type: 'test'
+  ...
+# Subtest: output path is bounded, symlink-safe, no-clobber, and leaves no partial temp files
+ok 49 - output path is bounded, symlink-safe, no-clobber, and leaves no partial temp files
+  ---
+  duration_ms: 27.1774
+  type: 'test'
+  ...
+# Subtest: CLI requires exact flags and cannot bypass current production authority
+ok 50 - CLI requires exact flags and cannot bypass current production authority
+  ---
+  duration_ms: 630.2817
+  type: 'test'
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 62156.5481

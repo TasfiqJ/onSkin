@@ -1,0 +1,18 @@
+{
+  "all_tests": 82,
+  "all_failures": 21,
+  "all_errors": 29,
+  "all_skipped": 1,
+  "by_module": {
+    "test_contract": {
+      "FAIL": 21,
+      "ERROR": 19
+    },
+    "test_secret_scan": {
+      "FAIL": 0,
+      "ERROR": 10
+    }
+  },
+  "inherited_contract_tests": 70,
+  "additional_secret_tests": 12
+}

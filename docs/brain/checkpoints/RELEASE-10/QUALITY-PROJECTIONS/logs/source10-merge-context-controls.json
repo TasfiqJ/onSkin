@@ -1,0 +1,18 @@
+{
+  "name": "source10-merge-context-controls",
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/source_consumer10.test.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "262b41ca772830228fcd7b76cc0729c506855b3f",
+    "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+  ],
+  "status_before": " M docs/release/full-app-j01/quality-projections10.md\n M scripts/release/full-app-j01/check.py\n M scripts/release/full-app-j01/source_consumer10.test.py\n",
+  "started": "2026-10-24T23:17:24.214283+00:00",
+  "finished": "2026-10-24T23:17:41.803981+00:00",
+  "exit": 0,
+  "disk_free": 795361280
+}

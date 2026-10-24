@@ -1,0 +1,42 @@
+{
+  "status": "BLOCKED_OUTSIDE_SCOPE",
+  "owner": [
+    "Readiness owner",
+    "CAT07 evidence owner",
+    "Release provenance owner",
+    "Independent Brain"
+  ],
+  "source": "c3c868f86313a9f42b10adfef37cdbbeb1c2e289",
+  "source_tree": "47e469bb900ff57488043a027490c469703881d0",
+  "diagnosis": "Stable snapshot and mobile inventory; unavailable governed evidence-chain binding, missing recorded source head; expected fail-closed refusal",
+  "script_bug_demonstrated": false,
+  "conditional_script_edit_activated": false,
+  "outputs_unchanged": true,
+  "readiness_current_exit": 1,
+  "readiness_tamper": "NOT_RUN_CANONICAL_BASELINE_ALREADY_FAILS",
+  "readiness_restored_exit": 1,
+  "original_readiness_fixture_controls": "33 PASS; immutable source/owner/provenance/atomic/HEAD/status controls retained",
+  "existing_paths_requiring_separate_grant": [
+    "LAUNCH_READINESS.md",
+    "BLOCKERS.md",
+    "docs/TESTING_STRATEGY.md",
+    "docs/e2e/generated/human-e2e-manifest.json",
+    "docs/e2e/generated/human-e2e-manifest.md",
+    "scripts/docs/readiness-status-audit.mjs",
+    "scripts/docs/readiness-status-audit.test.mjs"
+  ],
+  "protected_chain_paths": [
+    "scripts/launch/governed-evidence-chain.mjs",
+    "scripts/launch/governed-publication-coverage.mjs",
+    "scripts/phase9/build-evidence-chain-ledger.mjs",
+    "docs/phase-9/release-candidates/README.md"
+  ],
+  "missing_future_rc_path_pattern": "docs/phase-9/release-candidates/rc-<reviewed-id>/evidence-chain.json",
+  "acceptance": [
+    "Authentic corrected CAT07 evidence and reviewed test/doc baseline",
+    "Real S/direct-E/ledger custody and exact generated tail through R",
+    "Readiness-only final F child; no synthetic merge-ref or evidence-only-checkpoint substitute",
+    "All 33 original controls preserved plus current/tampered/restored strict producer proof"
+  ],
+  "safety": "No fabricated tests, owner approval, provenance, provider/device/clinical evidence or positive J01 outputs"
+}

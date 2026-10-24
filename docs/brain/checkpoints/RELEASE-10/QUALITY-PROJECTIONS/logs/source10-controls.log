@@ -1,0 +1,31 @@
+{"case": "unissued-path:../escape", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:/absolute", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:C:/drive", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs\\escape", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/../escape", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10//x", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/./x", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/.git/config", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/\uff58", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:.github/workflows/quality.yml", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/docs/readiness-status-audit.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/docs/readiness-status-audit.test.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/docs/source-packet-audit.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/phase4/build-source-worklist.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/release/full-app-j01/test_contract.py", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/release/full-app-j01/source_consumer09.test.py", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/release/full-app-j01/contract.v1.json", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:package.json", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/checkpoints/RELEASE-09/SOURCE-PACKET-CONSUMER/README.md", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\scripts\release\full-app-j01\source_consumer10.test.py", line 123, in <module>
+    main()
+  File "C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\scripts\release\full-app-j01\source_consumer10.test.py", line 57, in main
+    git('read-tree', check.RELEASE09)
+  File "C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\scripts\release\full-app-j01\source_consumer10.test.py", line 51, in git
+    return subprocess.check_output(['git', '-c', 'core.autocrlf=false', *args], cwd=fixture,
+  File "C:\Python39\lib\subprocess.py", line 424, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "C:\Python39\lib\subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-c', 'core.autocrlf=false', 'read-tree', '8ac97c32901272d97d1bff05f2abc294811055a6']' returned non-zero exit status 128.

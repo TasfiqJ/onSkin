@@ -1,0 +1,18 @@
+{
+  "name": "worklist-official-writer",
+  "argv": [
+    "npm.cmd",
+    "run",
+    "phase4:source-worklist:strict"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "8e6ac6682a2da2af89bdb8654dc144a6776bf5bc",
+    "4aee1d71b483791d4ef8c9e13c18e08ecaac0365"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:09:11.055413+00:00",
+  "finished": "2026-10-24T23:09:12.087592+00:00",
+  "exit": 0,
+  "disk_free": 849895424
+}

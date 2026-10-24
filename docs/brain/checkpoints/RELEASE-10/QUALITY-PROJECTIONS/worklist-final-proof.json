@@ -1,0 +1,41 @@
+{
+  "writer_source": "e37d13566624e87d4257c09d85489d7ee77ca7d0",
+  "writer_tree": "5a3b1e9bb205e78fdb59650b3f0116f33158c06e",
+  "summary": {
+    "itemCount": 14,
+    "domainCounts": {
+      "sourceReview": 3,
+      "curation": 4,
+      "betaEvidence": 1,
+      "productSurface": 4,
+      "operations": 2
+    },
+    "statusCounts": {
+      "blocked": 7,
+      "local-scaffold": 7
+    },
+    "sourcePathCount": 420,
+    "missingSourcePathCount": 0,
+    "blockerCount": 0,
+    "warningCount": 0
+  },
+  "changes": [
+    {
+      "item": "catalog-launch-curation-lifecycle",
+      "before": {
+        "path": ".github/workflows/quality.yml",
+        "exists": true,
+        "bytes": 13201,
+        "sha256": "c78ed1c9559407dd31634da1f3afaf00e887f976ff54f78c926acff7478a16c8"
+      },
+      "after": {
+        "path": ".github/workflows/quality.yml",
+        "exists": true,
+        "bytes": 13714,
+        "sha256": "51a295770e798707507048bc56cf10765b308b18ed9ce9922c05bf699b660c49"
+      }
+    }
+  ],
+  "self_binding": false,
+  "producer_unchanged": true
+}

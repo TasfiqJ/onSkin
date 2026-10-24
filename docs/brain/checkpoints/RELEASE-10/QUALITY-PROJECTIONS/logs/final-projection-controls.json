@@ -1,0 +1,18 @@
+{
+  "name": "final-projection-controls",
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/quality_projection10.test.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "262b41ca772830228fcd7b76cc0729c506855b3f",
+    "912e8450f4cf9aaf2d9aa19a4e8361c01a50baf1"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:10:33.601589+00:00",
+  "finished": "2026-10-24T23:10:41.844642+00:00",
+  "exit": 0,
+  "disk_free": 832540672
+}

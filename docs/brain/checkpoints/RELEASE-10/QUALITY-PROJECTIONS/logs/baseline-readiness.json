@@ -1,0 +1,19 @@
+{
+  "name": "baseline-readiness",
+  "argv": [
+    "node",
+    "scripts/docs/readiness-status-audit.mjs",
+    "--strict",
+    "--check"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "8ac97c32901272d97d1bff05f2abc294811055a6",
+    "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:00:55.089689+00:00",
+  "finished": "2026-10-24T23:01:03.426787+00:00",
+  "exit": 1,
+  "disk_free": 851324928
+}

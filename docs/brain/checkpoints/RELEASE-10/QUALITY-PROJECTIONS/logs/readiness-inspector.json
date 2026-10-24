@@ -1,0 +1,17 @@
+{
+  "name": "readiness-inspector",
+  "argv": [
+    "node",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\Release10-task-142d5e1df9c542329dbb3dc1fe7e3b7f\\readiness-diagnostic.cjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "8ac97c32901272d97d1bff05f2abc294811055a6",
+    "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:01:29.896922+00:00",
+  "finished": "2026-10-24T23:01:41.193139+00:00",
+  "exit": 1,
+  "disk_free": 837787648
+}

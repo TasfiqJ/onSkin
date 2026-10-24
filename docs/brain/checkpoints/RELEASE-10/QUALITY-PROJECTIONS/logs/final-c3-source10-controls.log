@@ -1,0 +1,81 @@
+{"case": "unissued-path:../escape", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:/absolute", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:C:/drive", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs\\escape", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/../escape", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10//x", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/./x", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/.git/config", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/.GIT/config", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/CON.md", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/alias.", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/contracts/RELEASE-10/\uff58", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:.github/workflows/quality.yml", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/docs/readiness-status-audit.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/docs/readiness-status-audit.test.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/docs/source-packet-audit.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/phase4/build-source-worklist.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/release/full-app-j01/test_contract.py", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:scripts/release/full-app-j01/source_consumer09.test.py", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/release/full-app-j01/contract.v1.json", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:package.json", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"case": "unissued-path:docs/brain/checkpoints/RELEASE-09/SOURCE-PACKET-CONSUMER/README.md", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 c010f5b2f0d381fbc9cca1146b1ff5b12810b1f2 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/phase-4/generated/source-worklist.json\u0000"}
+{"case": "authentic-generated-pair-path", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 6041c645ea6b100ec82f9c47406a1590900b54ea 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000ONSKIN_BRAIN_HANDOFF.txt\u0000"}
+{"case": "exact-granted-path:ONSKIN_BRAIN_HANDOFF.txt", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 223988e76077bbd411f663c8b7962a4f3d3a0a86 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/generated/readiness-status-audit.json\u0000"}
+{"case": "exact-granted-path:docs/generated/readiness-status-audit.json", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 269e90943ecf4a34acf35ec17922e9dd5aef57f0 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/generated/readiness-status-audit.md\u0000"}
+{"case": "exact-granted-path:docs/generated/readiness-status-audit.md", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 c010f5b2f0d381fbc9cca1146b1ff5b12810b1f2 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/phase-4/generated/source-worklist.json\u0000"}
+{"case": "exact-granted-path:docs/phase-4/generated/source-worklist.json", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 a1f96eb5259114a79cbc57b495f4fd9e9ad17f47 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/phase-4/generated/source-worklist.md\u0000"}
+{"case": "exact-granted-path:docs/phase-4/generated/source-worklist.md", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":000000 100644 0000000000000000000000000000000000000000 20824562732cd4e6455bc01640ad5d29a3ecfabe A\u0000docs/release/full-app-j01/legacy-consumer-cutover10.unapplied.json\u0000"}
+{"case": "exact-granted-path:docs/release/full-app-j01/legacy-consumer-cutover10.unapplied.json", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":000000 100644 0000000000000000000000000000000000000000 20824562732cd4e6455bc01640ad5d29a3ecfabe A\u0000docs/release/full-app-j01/quality-projections10.md\u0000"}
+{"case": "exact-granted-path:docs/release/full-app-j01/quality-projections10.md", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 c2d2bee4b2ab71965fa3cd7689f6211fff30a3ce 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000scripts/release/full-app-j01/check.py\u0000"}
+{"case": "exact-granted-path:scripts/release/full-app-j01/check.py", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":000000 100644 0000000000000000000000000000000000000000 20824562732cd4e6455bc01640ad5d29a3ecfabe A\u0000scripts/release/full-app-j01/quality_projection10.test.py\u0000"}
+{"case": "exact-granted-path:scripts/release/full-app-j01/quality_projection10.test.py", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":000000 100644 0000000000000000000000000000000000000000 20824562732cd4e6455bc01640ad5d29a3ecfabe A\u0000scripts/release/full-app-j01/source_consumer10.test.py\u0000"}
+{"case": "exact-granted-path:scripts/release/full-app-j01/source_consumer10.test.py", "exit": 0, "expected_exit": 0, "error": null}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 92400c74fe776dd7766a15befdefdff852074f4e 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000.github/workflows/quality.yml\u0000"}
+{"case": "actual-protected-delta:.github/workflows/quality.yml", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:.github/workflows/quality.yml"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 8dcfe8ced92b3b96f40a0628c1398c045767dd14 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000scripts/phase4/build-source-worklist.mjs\u0000"}
+{"case": "actual-protected-delta:scripts/phase4/build-source-worklist.mjs", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:scripts/phase4/build-source-worklist.mjs"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 876a1a3642834364e08121ef2429ace9864f23ff 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/generated/source-packet-audit.json\u0000"}
+{"case": "actual-protected-delta:docs/generated/source-packet-audit.json", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:docs/generated/source-packet-audit.json"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 67d6e5db9fadd7501557e7105ac930b67e2a2ffc 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/release/full-app-j01/contract.v1.json\u0000"}
+{"case": "actual-protected-delta:docs/release/full-app-j01/contract.v1.json", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:docs/release/full-app-j01/contract.v1.json"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 bccb30b28278a03a1d4d65e7d1f08f3fd79c1c67 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000scripts/release/full-app-j01/test_contract.py\u0000"}
+{"case": "actual-protected-delta:scripts/release/full-app-j01/test_contract.py", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:scripts/release/full-app-j01/test_contract.py"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100644 96d200b42c538d698d8b6acf8763cce91d8990ea 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000supabase/config.toml\u0000"}
+{"case": "actual-protected-delta:supabase/config.toml", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:supabase/config.toml"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 100755 c010f5b2f0d381fbc9cca1146b1ff5b12810b1f2 20824562732cd4e6455bc01640ad5d29a3ecfabe M\u0000docs/phase-4/generated/source-worklist.json\u0000"}
+{"case": "actual-mode:100755", "exit": 1, "expected_exit": 1, "error": "R10_MODE:docs/phase-4/generated/source-worklist.json"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 120000 c010f5b2f0d381fbc9cca1146b1ff5b12810b1f2 20824562732cd4e6455bc01640ad5d29a3ecfabe T\u0000docs/phase-4/generated/source-worklist.json\u0000"}
+{"case": "actual-mode:120000", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:docs/phase-4/generated/source-worklist.json"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":100644 000000 c010f5b2f0d381fbc9cca1146b1ff5b12810b1f2 0000000000000000000000000000000000000000 D\u0000docs/phase-4/generated/source-worklist.json\u0000"}
+{"case": "actual-deletion", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:docs/phase-4/generated/source-worklist.json"}
+{"argv": ["git", "diff", "--cached", "--raw", "--no-abbrev", "--no-renames", "-z", "8ac97c32901272d97d1bff05f2abc294811055a6"], "cwd": "C:\\Users\\jasim\\AppData\\Local\\Temp\\onskin-source10-arr2nxwk", "raw": ":000000 100644 0000000000000000000000000000000000000000 20824562732cd4e6455bc01640ad5d29a3ecfabe A\u0000docs/brain/contracts/RELEASE-10/Case.md\u0000:000000 100644 0000000000000000000000000000000000000000 20824562732cd4e6455bc01640ad5d29a3ecfabe A\u0000docs/brain/contracts/RELEASE-10/case.md\u0000"}
+{"case": "actual-casefold-collision", "exit": 1, "expected_exit": 1, "error": "R10_COLLISION:docs/brain/contracts/RELEASE-10/case.md"}
+{"case": "malformed-raw", "exit": 1, "expected_exit": 1, "error": "R10_DIFF_SHAPE"}
+{"case": "old09-rejects-new10-path", "exit": 1, "expected_exit": 1, "error": "R09_SCOPE:docs/phase-4/generated/source-worklist.json"}
+{"case": "actual-history-authentic", "exit": 0, "expected_exit": 0, "error": null}
+{"case": "actual-history-protected-mutation", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:.github/workflows/quality.yml"}
+{"case": "actual-history-hidden-intermediate-remains-rejected", "exit": 1, "expected_exit": 1, "error": "R10_SCOPE:.github/workflows/quality.yml"}
+{"case": "actual-history-authentic-restored", "exit": 0, "expected_exit": 0, "error": null}
+{"case": "actual-history-merge", "exit": 1, "expected_exit": 1, "error": "R10_CI_MERGE_CONTEXT"}
+{"case": "exact-synthetic-integration-tree-and-event", "exit": 0, "expected_exit": 0, "error": null}
+{"case": "synthetic-context-tampered:GITHUB_EVENT_NAME", "exit": 1, "expected_exit": 1, "error": "R10_CI_MERGE_CONTEXT"}
+{"case": "synthetic-context-tampered:GITHUB_REF", "exit": 1, "expected_exit": 1, "error": "R10_CI_MERGE_CONTEXT"}
+{"case": "synthetic-context-tampered:GITHUB_SHA", "exit": 1, "expected_exit": 1, "error": "R10_CI_MERGE_CONTEXT"}
+{"case": "synthetic-context-tampered:GITHUB_REPOSITORY", "exit": 1, "expected_exit": 1, "error": "R10_CI_MERGE_CONTEXT"}
+{"case": "synthetic-event-head-tampered", "exit": 1, "expected_exit": 1, "error": "R10_CI_EVENT_IDENTITY"}
+{"case": "synthetic-integration-tree-tampered", "exit": 1, "expected_exit": 1, "error": "R10_CI_MERGE_TREE"}
+{"case": "exact-synthetic-integration-restored", "exit": 0, "expected_exit": 0, "error": null}
+{"case": "actual-history-wrong-ancestry", "exit": 1, "expected_exit": 1, "error": "R10_LINEAR_HISTORY:c6bdfaacfe06dee0417fe554d7e83a34ebe524a8"}
+{"passed": true, "rejected": 44, "semantic_functions": "UNCHANGED_AST", "previous_tests": "BYTE_IDENTICAL", "qualification": "BOUNDED_ACTUAL_GIT_INDEX_AND_HISTORY_NOT_FULL_CHECKOUT", "release": "NO_GO"}

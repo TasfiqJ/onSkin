@@ -1,0 +1,8 @@
+{
+  "zip_sha256": "9d20e6338e177aef862f5de3af0bc99abc5ed2a6aeada7f973002d93140c8bd4",
+  "entries": 11,
+  "uncompressed_bytes": 49542,
+  "context_root": "C:\\Users\\jasim\\Documents\\ChatGPT\\Release10-task-142d5e1df9c542329dbb3dc1fe7e3b7f\\context-authenticated",
+  "original_files_unchanged": true,
+  "reason": "Reauthenticate same original attachment in clean context-only directory; scratch kept separate"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "projection-controls-complete-imports",
+  "argv": [
+    "python",
+    "-B",
+    "scripts/release/full-app-j01/quality_projection10.test.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "source": [
+    "5d1582598527c546fdb9ecd9c1b1409b04afe3c9",
+    "a1c9ec771be902b2ce6bed77b479adabf5fa618b"
+  ],
+  "status_before": "",
+  "started": "2026-10-24T23:09:58.643947+00:00",
+  "finished": "2026-10-24T23:10:03.474643+00:00",
+  "exit": 0,
+  "disk_free": 835293184
+}
