@@ -1,0 +1,22 @@
+node:fs:2425
+    return binding.writeFileUtf8(
+                   ^
+
+Error: ENOENT: no such file or directory, open 'C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\docs\brain\checkpoints\M1-02\RETAINED-RESILIENCE-01\ui\daily390\harness-binding.json'
+    at writeFileSync (node:fs:2425:20)
+    at load (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/extend-daily-loop.mjs:27:5)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at loadWithHooks (node:internal/modules/customization_hooks:352:18)
+    at #loadSync (node:internal/modules/esm/loader:849:14)
+    at ModuleLoader.load (node:internal/modules/esm/loader:808:28)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:594:31)
+    at #createModuleJob (node:internal/modules/esm/loader:624:36)
+    at #getJobFromResolveResult (node:internal/modules/esm/loader:343:34)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:311:41) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience\\docs\\brain\\checkpoints\\M1-02\\RETAINED-RESILIENCE-01\\ui\\daily390\\harness-binding.json'
+}
+
+Node.js v22.21.0

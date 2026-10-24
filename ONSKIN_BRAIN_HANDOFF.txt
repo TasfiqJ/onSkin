@@ -1,13 +1,13 @@
-M1-03 / GOVERNANCE-FIXTURE-01 - SUBMITTED_REVIEW_REQUIRED
-Authorization M103-GOVERNANCE-FIXTURE01-SOURCE-EDIT-01.
-External manifest anchor verified: 6510d0f948e93517eb4c2bb5875f5988507642a3c10f065c8d250222dfeec30f.
-Issued base dbcfce9770850d4655221bd3d4c3b5799553aed2, tree 93d9a5789c1ce443cf0bcd86696fff044ff2fd64; 7 writable + 16 protected preimages verified.
-Implementation/measured source 1dc58a5c5e49c3ffeada603f7e6f6038fc12803d; tree b0a80f55a472fc28f02a5e993912314a17726f6c.
-Only historical QR02/QR03 fixture setUp source selection and the disjoint GF01 interval/test/active authority changed. Original 16 test ASTs and source bodies unchanged; one repair approach.
-Ordinary Linux governance: 103 tests, 101 pass, zero failure/error, two unchanged Windows-only skips. QR02 8/8 and QR03 8/8 targeted pass. Fresh npm ci 1032, root6067, typecheck/lint zero cached, original secret12 PASS. Original Security70: exit 1; 70 tests, 23 failure events and 2 errors; {'passed': 62, 'failed': 8, 'skipped': 0} counts distinct test methods; preserve genuine rejection. Clean canonical worklist check PASS, no regeneration.
-Checkpoint docs/brain/checkpoints/M1-03/GOVERNANCE-FIXTURE-01 contains strict report, complete source-bound command evidence and regular Git blob hashes. Final evidence delivery SHA/tree and exact-head original Quality/Security/iOS observations are in the live pushed ref and accompanying return receipt; evidence tail changes only checkpoint/handoff.
-Original Security findings/advisories/SBOM remain unreviewed; proposal expired 2026-10-21T00:00:00Z. Canonical ECR acquisition remains an owner blocker; no replay, substitution or quota retry.
-PR9 remains draft/open/unmerged; main bbc28dc3d1f945191a81be56945b8bda7bb6ef73 unchanged.
-protected_source_go=false; main_promotion_authorized=false; hosted_replay_authorized=false.
-Accepted tasks only M0-01/M0-02/M1-01/M1-02; tasks47/modules27/priorADRs51 unchanged; spend USD0.
-Context health LOW; sufficient; no observed compaction. No self-acceptance/M2/clinical/device/archive/release. Stop for independent Brain review. Founder returns to Brain with: Codex is done.
+M1-02 / RETAINED-RESILIENCE-01 — SUBMITTED_REVIEW_REQUIRED
+Authorization M102-RETAINED-RESILIENCE01-CLIENT-SOURCE-01; Brain decision 2026-10-23.
+External packet manifest anchor verified: cf8dd7c7abb8c77e043ec52e7a8aa2c987359980a49b451a7c64b2a68f28a01c. Transport integrity only; source admission NONE.
+Independent stage/m1-retained-resilience directly from main d9912f4c8b30358593569c5b9b4e84773c6f463e, tree 389c2a09b62e78a225a2b41c8a1965a1b0e1ab80. Main and PR10 are read-only.
+Measured source 8284218a0c0c261a7eca841029ff3090af3e7c3b; tree 3d0575e6a94031b1b698c79dce95c434962d7b46. Three source commits: 94d510a7ff8936f108d237fed6d54330daf76cf2 (weekly adherence), a137dd4b0f4365e6cedb64b347d25be2f906182c (photo committed-save recovery), 8284218a0c0c261a7eca841029ff3090af3e7c3b (strict native permission admission).
+Exactly eight source/test paths in authorized streak/photos/notifications directories; no exceptional shared primitive edited. Checkpoint source-scope.json gives every pre/post blob and SHA256; protected-objects.json verifies original protected subtree/config identities.
+Baseline retained118 files/1602 tests PASS. Nine pre-repair failures reproduced. Repaired focused105 and real encrypted photo integration32 PASS. Forced repository6078 (mobile6054+console24), typecheck3 tasks, lint3 configured tasks: exit0, zero cached. Windows Node22.21/npm11.20/Python3.9.13. Fresh lockfile ci1028 platform packages and original postinstall PASS.
+Actual Chrome Expo web synthetic daily loop PASS at375x667,390x844,430x932; cross-owner390x844 PASS. Includes offline writes/recovery/duplicates/reload/reminder timing and owner transition denial/recovery. Paid weekly/diary positive UI and native/device/OS delivery/DST/archive/TestFlight are NOT_RUN; no fake entitlement or provider proof.
+Checkpoint docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01 has README, RESULTS, TEST_MATRIX, SOURCE_SCOPE, BLOCKERS, machine completion report, raw exits/hashes, screenshots and limitations. Later evidence-only delivery SHA/tree, draft PR and current-head CI are reported from actual GitHub observations; no future self-hash.
+PR10 observed draft/open/unmerged at cd2bd51997f283c0b446bf2124f427f482550fa8. Its Quality40036061496 SUCCESS, iOS source40036061450 SUCCESS, Security40036061435 FAILURE are separate protected-stage observations, not this candidate's admission.
+Additive M1-03 blocked note records Brain decision only: M1-03=BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2-01=NOT_AUTHORIZED. Original G97 expiry2026-10-21T00:00:00Z, OWASP custody,61 REFUSED paths,26 SQL obligations,189 failed targets/368 events remain OPEN. No G97 search/remediation, DB/Edge/native/dependency/workflow/Brain-state/clinical/release edit or admission.
+Npm cache cleanup after explicit human permission recovered workspace; personal files and other source checkouts preserved. Failed temporary Git pack removal was rejected and file retained. SpendUSD0. No force push/reset/unknown checkout deletion, main promotion, auto-merge or release.
+Stop after safe draft submission for independent Brain review. Founder relay: Codex is done.

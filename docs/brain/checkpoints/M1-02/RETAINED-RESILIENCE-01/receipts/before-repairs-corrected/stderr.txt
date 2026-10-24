@@ -1,0 +1,88 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > notification authorization > fails closed for unknown iOS enum and recovers only after a valid OS read
+ FAIL  src/features/notifications/deliver.test.ts > notification authorization > fails closed for contradictory grant and recovers only after a valid OS read
+ FAIL  src/features/notifications/deliver.test.ts > notification authorization > fails closed for missing request authority and recovers only after a valid OS read
+ FAIL  src/features/notifications/deliver.test.ts > notification authorization > fails closed for malformed iOS state and recovers only after a valid OS read
+AssertionError: expected 'authorized' to be 'unavailable' // Object.is equality
+
+Expected: "unavailable"
+Received: "authorized"
+
+ ❯ src/features/notifications/deliver.test.ts:214:40
+    212|     const { getPermissionStatus, requestPermission, rescheduleReminder…
+    213|     mocks.getPermissionsAsync.mockResolvedValue(value as never);
+    214|     await expect(getPermissionStatus()).resolves.toBe('unavailable');
+       |                                        ^
+    215|     await expect(requestPermission()).resolves.toEqual({ kind: 'error'…
+    216|     expect(mocks.requestPermissionsAsync).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/features/notifications/deliver.test.ts > notification authorization > reports a malformed post-request response as unavailable, without inventing denial or authorization
+AssertionError: expected { kind: 'authorized', …(2) } to deeply equal { kind: 'error', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "kind": "error",
++   "kind": "authorized",
+    "requestAttempted": true,
+-   "state": "unavailable",
++   "state": "authorized",
+  }
+
+ ❯ src/features/notifications/deliver.test.ts:228:38
+    226|     mocks.getPermissionsAsync.mockResolvedValueOnce({ status: 'undeter…
+    227|     mocks.requestPermissionsAsync.mockResolvedValueOnce({ status: 'gra…
+    228|     await expect(requestPermission()).resolves.toEqual({ kind: 'error'…
+       |                                      ^
+    229|   });
+    230|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/features/photos/store.test.ts > photo local store recovery > reports committed metadata honestly when its publication-stage acknowledgement fails
+Error: synthetic journal write failure
+ ❯ src/features/photos/store.test.ts:404:49
+    402|   it('reports committed metadata honestly when its publication-stage a…
+    403|     mocks.markPhotoRenditionPublication.mockImplementation(async (_ide…
+    404|       if (stage === 'metadata_committed') throw new Error('synthetic j…
+       |                                                 ^
+    405|     });
+    406|
+ ❯ src/features/photos/store.ts:736:15
+ ❯ guardedOperation src/features/photos/store.ts:96:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/features/streak/streak.test.ts > weekly adherence + heat-map (docs/07 §4.3) > counts a completed current day immediately on 2026-06-08, without counting future rows
+ FAIL  src/features/streak/streak.test.ts > weekly adherence + heat-map (docs/07 §4.3) > counts a completed current day immediately on 2026-06-13, without counting future rows
+ FAIL  src/features/streak/streak.test.ts > weekly adherence + heat-map (docs/07 §4.3) > counts a completed current day immediately on 2026-06-14, without counting future rows
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/features/streak/streak.test.ts:108:32
+    106|     (today) => {
+    107|       const week = buildWeek(set(today, '2026-06-15'), today);
+    108|       expect(weeklyDone(week)).toBe(1);
+       |                                ^
+    109|       expect(week.filter((day) => day.state === 'done')).toHaveLength(…
+    110|       expect(weeklyDone(buildWeek(new Set(), today))).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/streak/streak.test.ts src/features/photos/store.test.ts src/features/notifications/deliver.test.ts --maxWorkers=3

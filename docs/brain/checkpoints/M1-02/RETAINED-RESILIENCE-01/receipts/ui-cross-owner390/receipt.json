@@ -1,0 +1,18 @@
+{
+  "command": [
+    "node",
+    "scripts/e2e/onboarding-first-session.mjs",
+    "--cross-owner"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+  "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:20:00.527045+00:00",
+  "exit": 0,
+  "elapsed_seconds": 74.844,
+  "stdout_sha256": "11f218abefff2693e370291ac627a59b962e5106199ff159207109e1ae70bc63",
+  "stdout_bytes": 170,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_bytes": 0
+}

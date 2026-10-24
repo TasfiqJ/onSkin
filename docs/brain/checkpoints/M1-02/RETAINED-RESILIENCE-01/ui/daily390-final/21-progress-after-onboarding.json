@@ -1,0 +1,339 @@
+{
+  "bodyText": "FRIDAY, OCTOBER 23 · 8:16 PM Good evening. 1 step left in your evening routine. SKIN CYCLING · NIGHT 1 OF 7 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Reco ver Evening routine 0 of 1 Glycolic 7% toner On exfoliation nights only. NEXT Terms · Privacy · Restore x Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of Layerwell Pro. Subscribe for $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Subscribe to Pro Shelf 3 products ＋ Add All Actives Expiring Everything on your shelf, ordered by supported tracked dates. Interaction guidance is unavailable We won't show a compatibility result for these products until that review is complete. FIRST ROUTINE Your routine is ready to draft. Uses the products you added, and keeps missing steps visible instead of inventing them. Build my routine Mineral SPF 50 Sunscreen (SPF) · opened Oct · Date unknown Date unknown Glycolic 7% toner Toner / essence · opened Oct · Date unknown Date unknown Retinol 0.3% serum Retinol / retinoid serum · opened Oct · Date unknown Date unknown Add a product Today Progress Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": false,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 140
+    },
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": false,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "selected": false,
+      "width": 302,
+      "x": 44,
+      "y": 347
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 24,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 85.36,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 146.72,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Maybe later",
+      "role": "button",
+      "selected": false,
+      "width": 48,
+      "x": 318,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Subscribe to Pro",
+      "role": "button",
+      "selected": false,
+      "width": 342,
+      "x": 24,
+      "y": 560
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Add a product to your shelf",
+      "role": "button",
+      "selected": false,
+      "width": 83.06,
+      "x": 282.94,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "All",
+      "role": "button",
+      "selected": false,
+      "width": 57.19,
+      "x": 24,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Actives",
+      "role": "button",
+      "selected": false,
+      "width": 90.88,
+      "x": 91.19,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": false,
+      "label": "Expiring",
+      "role": "button",
+      "selected": false,
+      "width": 96.73,
+      "x": 192.06,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": false,
+      "label": "Build my routine",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 450
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": false,
+      "label": "Mineral SPF 50, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 556
+    },
+    {
+      "disabled": false,
+      "height": 86,
+      "hitOk": false,
+      "label": "Glycolic 7% toner, Date unknown",
+      "role": "button",
+      "selected": false,
+      "width": 308,
+      "x": 41,
+      "y": 686
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Today",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 25,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62.23,
+      "hitOk": true,
+      "label": "Progress",
+      "role": "tab",
+      "selected": true,
+      "width": 85.32,
+      "x": 109.84,
+      "y": 760.58
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "Shelf",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 195,
+      "y": 761
+    },
+    {
+      "disabled": false,
+      "height": 62,
+      "hitOk": true,
+      "label": "You",
+      "role": "tab",
+      "selected": false,
+      "width": 85,
+      "x": 280,
+      "y": 761
+    }
+  ],
+  "issueCount": 9,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 139,
+        "hitOk": false,
+        "label": "See your cycle week ahead",
+        "role": "button",
+        "selected": false,
+        "width": 342,
+        "x": 24,
+        "y": 140
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 74,
+        "hitOk": false,
+        "label": "Glycolic 7% toner",
+        "role": "checkbox",
+        "selected": false,
+        "width": 302,
+        "x": 44,
+        "y": 347
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Add a product to your shelf",
+        "role": "button",
+        "selected": false,
+        "width": 83.06,
+        "x": 282.94,
+        "y": 8
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "All",
+        "role": "button",
+        "selected": false,
+        "width": 57.19,
+        "x": 24,
+        "y": 82
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Actives",
+        "role": "button",
+        "selected": false,
+        "width": 90.88,
+        "x": 91.19,
+        "y": 82
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 48,
+        "hitOk": false,
+        "label": "Expiring",
+        "role": "button",
+        "selected": false,
+        "width": 96.73,
+        "x": 192.06,
+        "y": 82
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 56,
+        "hitOk": false,
+        "label": "Build my routine",
+        "role": "button",
+        "selected": false,
+        "width": 308,
+        "x": 41,
+        "y": 450
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 86,
+        "hitOk": false,
+        "label": "Mineral SPF 50, Date unknown",
+        "role": "button",
+        "selected": false,
+        "width": 308,
+        "x": 41,
+        "y": 556
+      },
+      "type": "blockedCenterHitTest"
+    },
+    {
+      "control": {
+        "disabled": false,
+        "height": 86,
+        "hitOk": false,
+        "label": "Glycolic 7% toner, Date unknown",
+        "role": "button",
+        "selected": false,
+        "width": 308,
+        "x": 41,
+        "y": 686
+      },
+      "type": "blockedCenterHitTest"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8378/progress",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

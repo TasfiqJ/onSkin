@@ -1,0 +1,7 @@
+
+> layerwell@0.1.0 postinstall
+> node scripts/postinstall.mjs
+
+{"check":false,"viewShot":"patched","widgets":"patched","toolingSecurity":"patched"}
+
+added 1028 packages in 45s

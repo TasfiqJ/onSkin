@@ -1,0 +1,3 @@
+• turbo 2.9.18
+ ERROR  @layerwell/mobile#test: command (C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\apps\mobile) C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js run test exited (1)
+ ERROR  run failed: command  exited (1)

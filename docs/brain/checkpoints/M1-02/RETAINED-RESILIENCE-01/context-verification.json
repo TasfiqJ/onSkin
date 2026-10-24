@@ -1,0 +1,16 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "verify_packet.py",
+    "--expected-manifest-sha256",
+    "cf8dd7c7abb8c77e043ec52e7a8aa2c987359980a49b451a7c64b2a68f28a01c"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-context-20261023",
+  "exit": 0,
+  "stdout": "VERIFIED 16 content files; prompt SHA256 verified; source admission NONE",
+  "stderr": "",
+  "transport_integrity_only": true,
+  "source_admission": "NONE",
+  "manifest_sha256": "cf8dd7c7abb8c77e043ec52e7a8aa2c987359980a49b451a7c64b2a68f28a01c"
+}

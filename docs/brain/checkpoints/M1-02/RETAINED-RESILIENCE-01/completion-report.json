@@ -1,0 +1,568 @@
+{
+  "schema_version": 1,
+  "task": "M1-02/RETAINED-RESILIENCE-01",
+  "authorization": "M102-RETAINED-RESILIENCE01-CLIENT-SOURCE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "authored_by": "Codex implementation; independent Brain acceptance required",
+  "observed_utc": "2026-10-24T00:22:38.788518+00:00",
+  "branch": "stage/m1-retained-resilience",
+  "base": {
+    "sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+    "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80"
+  },
+  "measured_source": {
+    "sha": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+    "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+    "commits": [
+      {
+        "sha": "94d510a7ff8936f108d237fed6d54330daf76cf2",
+        "tree": "1209a9b1f1573210ea1e21d9317a0543818c930b",
+        "parent": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+        "message": "fix(streak): count completed current day in weekly adherence",
+        "paths": [
+          "apps/mobile/src/features/streak/streak.ts",
+          "apps/mobile/src/features/streak/streak.test.ts"
+        ]
+      },
+      {
+        "sha": "a137dd4b0f4365e6cedb64b347d25be2f906182c",
+        "tree": "f9287d6e14c9a079ec10e742ddffa4cd4941a033",
+        "parent": "94d510a7ff8936f108d237fed6d54330daf76cf2",
+        "message": "fix(photos): preserve committed save outcome on journal failure",
+        "paths": [
+          "apps/mobile/src/features/photos/store.ts",
+          "apps/mobile/src/features/photos/store.test.ts",
+          "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts"
+        ]
+      },
+      {
+        "sha": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+        "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+        "parent": "a137dd4b0f4365e6cedb64b347d25be2f906182c",
+        "message": "fix(notifications): refuse malformed native permission responses",
+        "paths": [
+          "apps/mobile/src/features/notifications/deliver.ts",
+          "apps/mobile/src/features/notifications/deliver.test.ts",
+          "apps/mobile/src/features/notifications/transaction.cont01.test.ts"
+        ]
+      }
+    ]
+  },
+  "source_paths": [
+    {
+      "path": "apps/mobile/src/features/notifications/deliver.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/notifications/",
+      "before_blob": "c6ee496614ff9876bbd5b7038cf327ea9980734a",
+      "after_blob": "ab487b73f270729beb632d53ab700a022aeb64c9",
+      "before_sha256": "d00d7b01bb67e7b60912406e6ea17628071487dfbfc7b67ec0d57e69590485a0",
+      "after_sha256": "224bbc32a955142be3281f1a4954444d251cb93c18121673e881583d1c71dff4"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/deliver.ts",
+      "authorized_prefix": "apps/mobile/src/features/notifications/",
+      "before_blob": "97633088ba995d079bb0509b7b24842513acd44e",
+      "after_blob": "950cd4b5f304b98753871383c017758d727e0a1f",
+      "before_sha256": "86e219dbbd06e15d2c96bc1e61067745ea3b92b991f8c1c76943cbc454a82f8f",
+      "after_sha256": "0e7f99473b7d34aae69ea28201346fe9df115ddd22b001389e50b423f38dd10b"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/notifications/",
+      "before_blob": "38c92b6aaf7ddd7813d8c5f17804872bf80e356a",
+      "after_blob": "160807041ae8364a84bbd22ed28bfd082c75c798",
+      "before_sha256": "716050e95d37626333401c33e0efb027019ed2cdc98a9c244d9fb2247f00ef2d",
+      "after_sha256": "5031e7acbe866f51bedf93bcaeffa9eb91213485fd14c56f3e2c01bf7f8aef08"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/photos/",
+      "before_blob": "978bc23de5520c261767898b04c90b11d40035de",
+      "after_blob": "794a22b3505968a6edc55c58abbb6d1e86f945e7",
+      "before_sha256": "307dbc81f133caca2a91d5883ee7695bcee2d26984218088efcdc394da29ccf6",
+      "after_sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/photos/",
+      "before_blob": "247a709c84d4b842fcf967609f7115fa57bbd111",
+      "after_blob": "a569e5d9f14d2f63a07aa2d850d4dd4422292289",
+      "before_sha256": "047f74b3212c050c7903ff2b363e09d4e85fdb63420e6ff354f8db7a4daa203c",
+      "after_sha256": "27eda8454850521fe2b803118c95037aff0cdf4be25d23ae7988001b26f5755e"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "authorized_prefix": "apps/mobile/src/features/photos/",
+      "before_blob": "1614b19afaba0f1cba06201e3934d102a145faaf",
+      "after_blob": "6ff52e8e9bfde498d1169abc233ea26b3363ef8a",
+      "before_sha256": "22ebb0e96f0bfc4634621155d183ee05951fe2d9004856b39a96337765b5c855",
+      "after_sha256": "88d4720aa16d34161574e8138fa79244af78ef2432aa5286c479ad78d41f94e2"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/streak/",
+      "before_blob": "cc52049976a0ecea6a0a103af90ef51644ba1414",
+      "after_blob": "7987efda39ecf971ed99367e140697ec4c296af9",
+      "before_sha256": "060c9cdadb0172918bccceb4aea2a07da2910a226bdcfa8849d1d9f8353b0520",
+      "after_sha256": "48f8da76c7fbe51a76b935ffbd150711cfcbdd43416d2de90543941c141a8009"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.ts",
+      "authorized_prefix": "apps/mobile/src/features/streak/",
+      "before_blob": "1df685f34e30be4170b8bcd7410eb8dc89fb0454",
+      "after_blob": "07a5fa0b274c42b1414d0ea9539ed885d4f44dd7",
+      "before_sha256": "73bc1c028f27cd836ee4251ad72aaa033d7298525264ef39729ad11368fbbe73",
+      "after_sha256": "a674d3e89119cf851d8781b07942d8e079ae9f62b0d498e5b1e987ee277b4d51"
+    }
+  ],
+  "improvements": {
+    "A": "Completed current day counts in weekly adherence immediately; no completion protocol/storage change.",
+    "B": "Committed photo metadata remains a saved outcome when subsequent journal acknowledgement fails; explicit cleanup pending and existing recovery.",
+    "C": "Malformed native permission cannot fall back to authorized, request a prompt, or schedule reminders; existing strict classifier reused."
+  },
+  "tests": {
+    "baseline_retained": {
+      "files": 118,
+      "passed": 1602,
+      "exit": 0
+    },
+    "before_repairs_corrected": {
+      "passed": 86,
+      "failed": 9,
+      "exit": 1
+    },
+    "after_repairs_focused": {
+      "files": 4,
+      "passed": 105,
+      "exit": 0
+    },
+    "photo_encryption_integration": {
+      "passed": 32,
+      "exit": 0
+    },
+    "forced_root": {
+      "mobile_passed": 6054,
+      "console_passed": 24,
+      "total_passed": 6078,
+      "exit": 0,
+      "cached_tasks": 0
+    },
+    "forced_typecheck": {
+      "exit": 0,
+      "tasks": 3,
+      "cached_tasks": 0
+    },
+    "forced_lint": {
+      "exit": 0,
+      "configured_tasks": 3,
+      "cached_tasks": 0
+    },
+    "new_regressions": 11
+  },
+  "commands": [
+    {
+      "label": "after-repairs",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/streak/streak.test.ts",
+        "src/features/photos/store.test.ts",
+        "src/features/notifications/deliver.test.ts",
+        "src/features/notifications/transaction.cont01.test.ts",
+        "--maxWorkers=3"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 0,
+      "receipt": "receipts/after-repairs/receipt.json"
+    },
+    {
+      "label": "baseline-retained-2",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/photos",
+        "src/features/notifications",
+        "--maxWorkers=2"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 1,
+      "receipt": "receipts/baseline-retained-2/receipt.json"
+    },
+    {
+      "label": "baseline-retained-3",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/today",
+        "src/features/routine",
+        "src/features/scheduler",
+        "src/features/streak",
+        "src/features/photos",
+        "src/features/notifications",
+        "--maxWorkers=4"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 0,
+      "receipt": "receipts/baseline-retained-3/receipt.json"
+    },
+    {
+      "label": "before-repairs",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/streak/streak.test.ts",
+        "src/features/photos/store.test.ts",
+        "src/features/notifications/deliver.test.ts",
+        "--maxWorkers=3"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 1,
+      "receipt": "receipts/before-repairs/receipt.json"
+    },
+    {
+      "label": "before-repairs-corrected",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/streak/streak.test.ts",
+        "src/features/photos/store.test.ts",
+        "src/features/notifications/deliver.test.ts",
+        "--maxWorkers=3"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 1,
+      "receipt": "receipts/before-repairs-corrected/receipt.json"
+    },
+    {
+      "label": "install",
+      "command": [
+        "npm.cmd",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 0,
+      "receipt": "receipts/install/receipt.json"
+    },
+    {
+      "label": "measured-root-lint",
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force",
+        "--concurrency=2"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/measured-root-lint/receipt.json"
+    },
+    {
+      "label": "measured-root-tests",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force",
+        "--concurrency=2"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 1,
+      "receipt": "receipts/measured-root-tests/receipt.json"
+    },
+    {
+      "label": "measured-root-tests-complete",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force",
+        "--concurrency=2"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/measured-root-tests-complete/receipt.json"
+    },
+    {
+      "label": "measured-root-typecheck",
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force",
+        "--concurrency=2"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/measured-root-typecheck/receipt.json"
+    },
+    {
+      "label": "mobile-lint",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "lint"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 0,
+      "receipt": "receipts/mobile-lint/receipt.json"
+    },
+    {
+      "label": "mobile-typecheck",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 0,
+      "receipt": "receipts/mobile-typecheck/receipt.json"
+    },
+    {
+      "label": "photo-publication-integration",
+      "command": [
+        "npm.cmd",
+        "--workspace",
+        "apps/mobile",
+        "run",
+        "test",
+        "--",
+        "src/features/photos/photoDeleteR3.integration.test.ts",
+        "--maxWorkers=2"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "exit": 0,
+      "receipt": "receipts/photo-publication-integration/receipt.json"
+    },
+    {
+      "label": "ui-cross-owner390",
+      "command": [
+        "node",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--cross-owner"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/ui-cross-owner390/receipt.json"
+    },
+    {
+      "label": "ui-daily375",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/extend-daily-loop.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/ui-daily375/receipt.json"
+    },
+    {
+      "label": "ui-daily390",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/extend-daily-loop.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 1,
+      "receipt": "receipts/ui-daily390/receipt.json"
+    },
+    {
+      "label": "ui-daily390-2",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/extend-daily-loop.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 1,
+      "receipt": "receipts/ui-daily390-2/receipt.json"
+    },
+    {
+      "label": "ui-daily390-final",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/extend-daily-loop.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/ui-daily390-final/receipt.json"
+    },
+    {
+      "label": "ui-daily430",
+      "command": [
+        "node",
+        "--import",
+        "./docs/brain/checkpoints/M1-02/RETAINED-RESILIENCE-01/extend-daily-loop.mjs",
+        "scripts/e2e/onboarding-first-session.mjs",
+        "--daily-loop"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+      "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+      "exit": 0,
+      "receipt": "receipts/ui-daily430/receipt.json"
+    }
+  ],
+  "ui": [
+    {
+      "run": "daily375",
+      "verdict": "pass",
+      "viewport": {
+        "height": 667,
+        "width": 375,
+        "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+      },
+      "summary": "ui/daily375/summary.json",
+      "evidence_class": "ACTUAL_EXPO_WEB_SYNTHETIC_LOCAL_SURFACE",
+      "native": false
+    },
+    {
+      "run": "daily390-final",
+      "verdict": "pass",
+      "viewport": {
+        "height": 844,
+        "width": 390,
+        "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+      },
+      "summary": "ui/daily390-final/summary.json",
+      "evidence_class": "ACTUAL_EXPO_WEB_SYNTHETIC_LOCAL_SURFACE",
+      "native": false
+    },
+    {
+      "run": "daily430",
+      "verdict": "pass",
+      "viewport": {
+        "height": 932,
+        "width": 430,
+        "supportClass": "supported phone geometry at or above the 375 x 667 launch floor"
+      },
+      "summary": "ui/daily430/summary.json",
+      "evidence_class": "ACTUAL_EXPO_WEB_SYNTHETIC_LOCAL_SURFACE",
+      "native": false
+    },
+    {
+      "run": "cross-owner390",
+      "verdict": "pass",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      },
+      "summary": "ui/cross-owner390/summary.json",
+      "evidence_class": "ACTUAL_EXPO_WEB_SYNTHETIC_LOCAL_SURFACE",
+      "native": false
+    }
+  ],
+  "not_run": [
+    "Positive paid weekly display",
+    "Positive paid/native diary UI",
+    "Physical device/iOS simulator/archive/TestFlight",
+    "Real OS permission prompts/local notification delivery/OS DST scheduling",
+    "Installed-native offline cold launch",
+    "Hosted/provider/two-device/DB/clinical/release proof",
+    "Original Security admission/scans"
+  ],
+  "preservation": {
+    "all_other_measured_base_entries_unchanged": true,
+    "original_security_unchanged": true,
+    "database_sql_edge_unchanged": true,
+    "dependencies_lockfiles_workflows_native_config_unchanged": true,
+    "brain_state_and_accepted_history_unchanged": true,
+    "clinical_j05_unchanged": true,
+    "main_not_written": true,
+    "pr10_not_written": true
+  },
+  "admissions": {
+    "brain_source_acceptance": false,
+    "protected_source_go": false,
+    "M1-03": "BLOCKED_EXTERNAL_CUSTODY_NOT_ACCEPTED",
+    "M2-01": "NOT_AUTHORIZED",
+    "hosted_db": false,
+    "native_device": false,
+    "clinical": false,
+    "release": false,
+    "main_promotion": false
+  },
+  "incremental_spend_usd": 0,
+  "delivery": {
+    "pr": null,
+    "evidence_tail_sha": null,
+    "reason": "Actual pushed evidence SHA/tree and draft PR are observed after evidence commit; no future self-hash claimed."
+  },
+  "limitations": "See BLOCKERS.md and TEST_MATRIX.md. Earlier genuine failures and the first incomplete receipt remain preserved. Positive paid/native proof is not invented."
+}

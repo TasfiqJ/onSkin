@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/photos/photoDeleteR3.integration.test.ts --maxWorkers=2
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  32 passed (32)
+   Start at  20:10:35
+   Duration  1.23s (transform 439ms, setup 0ms, import 684ms, tests 361ms, environment 0ms)
+

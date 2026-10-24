@@ -1,0 +1,20 @@
+{
+  "command": [
+    "npm.cmd",
+    "test",
+    "--",
+    "--force",
+    "--concurrency=2"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "head": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+  "tree": "3d0575e6a94031b1b698c79dce95c434962d7b46",
+  "branch": "stage/m1-retained-resilience",
+  "started_utc": "2026-10-24T00:12:07.285199+00:00",
+  "exit": 1,
+  "elapsed_seconds": 41.282,
+  "stdout_sha256": "9500c94ca3ab9fba6df31b693d61fc5b041cf4dbf777c5ff993b7765f09e02ea",
+  "stdout_bytes": 298749,
+  "stderr_sha256": "d4d361f6a98aa3a144f62b909ffb7165f7b1dabc458750025f0c8fd5c91c810b",
+  "stderr_bytes": 286
+}

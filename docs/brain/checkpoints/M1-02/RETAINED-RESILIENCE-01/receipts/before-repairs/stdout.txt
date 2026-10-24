@@ -1,0 +1,26 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/streak/streak.test.ts src/features/photos/store.test.ts src/features/notifications/deliver.test.ts --maxWorkers=3
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+ ❯ src/features/streak/streak.test.ts (16 tests | 3 failed) 15ms
+     × counts a completed current day immediately on 2026-06-08, without counting future rows 5ms
+     × counts a completed current day immediately on 2026-06-13, without counting future rows 1ms
+     × counts a completed current day immediately on 2026-06-14, without counting future rows 0ms
+ ❯ src/features/notifications/deliver.test.ts (42 tests | 5 failed) 116ms
+     × fails closed for unknown iOS enum and recovers only after a valid OS read 75ms
+     × fails closed for contradictory grant and recovers only after a valid OS read 1ms
+     × fails closed for missing request authority and recovers only after a valid OS read 1ms
+     × fails closed for malformed iOS state and recovers only after a valid OS read 1ms
+     × reports a malformed post-request response as unavailable, without inventing denial or authorization 3ms
+ ❯ src/features/photos/store.test.ts (37 tests | 2 failed) 42ms
+     × reports committed metadata honestly when its publication-stage acknowledgement fails 6ms
+     × does not publish committed-photo success after a journal failure crosses a health regrant 3ms
+
+ Test Files  3 failed (3)
+      Tests  10 failed | 85 passed (95)
+   Start at  20:08:28
+   Duration  526ms (transform 413ms, setup 0ms, import 565ms, tests 173ms, environment 0ms)
+

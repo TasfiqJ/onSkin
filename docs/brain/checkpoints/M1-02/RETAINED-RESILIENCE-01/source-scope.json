@@ -1,0 +1,71 @@
+{
+  "base": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+  "measured_source": "8284218a0c0c261a7eca841029ff3090af3e7c3b",
+  "files": [
+    {
+      "path": "apps/mobile/src/features/notifications/deliver.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/notifications/",
+      "before_blob": "c6ee496614ff9876bbd5b7038cf327ea9980734a",
+      "after_blob": "ab487b73f270729beb632d53ab700a022aeb64c9",
+      "before_sha256": "d00d7b01bb67e7b60912406e6ea17628071487dfbfc7b67ec0d57e69590485a0",
+      "after_sha256": "224bbc32a955142be3281f1a4954444d251cb93c18121673e881583d1c71dff4"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/deliver.ts",
+      "authorized_prefix": "apps/mobile/src/features/notifications/",
+      "before_blob": "97633088ba995d079bb0509b7b24842513acd44e",
+      "after_blob": "950cd4b5f304b98753871383c017758d727e0a1f",
+      "before_sha256": "86e219dbbd06e15d2c96bc1e61067745ea3b92b991f8c1c76943cbc454a82f8f",
+      "after_sha256": "0e7f99473b7d34aae69ea28201346fe9df115ddd22b001389e50b423f38dd10b"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/transaction.cont01.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/notifications/",
+      "before_blob": "38c92b6aaf7ddd7813d8c5f17804872bf80e356a",
+      "after_blob": "160807041ae8364a84bbd22ed28bfd082c75c798",
+      "before_sha256": "716050e95d37626333401c33e0efb027019ed2cdc98a9c244d9fb2247f00ef2d",
+      "after_sha256": "5031e7acbe866f51bedf93bcaeffa9eb91213485fd14c56f3e2c01bf7f8aef08"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/photos/",
+      "before_blob": "978bc23de5520c261767898b04c90b11d40035de",
+      "after_blob": "794a22b3505968a6edc55c58abbb6d1e86f945e7",
+      "before_sha256": "307dbc81f133caca2a91d5883ee7695bcee2d26984218088efcdc394da29ccf6",
+      "after_sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/photos/",
+      "before_blob": "247a709c84d4b842fcf967609f7115fa57bbd111",
+      "after_blob": "a569e5d9f14d2f63a07aa2d850d4dd4422292289",
+      "before_sha256": "047f74b3212c050c7903ff2b363e09d4e85fdb63420e6ff354f8db7a4daa203c",
+      "after_sha256": "27eda8454850521fe2b803118c95037aff0cdf4be25d23ae7988001b26f5755e"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "authorized_prefix": "apps/mobile/src/features/photos/",
+      "before_blob": "1614b19afaba0f1cba06201e3934d102a145faaf",
+      "after_blob": "6ff52e8e9bfde498d1169abc233ea26b3363ef8a",
+      "before_sha256": "22ebb0e96f0bfc4634621155d183ee05951fe2d9004856b39a96337765b5c855",
+      "after_sha256": "88d4720aa16d34161574e8138fa79244af78ef2432aa5286c479ad78d41f94e2"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.test.ts",
+      "authorized_prefix": "apps/mobile/src/features/streak/",
+      "before_blob": "cc52049976a0ecea6a0a103af90ef51644ba1414",
+      "after_blob": "7987efda39ecf971ed99367e140697ec4c296af9",
+      "before_sha256": "060c9cdadb0172918bccceb4aea2a07da2910a226bdcfa8849d1d9f8353b0520",
+      "after_sha256": "48f8da76c7fbe51a76b935ffbd150711cfcbdd43416d2de90543941c141a8009"
+    },
+    {
+      "path": "apps/mobile/src/features/streak/streak.ts",
+      "authorized_prefix": "apps/mobile/src/features/streak/",
+      "before_blob": "1df685f34e30be4170b8bcd7410eb8dc89fb0454",
+      "after_blob": "07a5fa0b274c42b1414d0ea9539ed885d4f44dd7",
+      "before_sha256": "73bc1c028f27cd836ee4251ad72aaa033d7298525264ef39729ad11368fbbe73",
+      "after_sha256": "a674d3e89119cf851d8781b07942d8e079ae9f62b0d498e5b1e987ee277b4d51"
+    }
+  ],
+  "all_other_base_entries": "UNCHANGED"
+}
