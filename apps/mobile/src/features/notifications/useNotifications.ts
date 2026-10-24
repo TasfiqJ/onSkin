@@ -67,6 +67,9 @@ export function useNotifPrefs() {
     queryKey: authority ? [...KEY, authority.generation, authority.ownerUserId, authority.accountGeneration] : [...KEY, 'closed'],
     networkMode: 'always',
     enabled: authority?.ownerUserId != null && authority.accountGeneration != null,
+    // The app-wide one-minute freshness cannot stand in for a device read
+    // when returning to settings after storage or local intent changes.
+    staleTime: 0,
     queryFn: async () => {
       const expectedOwnerUserId = authority?.ownerUserId;
       if (!authority || !expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
@@ -79,7 +82,7 @@ export function useNotifPrefs() {
     },
     retry: 0,
   });
-  return { ...query, data: authority === null || query.isError ? undefined : query.data };
+  return { ...query, data: authority === null || query.isFetching || query.isError ? undefined : query.data };
 }
 
 export function useUpdateNotifPrefs() {

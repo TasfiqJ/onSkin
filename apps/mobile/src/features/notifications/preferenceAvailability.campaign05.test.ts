@@ -102,3 +102,12 @@ it('withdrawal immediately hides current preferences without waiting for a priva
   await act(async () => { clearActiveHealthProcessingEpoch(); });
   expect(source.data).toBeUndefined();
 });
+
+it('settings rereads local preferences on entry even with the app’s one-minute query freshness', async () => {
+  client.setDefaultOptions({ queries: { staleTime: 60_000, retry: false, gcTime: Infinity } });
+  await saveNotifPrefs({ amEnabled: true }); await mount();
+  await act(async () => { renderer.unmount(); });
+  ports.failure = true;
+  await mount(NotificationSettingsScreen);
+  expect(renderer.root.findAll(node => node.props.accessibilityLabel === 'Try loading reminder preferences again').length).toBeGreaterThan(0);
+});
