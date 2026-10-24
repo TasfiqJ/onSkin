@@ -1,6 +1,6 @@
 import type { ProductStatus } from '@layerwell/types';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import {
   evaluateConflicts,
@@ -133,6 +133,7 @@ export function applyConflictChoicesToShelfData(
 }
 
 export function useShelf() {
+  const queryClient = useQueryClient();
   const [today, setToday] = useState(localDateString);
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -164,7 +165,7 @@ export function useShelf() {
   }, [published]);
   const authority = activeHealthProcessingLeaseSnapshot();
 
-  const query = useQuery<ShelfData & { sourceGeneration: number }>({
+  const query = useQuery<ShelfData & { sourceGeneration: number; sourceDate: string }>({
     queryKey: ['shelf'],
     // This projection reads encrypted local records, including just-saved
     // offline mutations. Connectivity must not pause its cache refresh.
@@ -271,6 +272,7 @@ export function useShelf() {
 
         const result = {
           sourceGeneration: lease.generation,
+          sourceDate: today,
           items,
           archive,
           conflicts,
@@ -287,16 +289,22 @@ export function useShelf() {
       }),
   });
   const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
-  const currentDates = useMemo(() => {
-    if (!query.data) return undefined;
-    const next = applyConflictChoicesToShelfData(query.data, query.data.conflictChoices, today);
-    next.items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
-    return next;
-  }, [query.data, today]);
+  useEffect(() => {
+    if (!query.data || retired || query.isError || query.isFetching || query.data.sourceDate === today) return;
+    // Keep the hook's data identical to its canonical cache: usePlan checks that
+    // exact identity. Only the admitted snapshot's calendar presentation changes;
+    // no source read, private write or clinical evaluation is repeated.
+    queryClient.setQueryData<typeof query.data>(['shelf'], (previous) => {
+      if (!previous || previous !== query.data || previous.sourceGeneration !== activeHealthProcessingLeaseSnapshot()?.generation) return previous;
+      const next = applyConflictChoicesToShelfData(previous, previous.conflictChoices, today);
+      next.items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
+      return { ...next, sourceGeneration: previous.sourceGeneration, sourceDate: today };
+    });
+  }, [queryClient, query.data, query.isError, query.isFetching, retired, today]);
   return {
     ...query,
     isError: query.isError || retired,
-    data: authority === null || retired || query.isError ? undefined : currentDates,
+    data: authority === null || retired || query.isError ? undefined : query.data,
   };
 }
 

@@ -410,3 +410,13 @@ it.each([
     expect(visible).toBeUndefined();
   } finally { vi.useRealTimers(); }
 });
+
+
+it('preserves canonical Shelf cache identity required by routine source-currentness', async () => {
+  await addProduct({ name: 'Synthetic routine source', addedVia: 'manual' });
+  let visible: ShelfData | undefined;
+  function CanonicalProbe() { visible = useShelf().data; return null; }
+  await mount(CanonicalProbe);
+  expect(visible?.items[0]?.name).toBe('Synthetic routine source');
+  expect(visible).toBe(client.getQueryData(['shelf']));
+});
