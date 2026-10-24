@@ -1,5 +1,21 @@
 # Decisions
 
+## Release08 proposed public-product scope — 2026-10-24
+
+The proposed [full-app + J01 contract](release/full-app-j01/README.md), under
+`BRAIN-RELEASE-FULLAPP-J01-REBASE08-CANDIDATE-01`, requires F01–F17/F19–F20,
+V2-C01–C12 and P01–P06, plus J01 Visible Pores only. F18 automated Trend and
+J02–J27 (including J05) defer; F09 private history/manual comparison remains required.
+F12 uses a truthful approved Apple-managed offer, with no unsafe custom reverse grant.
+This is a proposed source migration awaiting independent Brain acceptance, not
+accepted repository release authority or completed app functionality. The old
+Sep27 inclusion statements below are historical product scope; the unchanged
+legacy launch JSON/scripts remain technical safety guards. Their consumer/CI
+cutover is **NOT_DONE**, explicitly governed by the new precedence declaration.
+All Security/DB/M1-03/M2/native/provider/paid/clinical/Apple/public gates remain
+closed. No release date, main promotion or positive J01 claim is authorized.
+
+
 > Active scope (2026-09-27): iOS lean V1 supersedes earlier all-features launch requirements. Required feature IDs: 1, 2, 3, 5, 6, 7, 8, 9, 10, 11. See `docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md` and `docs/hugeToDo/launch-contract.json`. Manual Shelf/local ingredient parsing, reviewed guidance, routine/cycle, Today, private Progress, local reminders and standard subscriptions remain required. Catalog/search/barcode, custom grants/reverse trial/win-back, recommendations, Ask, public sharing, commerce, community, trends, widgets and growth experiments are post-launch and must stay closed. Existing Apple/email account functionality and all current privacy, payment, persistence, accessibility and owner-isolation safeguards are preserved. Historical sections below do not add deferred features back to the V1 launch gate.
 
 

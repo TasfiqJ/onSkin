@@ -1,0 +1,1797 @@
+{
+  "schema_version": 1,
+  "packet_manifest_anchor": "2dd612c4aba524688c432081cf6fe7cc47b02dd69bcac8d2db98ee3ec0e3676a",
+  "source_base": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+  "task_rows": [
+    {
+      "id": "M0-01",
+      "original_status": "ACCEPTED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/0",
+      "packet_record_sha256": "1c8cbc8c55738b05d6690a14d4d0d0a00b597c330dab5e440d90843aee08c43d",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1c8cbc8c55738b05d6690a14d4d0d0a00b597c330dab5e440d90843aee08c43d",
+      "new_nodes": [
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M0-02",
+      "original_status": "ACCEPTED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/1",
+      "packet_record_sha256": "1ba88f4b7c5b4cd335be2e0f518b5d57121547c6e27bec9a92cbef7375d617d2",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1ba88f4b7c5b4cd335be2e0f518b5d57121547c6e27bec9a92cbef7375d617d2",
+      "new_nodes": [
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M1-01",
+      "original_status": "ACCEPTED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/2",
+      "packet_record_sha256": "1be12f64e78168d056b4cf6ecea2a06ed3646d1076f114a39faf769abdbce0d9",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1be12f64e78168d056b4cf6ecea2a06ed3646d1076f114a39faf769abdbce0d9",
+      "new_nodes": [
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M1-02",
+      "original_status": "ACCEPTED_SCOPED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/3",
+      "packet_record_sha256": "b33181ec8ae14e77d2b51cae207edab752a1ce4954e99517e04ea921a53c6b70",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "b33181ec8ae14e77d2b51cae207edab752a1ce4954e99517e04ea921a53c6b70",
+      "new_nodes": [
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M1-03",
+      "original_status": "PARTIAL_ACCEPTED_OVERNIGHT01_SECURITY_HARDEN01_ISSUED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/4",
+      "packet_record_sha256": "86ecf91f4f5a4e60a8821547620f05b7a2827929c49664bb1219d4166f5dac38",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "86ecf91f4f5a4e60a8821547620f05b7a2827929c49664bb1219d4166f5dac38",
+      "new_nodes": [
+        "R08-BASELINE"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M2-01",
+      "original_status": "PLANNED_NOT_ISSUED_DEPENDS_ON_M1-03",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/5",
+      "packet_record_sha256": "385624e3c6de47c152ce0336b009845e5370d596fe8f3637fcb49bff389454eb",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "385624e3c6de47c152ce0336b009845e5370d596fe8f3637fcb49bff389454eb",
+      "new_nodes": [
+        "R08-LEDGER",
+        "R08-NATIVE"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M2-02",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/6",
+      "packet_record_sha256": "cdeee32e741562460da467713b66c899298f328e0c584b6f6d4f6ec1a09b4b45",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "cdeee32e741562460da467713b66c899298f328e0c584b6f6d4f6ec1a09b4b45",
+      "new_nodes": [
+        "R08-LEDGER",
+        "R08-NATIVE"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M2-03",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/7",
+      "packet_record_sha256": "1652733aeb35e884b95a1de51f6f367dc02e8d95b0301190df7360a724b80f39",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1652733aeb35e884b95a1de51f6f367dc02e8d95b0301190df7360a724b80f39",
+      "new_nodes": [
+        "R08-LEDGER",
+        "R08-NATIVE"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M2-04",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/8",
+      "packet_record_sha256": "1639895b0a23690ee31315d79fae3d4caff881ded263cfd32d727b57be0393c2",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1639895b0a23690ee31315d79fae3d4caff881ded263cfd32d727b57be0393c2",
+      "new_nodes": [
+        "R08-LEDGER",
+        "R08-NATIVE"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M3-01",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/9",
+      "packet_record_sha256": "fe98415bf505472fed6f72eb62c885ae2a579b30b887336f6d6615aff21d83bf",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "fe98415bf505472fed6f72eb62c885ae2a579b30b887336f6d6615aff21d83bf",
+      "new_nodes": [
+        "R08-RESEARCH",
+        "R08-J01"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M3-02",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/10",
+      "packet_record_sha256": "2af06a30f6ffcf5ac3b0467aa3997b43018029aedad6fa1e35229ed895af3cff",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "2af06a30f6ffcf5ac3b0467aa3997b43018029aedad6fa1e35229ed895af3cff",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M3-03",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/11",
+      "packet_record_sha256": "ff3b035f3d899428054ca77b09c69b6d93829cb5c73b51166f6ae529fcfb2f67",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "ff3b035f3d899428054ca77b09c69b6d93829cb5c73b51166f6ae529fcfb2f67",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M3-04",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/12",
+      "packet_record_sha256": "cc4365b3a59a1b850ce7d0a73c4523f9a01cc2e8c9b0400e9237463be0f810b3",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "cc4365b3a59a1b850ce7d0a73c4523f9a01cc2e8c9b0400e9237463be0f810b3",
+      "new_nodes": [
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M4-01",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/13",
+      "packet_record_sha256": "64743247a25f6cef0627f94114bead3a73b0c90c720a5f9b743ff32d9c01929c",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "64743247a25f6cef0627f94114bead3a73b0c90c720a5f9b743ff32d9c01929c",
+      "new_nodes": [
+        "R08-CORE",
+        "R08-PRO",
+        "R08-PAY",
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M4-02",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/14",
+      "packet_record_sha256": "43deda90707370ce081a6db3bb9f647a0225ae4195ed5af534f4c666c791e78e",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "43deda90707370ce081a6db3bb9f647a0225ae4195ed5af534f4c666c791e78e",
+      "new_nodes": [
+        "R08-CORE",
+        "R08-PRO",
+        "R08-PAY",
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M4-03",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/15",
+      "packet_record_sha256": "b292840805537d007d4d4c5a9ee278613aec9b835f44621dadbe1c694982779a",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "b292840805537d007d4d4c5a9ee278613aec9b835f44621dadbe1c694982779a",
+      "new_nodes": [
+        "R08-CORE",
+        "R08-PRO",
+        "R08-PAY",
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M4-04",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/16",
+      "packet_record_sha256": "a31afe60916dfe8bd11d80d946fddd69696d8ee900567a702dafa492dd9f5808",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "a31afe60916dfe8bd11d80d946fddd69696d8ee900567a702dafa492dd9f5808",
+      "new_nodes": [
+        "R08-CORE",
+        "R08-PRO",
+        "R08-PAY",
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M4-05",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/17",
+      "packet_record_sha256": "87c7ea3d306070f96769f1a9721fc7c732a2ec8e477c0ec0b024211a70245107",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "87c7ea3d306070f96769f1a9721fc7c732a2ec8e477c0ec0b024211a70245107",
+      "new_nodes": [
+        "R08-CORE",
+        "R08-PRO",
+        "R08-PAY",
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M4-06",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/18",
+      "packet_record_sha256": "1bebc453be317f813b3359c444928d3e9e21905b7162ba0438ef8cf90fa599d7",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1bebc453be317f813b3359c444928d3e9e21905b7162ba0438ef8cf90fa599d7",
+      "new_nodes": [
+        "R08-CORE",
+        "R08-PRO",
+        "R08-PAY",
+        "R08-INTEGRATION"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M5-01",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/19",
+      "packet_record_sha256": "287d0fc6cc74f98e0f6aec3994e88fd7c9193e5fce48b5a9b2ab0ff454e0464a",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "287d0fc6cc74f98e0f6aec3994e88fd7c9193e5fce48b5a9b2ab0ff454e0464a",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "M5-02",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/20",
+      "packet_record_sha256": "52b47b8714c37682e7900e8556d2a3e3907b8362f8e8c499c75dcb667e1219e3",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "52b47b8714c37682e7900e8556d2a3e3907b8362f8e8c499c75dcb667e1219e3",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J14",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/21",
+      "packet_record_sha256": "ed7f29647a250568055b01a5b802f72997585e0be421747aa1ae1ae8ccc97f12",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "ed7f29647a250568055b01a5b802f72997585e0be421747aa1ae1ae8ccc97f12",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J27",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/22",
+      "packet_record_sha256": "286166e36cc6f4fe603595da11da2f90630ca1dcd696adf197742b2a462fe74f",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "286166e36cc6f4fe603595da11da2f90630ca1dcd696adf197742b2a462fe74f",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J03",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/23",
+      "packet_record_sha256": "364c722d00af0df25928653021c7640332ed349b3f18fdff06534af9becebf15",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "364c722d00af0df25928653021c7640332ed349b3f18fdff06534af9becebf15",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J09",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/24",
+      "packet_record_sha256": "4f98a3bc4e36b1fcce82888eaad2bdaf3605252bd8efbb52a0b0a34ca66e1220",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "4f98a3bc4e36b1fcce82888eaad2bdaf3605252bd8efbb52a0b0a34ca66e1220",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J24",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/25",
+      "packet_record_sha256": "c48324c58a892fd93eb7db361cf3b405673ccccf922b0654536fb81647d2e3b7",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "c48324c58a892fd93eb7db361cf3b405673ccccf922b0654536fb81647d2e3b7",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J10",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/26",
+      "packet_record_sha256": "accc2aab22d3b82442d4b71d38f96b1f0da4579928746f03ebab9749c8a041fc",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "accc2aab22d3b82442d4b71d38f96b1f0da4579928746f03ebab9749c8a041fc",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J11",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/27",
+      "packet_record_sha256": "1ab951d530b80c0c8a9d82c6ff6428d3a71166a4cc10edc47c862bcf25b38c60",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "1ab951d530b80c0c8a9d82c6ff6428d3a71166a4cc10edc47c862bcf25b38c60",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J01",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/28",
+      "packet_record_sha256": "9f97e821cd02002d2a815f9b99be3652e782a65937016bb60e570a0d3d3aaf31",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "9f97e821cd02002d2a815f9b99be3652e782a65937016bb60e570a0d3d3aaf31",
+      "new_nodes": [
+        "R08-J01"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J04",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/29",
+      "packet_record_sha256": "b68d84c570ebe8789f5b014e46f04fb8fc8a355327a87993cb1cbadd835eb228",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "b68d84c570ebe8789f5b014e46f04fb8fc8a355327a87993cb1cbadd835eb228",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J13",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/30",
+      "packet_record_sha256": "b7500ca697a832ec80ce2895e87c2232d17def9e18301ae1de0a2bf95388ecfe",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "b7500ca697a832ec80ce2895e87c2232d17def9e18301ae1de0a2bf95388ecfe",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J02",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/31",
+      "packet_record_sha256": "3d357efc7c7da8bea9df0d7271ea4380989d9da799889a6e4c3eaa7e1a541c4e",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "3d357efc7c7da8bea9df0d7271ea4380989d9da799889a6e4c3eaa7e1a541c4e",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J07",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/32",
+      "packet_record_sha256": "3de1b4228d02c216c5527b0bf73f6acb372a6508aa9da2e963e748c10e3ff9a2",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "3de1b4228d02c216c5527b0bf73f6acb372a6508aa9da2e963e748c10e3ff9a2",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J19",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/33",
+      "packet_record_sha256": "17c8dfdae6e9eacaf8b90b5a99252edb1a6148a95b3e4b28c3f16865bc88276f",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "17c8dfdae6e9eacaf8b90b5a99252edb1a6148a95b3e4b28c3f16865bc88276f",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J21",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/34",
+      "packet_record_sha256": "80fd6cf11243a0d0d6c737c2b19c75be60a30dafe13bed51fdea5e0f6f2aa662",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "80fd6cf11243a0d0d6c737c2b19c75be60a30dafe13bed51fdea5e0f6f2aa662",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J22",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/35",
+      "packet_record_sha256": "fbbc7a63ee635ac399394d4a231e2c08206014cf9d12b8405004556b31f5f94a",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "fbbc7a63ee635ac399394d4a231e2c08206014cf9d12b8405004556b31f5f94a",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J17",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/36",
+      "packet_record_sha256": "d4b9fee991e14290a5d25c0e9d460fc5c1f07b508ca361faffb5c7558834a757",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "d4b9fee991e14290a5d25c0e9d460fc5c1f07b508ca361faffb5c7558834a757",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J15",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/37",
+      "packet_record_sha256": "f6ca29207784bcf3dbf79a66b39b088e6ff2ba040f1ac48b765fd9d3fd64a802",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "f6ca29207784bcf3dbf79a66b39b088e6ff2ba040f1ac48b765fd9d3fd64a802",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J18",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/38",
+      "packet_record_sha256": "98e273e6f948820312dcaefacf36915e3dcc09aaebe4e45a4a4450e3af8d872d",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "98e273e6f948820312dcaefacf36915e3dcc09aaebe4e45a4a4450e3af8d872d",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J06",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/39",
+      "packet_record_sha256": "5fbc33f14c491d7fe6c061481e26df51d634259f925b3c727481fbf2cd9229f2",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "5fbc33f14c491d7fe6c061481e26df51d634259f925b3c727481fbf2cd9229f2",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J12",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/40",
+      "packet_record_sha256": "81916cae060fcc9b5319cb13540e67fd9fc2adc4f61c93b30040080d13fa1472",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "81916cae060fcc9b5319cb13540e67fd9fc2adc4f61c93b30040080d13fa1472",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J16",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/41",
+      "packet_record_sha256": "74bd2f452570e645085af4273b126686c0d0e452f352ab309706dec8167fb852",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "74bd2f452570e645085af4273b126686c0d0e452f352ab309706dec8167fb852",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J23",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/42",
+      "packet_record_sha256": "37b228ed94b4036d0d62ba340139d033851c1fb355f08cff00a4733177739d59",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "37b228ed94b4036d0d62ba340139d033851c1fb355f08cff00a4733177739d59",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J20",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/43",
+      "packet_record_sha256": "4f9a25fa8a2b9809fba8af0b39984bcf28a4679afa94fc080f02a73d8015ca97",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "4f9a25fa8a2b9809fba8af0b39984bcf28a4679afa94fc080f02a73d8015ca97",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J25",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/44",
+      "packet_record_sha256": "a1ab0bcd6c2eb52d4e6c14e2a9387425e4be0e6606effdeaa64c79c88eaea12d",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "a1ab0bcd6c2eb52d4e6c14e2a9387425e4be0e6606effdeaa64c79c88eaea12d",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J26",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/45",
+      "packet_record_sha256": "8b7cc5b41f3132012fa51b18b708f5c1271bd6d6f6e8dcdedd5bb9425f51781b",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "8b7cc5b41f3132012fa51b18b708f5c1271bd6d6f6e8dcdedd5bb9425f51781b",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "MOD-J08",
+      "original_status": "PLANNED",
+      "packet_pointer": "historical/roadmap_47.json#/tasks/46",
+      "packet_record_sha256": "c12ce0fb80191d389c118c99d8f04d6e30a1b3935c662f6d5e54c45aad4ed381",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/roadmap.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "4f02b69508a73cd492abe109f351be2174f8bcc7",
+        "mode": "100644",
+        "sha256": "7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39"
+      },
+      "live_record_sha256": "c12ce0fb80191d389c118c99d8f04d6e30a1b3935c662f6d5e54c45aad4ed381",
+      "new_nodes": [
+        "DEFERRED"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    }
+  ],
+  "adr_rows": [
+    {
+      "id": "ADR-001",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/0",
+      "packet_record_sha256": "ef770be7d95e23a208ec45f308da18de1f3e3fc2bae1cfc3f6bef53ba34a21dc",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "ef770be7d95e23a208ec45f308da18de1f3e3fc2bae1cfc3f6bef53ba34a21dc",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-002",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/1",
+      "packet_record_sha256": "c8c8b917726fcedfa2fbfaaea3daab2af08e177d5e52fdaef639f29b3aa4d736",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "c8c8b917726fcedfa2fbfaaea3daab2af08e177d5e52fdaef639f29b3aa4d736",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-003",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/2",
+      "packet_record_sha256": "01d271452f078b9e579706425bc35dd5d928a7310869475fc8b625dec5ae278a",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "01d271452f078b9e579706425bc35dd5d928a7310869475fc8b625dec5ae278a",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-004",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/3",
+      "packet_record_sha256": "a6af74ffa512019457c64b71da90b5c773ae1e1f203c7ee74a01ffd78c041d88",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "a6af74ffa512019457c64b71da90b5c773ae1e1f203c7ee74a01ffd78c041d88",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-005",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/4",
+      "packet_record_sha256": "c13f90faf4e0347de3cddcb7caa04f725b1aac0d4481e930d110e98cdf829cf7",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "c13f90faf4e0347de3cddcb7caa04f725b1aac0d4481e930d110e98cdf829cf7",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-006",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/5",
+      "packet_record_sha256": "4b006d2f971091217e95d506d36a245f54dc7907a61f54d2d2821ee9200d7415",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "4b006d2f971091217e95d506d36a245f54dc7907a61f54d2d2821ee9200d7415",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-007",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/6",
+      "packet_record_sha256": "a6718b5095366a52c0ac34b9f27115591a244f62d84f3b8ecbaa466c2ca4f43a",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "a6718b5095366a52c0ac34b9f27115591a244f62d84f3b8ecbaa466c2ca4f43a",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-008",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/7",
+      "packet_record_sha256": "3262d85cb5921970e01ba87819dd50aeba25e055b0cde05980a05c034da6aacb",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "3262d85cb5921970e01ba87819dd50aeba25e055b0cde05980a05c034da6aacb",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-009",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/8",
+      "packet_record_sha256": "939530232eac27dc6beace00d092f43906e63dc44804b2cd56d8b62f74b012ed",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "939530232eac27dc6beace00d092f43906e63dc44804b2cd56d8b62f74b012ed",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-010",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/9",
+      "packet_record_sha256": "b44f4706ff83c53e31ae183ca37c6599c5009f5e196f43264dbacb6c7034b0bc",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "b44f4706ff83c53e31ae183ca37c6599c5009f5e196f43264dbacb6c7034b0bc",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-011",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/10",
+      "packet_record_sha256": "0c75316732578690bc04c4c2eec65ef01a75f24d2dd66a9ee70e83b182192fc9",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "0c75316732578690bc04c4c2eec65ef01a75f24d2dd66a9ee70e83b182192fc9",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-012",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/11",
+      "packet_record_sha256": "e1422e4cad8b64923ec95d7b2e47fb474588c2bb38e38791c309b14a22e8e025",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "e1422e4cad8b64923ec95d7b2e47fb474588c2bb38e38791c309b14a22e8e025",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-013",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/12",
+      "packet_record_sha256": "8a196dfb8066f56a089b4003176acb389d7e4a08888d06e2525ae8ee4b5dbfd1",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "8a196dfb8066f56a089b4003176acb389d7e4a08888d06e2525ae8ee4b5dbfd1",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-014",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/13",
+      "packet_record_sha256": "7c67c89228e861c152d09d7dcb1aa617e814a0502b5de12ca61a03a3c393c2b6",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "7c67c89228e861c152d09d7dcb1aa617e814a0502b5de12ca61a03a3c393c2b6",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-015",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/14",
+      "packet_record_sha256": "aa6fb42ba4fe77adb4d41b21ef35b36234871c8d31df29360ce21f965cd90936",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "aa6fb42ba4fe77adb4d41b21ef35b36234871c8d31df29360ce21f965cd90936",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-016",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/15",
+      "packet_record_sha256": "9475383c8d62edc66b9eb68623fc8864b5d52161f9cd9c55521302b43cca813f",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "9475383c8d62edc66b9eb68623fc8864b5d52161f9cd9c55521302b43cca813f",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-017",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/16",
+      "packet_record_sha256": "bbc8690e7eb7e78682563ed0a6abfc4434df608e6721ec6375f7e1929fa45d34",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "bbc8690e7eb7e78682563ed0a6abfc4434df608e6721ec6375f7e1929fa45d34",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-018",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/17",
+      "packet_record_sha256": "3da048e9ac8646726fac3c05ec7bf8b9ce78e914b28be24883bc0e408fa54307",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "3da048e9ac8646726fac3c05ec7bf8b9ce78e914b28be24883bc0e408fa54307",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-019",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/18",
+      "packet_record_sha256": "c0033b94cccc7425cea1bc454a1076d6f12e70407427f74cd20cb788aecc835f",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "c0033b94cccc7425cea1bc454a1076d6f12e70407427f74cd20cb788aecc835f",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-020",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/19",
+      "packet_record_sha256": "934496dc081f18b27fa11545927f16ad805f79505350e9e8d0ca39c649108624",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "934496dc081f18b27fa11545927f16ad805f79505350e9e8d0ca39c649108624",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-021",
+      "original_status": "ADOPTED_SOURCE_PACK",
+      "packet_pointer": "historical/adr_registry_51.json#/records/20",
+      "packet_record_sha256": "6996210987be1b4f8397e3435d82020741afbea93b4a3f4f923e54434c1b865e",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "6996210987be1b4f8397e3435d82020741afbea93b4a3f4f923e54434c1b865e",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-022",
+      "original_status": "ADOPTED_FOUNDER_DIRECT",
+      "packet_pointer": "historical/adr_registry_51.json#/records/21",
+      "packet_record_sha256": "0ef979898678bbb56e2855d284943eb84d0283127741288f8ad3584873e0fae5",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "0ef979898678bbb56e2855d284943eb84d0283127741288f8ad3584873e0fae5",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-023",
+      "original_status": "ADOPTED_BRAIN_WITHIN_EXECUTIVE_AUTHORITY",
+      "packet_pointer": "historical/adr_registry_51.json#/records/22",
+      "packet_record_sha256": "6d7acdcca837cda05b8f56f55a219704427252a510cfe5f21b04c31ab2dab50e",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "6d7acdcca837cda05b8f56f55a219704427252a510cfe5f21b04c31ab2dab50e",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-024",
+      "original_status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/23",
+      "packet_record_sha256": "2040238ad0258ab80a7cf0ae89e101c602a60e63276f27e9f981a5e7aeb1c378",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "2040238ad0258ab80a7cf0ae89e101c602a60e63276f27e9f981a5e7aeb1c378",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-025",
+      "original_status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/24",
+      "packet_record_sha256": "e3b8adcc7fae9dabb325f7d7e328ac8cdd0cf167012b0fa24f501da784357dd2",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "e3b8adcc7fae9dabb325f7d7e328ac8cdd0cf167012b0fa24f501da784357dd2",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-026",
+      "original_status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/25",
+      "packet_record_sha256": "c758aabbc65546a0e4a7999794e5d1f24d0afb77bc5255a34d733e02b004dcc3",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "c758aabbc65546a0e4a7999794e5d1f24d0afb77bc5255a34d733e02b004dcc3",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-027",
+      "original_status": "ADOPTED_BRAIN_EXECUTION_DECISION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/26",
+      "packet_record_sha256": "46d9cf351b1ca328cf5347387a1c774912a5ae41714569c4e8b7cf7577b9989d",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "46d9cf351b1ca328cf5347387a1c774912a5ae41714569c4e8b7cf7577b9989d",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-028",
+      "original_status": "ADOPTED_BRAIN_EVIDENCE_RECONCILIATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/27",
+      "packet_record_sha256": "8d0c263ac069eb7e3488b4d3222d7292806d390c3968e98e73805de2aa0c3bd6",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "8d0c263ac069eb7e3488b4d3222d7292806d390c3968e98e73805de2aa0c3bd6",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-029",
+      "original_status": "ADOPTED_BRAIN_IMPLEMENTATION_CLARIFICATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/28",
+      "packet_record_sha256": "37df5046e6b6e9e70033ac1a4833de0d85de8072408f981580f7a57292887460",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "37df5046e6b6e9e70033ac1a4833de0d85de8072408f981580f7a57292887460",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-030",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/29",
+      "packet_record_sha256": "e4db7f7653c7b6873ca7ec4a7dd7a123c198431a29f3a5768fe2a14663ddec6d",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "e4db7f7653c7b6873ca7ec4a7dd7a123c198431a29f3a5768fe2a14663ddec6d",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-031",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/30",
+      "packet_record_sha256": "c90a8eaf624f4ec7be74675971befe7a8f05b92b974763c0fc1e5c68c7099b55",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "c90a8eaf624f4ec7be74675971befe7a8f05b92b974763c0fc1e5c68c7099b55",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-032",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/31",
+      "packet_record_sha256": "b3000ff3c17c1925cd6d541250f3112e943dd1e7622abbfc18ee1f4fb10731f1",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "b3000ff3c17c1925cd6d541250f3112e943dd1e7622abbfc18ee1f4fb10731f1",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-033",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/32",
+      "packet_record_sha256": "5d033419af8e6a284171399ef83aa991707e2bf1c85e61b5b3c1f550760e3308",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "5d033419af8e6a284171399ef83aa991707e2bf1c85e61b5b3c1f550760e3308",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-034",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/33",
+      "packet_record_sha256": "35936ecbf03699ac0778adfbcaf7d2e1a4a98f680e75685daca1308522138a5d",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "35936ecbf03699ac0778adfbcaf7d2e1a4a98f680e75685daca1308522138a5d",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-035",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/34",
+      "packet_record_sha256": "76a2e3580e9595b64c7e82f304bda552d80968bc0fa50ae697636d1919ef2cb6",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "76a2e3580e9595b64c7e82f304bda552d80968bc0fa50ae697636d1919ef2cb6",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-036",
+      "original_status": "DECIDED_FOUNDER_FORMAT_BRAIN_IMPLEMENTATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/35",
+      "packet_record_sha256": "37c7d343842e27e67fbea49fcb2888400244802a6d2e0fa6b1b539984e0ebb81",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "37c7d343842e27e67fbea49fcb2888400244802a6d2e0fa6b1b539984e0ebb81",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-037",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/36",
+      "packet_record_sha256": "fe24f7705042ee467896e1291afbcb1edede1645607a61c1c3efe51ab566ba72",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "fe24f7705042ee467896e1291afbcb1edede1645607a61c1c3efe51ab566ba72",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-038",
+      "original_status": "DECIDED_BRAIN_SCOPE_RECONCILIATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/37",
+      "packet_record_sha256": "fa42edd2628dcfe56d30c148f9aec92c78ca9c564ae31e0869effb355cdddeb2",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "fa42edd2628dcfe56d30c148f9aec92c78ca9c564ae31e0869effb355cdddeb2",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-039",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/38",
+      "packet_record_sha256": "65ce6e7e04f74cf375cf2e18dd88c273d7dd22d858f70892fa1a70560e26ac08",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "65ce6e7e04f74cf375cf2e18dd88c273d7dd22d858f70892fa1a70560e26ac08",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-040",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/39",
+      "packet_record_sha256": "24f333104ac3ea4e1a2d346b5bca966673a241f07afbf379baf91fab1c29395c",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "24f333104ac3ea4e1a2d346b5bca966673a241f07afbf379baf91fab1c29395c",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-041",
+      "original_status": "DECIDED_BRAIN_BOUNDED_AUTHORIZATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/40",
+      "packet_record_sha256": "0ba8c4eb1365dbe303451c5026bcf7de536aedc70d03d55a8c286ac3be52d585",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "0ba8c4eb1365dbe303451c5026bcf7de536aedc70d03d55a8c286ac3be52d585",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-042",
+      "original_status": "DECIDED_BRAIN",
+      "packet_pointer": "historical/adr_registry_51.json#/records/41",
+      "packet_record_sha256": "d9d3606a44bc38dbf290e6d4197c7fe1c92bf9f1dee8e6f35891645ecd7428f7",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "d9d3606a44bc38dbf290e6d4197c7fe1c92bf9f1dee8e6f35891645ecd7428f7",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-043",
+      "original_status": "DECIDED_BRAIN_BOUNDED_SOURCE_EDIT_AUTHORIZATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/42",
+      "packet_record_sha256": "b882b53c42629c793657bbf0f5f6f5c5dbe1f7c2f32cc64fcc49ded76d118332",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "b882b53c42629c793657bbf0f5f6f5c5dbe1f7c2f32cc64fcc49ded76d118332",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-044",
+      "original_status": "DECIDED_BRAIN_DEFERRED_UNPROVED_TOOL_CLOSURE",
+      "packet_pointer": "historical/adr_registry_51.json#/records/43",
+      "packet_record_sha256": "c692bf8c4dcb7a39f7b1df2e0e74290f3207cc75848362dc2f362156c6530271",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "c692bf8c4dcb7a39f7b1df2e0e74290f3207cc75848362dc2f362156c6530271",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-045",
+      "original_status": "DECIDED_BRAIN_PARTIAL_REVIEW",
+      "packet_pointer": "historical/adr_registry_51.json#/records/44",
+      "packet_record_sha256": "1fcd75e843d708cc9f1d8422baaeeb1a74aec29e0545a089f354f4254d12ac1a",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "1fcd75e843d708cc9f1d8422baaeeb1a74aec29e0545a089f354f4254d12ac1a",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-046",
+      "original_status": "DECIDED_BRAIN_BOUNDED_SOURCE_EDIT_AUTHORIZATION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/45",
+      "packet_record_sha256": "331d4d66b901735b20fcf46c5ff467ac438e02814a4d90739ffb237043197114",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "331d4d66b901735b20fcf46c5ff467ac438e02814a4d90739ffb237043197114",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-047",
+      "original_status": "DECIDED_BRAIN_FOUNDER_REQUESTED_EXPANDED_ASSIGNMENT",
+      "packet_pointer": "historical/adr_registry_51.json#/records/46",
+      "packet_record_sha256": "8d2fb5a5fe68b6bc32031e19ec7b13dfa1d3939b0da717848ea4c2ef006f87e7",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "8d2fb5a5fe68b6bc32031e19ec7b13dfa1d3939b0da717848ea4c2ef006f87e7",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-048",
+      "original_status": "DECIDED_INDEPENDENT_OVERNIGHT01_REVIEW_SCOPED",
+      "packet_pointer": "historical/adr_registry_51.json#/records/47",
+      "packet_record_sha256": "3d716a3ddc7c1c4bec798999a6759a0d7c84a1c03f2c0e3b37429d546204c64c",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "3d716a3ddc7c1c4bec798999a6759a0d7c84a1c03f2c0e3b37429d546204c64c",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-049",
+      "original_status": "DECIDED_SECURITY_HARDEN01_SOURCE_EDIT_ISSUANCE",
+      "packet_pointer": "historical/adr_registry_51.json#/records/48",
+      "packet_record_sha256": "2ef1938fd3cd2033ab33f0b700cdd51691568348a82d1128aca329c29679c21c",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "2ef1938fd3cd2033ab33f0b700cdd51691568348a82d1128aca329c29679c21c",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-050",
+      "original_status": "ADOPTED_BRAIN_SCOPED_DECISION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/49",
+      "packet_record_sha256": "49096a782c04148000dae2ba06dafe750fc82975b8716d3b5c996d1aa17653c9",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "49096a782c04148000dae2ba06dafe750fc82975b8716d3b5c996d1aa17653c9",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "id": "ADR-051",
+      "original_status": "ADOPTED_BRAIN_SCOPED_DECISION",
+      "packet_pointer": "historical/adr_registry_51.json#/records/50",
+      "packet_record_sha256": "2ec68194914befdeb6113c8184d8d3162bf3840e33d059b5629eaea092c75ab4",
+      "live_source": {
+        "path": "docs/brain/checkpoints/M1-03/SOURCE-CLOSURE-01/inputs/BRAIN_STATE/ADR_REGISTRY.json",
+        "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+        "blob": "72014693b13b221eb0f00d81bec0a3296b2b8d3b",
+        "mode": "100644",
+        "sha256": "2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1"
+      },
+      "live_record_sha256": "2ec68194914befdeb6113c8184d8d3162bf3840e33d059b5629eaea092c75ab4",
+      "new_nodes": [
+        "R08-GOV"
+      ],
+      "disposition": "HISTORICAL_STATUS_PRESERVED_NOT_NEW_ACCEPTANCE"
+    }
+  ],
+  "encoding_differences": []
+}

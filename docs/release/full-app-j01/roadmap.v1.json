@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_TASK_ISSUANCE",
+  "nodes": [
+    {
+      "id": "R08-GOV",
+      "depends_on": [],
+      "gates": [],
+      "owner": "Codex proposal; independent Brain",
+      "status": "SUBMITTED_REVIEW_REQUIRED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Review strict artifacts, falsification and immutable guards; source acceptance still pending",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-RESEARCH",
+      "depends_on": [
+        "R08-GOV"
+      ],
+      "gates": [],
+      "owner": "Imaging/rights/statistical owners",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Early G1 optical experiment and G2 target/rights preregistration; safe documentary research can proceed independently, no unconsented collection",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-BASELINE",
+      "depends_on": [
+        "R08-GOV"
+      ],
+      "gates": [
+        "M1-03",
+        "G97",
+        "DB"
+      ],
+      "owner": "Original Security/DB custodians",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Resolve exact original Security/rules/OSV/secret/source inventory and canonical DB replay; Brain whole M1-03 acceptance",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-IDENTITY",
+      "depends_on": [
+        "R08-GOV"
+      ],
+      "gates": [
+        "RIGHTS",
+        "APPLE"
+      ],
+      "owner": "Brand/counsel and account owner",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F01"
+      ],
+      "acceptance": "Exact brand/territory/entity and policy/support ownership evidence; no account setup in this task",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-LEDGER",
+      "depends_on": [
+        "R08-BASELINE"
+      ],
+      "gates": [
+        "M1-03",
+        "M2-01"
+      ],
+      "owner": "Future engineering; Brain",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F02",
+        "V2-C01",
+        "V2-C03"
+      ],
+      "acceptance": "Separate M2 grant, owner/version/CAS/idempotency/deletion-win adapters and ADR038 non-destructive corrections",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-CATALOG",
+      "depends_on": [
+        "R08-LEDGER"
+      ],
+      "gates": [
+        "RIGHTS",
+        "PROVIDER"
+      ],
+      "owner": "Catalog/source-rights operator",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F03",
+        "F04",
+        "V2-C02"
+      ],
+      "acceptance": "Real rights-reviewed intake/records/formula history and correction/report/operator end-to-end flow",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-CORE",
+      "depends_on": [
+        "R08-LEDGER",
+        "R08-CATALOG"
+      ],
+      "gates": [
+        "CLINICAL"
+      ],
+      "owner": "Engineering and exact guidance reviewers",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F05",
+        "F06",
+        "F07",
+        "F08",
+        "V2-C04",
+        "V2-C05"
+      ],
+      "acceptance": "Routine/Today/cycle/exceptions/actual-versus-intended and offline integration with approved copy",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-PAY",
+      "depends_on": [
+        "R08-LEDGER",
+        "R08-IDENTITY"
+      ],
+      "gates": [
+        "PAYMENT",
+        "APPLE",
+        "PROVIDER"
+      ],
+      "owner": "StoreKit/RevenueCat merchant operators",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F11",
+        "F12",
+        "V2-C10"
+      ],
+      "acceptance": "Real standard purchase and approved offer; preserve free quota/rights/current terms and unknown denials",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-DECISIONS",
+      "depends_on": [
+        "R08-CORE",
+        "R08-CATALOG"
+      ],
+      "gates": [
+        "CLINICAL",
+        "RIGHTS",
+        "PROVIDER"
+      ],
+      "owner": "Content/privacy/provider reviewers",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F13",
+        "F14",
+        "F15",
+        "V2-C06",
+        "V2-C08"
+      ],
+      "acceptance": "Factual compare/what-if/brief/recommendations/Ask/share integration with safe abstention and actual provider operations",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-PRO",
+      "depends_on": [
+        "R08-CORE",
+        "R08-DECISIONS",
+        "R08-PAY"
+      ],
+      "gates": [
+        "PROVIDER",
+        "CLINICAL",
+        "OPERATIONS",
+        "PAYMENT"
+      ],
+      "owner": "Professional/privacy/workspace billing operators",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06"
+      ],
+      "acceptance": "Dedicated text-only client/practice surface, roles/grants/plans/queue/offboarding/capacity with real tenants and restore proof",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-OPERATIONS",
+      "depends_on": [
+        "R08-CATALOG"
+      ],
+      "gates": [
+        "OPERATIONS",
+        "MODERATION",
+        "RIGHTS"
+      ],
+      "owner": "Support/catalog/moderation leads",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F20",
+        "V2-C12"
+      ],
+      "acceptance": "Functional least-privilege operations and funded support, incident/restore/rights workflow; catalog console not practitioner workspace",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-COMMUNITY",
+      "depends_on": [
+        "R08-OPERATIONS",
+        "R08-LEDGER"
+      ],
+      "gates": [
+        "MODERATION",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner": "Community moderation lead",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F17"
+      ],
+      "acceptance": "Real posting/report/block/appeal/deletion rehearsal and coverage before public exposure",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-COMMERCE",
+      "depends_on": [
+        "R08-DECISIONS",
+        "R08-PAY",
+        "R08-OPERATIONS"
+      ],
+      "gates": [
+        "RIGHTS",
+        "PROVIDER",
+        "PAYMENT",
+        "CLINICAL"
+      ],
+      "owner": "Partner/privacy/merchant operators",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F16"
+      ],
+      "acceptance": "Executed truthful rail, disclosures, independent ranking and real refund/reconciliation; current COM-01A remains zero",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-NATIVE",
+      "depends_on": [
+        "R08-CORE",
+        "R08-PAY"
+      ],
+      "gates": [
+        "DEVICE",
+        "APPLE",
+        "G5"
+      ],
+      "owner": "Native/device QA owners",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "F09",
+        "F10",
+        "F19",
+        "V2-C07",
+        "V2-C09"
+      ],
+      "acceptance": "Photos/history/manual compare, OS reminders, widgets and supported-profile lifecycle/accessibility at signed exact source",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-J01",
+      "depends_on": [
+        "R08-RESEARCH",
+        "R08-LEDGER",
+        "R08-NATIVE"
+      ],
+      "gates": [
+        "G1",
+        "G2",
+        "G3",
+        "G5"
+      ],
+      "owner": "Imaging/statistical/privacy/native reviewers",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "J01"
+      ],
+      "acceptance": "Separately authorized on-device J01 baseline and locked independent single-scan evaluation; unsupported/failed outputs unavailable",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-INTEGRATION",
+      "depends_on": [
+        "R08-PRO",
+        "R08-COMMUNITY",
+        "R08-COMMERCE",
+        "R08-NATIVE",
+        "R08-J01",
+        "R08-IDENTITY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "CLINICAL",
+        "DEVICE",
+        "OPERATIONS"
+      ],
+      "owner": "Independent Brain plus all qualified owners",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [
+        "V2-C11"
+      ],
+      "acceptance": "All38 required rows genuine at one build, clean source/CI, no P0/P1, real operator/provider/device/reviewer evidence",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    },
+    {
+      "id": "R08-APPLE",
+      "depends_on": [
+        "R08-INTEGRATION"
+      ],
+      "gates": [
+        "APPLE",
+        "PUBLIC"
+      ],
+      "owner": "Founder, release owner and Apple",
+      "status": "GATED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Separate exact-build beta/App Review submission and public availability decisions; no committed date",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality"
+    }
+  ],
+  "parallel_research": [
+    "R08-RESEARCH",
+    "R08-IDENTITY",
+    "R08-BASELINE"
+  ],
+  "protected_dependencies": {
+    "M2-01": [
+      "M1-03"
+    ],
+    "M2-02": [
+      "M2-01"
+    ],
+    "M2-03": [
+      "M2-02"
+    ],
+    "M2-04": [
+      "M2-03"
+    ]
+  },
+  "j01_engineering_predecessor": "SHARED_CAPTURE_AND_OWNER_FOUNDATIONS",
+  "removed_priority_predecessor": "M3-02",
+  "j05_measurement_enabled": false,
+  "j01_change_requires": "G4",
+  "public_date": null
+}

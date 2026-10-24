@@ -1,0 +1,12 @@
+# Gated implementation order
+
+The machine DAG in `roadmap.v1.json` owns each required scope row once and is acyclic. Every future implementation node is GATED and implementation_authorized=false. Research entries are prepared work packages; this task executes only governance and source tests.
+
+1. Review this contract/crosswalk/ADR and unchanged guards. In parallel, prepare exact J01 optical/rights studies, identity/territory review and original Security/DB custody resolution. Documentary preparation is independent; no new data collection or paid access follows.
+2. Only after accepted whole M1-03 and separate M2 issuance: build owner/formula/event/consent/CAS/deletion foundations, including ADR038 additive correction contracts/adapters and UI before M2-03/M2-04 readiness. Preserve old subscriber and local data compatibility.
+3. Complete real catalog/intake and operator provenance, then reviewed routine/Today/cycle/exceptions. Standard native billing/approved offer can proceed as a separate provider stream once its owner/identity prerequisites exist. No unqualified clinical copy is exposed.
+4. Add factual compare/what-if/appointment brief, reviewer-cleared recommendations, actual safe Ask and private sharing. Build dedicated text-only professional client web/roles/grants/intended plans/queue/offboarding/workspace billing and capacity; preserve client free continuity. Build staffed operator support, moderation/community and compliant real commerce in their own bounded streams.
+5. Physical signed-native integration proves photos/history/manual comparison, OS reminders, widgets, privacy, accessibility and actual purchase lifecycle. Separately authorized J01 uses shared capture/owner foundations plus real G1/G2/G3/G5. G4 is a separately reviewed extra program; no trend/change enters this scope by default.
+6. At one immutable build reconcile all38 required rows, applicable source/integration/device/provider/expert/operator gates and real failures. Only then seek separately authorized eligible beta, App Review submission and public availability. No date, positive provider, funding or external signoff is promised.
+
+Node acceptance text is bounded and owned by the named role. Failed optics, missing rights, failed canonical replay, unverifiable billing or absent moderation coverage stops the corresponding exposure. It does not justify calling a stub complete or deleting that required family. Exact owner packets record decisive missing acts while Codex continues independent permitted preparation.

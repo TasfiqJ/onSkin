@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_PUBLIC_PRODUCT_AUTHORITY_SOURCE_REVIEW_PENDING",
+  "product_contract": "contract.v1.json",
+  "order": [
+    "Exact current human authorization and protected custody",
+    "Independent Brain source acceptance and later ordinary promotion",
+    "Proposed full-app/J01 public product scope after source acceptance",
+    "Adopted V2 semantics except explicitly versioned product/priority supersession",
+    "Byte-stable Sep27 technical guards; historical scope references"
+  ],
+  "supersedes_product_scope": [
+    "ios-lean-v1-2026",
+    "historical all20/F18 inclusion",
+    "J05-first engineering priority"
+  ],
+  "preserves": [
+    "Original Security/DB admission",
+    "Clinical and source rights",
+    "Adult/owner/consent/privacy",
+    "Literal-zero commerce/trend/share/paid gates",
+    "Apple/financial/native/public approvals",
+    "47 historical task and51 ADR records"
+  ],
+  "legacy_technical_guard": {
+    "path": "docs/hugeToDo/launch-contract.json",
+    "status": "HISTORICALLY_ACCEPTED_TECHNICAL_GUARD",
+    "byte_stable": true
+  },
+  "cutover": {
+    "status": "NOT_DONE",
+    "ci_wired": false,
+    "runtime_consumers_migrated": false,
+    "reason": "Legacy validator hardcodes lean-v1 exact IDs; whole-source consumers and protected CI cannot be safely migrated inside this finite grant",
+    "next_authority": "Independent Brain reviews this proposal then issues exact consumer/CI cutover grant; retain original fail-closed checks",
+    "consumers": [
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:apps/mobile/app.config.js",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/brain/brain.py",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/brain/test_brain.py",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/com01/commerce-admission-source-contract.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/core02/clinical-rule-source-contract.test.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/core06/recommendation-admission-source-contract.test.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/docs/device-support-policy-audit.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/docs/performance-readiness-audit.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/docs/readiness-status-audit.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/docs/tas-todo-audit.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/docs/tas-todo-audit.test.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/launch/contract.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/launch/execution-baseline.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/launch/governed-evidence-chain.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/pay08/ios-win-back-source-contract.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase10/beta-readiness.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase10/lib.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase11/launch-readiness.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase11/lib.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase3/build-review-packet.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase4/beta-coverage-committed-check.test.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase4/beta-coverage-report.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase4/source-policy.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase5/build-device-qa-packet.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase5/check-native-config.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase5/device-qa-packet-smoke.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase6/build-payments-qa-packet.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase6/check-payments-env.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase7/build-core-loop-qa-packet.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase7/check-core-loop.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase8/build-growth-store-qa-packet.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase8/check-growth-store-readiness.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase8/check-growth-store-smoke.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase9/build-release-qa-packet.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase9/release-smoke.mjs",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/phase9/security_acceptance/source-manifest.json",
+      "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb:scripts/photo05/trend-admission-source-contract.mjs"
+    ]
+  },
+  "protected_witnesses": [
+    {
+      "path": "AGENTS.md",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "ce3ab101464c8964c85e8cefa0ac8ad7ce053fb0",
+      "mode": "100644",
+      "sha256": "be3dbb304c30af6cc7a0f51e890ccb0e22a312690f8f455b88a710065da71a1a"
+    },
+    {
+      "path": "CLAUDE.md",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "6d2cacba1f58032e3878c16b0868b6c4a58fcd42",
+      "mode": "100644",
+      "sha256": "2baa63ccb443800af7ffc6be239848b8d1a84cb078e163574a95792d882f68c0"
+    },
+    {
+      "path": "docs/brain/AGENTS.md",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "b5aec7886df072024d616228077c1ee9a169f86c",
+      "mode": "100644",
+      "sha256": "6fc492bc33d39d7d609574984d259da88a93c53eabd18d545ab272c6d550144d"
+    },
+    {
+      "path": "docs/v2/AGENTS.md",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "4f1e90c2e91aa3645b7b5810df79432768043ff8",
+      "mode": "100644",
+      "sha256": "0ab28614530ae5e29e759311f2e69ff92f00db6e6e537ccb42ab93b84928d7d8"
+    },
+    {
+      "path": "docs/hugeToDo/launch-contract.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "c9ec78cf784b3dd0093de8e6d870e20587af1408",
+      "mode": "100644",
+      "sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f"
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "4e772f57ed76a9119657071cae9a4c06212d3830",
+      "mode": "100644",
+      "sha256": "0c7aabc43c1a49585bce7fb6739d4b2715b4fe0a0061e5f47bd327e9670fbdc1"
+    },
+    {
+      "path": "scripts/launch/check-contract.mjs",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "b8ffa2fbdd6360274bb9e8c60dda9a35cfee1ab9",
+      "mode": "100644",
+      "sha256": "ea4088e134c0b1b478d1a208e7003cbf0b42c9829be937aa6dd20bc5a56865e9"
+    },
+    {
+      "path": "scripts/launch/contract-smoke.mjs",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "b599921daa68de4b610fcba9dbed6796f7a37ae7",
+      "mode": "100644",
+      "sha256": "1256ab6ecc09e873a8d84f4ca7b6c2e033b32d456eeb38e9c4dcaad7d060e513"
+    },
+    {
+      "path": "package.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "mode": "100644",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
+    },
+    {
+      "path": "package-lock.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "mode": "100644",
+      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568"
+    },
+    {
+      "path": "docs/brain/state/roadmap.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "3480774ca0794cae65c36820610572c49007d6e8",
+      "mode": "100644",
+      "sha256": "f4c7ce71889e1240d970521446333059861ad89c4e78a8999ac8f68eb915d877"
+    },
+    {
+      "path": "docs/brain/state/ADR_REGISTRY.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "4c0abfad871af7f94dab3d9d25ebcc66d749fa33",
+      "mode": "100644",
+      "sha256": "cff6240c8b38c8647432cd719110985018c11528640c4398b444e4827b235213"
+    },
+    {
+      "path": "docs/v2/mirrors/modules.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "d91e71a9322c4ca0678aa6cf854f799469e4d235",
+      "mode": "100644",
+      "sha256": "4f460af7898ce3f21395694f54644a4f4758a966f0936987787d56e6d131f8fa"
+    },
+    {
+      "path": "docs/v2/mirrors/roadmap.json",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "a7f394f2f4738e18a3929c49e24ab7e88d34b006",
+      "mode": "100644",
+      "sha256": "fdb3f4fc8ebb04c406c3ea70264a5008dba108c5c416335d20c610fe79e91164"
+    },
+    {
+      "path": ".github/workflows/ios-launch-contract.yml",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "3f80c9f19ac4a3675d82446501a0d3aae4c511a0",
+      "mode": "100644",
+      "sha256": "9b3d549354fdbd01ea8d25be1637d1d95f57f07c98c058ce6cea0270e64c2896"
+    },
+    {
+      "path": "apps/mobile/src/features/commerce/admission.ts",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "255ea8ee4dd5bff0c7e12cb377f02b3269ee959d",
+      "mode": "100644",
+      "sha256": "32feaa31a53d5d322da4ca4eb3b38a5968458d04c28df95afdcfe8d4ad96a10d"
+    },
+    {
+      "path": "apps/mobile/src/features/trend/trend.ts",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "bec04babd24cf751fa73f6abdce6d981781ed2cb",
+      "mode": "100644",
+      "sha256": "bf4d6126f827ec42891e1c6121dee06d31743200d6770c74af10b80f6747ab1a"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/entitlement.ts",
+      "source_commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "blob": "4488c10499d1ac3a61645cbfce1282cd6b6651b3",
+      "mode": "100644",
+      "sha256": "88227479773070400a30c0331063f77e23d094da5bd230486abd104bbe69e0b7"
+    }
+  ],
+  "activation": "NONE; JSON is documentation, never a feature flag"
+}
