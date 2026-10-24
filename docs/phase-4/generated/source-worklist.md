@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-24T05:50:57.625Z
+Generated: 2026-10-24T15:23:17.036Z
 Status: pass
-Git SHA: e2f64e876bdd98996ceb737d999174b80519b57f
+Git SHA: 0e54f7402e35dfe2dfbf4ef1a9b48b9e5ef7ef1f
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -13,7 +13,7 @@ must attach before Phase 4 can stop blocking launch.
 ## Summary
 
 - Work items: 14
-- Source files hashed: 417
+- Source files hashed: 420
 - Missing source files: 0
 - Blockers: 0
 - Warnings: 0
@@ -30,7 +30,7 @@ must attach before Phase 4 can stop blocking launch.
 | beta-coverage                     | betaEvidence   | Closed-beta catalog coverage and correction loop                      | blocked        | B-CATALOG-COVERAGE      | 19      | 0               |
 | catalog-promotion-lifecycle       | curation       | Reviewed catalog staging, promotion, lineage, and rollback            | local-scaffold | B-CATALOG-SEED          | 38      | 0               |
 | catalog-launch-curation-lifecycle | curation       | Signed launch curation, positive serving authority, and retirement    | local-scaffold | B-CURATED-CATALOG       | 27      | 0               |
-| mobile-catalog-disclosure         | productSurface | Mobile catalog source, quality, and report-issue disclosure           | local-scaffold | B-CATALOG-SEED          | 109     | 0               |
+| mobile-catalog-disclosure         | productSurface | Mobile catalog source, quality, and report-issue disclosure           | local-scaffold | B-CATALOG-SEED          | 112     | 0               |
 | recommendation-zero-admission     | productSurface | Fail-closed product-specific recommendation admission                 | local-scaffold | B-CURATED-CATALOG       | 18      | 0               |
 | catalog-freshness-provenance      | productSurface | Catalog-backed Shelf freshness and provenance contract                | local-scaffold | B-CATALOG-SEED          | 46      | 0               |
 | catalog-serving-gate              | productSurface | Fail-closed production catalog serving boundary                       | local-scaffold | B-CATALOG-SEED          | 57      | 0               |
@@ -410,6 +410,7 @@ Sources:
 - `apps/mobile/src/features/shelf/catalogRecoveryAsync.test.ts` - 13373 bytes - sha256 `b336d46440752fe9463c5fc479f5f1abd0c344b8d14b99ae2d1396d2ff78c56a`
 - `apps/mobile/src/features/shelf/categories.test.ts` - 1325 bytes - sha256 `a6f69552408d01ddfd0f5d44d0c296101f77eda35f0affcbbde580d3dd950a42`
 - `apps/mobile/src/features/shelf/categories.ts` - 2393 bytes - sha256 `1a8449afa7536dca3ec6b744016af047f3e98c97b8e2a71412e0d3d90b3d1864`
+- `apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts` - 13362 bytes - sha256 `845165a712269b5a436845dfcd4512ccece58a436f48d72deafe9b40c6d554e8`
 - `apps/mobile/src/features/shelf/expiry.test.ts` - 2602 bytes - sha256 `dca407f4572147d1368e0f2b108e4a59ed2bb0f63e541bdeb0f1264bbb73d952`
 - `apps/mobile/src/features/shelf/expiry.ts` - 2778 bytes - sha256 `43e97ea2d296532af742bd23643e9ca48ed0193d756ba5c163f421703a15508d`
 - `apps/mobile/src/features/shelf/freshness.test.ts` - 8351 bytes - sha256 `fee1fd4da816079fe1e3cd10a33af16c74e7244ec996905605013f7884699a0a`
@@ -429,6 +430,8 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 511 bytes - sha256 `a9688d11fda1c37ac1aae3d66426d82f470ba7a04252d7b4558cb9e361c90910`
 - `apps/mobile/src/features/shelf/productOpeningRecovery.test.ts` - 4767 bytes - sha256 `04ea43a4493e789774fa1b8337daaeea3b11f10ef8fa2ddd9836c83f5eecdb92`
+- `apps/mobile/src/features/shelf/quickFind.test.ts` - 952 bytes - sha256 `230996fee170b521f2c532ed196810ead6d2abb0366a318ec50bd71ef982779f`
+- `apps/mobile/src/features/shelf/quickFind.ts` - 701 bytes - sha256 `f1684384186b76369d0470d45dcc76b48cbd2a708a803408159014155ea62c7c`
 - `apps/mobile/src/features/shelf/retainedSafety.integration.test.ts` - 8124 bytes - sha256 `21e5531c400cfbb67f7aa42fb4a2990aa944ba7df79dc7e7f6b4c9ae53113230`
 - `apps/mobile/src/features/shelf/retiredActions.campaign05.test.ts` - 4148 bytes - sha256 `8692eea0a11010580da3bba8a1e6e3a044804cc7e444ed1a87293358078ed345`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4009 bytes - sha256 `5fbd9506ee53dc6908b7839a4c4f2bcecfaeb6b2f7748ba49fc7a125b9e773c2`
@@ -443,7 +446,7 @@ Sources:
 - `apps/mobile/src/features/shelf/store.test.ts` - 57439 bytes - sha256 `ef81c36aa369f9a59cb1e291237513e4a68bb2e2af537c9f39238f20ef2219e2`
 - `apps/mobile/src/features/shelf/store.ts` - 58718 bytes - sha256 `b1c78581d5984f3c1f05efe56a320b28ec01453bb74fd97d4d121657d8d96f5a`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 5075 bytes - sha256 `2aa0f2717f781bdf8836d451df432e577ab157fa5e0799f2ab674e87b163aea9`
-- `apps/mobile/src/features/shelf/useShelf.ts` - 10723 bytes - sha256 `89267a8478de7ee0dfc8f45f48d455b792e4621174df94c48108779660f423c8`
+- `apps/mobile/src/features/shelf/useShelf.ts` - 11783 bytes - sha256 `a9278c5429889c85e55ee6c37220328ffae34cbe0d3381c4ff08224d27477302`
 - `apps/mobile/src/app/shelf/[id].tsx` - 47238 bytes - sha256 `c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99`
 - `apps/mobile/src/app/shelf/search.tsx` - 24504 bytes - sha256 `193518934f1168ed86ddc90f530af12065b8c00e4c394722ce61a8181901f087`
 - `apps/mobile/src/app/shelf/manual.tsx` - 17482 bytes - sha256 `75f5a8e3ccad7bf3e6478a086edecc8d4159abac990c78f8381131e412149088`
@@ -530,8 +533,8 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66906 bytes - sha256 `a83cbda544e062d873a8f3905923e35fca2e72a0213c33b0d6f6d79d8d40ca02`
-- `docs/USER_FLOW_TREE.md` - 506861 bytes - sha256 `152f76145f5028b0f3bf31f5a08a6fdbc15a820d8c526863e4c880e1df1f2b12`
-- `apps/mobile/src/app/onboarding/products.tsx` - 16181 bytes - sha256 `7f525652378ce533185cf40a3cf4a79cddfb5fb24ea6cb30e1721a844e9539f4`
+- `docs/USER_FLOW_TREE.md` - 509201 bytes - sha256 `e7927f20c38b5213b6eecb15001b2e30575ae07c6c88d19cbba8ce3a0fd8534e`
+- `apps/mobile/src/app/onboarding/products.tsx` - 18266 bytes - sha256 `03b71369c569997687797a63f7fe5d9ce18e1d60fbac7b692ac4b46e382f2f07`
 - `apps/mobile/src/app/shelf/[id].tsx` - 47238 bytes - sha256 `c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18282 bytes - sha256 `1e7108e64c4b12f462a51745f1e15d465990ed2dc8f7cf0b76f027afbc677c85`
 - `apps/mobile/src/app/shelf/replenish.tsx` - 10694 bytes - sha256 `e4dee732e65c6bbdb7870597941390d5e53416940cce96d02d3f4d7eb8d2aec1`
