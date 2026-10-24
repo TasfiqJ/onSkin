@@ -11,6 +11,7 @@ import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { IntakeProvider } from './IntakeContext';
 import { addProduct, loadShelf, updateProduct } from './store';
 import { useShelf } from './useShelf';
+import type { ShelfData } from './useShelf';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import {
   clearActiveHealthProcessingEpoch,
@@ -378,4 +379,34 @@ it('Quick Find cannot survive a same-owner regrant or disclose a retired cache',
   });
   await flush();
   expect(rendered()).toContain('empty for now');
+});
+
+
+// Campaign07: retain the actual encrypted store, QueryClient and useShelf.
+it.each([
+  [2026, 9, 24, '2026-10-24'],
+  [2026, 10, 1, '2026-11-01'],
+  [2026, 2, 8, '2026-03-08'],
+])('refreshes supported expiry at local midnight without rereading private storage (%s-%s-%s)', async (year, month, day, printed) => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(Number(year), Number(month), Number(day), 23, 59, 59, 800));
+  let visible: ShelfData | undefined;
+  function ShelfProbe() { visible = useShelf().data; return null; }
+  try {
+    await addProduct({ name: 'Synthetic dated balm', addedVia: 'manual', expiryDate: String(printed), expirySource: 'printed' });
+    await act(async () => {
+      renderer = create(createElement(QueryClientProvider, { client }, createElement(ShelfProbe)));
+    });
+    await act(async () => { await vi.advanceTimersByTimeAsync(50); });
+    expect(visible?.items[0]?.badge.label).toBe('0 days left');
+    const ciphertext = new Map(ports.bytes);
+    // The platform read port can now fail: date-only presentation must use
+    // the admitted snapshot, without turning a new read into empty/success.
+    ports.failRead = true;
+    await act(async () => { await vi.advanceTimersByTimeAsync(1250); });
+    expect(visible?.items[0]?.badge.label).toBe('Time to replace');
+    expect(ports.bytes).toEqual(ciphertext);
+    await act(async () => { clearActiveHealthProcessingEpoch(); });
+    expect(visible).toBeUndefined();
+  } finally { vi.useRealTimers(); }
 });

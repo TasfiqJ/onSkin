@@ -1,6 +1,6 @@
 import type { ProductStatus } from '@layerwell/types';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 
 import {
   evaluateConflicts,
@@ -133,7 +133,21 @@ export function applyConflictChoicesToShelfData(
 }
 
 export function useShelf() {
-  const today = localDateString();
+  const [today, setToday] = useState(localDateString);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(24, 0, 0, 100);
+      timer = setTimeout(() => {
+        setToday(localDateString());
+        schedule();
+      }, Math.max(100, next.getTime() - now.getTime()));
+    };
+    schedule();
+    return () => clearTimeout(timer);
+  }, []);
   const published = useSyncExternalStore(
     subscribeActiveHealthProcessingLeaseChanges,
     activeHealthProcessingLeaseSnapshot,
@@ -273,10 +287,16 @@ export function useShelf() {
       }),
   });
   const retired = query.data !== undefined && query.data.sourceGeneration !== authority?.generation;
+  const currentDates = useMemo(() => {
+    if (!query.data) return undefined;
+    const next = applyConflictChoicesToShelfData(query.data, query.data.conflictChoices, today);
+    next.items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
+    return next;
+  }, [query.data, today]);
   return {
     ...query,
     isError: query.isError || retired,
-    data: authority === null || retired || query.isError ? undefined : query.data,
+    data: authority === null || retired || query.isError ? undefined : currentDates,
   };
 }
 
