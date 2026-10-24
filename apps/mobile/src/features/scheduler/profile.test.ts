@@ -1,4 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
+import { createElement } from 'react';
+import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 
 import type {
   StoredSkinProfile,
@@ -7,7 +10,7 @@ import type {
 import { CURRENT_SERVER_SKIN_PROFILE_PROVENANCE } from '@/features/onboarding/serverSkinProfile';
 import { QUIZ_SCORING_PROVENANCE } from '@/features/onboarding/quizContract';
 
-import { readProfileBits, savePregnancyStatus } from './profile';
+import { readProfileBits, savePregnancyStatus, useProfileBits } from './profile';
 import { moistureFromAxis, sensitivityFromAxis } from './profileMapping';
 
 const mocks = vi.hoisted(() => ({
@@ -337,5 +340,50 @@ describe('skin profile axis mapping', () => {
       'CURRENT_HEALTH_CONSENT_REQUIRED',
     );
     expect(mocks.updateStoredPregnancyStatus).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('retained04 offline profile dispatch', () => {
+  async function observe(assertion: (source: ReturnType<typeof useProfileBits>) => void) {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    onlineManager.setOnline(false);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } });
+    let renderer: ReactTestRenderer | undefined;
+    let source!: ReturnType<typeof useProfileBits>;
+    function Probe() { source = { ...useProfileBits() }; return null; }
+    try {
+      await act(async () => { renderer = create(createElement(QueryClientProvider, { client }, createElement(Probe))); });
+      await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
+      assertion(source);
+    } finally {
+      await act(async () => renderer?.unmount()); client.clear(); onlineManager.setOnline(true);
+    }
+  }
+
+  it('reads the real local profile projection on a cold offline mount', async () => {
+    mocks.storedProfile = storedProfile({ oilyDry: -2, sensitiveResistant: 2 });
+    await observe(source => {
+      expect(source.isPaused).toBe(false);
+      expect(source.data).toMatchObject({ source: 'local', consentCurrent: true });
+      expect(mocks.from).not.toHaveBeenCalled();
+    });
+  });
+
+  it('reports a missing local profile unavailable offline without remote fallback', async () => {
+    mocks.supabaseConfigured = true;
+    await observe(source => {
+      expect(source.isPaused).toBe(false);
+      expect(source.data).toMatchObject({ source: 'unavailable', consentCurrent: true });
+      expect(mocks.from).not.toHaveBeenCalled();
+    });
+  });
+
+  it('does not publish a profile when the health lease is closed offline', async () => {
+    mocks.leaseOpen = false;
+    await observe(source => {
+      expect(source.isError).toBe(true); expect(source.data).toBeUndefined();
+      expect(mocks.from).not.toHaveBeenCalled();
+    });
   });
 });
