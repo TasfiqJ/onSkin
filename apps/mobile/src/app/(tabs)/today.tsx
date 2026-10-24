@@ -495,7 +495,8 @@ export default function TodayScreen() {
   const planSource = usePlan();
   const sourceState = planSourceViewState(planSource);
   const completionLease = planSource.orderLease;
-  const { data: progress, isError: progressFailed, isFetching: progressReading, refetch: retryProgress } = useProgress();
+  const { data: progressData, isError: progressFailed, isFetching: progressReading, refetch: retryProgress } = useProgress();
+  const progress = progressFailed ? undefined : progressData;
   const streakNotice = progressFailed ? (
     <StreakStatusNotice dark={dark} retrying={progressReading} onRetry={() => void retryProgress()} />
   ) : null;
@@ -955,7 +956,7 @@ export default function TodayScreen() {
             total={steps.length}
             completed={doneCount}
             hasRoutine={hasRealRoutine}
-            streakDays={progressFailed ? 0 : progress?.streak ?? 0}
+            streakDays={progress?.streak ?? 0}
           />
           {streakNotice}
 
@@ -1140,7 +1141,7 @@ export default function TodayScreen() {
           total={pmSteps.length}
           completed={donePm}
           hasRoutine={hasRealRoutine}
-          streakDays={progressFailed ? 0 : progress?.streak ?? 0}
+          streakDays={progress?.streak ?? 0}
         />
         {streakNotice}
 
