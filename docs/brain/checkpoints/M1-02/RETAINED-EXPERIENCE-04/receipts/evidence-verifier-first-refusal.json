@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/verify_checkpoint.py"
+  ],
+  "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+  "started_utc": "2026-10-24T04:00:23.670769+00:00",
+  "exit": 1,
+  "source_start": {
+    "head": "a157ef46fe86edfe3679436553ff9e4b4f067463",
+    "tree": "af9ced3c749b492261d810d7281b2a8714e0d763",
+    "dirty": ""
+  },
+  "seconds": 7.25,
+  "sha256": "31e481d1ec8a22103cbb02e9783abeed7a0c8dde1c3f8721e5a27909b73dfca1",
+  "head": "a157ef46fe86edfe3679436553ff9e4b4f067463",
+  "dirty": ""
+}

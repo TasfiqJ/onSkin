@@ -1,0 +1,4 @@
+Error: Could not find visible clickable text: Morning routine
+    at assert (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:78:25)
+    at clickByText (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:500:3)
+    at async run (file:///C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/scripts/e2e/onboarding-first-session.mjs:1806:5)

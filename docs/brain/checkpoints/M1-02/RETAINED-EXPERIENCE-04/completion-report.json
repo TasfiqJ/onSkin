@@ -3,7 +3,7 @@
   "status": "SUBMITTED_REVIEW_REQUIRED",
   "evidence_class": "CODEX_REPRODUCED_SOURCE_AND_SYNTHETIC_WEB",
   "authorization": "M1X-RETAINED-EXPERIENCE04-CLIENT-CANDIDATE-01",
-  "created_utc": "2026-10-24T03:59:10.793663+00:00",
+  "created_utc": "2026-10-24T04:00:31.431463+00:00",
   "branch": "stage/m1-retained-resilience",
   "pr": 11,
   "anchor": "a84eb53c7a3217862bb18ec795c5113f8e2a10f2",
@@ -221,6 +221,26 @@
       "sha256": "30b84dc3055285692116f60a5440defb10e0dcdf7043fcfd873ef6fffcd49f59",
       "head": "57eff8cf202fb3c539386a5fe1de45c46ba845cc",
       "dirty": "?? docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/\n"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/evidence-verifier-first-refusal.json",
+      "command": [
+        "python",
+        "-B",
+        "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/verify_checkpoint.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Desktop\\WeddingCards\\work\\m102-retained-resilience",
+      "started_utc": "2026-10-24T04:00:23.670769+00:00",
+      "exit": 1,
+      "source_start": {
+        "head": "a157ef46fe86edfe3679436553ff9e4b4f067463",
+        "tree": "af9ced3c749b492261d810d7281b2a8714e0d763",
+        "dirty": ""
+      },
+      "seconds": 7.25,
+      "sha256": "31e481d1ec8a22103cbb02e9783abeed7a0c8dde1c3f8721e5a27909b73dfca1",
+      "head": "a157ef46fe86edfe3679436553ff9e4b4f067463",
+      "dirty": ""
     },
     {
       "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-all-retained.json",

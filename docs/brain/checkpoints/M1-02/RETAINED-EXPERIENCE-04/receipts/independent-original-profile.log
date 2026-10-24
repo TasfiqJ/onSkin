@@ -1,0 +1,99 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/scheduler/profile.test.ts -t retained04
+
+
+ RUN  v4.1.11 C:/Users/jasim/Documents/ChatGPT/MasterV2Code/retained04-clean-check/apps/mobile
+
+stderr | src/features/scheduler/profile.test.ts > retained04 offline profile dispatch > reads the real local profile projection on a cold offline mount
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/scheduler/profile.test.ts > retained04 offline profile dispatch > reports a missing local profile unavailable offline without remote fallback
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+stderr | src/features/scheduler/profile.test.ts > retained04 offline profile dispatch > does not publish a profile when the health lease is closed offline
+react-test-renderer is deprecated. See https://react.dev/warnings/react-test-renderer
+
+ ❯ src/features/scheduler/profile.test.ts (18 tests | 3 failed | 15 skipped) 65ms
+     × reads the real local profile projection on a cold offline mount 41ms
+     × reports a missing local profile unavailable offline without remote fallback 5ms
+     × does not publish a profile when the health lease is closed offline 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/features/scheduler/profile.test.ts > retained04 offline profile dispatch > reads the real local profile projection on a cold offline mount
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/scheduler/profile.test.ts:367:31
+    365|     mocks.storedProfile = storedProfile({ oilyDry: -2, sensitiveResist…
+    366|     await observe(source => {
+    367|       expect(source.isPaused).toBe(false);
+       |                               ^
+    368|       expect(source.data).toMatchObject({ source: 'local', consentCurr…
+    369|       expect(mocks.from).not.toHaveBeenCalled();
+ ❯ observe src/features/scheduler/profile.test.ts:358:7
+ ❯ src/features/scheduler/profile.test.ts:366:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/features/scheduler/profile.test.ts > retained04 offline profile dispatch > reports a missing local profile unavailable offline without remote fallback
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/features/scheduler/profile.test.ts:376:31
+    374|     mocks.supabaseConfigured = true;
+    375|     await observe(source => {
+    376|       expect(source.isPaused).toBe(false);
+       |                               ^
+    377|       expect(source.data).toMatchObject({ source: 'unavailable', conse…
+    378|       expect(mocks.from).not.toHaveBeenCalled();
+ ❯ observe src/features/scheduler/profile.test.ts:358:7
+ ❯ src/features/scheduler/profile.test.ts:375:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/features/scheduler/profile.test.ts > retained04 offline profile dispatch > does not publish a profile when the health lease is closed offline
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/scheduler/profile.test.ts:385:30
+    383|     mocks.leaseOpen = false;
+    384|     await observe(source => {
+    385|       expect(source.isError).toBe(true); expect(source.data).toBeUndef…
+       |                              ^
+    386|       expect(mocks.from).not.toHaveBeenCalled();
+    387|     });
+ ❯ observe src/features/scheduler/profile.test.ts:358:7
+ ❯ src/features/scheduler/profile.test.ts:384:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 15 skipped (18)
+   Start at  23:43:35
+   Duration  1.47s (transform 357ms, setup 0ms, import 700ms, tests 65ms, environment 0ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Documents\ChatGPT\MasterV2Code\retained04-clean-check\apps\mobile
+npm error workspace @layerwell/mobile@0.1.0
+npm error location C:\Users\jasim\Documents\ChatGPT\MasterV2Code\retained04-clean-check\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run src/features/scheduler/profile.test.ts -t retained04

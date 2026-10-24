@@ -3,9 +3,15 @@
   "entries": [
     {
       "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/completion-report.json",
-      "bytes": 50665,
-      "sha256": "2e2c66893eaec58cd24408847015e85ba71b0a99dccb76726db77fabb1e85c19",
-      "git_blob": "ccadb4ebe78e7987bf62ea3da280907bcdd86724"
+      "bytes": 51454,
+      "sha256": "544d5d5e318aafc7d58886c69ab3e5336da233b1159cf8da3d8940fb9d174354",
+      "git_blob": "727f87a810298210a27767c594c11ac6cb548cb2"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/DELIVERY_NOTES.md",
+      "bytes": 582,
+      "sha256": "5cfaac8dbc4634a0419bb086553b462365a5b4dd9c55eb6daf94193b3da796b4",
+      "git_blob": "5584e1fb4349e7092eebaebd7bd1a77553fa3d5a"
     },
     {
       "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/disposable-cleanup.json",
@@ -162,6 +168,18 @@
       "bytes": 3711,
       "sha256": "30b84dc3055285692116f60a5440defb10e0dcdf7043fcfd873ef6fffcd49f59",
       "git_blob": "fb0c956faf33692d9855ad79fc97e55a7967c14a"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/evidence-verifier-first-refusal.json",
+      "bytes": 616,
+      "sha256": "df4e740e4328460d19da06823181e651e780d3b1a53806dbabc479439cdc2329",
+      "git_blob": "e13b82ebcff1e9ac5d7cf2c8a2e2c274810848fc"
+    },
+    {
+      "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/evidence-verifier-first-refusal.log",
+      "bytes": 5377,
+      "sha256": "31e481d1ec8a22103cbb02e9783abeed7a0c8dde1c3f8721e5a27909b73dfca1",
+      "git_blob": "f0e4ef4c015052550fec095bcdfe160fa65828da"
     },
     {
       "path": "docs/brain/checkpoints/M1-02/RETAINED-EXPERIENCE-04/receipts/final-all-retained.json",

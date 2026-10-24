@@ -1,0 +1,13 @@
+
+> @layerwell/mobile@0.1.0 test
+> vitest run src/features/today/todayRoute.test.ts src/features/today/todayPersistence.t1.test.ts
+
+
+ RUN  v4.1.11 C:/Users/jasim/Desktop/WeddingCards/work/m102-retained-resilience/apps/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  80 passed (80)
+   Start at  23:44:44
+   Duration  19.66s (transform 271ms, setup 0ms, import 454ms, tests 19.11s, environment 0ms)
+
