@@ -192,10 +192,10 @@ function ProductCard({ item }: { item: ShelfItem }) {
           router.push(`/shelf/${item.id}`);
         }}
         style={({ pressed }) => [pressed ? { opacity: 0.85 } : null]}
-        className="flex-row items-center gap-3.5"
+        className="flex-row flex-wrap items-center gap-3.5"
       >
         <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
-        <View className="flex-1">
+        <View className="min-w-[100px] flex-1">
           <Text variant="body" className="font-sans-semibold">
             {item.name}
           </Text>
@@ -441,7 +441,13 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
           Shelf
         </Text>
       </View>
-      <View className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}>
+      <View
+        className={
+          compactFilterLabels
+            ? 'mt-3.5 flex-row flex-wrap gap-2'
+            : 'mt-3.5 flex-row flex-wrap gap-2.5'
+        }
+      >
         {(['All', 'Actives', 'Expiring'] as const).map((l, i) => (
           <SegmentChip
             key={l}
@@ -653,7 +659,11 @@ function ShelfScreenContent() {
           </View>
 
           <View
-            className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}
+            className={
+              compactFilterLabels
+                ? 'mt-3.5 flex-row flex-wrap gap-2'
+                : 'mt-3.5 flex-row flex-wrap gap-2.5'
+            }
           >
             {(['all', 'actives', 'expiring'] as Filter[]).map((f) => (
               <SegmentChip
