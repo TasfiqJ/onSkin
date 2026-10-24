@@ -3,11 +3,12 @@ Authorization BRAIN-RELEASE-FULLAPP-J01-REBASE08-CANDIDATE-01.
 Branch stage/full-app-j01-release-contract08; stacked draft base stage/m1-retained-resilience. Never merge/retarget PR11 or main.
 Measured source f0f743e5d8db586a1f9d98e417adb36416ede9fa; tree 54d5645866d25681cae42a2a7a2869e12362edfa.
 Contract onskin-full-app-j01-release08-v1 SHA256 017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996.
-Checkpoint docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT; manifest SHA256 cf4aee691cde924022092e91fcc8b1d9e8ffc969502fa6248daa4b66fb5a0ebc.
-Verify: python -B docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT/verify_checkpoint.py --expected-manifest-sha256 cf4aee691cde924022092e91fcc8b1d9e8ffc969502fa6248daa4b66fb5a0ebc
+Checkpoint docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT; manifest SHA256 c1e2271e7e645f0f03aa0ee067e8904959f4990138d0584c21191af2a60adba5.
+Verify: python -B docs/brain/checkpoints/RELEASE-08/FULL-APP-J01-CONTRACT/verify_checkpoint.py --expected-manifest-sha256 c1e2271e7e645f0f03aa0ee067e8904959f4990138d0584c21191af2a60adba5
 65 identities/38 required scopes;47 historical tasks/51 ADRs preserved. New validator0;151 negative exits1; restored0. Forced root6190/6190, lint/typecheck0,0cached. Old full launch chain and primary worklist0.
 Broader untouched source contracts111pass/2fail; original Security3.12 suite exit1, raw failures retained. G97 FAIL/NO_GO; canonical DB H01_SQL_PROBE_FAILED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED.
 Legacy consumer cutover NOT_DONE; new validator CI NOT_WIRED; independent complete-checkout0/1/0 NOT_QUALIFIED. See structured completion-report.json for all unfinished scopes, risks and command anomalies.
 J01 NOT_IMPLEMENTED_OR_VALIDATED; authenticated intake missing, G1/G2/G3/G5 pending and G4 closed. F18/J02-J27 deferred; F09 diary/compare required. No paid/provider/clinical/native/Apple/public admission. Spend USD0. Brain alone audits/accepts source and later decides ordinary main promotion.
+Evidence verifier source-versus-delivery absence correction is recorded in verifier-correction.json; original failed run retained.
 Final delivery SHA/tree and actual final-head CI are reported after push, outside this self-referential handoff.
 Codex is done.

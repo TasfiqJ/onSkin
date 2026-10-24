@@ -80,7 +80,9 @@ def main():
         assert path==x['path'] and meta.split()==[x['mode'],x['kind'],x['blob']]
     for x in proof['absences']:
         assert (not git('ls-tree',BASE,'--',x['path']).strip())==x['base_absent']
-        if x['source_absent']:
+        assert (not git('ls-tree',SOURCE,'--',x['path']).strip())==x['source_absent']
+        own_new_directory = any((x['path']+'/').startswith(prefix) for prefix in PREFIXES)
+        if x['source_absent'] and not own_new_directory:
             assert not git('ls-tree','HEAD','--',x['path']).strip()
     commits=git('rev-list','--reverse',BASE+'..HEAD').decode().splitlines()
     for commit in commits:

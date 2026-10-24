@@ -1,0 +1,166 @@
+{
+  "observed_utc": "2026-10-24T20:50:16.660233+00:00",
+  "pinned_heads": [
+    {
+      "branch": "main",
+      "commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "match": true
+    },
+    {
+      "branch": "stage/m1-gate-recovery",
+      "commit": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+      "tree": "4c2617588111aeb976913e5c73a5c7b998bc672e",
+      "match": true
+    },
+    {
+      "branch": "stage/m1-retained-resilience",
+      "commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "tree": "f623b5bbd220fd6d9d10f967400081489a5dd7e0",
+      "match": true
+    }
+  ],
+  "prs": [
+    {
+      "number": 10,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "auto_merge": null,
+      "html_url": "https://github.com/TasfiqJ/onSkin/pull/10",
+      "head": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+      "head_ref": "stage/m1-gate-recovery",
+      "base": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "base_ref": "main"
+    },
+    {
+      "number": 11,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "auto_merge": null,
+      "html_url": "https://github.com/TasfiqJ/onSkin/pull/11",
+      "head": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "head_ref": "stage/m1-retained-resilience",
+      "base": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "base_ref": "main"
+    },
+    {
+      "number": 12,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "auto_merge": null,
+      "html_url": "https://github.com/TasfiqJ/onSkin/pull/12",
+      "head": "457fe6d0b7c1b475ef636590d2b66f6940224d03",
+      "head_ref": "stage/full-app-j01-release-contract08",
+      "base": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "base_ref": "stage/m1-retained-resilience"
+    }
+  ],
+  "head": "457fe6d0b7c1b475ef636590d2b66f6940224d03",
+  "tree": "7764f3a36a55ad27da73f7cc244fbb99d9d1624e",
+  "branch": "stage/full-app-j01-release-contract08",
+  "status": "",
+  "remote_refs": "d9912f4c8b30358593569c5b9b4e84773c6f463e\trefs/heads/main\n457fe6d0b7c1b475ef636590d2b66f6940224d03\trefs/heads/stage/full-app-j01-release-contract08\ncd2bd51997f283c0b446bf2124f427f482550fa8\trefs/heads/stage/m1-gate-recovery\n50f25abeafaa6127e105e2a9d825e6d15dc1dcdb\trefs/heads/stage/m1-retained-resilience",
+  "ci_runs": [
+    {
+      "id": 40131530992,
+      "name": "iOS launch contract",
+      "head_sha": "457fe6d0b7c1b475ef636590d2b66f6940224d03",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530992",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 120984068337,
+          "name": "iOS all-features contract",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530992/job/120984068337"
+        }
+      ]
+    },
+    {
+      "id": 40131530991,
+      "name": "Quality",
+      "head_sha": "457fe6d0b7c1b475ef636590d2b66f6940224d03",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530991",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 120984068583,
+          "name": "Account deletion rehearsals on PostgreSQL 15-alpine",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530991/job/120984068583"
+        },
+        {
+          "id": 120984068710,
+          "name": "Repository quality gates",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530991/job/120984068710"
+        },
+        {
+          "id": 120984068715,
+          "name": "Credential-free Supabase reset and database tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530991/job/120984068715"
+        },
+        {
+          "id": 120984068798,
+          "name": "Account deletion rehearsals on PostgreSQL 17-alpine",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131530991/job/120984068798"
+        }
+      ]
+    },
+    {
+      "id": 40131531016,
+      "name": "Security",
+      "head_sha": "457fe6d0b7c1b475ef636590d2b66f6940224d03",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131531016",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 120984068711,
+          "name": "Secret scanning",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131531016/job/120984068711"
+        },
+        {
+          "id": 120984068870,
+          "name": "Static analysis and OSV",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131531016/job/120984068870"
+        },
+        {
+          "id": 120984068904,
+          "name": "Code security gates",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131531016/job/120984068904"
+        },
+        {
+          "id": 120984069503,
+          "name": "Live Supabase adversarial evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "html_url": "https://github.com/TasfiqJ/onSkin/actions/runs/40131531016/job/120984069503"
+        }
+      ]
+    }
+  ],
+  "spend_usd": 0,
+  "evidence_scope": "HISTORICAL_FIRST_EVIDENCE_TAIL_OBSERVATION_NOT_FINAL_CORRECTED_HEAD"
+}

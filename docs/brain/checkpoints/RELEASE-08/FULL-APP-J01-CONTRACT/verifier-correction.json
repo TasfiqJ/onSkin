@@ -1,0 +1,17 @@
+{
+  "status": "CORRECTED_EVIDENCE_VERIFIER_ONLY",
+  "failure_head": "457fe6d0b7c1b475ef636590d2b66f6940224d03",
+  "failure_tree": "7764f3a36a55ad27da73f7cc244fbb99d9d1624e",
+  "actual_exit": 1,
+  "raw_log": "logs/checkpoint-verifier-first-tail-failure.log",
+  "raw_log_sha256": "ecdb84773dc46e6f9e98848d8f925c3f4ea115e770daa0397c4df151e0660106",
+  "cause": "Verifier conflated source-commit absence of its own new checkpoint directory with a protected absence required at delivery HEAD.",
+  "correction": "Check all recorded absences at their immutable source commit; enforce continued HEAD absence for protected paths, while allowing explicitly authorized new checkpoint directories.",
+  "protected_absences_preserved": [
+    "apps/professional-web",
+    "apps/client-web",
+    "apps/mobile/src/features/j01"
+  ],
+  "source_changes_after_measurement": false,
+  "no_admission": true
+}

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\docs\brain\checkpoints\RELEASE-08\FULL-APP-J01-CONTRACT\verify_checkpoint.py", line 118, in <module>
+    main()
+  File "C:\Users\jasim\Desktop\WeddingCards\work\m102-retained-resilience\docs\brain\checkpoints\RELEASE-08\FULL-APP-J01-CONTRACT\verify_checkpoint.py", line 84, in main
+    assert not git('ls-tree','HEAD','--',x['path']).strip()
+AssertionError
