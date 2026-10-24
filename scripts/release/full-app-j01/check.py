@@ -118,6 +118,7 @@ def allowed_path(path):
 
 
 RELEASE08 = 'd08347f0011672cd309d835628c094b5e9f4725d'
+RELEASE09 = '8ac97c32901272d97d1bff05f2abc294811055a6'
 RELEASE09_AUTHORITY = 'BRAIN-RELEASE09-SOURCE-PACKET-CI-CANDIDATE-01'
 RELEASE09_EXISTING = {
     'scripts/docs/source-packet-audit.mjs',
@@ -170,19 +171,14 @@ def validate09_diff(raw, read_after, historical_commit=None):
 def source09_guard():
     require(git('rev-parse', RELEASE08+'^{tree}').decode().strip() ==
             '0998881bc543840395dca375769ea1b7c9a8d4c7', 'R09_BASE_TREE')
-    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE08, 'HEAD'],
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE08, RELEASE09],
                    cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # Authenticate every intermediate committed state against the immutable R08
-    # endpoint, then the index/working tree and every untracked path separately.
-    for commit in git('rev-list', '--reverse', RELEASE08+'..HEAD').decode().splitlines():
+    # endpoint. Release10 separately checks the index, worktree and untracked paths
+    # from the immutable Release09 endpoint; the original segment stays bounded.
+    for commit in git('rev-list', '--reverse', RELEASE08+'..'+RELEASE09).decode().splitlines():
         raw = git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE08, commit)
         validate09_diff(raw, lambda path: git('show', commit+':'+path), historical_commit=commit)
-    validate09_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE08),
-                    lambda path: regular(ROOT/path))
-    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
-        if path:
-            require(allowed09(path) and path not in RELEASE09_EXISTING, 'R09_UNTRACKED_SCOPE:'+path)
-            regular(ROOT/path)
     for path in SAFE_DOCS:
         require(regular(ROOT/path) == git('show', RELEASE08+':'+path), 'R09_NOTICE_IMMUTABLE:'+path)
     # Invoke the real source producer in read-only/current mode. This also binds
@@ -190,6 +186,92 @@ def source09_guard():
     result = subprocess.run(['node', 'scripts/docs/source-packet-audit.mjs', '--strict', '--check'],
                             cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
     require(result.returncode == 0, 'R09_SOURCE_PACKET:'+result.stdout+result.stderr)
+
+
+RELEASE10_AUTHORITY = 'BRAIN-RELEASE10-QUALITY-PROJECTIONS-CONSUMERS-CANDIDATE-01'
+RELEASE10_EXISTING = {
+    'docs/phase-4/generated/source-worklist.json',
+    'docs/phase-4/generated/source-worklist.md',
+    'docs/generated/readiness-status-audit.json',
+    'docs/generated/readiness-status-audit.md',
+    'scripts/release/full-app-j01/check.py', 'ONSKIN_BRAIN_HANDOFF.txt',
+}
+# The conditional readiness-script grant is NOT activated: no deterministic bug
+# was demonstrated. Missing governed provenance must remain a refusal.
+RELEASE10_NEW = {
+    'docs/release/full-app-j01/quality-projections10.md',
+    'docs/release/full-app-j01/legacy-consumer-cutover10.unapplied.json',
+    'scripts/release/full-app-j01/quality_projection10.test.py',
+    'scripts/release/full-app-j01/source_consumer10.test.py',
+}
+RELEASE10_PREFIXES = ('docs/brain/contracts/RELEASE-10/',
+    'docs/brain/task-specs/RELEASE-10/',
+    'docs/brain/checkpoints/RELEASE-10/QUALITY-PROJECTIONS/')
+
+
+def allowed10(path):
+    return (isinstance(path, str) and
+            re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+            all(part and part.casefold() not in ('.', '..', '.git') and not part.endswith('.') and
+                re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', part, re.I) is None
+                for part in path.split('/')) and
+            (path in RELEASE10_EXISTING or path in RELEASE10_NEW or
+             path.startswith(RELEASE10_PREFIXES)))
+
+
+def validate10_diff(raw, read_after):
+    """Only actual regular-file additions/edits in the finite successor grant."""
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R10_DIFF_SHAPE')
+    seen = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split()
+        path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R10_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed10(path) and status in ('A', 'M'), 'R10_SCOPE:'+path)
+        require(path.casefold() not in seen, 'R10_COLLISION:'+path)
+        seen.add(path.casefold())
+        require(newmode == '100644' and oldmode in (':000000', ':100644'), 'R10_MODE:'+path)
+        require((path in RELEASE10_EXISTING) == (oldmode == ':100644'), 'R10_CREATE_EDIT:'+path)
+        require(status == ('A' if oldmode == ':000000' else 'M') and
+                re.fullmatch('[0-9a-f]{40}', oldblob) is not None and
+                re.fullmatch('[0-9a-f]{40}', newblob) is not None, 'R10_DIFF_IDENTITY:'+path)
+        read_after(path)  # Every changed working path is checked for links/reparse components.
+
+
+def source10_history():
+    require(git('rev-parse', RELEASE09+'^{tree}').decode().strip() ==
+            'a59fc7ea1cc57901f6d848ff5009734f446bdff2', 'R10_BASE_TREE')
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE09, 'HEAD'],
+                   cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE09+'..HEAD').decode().splitlines():
+        parents = git('rev-list', '--parents', '-n', '1', commit).decode().split()
+        require(len(parents) == 2, 'R10_LINEAR_HISTORY:'+commit)
+        validate10_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE09, commit),
+                        lambda path: git('show', commit+':'+path))
+
+
+def source10_guard():
+    source10_history()
+    # Check staged and working states independently: restoring a malicious staged
+    # edit in the worktree must never hide its index delta.
+    validate10_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE09),
+                    lambda path: git('show', ':'+path))
+    validate10_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE09),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R10_INDEX_FLAGS:'+entry)
+            require(entry[2:].casefold() not in names, 'R10_COLLISION:'+entry[2:])
+            names.add(entry[2:].casefold())
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed10(path) and path not in RELEASE10_EXISTING, 'R10_UNTRACKED_SCOPE:'+path)
+            require(path.casefold() not in names, 'R10_COLLISION:'+path)
+            names.add(path.casefold())
+            regular(ROOT/path)
 
 
 def source_guard():
@@ -209,10 +291,11 @@ def source_guard():
             require(allowed_path(path) and not status.startswith(('D', 'R', 'C')),
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
+    source10_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)
