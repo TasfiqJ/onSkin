@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { createElement, useEffect, type ReactElement } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { onlineManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, it, vi } from 'vitest';
 
 import type { HealthDataWriteLease, HealthDataWriteOperationLease } from '@/lib/consent/healthDataWriteAdmission';
@@ -142,6 +142,7 @@ const rampQuery = () => {
   assert.ok(query); return query;
 };
 beforeEach(() => {
+  onlineManager.setOnline(true);
   mocks.active = { ownerUserId: 'owner-a', generation: 1, epoch: 1, accountGeneration: 0, expiresAt: null };
   mocks.cadenceReady = true; mocks.recoveryReady = true; mocks.entryGate = undefined; mocks.events = [];
   for (const mock of [mocks.shelfRead, mocks.profileRead, mocks.orderRead, mocks.getStoredRamps,
@@ -303,4 +304,20 @@ describe('useRamp publication and persistence admission with the real plan sourc
     assert.equal(latest.ramp.items[0]?.name, 'Successor steady');
     assert.equal(latest.ramp.sourceReady, true);
   });
+});
+
+
+it('retained04 refreshes admitted local ramp state offline without pausing Today', async () => {
+  await mount();
+  assert.equal(latest.ramp.sourceReady, true);
+  const before = mocks.getStoredRamps.mock.calls.length;
+  onlineManager.setOnline(false);
+  try {
+    await act(async () => { await client.invalidateQueries({ queryKey: ['ramp'] }); });
+    await flush();
+    assert.equal(mocks.getStoredRamps.mock.calls.length, before + 1);
+    assert.equal(latest.ramp.sourceReady, true);
+    assert.equal(latest.ramp.isSourceCurrent(), true);
+    assert.equal(mocks.stepUpRamp.mock.calls.length, 0);
+  } finally { onlineManager.setOnline(true); }
 });

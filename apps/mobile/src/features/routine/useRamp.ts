@@ -54,6 +54,8 @@ export function useRamp(): {
   const q = useQuery<RampItem[]>({
     // The record format is unchanged; a successor lease must not reuse old ramp query data.
     queryKey,
+    // Admitted ramp records and any initial seed are device-local operations.
+    networkMode: 'always',
     enabled: cadenceReady && planCurrent,
     queryFn: () =>
       runCurrentHealthDataOperation(async (lease) => {
