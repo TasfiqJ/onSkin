@@ -89,6 +89,10 @@ export function useUpdateNotifPrefs() {
         } catch (error) {
           lease.assertCurrent();
           if (error instanceof NotificationPreferenceSaveError) {
+            // A data-less initial read can still publish its pre-save snapshot.
+            // Retire it before exposing the durable intent that needs retry.
+            await qc.cancelQueries({ queryKey: KEY });
+            lease.assertCurrent();
             qc.setQueryData<NotifPrefs>(KEY, error.prefs);
           }
           throw error;
