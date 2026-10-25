@@ -33,8 +33,13 @@
     },
     "packageLock": {
       "path": "package-lock.json",
-      "bytes": 572797,
-      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568"
+      "bytes": 572798,
+      "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb"
+    },
+    "lockSuccession13": {
+      "path": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+      "bytes": 35108,
+      "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409"
     }
   },
   "summary": {
