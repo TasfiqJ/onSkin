@@ -1,5 +1,6 @@
 """Release08 governance validation only; exit0 never grants release or feature admission."""
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -8,6 +9,7 @@ import re
 import stat
 import subprocess
 import sys
+import unicodedata
 
 BASE = '50f25abeafaa6127e105e2a9d825e6d15dc1dcdb'
 ROOT = Path(__file__).resolve().parents[3]
@@ -307,6 +309,174 @@ def source10_guard():
             regular(ROOT/path)
 
 
+RELEASE11_BASE = '14805e7f708297e72419035f517acc41ba52da70'
+RELEASE11_TREE = '90c9427743b99fb43747d68cd55e413d2aee3ad4'
+RELEASE11_AUTHORITY = 'BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01'
+# Bound only after GitHub creates the actual new draft; None rejects integration refs.
+RELEASE11_PR = None
+RELEASE11_EXISTING = {
+    'scripts/core05/adherence-source-contract.test.mjs',
+    'scripts/core06/recommendation-admission-source-contract.test.mjs',
+    'package.json', 'package-lock.json', 'apps/mobile/package.json',
+    'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json',
+    'docs/phase-4/generated/source-worklist.md', 'ONSKIN_BRAIN_HANDOFF.txt',
+}
+RELEASE11_NEW = {
+    'scripts/release/full-app-j01/source_consumer11.test.py',
+    'scripts/release/full-app-j01/dependency_guard11.test.py',
+    'docs/release/full-app-j01/security-recovery11.md',
+    'docs/release/full-app-j01/security-custody11.unapplied.json',
+}
+RELEASE11_PREFIXES = ('docs/brain/contracts/SECURITY-11/',
+    'docs/brain/task-specs/SECURITY-11/',
+    'docs/brain/checkpoints/M1-03/SECURITY-SOURCE-11/')
+
+
+def allowed11(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+            all(p and p.casefold() not in ('.', '..', '.git', '.gitattributes', '.gitignore') and
+                not p.endswith('.') and
+                re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+                for p in path.split('/')) and
+            (path in RELEASE11_EXISTING or path in RELEASE11_NEW or
+             path.startswith(RELEASE11_PREFIXES)))
+
+
+def dependency11_guard(raw):
+    """Only the eight authenticated 4.1.12 Vitest records; no other graph mutation."""
+    before = json.loads(git('show', RELEASE11_BASE+':package-lock.json'), object_pairs_hook=pairs)
+    after = json.loads(raw, object_pairs_hook=pairs)
+    if after == before:
+        return  # Earlier source-only commits remain admissible.
+    contract = load(ROOT/'docs/brain/contracts/SECURITY-11/dependency-patch.v1.json')
+    approved = contract['nodes']
+    require(sha(json.dumps(approved, sort_keys=True, separators=(',', ':')).encode()) ==
+            '5a25d459ae94186cc123e37bee90ff7c1d6145af5723487d31f386fda30210de',
+            'R11_APPROVED_DEPENDENCY_IDENTITY')
+    expected = json.loads(json.dumps(before))
+    expected['packages'].update(approved)
+    require(after == expected, 'R11_DEPENDENCY_CLOSURE')
+
+
+def validate11_checker(raw):
+    before = ast.parse(git('show', RELEASE11_BASE+':scripts/release/full-app-j01/check.py'))
+    after = ast.parse(raw)
+    functions = lambda module: {n.name: ast.dump(n, include_attributes=False)
+        for n in module.body if isinstance(n, ast.FunctionDef)}
+    old, new = functions(before), functions(after)
+    require(all(new.get(k) == v for k, v in old.items() if k != 'source_guard'),
+            'R11_INHERITED_FUNCTION_CHANGED')
+    assignments = lambda module: {ast.dump(n.targets[0]): ast.dump(n.value, include_attributes=False)
+        for n in module.body if isinstance(n, ast.Assign) and len(n.targets) == 1}
+    old_globals, new_globals = assignments(before), assignments(after)
+    require(all(new_globals.get(k) == v for k, v in old_globals.items()),
+            'R11_INHERITED_GLOBAL_CHANGED')
+
+
+def validate11_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R11_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split()
+        path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R11_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed11(path) and status in ('A', 'M'), 'R11_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R11_COLLISION:'+path)
+        names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R11_MODE:'+path)
+        require((path in RELEASE11_EXISTING) == (oldmode == ':100644'), 'R11_CREATE_EDIT:'+path)
+        require(status == ('A' if oldmode == ':000000' else 'M') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)),
+                'R11_DIFF_IDENTITY:'+path)
+        data = read_after(path)
+        if path in ('package.json', 'apps/mobile/package.json'):
+            require(data == git('show', RELEASE11_BASE+':'+path), 'R11_DECLARATION_NOT_ACTIVATED')
+        if path == 'package-lock.json':
+            dependency11_guard(data)
+        if path == 'scripts/release/full-app-j01/check.py':
+            validate11_checker(data)
+
+
+def source11_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2:
+        return head
+    require(len(parents) == 3 and type(RELEASE11_PR) is int, 'R11_LINEAR_HISTORY:'+head)
+    require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE11_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R11_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R11_CI_EVENT')
+    event = load(event_path)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE11_PR and pr.get('number') == RELEASE11_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE11_BASE and parents[1] == RELEASE11_BASE and
+            pr.get('base', {}).get('ref') == 'stage/full-app-j01-quality-projections10' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m103-security-source-recovery11' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin',
+            'R11_CI_EVENT_IDENTITY')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'),
+            'R11_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source11_history():
+    require(git('rev-parse', RELEASE11_BASE+'^{tree}').decode().strip() == RELEASE11_TREE,
+            'R11_BASE_TREE')
+    endpoint = source11_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE11_BASE, endpoint],
+                   cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE11_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2,
+                'R11_LINEAR_HISTORY:'+commit)
+        validate11_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE11_BASE, commit),
+                        lambda path: git('show', commit+':'+path))
+
+
+def source11_guard():
+    source11_history()
+    validate11_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE11_BASE),
+                    lambda path: git('show', ':'+path))
+    validate11_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE11_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R11_INDEX_FLAGS:'+entry)
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R11_COLLISION:'+entry[2:])
+            names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed11(path) and path not in RELEASE11_EXISTING, 'R11_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R11_COLLISION:'+path)
+            names.add(key)
+            regular(ROOT/path)
+
+
+def source10_historical_segment():
+    """Execute unchanged Release10 history on its exact endpoint, never on new source."""
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'):
+            return actual_git('rev-parse', RELEASE11_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source10_history()
+    finally:
+        globals()['git'] = actual_git
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -324,11 +494,12 @@ def source_guard():
             require(allowed_path(path) and not status.startswith(('D', 'R', 'C')),
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
-    source10_guard()
+    source10_historical_segment()
+    source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)
