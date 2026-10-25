@@ -1,0 +1,133 @@
+{
+  "authorization": "BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01",
+  "status": "PARTIAL_BLOCKED",
+  "source_status": "SUBMITTED_REVIEW_REQUIRED",
+  "source": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+  "source_tree": "d3b9e8c6626d8b04632ec586ee408b160d8f0393",
+  "base": "14805e7f708297e72419035f517acc41ba52da70",
+  "draft_pr": "https://github.com/TasfiqJ/onSkin/pull/15",
+  "branch": "stage/m103-security-source-recovery11",
+  "base_branch": "stage/full-app-j01-quality-projections10",
+  "baseline_inherited": {
+    "passed": 111,
+    "failed": 2
+  },
+  "repaired_inherited": {
+    "passed": 125,
+    "failed": 0
+  },
+  "root_tests": {
+    "passed": 6190,
+    "failed": 0,
+    "mobile_files": 480,
+    "mobile_tests": 6166,
+    "cached_tasks": 0,
+    "max_workers": 2
+  },
+  "typecheck": "PASS_ZERO_CACHE",
+  "lint": "PASS_ZERO_CACHE",
+  "launch_contract": "PASS",
+  "original_semantic_negatives": {
+    "count": 151,
+    "result": "PASS_COMPLETE_EXACT_SOURCE_LINUX_CI",
+    "run": 40153300403,
+    "job": 121049185345
+  },
+  "old_source_controls": {
+    "release09": 23,
+    "release10": 44
+  },
+  "new_source_controls": 58,
+  "dependency_guard_negatives": 9,
+  "phase4": {
+    "current": 0,
+    "tampered": 1,
+    "restored": 0,
+    "statuses": "UNCHANGED_7_BLOCKED_7_LOCAL_SCAFFOLD",
+    "items": 14,
+    "source_occurrences": 420
+  },
+  "independent_complete_checkout": {
+    "qualification": "INDEPENDENT_COMPLETE_CHECKOUT_SOURCE_GOVERNANCE_0_1_0",
+    "scope": "Complete real tracked checkout and separate Git objects, original live governance checker only. No app/device/Security/database/release admission.",
+    "tracked_files": 23241,
+    "shallow": false,
+    "shared_object_store": false,
+    "clean_after": true,
+    "results": [
+      {
+        "case": "current",
+        "argv": [
+          "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+          "-B",
+          "scripts/release/full-app-j01/check.py"
+        ],
+        "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\c11-independent-5ca49b38",
+        "exit": 0,
+        "expected_exit": 0,
+        "source": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+        "stdout_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "tampered",
+        "argv": [
+          "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+          "-B",
+          "scripts/release/full-app-j01/check.py"
+        ],
+        "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\c11-independent-5ca49b38",
+        "exit": 1,
+        "expected_exit": 1,
+        "source": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+        "stdout_sha256": "c780d2ae658da3125fdd6e63a8a27854fb504d7bb6fd1280ec077ad4ce697fc6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "restored",
+        "argv": [
+          "C:/Users/jasim/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+          "-B",
+          "scripts/release/full-app-j01/check.py"
+        ],
+        "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\c11-independent-5ca49b38",
+        "exit": 0,
+        "expected_exit": 0,
+        "source": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+        "stdout_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "release": "NO_GO"
+  },
+  "protected_final_files": 23229,
+  "source_files": 23241,
+  "source_commits": 6,
+  "dependency_fix": "UNAPPLIED_RETAINED_SOURCE_WITNESS_BLOCKED_FINAL_PACKAGE_BYTES_IDENTICAL_TO_PR14",
+  "source_head_ci": {
+    "head": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+    "quality_repository_job": "PASS",
+    "quality_canonical_db": "RUNNING_AT_CAPTURE_NOT_BORROWED",
+    "ios": "PASS_SOURCE_ONLY",
+    "security": "FAIL",
+    "original_security_contract_tests": 70,
+    "security_contract_failures": 23,
+    "security_contract_errors": 2,
+    "live_supabase": "SKIPPED",
+    "final_delivery_ci": "OBSERVED_AFTER_EVIDENCE_PUSH_IN_RETURN_REPORT"
+  },
+  "readonly_paths": "All app/runtime/SQL/RLS/migrations/.github/phase9 policies and tools/Brain state/older checkpoints frozen",
+  "owner_actions": "docs/release/full-app-j01/security-custody11.unapplied.json",
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "M1-03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED",
+    "readiness": "BLOCKED_OUTSIDE_SCOPE",
+    "legacy_consumers": "NOT_DONE",
+    "J01": "AUTHENTICATED_INTAKE_MISSING",
+    "public_release": "NO_GO"
+  },
+  "spend_usd": 0,
+  "acceptance_granted": false,
+  "delivery_identity": "Computed from actual evidence-head Git by verify_checkpoint.py and final post-push report; never self-referential"
+}

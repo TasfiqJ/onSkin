@@ -1,0 +1,9 @@
+# Detailed acceptance and delivery contract
+
+Revalidate live PR and source/tree refs, full checkout clean and one writer. Track every changed file's mode, git blob, SHA256 and source preimage. Commit implementation in meaningful separate segments, then a compact evidence-only tail. Push only the new branch; new DRAFT stacked PR targets PR14 branch, auto-merge OFF. Root handoff factual. Report if PR creation blocked, never retarget/merge older PRs.
+
+Run original failing CORE05/06 tests red, new repaired tests green only when correct; add negative tests for the semantic permission and recommendation admission closures. Confirm actual scanner source evidence, dependency graph, security advisories (patched upstream identity/date), no extra packages changed. If conditional package fixes are unsafe, produce a prioritized unapplied exact-path blocker and leave package bytes unchanged.
+
+Run full root test/typecheck/lint (forced with zero cache where safe), original launch contract, Phase4 strict worklist, source-packet audit, Release08/09/10 semantics (151 negative fixtures and 23+44 scope regressions), new source11 controls; run original Security scan and CI at exact final head and label FAIL/SKIPPED properly. No shortening original Security worklist to obtain a PASS, no expiry/hash-review extension, no override that converts unknown to accepted.
+
+Original legacy release/runtime consumer migration remains NOT_DONE; readiness CAT07 S/E/ledger evidence remains separately blocked; M1-03 and G97 remain subject to original external custodian independent review regardless of source tests. Preserve prior failure logs. Full clean independent checkout 0/1/0 NOT_QUALIFIED unless genuinely completed with adequate disk space. Deliver independent verifier bound to an externally pasted manifest hash, raw failures/positive logs and exact protected witnesses. Founder need only relay final full report `Codex is done.`

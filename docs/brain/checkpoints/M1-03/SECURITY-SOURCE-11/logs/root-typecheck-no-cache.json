@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "C:/Program Files/nodejs/npm.cmd",
+    "run",
+    "typecheck",
+    "--",
+    "--cache=local:,remote:"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+  "start_utc": "2026-10-25T02:00:31.460435+00:00",
+  "duration_seconds": 52.453,
+  "exit": 0,
+  "source": [
+    "5d1928148c619cf3e8b537c3a438f1bdb8b46965",
+    "a44600350bb3fa5db20aa13646ea1f52274e86cb"
+  ],
+  "worktree_before_or_after": "source identities are commit identities; uncommitted changes reported separately",
+  "status_after": "M scripts/release/full-app-j01/check.py\n?? scripts/release/full-app-j01/source_consumer11.test.py",
+  "stdout_sha256": "8e4b2755bdd3fe0294b3f7c7f8f78104663545fd66aed1d7c443b5acb803296e",
+  "stderr_sha256": "49f3ce89a65e7db651c08e8f14fbfb4139f8da1f06a1b7ba9adc57c0bad11a5b"
+}

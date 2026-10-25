@@ -1,0 +1,60 @@
+{
+  "files": [
+    {
+      "bytes": 709,
+      "mode": "0644",
+      "path": "00_READ_FIRST.md",
+      "sha256": "7b62a3c3d81fdad24cd966b04c999cd669221a7aa216b05aacdd8a165a4648c2"
+    },
+    {
+      "bytes": 1767,
+      "mode": "0644",
+      "path": "01_PINNED_LIVE_REFS_AND_VERDICT.md",
+      "sha256": "420ec1d11cd1300611c8acf27bef9598f5bdd677c21459fa33a67f17fe31cce9"
+    },
+    {
+      "bytes": 2059,
+      "mode": "0644",
+      "path": "02_FINAL_HEAD_CI_AND_SECURITY.md",
+      "sha256": "dc168a5ad627def4062155ab0ad34086770bc17b324d433bf3d9321376ffbc1f"
+    },
+    {
+      "bytes": 1855,
+      "mode": "0644",
+      "path": "03_SOURCE_CONTRACT_NEGATIVES.md",
+      "sha256": "bc393a33f06e3fcee3c548780a38789407abb0467cae57715675f1b7085d422a"
+    },
+    {
+      "bytes": 2513,
+      "mode": "0644",
+      "path": "04_AUTHORIZED_FINITE_PATHS_AND_GATES.md",
+      "sha256": "5e9016b7f33ae0fef870ebba69b1c6d8b4af2d68451a74c27b138549b413cb00"
+    },
+    {
+      "bytes": 1877,
+      "mode": "0644",
+      "path": "05_SCOPE_FULL_APP_J01_AND_READINESS.md",
+      "sha256": "4c0bace696b4b28c11c79d9d3594d2504bc5bc9ef1c64c65a90a6431734a60c7"
+    },
+    {
+      "bytes": 1928,
+      "mode": "0644",
+      "path": "06_ACCEPTANCE_TESTS_AND_DELIVERY.md",
+      "sha256": "17a721c47a7e9a44411f1dc9ad38899f76430e73e29142e6de2356baac0979ff"
+    },
+    {
+      "bytes": 11906,
+      "mode": "0644",
+      "path": "PROMPT_TEMPLATE.md",
+      "sha256": "a56beead1ece1dd81f953916ae6a8564cd09dcac7e241b8c1ba6e729eb8e923c"
+    },
+    {
+      "bytes": 1970,
+      "mode": "0644",
+      "path": "verify_packet.py",
+      "sha256": "1ddc6e364f4e4a59c130808acc01cd03594a3b2acc5897c24d368af3664fb5b7"
+    }
+  ],
+  "format": 1,
+  "purpose": "Campaign11 handoff only"
+}

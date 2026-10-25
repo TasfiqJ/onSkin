@@ -1,0 +1,9 @@
+# Two inherited non-Quality source-contract failures are still real tests
+
+The original broader source contract suite remains 111 pass / 2 fail at Release10. Neither is a Quality green job failure; both should be independently diagnosed and repaired with semantically stronger tests only if correct.
+
+CORE05: `scripts/core05/adherence-source-contract.test.mjs` blob `5d24ced2617cead8ff25ff340e8cbef5b4c105c3`. Test around line624 requires literal regex `/const state = await getPermissionStatus\(\)/`, while current actual `apps/mobile/src/features/notifications/useNotifications.ts` permission query returns `getPermissionStatus()` from a TanStack `useQuery` and masks data during fetch/error; verify exact current path/source before deciding this is only assertion drift. Keep permission foreground invalidation and owner/current-health lease constraints, no fake grant or OS delivery. Add negative source mutation proving removal of real query/currentness is rejected, not merely delete an assertion.
+
+CORE06: `scripts/core06/recommendation-admission-source-contract.test.mjs` blob `10e14976cce60101aee619885e59bed9d8c11c37` around line 652 expects the historic `'20260926000078'::text` literal, while current checked-in SQL was seen checking `'20261010000081'::text`. Check authentic migration head, history and exact closure of recommendation admission at 0071; do not make migration number a fabricated review. Prefer semantic contract across ordered verified migrations and exact source evidence, with mutation controls that refuse a reopened admission. SQL, RLS, Supabase migrations and runtime recommendation code are read-only.
+
+Other source tests, E2E and all original 151 Release08 semantic negatives stay unchanged. If a repair requires runtime/SQL protected paths outside this grant, record a precise unapplied blocker; do not weaken tests.

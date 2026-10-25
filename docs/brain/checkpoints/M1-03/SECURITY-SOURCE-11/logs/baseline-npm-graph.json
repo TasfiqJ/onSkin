@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "C:/Program Files/nodejs/npm.cmd",
+    "ls",
+    "vitest",
+    "@vitest/mocker",
+    "zod",
+    "braces",
+    "node-forge",
+    "--all",
+    "--json"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+  "start_utc": "2026-10-25T01:51:53.724990+00:00",
+  "duration_seconds": 3.734,
+  "exit": 0,
+  "source": [
+    "14805e7f708297e72419035f517acc41ba52da70",
+    "90c9427743b99fb43747d68cd55e413d2aee3ad4"
+  ],
+  "worktree_before_or_after": "source identities are commit identities; uncommitted changes reported separately",
+  "status_after": "",
+  "stdout_sha256": "4c73c2544f52e97c91bababe71a1a47eca4f4dc5d320abf164699fba0f617843",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

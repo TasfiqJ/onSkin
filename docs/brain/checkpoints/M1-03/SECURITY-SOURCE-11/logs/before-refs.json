@@ -1,0 +1,63 @@
+{
+  "phase": "BEFORE_SOURCE_WRITES",
+  "source": "connected GitHub get_pr_info and separate git ls-remote",
+  "prs": [
+    {
+      "number": 10,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/10",
+      "head": "stage/m1-gate-recovery",
+      "head_sha": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+      "base": "main",
+      "base_sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "draft": true,
+      "state": "open",
+      "merged": false
+    },
+    {
+      "number": 11,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/11",
+      "head": "stage/m1-retained-resilience",
+      "head_sha": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "base": "main",
+      "base_sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "draft": true,
+      "state": "open",
+      "merged": false
+    },
+    {
+      "number": 12,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/12",
+      "head": "stage/full-app-j01-release-contract08",
+      "head_sha": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "base": "stage/m1-retained-resilience",
+      "base_sha": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "draft": true,
+      "state": "open",
+      "merged": false
+    },
+    {
+      "number": 13,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/13",
+      "head": "stage/full-app-j01-source-packet-ci09",
+      "head_sha": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "base": "stage/full-app-j01-release-contract08",
+      "base_sha": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "draft": true,
+      "state": "open",
+      "merged": false
+    },
+    {
+      "number": 14,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/14",
+      "head": "stage/full-app-j01-quality-projections10",
+      "head_sha": "14805e7f708297e72419035f517acc41ba52da70",
+      "base": "stage/full-app-j01-source-packet-ci09",
+      "base_sha": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "draft": true,
+      "state": "open",
+      "merged": false
+    }
+  ],
+  "disk_free_bytes": 274264248320,
+  "scope": "Full Campaign11 scope explicitly adopted by user after initial intake stop"
+}

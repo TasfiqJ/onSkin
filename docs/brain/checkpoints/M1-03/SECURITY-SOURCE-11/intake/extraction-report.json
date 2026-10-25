@@ -1,0 +1,63 @@
+{
+  "archive": "C:\\Users\\jasim\\Downloads\\onSkin_Codex_M103_Security_Source_Recovery11_CONTEXT_2026-10-24.zip",
+  "archive_sha256": "d4277948ca6c8fde95e819acbef6aff589f0ee23b4be6cffa81ef4b90f43a10f",
+  "root": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\context",
+  "entries": [
+    {
+      "path": "00_READ_FIRST.md",
+      "bytes": 709,
+      "sha256": "7b62a3c3d81fdad24cd966b04c999cd669221a7aa216b05aacdd8a165a4648c2"
+    },
+    {
+      "path": "01_PINNED_LIVE_REFS_AND_VERDICT.md",
+      "bytes": 1767,
+      "sha256": "420ec1d11cd1300611c8acf27bef9598f5bdd677c21459fa33a67f17fe31cce9"
+    },
+    {
+      "path": "02_FINAL_HEAD_CI_AND_SECURITY.md",
+      "bytes": 2059,
+      "sha256": "dc168a5ad627def4062155ab0ad34086770bc17b324d433bf3d9321376ffbc1f"
+    },
+    {
+      "path": "03_SOURCE_CONTRACT_NEGATIVES.md",
+      "bytes": 1855,
+      "sha256": "bc393a33f06e3fcee3c548780a38789407abb0467cae57715675f1b7085d422a"
+    },
+    {
+      "path": "04_AUTHORIZED_FINITE_PATHS_AND_GATES.md",
+      "bytes": 2513,
+      "sha256": "5e9016b7f33ae0fef870ebba69b1c6d8b4af2d68451a74c27b138549b413cb00"
+    },
+    {
+      "path": "05_SCOPE_FULL_APP_J01_AND_READINESS.md",
+      "bytes": 1877,
+      "sha256": "4c0bace696b4b28c11c79d9d3594d2504bc5bc9ef1c64c65a90a6431734a60c7"
+    },
+    {
+      "path": "06_ACCEPTANCE_TESTS_AND_DELIVERY.md",
+      "bytes": 1928,
+      "sha256": "17a721c47a7e9a44411f1dc9ad38899f76430e73e29142e6de2356baac0979ff"
+    },
+    {
+      "path": "EXACT_PROMPT.md",
+      "bytes": 11942,
+      "sha256": "48238a57e9ce832a282b06d93f48e5ecb1ca68f30ed1dfe23092befc17d2871b"
+    },
+    {
+      "path": "PROMPT_TEMPLATE.md",
+      "bytes": 11906,
+      "sha256": "a56beead1ece1dd81f953916ae6a8564cd09dcac7e241b8c1ba6e729eb8e923c"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 1747,
+      "sha256": "c9c211ec438a67a207a9cec8d95b135207166e7162de7d036489445aa0995ab3"
+    },
+    {
+      "path": "verify_packet.py",
+      "bytes": 1970,
+      "sha256": "1ddc6e364f4e4a59c130808acc01cd03594a3b2acc5897c24d368af3664fb5b7"
+    }
+  ],
+  "validation": "All entries validated before extraction; new directory; exclusive file creation"
+}

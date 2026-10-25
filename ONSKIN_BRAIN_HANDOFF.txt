@@ -1,8 +1,10 @@
-RELEASE10 quality projections — PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED. No self-acceptance.
-Authority BRAIN-RELEASE10-QUALITY-PROJECTIONS-CONSUMERS-CANDIDATE-01.
-DRAFT PR https://github.com/TasfiqJ/onSkin/pull/14; new branch stage/full-app-j01-quality-projections10 targets pinned PR13; auto-merge OFF.
-Measured source c3c868f86313a9f42b10adfef37cdbbeb1c2e289; tree 47e469bb900ff57488043a027490c469703881d0.
-Report and complete source/evidence/raw logs: docs/brain/checkpoints/RELEASE-10/QUALITY-PROJECTIONS/README.md and completion-report.json.
-External checkpoint manifest SHA256 b86dd807e22f009456cb8085c2829047bfe68b2700f7dae0b5382fb5ede256df. Standalone verify_checkpoint.py requires this external digest.
-Phase4 original producer current/tampered/restored 0/1/0; readiness BLOCKED_OUTSIDE_SCOPE, unchanged. Legacy cutover UNAPPLIED. Final delivery-head CI is observed after push and reported separately.
-G97 FAIL/NO_GO; DB H01_SQL_PROBE_FAILED prior custody unaccepted; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 intake missing and all qualified gates intact. Spend USD0; no main merge/public release.
+CAMPAIGN11 Security source recovery — PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED.
+Authority BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01; full scope explicitly adopted by founder.
+DRAFT PR https://github.com/TasfiqJ/onSkin/pull/15; stage/m103-security-source-recovery11 targets pinned PR14 stage/full-app-j01-quality-projections10; auto-merge OFF.
+Measured source90a2b90bc859172683fd4a352ddd4cb13b307e89; tree d3b9e8c6626d8b04632ec586ee408b160d8f0393.
+Checkpoint docs/brain/checkpoints/M1-03/SECURITY-SOURCE-11/README.md; independent verify_checkpoint.py requires the external manifest SHA256 relayed in the final report.
+Original111/2 source failures repaired to125/0 with semantic negatives. Root6190 tests/typecheck/lint pass with zero caches; original151 in exact-source Linux CI, old23/44/new58 controls and independent complete-checkout source-governance0/1/0 authenticated.
+Compatible eight-node Vitest candidate UNAPPLIED: original retained-source lock witness refused it; final package declarations/lock bytes equal PR14. Exact owner actions in docs/release/full-app-j01/security-custody11.unapplied.json.
+Source Security/readiness remain failed/blocked. PR14 canonical DB passed, but independent protected DB custody NOT_ACCEPTED; older H01 failure remains historical.
+Final evidence-head CI and actual delivery SHA/tree are observed separately after push; earlier results are not borrowed. No self-acceptance, main merge, release, provider/payment/native/clinical/J01 admission.
+G97 FAIL/NO_GO; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; legacy consumers NOT_DONE; J01 intake missing. Spend USD0.

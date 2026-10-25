@@ -1,0 +1,104 @@
+{
+  "status": "PARTIAL_BLOCKED",
+  "requested_authorization_label": "BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01",
+  "completed": [
+    "Validated all ZIP entry paths/types and Unicode NFKC/casefold uniqueness before extraction",
+    "Extracted eleven regular files exclusively into a new task-owned directory",
+    "Ran the exact requested verifier command from the extracted root; exit 0",
+    "Read all numbered packet documents as context",
+    "Read-only connected GitHub observation of PR10 through PR14"
+  ],
+  "verification": {
+    "cwd": "C:/Users/jasim/Documents/ChatGPT/MasterV2Code/source-recovery11-5ca49b38f6ad44539feab22fc4ca507e/context",
+    "command": "python -B verify_packet.py --expected-manifest-sha256 c9c211ec438a67a207a9cec8d95b135207166e7162de7d036489445aa0995ab3",
+    "exit": 0,
+    "stdout": "VERIFIED: 9 manifest entries and exact pasted prompt derivation; handoff integrity only\n",
+    "archive_sha256": "d4277948ca6c8fde95e819acbef6aff589f0ee23b4be6cffa81ef4b90f43a10f",
+    "manifest_sha256": "c9c211ec438a67a207a9cec8d95b135207166e7162de7d036489445aa0995ab3",
+    "limits": "Packet integrity and the packet's internal template derivation only. This does not establish that the user pasted the full EXACT_PROMPT.md or validate source, Security, CI, database custody, or release."
+  },
+  "blockers": [
+    {
+      "code": "HOST_SPACE_BLOCKED",
+      "observed_free_bytes": 196665344,
+      "observed_free_MiB": 187.5546875,
+      "impact": "Unsafe headroom for isolated checkout, npm ci, full tests, scanner outputs, and independent validation. No deletion of existing data is authorized or performed.",
+      "next_action": "Provide a workspace with adequate disk headroom, or free selected user-owned data; then recheck actual capacity before any source write."
+    },
+    {
+      "code": "REQUEST_TRUNCATED",
+      "impact": "The actual user message ends after the step-0 verifier command. Sections 1 through 5 are present only in the attached EXACT_PROMPT.md; they were read as contextual proposed scope, not promoted into user instructions.",
+      "next_action": "Supply the remaining intended user instructions or explicitly adopt the attached campaign scope before implementing beyond the verified intake."
+    }
+  ],
+  "live_pr_observations": [
+    {
+      "number": 10,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/10",
+      "head": "stage/m1-gate-recovery",
+      "head_sha": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+      "base": "main",
+      "base_sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "evidence_source": "connected GitHub get_pr_info"
+    },
+    {
+      "number": 11,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/11",
+      "head": "stage/m1-retained-resilience",
+      "head_sha": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "base": "main",
+      "base_sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "evidence_source": "connected GitHub get_pr_info"
+    },
+    {
+      "number": 12,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/12",
+      "head": "stage/full-app-j01-release-contract08",
+      "head_sha": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "base": "stage/m1-retained-resilience",
+      "base_sha": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "evidence_source": "connected GitHub get_pr_info"
+    },
+    {
+      "number": 13,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/13",
+      "head": "stage/full-app-j01-source-packet-ci09",
+      "head_sha": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "base": "stage/full-app-j01-release-contract08",
+      "base_sha": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "evidence_source": "connected GitHub get_pr_info"
+    },
+    {
+      "number": 14,
+      "url": "https://github.com/TasfiqJ/onSkin/pull/14",
+      "head": "stage/full-app-j01-quality-projections10",
+      "head_sha": "14805e7f708297e72419035f517acc41ba52da70",
+      "base": "stage/full-app-j01-source-packet-ci09",
+      "base_sha": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "evidence_source": "connected GitHub get_pr_info"
+    }
+  ],
+  "not_performed": [
+    "No new branch, checkout, commit, push or pull request",
+    "No source/dependency/security-policy/database/runtime changes",
+    "No baseline source-suite reproduction, repair, npm ci, root test/typecheck/lint, new scanner execution, or current-head CI rerun",
+    "No full tree/ancestry/one-writer qualification or independent clean-checkout 0/1/0"
+  ],
+  "release_and_custody": "No acceptance or promotion decision made. Packet-reported G97 FAIL/NO_GO; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED remain unaltered and were not newly audited.",
+  "spend_usd": 0
+}
