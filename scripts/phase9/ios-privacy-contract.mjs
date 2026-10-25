@@ -23,6 +23,11 @@ const DOMParser = xmldomModule?.DOMParser ?? xmldomModule?.default?.DOMParser;
 export const IOS_PRIVACY_AUDIT_SCHEMA_VERSION = 1;
 export const IOS_PRIVACY_BASELINE_PATH = 'docs/phase-9/apple-ios-privacy-baseline.json';
 export const IOS_PRIVACY_MAPPING_PATH = 'docs/phase-9/ios-sdk-package-mapping.json';
+export const IOS_PRIVACY_LOCK_SUCCESSION13_PATH = 'docs/phase-9/ios-sdk-lock-succession13.v1.json';
+const LOCK_SUCCESSION13_SHA256 =
+  '824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409';
+const ORIGINAL_LOCK13_SHA256 =
+  '99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568';
 export const IOS_PRIVACY_LOCKFILE_PATH = 'package-lock.json';
 export const IOS_PRIVACY_AUDIT_JSON_PATH = 'docs/phase-9/generated/ios-privacy-source-audit.json';
 export const IOS_PRIVACY_AUDIT_MARKDOWN_PATH = 'docs/phase-9/generated/ios-privacy-source-audit.md';
@@ -1516,8 +1521,59 @@ function hashNativeBinarySourceFile(root, path, bounds, packageName, packagePath
   });
 }
 
-function mappingErrors({ mapping, baseline, lock, lockFile, root }) {
+function lockSuccession13({ mapping, mappingFile, lock, lockFile, root }) {
+  const file = readJson(root, IOS_PRIVACY_LOCK_SUCCESSION13_PATH, MAX_MAPPING_BYTES);
+  const successor = file.value;
+  const reject = (message) => fail('LOCK_SUCCESSION13_IDENTITY', message, file.relative);
+  // This is one independently anchored source version, never a mutable hash alias.
+  if (file.sha256 !== LOCK_SUCCESSION13_SHA256) reject('Successor bytes are not exact v1.');
+  if (
+    successor.schemaVersion !== 1 ||
+    successor.base.commit !== 'bbbd59073b7add22ac350bced0d9a34124c12ffb' ||
+    mappingFile.sha256 !== successor.originalMapping.sha256 ||
+    lockFile.sha256 !== successor.candidateLock.sha256 ||
+    successor.originalLock.sha256 !== ORIGINAL_LOCK13_SHA256 ||
+    JSON.stringify(mapping.mappings) !== JSON.stringify(successor.unchangedNativeMappings)
+  ) reject('Original mapping, source version or complete lock identity drifted.');
+  const original = JSON.parse(decodeUtf8(lockFile.bytes, IOS_PRIVACY_LOCKFILE_PATH));
+  if (successor.changedNodes.length !== 8) reject('Exactly eight reviewed nodes are required.');
+  for (const path of successor.changedNodes) {
+    if (JSON.stringify(lock.packages[path]) !== JSON.stringify(successor.candidateNodes[path])) {
+      reject(`Reviewed testing-tool node drifted: ${path}`);
+    }
+    original.packages[path] = successor.originalNodes[path];
+  }
+  if (sha256(Buffer.from(canonicalAuditJson(original))) !== ORIGINAL_LOCK13_SHA256) {
+    reject('All other lock bytes, records and ordering must reproduce the original lock.');
+  }
+  for (const [path, node] of Object.entries(successor.unchangedNativeNodes)) {
+    if (JSON.stringify(lock.packages[path]) !== JSON.stringify(node)) {
+      reject(`Mapped native lock record drifted: ${path}`);
+    }
+  }
+  for (const pin of [successor.dependencyWitness, successor.provenance,
+    ...successor.registry.flatMap((row) => [row.metadata, row.attestations])]) {
+    if (readBoundedFile(root, pin.path, MAX_MAPPING_BYTES).sha256 !== pin.sha256) {
+      reject(`Authenticated dependency provenance drifted: ${pin.path}`);
+    }
+  }
+  // The original mappingErrors loop still checks every installed native source pin,
+  // SDK classification and absent/archive-required claim with its original errors.
+  return file;
+}
+
+function mappingErrors({ mapping, mappingFile, baseline, lock, lockFile, root }) {
   const errors = [];
+  let successor = null;
+  if (lockFile.sha256 === '7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb' ||
+      (lockFile.sha256 !== ORIGINAL_LOCK13_SHA256 &&
+       mappingFile.sha256 === '9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246')) {
+    try {
+      successor = lockSuccession13({ mapping, mappingFile, lock, lockFile, root });
+    } catch (error) {
+      errors.push(issueFromError(error, IOS_PRIVACY_LOCK_SUCCESSION13_PATH));
+    }
+  }
   if (
     mapping.generatedAgainst.baselinePath !== IOS_PRIVACY_BASELINE_PATH ||
     mapping.generatedAgainst.baselineSchemaVersion !== baseline.value.schemaVersion ||
@@ -1556,7 +1612,7 @@ function mappingErrors({ mapping, baseline, lock, lockFile, root }) {
     }
     if (
       entry.lockIntegrity.packageLockPath !== IOS_PRIVACY_LOCKFILE_PATH ||
-      entry.lockIntegrity.packageLockSha256 !== lockFile.sha256
+      (entry.lockIntegrity.packageLockSha256 !== lockFile.sha256 && !successor)
     ) {
       errors.push(
         issue(
@@ -1654,7 +1710,7 @@ function mappingErrors({ mapping, baseline, lock, lockFile, root }) {
       );
     }
   }
-  return errors.sort(issueSort);
+  return { errors: errors.sort(issueSort), successor };
 }
 
 function validateLockfile(file) {
@@ -1809,6 +1865,7 @@ export function auditIosPrivacySource(options = {}) {
   let baseline;
   let mapping;
   let lock;
+  let lockSuccessor;
   try {
     baselineFile = readJson(root, IOS_PRIVACY_BASELINE_PATH, MAX_BASELINE_BYTES);
     baseline = validateBaseline(baselineFile);
@@ -1837,7 +1894,9 @@ export function auditIosPrivacySource(options = {}) {
   const invalidPackages = new Set();
   const totalCounter = { count: 0 };
   if (baseline && mapping && lock && lockFile) {
-    errors.push(...mappingErrors({ mapping, baseline, lock, lockFile, root }));
+    const mapped = mappingErrors({ mapping, mappingFile, baseline, lock, lockFile, root });
+    errors.push(...mapped.errors);
+    lockSuccessor = mapped.successor;
     const mappedNames = new Set(mapping.mappings.map(({ packageName }) => packageName));
     for (const [packagePath, entry] of Object.entries(lock.packages).sort(([a], [b]) =>
       compareText(a, b),
@@ -2139,6 +2198,11 @@ export function auditIosPrivacySource(options = {}) {
       packageLock: lockFile
         ? { path: IOS_PRIVACY_LOCKFILE_PATH, bytes: lockFile.bytes.length, sha256: lockFile.sha256 }
         : { path: IOS_PRIVACY_LOCKFILE_PATH, bytes: null, sha256: null },
+      ...(lockSuccessor ? { lockSuccession13: {
+        path: IOS_PRIVACY_LOCK_SUCCESSION13_PATH,
+        bytes: lockSuccessor.bytes.length,
+        sha256: lockSuccessor.sha256,
+      } } : {}),
     },
     summary: {
       nativePackageCount: nativePackages.length,
@@ -2245,6 +2309,9 @@ export function renderIosPrivacySourceAuditMarkdown(report) {
     `- Baseline: \`${report.inputs.baseline.path}\` - \`${report.inputs.baseline.sha256 ?? 'unavailable'}\``,
     `- Mapping: \`${report.inputs.mapping.path}\` - \`${report.inputs.mapping.sha256 ?? 'unavailable'}\``,
     `- Package lock: \`${report.inputs.packageLock.path}\` - \`${report.inputs.packageLock.sha256 ?? 'unavailable'}\``,
+    ...(report.inputs.lockSuccession13 ? [
+      `- Source-only lock successor: \`${report.inputs.lockSuccession13.path}\` - \`${report.inputs.lockSuccession13.sha256}\``,
+    ] : []),
     '',
     '## Summary',
     '',

@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "authorization": "BRAIN-M103-IOS-PRIVACY-LOCK-SUCCESSION13-CANDIDATE-01",
+  "status": "UNAPPLIED_PROTECTED_OWNER_TASKS; SOURCE_SUCCESSOR_REVIEW_REQUIRED",
+  "base": {
+    "commit": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+    "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d"
+  },
+  "final_source_binding": "The external-digest SECURITY-DEPENDENCY-12 checkpoint source-proof binds this file and the final measured source; this packet is not a signature or acceptance.",
+  "dependency_candidate": {
+    "manifest": "docs/release/full-app-j01/dependency-succession12.v1.json",
+    "sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2",
+    "status": "UNAPPLIED_COMPATIBILITY_BLOCKED"
+  },
+  "original_security_artifact_review": {
+    "qualification": "LIVE_DOWNLOADED_IMMUTABLE_PR15_ARTIFACTS; NOT_CANDIDATE_SOURCE_SCAN",
+    "artifacts": [
+      {
+        "name": "decision",
+        "run_id": 40156333954,
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "sha256": "46b9dfad4f8b484fc5e9274ec13d432f048050d2690d8c265f8d7a41d766af94",
+        "entries": [
+          {
+            "path": "g97-decision.json",
+            "sha256": "eb5f5ac234c84a2d19178c5a3f62c656da5f60195053e4c088e78d9da73207bd",
+            "bytes": 115
+          }
+        ]
+      },
+      {
+        "name": "secret",
+        "run_id": 40156333954,
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "sha256": "b64230564712ced9fad487c81e10ac4bf1ff79dc80a53f0c2944ea1029d542f4",
+        "entries": [
+          {
+            "path": "gitleaks-results.sarif",
+            "sha256": "8b13324b922bfa3caf54ab08175fde902604887e1381379504736e96a3e5ffe7",
+            "bytes": 4643885
+          },
+          {
+            "path": "gitleaks-tool.json",
+            "sha256": "26ea8038dda3c7926b13d7a1c1b49c67baaf22469f3f1ba64aca4b41cb2e69a5",
+            "bytes": 106
+          },
+          {
+            "path": "secret-scan-outcomes.json",
+            "sha256": "0eb90409204b27c5612aaa8034eb7eb3093d55fe83e69fa6ec3aa214e2b5a024",
+            "bytes": 183
+          },
+          {
+            "path": "secret-scan-proof.json",
+            "sha256": "9a5714047757b5db4967599f8dbd6119f604017d1ac2e2b62547eae19f5f08ea",
+            "bytes": 7085871
+          }
+        ]
+      },
+      {
+        "name": "static",
+        "run_id": 40156333954,
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "sha256": "f6918d0eda21bfb96c500930aae9f26b3abdaacb88b8bbc78e25fcbf2a2f1f19",
+        "entries": [
+          {
+            "path": "osv-exception-gate.exit-code",
+            "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "bytes": 2
+          },
+          {
+            "path": "osv-exception-gate.stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "path": "osv-exception-gate.stderr",
+            "sha256": "ef723bcab621cfc5fb1dbebb7cc35d8a7e33ec62c7bfb73c801e09aaa3ecb1d6",
+            "bytes": 655
+          },
+          {
+            "path": "osv-scan.exit-code",
+            "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "bytes": 2
+          },
+          {
+            "path": "osv-scan.json",
+            "sha256": "bfb5f43768875bc3951edf135d04e0890a28d453d671964ef3866f8acbb825e0",
+            "bytes": 89698
+          },
+          {
+            "path": "static-analysis-outcomes.json",
+            "sha256": "6ddde083addab939fcf367b48c8b3591fe3fae1bafc081e6070b862f8403a937",
+            "bytes": 190
+          }
+        ]
+      },
+      {
+        "name": "code",
+        "run_id": 40156333954,
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "sha256": "fa7b3456589a7bf274455b8d88d0f8cb598a7d26f4d5796d4cfa77fe001f8a39",
+        "entries": [
+          {
+            "path": "dependency-inventory.json",
+            "sha256": "2113eacd29d9b11e3aefb7bfd27a2ae5efa59153c2b65919db7944f3a8ac98dd",
+            "bytes": 282100
+          },
+          {
+            "path": "dependency-sbom-audit.json",
+            "sha256": "de8b6b02ad06689b27ac38cdb4a79d96de965def1f032605a770d96444831950",
+            "bytes": 6310
+          },
+          {
+            "path": "dependency-sbom-audit.exit-code",
+            "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "bytes": 2
+          },
+          {
+            "path": "code-gates-outcomes.json",
+            "sha256": "369724190054d503e993828ebb396bcc3d329340666cb356839bd38f72ca75a9",
+            "bytes": 234
+          },
+          {
+            "path": "dependency-sbom.exit-code",
+            "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "bytes": 2
+          },
+          {
+            "path": "npm-audit-high.exit-code",
+            "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "bytes": 2
+          },
+          {
+            "path": "npm-audit-high.json",
+            "sha256": "de8b6b02ad06689b27ac38cdb4a79d96de965def1f032605a770d96444831950",
+            "bytes": 6310
+          },
+          {
+            "path": "npm-exception-gate.exit-code",
+            "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "bytes": 2
+          },
+          {
+            "path": "npm-exception-gate.stderr",
+            "sha256": "21f4dc1e5c7cf5aea884172259d504ded4ecb1f4673b154b8edf113fd03287fb",
+            "bytes": 496
+          },
+          {
+            "path": "npm-exception-gate.stdout",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          }
+        ]
+      }
+    ],
+    "secrets": {
+      "source_head": "37c872994bef01f665f4f1583edf2a580b92df23",
+      "source_tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+      "context": {
+        "attempt": "1",
+        "job": "secret-scan",
+        "kind": "ORIGINAL_SECRET_GITHUB_ACTIONS",
+        "repository": "TasfiqJ/onSkin",
+        "workflow": "Security"
+      },
+      "current_finding_count": 1144,
+      "history_finding_count": 4388,
+      "current_checkpoint_path_count": 33,
+      "current_findings": "UNREVIEWED; current-source findings include retained evidence artifacts; location alone is not a disposition",
+      "exits": {
+        "gitleaks-current": 2,
+        "gitleaks-history": 2,
+        "trufflehog-current": 0,
+        "trufflehog-history": 0
+      },
+      "tool_identities": {
+        "gitleaks": {
+          "asset": "9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c",
+          "binary": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+          "url": "https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz",
+          "version": "8.24.3"
+        },
+        "trufflehog": {
+          "asset": "029b182e0ed35fd5b02cd1eadc2a94bd457ab14ad22a9380b6e5d9652261d28d",
+          "binary": "f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61",
+          "url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.99.3/trufflehog_3.99.3_linux_amd64.tar.gz",
+          "version": "3.99.3"
+        }
+      }
+    },
+    "static_diagnostics": [
+      "braces: review is expired or dates are invalid",
+      "node-forge: review is expired or dates are invalid",
+      "unreviewed OSV advisory: opentelemetry-api@1.37.0:GHSA-xcq7-p3pf-p88h",
+      "unreviewed OSV advisory: @vitest/mocker@4.1.11:GHSA-qxg6-89mg-rqv8",
+      "unreviewed OSV advisory: @vitest/mocker@4.1.11:GHSA-xp26-3454-mjgp",
+      "unreviewed OSV advisory: zod@3.25.76:GHSA-mrhx-c7xc-m3w5",
+      "unreviewed OSV advisory: certifi@2026.10.18:PYSEC-2026-4320",
+      "unreviewed OSV advisory: certifi@2026.10.18:GHSA-6q48-6c7w-9gw2",
+      "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv",
+      "reviewed OSV advisory is missing: braces@3.0.3:GHSA-vfj7-8cjw-p6xm",
+      "braces: live advisory identity or status changed"
+    ]
+  },
+  "protected_witnesses": [
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+      "bytes": 46730,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "mode": "100644",
+      "blob": "6217bd03730c530445861cc3e1e438a92f401b83",
+      "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f",
+      "bytes": 3007,
+      "unchanged_from_base": true
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "mode": "100644",
+      "blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1",
+      "bytes": 29246,
+      "unchanged_from_base": true
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "mode": "100644",
+      "blob": "92400c74fe776dd7766a15befdefdff852074f4e",
+      "sha256": "51a295770e798707507048bc56cf10765b308b18ed9ce9922c05bf699b660c49",
+      "bytes": 13714,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "mode": "100644",
+      "blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "bytes": 13797,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "mode": "100644",
+      "blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "bytes": 2327707,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "mode": "100644",
+      "blob": "d3d811b1ab1f6d672c965d8c005cd94e77ed63b3",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
+      "bytes": 81513,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/gitleaks.toml",
+      "mode": "100644",
+      "blob": "e127f827aab0b3899f81b2efa880f17669f97bb5",
+      "sha256": "f683584269dd6d1af30371c56b6a39def7343e0549f1f4c3c445932bcb075828",
+      "bytes": 93794,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "mode": "100644",
+      "blob": "641e85bad6becf327f0a3269340bb49c6db912a7",
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+      "bytes": 6778,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "docs/phase-9/security-advisory-exceptions.json",
+      "mode": "100644",
+      "blob": "3e575fa3769a4f1b8dcdeae970d8bd4072d64740",
+      "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+      "bytes": 1577,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/phase4/build-source-worklist.mjs",
+      "mode": "100644",
+      "blob": "8dcfe8ced92b3b96f40a0628c1398c045767dd14",
+      "sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+      "bytes": 46973,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/core05/adherence-source-contract.test.mjs",
+      "mode": "100644",
+      "blob": "880be16d287890c24e3d4e5b3d8de04ccaf7142f",
+      "sha256": "563ef0c862cb57dda6f832af8a20f3f1b84636845b9a2ef115777d53e2c80dff",
+      "bytes": 47560,
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/core06/recommendation-admission-source-contract.test.mjs",
+      "mode": "100644",
+      "blob": "fec56a75af3521caa88a176ec67e45c34fa91d39",
+      "sha256": "e7ae488fbba9b6817679c46791ebd505f84aecce1fbb05cebf9db0c4e113855f",
+      "bytes": 35759,
+      "unchanged_from_base": true
+    }
+  ],
+  "current_original_source_check": {
+    "argv": [
+      "python",
+      "-B",
+      "scripts/phase9/security_acceptance/contract.py",
+      "source"
+    ],
+    "exit": 1,
+    "code": "SOURCE_INVENTORY_DRIFT",
+    "acceptanceGranted": false
+  },
+  "local_scanner_execution": "No substituted scanners. Original source preflight and supported-Python suite are rerun separately; fresh original GitHub jobs supply Linux scanner evidence. No raw secret artifacts are published.",
+  "actions": [
+    {
+      "id": "DEP13-COMPATIBILITY",
+      "owner": "Independent Brain and native privacy source custodian",
+      "status": "UNAPPLIED_INDEPENDENT_SOURCE_REVIEW",
+      "problem": "Exact source-only native lock successor and eight-node candidate implemented under the fresh finite grant; independent source acceptance remains pending.",
+      "proof": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+      "next_action": "Independently audit exact Campaign13 source, immutable old mapping and native/provenance identities. Review authentic native/Apple/device archive evidence under separate custody. No source-only pass approves an archive."
+    },
+    {
+      "id": "SEC13-SOURCE",
+      "owner": "Original Security source/coverage custodian plus independent qualified reviewer",
+      "status": "UNAPPLIED_SCOPE_PROTECTED",
+      "problem": "Unmodified source contract rejects SOURCE_INVENTORY_DRIFT; scanner source manifests/rules/inventories and expired original proposal remain protected.",
+      "next_action": "Separately authorize a source-versioned inventory/coverage recovery bound to exact source tree, every scanner/tool/rule identity and all current/history targets. Rerun the unmodified original scanner suite and preserve every failure. No renewal by date edit.",
+      "protected_paths": [
+        "scripts/phase9/security_acceptance/",
+        ".github/security/",
+        ".github/workflows/security.yml"
+      ]
+    },
+    {
+      "id": "SEC13-SECRET",
+      "owner": "Qualified security incident/secret custodian independent of implementer",
+      "status": "UNAPPLIED_FINDINGS_UNREVIEWED",
+      "problem": "PR16 reported genuine current-source Gitleaks exit2 with 1144 findings; full-history Gitleaks exit2; verified-only TruffleHog exits0 do not dispose of Gitleaks findings.",
+      "next_action": "Inspect original findings privately, establish actual issuer/scope/liveness, revoke or rotate real exposed credentials through authorized owners, attribute retained historical artifact findings without deleting history, then rerun complete current/history scans with exact source and reviewed genuine finding dispositions.",
+      "forbidden": "No raw secret publication, invented fingerprints, shortened history or bulk allowlist."
+    },
+    {
+      "id": "SEC13-ADVISORIES",
+      "owner": "Qualified dependency/application security owner and scanner-runtime custodian",
+      "status": "UNAPPLIED_REMAINING_RISK",
+      "problem": "Vitest4.1.12 successor is a source candidate only. Zod3 finding requires a separately reviewed major-version compatibility plan; node-forge/braces exception reviews expired; braces advisory identity/status changed. Scanner runtime findings include certifi, mcp and opentelemetry-api.",
+      "next_action": "Independently revalidate every live original finding against upstream, distinguish application graph from scanner/retained evidence runtimes, scope compatible repairs and qualified dispositions separately. No audit-fix, broad update, exception expiry edit or unreviewed Zod3-to4 migration."
+    },
+    {
+      "id": "DB13-CUSTODY",
+      "owner": "Independent DB06/DB08/R2B protected database custodian",
+      "status": "UNAPPLIED_NOT_ACCEPTED",
+      "problem": "PR16 final canonical credential-free DB CI passed at bbbd59073b7add22ac350bced0d9a34124c12ffb; earlier registry quota failures remain historical. Neither result grants protected DB06/DB08/R2B custody. Fresh Campaign13 final-head results are observed separately.",
+      "next_action": "Observe final-head canonical CI independently and obtain exact-source replay/acceptance under a separate protected custody grant. No hosted fallback, quota purchase, SQL/workflow edit or stale pass substitution."
+    },
+    {
+      "id": "READINESS13",
+      "owner": "Independent Brain, governed evidence and CAT07/provenance owners",
+      "status": "UNAPPLIED_NOT_AUTHORIZED",
+      "problem": "Qualified independent evidence, readiness/CAT07, authenticated J01 intake, native/Apple/provider/paid/clinical/public release gates remain closed.",
+      "next_action": "Provide authentic separately authorized owner evidence and exact-source acceptance through Brain. Legacy runtime consumer migration stays NOT_DONE; no feature checkbox changes."
+    }
+  ],
+  "qualified_owner_acceptance": null,
+  "security": "FAIL/NO_GO",
+  "M1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+  "M2": "NOT_AUTHORIZED",
+  "spend_usd": 0,
+  "admissions": {
+    "security": false,
+    "db": false,
+    "J01": false,
+    "paid": false,
+    "native": false,
+    "apple": false,
+    "public_release": false
+  },
+  "source_bound": {
+    "package-lock.json": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+    "scripts/phase9/ios-privacy-contract.mjs": "b16e3ea02b83fadee1a1bf0acd01f293c985e4fb1dc80226bc4bd803149d29fe",
+    "docs/phase-9/ios-sdk-lock-succession13.v1.json": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
+    "scripts/release/full-app-j01/check.py": "811983d1ace5f5efae53968a3b21d643e2d38d3a31d71817ec21b416eeafc5f3"
+  },
+  "fresh_evidence": "Exact source/evidence commits, fresh final-head Security jobs and sanitized findings are recorded in IOS-PRIVACY-LOCK-13 checkpoint and final report. Prior findings remain historical observations until freshly reconfirmed."
+}

@@ -1,0 +1,84 @@
+{
+  "nodes": [
+    {
+      "path": "node_modules/@vitest/expect",
+      "integrity": "sha512-vFlTt+YEu9WBpNjdGayNmlMVzrWPi1+sv853/7t2FU7hpO5gAFBKHzQmkCq5Xjpr+evegF2994LQT3hF3mRlqQ==",
+      "tarball_sha256": "8c932064dafe90dca40312b44c5b63623c8c7e03bb9b38c4bd9af2f5701f7bb6",
+      "tarball_bytes": 24924,
+      "metadata_sha256": "0528bfe881bab6121b389e1ab88a26bf43208027e80016c43a5971b391f4f199",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/@vitest/mocker",
+      "integrity": "sha512-fKShNpKZzupWZuY0z7egydvL0sqW4INEZBEExMBMAa6izlENEVHwoXgdaTCaBZ5fwlr4xf2o1wXC83n9RpO+NA==",
+      "tarball_sha256": "8f9ac0144028329f5c649c031608b8877efea748cdbded0d7f41d60f9be49c52",
+      "tarball_bytes": 56550,
+      "metadata_sha256": "8db5c03250edf5280c4ba695058beaa9daa2b6ebd2e115de5c4c615889effb58",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/@vitest/pretty-format",
+      "integrity": "sha512-XW9O8+Mxx4VpCtkYdMJLZQQwsVryP9wk7cPKDxtXFfwSak6yRh5+2fep/Y0XF/ElBvJHq8bcYdi6aeuai0opZA==",
+      "tarball_sha256": "929beb93dafed9e676e55f07919839643231679384020a5ef9c2d02022a5dd80",
+      "tarball_bytes": 12888,
+      "metadata_sha256": "351069ed91e3ef52bc958fa7da8da7326b09865cda981aa37ee8c29c8b6f14f4",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/@vitest/runner",
+      "integrity": "sha512-NKlVKCr5QnCe8jijdMnmkpHHU+WTqiLFR6G0pHji9uRjXK9xJl1k1nTw6F3pOOj2PDcsDt2GKQMI7wIsaT491w==",
+      "tarball_sha256": "061db956dceb2b291e1a4ceb3c5b7e31c368e75b34411953402e339ef566e6cf",
+      "tarball_bytes": 48456,
+      "metadata_sha256": "ce975479304c71711463b4a47545256fb37eec3f466f8191aa8a5983726c4385",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/@vitest/snapshot",
+      "integrity": "sha512-ko1y1Qgb/slzQ9mr+b89Cuqud8WG1TKtsPD8r7ZUBdvVOGt85Af2HwCqHujrhwJq95hs/9RM7fcAPg57o1vlzw==",
+      "tarball_sha256": "10b57fb1cb37d110309dd64e22a154bf26bd98526cc1ea5307b2f2478cbdddf5",
+      "tarball_bytes": 17411,
+      "metadata_sha256": "e1224551dfdd89b4dee9ff0a57117bb29a75b9f6e64e3a94be06feb4aaca44c6",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/@vitest/spy",
+      "integrity": "sha512-RGq9x4JNGNTZHEJxvN0oSiJjeSCExm0n2gZKKJZHY9cX5AVA6M7VJILBT3ZJ/tJ/0J9uWT7fETV9/btoi//vSg==",
+      "tarball_sha256": "eb9a67720d1082f33bfc5cf3a41ee6d297e994cf26013dae0ad807a474fa44a3",
+      "tarball_bytes": 9566,
+      "metadata_sha256": "f05eb9a7f06b3c45f150c2735e48feaa79a65a217f247f29fa9e2373c1f2ebe9",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/@vitest/utils",
+      "integrity": "sha512-Q3awXrwOfEV+qc3WmO5ONyE0yO7Q1gQ9/oyHxGLZ/pl7N3NO/ZztqQwKLuwMkV+CA1JYSIeO3gkHnRDIo4AVaA==",
+      "tarball_sha256": "0c25f072d4afcb52fa48266177111ca90bc4116c66473170959aae1d57db347d",
+      "tarball_bytes": 45448,
+      "metadata_sha256": "5ff2d396f4bd7c27566d00dfdaae96f8d29a6a410d09443db3263c7e0002afb8",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    },
+    {
+      "path": "node_modules/vitest",
+      "integrity": "sha512-5eWdz2yb3ajxWF3C8C4TjkXl7FGm3n2E/VlazALrQHzK7nYMSGFnCZto0bbPNl77AwkOZVLk0YnBAejUu0NiWA==",
+      "tarball_sha256": "ac79c9561c99eabc1cc29e0a839cbd03d1ff0e45bbecb5a2edfa6c3827c823d1",
+      "tarball_bytes": 475403,
+      "metadata_sha256": "6f6dd06b4b6f0611d655c76981a318a5f2ddf6e5ec032056876751c754fdbcc0",
+      "native_files": [],
+      "install_scripts": [],
+      "original_metadata_semantics_identical": true
+    }
+  ]
+}

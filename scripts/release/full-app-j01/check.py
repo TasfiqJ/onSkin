@@ -720,6 +720,219 @@ def validate12(bundle=BUNDLE):
 
 
 
+RELEASE13_BASE = 'bbbd59073b7add22ac350bced0d9a34124c12ffb'
+RELEASE13_TREE = '4a70f0934a56e27863742084272c9bb4bfd5492d'
+RELEASE13_PR = 17  # Allocated by GitHub after the proposal draft was created.
+RELEASE13_MANIFEST = 'docs/phase-9/ios-sdk-lock-succession13.v1.json'
+RELEASE13_MANIFEST_SHA256 = '824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409'
+RELEASE13_EXISTING = {'package-lock.json', 'scripts/phase9/ios-privacy-contract.mjs',
+    'scripts/phase9/ios-privacy-source-audit.test.mjs', 'scripts/release/full-app-j01/check.py',
+    'docs/phase-9/generated/ios-privacy-source-audit.json',
+    'docs/phase-9/generated/ios-privacy-source-audit.md',
+    'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE13_NEW = {RELEASE13_MANIFEST, 'scripts/release/full-app-j01/source_consumer13.test.py',
+    'scripts/release/full-app-j01/dependency_guard13.test.py',
+    'docs/release/full-app-j01/native-privacy-succession13.md',
+    'docs/release/full-app-j01/security-custody13.unapplied.json'}
+RELEASE13_PREFIXES = ('docs/brain/contracts/SECURITY-13/', 'docs/brain/task-specs/SECURITY-13/',
+    'docs/brain/checkpoints/M1-03/IOS-PRIVACY-LOCK-13/')
+
+
+def allowed13(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and p.casefold() not in ('.', '..', '.git', '.gitattributes', '.gitignore') and
+            not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE13_EXISTING or path in RELEASE13_NEW or path.startswith(RELEASE13_PREFIXES)))
+
+
+def release13_active():
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE13_BASE, 'HEAD'],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
+
+
+def dependency13_guard(raw, read_after=None, installed=True):
+    read_after = read_after or (lambda path: regular(ROOT/path))
+    manifest_raw = read_after(RELEASE13_MANIFEST)
+    require(sha(manifest_raw) == RELEASE13_MANIFEST_SHA256, 'R13_MANIFEST_IDENTITY')
+    manifest = json.loads(manifest_raw, object_pairs_hook=pairs)
+    require(manifest['schemaVersion'] == 1 and manifest['pr'] == RELEASE13_PR and
+            manifest['base'] == dict(commit=RELEASE13_BASE, tree=RELEASE13_TREE), 'R13_SOURCE_VERSION')
+    authority = dependency12_guard(raw, read_after)  # Unchanged exact eight-node authority.
+    original = git('show', RELEASE13_BASE+':package-lock.json')
+    require(sha(original) == manifest['originalLock']['sha256'] and
+            sha(raw) == manifest['candidateLock']['sha256'] and
+            manifest['candidateNodes'] == authority['nodes'], 'R13_LOCK_IDENTITIES')
+    mapping_raw = read_after(manifest['originalMapping']['path'])
+    require(mapping_raw == git('show', RELEASE13_BASE+':'+manifest['originalMapping']['path']) and
+            sha(mapping_raw) == manifest['originalMapping']['sha256'], 'R13_ORIGINAL_MAPPING')
+    mapping = json.loads(mapping_raw, object_pairs_hook=pairs)
+    require(mapping['mappings'] == manifest['unchangedNativeMappings'], 'R13_NATIVE_MAPPING_ROWS')
+    before = json.loads(original, object_pairs_hook=pairs)
+    after = json.loads(raw, object_pairs_hook=pairs)
+    require(list(after['packages']) == list(before['packages']) and
+            [p for p in before['packages'] if before['packages'][p] != after['packages'][p]] ==
+            manifest['changedNodes'], 'R13_EXACT_NODE_ORDER')
+    for path, node in manifest['unchangedNativeNodes'].items():
+        require(before['packages'][path] == after['packages'][path] == node, 'R13_NATIVE_NODE:'+path)
+    if installed:
+        for row in mapping['mappings']:
+            for pin in row['notes']['sourcePins']:
+                require(sha(regular(ROOT/pin['path'])) == pin['sha256'], 'R13_INSTALLED_SOURCE:'+pin['path'])
+        require(not os.path.lexists(ROOT/'apps/mobile/ios/Podfile.lock'), 'R13_UNPROVEN_PODFILE')
+    return manifest
+
+
+def validate13_checker(raw):
+    before = ast.parse(git('show', RELEASE13_BASE+':scripts/release/full-app-j01/check.py'))
+    after = ast.parse(raw)
+    functions = lambda module: {n.name: ast.dump(n, include_attributes=False)
+        for n in module.body if isinstance(n, ast.FunctionDef)}
+    old, new = functions(before), functions(after)
+    require(all(new.get(k) == v for k, v in old.items() if k != 'source_guard'),
+            'R13_INHERITED_FUNCTION_CHANGED')
+    assignments = lambda module: {ast.dump(n.targets[0]): ast.dump(n.value, include_attributes=False)
+        for n in module.body if isinstance(n, ast.Assign) and len(n.targets) == 1}
+    old_globals, new_globals = assignments(before), assignments(after)
+    alias = ast.dump(ast.Name(id='validate', ctx=ast.Store()))
+    require(all(new_globals.get(k) == v for k, v in old_globals.items() if k != alias),
+            'R13_INHERITED_GLOBAL_CHANGED')
+    require(new_globals[alias] == ast.dump(ast.Name(id='validate13', ctx=ast.Load())),
+            'R13_CURRENT_VALIDATE_ALIAS')
+
+
+def validate13_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R13_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split()
+        path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R13_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed13(path) and status in ('A', 'M'), 'R13_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R13_COLLISION:'+path)
+        names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R13_MODE:'+path)
+        require((path in RELEASE13_EXISTING) == (oldmode == ':100644') and
+                status == ('A' if oldmode == ':000000' else 'M') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)),
+                'R13_CREATE_EDIT:'+path)
+        data = read_after(path)
+        if path == 'package-lock.json':
+            dependency13_guard(data, read_after, installed=False)
+        if path == RELEASE13_MANIFEST:
+            require(sha(data) == RELEASE13_MANIFEST_SHA256, 'R13_MANIFEST_IDENTITY')
+        if path == 'scripts/release/full-app-j01/check.py':
+            validate13_checker(data)
+
+
+def source13_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2:
+        return head
+    require(len(parents) == 3, 'R13_LINEAR_HISTORY:'+head)
+    require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE13_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R13_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R13_CI_EVENT')
+    event = load(event_path)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE13_PR and pr.get('number') == RELEASE13_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE13_BASE and parents[1] == RELEASE13_BASE and
+            pr.get('base', {}).get('ref') == 'stage/m103-dependency-witness12' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m103-ios-privacy-lock-succession13' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin', 'R13_CI_EVENT_IDENTITY')
+    require(git('merge-base', RELEASE13_BASE, parents[2]).decode().strip() == RELEASE13_BASE,
+            'R13_CI_MERGE_BASE')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'),
+            'R13_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source13_history():
+    require(git('rev-parse', RELEASE13_BASE+'^{tree}').decode().strip() == RELEASE13_TREE, 'R13_BASE_TREE')
+    endpoint = source13_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE13_BASE, endpoint],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE13_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2,
+                'R13_LINEAR_HISTORY:'+commit)
+        read_after = lambda path: git('show', commit+':'+path)
+        validate13_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE13_BASE, commit), read_after)
+
+
+def source13_guard():
+    source13_history()
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate13_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE13_BASE),
+                    lambda path: git('show', ':'+path))
+    validate13_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE13_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R13_INDEX_FLAGS:'+entry)
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R13_COLLISION:'+entry[2:])
+            names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed13(path) and path not in RELEASE13_EXISTING, 'R13_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R13_COLLISION:'+path)
+            names.add(key)
+            regular(ROOT/path)
+
+
+def source12_historical_segment():
+    """Unchanged Release12 history and UNAPPLIED witness retain their original endpoint."""
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'):
+            return actual_git('rev-parse', RELEASE13_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source12_history()
+        unapplied12_guard(actual_git('show', RELEASE13_BASE+':package-lock.json'),
+                          lambda path: actual_git('show', RELEASE13_BASE+':'+path))
+    finally:
+        globals()['git'] = actual_git
+
+
+def validate13(bundle=BUNDLE):
+    if not release13_active():
+        return validate12(bundle)
+    manifest = dependency13_guard(regular(ROOT/'package-lock.json'))
+    # Current/index/history checks run with actual source. Only the original root
+    # lock witness inside the unchanged semantic validator reads its declared version.
+    import types
+    namespace = dict(globals())
+    actual_regular = regular
+    def historical_witness_reader(path):
+        if path == ROOT/'package-lock.json':
+            return git('show', BASE+':package-lock.json')
+        return actual_regular(path)
+    namespace['regular'] = historical_witness_reader
+    legacy = types.FunctionType(RELEASE12_LEGACY_VALIDATE.__code__, namespace)
+    result = legacy(bundle)
+    result['historical_lock_witness'] = manifest['originalLock']['sha256']
+    result['current_dependency_witness'] = manifest['candidateLock']['sha256']
+    result['ios_privacy_lock_successor'] = RELEASE13_MANIFEST_SHA256
+    result['dependency_successor_status'] = 'SOURCE_CANDIDATE_REVIEW_REQUIRED'
+    return result
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -738,15 +951,19 @@ def source_guard():
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
     source10_historical_segment()
-    if release12_active():
+    if release13_active():
+        source11_historical_segment()
+        source12_historical_segment()
+        source13_guard()
+    elif release12_active():
         source11_historical_segment()
         source12_guard()
     else:
         source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)
@@ -971,6 +1188,7 @@ def main():
 # Preserve the original validator function/AST for historical consumers.
 RELEASE12_LEGACY_VALIDATE = validate
 validate = validate12
+validate = validate13
 
 
 if __name__ == '__main__':

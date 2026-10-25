@@ -10,6 +10,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  renameSync,
   statSync,
   symlinkSync,
   writeFileSync,
@@ -25,6 +26,7 @@ import {
   IOS_PRIVACY_BASELINE_PATH,
   IOS_PRIVACY_DEFAULT_BOUNDS,
   IOS_PRIVACY_MAPPING_PATH,
+  IOS_PRIVACY_LOCK_SUCCESSION13_PATH,
   IosPrivacyContractError,
   auditIosPrivacySource,
   canonicalAuditJson,
@@ -1194,4 +1196,170 @@ test('CLI refuses an existing output-file symlink without mutating its target', 
   );
   assert.deepEqual(readFileSync(target), seed);
   assert.equal(existsSync(outputPath(root, IOS_PRIVACY_AUDIT_MARKDOWN_PATH)), false);
+});
+
+// Real authenticated lock/mapping/provenance and installed source bytes in a
+// bounded fixture. Full installed-source and independent-checkout runs are separate.
+function createSuccession13Fixture(t) {
+  const root = createAuditFixture(t);
+  const successor = JSON.parse(readFileSync(outputPath(REPO_ROOT, IOS_PRIVACY_LOCK_SUCCESSION13_PATH)));
+  const mapping = JSON.parse(readFileSync(outputPath(REPO_ROOT, IOS_PRIVACY_MAPPING_PATH)));
+  const original = JSON.parse(readFileSync(join(REPO_ROOT, 'package-lock.json')));
+  Object.assign(original.packages, successor.originalNodes);
+  const candidate = structuredClone(original);
+  Object.assign(candidate.packages, successor.candidateNodes);
+  assert.equal(sha256(Buffer.from(canonicalAuditJson(original))), successor.originalLock.sha256);
+  assert.equal(sha256(Buffer.from(canonicalAuditJson(candidate))), successor.candidateLock.sha256);
+  const paths = [IOS_PRIVACY_MAPPING_PATH, IOS_PRIVACY_LOCK_SUCCESSION13_PATH,
+    successor.dependencyWitness.path, successor.provenance.path,
+    ...successor.registry.flatMap((row) => [row.metadata.path, row.attestations.path]),
+    ...mapping.mappings.flatMap((row) => row.notes.sourcePins.map((pin) => pin.path))];
+  for (const path of paths) {
+    const target = outputPath(root, path);
+    mkdirSync(dirname(target), { recursive: true });
+    copyFileSync(outputPath(REPO_ROOT, path), target);
+  }
+  writeJson(join(root, 'package-lock.json'), candidate);
+  return { root, successor, mapping, original, candidate };
+}
+
+test('succession13 preserves original lock meaning and admits only the exact source candidate', (t) => {
+  const { root, original } = createSuccession13Fixture(t);
+  const candidate = auditIosPrivacySource({ root });
+  assert.equal(candidate.status, 'archive_required');
+  assert.deepEqual(candidate.errors, []);
+  assert.deepEqual(candidate.claims, FALSE_CLAIMS);
+  assert.equal(candidate.schemaVersion, 1);
+  assert.equal(candidate.inputs.lockSuccession13.sha256,
+    '824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409');
+  writeJson(join(root, 'package-lock.json'), original);
+  const historical = auditIosPrivacySource({ root });
+  assert.equal(historical.status, 'archive_required');
+  assert.deepEqual(historical.errors, []);
+  assert.equal(historical.inputs.lockSuccession13, undefined);
+  assert.deepEqual(historical.claims, candidate.claims);
+  assert.deepEqual(historical.ledgerHashes, candidate.ledgerHashes);
+});
+
+test('succession13 refuses forged versions, identities, claims, duplicate keys and traversal', (t) => {
+  const { root, successor } = createSuccession13Fixture(t);
+  const path = outputPath(root, IOS_PRIVACY_LOCK_SUCCESSION13_PATH);
+  const raw = readFileSync(path);
+  const mutations = [
+    (s) => { s.schemaVersion = 2; },
+    (s) => { s.authorization = 'forged'; },
+    (s) => { s.base.commit = '0'.repeat(40); },
+    (s) => { s.base.tree = '0'.repeat(40); },
+    (s) => { s.pr = 16; },
+    (s) => { s.originalMapping.sha256 = s.candidateLock.sha256; },
+    (s) => { s.originalLock.sha256 = s.candidateLock.sha256; },
+    (s) => { s.changedNodes.pop(); },
+    (s) => { s.candidateNodes['node_modules/vitest'].dev = false; },
+    (s) => { s.provenance.path = '../outside'; },
+    (s) => { s.registry[0].metadata.path = '/outside'; },
+    (s) => { s.unchangedNativeMappings[0].archiveRequired = false; },
+    (s) => { s.unchangedNativeMappings[0].notes.sourcePins[0].sha256 = '0'.repeat(64); },
+    (s) => { s.claims.podfileLock = 'verified'; },
+    (s) => { s.claims.releaseArchive = 'INSPECTED'; },
+    (s) => { s.claims.appleAttestation = 'approved'; },
+    ...Object.keys(successor.admissions).map((key) => (s) => { s.admissions[key] = true; }),
+    (s) => { s.gates.G97 = 'PASS'; },
+    (s) => { s.gates.M2 = 'AUTHORIZED'; },
+  ];
+  try {
+    for (const mutate of mutations) {
+      const value = structuredClone(successor);
+      mutate(value);
+      writeJson(path, value);
+      const report = auditIosPrivacySource({ root });
+      assert.equal(report.status, 'source_invalid');
+      assert.ok(issueCodes(report).includes('LOCK_SUCCESSION13_IDENTITY'));
+      assert.equal(report.errors.filter(({ code }) => code === 'MAPPING_LOCK_DRIFT').length, 3);
+      assert.deepEqual(report.claims, FALSE_CLAIMS);
+    }
+    for (const invalid of [Buffer.from('{}'), Buffer.concat([raw, Buffer.from(' ')]),
+      Buffer.from(raw.toString().replace('"schemaVersion": 1,', '"schemaVersion": 1,"schemaVersion": 1,'))]) {
+      writeFileSync(path, invalid);
+      assert.equal(auditIosPrivacySource({ root }).status, 'source_invalid');
+    }
+  } finally { writeFileSync(path, raw); }
+  renameSync(path, path + '.missing');
+  try {
+    const report = auditIosPrivacySource({ root });
+    assert.equal(report.status, 'source_invalid');
+    assert.ok(issueCodes(report).includes('PATH_MISSING'));
+  } finally { renameSync(path + '.missing', path); }
+  assert.deepEqual(auditIosPrivacySource({ root }).errors, []);
+});
+
+test('succession13 refuses every native lock and source-pin change and any extra lock node', (t) => {
+  const { root, successor, mapping, candidate } = createSuccession13Fixture(t);
+  const lockPath = join(root, 'package-lock.json');
+  const raw = readFileSync(lockPath);
+  const mutations = [
+    ...Object.keys(successor.unchangedNativeNodes).flatMap((path) =>
+      ['version', 'integrity', 'resolved'].map((key) => (lock) => { lock.packages[path][key] = 'forged'; })),
+    (lock) => { lock.packages['node_modules/extra13'] = { version: '1.0.0' }; },
+    (lock) => { delete lock.packages['node_modules/@vitest/spy']; },
+    (lock) => { lock.packages['node_modules/vitest'].dev = false; },
+    (lock) => { lock.packages = Object.fromEntries(Object.entries(lock.packages).reverse()); },
+    (lock) => { lock.packages['node_modules/zod'].version = '4.0.0'; },
+  ];
+  try {
+    for (const mutate of mutations) {
+      const lock = structuredClone(candidate); mutate(lock); writeJson(lockPath, lock);
+      assert.equal(auditIosPrivacySource({ root }).status, 'source_invalid');
+    }
+    writeFileSync(lockPath, Buffer.concat([raw, Buffer.from(' ')]));
+    assert.equal(auditIosPrivacySource({ root }).status, 'source_invalid');
+  } finally { writeFileSync(lockPath, raw); }
+  for (const pin of mapping.mappings.flatMap((row) => row.notes.sourcePins)) {
+    const path = outputPath(root, pin.path); const bytes = readFileSync(path);
+    try {
+      writeFileSync(path, Buffer.concat([bytes, Buffer.from('\n')]));
+      const report = auditIosPrivacySource({ root });
+      assert.equal(report.status, 'source_invalid');
+      assert.ok(issueCodes(report).includes('MAPPING_SOURCE_PIN_DRIFT'), pin.path);
+    } finally { writeFileSync(path, bytes); }
+  }
+  const path = outputPath(root, IOS_PRIVACY_MAPPING_PATH); const bytes = readFileSync(path);
+  try {
+    writeFileSync(path, Buffer.concat([bytes, Buffer.from(' ')]));
+    assert.equal(auditIosPrivacySource({ root }).status, 'source_invalid');
+    const forged = structuredClone(mapping);
+    for (const row of forged.mappings) row.lockIntegrity.packageLockSha256 = successor.candidateLock.sha256;
+    writeJson(path, forged);
+    const rebound = auditIosPrivacySource({ root });
+    assert.equal(rebound.status, 'source_invalid');
+    assert.ok(issueCodes(rebound).includes('LOCK_SUCCESSION13_IDENTITY'));
+  } finally { writeFileSync(path, bytes); }
+  for (const pin of [successor.dependencyWitness, successor.provenance,
+    ...successor.registry.flatMap((row) => [row.metadata, row.attestations])]) {
+    const path = outputPath(root, pin.path); const bytes = readFileSync(path);
+    try {
+      writeFileSync(path, Buffer.concat([bytes, Buffer.from(' ')]));
+      assert.equal(auditIosPrivacySource({ root }).status, 'source_invalid');
+    } finally { writeFileSync(path, bytes); }
+  }
+  assert.deepEqual(auditIosPrivacySource({ root }).errors, []);
+});
+
+test('succession13 refuses an actual linked manifest and preserves strict output integrity', (t) => {
+  const { root } = createSuccession13Fixture(t);
+  const path = outputPath(root, IOS_PRIVACY_LOCK_SUCCESSION13_PATH);
+  const target = path + '.target'; renameSync(path, target);
+  try {
+    symlinkSync(target, path, 'file');
+  } catch (error) {
+    renameSync(target, path);
+    if (process.platform === 'win32' && ['EPERM', 'EACCES'].includes(error.code)) {
+      t.skip('File symlink creation is unavailable on this Windows host.'); return;
+    }
+    throw error;
+  }
+  const report = auditIosPrivacySource({ root });
+  assert.equal(report.status, 'source_invalid');
+  assert.ok(issueCodes(report).includes('PATH_SYMLINK'));
+  assert.equal(runIosPrivacySourceAudit(['--root', root, '--write', '--strict'], captureIo().io), 1);
+  assert.equal(existsSync(outputPath(root, IOS_PRIVACY_AUDIT_JSON_PATH)), false);
 });

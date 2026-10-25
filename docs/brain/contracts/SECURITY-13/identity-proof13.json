@@ -1,0 +1,51 @@
+{
+  "old": {
+    "path": "package-lock.json",
+    "mode": "100644",
+    "blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+    "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+    "bytes": 572797,
+    "source_commit": "bbbd59073b7add22ac350bced0d9a34124c12ffb"
+  },
+  "candidate": {
+    "path": "package-lock.json",
+    "mode": "100644",
+    "blob": "843be0fdf1fe9354dfdc4750118481486d9a778a",
+    "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+    "bytes": 572798
+  },
+  "mapping": {
+    "path": "docs/phase-9/ios-sdk-package-mapping.json",
+    "mode": "100644",
+    "blob": "9776ac1b83e79c39e71b34867481d71cb56a29a4",
+    "sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246",
+    "bytes": 8350,
+    "source_commit": "bbbd59073b7add22ac350bced0d9a34124c12ffb"
+  },
+  "changed_nodes": [
+    "node_modules/@vitest/expect",
+    "node_modules/@vitest/mocker",
+    "node_modules/@vitest/pretty-format",
+    "node_modules/@vitest/runner",
+    "node_modules/@vitest/snapshot",
+    "node_modules/@vitest/spy",
+    "node_modules/@vitest/utils",
+    "node_modules/vitest"
+  ],
+  "only_changed_nodes": true,
+  "all_other_records_and_order_identical": true,
+  "native_nodes_identical": [
+    "node_modules/@react-native-google-signin/google-signin",
+    "node_modules/expo-image",
+    "node_modules/hermes-compiler",
+    "node_modules/react-native"
+  ],
+  "native_source_pins_verified": 10,
+  "successor": {
+    "path": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+    "mode": "100644",
+    "blob": "128099f910890e798ad867203f44066a90e6e7e4",
+    "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
+    "bytes": 35108
+  }
+}
