@@ -1,8 +1,9 @@
-Campaign14 SOURCE CANDIDATE IN PROGRESS; not accepted.
-Authorization BRAIN-M103-G97-SOURCE-TRIAGE14-CANDIDATE-01.
-Branch stage/m103-g97-provenance-triage14, stacked on immutable PR17 d0c5ad49ba22c8da7136d59a399589af1cea0e82.
-Finite Git-path test buffer repair, private aggregate secret triage and UNAPPLIED original-owner crosswalk.
-Newest source plan: docs/release/full-app-j01/g97-security-triage14.md
-Owner tasks: docs/release/full-app-j01/g97-security-triage14.unapplied.json
+Campaign14 SOURCE CANDIDATE SUBMITTED_REVIEW_REQUIRED; no acceptance.
+PR18 https://github.com/TasfiqJ/onSkin/pull/18; branch stage/m103-g97-provenance-triage14, draft/open/unmerged.
+Frozen implementation6a3cef0ddf62cdbe387998f797fe4692f95a1224; source/projection63c7d910ec85659f3180e4ea7ddd41c7f44e2c5c.
+Newest checkpoint: docs/brain/checkpoints/M1-03/G97-SOURCE-TRIAGE-14/README.md
+Verify with verify14.py and the external manifest SHA256 in the founder return / PR body.
+Source GitHub Quality repository, iOS and Expo exports passed; overall Quality failed canonical DB registry quota; original Security failed.
+Private raw scanner reports withheld; rule aggregates UNREVIEWED. Original-owner tasks remain UNAPPLIED.
 G97 FAIL/NO_GO; DB NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01/release closed.
-Independent Brain review required. USD0. No merge, credential/provider/Apple or public action.
+Independent Brain source review required. USD0. No merge, credential/provider/Apple or public action.
