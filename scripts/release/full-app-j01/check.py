@@ -481,6 +481,229 @@ def source10_historical_segment():
         globals()['git'] = actual_git
 
 
+RELEASE12_BASE = '9e3ba80e09579ee4855948f13297049791c4d5d7'
+RELEASE12_TREE = '0c3d2dc79a54a405315df06f05d284bd643cd538'
+RELEASE12_PR = 16  # Allocated by GitHub, observed after draft creation.
+RELEASE12_MANIFEST = 'docs/release/full-app-j01/dependency-succession12.v1.json'
+RELEASE12_MANIFEST_SHA256 = '5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2'
+RELEASE12_LOCK_SHA256 = '7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb'
+RELEASE12_EXISTING = {'package-lock.json', 'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE12_NEW = {RELEASE12_MANIFEST,
+    'docs/release/full-app-j01/security-custody12.unapplied.json',
+    'docs/release/full-app-j01/security-recovery12.md',
+    'scripts/release/full-app-j01/source_consumer12.test.py',
+    'scripts/release/full-app-j01/dependency_guard12.test.py'}
+RELEASE12_PREFIXES = ('docs/brain/contracts/SECURITY-12/', 'docs/brain/task-specs/SECURITY-12/',
+    'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-12/')
+
+
+def allowed12(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and p.casefold() not in ('.', '..', '.git', '.gitattributes', '.gitignore') and
+            not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE12_EXISTING or path in RELEASE12_NEW or path.startswith(RELEASE12_PREFIXES)))
+
+
+def release12_active():
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE12_BASE, 'HEAD'],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
+
+
+def dependency12_guard(raw, read_after=None):
+    """Two distinct authorities: immutable old witness and frozen candidate source proposal."""
+    read_after = read_after or (lambda path: regular(ROOT/path))
+    authority_raw = read_after(RELEASE12_MANIFEST)
+    require(sha(authority_raw) == RELEASE12_MANIFEST_SHA256, 'R12_MANIFEST_IDENTITY')
+    authority = json.loads(authority_raw, object_pairs_hook=pairs)
+    require(sha(raw) == RELEASE12_LOCK_SHA256 == authority['candidate_root_lock']['sha256'],
+            'R12_CANDIDATE_LOCK_SHA256')
+    require(authority['status'] == 'CANDIDATE_REVIEW_REQUIRED' and
+            authority['base'] == dict(commit=RELEASE12_BASE, tree=RELEASE12_TREE) and
+            authority['pr'] == RELEASE12_PR and authority['spend_usd'] == 0 and
+            all(v is False for v in authority['admissions'].values()), 'R12_NO_ADMISSION')
+    before_raw = git('show', RELEASE12_BASE+':package-lock.json')
+    original = authority['original_root_lock_witness']
+    require(original['source_commit'] == BASE and original['mode'] == '100644' and
+            sha(before_raw) == original['sha256'] ==
+            '99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568' and
+            git('show', BASE+':package-lock.json') == before_raw, 'R12_ORIGINAL_LOCK_AUTHORITY')
+    frozen = json.loads(git('show', RELEASE12_BASE+
+        ':docs/brain/contracts/SECURITY-11/dependency-patch.v1.json'), object_pairs_hook=pairs)['nodes']
+    require(authority['nodes'] == frozen and len(frozen) == 8 and
+            authority['changed_nodes'] == list(frozen), 'R12_REVIEWED_EIGHT_NODES')
+    before = json.loads(before_raw, object_pairs_hook=pairs)
+    after = json.loads(raw, object_pairs_hook=pairs)
+    expected = json.loads(before_raw, object_pairs_hook=pairs)
+    expected['packages'].update(frozen)
+    require(after == expected and list(after['packages']) == list(before['packages']),
+            'R12_EXACT_CLOSURE_AND_ORDER')
+    require(authority['candidate_root_lock']['blob'] ==
+            hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest(), 'R12_LOCK_BLOB')
+    for row in authority['historical_contracts'] + [authority['reviewed_nodes_source']]:
+        require(sha(git('show', RELEASE12_BASE+':'+row['path'])) == row['sha256'] and
+                read_after(row['path']) == git('show', RELEASE12_BASE+':'+row['path']),
+                'R12_HISTORICAL_WITNESS:'+row['path'])
+    for row in authority['declarations']:
+        require(read_after(row['path']) == git('show', RELEASE12_BASE+':'+row['path']),
+                'R12_DECLARATION:'+row['path'])
+    for row in authority['registry']:
+        require(row['path'] in frozen and row['integrity_verified'] is True and
+                row['signature_verified'] is True and row['provenance_verified'] is True,
+                'R12_REGISTRY_VERIFICATION')
+        for key in ('metadata', 'attestations'):
+            require(sha(read_after(row[key]['path'])) == row[key]['sha256'],
+                    'R12_REGISTRY_BYTES:'+row[key]['path'])
+        metadata = json.loads(read_after(row['metadata']['path']), object_pairs_hook=pairs)
+        require(metadata['dist']['integrity'] == frozen[row['path']]['integrity'] and
+                metadata['dist']['tarball'] == frozen[row['path']]['resolved'], 'R12_REGISTRY_INTEGRITY')
+    proof = authority['provenance']
+    require(sha(read_after(proof['path'])) == proof['sha256'], 'R12_PROVENANCE_BYTES')
+    return authority
+
+
+def validate12_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R12_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split()
+        path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R12_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed12(path) and status in ('A', 'M'), 'R12_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R12_COLLISION:'+path)
+        names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R12_MODE:'+path)
+        require((path in RELEASE12_EXISTING) == (oldmode == ':100644') and
+                status == ('A' if oldmode == ':000000' else 'M') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)),
+                'R12_CREATE_EDIT:'+path)
+        data = read_after(path)
+        if path == 'package-lock.json':
+            dependency12_guard(data, read_after)
+        if path == RELEASE12_MANIFEST:
+            require(sha(data) == RELEASE12_MANIFEST_SHA256, 'R12_MANIFEST_IDENTITY')
+        if path == 'scripts/release/full-app-j01/check.py':
+            validate11_checker(data)  # Every old function/global except source_guard is unchanged.
+
+
+def source12_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2:
+        return head
+    require(len(parents) == 3, 'R12_LINEAR_HISTORY:'+head)
+    require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE12_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R12_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R12_CI_EVENT')
+    event = load(event_path)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE12_PR and pr.get('number') == RELEASE12_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE12_BASE and parents[1] == RELEASE12_BASE and
+            pr.get('base', {}).get('ref') == 'stage/m103-security-source-recovery11' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m103-dependency-witness12' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin',
+            'R12_CI_EVENT_IDENTITY')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'),
+            'R12_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source12_history():
+    require(git('rev-parse', RELEASE12_BASE+'^{tree}').decode().strip() == RELEASE12_TREE,
+            'R12_BASE_TREE')
+    endpoint = source12_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE12_BASE, endpoint],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE12_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2,
+                'R12_LINEAR_HISTORY:'+commit)
+        read_after = lambda path: git('show', commit+':'+path)
+        validate12_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE12_BASE, commit), read_after)
+        if git('ls-tree', commit, '--', RELEASE12_MANIFEST).strip():
+            dependency12_guard(read_after('package-lock.json'), read_after)
+
+
+def source12_guard():
+    source12_history()
+    for row in ('package.json', 'apps/mobile/package.json'):
+        require(regular(ROOT/row) == git('show', RELEASE12_BASE+':'+row) == git('show', ':'+row),
+                'R12_DECLARATION:'+row)
+    dependency12_guard(regular(ROOT/'package-lock.json'))
+    dependency12_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p))
+    validate12_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE12_BASE),
+                    lambda path: git('show', ':'+path))
+    validate12_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE12_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R12_INDEX_FLAGS:'+entry)
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R12_COLLISION:'+entry[2:])
+            names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed12(path) and path not in RELEASE12_EXISTING, 'R12_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R12_COLLISION:'+path)
+            names.add(key)
+            regular(ROOT/path)
+
+
+def source11_historical_segment():
+    """Keep the unedited Release11 history checker bounded at the exact PR15 endpoint."""
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'):
+            return actual_git('rev-parse', RELEASE12_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source11_history()
+    finally:
+        globals()['git'] = actual_git
+
+
+def validate12(bundle=BUNDLE):
+    """Run the successor and original witness meanings as separate source versions.
+
+    Only an authenticated current candidate permits this isolated historical reader.
+    The original validate()/witness() code, old records and all semantic checks stay
+    byte/AST identical. Neither a changed hash nor an old blob can admit current code.
+    """
+    if not release12_active():
+        return RELEASE12_LEGACY_VALIDATE(bundle)
+    authority = dependency12_guard(regular(ROOT/'package-lock.json'))
+    # A separate globals dictionary prevents changing regular() for any current
+    # guard or caller. Exactly one old source link is read at its declared version.
+    namespace = dict(globals())
+    actual_regular = regular
+    def historical_witness_reader(path):
+        if path == ROOT/'package-lock.json':
+            return git('show', BASE+':package-lock.json')
+        return actual_regular(path)
+    namespace['regular'] = historical_witness_reader
+    import types
+    legacy = types.FunctionType(RELEASE12_LEGACY_VALIDATE.__code__, namespace)
+    result = legacy(bundle)
+    result['historical_lock_witness'] = authority['original_root_lock_witness']['sha256']
+    result['current_dependency_witness'] = RELEASE12_LOCK_SHA256
+    result['dependency_successor_status'] = 'CANDIDATE_REVIEW_REQUIRED'
+    return result
+
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -499,11 +722,15 @@ def source_guard():
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
     source10_historical_segment()
-    source11_guard()
+    if release12_active():
+        source11_historical_segment()
+        source12_guard()
+    else:
+        source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)
@@ -723,6 +950,11 @@ def main():
     except (ValueError, KeyError, TypeError, OSError, subprocess.SubprocessError) as error:
         print(json.dumps(dict(valid=False, release='NO_GO', error=str(error)), sort_keys=True))
         return 1
+
+
+# Preserve the original validator function/AST for historical consumers.
+RELEASE12_LEGACY_VALIDATE = validate
+validate = validate12
 
 
 if __name__ == '__main__':

@@ -1,0 +1,13 @@
+{
+  "name": "provenance",
+  "argv": [
+    "node",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\provenance.cjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+  "started": "2026-10-25T04:47:11.623890+00:00",
+  "elapsed_seconds": 7.485,
+  "exit": 0,
+  "log_sha256": "1b1599d975f8c13136d9b5117d31a9b506acb7b7a0001216fcb1091272dc92b8",
+  "log_bytes": 389
+}

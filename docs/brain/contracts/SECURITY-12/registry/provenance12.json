@@ -1,0 +1,622 @@
+{
+  "npm": "11.20.0",
+  "pacote": "21.5.1",
+  "verified": [
+    {
+      "path": "node_modules/@vitest/expect",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/expect@4.1.12",
+                "digest": {
+                  "sha512": "bc5953b7e604bbd581a4d8dd19ac8d9a5315ceb58f8b5facbfce77ffbb76154ee1a4ee6000504a1f3426902ab95e3a6bf9ebde805dbdf782d04f7845de6465a9"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/expect",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/expect@4.1.12",
+                "digest": {
+                  "sha512": "bc5953b7e604bbd581a4d8dd19ac8d9a5315ceb58f8b5facbfce77ffbb76154ee1a4ee6000504a1f3426902ab95e3a6bf9ebde805dbdf782d04f7845de6465a9"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/mocker",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/mocker@4.1.12",
+                "digest": {
+                  "sha512": "7ca4a1369299ceea5666e634cfb7a0c9dbcbd2ca96e08344641104c4c04c01aea2ce510d1151f0a1781d69309a059e5fc25af8c5fda8d705c2f379fd4693be34"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/mocker",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/mocker@4.1.12",
+                "digest": {
+                  "sha512": "7ca4a1369299ceea5666e634cfb7a0c9dbcbd2ca96e08344641104c4c04c01aea2ce510d1151f0a1781d69309a059e5fc25af8c5fda8d705c2f379fd4693be34"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/pretty-format",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/pretty-format@4.1.12",
+                "digest": {
+                  "sha512": "5d6f4ef3e331c785690ad91874c24b650430b15af23fdc24edc3ca0f1b5715fc126a4eb2461e7ed9f7a9fd8d1717f12506f247abc6dc61d8ba69eb9a8b4a2964"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/pretty-format",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/pretty-format@4.1.12",
+                "digest": {
+                  "sha512": "5d6f4ef3e331c785690ad91874c24b650430b15af23fdc24edc3ca0f1b5715fc126a4eb2461e7ed9f7a9fd8d1717f12506f247abc6dc61d8ba69eb9a8b4a2964"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/runner",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/runner@4.1.12",
+                "digest": {
+                  "sha512": "34a955282af942709ef238a374c9e69291c753e593aa22c547a1b4a478e2f6e4635caf71265d64d674f0e85de938e8f63c372c0edd86290308ef022c693e3dd7"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/runner",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/runner@4.1.12",
+                "digest": {
+                  "sha512": "34a955282af942709ef238a374c9e69291c753e593aa22c547a1b4a478e2f6e4635caf71265d64d674f0e85de938e8f63c372c0edd86290308ef022c693e3dd7"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/snapshot",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/snapshot@4.1.12",
+                "digest": {
+                  "sha512": "928d72d5081bfec97343d9abf9bf3d0aeaae77c586d532adb0f0fcafb65405dbd5386b7ce407f61f00aa1ee8eb87026af7986cffd44cedf7003e0e7ba35be5cf"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/snapshot",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/snapshot@4.1.12",
+                "digest": {
+                  "sha512": "928d72d5081bfec97343d9abf9bf3d0aeaae77c586d532adb0f0fcafb65405dbd5386b7ce407f61f00aa1ee8eb87026af7986cffd44cedf7003e0e7ba35be5cf"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/spy",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/spy@4.1.12",
+                "digest": {
+                  "sha512": "446abdc7824d18d4d91c4271bcdd284a2263792084c66d27da064a28964763d717e40540e8ced52482c14f7649fed27fd09f6e593edf11357dfdbb688bffef4a"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/spy",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/spy@4.1.12",
+                "digest": {
+                  "sha512": "446abdc7824d18d4d91c4271bcdd284a2263792084c66d27da064a28964763d717e40540e8ced52482c14f7649fed27fd09f6e593edf11357dfdbb688bffef4a"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@vitest/utils",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/utils@4.1.12",
+                "digest": {
+                  "sha512": "4376b05ebc0e7c457ea9cdd698ee4e372134c8eed0d6043dfe8c87c462d9fe997b37734efd9ceda90c0a2eec0c915f8203525848878ede09079d10c8a3801568"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "@vitest/utils",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/%40vitest/utils@4.1.12",
+                "digest": {
+                  "sha512": "4376b05ebc0e7c457ea9cdd698ee4e372134c8eed0d6043dfe8c87c462d9fe997b37734efd9ceda90c0a2eec0c915f8203525848878ede09079d10c8a3801568"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "node_modules/vitest",
+      "registry_signature": "VERIFIED",
+      "attestations": "VERIFIED",
+      "statements": [
+        {
+          "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "pkg:npm/vitest@4.1.12",
+                "digest": {
+                  "sha512": "e5e59dcf6c9bdda8f1585dc2f02e138e45e5ec51a6de7d84fd595acc02eb407ccaee760c486167099b68d1b6cf365efb03090e6552e4d189c101e8d4bb436258"
+                }
+              }
+            ],
+            "predicateType": "https://github.com/npm/attestation/tree/main/specs/publish/v0.1",
+            "predicate": {
+              "name": "vitest",
+              "version": "4.1.12",
+              "registry": "https://registry.npmjs.org"
+            }
+          }
+        },
+        {
+          "predicateType": "https://slsa.dev/provenance/v1",
+          "statement": {
+            "_type": "https://in-toto.io/Statement/v1",
+            "subject": [
+              {
+                "name": "pkg:npm/vitest@4.1.12",
+                "digest": {
+                  "sha512": "e5e59dcf6c9bdda8f1585dc2f02e138e45e5ec51a6de7d84fd595acc02eb407ccaee760c486167099b68d1b6cf365efb03090e6552e4d189c101e8d4bb436258"
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+              "buildDefinition": {
+                "buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+                "externalParameters": {
+                  "workflow": {
+                    "ref": "refs/heads/v4",
+                    "repository": "https://github.com/vitest-dev/vitest",
+                    "path": ".github/workflows/publish.yml"
+                  }
+                },
+                "internalParameters": {
+                  "github": {
+                    "event_name": "push",
+                    "repository_id": "434708679",
+                    "repository_owner_id": "95747107"
+                  }
+                },
+                "resolvedDependencies": [
+                  {
+                    "uri": "git+https://github.com/vitest-dev/vitest@refs/heads/v4",
+                    "digest": {
+                      "gitCommit": "4766ce1e72ded629d3a37637f57eeae643789a8c"
+                    }
+                  }
+                ]
+              },
+              "runDetails": {
+                "builder": {
+                  "id": "https://github.com/actions/runner/github-hosted"
+                },
+                "metadata": {
+                  "invocationId": "https://github.com/vitest-dev/vitest/actions/runs/38752077783/attempts/1"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
