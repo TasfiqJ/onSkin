@@ -1142,7 +1142,7 @@ def source14_guard():
 
 RELEASE15_BASE = '53cf869c5fc5f13ecd18dc1ef9c3a6288eaae51a'
 RELEASE15_TREE = '1c483dedfb4c5d51994be07f65f1a40bdd52be73'
-RELEASE15_PR = 0  # Bind only after GitHub allocates the new draft.
+RELEASE15_PR = 19  # Allocated by GitHub after draft creation on 2026-10-25.
 RELEASE15_AUTHORITY = 'BRAIN-M103-G97-FULL-COVERAGE15-CANDIDATE-01'
 RELEASE15_EXISTING = {'scripts/release/full-app-j01/check.py',
     'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
