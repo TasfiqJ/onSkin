@@ -54,12 +54,14 @@ def parse(raw):
 def path_key(name):
     need(isinstance(name, str) and name and not name.startswith('/') and
          not re.search(r'\\|:|//|[\x00-\x1f\x7f]', name), 'UNSAFE_PATH')
-    for part in name.split('/'):
+    normalized = unicodedata.normalize('NFKC', name).casefold()
+    need(not normalized.startswith('/') and not re.search(r'\\|:|//|[\x00-\x1f\x7f]', normalized), 'UNSAFE_PATH')
+    for part in [*name.split('/'), *normalized.split('/')]:
         need(part not in ('', '.', '..') and part.casefold() != '.git' and
              part == part.strip() and not part.endswith('.') and
              not re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', part, re.I),
              'UNSAFE_PATH')
-    return unicodedata.normalize('NFKC', name).casefold()
+    return normalized
 
 def regular(path, limit=LIMIT):
     path = Path(path).absolute()
@@ -168,6 +170,15 @@ def coverage_rows(raw, expected_sha, expected):
                  [('required', 'source-text-or-generic-input'), ('auxiliary', 'opaque-jpeg-selected-by-generic-rules')]) or
                  (group == 'exclusions' and row['kind'] == 'excluded' and row['reason'] in
                   ['binary-png', 'binary-jpeg', 'gzip-source-witness', 'reviewed-scanner-engine-artifact']), 'COVERAGE_KIND')
+            if group == 'exclusions':
+                name = row['path']; reason = row['reason']
+                compressed = {PREFIX+n for n in ('history.json.gz', 'scan-targets.json.gz', 'test-fixtures.json.gz', 'legacy-sbom-fixture.json.gz')}
+                compressed.add('scripts/phase9/tooling-security-backports/originals.json.gz')
+                need((reason == 'binary-png' and name.endswith('.png')) or
+                     (reason == 'binary-jpeg' and name.endswith('.jpg')) or
+                     (reason == 'gzip-source-witness' and name in compressed) or
+                     (reason == 'reviewed-scanner-engine-artifact' and name == PREFIX+'semgrep-engine-linux-x86_64.tar.gz'),
+                     'COVERAGE_BROAD_EXCLUSION')
             out[row['path']] = dict(group=group, kind=row['kind'], reason=row['reason'])
     need(set(out) == set(expected), 'COVERAGE_OMISSION')
     sql = sorted(n for n, r in out.items() if r['kind'] == 'required' and n.startswith('supabase/tests/') and n.endswith('.sql'))

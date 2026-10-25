@@ -101,11 +101,12 @@ function gitNulPaths(root, args) {
     .split('\0');
   const seen = new Set();
   for (const path of paths) {
+    const normalized = path.normalize('NFKC');
     assert.ok(
-      path && !/(^\/|\\|:|\/\/|[\x00-\x1f\x7f]|(^|\/)\.\.?($|\/))/u.test(path),
+      path && !/(^\/|\\|:|\/\/|[\x00-\x1f\x7f]|(^|\/)\.\.?($|\/))/u.test(normalized),
       'Git path inventory contains an invalid path',
     );
-    const key = path.normalize('NFKC').toLowerCase();
+    const key = normalized.toUpperCase().toLowerCase();
     assert.ok(!seen.has(key), 'Git path inventory contains colliding paths');
     seen.add(key);
   }
@@ -300,7 +301,9 @@ test('bounded Git paths reject malformed, truncated, duplicate and colliding out
     Buffer.from('docs/a\0docs/a\0'),
     Buffer.from('docs/A\0docs/a\0'),
     Buffer.from('docs/Ａ\0docs/a\0'),
+    Buffer.from('docs/ß\0docs/ss\0'),
     Buffer.from('../escape\0'),
+    Buffer.from('docs/．．/escape\0'),
     Buffer.from('docs//empty\0'),
   ]) {
     const blob = git(root, ['hash-object', '-w', '--stdin'], { input: bytes });

@@ -936,7 +936,7 @@ def validate13(bundle=BUNDLE):
 RELEASE14_BASE = 'd0c5ad49ba22c8da7136d59a399589af1cea0e82'
 RELEASE14_TREE = '4cfe9c819df4c22fc5d19d79f9c0e89e0e24c973'
 RELEASE14_AUTHORITY = 'BRAIN-M103-G97-SOURCE-TRIAGE14-CANDIDATE-01'
-RELEASE14_PR = 0  # Fail closed until GitHub allocates the new draft's identity.
+RELEASE14_PR = 18  # Allocated by GitHub on 2026-10-25; observed after draft creation.
 RELEASE14_EXISTING = {'scripts/launch/governed-evidence-chain.test.mjs',
     'scripts/release/full-app-j01/check.py', 'docs/phase-4/generated/source-worklist.json',
     'docs/phase-4/generated/source-worklist.md', 'ONSKIN_BRAIN_HANDOFF.txt'}

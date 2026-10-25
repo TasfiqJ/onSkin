@@ -13,6 +13,8 @@ class InventoryTests(unittest.TestCase):
         raw=inv.canonical(good)
         self.assertEqual(inv.manifest_rows(raw,inv.sha(raw)), {'src/a.py':'a'*64})
         with self.assertRaises(ValueError): inv.manifest_rows(raw,'0'*64)
+        for name in ['docs/．．/escape','docs/.. /escape','docs/CON.txt','docs/.git/config']:
+            with self.assertRaises(ValueError):inv.path_key(name)
         for value in [good+good, [dict(path='../escape',sha256='a'*64)],
                       [dict(path='/absolute',sha256='a'*64)],
                       [good[0],dict(path='src/Ａ.py',sha256='a'*64),dict(path='src/a.PY',sha256='b'*64)]]:
@@ -28,6 +30,9 @@ class InventoryTests(unittest.TestCase):
             d=json.loads(json.dumps(data)); mutate(d); b=gzip.compress(inv.canonical(d),mtime=0)
             with self.assertRaises(ValueError): inv.coverage_rows(b,inv.sha(b),{'src/a.py'})
         with self.assertRaises((ValueError,EOFError,OSError)): inv.coverage_rows(body[:-5],inv.sha(body[:-5]),{'src/a.py'})
+        broad=dict(schema=1,targets=[],exclusions=[dict(path='src/a.py',kind='excluded',reason='binary-png')],explicitTargets=[])
+        body=gzip.compress(inv.canonical(broad),mtime=0)
+        with self.assertRaises(ValueError):inv.coverage_rows(body,inv.sha(body),{'src/a.py'})
 
     def test_real_git_modes_renames_and_bounded_nul(self):
         with tempfile.TemporaryDirectory(prefix='security14-inventory-') as tmp:

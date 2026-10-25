@@ -1,0 +1,208 @@
+{
+  "advisories": [
+    {
+      "id": "GHSA-mrhx-c7xc-m3w5",
+      "references": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2023-54404",
+        "https://github.com/colinhacks/zod/issues/1872",
+        "https://github.com/colinhacks/zod/pull/6475",
+        "https://www.vulncheck.com/advisories/zod-uncontrolled-resource-consumption-via-array-validation",
+        "https://github.com/colinhacks/zod/pull/6652",
+        "https://github.com/colinhacks/zod/commit/a0ebf970f2d752e5f58527cd2942ff48be4f46bd",
+        "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5"
+      ],
+      "response_sha256": "b90531accc02567c19f5124cc33f6efcdf451e05c0bad1cde56aac6ee2cd9e3a",
+      "severity": "high",
+      "updated_at": "2026-10-23T18:26:52Z",
+      "url": "https://api.github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+      "vulnerabilities": [
+        {
+          "first_patched_version": "4.6.6",
+          "package": {
+            "ecosystem": "npm",
+            "name": "zod"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": "< 4.6.6"
+        }
+      ],
+      "withdrawn_at": null
+    },
+    {
+      "id": "GHSA-vfj7-8cjw-p6xm",
+      "references": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-93687",
+        "https://github.com/micromatch/braces/issues/70",
+        "https://github.com/micromatch/braces/blob/3.0.3/lib/compile.js#L49-L53",
+        "https://github.com/micromatch/braces/blob/3.0.3/lib/expand.js#L102-L105",
+        "https://github.com/micromatch/braces/blob/3.0.3/lib/parse.js#L38-L40",
+        "https://www.vulncheck.com/advisories/braces-through-3.0.3-stack-overflow-via-deeply-nested-patterns",
+        "https://github.com/micromatch/braces/issues/73#issuecomment-5996574974",
+        "https://github.com/micromatch/braces",
+        "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+      ],
+      "response_sha256": "3d354429db1b635e06e60dcce43208bcf21fa006f91019c2497e88b5a92ca6f7",
+      "severity": "high",
+      "updated_at": "2026-10-23T12:53:05Z",
+      "url": "https://api.github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "vulnerabilities": [
+        {
+          "first_patched_version": null,
+          "package": {
+            "ecosystem": "npm",
+            "name": "braces"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": "<= 3.0.3"
+        }
+      ],
+      "withdrawn_at": "2026-10-23T12:53:02Z"
+    },
+    {
+      "id": "GHSA-86w9-cpqp-85rv",
+      "references": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-85393",
+        "https://github.com/digitalbazaar/forge/issues/1149",
+        "https://github.com/advisories/GHSA-ppp5-5v6c-4jwp",
+        "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/asn1.js",
+        "https://github.com/digitalbazaar/forge/blob/v1.4.0/lib/rsa.js",
+        "https://www.vulncheck.com/advisories/node-forge-through-1.4.0-rsa-pkcs-1-1.5-signature-forgery-via-nested-digestalgorithm-padding",
+        "https://github.com/digitalbazaar/forge/pull/1152",
+        "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
+      ],
+      "response_sha256": "97c3ad2ede7e420b07bf1cef998e4e319d4a01f6b6760192be5fa9dbeb46c5c8",
+      "severity": "high",
+      "updated_at": "2026-10-01T21:09:10Z",
+      "url": "https://api.github.com/advisories/GHSA-86w9-cpqp-85rv",
+      "vulnerabilities": [
+        {
+          "first_patched_version": null,
+          "package": {
+            "ecosystem": "npm",
+            "name": "node-forge"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": "<= 1.4.0"
+        }
+      ],
+      "withdrawn_at": null
+    },
+    {
+      "id": "GHSA-xcq7-p3pf-p88h",
+      "references": [
+        "https://github.com/open-telemetry/opentelemetry-python/security/advisories/GHSA-xcq7-p3pf-p88h",
+        "https://github.com/open-telemetry/opentelemetry-python/pull/5749",
+        "https://github.com/open-telemetry/opentelemetry-python/commit/d5224bf4ffdf2aee1b592ad238dcc32ca957f26b",
+        "https://github.com/open-telemetry/opentelemetry-python/blob/main/CHANGELOG.md#version-1451066b1-2026-10-06",
+        "https://github.com/open-telemetry/opentelemetry-python/releases/tag/v1.45.1",
+        "https://github.com/advisories/GHSA-xcq7-p3pf-p88h"
+      ],
+      "response_sha256": "2e56e0bd22f17222764da39a4c6da0837c78c31f52b1b6e7c5fb8784857b9272",
+      "severity": "medium",
+      "updated_at": "2026-10-22T16:22:08Z",
+      "url": "https://api.github.com/advisories/GHSA-xcq7-p3pf-p88h",
+      "vulnerabilities": [
+        {
+          "first_patched_version": "1.45.1",
+          "package": {
+            "ecosystem": "pip",
+            "name": "opentelemetry-api"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": "<= 1.45.0"
+        }
+      ],
+      "withdrawn_at": null
+    },
+    {
+      "id": "GHSA-6q48-6c7w-9gw2",
+      "references": [
+        "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2",
+        "https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576",
+        "https://emudhra.we-have-a-problem.com",
+        "https://github.com/advisories/GHSA-6q48-6c7w-9gw2"
+      ],
+      "response_sha256": "744e6f07692b60127a7de335386ad71a2b6e27a27f6879d969ec6fc81a9705b7",
+      "severity": "critical",
+      "updated_at": "2026-10-20T19:35:06Z",
+      "url": "https://api.github.com/advisories/GHSA-6q48-6c7w-9gw2",
+      "vulnerabilities": [
+        {
+          "first_patched_version": "2026.10.19",
+          "package": {
+            "ecosystem": "pip",
+            "name": "certifi"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": ">= 2019.03.09, < 2026.10.19"
+        }
+      ],
+      "withdrawn_at": null
+    },
+    {
+      "id": "GHSA-84m7-p3x7-pcfv",
+      "references": [
+        "https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv",
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-59951",
+        "https://github.com/modelcontextprotocol/python-sdk/pull/3395",
+        "https://github.com/modelcontextprotocol/python-sdk/pull/3426",
+        "https://github.com/modelcontextprotocol/python-sdk/commit/92120b4b0f50385af096592d7cee932fc1d994e7",
+        "https://github.com/modelcontextprotocol/python-sdk/commit/d2290ca3434731b68ea3e2270bc06a6e6575931b",
+        "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v1.30.0",
+        "https://github.com/modelcontextprotocol/python-sdk/releases/tag/v2.2.0",
+        "https://github.com/advisories/GHSA-84m7-p3x7-pcfv"
+      ],
+      "response_sha256": "e2cc4ffa8b702cc8b7f5fcfc999891a28ad9485dc9446a58d8513687a17aceee",
+      "severity": "medium",
+      "updated_at": "2026-10-15T20:13:14Z",
+      "url": "https://api.github.com/advisories/GHSA-84m7-p3x7-pcfv",
+      "vulnerabilities": [
+        {
+          "first_patched_version": "1.30.0",
+          "package": {
+            "ecosystem": "pip",
+            "name": "mcp"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": ">= 1.8.0, < 1.30.0"
+        },
+        {
+          "first_patched_version": "2.2.0",
+          "package": {
+            "ecosystem": "pip",
+            "name": "mcp"
+          },
+          "vulnerable_functions": [],
+          "vulnerable_version_range": ">= 2.0.0, < 2.2.0"
+        }
+      ],
+      "withdrawn_at": null
+    }
+  ],
+  "official_scanner_receipts": [
+    {
+      "asset_sha256": "9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c",
+      "binary_sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+      "bytes": 5796002,
+      "executed": false,
+      "release_id": 211858833,
+      "release_metadata_sha256": "3d4523e8fbe8389160cf5e546eb89fa7402b8b0e0a0e1f91c443ebaf46808214",
+      "tool": "gitleaks",
+      "url": "https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz",
+      "version": "8.24.3"
+    },
+    {
+      "asset_sha256": "029b182e0ed35fd5b02cd1eadc2a94bd457ab14ad22a9380b6e5d9652261d28d",
+      "binary_sha256": "f315489f12691f669fd16bafeaf983168dcdd22c0652b541ff7e41dc7da9aa61",
+      "bytes": 35906556,
+      "executed": false,
+      "release_id": 417604399,
+      "release_metadata_sha256": "e35c38a3e0a2aec48969ecfef3abc3f23097f969124b0a212a133c5251e422b8",
+      "tool": "trufflehog",
+      "url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.99.3/trufflehog_3.99.3_linux_amd64.tar.gz",
+      "version": "3.99.3"
+    }
+  ],
+  "schema": 1,
+  "status": "PRIMARY_SOURCE_OBSERVATIONS_NOT_OWNER_ACCEPTANCE"
+}
