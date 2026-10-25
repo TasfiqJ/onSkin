@@ -1,0 +1,1967 @@
+{
+  "status": "PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED",
+  "authorization": "BRAIN-M103-IOS-PRIVACY-LOCK-SUCCESSION13-CANDIDATE-01",
+  "source": {
+    "commit": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+    "tree": "90399d8622016c903f7e637a555bcb90dde2ed02"
+  },
+  "implementation": {
+    "commit": "32c0d29743230faab1a8421cfdff6beea9343931",
+    "tree": "926159902c18e88643d07665213995055685a0f8"
+  },
+  "base": {
+    "commit": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+    "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d"
+  },
+  "branch": "stage/m103-ios-privacy-lock-succession13",
+  "pr": 17,
+  "base_branch": "stage/m103-dependency-witness12",
+  "outcome": "Exact eight-node Vitest4.1.12 candidate APPLIED through separately pinned source-only native lock successor. Original mapping and producers remain byte-identical. No independent acceptance or release.",
+  "successor_sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
+  "old_lock_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+  "candidate_lock_sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+  "original_native_ledger": "All native ledger hashes, counts, warnings, schema1, archive_required and false claims identical to PR16; only current lock input and separately named successor input change.",
+  "tests": {
+    "cold_install": "Primary and independent fresh npm caches,1028 packages, no lock drift; npm optional-script warnings retained without approval",
+    "root": {
+      "passed": 6190,
+      "cached_tasks": 0,
+      "measured_source": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+      "later_delta": "Only new custody document labels and Phase4 Git/timestamp projection metadata; all executable/test/package bytes unchanged. Final evidence-head CI executes independently."
+    },
+    "typecheck_lint": "Forced uncached PASS at clean measured source; final-head CI observed separately",
+    "native_tests": {
+      "total": 81,
+      "passed_windows": 79,
+      "skipped_windows": 2,
+      "failed": 0,
+      "skips": "Original and successor actual file-symlink tests lack Windows privilege; actual Linux native tests are exercised by unchanged CI step."
+    },
+    "source13_refusals": 68,
+    "dependency13_refusals": 66,
+    "predecessor_refusals": [
+      23,
+      44,
+      58,
+      9,
+      55,
+      49
+    ],
+    "original_semantic_negatives": {
+      "count": 151,
+      "current": 0,
+      "malicious": 1,
+      "restored": 0,
+      "class": "Original unedited bundle fixtures in real GitHub source job121207060958 at b835; raw log retained. Overall run later CANCELLED by newer source push; final-head result is separate."
+    },
+    "launch_and_source_packet": "Original unchanged launch chain and strict source-packet PASS",
+    "security_original_suite": {
+      "tests": 70,
+      "failures": 21,
+      "errors": 19,
+      "exit": 1,
+      "supported_python": "bundled Python3.12; retained exact failing case identities match prior receipt set"
+    },
+    "security_original_source": {
+      "exit": 1,
+      "code": "SOURCE_INVENTORY_DRIFT"
+    },
+    "independent": {
+      "qualification": "INDEPENDENT_COMPLETE_CHECKOUT_SEPARATE_GIT_OBJECTS",
+      "checkout": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "source_commit": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+      "source_tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+      "tracked_files": 23308,
+      "all_tracked_files_materialized": true,
+      "shallow": false,
+      "alternates": false,
+      "hardlinked_objects": false,
+      "cold_install": "independent-cold-ci13.receipt.json; exact lock and executable source bytes unchanged since b835; later custody/projection-only changes fetched before tests",
+      "governance_actual_lock_mutation": [
+        0,
+        1,
+        0
+      ],
+      "native_actual_installed_source_pin_mutation": [
+        0,
+        1,
+        0
+      ],
+      "phase4_actual_workflow_source_input_mutation": [
+        0,
+        1,
+        0
+      ],
+      "mutations": "Uncommitted disposable changes restored byte-for-byte; no production protected ref changed",
+      "worklist_summary": {
+        "itemCount": 14,
+        "domainCounts": {
+          "sourceReview": 3,
+          "curation": 4,
+          "betaEvidence": 1,
+          "productSurface": 4,
+          "operations": 2
+        },
+        "statusCounts": {
+          "blocked": 7,
+          "local-scaffold": 7
+        },
+        "sourcePathCount": 420,
+        "missingSourcePathCount": 0,
+        "blockerCount": 0,
+        "warningCount": 0
+      },
+      "clean_after": true,
+      "acceptanceGranted": false,
+      "release": "NO_GO"
+    },
+    "historical": {
+      "qualification": "INDEPENDENT_COMPLETE_CHECKOUT_SEPARATE_GIT_OBJECTS",
+      "endpoints": {
+        "12": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "11": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "10": "14805e7f708297e72419035f517acc41ba52da70",
+        "09": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "08": "d08347f0011672cd309d835628c094b5e9f4725d"
+      },
+      "original_lock_witness": [
+        0,
+        1,
+        0
+      ],
+      "alternates": false,
+      "acceptance": false
+    }
+  },
+  "receipts": {
+    "cold-ci13.receipt.json": {
+      "name": "cold-ci13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "ci",
+        "--cache",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\npm-cold-cache13",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:04:32.733337+00:00",
+      "elapsed_seconds": 49.765,
+      "exit": 0,
+      "log_sha256": "3a24f8cd529bb83ee1e88ed3d83e66018d6a33a04ca1e7f73c6dd3137049b9bc",
+      "log_bytes": 712,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "2d8e92000d689a23bf8f300652e1db14dc754e13df1056d6973a1896f8720610",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "2d8e92000d689a23bf8f300652e1db14dc754e13df1056d6973a1896f8720610",
+        "clean": false
+      }
+    },
+    "dependency13-frozen.receipt.json": {
+      "name": "dependency13-frozen",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard13.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:22:37.150012+00:00",
+      "elapsed_seconds": 35.562,
+      "exit": 0,
+      "log_sha256": "5f9dc5616fcf2e082aa6d7e2e89ee8c53895f46261f06b22c321a4b528bbd57f",
+      "log_bytes": 8978,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "dependency13.receipt.json": {
+      "name": "dependency13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard13.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:05:51.658964+00:00",
+      "elapsed_seconds": 16.734,
+      "exit": 0,
+      "log_sha256": "5f9dc5616fcf2e082aa6d7e2e89ee8c53895f46261f06b22c321a4b528bbd57f",
+      "log_bytes": 8978,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "governance13.receipt.json": {
+      "name": "governance13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:06:09.677150+00:00",
+      "elapsed_seconds": 52.594,
+      "exit": 0,
+      "log_sha256": "9a5f8a87ab495b8246d36f97d339576d2a3694397c85b4c5be8e0c535778e6b2",
+      "log_bytes": 600,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "historical13-release08-current.receipt.json": {
+      "name": "historical13-release08-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:20.912034+00:00",
+      "elapsed_seconds": 2.203,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+        "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+        "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release08-malicious.receipt.json": {
+      "name": "historical13-release08-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:23.443302+00:00",
+      "elapsed_seconds": 0.453,
+      "exit": 1,
+      "log_sha256": "785788ad61e2dce34fbf89247d2ef712dddab8df167cd22390f2a5aa6eea444e",
+      "log_bytes": 82,
+      "source_before": {
+        "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+        "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      },
+      "source_after": {
+        "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+        "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      }
+    },
+    "historical13-release08-restored.receipt.json": {
+      "name": "historical13-release08-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:24.201467+00:00",
+      "elapsed_seconds": 2.343,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+        "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d08347f0011672cd309d835628c094b5e9f4725d",
+        "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release09-current.receipt.json": {
+      "name": "historical13-release09-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:11.896008+00:00",
+      "elapsed_seconds": 3.453,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release09-malicious.receipt.json": {
+      "name": "historical13-release09-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:15.693075+00:00",
+      "elapsed_seconds": 0.922,
+      "exit": 1,
+      "log_sha256": "188b9228b91c9adbbe69120870e23afcb5e6cffe25038437789d30c8b09ccc55",
+      "log_bytes": 78,
+      "source_before": {
+        "head": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      },
+      "source_after": {
+        "head": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      }
+    },
+    "historical13-release09-restored.receipt.json": {
+      "name": "historical13-release09-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:16.945317+00:00",
+      "elapsed_seconds": 3.39,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "8ac97c32901272d97d1bff05f2abc294811055a6",
+        "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release10-current.receipt.json": {
+      "name": "historical13-release10-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:21:27.504621+00:00",
+      "elapsed_seconds": 15.485,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "14805e7f708297e72419035f517acc41ba52da70",
+        "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "14805e7f708297e72419035f517acc41ba52da70",
+        "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release10-malicious.receipt.json": {
+      "name": "historical13-release10-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:21:43.325220+00:00",
+      "elapsed_seconds": 12.844,
+      "exit": 1,
+      "log_sha256": "c5e14074aa26fc074e2c34c690627b233715cc634dc98e93d4c61ecb198a950f",
+      "log_bytes": 78,
+      "source_before": {
+        "head": "14805e7f708297e72419035f517acc41ba52da70",
+        "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      },
+      "source_after": {
+        "head": "14805e7f708297e72419035f517acc41ba52da70",
+        "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      }
+    },
+    "historical13-release10-restored.receipt.json": {
+      "name": "historical13-release10-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:21:56.463601+00:00",
+      "elapsed_seconds": 14.828,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "14805e7f708297e72419035f517acc41ba52da70",
+        "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "14805e7f708297e72419035f517acc41ba52da70",
+        "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release11-current.receipt.json": {
+      "name": "historical13-release11-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:20:04.198326+00:00",
+      "elapsed_seconds": 29.265,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release11-malicious.receipt.json": {
+      "name": "historical13-release11-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:20:33.814264+00:00",
+      "elapsed_seconds": 24.719,
+      "exit": 1,
+      "log_sha256": "dc7587e561e0a5e00bf7e2e92f9801034d884899540ac40cede9b381805ccc9e",
+      "log_bytes": 93,
+      "source_before": {
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      },
+      "source_after": {
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      }
+    },
+    "historical13-release11-restored.receipt.json": {
+      "name": "historical13-release11-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:20:58.848063+00:00",
+      "elapsed_seconds": 28.078,
+      "exit": 0,
+      "log_sha256": "423ee6a05248088a0213552fe8c4f7dc539fb32e7ed501ddbba345ed3be86030",
+      "log_bytes": 242,
+      "source_before": {
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+        "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release12-current.receipt.json": {
+      "name": "historical13-release12-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:18:18.929653+00:00",
+      "elapsed_seconds": 51.093,
+      "exit": 0,
+      "log_sha256": "56d7d55b08d00bc1024267f5992d2009bbac5d2d74ad74da8285cdf005e8cfb9",
+      "log_bytes": 600,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "historical13-release12-malicious.receipt.json": {
+      "name": "historical13-release12-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:19:10.328878+00:00",
+      "elapsed_seconds": 0.141,
+      "exit": 1,
+      "log_sha256": "836b38375f2ea140c92af5a2e481a7eb6e1e36bc2cb48510d31c9dc056a90e5f",
+      "log_bytes": 70,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      }
+    },
+    "historical13-release12-restored.receipt.json": {
+      "name": "historical13-release12-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:19:10.789509+00:00",
+      "elapsed_seconds": 52.812,
+      "exit": 0,
+      "log_sha256": "56d7d55b08d00bc1024267f5992d2009bbac5d2d74ad74da8285cdf005e8cfb9",
+      "log_bytes": 600,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "independent-clone13.receipt.json": {
+      "name": "independent-clone13",
+      "argv": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "-c",
+        "core.longpaths=true",
+        "clone",
+        "--no-local",
+        "--no-hardlinks",
+        "--no-checkout",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:09:47.479721+00:00",
+      "elapsed_seconds": 7.688,
+      "exit": 0,
+      "log_sha256": "4a9adcbc4788b8c83a1367bbe3333203934a062c6b37a53803631f8807521658",
+      "log_bytes": 113,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "independent-cold-ci13.receipt.json": {
+      "name": "independent-cold-ci13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "ci",
+        "--cache",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\npm-independent-cache13",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:22:27.699422+00:00",
+      "elapsed_seconds": 42.797,
+      "exit": 0,
+      "log_sha256": "4dd88ba3fd91e06e320d83d78ac746606eda219a6a11b711b2285a53568bc280",
+      "log_bytes": 712,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "independent-current13.receipt.json": {
+      "name": "independent-current13",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:26:03.361941+00:00",
+      "elapsed_seconds": 62.922,
+      "exit": 0,
+      "log_sha256": "9a5f8a87ab495b8246d36f97d339576d2a3694397c85b4c5be8e0c535778e6b2",
+      "log_bytes": 600,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "independent-malicious13.receipt.json": {
+      "name": "independent-malicious13",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:27:06.630886+00:00",
+      "elapsed_seconds": 0.14,
+      "exit": 1,
+      "log_sha256": "495b53a42634e87b92108111d0b96e43fc81478993887e44a89aefc118ae7063",
+      "log_bytes": 76,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": false,
+        "status_sha256": "ed4db2d3700f6c4489b697cd663e8cff0965cb31bf905fe8cbcfed98b5cbd44d"
+      }
+    },
+    "independent-restored13.receipt.json": {
+      "name": "independent-restored13",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:27:07.087910+00:00",
+      "elapsed_seconds": 62.953,
+      "exit": 0,
+      "log_sha256": "9a5f8a87ab495b8246d36f97d339576d2a3694397c85b4c5be8e0c535778e6b2",
+      "log_bytes": 600,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "inherited-dependency11-13.receipt.json": {
+      "name": "inherited-dependency11-13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard11.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:09:20.755541+00:00",
+      "elapsed_seconds": 0.938,
+      "exit": 0,
+      "log_sha256": "fdd4ebd9f9a101072f0624fe168af5941dcaf8bfac071be433d2ad86f757ea51",
+      "log_bytes": 873,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "inherited-dependency12-13.receipt.json": {
+      "name": "inherited-dependency12-13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:13:02.094104+00:00",
+      "elapsed_seconds": 17.703,
+      "exit": 0,
+      "log_sha256": "46ac52a17b456bc06f1db9c73d5876d89d603cfd8900d6cc9751530e3e488082",
+      "log_bytes": 7216,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "inherited-source12-13.receipt.json": {
+      "name": "inherited-source12-13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:13:02.093607+00:00",
+      "elapsed_seconds": 222.875,
+      "exit": 0,
+      "log_sha256": "42b7117d6e8ac1bf5e30d89b07b4138d7794936742733be053908823b104d126",
+      "log_bytes": 8453,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "inherited09-13.receipt.json": {
+      "name": "inherited09-13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:08:59.914017+00:00",
+      "elapsed_seconds": 3.671,
+      "exit": 0,
+      "log_sha256": "1efd087c37e21d79e5db30c0323b4cf595a90054b732aa6a334e05b15ac0ede1",
+      "log_bytes": 6257,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "inherited10-13.receipt.json": {
+      "name": "inherited10-13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer10.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:13:02.072605+00:00",
+      "elapsed_seconds": 10.062,
+      "exit": 0,
+      "log_sha256": "e0408a9b955f9ea4e18a1ed331cc8ddc102b0ad6aeb8aa154f12d33a47c1e0eb",
+      "log_bytes": 15232,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "inherited11-13.receipt.json": {
+      "name": "inherited11-13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer11.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:13:02.079603+00:00",
+      "elapsed_seconds": 57.0,
+      "exit": 0,
+      "log_sha256": "f499e7329c129c69f7b733f68252d318bf1f36b44db2382f1297bc0ca8cc48d7",
+      "log_bytes": 8690,
+      "source_before": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+        "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "ios-tests13-r2.receipt.json": {
+      "name": "ios-tests13-r2",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/phase9/ios-privacy-source-audit.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:06:09.676650+00:00",
+      "elapsed_seconds": 18.547,
+      "exit": 0,
+      "log_sha256": "5f7109fdf30772851bf43872666f60dcbeb36dc71528b6ebb2e63b3e8c04f564",
+      "log_bytes": 14179,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "ios-tests13.receipt.json": {
+      "name": "ios-tests13",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/phase9/ios-privacy-source-audit.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:01:01.584830+00:00",
+      "elapsed_seconds": 17.656,
+      "exit": 0,
+      "log_sha256": "3a083de465b25a5c2f2bc2ab6ec5c5f68846a518c50fa89d293d6938fb1f3df9",
+      "log_bytes": 14184,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "bdc16c1901b54d20a7a7eea99e7e3dfc7c0548e4dbad45e9e62e097c5a11a132",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "bdc16c1901b54d20a7a7eea99e7e3dfc7c0548e4dbad45e9e62e097c5a11a132",
+        "clean": false
+      }
+    },
+    "launch13.receipt.json": {
+      "name": "launch13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "launch:contract:verify"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:08:59.902019+00:00",
+      "elapsed_seconds": 72.187,
+      "exit": 0,
+      "log_sha256": "d38e0889d10f70500f5ea0f72bfef80b6f976c514bc50a1ca70be88d45cd6489",
+      "log_bytes": 28071,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "lint-frozen13.receipt.json": {
+      "name": "lint-frozen13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:15:34.401874+00:00",
+      "elapsed_seconds": 60.641,
+      "exit": 0,
+      "log_sha256": "755c0e5efded8a46531968624d909ff2f8552b681b03be58dda90409f697902a",
+      "log_bytes": 1164,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "lint13.receipt.json": {
+      "name": "lint13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:08:59.902019+00:00",
+      "elapsed_seconds": 46.766,
+      "exit": 0,
+      "log_sha256": "b85cb0cf86d70b5895cbff29d8314bf50bba536384d2c53940a16cb45d7bfb22",
+      "log_bytes": 1164,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "native-candidate13.receipt.json": {
+      "name": "native-candidate13",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:07:01.029754+00:00",
+      "elapsed_seconds": 16.297,
+      "exit": 0,
+      "log_sha256": "b0b677e4523299dbed06b1f29fdbe1625c0b92c9a6e2e790b2b153c0f8d8683d",
+      "log_bytes": 248120,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "native-generate13-final.receipt.json": {
+      "name": "native-generate13-final",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--write",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:24:19.919747+00:00",
+      "elapsed_seconds": 11.0,
+      "exit": 0,
+      "log_sha256": "b8bcdb8f60de5c822a26c5fbd338b33e3be476699476bd90be1a52b022d80b3d",
+      "log_bytes": 170,
+      "source_before": {
+        "head": "7f59555660a14905a8ed95730460414c96f16d52",
+        "tree": "5a5d7a23bec9e23b9fc2556cbe2527e56022cc0b",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "7f59555660a14905a8ed95730460414c96f16d52",
+        "tree": "5a5d7a23bec9e23b9fc2556cbe2527e56022cc0b",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "native-generate13.receipt.json": {
+      "name": "native-generate13",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--write",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:13:48.815172+00:00",
+      "elapsed_seconds": 11.172,
+      "exit": 0,
+      "log_sha256": "b8bcdb8f60de5c822a26c5fbd338b33e3be476699476bd90be1a52b022d80b3d",
+      "log_bytes": 170,
+      "source_before": {
+        "head": "32c0d29743230faab1a8421cfdff6beea9343931",
+        "tree": "926159902c18e88643d07665213995055685a0f8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "32c0d29743230faab1a8421cfdff6beea9343931",
+        "tree": "926159902c18e88643d07665213995055685a0f8",
+        "status_sha256": "c9bc0676f9060833995d735a83934190457e335971342f92d96596aae1dab86c",
+        "clean": false
+      }
+    },
+    "native-independent-current13.receipt.json": {
+      "name": "native-independent-current13",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--check",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:28:10.372652+00:00",
+      "elapsed_seconds": 11.375,
+      "exit": 0,
+      "log_sha256": "d960a107f2026007e252e97133834df9d7a12f213d6a109f18c4978829f5fda8",
+      "log_bytes": 162,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "native-independent-malicious13.receipt.json": {
+      "name": "native-independent-malicious13",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--check",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:28:22.058169+00:00",
+      "elapsed_seconds": 10.157,
+      "exit": 1,
+      "log_sha256": "21ecd5265c02074fd5ce0f369d0c676691a60ed10e69d5e645c7cc8f279af299",
+      "log_bytes": 156,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "native-independent-restored13.receipt.json": {
+      "name": "native-independent-restored13",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--check",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:28:32.531463+00:00",
+      "elapsed_seconds": 10.453,
+      "exit": 0,
+      "log_sha256": "d960a107f2026007e252e97133834df9d7a12f213d6a109f18c4978829f5fda8",
+      "log_bytes": 162,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "native-tests-frozen13.receipt.json": {
+      "name": "native-tests-frozen13",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/phase9/ios-privacy-source-audit.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:15:34.447902+00:00",
+      "elapsed_seconds": 32.453,
+      "exit": 0,
+      "log_sha256": "c7ebb4e640d8caf20bb10bc9b35e9deb73b4ec0978e87ae54760e03d734f6708",
+      "log_bytes": 14193,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "original-native-candidate-refusal.receipt.json": {
+      "name": "original-native-candidate-refusal",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T14:58:19.808239+00:00",
+      "elapsed_seconds": 10.656,
+      "exit": 1,
+      "log_sha256": "11b81abb023031e3cc5427c1840aa5330d6f4a96233d8f27424d7c6d3a7f3600",
+      "log_bytes": 483,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "55c78df037309296b6fc4ef6289b9f30df726556499bc99d27b9ce12349825b2",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "55c78df037309296b6fc4ef6289b9f30df726556499bc99d27b9ce12349825b2",
+        "clean": false
+      }
+    },
+    "original-native-current.receipt.json": {
+      "name": "original-native-current",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T14:58:00.630846+00:00",
+      "elapsed_seconds": 18.86,
+      "exit": 0,
+      "log_sha256": "ae9f581b5277b4109cf5cc9a056df9f647fdc18ff7ee34143d11ea11255c8925",
+      "log_bytes": 247918,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      }
+    },
+    "original-native-restored.receipt.json": {
+      "name": "original-native-restored",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T14:58:30.761817+00:00",
+      "elapsed_seconds": 10.625,
+      "exit": 0,
+      "log_sha256": "ae9f581b5277b4109cf5cc9a056df9f647fdc18ff7ee34143d11ea11255c8925",
+      "log_bytes": 247918,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      }
+    },
+    "packet-verification13.receipt.json": {
+      "argv": [
+        "python",
+        "-B",
+        "verify_packet.py",
+        "--expected-manifest-sha256",
+        "dd05510fe83911324acadab5391e8bd2efe86e69f7aad076169c5a12c36559c7"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\context",
+      "observed_utc": "2026-10-25T15:29:22.619997+00:00",
+      "exit": 0,
+      "log_sha256": "665dc7bef81e540bbdc6189f861a4abcf1a09ac1c17cd773c9214962aef9a761",
+      "external_manifest_sha256": "dd05510fe83911324acadab5391e8bd2efe86e69f7aad076169c5a12c36559c7",
+      "archive_sha256": "b7ff6d020c9fb21e338ecd86e9526b9f135c22800ba3ed10fd5732bdc6ab56f4",
+      "authority": "FULL_PASTED_USER_REQUEST; ZIP_CONTEXT_ONLY"
+    },
+    "provenance13.receipt.json": {
+      "name": "provenance13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\provenance13.cjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T14:58:51.841694+00:00",
+      "elapsed_seconds": 5.578,
+      "exit": 0,
+      "log_sha256": "f4b802dafed7a5a994728bf36c5192389636a568b77a05c717baa51f2d5e0b4e",
+      "log_bytes": 437,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      }
+    },
+    "registry13.receipt.json": {
+      "name": "registry13",
+      "argv": [
+        "python",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\registry13.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T14:58:42.327213+00:00",
+      "elapsed_seconds": 2.922,
+      "exit": 0,
+      "log_sha256": "af11ab288a2cc902236e8064ea63e0ed8f54c6620353ca0d75dbd4d100aea7fb",
+      "log_bytes": 533,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "7e45a8749196d553d0b5d45dea3abc06c8635cb4729df0342114137f90ef3289",
+        "clean": false
+      }
+    },
+    "root-forced13.receipt.json": {
+      "name": "root-forced13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "test",
+        "--",
+        "--force",
+        "--concurrency=1"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:07:01.029754+00:00",
+      "elapsed_seconds": 41.25,
+      "exit": 0,
+      "log_sha256": "45c76d06d07dc4f7b16863f6035febe0f39bd524482c0929c263da56a9212423",
+      "log_bytes": 374212,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "root-frozen13.receipt.json": {
+      "name": "root-frozen13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "test",
+        "--",
+        "--force",
+        "--concurrency=1"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:15:13.962711+00:00",
+      "elapsed_seconds": 38.781,
+      "exit": 0,
+      "log_sha256": "c7682e1b17ebce58bf1cd33997cc33a35939f41454320ea03b75866f681e3bd1",
+      "log_bytes": 374072,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "security-source13.receipt.json": {
+      "name": "security-source13",
+      "argv": [
+        "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "scripts/phase9/security_acceptance/contract.py",
+        "source"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:14:56.958133+00:00",
+      "elapsed_seconds": 0.531,
+      "exit": 1,
+      "log_sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d",
+      "log_bytes": 111,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "security-tests13.receipt.json": {
+      "name": "security-tests13",
+      "argv": [
+        "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_contract.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:15:13.968212+00:00",
+      "elapsed_seconds": 425.422,
+      "exit": 1,
+      "log_sha256": "67e8a3d73d0668d7bf9309489c792e0c2bf6724aadddf3d6dfe12854430d83bd",
+      "log_bytes": 68720,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "source-packet-frozen13.receipt.json": {
+      "name": "source-packet-frozen13",
+      "argv": [
+        "node",
+        "scripts/docs/source-packet-audit.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:22:37.437582+00:00",
+      "elapsed_seconds": 0.875,
+      "exit": 0,
+      "log_sha256": "623526793da6ab11e235a42ad604277cc8c3d2521866aaaaeec3006075cce502",
+      "log_bytes": 60,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "source13-frozen.receipt.json": {
+      "name": "source13-frozen",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer13.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:15:13.965714+00:00",
+      "elapsed_seconds": 299.875,
+      "exit": 0,
+      "log_sha256": "a2f184efd892aa7e8cf4d7fe1b3b11cf7eb33f1fe5068ab073bb6f1a3f65d896",
+      "log_bytes": 10990,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "source13-r2.receipt.json": {
+      "name": "source13-r2",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer13.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:07:01.091766+00:00",
+      "elapsed_seconds": 9.687,
+      "exit": 1,
+      "log_sha256": "647e1205a6de04ffab3d8caab1c46ea1376fd9d37c625d93e1336252f231c90e",
+      "log_bytes": 4270,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "source13-r3.receipt.json": {
+      "name": "source13-r3",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer13.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:08:38.314273+00:00",
+      "elapsed_seconds": 255.735,
+      "exit": 0,
+      "log_sha256": "e49ca90030fb59f8e880323b752341a230235c8fa87cdd4b3ad49a00403f9110",
+      "log_bytes": 10990,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "f095a97d1fcad51366023a329b842fc9cb89a6853442fd25baf73494487e998a",
+        "clean": false
+      }
+    },
+    "source13.receipt.json": {
+      "name": "source13",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer13.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:06:09.676650+00:00",
+      "elapsed_seconds": 6.797,
+      "exit": 1,
+      "log_sha256": "988fbf5dfa140f09a1270ffb3e7293805e01263ec38b3570c751f8115434e196",
+      "log_bytes": 4128,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "typecheck-frozen13.receipt.json": {
+      "name": "typecheck-frozen13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:15:34.396367+00:00",
+      "elapsed_seconds": 31.657,
+      "exit": 0,
+      "log_sha256": "6d61d6d45323faaf1115f2f0f81be0ec50eb16f0e390b75784f346662aa15d74",
+      "log_bytes": 1152,
+      "source_before": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+        "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "typecheck13.receipt.json": {
+      "name": "typecheck13",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:08:59.898018+00:00",
+      "elapsed_seconds": 20.641,
+      "exit": 0,
+      "log_sha256": "2759b3db66ff5995e87847dd28eb6db6910157e2fb7ca47572b1a0032e8f9cb9",
+      "log_bytes": 1152,
+      "source_before": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      },
+      "source_after": {
+        "head": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+        "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+        "status_sha256": "635c2fca17d7a1638fdf2b93049f7d13d2ae0436b28c8a712204db92d805e447",
+        "clean": false
+      }
+    },
+    "worklist-generate13-final.receipt.json": {
+      "name": "worklist-generate13-final",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:24:59.167719+00:00",
+      "elapsed_seconds": 0.265,
+      "exit": 0,
+      "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "log_bytes": 130,
+      "source_before": {
+        "head": "7f59555660a14905a8ed95730460414c96f16d52",
+        "tree": "5a5d7a23bec9e23b9fc2556cbe2527e56022cc0b",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "7f59555660a14905a8ed95730460414c96f16d52",
+        "tree": "5a5d7a23bec9e23b9fc2556cbe2527e56022cc0b",
+        "status_sha256": "d6f66b68a32cb35183d1cbde4947d480343ae48527cab05888e356ae3e6830e5",
+        "clean": false
+      }
+    },
+    "worklist-generate13.receipt.json": {
+      "name": "worklist-generate13",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T15:13:59.002799+00:00",
+      "elapsed_seconds": 0.454,
+      "exit": 0,
+      "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "log_bytes": 130,
+      "source_before": {
+        "head": "32c0d29743230faab1a8421cfdff6beea9343931",
+        "tree": "926159902c18e88643d07665213995055685a0f8",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "32c0d29743230faab1a8421cfdff6beea9343931",
+        "tree": "926159902c18e88643d07665213995055685a0f8",
+        "status_sha256": "d6f66b68a32cb35183d1cbde4947d480343ae48527cab05888e356ae3e6830e5",
+        "clean": false
+      }
+    },
+    "worklist-independent-current13.receipt.json": {
+      "name": "worklist-independent-current13",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:28:43.302232+00:00",
+      "elapsed_seconds": 0.437,
+      "exit": 0,
+      "log_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "log_bytes": 68,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "worklist-independent-malicious13.receipt.json": {
+      "name": "worklist-independent-malicious13",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:28:44.055408+00:00",
+      "elapsed_seconds": 0.391,
+      "exit": 1,
+      "log_sha256": "efae7addc0738dbbea7e2bf6ed957026a93ac40f524c1cb9b3c3339ff78d0cc4",
+      "log_bytes": 188,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": false,
+        "status_sha256": "3bff53831468d0623666967ed62ea4243a661403e2aba2669a8ce0562bb63b42"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": false,
+        "status_sha256": "3bff53831468d0623666967ed62ea4243a661403e2aba2669a8ce0562bb63b42"
+      }
+    },
+    "worklist-independent-restored13.receipt.json": {
+      "name": "worklist-independent-restored13",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign13-run-35fe6a2d2355\\independent-complete",
+      "started": "2026-10-25T15:28:44.776563+00:00",
+      "elapsed_seconds": 0.438,
+      "exit": 0,
+      "log_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "log_bytes": 68,
+      "source_before": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "source_after": {
+        "head": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+        "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+        "clean": true,
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "source_security_review": {
+    "qualification": "FRESH_IMMUTABLE_SOURCE_HEAD_ORIGINAL_JOBS; SANITIZED_AGGREGATES_ONLY",
+    "source_commit": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+    "source_tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+    "ci_merge_head": "01a1698df5f6bd32848602aba6919bd30981c0ea",
+    "run": 40206037618,
+    "commands": {
+      "gitleaks-current": {
+        "exit": 2,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "2bcfbdec6f49d9120d9cfaf330f8cbb14109d5ff08762c02cd4f61e475590107"
+      },
+      "gitleaks-history": {
+        "exit": 2,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "9cd8adf97828bfccd7c82e748579f5c38b310314472b942f1724bb3f42e0ae8c"
+      },
+      "trufflehog-current": {
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "dda4ab065641361c7d4b047ee371b32f6f5b7e0c2bf61a28095027d6de2a0701"
+      },
+      "trufflehog-history": {
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "7b81c3e437f1153d1ca01776286ae1e4b6016cd29390e86b25b03a87fde3aa58"
+      }
+    },
+    "gitleaks_current_findings": 1144,
+    "gitleaks_history_findings": 4388,
+    "findings_disposition": "UNREVIEWED; scanner findings are not automatically confirmed exposed credentials",
+    "coverage": "Original pinned source inventories/rules/targets and independent qualified custody remain unaccepted; exact source tree is not full-coverage acceptance.",
+    "npm_primary_advisories": {
+      "node-forge": [
+        {
+          "source": 1240912,
+          "name": "node-forge",
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "severity": "high",
+          "range": "<=1.4.0"
+        }
+      ],
+      "zod": [
+        {
+          "source": 1243066,
+          "name": "zod",
+          "title": "Zod can exhaust memory while validating oversized constrained collections",
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "severity": "high",
+          "range": "<4.6.6"
+        }
+      ]
+    },
+    "patched_vitest_advisories_present": false,
+    "npm_exception_errors": [
+      "braces: review is expired or dates are invalid",
+      "node-forge: review is expired or dates are invalid",
+      "unreviewed high/critical npm advisory: zod@3.25.76:GHSA-mrhx-c7xc-m3w5 (severity: high)",
+      "reviewed npm advisory is missing: braces@3.0.3:GHSA-vfj7-8cjw-p6xm",
+      "braces: live advisory identity or status changed"
+    ],
+    "osv_exception_errors": [
+      "braces: review is expired or dates are invalid",
+      "node-forge: review is expired or dates are invalid",
+      "unreviewed OSV advisory: opentelemetry-api@1.37.0:GHSA-xcq7-p3pf-p88h",
+      "unreviewed OSV advisory: zod@3.25.76:GHSA-mrhx-c7xc-m3w5",
+      "unreviewed OSV advisory: certifi@2026.10.18:PYSEC-2026-4320",
+      "unreviewed OSV advisory: certifi@2026.10.18:GHSA-6q48-6c7w-9gw2",
+      "unreviewed OSV advisory: mcp@1.29.0:GHSA-84m7-p3x7-pcfv",
+      "reviewed OSV advisory is missing: braces@3.0.3:GHSA-vfj7-8cjw-p6xm",
+      "braces: live advisory identity or status changed"
+    ],
+    "original_decision": {
+      "status": "REJECTED",
+      "code": "PROPOSAL_EXPIRED_OR_CHANGED",
+      "acceptanceGranted": false,
+      "rawScannerPass": false
+    },
+    "raw_secret_artifacts_published": false,
+    "acceptanceGranted": false
+  },
+  "source_ci": "Exact b835 API observations archived. Original steps passed; canonical DB FAILED H01_SQL_PROBE_FAILED / registry Data limit exceeded. Overall Quality and exports later CANCELLED by newer source push. Security FAIL; iOS source-only PASS. Never borrowed as final-head PASS.",
+  "final_ci": "Resolve final pushed evidence HEAD after publication and report its actual Quality/DB/Security/iOS/Expo jobs externally. No recursive self-hash or invented final results in this checkpoint.",
+  "outside_scope_unapplied": {
+    "owner_packet": "docs/release/full-app-j01/security-custody13.unapplied.json",
+    "paths": [
+      "scripts/phase9/security_acceptance/",
+      ".github/security/",
+      ".github/workflows/security.yml",
+      "docs/phase-9/security-advisory-exceptions.json",
+      "scripts/phase2/",
+      "supabase/",
+      "LAUNCH_READINESS.md",
+      "BLOCKERS.md",
+      "docs/e2e/generated/"
+    ],
+    "blockers": [
+      "Unreviewed original current/history findings and source inventory/rule custody",
+      "Zod/node-forge and scanner-runtime advisories; expired reviews/proposal",
+      "Canonical registry quota failure; protected DB06/DB08/R2B not accepted",
+      "Readiness/CAT07/provenance, native phone/archive/Apple, research/rights/clinical/provider/commercial gates"
+    ]
+  },
+  "retained_failures": [
+    "Original native consumer actual primary0/1/0 reproduced exactly three MAPPING_LOCK_DRIFT errors before patch.",
+    "Two early source13 harness attempts expected narrower error labels; actual earlier guards refused. Expectations corrected without weakening guards.",
+    "Python3.9 helper rejected write_text(newline=...); corrected task helper to write exact bytes before harness creation.",
+    "Custody source correction explicitly distinguishes applied Campaign13 successor from immutable Release12 UNAPPLIED witness.",
+    "Original Security failures retained; source-head canonical registry quota failure retained; source CI concurrency cancellations remain CANCELLED."
+  ],
+  "raw_secret_reports": "NOT_PUBLISHED. Downloaded originals stay task-local; only artifact hashes, actual exits, aggregate counts and public advisory IDs are included.",
+  "protected_count": 23290,
+  "changed_source_paths": 17,
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "DB06_DB08_R2B": "NOT_ACCEPTED",
+    "M1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED",
+    "public_release": "CLOSED"
+  },
+  "product_limits": "All real working non-Korean F01-F17/F19-F20, all12 consumer and6 professional groups plus only independently validated J01 are the required product. F09 diary/history/manual compare required. F18 and J02-J27/J05 deferred. J01 authenticated intake missing; G1/G2/G3/G5 and separate G4 remain closed. No positive count/size/score/percentage/causality/improvement/diagnosis/accuracy, provider/paid/native/Apple/clinical/public release claim.",
+  "spend_usd": 0,
+  "acceptanceGranted": false,
+  "merge": false
+}

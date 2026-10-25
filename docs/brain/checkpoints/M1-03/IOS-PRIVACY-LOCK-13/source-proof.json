@@ -1,0 +1,548 @@
+{
+  "authorization": "BRAIN-M103-IOS-PRIVACY-LOCK-SUCCESSION13-CANDIDATE-01",
+  "source": {
+    "commit": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+    "tree": "90399d8622016c903f7e637a555bcb90dde2ed02"
+  },
+  "implementation": {
+    "commit": "32c0d29743230faab1a8421cfdff6beea9343931",
+    "tree": "926159902c18e88643d07665213995055685a0f8"
+  },
+  "base": {
+    "commit": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+    "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d"
+  },
+  "branch": "stage/m103-ios-privacy-lock-succession13",
+  "pr": 17,
+  "base_branch": "stage/m103-dependency-witness12",
+  "changed_files": [
+    {
+      "path": "docs/brain/contracts/SECURITY-13/advisories13.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "a77b19921b81233a552c61c40f1a55e4c15eeaa2",
+        "sha256": "50bf5a649c4dc7f172df41ce35a3998b4ce547ea6eabafcc9059f74269610c19",
+        "bytes": 23951
+      }
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-13/identity-proof13.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "d9db46599e1216779817446d8f4ab3493b953780",
+        "sha256": "dc2548c1257e0380718d46745988f8c0bba14e732f5ea63ae86aa181d9d2d52f",
+        "bytes": 1729
+      }
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-13/provenance13.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "dc338a2ecbdefacd42ecd71ba9d57be945ed1683",
+        "sha256": "746d086a72edd7b71094c5ecbf4cc98af24162b46a40df6e9a9bcb1f3ddf66b8",
+        "bytes": 23489
+      }
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-13/registry13.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "7eb904d6b3448b661e985a7c18474d45d2a1dde4",
+        "sha256": "d067488f2080865d60fbae850c556e5f59d31f9bed0e76d57e687177029d4ea2",
+        "bytes": 4001
+      }
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "before": {
+        "mode": "100644",
+        "blob": "82f72d838bae0d68f6c78630ed7b9e30a4a02fb8"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "96e9d748887473d75b499afeda0f379612b32bdb",
+        "sha256": "ec89aec6c06214951b0afec603d479b99b3972e42c16e460b48fbaf405d419e1",
+        "bytes": 138905
+      }
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "before": {
+        "mode": "100644",
+        "blob": "968c93e42cd48ea6ab067c903647571248286653"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "37662ff8cf34b26c3c2769c16e9c19f2b70f04ba",
+        "sha256": "cb770ba07fb93e0307586308fb4a6b45639db9528dd290205110da63e391097d",
+        "bytes": 82775
+      }
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "before": {
+        "mode": "100644",
+        "blob": "36eb99e320de7873bc569f1e88e93cdb7bbca158"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "b051222d93707056a8cce2361dfe11a931b364f3",
+        "sha256": "a637756c065bddf64fe1f13672ddc39e6874b958a3984929234c1a0d785905d9",
+        "bytes": 248022
+      }
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+      "before": {
+        "mode": "100644",
+        "blob": "c8247b85acb7b123279411644fbb83f7efce7936"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "536f2e2d66c4c1233b40ba3d641e99ea9b56c9cc",
+        "sha256": "19e8caaae0610c9d1abac74ae4c5b73aeba1832e239f262c1afb2f43cf525fb9",
+        "bytes": 19665
+      }
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "128099f910890e798ad867203f44066a90e6e7e4",
+        "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
+        "bytes": 35108
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/native-privacy-succession13.md",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "fcbe70fc138a90b5ba404678e83e92545292622c",
+        "sha256": "15bb7afb862c020ae94d4674171242fd50aea3081a7da5b45db2770a4425fcf2",
+        "bytes": 4111
+      }
+    },
+    {
+      "path": "docs/release/full-app-j01/security-custody13.unapplied.json",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "09dbb323ece5c8a462f9d5c2564055b3ce7eb0b8",
+        "sha256": "70ff911874426412e55a825796ca4d4c00bb2facaa90bb3f7f6ea65321edff6c",
+        "bytes": 18296
+      }
+    },
+    {
+      "path": "package-lock.json",
+      "before": {
+        "mode": "100644",
+        "blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "843be0fdf1fe9354dfdc4750118481486d9a778a",
+        "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+        "bytes": 572798
+      }
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "before": {
+        "mode": "100644",
+        "blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "72734cf0e3175dad3c9cc6e2e27a1ad481768efa",
+        "sha256": "b16e3ea02b83fadee1a1bf0acd01f293c985e4fb1dc80226bc4bd803149d29fe",
+        "bytes": 82564
+      }
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "before": {
+        "mode": "100644",
+        "blob": "2a254283688b0143edc4887dc305b06b1b3d0b1d"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "9c288c97816f03c65d154beeddcb16e7d5f670b6",
+        "sha256": "56eafa7a9bb5dae63101bc3ecee1ccea80eaa614ec7fe21f0a6f7b5f42e38971",
+        "bytes": 50829
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/check.py",
+      "before": {
+        "mode": "100644",
+        "blob": "1cf2b7d3cf994fb8a10a7d5838a235e897d4a806"
+      },
+      "after": {
+        "mode": "100644",
+        "blob": "269f41f7d4610d1988267a325b4c53ff116c9fb9",
+        "sha256": "811983d1ace5f5efae53968a3b21d643e2d38d3a31d71817ec21b416eeafc5f3",
+        "bytes": 67724
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/dependency_guard13.test.py",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "0884c2cccec6c8810c4f661952e94f4ae75bcdf5",
+        "sha256": "66d10a259ae1ee438c6b752debbb65ccf0ac4a171d0b1935c631efce67011d65",
+        "bytes": 5521
+      }
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_consumer13.test.py",
+      "before": null,
+      "after": {
+        "mode": "100644",
+        "blob": "649c290f50c120429382255f8d18838f24ac2d81",
+        "sha256": "ae225d918b95121845da9bc7b990d5cc888015fb7363b06f15ad9d0f40f694d7",
+        "bytes": 12154
+      }
+    }
+  ],
+  "intermediate_commits": [
+    {
+      "commit": "ec67f9264d2dbbea79ea5f67182702876dd36423",
+      "tree": "d5252fa4236797fa7452d1e3228a7af024071d6b",
+      "parents": [
+        "bbbd59073b7add22ac350bced0d9a34124c12ffb"
+      ],
+      "changes": [
+        {
+          "path": "docs/release/full-app-j01/native-privacy-succession13.md",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "58105cf8d69a90b07e091b4cff8d357d5ea9a434",
+            "sha256": "0ec21764279e951024cd180539de4a53a3556b2e4367047fbe9bf025cd0c6a57",
+            "bytes": 1368
+          }
+        }
+      ]
+    },
+    {
+      "commit": "32c0d29743230faab1a8421cfdff6beea9343931",
+      "tree": "926159902c18e88643d07665213995055685a0f8",
+      "parents": [
+        "ec67f9264d2dbbea79ea5f67182702876dd36423"
+      ],
+      "changes": [
+        {
+          "path": "docs/brain/contracts/SECURITY-13/advisories13.json",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "a77b19921b81233a552c61c40f1a55e4c15eeaa2",
+            "sha256": "50bf5a649c4dc7f172df41ce35a3998b4ce547ea6eabafcc9059f74269610c19",
+            "bytes": 23951
+          }
+        },
+        {
+          "path": "docs/brain/contracts/SECURITY-13/identity-proof13.json",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "d9db46599e1216779817446d8f4ab3493b953780",
+            "sha256": "dc2548c1257e0380718d46745988f8c0bba14e732f5ea63ae86aa181d9d2d52f",
+            "bytes": 1729
+          }
+        },
+        {
+          "path": "docs/brain/contracts/SECURITY-13/provenance13.json",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "dc338a2ecbdefacd42ecd71ba9d57be945ed1683",
+            "sha256": "746d086a72edd7b71094c5ecbf4cc98af24162b46a40df6e9a9bcb1f3ddf66b8",
+            "bytes": 23489
+          }
+        },
+        {
+          "path": "docs/brain/contracts/SECURITY-13/registry13.json",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "7eb904d6b3448b661e985a7c18474d45d2a1dde4",
+            "sha256": "d067488f2080865d60fbae850c556e5f59d31f9bed0e76d57e687177029d4ea2",
+            "bytes": 4001
+          }
+        },
+        {
+          "path": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "128099f910890e798ad867203f44066a90e6e7e4",
+            "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
+            "bytes": 35108
+          }
+        },
+        {
+          "path": "docs/release/full-app-j01/native-privacy-succession13.md",
+          "before": {
+            "mode": "100644",
+            "blob": "58105cf8d69a90b07e091b4cff8d357d5ea9a434"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "fcbe70fc138a90b5ba404678e83e92545292622c",
+            "sha256": "15bb7afb862c020ae94d4674171242fd50aea3081a7da5b45db2770a4425fcf2",
+            "bytes": 4111
+          }
+        },
+        {
+          "path": "docs/release/full-app-j01/security-custody13.unapplied.json",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "f24e9495ebe944bd72693adfab04ce5f3a7724f6",
+            "sha256": "020c11df10477d57167effc68c08f49c977b6838b029a6ad9b060c372a233ca9",
+            "bytes": 17859
+          }
+        },
+        {
+          "path": "package-lock.json",
+          "before": {
+            "mode": "100644",
+            "blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "843be0fdf1fe9354dfdc4750118481486d9a778a",
+            "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+            "bytes": 572798
+          }
+        },
+        {
+          "path": "scripts/phase9/ios-privacy-contract.mjs",
+          "before": {
+            "mode": "100644",
+            "blob": "3ca1f9a55e43ffd358f7c7a86dffa3174436e59c"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "72734cf0e3175dad3c9cc6e2e27a1ad481768efa",
+            "sha256": "b16e3ea02b83fadee1a1bf0acd01f293c985e4fb1dc80226bc4bd803149d29fe",
+            "bytes": 82564
+          }
+        },
+        {
+          "path": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+          "before": {
+            "mode": "100644",
+            "blob": "2a254283688b0143edc4887dc305b06b1b3d0b1d"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "9c288c97816f03c65d154beeddcb16e7d5f670b6",
+            "sha256": "56eafa7a9bb5dae63101bc3ecee1ccea80eaa614ec7fe21f0a6f7b5f42e38971",
+            "bytes": 50829
+          }
+        },
+        {
+          "path": "scripts/release/full-app-j01/check.py",
+          "before": {
+            "mode": "100644",
+            "blob": "1cf2b7d3cf994fb8a10a7d5838a235e897d4a806"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "269f41f7d4610d1988267a325b4c53ff116c9fb9",
+            "sha256": "811983d1ace5f5efae53968a3b21d643e2d38d3a31d71817ec21b416eeafc5f3",
+            "bytes": 67724
+          }
+        },
+        {
+          "path": "scripts/release/full-app-j01/dependency_guard13.test.py",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "0884c2cccec6c8810c4f661952e94f4ae75bcdf5",
+            "sha256": "66d10a259ae1ee438c6b752debbb65ccf0ac4a171d0b1935c631efce67011d65",
+            "bytes": 5521
+          }
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_consumer13.test.py",
+          "before": null,
+          "after": {
+            "mode": "100644",
+            "blob": "649c290f50c120429382255f8d18838f24ac2d81",
+            "sha256": "ae225d918b95121845da9bc7b990d5cc888015fb7363b06f15ad9d0f40f694d7",
+            "bytes": 12154
+          }
+        }
+      ]
+    },
+    {
+      "commit": "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5",
+      "tree": "542aa50815c26d6ce1acc1bb431f8d886d40a2a8",
+      "parents": [
+        "32c0d29743230faab1a8421cfdff6beea9343931"
+      ],
+      "changes": [
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "before": {
+            "mode": "100644",
+            "blob": "82f72d838bae0d68f6c78630ed7b9e30a4a02fb8"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "58ca5b0d198605e8d8c76cc27ed749abe93c6609",
+            "sha256": "9870ad32c53f32e6c1d655afcd56067caded2c9ab514ebf92ebfa58de6b664af",
+            "bytes": 138905
+          }
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "before": {
+            "mode": "100644",
+            "blob": "968c93e42cd48ea6ab067c903647571248286653"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "3d2ed4759b9757da5ead3fa42c8b693774be42cd",
+            "sha256": "fccd58fbb283e1d753e56bfab454b04e88833b635687aa81dd093d8f51551616",
+            "bytes": 82775
+          }
+        },
+        {
+          "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+          "before": {
+            "mode": "100644",
+            "blob": "36eb99e320de7873bc569f1e88e93cdb7bbca158"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "b051222d93707056a8cce2361dfe11a931b364f3",
+            "sha256": "a637756c065bddf64fe1f13672ddc39e6874b958a3984929234c1a0d785905d9",
+            "bytes": 248022
+          }
+        },
+        {
+          "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
+          "before": {
+            "mode": "100644",
+            "blob": "c8247b85acb7b123279411644fbb83f7efce7936"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "536f2e2d66c4c1233b40ba3d641e99ea9b56c9cc",
+            "sha256": "19e8caaae0610c9d1abac74ae4c5b73aeba1832e239f262c1afb2f43cf525fb9",
+            "bytes": 19665
+          }
+        }
+      ]
+    },
+    {
+      "commit": "7f59555660a14905a8ed95730460414c96f16d52",
+      "tree": "5a5d7a23bec9e23b9fc2556cbe2527e56022cc0b",
+      "parents": [
+        "b835356f4c4a45cd0a8fab8de744d16bc63f1ea5"
+      ],
+      "changes": [
+        {
+          "path": "docs/release/full-app-j01/security-custody13.unapplied.json",
+          "before": {
+            "mode": "100644",
+            "blob": "f24e9495ebe944bd72693adfab04ce5f3a7724f6"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "09dbb323ece5c8a462f9d5c2564055b3ce7eb0b8",
+            "sha256": "70ff911874426412e55a825796ca4d4c00bb2facaa90bb3f7f6ea65321edff6c",
+            "bytes": 18296
+          }
+        }
+      ]
+    },
+    {
+      "commit": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+      "tree": "90399d8622016c903f7e637a555bcb90dde2ed02",
+      "parents": [
+        "7f59555660a14905a8ed95730460414c96f16d52"
+      ],
+      "changes": [
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "before": {
+            "mode": "100644",
+            "blob": "58ca5b0d198605e8d8c76cc27ed749abe93c6609"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "96e9d748887473d75b499afeda0f379612b32bdb",
+            "sha256": "ec89aec6c06214951b0afec603d479b99b3972e42c16e460b48fbaf405d419e1",
+            "bytes": 138905
+          }
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "before": {
+            "mode": "100644",
+            "blob": "3d2ed4759b9757da5ead3fa42c8b693774be42cd"
+          },
+          "after": {
+            "mode": "100644",
+            "blob": "37662ff8cf34b26c3c2769c16e9c19f2b70f04ba",
+            "sha256": "cb770ba07fb93e0307586308fb4a6b45639db9528dd290205110da63e391097d",
+            "bytes": 82775
+          }
+        }
+      ]
+    }
+  ],
+  "protected_count": 23290,
+  "protected_inventory_sha256": "11c1184552a5575e8a229e305316ae1401fa6bb0fc1859e4dd269c9f0769c425",
+  "old_refs": {
+    "main": {
+      "sha": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80"
+    },
+    "stage/m1-gate-recovery": {
+      "sha": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+      "tree": "4c2617588111aeb976913e5c73a5c7b998bc672e"
+    },
+    "stage/m1-retained-resilience": {
+      "sha": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "tree": "f623b5bbd220fd6d9d10f967400081489a5dd7e0"
+    },
+    "stage/full-app-j01-release-contract08": {
+      "sha": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7"
+    },
+    "stage/full-app-j01-source-packet-ci09": {
+      "sha": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2"
+    },
+    "stage/full-app-j01-quality-projections10": {
+      "sha": "14805e7f708297e72419035f517acc41ba52da70",
+      "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4"
+    },
+    "stage/m103-security-source-recovery11": {
+      "sha": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+      "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538"
+    },
+    "stage/m103-dependency-witness12": {
+      "sha": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
+      "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d"
+    }
+  },
+  "absences": [
+    "apps/mobile/ios/Podfile.lock"
+  ],
+  "acceptanceGranted": false,
+  "release": "NO_GO"
+}

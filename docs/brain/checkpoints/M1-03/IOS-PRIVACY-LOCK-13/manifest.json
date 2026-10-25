@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "authorization": "BRAIN-M103-IOS-PRIVACY-LOCK-SUCCESSION13-CANDIDATE-01",
+  "source": {
+    "commit": "d94196a646d8e6f16936145f87d8822e0fff9ed5",
+    "tree": "90399d8622016c903f7e637a555bcb90dde2ed02"
+  },
+  "files": {
+    "archive-index.json": {
+      "bytes": 25190,
+      "sha256": "95e99e17ef79238d7c7f8b72aa754e77a4c0b1da1a5d67c922e641454579bca7",
+      "mode": "100644"
+    },
+    "completion-report.json": {
+      "bytes": 82959,
+      "sha256": "8227633e0ede928238d314db629c9cbbb2b5126845957dfc14b99510351a54a1",
+      "mode": "100644"
+    },
+    "evidence.zip": {
+      "bytes": 505806,
+      "sha256": "fd660d9ea7adffc1f96d262bc84707ffbd8c3a57646eba2cf888b0e339c89d3a",
+      "mode": "100644"
+    },
+    "protected-files.json.gz": {
+      "bytes": 1488954,
+      "sha256": "27a055446d55831be78a0a82bbbde90bfaf65454cd2c864616d276d5d46b348c",
+      "mode": "100644"
+    },
+    "README.md": {
+      "bytes": 3047,
+      "sha256": "f86b48998af6a10f75032d17745a2c58169e2c046545622450e59a7fb5d687bd",
+      "mode": "100644"
+    },
+    "source-proof.json": {
+      "bytes": 18331,
+      "sha256": "8fea01f8e8fa1239d6f60b2d82ae2e8bd1b9e1e1913b6fbb634d8a129ab110c9",
+      "mode": "100644"
+    },
+    "verify_checkpoint.py": {
+      "bytes": 7590,
+      "sha256": "519fff68f4b7d023a893cf384c67cd4b16a5eeb1cf69efc23dbbc3c62a7a556b",
+      "mode": "100644"
+    }
+  },
+  "handoff_sha256": "e8dcd8e7bd98165017ba1b64a00da1655f049abcd9ea4143749aa6d67a382ea5",
+  "acceptanceGranted": false,
+  "release": "NO_GO"
+}

@@ -1,11 +1,11 @@
-Campaign12 PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED
-PR https://github.com/TasfiqJ/onSkin/pull/16 remains DRAFT, stacked on immutable PR15.
-Branch stage/m103-dependency-witness12; measured source b95f469650b30bffafc86bad039b93d678e54cac; tree a6d3077b85617248aa9beb4c0b45fb3299b3016f.
-The tested Vitest4.1.12 eight-node patch is UNAPPLIED: protected iOS privacy mapping binds the old whole-lock hash. Original lock restored byte-for-byte; source guard refuses current activation and hidden blocker removal.
-Exact blocker: docs/brain/contracts/SECURITY-12/dependency-install-blocker.v1.json
-Owner handoff: docs/release/full-app-j01/security-custody12.unapplied.json
-Externally anchored checkpoint: docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-12/README.md
-Use the external manifest SHA from the final report, never an internally substituted digest. Resolve final evidence HEAD from the pushed branch; this pointer grants no approval.
-Final source6190 tests, uncached lint/typecheck,55 source and49 dependency refusals, original23/44/58/9 controls pass. Historical witness proofs and independent complete checkout0/1/0 are separate authenticated evidence classes.
-Original Security source inventory drift, expired reviews and unresolved findings remain; qualified Security/DB custody absent. G97 FAIL/NO_GO; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/paid/native/provider/clinical/Apple/public release closed.
-Brain alone accepts source. No main/older PR mutation, release, purchase or self-acceptance. Spend USD0. Final evidence-head CI is observed after push and reported separately.
+Campaign13 PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED
+PR https://github.com/TasfiqJ/onSkin/pull/17 remains DRAFT, stacked on pinned PR16.
+Branch stage/m103-ios-privacy-lock-succession13; measured source d94196a646d8e6f16936145f87d8822e0fff9ed5; tree 90399d8622016c903f7e637a555bcb90dde2ed02.
+Exact reviewed eight-node Vitest4.1.12 candidate APPLIED via source-only ios-sdk-lock-succession13.v1.json. Original mapping and producers preserved byte-for-byte; native identities, source pins and archive_required claims retained.
+Checkpoint: docs/brain/checkpoints/M1-03/IOS-PRIVACY-LOCK-13/README.md
+Use the externally supplied manifest SHA256 from the final report; never substitute an internal anchor. Final evidence HEAD/tree is resolved after push and reported separately.
+Protected-owner tasks: docs/release/full-app-j01/security-custody13.unapplied.json
+Independent complete-checkout governance/native/worklist0/1/0 and original Release08-12 endpoint0/1/0 completed. Source/evidence and disposable/historical/independent classes remain distinct.
+G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01 research and G1/G2/G3/G5, separate G4, native/Apple/provider/paid/clinical/readiness/CAT07/public release closed. F09 required; F18/J02-J27/J05 deferred.
+Final-head Quality/DB/Security/iOS/Expo actual results must be read at the pushed delivery SHA. Current source passes never approve release; original Security and canonical quota failures remain unresolved.
+Only independent Brain audits/accepts source and later authorizes ordinary promotion. No merge, purchase or self-acceptance. Spend USD0.
