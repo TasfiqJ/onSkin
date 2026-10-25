@@ -101,6 +101,8 @@ def source_binding(proof, envelope, root):
         need(inv.sha(inv.regular(Path(root)/(inv.PREFIX+leaf)))==digest,'ADAPTER_SOURCE_DRIFT')
 
 def commands(proof):
+    need(all(isinstance(proof[n],str) and proof[n].startswith('/') and '\0' not in proof[n]
+             for n in ['mirror','snapshot','sarif','current_report']), 'COMMAND_PATH_SCHEMA')
     tools=proof['tools'];need(set(tools)==set(TOOLS),'TOOL_INVENTORY')
     for name,(version,asset,binary) in TOOLS.items():
         t=tools[name]; vr=t['version_result']
@@ -134,6 +136,7 @@ def commands(proof):
                 need(len(counts)==1 and int(counts[0])==len(proof['source']['patch_commits']),'HISTORY_COUNT')
         else:
             events=[inv.parse(line.encode()) for line in row['stderr'].splitlines() if line.strip()]
+            need(bool(events) and all(isinstance(e,dict) for e in events),'VERIFIED_ONLY_INCOMPLETE')
             finish=[e for e in events if e.get('msg')=='finished scanning']
             need(row['exit']==0 and not row['stdout'].strip() and len(finish)==1 and events[-1]==finish[0] and
                  finish[0].get('trufflehog_version')=='3.99.3' and finish[0].get('chunks',0)>0 and
@@ -199,8 +202,10 @@ def main():
     try:
         result=triage(inv.regular(a.artifact),inv.regular(a.provenance),a.expected_provenance_sha256,a.head,a.scan,a.tree,a.repo)
         print(json.dumps(result,sort_keys=True));return 1
-    except (ValueError,KeyError,TypeError,IndexError,OSError,EOFError,zipfile.BadZipFile,RuntimeError,inv.subprocess.SubprocessError):
+    except Exception:
         # Never include an exception string: parsers may quote raw sensitive input.
+        # Every ordinary malformed-input/parser/I/O failure is INCOMPLETE. Process
+        # cancellation remains outside Exception and is never reported as triage.
         print('{"status":"INCOMPLETE","acceptanceGranted":false}');return 2
 
 if __name__=='__main__':

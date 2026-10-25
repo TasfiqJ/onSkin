@@ -1,5 +1,6 @@
 """Synthetic adversarial fixtures only; all positive outcomes stay UNREVIEWED."""
 import copy
+import contextlib
 import io
 import json
 from pathlib import Path
@@ -73,6 +74,12 @@ class TriageTests(unittest.TestCase):
                        lambda p:p['commands']['trufflehog-history'].update(stdout='SYNTHETIC_DO_NOT_EMIT')]:
             changed=copy.deepcopy(proof);mutate(changed)
             with self.assertRaises(ValueError):tri.commands(changed)
+        for bad in ['null\n','[]\n','123\n','"SYNTHETIC_DO_NOT_EMIT"\n']:
+            changed=copy.deepcopy(proof);row=changed['commands']['trufflehog-current']
+            row.update(stderr=bad,stderr_sha256=tri.inv.sha(bad.encode()))
+            with self.assertRaises(ValueError):tri.commands(changed)
+        changed=copy.deepcopy(proof);changed['mirror']=[]
+        with self.assertRaises(ValueError):tri.commands(changed)
         duplicate=report['runs'][0]['results']*2
         with self.assertRaises(ValueError):tri.aggregate(duplicate,dict(row,stderr='leaks found: 2\n'),False)
 
@@ -92,6 +99,19 @@ class TriageTests(unittest.TestCase):
         with self.assertRaises(zipfile.BadZipFile):tri.archive(zipped(good)[:-22])
         for bad in [b'{"a":1,"a":2}',b'NaN',b'{']:
             with self.assertRaises(ValueError):tri.inv.parse(bad)
+
+    def test_cli_never_exposes_unexpected_parser_errors(self):
+        import sys
+        argv=['triage','--artifact','synthetic.zip','--provenance','synthetic.json','--repo','.',
+              '--expected-provenance-sha256','0'*64,'--head','0'*40,'--scan','0'*40,'--tree','0'*40]
+        for error in [AttributeError('SYNTHETIC_DO_NOT_EMIT'),ValueError('SYNTHETIC_DO_NOT_EMIT'),
+                      zipfile.BadZipFile('SYNTHETIC_DO_NOT_EMIT')]:
+            out=io.StringIO()
+            with patch.object(sys,'argv',argv),patch.object(tri.inv,'regular',return_value=b'{}'), \
+                 patch.object(tri,'triage',side_effect=error),contextlib.redirect_stdout(out):
+                self.assertEqual(tri.main(),2)
+            self.assertEqual(json.loads(out.getvalue()),dict(status='INCOMPLETE',acceptanceGranted=False))
+            self.assertNotIn('SYNTHETIC_DO_NOT_EMIT',out.getvalue())
 
     def test_actual_synthetic_git_source_binding_and_unapplied_result(self):
         proof,report=fixture()
