@@ -135,13 +135,36 @@ def workspace(root, commit):
         safe_cache=any(p in ('node_modules','.turbo','.expo','dist','web-build','.temp','.branches') for p in parts)
         safe_cache = safe_cache or name.endswith('.tsbuildinfo') or name=='apps/mobile/expo-env.d.ts'
         need(safe_cache,'IGNORED_PROTECTED_SOURCE')
+    directories={};total=0
     for name,row in tree.items():
-        data=regular(Path(root)/name)
-        oid=hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()
-        need(oid==row['blob'],'WORKTREE_BLOB')
+        path=Path(root)/name
+        for directory in path.parents:
+            if directory not in directories:
+                info=directory.lstat()
+                need(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+                     not getattr(info,'st_file_attributes',0)&1024,'WORKTREE_DIRECTORY')
+                directories[directory]=(info.st_dev,info.st_ino,info.st_mode)
+        info=path.lstat();total+=info.st_size
+        need(stat.S_ISREG(info.st_mode) and info.st_nlink==1 and
+             not getattr(info,'st_file_attributes',0)&1024 and info.st_size<=inv.LIMIT and
+             total<=2*1024**3,'WORKTREE_FILE_MODE_OR_BOUND')
+        digest=hashlib.sha1(('blob '+str(info.st_size)+'\0').encode());size=0
+        with path.open('rb') as stream:
+            while True:
+                chunk=stream.read(1024**2)
+                if not chunk:break
+                size+=len(chunk);need(size<=info.st_size,'WORKTREE_FILE_RACE');digest.update(chunk)
+        after=path.lstat()
+        need((info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_mode)==
+             (after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns,after.st_mode) and
+             size==info.st_size and digest.hexdigest()==row['blob'],'WORKTREE_BLOB')
         if os.name != 'nt':
             executable=bool((Path(root)/name).stat().st_mode & stat.S_IXUSR)
             need(executable == (row['mode']=='100755'),'WORKTREE_MODE')
+    for directory,identity in directories.items():
+        info=directory.lstat()
+        need((info.st_dev,info.st_ino,info.st_mode)==identity and
+             not getattr(info,'st_file_attributes',0)&1024,'WORKTREE_DIRECTORY_RACE')
     need(git(root,'rev-parse','HEAD')==before and
          not git(root,'status','--porcelain=v1','-z','--untracked-files=all'),'WORKSPACE_RACE')
     return tree
