@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-24T23:18:20.798Z",
+  "generatedAt": "2026-10-25T02:07:54.639Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "e37d13566624e87d4257c09d85489d7ee77ca7d0",
+  "gitSha": "6730e61e00ca36d9632e94852cd34f528108f742",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -2089,8 +2089,8 @@
         {
           "path": "scripts/core06/recommendation-admission-source-contract.test.mjs",
           "exists": true,
-          "bytes": 31820,
-          "sha256": "8e32aba423280da0f22dba3fbc07adfde1ce28262967cd33e7e8d3d8830c1677"
+          "bytes": 35759,
+          "sha256": "e7ae488fbba9b6817679c46791ebd505f84aecce1fbb05cebf9db0c4e113855f"
         },
         {
           "path": "apps/mobile/src/features/recommendations/admission.ts",

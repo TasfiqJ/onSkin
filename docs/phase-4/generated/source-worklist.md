@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-24T23:18:20.798Z
+Generated: 2026-10-25T02:07:54.639Z
 Status: pass
-Git SHA: e37d13566624e87d4257c09d85489d7ee77ca7d0
+Git SHA: 6730e61e00ca36d9632e94852cd34f528108f742
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -500,7 +500,7 @@ Sources:
 
 - `docs/09-personalized-recommendations.md` - 46694 bytes - sha256 `27f422fbf7d58d35193d03611b66d80148c2f2e74883dd2b81e0be08e77f87ce`
 - `docs/hugeToDo/CORE-06-RECOMMENDATION-ADMISSION-SOURCE-CHECKPOINT-2026-07-26.md` - 35345 bytes - sha256 `6a4bba46c424d8941303d3a7d695e916c8d1b70671af12613fd944903f657246`
-- `scripts/core06/recommendation-admission-source-contract.test.mjs` - 31820 bytes - sha256 `8e32aba423280da0f22dba3fbc07adfde1ce28262967cd33e7e8d3d8830c1677`
+- `scripts/core06/recommendation-admission-source-contract.test.mjs` - 35759 bytes - sha256 `e7ae488fbba9b6817679c46791ebd505f84aecce1fbb05cebf9db0c4e113855f`
 - `apps/mobile/src/features/recommendations/admission.ts` - 3362 bytes - sha256 `699de9485fa5fed2335fb4b91dbd9f263ae7cd081048c30bb6b4d6fc17bb7934`
 - `apps/mobile/src/features/recommendations/admission.test.ts` - 3673 bytes - sha256 `41f457e23372c20b95d5bfe723a4077bebfefbf833aaa4cf786e73505a51cf70`
 - `apps/mobile/src/features/recommendations/goalAdmission.ts` - 2696 bytes - sha256 `fb83706008828017504ae68c94ba561cb7441dfb65047d341771bc0a2d2aa27b`
