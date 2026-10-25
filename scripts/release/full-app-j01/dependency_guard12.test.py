@@ -11,7 +11,7 @@ spec.loader.exec_module(check)
 
 
 def main():
-    current = check.regular(check.ROOT/'package-lock.json')
+    current = check.git('cat-file','blob','843be0fdf1fe9354dfdc4750118481486d9a778a')
     authority = check.dependency12_guard(current)
     rejected = 0
     def expect(name, raw=current, overrides=None, expected=1):
@@ -65,6 +65,20 @@ def main():
     proof=authority['provenance']['path']
     expect('forged-provenance',overrides={proof:b'{}'})
     expect('authentic-restored',expected=0)
+    actual_lock=check.regular(check.ROOT/'package-lock.json')
+    check.unapplied12_guard(actual_lock)
+    for name,raw,overrides in [
+        ('candidate-activation-refused',current,{}),
+        ('forged-unapplied-blocker',actual_lock,{check.RELEASE12_BLOCKER:b'{}'}),
+        ('altered-protected-native-mapping',actual_lock,{'docs/phase-9/ios-sdk-package-mapping.json':b'{}'}),
+    ]:
+        def reader(path):return overrides.get(path,check.regular(check.ROOT/path))
+        try:check.unapplied12_guard(raw,reader)
+        except (ValueError,KeyError,OSError) as error:
+            rejected+=1
+            print(json.dumps(dict(case=name,exit=1,expected_exit=1,error=str(error))))
+        else:raise AssertionError(name)
+    check.unapplied12_guard(actual_lock)
     print(json.dumps(dict(passed=True,rejected=rejected,qualification='IN_MEMORY_EXACT_SOURCE_READERS',release='NO_GO')))
 
 

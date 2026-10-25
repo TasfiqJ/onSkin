@@ -10,7 +10,7 @@
   "dependency_candidate": {
     "manifest": "docs/release/full-app-j01/dependency-succession12.v1.json",
     "sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2",
-    "status": "CANDIDATE_REVIEW_REQUIRED"
+    "status": "UNAPPLIED_COMPATIBILITY_BLOCKED"
   },
   "original_security_artifact_review": {
     "qualification": "LIVE_DOWNLOADED_IMMUTABLE_PR15_ARTIFACTS; NOT_CANDIDATE_SOURCE_SCAN",
@@ -321,6 +321,14 @@
   },
   "local_scanner_execution": "Source preflight fails; original full Linux executable suite unavailable locally because registered WSL disk is missing. Original supported Python source tests and final-head original GitHub Security jobs are reported separately; no substitute scan is asserted.",
   "actions": [
+    {
+      "id": "DEP12-COMPATIBILITY",
+      "owner": "Independent Brain and native privacy source custodian",
+      "status": "UNAPPLIED_SCOPE_PROTECTED",
+      "problem": "The complete eight-node patch passed dependency/source/root tests but original strict iOS privacy mapping rejects its whole-lock hash. Final root lock restored; the applied candidate and failing CI remain immutable history.",
+      "proof": "docs/brain/contracts/SECURITY-12/dependency-install-blocker.v1.json",
+      "next_action": "Separately review exact versioned lock-witness handling for docs/phase-9/ios-sdk-package-mapping.json and scripts/phase9/ios-privacy-source-audit.mjs. Preserve old source evidence and mapped native identities; do not treat a hash refresh as new approval. No update to either protected path is applied."
+    },
     {
       "id": "SEC12-SOURCE",
       "owner": "Original Security source/coverage custodian plus independent qualified reviewer",

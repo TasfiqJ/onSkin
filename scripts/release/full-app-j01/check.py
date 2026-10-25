@@ -487,6 +487,8 @@ RELEASE12_PR = 16  # Allocated by GitHub, observed after draft creation.
 RELEASE12_MANIFEST = 'docs/release/full-app-j01/dependency-succession12.v1.json'
 RELEASE12_MANIFEST_SHA256 = '5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2'
 RELEASE12_LOCK_SHA256 = '7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb'
+RELEASE12_BLOCKER = 'docs/brain/contracts/SECURITY-12/dependency-install-blocker.v1.json'
+RELEASE12_BLOCKER_SHA256 = 'd52d4153dd4f718559aa2a7461824d013545f37929f609ca677fa7cd9f50ab35'
 RELEASE12_EXISTING = {'package-lock.json', 'scripts/release/full-app-j01/check.py',
     'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
     'ONSKIN_BRAIN_HANDOFF.txt'}
@@ -565,6 +567,24 @@ def dependency12_guard(raw, read_after=None):
     return authority
 
 
+def unapplied12_guard(raw, read_after=None):
+    """Native privacy's protected whole-lock witness blocks current activation."""
+    read_after = read_after or (lambda path: regular(ROOT/path))
+    blocker_raw = read_after(RELEASE12_BLOCKER)
+    require(sha(blocker_raw) == RELEASE12_BLOCKER_SHA256, 'R12_BLOCKER_IDENTITY')
+    blocker = json.loads(blocker_raw, object_pairs_hook=pairs)
+    require(sha(raw) == blocker['required_current_lock_sha256'] ==
+            '99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568' and
+            raw == git('show', RELEASE12_BASE+':package-lock.json'), 'R12_PATCH_UNAPPLIED')
+    for row in blocker['protected_witnesses']:
+        require(sha(read_after(row['path'])) == row['sha256'] and
+                read_after(row['path']) == git('show', RELEASE12_BASE+':'+row['path']),
+                'R12_PROTECTED_COMPATIBILITY_WITNESS:'+row['path'])
+    # Continue to authenticate the independently tested proposal. Reading its
+    # frozen historical blob is not permission to install or admit it now.
+    return dependency12_guard(git('cat-file', 'blob', '843be0fdf1fe9354dfdc4750118481486d9a778a'), read_after)
+
+
 def validate12_diff(raw, read_after):
     fields = raw.split(b'\0')
     require(fields[-1] == b'' and len(fields) % 2 == 1, 'R12_DIFF_SHAPE')
@@ -625,12 +645,18 @@ def source12_history():
     endpoint = source12_endpoint()
     subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE12_BASE, endpoint],
         cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    blocked = False
     for commit in git('rev-list', '--reverse', RELEASE12_BASE+'..'+endpoint).decode().splitlines():
         require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2,
                 'R12_LINEAR_HISTORY:'+commit)
         read_after = lambda path: git('show', commit+':'+path)
         validate12_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE12_BASE, commit), read_after)
-        if git('ls-tree', commit, '--', RELEASE12_MANIFEST).strip():
+        has_blocker = bool(git('ls-tree', commit, '--', RELEASE12_BLOCKER).strip())
+        require(not blocked or has_blocker, 'R12_BLOCKER_REMOVAL')
+        blocked = blocked or has_blocker
+        if has_blocker:
+            unapplied12_guard(read_after('package-lock.json'), read_after)
+        elif git('ls-tree', commit, '--', RELEASE12_MANIFEST).strip():
             dependency12_guard(read_after('package-lock.json'), read_after)
 
 
@@ -639,8 +665,8 @@ def source12_guard():
     for row in ('package.json', 'apps/mobile/package.json'):
         require(regular(ROOT/row) == git('show', RELEASE12_BASE+':'+row) == git('show', ':'+row),
                 'R12_DECLARATION:'+row)
-    dependency12_guard(regular(ROOT/'package-lock.json'))
-    dependency12_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p))
+    unapplied12_guard(regular(ROOT/'package-lock.json'))
+    unapplied12_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p))
     validate12_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE12_BASE),
                     lambda path: git('show', ':'+path))
     validate12_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE12_BASE),
@@ -676,30 +702,20 @@ def source11_historical_segment():
 
 
 def validate12(bundle=BUNDLE):
-    """Run the successor and original witness meanings as separate source versions.
+    """Retain the tested proposal, while refusing activation outside the finite grant.
 
-    Only an authenticated current candidate permits this isolated historical reader.
-    The original validate()/witness() code, old records and all semantic checks stay
-    byte/AST identical. Neither a changed hash nor an old blob can admit current code.
+    The applied candidate's isolated historical reader is preserved at immutable
+    b74d9997 and its measured CI failure. Current original bytes need no remapping.
+    All original validate()/witness() semantics execute on actual current source.
     """
     if not release12_active():
         return RELEASE12_LEGACY_VALIDATE(bundle)
-    authority = dependency12_guard(regular(ROOT/'package-lock.json'))
-    # A separate globals dictionary prevents changing regular() for any current
-    # guard or caller. Exactly one old source link is read at its declared version.
-    namespace = dict(globals())
-    actual_regular = regular
-    def historical_witness_reader(path):
-        if path == ROOT/'package-lock.json':
-            return git('show', BASE+':package-lock.json')
-        return actual_regular(path)
-    namespace['regular'] = historical_witness_reader
-    import types
-    legacy = types.FunctionType(RELEASE12_LEGACY_VALIDATE.__code__, namespace)
-    result = legacy(bundle)
+    authority = unapplied12_guard(regular(ROOT/'package-lock.json'))
+    result = RELEASE12_LEGACY_VALIDATE(bundle)
     result['historical_lock_witness'] = authority['original_root_lock_witness']['sha256']
-    result['current_dependency_witness'] = RELEASE12_LOCK_SHA256
-    result['dependency_successor_status'] = 'CANDIDATE_REVIEW_REQUIRED'
+    result['current_dependency_witness'] = authority['original_root_lock_witness']['sha256']
+    result['proposed_dependency_witness'] = RELEASE12_LOCK_SHA256
+    result['dependency_successor_status'] = 'UNAPPLIED_COMPATIBILITY_BLOCKED'
     return result
 
 

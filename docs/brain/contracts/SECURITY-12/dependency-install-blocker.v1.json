@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "authorization": "BRAIN-M103-DEPENDENCY-WITNESS12-CANDIDATE-01",
+  "status": "UNAPPLIED_COMPATIBILITY_BLOCKED",
+  "observed_candidate_source": {
+    "commit": "b74d999799d7f6843b335c91b6974596629ce20f",
+    "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494"
+  },
+  "reviewed_candidate_sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+  "required_current_lock_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+  "blocking_check": {
+    "argv": [
+      "node",
+      "scripts/phase9/ios-privacy-source-audit.mjs",
+      "--check",
+      "--strict"
+    ],
+    "exit": 1,
+    "code": "MAPPING_LOCK_DRIFT",
+    "workflow": 40163991148,
+    "job": 121081172942,
+    "affected_mapping_ids": [
+      "@react-native-google-signin/google-signin",
+      "expo-image",
+      "react-native"
+    ]
+  },
+  "protected_witnesses": [
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "mode": "100644",
+      "blob": "9776ac1b83e79c39e71b34867481d71cb56a29a4",
+      "sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246",
+      "bytes": 8350
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-source-audit.mjs",
+      "mode": "100644",
+      "blob": "b908d68e44f00b19d2b0a0d128eeb8468a4b04e9",
+      "sha256": "8dc1454011df7029830611c8593d6bd2e8267d7276e9027d45c6adbd3a00f7d1",
+      "bytes": 10966
+    }
+  ],
+  "engineering_result": "Eight-node install/signature/provenance and6190 root tests passed. Original151 governance negatives passed in GitHub. Whole-lock native privacy witness rejects candidate; these protected consumer paths are outside the finite grant. Final original lock restored in a separate commit; prior measured candidate remains immutable history.",
+  "next_owner_action": "Independent Brain/native privacy source custodian must separately scope and review exact versioned lock-witness succession for the original iOS SDK mapping/audit, preserving historical source meaning and proving all mapped native nodes and runtime/native source unchanged. Do not refresh a hash as an approval shortcut. No change to either protected path is applied here.",
+  "candidate_activation": "REFUSED_WHILE_THIS_EXACT_BLOCKER_IS_PRESENT",
+  "acceptanceGranted": false,
+  "security": "FAIL/NO_GO",
+  "M2": "NOT_AUTHORIZED",
+  "release": "NO_GO",
+  "spend_usd": 0
+}
