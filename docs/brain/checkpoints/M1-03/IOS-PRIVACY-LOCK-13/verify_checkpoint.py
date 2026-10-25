@@ -26,8 +26,9 @@ def parse(raw):
         parse_constant=lambda value:(_ for _ in ()).throw(ValueError('NONFINITE_JSON')))
 
 def safe(path):
-    require(isinstance(path,str) and re.fullmatch(r'[A-Za-z0-9._/-]+',path) is not None and
-        all(part and part not in ('.','..') and not part.endswith('.') for part in path.split('/')),
+    require(isinstance(path,str) and bool(path) and not path.startswith('/') and
+        not any(ord(c)<32 or ord(c)==127 or c in '<>:"\\|?*' for c in path) and
+        all(part and part not in ('.','..') and not part.endswith((' ','.')) for part in path.split('/')),
         'UNSAFE_PATH:'+str(path))
     return path
 

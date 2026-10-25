@@ -1948,7 +1948,8 @@
     "Two early source13 harness attempts expected narrower error labels; actual earlier guards refused. Expectations corrected without weakening guards.",
     "Python3.9 helper rejected write_text(newline=...); corrected task helper to write exact bytes before harness creation.",
     "Custody source correction explicitly distinguishes applied Campaign13 successor from immutable Release12 UNAPPLIED witness.",
-    "Original Security failures retained; source-head canonical registry quota failure retained; source CI concurrency cancellations remain CANCELLED."
+    "Original Security failures retained; source-head canonical registry quota failure retained; source CI concurrency cancellations remain CANCELLED.",
+    "First checkpoint verifier rejected an authentic historical asset filename containing a space. Read-only anchored inventory path validation now permits real repository names while rejecting absolute/traversal/control/Windows-special/alias/link paths. The source whitelist is unchanged."
   ],
   "raw_secret_reports": "NOT_PUBLISHED. Downloaded originals stay task-local; only artifact hashes, actual exits, aggregate counts and public advisory IDs are included.",
   "protected_count": 23290,
@@ -1963,5 +1964,13 @@
   "product_limits": "All real working non-Korean F01-F17/F19-F20, all12 consumer and6 professional groups plus only independently validated J01 are the required product. F09 diary/history/manual compare required. F18 and J02-J27/J05 deferred. J01 authenticated intake missing; G1/G2/G3/G5 and separate G4 remain closed. No positive count/size/score/percentage/causality/improvement/diagnosis/accuracy, provider/paid/native/Apple/clinical/public release claim.",
   "spend_usd": 0,
   "acceptanceGranted": false,
-  "merge": false
+  "merge": false,
+  "evidence_corrections": [
+    {
+      "commit": "c6c5c0172d977d495a0172439d42ab14fb1723ef",
+      "tree": "7247f532262b48ac1b070b5601c1a127eaa35121",
+      "manifest_sha256": "f474a2acbfbcfe174df5b205e639a65016fd7757fa07ef966f2ea5506f63cb9f",
+      "result": "VERIFIER_PATH_FALSE_REJECTION; NOT_PASS"
+    }
+  ]
 }

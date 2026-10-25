@@ -55,6 +55,22 @@
     "bytes": 6804,
     "sha256": "52d806744c55f0b4fff8dcea8fb66c748ab04670cd4f75e85fae2de02d82a8db"
   },
+  "task/checkpoint-primary13.log": {
+    "bytes": 147,
+    "sha256": "23190e3e1efa5cc82d69c42d3cbf1f09435fc6a4d33854b54c40ae2f549db228"
+  },
+  "task/checkpoint-primary13.receipt.json": {
+    "bytes": 1066,
+    "sha256": "5ef7febd11cdb855c45c535cbcf8cda637da7bd50565e569e5954b52bef72d74"
+  },
+  "task/checkpoint-wrong-anchor13.log": {
+    "bytes": 106,
+    "sha256": "061ff3c2a06bfed45975d4b86235ab7c91ef12ddd5243c4eec9afd81dc7d68fb"
+  },
+  "task/checkpoint-wrong-anchor13.receipt.json": {
+    "bytes": 1071,
+    "sha256": "b20aaba333296f1ac98132fd05598b6582854ce605a51217188a4f057d8e288d"
+  },
   "task/ci_status13.py": {
     "bytes": 1845,
     "sha256": "0237f7686ae5d6288ead2d5133227dee3370ce39bd199733a8b8c6901972cdd1"
@@ -616,8 +632,8 @@
     "sha256": "0edebf4d6a4bf7ef84aee75198840915a0a63968696a53370dd57ae74e8df025"
   },
   "task/verify_checkpoint13.py": {
-    "bytes": 7590,
-    "sha256": "519fff68f4b7d023a893cf384c67cd4b16a5eeb1cf69efc23dbbc3c62a7a556b"
+    "bytes": 7665,
+    "sha256": "9b1bdc3e6c775124cbf07aa0a50c1dc3fcf962ad803c9a15a3ce23378cc0edaf"
   },
   "task/vitest.registry.json": {
     "bytes": 5800,
