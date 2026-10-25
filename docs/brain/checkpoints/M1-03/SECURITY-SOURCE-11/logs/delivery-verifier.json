@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "python",
+    "-B",
+    "docs/brain/checkpoints/M1-03/SECURITY-SOURCE-11/verify_checkpoint.py",
+    "--expected-manifest-sha256",
+    "e82f0a3400aed330ab09ac90b7173935bcbceb85367cc3e4034f473a41d00f5f"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+  "start_utc": "2026-10-25T02:34:59.607848+00:00",
+  "duration_seconds": 0.344,
+  "exit": 1,
+  "source": [
+    "35829992b38f70c7b4eb176be33623dc4ebe9cc7",
+    "4190f1edb6111c4e3fe2fa56fc621e5eb9bd5d4d"
+  ],
+  "worktree_before_or_after": "source identities are commit identities; uncommitted changes reported separately",
+  "status_after": "",
+  "stdout_sha256": "7c127db2fa59fd36e5ee6107532198711dfcb9b826e3c7c470adac5b624d2613",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

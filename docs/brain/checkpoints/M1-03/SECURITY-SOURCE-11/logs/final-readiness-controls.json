@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "node",
+    "--test",
+    "scripts/docs/readiness-status-audit.test.mjs",
+    "scripts/launch/governed-publication-coverage.test.mjs"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+  "start_utc": "2026-10-25T02:22:54.090385+00:00",
+  "duration_seconds": 577.938,
+  "exit": 0,
+  "source": [
+    "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+    "d3b9e8c6626d8b04632ec586ee408b160d8f0393"
+  ],
+  "worktree_before_or_after": "source identities are commit identities; uncommitted changes reported separately",
+  "status_after": "",
+  "stdout_sha256": "eb7ee5b4dedc84a4d89a6f005fa4b3778f0ea91fb06d0894f4c837966558fa30",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

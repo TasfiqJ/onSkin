@@ -129,5 +129,16 @@
   },
   "spend_usd": 0,
   "acceptance_granted": false,
-  "delivery_identity": "Computed from actual evidence-head Git by verify_checkpoint.py and final post-push report; never self-referential"
+  "delivery_identity": "Computed from actual evidence-head Git by verify_checkpoint.py and final post-push report; never self-referential",
+  "evidence_packaging_repair": "First archived-intake inventory check refused extra sidecars. Moved sidecars outside original packet, retained failure and original packet bytes; evidence-only repair commit.",
+  "additional_unchanged_readiness_controls": {
+    "passed": 39,
+    "failed": 0,
+    "source": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+    "qualification": "Original33 readiness plus6 publication fixtures; canonical readiness still fails."
+  },
+  "whitespace_checks": {
+    "authored_source": "PASS",
+    "all_evidence": "EXIT2_RAW_CRLF_AND_ARCHIVAL_EOF_RETAINED"
+  }
 }
