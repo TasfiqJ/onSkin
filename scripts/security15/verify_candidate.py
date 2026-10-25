@@ -57,7 +57,7 @@ def tail(root, source, endpoint):
     b.need(len(commits)==1,'ONE_EVIDENCE_TAIL')
     b.need(b.git(root,'rev-list','--parents','-n','1',endpoint).decode().split()==[endpoint,source],
            'EVIDENCE_PARENT')
-    old=b.entries(root,source);new=b.inv.snapshot(root,endpoint)
+    old=b.entries(root,source);new=b.snapshot(root,endpoint)
     changed={}
     for name in sorted(set(old)|set(new)):
         after=new.get(name);before=old.get(name)

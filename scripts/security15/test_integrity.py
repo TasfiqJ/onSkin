@@ -79,10 +79,17 @@ class Integrity(unittest.TestCase):
 
     def test_policy_forgery(self):
         b.policy(b.ROOT)
+        with patch.dict(b.os.environ,{'GIT_INDEX_FILE':'synthetic-cloned-index'}):
+            with self.assertRaises(ValueError):b.policy(b.ROOT)
         for key,value in [('acceptanceGranted',True),('status','ACCEPTED'),('newPaths','ignored')]:
             obj=copy.deepcopy(b.POLICY_VALUE);obj[key]=value
             with patch.object(b,'regular',return_value=b.canonical(obj)):
                 with self.assertRaises(ValueError):b.policy(b.ROOT)
+
+    def test_replaced_commit_tree_cannot_forge_snapshot(self):
+        with patch.object(b.inv,'snapshot',return_value={'a.py':dict(mode='100644',blob='1'*40)}),\
+             patch.object(b,'entries',return_value={'b.py':dict(mode='100644',blob='1'*40)}):
+            with self.assertRaises(ValueError):b.snapshot(b.ROOT,'0'*40)
 
 
 if __name__=='__main__':unittest.main()

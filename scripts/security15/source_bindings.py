@@ -57,9 +57,19 @@ def strict_gzip(raw, limit=inv.LIMIT):
 
 
 def policy(root):
+    need(not any(os.environ.get(n) for n in ('GIT_INDEX_FILE','GIT_DIR','GIT_WORK_TREE',
+         'GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES',
+         'GIT_REPLACE_REF_BASE','GIT_CONFIG_COUNT','GIT_CONFIG_PARAMETERS')),'GIT_ENV_REDIRECTION')
     value = parse(regular(Path(root)/POLICY))
     need(value == POLICY_VALUE, 'POLICY_IDENTITY')
     return value
+
+
+def snapshot(root, commit):
+    rows=inv.snapshot(root,commit)
+    need({n:dict(mode=r['mode'],blob=r['blob']) for n,r in rows.items()}==entries(root,commit),
+         'SNAPSHOT_REF_DRIFT')
+    return rows
 
 
 def witnesses(root, commit):
