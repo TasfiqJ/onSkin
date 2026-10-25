@@ -312,8 +312,8 @@ def source10_guard():
 RELEASE11_BASE = '14805e7f708297e72419035f517acc41ba52da70'
 RELEASE11_TREE = '90c9427743b99fb43747d68cd55e413d2aee3ad4'
 RELEASE11_AUTHORITY = 'BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01'
-# Bound only after GitHub creates the actual new draft; None rejects integration refs.
-RELEASE11_PR = None
+# GitHub allocated this exact draft; no general merge-ref exception is granted.
+RELEASE11_PR = 15
 RELEASE11_EXISTING = {
     'scripts/core05/adherence-source-contract.test.mjs',
     'scripts/core06/recommendation-admission-source-contract.test.mjs',
@@ -443,6 +443,10 @@ def source11_history():
 
 def source11_guard():
     source11_history()
+    for name in ('package.json', 'package-lock.json', 'apps/mobile/package.json'):
+        baseline = git('show', RELEASE11_BASE+':'+name)
+        require(regular(ROOT/name) == baseline and git('show', ':'+name) == baseline,
+                'R11_DEPENDENCY_UNAPPLIED:'+name)
     validate11_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE11_BASE),
                     lambda path: git('show', ':'+path))
     validate11_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE11_BASE),

@@ -1,0 +1,267 @@
+{
+  "authorization": "BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01",
+  "status": "UNAPPLIED_OWNER_ACTIONS_ONLY",
+  "immutable_base": "14805e7f708297e72419035f517acc41ba52da70",
+  "immutable_base_tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+  "final_source_binding": "External checkpoint manifest and source-proof.json bind this file and every final source byte; no self-referential SHA assertion.",
+  "protected_witnesses": [
+    {
+      "path": "package.json",
+      "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1",
+      "bytes": 46730,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+      "bytes": 572797,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f",
+      "bytes": 3007,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1",
+      "bytes": 29246,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/proposal.json",
+      "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896",
+      "bytes": 13797,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d",
+      "bytes": 2327707,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+      "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5",
+      "bytes": 81513,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f",
+      "bytes": 6778,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "docs/phase-9/security-advisory-exceptions.json",
+      "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d",
+      "bytes": 1577,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "docs/release/full-app-j01/matrix.v1.json",
+      "sha256": "3b3fd0bba1c668358326658f8a4dedeab7239ba8d0221dc01f415f506c080fe3",
+      "bytes": 163981,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/phase2/local-supabase-contract.mjs",
+      "sha256": "4ada4b94c789139662a358327e1ccbb947a42d5601cc58a124b45280ca3c6fbc",
+      "bytes": 59497,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/phase4/build-source-worklist.mjs",
+      "sha256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+      "bytes": 46973,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "scripts/docs/readiness-status-audit.mjs",
+      "sha256": "15fa6f19c04b6c2a557089021cf59c129bd51185d3aab0db13c0db4806174235",
+      "bytes": 63020,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "docs/generated/readiness-status-audit.json",
+      "sha256": "e5f05ce6642f2b6e9b47724b750549ae4cdc15e48fe56588d5dc31b1576d4cb7",
+      "bytes": 9359,
+      "unchanged_from_pr14": true
+    },
+    {
+      "path": "docs/generated/readiness-status-audit.md",
+      "sha256": "3fe94c9e851bd47e6fee061b43b3688ea152a669a9955c2b5782a9ec82639a85",
+      "bytes": 2205,
+      "unchanged_from_pr14": true
+    }
+  ],
+  "actions": [
+    {
+      "id": "DEP11",
+      "owner": "Independent Brain and retained-source contract custodian",
+      "status": "UNAPPLIED_SCOPE_BLOCKED",
+      "problem": "Compatible Vitest patch conflicts with original exact retained-source lock witness; production bytes restored.",
+      "paths_requiring_separate_grant": [
+        "docs/release/full-app-j01/contract.v1.json",
+        "docs/release/full-app-j01/matrix.v1.json",
+        "docs/release/full-app-j01/roadmap.v1.json",
+        "scripts/release/full-app-j01/check.py",
+        "package-lock.json"
+      ],
+      "next_action": "Independently decide an exact dependency witness succession contract without weakening original BASE/SHA checks, then authorize the eight-node candidate and repeat cold installation, full tests, original scanners and final-head CI. No update was applied.",
+      "candidate_nodes_file": "docs/brain/contracts/SECURITY-11/dependency-patch.v1.json"
+    },
+    {
+      "id": "SEC11-SOURCE",
+      "owner": "Original Security source/coverage custodian and independent Brain",
+      "status": "NOT_ACCEPTED",
+      "problem": "Original contract.py source returns SOURCE_INVENTORY_DRIFT; original acceptance proposal ended 2026-10-21.",
+      "paths_requiring_separate_grant": [
+        "scripts/phase9/security_acceptance/source-manifest.json",
+        "scripts/phase9/security_acceptance/scan-targets.json.gz",
+        "scripts/phase9/security_acceptance/proposal.json",
+        "scripts/phase9/security_acceptance/contract.py"
+      ],
+      "next_action": "Independently reconcile every exact source and coverage identity, original tool/rule hashes and proposal terms against the final checkpoint source. New source authorization and actual complete scans are required; do not relabel old receipts."
+    },
+    {
+      "id": "SEC11-SECRET",
+      "owner": "Original secret-scan and finding disposition custodian",
+      "status": "FAIL_UNREVIEWED_CURRENT_FINDINGS",
+      "problem": "PR14 artifacts exist; original enforcement rejects SECRET_CURRENT_SOURCE_FINDINGS_UNREVIEWED after real Gitleaks exit2.",
+      "evidence_job": 121019549036,
+      "next_action": "Re-extract every current/history finding from exact Git blobs and authenticate its disposition and complete full-ref coverage on the new head. Do not add fingerprint ignores, shorten history or infer cleanup from verified-only TruffleHog success.",
+      "paths_requiring_separate_grant": [
+        "scripts/phase9/security_acceptance/history.json.gz",
+        "scripts/phase9/security_acceptance/history.py",
+        "scripts/phase9/security_acceptance/secret_scan.py"
+      ]
+    },
+    {
+      "id": "SEC11-ADVISORIES",
+      "owner": "Qualified dependency risk and scanner runtime custodians",
+      "status": "FAIL_ADVISORIES_AND_EXPIRED_REVIEWS",
+      "problem": "Final application packages retain zod3.25.76, node-forge1.4.0, mocker4.1.11. Original braces/node-forge reviews expired 2026-10-17. Braces advisory withdrawal requires authentic review, not expiry extension by Codex.",
+      "read_only_scanner_dependencies": [
+        "opentelemetry-api==1.37.0",
+        "certifi==2026.10.18",
+        "mcp==1.29.0"
+      ],
+      "paths_requiring_separate_grant": [
+        "docs/phase-9/security-advisory-exceptions.json",
+        "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+        "scripts/phase9/security_acceptance/proposal.json"
+      ],
+      "next_action": "Review actual fresh advisory identities/ranges, distinguish upstream withdrawal from remediation, assess a compatible zod successor and original forge backport, and rebuild/review the exact original scanner dependency closure under separate authority. Never force major package overrides or manufacture qualified reviews.",
+      "legacy_source_caveat": "Original recursive scanner also reports immutable older checkpoint requirement/lock files. Those bytes stay frozen. Owner must independently decide evidence-bound historical dispositions while preserving complete scan coverage; no archive exclusion or manual whitelist is authorized."
+    },
+    {
+      "id": "DB11-CUSTODY",
+      "owner": "Independent DB06/DB08/R2B database evidence custodians",
+      "status": "BLOCKED_EXTERNAL_CUSTODY_NOT_ACCEPTED",
+      "problem": "PR14 canonical DB job121019681930 passed; earlier H01 failure is historical. Protected custody remains unaccepted.",
+      "evidence_run": 40143371769,
+      "evidence_job": 121019681930,
+      "paths_requiring_separate_grant": [
+        "scripts/phase2/staging-deployment-evidence-lib.mjs",
+        "scripts/phase2/local-supabase-contract.mjs",
+        "docs/brain/state/"
+      ],
+      "next_action": "Independently replay/attest exact protected DB06/DB08/R2B evidence against the new bound source. No database/provider mutation or acceptance is authorized here."
+    },
+    {
+      "id": "READINESS11",
+      "owner": "Readiness, CAT07 evidence and governed release-provenance custodians",
+      "status": "BLOCKED_OUTSIDE_SCOPE",
+      "problem": "Missing governed source/evidence/ledger/RC binding and genuine CAT07 evidence; 480 actual mobile files vs reviewed337/4204 and historical301/3529.",
+      "paths_requiring_separate_grant": [
+        "LAUNCH_READINESS.md",
+        "BLOCKERS.md",
+        "docs/TESTING_STRATEGY.md",
+        "docs/e2e/generated/human-e2e-manifest.json",
+        "docs/e2e/generated/human-e2e-manifest.md",
+        "scripts/docs/readiness-status-audit.mjs",
+        "scripts/docs/readiness-status-audit.test.mjs"
+      ],
+      "next_action": "Supply genuine CAT07 and non-template governed S/direct-E/ledger/RC evidence; independently review counts and scope before any source/output update. Preserve original atomic and provenance refusals. Legacy runtime/launch consumer migration remains NOT_DONE."
+    }
+  ],
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "M1-03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED",
+    "legacy_consumers": "NOT_DONE",
+    "readiness": "BLOCKED_OUTSIDE_SCOPE",
+    "J01": "AUTHENTICATED_RESEARCH_INTAKE_MISSING"
+  },
+  "spend_usd": 0,
+  "acceptance_granted": false,
+  "original_osv_source_locations": [
+    {
+      "path": "docs/brain/checkpoints/M1-03/OVERNIGHT-01/evidence/candidate-requirements.txt",
+      "package": "opentelemetry-api",
+      "version": "1.37.0",
+      "ecosystem": "PyPI",
+      "advisories": [
+        "GHSA-xcq7-p3pf-p88h"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "package": "@vitest/mocker",
+      "version": "4.1.11",
+      "ecosystem": "npm",
+      "advisories": [
+        "GHSA-qxg6-89mg-rqv8",
+        "GHSA-xp26-3454-mjgp"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "package": "node-forge",
+      "version": "1.4.0",
+      "ecosystem": "npm",
+      "advisories": [
+        "GHSA-86w9-cpqp-85rv"
+      ]
+    },
+    {
+      "path": "package-lock.json",
+      "package": "zod",
+      "version": "3.25.76",
+      "ecosystem": "npm",
+      "advisories": [
+        "GHSA-mrhx-c7xc-m3w5"
+      ]
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "package": "certifi",
+      "version": "2026.10.18",
+      "ecosystem": "PyPI",
+      "advisories": [
+        "GHSA-6q48-6c7w-9gw2",
+        "PYSEC-2026-4320"
+      ]
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "package": "mcp",
+      "version": "1.29.0",
+      "ecosystem": "PyPI",
+      "advisories": [
+        "GHSA-84m7-p3x7-pcfv"
+      ]
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+      "package": "opentelemetry-api",
+      "version": "1.37.0",
+      "ecosystem": "PyPI",
+      "advisories": [
+        "GHSA-xcq7-p3pf-p88h"
+      ]
+    }
+  ]
+}

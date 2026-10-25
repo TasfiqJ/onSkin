@@ -1,5 +1,4 @@
 """Actual Git controls in a disposable repository; no acceptance or release qualification."""
-import ast
 import importlib.util
 import json
 from pathlib import Path
@@ -155,11 +154,21 @@ def main():
                 'commit-tree', git('write-tree').decode().strip(), data=b'unrelated root\n').decode().strip()
             git('update-ref', 'HEAD', unrelated)
             expect('wrong-ancestry', check.source11_history)
+            foreign = commit(check.RELEASE09)
+            git('update-ref', 'HEAD', foreign)
+            expect('linear-wrong-ancestry', check.source11_history)
+            with patch.object(check, 'RELEASE11_TREE', '0'*40):
+                expect('pinned-base-tree', check.source11_history, code='R11_BASE_TREE')
             # Materialize the complete real base for independent index/worktree
             # controls. Only this task-created temporary repository is mutated.
             restore(); git('update-ref', 'HEAD', check.RELEASE11_BASE)
             git('checkout-index', '--all', '--force')
             expect('complete-fixture-current', check.source11_guard, 0)
+            for declaration in ('package.json', 'apps/mobile/package.json', 'package-lock.json'):
+                target = fixture/declaration; content = target.read_bytes()
+                target.write_bytes(content+b' ')
+                expect('unapplied-package-mutation:'+declaration, check.source11_guard, code='R11_DEPENDENCY_UNAPPLIED')
+                target.write_bytes(content)
             original = (fixture/protected).read_bytes()
             put(protected, original+b'\n# staged mutation\n')
             expect('staged-hidden-by-restored-worktree', check.source11_guard, code='R11_SCOPE')

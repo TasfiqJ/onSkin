@@ -1,0 +1,18 @@
+{
+  "authorization": "BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01",
+  "status": "IMPLEMENTATION_CANDIDATE_REVIEW_REQUIRED",
+  "scope_paths": [
+    "scripts/core05/adherence-source-contract.test.mjs",
+    "scripts/core06/recommendation-admission-source-contract.test.mjs",
+    "scripts/release/full-app-j01/check.py",
+    "scripts/release/full-app-j01/source_consumer11.test.py",
+    "scripts/release/full-app-j01/dependency_guard11.test.py"
+  ],
+  "base": "14805e7f708297e72419035f517acc41ba52da70",
+  "old_guard_functions": "UNCHANGED_AST except source_guard orchestration",
+  "frozen_product_scope": "65 identities/38 required rows/47 historical tasks/51 ADRs; original151 semantic negatives",
+  "dependency_disposition": "UNAPPLIED; package bytes unchanged",
+  "owner_packet": "docs/release/full-app-j01/security-custody11.unapplied.json",
+  "main_promotion_authorized": false,
+  "external_custody_accepted": false
+}
