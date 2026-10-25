@@ -1,0 +1,122 @@
+{
+  "acceptanceGranted": false,
+  "artifact": {
+    "bytes": 1682822,
+    "id": 12604063429,
+    "job_id": 121215574747,
+    "run_id": 40208858991,
+    "sha256": "109a94569a05f11067323fc6163166f0802006101ad4acc43e80a5c8b62b31b5"
+  },
+  "current": {
+    "categories": [
+      {
+        "category": "generic-pattern-requires-content-review",
+        "count": 1141,
+        "rule": "generic-api-key"
+      },
+      {
+        "category": "private-key-material-requires-owner-review",
+        "count": 1,
+        "rule": "private-key"
+      },
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 2,
+        "rule": "sentry-access-token"
+      }
+    ],
+    "disposition": "UNREVIEWED",
+    "fingerprint_collision_count": 9,
+    "total": 1144
+  },
+  "head": "d0c5ad49ba22c8da7136d59a399589af1cea0e82",
+  "history": {
+    "categories": [
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 4,
+        "rule": "aws-access-token"
+      },
+      {
+        "category": "generic-pattern-requires-content-review",
+        "count": 4361,
+        "rule": "generic-api-key"
+      },
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 10,
+        "rule": "jwt"
+      },
+      {
+        "category": "private-key-material-requires-owner-review",
+        "count": 2,
+        "rule": "private-key"
+      },
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 8,
+        "rule": "sentry-access-token"
+      },
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 1,
+        "rule": "slack-bot-token"
+      },
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 1,
+        "rule": "stripe-access-token"
+      },
+      {
+        "category": "service-token-pattern-requires-owner-review",
+        "count": 1,
+        "rule": "vault-service-token"
+      }
+    ],
+    "disposition": "UNREVIEWED",
+    "fingerprint_collision_count": 0,
+    "total": 4388
+  },
+  "limitation": "COUNTS_AND_BYTE_PROVENANCE_ONLY_NO_CREDENTIAL_LIVENESS_OR_FALSE_POSITIVE_DISPOSITION",
+  "member_receipts": [
+    {
+      "bytes": 4643885,
+      "member": "gitleaks-results.sarif",
+      "sha256": "c07b7cd55117ac71c8ac72fcd4976926cf4619cf43cc3ee51ea899d51e92b86a"
+    },
+    {
+      "bytes": 106,
+      "member": "gitleaks-tool.json",
+      "sha256": "26ea8038dda3c7926b13d7a1c1b49c67baaf22469f3f1ba64aca4b41cb2e69a5"
+    },
+    {
+      "bytes": 183,
+      "member": "secret-scan-outcomes.json",
+      "sha256": "af218e535a0a962d83ef9af2de2cdeba903765294fdd49ed2aacd9032f1d377e"
+    },
+    {
+      "bytes": 7097967,
+      "member": "secret-scan-proof.json",
+      "sha256": "907263b405e354b091c175df2782d4603782779cf47f2d2d5f00fe7b92ebc84d"
+    }
+  ],
+  "provenance_sha256": "46ac2c0849be950864ed5ff9ac38c1dd9654e9996a7eaf444136347e81a0da8f",
+  "scanned_commit": "8dd35b816998c9d4c01804dd629ff8ce6daf8a2a",
+  "scanner": {
+    "binary_sha256": "e18325d568268b6efb6cd0cc721f8bea5667f4cd1c8d03618ab61987f41269ad",
+    "current_exit": 2,
+    "history_exit": 2,
+    "official_asset_sha256": "9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c",
+    "version": "8.24.3"
+  },
+  "schema": 1,
+  "scope_counts": {
+    "commits": 2737,
+    "patch_commits": 2734,
+    "refs": 21,
+    "snapshot": 23312
+  },
+  "status": "UNREVIEWED",
+  "tree": "4cfe9c819df4c22fc5d19d79f9c0e89e0e24c973",
+  "verified_only_trufflehog": "EXIT0_IS_NOT_GITLEAKS_CLEARANCE"
+}

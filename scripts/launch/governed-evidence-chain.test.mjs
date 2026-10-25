@@ -90,11 +90,26 @@ function gitNulPaths(root, args) {
   const output = execFileSync('git', ['-c', `safe.directory=${root}`, ...args], {
     cwd: root,
     encoding: 'buffer',
+    // Complete trusted-Git metadata only: fail on overflow; never truncate paths.
+    maxBuffer: 8 * 1024 * 1024,
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   if (output.length === 0) return [];
   assert.equal(output.at(-1), 0, 'Git path inventory must be NUL terminated');
-  return output.subarray(0, -1).toString('utf8').split('\0');
+  const paths = new TextDecoder('utf-8', { fatal: true })
+    .decode(output.subarray(0, -1))
+    .split('\0');
+  const seen = new Set();
+  for (const path of paths) {
+    assert.ok(
+      path && !/(^\/|\\|:|\/\/|[\x00-\x1f\x7f]|(^|\/)\.\.?($|\/))/u.test(path),
+      'Git path inventory contains an invalid path',
+    );
+    const key = path.normalize('NFKC').toLowerCase();
+    assert.ok(!seen.has(key), 'Git path inventory contains colliding paths');
+    seen.add(key);
+  }
+  return paths;
 }
 
 function write(root, path, value) {
@@ -242,6 +257,64 @@ function audit(value, options = {}) {
     ...options,
   });
 }
+
+test('bounded Git paths preserve a real greater-than-1MiB complete inventory and strict equality', (t) => {
+  const { root } = createRepository(t);
+  const blob = git(root, ['hash-object', '-w', '--stdin'], { input: '' });
+  const filler = Array.from(
+    { length: 14000 },
+    (_, i) => `docs/bounded-fixture/${String(i).padStart(5, '0')}-${'x'.repeat(75)}.md`,
+  );
+  const paths = [...filler, ...GOVERNED_DOWNSTREAM_GENERATED_PATHS];
+  git(root, ['update-index', '--index-info'], {
+    input: paths.map((path) => `100644 ${blob}\t${path}\n`).join(''),
+  });
+  assert.ok(Buffer.byteLength(paths.join('\0') + '\0') > 1024 * 1024);
+  assert.throws(
+    () => execFileSync('git', ['ls-files', '-z', '--', 'docs'], { cwd: root }),
+    (error) => error.code === 'ENOBUFS',
+  );
+  const compare = () => {
+    const trackedGeneratedPaths = gitNulPaths(root, ['ls-files', '-z', '--', 'docs'])
+      .filter((repoPath) => repoPath.startsWith('docs/') && repoPath.includes('/generated/'))
+      .sort((left, right) => Buffer.compare(Buffer.from(left), Buffer.from(right)));
+    const governedGeneratedPaths = [...GOVERNED_DOWNSTREAM_GENERATED_PATHS].sort((left, right) =>
+      Buffer.compare(Buffer.from(left), Buffer.from(right)),
+    );
+    assert.deepEqual(governedGeneratedPaths, trackedGeneratedPaths);
+  };
+  assert.equal(gitNulPaths(root, ['ls-files', '-z', '--', 'docs']).length, paths.length + 1);
+  compare();
+  git(root, ['update-index', '--index-info'], {
+    input: `100644 ${blob}\tdocs/bounded-fixture/generated/unexpected.json\n`,
+  });
+  assert.throws(compare, { code: 'ERR_ASSERTION' });
+});
+
+test('bounded Git paths reject malformed, truncated, duplicate and colliding output and Git errors', (t) => {
+  const { root } = createRepository(t);
+  for (const bytes of [
+    Buffer.from('docs/truncated'),
+    Buffer.from([0xff, 0]),
+    Buffer.from('\0'),
+    Buffer.from('docs/a\0docs/a\0'),
+    Buffer.from('docs/A\0docs/a\0'),
+    Buffer.from('docs/Ａ\0docs/a\0'),
+    Buffer.from('../escape\0'),
+    Buffer.from('docs//empty\0'),
+  ]) {
+    const blob = git(root, ['hash-object', '-w', '--stdin'], { input: bytes });
+    assert.throws(() => gitNulPaths(root, ['cat-file', 'blob', blob]));
+  }
+  assert.throws(() => gitNulPaths(root, ['cat-file', 'blob', 'not-an-object']));
+  const oversized = git(root, ['hash-object', '-w', '--stdin'], {
+    input: Buffer.alloc(8 * 1024 * 1024 + 1, 97),
+  });
+  assert.throws(
+    () => gitNulPaths(root, ['cat-file', 'blob', oversized]),
+    (error) => error.code === 'ENOBUFS',
+  );
+});
 
 test('canonical ledger builder/parser sorts and freezes exact evidence bindings', () => {
   const sourceGitSha = 'a'.repeat(40);

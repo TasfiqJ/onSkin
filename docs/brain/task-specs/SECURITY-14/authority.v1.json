@@ -1,0 +1,12 @@
+{
+  "authority": "BRAIN-M103-G97-SOURCE-TRIAGE14-CANDIDATE-01",
+  "base": "d0c5ad49ba22c8da7136d59a399589af1cea0e82",
+  "external_context_manifest_sha256": "1e49ce39198a22621058e7608bb4c4111b770a875823febe7750ff70e8ec5474",
+  "packet_context_only": true,
+  "provenance": "HUMAN_PASTED_FRESH_PROMPT",
+  "schema": 1,
+  "signatures": [],
+  "source_acceptance": "INDEPENDENT_BRAIN_ONLY",
+  "status": "SOURCE_CANDIDATE_NOT_ACCEPTED",
+  "tree": "4cfe9c819df4c22fc5d19d79f9c0e89e0e24c973"
+}

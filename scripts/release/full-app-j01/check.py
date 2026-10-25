@@ -933,6 +933,213 @@ def validate13(bundle=BUNDLE):
     return result
 
 
+RELEASE14_BASE = 'd0c5ad49ba22c8da7136d59a399589af1cea0e82'
+RELEASE14_TREE = '4cfe9c819df4c22fc5d19d79f9c0e89e0e24c973'
+RELEASE14_AUTHORITY = 'BRAIN-M103-G97-SOURCE-TRIAGE14-CANDIDATE-01'
+RELEASE14_PR = 0  # Fail closed until GitHub allocates the new draft's identity.
+RELEASE14_EXISTING = {'scripts/launch/governed-evidence-chain.test.mjs',
+    'scripts/release/full-app-j01/check.py', 'docs/phase-4/generated/source-worklist.json',
+    'docs/phase-4/generated/source-worklist.md', 'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE14_NEW = {'scripts/security14/triage_gitleaks.py', 'scripts/security14/test_triage_gitleaks.py',
+    'scripts/security14/source_inventory.py', 'scripts/security14/test_source_inventory.py',
+    'scripts/release/full-app-j01/source_consumer14.test.py',
+    'docs/release/full-app-j01/g97-security-triage14.md',
+    'docs/release/full-app-j01/g97-security-triage14.unapplied.json'}
+RELEASE14_PREFIXES = ('docs/brain/contracts/SECURITY-14/', 'docs/brain/task-specs/SECURITY-14/',
+    'docs/brain/checkpoints/M1-03/G97-SOURCE-TRIAGE-14/')
+
+
+def allowed14(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE14_EXISTING or path in RELEASE14_NEW or path.startswith(RELEASE14_PREFIXES)))
+
+
+def release14_active():
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE14_BASE, 'HEAD'],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
+
+
+def validate14_checker(raw):
+    before = git('show', RELEASE14_BASE+':scripts/release/full-app-j01/check.py')
+    old = ast.parse(before); new = ast.parse(raw)
+    funcs = lambda module: {n.name: ast.dump(n, include_attributes=False)
+        for n in module.body if isinstance(n, ast.FunctionDef)}
+    old_functions, new_functions = funcs(old), funcs(new)
+    require(all(new_functions.get(k) == v for k, v in old_functions.items() if k != 'source_guard'),
+            'R14_INHERITED_FUNCTION_CHANGED')
+    expected = before.replace(b'    if release13_active():\n        source11_historical_segment()',
+        b'    if release14_active():\n        source11_historical_segment()\n        source12_historical_segment()\n        source13_historical_segment()\n        source14_guard()\n    elif release13_active():\n        source11_historical_segment()')
+    expected = expected.replace(b'or allowed13(path),', b'or allowed13(path) or allowed14(path),')
+    require(new_functions.get('source_guard') == funcs(ast.parse(expected))['source_guard'],
+            'R14_ORIGINAL_SOURCE_GUARD_CHANGED')
+    assignments = lambda module: {ast.dump(n.targets[0]): ast.dump(n.value, include_attributes=False)
+        for n in module.body if isinstance(n, ast.Assign) and len(n.targets) == 1}
+    old_globals, new_globals = assignments(old), assignments(new)
+    require(all(new_globals.get(k) == v for k, v in old_globals.items()), 'R14_INHERITED_GLOBAL_CHANGED')
+    # Preserve every original module-level import, expression, alias and entrypoint
+    # in order. New source-only definitions cannot replace an old top-level node.
+    old_other = [ast.dump(n, include_attributes=False) for n in old.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    new_other = [ast.dump(n, include_attributes=False) for n in new.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    require(old_other == new_other, 'R14_INHERITED_MODULE_CHANGED')
+    original_assignments = [ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.Assign)]
+    inherited_assignments = [ast.dump(n, include_attributes=False) for n in new.body
+        if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) in old_globals]
+    require(original_assignments == inherited_assignments, 'R14_INHERITED_ASSIGNMENT_ORDER')
+    added = [n for n in new.body if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) not in old_globals]
+    require(all(len(n.targets) == 1 and isinstance(n.targets[0], ast.Name) and
+                n.targets[0].id.startswith('RELEASE14_') for n in added), 'R14_NEW_GLOBAL_SCOPE')
+    new_names = [n.name for n in new.body if isinstance(n, ast.FunctionDef)]
+    require(len(new_names) == len(set(new_names)), 'R14_REDEFINED_SAFEGUARD')
+
+
+def validate14_provenance_test(raw):
+    old = git('show', RELEASE14_BASE+':scripts/launch/governed-evidence-chain.test.mjs')
+    begin = b'function gitNulPaths('; end = b'\nfunction write('
+    start, stop = old.index(begin), old.index(end, old.index(begin))
+    left, right = raw.index(begin), raw.index(end, raw.index(begin))
+    helper = raw[left:right]
+    require(helper.count(b'maxBuffer: 8 * 1024 * 1024') == 1 and
+            b"assert.equal(output.at(-1), 0" in helper and
+            b"{ fatal: true }" in helper and b'return paths;' in helper, 'R14_FINITE_GIT_BUFFER')
+    restored = raw[:left] + old[start:stop] + raw[right:]
+    tests_begin = b"test('bounded Git paths preserve a real greater-than-1MiB"
+    tests_end = b"test('canonical ledger builder/parser"
+    a, b = restored.index(tests_begin), restored.index(tests_end)
+    require(a < b and b'14000' in restored[a:b] and b'ENOBUFS' in restored[a:b] and
+            b'assert.deepEqual(governedGeneratedPaths, trackedGeneratedPaths)' in restored[a:b],
+            'R14_GIT_BUFFER_REGRESSION')
+    require(restored[:a] + restored[b:] == old, 'R14_ORIGINAL_PROVENANCE_ASSERTION_CHANGED')
+
+
+def candidate14_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(value['schema'] == 1 and value['authority'] == RELEASE14_AUTHORITY and
+            value['status'] == 'UNAPPLIED' and value['source'] == RELEASE14_BASE and
+            value['tree'] == RELEASE14_TREE and value['acceptanceGranted'] is False and
+            value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False),
+            'R14_NO_ADMISSION')
+    require(isinstance(value['tasks'], list) and bool(value['tasks']) and
+            all(t['status'] == 'UNAPPLIED' and t['qualified_owner_required'] is True and
+                t['owner_decision'] == 'NOT_PERFORMED' and bool(t['source_witnesses'])
+                for t in value['tasks']), 'R14_OWNER_DECISION_UNAPPLIED')
+    for task in value['tasks']:
+        for witness in task['source_witnesses']:
+            name = witness['path']
+            require(isinstance(name, str) and re.fullmatch('[A-Za-z0-9._/-]+', name) and
+                    not any(x in ('', '.', '..') for x in name.split('/')), 'R14_OWNER_SOURCE_PATH')
+            require(sha(git('show', RELEASE14_BASE+':'+name)) == witness['sha256'] and
+                    git('rev-parse', RELEASE14_BASE+':'+name).decode().strip() == witness['blob'],
+                    'R14_OWNER_SOURCE_WITNESS')
+
+
+def validate14_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R14_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R14_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed14(path) and status in ('A', 'M'), 'R14_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R14_COLLISION:'+path); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R14_MODE:'+path)
+        require((path in RELEASE14_EXISTING) == (oldmode == ':100644') and
+                status == ('M' if oldmode == ':100644' else 'A') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R14_CREATE_EDIT:'+path)
+        if oldmode == ':000000':
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE14_BASE+':'+path],
+                cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode != 0, 'R14_EXISTING_RECLASSIFIED')
+        else:
+            require(oldblob == git('rev-parse', RELEASE14_BASE+':'+path).decode().strip(), 'R14_BASE_BLOB')
+        data = read_after(path)
+        if path == 'scripts/release/full-app-j01/check.py': validate14_checker(data)
+        if path == 'scripts/launch/governed-evidence-chain.test.mjs': validate14_provenance_test(data)
+        if path == 'docs/release/full-app-j01/g97-security-triage14.unapplied.json': candidate14_guard(data)
+
+
+def source14_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3, 'R14_LINEAR_HISTORY')
+    require(RELEASE14_PR > 0 and os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE14_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R14_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R14_CI_EVENT')
+    event = load(event_path); pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE14_PR and pr.get('number') == RELEASE14_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE14_BASE and parents[1] == RELEASE14_BASE and
+            pr.get('base', {}).get('ref') == 'stage/m103-ios-privacy-lock-succession13' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m103-g97-provenance-triage14' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin', 'R14_CI_EVENT_IDENTITY')
+    require(git('merge-base', RELEASE14_BASE, parents[2]).decode().strip() == RELEASE14_BASE, 'R14_CI_MERGE_BASE')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R14_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source14_history():
+    require(git('rev-parse', RELEASE14_BASE+'^{tree}').decode().strip() == RELEASE14_TREE, 'R14_BASE_TREE')
+    endpoint = source14_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE14_BASE, endpoint],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE14_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R14_LINEAR_HISTORY')
+        validate14_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE14_BASE, commit),
+                        lambda path: git('show', commit+':'+path))
+
+
+def source13_historical_segment():
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE14_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source13_history()
+        validate13_checker(actual_git('show', RELEASE14_BASE+':scripts/release/full-app-j01/check.py'))
+    finally:
+        globals()['git'] = actual_git
+
+
+def source14_guard():
+    source14_history()
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate14_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE14_BASE),
+                    lambda path: git('show', ':'+path))
+    validate14_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE14_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R14_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R14_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed14(path) and path not in RELEASE14_EXISTING, 'R14_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R14_COLLISION'); names.add(key); regular(ROOT/path)
+    # Existing immutable Quality wiring invokes this CLI. Add only source-only
+    # synthetic tests; never execute the private artifact reader or a live scan.
+    # Bundle-only semantic CLI negatives run their unchanged assertions separately.
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        for args in [[sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'scripts/security14', '-p', 'test_*.py'],
+                     [sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer14.test.py']]:
+            result = subprocess.run(args, cwd=ROOT, capture_output=True)
+            require(result.returncode == 0, 'R14_SOURCE_TESTS_FAILED:'+result.stdout.decode(errors='replace')+result.stderr.decode(errors='replace'))
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -951,7 +1158,12 @@ def source_guard():
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
     source10_historical_segment()
-    if release13_active():
+    if release14_active():
+        source11_historical_segment()
+        source12_historical_segment()
+        source13_historical_segment()
+        source14_guard()
+    elif release13_active():
         source11_historical_segment()
         source12_historical_segment()
         source13_guard()
@@ -961,9 +1173,9 @@ def source_guard():
     else:
         source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)

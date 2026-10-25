@@ -1,0 +1,329 @@
+{
+  "acceptanceGranted": false,
+  "admissions": {
+    "DB": false,
+    "G97": false,
+    "J01": false,
+    "M103": false,
+    "M2": false,
+    "PUBLIC": false
+  },
+  "authority": "BRAIN-M103-G97-SOURCE-TRIAGE14-CANDIDATE-01",
+  "schema": 1,
+  "source": "d0c5ad49ba22c8da7136d59a399589af1cea0e82",
+  "spend_usd": 0,
+  "status": "UNAPPLIED",
+  "tasks": [
+    {
+      "id": "secret-finding-custody",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Original Security custodian plus affected credential owners",
+      "primary_sources": [
+        "https://github.com/gitleaks/gitleaks/releases/tag/v8.24.3",
+        "https://github.com/trufflesecurity/trufflehog/releases/tag/v3.99.3"
+      ],
+      "priority": 0,
+      "problem": "Fresh PR17 artifacts contain 1144 current and 4388 history findings; content is redacted and no credential liveness has been established. Verified-only TruffleHog exit0 cannot clear Gitleaks.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Full same-run current and all-ref history scan artifacts, exact source/run/tool/rule identities, every record disposition and owner review; no raw matches in Git or chat."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "cd9d88d5f723cae30ef9a8cee18126136e396218",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/secret_scan.py",
+          "sha256": "30a04d2b2c7a4fa9aefacdea6796b20c7e1f332b61102d12a47878145e3590a5"
+        },
+        {
+          "blob": "4ff11e42ca28d438792e80ae4629974f10b83193",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/history.py",
+          "sha256": "0e58ddadd9b03e294deb03ac738c2a4bbcbcf8cf7c0f510958e9abccaff7ca93"
+        },
+        {
+          "blob": "e127f827aab0b3899f81b2efa880f17669f97bb5",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/gitleaks.toml",
+          "sha256": "f683584269dd6d1af30371c56b6a39def7343e0549f1f4c3c445932bcb075828"
+        },
+        {
+          "blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+          "mode": "100644",
+          "path": ".github/workflows/security.yml",
+          "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "Privately review every original record using the authenticated artifact; do not infer false-positive status from a filename, rule category or repeated fingerprint.",
+        "IF a credential is identified as live: the authorized owner should revoke it at its issuing provider, create a least-privilege replacement, update authorized consumers, invalidate sessions where applicable and audit use. These steps are conditional and UNAPPLIED; no credential is sent to a verification endpoint by this campaign.",
+        "Record qualified disposition in the original typed custody system only under a new explicit grant. Obtain separate authorization for source cleanup or any history rewriting; retain full original scan scope and evidence."
+      ]
+    },
+    {
+      "id": "source-inventory-custody",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Original G97 source and scanner custodian",
+      "primary_sources": [],
+      "priority": 1,
+      "problem": "Original expected inventory11922 versus PR17 tree23312:11390 additions,118 changes,0 removals. Original source command must continue SOURCE_INVENTORY_DRIFT.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Exact Git/index/worktree/history source, full scan-target bijection and all protected source witnesses; original gate remains failing until its legitimate owner acts."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/source-manifest.json",
+          "sha256": "3142f0f5c74bc42fc4e1b2b2cb03de8142075a885199b22ecd7035118185b69d"
+        },
+        {
+          "blob": "d3d811b1ab1f6d672c965d8c005cd94e77ed63b3",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/scan-targets.json.gz",
+          "sha256": "78c76b8b136feecb395f46a1113eff5c98214207dd8ebe7e339cc2002bfcdbd5"
+        },
+        {
+          "blob": "6c350d1fbfcc5d5386de1fccc35bb7c531095054",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/proposal.json",
+          "sha256": "03a667b14f387dc1ca4356e875c4ff8f355b314dd09f045ef93375028543e896"
+        },
+        {
+          "blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/contract.py",
+          "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "Review the complete versioned candidate crosswalk, every mode/content/rename candidate, original protected witness and absence. No broad new exclusion is proposed.",
+        "After a separately authorized remediation and frozen exact source, independently construct/review a successor inventory, rules/tool controls, full source coverage and fresh qualified proposal. Do not rebind the old inactive/expired proposal or old source signatures."
+      ]
+    },
+    {
+      "id": "zod-major-migration",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Expo/tooling maintainer plus qualified Security owner",
+      "primary_sources": [
+        "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+        "https://github.com/colinhacks/zod/commit/a0ebf97"
+      ],
+      "priority": 1,
+      "problem": "zod3.25.76 is in the exact lock through Expo CLI57.0.32 (^3.25.76), eslint-plugin-react-hooks7.1.1 and zod-validation-error4.0.2 peer. No direct app/package Zod imports were found. DevTools plugin/MCP schema arrays are unbounded; developer-supplied input remains a trust boundary.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Isolated study:1000 invalid elements produce1001 issues for v3 max(2),1 for v4.6.6 max(2),1000 for unbounded arrays in BOTH. Two exact Expo schema modules passed minimal valid/invalid smoke in both versions; this is not an Expo export/build or migration acceptance.",
+        "A future change needs complete cold resolution, semver/peer/API checks, actual Expo plugin/MCP flows, lint/typecheck/root/native/source/exports and genuine adversarial resource bounds."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "7b0522688c74c78328aa587cb9f9a07b65965061",
+          "mode": "100644",
+          "path": "package.json",
+          "sha256": "c50f822bc7f703cb1f64e66189ed20b6f201d26f0011bf4cd3fd309f6a6302e1"
+        },
+        {
+          "blob": "843be0fdf1fe9354dfdc4750118481486d9a778a",
+          "mode": "100644",
+          "path": "package-lock.json",
+          "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb"
+        },
+        {
+          "blob": "6217bd03730c530445861cc3e1e438a92f401b83",
+          "mode": "100644",
+          "path": "apps/mobile/package.json",
+          "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f"
+        },
+        {
+          "blob": "1b6091de3be4edb935cb829c2fc7c0c599b78c2b",
+          "mode": "100644",
+          "path": "scripts/phase9/security-advisory-exceptions.mjs",
+          "sha256": "9ff3af96f600a2f4fd0200b3f8edc9be8c261dfb3aa98225ff7c1877472d527e"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "Prefer an upstream Expo-compatible upgrade or a narrowly reviewed backport after explicit dependency/source authority. Do not force a global Zod4 override across Expo's v3 range.",
+        "Review plugin metadata/output size limits before schema validation; the upstream v4 fix short-circuits explicitly bounded arrays/maps/sets, while schemas with no bound still traverse every element.",
+        "Retain Vitest4.1.12 and the entire package-lock byte-identically in this grant."
+      ]
+    },
+    {
+      "id": "forge-backport-review",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Crypto/tooling maintainer plus qualified Security owner",
+      "primary_sources": [
+        "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+        "https://github.com/digitalbazaar/forge/issues/1152"
+      ],
+      "priority": 1,
+      "problem": "node-forge1.4.0 is a root dev dependency and Expo CLI/code-signing dependency. GHSA-86w9-cpqp-85rv affects<=1.4.0 with no listed patched release; original backport and its expired review require qualified re-evaluation.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Source/patch/SRI identities, every installed copy, existing backport negatives plus the current nested ASN.1 regression; separately authorized owner decision."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "843be0fdf1fe9354dfdc4750118481486d9a778a",
+          "mode": "100644",
+          "path": "package-lock.json",
+          "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb"
+        },
+        {
+          "blob": "daf95e32d4597f07cdcc525f48f7e1f4ca2ad4a0",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/packages.json",
+          "sha256": "4a35614b35ed64f8307ce6db42c01f3c3acfe415800b049a5cc3da689b6aaf04"
+        },
+        {
+          "blob": "a9989c7f5a5b059aa28d1f77140944e0bbabfe21",
+          "mode": "100644",
+          "path": "scripts/phase9/patch-tooling-security.mjs",
+          "sha256": "a106ce49808a604eab2d0f667b7559277139af2d3d0c44f9ee3cfe39a1e553e0"
+        },
+        {
+          "blob": "3e575fa3769a4f1b8dcdeae970d8bd4072d64740",
+          "mode": "100644",
+          "path": "docs/phase-9/security-advisory-exceptions.json",
+          "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "Independently inspect exact installed backport payload and nested DigestAlgorithm element-count validation for RSA PKCS#1v1.5. Validate both exploit rejection and valid-signature interoperability.",
+        "Review actual Expo signing/certificate trust boundaries; a dev dependency can affect build integrity. Do not infer remediation solely from the version string, inherited PASS or an exception date."
+      ]
+    },
+    {
+      "id": "withdrawn-braces-review",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Original advisory-policy custodian",
+      "primary_sources": [
+        "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+        "https://github.com/micromatch/braces/issues/73"
+      ],
+      "priority": 2,
+      "problem": "braces3.0.3 is through chokidar3.6.0 and micromatch4.0.8. GHSA-vfj7-8cjw-p6xm was withdrawn2026-10-23 as not practically exploitable; the immutable original review is still expired and the gate must not be silently bypassed.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Live advisory identity/withdrawal timestamp, actual dependency routes and unchanged original policy refusal until owner action."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "843be0fdf1fe9354dfdc4750118481486d9a778a",
+          "mode": "100644",
+          "path": "package-lock.json",
+          "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb"
+        },
+        {
+          "blob": "3e575fa3769a4f1b8dcdeae970d8bd4072d64740",
+          "mode": "100644",
+          "path": "docs/phase-9/security-advisory-exceptions.json",
+          "sha256": "938344d88765e8c77e5d9bb0b32401f22b503f2aa18394c05aa98d87390f154d"
+        },
+        {
+          "blob": "1b6091de3be4edb935cb829c2fc7c0c599b78c2b",
+          "mode": "100644",
+          "path": "scripts/phase9/security-advisory-exceptions.mjs",
+          "sha256": "9ff3af96f600a2f4fd0200b3f8edc9be8c261dfb3aa98225ff7c1877472d527e"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "Have the policy owner review the primary withdrawal evidence and exact inherited backport/source. Issue a new attributable decision through authorized policy maintenance if appropriate; no date renewal or historical rewrite here."
+      ]
+    },
+    {
+      "id": "isolated-scanner-runtime",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Original scanner-runtime and supply-chain custodian",
+      "primary_sources": [
+        "https://github.com/advisories/GHSA-xcq7-p3pf-p88h",
+        "https://github.com/advisories/GHSA-84m7-p3x7-pcfv",
+        "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2",
+        "https://github.com/advisories/GHSA-6q48-6c7w-9gw2"
+      ],
+      "priority": 1,
+      "problem": "PyPI opentelemetry-api1.37.0,certifi2026.10.18,mcp1.29.0 are isolated scanner-runtime or inherited lock/evidence dependencies, not npm mobile application packages. They remain reported by the original OSV scan; duplicate package appearances are not duplicate app exposure.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Fresh official wheel hashes/provenance, exact isolated graph/engine/pins, root-CA content, ingress/egress reachability, no-listener negatives, source/rule coverage and full original scanner suite under supported Python."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "641e85bad6becf327f0a3269340bb49c6db912a7",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/semgrep-requirements-linux-py312.txt",
+          "sha256": "d24d4645d498f402ad528cf6c9ff9e6cdc0b67baa6c290c7d9ae32cb9ce4c35f"
+        },
+        {
+          "blob": "ef6418942aa3eca8234f342b0a391bc2d715daac",
+          "mode": "100644",
+          "path": "scripts/phase9/security_acceptance/contract.py",
+          "sha256": "a237518381c986bcced04271595b232c61291a534111d1f0603d8421b96a0b1a"
+        },
+        {
+          "blob": "34416c61c8712303b45cf072c7754d54d0e8dd76",
+          "mode": "100644",
+          "path": ".github/workflows/security.yml",
+          "sha256": "11e80e1c712a1c1c2d964aedd5ad912731ea7bb76835b19b04ae0d2784f2e9b1"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "OpenTelemetry GHSA-xcq7-p3pf-p88h affects<=1.45.0; proposed patched line1.45.1 requires a fresh separately authorized reproducible scanner-runtime lock and schema/engine compatibility study. Assess whether untrusted tracestate headers can reach TraceState.from_header; original CLI listener-bind refusal reduces ingress, not all resource risk.",
+        "MCP GHSA-84m7-p3x7-pcfv affects1.8.0..<1.30.0; propose1.30.0 after compatibility review. Actual exposure requires a reachable stateful StreamableHTTP server. Preserve and independently exercise the original Internet socket.bind refusal; no server is started here.",
+        "Certifi primary maintainer advisory identifies2026.10.18 as removing emSign roots, while current aggregate GHSA/OSV metadata recommends2026.10.19 and still flags10.18. Treat this as an unresolved metadata/source discrepancy. Owner should inspect the exact official wheel CA set, requests/pip vendored copies and outbound TLS use; prefer a reviewed newer wheel after authorization. Never claim10.18 cleared solely from its version.",
+        "Do not install scanner updates, change requirement pins, mutate historical scanner evidence or declare the original custom Semgrep engine an official release."
+      ]
+    },
+    {
+      "id": "external-release-custody",
+      "owner_decision": "NOT_PERFORMED",
+      "owner_role": "Independent Brain and original DB/native/research/clinical/provider owners",
+      "primary_sources": [],
+      "priority": 1,
+      "problem": "G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. PR17 canonical DB failed registry Data limit exceeded; source tests cannot accept that axis.",
+      "qualified_owner_required": true,
+      "required_validation": [
+        "Separate original owner custody, exact source-bound qualified evidence, real native/privacy/device/archive/Apple/provider/clinical validation and independent Brain source acceptance."
+      ],
+      "source_witnesses": [
+        {
+          "blob": "67d6e5db9fadd7501557e7105ac930b67e2a2ffc",
+          "mode": "100644",
+          "path": "docs/release/full-app-j01/contract.v1.json",
+          "sha256": "017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996"
+        },
+        {
+          "blob": "65bac193775ea13f01d9561e5688ec65e6818049",
+          "mode": "100644",
+          "path": "docs/release/full-app-j01/matrix.v1.json",
+          "sha256": "3b3fd0bba1c668358326658f8a4dedeab7239ba8d0221dc01f415f506c080fe3"
+        },
+        {
+          "blob": "73408716260d5acc0bd9eb004cee5f346824a85f",
+          "mode": "100644",
+          "path": "docs/brain/state/brain_state.json",
+          "sha256": "068ed53fe35aaaed9457d1729688b20166067979ca4476c6b8006394fae1ec92"
+        },
+        {
+          "blob": "92400c74fe776dd7766a15befdefdff852074f4e",
+          "mode": "100644",
+          "path": ".github/workflows/quality.yml",
+          "sha256": "51a295770e798707507048bc56cf10765b308b18ed9ce9922c05bf699b660c49"
+        }
+      ],
+      "status": "UNAPPLIED",
+      "unapplied_actions": [
+        "Founder relays this exact source/evidence packet to independent Brain. No self-acceptance, merge, main promotion, provider/Apple/clinical/device mutation or public launch.",
+        "Obtain authenticated J01 research intake and independent G1/G2/G3/G5 for single-scan Visible Pores; G4 only for separate change claims. Complete all non-Korean F01-F17/F19-F20,12 V2-C and6 P groups. F09 encrypted history/manual compare remains required; F18 and J02-J27 includingJ05 defer."
+      ]
+    }
+  ],
+  "tree": "4cfe9c819df4c22fc5d19d79f9c0e89e0e24c973"
+}
