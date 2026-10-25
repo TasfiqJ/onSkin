@@ -1,9 +1,9 @@
-Campaign14 SOURCE CANDIDATE SUBMITTED_REVIEW_REQUIRED; no acceptance.
-PR18 https://github.com/TasfiqJ/onSkin/pull/18; branch stage/m103-g97-provenance-triage14, draft/open/unmerged.
-Frozen implementation6a3cef0ddf62cdbe387998f797fe4692f95a1224; source/projection63c7d910ec85659f3180e4ea7ddd41c7f44e2c5c.
-Newest checkpoint: docs/brain/checkpoints/M1-03/G97-SOURCE-TRIAGE-14/README.md
-Verify with verify14.py and the external manifest SHA256 in the founder return / PR body.
-Source GitHub Quality repository, iOS and Expo exports passed; overall Quality failed canonical DB registry quota; original Security failed.
-Private raw scanner reports withheld; rule aggregates UNREVIEWED. Original-owner tasks remain UNAPPLIED.
-G97 FAIL/NO_GO; DB NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01/release closed.
-Independent Brain source review required. USD0. No merge, credential/provider/Apple or public action.
+Campaign15 PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED; source candidate only.
+PR19 https://github.com/TasfiqJ/onSkin/pull/19; stage/m103-g97-coverage-candidate15 stacked on immutable PR18.
+Frozen source d04c36a025a0b0666e4f5f5253c65806b1fc49cf; tree 98702f9112659e705b10d5914d0c4a6a6e4e32f4.
+Checkpoint: docs/brain/checkpoints/M1-03/G97-COVERAGE-CANDIDATE-15/README.md
+Use verify15.py with the external manifest SHA256 supplied in the final PR/return.
+Complete 23338-path candidate remains OWNER_REVIEW_REQUIRED; original scanner SOURCE_INVENTORY_DRIFT remains FAIL.
+STOP_FOR_QUALIFIED_SECURITY_CUSTODIAN; owner decisions and private finding review remain UNAPPLIED.
+G97 FAIL/NO_GO; DB NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 and release closed.
+USD0. No merge, credential/provider/Apple action or self-acceptance.
