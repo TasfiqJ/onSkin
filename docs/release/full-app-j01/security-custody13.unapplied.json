@@ -6,11 +6,12 @@
     "commit": "bbbd59073b7add22ac350bced0d9a34124c12ffb",
     "tree": "4a70f0934a56e27863742084272c9bb4bfd5492d"
   },
-  "final_source_binding": "The external-digest SECURITY-DEPENDENCY-12 checkpoint source-proof binds this file and the final measured source; this packet is not a signature or acceptance.",
+  "final_source_binding": "The external-digest IOS-PRIVACY-LOCK-13 checkpoint source-proof binds this file and the final measured Campaign13 source. This packet is not a signature or acceptance. Final evidence-head CI is observed separately.",
   "dependency_candidate": {
-    "manifest": "docs/release/full-app-j01/dependency-succession12.v1.json",
-    "sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2",
-    "status": "UNAPPLIED_COMPATIBILITY_BLOCKED"
+    "manifest": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+    "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
+    "status": "APPLIED_SOURCE_CANDIDATE_REVIEW_REQUIRED",
+    "acceptanceGranted": false
   },
   "original_security_artifact_review": {
     "qualification": "LIVE_DOWNLOADED_IMMUTABLE_PR15_ARTIFACTS; NOT_CANDIDATE_SOURCE_SCAN",
@@ -391,5 +392,11 @@
     "docs/phase-9/ios-sdk-lock-succession13.v1.json": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409",
     "scripts/release/full-app-j01/check.py": "811983d1ace5f5efae53968a3b21d643e2d38d3a31d71817ec21b416eeafc5f3"
   },
-  "fresh_evidence": "Exact source/evidence commits, fresh final-head Security jobs and sanitized findings are recorded in IOS-PRIVACY-LOCK-13 checkpoint and final report. Prior findings remain historical observations until freshly reconfirmed."
+  "fresh_evidence": "Exact source/evidence commits, fresh final-head Security jobs and sanitized findings are recorded in IOS-PRIVACY-LOCK-13 checkpoint and final report. Prior findings remain historical observations until freshly reconfirmed.",
+  "original_release12_candidate": {
+    "manifest": "docs/release/full-app-j01/dependency-succession12.v1.json",
+    "sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2",
+    "status": "UNAPPLIED_COMPATIBILITY_BLOCKED",
+    "meaning": "Immutable historical Release12 disposition; not the current Campaign13 source status."
+  }
 }
