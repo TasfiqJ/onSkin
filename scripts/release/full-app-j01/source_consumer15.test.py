@@ -42,7 +42,7 @@ def main():
         'docs/brain/state/brain_state.json','docs/release/full-app-j01/contract.v1.json','supabase/config.toml',
         'docs/brain/checkpoints/M1-03/IOS-PRIVACY-LOCK-13/README.md']
     for name in ['../escape','/absolute','C:/drive','docs\\escape',
-        *[p+x for p in check.RELEASE15_PREFIXES for x in ['../escape','.git/config','.hidden','CON.md','alias.','Ã¯Â¼Â¡.md','x//y']]]:
+        *[p+x for p in check.RELEASE15_PREFIXES for x in ['../escape','.git/config','.hidden','CON.md','alias.','ÃƒÂ¯Ã‚Â¼Ã‚Â¡.md','x//y']]]:
         expect('unsafe:'+name,lambda p=name:check.require(check.allowed15(p),'R15_SCOPE'),code='R15_SCOPE')
     common=Path(check.git('rev-parse','--git-common-dir').decode().strip())
     if not common.is_absolute():common=(root/common).resolve()
@@ -69,7 +69,9 @@ def main():
             expect('authentic-history',check.source15_history,expected=0)
             for name in protected:
                 put(name);expect('protected:'+name,delta,code='R15_SCOPE');git('read-tree',tree)
+            tracked={n.decode('utf-8') for n in git('ls-files','-z').split(b'\0') if n}
             for name in protected:
+                if name not in tracked:continue
                 git('update-index','--force-remove',name)
                 expect('protected-deletion:'+name,delta,code='R15_SCOPE');git('read-tree',tree)
             old='docs/brain/checkpoints/M1-03/G97-SOURCE-TRIAGE-14/README.md'
