@@ -1,0 +1,365 @@
+{
+  "authority": "BRAIN-M103-DEPENDENCY-WITNESS12-CANDIDATE-01",
+  "source": {
+    "commit": "b95f469650b30bffafc86bad039b93d678e54cac",
+    "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f"
+  },
+  "base": {
+    "commit": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+    "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538"
+  },
+  "pinned_refs": [
+    {
+      "ref": "main",
+      "commit": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "tree": "389c2a09b62e78a225a2b41c8a1965a1b0e1ab80",
+      "source_merge_base": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "ancestor": true
+    },
+    {
+      "ref": "PR10",
+      "commit": "cd2bd51997f283c0b446bf2124f427f482550fa8",
+      "tree": "4c2617588111aeb976913e5c73a5c7b998bc672e",
+      "source_merge_base": "d9912f4c8b30358593569c5b9b4e84773c6f463e",
+      "ancestor": false
+    },
+    {
+      "ref": "PR11",
+      "commit": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "tree": "f623b5bbd220fd6d9d10f967400081489a5dd7e0",
+      "source_merge_base": "50f25abeafaa6127e105e2a9d825e6d15dc1dcdb",
+      "ancestor": true
+    },
+    {
+      "ref": "PR12",
+      "commit": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "tree": "0998881bc543840395dca375769ea1b7c9a8d4c7",
+      "source_merge_base": "d08347f0011672cd309d835628c094b5e9f4725d",
+      "ancestor": true
+    },
+    {
+      "ref": "PR13",
+      "commit": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "tree": "a59fc7ea1cc57901f6d848ff5009734f446bdff2",
+      "source_merge_base": "8ac97c32901272d97d1bff05f2abc294811055a6",
+      "ancestor": true
+    },
+    {
+      "ref": "PR14",
+      "commit": "14805e7f708297e72419035f517acc41ba52da70",
+      "tree": "90c9427743b99fb43747d68cd55e413d2aee3ad4",
+      "source_merge_base": "14805e7f708297e72419035f517acc41ba52da70",
+      "ancestor": true
+    },
+    {
+      "ref": "PR15",
+      "commit": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+      "tree": "0c3d2dc79a54a405315df06f05d284bd643cd538",
+      "source_merge_base": "9e3ba80e09579ee4855948f13297049791c4d5d7",
+      "ancestor": true
+    },
+    {
+      "ref": "Campaign11 source",
+      "commit": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+      "tree": "d3b9e8c6626d8b04632ec586ee408b160d8f0393",
+      "source_merge_base": "90a2b90bc859172683fd4a352ddd4cb13b307e89",
+      "ancestor": true
+    }
+  ],
+  "protected_files": 23261,
+  "source_files": [
+    {
+      "path": "docs/brain/contracts/SECURITY-12/dependency-install-blocker.v1.json",
+      "mode": "100644",
+      "blob": "ddc4d341345c92eab1db011a74205bb71a8bc562",
+      "sha256": "d52d4153dd4f718559aa2a7461824d013545f37929f609ca677fa7cd9f50ab35",
+      "bytes": 2379
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/provenance.log",
+      "mode": "100644",
+      "blob": "d3ff2ae70fa4287c50c38bb22e43be076767319b",
+      "sha256": "1b1599d975f8c13136d9b5117d31a9b506acb7b7a0001216fcb1091272dc92b8",
+      "bytes": 389
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/provenance.receipt.json",
+      "mode": "100644",
+      "blob": "11d819770f495b29ac030e812b5df653b582e2e7",
+      "sha256": "f898ac3c75136c7c063cf7187253e9b515645ff8bb9b24bbc03492003191d2a5",
+      "bytes": 470
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/provenance12.json",
+      "mode": "100644",
+      "blob": "dc338a2ecbdefacd42ecd71ba9d57be945ed1683",
+      "sha256": "746d086a72edd7b71094c5ecbf4cc98af24162b46a40df6e9a9bcb1f3ddf66b8",
+      "bytes": 23489
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest.attestations.json",
+      "mode": "100644",
+      "blob": "7c307064b11ed1cc00c0f386f0d85172aaac0061",
+      "sha256": "f4056213b45c9eae8979d444cd28f611acb68f5dda890ca6ad19e8750a0862ed",
+      "bytes": 14629
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest.registry.json",
+      "mode": "100644",
+      "blob": "800b8f0cca67927f5eead4a87dc8f37256ef20fd",
+      "sha256": "6f6dd06b4b6f0611d655c76981a318a5f2ddf6e5ec032056876751c754fdbcc0",
+      "bytes": 5800
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_expect.attestations.json",
+      "mode": "100644",
+      "blob": "1eafd963b95147a7f7c654e811161d424632d512",
+      "sha256": "131db9f0486fef0aced7222f14fbd68cff41b5de268cae4caa25af93f79b2e2c",
+      "bytes": 14442
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_expect.registry.json",
+      "mode": "100644",
+      "blob": "9e650941ff34fd908a2a631b496f1a2c50b07721",
+      "sha256": "0528bfe881bab6121b389e1ab88a26bf43208027e80016c43a5971b391f4f199",
+      "bytes": 2267
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_mocker.attestations.json",
+      "mode": "100644",
+      "blob": "fbc46e35781cceb49d5c8c626bd42c022fbd0e83",
+      "sha256": "f1fec34a180263b3d25b48cddafe624f554a2a9328f54a8ee6550477911007c3",
+      "bytes": 14332
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_mocker.registry.json",
+      "mode": "100644",
+      "blob": "10377a523d4347adb05f68eb4946c63358b29b9c",
+      "sha256": "8db5c03250edf5280c4ba695058beaa9daa2b6ebd2e115de5c4c615889effb58",
+      "bytes": 3095
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_pretty-format.attestations.json",
+      "mode": "100644",
+      "blob": "106fcf08dbc8f02005175cd941445cf5e3c3d6f3",
+      "sha256": "ad9b2480c01dc6280c58352ee203f5725ad891803a09899804f3f1e87b1d835a",
+      "bytes": 14470
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_pretty-format.registry.json",
+      "mode": "100644",
+      "blob": "ae9791007402a7bb090d32bf8d7ace4f6fd6b9d8",
+      "sha256": "351069ed91e3ef52bc958fa7da8da7326b09865cda981aa37ee8c29c8b6f14f4",
+      "bytes": 2305
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_runner.attestations.json",
+      "mode": "100644",
+      "blob": "458c63bd845b7d9e6816a7e3cd99edb400177713",
+      "sha256": "81e17a33fc8574f58986bfb2fd61eae2f2666c24cef4780263ea95bb6eab9b0d",
+      "bytes": 14289
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_runner.registry.json",
+      "mode": "100644",
+      "blob": "79466386233902f9f1e126dc881f82896017339d",
+      "sha256": "ce975479304c71711463b4a47545256fb37eec3f466f8191aa8a5983726c4385",
+      "bytes": 2240
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_snapshot.attestations.json",
+      "mode": "100644",
+      "blob": "e10869aa6c97d4dbc841f8106538190326c7a211",
+      "sha256": "df462c7a2a8160c75f6915ffb8adc513a32947b261d5bfa71927fc7301bdc5e4",
+      "bytes": 14297
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_snapshot.registry.json",
+      "mode": "100644",
+      "blob": "093131ac0658752c9ed14d9c407c5ba1847c115f",
+      "sha256": "e1224551dfdd89b4dee9ff0a57117bb29a75b9f6e64e3a94be06feb4aaca44c6",
+      "bytes": 2415
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_spy.attestations.json",
+      "mode": "100644",
+      "blob": "4571a6237398e0ccf3f1ab2efd57c8d0c8315f74",
+      "sha256": "3afab11c4c373d1a4db01733491e50cc9449679fa9dae86643920ac41988fe57",
+      "bytes": 14473
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_spy.registry.json",
+      "mode": "100644",
+      "blob": "032c6ab8886bbf081d5c5a0475c0b1a76d3ba254",
+      "sha256": "f05eb9a7f06b3c45f150c2735e48feaa79a65a217f247f29fa9e2373c1f2ebe9",
+      "bytes": 2108
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_utils.attestations.json",
+      "mode": "100644",
+      "blob": "e30e1213aadddb4f569ec4fdb0aa23aafefb1785",
+      "sha256": "7f65885d98983b866ce73ddf5908e64a09cd6d5cad0d19c790640ec40efe6a4e",
+      "bytes": 14379
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_utils.registry.json",
+      "mode": "100644",
+      "blob": "1b1b26bc60bcf538d9e15e551f9137ae504574a8",
+      "sha256": "5ff2d396f4bd7c27566d00dfdaae96f8d29a6a410d09443db3263c7e0002afb8",
+      "bytes": 3249
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "mode": "100644",
+      "blob": "82f72d838bae0d68f6c78630ed7b9e30a4a02fb8",
+      "sha256": "708f422c4ebaa377e4463506c1552189b0f095b39d8c37d56568e6f2c11d1061",
+      "bytes": 138905
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "mode": "100644",
+      "blob": "968c93e42cd48ea6ab067c903647571248286653",
+      "sha256": "56e340d0fb1c0bd7516f1a8499a75e6ac4e26cad2222d556b68cee5e6252a8bb",
+      "bytes": 82775
+    },
+    {
+      "path": "docs/release/full-app-j01/dependency-succession12.v1.json",
+      "mode": "100644",
+      "blob": "eb3ebe5f381b918034eb9868611a85c547b7b97e",
+      "sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2",
+      "bytes": 19025
+    },
+    {
+      "path": "docs/release/full-app-j01/security-custody12.unapplied.json",
+      "mode": "100644",
+      "blob": "072dcf3b2546dde6d96e4110130b5bf2729f68e2",
+      "sha256": "576a7831d5506d3b04c82c98c6353521428ec08a7ba07fd6d2fe77fd5b868c56",
+      "bytes": 17208
+    },
+    {
+      "path": "docs/release/full-app-j01/security-recovery12.md",
+      "mode": "100644",
+      "blob": "711c07891aece166f8491fecbb085c2aff29a82c",
+      "sha256": "a1759831743a7fb3dd45a29a39c49adb6b412143656d8d4c245b0490c3600c71",
+      "bytes": 5087
+    },
+    {
+      "path": "package-lock.json",
+      "mode": "100644",
+      "blob": "e53de80bf46db8f7a7fcd97781971911e2d328bd",
+      "sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+      "bytes": 572797
+    },
+    {
+      "path": "scripts/release/full-app-j01/check.py",
+      "mode": "100644",
+      "blob": "1cf2b7d3cf994fb8a10a7d5838a235e897d4a806",
+      "sha256": "6fea57dbd1d423c55b2d782bc5c4ba7d0323901c6cc4b805fe1cc94c65da3e0a",
+      "bytes": 55706
+    },
+    {
+      "path": "scripts/release/full-app-j01/dependency_guard12.test.py",
+      "mode": "100644",
+      "blob": "c576d5fa7f35956c56ed164207ab472e39f77eba",
+      "sha256": "2880751da4a59f83f7beb8b04dadbc19d27f77454e233174290b645663315563",
+      "bytes": 5042
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_consumer12.test.py",
+      "mode": "100644",
+      "blob": "4d69acb348e1d41a0b94788e62b95006eac65c3e",
+      "sha256": "328f41a178b4f93348a06d56a78d41ffa52ab102d5adc3263c1bb778f17bb963",
+      "bytes": 10898
+    }
+  ],
+  "source_chain": [
+    {
+      "commit": "2f1834e915234d0838a8fc9740c2e3d6fd11c495",
+      "tree": "aefc75a5eda4977a7c94ed0d94486153a47cb714",
+      "parents": [
+        "9e3ba80e09579ee4855948f13297049791c4d5d7"
+      ],
+      "delta": [
+        "A\tdocs/release/full-app-j01/security-recovery12.md"
+      ]
+    },
+    {
+      "commit": "adc44bc1d805065ab3c09fd210b3f859ef32e5b2",
+      "tree": "e0ebdc7c06c7727dd7d65cfdac7f5fd42e341eaa",
+      "parents": [
+        "2f1834e915234d0838a8fc9740c2e3d6fd11c495"
+      ],
+      "delta": [
+        "A\tdocs/brain/contracts/SECURITY-12/registry/provenance.receipt.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/provenance12.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_expect.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_expect.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_mocker.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_mocker.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_pretty-format.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_pretty-format.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_runner.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_runner.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_snapshot.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_snapshot.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_spy.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_spy.registry.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_utils.attestations.json",
+        "A\tdocs/brain/contracts/SECURITY-12/registry/vitest_utils.registry.json",
+        "A\tdocs/release/full-app-j01/dependency-succession12.v1.json",
+        "A\tdocs/release/full-app-j01/security-custody12.unapplied.json",
+        "M\tdocs/release/full-app-j01/security-recovery12.md",
+        "M\tpackage-lock.json",
+        "M\tscripts/release/full-app-j01/check.py",
+        "A\tscripts/release/full-app-j01/dependency_guard12.test.py",
+        "A\tscripts/release/full-app-j01/source_consumer12.test.py"
+      ]
+    },
+    {
+      "commit": "b74d999799d7f6843b335c91b6974596629ce20f",
+      "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494",
+      "parents": [
+        "adc44bc1d805065ab3c09fd210b3f859ef32e5b2"
+      ],
+      "delta": [
+        "A\tdocs/brain/contracts/SECURITY-12/registry/provenance.log",
+        "M\tdocs/phase-4/generated/source-worklist.json",
+        "M\tdocs/phase-4/generated/source-worklist.md"
+      ]
+    },
+    {
+      "commit": "d734f2cc2416facb2d72fa203d9586d20bbdd395",
+      "tree": "70bb29f7efb3ab56f81d5e7d000fd67925c991d9",
+      "parents": [
+        "b74d999799d7f6843b335c91b6974596629ce20f"
+      ],
+      "delta": [
+        "A\tdocs/brain/contracts/SECURITY-12/dependency-install-blocker.v1.json",
+        "M\tdocs/release/full-app-j01/security-custody12.unapplied.json",
+        "M\tdocs/release/full-app-j01/security-recovery12.md",
+        "M\tpackage-lock.json",
+        "M\tscripts/release/full-app-j01/check.py",
+        "M\tscripts/release/full-app-j01/dependency_guard12.test.py",
+        "M\tscripts/release/full-app-j01/source_consumer12.test.py"
+      ]
+    },
+    {
+      "commit": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+      "parents": [
+        "d734f2cc2416facb2d72fa203d9586d20bbdd395"
+      ],
+      "delta": [
+        "M\tdocs/phase-4/generated/source-worklist.json",
+        "M\tdocs/phase-4/generated/source-worklist.md"
+      ]
+    }
+  ],
+  "source_status": "CANDIDATE_REVIEW_REQUIRED",
+  "old_checker_functions": "AST_IDENTICAL_EXCEPT_SOURCE_GUARD",
+  "old_tests": "BYTE_IDENTICAL",
+  "spend_usd": 0,
+  "acceptanceGranted": false
+}

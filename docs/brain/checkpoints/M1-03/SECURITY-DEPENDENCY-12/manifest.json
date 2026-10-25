@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "authority": "BRAIN-M103-DEPENDENCY-WITNESS12-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "acceptanceGranted": false,
+  "source": {
+    "commit": "b95f469650b30bffafc86bad039b93d678e54cac",
+    "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f"
+  },
+  "files": {
+    "archive-index.json": {
+      "bytes": 23425,
+      "sha256": "7b14db1c10f359df6837d6994331e06487907098a20addf55b2c63cfb8b6eb24",
+      "mode": "100644"
+    },
+    "completion-report.json": {
+      "bytes": 49192,
+      "sha256": "b61e1eda73fd4ba2f2edbd3ef63d450dd04e222100a861979fc646c9d5290174",
+      "mode": "100644"
+    },
+    "evidence.zip": {
+      "bytes": 334374,
+      "sha256": "7743bda9882b9bd2976e11b2b70e703abc395a0913c71af1ac77d99b8977a346",
+      "mode": "100644"
+    },
+    "protected-files.json.gz": {
+      "bytes": 1493699,
+      "sha256": "d43483c9472f302e867371f47a733c679aed191e753cbe8ce36c15a1e5d59c58",
+      "mode": "100644"
+    },
+    "README.md": {
+      "bytes": 3173,
+      "sha256": "48479d6c6c9cc34420c285b51f68e57129cda1d15d2af40d6893689755a1e978",
+      "mode": "100644"
+    },
+    "source-proof.json": {
+      "bytes": 14633,
+      "sha256": "67018c463aff39cacea00c75a0ced4b6875ae59b9c23f8a20bfdc0e9935d469b",
+      "mode": "100644"
+    },
+    "verify_checkpoint.py": {
+      "bytes": 6522,
+      "sha256": "c75ca0a10aee744237bbe0a8c894d766038640dedb5131a54597f50921b1a964",
+      "mode": "100644"
+    }
+  },
+  "handoff": {
+    "mode": "100644",
+    "sha256": "6fa1cca56a31861ab3602918f691ff78b33bfc5c59e88e31cf7d6f399aecd7ee",
+    "blob": "191c360b3f338b62bddf79e0f96ec5da4fbb3bf7"
+  },
+  "security": "FAIL/NO_GO",
+  "M2": "NOT_AUTHORIZED",
+  "release": "NO_GO"
+}

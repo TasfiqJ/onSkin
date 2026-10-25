@@ -1,0 +1,1244 @@
+{
+  "status": "PARTIAL_BLOCKED",
+  "proposal": "SUBMITTED_REVIEW_REQUIRED",
+  "authorization": "BRAIN-M103-DEPENDENCY-WITNESS12-CANDIDATE-01",
+  "source": {
+    "commit": "b95f469650b30bffafc86bad039b93d678e54cac",
+    "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f"
+  },
+  "candidate_source": {
+    "commit": "b74d999799d7f6843b335c91b6974596629ce20f",
+    "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494"
+  },
+  "branch": "stage/m103-dependency-witness12",
+  "pr": 16,
+  "base": "stage/m103-security-source-recovery11",
+  "outcome": "Exact eight-node candidate independently installed/tested, but protected native privacy mapping requires original whole-lock hash. Original lock restored; exact versioned proposal and blocker retained; current guard refuses activation.",
+  "candidate_manifest_sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2",
+  "blocker_sha256": "d52d4153dd4f718559aa2a7461824d013545f37929f609ca677fa7cd9f50ab35",
+  "final_lock_sha256": "99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568",
+  "candidate_lock_sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+  "test_summary": {
+    "root": 6190,
+    "cached_tasks": 0,
+    "new_source_rejections": 55,
+    "new_dependency_rejections": 49,
+    "inherited_rejections": [
+      23,
+      44,
+      58,
+      9
+    ],
+    "semantic_negatives": 151,
+    "semantic_evidence": "Unedited original test_contract.py executed in source b74 GitHub Quality40163991148; final evidence-head execution is observed separately after publication.",
+    "source_packet_and_launch": "PASS",
+    "phase4": {
+      "items": 14,
+      "blocked": 7,
+      "local_scaffold": 7,
+      "source_occurrences": 420,
+      "missing": 0,
+      "independent": [
+        0,
+        1,
+        0
+      ]
+    },
+    "original_security_suite": {
+      "tests": 70,
+      "failures": 21,
+      "errors": 19,
+      "exit": 1
+    },
+    "original_security_source": {
+      "exit": 1,
+      "code": "SOURCE_INVENTORY_DRIFT"
+    }
+  },
+  "independent_complete_checkout": {
+    "qualification": "INDEPENDENT_COMPLETE_CHECKOUT_SEPARATE_GIT_OBJECTS; GOVERNANCE_ONLY",
+    "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+    "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+    "tracked_files": 23291,
+    "alternates": false,
+    "shallow": false,
+    "checkout": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+    "current_malicious_restored": [
+      0,
+      1,
+      0
+    ],
+    "mutation": "Exact reviewed candidate lock refused; original restored",
+    "extra_native_audit": "UNQUALIFIED: optional installed dependencies absent (@expo/plist); actual exit1 retained. Primary installed native audit is separate.",
+    "acceptance": false,
+    "release": "NO_GO"
+  },
+  "receipts": {
+    "candidate-ios-privacy-blocker": {
+      "name": "candidate-ios-privacy-blocker",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--check",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:11:39.250247+00:00",
+      "elapsed_seconds": 22.344,
+      "exit": 1,
+      "log_sha256": "11b81abb023031e3cc5427c1840aa5330d6f4a96233d8f27424d7c6d3a7f3600",
+      "log_bytes": 483,
+      "source_before": {
+        "head": "b74d999799d7f6843b335c91b6974596629ce20f",
+        "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494",
+        "status_sha256": "1a93dbafb3f3a2cde9c6cc7f5002ccf132157231da703050cabd57cc16dfca6e",
+        "clean": false
+      },
+      "source_after": {
+        "head": "b74d999799d7f6843b335c91b6974596629ce20f",
+        "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494",
+        "status_sha256": "c07ba8ce01ca572362389ba051144af756be01aa26773ab7b905b8be348153f1",
+        "clean": false
+      }
+    },
+    "cold-ci-unapplied": {
+      "name": "cold-ci-unapplied",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:13:25.526064+00:00",
+      "elapsed_seconds": 71.5,
+      "exit": 0,
+      "log_sha256": "3a42d6c9727017d3c70addc16589f6ebd4043cf1ac144788e6a6d07ca5b2b4ab",
+      "log_bytes": 711,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "cold-ci": {
+      "name": "cold-ci",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:51:41.513462+00:00",
+      "elapsed_seconds": 59.781,
+      "exit": 0,
+      "log_sha256": "690942a56422470d835746554dc5e999e5d8d0cf65394be6bfb7362905ca0e07",
+      "log_bytes": 712
+    },
+    "core05-core06": {
+      "name": "core05-core06",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/core05/adherence-source-contract.test.mjs",
+        "scripts/core06/recommendation-admission-source-contract.test.mjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:00:53.586984+00:00",
+      "elapsed_seconds": 1.437,
+      "exit": 0,
+      "log_sha256": "4c78d6de52415154e9ec015e35045285640c5e388eb1139d0d9dd74e2627e961",
+      "log_bytes": 12350
+    },
+    "current-check": {
+      "name": "current-check",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:52:43.979350+00:00",
+      "elapsed_seconds": 37.64,
+      "exit": 0,
+      "log_sha256": "7893d51c8dd024eab6bec365f90c0aaeb4da8db20ea1d4f66706ae6cffd1b6aa",
+      "log_bytes": 495
+    },
+    "dependency12-unapplied": {
+      "name": "dependency12-unapplied",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:13:25.526064+00:00",
+      "elapsed_seconds": 19.062,
+      "exit": 0,
+      "log_sha256": "46ac52a17b456bc06f1db9c73d5876d89d603cfd8900d6cc9751530e3e488082",
+      "log_bytes": 7216,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "dependency12": {
+      "name": "dependency12",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:51:13.517963+00:00",
+      "elapsed_seconds": 15.625,
+      "exit": 0,
+      "log_sha256": "149a4a742629bed583b47fa6cea03386c337b2d1529428ad32cc03775971402f",
+      "log_bytes": 6842
+    },
+    "historical-release08-malicious": {
+      "name": "historical-release08-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:05:45.179316+00:00",
+      "exit": 1,
+      "elapsed_seconds": 0.719,
+      "log_sha256": "584deb48cd64938954305990dfb381775e11652da7977e309876088ff855647d",
+      "log_bytes": 90
+    },
+    "historical-release08": {
+      "name": "historical-release08",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:05:42.200210+00:00",
+      "exit": 0,
+      "elapsed_seconds": 2.969,
+      "log_sha256": "85e35adca9cfc985c077013b4210f954ace1453c25fefab0cd47bea586c6c711",
+      "log_bytes": 250
+    },
+    "historical-release09-malicious": {
+      "name": "historical-release09-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:05:40.919989+00:00",
+      "exit": 1,
+      "elapsed_seconds": 1.125,
+      "log_sha256": "1d8afa73e0b5154b728b1bc6b34b9fa82ababe6e49529c250f6c1f2c32eabea1",
+      "log_bytes": 86
+    },
+    "historical-release09": {
+      "name": "historical-release09",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:05:36.630840+00:00",
+      "exit": 0,
+      "elapsed_seconds": 4.297,
+      "log_sha256": "85e35adca9cfc985c077013b4210f954ace1453c25fefab0cd47bea586c6c711",
+      "log_bytes": 250
+    },
+    "historical-release10-malicious": {
+      "name": "historical-release10-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:05:19.622297+00:00",
+      "exit": 1,
+      "elapsed_seconds": 16.859,
+      "log_sha256": "72029489dd26cbb358b6fe86213be19f626da52a1725253adc97c8d2e0675f6f",
+      "log_bytes": 86
+    },
+    "historical-release10": {
+      "name": "historical-release10",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:05:00.349838+00:00",
+      "exit": 0,
+      "elapsed_seconds": 19.281,
+      "log_sha256": "85e35adca9cfc985c077013b4210f954ace1453c25fefab0cd47bea586c6c711",
+      "log_bytes": 250
+    },
+    "historical-release11-malicious": {
+      "name": "historical-release11-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:04:31.337765+00:00",
+      "exit": 1,
+      "elapsed_seconds": 28.89,
+      "log_sha256": "2a61550332f2b39cc4e7a2071f90de2738d1a648ae350c03d93dd05f8b52bba7",
+      "log_bytes": 101
+    },
+    "historical-release11": {
+      "name": "historical-release11",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:03:52.933057+00:00",
+      "exit": 0,
+      "elapsed_seconds": 38.407,
+      "log_sha256": "85e35adca9cfc985c077013b4210f954ace1453c25fefab0cd47bea586c6c711",
+      "log_bytes": 250
+    },
+    "independent-clone": {
+      "name": "independent-clone",
+      "argv": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "-c",
+        "core.longpaths=true",
+        "clone",
+        "--no-local",
+        "--no-hardlinks",
+        "--branch",
+        "stage/m103-dependency-witness12",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196",
+      "started": "2026-10-25T05:01:40.809505+00:00",
+      "exit": 0,
+      "elapsed_seconds": 26.532,
+      "log_sha256": "2fd80dd826ce131df18fbfcfd51d14aa46e5851c90fdf64348e4ad5a455b8d22",
+      "log_bytes": 3931
+    },
+    "independent-current": {
+      "name": "independent-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:02:09.799165+00:00",
+      "exit": 0,
+      "elapsed_seconds": 53.172,
+      "log_sha256": "ee58ca83197e3139e5c37a7cce89a9859fc462a3156037f335635233fc586a31",
+      "log_bytes": 503
+    },
+    "independent-malicious": {
+      "name": "independent-malicious",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:03:02.975244+00:00",
+      "exit": 1,
+      "elapsed_seconds": 0.203,
+      "log_sha256": "3b696bc1516b05fc3f2a99832ffc079c9ab76ddd97d03ed77786bc59d8e39232",
+      "log_bytes": 84
+    },
+    "independent-restored": {
+      "name": "independent-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "started": "2026-10-25T05:03:03.168137+00:00",
+      "exit": 0,
+      "elapsed_seconds": 49.531,
+      "log_sha256": "ee58ca83197e3139e5c37a7cce89a9859fc462a3156037f335635233fc586a31",
+      "log_bytes": 503
+    },
+    "independent-unapplied-candidate-refused": {
+      "name": "independent-unapplied-candidate-refused",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 1,
+      "expected_exit": 1,
+      "elapsed_seconds": 0.61,
+      "log_sha256": "4692b8a413f7bca3dfee4ab075678e1eacbb3a5944ef51b9c8987fc23e243a3b",
+      "log_bytes": 78
+    },
+    "independent-unapplied-current": {
+      "name": "independent-unapplied-current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 0,
+      "expected_exit": 0,
+      "elapsed_seconds": 70.375,
+      "log_sha256": "e3f4b53a8011860cb606987838690dca607f826e42112ae29dbda9a6f6f3c3a5",
+      "log_bytes": 608
+    },
+    "independent-unapplied-native-privacy": {
+      "name": "independent-unapplied-native-privacy",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--check",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 1,
+      "expected_exit": 0,
+      "elapsed_seconds": 0.062,
+      "log_sha256": "36cfa3a4732505c4c07fe556f52b838952f4ae7985c696f318bbcf6d3f83b5c6",
+      "log_bytes": 987
+    },
+    "independent-unapplied-restored": {
+      "name": "independent-unapplied-restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "scripts/release/full-app-j01/check.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 0,
+      "expected_exit": 0,
+      "elapsed_seconds": 67.297,
+      "log_sha256": "e3f4b53a8011860cb606987838690dca607f826e42112ae29dbda9a6f6f3c3a5",
+      "log_bytes": 608
+    },
+    "inherited-dependency11-unapplied": {
+      "name": "inherited-dependency11-unapplied",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard11.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:16:00.562134+00:00",
+      "elapsed_seconds": 1.078,
+      "exit": 0,
+      "log_sha256": "da3a23b0afb1734cc1f3fb37f1f0a1c84b7bf91c7a11d364cae8abaa05645ac2",
+      "log_bytes": 874,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "inherited-dependency11": {
+      "name": "inherited-dependency11",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/dependency_guard11.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:59:15.863716+00:00",
+      "elapsed_seconds": 1.485,
+      "exit": 0,
+      "log_sha256": "fdd4ebd9f9a101072f0624fe168af5941dcaf8bfac071be433d2ad86f757ea51",
+      "log_bytes": 873
+    },
+    "inherited09-unapplied": {
+      "name": "inherited09-unapplied",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:14:09.436156+00:00",
+      "elapsed_seconds": 6.141,
+      "exit": 0,
+      "log_sha256": "8fbf7602f8485972471f00b34b5610f9e5776996f105404282a485edf1a7b3dd",
+      "log_bytes": 6257,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "inherited09": {
+      "name": "inherited09",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer09.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:57:07.463208+00:00",
+      "elapsed_seconds": 2.437,
+      "exit": 0,
+      "log_sha256": "825fddf61b61ea0987c48b111326f4b129d15200f07c9e1d6a02608441059cc8",
+      "log_bytes": 6257
+    },
+    "inherited10-unapplied": {
+      "name": "inherited10-unapplied",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer10.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:14:16.474824+00:00",
+      "elapsed_seconds": 16.141,
+      "exit": 0,
+      "log_sha256": "895c21881e0877450ecf1f821706d5f6ae84ffbfea74903debd84529aecf58ef",
+      "log_bytes": 15232,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "inherited10": {
+      "name": "inherited10",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer10.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:57:09.982444+00:00",
+      "elapsed_seconds": 11.75,
+      "exit": 0,
+      "log_sha256": "a04a9132e88d6807ad3671b208b01887f3734162ee00b4f4908543be60787ab3",
+      "log_bytes": 15232
+    },
+    "inherited11-unapplied": {
+      "name": "inherited11-unapplied",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer11.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:14:33.242356+00:00",
+      "elapsed_seconds": 86.86,
+      "exit": 0,
+      "log_sha256": "c7a29e4389e38d2c9b781506b63a6736ccaa24a42fc2d2826c82358fa2e5dfeb",
+      "log_bytes": 8690,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "inherited11": {
+      "name": "inherited11",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer11.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:57:21.818966+00:00",
+      "elapsed_seconds": 113.922,
+      "exit": 0,
+      "log_sha256": "aab4d478dd3543ba914ef0f047e7a2e0fd2e1cdfd534ab93b6b15f547e06c02d",
+      "log_bytes": 8690
+    },
+    "launch-contract": {
+      "name": "launch-contract",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "launch:contract:verify"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:59:05.039350+00:00",
+      "elapsed_seconds": 108.468,
+      "exit": 0,
+      "log_sha256": "d5fe0a43de0b6a43015414cc5a1f54010d6de6bce917d734c517fd322695b2ff",
+      "log_bytes": 28088
+    },
+    "lint-final": {
+      "name": "lint-final",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "lint",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:59:01.647274+00:00",
+      "elapsed_seconds": 104.719,
+      "exit": 0,
+      "log_sha256": "d480b25ba39999d73bac30e12d569a5fd8f7ec8ec4eb39480e1d28eefd360748",
+      "log_bytes": 1116
+    },
+    "lint-unapplied": {
+      "name": "lint-unapplied",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "lint",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:15:50.427161+00:00",
+      "elapsed_seconds": 59.531,
+      "exit": 0,
+      "log_sha256": "86756ae735f28ba1ad15f17b23536b0eea35012c9dc367de2aa79cc05aad433f",
+      "log_bytes": 1114,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "native-privacy-unapplied": {
+      "name": "native-privacy-unapplied",
+      "argv": [
+        "node",
+        "scripts/phase9/ios-privacy-source-audit.mjs",
+        "--check",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:16:32.529957+00:00",
+      "elapsed_seconds": 14.688,
+      "exit": 0,
+      "log_sha256": "d960a107f2026007e252e97133834df9d7a12f213d6a109f18c4978829f5fda8",
+      "log_bytes": 162,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "provenance": {
+      "name": "provenance",
+      "argv": [
+        "node",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\provenance.cjs"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:47:11.623890+00:00",
+      "elapsed_seconds": 7.485,
+      "exit": 0,
+      "log_sha256": "1b1599d975f8c13136d9b5117d31a9b506acb7b7a0001216fcb1091272dc92b8",
+      "log_bytes": 389
+    },
+    "root-clean-source": {
+      "name": "root-clean-source",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "test",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:01:03.729313+00:00",
+      "elapsed_seconds": 38.078,
+      "exit": 0,
+      "log_sha256": "e284324d161a8e0d30f85e63c9ce8f67c9fe9f259a12ae6e8d31a7593856e648",
+      "log_bytes": 374001
+    },
+    "root-forced-final": {
+      "name": "root-forced-final",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "test",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:58:00.188663+00:00",
+      "elapsed_seconds": 81.547,
+      "exit": 1,
+      "log_sha256": "54377c0f7249ed7d4dc9a973f55fc2a2c53240a7f714f8a49de7abe80e1cea12",
+      "log_bytes": 378550
+    },
+    "root-unapplied-complete": {
+      "name": "root-unapplied-complete",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "test",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:15:11.451134+00:00",
+      "elapsed_seconds": 48.672,
+      "exit": 0,
+      "log_sha256": "f9f775be803777bbafc99b7cf49bd3cd97dede289a4aa04936b7fabdc0b33c73",
+      "log_bytes": 372942,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "root-unapplied": {
+      "name": "root-unapplied",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "test",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:14:30.215616+00:00",
+      "elapsed_seconds": 3.61,
+      "exit": 1,
+      "log_sha256": "c3979b92ff9796b3f6f7590596870e5c82d424d58afb71a674e32762976e583d",
+      "log_bytes": 3253,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "scanner-source": {
+      "name": "scanner-source",
+      "argv": [
+        "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "scripts/phase9/security_acceptance/contract.py",
+        "source"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:56:50.649509+00:00",
+      "elapsed_seconds": 0.906,
+      "exit": 1,
+      "log_sha256": "55214d4b9399cfb5340339b36bebd4ab7b84a743ee33336c94fc6139a1fa657d",
+      "log_bytes": 111
+    },
+    "scanner-tests": {
+      "name": "scanner-tests",
+      "argv": [
+        "C:\\Users\\jasim\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/phase9/security_acceptance",
+        "-p",
+        "test_contract.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:56:50.649509+00:00",
+      "elapsed_seconds": 557.078,
+      "exit": 1,
+      "log_sha256": "1a05326a82cc0ab8e528ab0633935599da1a99052aeb7c2fad6fa334cf9d25eb",
+      "log_bytes": 68720
+    },
+    "source-packet-current": {
+      "name": "source-packet-current",
+      "argv": [
+        "node",
+        "scripts/docs/source-packet-audit.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:04:08.086181+00:00",
+      "elapsed_seconds": 0.593,
+      "exit": 0,
+      "log_sha256": "623526793da6ab11e235a42ad604277cc8c3d2521866aaaaeec3006075cce502",
+      "log_bytes": 60
+    },
+    "source-packet-unapplied": {
+      "name": "source-packet-unapplied",
+      "argv": [
+        "node",
+        "scripts/docs/source-packet-audit.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:16:48.226052+00:00",
+      "elapsed_seconds": 0.328,
+      "exit": 0,
+      "log_sha256": "623526793da6ab11e235a42ad604277cc8c3d2521866aaaaeec3006075cce502",
+      "log_bytes": 60,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "source12-at-frozen-source": {
+      "name": "source12-at-frozen-source",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:06:37.879228+00:00",
+      "elapsed_seconds": 253.313,
+      "exit": 0,
+      "log_sha256": "2b6fbdd72b49dabc7e85cc8409e2fb569cce2985e8633ce1cb49b6312915d9ca",
+      "log_bytes": 7945,
+      "source_before": {
+        "head": "b74d999799d7f6843b335c91b6974596629ce20f",
+        "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b74d999799d7f6843b335c91b6974596629ce20f",
+        "tree": "d8f13fca77945f8f7015e7392cd97b300ccb3494",
+        "status_sha256": "1a93dbafb3f3a2cde9c6cc7f5002ccf132157231da703050cabd57cc16dfca6e",
+        "clean": false
+      }
+    },
+    "source12-final": {
+      "name": "source12-final",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:58:00.173108+00:00",
+      "elapsed_seconds": 328.265,
+      "exit": 0,
+      "log_sha256": "3bd39e7728a48814a19b67febab73280feb4fb4ff410e85315817a33b6ea2c4a",
+      "log_bytes": 7945
+    },
+    "source12-r2": {
+      "name": "source12-r2",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:52:44.036553+00:00",
+      "elapsed_seconds": 14.954,
+      "exit": 1,
+      "log_sha256": "cd7a0dc0ad8dbedae6d73a49ace6a95e02d207b43c2f85a34ad4c702afab9096",
+      "log_bytes": 4471
+    },
+    "source12-unapplied": {
+      "name": "source12-unapplied",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:13:25.622889+00:00",
+      "elapsed_seconds": 268.766,
+      "exit": 0,
+      "log_sha256": "f526145396c40f3c392580ab6199e29b5ec8063d25e216c612cc485b91c0ba1d",
+      "log_bytes": 8453,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "source12": {
+      "name": "source12",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer12.test.py"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:51:41.513462+00:00",
+      "elapsed_seconds": 11.687,
+      "exit": 1,
+      "log_sha256": "433472bd780b6295ec78d6b94a8dce11d6a61c2c6fcc7be59e0b9f82135fe14c",
+      "log_bytes": 3777
+    },
+    "typecheck-final": {
+      "name": "typecheck-final",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "typecheck",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T04:58:00.980483+00:00",
+      "elapsed_seconds": 60.563,
+      "exit": 0,
+      "log_sha256": "7479fc2c784f1f0ba4f309d930496a4453f8d27c7935aa6bb798811399899ef1",
+      "log_bytes": 1092
+    },
+    "typecheck-unapplied": {
+      "name": "typecheck-unapplied",
+      "argv": [
+        "node",
+        "node_modules/turbo/bin/turbo",
+        "run",
+        "typecheck",
+        "--force"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:15:11.439134+00:00",
+      "elapsed_seconds": 38.578,
+      "exit": 0,
+      "log_sha256": "f2f92983176026cd3669d4d53c3b702ecf68855ba60fef1848177ef853f21417",
+      "log_bytes": 1092,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    },
+    "worklist-current": {
+      "name": "worklist-current",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:04:08.801009+00:00",
+      "elapsed_seconds": 0.562,
+      "exit": 0,
+      "log_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "log_bytes": 68
+    },
+    "worklist-final-independent-current": {
+      "name": "worklist-final-independent-current",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 0,
+      "expected_exit": 0,
+      "log_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "log_bytes": 76
+    },
+    "worklist-final-independent-malicious": {
+      "name": "worklist-final-independent-malicious",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 1,
+      "expected_exit": 1,
+      "log_sha256": "7366cb806bb10ca542fae1af10a1e0bc37a862c53d79fb5b0ea470dae1ff93c5",
+      "log_bytes": 103
+    },
+    "worklist-final-independent-restored": {
+      "name": "worklist-final-independent-restored",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "source": "b95f469650b30bffafc86bad039b93d678e54cac",
+      "exit": 0,
+      "expected_exit": 0,
+      "log_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "log_bytes": 76
+    },
+    "worklist-generate-unapplied": {
+      "name": "worklist-generate-unapplied",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:12:38.168813+00:00",
+      "elapsed_seconds": 0.391,
+      "exit": 0,
+      "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "log_bytes": 130,
+      "source_before": {
+        "head": "d734f2cc2416facb2d72fa203d9586d20bbdd395",
+        "tree": "70bb29f7efb3ab56f81d5e7d000fd67925c991d9",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "d734f2cc2416facb2d72fa203d9586d20bbdd395",
+        "tree": "70bb29f7efb3ab56f81d5e7d000fd67925c991d9",
+        "status_sha256": "d6f66b68a32cb35183d1cbde4947d480343ae48527cab05888e356ae3e6830e5",
+        "clean": false
+      }
+    },
+    "worklist-generate": {
+      "name": "worklist-generate",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:00:38.708595+00:00",
+      "elapsed_seconds": 0.719,
+      "exit": 0,
+      "log_sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad",
+      "log_bytes": 130
+    },
+    "worklist-independent-current-r2": {
+      "name": "worklist-independent-current-r2",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "exit": 0,
+      "expected_exit": 0,
+      "log_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "log_bytes": 76
+    },
+    "worklist-independent-current": {
+      "name": "worklist-independent-current",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "exit": 0,
+      "log_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "log_bytes": 76
+    },
+    "worklist-independent-malicious": {
+      "name": "worklist-independent-malicious",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "exit": 0,
+      "log_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "log_bytes": 76
+    },
+    "worklist-independent-restored-r2": {
+      "name": "worklist-independent-restored-r2",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "exit": 0,
+      "expected_exit": 0,
+      "log_sha256": "ab248369bb441b4d4cfbb989f3aab2eac1de3a44622ca3e7bbc03e99efa122fd",
+      "log_bytes": 76
+    },
+    "worklist-independent-semantic-mutation-r2": {
+      "name": "worklist-independent-semantic-mutation-r2",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\witness12-run-06095196\\independent-complete",
+      "exit": 1,
+      "expected_exit": 1,
+      "log_sha256": "7366cb806bb10ca542fae1af10a1e0bc37a862c53d79fb5b0ea470dae1ff93c5",
+      "log_bytes": 103
+    },
+    "worklist-unapplied": {
+      "name": "worklist-unapplied",
+      "argv": [
+        "node",
+        "scripts/phase4/build-source-worklist.mjs",
+        "--strict",
+        "--check"
+      ],
+      "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\source-recovery11-5ca49b38f6ad44539feab22fc4ca507e\\source",
+      "started": "2026-10-25T05:16:47.591502+00:00",
+      "elapsed_seconds": 0.296,
+      "exit": 0,
+      "log_sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b",
+      "log_bytes": 68,
+      "source_before": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      },
+      "source_after": {
+        "head": "b95f469650b30bffafc86bad039b93d678e54cac",
+        "tree": "a6d3077b85617248aa9beb4c0b45fb3299b3016f",
+        "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "clean": true
+      }
+    }
+  },
+  "evidence_qualification": {
+    "in_memory": "Dependency reader mutations",
+    "git_and_materialized_fixture": "55 source rejection controls, separately labeled; alternate object store is not independent proof",
+    "independent": "Complete 23291 tracked-file checkout with separate Git objects/no alternates, genuine current0/candidate-refused1/restored0",
+    "historical": "Original Release08/09/10/11 validators ran at each exact endpoint: current0, altered original lock1. Original restored bytes retained."
+  },
+  "retained_failures": [
+    "Genuine candidate strict iOS MAPPING_LOCK_DRIFT caused rollback; protected mapping/audit untouched.",
+    "Original Security source inventory drift, expired proposal/advisory reviews, actual findings and missing qualified custody remain.",
+    "Early source12 fixture expected a narrower error label; authentic stronger guard refused first. Test expectations corrected without changing guards.",
+    "Two long command attempts have no completed exit receipt; raw partial streams retained and never counted as PASS.",
+    "First candidate root suite failed its clean-worktree assertion because authored changes occurred during the run. Clean frozen-source6190 rerun passed.",
+    "First restored-lock root attempt overlapped npm ci and failed module loading before tests. Completed cold install and subsequent clean6190 run are separately bound.",
+    "A cosmetic trailing-whitespace worklist mutation was accepted by the semantic producer. Correct semantic count mutation then yielded authentic0/1/0.",
+    "Extra independent native privacy command lacked optional @expo/plist and exited1; not qualified. Governance0/1/0 completed independently; installed primary native audit passed."
+  ],
+  "original_artifact_review": "task/security11-artifact-review.json in evidence.zip; no raw secret artifacts or invented fingerprints published",
+  "withheld_sensitive_entries": [],
+  "final_ci": "Observe exact final pushed evidence HEAD after publication. Source/candidate observations are labeled by their own SHA and are never borrowed as final results.",
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "DB": "NOT_ACCEPTED",
+    "M1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED",
+    "J01": "MISSING_RESEARCH_AND_QUALIFIED_GATES",
+    "release": "NO_GO"
+  },
+  "hidden_disabled": "F18 and J02-J27/J05 deferred; positive J01, provider/paid/clinical/native/Apple/public-release claims closed; F09 history/manual compare retained; A-to-B owner boundary and CORE05/CORE06 bytes protected.",
+  "spend_usd": 0,
+  "acceptanceGranted": false
+}

@@ -1,10 +1,11 @@
-CAMPAIGN11 Security source recovery — PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED.
-Authority BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01; full scope explicitly adopted by founder.
-DRAFT PR https://github.com/TasfiqJ/onSkin/pull/15; stage/m103-security-source-recovery11 targets pinned PR14 stage/full-app-j01-quality-projections10; auto-merge OFF.
-Measured source90a2b90bc859172683fd4a352ddd4cb13b307e89; tree d3b9e8c6626d8b04632ec586ee408b160d8f0393.
-Checkpoint docs/brain/checkpoints/M1-03/SECURITY-SOURCE-11/README.md; independent verify_checkpoint.py requires the external manifest SHA256 relayed in the final report.
-Original111/2 source failures repaired to125/0 with semantic negatives. Root6190 tests/typecheck/lint pass with zero caches; original151 in exact-source Linux CI, old23/44/new58 controls and independent complete-checkout source-governance0/1/0 authenticated.
-Compatible eight-node Vitest candidate UNAPPLIED: original retained-source lock witness refused it; final package declarations/lock bytes equal PR14. Exact owner actions in docs/release/full-app-j01/security-custody11.unapplied.json.
-Source Security/readiness remain failed/blocked. PR14 canonical DB passed, but independent protected DB custody NOT_ACCEPTED; older H01 failure remains historical.
-Final evidence-head CI and actual delivery SHA/tree are observed separately after push; earlier results are not borrowed. No self-acceptance, main merge, release, provider/payment/native/clinical/J01 admission.
-G97 FAIL/NO_GO; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; legacy consumers NOT_DONE; J01 intake missing. Spend USD0.
+Campaign12 PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED
+PR https://github.com/TasfiqJ/onSkin/pull/16 remains DRAFT, stacked on immutable PR15.
+Branch stage/m103-dependency-witness12; measured source b95f469650b30bffafc86bad039b93d678e54cac; tree a6d3077b85617248aa9beb4c0b45fb3299b3016f.
+The tested Vitest4.1.12 eight-node patch is UNAPPLIED: protected iOS privacy mapping binds the old whole-lock hash. Original lock restored byte-for-byte; source guard refuses current activation and hidden blocker removal.
+Exact blocker: docs/brain/contracts/SECURITY-12/dependency-install-blocker.v1.json
+Owner handoff: docs/release/full-app-j01/security-custody12.unapplied.json
+Externally anchored checkpoint: docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-12/README.md
+Use the external manifest SHA from the final report, never an internally substituted digest. Resolve final evidence HEAD from the pushed branch; this pointer grants no approval.
+Final source6190 tests, uncached lint/typecheck,55 source and49 dependency refusals, original23/44/58/9 controls pass. Historical witness proofs and independent complete checkout0/1/0 are separate authenticated evidence classes.
+Original Security source inventory drift, expired reviews and unresolved findings remain; qualified Security/DB custody absent. G97 FAIL/NO_GO; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/paid/native/provider/clinical/Apple/public release closed.
+Brain alone accepts source. No main/older PR mutation, release, purchase or self-acceptance. Spend USD0. Final evidence-head CI is observed after push and reported separately.
