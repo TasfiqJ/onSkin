@@ -1,6 +1,6 @@
 {
   "authorization": "BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01",
-  "status": "PROPOSED_TECHNICAL_REMEDIATION_NOT_ACCEPTANCE",
+  "status": "UNAPPLIED_RETAINED_SOURCE_WITNESS_BLOCKED",
   "base": "14805e7f708297e72419035f517acc41ba52da70",
   "nodes": {
     "node_modules/@vitest/expect": {
@@ -254,5 +254,7 @@
     "https://github.com/vitest-dev/vitest/security/advisories/GHSA-xp26-3454-mjgp"
   ],
   "declarations": "UNCHANGED; both workspace ranges already admit 4.1.12",
-  "other_lock_nodes": "BYTE_VALUE_IDENTICAL_TO_BASE"
+  "other_lock_nodes": "BYTE_VALUE_IDENTICAL_TO_BASE",
+  "blocker": "Original full-app validator rejects SOURCE_SHA256:package-lock.json. Its frozen BASE_BLOB_SHA256 witness cannot admit an updated lock without a separate exact protected-contract grant.",
+  "final_package_bytes": "UNCHANGED_FROM_IMMUTABLE_PR14; candidate eight-node delta retained only for independent owner review"
 }

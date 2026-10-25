@@ -15,6 +15,9 @@ def main():
     current = (check.ROOT/'package-lock.json').read_bytes()
     check.dependency11_guard(baseline)
     check.dependency11_guard(current)
+    proposed = json.loads(baseline)
+    proposed['packages'].update(check.load(check.ROOT/'docs/brain/contracts/SECURITY-11/dependency-patch.v1.json')['nodes'])
+    check.dependency11_guard(json.dumps(proposed).encode())
     parsed = json.loads(current)
     rejected = 0
     cases = [
@@ -38,7 +41,8 @@ def main():
         else:
             raise AssertionError(name)
     check.dependency11_guard(current)
-    print(json.dumps(dict(passed=True, rejected=rejected, exact_changed_nodes=8, release='NO_GO')))
+    print(json.dumps(dict(passed=True, rejected=rejected, candidate_nodes=8,
+        final_lock_changed=current != baseline, disposition='UNAPPLIED_RETAINED_SOURCE_WITNESS_BLOCKED', release='NO_GO')))
 
 
 if __name__ == '__main__':
