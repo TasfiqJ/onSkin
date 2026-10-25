@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import test from 'node:test';
+import ts from 'typescript';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -621,18 +622,204 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(settings, /Routine pacing suggestions/u);
   assert.match(hooks, /AppState\.addEventListener\(['"]change['"]/u);
   assert.match(hooks, /invalidateQueries\(\{\s*queryKey:\s*AUTHORIZATION_KEY\s*\}\)/u);
-  assert.match(hooks, /const state = await getPermissionStatus\(\)/u);
+  assert.match(hooks, /return getPermissionStatus\(\)/u);
   assert.match(hooks, /await rescheduleReminders\(\)/u);
   assert.match(timing, /Event-triggered suggestions are skipped\./u);
   assert.match(timing, /Trial billing reminders follow the date shown at checkout\./u);
 });
 
+// Execute actual hook bodies with controlled React/native boundaries.
+// Source contracts do not qualify OS permissions or delivery.
+function runNotificationHook(source, name, bindings) {
+  const file = ts.createSourceFile('useNotifications.ts', source, ts.ScriptTarget.Latest, true);
+  const declaration = file.statements.find(
+    (node) => ts.isFunctionDeclaration(node) && node.name?.text === name,
+  );
+  assert.ok(declaration, 'missing actual hook ' + name);
+  const javascript = ts.transpileModule(declaration.getText(file).replace(/^export\s+/u, ''), {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+  }).outputText;
+  return new Function(...Object.keys(bindings), javascript + '; return ' + name + '();')(
+    ...Object.values(bindings),
+  );
+}
+
+async function assertNotificationQueries(source) {
+  let options;
+  let foreground;
+  let cleanup;
+  let removed = false;
+  const invalidated = [];
+  const calls = [];
+  let permission = 'denied';
+  let failReconciliation = false;
+  const query = { data: 'authorized', isFetching: false, isError: false };
+  const bindings = {
+    AUTHORIZATION_KEY: ['notificationAuthorization'],
+    useQuery: (value) => {
+      options = value;
+      return query;
+    },
+    useQueryClient: () => ({ invalidateQueries: (value) => invalidated.push(value) }),
+    useEffect: (effect) => {
+      cleanup = effect();
+    },
+    AppState: {
+      addEventListener: (event, listener) => {
+        assert.equal(event, 'change');
+        foreground = listener;
+        return {
+          remove: () => {
+            removed = true;
+          },
+        };
+      },
+    },
+    rescheduleReminders: async () => {
+      calls.push('reconcile');
+      await Promise.resolve();
+      if (failReconciliation) throw new Error('native cancellation failed');
+      calls.push('settled');
+    },
+    getPermissionStatus: () => {
+      calls.push('OS read');
+      return permission;
+    },
+  };
+  const invoke = () => runNotificationHook(source, 'useNotificationAuthorization', bindings);
+  assert.equal(invoke().data, 'authorized');
+  assert.equal(options.staleTime, 0);
+  assert.equal(options.retry, 0);
+  assert.equal(options.networkMode, 'always');
+  assert.deepEqual(options.queryKey, bindings.AUTHORIZATION_KEY);
+  assert.equal(await options.queryFn(), 'denied');
+  assert.deepEqual(calls, ['reconcile', 'settled', 'OS read']);
+  permission = 'unavailable';
+  assert.equal(await options.queryFn(), 'unavailable');
+  calls.length = 0;
+  failReconciliation = true;
+  await assert.rejects(options.queryFn, /native cancellation failed/u);
+  assert.deepEqual(calls, ['reconcile']);
+  foreground('background');
+  assert.equal(invalidated.length, 0);
+  foreground('active');
+  assert.deepEqual(invalidated, [{ queryKey: bindings.AUTHORIZATION_KEY }]);
+  cleanup();
+  assert.equal(removed, true);
+  for (const state of ['isFetching', 'isError']) {
+    query[state] = true;
+    assert.equal(invoke().data, undefined, 'old grants must be masked during ' + state);
+    query[state] = false;
+  }
+
+  let authority = { ownerUserId: 'owner-a', accountGeneration: 2, generation: 3 };
+  let current = true;
+  let revokeDuringRead = false;
+  const lease = {
+    generation: 3,
+    assertCurrent: () => {
+      assert.equal(current, true, 'lease revoked');
+    },
+  };
+  const prefs = { amEnabled: false, pmEnabled: false };
+  const prefQuery = { data: prefs, isFetching: false, isError: false };
+  const prefBindings = {
+    KEY: ['notifPrefs'],
+    HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'closed',
+    subscribeActiveHealthProcessingLeaseChanges: () => () => {},
+    activeHealthProcessingLeaseSnapshot: () => authority,
+    useSyncExternalStore: () => authority,
+    useState: () => [0, () => {}],
+    useEffect: () => {},
+    useQuery: (value) => {
+      options = value;
+      return prefQuery;
+    },
+    runHealthDataOperation: async (owner, operation) => {
+      assert.equal(owner, 'owner-a');
+      return operation(lease);
+    },
+    loadNotifPrefs: async (value) => {
+      assert.deepEqual(value, { strict: true });
+      if (revokeDuringRead) current = false;
+      return prefs;
+    },
+  };
+  const invokePrefs = () => runNotificationHook(source, 'useNotifPrefs', prefBindings);
+  assert.equal(invokePrefs().data, prefs);
+  assert.equal(options.enabled, true);
+  assert.deepEqual(options.queryKey, ['notifPrefs', 3, 'owner-a', 2]);
+  assert.equal(options.staleTime, 0);
+  assert.equal(options.retry, 0);
+  assert.equal(await options.queryFn(), prefs);
+  revokeDuringRead = true;
+  await assert.rejects(options.queryFn, /lease revoked/u);
+  revokeDuringRead = false;
+  current = true;
+  lease.generation = 4;
+  await assert.rejects(options.queryFn, /closed/u);
+  lease.generation = 3;
+  for (const state of ['isFetching', 'isError']) {
+    prefQuery[state] = true;
+    assert.equal(invokePrefs().data, undefined);
+    prefQuery[state] = false;
+  }
+  authority = null;
+  assert.equal(invokePrefs().data, undefined);
+  assert.equal(options.enabled, false);
+  await assert.rejects(options.queryFn, /closed/u);
+}
+
+test('notification queries read current OS state and preserve owner/health leases', async () => {
+  await assertNotificationQueries(read(paths.notificationHooks));
+});
+
+for (const [label, before, after] of [
+  ['missing real query', 'const query = useQuery({', 'const query = ({'],
+  ['missing OS read', 'return getPermissionStatus();', "return 'authorized';"],
+  ['missing reconciliation await', 'await rescheduleReminders();', 'void rescheduleReminders();'],
+  [
+    'stale visible grant',
+    'query.isFetching || query.isError ? undefined : query.data',
+    'query.data',
+  ],
+  ['missing foreground invalidation', "if (state === 'active')", 'if (false)'],
+  [
+    'missing owner admission',
+    'enabled: authority?.ownerUserId != null && authority.accountGeneration != null',
+    'enabled: true',
+  ],
+  [
+    'missing post-read currentness',
+    'lease.assertCurrent();\n        return prefs;',
+    'return prefs;',
+  ],
+  [
+    'wrong health generation',
+    'if (lease.generation !== authority.generation) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);',
+    '',
+  ],
+  ['nonstrict preference read', 'loadNotifPrefs({ strict: true })', 'loadNotifPrefs()'],
+]) {
+  test('notification query rejects source mutation: ' + label, async () => {
+    const source = read(paths.notificationHooks);
+    assert.ok(source.includes(before), 'mutation must alter real source');
+    await assert.rejects(() => assertNotificationQueries(source.replace(before, after)));
+  });
+}
+
 function assertRetainedHistory(source) {
   // Independently reconciled with the unchanged DB05 frozen inventory, not
   // inferred from today's directory count or a descriptive SQL test label.
   const sql = source.replace(/--[^\n]*/gu, '');
-  assert.match(sql, /select is\(\s*\(select count\(\*\) from supabase_migrations\.schema_migrations\),\s*97::bigint,/u);
-  assert.match(sql, /select is\(\s*\(select max\(version\) from supabase_migrations\.schema_migrations\),\s*'20261010000081'::text,/u);
+  assert.match(
+    sql,
+    /select is\(\s*\(select count\(\*\) from supabase_migrations\.schema_migrations\),\s*97::bigint,/u,
+  );
+  assert.match(
+    sql,
+    /select is\(\s*\(select max\(version\) from supabase_migrations\.schema_migrations\),\s*'20261010000081'::text,/u,
+  );
 }
 
 function assertDatabaseAuthority(readSource = read) {
@@ -789,7 +976,9 @@ test('database adherence and atomic Shelf/completion sync retain server authorit
 });
 
 test('history descriptions may change without changing the asserted SQL contract', () => {
-  assertDatabaseAuthority((path) => read(path).replaceAll('exact 97-migration source history', 'retained history'));
+  assertDatabaseAuthority((path) =>
+    read(path).replaceAll('exact 97-migration source history', 'retained history'),
+  );
 });
 
 for (const path of [paths.syncBridgeDbTest, paths.schemaContract]) {
@@ -798,38 +987,81 @@ for (const path of [paths.syncBridgeDbTest, paths.schemaContract]) {
     ['wrong head', "'20261010000081'::text", "'20260926000078'::text"],
     ['wrong history table', 'supabase_migrations.schema_migrations', 'public.schema_migrations'],
     ['wrong aggregate', 'count(*)', 'count(version)'],
-    ['removed count assertion', 'select is(\n  (select count(*)', 'select isnt(\n  (select count(*)'],
+    [
+      'removed count assertion',
+      'select is(\n  (select count(*)',
+      'select isnt(\n  (select count(*)',
+    ],
   ]) {
     test(`database authority rejects ${label} in ${path}`, () => {
       const original = read(path);
       assert.ok(original.includes(before), 'mutation must change the actual source');
-      assert.throws(() => assertDatabaseAuthority((name) => name === path
-        ? original.replaceAll(before, after) + `\n-- ${original.replaceAll('\n', '\n-- ')}`
-        : read(name)), assert.AssertionError);
+      assert.throws(
+        () =>
+          assertDatabaseAuthority((name) =>
+            name === path
+              ? original.replaceAll(before, after) + `\n-- ${original.replaceAll('\n', '\n-- ')}`
+              : read(name),
+          ),
+        assert.AssertionError,
+      );
     });
   }
 }
 
 for (const [label, mutate] of [
   ['missing required source', (files) => files.delete(paths.syncBridgeDbTest)],
-  ['renamed required source', (files) => {
-    files.set(`${paths.syncBridgeDbTest}.renamed`, files.get(paths.syncBridgeDbTest));
-    files.delete(paths.syncBridgeDbTest);
-  }],
-  ['removed server-owned guard', (files) => files.set(paths.adherenceMigration,
-    files.get(paths.adherenceMigration).replaceAll('ROUTINE_ADHERENCE_CACHE_SERVER_OWNED', 'REMOVED'))],
-  ['altered consent protection', (files) => files.set(paths.syncBridgeDbTest,
-    files.get(paths.syncBridgeDbTest).replaceAll('completion sync rejects a formerly active epoch after its exact grant closes', 'REMOVED'))],
+  [
+    'renamed required source',
+    (files) => {
+      files.set(`${paths.syncBridgeDbTest}.renamed`, files.get(paths.syncBridgeDbTest));
+      files.delete(paths.syncBridgeDbTest);
+    },
+  ],
+  [
+    'removed server-owned guard',
+    (files) =>
+      files.set(
+        paths.adherenceMigration,
+        files
+          .get(paths.adherenceMigration)
+          .replaceAll('ROUTINE_ADHERENCE_CACHE_SERVER_OWNED', 'REMOVED'),
+      ),
+  ],
+  [
+    'altered consent protection',
+    (files) =>
+      files.set(
+        paths.syncBridgeDbTest,
+        files
+          .get(paths.syncBridgeDbTest)
+          .replaceAll(
+            'completion sync rejects a formerly active epoch after its exact grant closes',
+            'REMOVED',
+          ),
+      ),
+  ],
 ]) {
   test(`database authority rejects ${label}`, () => {
-    const files = new Map([paths.adherenceMigration, paths.adherenceDbTest,
-      paths.syncBridgeMigration, paths.syncBridgeDbTest, paths.databaseTypes,
-      paths.schemaContract].map((path) => [path, read(path)]));
+    const files = new Map(
+      [
+        paths.adherenceMigration,
+        paths.adherenceDbTest,
+        paths.syncBridgeMigration,
+        paths.syncBridgeDbTest,
+        paths.databaseTypes,
+        paths.schemaContract,
+      ].map((path) => [path, read(path)]),
+    );
     mutate(files);
-    assert.throws(() => assertDatabaseAuthority((path) => {
-      assert.ok(files.has(path), `missing source: ${path}`);
-      return files.get(path);
-    }), assert.AssertionError);
+    assert.throws(
+      () =>
+        assertDatabaseAuthority((path) => {
+          assert.ok(files.has(path), `missing source: ${path}`);
+          return files.get(path);
+        }),
+      assert.AssertionError,
+    );
   });
 }
 

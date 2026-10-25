@@ -5,6 +5,11 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import {
+  canonicalJson,
+  DB06_CURRENT_SOURCE_CONTRACT,
+  sha256,
+} from '../phase2/staging-deployment-evidence-lib.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -655,7 +660,7 @@ test('database and forward-upgrade tests execute the checked-in 0071 boundary', 
   const runner = read(paths.databaseRunner);
 
   assert.match(database, /select plan\(\d+\)/u);
-  assert.match(database, /'20260926000078'::text/u);
+  assertRecommendationHistory();
   assert.match(database, /recommendation_admission_control/u);
   assert.match(database, /recommendable_catalog_products/u);
   assert.match(database, /recommendations_catalog_product_closed/u);
@@ -666,6 +671,100 @@ test('database and forward-upgrade tests execute the checked-in 0071 boundary', 
   assert.match(runner, /20260726000071_recommendation_zero_admission\.sql/u);
   assert.match(runner, /recommendation_zero_admission\.test\.sql/u);
   assert.match(runner, /recommendation_zero_admission_0071_upgrade\.test\.sql/u);
+});
+
+function assertClosedRecommendationMigration(source) {
+  const sql = source.replace(/--[^\n]*/gu, '');
+  assert.match(sql, /check\s*\(admission_state = 'closed'\)/u);
+  assert.match(sql, /force row level security/u);
+  assert.match(sql, /create trigger recommendation_admission_control_immutable/u);
+  assert.match(sql, /new\.recommendation_eligible := false/u);
+  assert.match(sql, /check\s*\(recommendation_eligible is false\)/u);
+  assert.match(sql, /check\s*\(catalog_product_id is null\)/u);
+  assert.match(sql, /raise exception 'RECOMMENDATION_ADMISSION_CLOSED'/u);
+  assert.match(sql, /create trigger recommendations_admission_control/u);
+  assert.match(
+    sql,
+    /revoke all on public\.recommendations\s+from public, anon, authenticated, service_role/u,
+  );
+}
+
+function assertRecommendationHistory(
+  readSource = read,
+  names = readdirSync(resolve(root, 'supabase/migrations')).sort(),
+) {
+  const authority = read('scripts/phase2/local-supabase-contract.mjs');
+  const frozenDigest = /sha256\(canonicalJson\(migrationInventory\)\) ===\s*'([0-9a-f]{64})'/u.exec(
+    authority,
+  )?.[1];
+  assert.ok(frozenDigest, 'original DB06 inventory digest must be present');
+  assert.equal(names.length, DB06_CURRENT_SOURCE_CONTRACT.migrationCount);
+  assert.deepEqual(names, [...new Set(names)].sort(), 'ordered unique migration history');
+  assert.ok(names.every((name) => /^\d{14}_[a-z0-9_]+\.sql$/u.test(name)));
+  const inventory = names.map((file) => ({
+    id: file.slice(0, 14),
+    file,
+    sha256: sha256(readSource('supabase/migrations/' + file)),
+  }));
+  assert.equal(
+    sha256(canonicalJson(inventory)),
+    frozenDigest,
+    'exact independently frozen DB06 source history',
+  );
+  const latest = inventory.at(-1).id;
+  assert.equal(latest, DB06_CURRENT_SOURCE_CONTRACT.latestMigrationId);
+  const database = readSource(paths.databaseContract).replace(/--[^\n]*/gu, '');
+  assert.equal(
+    /select is\(\s*\(select max\(version\) from supabase_migrations\.schema_migrations\),\s*'(\d{14})'::text/u.exec(
+      database,
+    )?.[1],
+    latest,
+  );
+  assertClosedRecommendationMigration(readSource(paths.migration));
+}
+
+test('recommendation closure rejects reopening even before inventory authentication', () => {
+  const source = read(paths.migration);
+  assertClosedRecommendationMigration(source);
+  for (const [before, after] of [
+    ["check (admission_state = 'closed')", "check (admission_state in ('closed', 'open'))"],
+    ['new.recommendation_eligible := false', 'new.recommendation_eligible := true'],
+    ['check (catalog_product_id is null)', 'check (true)'],
+    ['create trigger recommendations_admission_control', 'create trigger unguarded_cache'],
+  ]) {
+    assert.ok(source.includes(before), 'mutation must alter authentic SQL');
+    assert.throws(() => assertClosedRecommendationMigration(source.replace(before, after)));
+  }
+});
+
+test('recommendation history rejects changed, missing, duplicate and appended migrations', () => {
+  const names = readdirSync(resolve(root, 'supabase/migrations')).sort();
+  for (const mutated of [
+    names.slice(1),
+    [...names, names[0]],
+    [...names].reverse(),
+    [...names, '20261025000082_reopen.sql'],
+  ]) {
+    assert.throws(() => assertRecommendationHistory(read, mutated));
+  }
+  for (const path of [paths.migration, 'supabase/migrations/' + names.at(-1)]) {
+    assert.throws(() =>
+      assertRecommendationHistory(
+        (name) =>
+          read(name) +
+          (name === path
+            ? "\nupdate private.recommendation_admission_control set admission_state = 'open';\n"
+            : ''),
+      ),
+    );
+  }
+  assert.throws(() =>
+    assertRecommendationHistory((path) =>
+      path === paths.databaseContract
+        ? read(path).replace("'20261010000081'::text", "'20260926000078'::text")
+        : read(path),
+    ),
+  );
 });
 
 test('the launch contract requires exact recommendation professional roles', () => {
