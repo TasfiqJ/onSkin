@@ -1140,6 +1140,197 @@ def source14_guard():
             require(result.returncode == 0, 'R14_SOURCE_TESTS_FAILED:'+result.stdout.decode(errors='replace')+result.stderr.decode(errors='replace'))
 
 
+RELEASE15_BASE = '53cf869c5fc5f13ecd18dc1ef9c3a6288eaae51a'
+RELEASE15_TREE = '1c483dedfb4c5d51994be07f65f1a40bdd52be73'
+RELEASE15_PR = 0  # Bind only after GitHub allocates the new draft.
+RELEASE15_AUTHORITY = 'BRAIN-M103-G97-FULL-COVERAGE15-CANDIDATE-01'
+RELEASE15_EXISTING = {'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE15_NEW = {'scripts/security15/build_candidate.py', 'scripts/security15/verify_candidate.py',
+    'scripts/security15/source_bindings.py', 'scripts/security15/test_candidate.py',
+    'scripts/security15/test_integrity.py', 'scripts/release/full-app-j01/source_consumer15.test.py',
+    'docs/release/full-app-j01/g97-source-coverage15.md',
+    'docs/release/full-app-j01/g97-source-coverage15.unapplied.json'}
+RELEASE15_PREFIXES = ('docs/brain/contracts/SECURITY-15/', 'docs/brain/task-specs/SECURITY-15/',
+    'docs/brain/checkpoints/M1-03/G97-COVERAGE-CANDIDATE-15/')
+
+
+def allowed15(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE15_EXISTING or path in RELEASE15_NEW or path.startswith(RELEASE15_PREFIXES)))
+
+
+def release15_active():
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE15_BASE, 'HEAD'],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
+
+
+def validate15_checker(raw):
+    before = git('show', RELEASE15_BASE+':scripts/release/full-app-j01/check.py')
+    old = ast.parse(before); new = ast.parse(raw)
+    funcs = lambda module: {n.name: ast.dump(n, include_attributes=False)
+        for n in module.body if isinstance(n, ast.FunctionDef)}
+    old_functions, new_functions = funcs(old), funcs(new)
+    require(all(new_functions.get(k) == v for k, v in old_functions.items() if k != 'source_guard'),
+            'R15_INHERITED_FUNCTION_CHANGED')
+    expected = before.replace(b'    if release14_active():\n        source11_historical_segment()',
+        b'    if release15_active():\n        source11_historical_segment()\n        source12_historical_segment()\n        source13_historical_segment()\n        source14_historical_segment()\n        source15_guard()\n    elif release14_active():\n        source11_historical_segment()')
+    expected = expected.replace(b'or allowed14(path),', b'or allowed14(path) or allowed15(path),')
+    require(new_functions.get('source_guard') == funcs(ast.parse(expected))['source_guard'],
+            'R15_ORIGINAL_SOURCE_GUARD_CHANGED')
+    assignments = lambda module: {ast.dump(n.targets[0]): ast.dump(n.value, include_attributes=False)
+        for n in module.body if isinstance(n, ast.Assign) and len(n.targets) == 1}
+    old_globals, new_globals = assignments(old), assignments(new)
+    require(all(new_globals.get(k) == v for k, v in old_globals.items()), 'R15_INHERITED_GLOBAL_CHANGED')
+    # Preserve every original module-level import, expression, alias and entrypoint
+    # in order. New source-only definitions cannot replace an old top-level node.
+    old_other = [ast.dump(n, include_attributes=False) for n in old.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    new_other = [ast.dump(n, include_attributes=False) for n in new.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    require(old_other == new_other, 'R15_INHERITED_MODULE_CHANGED')
+    original_assignments = [ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.Assign)]
+    inherited_assignments = [ast.dump(n, include_attributes=False) for n in new.body
+        if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) in old_globals]
+    require(original_assignments == inherited_assignments, 'R15_INHERITED_ASSIGNMENT_ORDER')
+    added = [n for n in new.body if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) not in old_globals]
+    require(all(len(n.targets) == 1 and isinstance(n.targets[0], ast.Name) and
+                n.targets[0].id.startswith('RELEASE15_') for n in added), 'R15_NEW_GLOBAL_SCOPE')
+    new_names = [n.name for n in new.body if isinstance(n, ast.FunctionDef)]
+    require(len(new_names) == len(set(new_names)), 'R15_REDEFINED_SAFEGUARD')
+
+
+def candidate15_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(value['schema'] == 1 and value['authority'] == RELEASE15_AUTHORITY and
+            value['status'] == 'UNAPPLIED_CANDIDATE' and value['source'] == RELEASE15_BASE and
+            value['tree'] == RELEASE15_TREE and value['acceptanceGranted'] is False and
+            value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False),
+            'R15_NO_ADMISSION')
+    require(isinstance(value['tasks'], list) and bool(value['tasks']) and
+            all(t['status'] == 'UNAPPLIED' and t['qualified_owner_required'] is True and
+                t['owner_decision'] == 'NOT_PERFORMED' and bool(t['source_witnesses'])
+                for t in value['tasks']), 'R15_OWNER_DECISION_UNAPPLIED')
+    require(value['stop']=='STOP_FOR_QUALIFIED_SECURITY_CUSTODIAN' and
+            all(t['negative_cases'] and t['acceptance_criteria'] for t in value['tasks']), 'R15_OWNER_CRITERIA')
+    for task in value['tasks']:
+        for witness in task['source_witnesses']:
+            name = witness['path']
+            require(isinstance(name, str) and re.fullmatch('[A-Za-z0-9._/-]+', name) and
+                    not any(x in ('', '.', '..') for x in name.split('/')), 'R15_OWNER_SOURCE_PATH')
+            require(sha(git('show', RELEASE15_BASE+':'+name)) == witness['sha256'] and
+                    git('rev-parse', RELEASE15_BASE+':'+name).decode().strip() == witness['blob'],
+                    'R15_OWNER_SOURCE_WITNESS')
+
+
+def validate15_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R15_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R15_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed15(path) and status in ('A', 'M'), 'R15_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R15_COLLISION:'+path); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R15_MODE:'+path)
+        require((path in RELEASE15_EXISTING) == (oldmode == ':100644') and
+                status == ('M' if oldmode == ':100644' else 'A') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R15_CREATE_EDIT:'+path)
+        if oldmode == ':000000':
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE15_BASE+':'+path],
+                cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode != 0, 'R15_EXISTING_RECLASSIFIED')
+        else:
+            require(oldblob == git('rev-parse', RELEASE15_BASE+':'+path).decode().strip(), 'R15_BASE_BLOB')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()==newblob,
+                'R15_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate15_checker(data)
+        if path == 'docs/release/full-app-j01/g97-source-coverage15.unapplied.json': candidate15_guard(data)
+
+
+def source15_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3, 'R15_LINEAR_HISTORY')
+    require(RELEASE15_PR > 0 and os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE15_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R15_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R15_CI_EVENT')
+    event = load(event_path); pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE15_PR and pr.get('number') == RELEASE15_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE15_BASE and parents[1] == RELEASE15_BASE and
+            pr.get('base', {}).get('ref') == 'stage/m103-g97-provenance-triage14' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m103-g97-coverage-candidate15' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin', 'R15_CI_EVENT_IDENTITY')
+    require(git('merge-base', RELEASE15_BASE, parents[2]).decode().strip() == RELEASE15_BASE, 'R15_CI_MERGE_BASE')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R15_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source15_history():
+    require(git('rev-parse', RELEASE15_BASE+'^{tree}').decode().strip() == RELEASE15_TREE, 'R15_BASE_TREE')
+    endpoint = source15_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE15_BASE, endpoint],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE15_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R15_LINEAR_HISTORY')
+        validate15_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE15_BASE, commit),
+                        lambda path: git('show', commit+':'+path))
+
+
+def source14_historical_segment():
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE15_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source14_history()
+        validate14_checker(actual_git('show', RELEASE15_BASE+':scripts/release/full-app-j01/check.py'))
+    finally:
+        globals()['git'] = actual_git
+
+
+def source15_guard():
+    source15_history()
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate15_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE15_BASE),
+                    lambda path: git('show', ':'+path))
+    validate15_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE15_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R15_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R15_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed15(path) and path not in RELEASE15_EXISTING, 'R15_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R15_COLLISION'); names.add(key); regular(ROOT/path)
+    # Bounded read-only candidate invocation; future evidence is not a prerequisite.
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        commands = [[sys.executable, '-B', 'scripts/security15/verify_candidate.py', '--source-only'],
+            [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'scripts/security15', '-p', 'test_*.py'],
+            [sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer15.test.py']]
+        for command in commands:
+            result = subprocess.run(command, cwd=ROOT, capture_output=True, timeout=300)
+            require(result.returncode == 0, 'R15_CANDIDATE_TESTS_FAILED')
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -1158,7 +1349,13 @@ def source_guard():
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
     source10_historical_segment()
-    if release14_active():
+    if release15_active():
+        source11_historical_segment()
+        source12_historical_segment()
+        source13_historical_segment()
+        source14_historical_segment()
+        source15_guard()
+    elif release14_active():
         source11_historical_segment()
         source12_historical_segment()
         source13_historical_segment()
@@ -1173,9 +1370,9 @@ def source_guard():
     else:
         source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)
