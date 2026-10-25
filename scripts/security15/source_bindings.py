@@ -170,6 +170,27 @@ def workspace(root, commit):
     return tree
 
 
+def source_history(root, commit):
+    """Use the separately implemented Release15 guard on this exact immutable endpoint."""
+    checker=Path(root)/'scripts/release/full-app-j01/check.py'
+    spec=importlib.util.spec_from_file_location('release15_source_guard',checker)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    need(module.RELEASE15_BASE==BASE and module.RELEASE15_TREE==TREE and
+         module.RELEASE15_PR==19,'RELEASE15_BINDING')
+    module.ROOT=Path(root)
+    module.validate15_checker(regular(checker))
+    head=git(root,'rev-parse','HEAD').decode().strip()
+    if commit==head:
+        endpoint=module.source15_endpoint()
+    else:endpoint=commit
+    need(git(root,'merge-base',BASE,endpoint).decode().strip()==BASE,'SOURCE_ANCESTRY')
+    for oid in git(root,'rev-list','--reverse',BASE+'..'+endpoint).decode().splitlines():
+        need(len(git(root,'rev-list','--parents','-n','1',oid).decode().split())==2,'SOURCE_LINEAR_HISTORY')
+        module.validate15_diff(git(root,'diff','--raw','--no-abbrev','--no-renames','-z',BASE,oid),
+                               lambda path:git(root,'show',oid+':'+path))
+    return endpoint
+
+
 POLICY_VALUE = {
     'schema':1, 'authority':AUTHORITY, 'status':'UNAPPLIED_CANDIDATE',
     'acceptanceGranted':False, 'base':{'commit':BASE,'tree':TREE},

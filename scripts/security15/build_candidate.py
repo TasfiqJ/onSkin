@@ -45,6 +45,7 @@ def candidate(root, commit, tree):
     b.need(re.fullmatch('[0-9a-f]{40}',commit) and re.fullmatch('[0-9a-f]{40}',tree),'SOURCE_ID')
     b.need(b.git(root,'rev-parse',commit+'^{tree}').decode().strip()==tree,'SOURCE_TREE')
     b.policy(root)
+    b.source_history(root,commit)
     b.need(b.git(root,'show',commit+':'+b.POLICY)==b.canonical(b.POLICY_VALUE)+b'\n','FROZEN_POLICY_IDENTITY')
     original, coverage, protected = b.witnesses(root,commit)
     current = b.inv.snapshot(root,commit)

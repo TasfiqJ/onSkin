@@ -110,6 +110,7 @@ def main():
         b.policy(a.repo)
         if a.source_only:
             head=b.git(a.repo,'rev-parse','HEAD').decode().strip()
+            b.source_history(a.repo,head)
             b.witnesses(a.repo,head);names=b.workspace(a.repo,head)
             original,_coverage,_witness=b.witnesses(a.repo,head);b.absences(a.repo,names,original)
             result=dict(status='UNAPPLIED_CANDIDATE',acceptanceGranted=False,files=len(names))
