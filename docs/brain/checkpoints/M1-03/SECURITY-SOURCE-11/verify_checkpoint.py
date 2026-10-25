@@ -4,6 +4,7 @@ No source, Security, database, main-promotion or release acceptance is granted.
 import argparse
 import gzip
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -12,6 +13,7 @@ import stat
 import subprocess
 import sys
 import unicodedata
+import zipfile
 sys.dont_write_bytecode = True
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[4]
@@ -21,6 +23,7 @@ SOURCE_TREE = 'd3b9e8c6626d8b04632ec586ee408b160d8f0393'
 PREFIX = 'docs/brain/checkpoints/M1-03/SECURITY-SOURCE-11/'
 AUTHORITY = 'BRAIN-M103-SOURCE-RECOVERY11-CANDIDATE-01'
 checked_directories = set()
+archived_logs = None
 
 
 def require(ok, label):
@@ -45,6 +48,9 @@ def disk(path):
 
 
 def regular(path):
+    if path.parent == HERE/'logs':
+        require(not os.path.lexists(str(disk(HERE/'logs'))), 'ARCHIVE_LOGS_SHADOW')
+        return archive_logs()[path.name]
     for part in [path]+list(path.parents):
         if part != path and part in checked_directories:
             break
@@ -56,6 +62,32 @@ def regular(path):
         if part != path:
             checked_directories.add(part)
     return disk(path).read_bytes()
+
+
+def archive_logs():
+    global archived_logs
+    if archived_logs is None:
+        entries = {}
+        names = set()
+        total = 0
+        with zipfile.ZipFile(io.BytesIO(regular(HERE/'raw-evidence.zip'))) as archive:
+            for info in archive.infolist():
+                name = info.filename
+                require(name == info.orig_filename and re.fullmatch(r'[A-Za-z0-9._-]+', name) and
+                        name not in ('.', '..') and not info.is_dir() and not info.flag_bits&1 and
+                        not info.external_attr&0x10,
+                        'ARCHIVE_PATH')
+                normalized = unicodedata.normalize('NFKC', name).casefold()
+                require(normalized not in names, 'ARCHIVE_COLLISION')
+                names.add(normalized)
+                mode = info.external_attr >> 16
+                require(stat.S_IFMT(mode) in (0,stat.S_IFREG) and mode&0o777 in (0,0o644),
+                        'ARCHIVE_MODE')
+                total += info.file_size
+                require(info.file_size <= 16*1024*1024 and total <= 64*1024*1024, 'ARCHIVE_SIZE')
+                entries[name] = archive.read(info)
+        archived_logs = entries
+    return archived_logs
 
 
 def pairs(items):
@@ -121,6 +153,13 @@ def main():
                 record['mode'] == '100644', 'CHECKPOINT_IDENTITY:'+name)
     actual = {p.relative_to(disk(HERE)).as_posix() for p in disk(HERE).rglob('*') if p.is_file()}
     require(actual == inventory|{'manifest.json'}, 'CHECKPOINT_EXACT_INVENTORY')
+    logs = archive_logs()
+    require(set(logs) == {r['path'] for r in manifest['archive_files']}, 'ARCHIVE_EXACT_INVENTORY')
+    for record in manifest['archive_files']:
+        raw = logs[record['path']]
+        require(len(raw) == record['bytes'] and sha(raw) == record['sha256'] and
+                blob(raw) == record['blob'] and record['mode'] == '100644',
+                'ARCHIVE_IDENTITY:'+record['path'])
     packet_digest = 'c9c211ec438a67a207a9cec8d95b135207166e7162de7d036489445aa0995ab3'
     require(sha(regular(HERE/'intake/manifest.json')) == packet_digest, 'INTAKE_EXTERNAL_ANCHOR')
     packet = subprocess.run([sys.executable,'-B','verify_packet.py','--expected-manifest-sha256',packet_digest],
@@ -236,7 +275,8 @@ def main():
     require(live.returncode == 0, 'LIVE_GOVERNANCE:'+live.stdout.decode(errors='replace')+live.stderr.decode(errors='replace'))
     print(json.dumps(dict(verified=True, source=SOURCE,source_tree=SOURCE_TREE,
         evidence_head=head,evidence_tree=git('rev-parse','HEAD^{tree}').decode().strip(),
-        protected_files=len(protected),checkpoint_files=len(inventory)+1,semantic_negatives=151,
+        protected_files=len(protected),checkpoint_files=len(inventory)+1,
+        archived_evidence_files=len(logs),semantic_negatives=151,
         identities=65,required_rows=38,historical_tasks=47,historical_adrs=51,
         independent_checkout='SOURCE_GOVERNANCE_0_1_0',source_acceptance='REVIEW_REQUIRED',
         security='FAIL/NO_GO',readiness='BLOCKED_OUTSIDE_SCOPE',release='NO_GO')))
@@ -245,7 +285,7 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except (ValueError, KeyError, TypeError, OSError, subprocess.SubprocessError) as error:
+    except (ValueError, KeyError, TypeError, OSError, zipfile.BadZipFile, subprocess.SubprocessError) as error:
         print(json.dumps(dict(verified=False,error=str(error),release='NO_GO')))
         sys.exit(1)
 

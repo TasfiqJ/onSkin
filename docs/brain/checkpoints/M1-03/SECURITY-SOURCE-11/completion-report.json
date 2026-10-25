@@ -140,5 +140,17 @@
   "whitespace_checks": {
     "authored_source": "PASS",
     "all_evidence": "EXIT2_RAW_CRLF_AND_ARCHIVAL_EOF_RETAINED"
+  },
+  "evidence_layout": "All original raw receipt bytes retained in raw-evidence.zip with exact per-entry external-manifest identities; no extraction by verifier.",
+  "delivery_c82901e9_observation": {
+    "quality": "FAIL",
+    "repository_job": 121054909335,
+    "repository_failure": "spawnSync git ENOBUFS in protected complete docs inventory",
+    "canonical_db_job": 121054909343,
+    "canonical_db_failure": "H01_SQL_PROBE_FAILED / registry Data limit exceeded",
+    "ios": "PASS_SOURCE_ONLY",
+    "security": "FAIL",
+    "exports": "SKIPPED_AFTER_REPOSITORY_FAILURE",
+    "disposition": "Evidence layout corrected within existing new-checkpoint scope; original guards unchanged; new final-head CI observed separately."
   }
 }
