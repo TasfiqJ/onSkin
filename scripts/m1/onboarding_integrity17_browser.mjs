@@ -113,6 +113,10 @@ async function geometry(name) {
   json(prefix+'-'+name+'-geometry', value); return value;
 }
 async function onboarding() {
+  // Each scenario owns a fresh synthetic local profile. Clear only this test
+  // origin after the prior document has closed, never real account storage.
+  await c.send('Page.navigate', { url: 'about:blank' }); await delay(100);
+  await c.send('Storage.clearDataForOrigin', { origin: base, storageTypes: 'all' });
   await c.send('Page.navigate', { url: base + '/?e2eReset=local' }); await text('Begin');
   await c.send('Page.navigate', { url: base + '/onboarding/quiz' }); await text('First, your'); await snap('direct-quiz-age-fenced');
   await fill('Day of birth','01');await fill('Month of birth','01');await fill('Year of birth','1990');await click('Continue');
@@ -186,7 +190,7 @@ async function runFlows() {
   await c.eval('__held17.restore();__held17.release()');await route('/onboarding/consent');await snap('denied-private-route');
   // Missing-goals direct entry keeps a typed unsaved draft until explicit acknowledgement.
   prefix='direct-products';await onboarding();
-  await c.eval("__LAYERWELL_E2E_NAVIGATE__('/onboarding/products')");await route('/onboarding/products');await text("What's on your shelf?");
+  await c.send('Page.navigate',{url:base+'/onboarding/products'});await route('/onboarding/products');await text("What's on your shelf?");
   await fill('Product name','Synthetic unsaved direct-entry draft');await click('Skip for now');await text('not been added');await snap('unsaved-before-goals');
   assert(await c.eval("location.pathname==='/onboarding/products'"),'Missing goals silently discarded draft');
   await click('Keep editing');await click('Skip for now');await click('Continue without adding it');await route('/onboarding/goals');await snap('acknowledged-goals-guard');

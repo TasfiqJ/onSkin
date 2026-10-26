@@ -13,8 +13,13 @@
     {
       "path": "apps/mobile/src/features/onboarding/OnboardingContext.tsx",
       "reason": "Provider-wide owner tagging and synchronous private draft retirement outside this mounted route require protected core changes. Unknown inherited drafts are masked and require explicit current-lease reset; no global cleanup guarantee is claimed."
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/quizNavigation.test.ts",
+      "reason": "Four protected historical navigation fixtures mount Quiz with consent=true but no current owner/health lease. Updating those fixtures is outside the finite edit grant. The strict admission remains; root tests and dependent CI must report their failures without waiver."
     }
   ],
   "spendUsd": 0,
-  "release": "NO_GO"
+  "release": "NO_GO",
+  "draftPr": "https://github.com/TasfiqJ/onSkin/pull/21"
 }
