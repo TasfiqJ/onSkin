@@ -1521,7 +1521,7 @@ def release16_active():
 
 RELEASE17_BASE = '28953aa3a84fed0684b80b442d0cd9c2de0663b2'
 RELEASE17_TREE = '6776b61b49c63345e992da63f82920fedd07518b'
-RELEASE17_PR = None  # Fail closed until GitHub allocates the new draft.
+RELEASE17_PR = 21  # Allocated by GitHub on 2026-10-26; draft stacked only on PR20.
 RELEASE17_AUTHORITY = 'BRAIN-M1X-PRIVACY-REENTRY17-REPAIR-01'
 RELEASE17_EXISTING = {
     'apps/mobile/src/app/onboarding/quiz.tsx', 'apps/mobile/src/app/onboarding/products.tsx',
