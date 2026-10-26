@@ -2327,7 +2327,8 @@ def source18_historical_guard():
     actual_git, actual_regular, actual_name = git, regular, __name__
     def historical_git(*args):
         if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE19_BASE)
-        if args[0] == 'diff': return actual_git(*[a for a in args if a != '--cached'], RELEASE19_BASE)
+        if args[0] == 'diff' and len([a for a in args[1:] if not a.startswith('-')]) == 1:
+            return actual_git(*[a for a in args if a != '--cached'], RELEASE19_BASE)
         if args[0] == 'show' and args[1].startswith(':'): return actual_git('show', RELEASE19_BASE+args[1])
         if args[0] == 'ls-files':
             if '--others' in args: return b''

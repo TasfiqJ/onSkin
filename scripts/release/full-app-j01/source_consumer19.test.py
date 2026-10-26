@@ -31,8 +31,8 @@ def main():
         if old not in checker:continue
         expect('old-semantics:'+old.decode(),lambda a=old,b=new:check.validate19_checker(checker.replace(a,b,1)),code='R19_INHERITED_')
     expect('old-source-guard',lambda:check.validate19_checker(checker.replace(b'    source09_guard()',b'    pass # source09_guard()',1)),code='R19_')
-    expect('new-global-side-effect', lambda:check.validate19_checker(checker+b'\nRELEASE19_SIDE_EFFECT = globals().clear()\n'), code='R19_GLOBAL_SIDE_EFFECT')
-    expect('new-function-outside-segment', lambda:check.validate19_checker(checker+b'\ndef arbitrary_new_function(): pass\n'), code='R19_FUNCTION_SCOPE')
+    expect('new-global-side-effect', lambda:check.validate19_checker(checker.replace(b"if __name__ == '__main__':", b"RELEASE19_SIDE_EFFECT = globals().clear()\nif __name__ == '__main__':")), code='R19_GLOBAL_SIDE_EFFECT')
+    expect('new-function-outside-segment', lambda:check.validate19_checker(checker.replace(b"if __name__ == '__main__':", b"def arbitrary_new_function(): pass\nif __name__ == '__main__':")), code='R19_FUNCTION_SCOPE')
     protected=['AGENTS.md','package.json','package-lock.json','apps/mobile/package.json','apps/mobile/app.config.ts',
         '.github/workflows/quality.yml','.github/workflows/security.yml',
         'scripts/launch/governed-evidence-chain.mjs','scripts/launch/governed-evidence-chain.test.mjs',
