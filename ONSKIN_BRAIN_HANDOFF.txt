@@ -1,16 +1,14 @@
-Campaign18 owner-bound onboarding privacy SOURCE-ONLY candidate.
-PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED; independent Brain acceptance required.
-Authority: BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01.
-Authenticated input manifest: d6ce18a12f444fd91da5820fdf4e67900fd8d062de2515d2ef916d08a77c53df.
-Draft PR22: https://github.com/TasfiqJ/onSkin/pull/22
-Branch: stage/m1-onboarding-owner-privacy18; base stage/m1-first-session-integrity17.
-Immutable PR21 base: f9709e02420d6c03cc9b9586cf60d89bfde7d8a3; tree c735b32c667059ba1d6855b6896c70e42d6c6fd8.
-Frozen source: 0c3044920726080fbbd32f6d480bb5f71620cfe7; tree 65f77fe1c03aa123339aa696b99e88f2da4d9c6c.
-Checkpoint: docs/brain/checkpoints/M1-02/ONBOARDING-OWNER-PRIVACY-18/README.md
-External checkpoint manifest SHA256: 1117a60563b37932adfe5df1d68b5ccd3ec0d527c0cf4d27885173011f5c6d43
-Verify: python -B docs/brain/checkpoints/M1-02/ONBOARDING-OWNER-PRIVACY-18/verify18.py --expected-manifest-sha256 1117a60563b37932adfe5df1d68b5ccd3ec0d527c0cf4d27885173011f5c6d43 --git-root .
-Exactly one evidence-only tail follows frozen source. Its derived HEAD/tree, later historical/independent-checkout verification and exact final-head CI are supplied in the external FINAL_REPORT.md/verified return and PR description; they are not predicted here.
-53 focused tests pass, including all four unchanged original historical test bodies. Forced root: 6228 mobile passes/21 protected historical fixture or source-text failures; operator 24 passes. No bypass, skip or waiver. Lint/typecheck, both clean source exports and Release18 175 refusal/six positive controls pass. Native/physical iPhone/VoiceOver/OS delivery are NOT_RUN.
-Actual Expo web has 66 final PNGs/four viewports, 360px text x2, simulated keyboard height, Back/reentry/manual Shelf/current consent withdrawal and explicit unsaved choices; zero console errors. Source/web/fixture evidence never accepts native or professional axes.
-G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/provider/clinical/legal/Apple/public release CLOSED. F09 manual private photo history required; F18 and J02-J27 deferred.
-No private Security artifacts/3bc6b787, credential rotation, merge, force push, other branch edits, auto-merge, maintainer modification, paid/provider action, public release or self-acceptance. USD0.
+Campaign19 historical onboarding compatibility SOURCE_ONLY_CANDIDATE / NO_GO; independent Brain review required.
+Authority BRAIN-M1X-ONBOARDING-COMPATIBILITY19-REPAIR-01.
+Input manifest 3cf60513d094d68205c0a0d0eca39034d19416f27d16d2ddd4b31f7994b12955.
+Draft PR23 https://github.com/TasfiqJ/onSkin/pull/23
+Branch stage/m1-onboarding-compatibility19; base stage/m1-onboarding-owner-privacy18.
+Immutable PR22 149d18f3ae3c49f966a9e2b1a679901d1d15b3b6, tree 061b8e8565f21e871fb1d57bed1316cc1a76e5d6.
+Frozen source 9f4c23ad951382be5b72b8d1ad9a908537ba619b, tree 5bc0690ff9ac0e15e2ccaffc2f284b7990ea7b1e.
+Checkpoint docs/brain/checkpoints/M1-02/ONBOARDING-COMPATIBILITY-19/README.md
+External checkpoint manifest SHA256 fcd989bba65cb813c397d0c3118bf1bc0410190e1f0067c5223808eb8aac3119
+Verify python -B docs/brain/checkpoints/M1-02/ONBOARDING-COMPATIBILITY-19/verify19.py --expected-manifest-sha256 fcd989bba65cb813c397d0c3118bf1bc0410190e1f0067c5223808eb8aac3119 --git-root .
+Exactly one compact evidence tail follows frozen source; delivery HEAD/tree are derived by verification, not circularly predicted. Full final-head checks/CI and return custody follow in the external FINAL_REPORT.md.
+All original 70 cases pass; 6253 mobile and 24 operator passes, no cache hits. Six runtime paths unchanged; actual synthetic Expo web and source exports never establish installed iPhone/VoiceOver/native/provider or qualified review. Original151 completion is not predicted here.
+G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/device/clinical/legal/Apple/provider/public release CLOSED. Required F09 and complete F01-F17/F19-F20 + 12 C + 6 P + exactly J01 after qualified gates remain; F18/J02-J27 deferred.
+USD0. No merge, auto-merge, maintainer edits, prior-branch modification, paid/provider action, private Security custody/rotation or self-acceptance.
