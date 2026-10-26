@@ -2366,7 +2366,9 @@ def source19_guard():
     # The successor consumer exercises the current finite scope without rewriting old negatives.
     if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
         result = subprocess.run([sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer19.test.py'], cwd=ROOT, capture_output=True, timeout=300)
-        require(result.returncode == 0, 'R19_SOURCE_TESTS_FAILED')
+        require(result.returncode == 0, 'R19_SOURCE_TESTS_FAILED: ' +
+            result.stdout.decode('utf-8', errors='replace')[-4000:] +
+            result.stderr.decode('utf-8', errors='replace')[-4000:])
     return source18_historical_guard()
 
 
