@@ -207,9 +207,46 @@ it.each(['owner-return', 'same-owner-regrant', 'withdrawal', 'unmount', 'blur'] 
         renderer = undefined;
       }
       if (boundary === 'blur') ports.blur?.();
+    });
+    await act(async () => {
       release({ kind: 'authorized', state: 'authorized', requestAttempted: true });
     });
     expect(ports.push).not.toHaveBeenCalled();
-    if (!['unmount', 'blur'].includes(boundary)) expect(ports.storage.size).toBe(0);
+    expect(ports.storage.size).toBe(0);
+    expect(ports.schedule).not.toHaveBeenCalled();
   },
 );
+
+it('does not use an old OFF receipt to continue after a later storage failure', async () => {
+  ports.schedule.mockRejectedValue(new Error('synthetic-runtime-unavailable'));
+  await mount();
+  await act(async () => {
+    renderer!.root.findByType('Pressable' as never).props.onPress();
+  });
+  ports.failSave = true;
+  await press('Continue with delivery unconfirmed');
+  expect(ports.push).not.toHaveBeenCalled();
+  expect(text()).toContain('could not save');
+});
+
+it('retains saved intent but never navigates after unmount during scheduling', async () => {
+  let release!: (value: ReminderScheduleOutcome) => void;
+  ports.schedule.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  );
+  await mount();
+  await act(async () => {
+    button(SOFT_ASK.yes).props.onPress();
+  });
+  expect(await loadNotifPrefs({ strict: true })).toMatchObject({ amEnabled: true });
+  await act(async () => {
+    renderer!.unmount();
+    renderer = undefined;
+    release('scheduled');
+  });
+  expect(ports.push).not.toHaveBeenCalled();
+  expect(ports.schedule).toHaveBeenCalledTimes(1);
+});

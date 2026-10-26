@@ -1333,24 +1333,21 @@ def source15_guard():
 
 RELEASE16_BASE = 'b79e6d1e21a367be5cea5d0b333de9f2a144d41f'
 RELEASE16_TREE = 'ca7b6ac8ebcc0086b338b784f110b411400361b0'
-RELEASE16_PR = 0  # Replaced only with the actual GitHub allocation after creation.
+RELEASE16_PR = 20  # Allocated by GitHub on 2026-10-26; never predicted.
 RELEASE16_AUTHORITY = 'BRAIN-M1X-ONBOARDING-RESILIENCE16-CANDIDATE-01'
 RELEASE16_EXISTING = {
     'apps/mobile/src/app/onboarding/notifications.tsx', 'apps/mobile/src/app/onboarding/quiz.tsx',
     'apps/mobile/src/app/onboarding/products.tsx', 'apps/mobile/src/features/notifications/onboarding.ts',
-    'apps/mobile/src/features/notifications/onboarding.test.ts',
-    'apps/mobile/src/features/notifications/applyPreferences.ts',
-    'apps/mobile/src/features/notifications/applyPreferences.test.ts',
     'docs/USER_FLOW_TREE.md', 'scripts/release/full-app-j01/check.py',
     'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
     'ONSKIN_BRAIN_HANDOFF.txt'}
 RELEASE16_NEW = {'apps/mobile/src/features/onboarding/quizNavigation16.ts',
     'apps/mobile/src/features/onboarding/quizNavigation16.test.ts',
     'apps/mobile/src/features/notifications/reminderRecovery16.test.ts',
-    'apps/mobile/src/features/onboarding/productsFooter16.ts',
     'apps/mobile/src/features/onboarding/productsFooter16.test.ts',
     'scripts/release/full-app-j01/source_consumer16.test.py',
     'scripts/m1/onboarding_recovery16_browser.mjs'}
+
 RELEASE16_PREFIXES = ('docs/brain/contracts/M1X-16/', 'docs/brain/task-specs/M1X-16/',
     'docs/brain/checkpoints/M1-02/ONBOARDING-RECOVERY-16/')
 
@@ -1396,11 +1393,18 @@ def validate16_checker(raw):
                 n.targets[0].id.startswith('RELEASE16_') for n in added), 'R16_NEW_GLOBAL_SCOPE')
     new_names = [n.name for n in new.body if isinstance(n, ast.FunctionDef)]
     require(len(new_names) == len(set(new_names)), 'R16_REDEFINED_SAFEGUARD')
+    require(set(new_names)-set(old_functions) == {'allowed16', 'validate16_checker', 'candidate16_guard',
+        'validate16_diff', 'source16_endpoint', 'source16_history', 'source15_historical_segment',
+        'source16_guard', 'release16_active'}, 'R16_NEW_FUNCTION_SCOPE')
+    for assignment in added:
+        try: ast.literal_eval(assignment.value)
+        except (ValueError, TypeError): require(False, 'R16_NEW_GLOBAL_SIDE_EFFECT')
 
 
 def candidate16_guard(raw):
     value = json.loads(raw, object_pairs_hook=pairs)
-    require(value['schema'] == 1 and value['authority'] == RELEASE16_AUTHORITY and
+    require(set(value) == {'schema', 'authority', 'status', 'base', 'tree', 'acceptanceGranted', 'admissions'} and
+            type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE16_AUTHORITY and
             value['status'] == 'SOURCE_ONLY_CANDIDATE' and value['base'] == RELEASE16_BASE and
             value['tree'] == RELEASE16_TREE and value['acceptanceGranted'] is False and
             value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False),
@@ -1429,7 +1433,7 @@ def validate16_diff(raw, read_after):
             require(oldblob == git('rev-parse', RELEASE16_BASE+':'+path).decode().strip(), 'R16_BASE_BLOB')
         data = read_after(path)
         require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()==newblob,
-                'R16_AFTER_BLOB')
+                'R16_AFTER_BLOB:'+path)
         if path == 'scripts/release/full-app-j01/check.py': validate16_checker(data)
         if path == 'docs/brain/contracts/M1X-16/candidate.json': candidate16_guard(data)
         if path == 'docs/USER_FLOW_TREE.md':

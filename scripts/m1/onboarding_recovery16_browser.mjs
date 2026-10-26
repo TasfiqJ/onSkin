@@ -50,12 +50,12 @@ async function snap(name) {
 async function text(value) { await wait(() => c.eval(`document.body.innerText.includes(${JSON.stringify(value)})`), value); }
 async function route(value) { await wait(() => c.eval(`location.pathname===${JSON.stringify(value)}`), value); }
 async function click(label, exact = true) {
-  await wait(() => c.eval(`!![...document.querySelectorAll('[role=button],button,a')].find(n=>{if(n.getBoundingClientRect().width===0)return false;const s=(n.getAttribute('aria-label')||n.textContent||'').replace(/\\s+/g,' ').trim();return ${exact ? 's===' : 's.includes('}${JSON.stringify(label)}${exact ? '' : ')'}&&n.getAttribute('aria-disabled')!=='true'})`), 'click ' + label);
-  const r = await c.eval(`(()=>{const n=[...document.querySelectorAll('[role=button],button,a')].find(n=>{if(n.getBoundingClientRect().width===0)return false;const s=(n.getAttribute('aria-label')||n.textContent||'').replace(/\\s+/g,' ').trim();return ${exact ? 's===' : 's.includes('}${JSON.stringify(label)}${exact ? '' : ')'}});n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+  await wait(() => c.eval(`!![...document.querySelectorAll('[role=button],[role=radio],[role=checkbox],button,a')].find(n=>{if(n.getBoundingClientRect().width===0)return false;const s=(n.getAttribute('aria-label')||n.textContent||'').replace(/\\s+/g,' ').trim();return ${exact ? 's===' : 's.includes('}${JSON.stringify(label)}${exact ? '' : ')'}&&n.getAttribute('aria-disabled')!=='true'})`), 'click ' + label);
+  const r = await c.eval(`(()=>{const n=[...document.querySelectorAll('[role=button],[role=radio],[role=checkbox],button,a')].find(n=>{if(n.getBoundingClientRect().width===0)return false;const s=(n.getAttribute('aria-label')||n.textContent||'').replace(/\\s+/g,' ').trim();return ${exact ? 's===' : 's.includes('}${JSON.stringify(label)}${exact ? '' : ')'}});n.scrollIntoView({block:'center'});const r=n.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
   await c.send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', clickCount: 1, ...r }); await c.send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, ...r }); await delay(200);
 }
 async function fill(label, value) {
-  await c.eval(`(()=>{const n=document.querySelector('input[aria-label='+${JSON.stringify(JSON.stringify(label))}+']');if(!n)throw Error('missing input');n.scrollIntoView({block:'center'});n.focus();const set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;set.call(n,'');n.dispatchEvent(new Event('input',{bubbles:true}));})()`);
+  await c.eval(`(()=>{const n=[...document.querySelectorAll('input')].find(n=>n.getAttribute('aria-label')===${JSON.stringify(label)}&&n.getBoundingClientRect().width>0);if(!n)throw Error('missing input');n.scrollIntoView({block:'center'});n.focus();const set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;set.call(n,'');n.dispatchEvent(new Event('input',{bubbles:true}));})()`);
   await c.send('Input.insertText', { text: value }); await delay(150);
 }
 async function metrics(width, height) { await c.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: true }); }
@@ -71,6 +71,7 @@ try {
   let targets; await wait(async () => { targets = await (await fetch('http://127.0.0.1:9396/json')).json(); return targets.some(t => t.type === 'page'); }, 'Chrome');
   c = new CDP(targets.find(t => t.type === 'page').webSocketDebuggerUrl); await c.ready;
   for (const method of ['Page.enable', 'Runtime.enable', 'Network.enable']) await c.send(method);
+  await c.send('Page.addScriptToEvaluateOnNewDocument', { source: `globalThis.__permission16={blocked:0};if(globalThis.Notification)Object.defineProperty(Notification,'requestPermission',{configurable:true,value:()=>{__permission16.blocked++;return Promise.reject(Error('SYNTHETIC16_REAL_PERMISSION_FORBIDDEN'))}});` });
   await c.send('Fetch.enable', { patterns: [{ urlPattern: 'http*' }] });
   await c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   const answers = ['Shiny in places', 'Rarely', 'Often stings, burns, or reddens', 'Frequently', 'Yes, noticeably', 'Weeks or longer', 'Fine lines or firmness changes are visible', 'A lot over time', 'Sometimes burns', 'Tone 4', 'None that I know of', 'No'];
@@ -83,17 +84,32 @@ try {
     for (const [i, answer] of answers.entries()) { await text(answer); await click(answer); await click(i === 11 ? 'See my profile' : 'Next'); }
     await text("What's on your shelf?"); await snap('products-empty');
     await c.eval('history.back()'); await route('/onboarding/quiz'); await text('See my profile'); await snap('quiz-mounted-return'); await click('See my profile'); await route('/onboarding/products');
+    if (width === 390) {
+      await fill('Product name', 'Synthetic manual moisturizer with a deliberately long label');
+      await click('Choose product category'); await click('Moisturiser');
+      await click('Add to shelf'); await route('/shelf/opened'); await click('Just opened it', false);
+      await click('Add to shelf'); await route('/onboarding/products'); await text('1 ON YOUR SHELF'); await snap('products-one-saved');
+    }
+    const continuation = width === 390 ? 'Continue with 1 product' : 'Skip for now';
     await fill('Product name', 'Synthetic unsaved product with a long label');
     await c.eval(`(()=>{for(const n of document.querySelectorAll('*')) {if(n.children.length===0&&n.textContent.trim()) {const s=getComputedStyle(n);n.style.fontSize=(parseFloat(s.fontSize)*2)+'px';n.style.lineHeight=(parseFloat(s.lineHeight)*2)+'px';}}})()`);
     await metrics(width, Math.max(320, height - 300)); await snap('keyboard-viewport-text200');
-    await click('Skip for now'); await text('not been added'); await snap('unsaved-warning'); await click('Keep editing');
-    assert(await c.eval(`document.querySelector('input[aria-label="Product name"]').value.includes('Synthetic unsaved')`), 'Keep editing lost text');
-    await click('Skip for now'); await click('Continue without adding it'); await metrics(width, height);
+    await click(continuation); await text('not been added'); await snap('unsaved-warning'); await click('Keep editing');
+    assert(await c.eval(`[...document.querySelectorAll('input')].find(n=>n.getAttribute('aria-label')==='Product name'&&n.getBoundingClientRect().width>0).value.includes('Synthetic unsaved')`), 'Keep editing lost text');
+    await click(continuation); await click('Continue without adding it'); await metrics(width, height);
     await route('/onboarding/reveal'); await snap('reveal'); await click('Continue'); await route('/onboarding/notifications'); await snap('reminder-start');
     await c.eval(`(()=>{const original=Storage.prototype.setItem;globalThis.__restore16=()=>{Storage.prototype.setItem=original};Storage.prototype.setItem=function(k,v){if(k==='layerwell.notifPrefs.v1')throw Error('SYNTHETIC16_WRITE_REFUSED');return original.call(this,k,v)}})()`);
     await click('Not now'); await text('could not save'); assert(await c.eval(`location.pathname==='/onboarding/notifications'`), 'Failure silently advanced'); await snap('reminder-storage-failure');
-    await c.eval('__restore16()'); await click('Check current choice and retry'); await text('Reminders are off'); await snap('reminder-retry-off');
+    await c.eval('__restore16()');
+    await c.send('Page.bringToFront');
+    json(prefix+'-keyboard-focus',await c.eval(`(()=>{globalThis.__keys16=[];for(const type of ['keydown','keyup'])document.addEventListener(type,e=>__keys16.push({type,key:e.key,tag:e.target.tagName}),{once:true});const n=[...document.querySelectorAll('[role=button]')].find(n=>n.textContent==='Check current choice and retry'&&n.getBoundingClientRect().width>0);if(!n)throw Error('retry missing');n.focus();return {focused:document.activeElement===n,tag:n.tagName,tabIndex:n.tabIndex}})()`));
+    await c.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13, text: '\r', unmodifiedText: '\r' });
+    await delay(100);
+    await c.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 }); await delay(250); json(prefix+'-keyboard-events',await c.eval('__keys16')); await text('Reminders are off'); await snap('reminder-retry-off');
     await click('Turn reminders off'); await text('Reminders are off'); await click('Continue'); await route('/onboarding/account'); await snap('account');
+    await c.eval('history.back()'); await route('/onboarding/notifications'); await click('Use these times'); await wait(()=>c.eval("document.body.innerText.includes('Your choice is saved as off.') || document.body.innerText.includes('Reminders are off. Your choice was saved.')"),'durable OFF notice'); await snap('reminder-web-unconfirmed-off');
+    await click('Continue'); await route('/onboarding/account');
+    json(prefix+'-permission-port',await c.eval('__permission16'));
     summary.push({ viewport: { width, height }, result: 'PASS', mountedQuizReturn: true, emptyShelfSkip: true, unsavedChoice: true, storageFailureRetry: true, keyboardViewportPressure: 'SIMULATED', textPressure: '200% direct DOM leaf text', reducedMotion: true, nativeDelivery: 'NOT_RUN' });
   }
   json('summary', { status: 'PASS', source: 'actual Expo web with existing development-only anonymous-owner fixture', flows: summary, native: 'NOT_RUN', permissions: 'NO_REAL_OS_REQUEST' });

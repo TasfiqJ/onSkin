@@ -29,6 +29,8 @@ def main():
         if old not in checker:continue
         expect('old-semantics:'+old.decode(),lambda a=old,b=new:check.validate16_checker(checker.replace(a,b,1)),code='R16_INHERITED_')
     expect('old-source-guard',lambda:check.validate16_checker(checker.replace(b'    source09_guard()',b'    pass # source09_guard()',1)),code='R16_')
+    expect('new-global-side-effect', lambda:check.validate16_checker(checker+b'\nRELEASE16_SIDE_EFFECT = globals().clear()\n'), code='R16_NEW_GLOBAL_SIDE_EFFECT')
+    expect('new-function-outside-segment', lambda:check.validate16_checker(checker+b'\ndef arbitrary_new_function(): pass\n'), code='R16_NEW_FUNCTION_SCOPE')
     protected=['package.json','package-lock.json','apps/mobile/package.json','apps/mobile/app.config.ts',
         '.github/workflows/quality.yml','.github/workflows/security.yml',
         'scripts/launch/governed-evidence-chain.mjs','scripts/launch/governed-evidence-chain.test.mjs',
@@ -48,6 +50,9 @@ def main():
         'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
         'apps/mobile/src/lib/storage/privateKV.ts', 'apps/mobile/src/features/notifications/store.ts',
         'apps/mobile/src/features/notifications/deliver.ts',
+        'apps/mobile/src/features/notifications/applyPreferences.ts',
+        'apps/mobile/src/features/notifications/applyPreferences.test.ts',
+        'apps/mobile/src/features/notifications/onboarding.test.ts',
         'docs/brain/checkpoints/M1-03/G97-COVERAGE-CANDIDATE-15/README.md']
     for name in ['../escape','/absolute','C:/drive','docs\\escape',
         *[p+x for p in check.RELEASE16_PREFIXES for x in ['../escape','.git/config','.hidden','CON.md','alias.','ÃƒÂ¯Ã‚Â¼Ã‚Â¡.md','x//y']]]:
@@ -105,8 +110,8 @@ def main():
             integration=commit(check.RELEASE16_BASE,authentic);git('update-ref','HEAD',integration)
             expect('ordinary-merge',check.source16_history,code='R16_CI_')
             event=dict(number=check.RELEASE16_PR,repository=dict(full_name='TasfiqJ/onSkin'),
-                pull_request=dict(number=check.RELEASE16_PR,base=dict(sha=check.RELEASE16_BASE,ref='stage/m103-g97-provenance-triage14'),
-                head=dict(sha=authentic,ref='stage/m103-g97-coverage-candidate16',repo=dict(full_name='TasfiqJ/onSkin'))))
+                pull_request=dict(number=check.RELEASE16_PR,base=dict(sha=check.RELEASE16_BASE,ref='stage/m103-g97-coverage-candidate15'),
+                head=dict(sha=authentic,ref='stage/m1-first-session-recovery16',repo=dict(full_name='TasfiqJ/onSkin'))))
             event_path=fixture/'.git/event16.json'
             def write_event():event_path.write_bytes(json.dumps(event).encode())
             write_event()
@@ -150,6 +155,13 @@ def main():
             for field,new in [('acceptanceGranted',True),('status','ACCEPTED'),('base','0'*40)]:
                 changed=copy.deepcopy(value);changed[field]=new
                 expect('forged-owner:'+field,lambda v=changed:check.candidate16_guard(json.dumps(v).encode()),code='R16_')
+            for gate in value['admissions']:
+                changed=copy.deepcopy(value); changed['admissions'][gate]=True
+                expect('forged-admission:'+gate,lambda v=changed:check.candidate16_guard(json.dumps(v).encode()),code='R16_NO_ADMISSION')
+            changed=copy.deepcopy(value); changed['newSecurityAcceptance']=True
+            expect('unknown-admission',lambda:check.candidate16_guard(json.dumps(changed).encode()),code='R16_NO_ADMISSION')
+            extra=fixture/'apps/mobile/src/features/onboarding/unapproved16.ts';extra.write_bytes(b'synthetic untracked source\n')
+            expect('untracked-outside-finite-source',check.source16_guard,code='R16_UNTRACKED_SCOPE');extra.unlink()
             expect('restored-source-segment',check.source16_guard,expected=0)
         finally:check.ROOT=root
     print(json.dumps(dict(passed=True,refusals=rejected,positive_controls=positives,pr=check.RELEASE16_PR,
