@@ -1,15 +1,16 @@
-Campaign17 privacy and re-entry integrity SOURCE-ONLY candidate.
+Campaign18 owner-bound onboarding privacy SOURCE-ONLY candidate.
 PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED; independent Brain acceptance required.
-Authority: BRAIN-M1X-PRIVACY-REENTRY17-REPAIR-01; authenticated R1 manifest d2c9cbf835145ba4f98bc1c4162e9264ff81b4ce4982951c3d20e36c2b98a628.
-Draft PR21: https://github.com/TasfiqJ/onSkin/pull/21
-Branch: stage/m1-first-session-integrity17; base stage/m1-first-session-recovery16.
-Immutable PR20 base: 28953aa3a84fed0684b80b442d0cd9c2de0663b2; tree 6776b61b49c63345e992da63f82920fedd07518b.
-Frozen source: 27b2171385a56cace13d485e2a5280da1d45dcf1; tree a084d538d3d45e92f40103623376fe77b5b8b733.
-Checkpoint: docs/brain/checkpoints/M1-02/ONBOARDING-INTEGRITY-17/README.md
-External checkpoint manifest SHA256: e037262ec934f9ba273afb01ab05e6d82825931fc7b4dfb373b24c586b28bdb4
-Verify: python -B docs/brain/checkpoints/M1-02/ONBOARDING-INTEGRITY-17/verify17.py --expected-manifest-sha256 e037262ec934f9ba273afb01ab05e6d82825931fc7b4dfb373b24c586b28bdb4 --git-root .
-Exactly one evidence-only tail follows the frozen source. Its derived HEAD/tree and exact final-head CI are supplied in the external FINAL_REPORT.md, return and PR description; they are not circularly claimed here.
-74 focused tests pass. Full forced root: four unchanged protected navigation fixtures fail because they provide no owner lease; no bypass or waiver. Provider-wide owner tagging/private raw draft retirement remains UNAPPLIED in protected OnboardingContext.tsx; the route masks unknown drafts and requires explicit reset.
-Actual Expo web has 94 PNGs at four viewports; keyboard/text pressure are browser simulations. Source exports and source tests do not establish physical iPhone, genuine OS permission/delivery, VoiceOver, signed binary or provider functionality.
-G97 FAIL/NO_GO; 5534 original potential findings and 1255 supplemental potential matches remain privately undispositioned. DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01 G1/G2/G3/G5 and longitudinal G4 remain closed. F09 required; F18 and J02-J27/J05 deferred. Device/provider/paid/legal/clinical/Apple/public release CLOSED.
-USD0 incremental spend. No merge, auto-merge, maintainer modification, paid/provider action or self-acceptance.
+Authority: BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01.
+Authenticated input manifest: d6ce18a12f444fd91da5820fdf4e67900fd8d062de2515d2ef916d08a77c53df.
+Draft PR22: https://github.com/TasfiqJ/onSkin/pull/22
+Branch: stage/m1-onboarding-owner-privacy18; base stage/m1-first-session-integrity17.
+Immutable PR21 base: f9709e02420d6c03cc9b9586cf60d89bfde7d8a3; tree c735b32c667059ba1d6855b6896c70e42d6c6fd8.
+Frozen source: 0c3044920726080fbbd32f6d480bb5f71620cfe7; tree 65f77fe1c03aa123339aa696b99e88f2da4d9c6c.
+Checkpoint: docs/brain/checkpoints/M1-02/ONBOARDING-OWNER-PRIVACY-18/README.md
+External checkpoint manifest SHA256: 1117a60563b37932adfe5df1d68b5ccd3ec0d527c0cf4d27885173011f5c6d43
+Verify: python -B docs/brain/checkpoints/M1-02/ONBOARDING-OWNER-PRIVACY-18/verify18.py --expected-manifest-sha256 1117a60563b37932adfe5df1d68b5ccd3ec0d527c0cf4d27885173011f5c6d43 --git-root .
+Exactly one evidence-only tail follows frozen source. Its derived HEAD/tree, later historical/independent-checkout verification and exact final-head CI are supplied in the external FINAL_REPORT.md/verified return and PR description; they are not predicted here.
+53 focused tests pass, including all four unchanged original historical test bodies. Forced root: 6228 mobile passes/21 protected historical fixture or source-text failures; operator 24 passes. No bypass, skip or waiver. Lint/typecheck, both clean source exports and Release18 175 refusal/six positive controls pass. Native/physical iPhone/VoiceOver/OS delivery are NOT_RUN.
+Actual Expo web has 66 final PNGs/four viewports, 360px text x2, simulated keyboard height, Back/reentry/manual Shelf/current consent withdrawal and explicit unsaved choices; zero console errors. Source/web/fixture evidence never accepts native or professional axes.
+G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/provider/clinical/legal/Apple/public release CLOSED. F09 manual private photo history required; F18 and J02-J27 deferred.
+No private Security artifacts/3bc6b787, credential rotation, merge, force push, other branch edits, auto-merge, maintainer modification, paid/provider action, public release or self-acceptance. USD0.
