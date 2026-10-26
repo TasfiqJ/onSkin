@@ -1,9 +1,54 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import ts from 'typescript';
 
 const SRC = fileURLToPath(new URL('../../', import.meta.url));
 const read = (path: string) => readFileSync(`${SRC}/${path}`, 'utf8');
+
+function preConsentClosed(source: string) {
+  const root = ts.createSourceFile(
+    'context.tsx',
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const all: ts.Node[] = [];
+  function visit(n: ts.Node) {
+    all.push(n);
+    ts.forEachChild(n, visit);
+  }
+  visit(root);
+  const check = all.find((n) => ts.isFunctionDeclaration(n) && n.name?.text === 'revalidate');
+  if (!check || !ts.isFunctionDeclaration(check) || !check.body) return false;
+  const statements = check.body.statements;
+  const capture = statements.findIndex(
+    (n) =>
+      ts.isTryStatement(n) &&
+      n.tryBlock.getText().includes('captureHealthDataWriteLease()') &&
+      !!n.catchClause &&
+      n.catchClause.block.getText().includes('return Promise.resolve(null)'),
+  );
+  const consentRead = statements.findIndex((n) =>
+    n.getText().includes('hasCurrentHealthDataCollectionConsent()'),
+  );
+  const initial = all.find((n) => ts.isVariableDeclaration(n) && n.name.getText() === 'draft');
+  const getters = all
+    .filter(ts.isGetAccessorDeclaration)
+    .filter((n) => ['goals', 'quizAnswers', 'profileResult'].includes(n.name.getText()));
+  return (
+    capture >= 0 &&
+    consentRead > capture &&
+    !!initial &&
+    ts.isVariableDeclaration(initial) &&
+    initial.initializer?.kind === ts.SyntaxKind.NullKeyword &&
+    getters.length >= 3 &&
+    getters.every((n) => n.body?.getText().includes('isCurrent() ?')) &&
+    !source.includes('getPrivateItem(') &&
+    !source.includes('readStoredSkinProfile(')
+  );
+}
 
 describe('health lifecycle route contract', () => {
   it('mounts the lifecycle gate above every health provider and route', () => {
@@ -170,11 +215,28 @@ describe('health lifecycle route contract', () => {
   it('keeps allowed pre-consent providers empty and free of mount-time health I/O', () => {
     const onboarding = read('features/onboarding/OnboardingContext.tsx');
     const intake = read('features/shelf/IntakeContext.tsx');
-    expect(onboarding).toContain('const [goals, setGoals] = useState<GoalId[]>([]);');
-    expect(onboarding).toContain(
-      'const [quizAnswers, setQuizAnswers] = useState<QuizAnswers>({});',
-    );
-    expect(onboarding).not.toContain('useEffect(');
+    expect(preConsentClosed(onboarding)).toBe(true);
+    expect(
+      preConsentClosed(
+        onboarding.replace('lease = captureHealthDataWriteLease();', 'lease = forgedLease;'),
+      ),
+    ).toBe(false);
+    expect(
+      preConsentClosed(
+        onboarding.replace(
+          'let draft: Draft | null = null;',
+          'let draft: Draft | null = retainedDraft;',
+        ),
+      ),
+    ).toBe(false);
+    expect(
+      preConsentClosed(
+        onboarding.replace(
+          'return isCurrent() ? accepted!.quizAnswers : EMPTY_ANSWERS;',
+          'return accepted!.quizAnswers;',
+        ),
+      ),
+    ).toBe(false);
     expect(intake).toContain(
       'const [state, setState] = useState<IntakeSessionState>(() => createEmptyIntakeSession());',
     );

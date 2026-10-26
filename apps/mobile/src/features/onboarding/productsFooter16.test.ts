@@ -1,4 +1,8 @@
-import { createElement } from 'react';
+import { createElement, useLayoutEffect } from 'react';
+import { OnboardingProvider, useOnboarding } from './OnboardingContext';
+import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
+import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
+
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import ProductsScreen from '@/app/onboarding/products';
@@ -9,6 +13,7 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 const ports = vi.hoisted(() => ({
+  storage: new Map<string, string>(),
   width: 360,
   height: 640,
   fontScale: 2,
@@ -45,7 +50,43 @@ vi.mock('@/components/ui', () => ({
   Screen: 'Screen',
   Text: 'Text',
 }));
-vi.mock('./OnboardingContext', () => ({ useOnboarding: () => ({ goals: ports.goals }) }));
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: vi.fn(),
+}));
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: async (key: string) => ports.storage.get(key) ?? null,
+  removePrivateItem: async (key: string) => {
+    ports.storage.delete(key);
+  },
+  updatePrivateItem: async (key: string, update: (raw: string | null) => string | null) => {
+    const next = update(ports.storage.get(key) ?? null);
+    if (next === null) ports.storage.delete(key);
+    else ports.storage.set(key, next);
+  },
+}));
+vi.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({ invalidateQueries: vi.fn() }),
+}));
+vi.mock('@/lib/supabase/client', () => ({ getPersistedSupabaseUser: vi.fn(), supabase: {} }));
+vi.mock('./skinProfileStore', () => ({ setStoredSkinProfileFromExplicitQuiz: vi.fn() }));
+let context: ReturnType<typeof useOnboarding>;
+function Probe() {
+  const value = useOnboarding();
+  useLayoutEffect(() => {
+    context = value;
+  });
+  return null;
+}
+function tree() {
+  return createElement(
+    OnboardingProvider,
+    null,
+    createElement(Probe),
+    createElement(ProductsScreen),
+  );
+}
+
 vi.mock('@/features/shelf/IntakeContext', () => ({ useIntake: () => ({ reset: ports.reset }) }));
 vi.mock('@/features/shelf/useShelf', () => ({
   useShelf: () => ({
@@ -82,7 +123,10 @@ async function press(label: string) {
 }
 async function mount() {
   await act(async () => {
-    renderer = create(createElement(ProductsScreen));
+    renderer = create(tree());
+  });
+  await act(async () => {
+    if (ports.goals.length) context.toggleGoal('clear_skin');
   });
 }
 async function type() {
@@ -92,6 +136,12 @@ async function type() {
 }
 beforeEach(async () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  ports.storage.clear();
+  await setHealthDataCollectionConsentLocal({
+    granted: true,
+    version: HEALTH_DATA_CONSENT.version,
+    consentText: HEALTH_DATA_CONSENT.fullText,
+  });
   clearActiveHealthProcessingEpoch();
   const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
   setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-owner-a', accountGeneration });
@@ -178,12 +228,15 @@ it('preserves missing-goals and retired-health-lease gates and unavailable Shelf
   await press('Skip for now');
   expect(ports.replace).toHaveBeenCalledWith('/onboarding/goals');
   ports.goals = ['routine'];
-  clearActiveHealthProcessingEpoch();
-  await press('Skip for now');
+  const staleContinue = button('Skip for now').props.onPress;
+  await act(async () => {
+    clearActiveHealthProcessingEpoch();
+    staleContinue();
+  });
   expect(ports.push).not.toHaveBeenCalled();
   ports.unavailable = true;
   await act(async () => {
-    renderer!.update(createElement(ProductsScreen));
+    renderer!.update(tree());
   });
   expect(renderer!.root.findAllByType('Button' as never)).toHaveLength(0);
 });

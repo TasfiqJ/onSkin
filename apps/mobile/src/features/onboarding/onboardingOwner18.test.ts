@@ -418,3 +418,84 @@ it('rejects a health lease with an unknown or mismatched current account generat
   expect(() => context.computeResult()).toThrow();
   await expect(context.persistSkinProfile()).rejects.toThrow();
 });
+
+// Campaign19: independently exercise the original pre-consent and retained-profile promises.
+it('Campaign19 performs no private I/O when mounted without an active authority', async () => {
+  clearActiveHealthProcessingEpoch();
+  const reads = vi.spyOn(ports.storage, 'get');
+  await mount();
+  expect(context.privacyStatus).toBe('denied');
+  empty();
+  expect(reads).not.toHaveBeenCalled();
+  expect(ports.insert).not.toHaveBeenCalled();
+  expect(ports.writes).toHaveLength(0);
+  reads.mockRestore();
+});
+
+it.each(['same-owner-regrant', 'owner-return'] as const)(
+  'Campaign19 masks retained pregnancy, sensitivities and profile after %s and React rerender',
+  async (boundary) => {
+    await mount();
+    await complete();
+    await act(async () => {
+      context.setAnswer('q_pregnancy', 'pregnant');
+      context.setAnswer('q_sensitivities', ['fragrance']);
+    });
+    const old = context;
+    await act(async () => {
+      await context.persistSkinProfile();
+    });
+    expect(context.profileResult).not.toBeNull();
+    await act(async () => {
+      if (boundary === 'owner-return') await grant('synthetic-b');
+      await grant();
+      view!.update(createElement(OnboardingProvider, null, createElement(Probe)));
+    });
+    empty(old);
+    empty();
+    await act(async () => {
+      old.setAnswer('q_pregnancy', 'pregnant');
+      old.toggleGoal('hydration');
+      old.reset();
+      context.toggleGoal('hydration');
+    });
+    expect(context.goals).toEqual(['hydration']);
+    expect(context.quizAnswers).toEqual({});
+    expect(context.profileResult).toBeNull();
+    expect(() => old.computeResult()).toThrow();
+    await expect(old.persistSkinProfile()).rejects.toThrow();
+    expect(ports.writes).toHaveLength(1);
+  },
+);
+
+it('Campaign19 rejects a queued save across same-owner regrant and retains only the new draft', async () => {
+  await mount();
+  await complete();
+  const gate = deferred();
+  ports.writeGate = gate.promise;
+  const save = context.persistSkinProfile().then(
+    () => 'FALSE_SUCCESS',
+    () => 'retired',
+  );
+  await act(async () => {
+    for (let n = 0; n < 20; n++) await Promise.resolve();
+  });
+  await act(async () => {
+    await grant();
+  });
+  await complete();
+  const currentAnswers = context.quizAnswers;
+  ports.writeGate = null;
+  await act(async () => {
+    gate.release();
+    expect(await save).toBe('retired');
+  });
+  expect(context.quizAnswers).toEqual(currentAnswers);
+  expect(context.profileResult).toBeNull();
+  expect(ports.writes).toHaveLength(0);
+  expect(ports.insert).not.toHaveBeenCalled();
+  await act(async () => {
+    await context.persistSkinProfile();
+  });
+  expect(ports.writes).toHaveLength(1);
+});

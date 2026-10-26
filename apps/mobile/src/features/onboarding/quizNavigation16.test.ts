@@ -1,4 +1,8 @@
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
+import { OnboardingProvider } from './OnboardingContext';
+import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
+import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
+
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import QuizScreen from '@/app/onboarding/quiz';
@@ -11,6 +15,7 @@ import {
 } from '@/lib/consent/healthProcessingEpoch';
 
 const ports = vi.hoisted(() => ({
+  storage: new Map<string, string>(),
   answers: {} as QuizAnswers,
   consent: true,
   push: vi.fn(),
@@ -42,20 +47,29 @@ vi.mock('@/components/ui', () => ({
   Screen: 'Screen',
   Text: 'Text',
 }));
-vi.mock('./OnboardingContext', () => ({
-  useOnboarding: () => {
-    const [quizAnswers, update] = useState(ports.answers);
-    return {
-      quizAnswers,
-      setAnswer: (id: string, value: string | string[]) =>
-        update((prev) => ({ ...prev, [id]: value })),
-      reset: () => update({}),
-    };
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: vi.fn(),
+}));
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: async (key: string) => ports.storage.get(key) ?? null,
+  removePrivateItem: async (key: string) => {
+    ports.storage.delete(key);
+  },
+  updatePrivateItem: async (key: string, update: (raw: string | null) => string | null) => {
+    const next = update(ports.storage.get(key) ?? null);
+    if (next === null) ports.storage.delete(key);
+    else ports.storage.set(key, next);
   },
 }));
-vi.mock('./healthConsentStore', () => ({
-  hasCurrentHealthDataCollectionConsent: async () => ports.consent,
+vi.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
+vi.mock('@/lib/supabase/client', () => ({ getPersistedSupabaseUser: vi.fn(), supabase: {} }));
+vi.mock('./skinProfileStore', () => ({ setStoredSkinProfileFromExplicitQuiz: vi.fn() }));
+function tree() {
+  return createElement(OnboardingProvider, null, createElement(QuizScreen));
+}
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
 let renderer: ReactTestRenderer | undefined;
 function button(label: string) {
@@ -68,7 +82,12 @@ async function press(label: string) {
 }
 async function mount() {
   await act(async () => {
-    renderer = create(createElement(QuizScreen));
+    await setHealthDataCollectionConsentLocal({
+      granted: ports.consent,
+      version: HEALTH_DATA_CONSENT.version,
+      consentText: ports.consent ? HEALTH_DATA_CONSENT.fullText : HEALTH_DATA_CONSENT.declineText,
+    });
+    renderer = create(tree());
   });
 }
 async function answerCurrent() {
@@ -84,6 +103,7 @@ beforeEach(async () => {
   clearActiveHealthProcessingEpoch();
   const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
   setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-owner-a', accountGeneration });
+  ports.storage.clear();
   ports.answers = {};
   ports.consent = true;
   ports.push.mockReset();
@@ -122,7 +142,7 @@ it('returns from Products to the still-mounted last question and continues again
   await act(async () => {
     ports.blur?.();
     ports.focus?.();
-    renderer!.update(createElement(QuizScreen));
+    renderer!.update(tree());
   });
   await press('See my profile');
   expect(ports.push).toHaveBeenCalledTimes(2);

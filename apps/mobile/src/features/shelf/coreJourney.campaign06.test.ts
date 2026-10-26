@@ -4,6 +4,8 @@ import { createElement, type ComponentType } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
+import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
+import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import ProductsScreen from '@/app/onboarding/products';
 import ShelfScreen from '@/app/(tabs)/shelf';
 import ArchiveScreen from '@/app/shelf/archive';
@@ -142,6 +144,7 @@ function removeButton() {
 beforeEach(async () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   ports.bytes.clear();
+  await setHealthDataCollectionConsentLocal({ granted: true, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.fullText });
   ports.failRead = false;
   ports.failWrite = false;
   ports.writes = 0;

@@ -1,0 +1,9 @@
+# Required no-weakening privacy and test invariants
+
+True operator/consumer privacy boundary: an unknown, withdrawn, expired, owner-A->B->A or same-owner regrant/changed account generation cannot read, change, score, persist, show or cause navigation from another authority's goals/quiz/profile/pregnancy/sensitivity values. A pending or stale consent check displays no raw answers and publishes no positive admission. Old closures/refetches/React render handlers never become authorized because a new owner independently obtained current consent. No conditional `isCurrent: () => true`, mock of `assertHealthDataWriteLease` to a no-op, global permissive fallback, or skipped tests.
+
+Positive continuation: under genuinely current synthetic age/consent/owner, Goals->Quiz->Products->Analyzing->Reveal is usable; changes, Back, removal refusal and unsaved text confirmation work; raw quiz answers remain on FAILED durable save and only clear after confirmed local profile receipt; an old owner cannot commit a profile to a new owner. Native permission and secure storage must be honestly NOT_RUN when only fixtures or Expo web are exercised.
+
+Source shape assertions: if old string equality was tied to an obsolete implementation and no longer meaningful, use AST/dataflow/actual simulated user semantics; show a negative mutation that would detect the loss of the protected original behavior. Preserve test counts/names/precise semantic properties (not necessarily byte-identical assertion code). Protect past static negatives and source guard. Avoid endless incremental fake witness/receipt generation without real behavior tests.
+
+Existing root AGENTS.md requires reading CLAUDE.md and human-simulated E2E instructions. No new packages or network-dependent external test installations. Currency spending USD0. No private production health/credential/user data.

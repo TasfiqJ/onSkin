@@ -3,11 +3,17 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OnboardingProvider, useOnboarding } from './OnboardingContext';
+import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
+import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 import { ONBOARDING_QUIZ, scoreQuiz, type QuizAnswers } from './quiz';
 
 const mocks = vi.hoisted(() => ({
-  assertCurrent: vi.fn(),
-  hasConsent: vi.fn(),
+  storage: new Map<string, string>(),
   invalidateQueries: vi.fn(),
   insert: vi.fn(),
   setStoredFromQuiz: vi.fn(),
@@ -16,28 +22,29 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({ invalidateQueries: mocks.invalidateQueries }),
 }));
-vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
-  HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
-  runHealthDataWriteOperation: async (
-    _ownerUserId: string,
-    operation: (lease: { assertCurrent: () => void; ownerUserId: string }) => Promise<unknown>,
-  ) =>
-    operation({
-      assertCurrent: mocks.assertCurrent,
-      ownerUserId: 'user-a',
-    }),
+vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: vi.fn(),
 }));
-vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
-  activeHealthProcessingOwnerUserId: () => 'user-a',
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: async (key: string) => mocks.storage.get(key) ?? null,
+  removePrivateItem: async (key: string) => {
+    mocks.storage.delete(key);
+  },
+  updatePrivateItem: async (key: string, update: (raw: string | null) => string | null) => {
+    const next = update(mocks.storage.get(key) ?? null);
+    if (next === null) mocks.storage.delete(key);
+    else mocks.storage.set(key, next);
+  },
+}));
+vi.mock('expo-router/build/react-navigation/core/NavigationContext', async () => ({
+  NavigationContext: (await import('react')).createContext(undefined),
 }));
 vi.mock('@/lib/supabase/client', () => ({
   getPersistedSupabaseUser: vi.fn(async () => ({ data: { user: { id: 'user-a' } } })),
   supabase: {
     from: () => ({ insert: mocks.insert }),
   },
-}));
-vi.mock('./healthConsentStore', () => ({
-  hasCurrentHealthDataCollectionConsent: mocks.hasConsent,
 }));
 vi.mock('./skinProfileStore', () => ({
   setStoredSkinProfileFromExplicitQuiz: mocks.setStoredFromQuiz,
@@ -87,13 +94,20 @@ async function completeQuiz(): Promise<void> {
   });
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   (
     globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
   ).IS_REACT_ACT_ENVIRONMENT = true;
   latestContext = null;
-  mocks.assertCurrent.mockReset();
-  mocks.hasConsent.mockReset().mockResolvedValue(true);
+  mocks.storage.clear();
+  await setHealthDataCollectionConsentLocal({
+    granted: true,
+    version: HEALTH_DATA_CONSENT.version,
+    consentText: HEALTH_DATA_CONSENT.fullText,
+  });
+  clearActiveHealthProcessingEpoch();
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  setActiveHealthProcessingEpoch(19, { ownerUserId: 'user-a', accountGeneration });
   mocks.invalidateQueries.mockReset().mockResolvedValue(undefined);
   mocks.insert.mockReset().mockResolvedValue({ error: null });
   mocks.setStoredFromQuiz.mockReset().mockResolvedValue(undefined);
@@ -102,6 +116,7 @@ beforeEach(() => {
 afterEach(async () => {
   if (renderer) await act(async () => renderer?.unmount());
   renderer = null;
+  clearActiveHealthProcessingEpoch();
 });
 
 describe('OnboardingProvider profile retention', () => {

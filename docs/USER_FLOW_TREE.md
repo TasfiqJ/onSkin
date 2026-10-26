@@ -2868,3 +2868,11 @@ Source-only candidate; synthetic Expo web evidence does not establish native iPh
 - Critical asynchronous branches: delayed consent/write/mirror/Analyzing timer cannot publish or navigate under a later owner. Concurrent saves coalesce. Local write failure retains current answers for retry; a best-effort server outage preserves the valid local receipt.
 - Important unsaved choice: typed Products name → Keep editing or Continue without adding it. A same-owner focus keeps the typed draft; a new health window retires it. Manual category/input, keyboard-height simulation, and long labels remain usable.
 - Responsive verification: 360×640 at 200% text, 375×667, 390×844, 430×932; inspect actual glyph regions, scroll, tap, keyboard, Back and reentry. Fresh screenshots, click paths and sanitized console/network traces are retained in the Campaign18 checkpoint payload. Physical device and provider gates stay closed.
+
+
+## Campaign19 — historical compatibility and privacy regression
+
+- Critical; synthetic adult/current-consent owner; Expo web only. Goals → Quiz (Next/Back/reentry) → Products → Analyzing → Reveal. Inject one refused local save, require visible failure, retry and the same durable local profile before Reveal.
+- Preserve 0/1/2/3/20 saved-product footer states, explicit unsaved choices, duplicate removal/write refusal and fresh capture for every manual product. Focus the keyboard and inspect actual glyph/action bounds at 360×640 with 200% text and 375×667, 390×844, 430×932.
+- Deny private I/O without an active authority; mask pending and withdrawn consent. Regrant, A→B→A, expiration, old handlers and pending saves must never republish pregnancy, sensitivity, answers or a retired profile. Provider/route tests use real account/health leases and canonical synthetic consent.
+- Screenshots, geometry, sanitized console/network/trace and failure artifacts are Campaign19 checkpoint evidence. Browser keyboard/text simulation, source exports and tests do not establish physical iPhone, VoiceOver, native storage or provider/Apple approval. USD0; all protected gates remain closed.

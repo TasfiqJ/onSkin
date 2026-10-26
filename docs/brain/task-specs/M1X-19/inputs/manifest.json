@@ -1,0 +1,53 @@
+{
+  "acceptanceGranted": false,
+  "admissions": {
+    "DB": false,
+    "G97": false,
+    "J01": false,
+    "M103": false,
+    "M2": false,
+    "PUBLIC": false
+  },
+  "authority": "BRAIN-M1X-ONBOARDING-COMPATIBILITY19-REPAIR-01",
+  "files": {
+    "00_READ_FIRST.md": {
+      "bytes": 1220,
+      "sha256": "0de77af4f37499b7780b71202b86c1ab22a336fe06d9a1b0c97bb83631d3c402"
+    },
+    "01_LIVE_PR22_GITHUB_AUDIT.md": {
+      "bytes": 2515,
+      "sha256": "22dca998234c9386e4ce77b4f59a4a995d1238d26dd52217668772b09b03bb31"
+    },
+    "02_EXACT_21_FAILURES.md": {
+      "bytes": 3989,
+      "sha256": "759ebfe64a8339152d5d96dff9ca2f432da8109ff1dcb4db7a1a68fc4502bcac"
+    },
+    "03_PRIVACY_TEST_PROOFS.md": {
+      "bytes": 1863,
+      "sha256": "fd33a9c818410e8c7f10167deabb94e877db236bf2938c70f102d556d92d7a60"
+    },
+    "04_FULL_APP_SCOPE_GATES.md": {
+      "bytes": 1986,
+      "sha256": "b2fdfcc424a6175c8d4a306acae2783dc9f19a77bcd9e3b00cf3fe0a60f1d358"
+    },
+    "EXACT_PROMPT.md": {
+      "bytes": 10741,
+      "sha256": "3e2369998300918b1c8ef2f8fe8a3c45f2277990073df3fd832bed27d80fc999"
+    },
+    "PROMPT_TEMPLATE.md": {
+      "bytes": 10741,
+      "sha256": "3e2369998300918b1c8ef2f8fe8a3c45f2277990073df3fd832bed27d80fc999"
+    },
+    "TASK_DIRECTIVE.md": {
+      "bytes": 10741,
+      "sha256": "3e2369998300918b1c8ef2f8fe8a3c45f2277990073df3fd832bed27d80fc999"
+    },
+    "verify_packet.py": {
+      "bytes": 4047,
+      "sha256": "632d35e71be03cc9815bd10a4183ab715c33d9ff1a1d48e3870af9cefd5c4c19"
+    }
+  },
+  "release": "NO_GO",
+  "schema": 1,
+  "status": "SOURCE_ONLY_CONTEXT"
+}

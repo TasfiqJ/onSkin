@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import ts from 'typescript';
 
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
 const ONBOARDING_E2E_SCRIPT = fileURLToPath(
@@ -9,6 +10,76 @@ const ONBOARDING_E2E_SCRIPT = fileURLToPath(
 
 function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
+}
+
+// Parse the protected operations, independently of whitespace and destructuring syntax.
+function nodes(source: string) {
+  const root = ts.createSourceFile(
+    'route.tsx',
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const all: ts.Node[] = [];
+  function visit(node: ts.Node) {
+    all.push(node);
+    ts.forEachChild(node, visit);
+  }
+  visit(root);
+  return all;
+}
+function hasResetKey(source: string) {
+  return nodes(source).some(
+    (node) =>
+      ts.isJsxSelfClosingElement(node) &&
+      node.tagName.getText() === 'ProductsScreenContent' &&
+      node.attributes.properties.some((attr) => {
+        if (!ts.isJsxAttribute(attr) || attr.name.getText() !== 'key' || !attr.initializer)
+          return false;
+        const identifiers = nodes('const value = ' + attr.initializer.getText().slice(1, -1))
+          .filter(ts.isIdentifier)
+          .map((id) => id.text);
+        return identifiers.includes('generation') && identifiers.includes('addedProductId');
+      }),
+  );
+}
+function missingGoalsGuard(source: string) {
+  return nodes(source).some(
+    (node) =>
+      ts.isIfStatement(node) &&
+      node.expression.getText().replace(/\s/g, '') === 'goals.length===0' &&
+      nodes(node.thenStatement.getText()).some(
+        (call) =>
+          ts.isCallExpression(call) &&
+          call.expression.getText() === 'router.replace' &&
+          call.arguments[0] &&
+          ts.isStringLiteral(call.arguments[0]) &&
+          call.arguments[0].text === '/onboarding/goals',
+      ),
+  );
+}
+function durableBeforePublish(source: string) {
+  const method = nodes(source).find(
+    (n) => ts.isMethodDeclaration(n) && n.name.getText() === 'persistSkinProfile',
+  );
+  const all = nodes(source).filter((n) => method && n.pos >= method.pos && n.end <= method.end);
+  const call = (name: string) =>
+    all.filter(ts.isCallExpression).find((n) => n.expression.getText() === name);
+  const durable = call('setStoredSkinProfileFromExplicitQuiz');
+  const publish = call('setProfileResult');
+  const wipe = call('setQuizAnswers');
+  return (
+    !!durable &&
+    !!publish &&
+    !!wipe &&
+    ts.isAwaitExpression(durable.parent) &&
+    durable.pos < publish.pos &&
+    publish.pos < wipe.pos &&
+    wipe.arguments.length === 1 &&
+    ts.isObjectLiteralExpression(wipe.arguments[0]!) &&
+    wipe.arguments[0].properties.length === 0
+  );
 }
 
 describe('onboarding route contracts', () => {
@@ -216,7 +287,11 @@ describe('onboarding route contracts', () => {
     const source = readAppRoute('onboarding/products.tsx');
 
     expect(source).toContain('useLocalSearchParams<{ addedProductId?: string }>()');
-    expect(source).toContain("<ProductsScreenContent key={addedProductId ?? 'initial-add'} />");
+    expect(hasResetKey(source)).toBe(true);
+    expect(hasResetKey(source.replace('${generation}:', ''))).toBe(false);
+    expect(hasResetKey(source.replace("addedProductId ?? 'initial-add'", "'initial-add'"))).toBe(
+      false,
+    );
     expect(source).toContain('<ShelfDataAvailabilityGate>');
     expect(source).toContain('function ProductsScreenContent()');
     expect(source).toContain("const [name, setName] = useState('');");
@@ -430,21 +505,24 @@ describe('onboarding route contracts', () => {
 
     expect(goals).toContain('getQuizCompletionState');
     expect(goals).toContain(
-      'const { goals, profileResult, quizAnswers, toggleGoal } = useOnboarding();',
+      'const { goals, profileResult, quizAnswers, toggleGoal } = onboarding;',
     );
     expect(goals).toContain('const quizCompletion = getQuizCompletionState(quizAnswers);');
     expect(goals).toContain(
       "router.push(hasProfileResult ? '/onboarding/products' : '/onboarding/quiz')",
     );
-    expect(goals).toContain('hasCurrentHealthDataCollectionConsent');
+    expect(goals).toContain("onboarding.privacyStatus === 'ready'");
+    expect(goals).toContain('onboarding.isCurrent()');
     expect(goals).toContain("router.replace('/onboarding/consent')");
-    expect(products).toContain('const { goals } = useOnboarding();');
+    expect(missingGoalsGuard(products)).toBe(true);
+    expect(missingGoalsGuard(products.replace('goals.length === 0', 'false'))).toBe(false);
     expect(products).toContain('if (goals.length === 0)');
     expect(products).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain(
-      'const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();',
+      'const { goals, persistSkinProfile, profileResult, quizAnswers } = onboarding;',
     );
-    expect(analyzing).toContain('if (goals.length === 0)');
+    expect(missingGoalsGuard(analyzing)).toBe(true);
+    expect(missingGoalsGuard(analyzing.replace('goals.length === 0', 'false'))).toBe(false);
     expect(analyzing).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain('goals.length');
   });
@@ -466,7 +544,27 @@ describe('onboarding route contracts', () => {
     expect(durableWrite).toBeGreaterThan(-1);
     expect(retainResult).toBeGreaterThan(durableWrite);
     expect(wipeAnswers).toBeGreaterThan(retainResult);
-    expect(analyzing).toMatch(/profileResult\s*\?\s*Promise\.resolve\(profileResult\)/);
+    expect(durableBeforePublish(context)).toBe(true);
+    const earlyWipe = context.replace(
+      'await setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt });',
+      'setQuizAnswers({}); await setStoredSkinProfileFromExplicitQuiz({ result, goals, completedAt });',
+    );
+    expect(durableBeforePublish(earlyWipe)).toBe(false);
+    expect(
+      durableBeforePublish(
+        context.replace(
+          'await setStoredSkinProfileFromExplicitQuiz',
+          'setStoredSkinProfileFromExplicitQuiz',
+        ),
+      ),
+    ).toBe(false);
+    // Even a cached result goes through the provider's current-consent operation.
+    expect(
+      nodes(analyzing).some(
+        (n) => ts.isCallExpression(n) && n.expression.getText() === 'persistSkinProfile',
+      ),
+    ).toBe(true);
+    expect(analyzing).not.toMatch(/profileResult\s*\?\s*Promise\.resolve/);
     expect(reveal).toContain('profileResult ?? (quizCompletion.complete ? computeResult() : null)');
     expect(paywall).toContain(
       'profileResult ?? (quizCompletion.complete ? computeResult() : null)',
