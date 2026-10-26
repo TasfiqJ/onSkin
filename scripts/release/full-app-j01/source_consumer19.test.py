@@ -22,6 +22,11 @@ def main():
         assert actual==expected and (not code or code in (error or '')),(name,actual,error)
         rejected+=actual;positives+=not actual
         print(json.dumps(dict(case=name,exit=actual,expected_exit=expected,error=error)),flush=True)
+    def current_guard():
+        # This unit suite targets the new finite segment. The real, complete
+        # historical CLI and all original Release18 negatives run separately.
+        with patch.object(check, 'source18_historical_guard', return_value={}):
+            return check.source19_guard()
     checker=(HERE/'check.py').read_bytes()
     expect('preserved-original-AST',lambda:check.validate19_checker(checker),expected=0)
     for old,new in [(b"'FAIL/NO_GO'",b"'PASS'"),(b"'NOT_AUTHORIZED'",b"'AUTHORIZED'"),
@@ -150,19 +155,19 @@ def main():
                 for pin in row['notes']['sourcePins']:
                     target=fixture/pin['path'];target.parent.mkdir(parents=True,exist_ok=True)
                     target.write_bytes((root/pin['path']).read_bytes())
-            expect('materialized-source-segment',check.source19_guard,expected=0)
+            expect('materialized-source-segment',current_guard,expected=0)
             protected_path='.github/workflows/quality.yml'
             put(protected_path,git('show',':'+protected_path)+b'\n# hidden stage\n')
-            expect('staged-hidden-by-worktree',check.source19_guard,code='R19_SCOPE');git('read-tree',tree)
+            expect('staged-hidden-by-worktree',current_guard,code='R19_SCOPE');git('read-tree',tree)
             for flag,undo in [('--assume-unchanged','--no-assume-unchanged'),('--skip-worktree','--no-skip-worktree')]:
                 git('update-index',flag,protected_path)
-                expect('hidden-index-flag:'+flag,check.source19_guard,code='R19_INDEX_FLAGS')
+                expect('hidden-index-flag:'+flag,current_guard,code='R19_INDEX_FLAGS')
                 git('update-index',undo,protected_path)
             hidden=fixture/'docs/brain/contracts/M1X-19/.hidden';hidden.write_bytes(b'synthetic\n')
-            expect('untracked-hidden-intermediate',check.source19_guard,code='R19_UNTRACKED_SCOPE');hidden.unlink()
+            expect('untracked-hidden-intermediate',current_guard,code='R19_UNTRACKED_SCOPE');hidden.unlink()
             witness=fixture/'docs/phase-9/ios-sdk-package-mapping.json';before=witness.read_bytes()
             witness.write_bytes(before+b'\n')
-            expect('changed-old-source-witness',check.source19_guard,code='R19_');witness.write_bytes(before)
+            expect('changed-old-source-witness',current_guard,code='R19_');witness.write_bytes(before)
             owner=fixture/'docs/brain/contracts/M1X-19/candidate.json'
             original_owner=owner.read_bytes();value=json.loads(original_owner)
             for field,new in [('acceptanceGranted',True),('status','ACCEPTED'),('base','0'*40)]:
@@ -174,10 +179,10 @@ def main():
             changed=copy.deepcopy(value); changed['newSecurityAcceptance']=True
             expect('unknown-admission',lambda:check.candidate19_guard(json.dumps(changed).encode()),code='R19_NO_ADMISSION')
             extra=fixture/'apps/mobile/src/features/onboarding/unapproved19.ts';extra.write_bytes(b'synthetic untracked source\n')
-            expect('untracked-outside-finite-source',check.source19_guard,code='R19_UNTRACKED_SCOPE');extra.unlink()
-            expect('restored-source-segment',check.source19_guard,expected=0)
+            expect('untracked-outside-finite-source',current_guard,code='R19_UNTRACKED_SCOPE');extra.unlink()
+            expect('restored-source-segment',current_guard,expected=0)
         finally:check.ROOT=root
     print(json.dumps(dict(passed=True,refusals=rejected,positive_controls=positives,pr=check.RELEASE19_PR,
-        qualification='SYNTHETIC_GIT_NOT_INDEPENDENT_COMPLETE_CHECKOUT',release='NO_GO')))
+        qualification='SYNTHETIC_CURRENT_SEGMENT_ONLY; COMPLETE_CLI_VERIFIED_SEPARATELY',release='NO_GO')))
 
 if __name__=='__main__':main()
