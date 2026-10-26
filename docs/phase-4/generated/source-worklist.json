@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-26T19:27:54.818Z",
+  "generatedAt": "2026-10-26T21:47:42.612Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
-  "strict": false,
-  "gitSha": "fcf6c1fb1d53692ea207d1d69ace6185955ba3a7",
-  "gitStatus": "M docs/brain/contracts/M1X-18/candidate.json",
+  "strict": true,
+  "gitSha": "a6341ad81889d6d78d300fc652654e1c559b181c",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 420,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -1620,8 +1620,8 @@
         {
           "path": "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
           "exists": true,
-          "bytes": 17390,
-          "sha256": "4454962d96be7ee3040757ab9dea4aaea4b38d6388f9bf3b7f7d5dad9d53e518"
+          "bytes": 17704,
+          "sha256": "15dda0a67779599f7b29f2ab73d24b45cd7ccb50c44172a18a4ad63120f5fff6"
         },
         {
           "path": "apps/mobile/src/features/shelf/expiry.test.ts",
@@ -2254,8 +2254,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 517369,
-          "sha256": "82ecff033da6a9483897a851e53fe4c6e1529ce38a217876ca1e3be519d07df2"
+          "bytes": 518572,
+          "sha256": "e240dc5176329fdd0e9504e0182a0a6c4adb99d7b7a9b3b1709496a5faec875e"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -3124,7 +3124,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }

@@ -1,9 +1,9 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-26T19:27:54.818Z
+Generated: 2026-10-26T21:47:42.612Z
 Status: pass
-Git SHA: fcf6c1fb1d53692ea207d1d69ace6185955ba3a7
-Git status: DIRTY
+Git SHA: a6341ad81889d6d78d300fc652654e1c559b181c
+Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
 gate. It does not approve any catalog source, product batch, beta metric, or
@@ -16,7 +16,7 @@ must attach before Phase 4 can stop blocking launch.
 - Source files hashed: 420
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 1
+- Warnings: 0
 
 ## Items
 
@@ -410,7 +410,7 @@ Sources:
 - `apps/mobile/src/features/shelf/catalogRecoveryAsync.test.ts` - 13373 bytes - sha256 `b336d46440752fe9463c5fc479f5f1abd0c344b8d14b99ae2d1396d2ff78c56a`
 - `apps/mobile/src/features/shelf/categories.test.ts` - 1325 bytes - sha256 `a6f69552408d01ddfd0f5d44d0c296101f77eda35f0affcbbde580d3dd950a42`
 - `apps/mobile/src/features/shelf/categories.ts` - 2393 bytes - sha256 `1a8449afa7536dca3ec6b744016af047f3e98c97b8e2a71412e0d3d90b3d1864`
-- `apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts` - 17390 bytes - sha256 `4454962d96be7ee3040757ab9dea4aaea4b38d6388f9bf3b7f7d5dad9d53e518`
+- `apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts` - 17704 bytes - sha256 `15dda0a67779599f7b29f2ab73d24b45cd7ccb50c44172a18a4ad63120f5fff6`
 - `apps/mobile/src/features/shelf/expiry.test.ts` - 2602 bytes - sha256 `dca407f4572147d1368e0f2b108e4a59ed2bb0f63e541bdeb0f1264bbb73d952`
 - `apps/mobile/src/features/shelf/expiry.ts` - 2778 bytes - sha256 `43e97ea2d296532af742bd23643e9ca48ed0193d756ba5c163f421703a15508d`
 - `apps/mobile/src/features/shelf/freshness.test.ts` - 8351 bytes - sha256 `fee1fd4da816079fe1e3cd10a33af16c74e7244ec996905605013f7884699a0a`
@@ -533,7 +533,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66906 bytes - sha256 `a83cbda544e062d873a8f3905923e35fca2e72a0213c33b0d6f6d79d8d40ca02`
-- `docs/USER_FLOW_TREE.md` - 517369 bytes - sha256 `82ecff033da6a9483897a851e53fe4c6e1529ce38a217876ca1e3be519d07df2`
+- `docs/USER_FLOW_TREE.md` - 518572 bytes - sha256 `e240dc5176329fdd0e9504e0182a0a6c4adb99d7b7a9b3b1709496a5faec875e`
 - `apps/mobile/src/app/onboarding/products.tsx` - 22193 bytes - sha256 `b27d66f46bd70674bf9971abd0b8f5def31d52191c1cf14d417899a035c5f113`
 - `apps/mobile/src/app/shelf/[id].tsx` - 47238 bytes - sha256 `c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18282 bytes - sha256 `1e7108e64c4b12f462a51745f1e15d465990ed2dc8f7cf0b76f027afbc677c85`
@@ -713,4 +713,4 @@ Sources:
 
 ## Warnings
 
-- Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence.
+- None.
