@@ -39,6 +39,8 @@ export default function NotificationsScreen() {
   const [busy, setBusy] = useState(false);
   const admitted = useRef(false);
   const focused = useRef(false);
+  const focusToken = useRef(0);
+  const [renderedFocus, setRenderedFocus] = useState(0);
   const navigated = useRef(false);
   const authority = useRef<ReturnType<typeof captureHealthDataWriteLease> | null>(null);
   const [retired, setRetired] = useState(false);
@@ -47,12 +49,18 @@ export default function NotificationsScreen() {
     saved: boolean;
     offUnconfirmed?: boolean;
   } | null>(null);
+  const currentNotice = useRef(notice);
+  const publishNotice = useCallback((value: typeof notice) => {
+    currentNotice.current = value;
+    setNotice(value);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       focused.current = true;
+      setRenderedFocus(++focusToken.current);
       navigated.current = false;
-      setNotice(null);
+      publishNotice(null);
       try {
         authority.current = captureHealthDataWriteLease();
         setRetired(false);
@@ -66,26 +74,32 @@ export default function NotificationsScreen() {
           assertHealthDataWriteLease(authority.current);
         } catch {
           authority.current = null;
-          setNotice(null);
+          publishNotice(null);
           setRetired(true);
         }
       });
       return () => {
         focused.current = false;
+        ++focusToken.current;
         authority.current = null;
         unsubscribe();
       };
-    }, []),
+    }, [publishNotice]),
   );
 
   function assertCurrent() {
-    if (!focused.current || navigated.current || !authority.current)
+    if (
+      !focused.current ||
+      renderedFocus !== focusToken.current ||
+      navigated.current ||
+      !authority.current
+    )
       throw new Error('ONBOARDING_REMINDER_RETIRED');
     assertHealthDataWriteLease(authority.current);
   }
 
   function continueToAccount() {
-    if (admitted.current) return;
+    if (admitted.current || !notice?.saved || currentNotice.current !== notice) return;
     try {
       assertCurrent();
     } catch {
@@ -109,7 +123,7 @@ export default function NotificationsScreen() {
   }
 
   async function finish(choice: 'enable' | 'off' | 'retry' | 'continue-off') {
-    if (admitted.current || navigated.current) return;
+    if (admitted.current || navigated.current || currentNotice.current !== notice) return;
     try {
       assertCurrent();
     } catch {
@@ -124,7 +138,7 @@ export default function NotificationsScreen() {
     };
     admitted.current = true;
     setBusy(true);
-    setNotice(null);
+    publishNotice(null);
     try {
       let body: string;
       if (choice === 'enable') {
@@ -152,7 +166,7 @@ export default function NotificationsScreen() {
       if (choice === 'continue-off') {
         navigated.current = true;
         router.push('/onboarding/account');
-      } else setNotice({ body, saved: true });
+      } else publishNotice({ body, saved: true });
     } catch (error) {
       try {
         assertLifecycle();
@@ -167,7 +181,7 @@ export default function NotificationsScreen() {
           navigated.current = true;
           router.push('/onboarding/account');
         } else
-          setNotice({
+          publishNotice({
             saved: false,
             offUnconfirmed,
             body: offUnconfirmed
@@ -175,7 +189,7 @@ export default function NotificationsScreen() {
               : 'Your choice is saved, but reminders are unconfirmed. Retry the current saved choice or turn reminders off.',
           });
       } else
-        setNotice({
+        publishNotice({
           saved: false,
           body: 'We could not save your reminder choice. Check the current choice and retry, or try turning reminders off.',
         });

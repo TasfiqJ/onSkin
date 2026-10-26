@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
 import {
   Platform,
@@ -163,6 +163,14 @@ function ProductsScreenContent() {
   const [category, setCategory] = useState<ProductCategory | null>(null);
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
   const [pendingUnsavedName, setPendingUnsavedName] = useState<string | null>(null);
+  const currentName = useRef('');
+  const currentUnsavedChoice = useRef<string | null>(null);
+  useLayoutEffect(() => {
+    if (currentName.current === name) return;
+    currentName.current = name;
+    currentUnsavedChoice.current = null;
+    setPendingUnsavedName(null);
+  }, [name]);
   const confirmUnsaved = pendingUnsavedName !== null && pendingUnsavedName === name;
   const navigating = useRef(false);
   useEffect(() => {
@@ -192,7 +200,7 @@ function ProductsScreenContent() {
   const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;
   const showProgressBody = !modernTextPressurePhone && !splitShortPhone;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
-  const showCompactCategoryFooter = compactFooterAdds;
+  const showCompactCategoryFooter = compactFooterAdds && !splitShortPhone;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
   const hasTargetProducts = remainingToTarget === 0;
   const showContinueAnyway = added.length > 0 && !hasTargetProducts && !compactFooterAdds;
@@ -290,15 +298,21 @@ function ProductsScreenContent() {
   }
 
   function go() {
-    if (!canNavigate()) return;
+    if (
+      !canNavigate() ||
+      currentName.current !== name ||
+      currentUnsavedChoice.current !== pendingUnsavedName
+    )
+      return;
+    if (name.trim() && !confirmUnsaved) {
+      Keyboard.dismiss();
+      currentUnsavedChoice.current = name;
+      setPendingUnsavedName(name);
+      return;
+    }
     if (goals.length === 0) {
       navigating.current = true;
       router.replace('/onboarding/goals');
-      return;
-    }
-    if (name.trim() && !confirmUnsaved) {
-      Keyboard.dismiss();
-      setPendingUnsavedName(name);
       return;
     }
     navigating.current = true;
@@ -327,6 +341,30 @@ function ProductsScreenContent() {
     }
     focusNextProduct();
   }
+
+  const categoryControl = (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={
+        selectedCategoryLabel ? `Category, ${selectedCategoryLabel}` : 'Choose product category'
+      }
+      onPress={() => setCategoryPickerOpen((open) => !open)}
+      className="mb-2 min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
+      style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
+    >
+      <View className="flex-1 pr-3">
+        <Text variant="label" tone="muted">
+          CATEGORY · OPTIONAL
+        </Text>
+        <Text variant="body" className="mt-0.5 font-sans-medium">
+          {selectedCategoryLabel ?? 'Choose category'}
+        </Text>
+      </View>
+      <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
+        &gt;
+      </Text>
+    </Pressable>
+  );
 
   return (
     <Screen>
@@ -404,6 +442,7 @@ function ProductsScreenContent() {
               returnKeyType="done"
               onSubmitEditing={add}
             />
+            {compactFooterAdds && splitShortPhone ? categoryControl : null}
             {!compactPhone ? (
               <>
                 <Text variant="label" tone="muted" className="mb-2 mt-4">
@@ -515,36 +554,15 @@ function ProductsScreenContent() {
             <Button
               label="Keep editing"
               variant="ghost"
-              onPress={() => setPendingUnsavedName(null)}
+              onPress={() => {
+                currentUnsavedChoice.current = null;
+                setPendingUnsavedName(null);
+              }}
             />
           </>
         ) : (
           <>
-            {showCompactCategoryFooter ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={
-                  selectedCategoryLabel
-                    ? `Category, ${selectedCategoryLabel}`
-                    : 'Choose product category'
-                }
-                onPress={() => setCategoryPickerOpen((open) => !open)}
-                className="mb-2 min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
-                style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
-              >
-                <View className="flex-1 pr-3">
-                  <Text variant="label" tone="muted">
-                    CATEGORY · OPTIONAL
-                  </Text>
-                  <Text variant="body" className="mt-0.5 font-sans-medium">
-                    {selectedCategoryLabel ?? 'Choose category'}
-                  </Text>
-                </View>
-                <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
-                  &gt;
-                </Text>
-              </Pressable>
-            ) : null}
+            {showCompactCategoryFooter ? categoryControl : null}
             <Button
               label={footerPrimaryLabel}
               onPress={footerAction}

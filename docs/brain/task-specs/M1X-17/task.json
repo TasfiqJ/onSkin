@@ -1,0 +1,20 @@
+{
+  "authority": "BRAIN-M1X-PRIVACY-REENTRY17-REPAIR-01",
+  "revision": "R1_AUTH_TEXT_CORRECTION",
+  "inputManifestSha256": "d2c9cbf835145ba4f98bc1c4162e9264ff81b4ce4982951c3d20e36c2b98a628",
+  "base": "28953aa3a84fed0684b80b442d0cd9c2de0663b2",
+  "tree": "6776b61b49c63345e992da63f82920fedd07518b",
+  "branch": "stage/m1-first-session-integrity17",
+  "baseBranch": "stage/m1-first-session-recovery16",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "acceptanceGranted": false,
+  "notificationsRepairObserved": "old Continue inherits a later focus/owner; same-lease pending schedule publishes after blur/refocus",
+  "unapplied": [
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.tsx",
+      "reason": "Provider-wide owner tagging and synchronous private draft retirement outside this mounted route require protected core changes. Unknown inherited drafts are masked and require explicit current-lease reset; no global cleanup guarantee is claimed."
+    }
+  ],
+  "spendUsd": 0,
+  "release": "NO_GO"
+}

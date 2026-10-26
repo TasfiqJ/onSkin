@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-PRIVACY-REENTRY17-REPAIR-01",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "base": "28953aa3a84fed0684b80b442d0cd9c2de0663b2",
+  "tree": "6776b61b49c63345e992da63f82920fedd07518b",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  }
+}

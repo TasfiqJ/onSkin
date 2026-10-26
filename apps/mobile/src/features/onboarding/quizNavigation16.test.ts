@@ -1,9 +1,14 @@
-import { createElement } from 'react';
+import { createElement, useState } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import QuizScreen from '@/app/onboarding/quiz';
 import { ONBOARDING_QUIZ, type QuizAnswers } from './quiz';
 import { quizNavigation16 } from './quizNavigation16';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 const ports = vi.hoisted(() => ({
   answers: {} as QuizAnswers,
@@ -38,7 +43,15 @@ vi.mock('@/components/ui', () => ({
   Text: 'Text',
 }));
 vi.mock('./OnboardingContext', () => ({
-  useOnboarding: () => ({ quizAnswers: ports.answers, setAnswer: vi.fn() }),
+  useOnboarding: () => {
+    const [quizAnswers, update] = useState(ports.answers);
+    return {
+      quizAnswers,
+      setAnswer: (id: string, value: string | string[]) =>
+        update((prev) => ({ ...prev, [id]: value })),
+      reset: () => update({}),
+    };
+  },
 }));
 vi.mock('./healthConsentStore', () => ({
   hasCurrentHealthDataCollectionConsent: async () => ports.consent,
@@ -58,11 +71,20 @@ async function mount() {
     renderer = create(createElement(QuizScreen));
   });
 }
-beforeEach(() => {
+async function answerCurrent() {
+  await act(async () => {
+    const option =
+      renderer!.root.findAllByType('OptionCard' as never)[0] ??
+      renderer!.root.findAllByType('Chip' as never)[0];
+    option!.props.onPress();
+  });
+}
+beforeEach(async () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
-  ports.answers = Object.fromEntries(
-    ONBOARDING_QUIZ.map((q) => [q.id, q.multiSelect ? [q.options[0]!.id] : q.options[0]!.id]),
-  );
+  clearActiveHealthProcessingEpoch();
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-owner-a', accountGeneration });
+  ports.answers = {};
   ports.consent = true;
   ports.push.mockReset();
   ports.replace.mockReset();
@@ -72,6 +94,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => renderer?.unmount());
   renderer = undefined;
+  clearActiveHealthProcessingEpoch();
 });
 
 it('projects only an answered, current rendered transition and bounded Back', () => {
@@ -85,7 +108,11 @@ it('projects only an answered, current rendered transition and bounded Back', ()
 
 it('returns from Products to the still-mounted last question and continues again once', async () => {
   await mount();
-  for (let i = 0; i < ONBOARDING_QUIZ.length - 1; i++) await press('Next');
+  for (let i = 0; i < ONBOARDING_QUIZ.length - 1; i++) {
+    await answerCurrent();
+    await press('Next');
+  }
+  await answerCurrent();
   const finish = button('See my profile').props.onPress;
   await act(async () => {
     finish();
@@ -103,7 +130,9 @@ it('returns from Products to the still-mounted last question and continues again
 
 it('rejects stale rapid Next/Back callbacks instead of skipping questions', async () => {
   await mount();
+  await answerCurrent();
   await press('Next');
+  await answerCurrent();
   const next = button('Next').props.onPress;
   const back = button('Back').props.onPress;
   await act(async () => {
