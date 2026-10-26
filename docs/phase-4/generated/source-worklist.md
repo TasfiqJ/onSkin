@@ -1,9 +1,9 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-26T16:26:51.209Z
+Generated: 2026-10-26T19:27:54.818Z
 Status: pass
-Git SHA: 2f70429be4233d45cf48ea5acf4a0e6e1f9be727
-Git status: clean
+Git SHA: fcf6c1fb1d53692ea207d1d69ace6185955ba3a7
+Git status: DIRTY
 
 This generated worklist is an operator handoff for the catalog/source launch
 gate. It does not approve any catalog source, product batch, beta metric, or
@@ -16,7 +16,7 @@ must attach before Phase 4 can stop blocking launch.
 - Source files hashed: 420
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 0
+- Warnings: 1
 
 ## Items
 
@@ -533,8 +533,8 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66906 bytes - sha256 `a83cbda544e062d873a8f3905923e35fca2e72a0213c33b0d6f6d79d8d40ca02`
-- `docs/USER_FLOW_TREE.md` - 515697 bytes - sha256 `76485334a82cf7069349d9a1d15b67bb86c5f5a3835cb51daf537f8c10c48708`
-- `apps/mobile/src/app/onboarding/products.tsx` - 21303 bytes - sha256 `fdb02fb76fdceb3c1cc0d020a7d17c89a2d67b50090296defd9163f0511c7b9b`
+- `docs/USER_FLOW_TREE.md` - 517369 bytes - sha256 `82ecff033da6a9483897a851e53fe4c6e1529ce38a217876ca1e3be519d07df2`
+- `apps/mobile/src/app/onboarding/products.tsx` - 22193 bytes - sha256 `b27d66f46bd70674bf9971abd0b8f5def31d52191c1cf14d417899a035c5f113`
 - `apps/mobile/src/app/shelf/[id].tsx` - 47238 bytes - sha256 `c206c8116673cc9691fce13e629648201e42cb918afb7a168a90e7396cf86b99`
 - `apps/mobile/src/app/shelf/opened.tsx` - 18282 bytes - sha256 `1e7108e64c4b12f462a51745f1e15d465990ed2dc8f7cf0b76f027afbc677c85`
 - `apps/mobile/src/app/shelf/replenish.tsx` - 10694 bytes - sha256 `e4dee732e65c6bbdb7870597941390d5e53416940cce96d02d3f4d7eb8d2aec1`
@@ -713,4 +713,4 @@ Sources:
 
 ## Warnings
 
-- None.
+- Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence.

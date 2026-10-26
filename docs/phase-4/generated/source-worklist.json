@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-26T16:26:51.209Z",
+  "generatedAt": "2026-10-26T19:27:54.818Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
-  "strict": true,
-  "gitSha": "2f70429be4233d45cf48ea5acf4a0e6e1f9be727",
-  "gitStatus": "",
+  "strict": false,
+  "gitSha": "fcf6c1fb1d53692ea207d1d69ace6185955ba3a7",
+  "gitStatus": "M docs/brain/contracts/M1X-18/candidate.json",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 420,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -2254,14 +2254,14 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 515697,
-          "sha256": "76485334a82cf7069349d9a1d15b67bb86c5f5a3835cb51daf537f8c10c48708"
+          "bytes": 517369,
+          "sha256": "82ecff033da6a9483897a851e53fe4c6e1529ce38a217876ca1e3be519d07df2"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
           "exists": true,
-          "bytes": 21303,
-          "sha256": "fdb02fb76fdceb3c1cc0d020a7d17c89a2d67b50090296defd9163f0511c7b9b"
+          "bytes": 22193,
+          "sha256": "b27d66f46bd70674bf9971abd0b8f5def31d52191c1cf14d417899a035c5f113"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
@@ -3124,5 +3124,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
+  ]
 }
