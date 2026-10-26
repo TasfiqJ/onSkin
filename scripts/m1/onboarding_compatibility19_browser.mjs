@@ -138,15 +138,18 @@ async function addManual(number) {
 async function pendingRemoval() {
   await modulePort('useShelf');
   await c.eval(`(()=>{const p=__port19,original=p.useShelf;let release;
-    __refetch19={started:0,release:()=>release?.(),restore:()=>p.useShelf=original};
+    __refetch19={started:0,writeAttempts:0,release:()=>release?.(),restore:()=>p.useShelf=original};
     p.useShelf=()=>{const result=original();return {...result,refetch:async()=>{__refetch19.started++;await new Promise(done=>release=done);return result.refetch()}}};
     const write=Storage.prototype.setItem;__refetch19.restoreWrite=()=>Storage.prototype.setItem=write;
-    Storage.prototype.setItem=function(k,v){if(k==='layerwell.shelf.v1')throw Error('SYNTHETIC19_REMOVE_WRITE_REFUSED');return write.call(this,k,v)};
+    Storage.prototype.setItem=function(k,v){if(k==='layerwell.shelf.v1'){__refetch19.writeAttempts++;throw Error('SYNTHETIC19_REMOVE_WRITE_REFUSED')};return write.call(this,k,v)};
   })()`);
   await fill('Product name','Synthetic unsaved product');
-  await click('Remove Synthetic manual product 1 with a long readable label');
+  await click('Remove Synthetic unsaved cleanser');
+  const r=await c.eval(`(()=>{const n=[...document.querySelectorAll('[role=button]')].find(n=>n.getAttribute('aria-label')==='Remove Synthetic unsaved cleanser'&&n.getBoundingClientRect().width>0);const r=n.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+  await c.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...r});await c.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...r});
   await wait(()=>c.eval('__refetch19.started>0'),'pending real refetch');
   await snap('pending-delete-refetch');
+  assert(await c.eval('__refetch19.writeAttempts===1&&__refetch19.started===1'),'Repeated remove dispatched more than one write');
   assert(await c.eval("[...document.querySelectorAll('[role=button]')].filter(n=>n.getBoundingClientRect().width>0&&n.textContent.includes('Continue with 1 product')).every(n=>n.getAttribute('aria-disabled')==='true')"),'Pending refetch exposed continuation');
   await c.eval('__refetch19.restoreWrite();__refetch19.restore();__refetch19.release()');
   await wait(()=>c.eval("[...document.querySelectorAll('[role=button]')].some(n=>n.getBoundingClientRect().width>0&&n.textContent.includes('Continue with 1 product')&&n.getAttribute('aria-disabled')!=='true')"),'removal recovery');
@@ -174,12 +177,25 @@ async function runFlows() {
     await click('Moisturiser');
     await click('Add to shelf'); await route('/shelf/opened'); await click('Just opened it',false); await click('Add to shelf');
     await route('/onboarding/products'); await text('1 ON YOUR SHELF'); await snap('products-manual-return');
+    if(width===390){await pendingRemoval(); await snap('refused-removal-recovered'); await fill('Product name','');}
     await click('Continue with 1 product'); await route('/onboarding/analyzing'); await snap('analyzing');
     await text('We could not save your profile.'); await snap('save-failed'); await click('Try again'); await route('/onboarding/reveal'); await text('YOUR SKIN PROFILE'); await snap('reveal'); await geometry('reveal');
     await c.eval(`(()=>{const nodes=[...document.querySelectorAll('div')].filter(n=>n.scrollHeight>n.clientHeight+10&&getComputedStyle(n).overflowY==='auto');for(const n of nodes)n.scrollTop=n.scrollHeight})()`); await snap('reveal-scrolled'); await geometry('reveal-scrolled');
     await click('Continue'); await route('/onboarding/notifications'); await snap('notifications-reached');
     summary.push({viewport:{width,height},textScale:width===360?2:1,result:'PASS',happyPath:'Goals→Quiz→Products→Analyzing→Reveal',mountedQuizReentry:true,manualProduct:true,unsavedChoice:true,failedSaveRetry:true,native:'NOT_RUN'});
   }
+  prefix='pending-save-owner'; await metrics(390,844); await onboarding(); await click('Clear skin',false); await click('Continue'); await answerQuiz();
+  await modulePort('updatePrivateItem');
+  await c.eval(`(()=>{const p=__port19,original=p.updatePrivateItem;let release;globalThis.__save19={started:0,release:()=>release?.(),restore:()=>p.updatePrivateItem=original};p.updatePrivateItem=async(key,update)=>{if(key==='layerwell.skinprofile.v1'){__save19.started++;await new Promise(done=>release=done)}return original(key,update)}})()`);
+  await click('Skip for now'); await text('We could not save your profile.'); await click('Try again');
+  await wait(()=>c.eval('__save19.started===1'),'pending actual local profile save'); await snap('pending-local-save');
+  await modulePort('clearActiveHealthProcessingEpoch');
+  await c.eval('globalThis.__epoch19=__port19;__epoch19.clearActiveHealthProcessingEpoch()');
+  await modulePort('runAccountGenerationOperation');
+  await c.eval(`__port19.runAccountGenerationOperation(lease=>{__epoch19.setActiveHealthProcessingEpoch(19,{ownerUserId:'synthetic-browser-owner-b19',accountGeneration:lease.generation})})`);
+  await c.eval('__save19.restore();__save19.release()'); await delay(600); await snap('owner-b-save-retired');
+  assert(await c.eval(`location.pathname!=='/onboarding/reveal'&&!document.body.innerText.includes('YOUR SKIN PROFILE')&&!localStorage.getItem('layerwell.skinprofile.v1')`),'Retired save leaked a profile');
+  json('owner-save-race',{status:'PASS',fixture:'real account/health functions; synthetic owner publication in actual Expo runtime; not Auth/provider qualification'});
   prefix='withdrawal'; await metrics(390,844); await onboarding(); await click('Clear skin',false); await click('Continue'); await answerQuiz();
   await holdConsent(); await c.eval('history.back()'); await text('Checking your privacy choice'); await snap('pending');
   await modulePort('clearHealthDataCollectionConsentLocal'); await c.eval('__port19.clearHealthDataCollectionConsentLocal()');

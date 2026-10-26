@@ -445,7 +445,8 @@ it.each(['same-owner-regrant', 'owner-return'] as const)(
     await act(async () => {
       await context.persistSkinProfile();
     });
-    expect(context.profileResult).not.toBeNull();
+    expect(context.profileResult?.pregnancyStatus).toBe('pregnant');
+    expect(context.profileResult?.sensitivities).toContain('fragrance');
     await act(async () => {
       if (boundary === 'owner-return') await grant('synthetic-b');
       await grant();

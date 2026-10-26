@@ -31,8 +31,8 @@ def main():
         if old not in checker:continue
         expect('old-semantics:'+old.decode(),lambda a=old,b=new:check.validate19_checker(checker.replace(a,b,1)),code='R19_INHERITED_')
     expect('old-source-guard',lambda:check.validate19_checker(checker.replace(b'    source09_guard()',b'    pass # source09_guard()',1)),code='R19_')
-    expect('new-global-side-effect', lambda:check.validate19_checker(checker.replace(b"if __name__ == '__main__':", b"RELEASE19_SIDE_EFFECT = globals().clear()\nif __name__ == '__main__':")), code='R19_GLOBAL_SIDE_EFFECT')
-    expect('new-function-outside-segment', lambda:check.validate19_checker(checker.replace(b"if __name__ == '__main__':", b"def arbitrary_new_function(): pass\nif __name__ == '__main__':")), code='R19_FUNCTION_SCOPE')
+    expect('new-global-side-effect', lambda:check.validate19_checker(b"RELEASE19_SIDE_EFFECT = globals().clear()\nif __name__ == '__main__':".join(checker.rsplit(b"if __name__ == '__main__':", 1))), code='R19_GLOBAL_SIDE_EFFECT')
+    expect('new-function-outside-segment', lambda:check.validate19_checker(b"def arbitrary_new_function(): pass\nif __name__ == '__main__':".join(checker.rsplit(b"if __name__ == '__main__':", 1))), code='R19_FUNCTION_SCOPE')
     protected=['AGENTS.md','package.json','package-lock.json','apps/mobile/package.json','apps/mobile/app.config.ts',
         '.github/workflows/quality.yml','.github/workflows/security.yml',
         'scripts/launch/governed-evidence-chain.mjs','scripts/launch/governed-evidence-chain.test.mjs',
@@ -113,7 +113,7 @@ def main():
             expect('truncated-diff',lambda:check.validate19_diff(b'bad',lambda p:b''),code='R19_DIFF_SHAPE')
             zero='0'*40;blob=git('rev-parse',':ONSKIN_BRAIN_HANDOFF.txt').decode().strip()
             for path,meta in [('ONSKIN_BRAIN_HANDOFF.txt',f':000000 100644 {zero} {blob} A'),
-                              ('apps/mobile/src/features/onboarding/onboardingOwner19.test.ts',f':100644 100644 {blob} {blob} M')]:
+                              ('apps/mobile/src/features/onboarding/onboardingCompatibility19.test.ts',f':100644 100644 {blob} {blob} M')]:
                 expect('create-vs-edit:'+path,lambda p=path,m=meta:check.validate19_diff(m.encode()+b'\0'+p.encode()+b'\0',lambda p:b''),code='R19_CREATE_EDIT')
             put('.github/workflows/quality.yml');malicious=commit(authentic);git('update-ref','HEAD',malicious)
             expect('malicious-intermediate',check.source19_history,code='R19_SCOPE')
@@ -123,8 +123,8 @@ def main():
             integration=commit(check.RELEASE19_BASE,authentic);git('update-ref','HEAD',integration)
             expect('ordinary-merge',check.source19_history,code='R19_CI_')
             event=dict(number=check.RELEASE19_PR,repository=dict(full_name='TasfiqJ/onSkin'),
-                pull_request=dict(number=check.RELEASE19_PR,draft=True,maintainer_can_modify=False,auto_merge=None,base=dict(sha=check.RELEASE19_BASE,ref='stage/m1-first-session-integrity17'),
-                head=dict(sha=authentic,ref='stage/m1-onboarding-owner-privacy19',repo=dict(full_name='TasfiqJ/onSkin'))))
+                pull_request=dict(number=check.RELEASE19_PR,draft=True,maintainer_can_modify=False,auto_merge=None,base=dict(sha=check.RELEASE19_BASE,ref='stage/m1-onboarding-owner-privacy18'),
+                head=dict(sha=authentic,ref='stage/m1-onboarding-compatibility19',repo=dict(full_name='TasfiqJ/onSkin'))))
             event_path=fixture/'.git/event19.json'
             def write_event():event_path.write_bytes(json.dumps(event).encode())
             write_event()
@@ -162,7 +162,7 @@ def main():
             expect('untracked-hidden-intermediate',check.source19_guard,code='R19_UNTRACKED_SCOPE');hidden.unlink()
             witness=fixture/'docs/phase-9/ios-sdk-package-mapping.json';before=witness.read_bytes()
             witness.write_bytes(before+b'\n')
-            expect('changed-old-source-witness',check.source19_guard,code='R13_');witness.write_bytes(before)
+            expect('changed-old-source-witness',check.source19_guard,code='R19_');witness.write_bytes(before)
             owner=fixture/'docs/brain/contracts/M1X-19/candidate.json'
             original_owner=owner.read_bytes();value=json.loads(original_owner)
             for field,new in [('acceptanceGranted',True),('status','ACCEPTED'),('base','0'*40)]:
