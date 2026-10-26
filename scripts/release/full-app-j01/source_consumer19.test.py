@@ -167,7 +167,7 @@ def main():
             expect('untracked-hidden-intermediate',current_guard,code='R19_UNTRACKED_SCOPE');hidden.unlink()
             witness=fixture/'docs/phase-9/ios-sdk-package-mapping.json';before=witness.read_bytes()
             witness.write_bytes(before+b'\n')
-            expect('changed-old-source-witness',current_guard,code='R19_');witness.write_bytes(before)
+            expect('changed-old-source-witness',current_guard,code='R13_ORIGINAL_MAPPING');witness.write_bytes(before)
             owner=fixture/'docs/brain/contracts/M1X-19/candidate.json'
             original_owner=owner.read_bytes();value=json.loads(original_owner)
             for field,new in [('acceptanceGranted',True),('status','ACCEPTED'),('base','0'*40)]:
