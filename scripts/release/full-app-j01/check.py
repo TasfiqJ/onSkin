@@ -2180,5 +2180,197 @@ validate = validate12
 validate = validate13
 
 
+
+# Release19 successor. Inherited Release08-18 definitions above are immutable.
+RELEASE19_BASE = '149d18f3ae3c49f966a9e2b1a679901d1d15b3b6'
+RELEASE19_TREE = '061b8e8565f21e871fb1d57bed1316cc1a76e5d6'
+RELEASE19_PR = 23
+RELEASE19_AUTHORITY = 'BRAIN-M1X-ONBOARDING-COMPATIBILITY19-REPAIR-01'
+RELEASE19_EXISTING = {
+    'apps/mobile/src/features/onboarding/OnboardingContext.tsx',
+    'apps/mobile/src/app/onboarding/goals.tsx', 'apps/mobile/src/app/onboarding/quiz.tsx',
+    'apps/mobile/src/app/onboarding/products.tsx', 'apps/mobile/src/app/onboarding/analyzing.tsx',
+    'apps/mobile/src/app/onboarding/reveal.tsx',
+    'apps/mobile/src/features/onboarding/productsFooter16.test.ts',
+    'apps/mobile/src/features/onboarding/quizNavigation16.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingRoutes.test.ts',
+    'apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts',
+    'apps/mobile/src/features/onboarding/OnboardingContext.test.ts',
+    'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingOwner18.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts',
+    'apps/mobile/src/features/onboarding/quizFocus17.test.ts',
+    'apps/mobile/src/features/onboarding/productsDraft17.test.ts',
+    'docs/USER_FLOW_TREE.md', 'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE19_NEW = {'apps/mobile/src/features/onboarding/onboardingCompatibility19.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingConsent19.test.ts',
+    'scripts/m1/onboarding_compatibility19_browser.mjs',
+    'scripts/release/full-app-j01/source_consumer19.test.py'}
+RELEASE19_PREFIXES = ('docs/brain/contracts/M1X-19/', 'docs/brain/task-specs/M1X-19/',
+    'docs/brain/checkpoints/M1-02/ONBOARDING-COMPATIBILITY-19/')
+RELEASE19_INHERITED_SOURCE_GUARD = source_guard
+
+
+def allowed19(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE19_EXISTING or path in RELEASE19_NEW or path.startswith(RELEASE19_PREFIXES)))
+
+
+def validate19_checker(raw):
+    before = git('show', RELEASE19_BASE+':scripts/release/full-app-j01/check.py')
+    tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(tail) and raw.startswith(before[:-len(tail)]) and raw.endswith(tail),
+            'R19_INHERITED_BYTES_CHANGED')
+    old = ast.parse(before); new = ast.parse(raw)
+    inherited = {n.name: ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.FunctionDef)}
+    require(all(any(isinstance(n, ast.FunctionDef) and n.name == name and
+            ast.dump(n, include_attributes=False) == value for n in new.body)
+            for name, value in inherited.items()), 'R19_INHERITED_AST_CHANGED')
+    extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
+    functions = {'allowed19', 'validate19_checker', 'candidate19_guard', 'validate19_diff',
+        'source19_endpoint', 'source19_history', 'source18_historical_guard', 'source19_guard'}
+    require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
+            len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R19_FUNCTION_SCOPE')
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and
+                isinstance(node.targets[0], ast.Name), 'R19_MODULE_SCOPE')
+        name = node.targets[0].id
+        if name == 'source_guard':
+            require(isinstance(node.value, ast.Name) and node.value.id == 'source19_guard', 'R19_DISPATCH')
+        elif name == 'RELEASE19_INHERITED_SOURCE_GUARD':
+            require(isinstance(node.value, ast.Name) and node.value.id == 'source_guard', 'R19_INHERITED_DISPATCH')
+        else:
+            require(name.startswith('RELEASE19_'), 'R19_GLOBAL_SCOPE')
+            try: ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R19_GLOBAL_SIDE_EFFECT')
+
+
+def candidate19_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(set(value) == {'schema', 'authority', 'status', 'base', 'tree', 'acceptanceGranted', 'admissions'} and
+        type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE19_AUTHORITY and
+        value['base'] == RELEASE19_BASE and value['tree'] == RELEASE19_TREE and
+        value['status'] == 'SOURCE_ONLY_CANDIDATE' and value['acceptanceGranted'] is False and
+        value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False), 'R19_NO_ADMISSION')
+
+
+def validate19_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R19_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        meta = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(meta) == 5, 'R19_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(allowed19(path) and status in ('A', 'M'), 'R19_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R19_COLLISION'); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R19_MODE')
+        require((path in RELEASE19_EXISTING) == (oldmode == ':100644') and
+            status == ('M' if oldmode == ':100644' else 'A') and
+            all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R19_CREATE_EDIT')
+        if oldmode == ':100644':
+            require(oldblob == git('rev-parse', RELEASE19_BASE+':'+path).decode().strip(), 'R19_BASE_BLOB')
+        else:
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE19_BASE+':'+path],
+                cwd=ROOT, capture_output=True).returncode != 0, 'R19_EXISTING_RECLASSIFIED')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob,
+            'R19_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate19_checker(data)
+        if path == 'docs/brain/contracts/M1X-19/candidate.json': candidate19_guard(data)
+        if path == 'docs/USER_FLOW_TREE.md':
+            before = git('show', RELEASE19_BASE+':'+path)
+            require(data.startswith(before) and data[len(before):].count(b'## Campaign19') == 1, 'R19_ADDITIVE_FLOW')
+
+
+def source19_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3 and parents[1] == RELEASE19_BASE, 'R19_CI_PARENTS')
+    require(type(RELEASE19_PR) is int and RELEASE19_PR > 0 and
+        os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+        os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE19_PR)+'/merge' and os.environ.get('GITHUB_SHA') == head, 'R19_CI_CONTEXT')
+    event = json.loads(regular(Path(os.environ.get('GITHUB_EVENT_PATH', ''))), object_pairs_hook=pairs)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE19_PR and pr.get('number') == RELEASE19_PR and
+        event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+        pr.get('base', {}).get('sha') == RELEASE19_BASE and pr.get('base', {}).get('ref') == 'stage/m1-onboarding-owner-privacy18' and
+        pr.get('head', {}).get('sha') == parents[2] and pr.get('head', {}).get('ref') == 'stage/m1-onboarding-compatibility19' and
+        pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+        pr.get('maintainer_can_modify') is False and pr.get('auto_merge') is None, 'R19_CI_EVENT')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R19_CI_TREE')
+    return parents[2]
+
+
+def source19_history():
+    require(git('rev-parse', RELEASE19_BASE+'^{tree}').decode().strip() == RELEASE19_TREE, 'R19_BASE_TREE')
+    endpoint = source19_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE19_BASE, endpoint], cwd=ROOT, check=True, capture_output=True)
+    for commit in git('rev-list', '--reverse', RELEASE19_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R19_LINEAR_HISTORY')
+        validate19_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE19_BASE, commit),
+            lambda path: git('show', commit+':'+path))
+
+
+def source18_historical_guard():
+    # Evaluate every inherited guard against actual immutable PR22 Git bytes.
+    # Current source is checked separately and strictly by source19_guard.
+    actual_git, actual_regular, actual_name = git, regular, __name__
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE19_BASE)
+        if args[0] == 'diff': return actual_git(*[a for a in args if a != '--cached'], RELEASE19_BASE)
+        if args[0] == 'show' and args[1].startswith(':'): return actual_git('show', RELEASE19_BASE+args[1])
+        if args[0] == 'ls-files':
+            if '--others' in args: return b''
+            if '-v' in args:
+                return b''.join(b'H '+p+b'\0' for p in actual_git('ls-tree', '-r', '--name-only', '-z', RELEASE19_BASE).split(b'\0') if p)
+        return actual_git(*args)
+    def historical_regular(path):
+        try: name = Path(path).absolute().relative_to(ROOT.absolute()).as_posix()
+        except ValueError: return actual_regular(path)
+        found = subprocess.run(['git', 'cat-file', '-e', RELEASE19_BASE+':'+name], cwd=ROOT, capture_output=True)
+        return actual_git('show', RELEASE19_BASE+':'+name) if found.returncode == 0 else actual_regular(path)
+    globals()['git'], globals()['regular'], globals()['__name__'] = historical_git, historical_regular, 'release18_historical'
+    try: return RELEASE19_INHERITED_SOURCE_GUARD()
+    finally: globals()['git'], globals()['regular'], globals()['__name__'] = actual_git, actual_regular, actual_name
+
+
+def source19_guard():
+    source19_history()
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate19_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE19_BASE), lambda p: git('show', ':'+p))
+    validate19_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE19_BASE), lambda p: regular(ROOT/p))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R19_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R19_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed19(path) and path not in RELEASE19_EXISTING, 'R19_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R19_COLLISION'); names.add(key); regular(ROOT/path)
+    # Original consumer18 runs separately against its unchanged immutable checker.
+    # The successor consumer exercises the current finite scope without rewriting old negatives.
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        result = subprocess.run([sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer19.test.py'], cwd=ROOT, capture_output=True, timeout=300)
+        require(result.returncode == 0, 'R19_SOURCE_TESTS_FAILED')
+    return source18_historical_guard()
+
+
+source_guard = source19_guard
+
+
 if __name__ == '__main__':
     sys.exit(main())
