@@ -145,7 +145,7 @@ def main():
                 event['number']=999999;write_event();expect('wrong-number',check.source19_history,code='R19_CI_')
                 event['number']=check.RELEASE19_PR;write_event()
                 put('ONSKIN_BRAIN_HANDOFF.txt');altered=commit(check.RELEASE19_BASE,authentic);git('update-ref','HEAD',altered)
-                with patch.dict(check.os.environ,{'GITHUB_SHA':altered}):expect('wrong-merge-tree',check.source19_history,code='R19_CI_MERGE_TREE')
+                with patch.dict(check.os.environ,{'GITHUB_SHA':altered}):expect('wrong-merge-tree',check.source19_history,code='R19_CI_TREE')
             git('read-tree',tree);git('update-ref','HEAD',authentic)
             with patch.object(check,'RELEASE19_TREE','0'*40):expect('wrong-base-tree',check.source19_history,code='R19_BASE_TREE')
             foreign=commit(check.RELEASE13_BASE);git('update-ref','HEAD',foreign);expect('wrong-ancestry',check.source19_history)
