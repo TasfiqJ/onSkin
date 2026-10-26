@@ -1,9 +1,13 @@
-Campaign15 PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED; source candidate only.
-PR19 https://github.com/TasfiqJ/onSkin/pull/19; stage/m103-g97-coverage-candidate15 stacked on immutable PR18.
-Frozen source d04c36a025a0b0666e4f5f5253c65806b1fc49cf; tree 98702f9112659e705b10d5914d0c4a6a6e4e32f4.
-Checkpoint: docs/brain/checkpoints/M1-03/G97-COVERAGE-CANDIDATE-15/README.md
-Use verify15.py with the external manifest SHA256 supplied in the final PR/return.
-Complete 23338-path candidate remains OWNER_REVIEW_REQUIRED; original scanner SOURCE_INVENTORY_DRIFT remains FAIL.
-STOP_FOR_QUALIFIED_SECURITY_CUSTODIAN; owner decisions and private finding review remain UNAPPLIED.
-G97 FAIL/NO_GO; DB NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 and release closed.
-USD0. No merge, credential/provider/Apple action or self-acceptance.
+Campaign16 onboarding recovery source-only candidate — independent Brain review required.
+Authority: BRAIN-M1X-ONBOARDING-RESILIENCE16-CANDIDATE-01
+Draft PR20: https://github.com/TasfiqJ/onSkin/pull/20
+Branch: stage/m1-first-session-recovery16
+Base: stage/m103-g97-coverage-candidate15 at b79e6d1e21a367be5cea5d0b333de9f2a144d41f
+Frozen source: 3970ed1802ea928e50db1b12ec7e08a020355b09
+Frozen tree: 3da45d639deac52858480e982cbc19f438eb5f88
+Checkpoint: docs/brain/checkpoints/M1-02/ONBOARDING-RECOVERY-16/README.md
+External manifest SHA256: 20e72188bfcca1b1319caa19f261444c41ace344efc193db2caa81e8c479dfd9
+Verify: python -B docs/brain/checkpoints/M1-02/ONBOARDING-RECOVERY-16/verify16.py --expected-manifest-sha256 20e72188bfcca1b1319caa19f261444c41ace344efc193db2caa81e8c479dfd9 --git-root .
+One evidence-only tail follows the frozen source. Exact delivery head/tree, all final-head CI jobs/failures/skips and fresh ref/clean/zero-unpushed proof are supplied post-tail in the external return and PR description; no circular future-CI claim is made here.
+PARTIAL_BLOCKED / SUBMITTED_REVIEW_REQUIRED. No self-acceptance or merge. Auto-merge OFF; maintainer modification OFF. USD0 incremental spend.
+G97 FAIL/NO_GO, original PR19 source coverage candidate OWNER_REVIEW_REQUIRED; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. CAT07/readiness/native/device/provider/paid/legal/clinical/Apple/public-release gates remain CLOSED. J01 dossier/G1/G2/G3/G5 and longitudinal G4 are unaccepted; F09 required; F18/J02-J27/J05 deferred. Source/web/fixture tests do not establish OS notification delivery, physical iPhone, VoiceOver, signed binary or professional clearance.
