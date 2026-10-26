@@ -1713,7 +1713,7 @@ def release17_active():
 
 RELEASE18_BASE = 'f9709e02420d6c03cc9b9586cf60d89bfde7d8a3'
 RELEASE18_TREE = 'c735b32c667059ba1d6855b6896c70e42d6c6fd8'
-RELEASE18_PR = None  # Bound only after GitHub allocates the single draft PR.
+RELEASE18_PR = 22  # Allocated by GitHub; draft stacked only on immutable PR21.
 RELEASE18_AUTHORITY = 'BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01'
 RELEASE18_EXISTING = {'apps/mobile/src/features/onboarding/quizNavigation.test.ts', 'apps/mobile/src/features/onboarding/OnboardingContext.tsx', 'apps/mobile/src/app/onboarding/quiz.tsx', 'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts', 'scripts/release/full-app-j01/check.py', 'ONSKIN_BRAIN_HANDOFF.txt', 'apps/mobile/src/features/onboarding/productsDraft17.test.ts', 'apps/mobile/src/app/onboarding/goals.tsx', 'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md', 'apps/mobile/src/app/onboarding/reveal.tsx', 'docs/USER_FLOW_TREE.md', 'apps/mobile/src/app/onboarding/products.tsx', 'apps/mobile/src/features/onboarding/quizFocus17.test.ts', 'apps/mobile/src/app/onboarding/analyzing.tsx'}
 RELEASE18_NEW = {'apps/mobile/src/features/onboarding/onboardingRoute18.test.tsx', 'scripts/release/full-app-j01/source_consumer18.test.py', 'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts', 'apps/mobile/src/features/onboarding/onboardingOwner18.test.ts', 'scripts/m1/onboarding_owner_privacy18_browser.mjs', 'apps/mobile/src/features/onboarding/onboardingOwner18.test.tsx'}
