@@ -44,6 +44,29 @@ function hasResetKey(source: string) {
       }),
   );
 }
+function bindsRealProvider(source: string, fields: string[]) {
+  const all = nodes(source);
+  const provider = all.find(
+    (n) =>
+      ts.isVariableDeclaration(n) &&
+      ts.isIdentifier(n.name) &&
+      n.initializer &&
+      ts.isCallExpression(n.initializer) &&
+      n.initializer.expression.getText() === 'useOnboarding',
+  );
+  if (!provider || !ts.isVariableDeclaration(provider)) return false;
+  return all.some((n) => {
+    if (!ts.isVariableDeclaration(n) || !ts.isObjectBindingPattern(n.name)) return false;
+    const bound = n.name.elements
+      .filter((element) => !element.initializer)
+      .map((element) => element.name.getText());
+    return (
+      n.initializer?.getText() === provider.name.getText() &&
+      fields.every((field) => bound.includes(field))
+    );
+  });
+}
+
 function missingGoalsGuard(source: string) {
   return nodes(source).some(
     (node) =>
@@ -504,9 +527,12 @@ describe('onboarding route contracts', () => {
     const analyzing = readAppRoute('onboarding/analyzing.tsx');
 
     expect(goals).toContain('getQuizCompletionState');
-    expect(goals).toContain(
-      'const { goals, profileResult, quizAnswers, toggleGoal } = onboarding;',
+    expect(bindsRealProvider(goals, ['goals', 'profileResult', 'quizAnswers', 'toggleGoal'])).toBe(
+      true,
     );
+    expect(
+      bindsRealProvider(goals.replace('useOnboarding()', 'unownedFallback()'), ['goals']),
+    ).toBe(false);
     expect(goals).toContain('const quizCompletion = getQuizCompletionState(quizAnswers);');
     expect(goals).toContain(
       "router.push(hasProfileResult ? '/onboarding/products' : '/onboarding/quiz')",
@@ -514,13 +540,20 @@ describe('onboarding route contracts', () => {
     expect(goals).toContain("onboarding.privacyStatus === 'ready'");
     expect(goals).toContain('onboarding.isCurrent()');
     expect(goals).toContain("router.replace('/onboarding/consent')");
+    expect(bindsRealProvider(products, ['goals'])).toBe(true);
+    expect(
+      bindsRealProvider(products.replace('useOnboarding()', 'unownedFallback()'), ['goals']),
+    ).toBe(false);
     expect(missingGoalsGuard(products)).toBe(true);
     expect(missingGoalsGuard(products.replace('goals.length === 0', 'false'))).toBe(false);
     expect(products).toContain('if (goals.length === 0)');
     expect(products).toContain("router.replace('/onboarding/goals')");
-    expect(analyzing).toContain(
-      'const { goals, persistSkinProfile, profileResult, quizAnswers } = onboarding;',
-    );
+    expect(
+      bindsRealProvider(analyzing, ['goals', 'persistSkinProfile', 'profileResult', 'quizAnswers']),
+    ).toBe(true);
+    expect(
+      bindsRealProvider(analyzing.replace('useOnboarding()', 'unownedFallback()'), ['goals']),
+    ).toBe(false);
     expect(missingGoalsGuard(analyzing)).toBe(true);
     expect(missingGoalsGuard(analyzing.replace('goals.length === 0', 'false'))).toBe(false);
     expect(analyzing).toContain("router.replace('/onboarding/goals')");
