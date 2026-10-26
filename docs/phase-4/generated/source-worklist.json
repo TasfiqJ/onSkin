@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-26T04:38:09.479Z",
+  "generatedAt": "2026-10-26T04:44:01.837Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "f3c568540ad8ccf5882e97d1b2a13b6341e1f13a",
-  "gitStatus": "M  apps/mobile/src/features/notifications/reminderRecovery16.test.ts\n M docs/brain/contracts/M1X-16/candidate.json\n M docs/brain/task-specs/M1X-16/task.json\nMM scripts/m1/onboarding_recovery16_browser.mjs\nM  scripts/release/full-app-j01/check.py\nM  scripts/release/full-app-j01/source_consumer16.test.py",
+  "gitSha": "015e3e8676dda6fd8c63b8de6de0ebe5c4b35345",
+  "gitStatus": "",
   "summary": {
     "itemCount": 14,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 420,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -3124,7 +3124,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }
