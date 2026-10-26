@@ -1,3 +1,7 @@
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { createElement, useState } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -48,8 +52,24 @@ vi.mock('@/components/ui', () => ({
 vi.mock('./OnboardingContext', () => ({
   useOnboarding: () => {
     const [quizAnswers, update] = useState(ports.initial);
+    let lease: ReturnType<typeof captureHealthDataWriteLease> | null = null;
+    try {
+      lease = captureHealthDataWriteLease();
+    } catch {
+      /* closed synthetic authority */
+    }
     return {
       quizAnswers,
+      privacyStatus: lease ? 'ready' : 'denied',
+      isCurrent: () => {
+        try {
+          if (!lease) return false;
+          assertHealthDataWriteLease(lease);
+          return true;
+        } catch {
+          return false;
+        }
+      },
       setAnswer: (id: string, value: string | string[]) => {
         ports.answer(id, value);
         update((prior) => ({ ...prior, [id]: value }));

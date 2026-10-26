@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "base": "f9709e02420d6c03cc9b9586cf60d89bfde7d8a3",
+  "tree": "c735b32c667059ba1d6855b6896c70e42d6c6fd8",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  }
+}

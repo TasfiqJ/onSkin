@@ -1,0 +1,52 @@
+{
+  "acceptanceGranted": false,
+  "admissions": {
+    "DB": false,
+    "G97": false,
+    "J01": false,
+    "M103": false,
+    "M2": false,
+    "PUBLIC": false
+  },
+  "authority": "BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01",
+  "files": {
+    "00_READ_FIRST.md": {
+      "bytes": 1794,
+      "sha256": "cf7155e11df2454fd9fa0cb66ad5febee7cec8812dfbe19ee432b2898d0083d2"
+    },
+    "01_PR21_AUDIT_AND_CI.md": {
+      "bytes": 3540,
+      "sha256": "c4d8cdfb19bd1ffa298ece7a38d43197eb83a84e47c05a453ec8e50bc9ef9031"
+    },
+    "02_OWNER_BOUNDARY_INVARIANTS.md": {
+      "bytes": 3220,
+      "sha256": "37379e32868e2063727485cb0f39e219d1016544b076413da39c4b9e81862bda"
+    },
+    "03_RELEASE_SCOPE_AND_GATES.md": {
+      "bytes": 2752,
+      "sha256": "aa4600e85dd7b057a01e4f39e254f42e6cc778524c1e8fcbea5c23029e9fcdb6"
+    },
+    "04_SAFE_ENGINEERING_PROTOCOL.md": {
+      "bytes": 2504,
+      "sha256": "1a9705ad6b9b3e2f829f4401cc48d84c6a54b3dbde87bc135f98b324ce5a024b"
+    },
+    "EXACT_PROMPT.md": {
+      "bytes": 9821,
+      "sha256": "097d019c617a33ac0db0a3408c122490777d053ce45712e378102d5382c74dfb"
+    },
+    "PROMPT_TEMPLATE.md": {
+      "bytes": 9821,
+      "sha256": "097d019c617a33ac0db0a3408c122490777d053ce45712e378102d5382c74dfb"
+    },
+    "TASK_DIRECTIVE.md": {
+      "bytes": 9821,
+      "sha256": "097d019c617a33ac0db0a3408c122490777d053ce45712e378102d5382c74dfb"
+    },
+    "verify_packet.py": {
+      "bytes": 4480,
+      "sha256": "fe42fe621c0f697f47466b34ddae6a561c4d9ba24cb57ae3612e24794b0ca656"
+    }
+  },
+  "packet_kind": "CODEX_ORIENTATION",
+  "schema": 1
+}

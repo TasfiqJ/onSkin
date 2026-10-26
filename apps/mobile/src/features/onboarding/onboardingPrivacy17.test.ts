@@ -1,4 +1,5 @@
 import { createElement, useLayoutEffect } from 'react';
+import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, expect, it, vi } from 'vitest';
 
@@ -12,6 +13,7 @@ import { OnboardingProvider, useOnboarding } from './OnboardingContext';
 
 const ports = vi.hoisted(() => ({
   focus: undefined as (() => void) | undefined,
+  focusListeners: new Set<() => void>(),
   push: vi.fn(),
   replace: vi.fn(),
 }));
@@ -20,8 +22,15 @@ vi.mock('expo-router/build/react-navigation/core/NavigationContext', async () =>
   NavigationContext: (await import('react')).createContext({
     isFocused: () => true,
     addListener: (name: string, callback: () => void) => {
-      if (name === 'focus') ports.focus = callback;
-      return () => {};
+      if (name === 'focus') {
+        ports.focusListeners.add(callback);
+        ports.focus = () => {
+          for (const f of [...ports.focusListeners]) f();
+        };
+      }
+      return () => {
+        ports.focusListeners.delete(callback);
+      };
     },
   }),
 }));
@@ -64,7 +73,7 @@ afterEach(async () => {
   view = undefined;
   clearActiveHealthProcessingEpoch();
 });
-it('masks the actual protected provider draft across owner return and explicitly clears it only through reset', async () => {
+it('retires the actual provider draft across owner return without requiring a stale-draft reset', async () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
   const grant = (ownerUserId: string) => {
@@ -74,7 +83,12 @@ it('masks the actual protected provider draft across owner return and explicitly
   grant('synthetic-owner-a');
   await act(async () => {
     view = create(
-      createElement(OnboardingProvider, null, createElement(Probe), createElement(QuizScreen)),
+      createElement(
+        OnboardingProvider,
+        null,
+        createElement(NavigationContext.Provider, { value: undefined }, createElement(Probe)),
+        createElement(QuizScreen),
+      ),
     );
   });
   const oldSelection = view!.root.findAllByType('OptionCard' as never)[0]!.props.onPress;
@@ -88,17 +102,14 @@ it('masks the actual protected provider draft across owner return and explicitly
     oldSelection();
     ports.focus?.();
   });
-  expect(view!.root.findAllByType('OptionCard' as never)).toHaveLength(0);
-  // Explicitly record the protected-core limitation rather than pretending
-  // that masking the mounted screen has cleared provider-wide private memory.
-  expect(Object.keys(context.quizAnswers)).toHaveLength(1);
-  const restart = view!.root
-    .findAllByType('Button' as never)
-    .find((n) => n.props.label === 'Start a new quiz')!;
-  await act(async () => {
-    restart.props.onPress();
-  });
+  expect(view!.root.findAllByType('OptionCard' as never).every((n) => !n.props.selected)).toBe(
+    true,
+  );
   expect(Object.keys(context.quizAnswers)).toHaveLength(0);
-  expect(ports.replace).toHaveBeenLastCalledWith('/onboarding/goals');
+  expect(context.profileResult).toBeNull();
+  expect(context.goals).toEqual([]);
+  // The obsolete owner's callback cannot reset or repopulate the new window.
+  await act(async () => oldSelection());
+  expect(Object.keys(context.quizAnswers)).toHaveLength(0);
   expect(ports.push).not.toHaveBeenCalled();
 });

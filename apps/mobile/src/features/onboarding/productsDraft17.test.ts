@@ -1,3 +1,7 @@
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -40,7 +44,23 @@ vi.mock('@/components/ui', () => ({
   Screen: 'Screen',
   Text: 'Text',
 }));
-vi.mock('./OnboardingContext', () => ({ useOnboarding: () => ({ goals: ports.goals }) }));
+vi.mock('./OnboardingContext', () => ({
+  useOnboarding: () => {
+    const lease = captureHealthDataWriteLease();
+    return {
+      goals: ports.goals,
+      privacyStatus: 'ready',
+      isCurrent: () => {
+        try {
+          assertHealthDataWriteLease(lease);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+    };
+  },
+}));
 vi.mock('@/features/shelf/IntakeContext', () => ({ useIntake: () => ({ reset: vi.fn() }) }));
 vi.mock('@/features/shelf/useShelf', () => ({
   useShelf: () => ({

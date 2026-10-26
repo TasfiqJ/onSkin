@@ -1,0 +1,69 @@
+{
+  "authority": "BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01",
+  "inputManifestSha256": "d6ce18a12f444fd91da5820fdf4e67900fd8d062de2515d2ef916d08a77c53df",
+  "base": "f9709e02420d6c03cc9b9586cf60d89bfde7d8a3",
+  "tree": "c735b32c667059ba1d6855b6896c70e42d6c6fd8",
+  "branch": "stage/m1-onboarding-owner-privacy18",
+  "baseBranch": "stage/m1-first-session-integrity17",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "acceptanceGranted": false,
+  "existing": [
+    "apps/mobile/src/features/onboarding/OnboardingContext.tsx",
+    "apps/mobile/src/features/onboarding/quizNavigation.test.ts",
+    "apps/mobile/src/app/onboarding/quiz.tsx",
+    "apps/mobile/src/app/onboarding/goals.tsx",
+    "apps/mobile/src/app/onboarding/products.tsx",
+    "apps/mobile/src/app/onboarding/analyzing.tsx",
+    "apps/mobile/src/app/onboarding/reveal.tsx",
+    "apps/mobile/src/features/onboarding/quizFocus17.test.ts",
+    "apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts",
+    "apps/mobile/src/features/onboarding/productsDraft17.test.ts",
+    "docs/USER_FLOW_TREE.md",
+    "scripts/release/full-app-j01/check.py",
+    "docs/phase-4/generated/source-worklist.json",
+    "docs/phase-4/generated/source-worklist.md",
+    "ONSKIN_BRAIN_HANDOFF.txt"
+  ],
+  "new": [
+    "apps/mobile/src/features/onboarding/onboardingOwner18.test.ts",
+    "apps/mobile/src/features/onboarding/onboardingOwner18.test.tsx",
+    "apps/mobile/src/features/onboarding/onboardingRoute18.test.ts",
+    "apps/mobile/src/features/onboarding/onboardingRoute18.test.tsx",
+    "scripts/m1/onboarding_owner_privacy18_browser.mjs",
+    "scripts/release/full-app-j01/source_consumer18.test.py"
+  ],
+  "prefixes": [
+    "docs/brain/contracts/M1X-18/",
+    "docs/brain/task-specs/M1X-18/",
+    "docs/brain/checkpoints/M1-02/ONBOARDING-OWNER-PRIVACY-18/"
+  ],
+  "unapplied": [
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.test.ts",
+      "reason": "Protected historical fixture/source-text assumptions do not express the newly required provider API or owner-bound memory. Outside the finite edit grant; report real failures, no production bypass or waiver."
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/quizNavigation16.test.ts",
+      "reason": "Protected historical fixture/source-text assumptions do not express the newly required provider API or owner-bound memory. Outside the finite edit grant; report real failures, no production bypass or waiver."
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/productsFooter16.test.ts",
+      "reason": "Protected historical fixture/source-text assumptions do not express the newly required provider API or owner-bound memory. Outside the finite edit grant; report real failures, no production bypass or waiver."
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingRoutes.test.ts",
+      "reason": "Protected historical fixture/source-text assumptions do not express the newly required provider API or owner-bound memory. Outside the finite edit grant; report real failures, no production bypass or waiver."
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
+      "reason": "Protected historical fixture/source-text assumptions do not express the newly required provider API or owner-bound memory. Outside the finite edit grant; report real failures, no production bypass or waiver."
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/coreJourney.campaign06.test.ts",
+      "reason": "Protected historical fixture/source-text assumptions do not express the newly required provider API or owner-bound memory. Outside the finite edit grant; report real failures, no production bypass or waiver."
+    }
+  ],
+  "spendUsd": 0,
+  "release": "NO_GO",
+  "draftPr": null
+}

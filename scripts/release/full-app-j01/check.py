@@ -1711,6 +1711,182 @@ def release17_active():
         cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
 
 
+RELEASE18_BASE = 'f9709e02420d6c03cc9b9586cf60d89bfde7d8a3'
+RELEASE18_TREE = 'c735b32c667059ba1d6855b6896c70e42d6c6fd8'
+RELEASE18_PR = None  # Bound only after GitHub allocates the single draft PR.
+RELEASE18_AUTHORITY = 'BRAIN-M1X-ONBOARDING-OWNER-PRIVACY18-REPAIR-01'
+RELEASE18_EXISTING = {'apps/mobile/src/features/onboarding/quizNavigation.test.ts', 'apps/mobile/src/features/onboarding/OnboardingContext.tsx', 'apps/mobile/src/app/onboarding/quiz.tsx', 'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts', 'scripts/release/full-app-j01/check.py', 'ONSKIN_BRAIN_HANDOFF.txt', 'apps/mobile/src/features/onboarding/productsDraft17.test.ts', 'apps/mobile/src/app/onboarding/goals.tsx', 'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md', 'apps/mobile/src/app/onboarding/reveal.tsx', 'docs/USER_FLOW_TREE.md', 'apps/mobile/src/app/onboarding/products.tsx', 'apps/mobile/src/features/onboarding/quizFocus17.test.ts', 'apps/mobile/src/app/onboarding/analyzing.tsx'}
+RELEASE18_NEW = {'apps/mobile/src/features/onboarding/onboardingRoute18.test.tsx', 'scripts/release/full-app-j01/source_consumer18.test.py', 'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts', 'apps/mobile/src/features/onboarding/onboardingOwner18.test.ts', 'scripts/m1/onboarding_owner_privacy18_browser.mjs', 'apps/mobile/src/features/onboarding/onboardingOwner18.test.tsx'}
+RELEASE18_PREFIXES = ('docs/brain/contracts/M1X-18/', 'docs/brain/task-specs/M1X-18/',
+    'docs/brain/checkpoints/M1-02/ONBOARDING-OWNER-PRIVACY-18/')
+
+
+def allowed18(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE18_EXISTING or path in RELEASE18_NEW or path.startswith(RELEASE18_PREFIXES)))
+
+
+def validate18_checker(raw):
+    before = git('show', RELEASE18_BASE+':scripts/release/full-app-j01/check.py')
+    old = ast.parse(before); new = ast.parse(raw)
+    funcs = lambda module: {n.name: ast.dump(n, include_attributes=False)
+        for n in module.body if isinstance(n, ast.FunctionDef)}
+    old_functions, new_functions = funcs(old), funcs(new)
+    require(all(new_functions.get(k) == v for k, v in old_functions.items() if k != 'source_guard'),
+            'R18_INHERITED_FUNCTION_CHANGED')
+    expected = before.replace(b'    if release17_active():\n        source11_historical_segment()', b'    if release18_active():\n        source11_historical_segment()\n        source12_historical_segment()\n        source13_historical_segment()\n        source14_historical_segment()\n        source15_historical_segment()\n        source16_historical_segment()\n        source17_historical_segment()\n        source18_guard()\n    elif release17_active():\n        source11_historical_segment()')
+    expected = expected.replace(b'or allowed17(path),', b'or allowed17(path) or allowed18(path),')
+    require(new_functions.get('source_guard') == funcs(ast.parse(expected))['source_guard'],
+            'R18_ORIGINAL_SOURCE_GUARD_CHANGED')
+    assignments = lambda module: {ast.dump(n.targets[0]): ast.dump(n.value, include_attributes=False)
+        for n in module.body if isinstance(n, ast.Assign) and len(n.targets) == 1}
+    old_globals, new_globals = assignments(old), assignments(new)
+    require(all(new_globals.get(k) == v for k, v in old_globals.items()), 'R18_INHERITED_GLOBAL_CHANGED')
+    old_other = [ast.dump(n, include_attributes=False) for n in old.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    new_other = [ast.dump(n, include_attributes=False) for n in new.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    require(old_other == new_other, 'R18_INHERITED_MODULE_CHANGED')
+    original_assignments = [ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.Assign)]
+    inherited_assignments = [ast.dump(n, include_attributes=False) for n in new.body
+        if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) in old_globals]
+    require(original_assignments == inherited_assignments, 'R18_INHERITED_ASSIGNMENT_ORDER')
+    added = [n for n in new.body if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) not in old_globals]
+    require(all(len(n.targets) == 1 and isinstance(n.targets[0], ast.Name) and
+                n.targets[0].id.startswith('RELEASE18_') for n in added), 'R18_NEW_GLOBAL_SCOPE')
+    new_names = [n.name for n in new.body if isinstance(n, ast.FunctionDef)]
+    require(len(new_names) == len(set(new_names)), 'R18_REDEFINED_SAFEGUARD')
+    require(set(new_names)-set(old_functions) == {'allowed18', 'validate18_checker', 'candidate18_guard',
+        'validate18_diff', 'source18_endpoint', 'source18_history', 'source17_historical_segment',
+        'source18_guard', 'release18_active'}, 'R18_NEW_FUNCTION_SCOPE')
+    for assignment in added:
+        try: ast.literal_eval(assignment.value)
+        except (ValueError, TypeError): require(False, 'R18_NEW_GLOBAL_SIDE_EFFECT')
+
+
+def candidate18_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(set(value) == {'schema', 'authority', 'status', 'base', 'tree', 'acceptanceGranted', 'admissions'} and
+            type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE18_AUTHORITY and
+            value['status'] == 'SOURCE_ONLY_CANDIDATE' and value['base'] == RELEASE18_BASE and
+            value['tree'] == RELEASE18_TREE and value['acceptanceGranted'] is False and
+            value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False),
+            'R18_NO_ADMISSION')
+
+
+def validate18_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R18_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R18_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed18(path) and status in ('A', 'M'), 'R18_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R18_COLLISION:'+path); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R18_MODE:'+path)
+        require((path in RELEASE18_EXISTING) == (oldmode == ':100644') and
+                status == ('M' if oldmode == ':100644' else 'A') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R18_CREATE_EDIT:'+path)
+        if oldmode == ':000000':
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE18_BASE+':'+path],
+                cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode != 0, 'R18_EXISTING_RECLASSIFIED')
+        else:
+            require(oldblob == git('rev-parse', RELEASE18_BASE+':'+path).decode().strip(), 'R18_BASE_BLOB')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()==newblob,
+                'R18_AFTER_BLOB:'+path)
+        if path == 'scripts/release/full-app-j01/check.py': validate18_checker(data)
+        if path == 'docs/brain/contracts/M1X-18/candidate.json': candidate18_guard(data)
+        if path == 'docs/USER_FLOW_TREE.md':
+            before = git('show', RELEASE18_BASE+':'+path)
+            require(data.startswith(before) and data[len(before):].count(b'## Campaign18') == 1, 'R18_ADDITIVE_FLOW')
+
+
+def source18_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3 and parents[1] == RELEASE18_BASE, 'R18_CI_PARENTS')
+    require(type(RELEASE18_PR) is int and RELEASE18_PR > 0 and
+            os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE18_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R18_CI_CONTEXT')
+    event = json.loads(regular(Path(os.environ.get('GITHUB_EVENT_PATH', ''))), object_pairs_hook=pairs)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE18_PR and pr.get('number') == RELEASE18_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE18_BASE and
+            pr.get('base', {}).get('ref') == 'stage/m1-first-session-integrity17' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m1-onboarding-owner-privacy18' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('draft') is True and pr.get('maintainer_can_modify') is False and
+            pr.get('auto_merge') is None, 'R18_CI_EVENT_IDENTITY')
+    require(git('merge-base', RELEASE18_BASE, parents[2]).decode().strip() == RELEASE18_BASE, 'R18_CI_MERGE_BASE')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R18_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source18_history():
+    require(git('rev-parse', RELEASE18_BASE+'^{tree}').decode().strip() == RELEASE18_TREE, 'R18_BASE_TREE')
+    endpoint = source18_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE18_BASE, endpoint],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE18_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R18_LINEAR_HISTORY')
+        validate18_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE18_BASE, commit),
+                        lambda path: git('show', commit+':'+path))
+
+
+def source17_historical_segment():
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE18_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source17_history()
+        validate17_checker(actual_git('show', RELEASE18_BASE+':scripts/release/full-app-j01/check.py'))
+    finally:
+        globals()['git'] = actual_git
+
+
+def source18_guard():
+    source18_history()
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate18_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE18_BASE),
+                    lambda path: git('show', ':'+path))
+    validate18_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE18_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R18_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R18_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed18(path) and path not in RELEASE18_EXISTING, 'R18_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R18_COLLISION'); names.add(key); regular(ROOT/path)
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        result = subprocess.run([sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer18.test.py'],
+                                cwd=ROOT, capture_output=True, timeout=300)
+        require(result.returncode == 0, 'R18_SOURCE_TESTS_FAILED')
+
+
+def release18_active():
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE18_BASE, 'HEAD'],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -1729,7 +1905,16 @@ def source_guard():
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
     source10_historical_segment()
-    if release17_active():
+    if release18_active():
+        source11_historical_segment()
+        source12_historical_segment()
+        source13_historical_segment()
+        source14_historical_segment()
+        source15_historical_segment()
+        source16_historical_segment()
+        source17_historical_segment()
+        source18_guard()
+    elif release17_active():
         source11_historical_segment()
         source12_historical_segment()
         source13_historical_segment()
@@ -1765,9 +1950,9 @@ def source_guard():
     else:
         source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path) or allowed16(path) or allowed17(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path) or allowed16(path) or allowed17(path) or allowed18(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path) or allowed16(path) or allowed17(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path) or allowed16(path) or allowed17(path) or allowed18(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)

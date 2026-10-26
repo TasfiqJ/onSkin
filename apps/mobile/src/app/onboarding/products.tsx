@@ -1,5 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
 import {
   Platform,
@@ -27,7 +34,10 @@ import {
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
-import { activeHealthProcessingLeaseSnapshot } from '@/lib/consent/healthProcessingEpoch';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 import { colors } from '@/theme/tokens';
 
 const ONBOARDING_PRODUCT_TARGET = 3;
@@ -128,10 +138,16 @@ function CategoryPickerSheet({
 // lightweight first-population that was previously a dead skip-only screen.
 export default function ProductsScreen() {
   const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
+  const lease = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
+  const generation = lease?.generation ?? 'closed';
 
   return (
     <ShelfDataAvailabilityGate>
-      <ProductsScreenContent key={addedProductId ?? 'initial-add'} />
+      <ProductsScreenContent key={`${generation}:${addedProductId ?? 'initial-add'}`} />
     </ShelfDataAvailabilityGate>
   );
 }
@@ -143,7 +159,8 @@ function ProductsScreenContent() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
-  const { goals } = useOnboarding();
+  const onboarding = useOnboarding();
+  const { goals } = onboarding;
   const { reset: resetIntake } = useIntake();
   const dataQuery = useShelf();
   const { data } = dataQuery;
@@ -253,6 +270,7 @@ function ProductsScreenContent() {
   }
 
   async function remove(id: string) {
+    if (!onboarding.isCurrent()) return;
     if (removing.current.has(id)) return;
     removing.current.add(id);
     setRemovingIds(new Set(removing.current));
@@ -322,6 +340,7 @@ function ProductsScreenContent() {
 
   function canNavigate() {
     return (
+      onboarding.isCurrent() &&
       mounted.current &&
       !navigating.current &&
       removing.current.size === 0 &&
@@ -365,6 +384,21 @@ function ProductsScreenContent() {
       </Text>
     </Pressable>
   );
+
+  if (onboarding.privacyStatus !== 'ready') {
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <Text variant="title">
+            {onboarding.privacyStatus === 'checking'
+              ? 'Checking your privacy choice'
+              : 'Your privacy choice could not be confirmed'}
+          </Text>
+        </View>
+        <Button label="Return to privacy" onPress={() => router.replace('/onboarding/consent')} />
+      </Screen>
+    );
+  }
 
   return (
     <Screen>

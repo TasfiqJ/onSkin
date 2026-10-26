@@ -1,11 +1,9 @@
 import { GOALS, type GoalId } from '@layerwell/types';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
-import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
@@ -14,26 +12,11 @@ import { track } from '@/lib/analytics/track';
 export default function GoalsScreen() {
   const { height } = useWindowDimensions();
   const compact = height < 740;
-  const { goals, profileResult, quizAnswers, toggleGoal } = useOnboarding();
-  const [consentChecked, setConsentChecked] = useState(false);
+  const onboarding = useOnboarding();
+  const { goals, profileResult, quizAnswers, toggleGoal } = onboarding;
+  const consentChecked = onboarding.privacyStatus === 'ready';
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const hasProfileResult = profileResult !== null || quizCompletion.complete;
-
-  useEffect(() => {
-    let active = true;
-    void hasCurrentHealthDataCollectionConsent()
-      .then((hasCurrentConsent) => {
-        if (!active) return;
-        if (hasCurrentConsent) setConsentChecked(true);
-        else router.replace('/onboarding/consent');
-      })
-      .catch(() => {
-        if (active) router.replace('/onboarding/consent');
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   if (!consentChecked) {
     return (
@@ -43,9 +26,12 @@ export default function GoalsScreen() {
             Privacy check
           </Text>
           <Text variant="title" className="mt-2 text-center">
-            Checking your privacy choice
+            {onboarding.privacyStatus === 'denied'
+              ? 'Your privacy choice could not be confirmed'
+              : 'Checking your privacy choice'}
           </Text>
         </View>
+        <Button label="Return to privacy" onPress={() => router.replace('/onboarding/consent')} />
       </Screen>
     );
   }
@@ -101,6 +87,7 @@ export default function GoalsScreen() {
           label="Continue"
           disabled={goals.length === 0}
           onPress={() => {
+            if (!onboarding.isCurrent() || goals.length === 0) return;
             track('screen_viewed', { screen_name: 'goals' });
             router.push(hasProfileResult ? '/onboarding/products' : '/onboarding/quiz');
           }}

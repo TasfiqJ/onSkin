@@ -36,7 +36,14 @@ export default function QuizScreen() {
   const { height } = useWindowDimensions();
   const navigation = useContext(NavigationContext);
   const compact = height < 740;
-  const { quizAnswers, setAnswer, reset } = useOnboarding();
+  const {
+    quizAnswers,
+    setAnswer,
+    reset,
+    draftGeneration,
+    privacyStatus: draftPrivacy,
+    isCurrent: draftCurrent,
+  } = useOnboarding();
   const latestAnswers = useRef(quizAnswers);
   useLayoutEffect(() => {
     latestAnswers.current = quizAnswers;
@@ -46,9 +53,12 @@ export default function QuizScreen() {
     activeHealthProcessingLeaseSnapshot,
     () => null,
   );
-  // The protected provider does not tag drafts with an owner. Only a draft
-  // started empty in this mounted route's admitted window can be restored.
-  const answerGeneration = useRef<number | null>(null);
+  // Provider-bound drafts may return from Products in the same admitted window.
+  const answerGeneration = useRef<number | null>(draftGeneration);
+  const currentDraftGeneration = useRef(draftGeneration);
+  useLayoutEffect(() => {
+    currentDraftGeneration.current = draftGeneration;
+  }, [draftGeneration]);
   const focusToken = useRef(0);
   const authority = useRef<QuizAdmission | null>(null);
   const [admission, setAdmission] = useState<QuizAdmission | null>(null);
@@ -106,6 +116,7 @@ export default function QuizScreen() {
             authority.current = accepted;
             setAdmission(accepted);
             if (
+              currentDraftGeneration.current !== acceptedLease.generation &&
               answerGeneration.current !== acceptedLease.generation &&
               Object.keys(latestAnswers.current).length > 0
             ) {
@@ -148,7 +159,12 @@ export default function QuizScreen() {
   }, [navigation]);
 
   function isCurrent() {
-    if (!admission || authority.current !== admission || focusToken.current !== admission.token)
+    if (
+      !draftCurrent() ||
+      !admission ||
+      authority.current !== admission ||
+      focusToken.current !== admission.token
+    )
       return false;
     try {
       assertHealthDataWriteLease(admission.lease);
@@ -159,6 +175,7 @@ export default function QuizScreen() {
   }
   const consentChecked =
     privacyState === 'ready' &&
+    draftPrivacy === 'ready' &&
     admission !== null &&
     currentLease?.generation === admission.lease.generation;
   if (!consentChecked) {
@@ -179,7 +196,7 @@ export default function QuizScreen() {
             {privacyState === 'checking'
               ? 'One moment while we confirm the quiz can start.'
               : privacyState === 'restart'
-                ? 'We cannot verify who started this draft. Start a new quiz to clear the previous answers and choose your goals again.'
+                ? 'This draft is unavailable. Start a new quiz and choose your goals again.'
                 : 'Return to privacy before answering the quiz.'}
           </Text>
           {privacyState === 'restart' ? (
@@ -193,13 +210,13 @@ export default function QuizScreen() {
                 router.replace('/onboarding/goals');
               }}
             />
-          ) : privacyState !== 'checking' ? (
+          ) : (
             <Button
               label="Return to privacy"
               className="mt-6"
               onPress={() => router.replace('/onboarding/consent')}
             />
-          ) : null}
+          )}
         </View>
       </Screen>
     );

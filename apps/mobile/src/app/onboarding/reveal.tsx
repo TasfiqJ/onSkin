@@ -1,7 +1,7 @@
 import type { SkinAxis } from '@layerwell/types';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -30,14 +30,14 @@ function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
       <View className="mb-2 flex-row justify-between">
         <Text
           variant="bodySm"
-          tone={leansPositive ? 'muted' : 'ink'}
+          tone={leansPositive ? 'inverseMuted' : 'inverse'}
           className={leansPositive ? '' : 'font-sans-semibold'}
         >
           {negLabel}
         </Text>
         <Text
           variant="bodySm"
-          tone={leansPositive ? 'ink' : 'muted'}
+          tone={leansPositive ? 'inverse' : 'inverseMuted'}
           className={leansPositive ? 'font-sans-semibold' : ''}
         >
           {posLabel}
@@ -54,7 +54,8 @@ function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
 }
 
 export default function RevealScreen() {
-  const { computeResult, profileResult, quizAnswers } = useOnboarding();
+  const onboarding = useOnboarding();
+  const { computeResult, profileResult, quizAnswers } = onboarding;
   const planResult = usePlan();
   const trackedRevealInsight = useRef(false);
   const quizCompletion = useMemo(() => getQuizCompletionState(quizAnswers), [quizAnswers]);
@@ -76,7 +77,8 @@ export default function RevealScreen() {
   }, [result]);
 
   useEffect(() => {
-    if (!result || !planResult.data || trackedRevealInsight.current) return;
+    if (!onboarding.isCurrent() || !result || !planResult.data || trackedRevealInsight.current)
+      return;
 
     trackedRevealInsight.current = true;
     void recordFirstUsefulInsightAnalytics({
@@ -84,7 +86,26 @@ export default function RevealScreen() {
       isExample: planResult.data.isExample,
       source: 'reveal',
     });
-  }, [planResult.data, result]);
+  }, [onboarding, planResult.data, result]);
+
+  if (onboarding.privacyStatus !== 'ready') {
+    return (
+      <Screen tone="night">
+        <View className="flex-1 justify-center">
+          <Text variant="title" tone="inverse">
+            {onboarding.privacyStatus === 'checking'
+              ? 'Checking your privacy choice'
+              : 'Your privacy choice could not be confirmed'}
+          </Text>
+        </View>
+        <Button
+          label="Return to privacy"
+          variant="inverse"
+          onPress={() => router.replace('/onboarding/consent')}
+        />
+      </Screen>
+    );
+  }
 
   if (!result) {
     return (
@@ -104,7 +125,9 @@ export default function RevealScreen() {
           <Button
             label="Back to quiz"
             variant="inverse"
-            onPress={() => router.replace('/onboarding/quiz')}
+            onPress={() => {
+              if (onboarding.isCurrent()) router.replace('/onboarding/quiz');
+            }}
           />
         </View>
       </Screen>
@@ -113,41 +136,48 @@ export default function RevealScreen() {
 
   return (
     <Screen tone="night">
-      <View className="flex-1 justify-center">
-        <Text variant="eyebrow" tone="inverseMuted">
-          YOUR SKIN PROFILE
-        </Text>
-        <Text variant="title" tone="inverse" className="mt-2">
-          {descriptor}.
-        </Text>
-        <Text variant="label" tone="inverseMuted" className="mt-1">
-          Type {result.dspt}
-        </Text>
+      <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
+        <ScrollView
+          className="flex-1"
+          contentContainerClassName="py-4"
+          showsVerticalScrollIndicator={false}
+        >
+          <Text variant="eyebrow" tone="inverseMuted">
+            YOUR SKIN PROFILE
+          </Text>
+          <Text variant="title" tone="inverse" className="mt-2">
+            {descriptor}.
+          </Text>
+          <Text variant="label" tone="inverseMuted" className="mt-1">
+            Type {result.dspt}
+          </Text>
 
-        <View className="mt-8">
-          {AXIS_ORDER.map((axis) => (
-            <AxisSlider key={axis} axis={axis} value={result.axes[axis]} />
-          ))}
-        </View>
+          <View className="mt-8">
+            {AXIS_ORDER.map((axis) => (
+              <AxisSlider key={axis} axis={axis} value={result.axes[axis]} />
+            ))}
+          </View>
 
-        <Card tone="night" className="mt-4">
-          <Text variant="label" tone="inverseMuted" className="font-mono">
-            {(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()}
-          </Text>
-          <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
-            {firstInsight?.title ?? 'Your first routine starts gentle.'}
-          </Text>
-          <Text variant="bodySm" tone="inverseMuted" className="mt-1">
-            {firstInsight?.body ??
-              'Your routine draft keeps missing steps visible. Interaction guidance requires completed independent professional review before it can appear.'}
-          </Text>
-        </Card>
+          <Card tone="night" className="mt-4">
+            <Text variant="label" tone="inverseMuted" className="font-mono">
+              {(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()}
+            </Text>
+            <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
+              {firstInsight?.title ?? 'Your first routine starts gentle.'}
+            </Text>
+            <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+              {firstInsight?.body ??
+                'Your routine draft keeps missing steps visible. Interaction guidance requires completed independent professional review before it can appear.'}
+            </Text>
+          </Card>
+        </ScrollView>
       </View>
       <View className="pb-4">
         <Button
           label="Continue"
           variant="inverse"
           onPress={() => {
+            if (!onboarding.isCurrent()) return;
             track('screen_viewed', { screen_name: 'reveal' });
             router.push('/onboarding/notifications');
           }}

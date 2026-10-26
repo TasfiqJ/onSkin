@@ -1,10 +1,16 @@
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import QuizScreen from '@/app/onboarding/quiz';
 
-import { ONBOARDING_QUIZ, type QuizAnswers } from './quiz';
+import { ONBOARDING_QUIZ } from './quiz';
+import { OnboardingProvider } from './OnboardingContext';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 const mocks = vi.hoisted(() => ({ push: vi.fn(), replace: vi.fn(), consent: vi.fn() }));
 vi.mock('expo-router', () => ({ router: { push: mocks.push, replace: mocks.replace } }));
@@ -23,16 +29,11 @@ vi.mock('@/components/ui', () => ({
 }));
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
 vi.mock('./healthConsentStore', () => ({ hasCurrentHealthDataCollectionConsent: mocks.consent }));
-vi.mock('./OnboardingContext', () => ({
-  useOnboarding: () => {
-    const [quizAnswers, setAnswers] = useState<QuizAnswers>({});
-    return {
-      quizAnswers,
-      setAnswer: (id: string, value: string | string[]) =>
-        setAnswers((answers) => ({ ...answers, [id]: value })),
-    };
-  },
+vi.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
+vi.mock('@/lib/supabase/client', () => ({ getPersistedSupabaseUser: vi.fn(), supabase: {} }));
+vi.mock('./skinProfileStore', () => ({ setStoredSkinProfileFromExplicitQuiz: vi.fn() }));
 
 let screen: ReactTestRenderer;
 function button(label: string) {
@@ -56,12 +57,19 @@ beforeEach(async () => {
   ).IS_REACT_ACT_ENVIRONMENT = true;
   vi.clearAllMocks();
   mocks.consent.mockResolvedValue(true);
+  clearActiveHealthProcessingEpoch();
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  setActiveHealthProcessingEpoch(18, {
+    ownerUserId: 'synthetic-navigation-owner18',
+    accountGeneration,
+  });
   await act(async () => {
-    screen = create(createElement(QuizScreen));
+    screen = create(createElement(OnboardingProvider, null, createElement(QuizScreen)));
   });
 });
 afterEach(async () => {
   await act(async () => screen.unmount());
+  clearActiveHealthProcessingEpoch();
 });
 
 describe('quiz navigation through the real route', () => {

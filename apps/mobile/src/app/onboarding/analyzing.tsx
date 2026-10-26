@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Platform, View } from 'react-native';
+import { Animated, Easing, Platform, ScrollView, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -14,7 +14,8 @@ function devProfileSaveFailureMode(): 'once' | null {
 }
 
 export default function AnalyzingScreen() {
-  const { goals, persistSkinProfile, profileResult, quizAnswers } = useOnboarding();
+  const onboarding = useOnboarding();
+  const { goals, persistSkinProfile, profileResult, quizAnswers } = onboarding;
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const hasProfileResult = profileResult !== null || quizCompletion.complete;
   const [pulse] = useState(() => new Animated.Value(0));
@@ -25,6 +26,7 @@ export default function AnalyzingScreen() {
   const useNativeAnimationDriver = Platform.OS !== 'web';
 
   useEffect(() => {
+    if (onboarding.privacyStatus !== 'ready' || !onboarding.isCurrent()) return;
     if (!hasProfileResult) {
       router.replace('/onboarding/quiz');
       return;
@@ -55,9 +57,8 @@ export default function AnalyzingScreen() {
 
     let revealTimer: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
-    const profileSave = profileResult
-      ? Promise.resolve(profileResult)
-      : profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
+    const profileSave =
+      profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
         ? (() => {
             simulatedProfileSaveFailureUsed.current = true;
             return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
@@ -66,11 +67,13 @@ export default function AnalyzingScreen() {
 
     void profileSave
       .then(() => {
-        if (cancelled) return;
-        revealTimer = setTimeout(() => router.replace('/onboarding/reveal'), 2600);
+        if (cancelled || !onboarding.isCurrent()) return;
+        revealTimer = setTimeout(() => {
+          if (!cancelled && onboarding.isCurrent()) router.replace('/onboarding/reveal');
+        }, 2600);
       })
       .catch(() => {
-        if (!cancelled) {
+        if (!cancelled && onboarding.isCurrent()) {
           loop.stop();
           setSaveError(true);
         }
@@ -82,6 +85,7 @@ export default function AnalyzingScreen() {
       if (revealTimer) clearTimeout(revealTimer);
     };
   }, [
+    onboarding,
     goals.length,
     hasProfileResult,
     persistSkinProfile,
@@ -95,6 +99,21 @@ export default function AnalyzingScreen() {
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.94, 1.08] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.42, 0.82] });
 
+  if (onboarding.privacyStatus !== 'ready') {
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <Text variant="title">
+            {onboarding.privacyStatus === 'checking'
+              ? 'Checking your privacy choice'
+              : 'Your privacy choice could not be confirmed'}
+          </Text>
+        </View>
+        <Button label="Return to privacy" onPress={() => router.replace('/onboarding/consent')} />
+      </Screen>
+    );
+  }
+
   if (saveError) {
     return (
       <Screen>
@@ -103,13 +122,15 @@ export default function AnalyzingScreen() {
             We could not save your profile.
           </Text>
           <Text variant="body" tone="muted" className="mt-2 text-center">
-            Try again. Your quiz answers are still here.
+            Try again, or return to the quiz. If your privacy window ended, start again from
+            privacy.
           </Text>
         </View>
         <View className="gap-2 pb-4">
           <Button
             label="Try again"
             onPress={() => {
+              if (!onboarding.isCurrent()) return;
               setSaveError(false);
               setRetryKey((value) => value + 1);
             }}
@@ -117,7 +138,9 @@ export default function AnalyzingScreen() {
           <Button
             label="Back to quiz"
             variant="ghost"
-            onPress={() => router.replace('/onboarding/quiz')}
+            onPress={() => {
+              if (onboarding.isCurrent()) router.replace('/onboarding/quiz');
+            }}
           />
         </View>
       </Screen>
@@ -126,7 +149,17 @@ export default function AnalyzingScreen() {
 
   return (
     <Screen>
-      <View className="flex-1 items-center justify-center px-4">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{
+          flexGrow: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingVertical: 24,
+          paddingHorizontal: 16,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
         <View className="h-[148px] w-[148px] items-center justify-center rounded-full bg-clay-tint">
           <Animated.View
             style={{
@@ -155,7 +188,7 @@ export default function AnalyzingScreen() {
           We&apos;re organizing your skin profile and the products you added into a simpler first
           routine.
         </Text>
-      </View>
+      </ScrollView>
     </Screen>
   );
 }
