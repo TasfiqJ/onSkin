@@ -40,13 +40,21 @@ const defaultDeps: NotificationOnboardingDeps = {
 export async function acceptRoutineReminderSoftAsk(
   times: Readonly<typeof PROPOSED_ROUTINE_REMINDER_TIMES> = PROPOSED_ROUTINE_REMINDER_TIMES,
   deps: NotificationOnboardingDeps = defaultDeps,
+  assertLifecycle: () => void = () => {},
 ): Promise<NotificationPermissionOutcome> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
   return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
-    lease.assertCurrent();
+    const currentLease = {
+      ...lease,
+      assertCurrent: () => {
+        lease.assertCurrent();
+        assertLifecycle();
+      },
+    };
+    currentLease.assertCurrent();
     const outcome = await deps.requestPermission();
-    lease.assertCurrent();
+    currentLease.assertCurrent();
     const enabled = isDeliverableAuthorizationState(outcome.state);
     await applyNotificationPreferencePatch(
       {
@@ -57,20 +65,28 @@ export async function acceptRoutineReminderSoftAsk(
         pmTime: times.pmTime,
       },
       { save: deps.saveNotifPrefs, reschedule: deps.rescheduleReminders },
-      lease,
+      currentLease,
     );
-    lease.assertCurrent();
+    currentLease.assertCurrent();
     return outcome;
   });
 }
 
 export async function declineRoutineReminderSoftAsk(
   deps: Pick<NotificationOnboardingDeps, 'saveNotifPrefs' | 'rescheduleReminders'> = defaultDeps,
+  assertLifecycle: () => void = () => {},
 ): Promise<void> {
   const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
   if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
   await runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
-    lease.assertCurrent();
+    const currentLease = {
+      ...lease,
+      assertCurrent: () => {
+        lease.assertCurrent();
+        assertLifecycle();
+      },
+    };
+    currentLease.assertCurrent();
     await applyNotificationPreferencePatch(
       {
         ...OPTIONAL_NOTIFICATION_PURPOSES_OFF,
@@ -78,8 +94,33 @@ export async function declineRoutineReminderSoftAsk(
         pmEnabled: false,
       },
       { save: deps.saveNotifPrefs, reschedule: deps.rescheduleReminders },
-      lease,
+      currentLease,
     );
-    lease.assertCurrent();
+    currentLease.assertCurrent();
+  });
+}
+
+/** Reapply the current durable choice in the original ordered save/schedule queue.
+ * Never replay permission or an earlier opt-in, even after a failed first save. */
+export async function retryRoutineReminderSoftAsk(
+  deps: Pick<NotificationOnboardingDeps, 'saveNotifPrefs' | 'rescheduleReminders'> = defaultDeps,
+  assertLifecycle: () => void = () => {},
+) {
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const currentLease = {
+      ...lease,
+      assertCurrent: () => {
+        lease.assertCurrent();
+        assertLifecycle();
+      },
+    };
+    currentLease.assertCurrent();
+    return applyNotificationPreferencePatch(
+      {},
+      { save: deps.saveNotifPrefs, reschedule: deps.rescheduleReminders },
+      currentLease,
+    );
   });
 }

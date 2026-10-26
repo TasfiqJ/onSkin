@@ -1,7 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
 import {
   Platform,
+  Keyboard,
   Pressable,
   ScrollView,
   TextInput,
@@ -137,6 +139,7 @@ export default function ProductsScreen() {
 function ProductsScreenContent() {
   const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
   const reduceMotion = useReduceMotionPreference();
+  const navigation = useContext(NavigationContext);
   const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
@@ -159,6 +162,25 @@ function ProductsScreenContent() {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<ProductCategory | null>(null);
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
+  const [pendingUnsavedName, setPendingUnsavedName] = useState<string | null>(null);
+  const confirmUnsaved = pendingUnsavedName !== null && pendingUnsavedName === name;
+  const navigating = useRef(false);
+  useEffect(() => {
+    const focus = () => {
+      navigating.current = false;
+    };
+    const blur = () => {
+      navigating.current = true;
+    };
+    if (!navigation || navigation.isFocused()) focus();
+    const offFocus = navigation?.addListener('focus', focus);
+    const offBlur = navigation?.addListener('blur', blur);
+    return () => {
+      offFocus?.();
+      offBlur?.();
+      blur();
+    };
+  }, [navigation]);
   const added = data?.items ?? [];
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
@@ -181,9 +203,10 @@ function ProductsScreenContent() {
         ? 'pb-36'
         : 'pb-28';
   const remainingProductNoun = remainingToTarget === 1 ? 'product' : 'products';
-  const continueAnywayLabel = `Continue with ${added.length} ${
-    added.length === 1 ? 'product' : 'products'
-  }`;
+  const continueAnywayLabel =
+    added.length === 0
+      ? 'Skip for now'
+      : `Continue with ${added.length} ${added.length === 1 ? 'product' : 'products'}`;
   const footerPrimaryLabel = compactFooterAdds
     ? 'Add to shelf'
     : hasTargetProducts
@@ -249,8 +272,10 @@ function ProductsScreenContent() {
   }
 
   function add() {
+    if (!canNavigate()) return;
     const trimmed = name.trim();
-    if (!trimmed) return;
+    if (!trimmed || trimmed.length > SHELF_PRODUCT_NAME_MAX_LENGTH) return;
+    navigating.current = true;
     const intakeId = resetIntake({
       name: trimmed,
       category,
@@ -265,12 +290,30 @@ function ProductsScreenContent() {
   }
 
   function go() {
+    if (!canNavigate()) return;
     if (goals.length === 0) {
+      navigating.current = true;
       router.replace('/onboarding/goals');
       return;
     }
+    if (name.trim() && !confirmUnsaved) {
+      Keyboard.dismiss();
+      setPendingUnsavedName(name);
+      return;
+    }
+    navigating.current = true;
     track('screen_viewed', { screen_name: 'products_intake', count: added.length });
     router.push('/onboarding/analyzing');
+  }
+
+  function canNavigate() {
+    return (
+      mounted.current &&
+      !navigating.current &&
+      removing.current.size === 0 &&
+      acceptedGeneration !== undefined &&
+      activeHealthProcessingLeaseSnapshot()?.generation === acceptedGeneration
+    );
   }
 
   function footerAction() {
@@ -299,6 +342,7 @@ function ProductsScreenContent() {
           className="flex-1"
           showsVerticalScrollIndicator={false}
           contentContainerClassName={productsBottomPaddingClass}
+          keyboardShouldPersistTaps="handled"
         >
           <Text
             variant="title"
@@ -445,47 +489,79 @@ function ProductsScreenContent() {
           onClose={() => setCategoryPickerOpen(false)}
         />
       ) : null}
-      <View
+      <ScrollView
         className="bg-paper pb-4 pt-2"
+        style={{ flexGrow: 0, flexShrink: 1 }}
+        keyboardShouldPersistTaps="handled"
         aria-hidden={categoryPickerOpen || undefined}
         accessibilityElementsHidden={categoryPickerOpen}
         importantForAccessibility={categoryPickerOpen ? 'no-hide-descendants' : 'auto'}
       >
-        {showCompactCategoryFooter ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={
-              selectedCategoryLabel
-                ? `Category, ${selectedCategoryLabel}`
-                : 'Choose product category'
-            }
-            onPress={() => setCategoryPickerOpen((open) => !open)}
-            className="mb-2 min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
-            style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
-          >
-            <View className="flex-1 pr-3">
-              <Text variant="label" tone="muted">
-                CATEGORY · OPTIONAL
-              </Text>
-              <Text variant="body" className="mt-0.5 font-sans-medium">
-                {selectedCategoryLabel ?? 'Choose category'}
-              </Text>
-            </View>
-            <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
-              &gt;
+        {confirmUnsaved ? (
+          <>
+            <Text
+              accessibilityRole="alert"
+              accessibilityLiveRegion="polite"
+              variant="bodySm"
+              className="mb-2"
+            >
+              This product has not been added. Continue with your saved Shelf, or keep editing.
             </Text>
-          </Pressable>
-        ) : null}
-        <Button label={footerPrimaryLabel} onPress={footerAction} />
-        {showContinueAnyway ? (
-          <Button
-            label={continueAnywayLabel}
-            variant="ghost"
-            className="mt-1 min-h-[48px] py-2"
-            onPress={go}
-          />
-        ) : null}
-      </View>
+            <Button
+              label="Continue without adding it"
+              disabled={removingIds.size > 0}
+              onPress={go}
+            />
+            <Button
+              label="Keep editing"
+              variant="ghost"
+              onPress={() => setPendingUnsavedName(null)}
+            />
+          </>
+        ) : (
+          <>
+            {showCompactCategoryFooter ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={
+                  selectedCategoryLabel
+                    ? `Category, ${selectedCategoryLabel}`
+                    : 'Choose product category'
+                }
+                onPress={() => setCategoryPickerOpen((open) => !open)}
+                className="mb-2 min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
+                style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
+              >
+                <View className="flex-1 pr-3">
+                  <Text variant="label" tone="muted">
+                    CATEGORY · OPTIONAL
+                  </Text>
+                  <Text variant="body" className="mt-0.5 font-sans-medium">
+                    {selectedCategoryLabel ?? 'Choose category'}
+                  </Text>
+                </View>
+                <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
+                  &gt;
+                </Text>
+              </Pressable>
+            ) : null}
+            <Button
+              label={footerPrimaryLabel}
+              onPress={footerAction}
+              disabled={removingIds.size > 0}
+            />
+            {compactFooterAdds || showContinueAnyway ? (
+              <Button
+                label={continueAnywayLabel}
+                variant="ghost"
+                className="mt-1 min-h-[48px] py-2"
+                onPress={go}
+                disabled={removingIds.size > 0}
+              />
+            ) : null}
+          </>
+        )}
+      </ScrollView>
     </Screen>
   );
 }

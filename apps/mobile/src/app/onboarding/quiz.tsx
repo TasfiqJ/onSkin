@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
@@ -11,30 +12,58 @@ import {
   toggleExclusiveNoneSelection,
 } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
+import { quizNavigation16 } from '@/features/onboarding/quizNavigation16';
 
 export default function QuizScreen() {
   const { height } = useWindowDimensions();
+  const navigation = useContext(NavigationContext);
   const compact = height < 740;
   const { quizAnswers, setAnswer } = useOnboarding();
   const [index, setIndex] = useState(0);
   const navigationIndex = useRef(0);
+  const visibleIndex = useRef(0);
+  useEffect(() => {
+    visibleIndex.current = index;
+  }, [index]);
   const [consentChecked, setConsentChecked] = useState(false);
 
   useEffect(() => {
-    let active = true;
-    void hasCurrentHealthDataCollectionConsent()
-      .then((hasCurrentConsent) => {
-        if (!active) return;
-        if (hasCurrentConsent) setConsentChecked(true);
-        else router.replace('/onboarding/consent');
-      })
-      .catch(() => {
-        if (active) router.replace('/onboarding/consent');
-      });
-    return () => {
-      active = false;
+    let cleanup: (() => void) | undefined;
+    function focus() {
+      cleanup?.();
+      let active = true;
+      navigationIndex.current = -1;
+      void hasCurrentHealthDataCollectionConsent()
+        .then((hasCurrentConsent) => {
+          if (!active) return;
+          if (hasCurrentConsent) {
+            navigationIndex.current = visibleIndex.current;
+            setConsentChecked(true);
+          } else router.replace('/onboarding/consent');
+        })
+        .catch(() => {
+          if (active) router.replace('/onboarding/consent');
+        });
+      cleanup = () => {
+        active = false;
+        navigationIndex.current = -1;
+      };
+    }
+    const blur = () => {
+      cleanup?.();
+      cleanup = undefined;
     };
-  }, []);
+    // Standalone mounts retain the original consent check; navigator-hosted
+    // routes additionally reset on each real focus, including Products→Back.
+    if (!navigation || navigation.isFocused()) focus();
+    const offFocus = navigation?.addListener('focus', focus);
+    const offBlur = navigation?.addListener('blur', blur);
+    return () => {
+      offFocus?.();
+      offBlur?.();
+      blur();
+    };
+  }, [navigation]);
 
   if (!consentChecked) {
     return (
@@ -71,8 +100,9 @@ export default function QuizScreen() {
   }
 
   function next() {
-    if (!answered || navigationIndex.current !== index) return;
-    navigationIndex.current = index + 1;
+    const nextIndex = quizNavigation16(navigationIndex.current, index, total, answered, 'next');
+    if (nextIndex === null) return;
+    navigationIndex.current = nextIndex;
     if (index < total - 1) {
       setIndex(index + 1);
       return;
@@ -144,8 +174,16 @@ export default function QuizScreen() {
             variant="ghost"
             className="mb-1 min-h-[48px] py-2"
             onPress={() => {
-              navigationIndex.current = Math.max(0, index - 1);
-              setIndex(navigationIndex.current);
+              const previous = quizNavigation16(
+                navigationIndex.current,
+                index,
+                total,
+                answered,
+                'back',
+              );
+              if (previous === null) return;
+              navigationIndex.current = previous;
+              setIndex(previous);
             }}
           />
         ) : null}

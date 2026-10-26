@@ -1331,6 +1331,190 @@ def source15_guard():
             require(result.returncode == 0, 'R15_CANDIDATE_TESTS_FAILED')
 
 
+RELEASE16_BASE = 'b79e6d1e21a367be5cea5d0b333de9f2a144d41f'
+RELEASE16_TREE = 'ca7b6ac8ebcc0086b338b784f110b411400361b0'
+RELEASE16_PR = 0  # Replaced only with the actual GitHub allocation after creation.
+RELEASE16_AUTHORITY = 'BRAIN-M1X-ONBOARDING-RESILIENCE16-CANDIDATE-01'
+RELEASE16_EXISTING = {
+    'apps/mobile/src/app/onboarding/notifications.tsx', 'apps/mobile/src/app/onboarding/quiz.tsx',
+    'apps/mobile/src/app/onboarding/products.tsx', 'apps/mobile/src/features/notifications/onboarding.ts',
+    'apps/mobile/src/features/notifications/onboarding.test.ts',
+    'apps/mobile/src/features/notifications/applyPreferences.ts',
+    'apps/mobile/src/features/notifications/applyPreferences.test.ts',
+    'docs/USER_FLOW_TREE.md', 'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE16_NEW = {'apps/mobile/src/features/onboarding/quizNavigation16.ts',
+    'apps/mobile/src/features/onboarding/quizNavigation16.test.ts',
+    'apps/mobile/src/features/notifications/reminderRecovery16.test.ts',
+    'apps/mobile/src/features/onboarding/productsFooter16.ts',
+    'apps/mobile/src/features/onboarding/productsFooter16.test.ts',
+    'scripts/release/full-app-j01/source_consumer16.test.py',
+    'scripts/m1/onboarding_recovery16_browser.mjs'}
+RELEASE16_PREFIXES = ('docs/brain/contracts/M1X-16/', 'docs/brain/task-specs/M1X-16/',
+    'docs/brain/checkpoints/M1-02/ONBOARDING-RECOVERY-16/')
+
+
+def allowed16(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE16_EXISTING or path in RELEASE16_NEW or path.startswith(RELEASE16_PREFIXES)))
+
+
+def validate16_checker(raw):
+    before = git('show', RELEASE16_BASE+':scripts/release/full-app-j01/check.py')
+    old = ast.parse(before); new = ast.parse(raw)
+    funcs = lambda module: {n.name: ast.dump(n, include_attributes=False)
+        for n in module.body if isinstance(n, ast.FunctionDef)}
+    old_functions, new_functions = funcs(old), funcs(new)
+    require(all(new_functions.get(k) == v for k, v in old_functions.items() if k != 'source_guard'),
+            'R16_INHERITED_FUNCTION_CHANGED')
+    expected = before.replace(b'    if release15_active():\n        source11_historical_segment()',
+        b'    if release16_active():\n        source11_historical_segment()\n        source12_historical_segment()\n        source13_historical_segment()\n        source14_historical_segment()\n        source15_historical_segment()\n        source16_guard()\n    elif release15_active():\n        source11_historical_segment()')
+    expected = expected.replace(b'or allowed15(path),', b'or allowed15(path) or allowed16(path),')
+    require(new_functions.get('source_guard') == funcs(ast.parse(expected))['source_guard'],
+            'R16_ORIGINAL_SOURCE_GUARD_CHANGED')
+    assignments = lambda module: {ast.dump(n.targets[0]): ast.dump(n.value, include_attributes=False)
+        for n in module.body if isinstance(n, ast.Assign) and len(n.targets) == 1}
+    old_globals, new_globals = assignments(old), assignments(new)
+    require(all(new_globals.get(k) == v for k, v in old_globals.items()), 'R16_INHERITED_GLOBAL_CHANGED')
+    # Preserve every original module-level import, expression, alias and entrypoint
+    # in order. New source-only definitions cannot replace an old top-level node.
+    old_other = [ast.dump(n, include_attributes=False) for n in old.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    new_other = [ast.dump(n, include_attributes=False) for n in new.body
+                 if not isinstance(n, (ast.Assign, ast.FunctionDef))]
+    require(old_other == new_other, 'R16_INHERITED_MODULE_CHANGED')
+    original_assignments = [ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.Assign)]
+    inherited_assignments = [ast.dump(n, include_attributes=False) for n in new.body
+        if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) in old_globals]
+    require(original_assignments == inherited_assignments, 'R16_INHERITED_ASSIGNMENT_ORDER')
+    added = [n for n in new.body if isinstance(n, ast.Assign) and ast.dump(n.targets[0]) not in old_globals]
+    require(all(len(n.targets) == 1 and isinstance(n.targets[0], ast.Name) and
+                n.targets[0].id.startswith('RELEASE16_') for n in added), 'R16_NEW_GLOBAL_SCOPE')
+    new_names = [n.name for n in new.body if isinstance(n, ast.FunctionDef)]
+    require(len(new_names) == len(set(new_names)), 'R16_REDEFINED_SAFEGUARD')
+
+
+def candidate16_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(value['schema'] == 1 and value['authority'] == RELEASE16_AUTHORITY and
+            value['status'] == 'SOURCE_ONLY_CANDIDATE' and value['base'] == RELEASE16_BASE and
+            value['tree'] == RELEASE16_TREE and value['acceptanceGranted'] is False and
+            value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False),
+            'R16_NO_ADMISSION')
+
+
+def validate16_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R16_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        metadata = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(metadata) == 5, 'R16_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = metadata
+        require(allowed16(path) and status in ('A', 'M'), 'R16_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R16_COLLISION:'+path); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R16_MODE:'+path)
+        require((path in RELEASE16_EXISTING) == (oldmode == ':100644') and
+                status == ('M' if oldmode == ':100644' else 'A') and
+                all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R16_CREATE_EDIT:'+path)
+        if oldmode == ':000000':
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE16_BASE+':'+path],
+                cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode != 0, 'R16_EXISTING_RECLASSIFIED')
+        else:
+            require(oldblob == git('rev-parse', RELEASE16_BASE+':'+path).decode().strip(), 'R16_BASE_BLOB')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()==newblob,
+                'R16_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate16_checker(data)
+        if path == 'docs/brain/contracts/M1X-16/candidate.json': candidate16_guard(data)
+        if path == 'docs/USER_FLOW_TREE.md':
+            before = git('show', RELEASE16_BASE+':'+path)
+            require(data.startswith(before) and data[len(before):].count(b'## Campaign16:') == 1, 'R16_ADDITIVE_FLOW')
+
+
+def source16_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3, 'R16_LINEAR_HISTORY')
+    require(RELEASE16_PR > 0 and os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE16_PR)+'/merge' and
+            os.environ.get('GITHUB_SHA') == head, 'R16_CI_MERGE_CONTEXT')
+    event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+    require(event_path.is_file() and event_path.stat().st_size <= 1024*1024, 'R16_CI_EVENT')
+    event = load(event_path); pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE16_PR and pr.get('number') == RELEASE16_PR and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            pr.get('base', {}).get('sha') == RELEASE16_BASE and parents[1] == RELEASE16_BASE and
+            pr.get('base', {}).get('ref') == 'stage/m103-g97-coverage-candidate15' and
+            pr.get('head', {}).get('sha') == parents[2] and
+            pr.get('head', {}).get('ref') == 'stage/m1-first-session-recovery16' and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin', 'R16_CI_EVENT_IDENTITY')
+    require(git('merge-base', RELEASE16_BASE, parents[2]).decode().strip() == RELEASE16_BASE, 'R16_CI_MERGE_BASE')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R16_CI_MERGE_TREE')
+    return parents[2]
+
+
+def source16_history():
+    require(git('rev-parse', RELEASE16_BASE+'^{tree}').decode().strip() == RELEASE16_TREE, 'R16_BASE_TREE')
+    endpoint = source16_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE16_BASE, endpoint],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for commit in git('rev-list', '--reverse', RELEASE16_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R16_LINEAR_HISTORY')
+        validate16_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE16_BASE, commit),
+                        lambda path: git('show', commit+':'+path))
+
+
+def source15_historical_segment():
+    actual_git = git
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE16_BASE)
+        return actual_git(*args)
+    globals()['git'] = historical_git
+    try:
+        source15_history()
+        validate15_checker(actual_git('show', RELEASE16_BASE+':scripts/release/full-app-j01/check.py'))
+    finally:
+        globals()['git'] = actual_git
+
+
+def source16_guard():
+    source16_history()
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate16_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE16_BASE),
+                    lambda path: git('show', ':'+path))
+    validate16_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE16_BASE),
+                    lambda path: regular(ROOT/path))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R16_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R16_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed16(path) and path not in RELEASE16_EXISTING, 'R16_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R16_COLLISION'); names.add(key); regular(ROOT/path)
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        result = subprocess.run([sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer16.test.py'],
+                                cwd=ROOT, capture_output=True, timeout=300)
+        require(result.returncode == 0, 'R16_SOURCE_TESTS_FAILED')
+
+
+def release16_active():
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE16_BASE, 'HEAD'],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
+
+
 def source_guard():
     # Examine every changed path and mode, including intermediate committed states.
     index = {}
@@ -1349,7 +1533,14 @@ def source_guard():
                     'COMMIT_SCOPE:'+commit+':'+path)
     source09_guard()
     source10_historical_segment()
-    if release15_active():
+    if release16_active():
+        source11_historical_segment()
+        source12_historical_segment()
+        source13_historical_segment()
+        source14_historical_segment()
+        source15_historical_segment()
+        source16_guard()
+    elif release15_active():
         source11_historical_segment()
         source12_historical_segment()
         source13_historical_segment()
@@ -1370,9 +1561,9 @@ def source_guard():
     else:
         source11_guard()
     for path in git('diff', '--name-only', BASE).decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path), 'WORKING_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path) or allowed16(path), 'WORKING_SCOPE:'+path)
     for path in git('ls-files', '--others', '--exclude-standard').decode().splitlines():
-        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path), 'UNTRACKED_SCOPE:'+path)
+        require(allowed_path(path) or allowed09(path) or allowed10(path) or allowed11(path) or allowed12(path) or allowed13(path) or allowed14(path) or allowed15(path) or allowed16(path), 'UNTRACKED_SCOPE:'+path)
     for path in SAFE_DOCS:
         original = git('show', BASE+':'+path)
         actual = regular(ROOT/path)

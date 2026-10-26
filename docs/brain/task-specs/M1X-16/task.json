@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-ONBOARDING-RESILIENCE16-CANDIDATE-01",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "base": "b79e6d1e21a367be5cea5d0b333de9f2a144d41f",
+  "tree": "ca7b6ac8ebcc0086b338b784f110b411400361b0",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "scope": [
+    "reminder recovery",
+    "quiz navigation",
+    "compact manual Shelf continuation",
+    "additive source custody"
+  ],
+  "unapplied": [
+    {
+      "path": "native iOS/Android notification delivery",
+      "owner": "native/device qualified owner",
+      "test": "physical device permission/delivery and VoiceOver",
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "scripts/phase9/security_acceptance",
+      "owner": "independent qualified Security custodian",
+      "test": "original source inventory and original fail-closed gates",
+      "status": "UNAPPLIED"
+    },
+    {
+      "path": "supabase",
+      "owner": "DB06/DB08/R2B qualified owner",
+      "test": "canonical hosted/custody acceptance",
+      "status": "UNAPPLIED"
+    }
+  ]
+}
