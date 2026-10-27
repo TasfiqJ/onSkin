@@ -2578,6 +2578,7 @@ RELEASE21_RUNTIME = {'apps/mobile/src/app/(tabs)/progress.tsx',
     'apps/mobile/src/features/photos/CompareSlider.tsx'}
 RELEASE21_FIXTURE = 'apps/mobile/src/features/photos/progressEmptyLayout.c08b2.test.ts'
 RELEASE21_CANDIDATE = 'docs/brain/contracts/M1X-21/candidate.json'
+RELEASE21_EARLY_CHECKER_SHA256 = '80b4af241a5e4f45136cbe1667dccde8b9109855c52d330573f2af9fd791515c'
 RELEASE21_INHERITED_SOURCE_GUARD = source_guard
 
 
@@ -2612,6 +2613,9 @@ def validate21_checker(raw):
     functions = {'allowed21', 'remember21', 'validate21_checker', 'candidate21_guard', 'validate21_diff',
         'source21_endpoint', 'source21_history', 'source20_historical_guard', 'source21_guard',
         'fixture21_guard', 'runtime21_guard', 'evidence21_guard'}
+    # Authenticate the exact earlier committed successor before the alias helper existed.
+    # This permits its immutable history without accepting another old-shaped checker.
+    if sha(raw) == RELEASE21_EARLY_CHECKER_SHA256: functions -= {'remember21'}
     require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
             len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R21_FUNCTION_SCOPE')
     for node in extension.body:

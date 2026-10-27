@@ -29,6 +29,9 @@ def main():
             return check.source21_guard()
     checker=(HERE/'check.py').read_bytes()
     expect('preserved-original-AST',lambda:check.validate21_checker(checker),expected=0)
+    early=check.git('show','4bd4a524e253d467cfdee08a19d219c7b80c45c2:scripts/release/full-app-j01/check.py')
+    expect('authenticated-initial21-checker-history',lambda:check.validate21_checker(early),expected=0)
+    expect('modified-initial21-checker-refused',lambda:check.validate21_checker(early.replace(b'RELEASE21_PR = 25',b'RELEASE21_PR = 26')),code='R21_FUNCTION_SCOPE')
     for old,new in [(b"'FAIL/NO_GO'",b"'PASS'"),(b"'NOT_AUTHORIZED'",b"'AUTHORIZED'"),
                     (b"'BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED'",b"'ACCEPTED'"),
                     (b"'J01_G4_CHANGE_GATE'",b"'IGNORED_GATE'"),
