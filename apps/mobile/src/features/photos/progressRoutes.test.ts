@@ -48,7 +48,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}");
     expect(source).toContain('const compactEmptyFirstRun = height < 700;');
     expect(source).toContain('<FirstRun compact={compactEmptyFirstRun} />');
-    expect(source).toContain('<TimelineView compact={compactFirstRun} data={data} header={header} />');
+    expect(source).toContain(
+      '<TimelineView compact={compactFirstRun} data={data} header={header} />',
+    );
     expect(source).not.toContain('<FirstRun compact={compactFirstRun} />');
     expect(source).toContain("compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'");
     expect(source).toContain("compact ? 'mb-2 p-3' : 'mb-5'");
@@ -125,18 +127,28 @@ describe('Progress route mobile contracts', () => {
       if (source.includes('function PhotoDetailSession')) {
         // The mutation session survives storage-gate refresh but remains below
         // the existing lock. Rendered C-08B2 tests exercise this composition.
-        expect(source).toMatch(/<PhotoTimelineLockGate>\s*<PhotoDetailAuthorityBoundary \/>\s*<\/PhotoTimelineLockGate>/);
-        expect(source).toMatch(/<PhotoStorageGate[^\n]*>\s*<PhotoDetailScreenContent session=\{session\} \/>\s*<\/PhotoStorageGate>/);
+        expect(source).toMatch(
+          /<PhotoTimelineLockGate>\s*<PhotoDetailAuthorityBoundary \/>\s*<\/PhotoTimelineLockGate>/,
+        );
+        expect(source).toMatch(
+          /<PhotoStorageGate[^\n]*>\s*<PhotoDetailScreenContent session=\{session\} \/>\s*<\/PhotoStorageGate>/,
+        );
       } else {
-        expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(source.indexOf('<PhotoStorageGate'));
+        expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
+          source.indexOf('<PhotoStorageGate'),
+        );
       }
     }
     expect(routeSources[0]).toContain('<PhotoStorageGate tone="paper">');
     expect(routeSources[1]).toContain(
       '<PhotoStorageGate onExit={captureBoundary.requestProgressExit}>',
     );
-    expect(routeSources[2]).toContain('<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>');
-    expect(routeSources[3]).toContain("<PhotoStorageGate onExit={() => requestExit({ kind: 'back' })}>");
+    expect(routeSources[2]).toContain(
+      '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
+    );
+    expect(routeSources[3]).toContain(
+      "<PhotoStorageGate onExit={() => requestExit({ kind: 'back' })}>",
+    );
     expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
 
     expect(storageGate).toContain("const source = usePhotos('front');");
@@ -166,7 +178,8 @@ describe('Progress route mobile contracts', () => {
       photosHook.indexOf('await loadPhotos()'),
     );
 
-    expect(routeSources[0]).toContain("const { data } = usePhotos('front');");
+    expect(routeSources[0]).toContain("const source = usePhotos('front');");
+    expect(routeSources[0]).toContain('const { data, isSourceCurrent } = source;');
     expect(routeSources[0]).toContain('if (!data) return null;');
     expect(routeSources[0]).toContain('const count = data.count;');
     expect(routeSources[0]).not.toContain('data?.count ?? 0');
@@ -424,7 +437,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(
       'const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;',
     );
-    expect(source).toContain('const actionFeedback = deleteFeedback ?? session.referenceFeedback ?? shareFeedback;');
+    expect(source).toContain(
+      'const actionFeedback = deleteFeedback ?? session.referenceFeedback ?? shareFeedback;',
+    );
     expect(source).toContain('function nudgeActionFeedbackIntoView()');
     expect(source).toContain(
       'scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) })',
@@ -576,7 +591,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }');
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain(
-      'accessibilityLabel={`Choose ${short(photo.takenLocalDate)} as the ${target} comparison photo`}',
+      'accessibilityLabel={`Choose ${comparisonDate(photo.takenLocalDate)} as the ${target} comparison photo, capture ${position} of ${total}`}',
     );
     expect(source).not.toContain('role="dialog"');
     expect(source).not.toContain('aria-modal');

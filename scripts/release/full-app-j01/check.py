@@ -2375,5 +2375,180 @@ def source19_guard():
 source_guard = source19_guard
 
 
+# Release20 successor. Inherited Release08-19 definitions above are immutable.
+RELEASE20_BASE = '9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4'
+RELEASE20_TREE = '961d24a7427667aab610939f3a4d088db0a90430'
+RELEASE20_PR = None
+RELEASE20_AUTHORITY = 'BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01'
+RELEASE20_EXISTING = {'ONSKIN_BRAIN_HANDOFF.txt', 'apps/mobile/src/features/photos/CompareSlider.tsx', 'apps/mobile/src/features/photos/compareAccessibility.ts', 'apps/mobile/src/features/photos/timeline.test.ts', 'apps/mobile/src/app/(tabs)/progress.tsx', 'docs/USER_FLOW_TREE.md', 'docs/phase-4/generated/source-worklist.md', 'apps/mobile/src/features/photos/progressRoutes.test.ts', 'scripts/release/full-app-j01/check.py', 'apps/mobile/src/features/photos/progressImageDemand.test.ts', 'apps/mobile/src/features/photos/compareAccessibility.test.ts', 'docs/phase-4/generated/source-worklist.json', 'apps/mobile/src/features/photos/copy.ts', 'apps/mobile/src/features/photos/timeline.ts'}
+RELEASE20_NEW = {'apps/mobile/src/features/photos/manualCompare20.test.ts', 'scripts/m1/f09_manual_compare20_browser.mjs', 'apps/mobile/src/features/photos/manualCompare20.ts', 'apps/mobile/src/features/photos/manualCompare20Route.test.ts', 'scripts/release/full-app-j01/source_consumer20.test.py'}
+RELEASE20_PREFIXES = ('docs/brain/contracts/M1X-20/', 'docs/brain/task-specs/M1X-20/',
+    'docs/brain/checkpoints/M1-02/F09-MANUAL-COMPARE-20/')
+RELEASE20_INHERITED_SOURCE_GUARD = source_guard
+
+
+def allowed20(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/()-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE20_EXISTING or path in RELEASE20_NEW or path.startswith(RELEASE20_PREFIXES)))
+
+
+def validate20_checker(raw):
+    before = git('show', RELEASE20_BASE+':scripts/release/full-app-j01/check.py')
+    tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(tail) and raw.startswith(before[:-len(tail)]) and raw.endswith(tail),
+            'R20_INHERITED_BYTES_CHANGED')
+    old = ast.parse(before); new = ast.parse(raw)
+    inherited = {n.name: ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.FunctionDef)}
+    require(all(any(isinstance(n, ast.FunctionDef) and n.name == name and
+            ast.dump(n, include_attributes=False) == value for n in new.body)
+            for name, value in inherited.items()), 'R20_INHERITED_AST_CHANGED')
+    extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
+    functions = {'allowed20', 'validate20_checker', 'candidate20_guard', 'validate20_diff',
+        'source20_endpoint', 'source20_history', 'source19_historical_guard', 'source20_guard'}
+    require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
+            len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R20_FUNCTION_SCOPE')
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and
+                isinstance(node.targets[0], ast.Name), 'R20_MODULE_SCOPE')
+        name = node.targets[0].id
+        if name == 'source_guard':
+            require(isinstance(node.value, ast.Name) and node.value.id == 'source20_guard', 'R20_DISPATCH')
+        elif name == 'RELEASE20_INHERITED_SOURCE_GUARD':
+            require(isinstance(node.value, ast.Name) and node.value.id == 'source_guard', 'R20_INHERITED_DISPATCH')
+        else:
+            require(name.startswith('RELEASE20_'), 'R20_GLOBAL_SCOPE')
+            try: ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R20_GLOBAL_SIDE_EFFECT')
+
+
+def candidate20_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(set(value) == {'schema', 'authority', 'status', 'base', 'tree', 'acceptanceGranted', 'admissions'} and
+        type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE20_AUTHORITY and
+        value['base'] == RELEASE20_BASE and value['tree'] == RELEASE20_TREE and
+        value['status'] == 'SOURCE_ONLY_CANDIDATE' and value['acceptanceGranted'] is False and
+        value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False), 'R20_NO_ADMISSION')
+
+
+def validate20_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R20_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        meta = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(meta) == 5, 'R20_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(allowed20(path) and status in ('A', 'M'), 'R20_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R20_COLLISION'); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R20_MODE')
+        require((path in RELEASE20_EXISTING) == (oldmode == ':100644') and
+            status == ('M' if oldmode == ':100644' else 'A') and
+            all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R20_CREATE_EDIT')
+        if oldmode == ':100644':
+            require(oldblob == git('rev-parse', RELEASE20_BASE+':'+path).decode().strip(), 'R20_BASE_BLOB')
+        else:
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE20_BASE+':'+path],
+                cwd=ROOT, capture_output=True).returncode != 0, 'R20_EXISTING_RECLASSIFIED')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob,
+            'R20_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate20_checker(data)
+        if path == 'docs/brain/contracts/M1X-20/candidate.json': candidate20_guard(data)
+        if path == 'docs/USER_FLOW_TREE.md':
+            before = git('show', RELEASE20_BASE+':'+path)
+            require(data.startswith(before) and data[len(before):].count(b'## Campaign20') == 1, 'R20_ADDITIVE_FLOW')
+
+
+def source20_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3 and parents[1] == RELEASE20_BASE, 'R20_CI_PARENTS')
+    require(type(RELEASE20_PR) is int and RELEASE20_PR > 0 and
+        os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+        os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE20_PR)+'/merge' and os.environ.get('GITHUB_SHA') == head, 'R20_CI_CONTEXT')
+    event = json.loads(regular(Path(os.environ.get('GITHUB_EVENT_PATH', ''))), object_pairs_hook=pairs)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE20_PR and pr.get('number') == RELEASE20_PR and
+        event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+        pr.get('base', {}).get('sha') == RELEASE20_BASE and pr.get('base', {}).get('ref') == 'stage/m1-onboarding-compatibility19' and
+        pr.get('head', {}).get('sha') == parents[2] and pr.get('head', {}).get('ref') == 'stage/m1-f09-manual-photo-compare20' and
+        pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+        pr.get('maintainer_can_modify') is False and pr.get('auto_merge') is None, 'R20_CI_EVENT')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R20_CI_TREE')
+    return parents[2]
+
+
+def source20_history():
+    require(git('rev-parse', RELEASE20_BASE+'^{tree}').decode().strip() == RELEASE20_TREE, 'R20_BASE_TREE')
+    endpoint = source20_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE20_BASE, endpoint], cwd=ROOT, check=True, capture_output=True)
+    for commit in git('rev-list', '--reverse', RELEASE20_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R20_LINEAR_HISTORY')
+        validate20_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE20_BASE, commit),
+            lambda path: git('show', commit+':'+path))
+
+
+def source19_historical_guard():
+    # Evaluate every inherited guard against actual immutable PR23 Git bytes.
+    # Current source is checked separately and strictly by source20_guard.
+    actual_git, actual_regular, actual_name = git, regular, __name__
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE20_BASE)
+        if args[0] == 'diff' and len([a for a in args[1:] if not a.startswith('-')]) == 1:
+            return actual_git(*[a for a in args if a != '--cached'], RELEASE20_BASE)
+        if args[0] == 'show' and args[1].startswith(':'): return actual_git('show', RELEASE20_BASE+args[1])
+        if args[0] == 'ls-files':
+            if '--others' in args: return b''
+            if '-v' in args:
+                return b''.join(b'H '+p+b'\0' for p in actual_git('ls-tree', '-r', '--name-only', '-z', RELEASE20_BASE).split(b'\0') if p)
+        return actual_git(*args)
+    def historical_regular(path):
+        try: name = Path(path).absolute().relative_to(ROOT.absolute()).as_posix()
+        except ValueError: return actual_regular(path)
+        found = subprocess.run(['git', 'cat-file', '-e', RELEASE20_BASE+':'+name], cwd=ROOT, capture_output=True)
+        return actual_git('show', RELEASE20_BASE+':'+name) if found.returncode == 0 else actual_regular(path)
+    globals()['git'], globals()['regular'], globals()['__name__'] = historical_git, historical_regular, 'release19_historical'
+    try: return RELEASE20_INHERITED_SOURCE_GUARD()
+    finally: globals()['git'], globals()['regular'], globals()['__name__'] = actual_git, actual_regular, actual_name
+
+
+def source20_guard():
+    source20_history()
+    candidate20_guard(regular(ROOT/'docs/brain/contracts/M1X-20/candidate.json'))
+    candidate20_guard(git('show', ':docs/brain/contracts/M1X-20/candidate.json'))
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate20_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE20_BASE), lambda p: git('show', ':'+p))
+    validate20_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE20_BASE), lambda p: regular(ROOT/p))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R20_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R20_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed20(path) and path not in RELEASE20_EXISTING, 'R20_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R20_COLLISION'); names.add(key); regular(ROOT/path)
+    # Original Release08-19 consumers run separately against their immutable checkers.
+    # The successor consumer exercises the current finite scope without rewriting old negatives.
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        result = subprocess.run([sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer20.test.py'], cwd=ROOT, capture_output=True, timeout=300)
+        require(result.returncode == 0, 'R20_SOURCE_TESTS_FAILED: ' +
+            result.stdout.decode('utf-8', errors='replace')[-4000:] +
+            result.stderr.decode('utf-8', errors='replace')[-4000:])
+    return source19_historical_guard()
+
+
+source_guard = source20_guard
+
+
 if __name__ == '__main__':
     sys.exit(main())

@@ -1,14 +1,10 @@
-Campaign19 historical onboarding compatibility SOURCE_ONLY_CANDIDATE / NO_GO; independent Brain review required.
-Authority BRAIN-M1X-ONBOARDING-COMPATIBILITY19-REPAIR-01.
-Input manifest 3cf60513d094d68205c0a0d0eca39034d19416f27d16d2ddd4b31f7994b12955.
-Draft PR23 https://github.com/TasfiqJ/onSkin/pull/23
-Branch stage/m1-onboarding-compatibility19; base stage/m1-onboarding-owner-privacy18.
-Immutable PR22 149d18f3ae3c49f966a9e2b1a679901d1d15b3b6, tree 061b8e8565f21e871fb1d57bed1316cc1a76e5d6.
-Frozen source 9f4c23ad951382be5b72b8d1ad9a908537ba619b, tree 5bc0690ff9ac0e15e2ccaffc2f284b7990ea7b1e.
-Checkpoint docs/brain/checkpoints/M1-02/ONBOARDING-COMPATIBILITY-19/README.md
-External checkpoint manifest SHA256 fcd989bba65cb813c397d0c3118bf1bc0410190e1f0067c5223808eb8aac3119
-Verify python -B docs/brain/checkpoints/M1-02/ONBOARDING-COMPATIBILITY-19/verify19.py --expected-manifest-sha256 fcd989bba65cb813c397d0c3118bf1bc0410190e1f0067c5223808eb8aac3119 --git-root .
-Exactly one compact evidence tail follows frozen source; delivery HEAD/tree are derived by verification, not circularly predicted. Full final-head checks/CI and return custody follow in the external FINAL_REPORT.md.
-All original 70 cases pass; 6253 mobile and 24 operator passes, no cache hits. Six runtime paths unchanged; actual synthetic Expo web and source exports never establish installed iPhone/VoiceOver/native/provider or qualified review. Original151 completion is not predicted here.
-G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/device/clinical/legal/Apple/provider/public release CLOSED. Required F09 and complete F01-F17/F19-F20 + 12 C + 6 P + exactly J01 after qualified gates remain; F18/J02-J27 deferred.
-USD0. No merge, auto-merge, maintainer edits, prior-branch modification, paid/provider action, private Security custody/rotation or self-acceptance.
+Campaign20 F09 manual photo comparison SOURCE_ONLY_CANDIDATE / IN_PROGRESS / PARTIAL_BLOCKED.
+Authority BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01.
+Authenticated input manifest 41b0c20e2a74c033f68f758cc96ad8be6e5b72daa51917652c5b9cb206c53cfd.
+Branch stage/m1-f09-manual-photo-compare20; base stage/m1-onboarding-compatibility19.
+Immutable parent 9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4; tree 961d24a7427667aab610939f3a4d088db0a90430.
+Current scoped source adds distinct current-series pairing, retired picker closures, default side-by-side, readable dated controls and truthful image recovery. Independent Brain source review is required; no acceptance is granted.
+Initial clean-cache root identified seven incompatible populated-layout cases in protected progressEmptyLayout.c08b2.test.ts. That fixture omits Query/health authority and current source metadata; its repair is outside the finite grant and remains UNAPPLIED. No privacy gate, old test, dependency or workflow is weakened.
+Final frozen source, generated worklist, compact checkpoint, externally anchored manifest and exact final-head CI observations are pending. No pending check is represented as passed.
+G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 G1/G2/G3/G5 NOT_ACCEPTED. Native/iPhone/VoiceOver/provider/Apple/public release CLOSED.
+Full working non-Korean F01-F17/F19-F20, 12 consumer C and six professional P groups including F09, plus exactly independently validated J01 remain required. F18 and J02-J27 including J05 deferred. USD0; no main/prior-branch modification, merge, force push, paid action, private Security custody or self-acceptance.

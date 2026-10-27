@@ -1,9 +1,23 @@
 import { reportDockScroll } from '@/components/navigation/DockMotion';
 import { router } from 'expo-router';
-import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import {
   FlatList,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   SectionList,
@@ -25,6 +39,15 @@ import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { timelapseFrames } from '@/features/photos/timelapse';
 import { usePhotos } from '@/features/photos/usePhotos';
+import {
+  chooseManualCompare20,
+  manualCompare20,
+  type ManualCompare20Selection,
+} from '@/features/photos/manualCompare20';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 import { ProGate } from '@/features/subscription/ProGate';
 import {
   motionAwareModalAnimation,
@@ -47,6 +70,14 @@ function sameStringSet(left: ReadonlySet<string>, right: ReadonlySet<string>): b
 
 function short(ymd: string): string {
   return parseLocalDate(ymd).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function comparisonDate(ymd: string): string {
+  return parseLocalDate(ymd).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 }
 
 // ── Mode switch ──────────────────────────────────────────────────────────────
@@ -163,50 +194,81 @@ type PhotoLite = NonNullable<ReturnType<typeof usePhotos>['data']>['series'][num
 function PairPickerPhoto({
   photo,
   target,
+  position,
+  total,
   selected,
+  disabled,
   active,
   onSelect,
 }: {
   photo: PhotoLite;
   target: 'first' | 'second';
+  position: number;
+  total: number;
   selected: boolean;
+  disabled: boolean;
   active: boolean;
   onSelect: (id: string) => void;
 }) {
+  const [previewReady, setPreviewReady] = useState(false);
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Choose ${short(photo.takenLocalDate)} as the ${target} comparison photo`}
-      accessibilityHint="Updates the side-by-side comparison pair"
-      accessibilityState={{ selected }}
+      accessibilityLabel={`Choose ${comparisonDate(photo.takenLocalDate)} as the ${target} comparison photo, capture ${position} of ${total}`}
+      accessibilityHint={
+        disabled
+          ? 'Already used in the other position. Choose a different capture.'
+          : 'Updates the comparison pair'
+      }
+      accessibilityState={{ selected, disabled }}
+      disabled={disabled}
       onPress={() => onSelect(photo.id)}
-      style={{ width: 92, aspectRatio: 3 / 4 }}
-      className="overflow-hidden rounded-[12px]"
+      style={{
+        minHeight: 80,
+        flexDirection: 'row',
+        gap: 12,
+        alignItems: 'center',
+        padding: 8,
+        borderWidth: selected ? 2 : 1,
+        borderColor: selected ? colors.clay : colors.hairline,
+        borderRadius: 12,
+      }}
     >
-      {(photo.thumbnailLocalUri ?? photo.localUri) ? (
-        <PhotoImage
-          uri={photo.thumbnailLocalUri ?? photo.localUri}
-          photoId={photo.id}
-          captureSessionId={photo.captureSessionId}
-          fallbackOriginalUri={photo.localUri}
-          rendition="thumbnail"
-          requestPriority="visible"
-          active={active}
-          style={{ flex: 1 }}
-        />
-      ) : (
-        <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
-      )}
       <View
-        className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
-        style={{ borderWidth: selected ? 2.5 : 0, borderColor: colors.clay }}
-      />
-      <View
-        className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
-        style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        aria-hidden
+        style={{ width: 56, height: 72, overflow: 'hidden', borderRadius: 8 }}
       >
-        <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
-          {short(photo.takenLocalDate)}
+        {active && (photo.thumbnailLocalUri ?? photo.localUri) ? (
+          <PhotoImage
+            uri={photo.thumbnailLocalUri ?? photo.localUri}
+            photoId={photo.id}
+            captureSessionId={photo.captureSessionId}
+            fallbackOriginalUri={photo.localUri}
+            rendition="thumbnail"
+            requestPriority="visible"
+            active={active}
+            onDisplayReady={() => setPreviewReady(true)}
+            onDisplayError={() => setPreviewReady(false)}
+            style={{ flex: 1 }}
+          />
+        ) : (
+          <View style={{ flex: 1, backgroundColor: colors.greigeDeep }} />
+        )}
+        {!active || !previewReady ? (
+          <View style={{ position: 'absolute', inset: 0, backgroundColor: colors.greigeDeep }} />
+        ) : null}
+      </View>
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text variant="bodySm">{comparisonDate(photo.takenLocalDate)}</Text>
+        <Text variant="bodySm" tone="muted">
+          Capture {position} of {total}.{' '}
+          {disabled
+            ? 'Used in the other position'
+            : selected
+              ? 'Current choice'
+              : 'Choose this capture'}
         </Text>
       </View>
     </Pressable>
@@ -217,12 +279,14 @@ function PairPicker({
   which,
   photos,
   selectedId,
+  otherId,
   onSelect,
   onClose,
 }: {
   which: 'before' | 'after' | null;
   photos: PhotoLite[];
   selectedId: string | null;
+  otherId: string;
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
@@ -252,6 +316,7 @@ function PairPicker({
       animationType={motionAwareModalAnimation(reduceMotion, 'slide')}
       accessibilityLabel={title}
       onRequestClose={onClose}
+      onAccessibilityEscape={onClose}
     >
       <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
         <Pressable
@@ -273,31 +338,45 @@ function PairPicker({
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
             style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
           />
-          <Text variant="titleSm" className="mb-1">
-            {title}
-          </Text>
-          <Text variant="bodySm" tone="muted" className="mb-4">
-            Any two captures. You decide what to compare.
-          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cancel photo selection"
+            onPress={onClose}
+            className="min-h-[48px] self-start justify-center px-2 py-2"
+          >
+            <Text variant="bodySm">Cancel</Text>
+          </Pressable>
           <FlatList
             nativeID="progress-comparison-picker-list"
-            horizontal
+            ListHeaderComponent={
+              <>
+                <Text accessibilityRole="header" variant="titleSm" className="mb-1">
+                  {title}
+                </Text>
+                <Text variant="bodySm" tone="muted" className="mb-4">
+                  Pick a different capture.
+                </Text>
+              </>
+            }
+            style={{ flexShrink: 1 }}
             data={latestFirstPhotos}
             keyExtractor={(photo) => photo.id}
             extraData={visiblePhotoIds}
             initialNumToRender={4}
             maxToRenderPerBatch={4}
             windowSize={5}
-            getItemLayout={(_data, index) => ({ length: 102, offset: 102 * index, index })}
             viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}
             onViewableItemsChanged={onPickerViewableItemsChanged}
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator
             contentContainerStyle={{ gap: 10 }}
-            renderItem={({ item: photo }) => (
+            renderItem={({ item: photo, index }) => (
               <PairPickerPhoto
                 photo={photo}
                 target={target}
+                position={index + 1}
+                total={latestFirstPhotos.length}
                 selected={photo.id === selectedId}
+                disabled={photo.id === otherId}
                 active={which !== null && visiblePhotoIds.has(photo.id)}
                 onSelect={onSelect}
               />
@@ -310,96 +389,200 @@ function PairPicker({
 }
 
 // ── Compare (design screen 04) ───────────────────────────────────────────────
-function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>['data']> }) {
-  const [sideBySide, setSideBySide] = useState(false);
-  const [picking, setPicking] = useState<'before' | 'after' | null>(null);
-  const [pick, setPick] = useState<{ beforeId?: string; afterId?: string }>({});
-  const dflt = data.comparePair;
+// This boundary retires callbacks synchronously, including invalidate/restore or A→B→A
+// transitions batched before a React render. The protected hook still owns all data admission.
+function CompareView({
+  data,
+  isSourceCurrent,
+}: {
+  data: NonNullable<ReturnType<typeof usePhotos>['data']>;
+  isSourceCurrent: () => boolean;
+}) {
+  const client = useQueryClient();
+  const navigation = useContext(NavigationContext);
+  const lease = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
+  const [focused, setFocused] = useState(() => navigation?.isFocused() ?? true);
+  const [revision, setRevision] = useState(0);
+  const session = useMemo(
+    () => ({ alive: true, data, lease, revision, focused, navigation, client }),
+    [data, lease, revision, focused, navigation, client],
+  );
+  useLayoutEffect(() => {
+    const retire = () => {
+      session.alive = false;
+      setRevision((value) => value + 1);
+    };
+    const query = client.getQueryCache().subscribe((event) => {
+      if (
+        event.query.queryKey[0] === 'photos' &&
+        (event.type === 'updated' || event.type === 'removed')
+      )
+        retire();
+    });
+    const authority = subscribeActiveHealthProcessingLeaseChanges(retire);
+    const blur = navigation?.addListener('blur', () => {
+      retire();
+      setFocused(false);
+    });
+    const focus = navigation?.addListener('focus', () => {
+      retire();
+      setFocused(true);
+    });
+    return () => {
+      session.alive = false;
+      query();
+      authority();
+      blur?.();
+      focus?.();
+    };
+  }, [client, navigation, session]);
+  const current = () =>
+    session.alive &&
+    focused &&
+    (navigation?.isFocused() ?? true) &&
+    lease !== null &&
+    activeHealthProcessingLeaseSnapshot()?.generation === lease.generation &&
+    isSourceCurrent();
+  if (lease === null || !current()) return null;
+  return <CompareSession key={`${lease.generation}:${revision}`} data={data} isCurrent={current} />;
+}
 
-  if (!dflt) {
-    // Sparse: exactly one photo. Invite a second rather than an empty slider.
+function CompareSession({
+  data,
+  isCurrent,
+}: {
+  data: NonNullable<ReturnType<typeof usePhotos>['data']>;
+  isCurrent: () => boolean;
+}) {
+  const [sideBySide, setSideBySide] = useState(true);
+  const [picking, setPicking] = useState<'before' | 'after' | null>(null);
+  const [pick, setPick] = useState<ManualCompare20Selection>({});
+  const beforeTrigger = useRef<View>(null);
+  const afterTrigger = useRef<View>(null);
+  const pair = manualCompare20(data.series, pick);
+
+  function closePicker() {
+    if (!isCurrent()) return;
+    const trigger = picking === 'before' ? beforeTrigger : afterTrigger;
+    setPicking(null);
+    requestAnimationFrame(() => {
+      if (!isCurrent()) return;
+      if (Platform.OS === 'web') trigger.current?.focus?.();
+      else focusTimelapseElementAfterLayout(() => (isCurrent() ? trigger.current : null));
+    });
+  }
+  function choose(id: string) {
+    if (!isCurrent() || picking === null) return;
+    const next = chooseManualCompare20(data.series, pick, picking, id);
+    if (next === null) return;
+    setPick(next);
+    closePicker();
+  }
+  if (pair.status !== 'ready') {
     return (
       <Card className="mt-2">
-        <View
-          className="mb-3 h-44 items-center justify-center rounded-card"
-          style={{ backgroundColor: colors.greige }}
-        >
-          <Text variant="label" tone="muted">
-            your first photo
-          </Text>
-        </View>
-        <Text variant="body" className="font-sans-medium">
-          {PHOTO_COPY.sparse}
+        <Text variant="body">
+          {pair.status === 'sparse'
+            ? PHOTO_COPY.sparse
+            : pair.status === 'empty'
+              ? 'No front-series photos are available for comparison.'
+              : pair.status === 'missing'
+                ? 'A chosen photo is no longer available in this series. Choose a new pair.'
+                : 'Photo metadata is unavailable. Return to Timeline or reopen Progress to try again.'}
         </Text>
+        {pair.status === 'missing' ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Choose a new comparison pair"
+            onPress={() => {
+              if (isCurrent()) setPick({});
+            }}
+            className="min-h-[48px] justify-center py-3"
+          >
+            <Text variant="bodySm">Choose a new pair</Text>
+          </Pressable>
+        ) : null}
       </Card>
     );
   }
-
-  // Resolve the active pair: a user pick (docs/06 §4 "any two captures") or the
-  // default earliest-vs-latest.
-  const before = (pick.beforeId && data.series.find((p) => p.id === pick.beforeId)) || dflt.before;
-  const after = (pick.afterId && data.series.find((p) => p.id === pick.afterId)) || dflt.after;
-
-  function choose(id: string) {
-    setPick((prev) =>
-      picking === 'before' ? { ...prev, beforeId: id } : { ...prev, afterId: id },
-    );
-    setPicking(null);
-  }
-
+  const { before, after, sameDay } = pair;
   return (
     <View className="mt-2">
-      <View className="mb-3 flex-row items-center justify-between">
-        <View style={{ flex: 1 }} />
+      <View className="mb-3 gap-2">
+        <Text variant="bodySm" tone="muted">
+          Choose two photos, then compare with your own eyes.
+        </Text>
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={
+            sideBySide ? 'Switch to swipe comparison' : 'Switch to side-by-side comparison'
+          }
           accessibilityState={{ selected: sideBySide }}
-          onPress={() => setSideBySide((v) => !v)}
+          onPress={() => {
+            if (isCurrent()) setSideBySide((value) => !value);
+          }}
           className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
           style={{
-            backgroundColor: sideBySide ? colors.ink : colors.paperRaised,
-            borderWidth: sideBySide ? 0 : 1,
+            backgroundColor: colors.paperRaised,
+            borderWidth: 1,
             borderColor: colors.hairlineStrong,
           }}
         >
-          <Text variant="label" style={{ color: sideBySide ? colors.paper : colors.muted }}>
-            {PHOTO_COPY.sideBySide}
+          <Text variant="bodySm">
+            {sideBySide ? 'Side-by-side · Switch to swipe' : 'Swipe · Switch to side-by-side'}
           </Text>
         </Pressable>
+        {sameDay ? (
+          <Text variant="bodySm">
+            Same day. First and second identify positions; capture order is not known.
+          </Text>
+        ) : null}
       </View>
       <CompareSlider
         before={{
           id: before.id,
           uri: before.localUri,
-          date: short(before.takenLocalDate),
+          date: comparisonDate(before.takenLocalDate),
           tone: '#E7E0D5',
           captureSessionId: before.captureSessionId,
         }}
         after={{
           id: after.id,
           uri: after.localUri,
-          date: short(after.takenLocalDate),
+          date: comparisonDate(after.takenLocalDate),
           tone: '#DACFBE',
           captureSessionId: after.captureSessionId,
         }}
+        beforeLabel={sameDay ? 'First' : 'Before'}
+        afterLabel={sameDay ? 'Second' : 'After'}
+        beforeTrigger={beforeTrigger}
+        afterTrigger={afterTrigger}
         sideBySide={sideBySide}
         active={picking === null}
-        onPickBefore={() => setPicking('before')}
-        onPickAfter={() => setPicking('after')}
+        onPickBefore={() => {
+          if (isCurrent()) setPicking('before');
+        }}
+        onPickAfter={() => {
+          if (isCurrent()) setPicking('after');
+        }}
       />
-      <View className="mt-4 flex-row items-center gap-2.5">
-        <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clay }} />
-        <Text variant="bodySm" tone="muted" className="flex-1" style={{ lineHeight: 18 }}>
-          {PHOTO_COPY.compareNote}
-        </Text>
-      </View>
-      <PairPicker
-        which={picking}
-        photos={data.series}
-        selectedId={picking === 'before' ? before.id : picking === 'after' ? after.id : null}
-        onSelect={choose}
-        onClose={() => setPicking(null)}
-      />
+      <Text variant="bodySm" tone="muted" className="mt-4">
+        {PHOTO_COPY.compareNote}
+      </Text>
+      {picking !== null ? (
+        <PairPicker
+          which={picking}
+          photos={data.series}
+          selectedId={picking === 'before' ? before.id : after.id}
+          otherId={picking === 'before' ? after.id : before.id}
+          onSelect={choose}
+          onClose={closePicker}
+        />
+      ) : null}
     </View>
   );
 }
@@ -616,7 +799,8 @@ function TimelineView({
 
 function PhotoProgressTab() {
   const { height } = useWindowDimensions();
-  const { data } = usePhotos('front');
+  const source = usePhotos('front');
+  const { data, isSourceCurrent } = source;
   const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
   const compactFirstRun = height < 520;
   // Deletion recovery adds a header above the empty-state capture action.
@@ -636,7 +820,7 @@ function PhotoProgressTab() {
   const header = (
     <>
       <PhotoDeleteSyncStatus />
-      <View className="flex-row items-start justify-between">
+      <View className="flex-row flex-wrap items-start justify-between">
         <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
           {PHOTO_COPY.tabTitle}
         </Text>
@@ -664,7 +848,7 @@ function PhotoProgressTab() {
             {PHOTO_COPY.tagline}
           </Text>
           <View className="mt-4 gap-2.5">
-            <View className="flex-row items-center gap-2.5">
+            <View className="flex-row flex-wrap items-center gap-2.5">
               <ModeTab
                 label="Compare"
                 active={mode === 'compare'}
@@ -710,7 +894,11 @@ function PhotoProgressTab() {
       >
         {header}
 
-        {count === 0 ? <FirstRun compact={compactEmptyFirstRun} /> : <CompareView data={data} />}
+        {count === 0 ? (
+          <FirstRun compact={compactEmptyFirstRun} />
+        ) : (
+          <CompareView data={data} isSourceCurrent={isSourceCurrent} />
+        )}
       </ScrollView>
     </Screen>
   );

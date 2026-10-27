@@ -17,6 +17,6 @@ export function moveCompareDividerPercent(current: number, actionName: string): 
   return normalized;
 }
 
-export function compareDividerValueText(value: number): string {
-  return `${normalizeCompareDividerPercent(value)} percent of the before photo visible`;
+export function compareDividerValueText(value: number, label = 'before'): string {
+  return `${normalizeCompareDividerPercent(value)} percent of the ${label} photo visible`;
 }

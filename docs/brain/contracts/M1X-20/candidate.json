@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "base": "9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4",
+  "tree": "961d24a7427667aab610939f3a4d088db0a90430",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  }
+}
