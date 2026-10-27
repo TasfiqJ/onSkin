@@ -2589,6 +2589,15 @@ def allowed21(path):
         (path in RELEASE21_EXISTING or path in RELEASE21_NEW or path.startswith(RELEASE21_PREFIXES)))
 
 
+def remember21(path, identities):
+    parts = path.split('/')
+    for size in range(1, len(parts)+1):
+        original = '/'.join(parts[:size])
+        key = unicodedata.normalize('NFKC', original).casefold()
+        require(key not in identities or identities[key] == original, 'R21_COLLISION')
+        identities[key] = original
+
+
 def validate21_checker(raw):
     before = git('show', RELEASE21_BASE+':scripts/release/full-app-j01/check.py')
     tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
@@ -2600,7 +2609,7 @@ def validate21_checker(raw):
             ast.dump(n, include_attributes=False) == value for n in new.body)
             for name, value in inherited.items()), 'R21_INHERITED_AST_CHANGED')
     extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
-    functions = {'allowed21', 'validate21_checker', 'candidate21_guard', 'validate21_diff',
+    functions = {'allowed21', 'remember21', 'validate21_checker', 'candidate21_guard', 'validate21_diff',
         'source21_endpoint', 'source21_history', 'source20_historical_guard', 'source21_guard',
         'fixture21_guard', 'runtime21_guard', 'evidence21_guard'}
     require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
@@ -2636,11 +2645,13 @@ def validate21_diff(raw, read_after):
     fields = raw.split(b'\0')
     require(fields[-1] == b'' and len(fields) % 2 == 1, 'R21_DIFF_SHAPE')
     names = set()
+    identities = {}
     for n in range(0, len(fields)-1, 2):
         meta = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
         require(len(meta) == 5, 'R21_DIFF_META')
         oldmode, newmode, oldblob, newblob, status = meta
         require(allowed21(path) and status in ('A', 'M'), 'R21_SCOPE:'+path)
+        remember21(path, identities)
         key = unicodedata.normalize('NFKC', path).casefold()
         require(key not in names, 'R21_COLLISION'); names.add(key)
         require(oldmode in (':000000', ':100644') and newmode == '100644', 'R21_MODE')
@@ -2813,14 +2824,17 @@ def source21_guard():
     validate21_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE21_BASE), lambda p: git('show', ':'+p))
     validate21_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE21_BASE), lambda p: regular(ROOT/p))
     names = set()
+    identities = {}
     for entry in git('ls-files', '-v', '-z').decode().split('\0'):
         if entry:
             require(entry.startswith('H '), 'R21_INDEX_FLAGS')
+            remember21(entry[2:], identities)
             key = unicodedata.normalize('NFKC', entry[2:]).casefold()
             require(key not in names, 'R21_COLLISION'); names.add(key)
     for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
         if path:
             require(allowed21(path) and path not in RELEASE21_EXISTING, 'R21_UNTRACKED_SCOPE:'+path)
+            remember21(path, identities)
             key = unicodedata.normalize('NFKC', path).casefold()
             require(key not in names, 'R21_COLLISION'); names.add(key); regular(ROOT/path)
     # Original Release08-20 consumers run separately against their immutable checkers.

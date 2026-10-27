@@ -126,6 +126,11 @@ def main():
             for names in [('Case.md','case.md')]:
                 for name in names:put(check.RELEASE21_PREFIXES[0]+name)
                 expect('casefold-collision',delta,code='R21_COLLISION');git('read-tree',tree)
+            for name in ['Case/a.md', 'case/b.md']:put(check.RELEASE21_PREFIXES[0]+name)
+            expect('implicit-parent-case-alias',delta,code='R21_COLLISION');git('read-tree',tree)
+            identities = {}
+            check.remember21('docs/brain/contracts/M1X-21/A/a.md', identities)
+            expect('implicit-parent-nfkc-alias',lambda:check.remember21('docs/brain/contracts/M1X-21/\uff21/b.md',identities),code='R21_COLLISION')
             expect('truncated-diff',lambda:check.validate21_diff(b'bad',lambda p:b''),code='R21_DIFF_SHAPE')
             zero='0'*40;blob=git('rev-parse',':ONSKIN_BRAIN_HANDOFF.txt').decode().strip()
             for path,meta in [('ONSKIN_BRAIN_HANDOFF.txt',f':000000 100644 {zero} {blob} A'),
