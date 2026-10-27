@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-F09-LAYOUT-COMPATIBILITY21-REPAIR-01",
+  "status": "SOURCE_ONLY_CANDIDATE",
+  "base": "3c8cb787f3770df09f0ae4507bca9ac49fb5a079",
+  "tree": "1ae09829967d455d98b5f5f93558927890d2d8e9",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "runtimeProof": {}
+}

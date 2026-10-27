@@ -2550,5 +2550,291 @@ def source20_guard():
 source_guard = source20_guard
 
 
+# Release21 successor. Inherited Release08-20 definitions above are immutable.
+RELEASE21_BASE = '3c8cb787f3770df09f0ae4507bca9ac49fb5a079'
+RELEASE21_TREE = '1ae09829967d455d98b5f5f93558927890d2d8e9'
+RELEASE21_PR = 25  # Bind only the GitHub-allocated draft number.
+RELEASE21_AUTHORITY = 'BRAIN-M1X-F09-LAYOUT-COMPATIBILITY21-REPAIR-01'
+RELEASE21_EXISTING = {
+    'apps/mobile/src/features/photos/progressEmptyLayout.c08b2.test.ts',
+    'apps/mobile/src/features/photos/manualCompare20Route.test.ts',
+    'apps/mobile/src/features/photos/manualCompare20.test.ts',
+    'apps/mobile/src/features/photos/progressRoutes.test.ts',
+    'apps/mobile/src/app/(tabs)/progress.tsx',
+    'apps/mobile/src/features/photos/CompareSlider.tsx',
+    'docs/USER_FLOW_TREE.md', 'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt',
+}
+RELEASE21_NEW = {
+    'apps/mobile/src/features/photos/progressLayoutAuthority21.test.ts',
+    'scripts/m1/f09_layout_compatibility21_browser.mjs',
+    'scripts/release/full-app-j01/source_consumer21.test.py',
+}
+RELEASE21_PREFIXES = ('docs/brain/contracts/M1X-21/', 'docs/brain/task-specs/M1X-21/',
+    'docs/brain/checkpoints/M1-02/F09-LAYOUT-COMPATIBILITY-21/')
+RELEASE21_CHECKPOINT = 'docs/brain/checkpoints/M1-02/F09-LAYOUT-COMPATIBILITY-21/'
+RELEASE21_RUNTIME = {'apps/mobile/src/app/(tabs)/progress.tsx',
+    'apps/mobile/src/features/photos/CompareSlider.tsx'}
+RELEASE21_FIXTURE = 'apps/mobile/src/features/photos/progressEmptyLayout.c08b2.test.ts'
+RELEASE21_CANDIDATE = 'docs/brain/contracts/M1X-21/candidate.json'
+RELEASE21_INHERITED_SOURCE_GUARD = source_guard
+
+
+def allowed21(path):
+    return (isinstance(path, str) and re.fullmatch(r'[A-Za-z0-9._/()-]+', path) is not None and
+        all(p and not p.startswith('.') and not p.endswith('.') and
+            re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I) is None
+            for p in path.split('/')) and
+        (path in RELEASE21_EXISTING or path in RELEASE21_NEW or path.startswith(RELEASE21_PREFIXES)))
+
+
+def validate21_checker(raw):
+    before = git('show', RELEASE21_BASE+':scripts/release/full-app-j01/check.py')
+    tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(tail) and raw.startswith(before[:-len(tail)]) and raw.endswith(tail),
+            'R21_INHERITED_BYTES_CHANGED')
+    old = ast.parse(before); new = ast.parse(raw)
+    inherited = {n.name: ast.dump(n, include_attributes=False) for n in old.body if isinstance(n, ast.FunctionDef)}
+    require(all(any(isinstance(n, ast.FunctionDef) and n.name == name and
+            ast.dump(n, include_attributes=False) == value for n in new.body)
+            for name, value in inherited.items()), 'R21_INHERITED_AST_CHANGED')
+    extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
+    functions = {'allowed21', 'validate21_checker', 'candidate21_guard', 'validate21_diff',
+        'source21_endpoint', 'source21_history', 'source20_historical_guard', 'source21_guard',
+        'fixture21_guard', 'runtime21_guard', 'evidence21_guard'}
+    require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
+            len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R21_FUNCTION_SCOPE')
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and
+                isinstance(node.targets[0], ast.Name), 'R21_MODULE_SCOPE')
+        name = node.targets[0].id
+        if name == 'source_guard':
+            require(isinstance(node.value, ast.Name) and node.value.id == 'source21_guard', 'R21_DISPATCH')
+        elif name == 'RELEASE21_INHERITED_SOURCE_GUARD':
+            require(isinstance(node.value, ast.Name) and node.value.id == 'source_guard', 'R21_INHERITED_DISPATCH')
+        else:
+            require(name.startswith('RELEASE21_'), 'R21_GLOBAL_SCOPE')
+            try: ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R21_GLOBAL_SIDE_EFFECT')
+
+
+def candidate21_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs)
+    require(set(value) == {'schema', 'authority', 'status', 'base', 'tree', 'acceptanceGranted', 'admissions', 'runtimeProof'} and
+        type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE21_AUTHORITY and
+        value['base'] == RELEASE21_BASE and value['tree'] == RELEASE21_TREE and
+        value['status'] == 'SOURCE_ONLY_CANDIDATE' and value['acceptanceGranted'] is False and
+        value['admissions'] == dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False) and
+        all(flag is False for flag in value['admissions'].values()), 'R21_NO_ADMISSION')
+    require(type(value['runtimeProof']) is dict and set(value['runtimeProof']) <= RELEASE21_RUNTIME, 'R21_RUNTIME_PROOF_SCOPE')
+    return value
+
+
+def validate21_diff(raw, read_after):
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R21_DIFF_SHAPE')
+    names = set()
+    for n in range(0, len(fields)-1, 2):
+        meta = fields[n].decode('ascii').split(); path = fields[n+1].decode('utf-8')
+        require(len(meta) == 5, 'R21_DIFF_META')
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(allowed21(path) and status in ('A', 'M'), 'R21_SCOPE:'+path)
+        key = unicodedata.normalize('NFKC', path).casefold()
+        require(key not in names, 'R21_COLLISION'); names.add(key)
+        require(oldmode in (':000000', ':100644') and newmode == '100644', 'R21_MODE')
+        require((path in RELEASE21_EXISTING) == (oldmode == ':100644') and
+            status == ('M' if oldmode == ':100644' else 'A') and
+            all(re.fullmatch('[0-9a-f]{40}', x) for x in (oldblob, newblob)), 'R21_CREATE_EDIT')
+        if oldmode == ':100644':
+            require(oldblob == git('rev-parse', RELEASE21_BASE+':'+path).decode().strip(), 'R21_BASE_BLOB')
+        else:
+            require(oldblob == '0'*40 and subprocess.run(['git', 'cat-file', '-e', RELEASE21_BASE+':'+path],
+                cwd=ROOT, capture_output=True).returncode != 0, 'R21_EXISTING_RECLASSIFIED')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob,
+            'R21_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate21_checker(data)
+        if path == RELEASE21_CANDIDATE: candidate21_guard(data)
+        if path == RELEASE21_FIXTURE: fixture21_guard(data)
+        if path in RELEASE21_RUNTIME: runtime21_guard(path, read_after)
+        if path in {'apps/mobile/src/features/photos/manualCompare20Route.test.ts',
+                'apps/mobile/src/features/photos/manualCompare20.test.ts',
+                'apps/mobile/src/features/photos/progressRoutes.test.ts'}:
+            lines = iter(data.splitlines(keepends=True))
+            require(all(any(original == added for added in lines) for original in
+                git('show', RELEASE21_BASE+':'+path).splitlines(keepends=True)), 'R21_ADDITIVE_REGRESSION:'+path)
+        if path == 'docs/USER_FLOW_TREE.md':
+            before = git('show', RELEASE21_BASE+':'+path)
+            require(data.startswith(before) and data[len(before):].count(b'## Campaign21') == 1, 'R21_ADDITIVE_FLOW')
+
+
+def fixture21_guard(raw):
+    before = git('show', RELEASE21_BASE+':'+RELEASE21_FIXTURE)
+    marker = b"describe('C-08B2-R2 empty layout composition (pixel geometry is covered by the browser runner)', () => {"
+    require(before.count(marker) == raw.count(marker) == 1 and
+        raw[raw.index(marker):] == before[before.index(marker):], 'R21_ORIGINAL15_CHANGED')
+
+
+def runtime21_guard(path, read_after):
+    value = candidate21_guard(read_after(RELEASE21_CANDIDATE))
+    proof = value['runtimeProof'].get(path)
+    require(isinstance(proof, dict) and set(proof) == {'defect', 'before', 'after'} and
+        isinstance(proof['defect'], str) and len(proof['defect'].strip()) >= 20, 'R21_RUNTIME_REPRODUCTION_REQUIRED:'+path)
+    for phase, expected in [('before', 1), ('after', 0)]:
+        receipt = proof[phase]
+        fields = {'command', 'exit', 'receiptSHA256'} | ({'source'} if phase == 'before' else set())
+        require(isinstance(receipt, dict) and set(receipt) == fields and
+            type(receipt['exit']) is int and receipt['exit'] == expected and
+            isinstance(receipt['command'], list) and bool(receipt['command']) and
+            all(isinstance(arg, str) and bool(arg) for arg in receipt['command']) and
+            re.fullmatch('[0-9a-f]{64}', receipt['receiptSHA256']) is not None and
+            (phase != 'before' or receipt['source'] == RELEASE21_BASE), 'R21_RUNTIME_PROOF:'+path)
+
+
+def evidence21_guard(endpoint):
+    # There is no evidence tail while substantive source is being developed.
+    # Once a checkpoint enters Git, require exactly one terminal evidence child.
+    names = [p for p in git('diff', '--name-only', '--no-renames', '-z', RELEASE21_BASE, endpoint).decode().split('\0')
+             if p.startswith(RELEASE21_CHECKPOINT)]
+    manifest_path = RELEASE21_CHECKPOINT+'manifest.json'
+    if not names:
+        require(not (ROOT/manifest_path).exists(), 'R21_UNCOMMITTED_EVIDENCE')
+        return
+    manifest = json.loads(regular(ROOT/manifest_path), object_pairs_hook=pairs)
+    require(type(manifest.get('schema')) is int and manifest.get('schema') == 1 and manifest.get('authority') == RELEASE21_AUTHORITY and
+        manifest.get('acceptanceGranted') is False and manifest.get('release') == 'NO_GO' and
+        manifest.get('inputManifestSHA256') == '6c9b46747f0bb5a9141c9320a92f9508cff6d7e964b8ce2e8536e1260b64536e', 'R21_EVIDENCE_NO_ADMISSION')
+    source = manifest['source']
+    require(source['base'] == RELEASE21_BASE and source['baseTree'] == RELEASE21_TREE and
+        all(re.fullmatch('[0-9a-f]{40}', source[k]) is not None for k in
+            ['runtimeHead', 'runtimeTree', 'sourceHead', 'sourceTree']), 'R21_EVIDENCE_SOURCE')
+    require(git('rev-parse', source['runtimeHead']+'^{tree}').decode().strip() == source['runtimeTree'] and
+        git('rev-parse', source['sourceHead']+'^{tree}').decode().strip() == source['sourceTree'] and
+        git('rev-list', '--parents', '-n', '1', source['sourceHead']).decode().split() ==
+            [source['sourceHead'], source['runtimeHead']] and
+        git('rev-list', '--parents', '-n', '1', endpoint).decode().split() ==
+            [endpoint, source['sourceHead']], 'R21_ONE_EVIDENCE_TAIL')
+    worklist = set(git('diff', '--name-only', '--no-renames', '-z', source['runtimeHead'], source['sourceHead']).decode().split('\0')[:-1])
+    require(worklist == {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}, 'R21_WORKLIST_ONLY_FREEZE')
+    require(git('merge-base', RELEASE21_BASE, source['runtimeHead']).decode().strip() == RELEASE21_BASE,
+        'R21_EVIDENCE_ANCESTRY')
+    files = manifest['files']
+    require(isinstance(files, dict) and bool(files) and all(isinstance(name, str) and
+        allowed21(RELEASE21_CHECKPOINT+name) and not name.startswith('.') and
+        name != 'manifest.json' for name in files), 'R21_EVIDENCE_FILES')
+    expected = {RELEASE21_CHECKPOINT+name for name in files} | {manifest_path}
+    actual = set()
+    for artifact in (ROOT/RELEASE21_CHECKPOINT).rglob('*'):
+        require(not artifact.is_symlink() and not (getattr(artifact.lstat(), 'st_file_attributes', 0) & 1024), 'R21_EVIDENCE_LINK')
+        if artifact.is_dir(): continue
+        actual.add(artifact.relative_to(ROOT).as_posix())
+    require(actual == expected and set(names) == expected, 'R21_EVIDENCE_INVENTORY')
+    for name, entry in files.items():
+        data = regular(ROOT/(RELEASE21_CHECKPOINT+name))
+        require(isinstance(entry, dict) and set(entry) == {'bytes', 'sha256'} and
+            type(entry['bytes']) is int and entry['bytes'] == len(data) and
+            entry['sha256'] == sha(data), 'R21_EVIDENCE_SHA256:'+name)
+    fields = git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', source['sourceHead'], endpoint).split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R21_EVIDENCE_DIFF')
+    changed = set()
+    for index in range(0, len(fields)-1, 2):
+        meta = fields[index].decode().split(); path = fields[index+1].decode()
+        require(len(meta) == 5 and meta[1] == '100644' and
+            meta[4] == ('M' if path == 'ONSKIN_BRAIN_HANDOFF.txt' else 'A'), 'R21_EVIDENCE_MODE')
+        changed.add(path)
+    require(changed == expected | {'ONSKIN_BRAIN_HANDOFF.txt'}, 'R21_EVIDENCE_TAIL_SCOPE')
+
+
+
+
+def source21_endpoint():
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = git('rev-list', '--parents', '-n', '1', head).decode().split()
+    if len(parents) == 2: return head
+    require(len(parents) == 3 and parents[1] == RELEASE21_BASE, 'R21_CI_PARENTS')
+    require(type(RELEASE21_PR) is int and RELEASE21_PR > 0 and
+        os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and
+        os.environ.get('GITHUB_REF') == 'refs/pull/'+str(RELEASE21_PR)+'/merge' and os.environ.get('GITHUB_SHA') == head, 'R21_CI_CONTEXT')
+    event = json.loads(regular(Path(os.environ.get('GITHUB_EVENT_PATH', ''))), object_pairs_hook=pairs)
+    pr = event.get('pull_request', {})
+    require(event.get('number') == RELEASE21_PR and pr.get('number') == RELEASE21_PR and
+        event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+        pr.get('base', {}).get('sha') == RELEASE21_BASE and pr.get('base', {}).get('ref') == 'stage/m1-f09-manual-photo-compare20' and
+        pr.get('head', {}).get('sha') == parents[2] and pr.get('head', {}).get('ref') == 'stage/m1-f09-layout-compatibility21' and
+        pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+        pr.get('maintainer_can_modify') is False and pr.get('auto_merge') is None, 'R21_CI_EVENT')
+    require(git('rev-parse', head+'^{tree}') == git('rev-parse', parents[2]+'^{tree}'), 'R21_CI_TREE')
+    return parents[2]
+
+
+def source21_history():
+    require(git('rev-parse', RELEASE21_BASE+'^{tree}').decode().strip() == RELEASE21_TREE, 'R21_BASE_TREE')
+    endpoint = source21_endpoint()
+    subprocess.run(['git', 'merge-base', '--is-ancestor', RELEASE21_BASE, endpoint], cwd=ROOT, check=True, capture_output=True)
+    for commit in git('rev-list', '--reverse', RELEASE21_BASE+'..'+endpoint).decode().splitlines():
+        require(len(git('rev-list', '--parents', '-n', '1', commit).decode().split()) == 2, 'R21_LINEAR_HISTORY')
+        validate21_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE21_BASE, commit),
+            lambda path: git('show', commit+':'+path))
+
+
+def source20_historical_guard():
+    # Evaluate every inherited guard against actual immutable PR24 Git bytes.
+    # Current source is checked separately and strictly by source21_guard.
+    actual_git, actual_regular, actual_name = git, regular, __name__
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE21_BASE)
+        if args[0] == 'diff' and len([a for a in args[1:] if not a.startswith('-')]) == 1:
+            return actual_git(*[a for a in args if a != '--cached'], RELEASE21_BASE)
+        if args[0] == 'show' and args[1].startswith(':'): return actual_git('show', RELEASE21_BASE+args[1])
+        if args[0] == 'ls-files':
+            if '--others' in args: return b''
+            if '-v' in args:
+                return b''.join(b'H '+p+b'\0' for p in actual_git('ls-tree', '-r', '--name-only', '-z', RELEASE21_BASE).split(b'\0') if p)
+        return actual_git(*args)
+    def historical_regular(path):
+        try: name = Path(path).absolute().relative_to(ROOT.absolute()).as_posix()
+        except ValueError: return actual_regular(path)
+        found = subprocess.run(['git', 'cat-file', '-e', RELEASE21_BASE+':'+name], cwd=ROOT, capture_output=True)
+        return actual_git('show', RELEASE21_BASE+':'+name) if found.returncode == 0 else actual_regular(path)
+    globals()['git'], globals()['regular'], globals()['__name__'] = historical_git, historical_regular, 'release20_historical'
+    try: return RELEASE21_INHERITED_SOURCE_GUARD()
+    finally: globals()['git'], globals()['regular'], globals()['__name__'] = actual_git, actual_regular, actual_name
+
+
+def source21_guard():
+    source21_history()
+    evidence21_guard(source21_endpoint())
+    candidate21_guard(regular(ROOT/'docs/brain/contracts/M1X-21/candidate.json'))
+    candidate21_guard(git('show', ':docs/brain/contracts/M1X-21/candidate.json'))
+    dependency13_guard(regular(ROOT/'package-lock.json'))
+    dependency13_guard(git('show', ':package-lock.json'), lambda p: git('show', ':'+p), installed=False)
+    validate21_diff(git('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE21_BASE), lambda p: git('show', ':'+p))
+    validate21_diff(git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE21_BASE), lambda p: regular(ROOT/p))
+    names = set()
+    for entry in git('ls-files', '-v', '-z').decode().split('\0'):
+        if entry:
+            require(entry.startswith('H '), 'R21_INDEX_FLAGS')
+            key = unicodedata.normalize('NFKC', entry[2:]).casefold()
+            require(key not in names, 'R21_COLLISION'); names.add(key)
+    for path in git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if path:
+            require(allowed21(path) and path not in RELEASE21_EXISTING, 'R21_UNTRACKED_SCOPE:'+path)
+            key = unicodedata.normalize('NFKC', path).casefold()
+            require(key not in names, 'R21_COLLISION'); names.add(key); regular(ROOT/path)
+    # Original Release08-20 consumers run separately against their immutable checkers.
+    # The successor consumer exercises the current finite scope without rewriting old negatives.
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and __name__ == '__main__' and '--bundle-dir' not in sys.argv:
+        result = subprocess.run([sys.executable, '-B', 'scripts/release/full-app-j01/source_consumer21.test.py'], cwd=ROOT, capture_output=True, timeout=300)
+        require(result.returncode == 0, 'R21_SOURCE_TESTS_FAILED: ' +
+            result.stdout.decode('utf-8', errors='replace')[-4000:] +
+            result.stderr.decode('utf-8', errors='replace')[-4000:])
+    return source20_historical_guard()
+
+
+source_guard = source21_guard
+
+
 if __name__ == '__main__':
     sys.exit(main())
