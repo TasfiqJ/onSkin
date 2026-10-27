@@ -36,12 +36,14 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          python3 -B scripts/security22/run.py | tee "$RUNNER_TEMP/security22-public.json"
+          python3 -B scripts/security22/run.py --output-dir "$RUNNER_TEMP/security22-components" | tee "$RUNNER_TEMP/security22-public.json"
       - name: Retain only allowlisted public component evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: security22-public-components-${{ github.run_id }}
-          path: ${{ runner.temp }}/security22-public.json
+          path: |
+            ${{ runner.temp }}/security22-public.json
+            ${{ runner.temp }}/security22-components/*.json
           if-no-files-found: ignore
           retention-days: 7

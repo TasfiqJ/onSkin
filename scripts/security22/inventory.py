@@ -2,7 +2,6 @@
 
 Historical finding artifacts are NEVER opened. Metadata is not content scanning.
 """
-import gzip
 import hashlib
 import io
 import os
@@ -13,6 +12,7 @@ import struct
 import tarfile
 import unicodedata
 import zipfile
+import zlib
 
 from collect import execute
 from redact import canonical, require
@@ -30,7 +30,7 @@ def git(root, *args):
 
 def safe(name):
     require(isinstance(name, str) and name and not name.startswith('/') and
-            '\\' not in name and ':' not in name and not any(ord(c) < 32 for c in name), 'UNSAFE_PATH')
+            not any(c in name for c in '\\:<>|?*"') and not any(ord(c) < 32 for c in name), 'UNSAFE_PATH')
     parts = name.rstrip('/').split('/')
     require(all(p and p not in ('.', '..') and not p.endswith(('.', ' ')) and
                 not re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p, re.I)
@@ -72,7 +72,9 @@ def regular(root, name, maximum):
             'NONREGULAR_OR_OVERSIZED')
     require(not info.st_mode & (stat.S_ISUID | stat.S_ISGID), 'SPECIAL_MODE')
     with path.open('rb') as stream:
-        raw = stream.read(maximum + 1)
+        # Bound by the witnessed size as well as the policy ceiling; detect growth
+        # without allocating a maximum-size buffer for every small source file.
+        raw = stream.read(info.st_size + 1)
     after = path.lstat()
     require(len(raw) <= maximum and (info.st_ino, info.st_size, info.st_mtime_ns) ==
             (after.st_ino, after.st_size, after.st_mtime_ns), 'CHANGED_INPUT')
@@ -100,13 +102,25 @@ def archives(name, raw, policy, totals, depth=0):
     totals['containers'] += 1
     require(kind != 'unsupported' and depth < policy['maxArchiveDepth'], 'ARCHIVE_UNSUPPORTED_OR_DEPTH')
     if kind == 'gzip':
-        with gzip.GzipFile(fileobj=io.BytesIO(raw)) as stream:
-            data = stream.read(policy['maxFileBytes'] + 1)
-        require(len(data) <= policy['maxFileBytes'] and len(data) <= max(1048576, len(raw) * policy['maxRatio']),
-                'ARCHIVE_EXPANSION_LIMIT')
-        totals['expandedBytes'] += len(data)
-        require(totals['expandedBytes'] <= policy['maxExpandedBytes'], 'ARCHIVE_TOTAL_LIMIT')
-        archives(name[:-3] if name.lower().endswith('.gz') else name+'.tar', data, policy, totals, depth + 1)
+        pending = raw
+        while pending:
+            require(pending.startswith(b'\x1f\x8b'), 'GZIP_TRAILING_DATA')
+            remaining = min(policy['maxFileBytes'], policy['maxExpandedBytes'] - totals['expandedBytes'])
+            require(remaining >= 0, 'ARCHIVE_TOTAL_LIMIT')
+            decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
+            try:
+                data = decoder.decompress(pending, remaining + 1)
+            except zlib.error:
+                require(False, 'GZIP_INVALID')
+            consumed = len(pending) - len(decoder.unused_data)
+            require(decoder.eof and len(data) <= remaining and consumed > 0 and
+                    len(data) <= max(1048576, consumed * policy['maxRatio']), 'ARCHIVE_EXPANSION_LIMIT')
+            totals['members'] += 1
+            totals['gzipMembers'] = totals.get('gzipMembers', 0) + 1
+            require(totals['members'] <= policy['maxArchiveMembers'], 'ARCHIVE_MEMBER_LIMIT')
+            totals['expandedBytes'] += len(data)
+            archives(name[:-3] if name.lower().endswith('.gz') else name+'.tar', data, policy, totals, depth + 1)
+            pending = decoder.unused_data
         return
     aliases, explicit = {}, set()
     if kind == 'zip':
@@ -119,6 +133,7 @@ def archives(name, raw, policy, totals, depth=0):
                 struct.unpack_from('<H', raw, end + 6)[0] == 0, 'ZIP_DIRECTORY_LIMIT')
     handle = zipfile.ZipFile(io.BytesIO(raw)) if kind == 'zip' else tarfile.open(fileobj=io.BytesIO(raw), mode='r:')
     with handle:
+        member_end = 0
         members = handle.infolist() if kind == 'zip' else iter(handle)
         if kind == 'zip':
             require(len(members) == count, 'ZIP_DIRECTORY_COUNT')
@@ -139,7 +154,8 @@ def archives(name, raw, policy, totals, depth=0):
                 require(item.isdir() or item.isfile(), 'ARCHIVE_NONREGULAR')
                 require(not item.mode & (stat.S_ISUID | stat.S_ISGID), 'ARCHIVE_MODE')
                 size = item.size
-            require(size <= policy['maxFileBytes'], 'ARCHIVE_MEMBER_SIZE')
+                member_end = max(member_end, (item.offset_data + size + 511) // 512 * 512)
+            require(type(size) is int and 0 <= size <= policy['maxFileBytes'], 'ARCHIVE_MEMBER_SIZE')
             if directory:
                 require(size == 0, 'ARCHIVE_DIRECTORY_DATA')
                 continue
@@ -153,6 +169,11 @@ def archives(name, raw, policy, totals, depth=0):
                 data = source.read(policy['maxFileBytes'] + 1)
             require(len(data) == size, 'ARCHIVE_TRUNCATED')
             archives(member, data, policy, totals, depth + 1)
+        if kind == 'tar':
+            # tarfile stops at its first end marker. Do not hide a second TAR or
+            # arbitrary nonzero trailing content behind that marker.
+            tail = raw[member_end:]
+            require(len(tail) >= 1024 and not any(tail), 'TAR_TRAILING_DATA')
 
 
 def snapshot(root, policy):
@@ -193,7 +214,7 @@ def snapshot(root, policy):
     commits = len(git(root, 'rev-list', *scope).splitlines())
     rows, aliases, explicit = [], {}, set()
     modes = {}; byte_count = 0; matched = 0; custody = 0; oversized = 0; unsupported = 0
-    totals = dict(containers=0, members=0, expandedBytes=0, binaryLeaves=0, textLeaves=0, custodyMembers=0)
+    totals = dict(containers=0, members=0, gzipMembers=0, expandedBytes=0, binaryLeaves=0, textLeaves=0, custodyMembers=0)
     for entry in git(root, 'ls-tree', '-r', '-l', '-z', head).split(b'\0'):
         if not entry:
             continue
@@ -237,10 +258,12 @@ def snapshot(root, policy):
                              objectSetSHA256=digest(b'\n'.join(sorted(set(history)))),
                              objectMetadataSHA256=digest(object_data),
                              contentScan='BLOCKED_EXTERNAL_CUSTODY', scope='HEAD_AND_EXPLICIT_PUBLIC_REFS'),
-                metadata=dict(state='PASS', expected=len(rows), inventoried=len(rows), modes=modes),
+                metadata=dict(state='PASS', expected=len(rows), inventoried=len(rows), modes=modes,
+                              modeQualification='GIT_MODES; WINDOWS_EXECUTABLE_BIT_NOT_REPRESENTABLE' if os.name == 'nt' else 'GIT_AND_WORKTREE_MODES'),
                 workingBytes=dict(state='PASS' if not (custody or oversized) else 'INCOMPLETE',
                                   expected=len(rows), matched=matched, custodyBlocked=custody,
                                   oversized=oversized, bytesMatched=byte_count),
                 archiveCoverage=dict(state='PASS' if not (unsupported or custody or totals['custodyMembers']) else 'INCOMPLETE',
-                                     unsupportedOrRefusedContainers=unsupported, **totals),
+                                     unsupportedOrRefusedContainers=unsupported, binaryContentScan='NOT_RUN',
+                                     qualification='RECOGNIZED_CONTAINER_STRUCTURE_ONLY; NOT_A_CONTENT_SECURITY_SCAN', **totals),
                 generated=dict(state='INCOMPLETE' if unknown else 'EXPLICIT_DEPENDENCY_COMPONENT_SCOPE', counts=generated))

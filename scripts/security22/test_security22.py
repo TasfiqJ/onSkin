@@ -15,6 +15,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import tarfile
 import time
 import unittest
 from unittest.mock import patch
@@ -55,7 +56,8 @@ def inspect(raw, name='fixture.zip'):
 class Controls(unittest.TestCase):
     def test_path_escapes(self):
         for name in ('/absolute', '../escape', 'a/../b', 'a\\b', 'C:/drive', 'a:stream', 'CON',
-                     'a/PRN.txt', 'a.', 'a ', 'a//b', './a', '\x00', 'a\nb'):
+                     'a/PRN.txt', 'a.', 'a ', 'a//b', './a', '\x00', 'a\nb',
+                     'a<b', 'a>b', 'a|b', 'a?b', 'a*b', 'a"b'):
             with self.subTest(case=name), self.assertRaises(Refusal):
                 safe(name)
 
@@ -245,10 +247,27 @@ class Controls(unittest.TestCase):
             def poll(self): return 0
             def wait(self, **_): return 0
         leaked = io.StringIO()
-        with patch('collect.subprocess.Popen', return_value=Child()), patch('collect.windows_job', return_value=lambda: None), contextlib.redirect_stderr(leaked):
+        with patch('collect.subprocess.Popen', return_value=Child()), patch('collect.windows_job', return_value=lambda: None), patch('collect.stop'), contextlib.redirect_stderr(leaked):
             with self.assertRaises(Refusal):
                 execute([sys.executable, '-I', '-c', 'pass'], Path.cwd(), 1)
         self.assertNotIn('SYNTHETIC_RUNTIME_READER_CANARY', leaked.getvalue())
+
+    def test_tar_trailing_content_and_gzip_members(self):
+        buffer = io.BytesIO()
+        with tarfile.open(fileobj=buffer, mode='w') as handle:
+            item = tarfile.TarInfo('ordinary'); item.size = 3
+            handle.addfile(item, io.BytesIO(b'abc'))
+        raw = buffer.getvalue()
+        inspect(raw, 'ordinary.tar')
+        for changed in (raw + raw, raw + b'not padding'):
+            with self.assertRaises(Refusal):
+                inspect(changed, 'trailing.tar')
+        single = inspect(gzip.compress(b'one'), 'one.gz')
+        joined = inspect(gzip.compress(b'one') + gzip.compress(b'two'), 'joined.gz')
+        self.assertEqual((single['gzipMembers'], joined['gzipMembers']), (1, 2))
+        nested = gzip.compress(b'one') + gzip.compress(archive([('../escape', b'x', 0)]))
+        with self.assertRaises(Refusal):
+            inspect(nested, 'nested.gz')
 
     def test_cli_errors_do_not_publish_arguments(self):
         import run
@@ -260,9 +279,9 @@ class Controls(unittest.TestCase):
 
     def test_disclosure_gate_rejects_false_schema(self):
         from run import disclosure_gate
-        value = dict(errors=0, failures=0, passed=True, qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=24)
+        value = dict(errors=0, failures=0, passed=True, qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=25)
         disclosure_gate(value, 0)
-        for key, replacement in [('passed', 1), ('errors', False), ('testsRun', 24.0)]:
+        for key, replacement in [('passed', 1), ('errors', False), ('testsRun', 25.0)]:
             changed = {**value, key: replacement}
             with self.subTest(key=key), self.assertRaises(Refusal):
                 disclosure_gate(changed, 0)

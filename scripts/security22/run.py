@@ -43,6 +43,28 @@ def receipt_bytes(path):
     return raw
 
 
+def publish_components(directory, result):
+    directory = directory.absolute()
+    require(not directory.resolve().is_relative_to(ROOT.resolve()), 'OUTPUT_INSIDE_SOURCE')
+    for parent in directory.parents:
+        info = parent.lstat()
+        require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+                not getattr(info, 'st_file_attributes', 0) & 1024, 'OUTPUT_PARENT')
+    directory.mkdir(exist_ok=False)
+    entries = {}
+    for name, component in sorted(result['components'].items()):
+        require(re.fullmatch('[a-z_]+', name), 'COMPONENT_NAME')
+        value = dict(schema=1, qualification=result['qualification'], admission='NOT_GRANTED',
+                     head=result['source']['head'], tree=result['source']['tree'],
+                     toolchainIdentitySHA256=result['toolchain']['identitySHA256'], component=name, result=component)
+        raw = canonical(value) + b'\n'
+        with (directory/(name+'.json')).open('xb') as stream:
+            stream.write(raw)
+        entries[name+'.json'] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+    with (directory/'index.json').open('xb') as stream:
+        stream.write(canonical(dict(schema=1, files=entries, **summary(result['components']))) + b'\n')
+
+
 def policy(root):
     value = loads(regular(root, 'scripts/security22/policy.json', 65536))
     expected = dict(schema=1, qualification='CURRENT_PUBLIC_TECHNICAL_CANDIDATE_ONLY',
@@ -69,7 +91,7 @@ def tap(argv, root):
 
 def disclosure_gate(gate, code):
     expected = dict(errors=0, failures=0, passed=True,
-        qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=24)
+        qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=25)
     require(code == 0 and gate == expected and all(type(gate[key]) is type(value)
             for key, value in expected.items()), 'DISCLOSURE_GATE_FAILED')
 
@@ -134,9 +156,10 @@ def main():
         parser = SafeParser(description=__doc__)
         parser.add_argument('mode', nargs='?', choices=('run', 'inventory', 'verify'), default='run')
         parser.add_argument('--receipt', type=Path)
+        parser.add_argument('--output-dir', type=Path)
         args = parser.parse_args()
         if args.mode == 'inventory':
-            require(args.receipt is None, 'ARGUMENT_SCOPE')
+            require(args.receipt is None and args.output_dir is None, 'ARGUMENT_SCOPE')
             result = snapshot(ROOT, policy(ROOT))
             print(canonical(result).decode())
             return 0 if all(result[key]['state'] == 'PASS' for key in ('metadata', 'workingBytes', 'archiveCoverage')) else 2
@@ -147,6 +170,8 @@ def main():
             # Re-execute checks against this clean source; never trust caller exit/count fields.
             require(canonical(expected) == canonical(result), 'STALE_OMITTED_OR_FABRICATED_RECEIPT')
             result['receiptVerified'] = True
+        if args.output_dir is not None:
+            publish_components(args.output_dir, result)
         print(canonical(result).decode())
         return 1  # Required custody remains unresolved even if public components pass.
     except Exception as error:

@@ -15,6 +15,10 @@ a scan from a wrapper step or accepts a supplied clean result. `verify
 --receipt FILE` re-executes current checks and requires exact deterministic
 evidence equality. It still cannot grant acceptance.
 
+Use `--output-dir NEW_DIRECTORY_OUTSIDE_CHECKOUT` to publish each completed,
+stable component separately with exact source/tool bindings and a hashed index.
+The directory must be new, with regular parents; writes never overwrite files.
+
 Archive handling is in memory, with no extraction: regular-member/name/mode
 checks, parent aliases, bounded depth/count/expanded bytes/ratio, and explicit
 unsupported/custody dispositions. Files over bounds refuse content coverage.
