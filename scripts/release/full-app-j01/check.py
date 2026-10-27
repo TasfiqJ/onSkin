@@ -2854,5 +2854,347 @@ def source21_guard():
 source_guard = source21_guard
 
 
+# Release22 successor. Every inherited Release08-21 byte above is immutable.
+RELEASE22_BASE = '2cffa9e92be101af4e3b371f1815ec9f458d8da4'
+RELEASE22_TREE = '9380dd155ee2c7879de7ef79eb27d0028b950d13'
+RELEASE22_AUTHORITY = 'BRAIN-M1X-SECURITY-RECOVERY22-CANDIDATE-01'
+RELEASE22_CANDIDATE = 'docs/brain/contracts/M1X-22/candidate.json'
+RELEASE22_CHECKPOINT = 'docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/'
+RELEASE22_WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+RELEASE22_EXISTING = {
+    'package.json', 'package-lock.json', 'apps/mobile/package.json',
+    'apps/catalog-operator-console/package.json', 'scripts/postinstall.mjs',
+    'scripts/phase9/patch-tooling-security.mjs', 'scripts/phase9/patch-tooling-security.test.mjs',
+    'scripts/release/full-app-j01/check.py', 'docs/phase-4/generated/source-worklist.json',
+    'docs/phase-4/generated/source-worklist.md', 'ONSKIN_BRAIN_HANDOFF.txt'}
+RELEASE22_NEW = {
+    '.github/workflows/security-candidate22.yml', 'scripts/security22/README.md',
+    'scripts/security22/run.py', 'scripts/security22/inventory.py', 'scripts/security22/toolchain.py',
+    'scripts/security22/collect.py', 'scripts/security22/evaluate.py', 'scripts/security22/redact.py',
+    'scripts/security22/dependency.mjs', 'scripts/security22/test_security22.py',
+    'scripts/security22/dependency.test.mjs', 'scripts/security22/toolchain.json',
+    'scripts/security22/policy.json', 'scripts/security22/synthetic-fixtures.json',
+    'scripts/security22/patch-tooling.mjs', 'scripts/security22/patch-tooling.test.mjs',
+    'scripts/security22/backports.json', 'scripts/release/full-app-j01/source_consumer22.test.py',
+    'docs/brain/contracts/M1X-22/candidate.json', 'docs/brain/task-specs/M1X-22/TASK.md',
+    'docs/security/security22/ROOT_CAUSES.md', 'docs/security/security22/REMEDIATION.md',
+    'docs/security/security22/VALIDATION.md', 'docs/security/security22/BLOCKERS.md',
+    'docs/security/security22/UPSTREAM_SOURCES.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/README.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/FINAL_REPORT.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/manifest.json',
+    'docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/payload.zip',
+    'docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/verify22.py'}
+
+
+def git22(*args):
+    require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R22_GIT_ENV')
+    return subprocess.check_output(['git', '--no-replace-objects', '--no-optional-locks', *args], cwd=ROOT, stderr=subprocess.PIPE)
+
+
+def allowed22(path):
+    return isinstance(path, str) and path in RELEASE22_EXISTING | RELEASE22_NEW
+
+
+def candidate22_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R22_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'base', 'tree',
+        'acceptanceGranted', 'admissions', 'pr'} and type(value['schema']) is int and value['schema'] == 1 and
+        value['authority'] == RELEASE22_AUTHORITY and value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and
+        value['base'] == RELEASE22_BASE and value['tree'] == RELEASE22_TREE and
+        value['acceptanceGranted'] is False and type(value['admissions']) is dict and
+        set(value['admissions']) == {'G97', 'DB', 'M103', 'M2', 'J01', 'PUBLIC'} and
+        all(flag is False for flag in value['admissions'].values()) and
+        (value['pr'] is None or (type(value['pr']) is int and value['pr'] > 0)), 'R22_NO_ADMISSION')
+    return value
+
+
+def validate22_checker(raw):
+    before = git22('show', RELEASE22_BASE+':scripts/release/full-app-j01/check.py')
+    tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(tail) and raw.startswith(before[:-len(tail)]) and raw.endswith(tail), 'R22_INHERITED_BYTES')
+    extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
+    functions = {'git22', 'allowed22', 'candidate22_guard', 'validate22_checker', 'package22_guard',
+        'tooling22_guard', 'validate22_diff', 'source22_endpoint', 'source22_history', 'evidence22_guard',
+        'source22_guard', 'historical21_validate', 'validate22'}
+    require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
+        len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R22_FUNCTION_SCOPE')
+    dispatch = set(); assigned = set()
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name), 'R22_MODULE_SCOPE')
+        name = node.targets[0].id
+        require(name not in assigned, 'R22_DUPLICATE_ASSIGNMENT'); assigned.add(name)
+        if name in {'source_guard', 'validate'}:
+            dispatch.add(name)
+            require(isinstance(node.value, ast.Name) and node.value.id ==
+                {'source_guard': 'source22_guard', 'validate': 'validate22'}[name], 'R22_DISPATCH')
+        else:
+            require(name.startswith('RELEASE22_'), 'R22_GLOBAL_SCOPE')
+            try: ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R22_GLOBAL_SIDE_EFFECT')
+    require(dispatch == {'source_guard', 'validate'}, 'R22_DISPATCH_REQUIRED')
+
+
+def package22_guard(path, raw):
+    before_raw = git22('show', RELEASE22_BASE+':'+path)
+    if path == 'scripts/postinstall.mjs':
+        # The three existing installer calls, argument validation and reporting stay mandatory.
+        original = iter(before_raw.splitlines()); pending = next(original, None); additions = []
+        for line in raw.splitlines():
+            if line == pending: pending = next(original, None)
+            else: additions.append(line)
+        require(pending is None and all(not line.strip() or line in {
+            b"import { patchToolingSecurity22 } from './security22/patch-tooling.mjs';",
+            b'const toolingSecurity22 = patchToolingSecurity22({ root, check });'} for line in additions) and
+            len([line for line in additions if line.strip()]) == len(set(line for line in additions if line.strip())),
+            'R22_POSTINSTALL_PRESERVATION')
+        return
+    before = json.loads(before_raw, object_pairs_hook=pairs)
+    after = json.loads(raw, object_pairs_hook=pairs)
+    require(type(after) is dict, 'R22_PACKAGE_SCHEMA')
+    dependency_fields = {'dependencies', 'devDependencies', 'optionalDependencies'}
+    mutable = dependency_fields | ({'scripts'} if path == 'package.json' else set())
+    require({k:v for k,v in before.items() if k not in mutable} ==
+        {k:v for k,v in after.items() if k not in mutable}, 'R22_PACKAGE_PURPOSE')
+    for field in dependency_fields:
+        old, new = before.get(field, {}), after.get(field, {})
+        require(type(new) is dict and set(old) <= set(new) and
+            all(type(k) is str and type(v) is str and bool(v) for k,v in new.items()), 'R22_DEPENDENCY_SCHEMA')
+        for framework in ('expo', 'react-native'):
+            require(old.get(framework) == new.get(framework), 'R22_FRAMEWORK_VERSION')
+    if path == 'package.json':
+        old, new = before.get('scripts', {}), after.get('scripts', {})
+        require(type(new) is dict and all(new.get(k) == v for k,v in old.items()) and
+            all(k.startswith('security22:') and type(v) is str and bool(v) for k,v in new.items() if k not in old),
+            'R22_COMMAND_PRESERVATION')
+
+
+def tooling22_guard(raw):
+    original = git22('show', RELEASE22_BASE+':scripts/phase9/patch-tooling-security.mjs')
+    def tokens(source):
+        pattern = rb"""'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|\`(?:\\.|[^\`\\])*\`|//[^\r\n]*|/\*[\s\S]*?\*/|[A-Za-z_$][A-Za-z0-9_$]*|[0-9]+|[^\s]"""
+        return [token for token in re.findall(pattern, source) if not token.startswith((b'//', b'/*'))]
+    start, end = original.index(b'const PROFILES = ['), original.index(b'const SCRIPT_ROOT = ')
+    expected = tokens(original[start:end]); actual = tokens(raw); depth = 0; found = 0
+    for index, token in enumerate(actual):
+        if depth == 0 and actual[index:index+3] == [b'const', b'PROFILES', b'=']:
+            require(actual[index:index+len(expected)] == expected, 'R22_HISTORICAL_BACKPORT_PROFILES')
+            found += 1
+        if token == b'{': depth += 1
+        if token == b'}': depth -= 1
+        require(depth >= 0, 'R22_TOOLING_SYNTAX')
+    require(found == 1 and depth == 0, 'R22_ACTIVE_BACKPORT_PROFILES')
+
+
+def validate22_diff(raw, read_after, parent=None):
+    require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R22_GIT_ENV')
+    parent = parent or RELEASE22_BASE
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R22_DIFF_SHAPE')
+    identities = {}; seen = set()
+    for index in range(0, len(fields)-1, 2):
+        meta = fields[index].decode('ascii').split(); path = fields[index+1].decode('utf-8')
+        require(len(meta) == 5 and allowed22(path) and path not in seen, 'R22_FINITE_SCOPE')
+        seen.add(path); remember21(path, identities)
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(oldmode in (':000000', ':100644') and newmode == '100644' and status in ('A', 'M') and
+            all(re.fullmatch('[0-9a-f]{40}', v) for v in (oldblob, newblob)), 'R22_MODE_OR_DELETION')
+        exists = subprocess.run(['git', '--no-replace-objects', 'cat-file', '-e', parent+':'+path],
+            cwd=ROOT, capture_output=True).returncode == 0
+        require(exists == (status == 'M') == (oldmode == ':100644'), 'R22_PARENT_PROVENANCE')
+        if exists: require(oldblob == git22('rev-parse', parent+':'+path).decode().strip(), 'R22_PARENT_BLOB')
+        else: require(oldblob == '0'*40, 'R22_NEW_BLOB')
+        if parent == RELEASE22_BASE:
+            require(exists == (path in RELEASE22_EXISTING), 'R22_CREATE_EDIT')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob,
+            'R22_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate22_checker(data)
+        if path == RELEASE22_CANDIDATE: candidate22_guard(data)
+        if path in ('package.json', 'apps/mobile/package.json', 'apps/catalog-operator-console/package.json', 'scripts/postinstall.mjs'):
+            package22_guard(path, data)
+        if path == 'scripts/phase9/patch-tooling-security.mjs':
+            tooling22_guard(data)
+        if path == 'scripts/phase9/patch-tooling-security.test.mjs':
+            original = git22('show', RELEASE22_BASE+':'+path)
+            lines = iter(data.splitlines(keepends=True))
+            require(all(any(old == new for new in lines) for old in original.splitlines(keepends=True)), 'R22_EXISTING_TOOLING_REGRESSIONS')
+        if path == 'package-lock.json':
+            before = json.loads(git22('show', RELEASE22_BASE+':package-lock.json'), object_pairs_hook=pairs)
+            lock = json.loads(data, object_pairs_hook=pairs)
+            require(type(lock) is dict and type(lock.get('lockfileVersion')) is int and
+                lock['lockfileVersion'] == before['lockfileVersion'] and type(lock.get('packages')) is dict,
+                'R22_LOCK_SCHEMA')
+            for name, node in lock['packages'].items():
+                if name.endswith('/node_modules/expo') or name.endswith('/node_modules/react-native') or name in ('node_modules/expo', 'node_modules/react-native'):
+                    require(name in before['packages'] and node.get('version') == before['packages'][name].get('version'), 'R22_LOCK_FRAMEWORK')
+
+
+def source22_endpoint():
+    head = git22('rev-parse', 'HEAD').decode().strip()
+    parents = git22('rev-list', '--parents', '-n', '1', head).decode().split()
+    require(len(parents) in (2, 3), 'R22_HEAD_PARENTS')
+    endpoint = head if len(parents) == 2 else parents[2]
+    if len(parents) == 3 or os.environ.get('GITHUB_ACTIONS') == 'true':
+        require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and os.environ.get('GITHUB_SHA') in (head, endpoint), 'R22_CI_CONTEXT')
+        candidate = candidate22_guard(regular(ROOT/RELEASE22_CANDIDATE)); number = candidate['pr']
+        require(type(number) is int and number > 0, 'R22_CI_CONTEXT')
+        event = load(Path(os.environ.get('GITHUB_EVENT_PATH', ''))); pr = event.get('pull_request', {})
+        require(type(event.get('number')) is int and event['number'] == number and type(pr.get('number')) is int and pr['number'] == number and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+            pr.get('base', {}).get('sha') == RELEASE22_BASE and pr.get('base', {}).get('ref') == 'stage/m1-f09-layout-compatibility21' and
+            pr.get('head', {}).get('sha') == endpoint and
+            re.fullmatch(r'stage/m1-security-recovery22(?:-[a-z0-9-]+)?', pr.get('head', {}).get('ref', '')) is not None and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+            pr.get('maintainer_can_modify') is False and pr.get('auto_merge') is None, 'R22_CI_EVENT')
+        if len(parents) == 3:
+            require(parents[1] == RELEASE22_BASE and os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+                git22('rev-parse', head+'^{tree}') == git22('rev-parse', endpoint+'^{tree}'), 'R22_CI_MERGE_TREE')
+    return endpoint
+
+
+def source22_history():
+    grafts = Path(git22('rev-parse', '--git-path', 'info/grafts').decode().strip())
+    if not grafts.is_absolute(): grafts = ROOT/grafts
+    require(not os.path.lexists(grafts) and not git22('for-each-ref', '--format=%(refname)', 'refs/replace').strip() and
+        not os.environ.get('GIT_REPLACE_REF_BASE'), 'R22_HISTORY_SUBSTITUTION')
+    require(git22('rev-parse', '--is-shallow-repository').strip() == b'false' and
+        git22('rev-parse', RELEASE22_BASE+'^{tree}').decode().strip() == RELEASE22_TREE, 'R22_FULL_PINNED_HISTORY')
+    endpoint = source22_endpoint()
+    require(git22('merge-base', RELEASE22_BASE, endpoint).decode().strip() == RELEASE22_BASE, 'R22_ANCESTRY')
+    previous = RELEASE22_BASE; evidence_seen = False
+    for commit in git22('rev-list', '--reverse', RELEASE22_BASE+'..'+endpoint).decode().splitlines():
+        require(git22('rev-list', '--parents', '-n', '1', commit).decode().split() == [commit, previous], 'R22_LINEAR_HISTORY')
+        require(not evidence_seen, 'R22_AFTER_EVIDENCE_TAIL')
+        validate22_diff(git22('diff', '--raw', '--no-abbrev', '--no-renames', '-z', previous, commit),
+            lambda path: git22('show', commit+':'+path), previous)
+        validate22_diff(git22('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE22_BASE, commit),
+            lambda path: git22('show', commit+':'+path))
+        paths = git22('diff', '--name-only', '--no-renames', '-z', previous, commit).decode().split('\0')[:-1]
+        evidence_seen = any(p.startswith(RELEASE22_CHECKPOINT) for p in paths)
+        require('ONSKIN_BRAIN_HANDOFF.txt' not in paths or evidence_seen, 'R22_HANDOFF_BEFORE_TAIL')
+        previous = commit
+    return endpoint
+
+
+def evidence22_guard(endpoint):
+    names = {p for p in git22('diff', '--name-only', '--no-renames', '-z', RELEASE22_BASE, endpoint).decode().split('\0')
+        if p.startswith(RELEASE22_CHECKPOINT)}
+    expected = {p for p in RELEASE22_NEW if p.startswith(RELEASE22_CHECKPOINT)}
+    if not names:
+        require(not (ROOT/RELEASE22_CHECKPOINT).exists(), 'R22_UNCOMMITTED_EVIDENCE')
+        return
+    require(names == expected, 'R22_EVIDENCE_EXACT_PATHS')
+    manifest = load(ROOT/(RELEASE22_CHECKPOINT+'manifest.json'))
+    require(type(manifest) is dict and set(manifest) == {'schema', 'authority', 'status', 'acceptanceGranted',
+        'release', 'inputManifestSHA256', 'source', 'files', 'payload'} and
+        type(manifest['schema']) is int and manifest['schema'] == 1 and manifest['authority'] == RELEASE22_AUTHORITY and
+        manifest['status'] == 'SUBMITTED_REVIEW_REQUIRED' and manifest['acceptanceGranted'] is False and
+        manifest['release'] == 'NO_GO' and manifest['inputManifestSHA256'] ==
+        '72b9642e0419d7117014a5476d431de2edc32e2014503099d785c43374b3d9f9', 'R22_EVIDENCE_NO_ADMISSION')
+    source = manifest['source']
+    require(type(source) is dict and set(source) == {'base', 'baseTree', 'runtimeHead', 'runtimeTree', 'sourceHead', 'sourceTree'} and
+        source['base'] == RELEASE22_BASE and source['baseTree'] == RELEASE22_TREE and
+        all(type(v) is str and re.fullmatch('[0-9a-f]{40}', v) for v in source.values()), 'R22_EVIDENCE_SOURCE')
+    require(git22('rev-parse', source['runtimeHead']+'^{tree}').decode().strip() == source['runtimeTree'] and
+        git22('rev-parse', source['sourceHead']+'^{tree}').decode().strip() == source['sourceTree'] and
+        git22('rev-list', '--parents', '-n', '1', source['sourceHead']).decode().split() == [source['sourceHead'], source['runtimeHead']] and
+        git22('rev-list', '--parents', '-n', '1', endpoint).decode().split() == [endpoint, source['sourceHead']], 'R22_ONE_EVIDENCE_TAIL')
+    require(set(git22('diff', '--name-only', '--no-renames', '-z', source['runtimeHead'], source['sourceHead']).decode().split('\0')[:-1]) ==
+        RELEASE22_WORKLIST, 'R22_WORKLIST_ONLY_FREEZE')
+    require(set(git22('diff', '--name-only', '--no-renames', '-z', source['sourceHead'], endpoint).decode().split('\0')[:-1]) ==
+        expected | {'ONSKIN_BRAIN_HANDOFF.txt'}, 'R22_EVIDENCE_TAIL_SCOPE')
+    files = manifest['files']
+    require(type(files) is dict and set(files) == {'README.md', 'FINAL_REPORT.md', 'payload.zip', 'verify22.py'}, 'R22_EVIDENCE_FILES')
+    actual = set()
+    for path in (ROOT/RELEASE22_CHECKPOINT).rglob('*'):
+        info = path.lstat()
+        require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024, 'R22_EVIDENCE_LINK')
+        if stat.S_ISDIR(info.st_mode): continue
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'R22_EVIDENCE_REGULAR')
+        actual.add(path.relative_to(ROOT).as_posix())
+    require(actual == expected, 'R22_EVIDENCE_INVENTORY')
+    for name, witness in files.items():
+        raw = regular(ROOT/(RELEASE22_CHECKPOINT+name))
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(raw) and witness['sha256'] == sha(raw), 'R22_EVIDENCE_HASH')
+    require(all(regular(ROOT/path) == git22('show', endpoint+':'+path) for path in expected | {'ONSKIN_BRAIN_HANDOFF.txt'}),
+        'R22_EVIDENCE_COMMITTED_BYTES')
+
+
+def source22_guard():
+    endpoint = source22_history(); evidence22_guard(endpoint)
+    if (ROOT/(RELEASE22_CHECKPOINT+'manifest.json')).exists():
+        require(not git22('status', '--porcelain=v1', '--untracked-files=all', '-z'), 'R22_FROZEN_CHECKOUT_DIRTY')
+    candidate22_guard(regular(ROOT/RELEASE22_CANDIDATE))
+    candidate22_guard(git22('show', ':'+RELEASE22_CANDIDATE))
+    validate22_diff(git22('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE22_BASE), lambda p: git22('show', ':'+p))
+    validate22_diff(git22('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE22_BASE), lambda p: regular(ROOT/p))
+    identities = {}; tree = {}
+    for raw in git22('ls-tree', '-r', '-z', endpoint).split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, kind, oid = meta.decode().split(); path = name.decode()
+        require(kind == 'blob' and mode in ('100644', '100755'), 'R22_TREE_MODE')
+        tree[path] = (mode, oid); remember21(path, identities)
+    index = {}
+    for raw in git22('ls-files', '--stage', '-z').split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, oid, stage = meta.decode().split(); path = name.decode()
+        require(stage == '0' and mode in ('100644', '100755') and path not in index, 'R22_INDEX_STAGE_MODE')
+        index[path] = (mode, oid); remember21(path, identities)
+    for raw in git22('ls-files', '-v', '-z').split(b'\0'):
+        if raw: require(raw.startswith(b'H '), 'R22_INDEX_FLAGS')
+    for path in git22('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if not path: continue
+        require(path in RELEASE22_NEW and path not in index, 'R22_UNTRACKED_SCOPE'); remember21(path, identities); regular(ROOT/path)
+    # Full clean-source inventory/scanner coverage is independently executed by security22.
+    # This guard proves finite source governance, never technical Security readiness.
+    return tree
+
+
+def historical21_validate(bundle=BUNDLE):
+    raw = git22('show', RELEASE22_BASE+':scripts/release/full-app-j01/check.py')
+    namespace = {'__name__': 'release21_historical', '__file__': str(ROOT/'scripts/release/full-app-j01/check.py')}
+    exec(compile(raw, 'immutable-pr25-checker', 'exec'), namespace)
+    actual_git, actual_regular = git22, regular
+    def historical_git(*args):
+        if args == ('rev-parse', 'HEAD'): return actual_git('rev-parse', RELEASE22_BASE)
+        if args[0] == 'diff' and len([a for a in args[1:] if not a.startswith('-')]) == 1:
+            return actual_git(*[a for a in args if a != '--cached'], RELEASE22_BASE)
+        if args[0] == 'show' and args[1].startswith(':'): return actual_git('show', RELEASE22_BASE+args[1])
+        if args[0] == 'ls-files':
+            if '--others' in args: return b''
+            if '-v' in args:
+                return b''.join(b'H '+p+b'\0' for p in actual_git('ls-tree', '-r', '--name-only', '-z', RELEASE22_BASE).split(b'\0') if p)
+        return actual_git(*args)
+    def historical_regular(path):
+        try: name = Path(path).absolute().relative_to(ROOT.absolute()).as_posix()
+        except ValueError: return actual_regular(path)
+        found = subprocess.run(['git', '--no-replace-objects', 'cat-file', '-e', RELEASE22_BASE+':'+name], cwd=ROOT, capture_output=True)
+        return actual_git('show', RELEASE22_BASE+':'+name) if found.returncode == 0 else actual_regular(path)
+    namespace['git'], namespace['regular'] = historical_git, historical_regular
+    result = namespace['validate'](bundle)
+    result['historical_source'] = RELEASE22_BASE
+    result['historical_qualification'] = 'IMMUTABLE_PR25_GOVERNANCE_REPLAY; NOT_CURRENT_SECURITY_ACCEPTANCE'
+    return result
+
+
+def validate22(bundle=BUNDLE):
+    source22_guard()
+    result = historical21_validate(bundle)
+    result['current_source_governance'] = 'RELEASE22_FINITE_SCOPE_ONLY'
+    result['source_acceptance'] = 'SUBMITTED_REVIEW_REQUIRED'
+    result['release'] = 'NO_GO'
+    return result
+
+
+source_guard = source22_guard
+validate = validate22
+
+
 if __name__ == '__main__':
     sys.exit(main())

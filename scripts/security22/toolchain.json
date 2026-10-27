@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "nodeMajor": 22,
+  "npmVersion": "11.20.0",
+  "pythonMinimum": [3, 9],
+  "checks": ["inventory", "dependency", "tooling", "historical_workflow_contract"],
+  "qualification": "TECHNICAL_ONLY_NO_ADMISSION"
+}

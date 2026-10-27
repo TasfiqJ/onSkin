@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-SECURITY-RECOVERY22-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "2cffa9e92be101af4e3b371f1815ec9f458d8da4",
+  "tree": "9380dd155ee2c7879de7ef79eb27d0028b950d13",
+  "acceptanceGranted": false,
+  "admissions": {"G97": false, "DB": false, "M103": false, "M2": false, "J01": false, "PUBLIC": false},
+  "pr": null
+}

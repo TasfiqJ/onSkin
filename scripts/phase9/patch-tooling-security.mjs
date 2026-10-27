@@ -54,6 +54,24 @@ const PROFILES = [
   }
 ];
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+// Upstream 1.4.2 fixes additional ASN.1, PEM, TLS, PKCS and X.509 defects.
+// Keep the original backport profile/payload immutable for historical replays.
+const UPSTREAM_FORGE_142 = {
+  version: '1.4.2',
+  rsaPatched: 'be37cddddcbbbdc59855dc6c025d206c25295803d5f9fc7ce4594c12be02b6ce',
+  resolved: 'https://registry.npmjs.org/node-forge/-/node-forge-1.4.2.tgz',
+  integrity: 'sha512-rRtAR5XLJ8gCKd9du4qrKAsgCG1ObGP4gLeNJMa4vYSeq4bmBMOJk5IHkrviBV0q7uoAJlVd8HEQYQSVUb4FGQ==',
+  files: {
+    'lib/rsa.js': '6632e195295ce76f6bb9131ee770dcd6cc1ee4ffac7906302208b00faf95a87f',
+    'lib/asn1.js': '77cc3ca2b4c1009e93cf26594232598f253bd3e046f16eb32386c8bf644857b6',
+    'lib/pem.js': 'e8924037685f22dfb10ea9d1b780a7ae4f4eb3e6c601cef4079e7747bb4c8922',
+    'lib/tls.js': '3d7def7a2e1c568de50c18109d7186c0c83d0384c7f9badab4831722b6233cbe',
+    'lib/pkcs12.js': '4e471bf3e717d940a07b34d5716d988cfa01b143c38c3fc1f8b597cb83d29742',
+    'lib/pbe.js': '674750301f7c7d44b7b52c80bde90399aef8ff6021e6d6ccd1553ce3f5768c81',
+    'lib/x509.js': '6749ed90069312a63470cc468d434781494fa3c9d3f2cc194efb2099011f9132',
+  },
+};
+
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 function fail(code) { const error = new Error(code); error.code = code; throw error; }
 function within(root, value) {
@@ -109,9 +127,29 @@ export function patchToolingSecurity({ root = SCRIPT_ROOT, check = false } = {})
     if (!paths.length) fail('SECURITY_PATCH_PACKAGE_MISSING');
     for (const path of paths) {
       const entry = lock.packages[path];
-      if (entry.version !== profile.version || entry.resolved !== profile.resolved || entry.integrity !== profile.integrity || entry.link) fail('SECURITY_PATCH_LOCK_IDENTITY');
+      const upstream = profile.name === 'node-forge' && entry.version === UPSTREAM_FORGE_142.version ? UPSTREAM_FORGE_142 : null;
+      const identity = upstream ?? profile;
+      if (entry.version !== identity.version || entry.resolved !== identity.resolved || entry.integrity !== identity.integrity || entry.link) fail('SECURITY_PATCH_LOCK_IDENTITY');
       const pkg = JSON.parse(read(root, `${path}/package.json`, 1024 * 1024).bytes);
-      if (pkg.name !== profile.name || pkg.version !== profile.version) fail('SECURITY_PATCH_PACKAGE_IDENTITY');
+      if (pkg.name !== profile.name || pkg.version !== identity.version) fail('SECURITY_PATCH_PACKAGE_IDENTITY');
+      if (upstream) {
+        for (const [file, expected] of Object.entries(upstream.files)) {
+          const name = `${path}/${file}`; const target = read(root, name, 1024 * 1024);
+          if (file === 'lib/rsa.js') {
+            const observed = hash(target.bytes);
+            if (observed !== expected && observed !== upstream.rsaPatched) fail('SECURITY_PATCH_TARGET');
+            const before = '          // validate DigestInfo structure and element count\n          var capture = {};';
+            const after = before.replace('var capture = {};', 'var capture = Object.create(null);');
+            const bytes = observed === expected ? Buffer.from(target.bytes.toString('utf8').replace(before, after)) : target.bytes;
+            if (hash(bytes) !== upstream.rsaPatched) fail('SECURITY_PATCH_PAYLOAD');
+            plan.push({ name, target, expected: upstream.rsaPatched, original: observed === expected, payload: { bytes } });
+          } else {
+            if (hash(target.bytes) !== expected) fail('SECURITY_PATCH_TARGET');
+            plan.push({ name, target, expected, original: false });
+          }
+        }
+        continue;
+      }
       for (const file of profile.files) {
         const payload = read(root, file.payload);
         if (hash(payload.bytes) !== file.patched) fail('SECURITY_PATCH_PAYLOAD');

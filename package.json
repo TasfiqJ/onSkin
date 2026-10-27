@@ -293,13 +293,15 @@
     "e2e:human:manifest:contract:test": "node --test scripts/e2e/human-e2e-manifest-contract.test.mjs",
     "e2e:human:manifest:check": "node scripts/e2e/human-e2e-manifest.mjs --check",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,cjs,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,cjs,json,md}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,cjs,json,md}\"",
+    "security22:run": "python -B scripts/security22/run.py",
+    "security22:test": "python -B scripts/security22/test_security22.py && node --test scripts/security22/dependency.test.mjs && python -B scripts/release/full-app-j01/source_consumer22.test.py"
   },
   "devDependencies": {
     "@expo/plist": "0.7.0",
     "@xmldom/xmldom": "0.8.15",
     "bplist-parser": "0.3.2",
-    "node-forge": "1.4.0",
+    "node-forge": "1.4.2",
     "pngjs": "3.4.0",
     "prettier": "^3.4.2",
     "react-native": "0.86.3",

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "qualification": "CURRENT_PUBLIC_TECHNICAL_CANDIDATE_ONLY",
+  "baseHead": "2cffa9e92be101af4e3b371f1815ec9f458d8da4",
+  "baseTree": "9380dd155ee2c7879de7ef79eb27d0028b950d13",
+  "requiredRefs": ["refs/remotes/origin/stage/m1-f09-layout-compatibility21", "refs/remotes/origin/main"],
+  "maxFileBytes": 134217728,
+  "maxExpandedBytes": 536870912,
+  "maxArchiveMembers": 20000,
+  "maxArchiveDepth": 4,
+  "maxRatio": 500,
+  "release": "NO_GO",
+  "acceptanceGranted": false,
+  "protectedScans": "BLOCKED_EXTERNAL_CUSTODY"
+}

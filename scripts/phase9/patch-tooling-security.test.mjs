@@ -54,6 +54,34 @@ test('exact reviewed files and every nested copy are checked without audit clear
   for (const file of f.targets) assert.equal(hash(readFileSync(file.path)), file.hash);
 });
 
+test('exact upstream forge 1.4.2 preserves the inherited capture hardening and unknown-source refusal', t => {
+  const f = fixture(t);
+  const profile = {
+    version: '1.4.2',
+    resolved: 'https://registry.npmjs.org/node-forge/-/node-forge-1.4.2.tgz',
+    integrity: 'sha512-rRtAR5XLJ8gCKd9du4qrKAsgCG1ObGP4gLeNJMa4vYSeq4bmBMOJk5IHkrviBV0q7uoAJlVd8HEQYQSVUb4FGQ==',
+  };
+  f.lock.packages['node_modules/node-forge'] = profile; f.save();
+  const packageRoot = join(f.root, 'node_modules/node-forge');
+  writeFileSync(join(packageRoot, 'package.json'), JSON.stringify({ name: 'node-forge', version: profile.version }));
+  const files = ['rsa.js', 'asn1.js', 'pem.js', 'tls.js', 'pkcs12.js', 'pbe.js', 'x509.js'];
+  for (const file of files) copyFileSync(join(sourceRoot, 'node_modules/node-forge/lib', file), join(packageRoot, 'lib', file));
+  const rsa = join(packageRoot, 'lib/rsa.js');
+  const patched = readFileSync(rsa);
+  assert.equal(hash(patched), 'be37cddddcbbbdc59855dc6c025d206c25295803d5f9fc7ce4594c12be02b6ce');
+  const original = Buffer.from(patched.toString('utf8').replace('          // validate DigestInfo structure and element count\n          var capture = Object.create(null);', '          // validate DigestInfo structure and element count\n          var capture = {};'));
+  assert.equal(hash(original), '6632e195295ce76f6bb9131ee770dcd6cc1ee4ffac7906302208b00faf95a87f');
+  writeFileSync(rsa, original);
+  assert.throws(() => patchToolingSecurity({ root: f.root, check: true }), code('SECURITY_PATCH_UNAPPLIED'));
+  assert.equal(patchToolingSecurity({ root: f.root }).changed, 1);
+  assert.equal(hash(readFileSync(rsa)), hash(patched));
+  assert.equal(patchToolingSecurity({ root: f.root, check: true }).files, 11);
+  const asn1 = join(packageRoot, 'lib/asn1.js');
+  writeFileSync(asn1, 'unrecognized upstream source');
+  assert.throws(() => patchToolingSecurity({ root: f.root }), code('SECURITY_PATCH_TARGET'));
+  assert.equal(hash(readFileSync(rsa)), hash(patched));
+});
+
 test('an unexpected nested copy fails the entire preflight without writing any other target', t => {
   const f = fixture(t, true);
   const last = f.targets.at(-1);
