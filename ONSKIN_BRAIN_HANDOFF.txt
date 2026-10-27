@@ -1,15 +1,17 @@
-Campaign20 F09 private manual photo comparison SOURCE_ONLY_CANDIDATE / PARTIAL_BLOCKED / NO_GO.
-Authority BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01.
-Input manifest 41b0c20e2a74c033f68f758cc96ad8be6e5b72daa51917652c5b9cb206c53cfd.
-Draft PR24 https://github.com/TasfiqJ/onSkin/pull/24
-Branch stage/m1-f09-manual-photo-compare20; base stage/m1-onboarding-compatibility19.
-Immutable parent 9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4; tree 961d24a7427667aab610939f3a4d088db0a90430.
-Frozen runtime f2763113087e1b298ceb9b7d8ba79558c51e4495; tree c382dd7c0d351bc4440b077c0c49d2ec5a84d04a.
-Frozen source after unchanged-producer worklist c6f41b30ccfb33eec190e9ce23db8d750390af8d; tree d691e4a969ddfb0ca1fa9693693cbfa774fce5c4.
-Checkpoint docs/brain/checkpoints/M1-02/F09-MANUAL-COMPARE-20/README.md
-External checkpoint manifest SHA256 5d3798162dc2bb4676791bcd8088cff6107a858a87d395d24601c94c4a6e44f1
-Verify: python -B docs/brain/checkpoints/M1-02/F09-MANUAL-COMPARE-20/verify20.py --expected-manifest-sha256 5d3798162dc2bb4676791bcd8088cff6107a858a87d395d24601c94c4a6e44f1 --git-root .
-Exactly one evidence-only descendant follows frozen source; verification derives the final HEAD/tree. Exact later final-head checks, CI, failures/skips and return custody are in the external FINAL_REPORT.md and verified return ZIP.
-Seven protected populated-layout fixture cases remain UNAPPLIED: apps/mobile/src/features/photos/progressEmptyLayout.c08b2.test.ts omits Query/health authority and current front-series metadata. No protected gate or old test was weakened for a green result. Independent Brain source acceptance is required.
-Synthetic Expo web, source tests and exports do not establish signed/native iPhone, VoiceOver, actual StoreKit, provider, clinical/legal, Apple or public release. G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 G1/G2/G3/G5 NOT_ACCEPTED.
-The entire working non-Korean F01-F17/F19-F20, 12 consumer C and six professional P groups including required F09, plus exactly independently validated J01 Visible Pores remain required. F18 and J02-J27 including J05 are deferred. USD0; no merge, prior-branch/main edit, force push, auto-merge, maintainer modification, private Security custody or self-acceptance.
+Campaign21 F09 populated comparison layout compatibility SOURCE_ONLY_CANDIDATE / NO_GO.
+Authority BRAIN-M1X-F09-LAYOUT-COMPATIBILITY21-REPAIR-01.
+Input manifest 6c9b46747f0bb5a9141c9320a92f9508cff6d7e964b8ce2e8536e1260b64536e.
+Draft PR25 https://github.com/TasfiqJ/onSkin/pull/25
+Branch stage/m1-f09-layout-compatibility21; base stage/m1-f09-manual-photo-compare20.
+Immutable parent 3c8cb787f3770df09f0ae4507bca9ac49fb5a079; tree 1ae09829967d455d98b5f5f93558927890d2d8e9.
+Frozen substantive source 5400f755d6ea720f6a18f34db865614ba497cada; tree 2c90447c2efc0fc919a5ef2a5f8e9cbc677c5ac4.
+Frozen source after unchanged-producer worklist 0b255cf630294338b9359ba0fd2088828a74da4b; tree a0f3aec52deb9ce5d1a29bb6bb171f2ef25e4677.
+Checkpoint docs/brain/checkpoints/M1-02/F09-LAYOUT-COMPATIBILITY-21/README.md
+External checkpoint manifest SHA256 5465523c4a1799c67684e285290a3b01561aae883f1bd58374a1a9295fc049a4
+Verify: python -B docs/brain/checkpoints/M1-02/F09-LAYOUT-COMPATIBILITY-21/verify21.py --expected-manifest-sha256 5465523c4a1799c67684e285290a3b01561aae883f1bd58374a1a9295fc049a4 --git-root .
+Exactly one evidence-only descendant follows frozen source; verification derives the final HEAD/tree. Later final-head checks, CI, failures/skips and return custody are recorded in the external FINAL_REPORT.md and verified return ZIP.
+The original fifteen layout case bodies and assertions are byte-preserved. Synthetic authority/Query fixture repairs and additive regression protections require independent Brain source review; no acceptance or gate admission is granted.
+G97 FAIL/NO_GO; original Security credentials/secret findings privately UNREVIEWED; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 optical G1/G2/G3/G5 and longitudinal G4 NOT_ACCEPTED.
+Synthetic Expo web, source tests and unsigned exports do not establish installed iPhone, VoiceOver, provider, clinical/legal, Apple or public release. All remain CLOSED.
+First release still requires all working non-Korean F01-F17/F19-F20, 12 consumer C and six professional P groups including required F09 private history/manual comparison, plus exactly independently validated J01 Visible Pores. F18 and J02-J27 including J05 remain deferred.
+USD0; no merge, protected/main/prior-branch edit, rebase, force push, auto-merge, maintainer modification, private Security custody or self-acceptance.
