@@ -276,7 +276,7 @@ it.each([0, 1, 2, 3, 20])('renders the truthful route for %i synthetic captures'
   if (count > 1) {
     expect(slider().props.sideBySide).toBe(true);
     expect(slider().props.beforeLabel).toBe('First');
-    expect(text()).toContain('capture order is not known');
+    expect(text()).toContain('First and second identify display positions.');
   }
 });
 
@@ -520,4 +520,47 @@ it('measures in the default mode before switching to a functional swipe gesture'
     ports.pan.end();
   });
   expect(text()).toContain('42 percent of the before photo visible');
+});
+
+it('retires selection and cancel closures when their individual picker closes or is replaced', async () => {
+  await mount();
+  await press(slider().props.onPickBefore);
+  const oldChoice = pickerRows().find((n) => n.props.accessibilityLabel.includes('May 12'))!.props
+    .onPress;
+  const oldCancel = button('Cancel photo selection').props.onPress;
+  await press(oldCancel);
+  await press(oldChoice);
+  expect(pair()).toEqual(['a', 'c']);
+  await press(slider().props.onPickAfter);
+  await press(oldCancel);
+  expect(pickerRows()).toHaveLength(3);
+  await press(
+    pickerRows().find((n) => n.props.accessibilityLabel.includes('May 12'))!.props.onPress,
+  );
+  expect(pair()).toEqual(['a', 'b']);
+  await press(oldChoice);
+  expect(pair()).toEqual(['a', 'b']);
+});
+
+it('preserves a valid chosen pair through source refresh and requires recovery after its deletion', async () => {
+  await mount();
+  await press(slider().props.onPickBefore);
+  await press(
+    pickerRows().find((n) => n.props.accessibilityLabel.includes('May 12'))!.props.onPress,
+  );
+  expect(pair()).toEqual(['b', 'c']);
+  await press(slider().props.onPickAfter);
+  const oldChoice = pickerRows().find((n) => n.props.accessibilityLabel.includes('Apr 1'))!.props
+    .onPress;
+  await refresh();
+  await press(oldChoice);
+  expect(pair()).toEqual(['b', 'c']);
+  expect(pickerRows()).toHaveLength(0);
+  ports.photos = ports.photos.filter((photo) => photo.id !== 'b');
+  await refresh();
+  await press(oldChoice);
+  expect(hasSlider()).toBe(false);
+  expect(text()).toContain('no longer available');
+  await press(button('Choose a new comparison pair').props.onPress);
+  expect(pair()).toEqual(['a', 'c']);
 });

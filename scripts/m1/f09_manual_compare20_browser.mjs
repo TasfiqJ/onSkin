@@ -139,7 +139,10 @@ class CDP {
       awaitPromise: true,
       returnByValue: true,
     });
-    if (r.exceptionDetails) throw new Error(r.exceptionDetails.text);
+    if (r.exceptionDetails)
+      throw new Error(
+        (r.exceptionDetails.exception?.description || r.exceptionDetails.text).slice(0, 500),
+      );
     return r.result.value;
   }
 }
@@ -322,12 +325,24 @@ async function syntheticCases() {
     await c.eval(
       `(()=>{const q=__client20.getQueryCache().findAll({queryKey:['photos']}).find(q=>q.state.status==='success'&&q.state.data?.series);const d=q.state.data,base=d.series[0]||globalThis.__record20;if(base)globalThis.__record20=base;const series=Array.from({length:${count}},(_,i)=>({...__record20,id:'e2e-c20-'+i,takenLocalDate:'2026-06-24',takenAt:'2026-06-24T12:00:00Z',isReference:i===0,referencePhotoId:i? 'e2e-c20-0':null}));__client20.setQueryData(q.queryKey,{...d,series,all:series,count:series.length,metadata:{weeks:series.length?1:0,count:series.length,text:'Synthetic source: '+series.length+' current photos'},comparePair:series.length>1?{before:series[0],after:series[series.length-1]}:null,reference:series[0]||null,monthGroups:series.length?[{key:'2026-06',label:'June 2026',photos:series}]:[],milestones:[]})})()`,
     );
+    await wait(
+      () =>
+        c.eval(
+          `document.body.innerText.includes(${JSON.stringify(count === 0 ? 'Take my first photo' : count === 1 ? 'Take another' : 'Switch to swipe')})||!!document.querySelector('[aria-label="Choose a new comparison pair"]')`,
+        ),
+      'synthetic source settled',
+    );
+    if (
+      count > 0 &&
+      (await c.eval(`!!document.querySelector('[aria-label="Choose a new comparison pair"]')`))
+    )
+      await click('Choose a new comparison pair');
     await text(
       count === 0 ? 'Take my first photo' : count === 1 ? 'Take another' : 'Switch to swipe',
     );
     await snap('synthetic-count-' + count);
     if (count === 20) {
-      await text('capture order is not known');
+      await text('First and second identify display positions.');
       await click('Change first photo (currently Jun 24, 2026)');
       await snap('twenty-same-day-picker');
       for (let i = 0; i < 12; i++) {
@@ -359,7 +374,7 @@ async function syntheticCases() {
   // Synthetic unreadable and absent bytes are separate from the current metadata record.
   for (const kind of ['unreadable', 'missing']) {
     await c.eval(
-      `(()=>{const q=__client20.getQueryCache().findAll({queryKey:['photos']}).find(q=>q.state.status==='success'&&q.state.data?.series?.length===20);const d=q.state.data,series=[{...d.series[0],localUri:${'kind' === 'never' ? 'null' : "'REPLACE_URI'"}},...d.series.slice(1)];__client20.setQueryData(q.queryKey,{...d,series,all:series})})()`.replace(
+      `(()=>{const q=__client20.getQueryCache().findAll({queryKey:['photos']}).find(q=>q.state.status==='success'&&q.state.data?.series?.length===20);const d=q.state.data,series=d.series.map(p=>p.id==='e2e-c20-10'?{...p,localUri:${'kind' === 'never' ? 'null' : "'REPLACE_URI'"}}:p);__client20.setQueryData(q.queryKey,{...d,series,all:series})})()`.replace(
         "'REPLACE_URI'",
         kind === 'unreadable' ? "'data:image/png;base64,broken-synthetic-bytes'" : 'null',
       ),
@@ -368,6 +383,15 @@ async function syntheticCases() {
     await snap('synthetic-bytes-' + kind);
   }
   await c.eval(`__client20.invalidateQueries({queryKey:['photos']})`);
+  await wait(
+    () =>
+      c.eval(
+        `document.body.innerText.includes('Switch to swipe')||!!document.querySelector('[aria-label="Choose a new comparison pair"]')`,
+      ),
+    'restored fixture source',
+  );
+  if (await c.eval(`!!document.querySelector('[aria-label="Choose a new comparison pair"]')`))
+    await click('Choose a new comparison pair');
   await text('Switch to swipe');
 }
 async function dragDivider() {
@@ -443,6 +467,30 @@ async function sourceProbes() {
   );
   await c.eval(`__client20.invalidateQueries({queryKey:['photos']})`);
   await text('Change photo');
+  await click('Change before photo (currently Apr 1, 2026)');
+  await retainPicker();
+  await click('Cancel photo selection');
+  await click('You');
+  await route('/you');
+  await snap('navigation-blur');
+  await click('Progress');
+  await route('/progress');
+  await text('Switch to swipe');
+  const retainedAfterNavigation = await c.eval(`typeof globalThis.__oldChoice20==='function'`);
+  if (retainedAfterNavigation) await c.eval(`__oldChoice20('e2e-front-2026-05-12')`);
+  json('navigation-lifetime', {
+    retainedAfterNavigation,
+    documentReplacement: !retainedAfterNavigation,
+    meaning:
+      'A document replacement destroys the old callback; retained SPA callbacks must refuse publication.',
+  });
+  await snap('navigation-return-old-picker-retired');
+  assert(
+    await c.eval(
+      `!!document.querySelector('[aria-label="Change before photo (currently Apr 1, 2026)"]')&&!document.querySelector('[aria-label="Cancel photo selection"]')`,
+    ),
+    'Blur adopted a retired picker',
+  );
   await modulePort('activeHealthProcessingLeaseSnapshot');
   await c.eval(
     'globalThis.__epoch20=__port20;globalThis.__accepted20=__epoch20.activeHealthProcessingLeaseSnapshot()',
@@ -577,7 +625,7 @@ async function runFlows() {
     await click('Compare');
     await text('Switch to swipe');
     await snap('timeline-back');
-    await click('Change before photo (currently Apr 1, 2026)');
+    await click('Change before photo (currently May 12, 2026)');
     await metrics(width, Math.min(420, height));
     await snap('keyboard-viewport-pressure');
     await geometry('keyboard-pressure');

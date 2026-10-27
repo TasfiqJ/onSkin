@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { NavigationContext } from 'expo-router/build/react-navigation/core/NavigationContext';
 import { useQueryClient } from '@tanstack/react-query';
 import {
+  createContext,
   memo,
   useCallback,
   useContext,
@@ -190,6 +191,12 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
 
 // ── Compare-pair picker (docs/06 §4: "tap a date to change") ─────────────────
 type PhotoLite = NonNullable<ReturnType<typeof usePhotos>['data']>['series'][number];
+
+type ComparisonChoiceProps = {
+  selection: ManualCompare20Selection;
+  onSelection: (next: ManualCompare20Selection) => void;
+};
+const ComparisonChoiceContext = createContext<ComparisonChoiceProps | null>(null);
 
 function PairPickerPhoto({
   photo,
@@ -394,10 +401,12 @@ function PairPicker({
 function CompareView({
   data,
   isSourceCurrent,
+  selection,
+  onSelection,
 }: {
   data: NonNullable<ReturnType<typeof usePhotos>['data']>;
   isSourceCurrent: () => boolean;
-}) {
+} & ComparisonChoiceProps) {
   const client = useQueryClient();
   const navigation = useContext(NavigationContext);
   const lease = useSyncExternalStore(
@@ -407,14 +416,17 @@ function CompareView({
   );
   const [focused, setFocused] = useState(() => navigation?.isFocused() ?? true);
   const [revision, setRevision] = useState(0);
-  const session = useMemo(
-    () => ({ alive: true, data, lease, revision, focused, navigation, client }),
-    [data, lease, revision, focused, navigation, client],
-  );
+  const serial = useRef(0);
+  const mounted = useRef(true);
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   useLayoutEffect(() => {
     const retire = () => {
-      session.alive = false;
-      setRevision((value) => value + 1);
+      setRevision(++serial.current);
     };
     const query = client.getQueryCache().subscribe((event) => {
       if (
@@ -433,50 +445,72 @@ function CompareView({
       setFocused(true);
     });
     return () => {
-      session.alive = false;
       query();
       authority();
       blur?.();
       focus?.();
     };
-  }, [client, navigation, session]);
+  }, [client, navigation]);
   const current = () =>
-    session.alive &&
+    mounted.current &&
+    serial.current === revision &&
     focused &&
     (navigation?.isFocused() ?? true) &&
     lease !== null &&
     activeHealthProcessingLeaseSnapshot()?.generation === lease.generation &&
     isSourceCurrent();
-  if (lease === null || !current()) return null;
-  return <CompareSession key={`${lease.generation}:${revision}`} data={data} isCurrent={current} />;
+  // PhotoStorageGate/usePhotos own reactive render admission. Live mutable reads
+  // belong in callbacks, rather than a compiler-cached render predicate.
+  if (lease === null || !focused) return null;
+  return (
+    <CompareSession
+      key={`${lease.generation}:${revision}`}
+      data={data}
+      isCurrent={current}
+      selection={selection}
+      onSelection={onSelection}
+    />
+  );
 }
 
 function CompareSession({
   data,
   isCurrent,
+  selection: pick,
+  onSelection: setPick,
 }: {
   data: NonNullable<ReturnType<typeof usePhotos>['data']>;
   isCurrent: () => boolean;
-}) {
+} & ComparisonChoiceProps) {
   const [sideBySide, setSideBySide] = useState(true);
   const [picking, setPicking] = useState<'before' | 'after' | null>(null);
-  const [pick, setPick] = useState<ManualCompare20Selection>({});
+  const pickerGeneration = useRef(0);
+  const [pickerRevision, setPickerRevision] = useState(0);
   const beforeTrigger = useRef<View>(null);
   const afterTrigger = useRef<View>(null);
   const pair = manualCompare20(data.series, pick);
 
-  function closePicker() {
+  function openPicker(which: 'before' | 'after') {
     if (!isCurrent()) return;
+    setPickerRevision(++pickerGeneration.current);
+    setPicking(which);
+  }
+  function closePicker() {
+    if (!isCurrent() || pickerGeneration.current !== pickerRevision) return;
+    const closedPicker = ++pickerGeneration.current;
     const trigger = picking === 'before' ? beforeTrigger : afterTrigger;
     setPicking(null);
     requestAnimationFrame(() => {
-      if (!isCurrent()) return;
+      if (!isCurrent() || pickerGeneration.current !== closedPicker) return;
       if (Platform.OS === 'web') trigger.current?.focus?.();
-      else focusTimelapseElementAfterLayout(() => (isCurrent() ? trigger.current : null));
+      else
+        focusTimelapseElementAfterLayout(() =>
+          isCurrent() && pickerGeneration.current === closedPicker ? trigger.current : null,
+        );
     });
   }
   function choose(id: string) {
-    if (!isCurrent() || picking === null) return;
+    if (!isCurrent() || picking === null || pickerGeneration.current !== pickerRevision) return;
     const next = chooseManualCompare20(data.series, pick, picking, id);
     if (next === null) return;
     setPick(next);
@@ -537,9 +571,7 @@ function CompareSession({
           </Text>
         </Pressable>
         {sameDay ? (
-          <Text variant="bodySm">
-            Same day. First and second identify positions; capture order is not known.
-          </Text>
+          <Text variant="bodySm">Same day. First and second identify display positions.</Text>
         ) : null}
       </View>
       <CompareSlider
@@ -563,12 +595,8 @@ function CompareSession({
         afterTrigger={afterTrigger}
         sideBySide={sideBySide}
         active={picking === null}
-        onPickBefore={() => {
-          if (isCurrent()) setPicking('before');
-        }}
-        onPickAfter={() => {
-          if (isCurrent()) setPicking('after');
-        }}
+        onPickBefore={() => openPicker('before')}
+        onPickAfter={() => openPicker('after')}
       />
       <Text variant="bodySm" tone="muted" className="mt-4">
         {PHOTO_COPY.compareNote}
@@ -798,6 +826,7 @@ function TimelineView({
 }
 
 function PhotoProgressTab() {
+  const choice = useContext(ComparisonChoiceContext);
   const { height } = useWindowDimensions();
   const source = usePhotos('front');
   const { data, isSourceCurrent } = source;
@@ -814,6 +843,8 @@ function PhotoProgressTab() {
   // PhotoStorageGate owns the recovery UI. This inner guard prevents an
   // unavailable/retained observer snapshot from ever becoming first-run UI.
   if (!data) return null;
+  if (choice === null) return null;
+  const { selection, onSelection } = choice;
 
   const count = data.count;
 
@@ -897,7 +928,12 @@ function PhotoProgressTab() {
         {count === 0 ? (
           <FirstRun compact={compactEmptyFirstRun} />
         ) : (
-          <CompareView data={data} isSourceCurrent={isSourceCurrent} />
+          <CompareView
+            data={data}
+            isSourceCurrent={isSourceCurrent}
+            selection={selection}
+            onSelection={onSelection}
+          />
         )}
       </ScrollView>
     </Screen>
@@ -908,13 +944,42 @@ function PhotoProgressTab() {
 // New users are in the reverse trial / carded trial, so it's unlocked after
 // onboarding; it locks to the contextual upsell only once Pro lapses.
 export default function ProgressScreen() {
+  const lease = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <PhotoStorageGate tone="paper">
-          <PhotoProgressTab />
-        </PhotoStorageGate>
+        <PhotoSelectionWindow key={lease?.generation ?? 'closed'} lease={lease}>
+          <PhotoStorageGate tone="paper">
+            <PhotoProgressTab />
+          </PhotoStorageGate>
+        </PhotoSelectionWindow>
       </PhotoTimelineLockGate>
     </ProGate>
+  );
+}
+
+// Only opaque choices survive a source refresh within this exact owner/grant.
+// Gates remain authoritative; fresh metadata must validate both IDs before display.
+function PhotoSelectionWindow({
+  lease,
+  children,
+}: {
+  lease: ReturnType<typeof activeHealthProcessingLeaseSnapshot>;
+  children: ReactNode;
+}) {
+  const [selection, setSelection] = useState<ManualCompare20Selection>({});
+  function onSelection(next: ManualCompare20Selection) {
+    if (lease === null || activeHealthProcessingLeaseSnapshot()?.generation !== lease.generation)
+      return;
+    setSelection(next);
+  }
+  return (
+    <ComparisonChoiceContext.Provider value={{ selection, onSelection }}>
+      {children}
+    </ComparisonChoiceContext.Provider>
   );
 }
