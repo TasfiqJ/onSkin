@@ -33,6 +33,7 @@ const ports = vi.hoisted(() => ({
   listeners: new Map<string, () => void>(),
   focus: vi.fn(),
   reads: 0,
+  pendingRead: null as Promise<PhotoRecord[]> | null,
   pan: { begin: () => {}, change: (_event: { translationX: number }) => {}, end: () => {} },
 }));
 vi.mock('react-native', async () => {
@@ -112,6 +113,7 @@ vi.mock('@/features/photos/store', () => ({
   loadPhotos: async () => {
     ports.reads++;
     if (ports.fail) throw Error('SYNTHETIC_STORAGE_UNAVAILABLE');
+    if (ports.pendingRead) return ports.pendingRead;
     return ports.photos;
   },
 }));
@@ -238,6 +240,7 @@ beforeEach(async () => {
   ports.lock.photoTimelineUnlocked = true;
   ports.focus.mockReset();
   ports.reads = 0;
+  ports.pendingRead = null;
   await setHealthDataCollectionConsentLocal({
     granted: true,
     version: HEALTH_DATA_CONSENT.version,
@@ -252,8 +255,11 @@ beforeEach(async () => {
 });
 afterEach(async () => {
   if (view) await act(async () => view.unmount());
+  await client.cancelQueries();
   client.clear();
   clearActiveHealthProcessingEpoch();
+  await clearHealthDataCollectionConsentLocal();
+  ports.storage.clear();
 });
 
 it('refuses the actual opposite-slot choice instead of displaying one record twice', async () => {
@@ -563,4 +569,82 @@ it('preserves a valid chosen pair through source refresh and requires recovery a
   expect(text()).toContain('no longer available');
   await press(button('Choose a new comparison pair').props.onPress);
   expect(pair()).toEqual(['a', 'c']);
+});
+
+it('denies retained stale cache and retired callbacks throughout a deferred real refetch', async () => {
+  await mount();
+  await press(slider().props.onPickBefore);
+  await press(
+    pickerRows().find((n) => n.props.accessibilityLabel.includes('May 12'))!.props.onPress,
+  );
+  expect(pair()).toEqual(['b', 'c']);
+  await press(slider().props.onPickAfter);
+  const oldChoice = pickerRows().find((n) => n.props.accessibilityLabel.includes('Apr 1'))!.props
+    .onPress;
+  const oldTrigger = slider().props.onPickBefore;
+  const query = client.getQueryCache().findAll({ queryKey: ['photos'] })[0]!;
+  const retained = query.state.data;
+  let resolveRead!: (photos: PhotoRecord[]) => void;
+  ports.pendingRead = new Promise((resolve) => {
+    resolveRead = resolve;
+  });
+  let refetch!: Promise<void>;
+  await act(async () => {
+    refetch = client.invalidateQueries({ queryKey: ['photos'] });
+  });
+  await flush();
+  expect(query.state.data).toBe(retained);
+  expect(query.state.fetchStatus).toBe('fetching');
+  expect(query.state.isInvalidated).toBe(true);
+  expect(hasSlider()).toBe(false);
+  expect(text()).not.toContain('Take my first photo');
+  await press(oldChoice);
+  await press(oldTrigger);
+  expect(hasSlider()).toBe(false);
+  await act(async () => {
+    resolveRead(ports.photos);
+    await refetch;
+  });
+  ports.pendingRead = null;
+  await flush();
+  await press(oldChoice);
+  await press(oldTrigger);
+  expect(pair()).toEqual(['b', 'c']);
+  expect(pickerRows()).toHaveLength(0);
+});
+
+it.each(['same-owner-regrant', 'owner-a-b-a'])(
+  'discards an actual nondefault selection at the %s authority boundary',
+  async (boundary) => {
+    await mount();
+    await press(slider().props.onPickBefore);
+    const oldChoice = pickerRows().find((n) => n.props.accessibilityLabel.includes('May 12'))!.props
+      .onPress;
+    await press(oldChoice);
+    expect(pair()).toEqual(['b', 'c']);
+    await act(async () => {
+      if (boundary === 'owner-a-b-a') await grant('synthetic-b');
+      await grant();
+    });
+    await flush();
+    await press(oldChoice);
+    expect(pair()).toEqual(['a', 'c']);
+    expect(pickerRows()).toHaveLength(0);
+  },
+);
+
+it('denies a populated retained cache with closed authority and does not read private photos', async () => {
+  await mount();
+  const cached = client.getQueryCache().findAll({ queryKey: ['photos'] })[0]!;
+  const retained = cached.state.data;
+  const reads = ports.reads;
+  const oldTrigger = slider().props.onPickBefore;
+  await act(async () => {
+    clearActiveHealthProcessingEpoch();
+  });
+  await press(oldTrigger);
+  expect(cached.state.data).toBe(retained);
+  expect(hasSlider()).toBe(false);
+  expect(ports.reads).toBe(reads);
+  expect(text()).not.toContain('Take my first photo');
 });

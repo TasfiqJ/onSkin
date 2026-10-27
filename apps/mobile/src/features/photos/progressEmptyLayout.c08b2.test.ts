@@ -1,9 +1,38 @@
 import * as React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ProgressScreen from '@/app/(tabs)/progress';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
+import {
+  clearHealthDataCollectionConsentLocal,
+  setHealthDataCollectionConsentLocal,
+} from '@/features/onboarding/healthConsentStore';
+import { localDay } from './date';
+import { loadPhotos, type PhotoRecord } from './store';
+import {
+  defaultComparePair,
+  detectMilestones,
+  forSeries,
+  groupByMonth,
+  metadataLine,
+  referenceFor,
+} from './timeline';
 
-const fixture = vi.hoisted(() => ({ height: 640, width: 360, count: 0, status: 'local' }));
+const fixture = vi.hoisted(() => ({
+  height: 640,
+  width: 360,
+  count: 0,
+  status: 'local',
+  photos: [] as PhotoRecord[],
+  storage: new Map<string, string>(),
+}));
 vi.mock('react-native', () => ({
   View: 'View',
   Pressable: 'Pressable',
@@ -17,17 +46,35 @@ vi.mock('expo-router', () => ({ router: { push: vi.fn() } }));
 vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
-vi.mock('@/components/ui', () => ({ Screen: 'Screen', Card: 'Card', Text: 'Text' }));
+vi.mock('@/components/ui', () => ({
+  Screen: 'Screen',
+  Card: 'Card',
+  Text: 'Text',
+  StateNotice: 'StateNotice',
+}));
 vi.mock('@/components/navigation/DockMotion', () => ({ reportDockScroll: vi.fn() }));
 vi.mock('@/features/subscription/ProGate', () => ({
   ProGate: ({ children }: { children: React.ReactNode }) => children,
 }));
-vi.mock('./PhotoStorageGate', () => ({
-  PhotoStorageGate: ({ children }: { children: React.ReactNode }) => children,
+vi.mock('@/lib/applock/AppLockProvider', () => ({
+  useAppLock: () => ({ appUnlocked: true, enabled: true, photoTimelineUnlocked: true }),
 }));
-vi.mock('./PhotoTimelineLockGate', () => ({
-  PhotoTimelineLockGate: ({ children }: { children: React.ReactNode }) => children,
+vi.mock('@/features/photos/sensitiveImageMemory', () => ({
+  purgeSensitiveImageMemory: async () => true,
 }));
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: async (key: string) => fixture.storage.get(key) ?? null,
+  updatePrivateItem: async (key: string, update: (raw: string | null) => string | null) => {
+    const value = update(fixture.storage.get(key) ?? null);
+    if (value === null) fixture.storage.delete(key);
+    else fixture.storage.set(key, value);
+  },
+  removePrivateItem: async (key: string) => {
+    fixture.storage.delete(key);
+  },
+}));
+vi.mock('expo-crypto', () => ({ CryptoDigestAlgorithm: { SHA256: 'SHA-256' } }));
+vi.mock('./store', () => ({ loadPhotos: vi.fn(async () => fixture.photos) }));
 vi.mock('./PhotoImage', () => ({ PhotoImage: 'PhotoImage' }));
 vi.mock('./CompareSlider', () => ({ CompareSlider: 'CompareSlider' }));
 vi.mock('./PhotoTimelapse', () => ({ PhotoTimelapse: 'PhotoTimelapse' }));
@@ -42,26 +89,36 @@ vi.mock('@/lib/accessibility/useReduceMotionPreference', () => ({
   motionAwareModalAnimation: () => 'none',
 }));
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
-vi.mock('./usePhotos', () => ({
-  usePhotos: () => {
-    const series = [
-      { id: 'a', takenLocalDate: '2026-09-01', localUri: null, captureSessionId: null },
-      { id: 'b', takenLocalDate: '2026-09-30', localUri: null, captureSessionId: null },
-    ];
-    return {
-      data: {
-        count: fixture.count,
-        all: fixture.count ? series : [],
-        series: fixture.count ? series : [],
-        metadata: { text: 'Two local photos' },
-        comparePair: fixture.count ? { before: series[0], after: series[1] } : null,
-        monthGroups: [],
-        milestones: [],
-      },
-    };
-  },
-}));
 let renderer: ReactTestRenderer | null = null;
+let client: QueryClient;
+function photo(id: string, day: string): PhotoRecord {
+  return {
+    id,
+    series: 'front',
+    takenLocalDate: day,
+    takenAt: `${day}T12:00:00.000Z`,
+    timeOfDay: 'morning',
+    isReference: false,
+    referencePhotoId: null,
+    alignmentScore: null,
+    lightingScore: null,
+    localUri: null,
+    notes: null,
+    captureSessionId: null,
+    headRoll: null,
+    headYaw: null,
+    headPitch: null,
+    qualitySource: null,
+    localOnly: true,
+    storagePath: null,
+    faceRegionRedacted: false,
+    isEncrypted: false,
+    encryptedLocalUri: null,
+    thumbnailLocalUri: null,
+    encryptionVersion: 'none',
+    keyId: null,
+  };
+}
 function text(node: ReactTestInstance | string | number): string {
   return typeof node === 'object'
     ? node.children.map((child) => text(child as ReactTestInstance | string | number)).join(' ')
@@ -71,20 +128,84 @@ function nodes(type: string) {
   return renderer!.root.findAll((node) => (node.type as unknown) === type);
 }
 async function mount() {
+  fixture.photos = fixture.count ? [photo('a', '2026-09-01'), photo('b', '2026-09-30')] : [];
+  if (fixture.count === 0) {
+    // A current empty cache exercises the real hook/gate without private photo I/O.
+    const lease = activeHealthProcessingLeaseSnapshot()!;
+    const today = localDay();
+    const photos = fixture.photos;
+    client.setQueryData(
+      [
+        'photos',
+        'authority',
+        lease.generation,
+        lease.epoch,
+        lease.accountGeneration,
+        lease.ownerUserId,
+        'front',
+        today,
+      ],
+      {
+        all: photos,
+        series: forSeries(photos, 'front'),
+        count: 0,
+        metadata: metadataLine(photos),
+        comparePair: defaultComparePair(photos, { series: 'front' }),
+        monthGroups: groupByMonth(photos, 'front', today),
+        milestones: detectMilestones(photos, 'front'),
+        reference: referenceFor(photos, 'front'),
+      },
+    );
+  }
   await act(async () => {
-    renderer = create(React.createElement(ProgressScreen));
+    renderer = create(
+      React.createElement(QueryClientProvider, { client }, React.createElement(ProgressScreen)),
+    );
   });
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  });
+  if (fixture.count === 0) expect(loadPhotos).not.toHaveBeenCalled();
+  else {
+    expect(nodes('CompareSlider')[0]!.props.before.id).toBe('a');
+    expect(nodes('CompareSlider')[0]!.props.after.id).toBe('b');
+  }
 }
-beforeEach(() => {
+beforeEach(async () => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
   fixture.count = 0;
   fixture.status = 'local';
+  fixture.storage.clear();
+  vi.mocked(loadPhotos).mockClear();
+  clearActiveHealthProcessingEpoch();
+  await setHealthDataCollectionConsentLocal({
+    granted: true,
+    version: HEALTH_DATA_CONSENT.version,
+    consentText: HEALTH_DATA_CONSENT.fullText,
+  });
+  const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+  setActiveHealthProcessingEpoch(21, { ownerUserId: 'synthetic-layout21', accountGeneration });
+  client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: Infinity,
+        staleTime: Infinity,
+        refetchOnMount: false,
+      },
+    },
+  });
 });
 afterEach(async () => {
   await act(async () => {
     renderer?.unmount();
   });
   renderer = null;
+  await client.cancelQueries();
+  client.clear();
+  clearActiveHealthProcessingEpoch();
+  await clearHealthDataCollectionConsentLocal();
+  fixture.storage.clear();
 });
 
 describe('C-08B2-R2 empty layout composition (pixel geometry is covered by the browser runner)', () => {
