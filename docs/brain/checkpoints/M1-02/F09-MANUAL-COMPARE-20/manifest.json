@@ -1,0 +1,4026 @@
+{
+  "acceptanceGranted": false,
+  "authority": "BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01",
+  "files": {
+    "FINAL_REPORT.md": {
+      "bytes": 7816,
+      "sha256": "6d4b34991661a5fd97f280545646a1e66c4cdb5db60b7da7c1872f9355c37f7a"
+    },
+    "README.md": {
+      "bytes": 1699,
+      "sha256": "b2c447aeefafe11e99dd1a0cbc73afbf947122384356d889158c5c9f4e990291"
+    },
+    "payload.zip": {
+      "bytes": 4105879,
+      "sha256": "e38b1f434d600d00b16b3236598e8c81abc5ea6e3870bec57e11336af2f132d2"
+    },
+    "verify20.py": {
+      "bytes": 13565,
+      "sha256": "19900b26e71a3853eb5410fe8e05e9a9aa03f27da95ef0917938aa4a5a9aadc8"
+    }
+  },
+  "inputManifestSHA256": "41b0c20e2a74c033f68f758cc96ad8be6e5b72daa51917652c5b9cb206c53cfd",
+  "payload": {
+    "browser/browser20-compare-explore/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-compare-explore/explore-comparison.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-compare-explore/explore-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-compare-explore/expo.log": {
+      "bytes": 6485,
+      "sha256": "51ff84ef60ae3397295e6c6b3d6640fdf7c6c9ed8eee9eeb32576b797f3987b7"
+    },
+    "browser/browser20-compare-explore/network.json": {
+      "bytes": 9387,
+      "sha256": "ec31a12410ab34481840c61a10cb645f50a62f82010650e07ad7e83e0463cff0"
+    },
+    "browser/browser20-compare-explore/steps.json": {
+      "bytes": 256,
+      "sha256": "89d70cb6dab4404295887d09a15e3aa935a5ff417e437158b0063bf90da81381"
+    },
+    "browser/browser20-compare-explore/trace.json": {
+      "bytes": 37427,
+      "sha256": "a57d8b69c2f3e447dde11bd581b434fb5eaa883b20eef7fa6eea39a661bbbb7e"
+    },
+    "browser/browser20-complete-attempt9/360x640-FAILURE.json": {
+      "bytes": 1971,
+      "sha256": "b7eb98cd4a419c663be85b3e5c1da8b11881a5bf6869f935f1569f9c4b821fcb"
+    },
+    "browser/browser20-complete-attempt9/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-complete-attempt9/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-complete-attempt9/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-complete-attempt9/360x640-gesture.json": {
+      "bytes": 86,
+      "sha256": "d152cbedadddf8782d4797240ca0ddfcf8e11f6fedcf46391872ab02fa32768c"
+    },
+    "browser/browser20-complete-attempt9/360x640-keyboard-1793059231245.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-complete-attempt9/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-complete-attempt9/360x640-picker-geometry.json": {
+      "bytes": 5729,
+      "sha256": "9132376f02b8ae50d742bbb44a3d33e018d118f814c42158daed5c85586988ae"
+    },
+    "browser/browser20-complete-attempt9/360x640-picker.json": {
+      "bytes": 2747,
+      "sha256": "5daedd11f55736c5eef7eb1296823450113f2745961e670d8429800ab2f988b7"
+    },
+    "browser/browser20-complete-attempt9/360x640-same-item-refused.json": {
+      "bytes": 2747,
+      "sha256": "79d867f3eca78380b6e520d659bbfe3604b2d1f469b46a909f7b40a4452957eb"
+    },
+    "browser/browser20-complete-attempt9/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-complete-attempt9/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-complete-attempt9/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-complete-attempt9/ERROR.json": {
+      "bytes": 84,
+      "sha256": "b82c90dacdc728efec3645c4934554c036a46aaeda3a559803312282e947ff56"
+    },
+    "browser/browser20-complete-attempt9/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-complete-attempt9/debug-comparison.json": {
+      "bytes": 372,
+      "sha256": "fbb8ab390c126d35f714ef5246fb522d043bff633b9bce08140c67e6126bc1ab"
+    },
+    "browser/browser20-complete-attempt9/debug-query.json": {
+      "bytes": 10,
+      "sha256": "770c2d18aa4ec3159f46da461ef452972949942ff4f6a9771044485faa146398"
+    },
+    "browser/browser20-complete-attempt9/expo.log": {
+      "bytes": 6316,
+      "sha256": "e24af1d247011ec70b21905e695aa666353bd0c85b7f0a534a089c3c0f4d58e5"
+    },
+    "browser/browser20-complete-attempt9/network.json": {
+      "bytes": 9695,
+      "sha256": "0d786f41b77626196f4275dcfc44ae4357c175942f3cfbd754527b682ffa7d37"
+    },
+    "browser/browser20-complete-attempt9/steps.json": {
+      "bytes": 811,
+      "sha256": "a630b303f8a677e58cf4ba1e3c672faa3ce5c3a3e96852c9bedbffc22bae300b"
+    },
+    "browser/browser20-complete-attempt9/trace.json": {
+      "bytes": 38509,
+      "sha256": "1ebcde725d934a4f3372ca4a3b8e5ad102b37e8cd3ffafffa30797e46c121933"
+    },
+    "browser/browser20-explore/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-explore/explore-progress.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-explore/expo.log": {
+      "bytes": 8294,
+      "sha256": "057d77a1d2f67268b0fe3ee9eb041ae27df6352e9f50cc2b62f9880b8a70cac9"
+    },
+    "browser/browser20-explore/network.json": {
+      "bytes": 7763,
+      "sha256": "9719febd8854d5c0ac08628f5c49b61bc551ff6113b828621b9ba014976af9cd"
+    },
+    "browser/browser20-explore/steps.json": {
+      "bytes": 174,
+      "sha256": "0be3b970acf3e90241a946b37e462282bc2ef2f5b01f9f7aa8db75665dfd8128"
+    },
+    "browser/browser20-explore/trace.json": {
+      "bytes": 37903,
+      "sha256": "f60d9c859f5eb527cb4fcb86bcd0f69438b2c3930850b0faec5d852051766c48"
+    },
+    "browser/browser20-final-candidate13/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-final-candidate13/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-final-candidate13/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-final-candidate13/360x640-gesture-value.json": {
+      "bytes": 155,
+      "sha256": "578f065ffb8fe26b1dc518a8625f87051d955adabc2e818f3131797d132abf1b"
+    },
+    "browser/browser20-final-candidate13/360x640-image-visibility-adjusted.json": {
+      "bytes": 1971,
+      "sha256": "5599c0f92b52e816db191626619a4cd6dbc79bdf7ab684678fe82210b6f805fc"
+    },
+    "browser/browser20-final-candidate13/360x640-keyboard-1793059965244.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final-candidate13/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-final-candidate13/360x640-keyboard-pressure-geometry.json": {
+      "bytes": 5732,
+      "sha256": "5d7a3575eb46910bd712e9bbe1cab61376b918da688390a279e9bc5aef6d036d"
+    },
+    "browser/browser20-final-candidate13/360x640-keyboard-pressure-selected.json": {
+      "bytes": 1574,
+      "sha256": "8a1d49fc14e9b0aeee86056d3fe6a64bf8fccc55081f33f58e7afcf281e36c8c"
+    },
+    "browser/browser20-final-candidate13/360x640-keyboard-selected-geometry.json": {
+      "bytes": 4764,
+      "sha256": "beedf471553aece1c05493261b3c77d1ebd50810d7416c29ead061121a6c53b0"
+    },
+    "browser/browser20-final-candidate13/360x640-keyboard-viewport-pressure.json": {
+      "bytes": 2747,
+      "sha256": "90f45d754bdf3505c12a900ecb02da1bdb33d68ff8900ba56c4ca58a5a3b50e6"
+    },
+    "browser/browser20-final-candidate13/360x640-picker-geometry.json": {
+      "bytes": 5729,
+      "sha256": "9132376f02b8ae50d742bbb44a3d33e018d118f814c42158daed5c85586988ae"
+    },
+    "browser/browser20-final-candidate13/360x640-picker.json": {
+      "bytes": 2747,
+      "sha256": "5daedd11f55736c5eef7eb1296823450113f2745961e670d8429800ab2f988b7"
+    },
+    "browser/browser20-final-candidate13/360x640-same-item-refused.json": {
+      "bytes": 2747,
+      "sha256": "79d867f3eca78380b6e520d659bbfe3604b2d1f469b46a909f7b40a4452957eb"
+    },
+    "browser/browser20-final-candidate13/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final-candidate13/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-final-candidate13/360x640-swipe-adjusted-geometry.json": {
+      "bytes": 6296,
+      "sha256": "357f78c3ff905c3e8f690deb85177731b4ef57dfeecfbdf9f866b81ac8263ca3"
+    },
+    "browser/browser20-final-candidate13/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-final-candidate13/360x640-timeline-back.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final-candidate13/360x640-timeline.json": {
+      "bytes": 1647,
+      "sha256": "850b3f0ee9b5e848d0e63782925d41ad7ca7a9c55d09b4a1243b56d04b8ccd8f"
+    },
+    "browser/browser20-final-candidate13/375x667-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "96cc222477ff5a8f5bda29b4698547c8caeee59406551cbe0d9650806567c55f"
+    },
+    "browser/browser20-final-candidate13/375x667-alternate-pair.json": {
+      "bytes": 1549,
+      "sha256": "d317b0a35c5a8b74c43688a1e42b5a7cdf0366e8ea0e7301a22464c399e8b1dc"
+    },
+    "browser/browser20-final-candidate13/375x667-default-geometry.json": {
+      "bytes": 3870,
+      "sha256": "17b16a19f3738f4aa44fd600f612b6ca8848f20e1a1c6d5ffbdb6df475f009c3"
+    },
+    "browser/browser20-final-candidate13/375x667-gesture-value.json": {
+      "bytes": 152,
+      "sha256": "1e1f7288998fa40563d21e2ff5ced1a0e66e78972a1fae6aa9eaa9213284c910"
+    },
+    "browser/browser20-final-candidate13/375x667-image-visibility-adjusted.json": {
+      "bytes": 1945,
+      "sha256": "7396e3c411ecce7fc2c472412421c31f75890b9fae7ebff07489f532264018d2"
+    },
+    "browser/browser20-final-candidate13/375x667-keyboard-1793059972128.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final-candidate13/375x667-keyboard-cancel-focus.json": {
+      "bytes": 1552,
+      "sha256": "bb6d5577880a0ac051ef8947599e62c36b15e084296a61cf4697106699bcd398"
+    },
+    "browser/browser20-final-candidate13/375x667-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "e018c13c8c2483d99af7107461d2eb47e2e0db10d056cc0b0701fc2eff172f43"
+    },
+    "browser/browser20-final-candidate13/375x667-keyboard-pressure-selected.json": {
+      "bytes": 1549,
+      "sha256": "c5b0bbffe35557351bf668d1f51603de390db00a3fd84a3bc04c20535766dc0e"
+    },
+    "browser/browser20-final-candidate13/375x667-keyboard-selected-geometry.json": {
+      "bytes": 3903,
+      "sha256": "fa69a507c62906177d402f9e1847b80552de9939c378ae77e7cbfc3a3eb0bd5e"
+    },
+    "browser/browser20-final-candidate13/375x667-keyboard-viewport-pressure.json": {
+      "bytes": 2718,
+      "sha256": "9f169acfd4e890d89e61e6fe4936e976a8ea528fd80ff5e0974fe2b12d187808"
+    },
+    "browser/browser20-final-candidate13/375x667-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "09962d6b3efda6ae57e4ad1aa070d9a95c94ae2e0e6b2aea4f907787bffc920c"
+    },
+    "browser/browser20-final-candidate13/375x667-picker.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final-candidate13/375x667-same-item-refused.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final-candidate13/375x667-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final-candidate13/375x667-storage-unavailable.json": {
+      "bytes": 515,
+      "sha256": "13c7349ada8aa5c6b7c3e4f8d16d584a969dac001ff86dbab226d6a7ad647852"
+    },
+    "browser/browser20-final-candidate13/375x667-swipe-adjusted-geometry.json": {
+      "bytes": 4749,
+      "sha256": "70c2b3d15a1180fe96a3b4ec1c280921a7f00f97cb39c53a2361b22b9a0edd35"
+    },
+    "browser/browser20-final-candidate13/375x667-swipe.json": {
+      "bytes": 1941,
+      "sha256": "7377c5e6e0eb7b198cefd2085abd2639bf67b73372d517525b0be2469cb328b6"
+    },
+    "browser/browser20-final-candidate13/375x667-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final-candidate13/375x667-timeline.json": {
+      "bytes": 1639,
+      "sha256": "1de571599342d693c876227e8f45cd754f33f9b34680d129912bd88807768637"
+    },
+    "browser/browser20-final-candidate13/390x844-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "fc4881766edd3102d653de67516db26a46e2ebae369c85a5e56acadc7db22ca9"
+    },
+    "browser/browser20-final-candidate13/390x844-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "10c3d3374e8303bfaa7807ec19ac273f1079d7a63c1a66048e942f17ee2e1f81"
+    },
+    "browser/browser20-final-candidate13/390x844-default-geometry.json": {
+      "bytes": 3871,
+      "sha256": "b9a1f50e2a6c986671572ff9e23296fe420e3b8b2a6855ef8c1b4056815d1f87"
+    },
+    "browser/browser20-final-candidate13/390x844-gesture-value.json": {
+      "bytes": 157,
+      "sha256": "2122c9ed314f548cfc01aa78a33f2587af5b7705c577f3e59eede3ffe7e0e5ed"
+    },
+    "browser/browser20-final-candidate13/390x844-image-visibility-adjusted.json": {
+      "bytes": 1944,
+      "sha256": "4f51657fc3cfcde5d2dc6dc67f6792654989e537b9c5b891f88d366846988c18"
+    },
+    "browser/browser20-final-candidate13/390x844-keyboard-1793059978624.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final-candidate13/390x844-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "092cbaa1cabb8a93c9a27357c7c882a41332d120453da27860b5ed6bc5c13f88"
+    },
+    "browser/browser20-final-candidate13/390x844-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "e2e43bb1b25104ceb2cd7495d18cc8ea86dc7c050b1a2dd858ad7a4965e0558b"
+    },
+    "browser/browser20-final-candidate13/390x844-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "b07b54be5f10e934f50871398cf11ad65b51c3b0d83c40faf1ee520602edec4e"
+    },
+    "browser/browser20-final-candidate13/390x844-keyboard-selected-geometry.json": {
+      "bytes": 3915,
+      "sha256": "e3e57c14c7fa3c58932653d40bfcb8ea3d701724e3ce946302d402572c14bb1b"
+    },
+    "browser/browser20-final-candidate13/390x844-keyboard-viewport-pressure.json": {
+      "bytes": 2719,
+      "sha256": "8e9d8acbb1297c3ad7df419ccf24e6657cda2864c93e92c834c1a80702f02bef"
+    },
+    "browser/browser20-final-candidate13/390x844-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "1a1e00e88edee5ab148957f2945ce831266be5bea8adb41beed8d6574dbe1ca2"
+    },
+    "browser/browser20-final-candidate13/390x844-picker.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final-candidate13/390x844-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final-candidate13/390x844-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final-candidate13/390x844-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-final-candidate13/390x844-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "9b6762acb3d3f8b02b829079f1d3b0937c753b976ee0a580403115b99a6a8f29"
+    },
+    "browser/browser20-final-candidate13/390x844-swipe.json": {
+      "bytes": 1942,
+      "sha256": "5b937a9b2a40bbec15d3b43446fc97e7a6591ac8bd5ca16ce48ed29e14319601"
+    },
+    "browser/browser20-final-candidate13/390x844-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final-candidate13/390x844-timeline.json": {
+      "bytes": 1621,
+      "sha256": "cc37f3bb0d9781724475c5f0e173f6f77c650e14ee69abc895a71f5616ccde9b"
+    },
+    "browser/browser20-final-candidate13/430x932-alternate-pair-geometry.json": {
+      "bytes": 3902,
+      "sha256": "5393a6002d6a18ba69492291d6a8cdbe0aac34961f5fd274bedd150fb8fcf290"
+    },
+    "browser/browser20-final-candidate13/430x932-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-final-candidate13/430x932-default-geometry.json": {
+      "bytes": 3873,
+      "sha256": "dc4ae4ca21a80c27e9171359f562d4ad774a1855b28dbc18a707a37a257ea249"
+    },
+    "browser/browser20-final-candidate13/430x932-gesture-value.json": {
+      "bytes": 156,
+      "sha256": "b026136497e004ecdcdcfb2c6532ae24d60c3c05d601e0222ab910c5a1080991"
+    },
+    "browser/browser20-final-candidate13/430x932-image-visibility-adjusted.json": {
+      "bytes": 1943,
+      "sha256": "205bb6b71bba9d0eb3a70662efa6891de78fba3e4b2c85c1c246e587c946f767"
+    },
+    "browser/browser20-final-candidate13/430x932-keyboard-1793059985229.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final-candidate13/430x932-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "e369c3610980525ff99dddf0a241a8c96a6795f5dfe2f89b299ac541d649ce7b"
+    },
+    "browser/browser20-final-candidate13/430x932-keyboard-pressure-geometry.json": {
+      "bytes": 5044,
+      "sha256": "bb11869b7da419480d64d11bfd131aacccd7fac833a10698acfa9f5b29224b9b"
+    },
+    "browser/browser20-final-candidate13/430x932-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "299da808f227a951488caa667881de7e87a115b434cab99c3b2b1f3578c1515c"
+    },
+    "browser/browser20-final-candidate13/430x932-keyboard-selected-geometry.json": {
+      "bytes": 3916,
+      "sha256": "31080e8b01e6a23238cbc7f3a07a3a000eaca75f08590c0c8be71dea6d04638f"
+    },
+    "browser/browser20-final-candidate13/430x932-keyboard-viewport-pressure.json": {
+      "bytes": 2719,
+      "sha256": "221540dc4db54fe8b265f7368a699ba786bb7221e722175291627df926cd180b"
+    },
+    "browser/browser20-final-candidate13/430x932-picker-geometry.json": {
+      "bytes": 5044,
+      "sha256": "74c78c98897dc56c2e90469cb97b182fa0d2aeca6b086799d667f7362678c446"
+    },
+    "browser/browser20-final-candidate13/430x932-picker.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final-candidate13/430x932-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final-candidate13/430x932-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final-candidate13/430x932-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final-candidate13/430x932-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "86b534dd961429f22ea6c62fb559b669f1c65f4b17a8a007bd3d960a955c42e8"
+    },
+    "browser/browser20-final-candidate13/430x932-swipe.json": {
+      "bytes": 1942,
+      "sha256": "944a546d49187ca64443b8d62b7b9cf5e6a76a6f3767f4ae05f2461f35fad677"
+    },
+    "browser/browser20-final-candidate13/430x932-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final-candidate13/430x932-timeline.json": {
+      "bytes": 1617,
+      "sha256": "65ff83808cce34002a107564b82585e966d98a8b3bd50ea94d4f93eb7e773645"
+    },
+    "browser/browser20-final-candidate13/console.json": {
+      "bytes": 10210,
+      "sha256": "92623e872a577e55518766bfecafbc579d36afc1d428801b37b43b217e8c0b21"
+    },
+    "browser/browser20-final-candidate13/debug-slider.json": {
+      "bytes": 24284,
+      "sha256": "036f2dbe37659ae353f0871d6287b0838e9630054bd041d7cd3ac2a3d49ffd67"
+    },
+    "browser/browser20-final-candidate13/expo.log": {
+      "bytes": 14723,
+      "sha256": "d5a43ac8918453feb312e8ea030f7d23594a14d94370a0da7a48d1ed4c48009c"
+    },
+    "browser/browser20-final-candidate13/network.json": {
+      "bytes": 31781,
+      "sha256": "0a847285e5da338b85932327c9ba758019aa2c53e60d1648a1aa1b62eff29f2d"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "3eb16f595971399ba430c290e4297d6f72f3f7e911c2d4464bc6d7f3566e3650"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-owner-a-b-a-old-choice-retired.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-same-owner-regrant-old-choice-retired.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1637,
+      "sha256": "7391408937a6aa637e1929c59739b07db68aa730738072deb19edf5a58efd414"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1819,
+      "sha256": "d754e3f39553e0322bb2c51ba476ec28afa8f3c2a77197da065a05683f69283e"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "dbf394128d8162f8de0ffeef0de9b7e664ba8cd252a68dc5255a779b02c8e0c2"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "13deb087b7a2c1bce3d787cdde4ec60a03d1d5a4c08e81cfb5f9a91bbc1b06b5"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1619,
+      "sha256": "7b77289108149921d5b671e8b994d72f0cd4cce5387d7a65b30ee38e2aa1c936"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1620,
+      "sha256": "e48052e9f779081dda8a5d7f9b4f3c38f8d3c0540287437c519eb104a19591a3"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1620,
+      "sha256": "29c971ec8118c07def6578787c8008aaefb3269da76da1f1a7b8386827e40093"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6981,
+      "sha256": "c6e1d66f9b50607b1d80fbf99fd0ef9e06fab8e41ff43937d38aa6ccfac86a9c"
+    },
+    "browser/browser20-final-candidate13/source-lifecycle-withdrawn-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final-candidate13/source-probes.json": {
+      "bytes": 394,
+      "sha256": "7ed0dee47df3cca0b8d23ce8d5bfc6d6ce90bf1afd8f39ec04377a96fe5b59dc"
+    },
+    "browser/browser20-final-candidate13/steps.json": {
+      "bytes": 5746,
+      "sha256": "974f48b448dde4051cc5d10a1eda184b969dc5bf1540a7005b584c09d02c67dd"
+    },
+    "browser/browser20-final-candidate13/summary.json": {
+      "bytes": 1883,
+      "sha256": "d7943386be67f45f62a4fd0c81c287c651b679f7dcf089f28615f8808d820bbc"
+    },
+    "browser/browser20-final-candidate13/trace.json": {
+      "bytes": 109288,
+      "sha256": "c24cc6f93d26b9e014f955d0b553569e79327dae8f79f8537b758ae32596e28e"
+    },
+    "browser/browser20-final14/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-final14/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-final14/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-final14/360x640-gesture-value.json": {
+      "bytes": 155,
+      "sha256": "578f065ffb8fe26b1dc518a8625f87051d955adabc2e818f3131797d132abf1b"
+    },
+    "browser/browser20-final14/360x640-image-visibility-adjusted.json": {
+      "bytes": 1971,
+      "sha256": "5599c0f92b52e816db191626619a4cd6dbc79bdf7ab684678fe82210b6f805fc"
+    },
+    "browser/browser20-final14/360x640-keyboard-1793060505724.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final14/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-final14/360x640-keyboard-pressure-geometry.json": {
+      "bytes": 5732,
+      "sha256": "5d7a3575eb46910bd712e9bbe1cab61376b918da688390a279e9bc5aef6d036d"
+    },
+    "browser/browser20-final14/360x640-keyboard-pressure-selected.json": {
+      "bytes": 1574,
+      "sha256": "8a1d49fc14e9b0aeee86056d3fe6a64bf8fccc55081f33f58e7afcf281e36c8c"
+    },
+    "browser/browser20-final14/360x640-keyboard-selected-geometry.json": {
+      "bytes": 4764,
+      "sha256": "beedf471553aece1c05493261b3c77d1ebd50810d7416c29ead061121a6c53b0"
+    },
+    "browser/browser20-final14/360x640-keyboard-viewport-pressure.json": {
+      "bytes": 2747,
+      "sha256": "90f45d754bdf3505c12a900ecb02da1bdb33d68ff8900ba56c4ca58a5a3b50e6"
+    },
+    "browser/browser20-final14/360x640-picker-geometry.json": {
+      "bytes": 5729,
+      "sha256": "9132376f02b8ae50d742bbb44a3d33e018d118f814c42158daed5c85586988ae"
+    },
+    "browser/browser20-final14/360x640-picker.json": {
+      "bytes": 2747,
+      "sha256": "5daedd11f55736c5eef7eb1296823450113f2745961e670d8429800ab2f988b7"
+    },
+    "browser/browser20-final14/360x640-same-item-refused.json": {
+      "bytes": 2747,
+      "sha256": "79d867f3eca78380b6e520d659bbfe3604b2d1f469b46a909f7b40a4452957eb"
+    },
+    "browser/browser20-final14/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final14/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-final14/360x640-swipe-adjusted-geometry.json": {
+      "bytes": 6296,
+      "sha256": "357f78c3ff905c3e8f690deb85177731b4ef57dfeecfbdf9f866b81ac8263ca3"
+    },
+    "browser/browser20-final14/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-final14/360x640-timeline-back.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final14/360x640-timeline.json": {
+      "bytes": 1647,
+      "sha256": "850b3f0ee9b5e848d0e63782925d41ad7ca7a9c55d09b4a1243b56d04b8ccd8f"
+    },
+    "browser/browser20-final14/375x667-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "96cc222477ff5a8f5bda29b4698547c8caeee59406551cbe0d9650806567c55f"
+    },
+    "browser/browser20-final14/375x667-alternate-pair.json": {
+      "bytes": 1549,
+      "sha256": "d317b0a35c5a8b74c43688a1e42b5a7cdf0366e8ea0e7301a22464c399e8b1dc"
+    },
+    "browser/browser20-final14/375x667-default-geometry.json": {
+      "bytes": 3870,
+      "sha256": "17b16a19f3738f4aa44fd600f612b6ca8848f20e1a1c6d5ffbdb6df475f009c3"
+    },
+    "browser/browser20-final14/375x667-gesture-value.json": {
+      "bytes": 152,
+      "sha256": "1e1f7288998fa40563d21e2ff5ced1a0e66e78972a1fae6aa9eaa9213284c910"
+    },
+    "browser/browser20-final14/375x667-image-visibility-adjusted.json": {
+      "bytes": 1945,
+      "sha256": "7396e3c411ecce7fc2c472412421c31f75890b9fae7ebff07489f532264018d2"
+    },
+    "browser/browser20-final14/375x667-keyboard-1793060512499.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final14/375x667-keyboard-cancel-focus.json": {
+      "bytes": 1552,
+      "sha256": "bb6d5577880a0ac051ef8947599e62c36b15e084296a61cf4697106699bcd398"
+    },
+    "browser/browser20-final14/375x667-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "e018c13c8c2483d99af7107461d2eb47e2e0db10d056cc0b0701fc2eff172f43"
+    },
+    "browser/browser20-final14/375x667-keyboard-pressure-selected.json": {
+      "bytes": 1549,
+      "sha256": "c5b0bbffe35557351bf668d1f51603de390db00a3fd84a3bc04c20535766dc0e"
+    },
+    "browser/browser20-final14/375x667-keyboard-selected-geometry.json": {
+      "bytes": 3903,
+      "sha256": "fa69a507c62906177d402f9e1847b80552de9939c378ae77e7cbfc3a3eb0bd5e"
+    },
+    "browser/browser20-final14/375x667-keyboard-viewport-pressure.json": {
+      "bytes": 2718,
+      "sha256": "9f169acfd4e890d89e61e6fe4936e976a8ea528fd80ff5e0974fe2b12d187808"
+    },
+    "browser/browser20-final14/375x667-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "09962d6b3efda6ae57e4ad1aa070d9a95c94ae2e0e6b2aea4f907787bffc920c"
+    },
+    "browser/browser20-final14/375x667-picker.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final14/375x667-same-item-refused.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final14/375x667-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final14/375x667-storage-unavailable.json": {
+      "bytes": 515,
+      "sha256": "13c7349ada8aa5c6b7c3e4f8d16d584a969dac001ff86dbab226d6a7ad647852"
+    },
+    "browser/browser20-final14/375x667-swipe-adjusted-geometry.json": {
+      "bytes": 4749,
+      "sha256": "70c2b3d15a1180fe96a3b4ec1c280921a7f00f97cb39c53a2361b22b9a0edd35"
+    },
+    "browser/browser20-final14/375x667-swipe.json": {
+      "bytes": 1941,
+      "sha256": "7377c5e6e0eb7b198cefd2085abd2639bf67b73372d517525b0be2469cb328b6"
+    },
+    "browser/browser20-final14/375x667-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final14/375x667-timeline.json": {
+      "bytes": 1639,
+      "sha256": "1de571599342d693c876227e8f45cd754f33f9b34680d129912bd88807768637"
+    },
+    "browser/browser20-final14/390x844-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "fc4881766edd3102d653de67516db26a46e2ebae369c85a5e56acadc7db22ca9"
+    },
+    "browser/browser20-final14/390x844-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "10c3d3374e8303bfaa7807ec19ac273f1079d7a63c1a66048e942f17ee2e1f81"
+    },
+    "browser/browser20-final14/390x844-default-geometry.json": {
+      "bytes": 3871,
+      "sha256": "b9a1f50e2a6c986671572ff9e23296fe420e3b8b2a6855ef8c1b4056815d1f87"
+    },
+    "browser/browser20-final14/390x844-gesture-value.json": {
+      "bytes": 157,
+      "sha256": "2122c9ed314f548cfc01aa78a33f2587af5b7705c577f3e59eede3ffe7e0e5ed"
+    },
+    "browser/browser20-final14/390x844-image-visibility-adjusted.json": {
+      "bytes": 1944,
+      "sha256": "4f51657fc3cfcde5d2dc6dc67f6792654989e537b9c5b891f88d366846988c18"
+    },
+    "browser/browser20-final14/390x844-keyboard-1793060518965.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final14/390x844-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "092cbaa1cabb8a93c9a27357c7c882a41332d120453da27860b5ed6bc5c13f88"
+    },
+    "browser/browser20-final14/390x844-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "e2e43bb1b25104ceb2cd7495d18cc8ea86dc7c050b1a2dd858ad7a4965e0558b"
+    },
+    "browser/browser20-final14/390x844-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "b07b54be5f10e934f50871398cf11ad65b51c3b0d83c40faf1ee520602edec4e"
+    },
+    "browser/browser20-final14/390x844-keyboard-selected-geometry.json": {
+      "bytes": 3915,
+      "sha256": "e3e57c14c7fa3c58932653d40bfcb8ea3d701724e3ce946302d402572c14bb1b"
+    },
+    "browser/browser20-final14/390x844-keyboard-viewport-pressure.json": {
+      "bytes": 2719,
+      "sha256": "8e9d8acbb1297c3ad7df419ccf24e6657cda2864c93e92c834c1a80702f02bef"
+    },
+    "browser/browser20-final14/390x844-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "1a1e00e88edee5ab148957f2945ce831266be5bea8adb41beed8d6574dbe1ca2"
+    },
+    "browser/browser20-final14/390x844-picker.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final14/390x844-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final14/390x844-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final14/390x844-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-final14/390x844-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "9b6762acb3d3f8b02b829079f1d3b0937c753b976ee0a580403115b99a6a8f29"
+    },
+    "browser/browser20-final14/390x844-swipe.json": {
+      "bytes": 1942,
+      "sha256": "5b937a9b2a40bbec15d3b43446fc97e7a6591ac8bd5ca16ce48ed29e14319601"
+    },
+    "browser/browser20-final14/390x844-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final14/390x844-timeline.json": {
+      "bytes": 1621,
+      "sha256": "cc37f3bb0d9781724475c5f0e173f6f77c650e14ee69abc895a71f5616ccde9b"
+    },
+    "browser/browser20-final14/430x932-alternate-pair-geometry.json": {
+      "bytes": 3902,
+      "sha256": "5393a6002d6a18ba69492291d6a8cdbe0aac34961f5fd274bedd150fb8fcf290"
+    },
+    "browser/browser20-final14/430x932-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-final14/430x932-default-geometry.json": {
+      "bytes": 3873,
+      "sha256": "dc4ae4ca21a80c27e9171359f562d4ad774a1855b28dbc18a707a37a257ea249"
+    },
+    "browser/browser20-final14/430x932-gesture-value.json": {
+      "bytes": 156,
+      "sha256": "b026136497e004ecdcdcfb2c6532ae24d60c3c05d601e0222ab910c5a1080991"
+    },
+    "browser/browser20-final14/430x932-image-visibility-adjusted.json": {
+      "bytes": 1943,
+      "sha256": "205bb6b71bba9d0eb3a70662efa6891de78fba3e4b2c85c1c246e587c946f767"
+    },
+    "browser/browser20-final14/430x932-keyboard-1793060525431.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final14/430x932-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "e369c3610980525ff99dddf0a241a8c96a6795f5dfe2f89b299ac541d649ce7b"
+    },
+    "browser/browser20-final14/430x932-keyboard-pressure-geometry.json": {
+      "bytes": 5044,
+      "sha256": "bb11869b7da419480d64d11bfd131aacccd7fac833a10698acfa9f5b29224b9b"
+    },
+    "browser/browser20-final14/430x932-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "299da808f227a951488caa667881de7e87a115b434cab99c3b2b1f3578c1515c"
+    },
+    "browser/browser20-final14/430x932-keyboard-selected-geometry.json": {
+      "bytes": 3916,
+      "sha256": "31080e8b01e6a23238cbc7f3a07a3a000eaca75f08590c0c8be71dea6d04638f"
+    },
+    "browser/browser20-final14/430x932-keyboard-viewport-pressure.json": {
+      "bytes": 2719,
+      "sha256": "221540dc4db54fe8b265f7368a699ba786bb7221e722175291627df926cd180b"
+    },
+    "browser/browser20-final14/430x932-picker-geometry.json": {
+      "bytes": 5044,
+      "sha256": "74c78c98897dc56c2e90469cb97b182fa0d2aeca6b086799d667f7362678c446"
+    },
+    "browser/browser20-final14/430x932-picker.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final14/430x932-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final14/430x932-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final14/430x932-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final14/430x932-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "86b534dd961429f22ea6c62fb559b669f1c65f4b17a8a007bd3d960a955c42e8"
+    },
+    "browser/browser20-final14/430x932-swipe.json": {
+      "bytes": 1942,
+      "sha256": "944a546d49187ca64443b8d62b7b9cf5e6a76a6f3767f4ae05f2461f35fad677"
+    },
+    "browser/browser20-final14/430x932-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final14/430x932-timeline.json": {
+      "bytes": 1617,
+      "sha256": "65ff83808cce34002a107564b82585e966d98a8b3bd50ea94d4f93eb7e773645"
+    },
+    "browser/browser20-final14/ERROR.json": {
+      "bytes": 64,
+      "sha256": "340eeb54fb821b29c2abf0b41bcd12e6203cd53ac9ec6993a6173c9bf94c3071"
+    },
+    "browser/browser20-final14/console.json": {
+      "bytes": 7632,
+      "sha256": "ddf8d07948be5ae02912d330636ff4d8781bfd9e0838d128bb1a6c7035e5ef17"
+    },
+    "browser/browser20-final14/debug-comparison.json": {
+      "bytes": 372,
+      "sha256": "62d82931ee162bef077d3d845994249820fd5bbec403e04746d6fcea1cdf5b43"
+    },
+    "browser/browser20-final14/debug-query.json": {
+      "bytes": 99,
+      "sha256": "b6557fc758814116d26c4137b286bde01d8ff466147eafaead810228bd0d77d6"
+    },
+    "browser/browser20-final14/debug-slider.json": {
+      "bytes": 24284,
+      "sha256": "036f2dbe37659ae353f0871d6287b0838e9630054bd041d7cd3ac2a3d49ffd67"
+    },
+    "browser/browser20-final14/expo.log": {
+      "bytes": 11462,
+      "sha256": "ecaab1c9249df92a556283e2ff40baeb443e0d4ae663e62705ded24edd515f87"
+    },
+    "browser/browser20-final14/network.json": {
+      "bytes": 22989,
+      "sha256": "afdb2753a2b79284d929198f37129aefa37a263ee3c1ec017879f9ea02c862fb"
+    },
+    "browser/browser20-final14/source-lifecycle-FAILURE.json": {
+      "bytes": 1160,
+      "sha256": "1a8d459d66bd99a5345eb64ede930d1287c61e584f0e230bb09ace12cb1a57a4"
+    },
+    "browser/browser20-final14/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "3eb16f595971399ba430c290e4297d6f72f3f7e911c2d4464bc6d7f3566e3650"
+    },
+    "browser/browser20-final14/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final14/source-lifecycle-navigation-blur.json": {
+      "bytes": 575,
+      "sha256": "3f27535bd289252733124c5737781314da65ac89caaa16d764a807b9f5686b6d"
+    },
+    "browser/browser20-final14/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final14/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1617,
+      "sha256": "31f3a7171175441f8fd9a31fabcb6eb244eb383d3ac2f745280f2c83f6ed6ee7"
+    },
+    "browser/browser20-final14/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1799,
+      "sha256": "bf641e4974eb401c0a36b016179f51fd27fe55b54b58ca256ae15a8f9bcd9e6e"
+    },
+    "browser/browser20-final14/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "dbf394128d8162f8de0ffeef0de9b7e664ba8cd252a68dc5255a779b02c8e0c2"
+    },
+    "browser/browser20-final14/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "13deb087b7a2c1bce3d787cdde4ec60a03d1d5a4c08e81cfb5f9a91bbc1b06b5"
+    },
+    "browser/browser20-final14/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1599,
+      "sha256": "242ba914b215fe8226ffac733de4ac053fff88b41375bd2ce6c3f37a6db60157"
+    },
+    "browser/browser20-final14/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-final14/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-final14/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6961,
+      "sha256": "636a561afe4f09b99dcf0f04b6a5526c8a0cf3e315b7e4576cf8aabeab4c424d"
+    },
+    "browser/browser20-final14/steps.json": {
+      "bytes": 5604,
+      "sha256": "82356d75d8a7d1eedebbbc628aa405fe764ccb72037ccbfd6ac029e435d8e0ed"
+    },
+    "browser/browser20-final14/trace.json": {
+      "bytes": 84725,
+      "sha256": "77c143882e9f8ae60d79adc43f183ef992dee08c9df0ca7e05826a546e641993"
+    },
+    "browser/browser20-final15/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-final15/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-final15/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-final15/360x640-gesture-value.json": {
+      "bytes": 155,
+      "sha256": "578f065ffb8fe26b1dc518a8625f87051d955adabc2e818f3131797d132abf1b"
+    },
+    "browser/browser20-final15/360x640-image-visibility-adjusted.json": {
+      "bytes": 1971,
+      "sha256": "5599c0f92b52e816db191626619a4cd6dbc79bdf7ab684678fe82210b6f805fc"
+    },
+    "browser/browser20-final15/360x640-keyboard-1793060815780.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final15/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-final15/360x640-keyboard-pressure-geometry.json": {
+      "bytes": 5732,
+      "sha256": "5d7a3575eb46910bd712e9bbe1cab61376b918da688390a279e9bc5aef6d036d"
+    },
+    "browser/browser20-final15/360x640-keyboard-pressure-selected.json": {
+      "bytes": 1574,
+      "sha256": "8a1d49fc14e9b0aeee86056d3fe6a64bf8fccc55081f33f58e7afcf281e36c8c"
+    },
+    "browser/browser20-final15/360x640-keyboard-selected-geometry.json": {
+      "bytes": 4764,
+      "sha256": "beedf471553aece1c05493261b3c77d1ebd50810d7416c29ead061121a6c53b0"
+    },
+    "browser/browser20-final15/360x640-keyboard-viewport-pressure.json": {
+      "bytes": 2747,
+      "sha256": "90f45d754bdf3505c12a900ecb02da1bdb33d68ff8900ba56c4ca58a5a3b50e6"
+    },
+    "browser/browser20-final15/360x640-picker-geometry.json": {
+      "bytes": 5729,
+      "sha256": "9132376f02b8ae50d742bbb44a3d33e018d118f814c42158daed5c85586988ae"
+    },
+    "browser/browser20-final15/360x640-picker.json": {
+      "bytes": 2747,
+      "sha256": "5daedd11f55736c5eef7eb1296823450113f2745961e670d8429800ab2f988b7"
+    },
+    "browser/browser20-final15/360x640-same-item-refused.json": {
+      "bytes": 2747,
+      "sha256": "79d867f3eca78380b6e520d659bbfe3604b2d1f469b46a909f7b40a4452957eb"
+    },
+    "browser/browser20-final15/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final15/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-final15/360x640-swipe-adjusted-geometry.json": {
+      "bytes": 6296,
+      "sha256": "357f78c3ff905c3e8f690deb85177731b4ef57dfeecfbdf9f866b81ac8263ca3"
+    },
+    "browser/browser20-final15/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-final15/360x640-timeline-back.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final15/360x640-timeline.json": {
+      "bytes": 1647,
+      "sha256": "850b3f0ee9b5e848d0e63782925d41ad7ca7a9c55d09b4a1243b56d04b8ccd8f"
+    },
+    "browser/browser20-final15/375x667-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "96cc222477ff5a8f5bda29b4698547c8caeee59406551cbe0d9650806567c55f"
+    },
+    "browser/browser20-final15/375x667-alternate-pair.json": {
+      "bytes": 1549,
+      "sha256": "d317b0a35c5a8b74c43688a1e42b5a7cdf0366e8ea0e7301a22464c399e8b1dc"
+    },
+    "browser/browser20-final15/375x667-default-geometry.json": {
+      "bytes": 3870,
+      "sha256": "17b16a19f3738f4aa44fd600f612b6ca8848f20e1a1c6d5ffbdb6df475f009c3"
+    },
+    "browser/browser20-final15/375x667-gesture-value.json": {
+      "bytes": 152,
+      "sha256": "1e1f7288998fa40563d21e2ff5ced1a0e66e78972a1fae6aa9eaa9213284c910"
+    },
+    "browser/browser20-final15/375x667-image-visibility-adjusted.json": {
+      "bytes": 1945,
+      "sha256": "7396e3c411ecce7fc2c472412421c31f75890b9fae7ebff07489f532264018d2"
+    },
+    "browser/browser20-final15/375x667-keyboard-1793060822504.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final15/375x667-keyboard-cancel-focus.json": {
+      "bytes": 1552,
+      "sha256": "bb6d5577880a0ac051ef8947599e62c36b15e084296a61cf4697106699bcd398"
+    },
+    "browser/browser20-final15/375x667-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "e018c13c8c2483d99af7107461d2eb47e2e0db10d056cc0b0701fc2eff172f43"
+    },
+    "browser/browser20-final15/375x667-keyboard-pressure-selected.json": {
+      "bytes": 1549,
+      "sha256": "c5b0bbffe35557351bf668d1f51603de390db00a3fd84a3bc04c20535766dc0e"
+    },
+    "browser/browser20-final15/375x667-keyboard-selected-geometry.json": {
+      "bytes": 3903,
+      "sha256": "fa69a507c62906177d402f9e1847b80552de9939c378ae77e7cbfc3a3eb0bd5e"
+    },
+    "browser/browser20-final15/375x667-keyboard-viewport-pressure.json": {
+      "bytes": 2718,
+      "sha256": "9f169acfd4e890d89e61e6fe4936e976a8ea528fd80ff5e0974fe2b12d187808"
+    },
+    "browser/browser20-final15/375x667-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "09962d6b3efda6ae57e4ad1aa070d9a95c94ae2e0e6b2aea4f907787bffc920c"
+    },
+    "browser/browser20-final15/375x667-picker.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final15/375x667-same-item-refused.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final15/375x667-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final15/375x667-storage-unavailable.json": {
+      "bytes": 515,
+      "sha256": "13c7349ada8aa5c6b7c3e4f8d16d584a969dac001ff86dbab226d6a7ad647852"
+    },
+    "browser/browser20-final15/375x667-swipe-adjusted-geometry.json": {
+      "bytes": 4749,
+      "sha256": "70c2b3d15a1180fe96a3b4ec1c280921a7f00f97cb39c53a2361b22b9a0edd35"
+    },
+    "browser/browser20-final15/375x667-swipe.json": {
+      "bytes": 1941,
+      "sha256": "7377c5e6e0eb7b198cefd2085abd2639bf67b73372d517525b0be2469cb328b6"
+    },
+    "browser/browser20-final15/375x667-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final15/375x667-timeline.json": {
+      "bytes": 1639,
+      "sha256": "1de571599342d693c876227e8f45cd754f33f9b34680d129912bd88807768637"
+    },
+    "browser/browser20-final15/390x844-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "fc4881766edd3102d653de67516db26a46e2ebae369c85a5e56acadc7db22ca9"
+    },
+    "browser/browser20-final15/390x844-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "10c3d3374e8303bfaa7807ec19ac273f1079d7a63c1a66048e942f17ee2e1f81"
+    },
+    "browser/browser20-final15/390x844-default-geometry.json": {
+      "bytes": 3871,
+      "sha256": "b9a1f50e2a6c986671572ff9e23296fe420e3b8b2a6855ef8c1b4056815d1f87"
+    },
+    "browser/browser20-final15/390x844-gesture-value.json": {
+      "bytes": 157,
+      "sha256": "2122c9ed314f548cfc01aa78a33f2587af5b7705c577f3e59eede3ffe7e0e5ed"
+    },
+    "browser/browser20-final15/390x844-image-visibility-adjusted.json": {
+      "bytes": 1944,
+      "sha256": "4f51657fc3cfcde5d2dc6dc67f6792654989e537b9c5b891f88d366846988c18"
+    },
+    "browser/browser20-final15/390x844-keyboard-1793060828885.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final15/390x844-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "092cbaa1cabb8a93c9a27357c7c882a41332d120453da27860b5ed6bc5c13f88"
+    },
+    "browser/browser20-final15/390x844-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "e2e43bb1b25104ceb2cd7495d18cc8ea86dc7c050b1a2dd858ad7a4965e0558b"
+    },
+    "browser/browser20-final15/390x844-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "b07b54be5f10e934f50871398cf11ad65b51c3b0d83c40faf1ee520602edec4e"
+    },
+    "browser/browser20-final15/390x844-keyboard-selected-geometry.json": {
+      "bytes": 3915,
+      "sha256": "e3e57c14c7fa3c58932653d40bfcb8ea3d701724e3ce946302d402572c14bb1b"
+    },
+    "browser/browser20-final15/390x844-keyboard-viewport-pressure.json": {
+      "bytes": 2719,
+      "sha256": "8e9d8acbb1297c3ad7df419ccf24e6657cda2864c93e92c834c1a80702f02bef"
+    },
+    "browser/browser20-final15/390x844-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "1a1e00e88edee5ab148957f2945ce831266be5bea8adb41beed8d6574dbe1ca2"
+    },
+    "browser/browser20-final15/390x844-picker.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final15/390x844-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final15/390x844-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final15/390x844-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-final15/390x844-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "9b6762acb3d3f8b02b829079f1d3b0937c753b976ee0a580403115b99a6a8f29"
+    },
+    "browser/browser20-final15/390x844-swipe.json": {
+      "bytes": 1942,
+      "sha256": "5b937a9b2a40bbec15d3b43446fc97e7a6591ac8bd5ca16ce48ed29e14319601"
+    },
+    "browser/browser20-final15/390x844-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final15/390x844-timeline.json": {
+      "bytes": 1621,
+      "sha256": "cc37f3bb0d9781724475c5f0e173f6f77c650e14ee69abc895a71f5616ccde9b"
+    },
+    "browser/browser20-final15/430x932-alternate-pair-geometry.json": {
+      "bytes": 3902,
+      "sha256": "5393a6002d6a18ba69492291d6a8cdbe0aac34961f5fd274bedd150fb8fcf290"
+    },
+    "browser/browser20-final15/430x932-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-final15/430x932-default-geometry.json": {
+      "bytes": 3873,
+      "sha256": "dc4ae4ca21a80c27e9171359f562d4ad774a1855b28dbc18a707a37a257ea249"
+    },
+    "browser/browser20-final15/430x932-gesture-value.json": {
+      "bytes": 156,
+      "sha256": "b026136497e004ecdcdcfb2c6532ae24d60c3c05d601e0222ab910c5a1080991"
+    },
+    "browser/browser20-final15/430x932-image-visibility-adjusted.json": {
+      "bytes": 1943,
+      "sha256": "205bb6b71bba9d0eb3a70662efa6891de78fba3e4b2c85c1c246e587c946f767"
+    },
+    "browser/browser20-final15/430x932-keyboard-1793060835266.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final15/430x932-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "e369c3610980525ff99dddf0a241a8c96a6795f5dfe2f89b299ac541d649ce7b"
+    },
+    "browser/browser20-final15/430x932-keyboard-pressure-geometry.json": {
+      "bytes": 5044,
+      "sha256": "bb11869b7da419480d64d11bfd131aacccd7fac833a10698acfa9f5b29224b9b"
+    },
+    "browser/browser20-final15/430x932-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "299da808f227a951488caa667881de7e87a115b434cab99c3b2b1f3578c1515c"
+    },
+    "browser/browser20-final15/430x932-keyboard-selected-geometry.json": {
+      "bytes": 3916,
+      "sha256": "31080e8b01e6a23238cbc7f3a07a3a000eaca75f08590c0c8be71dea6d04638f"
+    },
+    "browser/browser20-final15/430x932-keyboard-viewport-pressure.json": {
+      "bytes": 2719,
+      "sha256": "221540dc4db54fe8b265f7368a699ba786bb7221e722175291627df926cd180b"
+    },
+    "browser/browser20-final15/430x932-picker-geometry.json": {
+      "bytes": 5044,
+      "sha256": "74c78c98897dc56c2e90469cb97b182fa0d2aeca6b086799d667f7362678c446"
+    },
+    "browser/browser20-final15/430x932-picker.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final15/430x932-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final15/430x932-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final15/430x932-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final15/430x932-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "86b534dd961429f22ea6c62fb559b669f1c65f4b17a8a007bd3d960a955c42e8"
+    },
+    "browser/browser20-final15/430x932-swipe.json": {
+      "bytes": 1942,
+      "sha256": "944a546d49187ca64443b8d62b7b9cf5e6a76a6f3767f4ae05f2461f35fad677"
+    },
+    "browser/browser20-final15/430x932-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final15/430x932-timeline.json": {
+      "bytes": 1617,
+      "sha256": "65ff83808cce34002a107564b82585e966d98a8b3bd50ea94d4f93eb7e773645"
+    },
+    "browser/browser20-final15/ERROR.json": {
+      "bytes": 48,
+      "sha256": "e694424204b930ebbe18c8acab89c09d62946c7aa9d76d052a987409b693d46f"
+    },
+    "browser/browser20-final15/console.json": {
+      "bytes": 7632,
+      "sha256": "ddf8d07948be5ae02912d330636ff4d8781bfd9e0838d128bb1a6c7035e5ef17"
+    },
+    "browser/browser20-final15/debug-comparison.json": {
+      "bytes": 372,
+      "sha256": "62d82931ee162bef077d3d845994249820fd5bbec403e04746d6fcea1cdf5b43"
+    },
+    "browser/browser20-final15/debug-query.json": {
+      "bytes": 99,
+      "sha256": "b6557fc758814116d26c4137b286bde01d8ff466147eafaead810228bd0d77d6"
+    },
+    "browser/browser20-final15/debug-slider.json": {
+      "bytes": 24284,
+      "sha256": "036f2dbe37659ae353f0871d6287b0838e9630054bd041d7cd3ac2a3d49ffd67"
+    },
+    "browser/browser20-final15/expo.log": {
+      "bytes": 11458,
+      "sha256": "a1325741d02f8db7058f694a8d83ac165cbd25ec42f97ee60c4f2a900f9ca952"
+    },
+    "browser/browser20-final15/network.json": {
+      "bytes": 22989,
+      "sha256": "72815a93c94d6e20a3759b2aa017884c86e7d8640feaf0c03acb709a3e21054e"
+    },
+    "browser/browser20-final15/source-lifecycle-FAILURE.json": {
+      "bytes": 7518,
+      "sha256": "977967fae23dad49955d6d5013cd7d8c70f1bb31557659907f71e33ea05ed773"
+    },
+    "browser/browser20-final15/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "3eb16f595971399ba430c290e4297d6f72f3f7e911c2d4464bc6d7f3566e3650"
+    },
+    "browser/browser20-final15/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final15/source-lifecycle-navigation-blur.json": {
+      "bytes": 6130,
+      "sha256": "40882f657c45c21624d81c8861011ea8317874c22ccab031714407d33b7adc2d"
+    },
+    "browser/browser20-final15/source-lifecycle-navigation-return-old-picker-retired.json": {
+      "bytes": 7518,
+      "sha256": "977967fae23dad49955d6d5013cd7d8c70f1bb31557659907f71e33ea05ed773"
+    },
+    "browser/browser20-final15/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final15/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1617,
+      "sha256": "31f3a7171175441f8fd9a31fabcb6eb244eb383d3ac2f745280f2c83f6ed6ee7"
+    },
+    "browser/browser20-final15/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1799,
+      "sha256": "bf641e4974eb401c0a36b016179f51fd27fe55b54b58ca256ae15a8f9bcd9e6e"
+    },
+    "browser/browser20-final15/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "dbf394128d8162f8de0ffeef0de9b7e664ba8cd252a68dc5255a779b02c8e0c2"
+    },
+    "browser/browser20-final15/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "13deb087b7a2c1bce3d787cdde4ec60a03d1d5a4c08e81cfb5f9a91bbc1b06b5"
+    },
+    "browser/browser20-final15/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1599,
+      "sha256": "242ba914b215fe8226ffac733de4ac053fff88b41375bd2ce6c3f37a6db60157"
+    },
+    "browser/browser20-final15/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-final15/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-final15/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6961,
+      "sha256": "636a561afe4f09b99dcf0f04b6a5526c8a0cf3e315b7e4576cf8aabeab4c424d"
+    },
+    "browser/browser20-final15/steps.json": {
+      "bytes": 5718,
+      "sha256": "feeee43bba5559c93880c6a8e5a675fac748f9715b5df859314e1126b93bc307"
+    },
+    "browser/browser20-final15/trace.json": {
+      "bytes": 84600,
+      "sha256": "af1492c92dc4f18bcb10db8e1047d63e51b8426a9aacffe9b960f54263f75e69"
+    },
+    "browser/browser20-final18/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-final18/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-final18/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-final18/360x640-gesture-value.json": {
+      "bytes": 155,
+      "sha256": "578f065ffb8fe26b1dc518a8625f87051d955adabc2e818f3131797d132abf1b"
+    },
+    "browser/browser20-final18/360x640-image-visibility-adjusted.json": {
+      "bytes": 1971,
+      "sha256": "5599c0f92b52e816db191626619a4cd6dbc79bdf7ab684678fe82210b6f805fc"
+    },
+    "browser/browser20-final18/360x640-keyboard-1793062215134.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final18/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-final18/360x640-keyboard-pressure-geometry.json": {
+      "bytes": 5732,
+      "sha256": "c7f7c38a2d4274415a24bf1740a96cb3f62403028d40dbc8c4c13ad14561c57e"
+    },
+    "browser/browser20-final18/360x640-keyboard-pressure-selected.json": {
+      "bytes": 1574,
+      "sha256": "8a1d49fc14e9b0aeee86056d3fe6a64bf8fccc55081f33f58e7afcf281e36c8c"
+    },
+    "browser/browser20-final18/360x640-keyboard-selected-geometry.json": {
+      "bytes": 4764,
+      "sha256": "beedf471553aece1c05493261b3c77d1ebd50810d7416c29ead061121a6c53b0"
+    },
+    "browser/browser20-final18/360x640-keyboard-viewport-pressure.json": {
+      "bytes": 2749,
+      "sha256": "425f4859eb7040bfcef3e7ee12ff588b85c52a04e3ea95ebeea731958779ae96"
+    },
+    "browser/browser20-final18/360x640-picker-geometry.json": {
+      "bytes": 5729,
+      "sha256": "9132376f02b8ae50d742bbb44a3d33e018d118f814c42158daed5c85586988ae"
+    },
+    "browser/browser20-final18/360x640-picker.json": {
+      "bytes": 2747,
+      "sha256": "5daedd11f55736c5eef7eb1296823450113f2745961e670d8429800ab2f988b7"
+    },
+    "browser/browser20-final18/360x640-same-item-refused.json": {
+      "bytes": 2747,
+      "sha256": "79d867f3eca78380b6e520d659bbfe3604b2d1f469b46a909f7b40a4452957eb"
+    },
+    "browser/browser20-final18/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-final18/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-final18/360x640-swipe-adjusted-geometry.json": {
+      "bytes": 6296,
+      "sha256": "357f78c3ff905c3e8f690deb85177731b4ef57dfeecfbdf9f866b81ac8263ca3"
+    },
+    "browser/browser20-final18/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-final18/360x640-timeline-back.json": {
+      "bytes": 1571,
+      "sha256": "cc65ec1d4e8833d61ef37d22321a31b8f600f5b83b6d56adbac3cba8b7605456"
+    },
+    "browser/browser20-final18/360x640-timeline.json": {
+      "bytes": 1647,
+      "sha256": "850b3f0ee9b5e848d0e63782925d41ad7ca7a9c55d09b4a1243b56d04b8ccd8f"
+    },
+    "browser/browser20-final18/375x667-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "96cc222477ff5a8f5bda29b4698547c8caeee59406551cbe0d9650806567c55f"
+    },
+    "browser/browser20-final18/375x667-alternate-pair.json": {
+      "bytes": 1549,
+      "sha256": "d317b0a35c5a8b74c43688a1e42b5a7cdf0366e8ea0e7301a22464c399e8b1dc"
+    },
+    "browser/browser20-final18/375x667-default-geometry.json": {
+      "bytes": 3870,
+      "sha256": "17b16a19f3738f4aa44fd600f612b6ca8848f20e1a1c6d5ffbdb6df475f009c3"
+    },
+    "browser/browser20-final18/375x667-gesture-value.json": {
+      "bytes": 152,
+      "sha256": "1e1f7288998fa40563d21e2ff5ced1a0e66e78972a1fae6aa9eaa9213284c910"
+    },
+    "browser/browser20-final18/375x667-image-visibility-adjusted.json": {
+      "bytes": 1945,
+      "sha256": "7396e3c411ecce7fc2c472412421c31f75890b9fae7ebff07489f532264018d2"
+    },
+    "browser/browser20-final18/375x667-keyboard-1793062221826.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final18/375x667-keyboard-cancel-focus.json": {
+      "bytes": 1552,
+      "sha256": "bb6d5577880a0ac051ef8947599e62c36b15e084296a61cf4697106699bcd398"
+    },
+    "browser/browser20-final18/375x667-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "d75beba1bf88d404ed2c390e27f8403cdee439a220de4828f5419f4aec70ce9a"
+    },
+    "browser/browser20-final18/375x667-keyboard-pressure-selected.json": {
+      "bytes": 1549,
+      "sha256": "c5b0bbffe35557351bf668d1f51603de390db00a3fd84a3bc04c20535766dc0e"
+    },
+    "browser/browser20-final18/375x667-keyboard-selected-geometry.json": {
+      "bytes": 3903,
+      "sha256": "fa69a507c62906177d402f9e1847b80552de9939c378ae77e7cbfc3a3eb0bd5e"
+    },
+    "browser/browser20-final18/375x667-keyboard-viewport-pressure.json": {
+      "bytes": 2720,
+      "sha256": "7828f3db1d672768f43674e8ccb828449c3bd847c203a7451903347b73568549"
+    },
+    "browser/browser20-final18/375x667-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "09962d6b3efda6ae57e4ad1aa070d9a95c94ae2e0e6b2aea4f907787bffc920c"
+    },
+    "browser/browser20-final18/375x667-picker.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final18/375x667-same-item-refused.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-final18/375x667-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-final18/375x667-storage-unavailable.json": {
+      "bytes": 515,
+      "sha256": "13c7349ada8aa5c6b7c3e4f8d16d584a969dac001ff86dbab226d6a7ad647852"
+    },
+    "browser/browser20-final18/375x667-swipe-adjusted-geometry.json": {
+      "bytes": 4749,
+      "sha256": "70c2b3d15a1180fe96a3b4ec1c280921a7f00f97cb39c53a2361b22b9a0edd35"
+    },
+    "browser/browser20-final18/375x667-swipe.json": {
+      "bytes": 1941,
+      "sha256": "7377c5e6e0eb7b198cefd2085abd2639bf67b73372d517525b0be2469cb328b6"
+    },
+    "browser/browser20-final18/375x667-timeline-back.json": {
+      "bytes": 1550,
+      "sha256": "6daab1bcead21ac6ac0f54e2e8ff29921c558d9b7e8238351c14352b109ad328"
+    },
+    "browser/browser20-final18/375x667-timeline.json": {
+      "bytes": 1639,
+      "sha256": "1de571599342d693c876227e8f45cd754f33f9b34680d129912bd88807768637"
+    },
+    "browser/browser20-final18/390x844-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "fc4881766edd3102d653de67516db26a46e2ebae369c85a5e56acadc7db22ca9"
+    },
+    "browser/browser20-final18/390x844-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "10c3d3374e8303bfaa7807ec19ac273f1079d7a63c1a66048e942f17ee2e1f81"
+    },
+    "browser/browser20-final18/390x844-default-geometry.json": {
+      "bytes": 3871,
+      "sha256": "b9a1f50e2a6c986671572ff9e23296fe420e3b8b2a6855ef8c1b4056815d1f87"
+    },
+    "browser/browser20-final18/390x844-gesture-value.json": {
+      "bytes": 157,
+      "sha256": "2122c9ed314f548cfc01aa78a33f2587af5b7705c577f3e59eede3ffe7e0e5ed"
+    },
+    "browser/browser20-final18/390x844-image-visibility-adjusted.json": {
+      "bytes": 1944,
+      "sha256": "4f51657fc3cfcde5d2dc6dc67f6792654989e537b9c5b891f88d366846988c18"
+    },
+    "browser/browser20-final18/390x844-keyboard-1793062228286.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final18/390x844-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "092cbaa1cabb8a93c9a27357c7c882a41332d120453da27860b5ed6bc5c13f88"
+    },
+    "browser/browser20-final18/390x844-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "a713c7dc36985003bf2b0da1be19a87b762769c968c2e795d76d59584dbab732"
+    },
+    "browser/browser20-final18/390x844-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "b07b54be5f10e934f50871398cf11ad65b51c3b0d83c40faf1ee520602edec4e"
+    },
+    "browser/browser20-final18/390x844-keyboard-selected-geometry.json": {
+      "bytes": 3915,
+      "sha256": "e3e57c14c7fa3c58932653d40bfcb8ea3d701724e3ce946302d402572c14bb1b"
+    },
+    "browser/browser20-final18/390x844-keyboard-viewport-pressure.json": {
+      "bytes": 2721,
+      "sha256": "9017659d48497d9658885c282f0c820e85f1ac6f6733f82ba564fbe82776c982"
+    },
+    "browser/browser20-final18/390x844-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "1a1e00e88edee5ab148957f2945ce831266be5bea8adb41beed8d6574dbe1ca2"
+    },
+    "browser/browser20-final18/390x844-picker.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final18/390x844-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-final18/390x844-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-final18/390x844-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-final18/390x844-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "9b6762acb3d3f8b02b829079f1d3b0937c753b976ee0a580403115b99a6a8f29"
+    },
+    "browser/browser20-final18/390x844-swipe.json": {
+      "bytes": 1942,
+      "sha256": "5b937a9b2a40bbec15d3b43446fc97e7a6591ac8bd5ca16ce48ed29e14319601"
+    },
+    "browser/browser20-final18/390x844-timeline-back.json": {
+      "bytes": 1550,
+      "sha256": "a410a4616ed1fbdd5a75be9b656b832a96d70fe08d9acdbe8842cb4b11ae9861"
+    },
+    "browser/browser20-final18/390x844-timeline.json": {
+      "bytes": 1621,
+      "sha256": "cc37f3bb0d9781724475c5f0e173f6f77c650e14ee69abc895a71f5616ccde9b"
+    },
+    "browser/browser20-final18/430x932-alternate-pair-geometry.json": {
+      "bytes": 3902,
+      "sha256": "5393a6002d6a18ba69492291d6a8cdbe0aac34961f5fd274bedd150fb8fcf290"
+    },
+    "browser/browser20-final18/430x932-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-final18/430x932-default-geometry.json": {
+      "bytes": 3873,
+      "sha256": "dc4ae4ca21a80c27e9171359f562d4ad774a1855b28dbc18a707a37a257ea249"
+    },
+    "browser/browser20-final18/430x932-gesture-value.json": {
+      "bytes": 156,
+      "sha256": "b026136497e004ecdcdcfb2c6532ae24d60c3c05d601e0222ab910c5a1080991"
+    },
+    "browser/browser20-final18/430x932-image-visibility-adjusted.json": {
+      "bytes": 1943,
+      "sha256": "205bb6b71bba9d0eb3a70662efa6891de78fba3e4b2c85c1c246e587c946f767"
+    },
+    "browser/browser20-final18/430x932-keyboard-1793062234809.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-final18/430x932-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "e369c3610980525ff99dddf0a241a8c96a6795f5dfe2f89b299ac541d649ce7b"
+    },
+    "browser/browser20-final18/430x932-keyboard-pressure-geometry.json": {
+      "bytes": 5044,
+      "sha256": "23bd33d01b67f6f19bcbe547544d5ca599c8ffff8b3c75940236c476b7ee6b9f"
+    },
+    "browser/browser20-final18/430x932-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "299da808f227a951488caa667881de7e87a115b434cab99c3b2b1f3578c1515c"
+    },
+    "browser/browser20-final18/430x932-keyboard-selected-geometry.json": {
+      "bytes": 3916,
+      "sha256": "31080e8b01e6a23238cbc7f3a07a3a000eaca75f08590c0c8be71dea6d04638f"
+    },
+    "browser/browser20-final18/430x932-keyboard-viewport-pressure.json": {
+      "bytes": 2721,
+      "sha256": "84dda43b3f8e4e5f025956eaf83d7c5947decaee2371f1da23cbbee85d48faa8"
+    },
+    "browser/browser20-final18/430x932-picker-geometry.json": {
+      "bytes": 5044,
+      "sha256": "74c78c98897dc56c2e90469cb97b182fa0d2aeca6b086799d667f7362678c446"
+    },
+    "browser/browser20-final18/430x932-picker.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final18/430x932-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-final18/430x932-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final18/430x932-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final18/430x932-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "86b534dd961429f22ea6c62fb559b669f1c65f4b17a8a007bd3d960a955c42e8"
+    },
+    "browser/browser20-final18/430x932-swipe.json": {
+      "bytes": 1942,
+      "sha256": "944a546d49187ca64443b8d62b7b9cf5e6a76a6f3767f4ae05f2461f35fad677"
+    },
+    "browser/browser20-final18/430x932-timeline-back.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-final18/430x932-timeline.json": {
+      "bytes": 1617,
+      "sha256": "65ff83808cce34002a107564b82585e966d98a8b3bd50ea94d4f93eb7e773645"
+    },
+    "browser/browser20-final18/console.json": {
+      "bytes": 10210,
+      "sha256": "92623e872a577e55518766bfecafbc579d36afc1d428801b37b43b217e8c0b21"
+    },
+    "browser/browser20-final18/debug-slider.json": {
+      "bytes": 24284,
+      "sha256": "036f2dbe37659ae353f0871d6287b0838e9630054bd041d7cd3ac2a3d49ffd67"
+    },
+    "browser/browser20-final18/expo.log": {
+      "bytes": 14885,
+      "sha256": "070e41f8c7498938b0ce329d1e6f10c8e162ac90f439747b17dc033c3a1e682f"
+    },
+    "browser/browser20-final18/navigation-lifetime.json": {
+      "bytes": 184,
+      "sha256": "6363809bc108ffbb327344fbe59cf164d0d6f0ce93f4c42947100cf4dc30356d"
+    },
+    "browser/browser20-final18/network.json": {
+      "bytes": 31473,
+      "sha256": "9d7aa59a988362ec3a912c0eef3d8cd3dde4bd0a3634139f759dd9a7b644f206"
+    },
+    "browser/browser20-final18/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "3eb16f595971399ba430c290e4297d6f72f3f7e911c2d4464bc6d7f3566e3650"
+    },
+    "browser/browser20-final18/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final18/source-lifecycle-navigation-blur.json": {
+      "bytes": 6130,
+      "sha256": "40882f657c45c21624d81c8861011ea8317874c22ccab031714407d33b7adc2d"
+    },
+    "browser/browser20-final18/source-lifecycle-navigation-return-old-picker-retired.json": {
+      "bytes": 7518,
+      "sha256": "977967fae23dad49955d6d5013cd7d8c70f1bb31557659907f71e33ea05ed773"
+    },
+    "browser/browser20-final18/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final18/source-lifecycle-owner-a-b-a-old-choice-retired.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-final18/source-lifecycle-same-owner-regrant-old-choice-retired.json": {
+      "bytes": 7518,
+      "sha256": "977967fae23dad49955d6d5013cd7d8c70f1bb31557659907f71e33ea05ed773"
+    },
+    "browser/browser20-final18/source-lifecycle-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final18/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1617,
+      "sha256": "31f3a7171175441f8fd9a31fabcb6eb244eb383d3ac2f745280f2c83f6ed6ee7"
+    },
+    "browser/browser20-final18/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1799,
+      "sha256": "bf641e4974eb401c0a36b016179f51fd27fe55b54b58ca256ae15a8f9bcd9e6e"
+    },
+    "browser/browser20-final18/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "dbf394128d8162f8de0ffeef0de9b7e664ba8cd252a68dc5255a779b02c8e0c2"
+    },
+    "browser/browser20-final18/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "13deb087b7a2c1bce3d787cdde4ec60a03d1d5a4c08e81cfb5f9a91bbc1b06b5"
+    },
+    "browser/browser20-final18/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1599,
+      "sha256": "242ba914b215fe8226ffac733de4ac053fff88b41375bd2ce6c3f37a6db60157"
+    },
+    "browser/browser20-final18/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-final18/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-final18/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6961,
+      "sha256": "636a561afe4f09b99dcf0f04b6a5526c8a0cf3e315b7e4576cf8aabeab4c424d"
+    },
+    "browser/browser20-final18/source-lifecycle-withdrawn-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-final18/source-probes.json": {
+      "bytes": 394,
+      "sha256": "7ed0dee47df3cca0b8d23ce8d5bfc6d6ce90bf1afd8f39ec04377a96fe5b59dc"
+    },
+    "browser/browser20-final18/steps.json": {
+      "bytes": 6320,
+      "sha256": "50f1f3fa63e78dd94036c1c494473e8089f26f94fac602363d12724493e24fce"
+    },
+    "browser/browser20-final18/summary.json": {
+      "bytes": 1883,
+      "sha256": "d7943386be67f45f62a4fd0c81c287c651b679f7dcf089f28615f8808d820bbc"
+    },
+    "browser/browser20-final18/trace.json": {
+      "bytes": 108400,
+      "sha256": "5d31c0afeb10f1d9bf516e3f04af456c0400bbdb79b3a293e35851c203b32317"
+    },
+    "browser/browser20-frozen-final19/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-frozen-final19/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-frozen-final19/360x640-alternate-pair.png": {
+      "bytes": 51061,
+      "sha256": "4ed42c3c33d66705f54515daef0eda232dce38638fc8fc7a445b1ad6482275db"
+    },
+    "browser/browser20-frozen-final19/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-frozen-final19/360x640-gesture-value.json": {
+      "bytes": 155,
+      "sha256": "578f065ffb8fe26b1dc518a8625f87051d955adabc2e818f3131797d132abf1b"
+    },
+    "browser/browser20-frozen-final19/360x640-image-visibility-adjusted.json": {
+      "bytes": 1971,
+      "sha256": "5599c0f92b52e816db191626619a4cd6dbc79bdf7ab684678fe82210b6f805fc"
+    },
+    "browser/browser20-frozen-final19/360x640-image-visibility-adjusted.png": {
+      "bytes": 34739,
+      "sha256": "3538e502d3342d750814ee9d1811860680330db6f05e4dd1cae8c333ecc3dd01"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-1793062665379.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-cancel-focus.png": {
+      "bytes": 48697,
+      "sha256": "9a62fe087886dc3ef3de850f446ada8e5fef970c1c2c221f99b8c5bdcf574208"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-pressure-geometry.json": {
+      "bytes": 5732,
+      "sha256": "c7f7c38a2d4274415a24bf1740a96cb3f62403028d40dbc8c4c13ad14561c57e"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-pressure-selected.json": {
+      "bytes": 1574,
+      "sha256": "8a1d49fc14e9b0aeee86056d3fe6a64bf8fccc55081f33f58e7afcf281e36c8c"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-pressure-selected.png": {
+      "bytes": 37257,
+      "sha256": "1cdb9df145f4b5a96413b1b105cebca7b0d2987d23eace329a4829e638d15bf2"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-selected-geometry.json": {
+      "bytes": 4764,
+      "sha256": "beedf471553aece1c05493261b3c77d1ebd50810d7416c29ead061121a6c53b0"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-viewport-pressure.json": {
+      "bytes": 2749,
+      "sha256": "425f4859eb7040bfcef3e7ee12ff588b85c52a04e3ea95ebeea731958779ae96"
+    },
+    "browser/browser20-frozen-final19/360x640-keyboard-viewport-pressure.png": {
+      "bytes": 26561,
+      "sha256": "1b763b330c759eb6c418bb480fcf0086d0ac5915a4079298962a5410c4808c22"
+    },
+    "browser/browser20-frozen-final19/360x640-picker-geometry.json": {
+      "bytes": 5729,
+      "sha256": "9132376f02b8ae50d742bbb44a3d33e018d118f814c42158daed5c85586988ae"
+    },
+    "browser/browser20-frozen-final19/360x640-picker.json": {
+      "bytes": 2747,
+      "sha256": "5daedd11f55736c5eef7eb1296823450113f2745961e670d8429800ab2f988b7"
+    },
+    "browser/browser20-frozen-final19/360x640-picker.png": {
+      "bytes": 44906,
+      "sha256": "7e617fef790bf10fd44389734cb2dff379de15b6bfb80184ca01ee8c17a64c9f"
+    },
+    "browser/browser20-frozen-final19/360x640-same-item-refused.json": {
+      "bytes": 2747,
+      "sha256": "79d867f3eca78380b6e520d659bbfe3604b2d1f469b46a909f7b40a4452957eb"
+    },
+    "browser/browser20-frozen-final19/360x640-same-item-refused.png": {
+      "bytes": 42215,
+      "sha256": "0c2d4297619e83f424cf0fa8d469ec48c32915818bc334ae0353d9b968c5ea15"
+    },
+    "browser/browser20-frozen-final19/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-frozen-final19/360x640-side-by-side-default.png": {
+      "bytes": 55442,
+      "sha256": "e59d7a4a951e6f9e0730e02445cb92d05a306e8b7d46ad49020034f9c673354b"
+    },
+    "browser/browser20-frozen-final19/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-frozen-final19/360x640-storage-unavailable.png": {
+      "bytes": 27403,
+      "sha256": "5f91cbb75f2d3efb410333c85449ff35cdb0238790b27c863e8a3385ba73f89e"
+    },
+    "browser/browser20-frozen-final19/360x640-swipe-adjusted-geometry.json": {
+      "bytes": 6296,
+      "sha256": "357f78c3ff905c3e8f690deb85177731b4ef57dfeecfbdf9f866b81ac8263ca3"
+    },
+    "browser/browser20-frozen-final19/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-frozen-final19/360x640-swipe.png": {
+      "bytes": 56132,
+      "sha256": "8bc673d253efe9db86fdbbaef22b97844862c7d46961c6119a8bcaef6d31d877"
+    },
+    "browser/browser20-frozen-final19/360x640-timeline-back.json": {
+      "bytes": 1571,
+      "sha256": "cc65ec1d4e8833d61ef37d22321a31b8f600f5b83b6d56adbac3cba8b7605456"
+    },
+    "browser/browser20-frozen-final19/360x640-timeline-back.png": {
+      "bytes": 55442,
+      "sha256": "e59d7a4a951e6f9e0730e02445cb92d05a306e8b7d46ad49020034f9c673354b"
+    },
+    "browser/browser20-frozen-final19/360x640-timeline.json": {
+      "bytes": 1647,
+      "sha256": "850b3f0ee9b5e848d0e63782925d41ad7ca7a9c55d09b4a1243b56d04b8ccd8f"
+    },
+    "browser/browser20-frozen-final19/360x640-timeline.png": {
+      "bytes": 55386,
+      "sha256": "1571de6922bc4c89f9558494809b25da4698bc0c9284a9e4a5edfb9c993faa34"
+    },
+    "browser/browser20-frozen-final19/375x667-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "96cc222477ff5a8f5bda29b4698547c8caeee59406551cbe0d9650806567c55f"
+    },
+    "browser/browser20-frozen-final19/375x667-alternate-pair.json": {
+      "bytes": 1549,
+      "sha256": "d317b0a35c5a8b74c43688a1e42b5a7cdf0366e8ea0e7301a22464c399e8b1dc"
+    },
+    "browser/browser20-frozen-final19/375x667-alternate-pair.png": {
+      "bytes": 40548,
+      "sha256": "f8b4e432af1786ef727ba9e7d29077742efc088ae2033c504e8a71aa6d99967f"
+    },
+    "browser/browser20-frozen-final19/375x667-default-geometry.json": {
+      "bytes": 3870,
+      "sha256": "17b16a19f3738f4aa44fd600f612b6ca8848f20e1a1c6d5ffbdb6df475f009c3"
+    },
+    "browser/browser20-frozen-final19/375x667-gesture-value.json": {
+      "bytes": 152,
+      "sha256": "1e1f7288998fa40563d21e2ff5ced1a0e66e78972a1fae6aa9eaa9213284c910"
+    },
+    "browser/browser20-frozen-final19/375x667-image-visibility-adjusted.json": {
+      "bytes": 1945,
+      "sha256": "7396e3c411ecce7fc2c472412421c31f75890b9fae7ebff07489f532264018d2"
+    },
+    "browser/browser20-frozen-final19/375x667-image-visibility-adjusted.png": {
+      "bytes": 38028,
+      "sha256": "43e76064136d22eea00b053842ae73e28c94652ae3c84b08b703470569687bb3"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-1793062672101.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-cancel-focus.json": {
+      "bytes": 1552,
+      "sha256": "bb6d5577880a0ac051ef8947599e62c36b15e084296a61cf4697106699bcd398"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-cancel-focus.png": {
+      "bytes": 38963,
+      "sha256": "f5dbe530fe7cfe5ce287aa25d9db00a95dddc29e4c6935299204f8016f8862c1"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "d75beba1bf88d404ed2c390e27f8403cdee439a220de4828f5419f4aec70ce9a"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-pressure-selected.json": {
+      "bytes": 1549,
+      "sha256": "c5b0bbffe35557351bf668d1f51603de390db00a3fd84a3bc04c20535766dc0e"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-pressure-selected.png": {
+      "bytes": 27896,
+      "sha256": "41d7991dcec819e61e155804d0940597fc7d6042f214946bbeed1172b219db4d"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-selected-geometry.json": {
+      "bytes": 3903,
+      "sha256": "fa69a507c62906177d402f9e1847b80552de9939c378ae77e7cbfc3a3eb0bd5e"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-viewport-pressure.json": {
+      "bytes": 2720,
+      "sha256": "7828f3db1d672768f43674e8ccb828449c3bd847c203a7451903347b73568549"
+    },
+    "browser/browser20-frozen-final19/375x667-keyboard-viewport-pressure.png": {
+      "bytes": 22124,
+      "sha256": "e2447f1460434f1a8b86ea338f302ad84d07484c393a5997c7e7135a617f69e0"
+    },
+    "browser/browser20-frozen-final19/375x667-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "09962d6b3efda6ae57e4ad1aa070d9a95c94ae2e0e6b2aea4f907787bffc920c"
+    },
+    "browser/browser20-frozen-final19/375x667-picker.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-frozen-final19/375x667-picker.png": {
+      "bytes": 38534,
+      "sha256": "e7af949ee19192b65c7e8d1c124709ca76be0244bb2e2aa78462294f3566be09"
+    },
+    "browser/browser20-frozen-final19/375x667-same-item-refused.json": {
+      "bytes": 2720,
+      "sha256": "fcee68b550713c02e6266619419c2bc4ae224ee217eb5dad3dbe2e65c40c2022"
+    },
+    "browser/browser20-frozen-final19/375x667-same-item-refused.png": {
+      "bytes": 35718,
+      "sha256": "9df62ba9f72771d612cac606a0d60b17749f7c3dddbcd1669e9a2743514347cc"
+    },
+    "browser/browser20-frozen-final19/375x667-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-frozen-final19/375x667-side-by-side-default.png": {
+      "bytes": 43878,
+      "sha256": "0aec79bf0f920192185004f7af833ef95b57e9b3d195c67e4a167c9bca395c1b"
+    },
+    "browser/browser20-frozen-final19/375x667-storage-unavailable.json": {
+      "bytes": 515,
+      "sha256": "13c7349ada8aa5c6b7c3e4f8d16d584a969dac001ff86dbab226d6a7ad647852"
+    },
+    "browser/browser20-frozen-final19/375x667-storage-unavailable.png": {
+      "bytes": 27408,
+      "sha256": "b577971faa5744b2361ba7cba69520a4abbe9d5e01f1a9075ed995e961101e2b"
+    },
+    "browser/browser20-frozen-final19/375x667-swipe-adjusted-geometry.json": {
+      "bytes": 4749,
+      "sha256": "70c2b3d15a1180fe96a3b4ec1c280921a7f00f97cb39c53a2361b22b9a0edd35"
+    },
+    "browser/browser20-frozen-final19/375x667-swipe.json": {
+      "bytes": 1941,
+      "sha256": "7377c5e6e0eb7b198cefd2085abd2639bf67b73372d517525b0be2469cb328b6"
+    },
+    "browser/browser20-frozen-final19/375x667-swipe.png": {
+      "bytes": 42528,
+      "sha256": "4137bb19d865fc3719b3db559f8f0b90c6d84ae9f2d9a580664bb15af370c8d7"
+    },
+    "browser/browser20-frozen-final19/375x667-timeline-back.json": {
+      "bytes": 1550,
+      "sha256": "6daab1bcead21ac6ac0f54e2e8ff29921c558d9b7e8238351c14352b109ad328"
+    },
+    "browser/browser20-frozen-final19/375x667-timeline-back.png": {
+      "bytes": 43963,
+      "sha256": "36233b4c2dde562137622375eed3f124b3bd5ee4224aed03d52416f1f0b5c500"
+    },
+    "browser/browser20-frozen-final19/375x667-timeline.json": {
+      "bytes": 1639,
+      "sha256": "1de571599342d693c876227e8f45cd754f33f9b34680d129912bd88807768637"
+    },
+    "browser/browser20-frozen-final19/375x667-timeline.png": {
+      "bytes": 38613,
+      "sha256": "8e6f13ba24dac0003206319dfe2e2e800edd4016430eac97f0ef7d073ff9ad34"
+    },
+    "browser/browser20-frozen-final19/390x844-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "fc4881766edd3102d653de67516db26a46e2ebae369c85a5e56acadc7db22ca9"
+    },
+    "browser/browser20-frozen-final19/390x844-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "10c3d3374e8303bfaa7807ec19ac273f1079d7a63c1a66048e942f17ee2e1f81"
+    },
+    "browser/browser20-frozen-final19/390x844-alternate-pair.png": {
+      "bytes": 48940,
+      "sha256": "03a6b4c59c02d2908e557e88bdc49b673a8dcbe98214f33348eb1f686a07566e"
+    },
+    "browser/browser20-frozen-final19/390x844-default-geometry.json": {
+      "bytes": 3871,
+      "sha256": "b9a1f50e2a6c986671572ff9e23296fe420e3b8b2a6855ef8c1b4056815d1f87"
+    },
+    "browser/browser20-frozen-final19/390x844-gesture-value.json": {
+      "bytes": 157,
+      "sha256": "2122c9ed314f548cfc01aa78a33f2587af5b7705c577f3e59eede3ffe7e0e5ed"
+    },
+    "browser/browser20-frozen-final19/390x844-image-visibility-adjusted.json": {
+      "bytes": 1944,
+      "sha256": "4f51657fc3cfcde5d2dc6dc67f6792654989e537b9c5b891f88d366846988c18"
+    },
+    "browser/browser20-frozen-final19/390x844-image-visibility-adjusted.png": {
+      "bytes": 47446,
+      "sha256": "cbe9d03343c1878c159b91fb6308c7b36813528131f8a62bb78bd205350ae7c2"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-1793062678481.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "092cbaa1cabb8a93c9a27357c7c882a41332d120453da27860b5ed6bc5c13f88"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-cancel-focus.png": {
+      "bytes": 49197,
+      "sha256": "8e14a6a476beb91984181e7935e9d97392053338f4e7542668a6bb540033150b"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-pressure-geometry.json": {
+      "bytes": 5390,
+      "sha256": "a713c7dc36985003bf2b0da1be19a87b762769c968c2e795d76d59584dbab732"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "b07b54be5f10e934f50871398cf11ad65b51c3b0d83c40faf1ee520602edec4e"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-pressure-selected.png": {
+      "bytes": 26836,
+      "sha256": "f4118869dcaa691964e471bf94bf1388e47937b13f3493e501390a49cf5e447a"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-selected-geometry.json": {
+      "bytes": 3915,
+      "sha256": "e3e57c14c7fa3c58932653d40bfcb8ea3d701724e3ce946302d402572c14bb1b"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-viewport-pressure.json": {
+      "bytes": 2721,
+      "sha256": "9017659d48497d9658885c282f0c820e85f1ac6f6733f82ba564fbe82776c982"
+    },
+    "browser/browser20-frozen-final19/390x844-keyboard-viewport-pressure.png": {
+      "bytes": 23964,
+      "sha256": "e6370f3604f2e1507ed6f2ec92c5e5adf24e8735dee3d350472f2dce6261f6e1"
+    },
+    "browser/browser20-frozen-final19/390x844-picker-geometry.json": {
+      "bytes": 5390,
+      "sha256": "1a1e00e88edee5ab148957f2945ce831266be5bea8adb41beed8d6574dbe1ca2"
+    },
+    "browser/browser20-frozen-final19/390x844-picker.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-frozen-final19/390x844-picker.png": {
+      "bytes": 52359,
+      "sha256": "3975895d64b0e4b7dead4e4cf4828af5190144a9ccb0675875f222a6643991a6"
+    },
+    "browser/browser20-frozen-final19/390x844-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "b5bc29bde24b2ea83c5892cfe6efa22c442885adbfc01ffedd2ad13445c36df7"
+    },
+    "browser/browser20-frozen-final19/390x844-same-item-refused.png": {
+      "bytes": 49542,
+      "sha256": "795fdbd6af0e9bbe4d8f98be11f57e110d0174cafd434c880329d01feda664ca"
+    },
+    "browser/browser20-frozen-final19/390x844-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-frozen-final19/390x844-side-by-side-default.png": {
+      "bytes": 48965,
+      "sha256": "b8e28a3c447ff48d77459fd95071590f9333ce91203697a14cc4c8db9b623b34"
+    },
+    "browser/browser20-frozen-final19/390x844-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-frozen-final19/390x844-storage-unavailable.png": {
+      "bytes": 28135,
+      "sha256": "583ed2c36cc855ca29d06f04e8f6e72c27013dd9a14f63b1e2e242cda5b783c2"
+    },
+    "browser/browser20-frozen-final19/390x844-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "9b6762acb3d3f8b02b829079f1d3b0937c753b976ee0a580403115b99a6a8f29"
+    },
+    "browser/browser20-frozen-final19/390x844-swipe.json": {
+      "bytes": 1942,
+      "sha256": "5b937a9b2a40bbec15d3b43446fc97e7a6591ac8bd5ca16ce48ed29e14319601"
+    },
+    "browser/browser20-frozen-final19/390x844-swipe.png": {
+      "bytes": 54160,
+      "sha256": "cd780a82af2c46d1a82d6b609a8ca5c25f5f9a284b3662f89a4cc992c3b7c53a"
+    },
+    "browser/browser20-frozen-final19/390x844-timeline-back.json": {
+      "bytes": 1550,
+      "sha256": "a410a4616ed1fbdd5a75be9b656b832a96d70fe08d9acdbe8842cb4b11ae9861"
+    },
+    "browser/browser20-frozen-final19/390x844-timeline-back.png": {
+      "bytes": 49241,
+      "sha256": "19167a89f17fa82280a751ab97a343ec6f607bae9d97bedfc42d2b8e41e10acb"
+    },
+    "browser/browser20-frozen-final19/390x844-timeline.json": {
+      "bytes": 1621,
+      "sha256": "cc37f3bb0d9781724475c5f0e173f6f77c650e14ee69abc895a71f5616ccde9b"
+    },
+    "browser/browser20-frozen-final19/390x844-timeline.png": {
+      "bytes": 42916,
+      "sha256": "3f71ff09ab07bcedc72ec6ed2a18fe61c0e6f04f03e93d0cee33bde91495e54f"
+    },
+    "browser/browser20-frozen-final19/430x932-alternate-pair-geometry.json": {
+      "bytes": 3902,
+      "sha256": "5393a6002d6a18ba69492291d6a8cdbe0aac34961f5fd274bedd150fb8fcf290"
+    },
+    "browser/browser20-frozen-final19/430x932-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-frozen-final19/430x932-alternate-pair.png": {
+      "bytes": 56695,
+      "sha256": "a848503088ae63d928dd49fbf334444a49ec4bced1b0982429ea4df42af8b191"
+    },
+    "browser/browser20-frozen-final19/430x932-default-geometry.json": {
+      "bytes": 3873,
+      "sha256": "dc4ae4ca21a80c27e9171359f562d4ad774a1855b28dbc18a707a37a257ea249"
+    },
+    "browser/browser20-frozen-final19/430x932-gesture-value.json": {
+      "bytes": 156,
+      "sha256": "b026136497e004ecdcdcfb2c6532ae24d60c3c05d601e0222ab910c5a1080991"
+    },
+    "browser/browser20-frozen-final19/430x932-image-visibility-adjusted.json": {
+      "bytes": 1943,
+      "sha256": "205bb6b71bba9d0eb3a70662efa6891de78fba3e4b2c85c1c246e587c946f767"
+    },
+    "browser/browser20-frozen-final19/430x932-image-visibility-adjusted.png": {
+      "bytes": 54952,
+      "sha256": "8a7125d5e6135b21eaa79a2c9c16fd6ed30b53aa9beb944be6d93c8a79e26014"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-1793062684853.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "e369c3610980525ff99dddf0a241a8c96a6795f5dfe2f89b299ac541d649ce7b"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-cancel-focus.png": {
+      "bytes": 61368,
+      "sha256": "eb118fcc43e8dc5eeb9eae7530d717412072e632027965bed0f59e1f3e0dab82"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-pressure-geometry.json": {
+      "bytes": 5044,
+      "sha256": "23bd33d01b67f6f19bcbe547544d5ca599c8ffff8b3c75940236c476b7ee6b9f"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-pressure-selected.json": {
+      "bytes": 1551,
+      "sha256": "299da808f227a951488caa667881de7e87a115b434cab99c3b2b1f3578c1515c"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-pressure-selected.png": {
+      "bytes": 27213,
+      "sha256": "be9fbfdb50316e8e1b1bf2cbe0f23ab419517d03193223c3c49e0da3a8be3ace"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-selected-geometry.json": {
+      "bytes": 3916,
+      "sha256": "31080e8b01e6a23238cbc7f3a07a3a000eaca75f08590c0c8be71dea6d04638f"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-viewport-pressure.json": {
+      "bytes": 2721,
+      "sha256": "84dda43b3f8e4e5f025956eaf83d7c5947decaee2371f1da23cbbee85d48faa8"
+    },
+    "browser/browser20-frozen-final19/430x932-keyboard-viewport-pressure.png": {
+      "bytes": 23995,
+      "sha256": "9d6dd30f85e04e5da9dcdc05d6dbb4e87b6fb83e7fcfe65019991e1c9c0625bb"
+    },
+    "browser/browser20-frozen-final19/430x932-picker-geometry.json": {
+      "bytes": 5044,
+      "sha256": "74c78c98897dc56c2e90469cb97b182fa0d2aeca6b086799d667f7362678c446"
+    },
+    "browser/browser20-frozen-final19/430x932-picker.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-frozen-final19/430x932-picker.png": {
+      "bytes": 62198,
+      "sha256": "05d11013cc0aadba1e002fc3322cf44443c651cbaac2f40ed301d2b3fb746f5c"
+    },
+    "browser/browser20-frozen-final19/430x932-same-item-refused.json": {
+      "bytes": 2721,
+      "sha256": "2e96de9c1abc4ab52397f9c62386ed676098cd5b388399239450fdfecff1ee1e"
+    },
+    "browser/browser20-frozen-final19/430x932-same-item-refused.png": {
+      "bytes": 59372,
+      "sha256": "e0ada108f816b1ebde77724ce6dff2859403b849d8520f6a612e50b5df3c8e1c"
+    },
+    "browser/browser20-frozen-final19/430x932-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-frozen-final19/430x932-side-by-side-default.png": {
+      "bytes": 56420,
+      "sha256": "4122ce6ba350e0af54db70a5be3d57bcb5eeb92eefa34ac5c24f88456c282a78"
+    },
+    "browser/browser20-frozen-final19/430x932-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-frozen-final19/430x932-storage-unavailable.png": {
+      "bytes": 28663,
+      "sha256": "12d5b8e989dcf8f8278e9c0ff9f0ea032f470f14cf12b8f0140c92ab2ae4ab1b"
+    },
+    "browser/browser20-frozen-final19/430x932-swipe-adjusted-geometry.json": {
+      "bytes": 4757,
+      "sha256": "86b534dd961429f22ea6c62fb559b669f1c65f4b17a8a007bd3d960a955c42e8"
+    },
+    "browser/browser20-frozen-final19/430x932-swipe.json": {
+      "bytes": 1942,
+      "sha256": "944a546d49187ca64443b8d62b7b9cf5e6a76a6f3767f4ae05f2461f35fad677"
+    },
+    "browser/browser20-frozen-final19/430x932-swipe.png": {
+      "bytes": 56523,
+      "sha256": "1912c55d19206587684497d8190ad91d63347629e3c214a695697c2374125c2c"
+    },
+    "browser/browser20-frozen-final19/430x932-timeline-back.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-frozen-final19/430x932-timeline-back.png": {
+      "bytes": 56695,
+      "sha256": "a848503088ae63d928dd49fbf334444a49ec4bced1b0982429ea4df42af8b191"
+    },
+    "browser/browser20-frozen-final19/430x932-timeline.json": {
+      "bytes": 1617,
+      "sha256": "65ff83808cce34002a107564b82585e966d98a8b3bd50ea94d4f93eb7e773645"
+    },
+    "browser/browser20-frozen-final19/430x932-timeline.png": {
+      "bytes": 46299,
+      "sha256": "3a7ee34a5dc6f037c06e2258a195ffa49ac44f37bcc64c5f902c90e6b4494750"
+    },
+    "browser/browser20-frozen-final19/console.json": {
+      "bytes": 10210,
+      "sha256": "92623e872a577e55518766bfecafbc579d36afc1d428801b37b43b217e8c0b21"
+    },
+    "browser/browser20-frozen-final19/debug-slider.json": {
+      "bytes": 24284,
+      "sha256": "036f2dbe37659ae353f0871d6287b0838e9630054bd041d7cd3ac2a3d49ffd67"
+    },
+    "browser/browser20-frozen-final19/expo.log": {
+      "bytes": 14888,
+      "sha256": "64b25c35488d7a181aef09bebe52ad9247b11593fbe7da5116fe67d34173144b"
+    },
+    "browser/browser20-frozen-final19/navigation-lifetime.json": {
+      "bytes": 184,
+      "sha256": "6363809bc108ffbb327344fbe59cf164d0d6f0ce93f4c42947100cf4dc30356d"
+    },
+    "browser/browser20-frozen-final19/network.json": {
+      "bytes": 31781,
+      "sha256": "0a847285e5da338b85932327c9ba758019aa2c53e60d1648a1aa1b62eff29f2d"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "3eb16f595971399ba430c290e4297d6f72f3f7e911c2d4464bc6d7f3566e3650"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-deleted-record-and-old-picker-retired.png": {
+      "bytes": 56590,
+      "sha256": "63db940298cbbb900c19f951622813b2431f52a5ccca35e9d7364c2cf59cc90a"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-invalidated-retained-source-hidden.png": {
+      "bytes": 28663,
+      "sha256": "12d5b8e989dcf8f8278e9c0ff9f0ea032f470f14cf12b8f0140c92ab2ae4ab1b"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-navigation-blur.json": {
+      "bytes": 6130,
+      "sha256": "40882f657c45c21624d81c8861011ea8317874c22ccab031714407d33b7adc2d"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-navigation-blur.png": {
+      "bytes": 40911,
+      "sha256": "5d6762b82e8051c7ff7747a7205be45c79ccdffec36deec0ca8b262c8256d5f3"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-navigation-return-old-picker-retired.json": {
+      "bytes": 7518,
+      "sha256": "977967fae23dad49955d6d5013cd7d8c70f1bb31557659907f71e33ea05ed773"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-navigation-return-old-picker-retired.png": {
+      "bytes": 56900,
+      "sha256": "226e34f69a3a06ef5c8e2731bb775b33df9e3a7d8f8d1560a3fca36a1f8f7bd1"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-old-choice-retired-after-refresh.png": {
+      "bytes": 56420,
+      "sha256": "4122ce6ba350e0af54db70a5be3d57bcb5eeb92eefa34ac5c24f88456c282a78"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-owner-a-b-a-old-choice-retired.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-owner-a-b-a-old-choice-retired.png": {
+      "bytes": 56420,
+      "sha256": "4122ce6ba350e0af54db70a5be3d57bcb5eeb92eefa34ac5c24f88456c282a78"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-same-owner-regrant-old-choice-retired.json": {
+      "bytes": 7518,
+      "sha256": "977967fae23dad49955d6d5013cd7d8c70f1bb31557659907f71e33ea05ed773"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-same-owner-regrant-old-choice-retired.png": {
+      "bytes": 56420,
+      "sha256": "4122ce6ba350e0af54db70a5be3d57bcb5eeb92eefa34ac5c24f88456c282a78"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-storage-unavailable.png": {
+      "bytes": 28663,
+      "sha256": "12d5b8e989dcf8f8278e9c0ff9f0ea032f470f14cf12b8f0140c92ab2ae4ab1b"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1617,
+      "sha256": "31f3a7171175441f8fd9a31fabcb6eb244eb383d3ac2f745280f2c83f6ed6ee7"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-bytes-missing.png": {
+      "bytes": 62963,
+      "sha256": "a5bf154c584b7c3194a4613d5085929d5838ee9a56ce70b1b79ab12b1a5e868b"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1799,
+      "sha256": "bf641e4974eb401c0a36b016179f51fd27fe55b54b58ca256ae15a8f9bcd9e6e"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-bytes-unreadable.png": {
+      "bytes": 64765,
+      "sha256": "acebb3e0c71c012d36116884b5a7e6adc0b43f4c507e98f51093ca8c4dd394e5"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "dbf394128d8162f8de0ffeef0de9b7e664ba8cd252a68dc5255a779b02c8e0c2"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-0.png": {
+      "bytes": 39890,
+      "sha256": "860a7d598290bce59fe926517ee0003d39950f49c04a47e114d2f7b010a352e3"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "13deb087b7a2c1bce3d787cdde4ec60a03d1d5a4c08e81cfb5f9a91bbc1b06b5"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-1.png": {
+      "bytes": 35936,
+      "sha256": "157033db8859bd78710fc48df97b2e2b6403622d49b4fac8515eb60b160b847f"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1599,
+      "sha256": "242ba914b215fe8226ffac733de4ac053fff88b41375bd2ce6c3f37a6db60157"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-2.png": {
+      "bytes": 61145,
+      "sha256": "096040d78b1e91c290c445a7574e26395ae57698e25dbdbb4e706f4a2839f2e9"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-synthetic-count-20.png": {
+      "bytes": 61181,
+      "sha256": "11d5f67e7f2855200f648590fb4ba81597f2896603d7b945269b6280832b8cdc"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1600,
+      "sha256": "a7559e4e246a2720c3b2b3d0c4bf3b6ec8515845f56439d2b25b2c32fb821659"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-twenty-same-day-alternate.png": {
+      "bytes": 61181,
+      "sha256": "11d5f67e7f2855200f648590fb4ba81597f2896603d7b945269b6280832b8cdc"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6961,
+      "sha256": "636a561afe4f09b99dcf0f04b6a5526c8a0cf3e315b7e4576cf8aabeab4c424d"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-twenty-same-day-picker.png": {
+      "bytes": 61696,
+      "sha256": "13cb95dcd9fd14facc54abe16c68538b6ba3c95c9d404a896a587873d8c403f8"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-withdrawn-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-frozen-final19/source-lifecycle-withdrawn-source-hidden.png": {
+      "bytes": 28663,
+      "sha256": "12d5b8e989dcf8f8278e9c0ff9f0ea032f470f14cf12b8f0140c92ab2ae4ab1b"
+    },
+    "browser/browser20-frozen-final19/source-probes.json": {
+      "bytes": 394,
+      "sha256": "7ed0dee47df3cca0b8d23ce8d5bfc6d6ce90bf1afd8f39ec04377a96fe5b59dc"
+    },
+    "browser/browser20-frozen-final19/steps.json": {
+      "bytes": 6320,
+      "sha256": "098041cacd5526c3234a1a16531fdb5aad28a9ed99de751156b8d1d82ec0e9ea"
+    },
+    "browser/browser20-frozen-final19/summary.json": {
+      "bytes": 1883,
+      "sha256": "d7943386be67f45f62a4fd0c81c287c651b679f7dcf089f28615f8808d820bbc"
+    },
+    "browser/browser20-frozen-final19/trace.json": {
+      "bytes": 109379,
+      "sha256": "df81801f0a4e3c4fd4ba531e2adb09c2e34a46160e629fb64ac3fcab31f24fe8"
+    },
+    "browser/browser20-full-attempt1/360x640-FAILURE.json": {
+      "bytes": 2720,
+      "sha256": "0d0912f73aee3d7d9857217b497d14d42cfc10894d918e4ca1b7493c7fa1dca7"
+    },
+    "browser/browser20-full-attempt1/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-full-attempt1/360x640-picker-geometry.json": {
+      "bytes": 9100,
+      "sha256": "82e448b74f023eacb9cc4509240e91e03a7b9d2fe4c3502801e4251cc4f6286e"
+    },
+    "browser/browser20-full-attempt1/360x640-picker.json": {
+      "bytes": 2732,
+      "sha256": "ec041ea0637d9b4b407dd37faa18bb211f1cab41f800a773f1e65686fbdaab79"
+    },
+    "browser/browser20-full-attempt1/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-full-attempt1/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-full-attempt1/ERROR.json": {
+      "bytes": 85,
+      "sha256": "3e2454ad008931fbd51c4716969b18ad3890633fc387ec10f01567c9e283af69"
+    },
+    "browser/browser20-full-attempt1/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-full-attempt1/expo.log": {
+      "bytes": 6150,
+      "sha256": "f8fb4604834798d933469ecf278686a9ed662ad370623681cf21474ae8615849"
+    },
+    "browser/browser20-full-attempt1/network.json": {
+      "bytes": 9387,
+      "sha256": "ec31a12410ab34481840c61a10cb645f50a62f82010650e07ad7e83e0463cff0"
+    },
+    "browser/browser20-full-attempt1/steps.json": {
+      "bytes": 372,
+      "sha256": "2f6b1a0869ab852f0ab2be8bbb55fa175b25ed028d42607cd6ca8080c6ce4694"
+    },
+    "browser/browser20-full-attempt1/trace.json": {
+      "bytes": 37554,
+      "sha256": "f072fa6775c4887df407756309210f0edd591aabaf5e47af0043eea4fe860390"
+    },
+    "browser/browser20-full-attempt2/360x640-FAILURE.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-full-attempt2/360x640-alternate-pair-geometry.json": {
+      "bytes": 4767,
+      "sha256": "4bd2ece8681315c61b2aceb45fd4f3f9a578cc4eea738baa458ad262109d7271"
+    },
+    "browser/browser20-full-attempt2/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-full-attempt2/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-full-attempt2/360x640-picker-geometry.json": {
+      "bytes": 3816,
+      "sha256": "f0392219d21a8b0518f3b4ec1a1382c2a5cccfb3396b0e2f70807ff10a3dd03b"
+    },
+    "browser/browser20-full-attempt2/360x640-picker.json": {
+      "bytes": 2669,
+      "sha256": "064ee134ebe5e344c57996da3d381da8cd47d2bbf00dd50ed5ec1fd86d277d10"
+    },
+    "browser/browser20-full-attempt2/360x640-same-item-refused.json": {
+      "bytes": 2645,
+      "sha256": "de96172b31879750fe2a94ec4afc68abe7baaca6507af286334da2ce4eed22f9"
+    },
+    "browser/browser20-full-attempt2/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-full-attempt2/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-full-attempt2/ERROR.json": {
+      "bytes": 85,
+      "sha256": "3e2454ad008931fbd51c4716969b18ad3890633fc387ec10f01567c9e283af69"
+    },
+    "browser/browser20-full-attempt2/console.json": {
+      "bytes": 3822,
+      "sha256": "e736c81ac945812d8e6dae1db51f6babf60d5254102152976df25614b30b6188"
+    },
+    "browser/browser20-full-attempt2/expo.log": {
+      "bytes": 7129,
+      "sha256": "88d79e267b21afb63714913f762652d8485dec67999a751f383f005d72f34b55"
+    },
+    "browser/browser20-full-attempt2/network.json": {
+      "bytes": 10051,
+      "sha256": "7a8f419f1d7f2304e1290c3d9035b7a97833dce19397bf6920e58736146716a8"
+    },
+    "browser/browser20-full-attempt2/steps.json": {
+      "bytes": 488,
+      "sha256": "abf35b40fc0c084f80807d16062f507e0034f292a097e32ad003d7f2bbf70e75"
+    },
+    "browser/browser20-full-attempt2/trace.json": {
+      "bytes": 39724,
+      "sha256": "069c6ad7f375ab9688bb87f37f285d790172430555bd180463643f5d6f4b995d"
+    },
+    "browser/browser20-full-attempt3/360x640-FAILURE.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-full-attempt3/360x640-alternate-pair-geometry.json": {
+      "bytes": 4767,
+      "sha256": "4bd2ece8681315c61b2aceb45fd4f3f9a578cc4eea738baa458ad262109d7271"
+    },
+    "browser/browser20-full-attempt3/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-full-attempt3/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-full-attempt3/360x640-picker-geometry.json": {
+      "bytes": 135,
+      "sha256": "32e6a9025f83375959f20b3e2c2984dadc6f93a4572817df8a8bd1884595ae49"
+    },
+    "browser/browser20-full-attempt3/360x640-picker.json": {
+      "bytes": 2669,
+      "sha256": "064ee134ebe5e344c57996da3d381da8cd47d2bbf00dd50ed5ec1fd86d277d10"
+    },
+    "browser/browser20-full-attempt3/360x640-same-item-refused.json": {
+      "bytes": 2645,
+      "sha256": "de96172b31879750fe2a94ec4afc68abe7baaca6507af286334da2ce4eed22f9"
+    },
+    "browser/browser20-full-attempt3/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-full-attempt3/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-full-attempt3/ERROR.json": {
+      "bytes": 85,
+      "sha256": "3e2454ad008931fbd51c4716969b18ad3890633fc387ec10f01567c9e283af69"
+    },
+    "browser/browser20-full-attempt3/console.json": {
+      "bytes": 3822,
+      "sha256": "e736c81ac945812d8e6dae1db51f6babf60d5254102152976df25614b30b6188"
+    },
+    "browser/browser20-full-attempt3/expo.log": {
+      "bytes": 7465,
+      "sha256": "8b8b407e52bfac96b2c72d2e28da33c6ae0f998a971738cfdd2fa03d38ee0f59"
+    },
+    "browser/browser20-full-attempt3/network.json": {
+      "bytes": 10051,
+      "sha256": "fe34907994f527292d331332fbc52b2708cb225999451f29ebb21e0d4d3b08da"
+    },
+    "browser/browser20-full-attempt3/steps.json": {
+      "bytes": 488,
+      "sha256": "91b398de926a33bd2959f3b930e11782f45efafc5036c824e3bdd5c2d9000272"
+    },
+    "browser/browser20-full-attempt3/trace.json": {
+      "bytes": 39866,
+      "sha256": "89d09de7de5c4acd0ec3d563bfe47a1106fdd5fa0f3ebec7eafba44e808e1966"
+    },
+    "browser/browser20-full-attempt4/360x640-FAILURE.json": {
+      "bytes": 2675,
+      "sha256": "2bb61bd82fa28187dc6b7a53b0f031a981203182368f387f84b590df165307d1"
+    },
+    "browser/browser20-full-attempt4/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-full-attempt4/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-full-attempt4/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-full-attempt4/360x640-keyboard-cancel-focus.json": {
+      "bytes": 2651,
+      "sha256": "7ee2997b51cb30539366a66ff1016cb358426fb8bf69c22fe3586d00b834fda7"
+    },
+    "browser/browser20-full-attempt4/360x640-picker-geometry.json": {
+      "bytes": 3575,
+      "sha256": "38a63b5d1835785b8a8394a53a7c652727f82d5caac3521c36b63ec6cdf8f5b7"
+    },
+    "browser/browser20-full-attempt4/360x640-picker.json": {
+      "bytes": 2669,
+      "sha256": "064ee134ebe5e344c57996da3d381da8cd47d2bbf00dd50ed5ec1fd86d277d10"
+    },
+    "browser/browser20-full-attempt4/360x640-same-item-refused.json": {
+      "bytes": 2645,
+      "sha256": "de96172b31879750fe2a94ec4afc68abe7baaca6507af286334da2ce4eed22f9"
+    },
+    "browser/browser20-full-attempt4/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-full-attempt4/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-full-attempt4/ERROR.json": {
+      "bytes": 67,
+      "sha256": "d80d4b0328bfebc969b3176771b562b0a316baaa3b9c2b31f852fe969ad7e703"
+    },
+    "browser/browser20-full-attempt4/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-full-attempt4/expo.log": {
+      "bytes": 6316,
+      "sha256": "71c5db9e61722b34a12180a0b329418241d046a35bb442f73ef2742352dc6964"
+    },
+    "browser/browser20-full-attempt4/network.json": {
+      "bytes": 9387,
+      "sha256": "ec31a12410ab34481840c61a10cb645f50a62f82010650e07ad7e83e0463cff0"
+    },
+    "browser/browser20-full-attempt4/steps.json": {
+      "bytes": 604,
+      "sha256": "3a86da9d06c5adb3b09908cdc84b3bd71d11ea6807cc7ea19557df4954cbf3f4"
+    },
+    "browser/browser20-full-attempt4/trace.json": {
+      "bytes": 37962,
+      "sha256": "be5867d902a68642bd53a252b23abb3ab40e4cd1002d97ad48e6e76c504f7ff4"
+    },
+    "browser/browser20-full-attempt5/360x640-alternate-pair-geometry.json": {
+      "bytes": 4764,
+      "sha256": "66d20f81b7a9e44d88d3230852ceb24be4ee5ce6e7cbbc0f47af27a8516e0602"
+    },
+    "browser/browser20-full-attempt5/360x640-alternate-pair.json": {
+      "bytes": 1574,
+      "sha256": "c4ee91b8346a016dfbf966af202956bebaa4c87061588ee33811b6a74c60206c"
+    },
+    "browser/browser20-full-attempt5/360x640-default-geometry.json": {
+      "bytes": 4896,
+      "sha256": "86eeedfd6e7c36840995e95da44e10434bb2c2ecc7591a9aa89d556ea5439b71"
+    },
+    "browser/browser20-full-attempt5/360x640-image-visibility-adjusted.json": {
+      "bytes": 1974,
+      "sha256": "c72bb9ad5c7e072edc3ef1ddbead301cd31ccc5b984d9cee1492a400471f8ddd"
+    },
+    "browser/browser20-full-attempt5/360x640-keyboard-1793058288575.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-full-attempt5/360x640-keyboard-1793058290774.json": {
+      "bytes": 394,
+      "sha256": "75d74d2cbe59e613862eadd8042e2ebcb1e1c4445ca88ce846b442d25cf70294"
+    },
+    "browser/browser20-full-attempt5/360x640-keyboard-cancel-focus.json": {
+      "bytes": 1574,
+      "sha256": "4471dd0894f07a321368cbd09b99a325e832d2f31153757cff9e8bbdbcd65311"
+    },
+    "browser/browser20-full-attempt5/360x640-keyboard-pressure-geometry.json": {
+      "bytes": 4561,
+      "sha256": "9c026056667f39eef99f7defd952fa0118e35f36ca20b4c233070495bc7ef213"
+    },
+    "browser/browser20-full-attempt5/360x640-keyboard-viewport-pressure.json": {
+      "bytes": 2657,
+      "sha256": "f2befa05e0891d629d889f6048c1ac29631d52a2e876f946babc23b5bd68841a"
+    },
+    "browser/browser20-full-attempt5/360x640-picker-geometry.json": {
+      "bytes": 3575,
+      "sha256": "38a63b5d1835785b8a8394a53a7c652727f82d5caac3521c36b63ec6cdf8f5b7"
+    },
+    "browser/browser20-full-attempt5/360x640-picker.json": {
+      "bytes": 2669,
+      "sha256": "064ee134ebe5e344c57996da3d381da8cd47d2bbf00dd50ed5ec1fd86d277d10"
+    },
+    "browser/browser20-full-attempt5/360x640-same-item-refused.json": {
+      "bytes": 2645,
+      "sha256": "de96172b31879750fe2a94ec4afc68abe7baaca6507af286334da2ce4eed22f9"
+    },
+    "browser/browser20-full-attempt5/360x640-side-by-side-default.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-full-attempt5/360x640-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "1f648a2e1783664ec842f1ba9927063af96aec0a4af9278b707b51703f10b78d"
+    },
+    "browser/browser20-full-attempt5/360x640-swipe-adjusted-geometry.json": {
+      "bytes": 6326,
+      "sha256": "c44b4a7f7b0c4704d79962af9912ebf07ba00de4c72be06bcfca7429d148ab21"
+    },
+    "browser/browser20-full-attempt5/360x640-swipe.json": {
+      "bytes": 1969,
+      "sha256": "ef917cbe5c284b928afeea00e06ed29a5b162d811938ed71adecb47896fab15d"
+    },
+    "browser/browser20-full-attempt5/360x640-timeline-back.json": {
+      "bytes": 1569,
+      "sha256": "a0a524c85226dc0530ab815ddb6c670c36f159e7bdc9af52e45e3f2289e44959"
+    },
+    "browser/browser20-full-attempt5/360x640-timeline.json": {
+      "bytes": 1647,
+      "sha256": "850b3f0ee9b5e848d0e63782925d41ad7ca7a9c55d09b4a1243b56d04b8ccd8f"
+    },
+    "browser/browser20-full-attempt5/375x667-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "96cc222477ff5a8f5bda29b4698547c8caeee59406551cbe0d9650806567c55f"
+    },
+    "browser/browser20-full-attempt5/375x667-alternate-pair.json": {
+      "bytes": 1549,
+      "sha256": "d317b0a35c5a8b74c43688a1e42b5a7cdf0366e8ea0e7301a22464c399e8b1dc"
+    },
+    "browser/browser20-full-attempt5/375x667-default-geometry.json": {
+      "bytes": 3870,
+      "sha256": "17b16a19f3738f4aa44fd600f612b6ca8848f20e1a1c6d5ffbdb6df475f009c3"
+    },
+    "browser/browser20-full-attempt5/375x667-image-visibility-adjusted.json": {
+      "bytes": 1949,
+      "sha256": "a3337245032614fe3fb3223dd1f7903a34abc2820184079015365808ed3f1a8f"
+    },
+    "browser/browser20-full-attempt5/375x667-keyboard-1793058294463.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-full-attempt5/375x667-keyboard-1793058296678.json": {
+      "bytes": 394,
+      "sha256": "75d74d2cbe59e613862eadd8042e2ebcb1e1c4445ca88ce846b442d25cf70294"
+    },
+    "browser/browser20-full-attempt5/375x667-keyboard-cancel-focus.json": {
+      "bytes": 1552,
+      "sha256": "bb6d5577880a0ac051ef8947599e62c36b15e084296a61cf4697106699bcd398"
+    },
+    "browser/browser20-full-attempt5/375x667-keyboard-pressure-geometry.json": {
+      "bytes": 3774,
+      "sha256": "d9e79383bcdf11c0cdb634aee0c9451b425feed923dc0f23ab73aedb2c78ee84"
+    },
+    "browser/browser20-full-attempt5/375x667-keyboard-viewport-pressure.json": {
+      "bytes": 2616,
+      "sha256": "ded78de48f3b90c4b1cf2794e8e12bb9e215970b70bee5680ecd82d759cdbb8f"
+    },
+    "browser/browser20-full-attempt5/375x667-picker-geometry.json": {
+      "bytes": 2391,
+      "sha256": "3f56bc1623e33fd92703c0effbab9070be076362bddbbcad234c55df37df7cda"
+    },
+    "browser/browser20-full-attempt5/375x667-picker.json": {
+      "bytes": 2642,
+      "sha256": "60c95f88ed1efab4f10a9cbc2dcf5355c16fddc073b2477833e23379db477e0b"
+    },
+    "browser/browser20-full-attempt5/375x667-same-item-refused.json": {
+      "bytes": 2606,
+      "sha256": "1685e524836cb147fbac371a0a82816f0444bb414e25f1483f1434f6bcbc3914"
+    },
+    "browser/browser20-full-attempt5/375x667-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-full-attempt5/375x667-storage-unavailable.json": {
+      "bytes": 515,
+      "sha256": "13c7349ada8aa5c6b7c3e4f8d16d584a969dac001ff86dbab226d6a7ad647852"
+    },
+    "browser/browser20-full-attempt5/375x667-swipe-adjusted-geometry.json": {
+      "bytes": 4783,
+      "sha256": "537249d1a567c96cdb539de814617d90bca6908e1e40d3f623cc52d4a9d178ce"
+    },
+    "browser/browser20-full-attempt5/375x667-swipe.json": {
+      "bytes": 1941,
+      "sha256": "7377c5e6e0eb7b198cefd2085abd2639bf67b73372d517525b0be2469cb328b6"
+    },
+    "browser/browser20-full-attempt5/375x667-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "7b7084b014f0cbe72440d3392cc009c943e91e5882e1e0a327499e36eddf44fe"
+    },
+    "browser/browser20-full-attempt5/375x667-timeline.json": {
+      "bytes": 1639,
+      "sha256": "1de571599342d693c876227e8f45cd754f33f9b34680d129912bd88807768637"
+    },
+    "browser/browser20-full-attempt5/390x844-alternate-pair-geometry.json": {
+      "bytes": 3901,
+      "sha256": "fc4881766edd3102d653de67516db26a46e2ebae369c85a5e56acadc7db22ca9"
+    },
+    "browser/browser20-full-attempt5/390x844-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "10c3d3374e8303bfaa7807ec19ac273f1079d7a63c1a66048e942f17ee2e1f81"
+    },
+    "browser/browser20-full-attempt5/390x844-default-geometry.json": {
+      "bytes": 3871,
+      "sha256": "b9a1f50e2a6c986671572ff9e23296fe420e3b8b2a6855ef8c1b4056815d1f87"
+    },
+    "browser/browser20-full-attempt5/390x844-image-visibility-adjusted.json": {
+      "bytes": 1944,
+      "sha256": "8ff6c5952c95c2ba2a791c4da1c5754059152713b5012d0bffebfa77692ffecb"
+    },
+    "browser/browser20-full-attempt5/390x844-keyboard-1793058300226.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-full-attempt5/390x844-keyboard-1793058302426.json": {
+      "bytes": 394,
+      "sha256": "75d74d2cbe59e613862eadd8042e2ebcb1e1c4445ca88ce846b442d25cf70294"
+    },
+    "browser/browser20-full-attempt5/390x844-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "092cbaa1cabb8a93c9a27357c7c882a41332d120453da27860b5ed6bc5c13f88"
+    },
+    "browser/browser20-full-attempt5/390x844-keyboard-pressure-geometry.json": {
+      "bytes": 3774,
+      "sha256": "09befe3de6305e022fc60c17a9311955e73e780d401b525d4f08c7daace969bd"
+    },
+    "browser/browser20-full-attempt5/390x844-keyboard-viewport-pressure.json": {
+      "bytes": 2617,
+      "sha256": "a0b22092413f5ecbe914bad2f6043466434a6d21b2eae6b6e478528a3f43efe4"
+    },
+    "browser/browser20-full-attempt5/390x844-picker-geometry.json": {
+      "bytes": 2391,
+      "sha256": "ed94ae0777d1a8f6ffda5173e004d35b85d3cb09358842dc263089438e88c882"
+    },
+    "browser/browser20-full-attempt5/390x844-picker.json": {
+      "bytes": 2643,
+      "sha256": "bfaefe3d30d9360c6880574f723a1dcaab1d786ba96144175c3e7e1491947d80"
+    },
+    "browser/browser20-full-attempt5/390x844-same-item-refused.json": {
+      "bytes": 2607,
+      "sha256": "8187cacfde17cc0044cfe2c5924c824d7ab25683876f3a1559b5eaaf1ae3c3f7"
+    },
+    "browser/browser20-full-attempt5/390x844-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-full-attempt5/390x844-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-full-attempt5/390x844-swipe-adjusted-geometry.json": {
+      "bytes": 4753,
+      "sha256": "1f98f520d653d5bd85b61ee2343a58ea1df86941c2bf4d877acdbe92f6ff6727"
+    },
+    "browser/browser20-full-attempt5/390x844-swipe.json": {
+      "bytes": 1942,
+      "sha256": "5b937a9b2a40bbec15d3b43446fc97e7a6591ac8bd5ca16ce48ed29e14319601"
+    },
+    "browser/browser20-full-attempt5/390x844-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-full-attempt5/390x844-timeline.json": {
+      "bytes": 1621,
+      "sha256": "cc37f3bb0d9781724475c5f0e173f6f77c650e14ee69abc895a71f5616ccde9b"
+    },
+    "browser/browser20-full-attempt5/430x932-alternate-pair-geometry.json": {
+      "bytes": 3902,
+      "sha256": "5393a6002d6a18ba69492291d6a8cdbe0aac34961f5fd274bedd150fb8fcf290"
+    },
+    "browser/browser20-full-attempt5/430x932-alternate-pair.json": {
+      "bytes": 1550,
+      "sha256": "4803df49a42802b6bc2f0b809ae189f60869a785a65bcae336d298ca417deeb6"
+    },
+    "browser/browser20-full-attempt5/430x932-default-geometry.json": {
+      "bytes": 3873,
+      "sha256": "dc4ae4ca21a80c27e9171359f562d4ad774a1855b28dbc18a707a37a257ea249"
+    },
+    "browser/browser20-full-attempt5/430x932-image-visibility-adjusted.json": {
+      "bytes": 1945,
+      "sha256": "39ff5a4b0f7a84b27fcaec90476afd96142abbee3a5864493deb3c7c888a0fe1"
+    },
+    "browser/browser20-full-attempt5/430x932-keyboard-1793058305897.json": {
+      "bytes": 394,
+      "sha256": "16799d7701caf95324df16a69a80d097979c88c2152ea04439911aa14e30c1fe"
+    },
+    "browser/browser20-full-attempt5/430x932-keyboard-1793058308083.json": {
+      "bytes": 394,
+      "sha256": "75d74d2cbe59e613862eadd8042e2ebcb1e1c4445ca88ce846b442d25cf70294"
+    },
+    "browser/browser20-full-attempt5/430x932-keyboard-cancel-focus.json": {
+      "bytes": 1549,
+      "sha256": "e369c3610980525ff99dddf0a241a8c96a6795f5dfe2f89b299ac541d649ce7b"
+    },
+    "browser/browser20-full-attempt5/430x932-keyboard-pressure-geometry.json": {
+      "bytes": 3774,
+      "sha256": "d135315513a0474f2fdfd382b1e2882e947e656c274961eab0df36791e109e65"
+    },
+    "browser/browser20-full-attempt5/430x932-keyboard-viewport-pressure.json": {
+      "bytes": 2617,
+      "sha256": "9a2a292bb858809746d2839e6365347f1a0adbda69326bf657d7c1107763bcec"
+    },
+    "browser/browser20-full-attempt5/430x932-picker-geometry.json": {
+      "bytes": 2391,
+      "sha256": "feee0e95f5b5907a8c4e921726b1b7c4f7d5d22d3d8dbfce458ebf305bf85304"
+    },
+    "browser/browser20-full-attempt5/430x932-picker.json": {
+      "bytes": 2643,
+      "sha256": "cdd43f21eed7e962b8bb0d244d52457741b94293064841e2f9e6fdd05c4ac40d"
+    },
+    "browser/browser20-full-attempt5/430x932-same-item-refused.json": {
+      "bytes": 2607,
+      "sha256": "597d6d4b8cecc7f6798306ed96b9aac1937f0639ae855b6395ddfd6f60802d32"
+    },
+    "browser/browser20-full-attempt5/430x932-side-by-side-default.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-full-attempt5/430x932-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-full-attempt5/430x932-swipe-adjusted-geometry.json": {
+      "bytes": 4759,
+      "sha256": "83187fc9485b10fbdf46394dfacc86b2fd56a20de428035c3452bcd8ee4d68c5"
+    },
+    "browser/browser20-full-attempt5/430x932-swipe.json": {
+      "bytes": 1942,
+      "sha256": "944a546d49187ca64443b8d62b7b9cf5e6a76a6f3767f4ae05f2461f35fad677"
+    },
+    "browser/browser20-full-attempt5/430x932-timeline-back.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-full-attempt5/430x932-timeline.json": {
+      "bytes": 1617,
+      "sha256": "65ff83808cce34002a107564b82585e966d98a8b3bd50ea94d4f93eb7e773645"
+    },
+    "browser/browser20-full-attempt5/ERROR.json": {
+      "bytes": 61,
+      "sha256": "3816eb774eabab7c7732a233f5107af7bd9fd61fbe7ef5c8c5603935b6918927"
+    },
+    "browser/browser20-full-attempt5/console.json": {
+      "bytes": 7632,
+      "sha256": "ddf8d07948be5ae02912d330636ff4d8781bfd9e0838d128bb1a6c7035e5ef17"
+    },
+    "browser/browser20-full-attempt5/expo.log": {
+      "bytes": 11289,
+      "sha256": "9266cf621b1cbafbf3da717a1d8dee066433e272baab0736be798d90b7529b2f"
+    },
+    "browser/browser20-full-attempt5/network.json": {
+      "bytes": 22575,
+      "sha256": "67423bb1f430b58d83eb6071dc5943a30e4daddfcd46f150312ea9bc6a3272a2"
+    },
+    "browser/browser20-full-attempt5/source-lifecycle-FAILURE.json": {
+      "bytes": 740,
+      "sha256": "b9c29fcd87ccd030b64405bbd4349dcbdc5d0798eb34b6a68f172efa5b6e9bf5"
+    },
+    "browser/browser20-full-attempt5/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "8614aabc9f732d1be5c6f6e1d9b2cb3e7b4ff19f9f3bf8eacb53dfab1df79239"
+    },
+    "browser/browser20-full-attempt5/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "59dce0722585d88ef1c3d86368375222a2e771fb3c5e9640a403f3ef16ba87bf"
+    },
+    "browser/browser20-full-attempt5/steps.json": {
+      "bytes": 4458,
+      "sha256": "8fb681377a634849e2fa5b4cb02f638364d53de0f1fe63cc5ffcf01c434c2d67"
+    },
+    "browser/browser20-full-attempt5/trace.json": {
+      "bytes": 81438,
+      "sha256": "8b98ed06f3f75fcac91ceee5db5e955a004045f083896a31e482cee4480002ef"
+    },
+    "browser/browser20-gesture-attempt10/ERROR.json": {
+      "bytes": 84,
+      "sha256": "b82c90dacdc728efec3645c4934554c036a46aaeda3a559803312282e947ff56"
+    },
+    "browser/browser20-gesture-attempt10/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-gesture-attempt10/debug-comparison.json": {
+      "bytes": 372,
+      "sha256": "fbb8ab390c126d35f714ef5246fb522d043bff633b9bce08140c67e6126bc1ab"
+    },
+    "browser/browser20-gesture-attempt10/debug-query.json": {
+      "bytes": 10,
+      "sha256": "770c2d18aa4ec3159f46da461ef452972949942ff4f6a9771044485faa146398"
+    },
+    "browser/browser20-gesture-attempt10/expo.log": {
+      "bytes": 6153,
+      "sha256": "7712959d5095b7d72b0f5f6d57fe78641cd1265537507505a235f005562cbe34"
+    },
+    "browser/browser20-gesture-attempt10/network.json": {
+      "bytes": 9695,
+      "sha256": "0d786f41b77626196f4275dcfc44ae4357c175942f3cfbd754527b682ffa7d37"
+    },
+    "browser/browser20-gesture-attempt10/setup-FAILURE.json": {
+      "bytes": 1942,
+      "sha256": "e9521928b596bc06da54f0b910d5282609964f9f79be0d75d5d49c5ddb1dd866"
+    },
+    "browser/browser20-gesture-attempt10/setup-gesture.json": {
+      "bytes": 149,
+      "sha256": "6fa8feb56c555a0ea945b8cbb310ecc5cbd8bc73e5835084ab1088cb735ea2bb"
+    },
+    "browser/browser20-gesture-attempt10/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-gesture-attempt10/steps.json": {
+      "bytes": 456,
+      "sha256": "050e930f894aa9da5cc18a49561984752876ed3dfbdee814009650589d3617aa"
+    },
+    "browser/browser20-gesture-attempt10/trace.json": {
+      "bytes": 37980,
+      "sha256": "c81e8c1a20075a215bef4b132559a2fc396918d9f774432996f38516f0e184c6"
+    },
+    "browser/browser20-gesture-attempt12/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-gesture-attempt12/debug-slider.json": {
+      "bytes": 24284,
+      "sha256": "b56c3084b9738cd77f3a503aa9b0acb4811400aab779afce0f0704a1385cf92e"
+    },
+    "browser/browser20-gesture-attempt12/expo.log": {
+      "bytes": 6320,
+      "sha256": "f3229bfbad5660c327972aceeff2059bc35fa668a3f8963e1270ea65bc81f24e"
+    },
+    "browser/browser20-gesture-attempt12/network.json": {
+      "bytes": 9695,
+      "sha256": "0d786f41b77626196f4275dcfc44ae4357c175942f3cfbd754527b682ffa7d37"
+    },
+    "browser/browser20-gesture-attempt12/setup-gesture.json": {
+      "bytes": 1942,
+      "sha256": "dc787e98fe17ca60bbc2d21b28c935d76fbfd1123812a102e70341047996334c"
+    },
+    "browser/browser20-gesture-attempt12/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-gesture-attempt12/steps.json": {
+      "bytes": 456,
+      "sha256": "e242c67319c7c12dc060aa29ac4945bed5a7b3c1d13b7f6a47d256e6c31d92b7"
+    },
+    "browser/browser20-gesture-attempt12/trace.json": {
+      "bytes": 38193,
+      "sha256": "bfb378ed8edb6a8ab7f355ccaca7e87bfbc0c42c8ac984c8f4c1f15f1d347818"
+    },
+    "browser/browser20-gesture-debug11/ERROR.json": {
+      "bytes": 84,
+      "sha256": "b82c90dacdc728efec3645c4934554c036a46aaeda3a559803312282e947ff56"
+    },
+    "browser/browser20-gesture-debug11/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-gesture-debug11/debug-comparison.json": {
+      "bytes": 372,
+      "sha256": "fbb8ab390c126d35f714ef5246fb522d043bff633b9bce08140c67e6126bc1ab"
+    },
+    "browser/browser20-gesture-debug11/debug-query.json": {
+      "bytes": 10,
+      "sha256": "770c2d18aa4ec3159f46da461ef452972949942ff4f6a9771044485faa146398"
+    },
+    "browser/browser20-gesture-debug11/expo.log": {
+      "bytes": 6153,
+      "sha256": "b37610d0cc3670e591656359d6fc18538b56bc0b0a9000a5968a989800e277a8"
+    },
+    "browser/browser20-gesture-debug11/network.json": {
+      "bytes": 9695,
+      "sha256": "0d786f41b77626196f4275dcfc44ae4357c175942f3cfbd754527b682ffa7d37"
+    },
+    "browser/browser20-gesture-debug11/setup-FAILURE.json": {
+      "bytes": 1942,
+      "sha256": "e9521928b596bc06da54f0b910d5282609964f9f79be0d75d5d49c5ddb1dd866"
+    },
+    "browser/browser20-gesture-debug11/setup-gesture.json": {
+      "bytes": 149,
+      "sha256": "6fa8feb56c555a0ea945b8cbb310ecc5cbd8bc73e5835084ab1088cb735ea2bb"
+    },
+    "browser/browser20-gesture-debug11/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-gesture-debug11/steps.json": {
+      "bytes": 456,
+      "sha256": "9c4ba8a428f6f9a02f09055dcb2cc73a2d1c703296364388f75fe0561152297e"
+    },
+    "browser/browser20-gesture-debug11/trace.json": {
+      "bytes": 38268,
+      "sha256": "fc5b26dc9adaef1ad0753e863ef058395378479db03699d78e691978c817c80e"
+    },
+    "browser/browser20-probe-attempt6/ERROR.json": {
+      "bytes": 61,
+      "sha256": "3816eb774eabab7c7732a233f5107af7bd9fd61fbe7ef5c8c5603935b6918927"
+    },
+    "browser/browser20-probe-attempt6/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-probe-attempt6/debug-comparison.json": {
+      "bytes": 132,
+      "sha256": "e0931adcacbafe7ff3f0b1d032bbd13402a475ee67ed05373b75ef8e6d614a32"
+    },
+    "browser/browser20-probe-attempt6/expo.log": {
+      "bytes": 6321,
+      "sha256": "54c1a67e029d478ff2f7932bc3a3e57322d74ad5108061baa988e38ad37b74c9"
+    },
+    "browser/browser20-probe-attempt6/network.json": {
+      "bytes": 9387,
+      "sha256": "161ca1b3c1d18edb42bd685389e95caf936aee9a2a04071642e063b7da0e672c"
+    },
+    "browser/browser20-probe-attempt6/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt6/source-lifecycle-FAILURE.json": {
+      "bytes": 740,
+      "sha256": "d687ad25833c3fdd2eab6ba3b758e4e26bd611e67afb6ed3f260a11d211995a1"
+    },
+    "browser/browser20-probe-attempt6/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt6/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-probe-attempt6/steps.json": {
+      "bytes": 488,
+      "sha256": "e3ff94603059929a333da3e7370a29b2392b6762766a2896aa582aca1025f655"
+    },
+    "browser/browser20-probe-attempt6/trace.json": {
+      "bytes": 37889,
+      "sha256": "65df6a469d1a065ef047b302e3119f0990dd289c65a2c53c1763008121ce41ce"
+    },
+    "browser/browser20-probe-attempt7/ERROR.json": {
+      "bytes": 64,
+      "sha256": "340eeb54fb821b29c2abf0b41bcd12e6203cd53ac9ec6993a6173c9bf94c3071"
+    },
+    "browser/browser20-probe-attempt7/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-probe-attempt7/debug-comparison.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "browser/browser20-probe-attempt7/expo.log": {
+      "bytes": 6318,
+      "sha256": "0f1eb34716c5b5298ed46ea9b2846581c5fa19c508ffa8435e1b8ba5930dceca"
+    },
+    "browser/browser20-probe-attempt7/network.json": {
+      "bytes": 9387,
+      "sha256": "ec31a12410ab34481840c61a10cb645f50a62f82010650e07ad7e83e0463cff0"
+    },
+    "browser/browser20-probe-attempt7/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt7/source-lifecycle-FAILURE.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt7/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "1ae9e5906ee3c214e79408b78a8fc23b96b3ee93a0c857af60fdb55b43adcb1e"
+    },
+    "browser/browser20-probe-attempt7/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt7/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-probe-attempt7/steps.json": {
+      "bytes": 604,
+      "sha256": "c9462e99241390747ea8256065608f4fbfdaadd056771393f1b2a3d55f785cec"
+    },
+    "browser/browser20-probe-attempt7/trace.json": {
+      "bytes": 38309,
+      "sha256": "981d1b1ab9739220ec78ba4ae4665379fffed991b03fc859bc16ed8a4fcf1267"
+    },
+    "browser/browser20-probe-attempt8/ERROR.json": {
+      "bytes": 64,
+      "sha256": "340eeb54fb821b29c2abf0b41bcd12e6203cd53ac9ec6993a6173c9bf94c3071"
+    },
+    "browser/browser20-probe-attempt8/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-probe-attempt8/debug-comparison.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "browser/browser20-probe-attempt8/debug-query.json": {
+      "bytes": 99,
+      "sha256": "b6557fc758814116d26c4137b286bde01d8ff466147eafaead810228bd0d77d6"
+    },
+    "browser/browser20-probe-attempt8/expo.log": {
+      "bytes": 6322,
+      "sha256": "c2bf05e519b9fd44ab6669fa33540b270f6906d6985f50a5f329eac9fec5fedd"
+    },
+    "browser/browser20-probe-attempt8/network.json": {
+      "bytes": 9695,
+      "sha256": "b70c273fcce941cef791b370d65ce744a6f7b91d0b67e8ae85ab026f8fc2dd84"
+    },
+    "browser/browser20-probe-attempt8/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt8/source-lifecycle-FAILURE.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt8/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "1ae9e5906ee3c214e79408b78a8fc23b96b3ee93a0c857af60fdb55b43adcb1e"
+    },
+    "browser/browser20-probe-attempt8/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-probe-attempt8/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-probe-attempt8/steps.json": {
+      "bytes": 604,
+      "sha256": "0378698da9f768b480a25e3a8eaad31e522e5de5987cbb12909f893dcc8ca9b4"
+    },
+    "browser/browser20-probe-attempt8/trace.json": {
+      "bytes": 42363,
+      "sha256": "1f12fb76d82e440b8ee4ffc2c11b0fae7e7ce772a23185f393a5d10e5d0777f0"
+    },
+    "browser/browser20-ref-probe17/console.json": {
+      "bytes": 6343,
+      "sha256": "29b3f23b2e5e1bd8e08f9a2e65ba9a44b8c08b886609ea8e3b0653035e921f94"
+    },
+    "browser/browser20-ref-probe17/expo.log": {
+      "bytes": 9745,
+      "sha256": "fa2d0a1a56b9b0f8f629f0c26904e48273596a523c7db21f6d27e4a83c125992"
+    },
+    "browser/browser20-ref-probe17/navigation-lifetime.json": {
+      "bytes": 184,
+      "sha256": "6363809bc108ffbb327344fbe59cf164d0d6f0ce93f4c42947100cf4dc30356d"
+    },
+    "browser/browser20-ref-probe17/network.json": {
+      "bytes": 18285,
+      "sha256": "9576f87969fbdce142d84fa32f6f04cb7e647f1973cbbea40f1d2a2737ca1dca"
+    },
+    "browser/browser20-ref-probe17/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "1ae9e5906ee3c214e79408b78a8fc23b96b3ee93a0c857af60fdb55b43adcb1e"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-navigation-blur.json": {
+      "bytes": 5908,
+      "sha256": "3e86683698d7fa56cec891ef7cc59101453d607f3c3614d91e195be40249b90d"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-navigation-return-old-picker-retired.json": {
+      "bytes": 7296,
+      "sha256": "c0042f813c279e314a56b86ab630eb465da85f85a99d3cbaf3a1745977ee8d5e"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-owner-a-b-a-old-choice-retired.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-same-owner-regrant-old-choice-retired.json": {
+      "bytes": 6261,
+      "sha256": "7fdc2eb8bbf460ccbe6481a58c594bf3caacc7ccee646c606d4a34e316df6388"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1618,
+      "sha256": "b205ae740c1e3cade219d32c06bb82306c7fccb838aceea90f338cb54fcbcad4"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1800,
+      "sha256": "32cd9b0b12b72001d990ad882b9f3c0341c70ce2db805c1070b5324c7a8dbbf4"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "20aac94b39a2c1100e692fc8c0f881510e4e99889b5bba6677ff1cba0f0dcb76"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "35ad106ca34787647a2a039a80aab0f8949e78222212325a27e6afd637f60c3e"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1599,
+      "sha256": "f4693e99b6763a120187eac57f9963f8a53c052293b888f3327dcb517a63b3f3"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1600,
+      "sha256": "9517e053bfffc2c4902db108761e24eba5194e3775c60175c9354666ee1f646b"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1601,
+      "sha256": "a9156d4a49667952400d85680b0e891022b95ebde8b5a602823e3b6ea0bdd0f5"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6962,
+      "sha256": "45e0b6eeceeedafb3ecb42cad273eb0a6aa2e3696dfbf9c2f528e6b0983ede5c"
+    },
+    "browser/browser20-ref-probe17/source-lifecycle-withdrawn-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-ref-probe17/source-probes.json": {
+      "bytes": 394,
+      "sha256": "7ed0dee47df3cca0b8d23ce8d5bfc6d6ce90bf1afd8f39ec04377a96fe5b59dc"
+    },
+    "browser/browser20-ref-probe17/steps.json": {
+      "bytes": 1624,
+      "sha256": "2a17b20b14a13c3a72af2b1372d2d3dc70708008a775c6cffb2c29e10fc1c472"
+    },
+    "browser/browser20-ref-probe17/trace.json": {
+      "bytes": 64586,
+      "sha256": "b18ba752e35b5311f1c60828ba2d6da1048f1a071cce4191c9c08e2fd406bfb8"
+    },
+    "browser/browser20-source-probe16/ERROR.json": {
+      "bytes": 134,
+      "sha256": "52e79d98076f674d362108e0b7825cf93aac834530f452f027250b25729ee9a2"
+    },
+    "browser/browser20-source-probe16/console.json": {
+      "bytes": 3765,
+      "sha256": "66463fda1ca416fd1c9494dc3d15d23d3eff05ca263b89276cc57a3c124d0c5d"
+    },
+    "browser/browser20-source-probe16/debug-comparison.json": {
+      "bytes": 372,
+      "sha256": "62d82931ee162bef077d3d845994249820fd5bbec403e04746d6fcea1cdf5b43"
+    },
+    "browser/browser20-source-probe16/debug-query.json": {
+      "bytes": 99,
+      "sha256": "b6557fc758814116d26c4137b286bde01d8ff466147eafaead810228bd0d77d6"
+    },
+    "browser/browser20-source-probe16/expo.log": {
+      "bytes": 6149,
+      "sha256": "95da9542b1e1140fb02fd0bbdd4506a9cea7f8fd09b2dcea4e2a43f0fc736ff5"
+    },
+    "browser/browser20-source-probe16/navigation-lifetime.json": {
+      "bytes": 184,
+      "sha256": "6363809bc108ffbb327344fbe59cf164d0d6f0ce93f4c42947100cf4dc30356d"
+    },
+    "browser/browser20-source-probe16/network.json": {
+      "bytes": 9493,
+      "sha256": "97ba0c5374a9b8ee8702ad959228acd88553e6b9191d9724231c914e700c17aa"
+    },
+    "browser/browser20-source-probe16/setup-storage-unavailable.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-FAILURE.json": {
+      "bytes": 7296,
+      "sha256": "b97ce7a3d2b4810b2c988e896db079f898b2f019a593cb11ba7b1efcad8e953a"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-deleted-record-and-old-picker-retired.json": {
+      "bytes": 1541,
+      "sha256": "1ae9e5906ee3c214e79408b78a8fc23b96b3ee93a0c857af60fdb55b43adcb1e"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-invalidated-retained-source-hidden.json": {
+      "bytes": 513,
+      "sha256": "cf3a1912f0a233fa6b8d6e9c118c782bed3113b280029a3a7ade140dafca6868"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-navigation-blur.json": {
+      "bytes": 5908,
+      "sha256": "3e86683698d7fa56cec891ef7cc59101453d607f3c3614d91e195be40249b90d"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-navigation-return-old-picker-retired.json": {
+      "bytes": 7296,
+      "sha256": "c0042f813c279e314a56b86ab630eb465da85f85a99d3cbaf3a1745977ee8d5e"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-old-choice-retired-after-refresh.json": {
+      "bytes": 1548,
+      "sha256": "03f42e31a8402119678a3eb752dbb018286e1c208b79844d4c43e022db32e889"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-synthetic-bytes-missing.json": {
+      "bytes": 1618,
+      "sha256": "b205ae740c1e3cade219d32c06bb82306c7fccb838aceea90f338cb54fcbcad4"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-synthetic-bytes-unreadable.json": {
+      "bytes": 1800,
+      "sha256": "32cd9b0b12b72001d990ad882b9f3c0341c70ce2db805c1070b5324c7a8dbbf4"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-synthetic-count-0.json": {
+      "bytes": 605,
+      "sha256": "20aac94b39a2c1100e692fc8c0f881510e4e99889b5bba6677ff1cba0f0dcb76"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-synthetic-count-1.json": {
+      "bytes": 790,
+      "sha256": "35ad106ca34787647a2a039a80aab0f8949e78222212325a27e6afd637f60c3e"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-synthetic-count-2.json": {
+      "bytes": 1599,
+      "sha256": "f4693e99b6763a120187eac57f9963f8a53c052293b888f3327dcb517a63b3f3"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-synthetic-count-20.json": {
+      "bytes": 1600,
+      "sha256": "9517e053bfffc2c4902db108761e24eba5194e3775c60175c9354666ee1f646b"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-twenty-same-day-alternate.json": {
+      "bytes": 1601,
+      "sha256": "a9156d4a49667952400d85680b0e891022b95ebde8b5a602823e3b6ea0bdd0f5"
+    },
+    "browser/browser20-source-probe16/source-lifecycle-twenty-same-day-picker.json": {
+      "bytes": 6962,
+      "sha256": "45e0b6eeceeedafb3ecb42cad273eb0a6aa2e3696dfbf9c2f528e6b0983ede5c"
+    },
+    "browser/browser20-source-probe16/steps.json": {
+      "bytes": 1228,
+      "sha256": "20ec756b9f1a172534e37fcdbc15d46011003b857c2d0bb66acefcd820ddf595"
+    },
+    "browser/browser20-source-probe16/trace.json": {
+      "bytes": 39599,
+      "sha256": "c492fe462844b2d7b0445717afac92103fd8511a7875cad2c7f7da5b1127f22a"
+    },
+    "exports/android/assetmap.json": {
+      "bytes": 11532,
+      "sha256": "ac1e4cda550bf0a4b7a657e1b3038bdc3eb5f37f112f4997620eccfd6a5ff96d"
+    },
+    "exports/android/metadata.json": {
+      "bytes": 1877,
+      "sha256": "9546d96e1b152f97c28c9bf2dc1c5ce95d4760fc95ae901d01d5a29eb0e80322"
+    },
+    "exports/ios/assetmap.json": {
+      "bytes": 9783,
+      "sha256": "c1f5163df8c509b2cce2c063b9c77ee264b458280a5f5adf5ccb60ad410f9750"
+    },
+    "exports/ios/metadata.json": {
+      "bytes": 1613,
+      "sha256": "defdf5f8bf493bc96efd24bf54cf71fef2bb57763550497cd403cc06ba864366"
+    },
+    "inputs/packet/00_READ_FIRST.md": {
+      "bytes": 1106,
+      "sha256": "db6e56533d3b2495444ceecef12140d8f6c4946a3880427ad1731faa1f7debc2"
+    },
+    "inputs/packet/01_SOURCE_PR23_AND_CI.md": {
+      "bytes": 1854,
+      "sha256": "9fb9fd9c8b6ab5667195a08faba81c1eb0e22e4c6621a49fe848cc97b3a2c711"
+    },
+    "inputs/packet/02_F09_IMPLEMENTATION_CONTEXT.md": {
+      "bytes": 2506,
+      "sha256": "fcaa0feecb51e5a3bdad614fba522c43fc7977d417f9deb4ad1859d5006b585e"
+    },
+    "inputs/packet/03_PROTECTED_SCOPE_GATES.md": {
+      "bytes": 1712,
+      "sha256": "565ec383c7e72ae1c91385535927b7156a91a410d7915e6e3786314bdae46c04"
+    },
+    "inputs/packet/04_EVIDENCE_AND_RETURNS.md": {
+      "bytes": 1385,
+      "sha256": "6b1471e68dfb1db207b27975dc4a84f2b2ec928fa1461b06fbc9a78e003e422b"
+    },
+    "inputs/packet/EXACT_PROMPT.md": {
+      "bytes": 10107,
+      "sha256": "06728e1f8744fff14b2a5d21243cc34a95d1a8003bb898944b6adb32b79c8c63"
+    },
+    "inputs/packet/PROMPT_TEMPLATE.md": {
+      "bytes": 10107,
+      "sha256": "06728e1f8744fff14b2a5d21243cc34a95d1a8003bb898944b6adb32b79c8c63"
+    },
+    "inputs/packet/TASK_DIRECTIVE.md": {
+      "bytes": 10107,
+      "sha256": "06728e1f8744fff14b2a5d21243cc34a95d1a8003bb898944b6adb32b79c8c63"
+    },
+    "inputs/packet/manifest.json": {
+      "bytes": 1484,
+      "sha256": "41b0c20e2a74c033f68f758cc96ad8be6e5b72daa51917652c5b9cb206c53cfd"
+    },
+    "inputs/packet/verify_packet.py": {
+      "bytes": 3213,
+      "sha256": "16df45e7605a9f3b4710366e1ab033d807737d212b4d27c062cd158163281dc1"
+    },
+    "proof/baseline20-route.log": {
+      "bytes": 1372,
+      "sha256": "ec804ca9e9ff9edac7f942ec6778004efd450e7358a8495caa2f18cb66515327"
+    },
+    "proof/browser-attempts20.json": {
+      "bytes": 61210,
+      "sha256": "7fb78d078d0738061646b29cad25a7bfbafb01522cf24d54c235ffc3d0f1941e"
+    },
+    "proof/browser-custody.json": {
+      "bytes": 903,
+      "sha256": "a441a805cb676bd235d02ddc648611e7e1bc72a8e3bb258efd2c2204bb50ccb6"
+    },
+    "proof/docker20-availability.log": {
+      "bytes": 227,
+      "sha256": "b091bf6843123dd14028fe412dcdd18b85fabd91bbf9c94a763121d11c9a76e1"
+    },
+    "proof/export-android-inventory.json": {
+      "bytes": 5076,
+      "sha256": "7228f0640781ab589c94f860b7cf05d3e7fabbed116d6caecb66cb7de0aee261"
+    },
+    "proof/export-ios-inventory.json": {
+      "bytes": 4424,
+      "sha256": "5b5bf75e269f95ee6b73e7b7ddfa567d427cac6ac260fbfc919689e803bfbcfd"
+    },
+    "proof/final-mobile-test-names.json": {
+      "bytes": 1289149,
+      "sha256": "370310e669db7804efeed8d84a434ee0f1ff313c7514eea307b38a1625c91171"
+    },
+    "proof/frozen-source20.json": {
+      "bytes": 357,
+      "sha256": "96262b0d04cd75de6d08f8e9caa44da0d49b24292c4aa510ce9ec95be9f01e5e"
+    },
+    "proof/historical20-summary.json": {
+      "bytes": 14486,
+      "sha256": "79bda051ca389bf0e79ee8b9bd7553bcda997410be79da0316620409cf0fabd9"
+    },
+    "proof/historical20.py": {
+      "bytes": 3612,
+      "sha256": "fe2bfcd39d5f9b4b710e7a95b05bcc59921e62a199e04aaf73eadbed213d6a1d"
+    },
+    "proof/independent-clone.log": {
+      "bytes": 34,
+      "sha256": "5cc40a20d2407fba3dc0f6bb34312a4e4e23c152418ae03139c57483ab17b824"
+    },
+    "proof/independent-npm-ci.log": {
+      "bytes": 725,
+      "sha256": "d89c89a41cac25191fe6ee4f27ea11eb4a31b83476b2e3af91b08bde300bd9c6"
+    },
+    "proof/input-verification.json": {
+      "bytes": 777,
+      "sha256": "c969184490a9eba3166a789dc5829cec97db65dae54bb24f7c8a89278b6d2ac5"
+    },
+    "proof/live-pr-before-tail20.json": {
+      "bytes": 1457,
+      "sha256": "69d06dbafa589f86ec632ab510ab9bcfdcef78a0ae98824b0a7d621dfdcb6661"
+    },
+    "proof/mutation20-summary-initial.json": {
+      "bytes": 2473,
+      "sha256": "c180da9765984b573ae1779eabd555d648bd2892013cc9d04600ca1565fa6e99"
+    },
+    "proof/mutation20-summary.json": {
+      "bytes": 2474,
+      "sha256": "9edd0be35bef7d45b7f40556eff9ca28d8d84bceee510efaaf06e790a813edbb"
+    },
+    "proof/mutations20.py": {
+      "bytes": 2207,
+      "sha256": "1d6bac4bea8f5cceb7dd8c8744264aad6813c856755eacb31b97303bc04567bb"
+    },
+    "proof/npm-ci.log": {
+      "bytes": 725,
+      "sha256": "cb09100b9cde6bea3d860e950291ed21ff743280432d58e177ca97d7c6343a21"
+    },
+    "proof/original-151-successor-attempt.json": {
+      "bytes": 665,
+      "sha256": "7f2b3d6dcbc04ffaae7cb3166112e43cd9ad5075787c156f9d159924e2474ba3"
+    },
+    "proof/original-mobile-test-names.json": {
+      "bytes": 1269913,
+      "sha256": "cfa45400895c7c67cdc4bf57617fe2cf63906a46f51fc65fa594253e9ec07e42"
+    },
+    "proof/photo04-preserved20.log": {
+      "bytes": 2807,
+      "sha256": "fc5a61eb185c010d52eb7cce5086db52eb0fbc9c159918c247e789259161f492"
+    },
+    "proof/root-test-source-inventory.json": {
+      "bytes": 1977,
+      "sha256": "bd1cbb3fab05c92a6f9565bf4789d6c36fc01c1c8b828a8eb993487dd377d660"
+    },
+    "proof/run20.py": {
+      "bytes": 1116,
+      "sha256": "80f5c7f6aaec063eca7cb06630be018fc1c6858e2768c7c8818ff18fefab20a4"
+    },
+    "proof/source-inventory.json": {
+      "bytes": 19000,
+      "sha256": "5335702f1b88084761e7b88ddb10403b7c7b52aaf8d9c6cbe477ec04a06c4723"
+    },
+    "proof/test-identity20.json": {
+      "bytes": 6446,
+      "sha256": "b82eddac503336b3d24f66645b8e2f92bf806171ebebf973c7889439efec68e7"
+    },
+    "receipts/db-canonical-verify.json": {
+      "bytes": 473,
+      "sha256": "d2b0224cb3404b1bb616541e9334dc6b4695157f7949de3c300da0ee5dc086cb"
+    },
+    "receipts/db-canonical-verify.log": {
+      "bytes": 2588,
+      "sha256": "2b25e47db92d8c12dabe0a583eef7bad6700004ebd343288b6a801469ba925ef"
+    },
+    "receipts/db-contract.json": {
+      "bytes": 469,
+      "sha256": "d9720c0c574c397f25f3cdd4c38b5dfc42b93bc417708ab1ef3abbf7b3e66a93"
+    },
+    "receipts/db-contract.log": {
+      "bytes": 30030,
+      "sha256": "7d682c81739cb935e95ebe1141956519264aa72d969a756e204a9aa5b677f1c3"
+    },
+    "receipts/expo-android-export-final.json": {
+      "bytes": 640,
+      "sha256": "a46bc7cf15dbf833f80a1ded15d705d793deb703bf036463624713f28584af11"
+    },
+    "receipts/expo-android-export-final.log": {
+      "bytes": 3671,
+      "sha256": "e2b7faa2f826c4df1355918963af2a2c48d1b2acb969dd464acac9426b4fc1a8"
+    },
+    "receipts/expo-ios-export-final.json": {
+      "bytes": 628,
+      "sha256": "e58188470606a38fb5f743f2287c7225d614b57b1261e61e21dd0c14974ef59a"
+    },
+    "receipts/expo-ios-export-final.log": {
+      "bytes": 3417,
+      "sha256": "c75cfbbfcbe8e95e76c5eccef0367348f95e6c1650d0a3798019dd27001f1fda"
+    },
+    "receipts/focused-final.json": {
+      "bytes": 874,
+      "sha256": "8c9b7e15d093bb256b90c08320de12795bf975600a3fb8abb7f6ba9d4499b33a"
+    },
+    "receipts/focused-final.log": {
+      "bytes": 264,
+      "sha256": "d6bcb5c99ff6181a5b4fcb4c53f30fb4445210712e7edd652f36bb8c3135215d"
+    },
+    "receipts/focused-frozen-candidate.json": {
+      "bytes": 885,
+      "sha256": "401ce57f2c6e59f7ac7246b48afa2a58ca158dba3c068c768e58ec29d8ede691"
+    },
+    "receipts/focused-frozen-candidate.log": {
+      "bytes": 264,
+      "sha256": "b2a8720b72df6efd5fa55f5faa2373b3f846e3db34cb7c2ea223ce0c70afb4b6"
+    },
+    "receipts/historical-release10-quality_projection10.test.json": {
+      "bytes": 937,
+      "sha256": "69ee106c2828f016846336f14da754e0543273af07182110c21372b6c18164c4"
+    },
+    "receipts/historical-release10-quality_projection10.test.log": {
+      "bytes": 3569,
+      "sha256": "1ba70f5aea7bf73b03fa7939739bacb59b87fa434ab60a935183f007b4b07230"
+    },
+    "receipts/historical-release10-source_consumer10.test.json": {
+      "bytes": 931,
+      "sha256": "1f3211ee5c02b9dca08b7eaf841742158f2552e39d8f1b844da18dc447451f2b"
+    },
+    "receipts/historical-release10-source_consumer10.test.log": {
+      "bytes": 15232,
+      "sha256": "e46fd7b173dc4d399df4eed1a4e8a82d8d0e22393fd107551d9d7756e5c76e50"
+    },
+    "receipts/historical-release11-dependency_guard11.test.json": {
+      "bytes": 932,
+      "sha256": "c0e3556c46a5769286819923c04f949a68800949adb0478f95f8c5230d2838fc"
+    },
+    "receipts/historical-release11-dependency_guard11.test.log": {
+      "bytes": 874,
+      "sha256": "da3a23b0afb1734cc1f3fb37f1f0a1c84b7bf91c7a11d364cae8abaa05645ac2"
+    },
+    "receipts/historical-release11-source_consumer11.test.json": {
+      "bytes": 931,
+      "sha256": "82301ccbf1dc7e95b1e6dc387f59c6d60807a9970d056119e7adc79a90e5b3a3"
+    },
+    "receipts/historical-release11-source_consumer11.test.log": {
+      "bytes": 8690,
+      "sha256": "5850a0ec5ab98a5c112ebc0b4508c42ad112f0181423088d4116d132e637dc45"
+    },
+    "receipts/historical-release12-dependency_guard12.test.json": {
+      "bytes": 932,
+      "sha256": "58b33d109ea0b6e6e04688be90b39eb145c4b3f3147fccd090f74ca0bb3df323"
+    },
+    "receipts/historical-release12-dependency_guard12.test.log": {
+      "bytes": 7216,
+      "sha256": "46ac52a17b456bc06f1db9c73d5876d89d603cfd8900d6cc9751530e3e488082"
+    },
+    "receipts/historical-release12-source_consumer12.test.json": {
+      "bytes": 932,
+      "sha256": "8f3ae2d4fe6252eed8a3ffbf0beb525ac72945922ac9766f5a2f83f9282af7d1"
+    },
+    "receipts/historical-release12-source_consumer12.test.log": {
+      "bytes": 8453,
+      "sha256": "0126cd99e2e796bf15db507818d870f49de587e6d627d4f373b2c51493bd4950"
+    },
+    "receipts/historical-release13-dependency_guard13.test.json": {
+      "bytes": 933,
+      "sha256": "863675ec333119e178f8f8cee48e127f69be5318e06ba651422b1e5f72ef67cf"
+    },
+    "receipts/historical-release13-dependency_guard13.test.log": {
+      "bytes": 8978,
+      "sha256": "5f9dc5616fcf2e082aa6d7e2e89ee8c53895f46261f06b22c321a4b528bbd57f"
+    },
+    "receipts/historical-release13-source_consumer13.test.json": {
+      "bytes": 932,
+      "sha256": "23540d33216c7702496d3178fcac49e3c93c244f9cbe343fd1c13c0689340d95"
+    },
+    "receipts/historical-release13-source_consumer13.test.log": {
+      "bytes": 10990,
+      "sha256": "e2f5a4e3586cc4745018175ceeff3ffeeaedba3d4626ef8faf87496f5b9befdc"
+    },
+    "receipts/historical-release14-source_consumer14.test.json": {
+      "bytes": 932,
+      "sha256": "31d54158a55a365d139484b68c0c7319664cda5b29c7416a96f6d8dbf24a1ea7"
+    },
+    "receipts/historical-release14-source_consumer14.test.log": {
+      "bytes": 11634,
+      "sha256": "0b2677da2db9f0486e6b15e93aff95d4c00f2877bd3681490694eb45db572937"
+    },
+    "receipts/historical-release15-source_consumer15.test.json": {
+      "bytes": 932,
+      "sha256": "40e1694e0990745a34ab7ab5834cad72d43de7363cc61e9f3381ff4544e46011"
+    },
+    "receipts/historical-release15-source_consumer15.test.log": {
+      "bytes": 16517,
+      "sha256": "f4f0ddbbe2bcef95a2f6d3d365f359102315212f013b81316db136fa279d38eb"
+    },
+    "receipts/historical-release16-source_consumer16.test.json": {
+      "bytes": 932,
+      "sha256": "86405f1be247c51eb272a684703134f9dac5233257fb58f719165fca02bdba3e"
+    },
+    "receipts/historical-release16-source_consumer16.test.log": {
+      "bytes": 22657,
+      "sha256": "002bd8c197b6660b2094b820df304c71e54eab4f05e3b8f843c26920810ed08d"
+    },
+    "receipts/historical-release17-source_consumer17.test.json": {
+      "bytes": 932,
+      "sha256": "7ff1d2d8b9dd6121bd32369ef87343463cca8c391c4d9b1af785662c7df084d2"
+    },
+    "receipts/historical-release17-source_consumer17.test.log": {
+      "bytes": 23966,
+      "sha256": "0a61d0ea181a6eb0cb8d1ce16b99524806ae5807eeb75b20015096e234dd74d2"
+    },
+    "receipts/historical-release18-source_consumer18.test.json": {
+      "bytes": 932,
+      "sha256": "5aea38f1de168c8743d6a9f85ca0816ac7497b71a9647ed581cb166e14a90b98"
+    },
+    "receipts/historical-release18-source_consumer18.test.log": {
+      "bytes": 26837,
+      "sha256": "9138495ea13c1bcd10af3b6ad1a5dba8423355a57093502d5ba39c43c5ddbf1f"
+    },
+    "receipts/historical-release8-test_contract.json": {
+      "bytes": 911,
+      "sha256": "3697f851629b498d3f88996a5d72cbcfc944d50e0f5cb502824f049f61457bc2"
+    },
+    "receipts/historical-release8-test_contract.log": {
+      "bytes": 79478,
+      "sha256": "df26cf87cdc19a7e9689e6a745ffe349315e4085125f1dc8dfc611de44440976"
+    },
+    "receipts/historical-release9-source_consumer09.test.json": {
+      "bytes": 927,
+      "sha256": "15f9d851f381636a259175705ca340903226cbcddef4d09df66173d43c83b754"
+    },
+    "receipts/historical-release9-source_consumer09.test.log": {
+      "bytes": 6257,
+      "sha256": "ce797f4157d9e2866d84c50e9a01212ad7586cc1da439a19d673d1a2223347c7"
+    },
+    "receipts/inherited-release19.json": {
+      "bytes": 482,
+      "sha256": "d2f58eb828528fe0694ba8f52001561f9d0e86b17d7feeb5233c10c5049c9723"
+    },
+    "receipts/inherited-release19.log": {
+      "bytes": 24173,
+      "sha256": "099d5cb10223391b6d3b2d8f4cd6af34aa93f4f7f7504103209cca22100c440e"
+    },
+    "receipts/initial-mutation-duplicate-policy.json": {
+      "bytes": 786,
+      "sha256": "e677695299dd24c826fb1532c8fe6984f105ca056b261005c43857ef184a8b64"
+    },
+    "receipts/initial-mutation-duplicate-policy.log": {
+      "bytes": 1350,
+      "sha256": "ea379f3f36443487e98d4895ad285c0fa66b2e78769f58b01f87ab0a1e4f48ad"
+    },
+    "receipts/initial-mutation-retired-picker.json": {
+      "bytes": 778,
+      "sha256": "84fbe6ef3be4189b80ef30cf56fa89757a2decc552b150ba83434ddd518f3898"
+    },
+    "receipts/initial-mutation-retired-picker.log": {
+      "bytes": 1406,
+      "sha256": "f3b444eb7c356361a336da81b01f86f296f423718666d5ab9007c4945363d478"
+    },
+    "receipts/initial-mutation-stale-fallback.json": {
+      "bytes": 783,
+      "sha256": "ec0d3737559b5f8db92255575bde34db63dce6d47f1b34c6c5c6a0b1ae3599f9"
+    },
+    "receipts/initial-mutation-stale-fallback.log": {
+      "bytes": 2320,
+      "sha256": "c708d63d29e504c84fe2f55c27a84e39cf3ad2e171372adcac024759a1ece94b"
+    },
+    "receipts/ios-source-contract-final.json": {
+      "bytes": 482,
+      "sha256": "eaf1fddd135927a1bb08cb44732639a5f35c6559094467d0842eb144dcf05b9f"
+    },
+    "receipts/ios-source-contract-final.log": {
+      "bytes": 28084,
+      "sha256": "664bca6ebb9dfd07f644d71db8e20c43ad5b0a3383ed5be621f4334af70a8856"
+    },
+    "receipts/ios-source-contract.json": {
+      "bytes": 473,
+      "sha256": "9269067651f9b175adcf11f2afa0857cbbf455edf68cd1abde1de4cb452d57da"
+    },
+    "receipts/ios-source-contract.log": {
+      "bytes": 19833,
+      "sha256": "c89f7fb5457e0c5fa8bf85506c21f33aab2bfc4b372d438d981f3217b899fd23"
+    },
+    "receipts/ios-source-privacy.json": {
+      "bytes": 487,
+      "sha256": "78b368bbe027d071df1955e8b048280fccdc9d60e98fae566682201b03f65584"
+    },
+    "receipts/ios-source-privacy.log": {
+      "bytes": 288,
+      "sha256": "d53d03dd0af82dd70c2ff6aafb4bca9e5bb5936d518cf86b577fe73235a8d46c"
+    },
+    "receipts/mutation-duplicate-policy.json": {
+      "bytes": 786,
+      "sha256": "186e7ff03761c1d661332af37f939e80dbc8f471838c6b674eef111f2459df2f"
+    },
+    "receipts/mutation-duplicate-policy.log": {
+      "bytes": 1350,
+      "sha256": "8662260021760107ad6e3db90bb12fdb75342a3478e5d0484ffeb943f2465bbe"
+    },
+    "receipts/mutation-retired-picker.json": {
+      "bytes": 778,
+      "sha256": "c29113c0de17067da78405d9f28d25a186462f35a436e5b9db8016d10edefbf8"
+    },
+    "receipts/mutation-retired-picker.log": {
+      "bytes": 1406,
+      "sha256": "d7c782281a00221f113281fde1d853af96dbc21428af183e12024e6c29c276f5"
+    },
+    "receipts/mutation-stale-fallback.json": {
+      "bytes": 784,
+      "sha256": "d1f977253efbced6b49ecc28ada63f45bb53da6b0bc215b1aa10c298418d778a"
+    },
+    "receipts/mutation-stale-fallback.log": {
+      "bytes": 2320,
+      "sha256": "b6b84b5e5860669ff2c5efbea46c7bc9275cf0047bb3b30f455d779b06186012"
+    },
+    "receipts/original-151-final-source.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "receipts/phase4-frozen-source-check.json": {
+      "bytes": 482,
+      "sha256": "cb6aa8f50726052a06795eae1a37f1a21c967600b1b0f1404ac28d80eea15ed1"
+    },
+    "receipts/phase4-frozen-source-check.log": {
+      "bytes": 68,
+      "sha256": "8e8f1106bbfd07743042ccae0183658a042698a6aba7fcbc9ca7a1c79750bb4b"
+    },
+    "receipts/phase4-generate-frozen.json": {
+      "bytes": 464,
+      "sha256": "24e38e64399e82e254b5e800b1f98843479dcefe38ed0e548ff5fb646d8638dd"
+    },
+    "receipts/phase4-generate-frozen.log": {
+      "bytes": 130,
+      "sha256": "a0e84a3b4164ca4a729c99b57a91ebcbcab0ce89742fd00a04c6b333776284ad"
+    },
+    "receipts/release20-cli-exploratory.json": {
+      "bytes": 462,
+      "sha256": "8fe745b60cb0b07a24cb15be676adabf3985a547bb49c7b9ed2f5917323b1a4c"
+    },
+    "receipts/release20-cli-exploratory.log": {
+      "bytes": 600,
+      "sha256": "9a5f8a87ab495b8246d36f97d339576d2a3694397c85b4c5be8e0c535778e6b2"
+    },
+    "receipts/release20-cli-frozen-source.json": {
+      "bytes": 464,
+      "sha256": "0660abaa14eabf7e294c60c61e6907ceb29e36f497bb81c0fdfba77b667ab6e1"
+    },
+    "receipts/release20-cli-frozen-source.log": {
+      "bytes": 600,
+      "sha256": "9a5f8a87ab495b8246d36f97d339576d2a3694397c85b4c5be8e0c535778e6b2"
+    },
+    "receipts/release20-source-consumer-final.json": {
+      "bytes": 486,
+      "sha256": "5f30ac0d36accb0afa032adc0fc4f44befcf5f79a4742b2af6b0d20ce454edff"
+    },
+    "receipts/release20-source-consumer-final.log": {
+      "bytes": 30502,
+      "sha256": "c03fa6d05a705a1614a52b5b5ae98b72c4a12f82fdd5e8be143d23338496706e"
+    },
+    "receipts/root-lint-final.json": {
+      "bytes": 464,
+      "sha256": "d537e58607128e7ec337de262d26bdb8fb676d2d30bd3b45f620c25b5fd39b3f"
+    },
+    "receipts/root-lint-final.log": {
+      "bytes": 1181,
+      "sha256": "9fc80522216148529632677cadb36afd7a3fd7b6cf4552d4b27b93fac0b273e2"
+    },
+    "receipts/root-lint.json": {
+      "bytes": 458,
+      "sha256": "da005b573951953234b019ecf8a4f0bdc5f4d632d4f86193ba8638b2b81fca6d"
+    },
+    "receipts/root-lint.log": {
+      "bytes": 1183,
+      "sha256": "acb6e367179062aac2733ba01d8972a79b9f141b5477766ea003858324c6fce5"
+    },
+    "receipts/root-test-clean.json": {
+      "bytes": 461,
+      "sha256": "d64a201d70f6f3e8a919aaf280a8460f0988bb9d5f8a497bbb8095000fff2b42"
+    },
+    "receipts/root-test-clean.log": {
+      "bytes": 418664,
+      "sha256": "dfab22a9a02271f224811597b1d17798bf7b65924e61669a6e997515766985f3"
+    },
+    "receipts/root-test-final.json": {
+      "bytes": 461,
+      "sha256": "d505a53cc4aad4094c9e9c06b49f4a572fe497eef848bf22945fd5422a6499c3"
+    },
+    "receipts/root-test-final.log": {
+      "bytes": 419963,
+      "sha256": "ec61112450af01c238651547735a3c648b783302ae706298a048c93fed49e1d8"
+    },
+    "receipts/root-typecheck-final.json": {
+      "bytes": 473,
+      "sha256": "77986bd5a1c0f1a49ce18fc94846aaeb2e55d565e266f2762f2bc886c0cfdc85"
+    },
+    "receipts/root-typecheck-final.log": {
+      "bytes": 1169,
+      "sha256": "f3a9f8eef2c38dc52e67a9a4e38704bc1997823842c913747f49c3a45d030e64"
+    },
+    "receipts/root-typecheck.json": {
+      "bytes": 467,
+      "sha256": "6988dadb1b8483f87c441258bd245f31d7251ddf489363e73e1ac2a7b4be630c"
+    },
+    "receipts/root-typecheck.log": {
+      "bytes": 1169,
+      "sha256": "6198025e30c66667593b36e2a2eb216a3bda516c807c7866f0c278446a7d35f7"
+    }
+  },
+  "producerSHA256": "b3882f954498008cd80fe57d50f75c358504bca99f5f97b7481239977af26d1e",
+  "release": "NO_GO",
+  "rootTestFailures": 7,
+  "schema": 1,
+  "source": {
+    "base": "9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4",
+    "baseTree": "961d24a7427667aab610939f3a4d088db0a90430",
+    "runtimeHead": "f2763113087e1b298ceb9b7d8ba79558c51e4495",
+    "runtimeTree": "c382dd7c0d351bc4440b077c0c49d2ec5a84d04a",
+    "sourceHead": "c6f41b30ccfb33eec190e9ce23db8d750390af8d",
+    "sourceTree": "d691e4a969ddfb0ca1fa9693693cbfa774fce5c4"
+  },
+  "status": "SOURCE_ONLY_CANDIDATE_PARTIAL_BLOCKED"
+}

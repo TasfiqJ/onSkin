@@ -1,10 +1,15 @@
-Campaign20 F09 manual photo comparison SOURCE_ONLY_CANDIDATE / IN_PROGRESS / PARTIAL_BLOCKED.
+Campaign20 F09 private manual photo comparison SOURCE_ONLY_CANDIDATE / PARTIAL_BLOCKED / NO_GO.
 Authority BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01.
-Authenticated input manifest 41b0c20e2a74c033f68f758cc96ad8be6e5b72daa51917652c5b9cb206c53cfd.
+Input manifest 41b0c20e2a74c033f68f758cc96ad8be6e5b72daa51917652c5b9cb206c53cfd.
+Draft PR24 https://github.com/TasfiqJ/onSkin/pull/24
 Branch stage/m1-f09-manual-photo-compare20; base stage/m1-onboarding-compatibility19.
 Immutable parent 9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4; tree 961d24a7427667aab610939f3a4d088db0a90430.
-Current scoped source adds distinct current-series pairing, retired picker closures, default side-by-side, readable dated controls and truthful image recovery. Independent Brain source review is required; no acceptance is granted.
-Initial clean-cache root identified seven incompatible populated-layout cases in protected progressEmptyLayout.c08b2.test.ts. That fixture omits Query/health authority and current source metadata; its repair is outside the finite grant and remains UNAPPLIED. No privacy gate, old test, dependency or workflow is weakened.
-Final frozen source, generated worklist, compact checkpoint, externally anchored manifest and exact final-head CI observations are pending. No pending check is represented as passed.
-G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 G1/G2/G3/G5 NOT_ACCEPTED. Native/iPhone/VoiceOver/provider/Apple/public release CLOSED.
-Full working non-Korean F01-F17/F19-F20, 12 consumer C and six professional P groups including F09, plus exactly independently validated J01 remain required. F18 and J02-J27 including J05 deferred. USD0; no main/prior-branch modification, merge, force push, paid action, private Security custody or self-acceptance.
+Frozen runtime f2763113087e1b298ceb9b7d8ba79558c51e4495; tree c382dd7c0d351bc4440b077c0c49d2ec5a84d04a.
+Frozen source after unchanged-producer worklist c6f41b30ccfb33eec190e9ce23db8d750390af8d; tree d691e4a969ddfb0ca1fa9693693cbfa774fce5c4.
+Checkpoint docs/brain/checkpoints/M1-02/F09-MANUAL-COMPARE-20/README.md
+External checkpoint manifest SHA256 5d3798162dc2bb4676791bcd8088cff6107a858a87d395d24601c94c4a6e44f1
+Verify: python -B docs/brain/checkpoints/M1-02/F09-MANUAL-COMPARE-20/verify20.py --expected-manifest-sha256 5d3798162dc2bb4676791bcd8088cff6107a858a87d395d24601c94c4a6e44f1 --git-root .
+Exactly one evidence-only descendant follows frozen source; verification derives the final HEAD/tree. Exact later final-head checks, CI, failures/skips and return custody are in the external FINAL_REPORT.md and verified return ZIP.
+Seven protected populated-layout fixture cases remain UNAPPLIED: apps/mobile/src/features/photos/progressEmptyLayout.c08b2.test.ts omits Query/health authority and current front-series metadata. No protected gate or old test was weakened for a green result. Independent Brain source acceptance is required.
+Synthetic Expo web, source tests and exports do not establish signed/native iPhone, VoiceOver, actual StoreKit, provider, clinical/legal, Apple or public release. G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 G1/G2/G3/G5 NOT_ACCEPTED.
+The entire working non-Korean F01-F17/F19-F20, 12 consumer C and six professional P groups including required F09, plus exactly independently validated J01 Visible Pores remain required. F18 and J02-J27 including J05 are deferred. USD0; no merge, prior-branch/main edit, force push, auto-merge, maintainer modification, private Security custody or self-acceptance.
