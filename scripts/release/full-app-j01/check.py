@@ -2378,7 +2378,7 @@ source_guard = source19_guard
 # Release20 successor. Inherited Release08-19 definitions above are immutable.
 RELEASE20_BASE = '9b3b1781ad65b10ae6b3ade7c1a87a03a64374e4'
 RELEASE20_TREE = '961d24a7427667aab610939f3a4d088db0a90430'
-RELEASE20_PR = None
+RELEASE20_PR = 24
 RELEASE20_AUTHORITY = 'BRAIN-M1X-F09-MANUAL-PHOTO-COMPARE20-CANDIDATE-01'
 RELEASE20_EXISTING = {'ONSKIN_BRAIN_HANDOFF.txt', 'apps/mobile/src/features/photos/CompareSlider.tsx', 'apps/mobile/src/features/photos/compareAccessibility.ts', 'apps/mobile/src/features/photos/timeline.test.ts', 'apps/mobile/src/app/(tabs)/progress.tsx', 'docs/USER_FLOW_TREE.md', 'docs/phase-4/generated/source-worklist.md', 'apps/mobile/src/features/photos/progressRoutes.test.ts', 'scripts/release/full-app-j01/check.py', 'apps/mobile/src/features/photos/progressImageDemand.test.ts', 'apps/mobile/src/features/photos/compareAccessibility.test.ts', 'docs/phase-4/generated/source-worklist.json', 'apps/mobile/src/features/photos/copy.ts', 'apps/mobile/src/features/photos/timeline.ts'}
 RELEASE20_NEW = {'apps/mobile/src/features/photos/manualCompare20.test.ts', 'scripts/m1/f09_manual_compare20_browser.mjs', 'apps/mobile/src/features/photos/manualCompare20.ts', 'apps/mobile/src/features/photos/manualCompare20Route.test.ts', 'scripts/release/full-app-j01/source_consumer20.test.py'}
