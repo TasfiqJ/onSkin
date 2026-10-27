@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import fs from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import test from 'node:test';
-import { installedInventory, lockInventory, npmCli, sanitizeAudit, strictJson } from './dependency.mjs';
+import { generatedToolCache, installedInventory, lockInventory, npmCli, sanitizeAudit, strictJson } from './dependency.mjs';
 
 const require = createRequire(import.meta.url);
 const forge = require('node-forge');
@@ -96,6 +97,34 @@ test('installed-source reconciliation refuses changed package identity and recor
   const bad = installedInventory(root, inventory);
   assert.equal(bad.state, 'INCOMPLETE');
   assert.equal(JSON.stringify(bad).includes(SENTINEL), false);
+});
+
+test('only exact Vite cache roots are fully hashed; cache modules, aliases and links refuse', t => {
+  const root = realpathSync(mkdtempSync(join(tmpdir(), 'security22-cache-')));
+  t.after(() => { assert.equal(realpathSync(root), root); assert.equal(dirname(root), realpathSync(tmpdir())); rmSync(root, { recursive: true, force: true }); });
+  mkdirSync(join(root, 'node_modules/.vite/deps'), { recursive: true });
+  mkdirSync(join(root, 'node_modules/.vite-temp'), { recursive: true });
+  mkdirSync(join(root, 'node_modules/braces'), { recursive: true });
+  writeFileSync(join(root, 'package.json'), JSON.stringify({ name: 'synthetic-root', version: '1.0.0' }));
+  writeFileSync(join(root, 'node_modules/braces/package.json'), JSON.stringify({ name: 'braces', version: '1.0.0' }));
+  writeFileSync(join(root, 'node_modules/.vite/deps/config.js'), 'synthetic cache bytes');
+  const registry = lockInventory(lock());
+  const good = installedInventory(root, registry);
+  assert.equal(good.state, 'PASS');
+  const cache = good.generated.filter(item => item.kind === 'npm-tool-cache');
+  assert.equal(cache.length, 2); assert.equal(cache.reduce((n, item) => n + item.files, 0), 1);
+  const before = cache.find(item => item.path === 'node_modules/.vite').sha256;
+  writeFileSync(join(root, 'node_modules/.vite/deps/config.js'), 'changed synthetic cache bytes');
+  assert.notEqual(generatedToolCache(root, 'node_modules', '.vite').sha256, before);
+  mkdirSync(join(root, 'node_modules/.vite/deps/Node_Modules/extra'), { recursive: true });
+  assert.equal(installedInventory(root, registry).state, 'INCOMPLETE');
+  rmSync(join(root, 'node_modules/.vite/deps/Node_Modules'), { recursive: true });
+  const target = join(root, 'synthetic-outside'); mkdirSync(target);
+  fs.symlinkSync(target, join(root, 'node_modules/.vite/deps/linked'), process.platform === 'win32' ? 'junction' : 'dir');
+  assert.throws(() => generatedToolCache(root, 'node_modules', '.vite'), error => error.message === 'DEPENDENCY_CACHE_INCOMPLETE' && error.stack === error.message);
+  fs.rmSync(join(root, 'node_modules/.vite/deps/linked'), { recursive: true });
+  mkdirSync(join(root, 'node_modules/undeclared'), { recursive: true });
+  assert.equal(installedInventory(root, registry).state, 'INCOMPLETE');
 });
 
 test('upgraded forge bounds nested BIT STRING decoding and retains exact DER roundtrip', () => {

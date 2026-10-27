@@ -2,7 +2,7 @@
 
 | Category | Disposition | Evidence/next authority |
 | --- | --- | --- |
-| Zod 3.25.76 | UNRESOLVED_REQUIRED_TECHNICAL_FINDING | Public npm/OSV actual checks; compatible upstream v3 fix unavailable; non-applied proposal in REMEDIATION.md |
+| Zod 3.25.76 | UNRESOLVED_REQUIRED_VERSION_FINDING / REVIEW_REQUIRED | Bounded v3 technical backport implemented and tested; npm/OSV finding retained; unbounded/v4/active-iterator coverage is unresolved |
 | Complete native lock succession | OUT_OF_SCOPE_NOT_APPLIED / FAIL | Original native validator and original fixture hashes reject the new complete lock; separately granted successor required |
 | Widget native identity | PREEXISTING_FAIL | Immutable PR25 source mismatch; no native/package repin authorized |
 | Original source inventory / dated proposal | HISTORICAL_CONTRACT_REFUSAL | Exact historical inventory and 2026-10-21 exclusive expiry remain unchanged |

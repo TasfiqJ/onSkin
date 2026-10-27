@@ -23,16 +23,24 @@ Windows orphan cleanup, reader exception leakage, and malformed result/schema
 acceptance. Independent before/after receipts preserve the failures and repaired
 reruns. Synthetic results have their own qualification and are never real scans.
 
-## Unresolved required finding: Zod
+## Implemented Zod v3 bounded-collection candidate; advisory remains unresolved
 
 Zod 3.25.76 remains affected by GHSA-mrhx-c7xc-m3w5. A bounded 2,000-member
 synthetic input with max(1) still produces 2,001 issues. Expo CLI declares
 ^3.25.76; upstream's 4.6.6 repair does not supply a compatible v3 release.
 No major override, suppression, exception or framework migration was applied.
-An exact-source v3 backport across import/require/source dialects, or a reviewed
-Expo CLI-compatible migration, is a non-admitting technical proposal requiring
-additional implementation and independent review. Current npm/OSV findings
-remain findings.
+The new exact-source patcher bounds declared oversized arrays and sets before
+walking their elements. CommonJS, ESM and the published TypeScript source each
+retain size issues/error maps/paths while reducing the demonstrated 2,001 issues
+to one. It checks 25 immutable dispatch/helper pins plus three exact pre/postimages,
+all declared nested copies and registry SRI, with staged writes and rollback.
+Normal postinstall and check mode invoke it after the unchanged mandatory native
+and original tooling calls.
+
+This is NON_ADMITTING_TECHNICAL_PROPOSAL, not an advisory exception. Unbounded
+collections, v4 entrypoints and active custom iterators are explicitly outside
+this bounded v3 repair. Current npm/OSV version findings remain findings and need
+independent review or a compatible upstream/framework-qualified successor.
 
 ## Protected native lock successor: OUT_OF_SCOPE_NOT_APPLIED
 

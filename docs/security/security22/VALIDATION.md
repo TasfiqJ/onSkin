@@ -13,6 +13,23 @@ layout and 97 focused photo cases passed with no pending tests. Launch contracts
 installed mandatory native patches, widget lifecycle, view-shot privacy and iOS
 archive contracts passed. Both clear-cache unsigned Expo exports exited 0.
 
+The bounded Zod v3 treatment adds three exact source postimages and retains the
+version advisory. Its integration accounts for exact .vite/.vite-temp caches
+under lock-derived module roots with bounded regular-file hashes; nested packages,
+links, unknown hidden directories and unsafe aliases still refuse. Combined
+tooling suites pass 40/40, disclosure/bounds/publication suite 26/26 and Release22
+consumer 108 refusals/16 positives. Full app checks and exports are repeated after
+this treatment; external final receipts carry their source head/tree and actual
+result, including unchanged failures.
+
+An initial combined public run hit its 1,200-second parent bound and produced no
+final receipt. It is preserved as incomplete. Changing each file read from a
+maximum-size allocation to its witnessed size plus one retains growth detection;
+the subsequent exact 23,445-path inventory completed in 25.668 seconds. It still
+reports 2,162 custody-blocked content files and an explicit archive refusal, with
+binary content scanning NOT_RUN. This is metadata/byte integrity, not Security
+acceptance. Final-head denominators belong to the final actual run.
+
 Original iOS source audit tests were executed unchanged: 76 passes, four failures
 and one built-in platform skip out of 81. Strict current audit exited 1 because
 the complete lock identity changed; original fixtures still expect the prior

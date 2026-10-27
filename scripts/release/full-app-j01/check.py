@@ -2889,7 +2889,9 @@ RELEASE22_NEW = {
 
 def git22(*args):
     require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R22_GIT_ENV')
-    return subprocess.check_output(['git', '--no-replace-objects', '--no-optional-locks', *args], cwd=ROOT, stderr=subprocess.PIPE)
+    return subprocess.check_output(['git', '--no-pager', '--no-replace-objects', '--no-optional-locks',
+        '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false', '-c', 'diff.external=',
+        '-c', 'core.hooksPath=', *args], cwd=ROOT, stderr=subprocess.PIPE)
 
 
 def allowed22(path):
@@ -3042,7 +3044,35 @@ def source22_endpoint():
             os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and os.environ.get('GITHUB_SHA') in (head, endpoint), 'R22_CI_CONTEXT')
         candidate = candidate22_guard(regular(ROOT/RELEASE22_CANDIDATE)); number = candidate['pr']
         require(type(number) is int and number > 0, 'R22_CI_CONTEXT')
-        event = load(Path(os.environ.get('GITHUB_EVENT_PATH', ''))); pr = event.get('pull_request', {})
+        event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+        try:
+            # Keep regular()'s complete ancestor checks, then bound the read itself.
+            for component in (event_path, *event_path.parents):
+                info = component.lstat()
+                require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+                    'R22_CI_EVENT_PATH')
+            before = event_path.lstat()
+            require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+                0 < before.st_size <= 1024*1024, 'R22_CI_EVENT_SIZE')
+            with event_path.open('rb') as stream:
+                opened = os.fstat(stream.fileno()); event_raw = stream.read(1024*1024+1)
+                finished = os.fstat(stream.fileno())
+            after = event_path.lstat()
+        except OSError:
+            require(False, 'R22_CI_EVENT_PATH')
+        identity = lambda value: (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns)
+        require(identity(before) == identity(opened) == identity(finished) == identity(after) and
+            len(event_raw) == before.st_size and len(event_raw) <= 1024*1024, 'R22_CI_EVENT_CHANGED')
+        try:
+            event = json.loads(event_raw, object_pairs_hook=pairs,
+                parse_constant=lambda _: require(False, 'R22_NONFINITE_JSON'))
+        except (ValueError, TypeError, UnicodeError):
+            require(False, 'R22_CI_EVENT_JSON')
+        require(type(event) is dict and type(event.get('repository')) is dict and
+            type(event.get('pull_request')) is dict, 'R22_CI_EVENT')
+        pr = event['pull_request']
+        require(type(pr.get('base')) is dict and type(pr.get('head')) is dict and
+            type(pr['head'].get('repo')) is dict, 'R22_CI_EVENT')
         require(type(event.get('number')) is int and event['number'] == number and type(pr.get('number')) is int and pr['number'] == number and
             event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
             os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
@@ -3050,7 +3080,7 @@ def source22_endpoint():
             pr.get('head', {}).get('sha') == endpoint and
             re.fullmatch(r'stage/m1-security-recovery22(?:-[a-z0-9-]+)?', pr.get('head', {}).get('ref', '')) is not None and
             pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
-            pr.get('maintainer_can_modify') is False and pr.get('auto_merge') is None, 'R22_CI_EVENT')
+            pr.get('maintainer_can_modify') is False and 'auto_merge' in pr and pr['auto_merge'] is None, 'R22_CI_EVENT')
         if len(parents) == 3:
             require(parents[1] == RELEASE22_BASE and os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
                 git22('rev-parse', head+'^{tree}') == git22('rev-parse', endpoint+'^{tree}'), 'R22_CI_MERGE_TREE')

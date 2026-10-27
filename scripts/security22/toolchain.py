@@ -60,5 +60,7 @@ def identity(root):
               'scripts/phase9/security_acceptance/contract.py', 'scripts/phase9/security_acceptance/proposal.json',
               'scripts/phase9/security_acceptance/source-manifest.json', 'package-lock.json', 'package.json',
               'apps/mobile/package.json', 'apps/catalog-operator-console/package.json']
+    paths += ['scripts/security22/patch-tooling.mjs', 'scripts/security22/patch-tooling.test.mjs',
+              'scripts/security22/backports.json']
     sources = {name: hashlib.sha256(regular(root, name, 16*1024*1024)).hexdigest() for name in paths}
     return dict(schema=1, tools=tools, inputs=sources, identitySHA256=hashlib.sha256(canonical([tools, sources])).hexdigest())

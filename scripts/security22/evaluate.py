@@ -161,11 +161,22 @@ def dependency(value, exit_code, lock, *, lock_document, npm_cli_sha256, node_ve
                  error['reason'] == 'INSTALLED_DIRECTORY_INCOMPLETE' and error['path'] in directory_paths), 'INSTALLED_ERROR_SCHEMA')
         key = (error['path'], error['reason'])
         require(key not in error_keys, 'INSTALLED_ERROR_DUPLICATE'); error_keys.add(key)
+    cache_paths, cache_files, cache_bytes = set(), 0, 0
     for entry in installed['generated']:
-        require(type(entry) is dict and entry.get('kind') in ('npm-install-lock', 'npm-bin-shims'), 'INSTALLED_GENERATED_SCHEMA')
-        number = 'bytes' if entry['kind'] == 'npm-install-lock' else 'files'
-        fields(entry, ('kind', number, 'sha256'), 'INSTALLED_GENERATED_SCHEMA')
-        count(entry[number]); digest(entry['sha256'], 'INSTALLED_GENERATED_HASH')
+        require(type(entry) is dict and entry.get('kind') in ('npm-install-lock', 'npm-bin-shims', 'npm-tool-cache'), 'INSTALLED_GENERATED_SCHEMA')
+        if entry['kind'] == 'npm-tool-cache':
+            fields(entry, ('kind', 'moduleRoot', 'path', 'files', 'bytes', 'sha256'), 'INSTALLED_GENERATED_SCHEMA')
+            require(type(entry['moduleRoot']) is str and entry['moduleRoot'] in directory_paths and
+                    type(entry['path']) is str and entry['path'] in (entry['moduleRoot']+'/.vite', entry['moduleRoot']+'/.vite-temp') and
+                    entry['path'] not in cache_paths, 'INSTALLED_CACHE_PATH')
+            cache_paths.add(entry['path']); cache_files += count(entry['files']); cache_bytes += count(entry['bytes'])
+            require(entry['files'] <= 10000 and entry['bytes'] <= 64*1024*1024 and
+                    cache_files <= 20000 and cache_bytes <= 256*1024*1024, 'INSTALLED_CACHE_BOUND')
+        else:
+            number = 'bytes' if entry['kind'] == 'npm-install-lock' else 'files'
+            fields(entry, ('kind', number, 'sha256'), 'INSTALLED_GENERATED_SCHEMA')
+            count(entry[number])
+        digest(entry['sha256'], 'INSTALLED_GENERATED_HASH')
     # JSON.stringify's ordered compact JSON is the producer's exact hash domain.
     source = json.dumps([records, installed['generated']], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     require(hashlib.sha256(source).hexdigest() == value['installedSourceSHA256'], 'INSTALLED_SOURCE_HASH')
@@ -175,7 +186,8 @@ def dependency(value, exit_code, lock, *, lock_document, npm_cli_sha256, node_ve
             installed_public['accounted'] == sum(observed.values()) and
             installed_public['files'] >= files and installed_public['bytes'] >= byte_count and
             bool(installed['errors']) == (installed['state'] == 'INCOMPLETE'), 'INSTALLED_DENOMINATOR')
-    installed_public.update(state=installed['state'], incompleteEntries=len(installed['errors']))
+    installed_public.update(state=installed['state'], incompleteEntries=len(installed['errors']),
+                            generatedToolCaches=len(cache_paths), generatedCacheFiles=cache_files, generatedCacheBytes=cache_bytes)
     if installed['state'] == 'PASS':
         require(record_paths == set(expected) and installed_public['files'] == files and
                 installed_public['bytes'] == byte_count and not installed['errors'], 'INSTALLED_OMISSION')

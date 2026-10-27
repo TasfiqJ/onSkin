@@ -279,12 +279,31 @@ class Controls(unittest.TestCase):
 
     def test_disclosure_gate_rejects_false_schema(self):
         from run import disclosure_gate
-        value = dict(errors=0, failures=0, passed=True, qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=25)
+        value = dict(errors=0, failures=0, passed=True, qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=26)
         disclosure_gate(value, 0)
-        for key, replacement in [('passed', 1), ('errors', False), ('testsRun', 25.0)]:
+        for key, replacement in [('passed', 1), ('errors', False), ('testsRun', 26.0)]:
             changed = {**value, key: replacement}
             with self.subTest(key=key), self.assertRaises(Refusal):
                 disclosure_gate(changed, 0)
+
+    def test_separate_component_publication_is_exclusive_and_bound(self):
+        import run
+        components = {'technical': {'state': 'PASS'}, 'qualified_custody': {'state': 'BLOCKED_EXTERNAL_CUSTODY'}}
+        result = dict(components=components, source={'head': 'a'*40, 'tree': 'b'*40},
+                      toolchain={'identitySHA256': 'c'*64}, qualification='SYNTHETIC_PUBLICATION_ONLY')
+        with tempfile.TemporaryDirectory(prefix='security22-publication-') as temporary:
+            target = Path(temporary)/'new'
+            run.publish_components(target, result)
+            index = loads((target/'index.json').read_bytes())
+            self.assertFalse(index['candidateReady']); self.assertEqual(index['G97'], 'FAIL/NO_GO')
+            for name, witness in index['files'].items():
+                raw = (target/name).read_bytes()
+                self.assertEqual((len(raw), hashlib.sha256(raw).hexdigest()), (witness['bytes'], witness['sha256']))
+                self.assertEqual(loads(raw)['head'], 'a'*40)
+            with self.assertRaises(FileExistsError):
+                run.publish_components(target, result)
+        with self.assertRaises(Refusal):
+            run.publish_components(run.ROOT/'must-not-be-created', result)
 
 
 def main():

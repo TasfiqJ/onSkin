@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-SECURITY-RECOVERY22-CANDIDATE-01",
+  "treatment": "NON_ADMITTING_TECHNICAL_PROPOSAL",
+  "advisory": "GHSA-mrhx-c7xc-m3w5",
+  "versionFindingUnresolved": true,
+  "qualification": "V3_DECLARED_ARRAY_AND_SET_UPPER_BOUNDS_ONLY",
+  "unresolvedCoverage": [
+    "UNBOUNDED_COLLECTIONS",
+    "V4_ENTRYPOINTS",
+    "ACTIVE_CUSTOM_ITERATORS"
+  ],
+  "package": {
+    "name": "zod",
+    "version": "3.25.76",
+    "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz",
+    "integrity": "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="
+  },
+  "files": [
+    {
+      "path": "v3/types.js",
+      "originalSHA256": "9763a2938f0e7f983363ef4bf6530e7583e3f2d54f8a4a6684efad58febc6e8e",
+      "patchedSHA256": "8232e26720f7d11671bfc3f701dcdf98b571d8b437f1f313ca1cf980f57f5888"
+    },
+    {
+      "path": "v3/types.cjs",
+      "originalSHA256": "06487cc05ed45c5dd29789bf0aa75734d1ce06592a7f2665ba4ca90a68e8a3e1",
+      "patchedSHA256": "8e6dcd3f87c58450793d7fe0bb4977df41341b0970577381b1bf3cc204aa9a22"
+    },
+    {
+      "path": "src/v3/types.ts",
+      "originalSHA256": "70309a0877c35d036842e291fe7c8a4439d5db49411d233f8a22bf8a59c41419",
+      "patchedSHA256": "d6920383deb87aea3040662103bb0da9920845be72c2b6322801c44317362f79"
+    }
+  ],
+  "immutableSourcePins": {
+    "package.json": "70eedbe34fd52385a4ae2f3e5759b19682189f0118ea73a6e7c32c677f61668e",
+    "index.js": "6419c4ac0e637ff08463083e31886d10354f74cbcc4e584400b2b837e39ac881",
+    "index.cjs": "69025493407e0f37f24e01e363452d75ae43a89aac18eb24806706b5b534b459",
+    "v3/index.js": "3db2efd285e7328d8014b54a7fce3f4861ebcdc655df40517092ed0050983617",
+    "v3/index.cjs": "d58a1fea61e0f0bccdb2f4fd3b7b098adcfddb44f036302c4d2c4e173540a292",
+    "v3/external.js": "5d26d2e47e2352def36f89a3e8bf8581da22b7f857e07ef3114cd52cf4813445",
+    "v3/external.cjs": "224ff76e204434ec469f71dbba41d475db1ea873d3f3a5c26d75ab3a9c9f5f11",
+    "src/index.ts": "6419c4ac0e637ff08463083e31886d10354f74cbcc4e584400b2b837e39ac881",
+    "src/v3/index.ts": "3db2efd285e7328d8014b54a7fce3f4861ebcdc655df40517092ed0050983617",
+    "src/v3/external.ts": "5d26d2e47e2352def36f89a3e8bf8581da22b7f857e07ef3114cd52cf4813445",
+    "v3/helpers/parseUtil.js": "b57484013bb360bac2e334d58fcd5f6cbfa63ffcc7d8ff3dbbb3380ca659b956",
+    "v3/helpers/parseUtil.cjs": "40aaa18765f13ae1a933c6f215ecceb6d3afee89eaa23bb080997e08c30a5b00",
+    "src/v3/helpers/parseUtil.ts": "cb94690c02dce392b98ca364de0d4b24f42db715fbb1759a08bcfb7fa6674645",
+    "v3/helpers/util.js": "906ef685e5853d496e293ee8f8a2bb8b1ed2d078a1bcdfedb2dfd61d75b6330c",
+    "v3/helpers/util.cjs": "9b75d4955de684d11371054bbf8e4d747cb1ad7284ae1eda85d4c188b84c47fc",
+    "src/v3/helpers/util.ts": "df1b9ea5a29a591f273555e240142431617e686aa6a97f172193770c26841a52",
+    "v3/ZodError.js": "f5ac9e86b92e201d41e294d7aa35986a2aa28829e1bcc8ac25f7c8dce0674b99",
+    "v3/ZodError.cjs": "88b9cdd780a91656965e07b94c86c0e4729f97923d45cc9d7944b0973a462503",
+    "src/v3/ZodError.ts": "e4386fe8f2a49d774c7e1aff4c015c125ac4a0dcf70d5aa6883f167278ca141f",
+    "v3/errors.js": "d40831f478288d76e82bbbcc3b7e95c8513b6e76471f2d49a37c979bc57d492d",
+    "v3/errors.cjs": "bd32dbc86faeec2de1cc8e42ee3b29af2cbeb24fb5e3b57d7f056bb09cf8d4bd",
+    "src/v3/errors.ts": "cb8debd524102d5a38dbaadd72b220f68349dbac51ac9663569c1807f64b3772",
+    "v3/locales/en.js": "51a6dcc5d4bd52a64da127c012c6c963395c1d9a343ad75d4a8eca662fc8b205",
+    "v3/locales/en.cjs": "9f9d945a9e4c920a0790654b6c213839ad90b7414bada0a23c0284d45c8ed840",
+    "src/v3/locales/en.ts": "f729055c5f4acb839084e5c66c80bdecca02a78df6b048224e56e634322cb223"
+  }
+}

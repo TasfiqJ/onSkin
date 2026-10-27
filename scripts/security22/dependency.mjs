@@ -122,11 +122,55 @@ function sourceDigest(root, budget) {
   return { files, bytes, sourceSHA256: digest.digest('hex') };
 }
 
+function inspectToolCache(root, moduleRoot, name, budget = { files: 0, bytes: 0 }) {
+  require(name === '.vite' || name === '.vite-temp', 'DEPENDENCY_CACHE_NAME');
+  safePath(moduleRoot);
+  require(moduleRoot === 'node_modules' || moduleRoot.endsWith('/node_modules'), 'DEPENDENCY_CACHE_ROOT');
+  const path = resolve(root, moduleRoot, name); contained(root, path);
+  const digest = createHash('sha256'); let files = 0; let bytes = 0;
+  function walk(directory, prefix, depth) {
+    require(depth <= 16 && realpathSync(directory) === directory, 'DEPENDENCY_CACHE_LINK');
+    const before = lstatSync(directory);
+    require(before.isDirectory() && !before.isSymbolicLink(), 'DEPENDENCY_CACHE_LINK');
+    digest.update(JSON.stringify(['directory', prefix, before.mode & 0o777]) + '\n');
+    const aliases = new Set();
+    for (const entry of readdirSync(directory).sort()) {
+      require(/^[\x20-\x7E]+$/.test(entry) && !/[\\/:<>"|?*]/.test(entry) && !/[ .]$/.test(entry) &&
+        entry !== '.' && entry !== '..' && entry.toLowerCase() !== 'node_modules' && !aliases.has(entry.toLowerCase()) &&
+        !/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(entry), 'DEPENDENCY_CACHE_PATH');
+      aliases.add(entry.toLowerCase());
+      const child = join(directory, entry); const stat = lstatSync(child); const rel = prefix ? `${prefix}/${entry}` : entry;
+      require(!stat.isSymbolicLink(), 'DEPENDENCY_CACHE_LINK');
+      if (stat.isDirectory()) walk(child, rel, depth + 1);
+      else {
+        const raw = regular(child, 16 * 1024 * 1024);
+        files++; bytes += raw.length; budget.files++; budget.bytes += raw.length;
+        require(files <= 10000 && bytes <= 64 * 1024 * 1024 && budget.files <= 20000 && budget.bytes <= 256 * 1024 * 1024, 'DEPENDENCY_CACHE_BOUND');
+        digest.update(JSON.stringify(['file', rel, stat.mode & 0o777, raw.length, hash(raw)]) + '\n');
+      }
+    }
+    const after = lstatSync(directory);
+    require(before.dev === after.dev && before.ino === after.ino && before.mtimeMs === after.mtimeMs &&
+      !after.isSymbolicLink() && realpathSync(directory) === directory, 'DEPENDENCY_CACHE_CHANGED');
+  }
+  walk(path, '', 0);
+  return { kind: 'npm-tool-cache', moduleRoot, path: `${moduleRoot}/${name}`, files, bytes, sha256: digest.digest('hex') };
+}
+
+export function generatedToolCache(...args) {
+  try { return inspectToolCache(...args); }
+  catch {
+    const error = new Error('DEPENDENCY_CACHE_INCOMPLETE');
+    error.code = error.message; error.stack = error.message; throw error;
+  }
+}
+
 export function installedInventory(root, packages) {
   const budget = { files: 0, bytes: 0 };
   const records = []; const errors = [];
   const declared = new Set(packages.map(p => p.path));
   const generated = [];
+  const cacheBudget = { files: 0, bytes: 0 };
   // Inventory module directories independently; an extra nested installation
   // cannot disappear behind sourceDigest's separately-accounted node_modules.
   for (const owner of packages.filter(p => p.kind !== 'workspace-link')) {
@@ -138,7 +182,9 @@ export function installedInventory(root, packages) {
       if (!present) continue;
       require(realpathSync(directory) === directory, 'DEPENDENCY_INSTALLED_LINK');
       for (const name of readdirSync(directory)) {
-        if (name === '.package-lock.json') {
+        if (name === '.vite' || name === '.vite-temp') {
+          generated.push(generatedToolCache(root, modulePath, name, cacheBudget));
+        } else if (name === '.package-lock.json') {
           const raw = regular(join(directory, name)); strictJson(raw);
           generated.push({ kind: 'npm-install-lock', bytes: raw.length, sha256: hash(raw) });
         } else if (name === '.bin') {

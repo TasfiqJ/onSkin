@@ -295,7 +295,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,cjs,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,cjs,json,md}\"",
     "security22:run": "python -B scripts/security22/run.py",
-    "security22:test": "python -B scripts/security22/test_security22.py && node --test scripts/security22/dependency.test.mjs && python -B scripts/release/full-app-j01/source_consumer22.test.py"
+    "security22:test": "python -B scripts/security22/test_security22.py && node --test scripts/security22/dependency.test.mjs scripts/security22/patch-tooling.test.mjs && python -B scripts/release/full-app-j01/source_consumer22.test.py"
   },
   "devDependencies": {
     "@expo/plist": "0.7.0",

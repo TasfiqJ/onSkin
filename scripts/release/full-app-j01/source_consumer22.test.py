@@ -132,6 +132,32 @@ def main():
                 expect('nested-PR-number-float', check.source22_endpoint, 'R22_CI_EVENT')
                 event['pull_request']['number'] = 26; event_path.write_bytes(encode(event))
                 expect('single-parent-event-restored', check.source22_endpoint, expected=0)
+                del event['pull_request']['auto_merge']; event_path.write_bytes(encode(event))
+                expect('missing-auto-merge-field', check.source22_endpoint, 'R22_CI_EVENT')
+                event['pull_request']['auto_merge'] = False; event_path.write_bytes(encode(event))
+                expect('false-auto-merge-is-not-null', check.source22_endpoint, 'R22_CI_EVENT')
+                event['pull_request']['auto_merge'] = None
+                event['pull_request']['number'] = True; event_path.write_bytes(encode(event))
+                expect('boolean-nested-PR-number', check.source22_endpoint, 'R22_CI_EVENT')
+                event['pull_request']['number'] = 26
+                event['pull_request']['maintainer_can_modify'] = 0; event_path.write_bytes(encode(event))
+                expect('numeric-maintainer-flag', check.source22_endpoint, 'R22_CI_EVENT')
+                event['pull_request']['maintainer_can_modify'] = False
+                event_path.write_bytes(encode(event)+b' '*(1024*1024))
+                expect('oversize-event-refused-before-json', check.source22_endpoint, 'R22_CI_EVENT_SIZE')
+                event_path.write_bytes(encode(event))
+                expect('bounded-event-restored', check.source22_endpoint, expected=0)
+                event_path.write_bytes(b'[]')
+                expect('event-root-array-refused', check.source22_endpoint, 'R22_CI_EVENT')
+                changed_event = copy.deepcopy(event); changed_event['pull_request']['head'] = False
+                event_path.write_bytes(encode(changed_event))
+                expect('event-false-head-schema', check.source22_endpoint, 'R22_CI_EVENT')
+                event_path.write_bytes(b'{"SYNTHETIC_EVENT_KEY_CANARY":1,"SYNTHETIC_EVENT_KEY_CANARY":2}')
+                try: check.source22_endpoint()
+                except ValueError as error: assert str(error) == 'R22_CI_EVENT_JSON'
+                else: raise AssertionError('malformed event was accepted')
+                expect('event-duplicate-key-generic-refusal', check.source22_endpoint, 'R22_CI_EVENT_JSON')
+                event_path.write_bytes(encode(event))
             (root/'.git/info/grafts').write_bytes(b'bounded synthetic graft\n')
             expect('graft-substitution-refused', check.source22_history, 'R22_HISTORY_SUBSTITUTION')
             (root/'.git/info/grafts').unlink()

@@ -91,7 +91,7 @@ def tap(argv, root):
 
 def disclosure_gate(gate, code):
     expected = dict(errors=0, failures=0, passed=True,
-        qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=25)
+        qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=26)
     require(code == 0 and gate == expected and all(type(gate[key]) is type(value)
             for key, value in expected.items()), 'DISCLOSURE_GATE_FAILED')
 
@@ -121,7 +121,8 @@ def perform(root):
         components['dependencies'] = dict(state='INCOMPLETE', reason=diagnostic(error))
     try:
         components['tooling_regressions'] = tap(['node', '--test', 'scripts/phase9/patch-tooling-security.test.mjs',
-            'scripts/phase9/tooling-security-vulnerabilities.test.mjs', 'scripts/security22/dependency.test.mjs'], root)
+            'scripts/phase9/tooling-security-vulnerabilities.test.mjs', 'scripts/security22/dependency.test.mjs',
+            'scripts/security22/patch-tooling.test.mjs'], root)
         code, _, _ = execute(['node', 'scripts/postinstall.mjs', '--check'], root, seconds=120)
         components['mandatory_native_patches'] = dict(state='PASS' if code == 0 else 'INCOMPLETE', exit=code)
     except Exception as error:

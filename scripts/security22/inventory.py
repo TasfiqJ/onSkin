@@ -15,15 +15,20 @@ import zipfile
 import zlib
 
 from collect import execute
-from redact import canonical, require
+from redact import Refusal, canonical, require
 
 
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+GIT_COMMAND = ['git', '--no-pager', '--no-replace-objects', '--no-optional-locks',
+               '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false',
+               '-c', 'diff.external=', '-c', 'core.hooksPath=']
+
+
 def git(root, *args):
-    code, out, _ = execute(['git', *args], root, seconds=180, limit=64 * 1024 * 1024)
+    code, out, _ = execute([*GIT_COMMAND, *args], root, seconds=180, limit=64 * 1024 * 1024)
     require(code == 0, 'GIT_INCOMPLETE')
     return out
 
@@ -205,7 +210,7 @@ def snapshot(root, policy):
     scope = [head] + list(refs.values())
     history = git(root, 'rev-list', '--objects', '--no-object-names', *scope).splitlines()
     # No arbitrary --all refs or private/dangling commits are read.
-    code, object_data, _ = execute(['git', 'cat-file', '--batch-check'], root, 180,
+    code, object_data, _ = execute([*GIT_COMMAND, 'cat-file', '--batch-check'], root, 180,
                                   64*1024*1024, input_data=b'\n'.join(history)+b'\n')
     checked = object_data.splitlines()
     require(code == 0 and len(checked) == len(history) and all(
@@ -214,6 +219,7 @@ def snapshot(root, policy):
     commits = len(git(root, 'rev-list', *scope).splitlines())
     rows, aliases, explicit = [], {}, set()
     modes = {}; byte_count = 0; matched = 0; custody = 0; oversized = 0; unsupported = 0
+    archive_refusals = {}
     totals = dict(containers=0, members=0, gzipMembers=0, expandedBytes=0, binaryLeaves=0, textLeaves=0, custodyMembers=0)
     for entry in git(root, 'ls-tree', '-r', '-l', '-z', head).split(b'\0'):
         if not entry:
@@ -237,8 +243,15 @@ def snapshot(root, policy):
             row.update(content='MATCHED', sha256=digest(raw)); byte_count += len(raw); matched += 1
             try:
                 archives(name, raw, policy, totals)
-            except (ValueError, OSError, EOFError, zipfile.BadZipFile, tarfile.TarError):
+            except (ValueError, OSError, EOFError, zipfile.BadZipFile, tarfile.TarError) as error:
                 unsupported += 1
+                codes = {'UNSAFE_PATH', 'PATH_ALIAS_OR_COLLISION', 'DUPLICATE_PATH', 'ARCHIVE_UNSUPPORTED_OR_DEPTH',
+                         'GZIP_TRAILING_DATA', 'GZIP_INVALID', 'ARCHIVE_TOTAL_LIMIT', 'ARCHIVE_EXPANSION_LIMIT',
+                         'ARCHIVE_MEMBER_LIMIT', 'ZIP_DIRECTORY', 'ZIP_DIRECTORY_LIMIT', 'ZIP_DIRECTORY_COUNT',
+                         'ARCHIVE_MODE', 'ARCHIVE_RATIO', 'ARCHIVE_NONREGULAR', 'ARCHIVE_MEMBER_SIZE',
+                         'ARCHIVE_DIRECTORY_DATA', 'ARCHIVE_TRUNCATED', 'TAR_TRAILING_DATA'}
+                reason = error.args[0] if isinstance(error, Refusal) and error.args and error.args[0] in codes else 'MALFORMED_OR_INACCESSIBLE'
+                archive_refusals[reason] = archive_refusals.get(reason, 0) + 1
         rows.append(row)
     ignored = git(root, 'ls-files', '--others', '--ignored', '--exclude-standard', '-z').split(b'\0')
     generated = {}; unknown = 0
@@ -265,5 +278,6 @@ def snapshot(root, policy):
                                   oversized=oversized, bytesMatched=byte_count),
                 archiveCoverage=dict(state='PASS' if not (unsupported or custody or totals['custodyMembers']) else 'INCOMPLETE',
                                      unsupportedOrRefusedContainers=unsupported, binaryContentScan='NOT_RUN',
+                                     refusalCategories=archive_refusals,
                                      qualification='RECOGNIZED_CONTAINER_STRUCTURE_ONLY; NOT_A_CONTENT_SECURITY_SCAN', **totals),
                 generated=dict(state='INCOMPLETE' if unknown else 'EXPLICIT_DEPENDENCY_COMPONENT_SCOPE', counts=generated))
