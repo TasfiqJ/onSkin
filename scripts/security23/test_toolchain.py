@@ -93,7 +93,8 @@ WINDOWS_SEMVER_SHIMS = {'': '#!/bin/sh\nbasedir=$(dirname "$(echo "$0" | sed -e 
 class ToolFixture:
     def __init__(self):
         from redact import canonical
-        self.temporary = tempfile.TemporaryDirectory(prefix='security23-toolchain-')
+        self.parent = Path(tempfile.gettempdir()).resolve()
+        self.temporary = tempfile.TemporaryDirectory(prefix='security23-toolchain-', dir=self.parent)
         self.root = Path(self.temporary.name).absolute(); self.root.chmod(0o755)
         self.npm = self.root / 'npm'
         self.files = {'package.json': b'{"name":"npm","version":"11.20.0"}',
@@ -130,7 +131,8 @@ class ToolFixture:
         path.write_bytes(raw); path.chmod(0o644); return path
 
     def close(self):
-        assert self.root.parent == Path(tempfile.gettempdir()).resolve()
+        assert self.root.parent == self.parent and self.parent.resolve() == self.parent
+        assert self.root.resolve() == self.root
         assert self.root.name.startswith('security23-toolchain-') and self.root == Path(self.temporary.name).absolute()
         self.temporary.cleanup()
 
@@ -172,6 +174,17 @@ def regression_tests():
                 (profile['files'], profile['bytes'], profile['treeSHA256']))
             self.assertEqual(value['links'], 1 if os.name == 'posix' else 0)
             self.assertEqual(set(value), {'version', 'cliSHA256', 'treeSHA256', 'files', 'bytes', 'links', 'installationModelSHA256'})
+
+        def test_fixture_uses_canonical_temporary_parent(self):
+            with tempfile.TemporaryDirectory(prefix='security23-parent-', dir=Path(tempfile.gettempdir()).resolve()) as parent:
+                root = Path(parent).absolute(); (root/'nested').mkdir()
+                with patch.object(tempfile, 'gettempdir', return_value=str(root/'nested'/'..')):
+                    fixture = ToolFixture()
+                    try:
+                        self.assertEqual(fixture.root.parent, root)
+                        self.assertEqual(fixture.root.resolve(), fixture.root)
+                        toolchain.npm_inventory(fixture.npm, fixture.model)
+                    finally: fixture.close()
 
         def test_missing_files_and_restoration(self):
             before = self.value()

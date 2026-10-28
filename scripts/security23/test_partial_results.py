@@ -35,7 +35,7 @@ def gates(argv, *args, **kwargs):
     if argv[-1] == '--regressions':
         missing = 12 if os.name == 'nt' else 3
         return 0, canonical(dict(qualification='SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY',
-            state='PASS', platform=os.name, acceptanceGranted=False, tests=47, passed=47-missing,
+            state='PASS', platform=os.name, acceptanceGranted=False, tests=48, passed=48-missing,
             failed=0, errors=0, notRun=missing)), b''
     return 0, canonical(PARTIAL if argv[-1].endswith('test_partial_results.py') else GATE), b''
 

@@ -25,7 +25,8 @@ fstat_error hardlink hash_mismatch missing_bin missing_directory_and_restoration
 open_time_mutation posix_root_link_containment profile_boolean_counts profile_invalid_counts read_error setid
 silent_enumerator_omission stat_error target_link undeclared_bin undeclared_link unicode_parent_alias
 cross_domain_birthtime_preserves_other_identity_fields same_handle_change_time_mutation_refused
-prior_metadata_change_keeps_exact_content_identity duplicate_failure_cleanup_is_one_incomplete_case''').split())
+prior_metadata_change_keeps_exact_content_identity duplicate_failure_cleanup_is_one_incomplete_case
+fixture_uses_canonical_temporary_parent''').split())
 TOOLCHAIN_CASES = frozenset('test_' + name for name in TOOLCHAIN_CASES)
 TOOLCHAIN_NOT_RUN = ({'test_'+name: 'POSIX_FILESYSTEM_CONTROL_NOT_RUN_ON_WINDOWS' for name in
     ('actual_nonprivileged_posix_denial', 'case_parent_alias', 'chained_link', 'cyclic_link', 'dangling_link',
@@ -41,8 +42,8 @@ def toolchain_gate_report(value, code):
     require(type(code) is int and 0 <= code <= 255 and type(value) is dict and set(value) == keys and type(value['schema']) is int and value['schema'] == 1 and
         value['qualification'] == 'SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY' and value['state'] in ('PASS', 'INCOMPLETE') and
         value['platform'] == os.name and value['acceptanceGranted'] is False and
-        all(type(value[k]) is int and 0 <= value[k] <= 47 for k in ('tests', 'passed', 'failed', 'errors', 'notRun')) and
-        value['tests'] == 47 and type(value['cases']) is list and len(value['cases']) == 47, 'TOOLCHAIN_GATE_FAILED')
+        all(type(value[k]) is int and 0 <= value[k] <= 48 for k in ('tests', 'passed', 'failed', 'errors', 'notRun')) and
+        value['tests'] == 48 and type(value['cases']) is list and len(value['cases']) == 48, 'TOOLCHAIN_GATE_FAILED')
     names, counts, failures = set(), {state: 0 for state in ('PASS', 'FAIL', 'INCOMPLETE', 'NOT_RUN')}, []
     for case in value['cases']:
         require(type(case) is dict and type(case.get('name')) is str and case['name'] in TOOLCHAIN_CASES and

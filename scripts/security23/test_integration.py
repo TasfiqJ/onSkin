@@ -22,7 +22,7 @@ def tool_fixture():
     cases = [dict(name=name, state='NOT_RUN', reason=run.TOOLCHAIN_NOT_RUN[name]) if name in run.TOOLCHAIN_NOT_RUN
         else dict(name=name, state='PASS') for name in sorted(run.TOOLCHAIN_CASES)]
     return dict(schema=1, qualification='SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY', state='PASS',
-        tests=47, passed=47-len(run.TOOLCHAIN_NOT_RUN), failed=0, errors=0,
+        tests=48, passed=48-len(run.TOOLCHAIN_NOT_RUN), failed=0, errors=0,
         notRun=len(run.TOOLCHAIN_NOT_RUN), platform=os.name, cases=cases, acceptanceGranted=False)
 
 
