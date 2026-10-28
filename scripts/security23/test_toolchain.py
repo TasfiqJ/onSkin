@@ -150,6 +150,163 @@ def inventory_child(root, model_path):
         return dict(state='INCOMPLETE', predicate='EXECUTION_INCOMPLETE')
 
 
+class WindowsFixtureReader:
+    """Restrict this same user's reader thread; never enable a privilege."""
+    def __init__(self):
+        import ctypes
+        from ctypes import wintypes
+        self.c, self.w = ctypes, wintypes
+        self.handles, self.active, self.failure, self.proofs = [], False, None, []
+        self.thread_restored = True
+        self.api = ctypes.WinDLL('advapi32', use_last_error=True)
+        self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        HANDLE, DWORD, BOOL, PVOID = wintypes.HANDLE, wintypes.DWORD, wintypes.BOOL, ctypes.c_void_p
+        class LUID(ctypes.Structure):
+            _fields_ = [('LowPart', DWORD), ('HighPart', wintypes.LONG)]
+        class PRIVILEGE(ctypes.Structure):
+            _fields_ = [('Luid', LUID), ('Attributes', DWORD)]
+        class SID_ATTRIBUTE(ctypes.Structure):
+            _fields_ = [('Sid', PVOID), ('Attributes', DWORD)]
+        self.LUID, self.PRIVILEGE, self.SID_ATTRIBUTE = LUID, PRIVILEGE, SID_ATTRIBUTE
+        declarations = {
+            'OpenProcessToken': ([HANDLE, DWORD, ctypes.POINTER(HANDLE)], BOOL),
+            'OpenThreadToken': ([HANDLE, DWORD, BOOL, ctypes.POINTER(HANDLE)], BOOL),
+            'GetTokenInformation': ([HANDLE, DWORD, PVOID, DWORD, ctypes.POINTER(DWORD)], BOOL),
+            'CreateRestrictedToken': ([HANDLE, DWORD, DWORD, PVOID, DWORD, PVOID,
+                DWORD, PVOID, ctypes.POINTER(HANDLE)], BOOL),
+            'EqualSid': ([PVOID, PVOID], BOOL),
+            'ConvertSidToStringSidW': ([PVOID, ctypes.POINTER(wintypes.LPWSTR)], BOOL),
+            'LookupPrivilegeValueW': ([wintypes.LPCWSTR, wintypes.LPCWSTR, ctypes.POINTER(LUID)], BOOL),
+            'ImpersonateLoggedOnUser': ([HANDLE], BOOL),
+            'SetThreadToken': ([ctypes.POINTER(HANDLE), HANDLE], BOOL),
+            'RevertToSelf': ([], BOOL),
+        }
+        for name, (arguments, result) in declarations.items():
+            function = getattr(self.api, name); function.argtypes = arguments; function.restype = result
+        self.kernel.GetCurrentProcess.restype = HANDLE; self.kernel.GetCurrentThread.restype = HANDLE
+        self.kernel.CloseHandle.argtypes = [HANDLE]; self.kernel.CloseHandle.restype = BOOL
+        self.kernel.LocalFree.argtypes = [PVOID]; self.kernel.LocalFree.restype = PVOID
+        try:
+            process = HANDLE()
+            self.check(self.api.OpenProcessToken(self.kernel.GetCurrentProcess(), 0xA,
+                ctypes.byref(process)), 'ACL_READER_CAPABILITY_UNAVAILABLE')
+            self.handles.append(process)
+            self.original_thread = self.current_thread()
+            if self.original_thread is not None: self.handles.append(self.original_thread)
+            self.base = self.original_thread if self.original_thread is not None else process
+            self.original_id = self.query(self.base, 10).raw[:8]
+            self.original_privileges = self.privileges(self.base)
+            self.user = self.query(self.base, 1)
+            process_user = self.query(process, 1)
+            self.check(self.api.EqualSid(self.sid_pointer(self.user), self.sid_pointer(process_user)),
+                'ACL_READER_IDENTITY_CHANGED')
+            sid = self.sid_pointer(self.user); text = wintypes.LPWSTR()
+            self.check(self.api.ConvertSidToStringSidW(sid, ctypes.byref(text)), 'ACL_READER_CAPABILITY_UNAVAILABLE')
+            try: self.sid = text.value
+            finally: self.kernel.LocalFree(ctypes.cast(text, PVOID))
+            self.notify = self.privilege_id('SeChangeNotifyPrivilege')
+            self.backup = self.privilege_id('SeBackupPrivilege')
+            self.restore = self.privilege_id('SeRestorePrivilege')
+        except BaseException:
+            for handle in reversed(self.handles): self.kernel.CloseHandle(handle)
+            self.handles.clear()
+            raise
+
+    def check(self, condition, predicate):
+        if not condition:
+            self.failure = predicate
+            raise AssertionError(predicate)
+
+    def query(self, token, kind):
+        size = self.w.DWORD()
+        self.api.GetTokenInformation(token, kind, None, 0, self.c.byref(size))
+        self.check(0 < size.value <= 65536, 'ACL_READER_CAPABILITY_UNAVAILABLE')
+        buffer = self.c.create_string_buffer(size.value)
+        self.check(self.api.GetTokenInformation(token, kind, buffer, size,
+            self.c.byref(size)), 'ACL_READER_CAPABILITY_UNAVAILABLE')
+        return buffer
+
+    def sid_pointer(self, buffer):
+        return self.c.cast(buffer, self.c.POINTER(self.SID_ATTRIBUTE)).contents.Sid
+
+    def privilege_id(self, name):
+        value = self.LUID()
+        self.check(self.api.LookupPrivilegeValueW(None, name, self.c.byref(value)), 'ACL_READER_CAPABILITY_UNAVAILABLE')
+        return (value.LowPart, value.HighPart)
+
+    def privileges(self, token):
+        buffer = self.query(token, 3)
+        count = self.c.cast(buffer, self.c.POINTER(self.w.DWORD)).contents.value
+        self.check(count <= 1024 and 4+count*self.c.sizeof(self.PRIVILEGE) <= len(buffer),
+            'ACL_READER_CAPABILITY_UNAVAILABLE')
+        values = self.c.cast(self.c.addressof(buffer)+4, self.c.POINTER(self.PRIVILEGE))
+        return tuple(((values[i].Luid.LowPart, values[i].Luid.HighPart), values[i].Attributes) for i in range(count))
+
+    def enabled(self, token):
+        return {luid for luid, attributes in self.privileges(token) if attributes & 2}
+
+    def current_thread(self):
+        token = self.w.HANDLE()
+        if self.api.OpenThreadToken(self.kernel.GetCurrentThread(), 0xE, True, self.c.byref(token)):
+            return token
+        self.check(self.c.get_last_error() == 1008, 'ACL_READER_CAPABILITY_UNAVAILABLE')
+        return None
+
+    def assert_original(self):
+        token = self.current_thread()
+        try:
+            self.check((token is None) == (self.original_thread is None) and
+                (token is None or self.query(token, 10).raw[:8] == self.original_id), 'ACL_READER_RESTORE_FAILED')
+            self.check(self.privileges(self.base) == self.original_privileges, 'ACL_READER_RESTORE_FAILED')
+        finally:
+            if token is not None: self.kernel.CloseHandle(token)
+
+    def read(self):
+        from contextlib import contextmanager
+        @contextmanager
+        def context():
+            self.assert_original()
+            restricted = self.w.HANDLE(); effective = None; applied = False
+            proof = dict(sameAccount=False, threadTokenRestored=True, restrictedOptionalPrivilegesDisabled=False,
+                backupEnabledBefore=self.backup in self.enabled(self.base),
+                restoreEnabledBefore=self.restore in self.enabled(self.base),
+                backupEnabledDuring=False, restoreEnabledDuring=False, hadThreadTokenBefore=self.original_thread is not None)
+            try:
+                # Flag1 only: no SID changes, LUA/inert flags, privilege acquisition or account changes.
+                self.check(self.api.CreateRestrictedToken(self.base, 1, 0, None, 0, None,
+                    0, None, self.c.byref(restricted)), 'ACL_READER_CAPABILITY_UNAVAILABLE')
+                user = self.query(restricted, 1)
+                self.check(self.api.EqualSid(self.sid_pointer(self.user), self.sid_pointer(user)), 'ACL_READER_IDENTITY_CHANGED')
+                self.check(self.enabled(restricted) <= {self.notify}, 'ACL_READER_PRIVILEGES_NOT_REDUCED')
+                self.check(self.api.ImpersonateLoggedOnUser(restricted), 'ACL_READER_CAPABILITY_UNAVAILABLE')
+                applied = self.active = True; self.thread_restored = proof['threadTokenRestored'] = False
+                effective = self.current_thread(); self.check(effective is not None, 'ACL_READER_CAPABILITY_UNAVAILABLE')
+                actual_user = self.query(effective, 1); enabled = self.enabled(effective)
+                self.check(self.api.EqualSid(self.sid_pointer(self.user), self.sid_pointer(actual_user)), 'ACL_READER_IDENTITY_CHANGED')
+                self.check(enabled <= {self.notify}, 'ACL_READER_PRIVILEGES_NOT_REDUCED')
+                proof.update(sameAccount=True, restrictedOptionalPrivilegesDisabled=True,
+                    backupEnabledDuring=self.backup in enabled, restoreEnabledDuring=self.restore in enabled)
+                yield proof
+            finally:
+                if effective is not None: self.kernel.CloseHandle(effective)
+                try:
+                    if applied:
+                        restored = self.api.SetThreadToken(None, self.original_thread) if self.original_thread is not None else self.api.RevertToSelf()
+                        self.check(restored, 'ACL_READER_RESTORE_FAILED')
+                        self.active = False; self.assert_original()
+                        self.thread_restored = proof['threadTokenRestored'] = True
+                finally:
+                    if restricted.value: self.kernel.CloseHandle(restricted)
+                    self.proofs.append(proof)
+        return context()
+
+    def close(self):
+        self.check(not self.active and self.thread_restored, 'ACL_READER_RESTORE_FAILED')
+        self.assert_original()
+        for handle in reversed(self.handles): self.kernel.CloseHandle(handle)
+        self.handles.clear(); self.sid = None
+
+
 def regression_tests():
     import copy
     import csv
@@ -361,43 +518,65 @@ def regression_tests():
 
         def test_actual_windows_acl_denial(self):
             if os.name != 'nt': self.skipTest('WINDOWS_ACL_CONTROL_NOT_RUN_ON_POSIX')
-            denied = self.f.npm / 'private_dir'; before = self.value()
-            who = subprocess.run(['whoami', '/user', '/fo', 'csv', '/nh'], capture_output=True, timeout=15)
-            if who.returncode: self.skipTest('WINDOWS_ACL_PRINCIPAL_UNAVAILABLE')
-            sid = list(csv.reader(io.StringIO(who.stdout.decode('utf8', errors='replace'))))[0][-1]
-            if not __import__('re').fullmatch(r'S-1-[0-9-]+', sid): self.skipTest('WINDOWS_ACL_PRINCIPAL_UNAVAILABLE')
-            # Deny directory enumeration, retaining READ_CONTROL so the exact
-            # test ACE can be removed even under CPython3.12's private temp DACL.
-            applied = subprocess.run(['icacls', str(denied), '/deny', '*' + sid + ':(RD)'], capture_output=True, timeout=15)
-            if applied.returncode: self.skipTest('WINDOWS_ACL_DENY_UNAVAILABLE')
+            denied = self.f.npm / 'private_dir'; reader = None
+            self._acl_phase = 'ACL_READER_CAPABILITY_UNAVAILABLE'
             try:
-                self._acl_phase = 'ACL_ENUMERATION_NOT_DENIED'
-                with self.assertRaises(PermissionError):
-                    with os.scandir(denied) as stream: list(stream)
+                reader = WindowsFixtureReader()
+                with reader.read() as before_proof: before = self.value()
+                self.assertTrue(before_proof['sameAccount'] and before_proof['threadTokenRestored'])
+                reader.assert_original()
+                # Apply/remove only this fixture's RD ACE under the original token.
+                self._acl_phase = 'ACL_DENY_COMMAND_FAILED'
+                applied = subprocess.run(['icacls', str(denied), '/deny', '*' + reader.sid + ':(RD)'],
+                    capture_output=True, timeout=15)
+                self.assertEqual(applied.returncode, 0)
                 try:
-                    denied.lstat(); self._acl_stat_denied = False
-                except PermissionError: self._acl_stat_denied = True
-                self._acl_phase = 'ACL_INVENTORY_PREDICATE_MISMATCH'
-                try:
-                    self.value()
-                except Refusal as error:
-                    allowed = {'NPM_TOOL_ENUMERATION', 'NPM_TOOL_READ', 'NPM_TOOL_CHANGED', 'NPM_IDENTITY', 'NPM_EXPECTED_CONTENT', 'NPM_TOOL_LINK'}
-                    self._acl_observed = error.args[0] if len(error.args) == 1 and type(error.args[0]) is str and error.args[0] in allowed else 'REFUSED'
-                    self.assertEqual(self._acl_observed, 'NPM_TOOL_ENUMERATION')
-                else: self.fail('ACL_CONTROL_ACCEPTED_INCOMPLETE_CONTENT')
+                    self._acl_phase = 'ACL_READER_CAPABILITY_UNAVAILABLE'
+                    with reader.read():
+                        self._acl_phase = 'ACL_ENUMERATION_NOT_DENIED'
+                        with self.assertRaises(PermissionError):
+                            with os.scandir(denied) as stream: list(stream)
+                        try:
+                            denied.lstat(); self._acl_stat_denied = False
+                        except PermissionError: self._acl_stat_denied = True
+                        self._acl_phase = 'ACL_INVENTORY_PREDICATE_MISMATCH'
+                        try: self.value()
+                        except Refusal as error:
+                            allowed = {'NPM_TOOL_ENUMERATION', 'NPM_TOOL_READ', 'NPM_TOOL_CHANGED', 'NPM_IDENTITY', 'NPM_EXPECTED_CONTENT', 'NPM_TOOL_LINK'}
+                            self._acl_observed = error.args[0] if len(error.args) == 1 and type(error.args[0]) is str and error.args[0] in allowed else 'REFUSED'
+                            self.assertEqual(self._acl_observed, 'NPM_TOOL_ENUMERATION')
+                        else: self.fail('ACL_CONTROL_ACCEPTED_INCOMPLETE_CONTENT')
+                except BaseException:
+                    self._acl_failure = reader.failure or self._acl_phase
+                    raise
+                finally:
+                    reader.assert_original()
+                    restore = subprocess.run(['icacls', str(denied), '/remove:d', '*' + reader.sid],
+                        capture_output=True, timeout=15)
+                    try: self.assertEqual(restore.returncode, 0)
+                    except BaseException:
+                        self._acl_failure = 'ACL_RESTORE_COMMAND_FAILED'
+                        raise
+                self._acl_phase = 'ACL_RESTORED_IDENTITY_MISMATCH'
+                with reader.read() as after_proof: self.assertEqual(self.value(), before)
+                self.assertTrue(after_proof['sameAccount'] and after_proof['threadTokenRestored'])
             except BaseException:
-                self._acl_failure = self._acl_phase
+                self._acl_failure = getattr(self, '_acl_failure', None) or (reader.failure if reader is not None else None) or self._acl_phase
                 raise
             finally:
-                restore = subprocess.run(['icacls', str(denied), '/remove:d', '*' + sid], capture_output=True, timeout=15)
-                try: self.assertEqual(restore.returncode, 0)
-                except BaseException:
-                    self._acl_failure = 'ACL_RESTORE_COMMAND_FAILED'
-                    raise
-            try: self.assertEqual(self.value(), before)
-            except BaseException:
-                self._acl_failure = 'ACL_RESTORED_IDENTITY_MISMATCH'
-                raise
+                if reader is not None:
+                    try: reader.close()
+                    except BaseException:
+                        self._acl_failure = reader.failure or 'ACL_READER_RESTORE_FAILED'
+                        raise
+                    finally:
+                        if reader.proofs:
+                            proof = dict(reader.proofs[0])
+                            for key in ('sameAccount', 'threadTokenRestored', 'restrictedOptionalPrivilegesDisabled'):
+                                proof[key] = all(p[key] for p in reader.proofs)
+                            for key in ('backupEnabledDuring', 'restoreEnabledDuring'):
+                                proof[key] = any(p[key] for p in reader.proofs)
+                            self._reader_proof = proof
 
     def mutation(self, kind):
         f = self.f; predicate = None
@@ -455,16 +634,24 @@ def regression_tests():
                     if rank[case['state']] > rank[prior['state']]: self.cases[index] = case
                     return
             self.cases.append(case)
-        def addSuccess(self, test): self.note(dict(name=test._testMethodName, state='PASS'))
+        def addSuccess(self, test):
+            case = dict(name=test._testMethodName, state='PASS')
+            if test._testMethodName == 'test_actual_windows_acl_denial' and hasattr(test, '_reader_proof'):
+                case['readerProof'] = test._reader_proof
+            self.note(case)
         def failure(self, test, state):
             case = dict(name=test._testMethodName, state=state)
             predicate = getattr(test, '_acl_failure', None)
             if test._testMethodName == 'test_actual_windows_acl_denial' and predicate in {
                 'ACL_ENUMERATION_NOT_DENIED', 'ACL_INVENTORY_PREDICATE_MISMATCH',
-                'ACL_RESTORE_COMMAND_FAILED', 'ACL_RESTORED_IDENTITY_MISMATCH'}:
+                'ACL_RESTORE_COMMAND_FAILED', 'ACL_RESTORED_IDENTITY_MISMATCH',
+                'ACL_DENY_COMMAND_FAILED', 'ACL_READER_CAPABILITY_UNAVAILABLE',
+                'ACL_READER_IDENTITY_CHANGED', 'ACL_READER_PRIVILEGES_NOT_REDUCED', 'ACL_READER_RESTORE_FAILED'}:
                 case['predicate'] = predicate
                 if hasattr(test, '_acl_observed'): case['observedPredicate'] = test._acl_observed
                 if hasattr(test, '_acl_stat_denied'): case['directStatDenied'] = test._acl_stat_denied
+            if test._testMethodName == 'test_actual_windows_acl_denial' and hasattr(test, '_reader_proof'):
+                case['readerProof'] = test._reader_proof
             return case
         def addFailure(self, test, error):
             self.failures.append((test, 'ASSERTION_FAILED')); self.note(self.failure(test, 'FAIL'))
