@@ -137,6 +137,9 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
+      - name: Verify canonical postgres mirror24 bootstrap controls
+        run: node --test scripts/phase2/canonical-postgres-mirror24.test.mjs
+
       - name: Check local-only database contract
         run: npm run phase2:db-local-contract
 

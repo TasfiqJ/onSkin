@@ -22,6 +22,11 @@ import { fileURLToPath } from 'node:url';
 
 import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
 import {
+  assertCanonicalPostgres24,
+  isCanonicalPostgresQuota24,
+  prepareCanonicalPostgresMirror24,
+} from './canonical-postgres-mirror24.mjs';
+import {
   runWithCanonicalPostgresPullRetry,
   runWithSinglePreMigrationContainerRetry,
 } from './local-supabase-reset-retry.mjs';
@@ -210,6 +215,13 @@ if (
 bindLocalHistoryEngine(childEnv, process.platform);
 
 const sandboxRoot = await mkdtemp(join(tmpdir(), 'layerwell-db05-local-'));
+// Image acquisition is public and credential-free even on a signed-in desktop.
+// Never read the user's Docker auth store or inherited registry auth settings.
+const publicDockerConfig = join(sandboxRoot, '.docker-public');
+await mkdir(publicDockerConfig);
+await writeFile(join(publicDockerConfig, 'config.json'), '{"auths":{}}\n', { mode: 0o600 });
+childEnv.DOCKER_CONFIG = publicDockerConfig;
+delete childEnv.DOCKER_AUTH_CONFIG;
 const sandboxSupabaseDir = join(sandboxRoot, 'supabase');
 const sandboxProjectId = `layerwell_db05_${randomBytes(8).toString('hex')}`;
 let historyDatabase;
@@ -580,6 +592,22 @@ async function prepareCanonicalPostgresImage() {
   console.log(`[db05-local] canonical PostgreSQL identity: ${JSON.stringify(canonicalPostgresIdentity)}`);
 }
 
+async function prepareCanonicalPostgresImage24() {
+  try {
+    await prepareCanonicalPostgresImage();
+    // A moved upstream tag also fails before any database container starts.
+    assertCanonicalPostgres24(canonicalPostgresIdentity);
+  } catch (error) {
+    if (!isCanonicalPostgresQuota24(error)) throw error;
+    canonicalPostgresIdentity = await prepareCanonicalPostgresMirror24({
+      runDocker: runHistoryDocker,
+      architecture: { x64: 'amd64', arm64: 'arm64' }[process.arch],
+      signal: signalCleanup.signal,
+    });
+    console.log(`[db05-local] canonical identical-mirror identity: ${JSON.stringify(canonicalPostgresIdentity)}`);
+  }
+}
+
 function assertHistoryDatabaseTarget(rawOutput) {
   let entries;
   try { entries = JSON.parse(rawOutput); } catch {
@@ -837,7 +865,7 @@ try {
     );
   }
 
-  await prepareCanonicalPostgresImage();
+  await prepareCanonicalPostgresImage24();
   stackMayExist = true;
   await runLocalCli('start isolated credential-free stack', ['start']);
   if (FULL_VERIFY) {
