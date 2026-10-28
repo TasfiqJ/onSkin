@@ -249,6 +249,45 @@ def regression_tests():
             with patch.object(toolchain.os, 'open', side_effect=PermissionError('SYNTHETIC_DO_NOT_DISCLOSE')):
                 self.refused('NPM_TOOL_READ')
 
+        def test_cross_domain_birthtime_preserves_other_identity_fields(self):
+            values = dict(st_dev=1, st_ino=2, st_mode=0o100644, st_nlink=1,
+                st_size=9, st_mtime_ns=11, st_ctime_ns=13, st_birthtime_ns=7)
+            path = types.SimpleNamespace(**values)
+            handle = types.SimpleNamespace(**dict(values, st_ctime_ns=17, st_mode=0o100755))
+            with patch.object(toolchain.os, 'name', 'nt'):
+                self.assertNotEqual(toolchain._stamp(path), toolchain._stamp(handle))
+                self.assertEqual(toolchain._stamp(path, comparable=True), toolchain._stamp(handle, comparable=True))
+                for key in ('st_dev', 'st_ino', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_birthtime_ns', 'st_mode'):
+                    changed = dict(values)
+                    changed[key] = 0o40644 if key == 'st_mode' else values[key]+1
+                    self.assertNotEqual(toolchain._stamp(path, comparable=True),
+                        toolchain._stamp(types.SimpleNamespace(**changed), comparable=True))
+
+        def test_same_handle_change_time_mutation_refused(self):
+            original = os.fstat; calls = []
+            def changed(descriptor):
+                info = original(descriptor); calls.append(True)
+                if len(calls) == 2:
+                    values = {key:getattr(info, key) for key in ('st_dev', 'st_ino', 'st_mode',
+                        'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')}
+                    if hasattr(info, 'st_birthtime_ns'): values['st_birthtime_ns'] = info.st_birthtime_ns
+                    values['st_ctime_ns'] += 1
+                    return types.SimpleNamespace(**values)
+                return info
+            with patch.object(toolchain.os, 'fstat', changed): self.refused('NPM_TOOL_CHANGED')
+            self.assertEqual(len(calls), 2)
+
+        def test_prior_metadata_change_keeps_exact_content_identity(self):
+            import time
+            before = self.value(); info = self.f.target.stat(); time.sleep(.02)
+            self.f.target.write_bytes(self.f.files['node_modules/semver/bin/semver.js'])
+            os.utime(self.f.target, ns=(info.st_atime_ns, info.st_mtime_ns))
+            with self.f.target.open('rb') as stream:
+                current = os.fstat(stream.fileno())
+            if os.name == 'nt' and hasattr(current, 'st_birthtime_ns'):
+                self.assertGreater(current.st_ctime_ns, current.st_birthtime_ns)
+            self.assertEqual(self.value(), before)
+
         def test_stat_error(self):
             original = Path.lstat
             def denied(path, *args, **kwargs):
@@ -314,7 +353,9 @@ def regression_tests():
             if who.returncode: self.skipTest('WINDOWS_ACL_PRINCIPAL_UNAVAILABLE')
             sid = list(csv.reader(io.StringIO(who.stdout.decode('utf8', errors='replace'))))[0][-1]
             if not __import__('re').fullmatch(r'S-1-[0-9-]+', sid): self.skipTest('WINDOWS_ACL_PRINCIPAL_UNAVAILABLE')
-            applied = subprocess.run(['icacls', str(denied), '/deny', '*' + sid + ':(RX)'], capture_output=True, timeout=15)
+            # Deny directory enumeration, retaining READ_CONTROL so the exact
+            # test ACE can be removed even under CPython3.12's private temp DACL.
+            applied = subprocess.run(['icacls', str(denied), '/deny', '*' + sid + ':(RD)'], capture_output=True, timeout=15)
             if applied.returncode: self.skipTest('WINDOWS_ACL_DENY_UNAVAILABLE')
             try:
                 with self.assertRaises(PermissionError):

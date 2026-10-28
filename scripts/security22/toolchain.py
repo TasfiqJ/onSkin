@@ -19,11 +19,14 @@ NPM_MAX_FILE = 32 * 1024 * 1024
 NPM_MAX_DEPTH = 64
 
 
-def _stamp(info):
+def _stamp(info, *, comparable=False):
     # Windows stat(path) infers executable bits from suffix; fstat(fd) cannot.
     mode = info.st_mode & ~0o111 if os.name == 'nt' else info.st_mode
+    # CPython 3.12+ path ctime is creation time while handle ctime is ChangeTime.
+    # Cross-domain comparisons use creation time; same-handle checks retain ctime.
+    timestamp = getattr(info, 'st_birthtime_ns', info.st_ctime_ns) if os.name == 'nt' and comparable else info.st_ctime_ns
     return (info.st_dev, info.st_ino, mode, info.st_nlink, info.st_size,
-            info.st_mtime_ns, info.st_ctime_ns)
+            info.st_mtime_ns, timestamp)
 
 
 def _tool_read(root, name):
@@ -38,9 +41,10 @@ def _tool_read(root, name):
                 not info.st_mode & (stat.S_ISUID | stat.S_ISGID) and info.st_size <= NPM_MAX_FILE, 'NPM_TOOL_FILE')
         descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
         with os.fdopen(descriptor, 'rb') as source:
-            require(_stamp(os.fstat(source.fileno())) == _stamp(info), 'NPM_TOOL_CHANGED')
+            opened = os.fstat(source.fileno())
+            require(_stamp(opened, comparable=True) == _stamp(info, comparable=True), 'NPM_TOOL_CHANGED')
             raw = source.read(info.st_size + 1)
-            require(len(raw) == info.st_size and _stamp(os.fstat(source.fileno())) == _stamp(info), 'NPM_TOOL_CHANGED')
+            require(len(raw) == info.st_size and _stamp(os.fstat(source.fileno())) == _stamp(opened), 'NPM_TOOL_CHANGED')
         require(_stamp(path.lstat()) == _stamp(info), 'NPM_TOOL_CHANGED')
         return raw
     except OSError:
