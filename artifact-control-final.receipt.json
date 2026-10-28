@@ -1,0 +1,109 @@
+{
+  "qualification": "ACTUAL_FROZEN_RETURN_CORRUPTION_RESTORATION_ARTIFACT_ONLY_NOT_ACCEPTANCE",
+  "originalSHA256": "1c0587b97a8876bb1a35954be59ca088433a1c055a2cf146c92f2a68af75414b",
+  "corruptedSHA256": "21141ba32add661c365141a73db9b72a36c828b46103cb8f85d81e801a8af7ce",
+  "restoredSHA256": "1c0587b97a8876bb1a35954be59ca088433a1c055a2cf146c92f2a68af75414b",
+  "exactBytesRestored": true,
+  "exits": [
+    0,
+    1,
+    0
+  ],
+  "commands": [
+    {
+      "state": "current",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign24-evidence\\verify_return24.py",
+        "--archive",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign24-evidence\\onSkin_Campaign24_Security_Advisory_DB_Recovery_Return_2026-10-28.zip",
+        "--expected-manifest-sha256",
+        "0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf",
+        "--expected-verifier-sha256",
+        "eaa09de742c18eb090dfbe6ef8b2ecff64dacfe72525f1afe179719b22bb9fa4"
+      ],
+      "exit": 0,
+      "durationSeconds": 0.407,
+      "stdoutSHA256": "aee66a121b277eadfd94e7ce6fb50fd116a8765f17ccdd83187283c2f7727933",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "acceptanceGranted": false,
+        "checkpointManifestSHA256": "ce4a2e34d070a1916d1957ff1cd6c6267fc54879d5e7a0485693eac034e8be9d",
+        "filesIncludingManifest": 527,
+        "gitBundlePrerequisites": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+        "gitDeltaSemantics": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+        "manifestSHA256": "0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf",
+        "payloadFiles": 353,
+        "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+        "release": "NO_GO",
+        "sourceChecks": {
+          "state": "NOT_RUN"
+        },
+        "status": "VERIFIED"
+      }
+    },
+    {
+      "state": "corrupted",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign24-evidence\\verify_return24.py",
+        "--archive",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign24-evidence\\onSkin_Campaign24_Security_Advisory_DB_Recovery_Return_2026-10-28.zip",
+        "--expected-manifest-sha256",
+        "0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf",
+        "--expected-verifier-sha256",
+        "eaa09de742c18eb090dfbe6ef8b2ecff64dacfe72525f1afe179719b22bb9fa4"
+      ],
+      "exit": 1,
+      "durationSeconds": 0.188,
+      "stdoutSHA256": "0e9fd8f2b1c6e03614bf7f87ab166dc182741fd2fea9e5b84b670aa9ccfbb9e8",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "acceptanceGranted": false,
+        "error": "ARTIFACT_HASH_MISMATCH",
+        "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+        "release": "NO_GO",
+        "status": "CONTEXT_INVALID"
+      }
+    },
+    {
+      "state": "restored",
+      "argv": [
+        "C:\\Python39\\python.exe",
+        "-B",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign24-evidence\\verify_return24.py",
+        "--archive",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign24-evidence\\onSkin_Campaign24_Security_Advisory_DB_Recovery_Return_2026-10-28.zip",
+        "--expected-manifest-sha256",
+        "0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf",
+        "--expected-verifier-sha256",
+        "eaa09de742c18eb090dfbe6ef8b2ecff64dacfe72525f1afe179719b22bb9fa4"
+      ],
+      "exit": 0,
+      "durationSeconds": 0.422,
+      "stdoutSHA256": "aee66a121b277eadfd94e7ce6fb50fd116a8765f17ccdd83187283c2f7727933",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {
+        "acceptanceGranted": false,
+        "checkpointManifestSHA256": "ce4a2e34d070a1916d1957ff1cd6c6267fc54879d5e7a0485693eac034e8be9d",
+        "filesIncludingManifest": 527,
+        "gitBundlePrerequisites": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+        "gitDeltaSemantics": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+        "manifestSHA256": "0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf",
+        "payloadFiles": 353,
+        "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+        "release": "NO_GO",
+        "sourceChecks": {
+          "state": "NOT_RUN"
+        },
+        "status": "VERIFIED"
+      }
+    }
+  ],
+  "sameDeviceInodeModeMtimeAttributesRestored": true,
+  "sourceChecks": "NOT_RUN_HERE_SEPARATE_INDEPENDENT_CHECKOUT_PROOF",
+  "release": "NO_GO",
+  "acceptanceGranted": false
+}

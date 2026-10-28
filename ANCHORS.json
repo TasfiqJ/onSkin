@@ -1,0 +1,16 @@
+{
+  "acceptanceGranted": false,
+  "checkpointManifestSHA256": "ce4a2e34d070a1916d1957ff1cd6c6267fc54879d5e7a0485693eac034e8be9d",
+  "expandedBytes": 27029673,
+  "filesIncludingManifest": 527,
+  "head": "d0ccef65bcbe0c90483e6c0f691ed95f92228c6c",
+  "manifestSHA256": "0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf",
+  "prerequisite": "5976394fd39f41550bde8107b9cc27c758b7ce14",
+  "qualification": "EXTERNAL_ANCHORS_FOR_FROZEN_RETURN_NOT_ACCEPTANCE",
+  "release": "NO_GO",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "tree": "22f91455d651a81296ab8724f9db7cfead65af08",
+  "verifierSHA256": "eaa09de742c18eb090dfbe6ef8b2ecff64dacfe72525f1afe179719b22bb9fa4",
+  "zipBytes": 8022078,
+  "zipSHA256": "1c0587b97a8876bb1a35954be59ca088433a1c055a2cf146c92f2a68af75414b"
+}
