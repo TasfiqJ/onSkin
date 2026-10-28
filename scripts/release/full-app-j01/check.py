@@ -4106,14 +4106,10 @@ def validate24_diff(raw, read_after, parent=None):
             require(all(any(old == new for new in lines) for old in original.splitlines(keepends=True)), 'R24_EXISTING_TOOLING_REGRESSIONS')
         if path == '.github/workflows/quality.yml': quality24_guard(data)
         if path == 'package-lock.json':
-            before = json.loads(git23('show', RELEASE24_BASE+':package-lock.json'), object_pairs_hook=pairs)
-            lock = json.loads(data, object_pairs_hook=pairs)
-            require(type(lock) is dict and type(lock.get('lockfileVersion')) is int and
-                lock['lockfileVersion'] == before['lockfileVersion'] and type(lock.get('packages')) is dict,
-                'R24_LOCK_SCHEMA')
-            for name, node in lock['packages'].items():
-                if name.endswith('/node_modules/expo') or name.endswith('/node_modules/react-native') or name in ('node_modules/expo', 'node_modules/react-native'):
-                    require(name in before['packages'] and node.get('version') == before['packages'][name].get('version'), 'R24_LOCK_FRAMEWORK')
+            # This exact candidate repairs installed tooling without a lock change.
+            # Its finite grant contains no current native successor24 witness.
+            # Any byte delta needs a separately reviewed successor implementation.
+            require(data == git23('show', RELEASE24_BASE+':package-lock.json'), 'R24_LOCK_SUCCESSOR_REQUIRED')
 
 
 
@@ -4315,6 +4311,7 @@ def validate24(bundle=BUNDLE):
             'R24_GLOBAL_SCOPE', 'R24_GLOBAL_SIDE_EFFECT', 'R24_GRANT_SCHEMA', 'R24_HANDOFF_BEFORE_TAIL',
             'R24_HEAD_PARENTS', 'R24_HISTORY_SUBSTITUTION', 'R24_INDEX_FLAGS', 'R24_INDEX_STAGE_MODE',
             'R24_INHERITED_BYTES', 'R24_LINEAR_HISTORY', 'R24_LOCK_FRAMEWORK', 'R24_LOCK_SCHEMA',
+            'R24_LOCK_SUCCESSOR_REQUIRED',
             'R24_MODE_OR_DELETION', 'R24_MODULE_SCOPE', 'R24_NEW_BLOB', 'R24_NONFINITE_JSON',
             'R24_NO_ADMISSION', 'R24_ONE_EVIDENCE_TAIL', 'R24_PACKAGE_PURPOSE', 'R24_PACKAGE_SCHEMA',
             'R24_PARENT_BLOB', 'R24_PARENT_PROVENANCE', 'R24_POSTINSTALL_PRESERVATION',

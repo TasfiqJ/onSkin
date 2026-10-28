@@ -180,6 +180,24 @@ def main():
         try:
             expect('synthetic-authentic-delta',delta,success=True)
             expect('synthetic-authentic-history',check.source24_history,success=True)
+            exact_lock=git('show',check.RELEASE24_BASE+':package-lock.json')
+            lock=json.loads(exact_lock)
+            mutations=[]
+            changed=copy.deepcopy(lock);changed['packages']['node_modules/zod']['version']='0.0.0-review'
+            mutations.append(('nonframework-version',encode(changed)))
+            changed=copy.deepcopy(lock);changed['packages']['node_modules/hermes-compiler']['version']='0.0.0-review'
+            mutations.append(('native-transitive-version',encode(changed)))
+            changed=copy.deepcopy(lock);del changed['packages']['node_modules/deepmerge']
+            mutations.append(('omitted-package-node',encode(changed)))
+            changed=copy.deepcopy(lock);changed['packages']['node_modules/deepmerge']['reviewMutation']=True
+            mutations.append(('arbitrary-nonversion-field',encode(changed)))
+            mutations.extend([('malformed-JSON',b'{'),('same-semantics-newline',exact_lock+b'\n')])
+            for label,body in mutations:
+                put('package-lock.json',body)
+                expect('lock-without-native-successor:'+label,delta,'R24_LOCK_SUCCESSOR_REQUIRED')
+                git('read-tree',authentic_tree)
+            put('package-lock.json',exact_lock)
+            expect('exact-PR27-lock-retains-current-positive',delta,success=True)
             for path in ('.github/workflows/security.yml','supabase/config.toml','apps/mobile/src/features/photos/store.ts'):
                 put(path);expect('protected-edit-refused',delta,'R24_FINITE_SCOPE');git('read-tree',authentic_tree)
                 git('update-index','--force-remove',path);expect('protected-delete-refused',delta,'R24_FINITE_SCOPE');git('read-tree',authentic_tree)
