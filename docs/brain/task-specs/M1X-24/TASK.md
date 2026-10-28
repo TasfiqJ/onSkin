@@ -1,0 +1,13 @@
+# Campaign24 autonomous implementation scope
+
+Authority: BRAIN-M1X-SECURITY-DEPENDENCY-DB24-CANDIDATE-01. Context manifest SHA256: 4ad7e101bd0d6d47613a956c7958a3148d143f12dd333e40652e910ea8573298. The corrected two-ASCII-hyphen verifier returned VERIFIED. This authenticates context only.
+
+Base is exact PR27 commit 5976394fd39f41550bde8107b9cc27c758b7ce14, tree 63a896fad61d85a51b0d1e9a23020ba02d169c9e, on unchanged PR26 34fac69f3ba527724ecdf2d1cef69f27372756ad. One integration owner, isolated advisory/database/review worktrees, one new draft PR on stage/m1-security-integration23. No merge, history rewrite, provider action, private finding access or spending.
+
+The bounded technical changes implement exact-source mandatory dependency mitigations and same-digest canonical image acquisition. Unbounded Zod behavior and public scanner findings remain required; no exception or scanner suppression is authorized. The lock remains the exact PR27 lock. Historical native succession13/23 witnesses and original tests remain immutable; a successor24 is conditional on an actual lock change.
+
+All new noncheckpoint paths are explicitly enumerated by the separately hashed RELEASE24_NEW grant in check.py. Security patcher/backports/probe/behavior/patch/graph files bind provenance, attack reproduction, installed bytes and real consumer behavior. The two new canonical-postgres-mirror24 modules provide acquisition and adversarial proof. The new consumer24 and candidate24 contract bind append-only finite governance. test_packet24.py checks artifact boundaries. Task, advisory, canonical, validation and blocker documents record scope and evidence. These are16 new noncheckpoint paths, below the40-path ceiling; no wildcard authorizes further changes.
+
+Freeze follows substantive validation: unchanged clean-source Phase4 producer, sole worklist-only child, exactly one five-file checkpoint plus root handoff tail. Final CI and complete final-head independent-checkout receipts remain external to that tail to avoid circular hashes. Actual return bytes, external manifest/verifier/ZIP anchors and downloaded-byte proofs are required.
+
+All work is SUBMITTED_REVIEW_REQUIRED. G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/VoiceOver/provider/clinical/legal/Apple/public release CLOSED. Product scope remains F01-F17/F19-F20,12 consumer/six professional groups, private F09 manual history/compare and exactly independently qualified J01 Visible Pores. F18 and J02-J27 includingJ05 remain deferred. The independent Brain alone accepts source.
