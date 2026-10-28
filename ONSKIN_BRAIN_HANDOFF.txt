@@ -1,43 +1,59 @@
-Campaign21 F09 populated comparison layout compatibility SOURCE_ONLY_CANDIDATE / NO_GO.
-Authority BRAIN-M1X-F09-LAYOUT-COMPATIBILITY21-REPAIR-01.
-Input manifest 6c9b46747f0bb5a9141c9320a92f9508cff6d7e964b8ce2e8536e1260b64536e.
-Draft PR25 https://github.com/TasfiqJ/onSkin/pull/25
-Branch stage/m1-f09-layout-compatibility21; base stage/m1-f09-manual-photo-compare20.
-Immutable parent 3c8cb787f3770df09f0ae4507bca9ac49fb5a079; tree 1ae09829967d455d98b5f5f93558927890d2d8e9.
-Frozen substantive source 5400f755d6ea720f6a18f34db865614ba497cada; tree 2c90447c2efc0fc919a5ef2a5f8e9cbc677c5ac4.
-Frozen source after unchanged-producer worklist 0b255cf630294338b9359ba0fd2088828a74da4b; tree a0f3aec52deb9ce5d1a29bb6bb171f2ef25e4677.
-Checkpoint docs/brain/checkpoints/M1-02/F09-LAYOUT-COMPATIBILITY-21/README.md
-External checkpoint manifest SHA256 5465523c4a1799c67684e285290a3b01561aae883f1bd58374a1a9295fc049a4
-Verify: python -B docs/brain/checkpoints/M1-02/F09-LAYOUT-COMPATIBILITY-21/verify21.py --expected-manifest-sha256 5465523c4a1799c67684e285290a3b01561aae883f1bd58374a1a9295fc049a4 --git-root .
-Exactly one evidence-only descendant follows frozen source; verification derives the final HEAD/tree. Later final-head checks, CI, failures/skips and return custody are recorded in the external FINAL_REPORT.md and verified return ZIP.
-The original fifteen layout case bodies and assertions are byte-preserved. Synthetic authority/Query fixture repairs and additive regression protections require independent Brain source review; no acceptance or gate admission is granted.
-G97 FAIL/NO_GO; original Security credentials/secret findings privately UNREVIEWED; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; J01 optical G1/G2/G3/G5 and longitudinal G4 NOT_ACCEPTED.
-Synthetic Expo web, source tests and unsigned exports do not establish installed iPhone, VoiceOver, provider, clinical/legal, Apple or public release. All remain CLOSED.
-First release still requires all working non-Korean F01-F17/F19-F20, 12 consumer C and six professional P groups including required F09 private history/manual comparison, plus exactly independently validated J01 Visible Pores. F18 and J02-J27 including J05 remain deferred.
-USD0; no merge, protected/main/prior-branch edit, rebase, force push, auto-merge, maintainer modification, private Security custody or self-acceptance.
+CAMPAIGN24 — SUBMITTED_REVIEW_REQUIRED / NO_GO
+Authority: BRAIN-M1X-SECURITY-DEPENDENCY-DB24-CANDIDATE-01
+One integration owner; one new open draft PR28:
+https://github.com/TasfiqJ/onSkin/pull/28
+Branch: stage/m1-security-dependency-db24, stacked on untouched PR27.
+Pinned PR27: 5976394fd39f41550bde8107b9cc27c758b7ce14
+Pinned tree: 63a896fad61d85a51b0d1e9a23020ba02d169c9e
+Untouched PR26: 34fac69f3ba527724ecdf2d1cef69f27372756ad
 
+Frozen substantive body: be56c0ab63e4fede3fb289ad43e49b9e863a2bc4
+Sole unchanged-producer worklist child: a8d1feb3145325983ea42a15b017f7fa64745108
+The final candidate is the single evidence-tail commit containing this handoff.
+Its exact HEAD/tree, terminal CI, independent checkout and download receipts
+are published externally after sealing; they are not circular self-hashes here.
 
-Campaign22 autonomous security engineering — frozen evidence tail
-Authority: BRAIN-M1X-SECURITY-RECOVERY22-CANDIDATE-01.
-Draft PR26 https://github.com/TasfiqJ/onSkin/pull/26 on stage/m1-security-recovery22, stacked on unchanged PR25 2cffa9e92be101af4e3b371f1815ec9f458d8da4.
-Runtime source ecadc050ce03c89dd9d5d77e962c62fb744b74fc / tree 458f20311fe4e4ce709fb0d2e96b3f1d5d946712. Worklist-only freeze 6872e740385ff7bf2cd57221c31dd55a687ba45a / tree c79ed177927c016a6bb32b032fa8400f80be2489. This is the sole evidence-only child; final delivery identity and post-tail CI are returned externally.
-Checkpoint: docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22. External manifest SHA256 f52e9a79f48ff06fa13446d37fba9b5b3bb107b2c92c8a7e1374db98d462d6bc. Verify with python -B docs/brain/checkpoints/M1-03/SECURITY-RECOVERY-22/verify22.py --expected-manifest-sha256 f52e9a79f48ff06fa13446d37fba9b5b3bb107b2c92c8a7e1374db98d462d6bc --git-root .
-Implemented current public security runner, full committed metadata/inventory reconciliation, bounded and allowlisted output, real npm/OSV/installed-source checks, exact node-forge 1.4.2 repair and non-admitting bounded Zod v3 backport, additive read-only candidate workflow, separately appended Release22 successor. All original contracts, Security workflow, exceptions, backport payloads, negative fixtures and product/database/native sources remain unchanged.
-Final normal fresh-cache npm ci0; forced mobile6293/operator24, focused97/layout15, lint/typecheck, launch/native patch hooks, tooling40, synthetic26, Release22 consumer108 refusals/16 positives and both unsigned exports pass. Full source governance0 preserves its historical qualifier. Original151 and consumers09-21 pass at their immutable sources with fixture qualifications retained.
-Actual public path exit1: installed1114/1114 accounted and OSV1038/1038 queried; Zod advisory remains, no scanner-ID disagreement. Custody2162 files, one archive expansion refusal, unscanned generated/binary/history/static coverage remain explicit. Original native source audit still fails4 with1 built-in skip; strict complete-lock succession refuses node-forge lock change; native-config13 preexisting/qualification blockers persist. Separately authorized native-lock/widget successor proposal is unapplied.
-Original Security remains required; success conclusions cannot substitute raw outcomes. No original private finding, credential revocation or owner receipt adjudicated. Canonical database failure is not waived. Independent final checkout and final-head CI receipts are external to avoid circular evidence or a second tail.
-Source acceptance SUBMITTED_REVIEW_REQUIRED; G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/VoiceOver/provider/clinical/legal/Apple/public release CLOSED. F01-F17/F19-F20, 12 consumer and six professional groups, private F09 and independently qualified J01 Visible Pores remain required; F18 and J02-J27 including J05 deferred. Maintainer edits and auto-merge off. USD0. No merges.
+Checkpoint: docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/
+Checkpoint manifest SHA256: ce4a2e34d070a1916d1957ff1cd6c6267fc54879d5e7a0485693eac034e8be9d
+Checkpoint verifier SHA256: 724292f70da0d11e6d87c4e5b19f9f0a53aafe856e9f16e20966eff6107103d4
+Payload SHA256: d33d86d0f40a9265f6a28c14c3dbfcd5e29c2d644f3822b430978ba724ab0070
+Payload: 353 exact regular public evidence files, never private original findings.
 
+Mandatory exact-source deepmerge and constrained embedded-Zod-v4 mitigations
+have genuine before/after and real-consumer proof. Unbounded Zod and original
+version-based npm/OSV findings remain OPEN_REQUIRED; deepmerge upstream still
+has no patched release. No advisory suppression or exception was added.
+The complete PR27 lock remains byte-identical; original native13/23 witnesses,
+assertions and source-only compatibility proof are unchanged. No successor24
+was needed. Native, physical iPhone, signing and VoiceOver admission stay closed.
 
-Campaign23 security/native-source integration — frozen source submission
-Authority BRAIN-M1X-SECURITY-INTEGRATION23-REPAIR-01; externally authenticated context manifest a18911e49a60663dd8b66b9d2e609235d153c4ad48d8dafc361225f341557576.
-Draft PR27 https://github.com/TasfiqJ/onSkin/pull/27; branch stage/m1-security-integration23 stacked on unchanged PR26 34fac69f3ba527724ecdf2d1cef69f27372756ad / tree832baeae6421bfaa6fb668b025932d2c49a4f33c. PR25 remains2cffa9e92be101af4e3b371f1815ec9f458d8da4. Maintainer modification and auto-merge OFF; no merge/history rewrite.
-Stable runtime1bd95e82cc3c8dbcc16afaf839f2adeaed628105 / treea56098ae58100d74b453c2be2748008be5201e16. Sole unchanged-producer worklist child e012c309b06df2274bc1c00c4f25265077352823 / tree5078d0aa41c552e20c11b93cdbc3c5ca639c4a93; strict Phase4 PASS. This append and the five SECURITY-INTEGRATION-23 checkpoint files form the sole evidence tail. Exact final identity and final-head evidence are external to avoid circular hashes or a second tail.
-Repairs: complete independently pinned npm installation enumeration with declared contained executable links/shims; bounded regular-file reads and refusal on missing/unreadable/changed/aliased content; fixed diagnostics and durable partial component journal; Windows path/handle timestamp-domain and fixture-parent repairs; same-account reduced-privilege ACL denial/restoration proof; dedicated current native lock/source succession23 and authenticated widget compatibility. Original succession13 witness/validators/test assertions, historic contracts and original Security/Quality workflows remain immutable.
-Actual runtime hosted run40698739612: Linux and Windows full public executions complete/stable, native90/90 each, all1114 lock entries accounted and OSV1038/1038 queried. Linux toolchain45 PASS/3 platform NOT_RUN; Windows36 PASS/12 platform NOT_RUN. Actual Windows reader backup/restore privileges were enabled before and disabled during denial, with same-account identity and exact prior thread-token restoration proven. Both public paths retain exit1/NO_GO for required Zod/deepmerge findings, custody and incomplete scan coverage. Historical Campaign22 generic-refusal predicate remains UNKNOWN.
-Current default Release23 CLI0 in independent full checkout; original unchanged151 negatives/current-restored controls0 with historical-only fixture labels; Release23 consumer156 refusals/33 positives PASS on Python3.9/3.12; all14 original consumers09-22 replayed at exact immutable sources. All136 inherited functions and201170-byte prefix preserved. These are finite source governance proofs, not acceptance.
-Final substantive QA: forced mobile6293/6293 and operator24/24 with0 task-cache hits; lint/typecheck, focused97/layout15, launch/privacy/native contracts and both unsigned clear-cache exports executed. Initial parallel full-suite timeout retained; unchanged isolated original file and one controlled quiescent full replay passed without deadline/source changes. Strict native-config retains expected exit1/five external qualification warnings. Runtime hosted repository Quality/native/downstream exports PASS; canonical database failure keeps overall QualityFAIL.
-Checkpoint docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23 includes frozen-source report, explicitly indexed sanitized public evidence, standalone verifier and externally anchored manifest. Independent final-head checkouts, source/artifact0/1/0, strict Phase4, final CI metadata, downloadable return delta/anchors and downloaded-byte proof are recorded externally after this tail.
-External checkpoint manifest SHA256 a73ece5551bbe393a0aafb1a099dfafea779fdf45c1a31e1f4f35985d35ddf83; verifier SHA25647df0221b2b4833726d382d86869440c604e39a8901ec893cee46ae4cd4ca9b0. The260-member payload is public technical evidence only.
-Automatic approval review rejected cleanup of one temporary public test checkout as "blocked by policy". It was left in place without retry and excluded from all evidence collection. Earlier denied protected-worker checks remain NOT_RUN; separate authorized benign controls do not substitute for qualified custody.
-Source acceptance SUBMITTED_REVIEW_REQUIRED; G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01/native/VoiceOver/provider/clinical/legal/Apple/public release CLOSED. Required working non-Korean F01-F17/F19-F20, twelve consumer/six professional groups, private F09 and exactly independently qualified J01 Visible Pores remain unchanged; F18/J02-J27 includingJ05 deferred. USD0.
+Actual canonical recovery: runtime6488b220, Quality40758426039/job123063483970
+succeeded through real ECR quota fallback, two GHCR rate retries, all five forward
+cutovers, both 97-migration resets, SQL/RLS, lint, empty drift, CAT08 concurrency,
+type generation/repository parity and awaited cleanup. Actual default PR-merge
+checkout33a5941c is tree-equal to6488b220, not an exact-head checkout claim.
+PG15/17 each passed15 isolated rehearsals. DB acceptance is NOT granted.
+Full PG/canonical log hashing is NOT_RUN after automatic review rejected the
+oversized JavaScript request. No alternate wrapper/tool/identity bypass occurred.
+Sanitized phase/count/outcome evidence is included; raw status keys are excluded.
+
+Forced6,293 mobile/24 operator tests, zero task-cache hits, typecheck/lint,
+layout15/focused97, launch/privacy/widget/native controls and both clear-cache
+unsigned Expo exports executed. Original151 semantic negatives and every
+historical consumer09–23 executed at immutable sources with fixture qualification.
+Current Release24 controls:127 refusals/23 positives. Packet controls:77 passes;
+one actual filesystem symlink capability remains NOT_RUN. All prior/failing/
+skipped outcomes and custody/content gaps remain separately reported.
+
+This is exactly one evidence-only tail after the sole worklist child.
+No later source/evidence edits, second tail, merges, rebase or force-push.
+Maintainer modification and auto-merge OFF. USD0. No production/provider action.
+
+G97 FAIL/NO_GO. DB06/DB08/R2B NOT_ACCEPTED.
+M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED. M2 NOT_AUTHORIZED.
+J01/native/VoiceOver/provider/clinical/legal/Apple/public release CLOSED.
+Required scope: all genuinely working non-Korean F01-F17/F19-F20,12 consumer
+and6 professional groups, private F09 manual history/compare and exactly one
+independently qualified Korean/JANUS J01 Visible Pores. F18 and J02-J27 including
+J05 Spots remain deferred. Source-only proof does not admit any of these gates.
+Independent Brain review remains required. SUBMITTED_REVIEW_REQUIRED.
