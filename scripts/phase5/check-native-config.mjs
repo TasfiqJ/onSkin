@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 import {
-  validateIosExtensionConfig,
+  validateIosExtensionConfig23,
   validateIosExtensionVariantIsolation,
 } from './ios-extension-contract.mjs';
 
@@ -143,7 +143,8 @@ for (const variant of ['development', 'staging']) {
   require(resolvedConfig.ios?.infoPlist?.NSCameraUsageDescription === resolvedCameraPermission &&
     pluginOptions(resolvedConfig.plugins, 'expo-camera').cameraPermission ===
       resolvedCameraPermission, `${variant}: resolved iOS NSCameraUsageDescription and expo-camera cameraPermission must both equal the exact reviewed camera purpose string.`);
-  const validation = validateIosExtensionConfig({
+  const validation = validateIosExtensionConfig23({
+    root,
     config: resolvedConfig,
     packageJson: pkg,
     packageLock,

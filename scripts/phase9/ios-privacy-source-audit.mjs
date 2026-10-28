@@ -26,6 +26,8 @@ import {
   renderIosPrivacySourceAuditMarkdown,
 } from './ios-privacy-contract.mjs';
 
+import { IOS_PRIVACY_LOCK_SUCCESSION23_PATH, checkCurrentAuditSnapshot23 } from './ios-privacy-lock-succession23.mjs';
+
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const MAX_GENERATED_OUTPUT_BYTES = 64 * 1024 * 1024;
 
@@ -280,7 +282,19 @@ export function runIosPrivacySourceAudit(argv = process.argv.slice(2), io = cons
     io.error('iOS privacy source audit failed strict validation.');
     return 1;
   }
-  if (options.check) {
+  const defaultOutputs = options.jsonPath === IOS_PRIVACY_AUDIT_JSON_PATH &&
+    options.markdownPath === IOS_PRIVACY_AUDIT_MARKDOWN_PATH;
+  if (options.write && report.inputs.lockSuccession23 &&
+      (options.jsonPath === IOS_PRIVACY_AUDIT_JSON_PATH || options.markdownPath === IOS_PRIVACY_AUDIT_MARKDOWN_PATH)) {
+    throw new Error('CURRENT_NATIVE_SOURCE23_HISTORICAL_OUTPUTS_READ_ONLY');
+  }
+  if (options.check && defaultOutputs && report.inputs.lockSuccession23) {
+    // Separate current snapshot; historical generated reports remain immutable.
+    // The complete actual audit ran above, including all installed-source reads.
+    const witnessOutput = normalizedOutputPath(options.root, IOS_PRIVACY_LOCK_SUCCESSION23_PATH);
+    checkCurrentAuditSnapshot23(report, readCheckedOutput(options.root, witnessOutput));
+    io.log('Current source-only native successor23 snapshot is exact (archive_required).');
+  } else if (options.check) {
     compareOutput(options.root, jsonOutput, json);
     compareOutput(options.root, markdownOutput, markdown);
     io.log(`iOS privacy source audit outputs are current (${report.status}).`);

@@ -1,0 +1,515 @@
+{
+  "schemaVersion": 1,
+  "kind": "ios_privacy_lock_succession23_source_only",
+  "authority": "BRAIN-M1X-SECURITY-INTEGRATION23-REPAIR-01",
+  "base": {
+    "commit": "34fac69f3ba527724ecdf2d1cef69f27372756ad",
+    "tree": "832baeae6421bfaa6fb668b025932d2c49a4f33c"
+  },
+  "historicalLock": {
+    "commit": "2cffa9e92be101af4e3b371f1815ec9f458d8da4",
+    "sha256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+    "bytes": 572798
+  },
+  "candidateLock": {
+    "sha256": "1485297ffa6cc20367a5f2fda35bc33e12dc11ef422c813f5f28a4e339cb3b95",
+    "bytes": 572798
+  },
+  "changedNodes": [
+    "",
+    "node_modules/node-forge"
+  ],
+  "originalNodes": {
+    "": {
+      "name": "layerwell",
+      "version": "0.1.0",
+      "hasInstallScript": true,
+      "workspaces": [
+        "apps/*",
+        "packages/*"
+      ],
+      "devDependencies": {
+        "@expo/plist": "0.7.0",
+        "@xmldom/xmldom": "0.8.15",
+        "bplist-parser": "0.3.2",
+        "node-forge": "1.4.0",
+        "pngjs": "3.4.0",
+        "prettier": "^3.4.2",
+        "react-native": "0.86.3",
+        "react-native-reanimated": "4.5.1",
+        "react-native-worklets": "0.10.1",
+        "supabase": "2.117.0",
+        "turbo": "2.9.18",
+        "typescript": "~6.0.3",
+        "yaml": "2.9.0"
+      },
+      "engines": {
+        "node": ">=20"
+      }
+    },
+    "node_modules/node-forge": {
+      "version": "1.4.0",
+      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-1.4.0.tgz",
+      "integrity": "sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ==",
+      "license": "(BSD-3-Clause OR GPL-2.0)",
+      "engines": {
+        "node": ">= 6.13.0"
+      }
+    }
+  },
+  "candidateNodes": {
+    "": {
+      "name": "layerwell",
+      "version": "0.1.0",
+      "hasInstallScript": true,
+      "workspaces": [
+        "apps/*",
+        "packages/*"
+      ],
+      "devDependencies": {
+        "@expo/plist": "0.7.0",
+        "@xmldom/xmldom": "0.8.15",
+        "bplist-parser": "0.3.2",
+        "node-forge": "1.4.2",
+        "pngjs": "3.4.0",
+        "prettier": "^3.4.2",
+        "react-native": "0.86.3",
+        "react-native-reanimated": "4.5.1",
+        "react-native-worklets": "0.10.1",
+        "supabase": "2.117.0",
+        "turbo": "2.9.18",
+        "typescript": "~6.0.3",
+        "yaml": "2.9.0"
+      },
+      "engines": {
+        "node": ">=20"
+      }
+    },
+    "node_modules/node-forge": {
+      "version": "1.4.2",
+      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-1.4.2.tgz",
+      "integrity": "sha512-rRtAR5XLJ8gCKd9du4qrKAsgCG1ObGP4gLeNJMa4vYSeq4bmBMOJk5IHkrviBV0q7uoAJlVd8HEQYQSVUb4FGQ==",
+      "license": "(BSD-3-Clause OR GPL-2.0)",
+      "engines": {
+        "node": ">= 6.13.0"
+      }
+    }
+  },
+  "immutableInputs": [
+    {
+      "path": "docs/phase-9/apple-ios-privacy-baseline.json",
+      "bytes": 5479,
+      "sha256": "fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+      "bytes": 35108,
+      "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409"
+    }
+  ],
+  "unchangedNativeNodes": {
+    "node_modules/@react-native-google-signin/google-signin": {
+      "version": "16.1.2",
+      "resolved": "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-16.1.2.tgz",
+      "integrity": "sha512-1hf4pRmpnS5t0dHtqU72Q1FmWzsCZR2Sm3uVQbbfMKeNPl5TKjpAsP6F8QTZ9L+Q6Cnn9tL9BXpDCb1nyutdCQ==",
+      "license": "MIT",
+      "funding": {
+        "url": "https://universal-sign-in.com"
+      },
+      "peerDependencies": {
+        "expo": ">=52.0.40",
+        "react": "*",
+        "react-native": "*"
+      },
+      "peerDependenciesMeta": {
+        "expo": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/expo-image": {
+      "version": "57.0.5",
+      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-57.0.5.tgz",
+      "integrity": "sha512-jOm5lofaIKXhQ7i0Hz3I5JuNULw/aghmpIPZXddwQcEtw8+wUhlozq3M7LbsOrcsBEapcG4jFs85DsfuFoz1tQ==",
+      "license": "MIT",
+      "dependencies": {
+        "sf-symbols-typescript": "^2.2.0"
+      },
+      "peerDependencies": {
+        "expo": "*",
+        "react": "*",
+        "react-native": "*",
+        "react-native-web": "*"
+      },
+      "peerDependenciesMeta": {
+        "react-native-web": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/hermes-compiler": {
+      "version": "250829098.0.17",
+      "resolved": "https://registry.npmjs.org/hermes-compiler/-/hermes-compiler-250829098.0.17.tgz",
+      "integrity": "sha512-qG1PXzTEtriF6oQLZF3vyHhSMxOdW5h2TqqLri0rdpstPustd2fSvRZQMVAPdlhgFwBfYnj3OUZtiO6LjYsEFw==",
+      "license": "MIT"
+    },
+    "node_modules/react-native": {
+      "version": "0.86.3",
+      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.86.3.tgz",
+      "integrity": "sha512-JR5s3bM9ezud+Mw24GlNXNfthqPIKwrQgPPJcam+L97t2sKjjEavhCzBn+fyqZZRcM5+XlhYxpTxVkK7e1n38Q==",
+      "license": "MIT",
+      "dependencies": {
+        "@react-native/assets-registry": "0.86.3",
+        "@react-native/codegen": "0.86.3",
+        "@react-native/community-cli-plugin": "0.86.3",
+        "@react-native/gradle-plugin": "0.86.3",
+        "@react-native/js-polyfills": "0.86.3",
+        "@react-native/normalize-colors": "0.86.3",
+        "@react-native/virtualized-lists": "0.86.3",
+        "abort-controller": "^3.0.0",
+        "anser": "^1.4.9",
+        "ansi-regex": "^5.0.0",
+        "babel-plugin-syntax-hermes-parser": "0.36.0",
+        "base64-js": "^1.5.1",
+        "commander": "^12.0.0",
+        "flow-enums-runtime": "^0.0.6",
+        "hermes-compiler": "250829098.0.17",
+        "invariant": "^2.2.4",
+        "memoize-one": "^5.0.0",
+        "metro-runtime": "^0.84.3",
+        "metro-source-map": "^0.84.3",
+        "nullthrows": "^1.1.1",
+        "pretty-format": "^29.7.0",
+        "promise": "^8.3.0",
+        "react-devtools-core": "^6.1.5",
+        "react-refresh": "^0.14.0",
+        "regenerator-runtime": "^0.13.2",
+        "scheduler": "0.27.0",
+        "semver": "^7.1.3",
+        "stacktrace-parser": "^0.1.10",
+        "tinyglobby": "^0.2.15",
+        "whatwg-fetch": "^3.0.0",
+        "ws": "^7.5.10",
+        "yargs": "^17.6.2"
+      },
+      "bin": {
+        "react-native": "cli.js"
+      },
+      "engines": {
+        "node": "^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0"
+      },
+      "peerDependencies": {
+        "@react-native/jest-preset": "0.86.3",
+        "@types/react": "^19.1.1",
+        "react": "^19.2.3"
+      },
+      "peerDependenciesMeta": {
+        "@react-native/jest-preset": {
+          "optional": true
+        },
+        "@types/react": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@expo/ui": {
+      "version": "57.0.26",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.26.tgz",
+      "integrity": "sha512-sEvRjKK08nCq4sXo5PjDckA9OBpxFokCXs5MakWlI1wT1gQNvyliWn/Dwic8XC6YPTN/TbnEp2X/SEduD9+I3Q==",
+      "license": "MIT",
+      "dependencies": {
+        "sf-symbols-typescript": "^2.1.0",
+        "vaul": "^1.1.2"
+      },
+      "peerDependencies": {
+        "@babel/core": "*",
+        "expo": "*",
+        "react": "*",
+        "react-dom": "*",
+        "react-native": "*",
+        "react-native-worklets": "*"
+      },
+      "peerDependenciesMeta": {
+        "@babel/core": {
+          "optional": true
+        },
+        "react-dom": {
+          "optional": true
+        },
+        "react-native-worklets": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/expo-widgets": {
+      "version": "57.0.27",
+      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.27.tgz",
+      "integrity": "sha512-TPISoZYKWb5+l3NcpM8r9OS3+0CydL1jA+pIinFX+/sCQ2BkbQuqS8xE17w1DzqYhC71CUpwM12hCxkhkqIfiQ==",
+      "license": "MIT",
+      "dependencies": {
+        "@expo/plist": "^0.8.1",
+        "@expo/ui": "~57.0.26"
+      },
+      "peerDependencies": {
+        "expo": "*",
+        "react": "*",
+        "react-native": "*"
+      }
+    },
+    "node_modules/react-native-view-shot": {
+      "version": "5.1.0",
+      "resolved": "https://registry.npmjs.org/react-native-view-shot/-/react-native-view-shot-5.1.0.tgz",
+      "integrity": "sha512-JZgElCD82aO+hejIF/leUzI7JufL9mgJ6ChzGWIcdZ2ajpaEvvSnvIcw0qD32XWkrbId8wfSbyz/4u/ulTQzQA==",
+      "license": "MIT",
+      "dependencies": {
+        "html2canvas": "^1.4.1"
+      },
+      "engines": {
+        "node": ">=20",
+        "npm": ">=10"
+      },
+      "peerDependencies": {
+        "react": ">=18.0.0",
+        "react-native": ">=0.76.0"
+      }
+    }
+  },
+  "sourcePins": [
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin/RNGoogleSignin.podspec",
+      "bytes": 791,
+      "sha256": "50e4c8ec91bb448f4cb5d7dd291b0baea940607a5d3cb6230a96958cb9bb6493"
+    },
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin/package.json",
+      "bytes": 4397,
+      "sha256": "550ee99143b8098cd2ba673a8487fc8b5eca79880f64541d3ddb5393cfd5f2b3"
+    },
+    {
+      "path": "node_modules/expo-image/ios/ExpoImage.podspec",
+      "bytes": 1561,
+      "sha256": "de1c67fa42920094c4175f04a3900f6cdc9f260c49a35b7e3e33106c2e5963af"
+    },
+    {
+      "path": "node_modules/expo-image/package.json",
+      "bytes": 1431,
+      "sha256": "49a7b898a180ab27ef94ebd9510db681c09a7a40f6cb9830632c8e9749038bdc"
+    },
+    {
+      "path": "node_modules/expo-image/spm.config.json",
+      "bytes": 2044,
+      "sha256": "51afff0024dd49640df1bc9f3d800c64cc11570ab3ee13c8b39c1f28f78ab6f0"
+    },
+    {
+      "path": "node_modules/hermes-compiler/package.json",
+      "bytes": 312,
+      "sha256": "a03d51044c32ad7fd4486453e56c8b9f53a9b8a6a1d9958f81fdb5f39d69fc1c"
+    },
+    {
+      "path": "node_modules/react-native/package.json",
+      "bytes": 6334,
+      "sha256": "416224a4e7caf2ee1f8f9bead8508d0b608feed745371ce0a8f0e2cafa16d144"
+    },
+    {
+      "path": "node_modules/react-native/sdks/.hermesversion",
+      "bytes": 14,
+      "sha256": "5bdde0c2a3bf8b9a6df20ed87130fdff5945f8f32d8152165b8af8b14ff0ebab"
+    },
+    {
+      "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
+      "bytes": 8851,
+      "sha256": "ddfe34594624ed40a6299fd00a7105bdef0967ed73aad256ae596963b439dbc0"
+    },
+    {
+      "path": "node_modules/react-native/sdks/hermes-engine/version.properties",
+      "bytes": 65,
+      "sha256": "3b83e21d08ae2c2c1e77e747545f89f381020d5cb11d8496b215cbffa900a750"
+    },
+    {
+      "path": "node_modules/@expo/ui/package.json",
+      "bytes": 3735,
+      "sha256": "61207a43cdfbb1d3f727cd2018f483bcd8b947767614d511c4eaf02adfd64e84"
+    },
+    {
+      "path": "node_modules/@expo/ui/ios/ExpoUI.podspec",
+      "bytes": 833,
+      "sha256": "40ccef94d3947a4b8c181459637f205c556f36ef028fa1cd6629b387f89aca6d"
+    },
+    {
+      "path": "node_modules/expo-widgets/package.json",
+      "bytes": 1429,
+      "sha256": "c8f031b0a73590726722b16cdcbbffa23348a875b998b92734402e49a2100cfe"
+    },
+    {
+      "path": "node_modules/react-native-view-shot/package.json",
+      "bytes": 1981,
+      "sha256": "8a855362fff9875b808c98e103d6e5f0115aa6746cbd1c4dbbb6f0ae7435dd55"
+    },
+    {
+      "path": "node_modules/react-native-view-shot/ios/PrivacyInfo.xcprivacy",
+      "bytes": 325,
+      "sha256": "7a411ba0c8b0c43834b84b23b3959aa98df450c52db9e0a4efb4ba1b2786f0c9"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/AppIntent.swift",
+      "bytes": 5224,
+      "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/EntryView.swift",
+      "bytes": 1562,
+      "sha256": "67df36562fd9d2d64069ae9ad7b300f88717599ce492febdb5ba61fda38f0450"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/ExpoWidgets.podspec",
+      "bytes": 1933,
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LiveActivity.swift",
+      "bytes": 4673,
+      "sha256": "14edb955c8f0ad15f72d9770298d9bdfb9a036f8d92f88c3b51d7f2e3cbd540e"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LiveActivityFactory.swift",
+      "bytes": 3588,
+      "sha256": "f888fc22dd8b805b5ce2ade067479afcd6e894860e5cdffdf8ebce07b6658999"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift",
+      "bytes": 75303,
+      "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/TimelineProvider.swift",
+      "bytes": 1538,
+      "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/Utils.swift",
+      "bytes": 4881,
+      "sha256": "76887d9a3f1e076785d330dfdd6f2069df439c592b74b7e89812b0383205bd56"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/WidgetLiveActivity.swift",
+      "bytes": 3954,
+      "sha256": "5f1817d220a63b9a64faf2d7cc06803458655dcf34de160cff279e241e451f89"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/WidgetObject.swift",
+      "bytes": 1324,
+      "sha256": "2ccab1755d4889c93def15e2fa2715672d6f578fb982f81824496c749e5bf83d"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/WidgetsModule.swift",
+      "bytes": 7675,
+      "sha256": "3213cc92fff7922bdc60a8e1b94ecc84a0b3729a323629ca9b25fd964b92421c"
+    }
+  ],
+  "mandatoryPatchInputs": [
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "bytes": 16969,
+      "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+    },
+    {
+      "path": "scripts/phase9/patch-react-native-view-shot-privacy.mjs",
+      "bytes": 16707,
+      "sha256": "45f4e5fe7ac3b6e29cc0ac8f45db8d2d143a8f866843faa487b2ac9db9a6624e"
+    },
+    {
+      "path": "apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js",
+      "bytes": 11727,
+      "sha256": "97bdd94c58767d1ecfbe8754016ef29d1760732d9315dd543dd67628ae127915"
+    },
+    {
+      "path": "node_modules/@expo/ui/expo-module.config.json",
+      "bytes": 391,
+      "sha256": "0d218a854842b89de32c27c1deb026d7af198fb0d706975d2c21a80d7bc905c9"
+    },
+    {
+      "path": "node_modules/expo-widgets/expo-module.config.json",
+      "bytes": 165,
+      "sha256": "c3cc1eede8dfb77c352b5d7452d8338cf999f37a9d9d63510290ae13183dd0e5"
+    }
+  ],
+  "mobilePackage": {
+    "path": "apps/mobile/package.json",
+    "bytes": 3007,
+    "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f"
+  },
+  "widgetCompatibility": {
+    "@expo/ui": {
+      "specifier": "~57.0.26",
+      "version": "57.0.26",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.26.tgz",
+      "integrity": "sha512-sEvRjKK08nCq4sXo5PjDckA9OBpxFokCXs5MakWlI1wT1gQNvyliWn/Dwic8XC6YPTN/TbnEp2X/SEduD9+I3Q=="
+    },
+    "expo-widgets": {
+      "specifier": "57.0.27",
+      "version": "57.0.27",
+      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.27.tgz",
+      "integrity": "sha512-TPISoZYKWb5+l3NcpM8r9OS3+0CydL1jA+pIinFX+/sCQ2BkbQuqS8xE17w1DzqYhC71CUpwM12hCxkhkqIfiQ=="
+    }
+  },
+  "claims": {
+    "sourceOnly": true,
+    "archiveRequired": true,
+    "archiveInspected": false,
+    "archiveInclusionProven": false,
+    "signatureProven": false,
+    "appStoreAcceptanceProven": false,
+    "appStorePrivacyLabelsVerified": false,
+    "binarySignaturesVerified": false,
+    "mergedPrivacyReportVerified": false
+  },
+  "admissions": {
+    "security": false,
+    "db_custody": false,
+    "M1_03": false,
+    "M2": false,
+    "J01": false,
+    "paid": false,
+    "native": false,
+    "apple": false,
+    "public_release": false
+  },
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "M1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED"
+  },
+  "spendUsd": 0,
+  "currentAuditSnapshot": {
+    "hashDomain": "canonicalAuditJson(report) with only inputs.lockSuccession23 omitted",
+    "sha256": "6afab60dddb4f854142a5e449ba4dd78a4b10cd24561a4dfd094056ce5611329"
+  },
+  "installedNativeTrees": [
+    {
+      "path": "node_modules/@expo/ui",
+      "files": 1269,
+      "directories": 339,
+      "bytes": 4731294,
+      "sha256": "d46f0d6dd7e7701cd88a00185313cfec95d539aa5b1b6b2bf157d024732a7356"
+    },
+    {
+      "path": "node_modules/expo-widgets",
+      "files": 166,
+      "directories": 29,
+      "bytes": 390562,
+      "sha256": "767947d5a1b320d1ffe78f51f22e2b457759e34893eeb3600357e651fae4acdc"
+    },
+    {
+      "path": "node_modules/react-native-view-shot",
+      "files": 124,
+      "directories": 40,
+      "bytes": 2915873,
+      "sha256": "69a4c5039ac8a7b5cf21849e6b823fd4099530006c4827b3761ef498f6e0e6fc"
+    }
+  ]
+}

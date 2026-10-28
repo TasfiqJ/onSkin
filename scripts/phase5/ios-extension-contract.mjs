@@ -1,3 +1,6 @@
+import { createHash } from 'node:crypto';
+import { proveCurrentNativeSource23 } from '../phase9/ios-privacy-contract.mjs';
+
 const TARGET_NAME = 'ExpoWidgetsTarget';
 const WIDGET_NAME = 'LayerwellToday';
 const REQUIRED_FAMILIES = [
@@ -176,6 +179,44 @@ export function validateIosExtensionConfig({ config, packageJson, packageLock, v
           }
         : null,
   };
+}
+
+// Current source compatibility is separate from the unchanged historical
+// validator. It authenticates the actual current root, lock and installed native
+// sources before projecting only the historical dependency metadata expected by
+// the old config assertions. All config/entitlement/lifecycle assertions still run.
+export function validateIosExtensionConfig23({ root, config, packageJson, packageLock, variant }) {
+  try {
+    const { report, witness } = proveCurrentNativeSource23(root);
+    const hash = (value) => createHash('sha256').update(`${JSON.stringify(value, null, 2)}\n`).digest('hex');
+    if (hash(packageJson) !== witness.mobilePackage.sha256 ||
+        hash(packageLock) !== report.inputs.packageLock.sha256) throw new Error('CURRENT_CONFIG_INPUT_DRIFT');
+    for (const [name, expected] of Object.entries(witness.widgetCompatibility)) {
+      const actual = packageLock.packages[`node_modules/${name}`];
+      if (packageJson.dependencies[name] !== expected.specifier ||
+          packageLock.packages['apps/mobile'].dependencies[name] !== expected.specifier ||
+          ['version', 'resolved', 'integrity'].some((key) => actual?.[key] !== expected[key])) {
+        throw new Error('CURRENT_WIDGET_SOURCE_DRIFT');
+      }
+    }
+    const historicalPackage = structuredClone(packageJson);
+    const historicalLock = structuredClone(packageLock);
+    for (const [name, expected] of Object.entries(REVIEWED_DEPENDENCY_LOCKS)) {
+      historicalPackage.dependencies[name] = expected.specifier;
+      historicalLock.packages['apps/mobile'].dependencies[name] = expected.specifier;
+      for (const key of ['version', 'resolved', 'integrity']) {
+        historicalLock.packages[expected.path][key] = expected[key];
+      }
+    }
+    return { ...validateIosExtensionConfig({ config, packageJson: historicalPackage,
+      packageLock: historicalLock, variant }), sourceCompatibility: {
+      kind: 'CURRENT_NATIVE_SOURCE23', sourceOnly: true, nativeAccepted: false,
+      archiveInspected: false, publicReleaseAuthorized: false,
+      witnessSHA256: report.inputs.lockSuccession23.sha256,
+    } };
+  } catch {
+    return { errors: [`${variant}: CURRENT_NATIVE_SOURCE23_IDENTITY_REQUIRED`], identity: null };
+  }
 }
 
 export function validateIosExtensionVariantIsolation(identities) {

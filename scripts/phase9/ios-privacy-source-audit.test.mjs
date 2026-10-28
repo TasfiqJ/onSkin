@@ -1204,7 +1204,14 @@ function createSuccession13Fixture(t) {
   const root = createAuditFixture(t);
   const successor = JSON.parse(readFileSync(outputPath(REPO_ROOT, IOS_PRIVACY_LOCK_SUCCESSION13_PATH)));
   const mapping = JSON.parse(readFileSync(outputPath(REPO_ROOT, IOS_PRIVACY_MAPPING_PATH)));
-  const original = JSON.parse(readFileSync(join(REPO_ROOT, 'package-lock.json')));
+  // Historical replay: exact PR25 complete lock, never the current positive root.
+  const historicalLock = spawnSync('git', ['show',
+    '2cffa9e92be101af4e3b371f1815ec9f458d8da4:package-lock.json'],
+    { cwd: REPO_ROOT, encoding: null, windowsHide: true });
+  assert.equal(historicalLock.status, 0);
+  assert.equal(sha256(historicalLock.stdout),
+    '7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb');
+  const original = JSON.parse(historicalLock.stdout);
   Object.assign(original.packages, successor.originalNodes);
   const candidate = structuredClone(original);
   Object.assign(candidate.packages, successor.candidateNodes);
