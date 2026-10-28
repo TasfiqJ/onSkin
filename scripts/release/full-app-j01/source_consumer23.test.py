@@ -56,6 +56,17 @@ def main():
             expect('current-wrapper-fixed-disclosure', check.validate23, 'R23_EXECUTION_INCOMPLETE')
     with patch.object(check, 'source23_guard', side_effect=ValueError('R23_NO_ADMISSION')):
         expect('current-wrapper-retains-typed-refusal', check.validate23, 'R23_NO_ADMISSION')
+    for unsafe, safe in [('FINITE_IDS:SYNTHETIC_LEGACY_SUFFIX_CANARY', 'FINITE_IDS:'),
+        ('SCHEMA_TYPE:/SYNTHETIC_SCHEMA_PATH_CANARY', 'SCHEMA_TYPE:'),
+        ('SOURCE_ABSENT:/SYNTHETIC_SOURCE_PATH_CANARY', 'SOURCE_ABSENT:'),
+        ('NO_ADMISSION', 'NO_ADMISSION')]:
+        with patch.object(check, 'source23_guard', return_value={}), patch.object(check,
+            'historical21_validate', side_effect=ValueError(unsafe)):
+            try: check.validate23()
+            except ValueError as error: assert error.args == (safe,)
+            else: raise AssertionError('legacy semantic refusal was accepted')
+        rejected += 1
+        print(json.dumps(dict(case='legacy-label-without-arbitrary-suffix', exit=1, code=safe)), flush=True)
     expect('duplicate-candidate-key', lambda: check.candidate23_guard(encode(candidate).replace(b'"schema": 1', b'"schema": 1,"schema": 1')), 'JSON_DUPLICATE_KEY')
     expect('nonfinite-candidate', lambda: check.candidate23_guard(encode(candidate).replace(b'"pr": null', b'"pr": NaN')), 'R23_NONFINITE_JSON')
     raw = (HERE/'check.py').read_bytes()
