@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { lstatSync, readdirSync } from 'node:fs';
+import { lstatSync, opendirSync } from 'node:fs';
 
 export const IOS_PRIVACY_LOCK_SUCCESSION23_PATH = 'docs/phase-9/ios-sdk-lock-succession23.v1.json';
 export const LOCK_SUCCESSION23_SHA256 = '47392eb02fbb42e981020c30efb253f1df2f2ad7601cbdaf072f0f2e1003244b';
@@ -17,6 +17,7 @@ export function nativeTree23(root, path, { checkedPath, readBoundedFile, reject 
   let files = 0;
   let directories = 0;
   let bytes = 0;
+  let enumeratedEntries = 0;
   const visit = (name, depth) => {
     if (depth > 40 || rows.length >= 20000) reject('Native source tree exceeds its bounds.');
     const entry = checkedPath(root, name);
@@ -27,7 +28,20 @@ export function nativeTree23(root, path, { checkedPath, readBoundedFile, reject 
     if (before.isDirectory()) {
       rows.push({ path: name, kind: 'directory' });
       directories += 1;
-      for (const child of readdirSync(entry.absolute).sort()) {
+      const children = [];
+      const directory = opendirSync(entry.absolute);
+      try {
+        for (let child; (child = directory.readSync()) !== null;) {
+          enumeratedEntries += 1;
+          // Include the tree root in the same 20,000-entry ceiling, and stop
+          // enumeration before allocating an unbounded child-name list.
+          if (enumeratedEntries >= 20000) reject('Native source tree exceeds its bounds.');
+          children.push(child.name);
+        }
+      } finally {
+        directory.closeSync();
+      }
+      for (const child of children.sort()) {
         if (!child || /[\\/\x00-\x1f:]/.test(child) || child.endsWith('.') || child.endsWith(' ')) {
           reject('Native source tree has an unsafe entry name.');
         }

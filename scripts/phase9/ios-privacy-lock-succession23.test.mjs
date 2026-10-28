@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import test from 'node:test';
 import { auditIosPrivacySource, canonicalAuditJson } from './ios-privacy-contract.mjs';
-import { IOS_PRIVACY_LOCK_SUCCESSION23_PATH, checkCurrentAuditSnapshot23 } from './ios-privacy-lock-succession23.mjs';
+import { IOS_PRIVACY_LOCK_SUCCESSION23_PATH, checkCurrentAuditSnapshot23, nativeTree23 } from './ios-privacy-lock-succession23.mjs';
 
 const REPO = resolve(import.meta.dirname, '../..');
 const WITNESS_BYTES = readFileSync(join(REPO, IOS_PRIVACY_LOCK_SUCCESSION23_PATH));
@@ -124,4 +124,26 @@ test('current23 refuses missing/changed native files, omitted directories, alias
   symlinkSync(directory, link, process.platform === 'win32' ? 'junction' : 'dir');
   refusal(root); rmSync(link);
   assert.deepEqual(auditIosPrivacySource({ root }).errors, []);
+});
+
+test('current23 bounds actual directory enumeration before any child content read', (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'layerwell-native23-'));
+  t.after(() => {
+    assert.match(relative(resolve(tmpdir()), root), /^layerwell-native23-[^\\/]+$/);
+    rmSync(root, { recursive: true, force: true });
+  });
+  const tree = join(root, 'tree'); mkdirSync(tree);
+  // This is a real oversized directory, not a supplied count or a reader mock.
+  for (let index = 0; index < 20000; index += 1) {
+    writeFileSync(join(tree, `entry-${String(index).padStart(5, '0')}`), Buffer.alloc(0));
+  }
+  let pathChecks = 0;
+  let contentReads = 0;
+  assert.throws(() => nativeTree23(root, 'tree', {
+    checkedPath: () => { pathChecks += 1; return { absolute: tree }; },
+    readBoundedFile: () => { contentReads += 1; throw new Error('CHILD_CONTENT_MUST_NOT_BE_READ'); },
+    reject: (message) => { throw new Error(message); },
+  }), /exceeds its bounds/);
+  assert.equal(pathChecks, 1);
+  assert.equal(contentReads, 0);
 });
