@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-SECURITY-DEPENDENCY-DB24-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "5976394fd39f41550bde8107b9cc27c758b7ce14",
+  "tree": "63a896fad61d85a51b0d1e9a23020ba02d169c9e",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": null,
+  "inputManifestSHA256": "4ad7e101bd0d6d47613a956c7958a3148d143f12dd333e40652e910ea8573298",
+  "scopeSHA256": "11396a690c00c30e083ab4507970e7fb8ae4253e88f757ec4b5f211c3ec4f753"
+}

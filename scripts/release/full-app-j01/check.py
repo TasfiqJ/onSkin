@@ -3888,5 +3888,468 @@ source_guard = source23_guard
 validate = validate23
 
 
+# Release24 successor. Every inherited Release08-23 byte above is immutable.
+RELEASE24_BASE = '5976394fd39f41550bde8107b9cc27c758b7ce14'
+RELEASE24_TREE = '63a896fad61d85a51b0d1e9a23020ba02d169c9e'
+RELEASE24_AUTHORITY = 'BRAIN-M1X-SECURITY-DEPENDENCY-DB24-CANDIDATE-01'
+RELEASE24_CANDIDATE = 'docs/brain/contracts/M1X-24/candidate24.json'
+RELEASE24_CHECKPOINT = 'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/'
+RELEASE24_WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+RELEASE24_EXISTING = {
+    '.github/workflows/quality.yml',
+    '.github/workflows/security-candidate22.yml',
+    'ONSKIN_BRAIN_HANDOFF.txt',
+    'apps/catalog-operator-console/package.json',
+    'apps/mobile/package.json',
+    'docs/phase-4/generated/source-worklist.json',
+    'docs/phase-4/generated/source-worklist.md',
+    'package-lock.json',
+    'package.json',
+    'scripts/phase2/local-supabase-reset.mjs',
+    'scripts/phase5/check-native-config.mjs',
+    'scripts/phase5/ios-extension-contract.mjs',
+    'scripts/phase9/ios-privacy-contract.mjs',
+    'scripts/phase9/ios-privacy-source-audit.mjs',
+    'scripts/phase9/ios-privacy-source-audit.test.mjs',
+    'scripts/phase9/patch-tooling-security.mjs',
+    'scripts/phase9/patch-tooling-security.test.mjs',
+    'scripts/phase9/tooling-security-vulnerabilities.test.mjs',
+    'scripts/postinstall.mjs',
+    'scripts/release/full-app-j01/check.py',
+    'scripts/security22/README.md',
+    'scripts/security22/backports.json',
+    'scripts/security22/dependency.mjs',
+    'scripts/security22/dependency.test.mjs',
+    'scripts/security22/evaluate.py',
+    'scripts/security22/patch-tooling.mjs',
+    'scripts/security22/patch-tooling.test.mjs',
+    'scripts/security22/policy.json',
+    'scripts/security22/run.py',
+    'scripts/security22/toolchain.json',
+    'scripts/security22/toolchain.py',
+}
+RELEASE24_NEW = {
+    'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/FINAL_REPORT.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/README.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/manifest.json',
+    'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/payload.zip',
+    'docs/brain/checkpoints/M1-03/SECURITY-DEPENDENCY-DB24/verify24.py',
+    'docs/brain/contracts/M1X-24/candidate24.json',
+    'docs/brain/task-specs/M1X-24/TASK.md',
+    'docs/security/security24/advisories.md',
+    'docs/security/security24/blockers.md',
+    'docs/security/security24/canonical-db24.md',
+    'docs/security/security24/validation.md',
+    'scripts/phase2/canonical-postgres-mirror24.mjs',
+    'scripts/phase2/canonical-postgres-mirror24.test.mjs',
+    'scripts/release/full-app-j01/source_consumer24.test.py',
+    'scripts/security24/advisory-behavior.test.mjs',
+    'scripts/security24/backports.json',
+    'scripts/security24/graph.mjs',
+    'scripts/security24/patch-tooling.mjs',
+    'scripts/security24/patch-tooling.test.mjs',
+    'scripts/security24/probe.mjs',
+    'scripts/security24/test_packet24.py',
+}
+
+
+def allowed24(path):
+    return isinstance(path, str) and path in RELEASE24_EXISTING | RELEASE24_NEW
+
+
+
+def scope24_guard(existing, new):
+    require(type(existing) is set and type(new) is set and not existing & new and
+        all(type(path) is str for path in existing | new), 'R24_GRANT_SCHEMA')
+    document = dict(existingPaths=sorted(existing), newPaths=sorted(new))
+    require(sha(json.dumps(document, sort_keys=True, separators=(',', ':')).encode()) ==
+        '11396a690c00c30e083ab4507970e7fb8ae4253e88f757ec4b5f211c3ec4f753', 'R24_AUTHENTIC_FINITE_GRANT')
+
+
+
+def candidate24_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R24_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'base', 'tree',
+        'acceptanceGranted', 'admissions', 'pr', 'inputManifestSHA256', 'scopeSHA256'} and type(value['schema']) is int and value['schema'] == 1 and
+        value['authority'] == RELEASE24_AUTHORITY and value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and
+        value['base'] == RELEASE24_BASE and value['tree'] == RELEASE24_TREE and
+        value['inputManifestSHA256'] == '4ad7e101bd0d6d47613a956c7958a3148d143f12dd333e40652e910ea8573298' and
+        value['scopeSHA256'] == '11396a690c00c30e083ab4507970e7fb8ae4253e88f757ec4b5f211c3ec4f753' and
+        value['acceptanceGranted'] is False and type(value['admissions']) is dict and
+        set(value['admissions']) == {'G97', 'DB', 'M103', 'M2', 'J01', 'PUBLIC'} and
+        all(flag is False for flag in value['admissions'].values()) and
+        (value['pr'] is None or (type(value['pr']) is int and value['pr'] > 0)), 'R24_NO_ADMISSION')
+    return value
+
+
+
+def validate24_checker(raw):
+    before = git23('show', RELEASE24_BASE+':scripts/release/full-app-j01/check.py')
+    terminal = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(terminal) and raw.startswith(before[:-len(terminal)]) and
+        raw.endswith(terminal), 'R24_INHERITED_BYTES')
+    extension = ast.parse(raw[len(before)-len(terminal):-len(terminal)])
+    functions = {'allowed24', 'scope24_guard', 'candidate24_guard', 'validate24_checker',
+        'package24_guard', 'quality24_guard', 'validate24_diff', 'source24_endpoint',
+        'source24_history', 'evidence24_guard', 'source24_guard', 'validate24'}
+    declarations = [node for node in extension.body if isinstance(node, ast.FunctionDef)]
+    require({node.name for node in declarations} == functions and len(declarations) == len(functions),
+        'R24_FUNCTION_SCOPE')
+    dispatch = set(); assigned = set()
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name),
+            'R24_MODULE_SCOPE')
+        name = node.targets[0].id
+        require(name not in assigned, 'R24_DUPLICATE_ASSIGNMENT'); assigned.add(name)
+        if name in {'source_guard', 'validate'}:
+            dispatch.add(name)
+            require(isinstance(node.value, ast.Name) and node.value.id ==
+                {'source_guard':'source24_guard', 'validate':'validate24'}[name], 'R24_DISPATCH')
+        else:
+            require(name.startswith('RELEASE24_'), 'R24_GLOBAL_SCOPE')
+            try: ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R24_GLOBAL_SIDE_EFFECT')
+    require(dispatch == {'source_guard', 'validate'}, 'R24_DISPATCH_REQUIRED')
+    values = {node.targets[0].id: ast.literal_eval(node.value) for node in extension.body
+        if isinstance(node, ast.Assign) and node.targets[0].id in {'RELEASE24_EXISTING', 'RELEASE24_NEW'}}
+    require(set(values) == {'RELEASE24_EXISTING', 'RELEASE24_NEW'}, 'R24_GRANT_SCHEMA')
+    scope24_guard(values['RELEASE24_EXISTING'], values['RELEASE24_NEW'])
+
+
+def package24_guard(path, raw):
+    before_raw = git23('show', RELEASE24_BASE+':'+path)
+    if path == 'scripts/postinstall.mjs':
+        expected = before_raw.replace(
+            b"import { patchToolingSecurity22 } from './security22/patch-tooling.mjs';\n",
+            b"import { patchToolingSecurity22 } from './security22/patch-tooling.mjs';\n"
+            b"import { patchToolingSecurity24 } from './security24/patch-tooling.mjs';\n").replace(
+            b'const toolingSecurity22 = patchToolingSecurity22({ root, check });\n',
+            b'const toolingSecurity22 = patchToolingSecurity22({ root, check });\n'
+            b'const toolingSecurity24 = patchToolingSecurity24({ root, check });\n')
+        require(raw in (before_raw, expected), 'R24_POSTINSTALL_PRESERVATION')
+        return
+    before = json.loads(before_raw, object_pairs_hook=pairs)
+    after = json.loads(raw, object_pairs_hook=pairs)
+    require(type(after) is dict, 'R24_PACKAGE_SCHEMA')
+    dependency_fields = {'dependencies', 'devDependencies', 'optionalDependencies'}
+    mutable = dependency_fields | ({'scripts'} if path == 'package.json' else set())
+    require({k:v for k,v in before.items() if k not in mutable} ==
+        {k:v for k,v in after.items() if k not in mutable}, 'R24_PACKAGE_PURPOSE')
+    for field in dependency_fields:
+        old, new = before.get(field, {}), after.get(field, {})
+        require(type(new) is dict and set(old) <= set(new) and
+            all(type(k) is str and type(v) is str and bool(v) for k,v in new.items()), 'R24_DEPENDENCY_SCHEMA')
+        for framework in ('expo', 'react-native'):
+            require(old.get(framework) == new.get(framework), 'R24_FRAMEWORK_VERSION')
+    if path == 'package.json':
+        old, new = before.get('scripts', {}), after.get('scripts', {})
+        additions = {'python -B scripts/release/full-app-j01/source_consumer24.test.py',
+            'python -B scripts/security24/test_packet24.py',
+            'node --test scripts/security24/advisory-behavior.test.mjs',
+            'node --test scripts/security24/patch-tooling.test.mjs',
+            'node --test scripts/phase2/canonical-postgres-mirror24.test.mjs'}
+        def preserved(key, value):
+            current = new.get(key)
+            return current == value or (type(current) is str and current.startswith(value+' && ') and
+                all(command in additions for command in current[len(value)+4:].split(' && ')))
+        require(type(new) is dict and all(preserved(k, v) for k,v in old.items()) and
+            all(k.startswith('security23:') and type(v) is str and bool(v) for k,v in new.items() if k not in old),
+            'R24_COMMAND_PRESERVATION')
+
+
+
+def quality24_guard(raw):
+    original = git23('show', RELEASE24_BASE+':.github/workflows/quality.yml')
+    anchor = b'      - name: Check local-only database contract\n'
+    addition = (b'      - name: Verify canonical postgres mirror24 bootstrap controls\n'
+        b'        run: node --test scripts/phase2/canonical-postgres-mirror24.test.mjs\n\n')
+    require(original.count(anchor) == 1 and raw in (original, original.replace(anchor, addition+anchor)),
+        'R24_QUALITY_GATE_PRESERVATION')
+
+
+def validate24_diff(raw, read_after, parent=None):
+    require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R24_GIT_ENV')
+    parent = parent or RELEASE24_BASE
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R24_DIFF_SHAPE')
+    identities = {}; seen = set()
+    for index in range(0, len(fields)-1, 2):
+        meta = fields[index].decode('ascii').split(); path = fields[index+1].decode('utf-8')
+        require(len(meta) == 5 and allowed24(path) and path not in seen, 'R24_FINITE_SCOPE')
+        seen.add(path); remember21(path, identities)
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(oldmode in (':000000', ':100644') and newmode == '100644' and status in ('A', 'M') and
+            all(re.fullmatch('[0-9a-f]{40}', v) for v in (oldblob, newblob)), 'R24_MODE_OR_DELETION')
+        exists = subprocess.run(['git', '--no-replace-objects', 'cat-file', '-e', parent+':'+path],
+            cwd=ROOT, capture_output=True).returncode == 0
+        require(exists == (status == 'M') == (oldmode == ':100644'), 'R24_PARENT_PROVENANCE')
+        if exists: require(oldblob == git23('rev-parse', parent+':'+path).decode().strip(), 'R24_PARENT_BLOB')
+        else: require(oldblob == '0'*40, 'R24_NEW_BLOB')
+        if parent == RELEASE24_BASE:
+            require(exists == (path in RELEASE24_EXISTING), 'R24_CREATE_EDIT')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob,
+            'R24_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate24_checker(data)
+        if path == RELEASE24_CANDIDATE: candidate24_guard(data)
+        if path in ('package.json', 'apps/mobile/package.json', 'apps/catalog-operator-console/package.json', 'scripts/postinstall.mjs'):
+            package24_guard(path, data)
+        if path == 'scripts/phase9/patch-tooling-security.mjs':
+            tooling23_guard(data)
+        if path in ('scripts/phase9/patch-tooling-security.test.mjs',
+            'scripts/phase9/tooling-security-vulnerabilities.test.mjs', 'scripts/security22/patch-tooling.test.mjs',
+            'scripts/security22/dependency.test.mjs', 'scripts/phase9/ios-privacy-source-audit.test.mjs'):
+            original = git23('show', RELEASE24_BASE+':'+path)
+            lines = iter(data.splitlines(keepends=True))
+            require(all(any(old == new for new in lines) for old in original.splitlines(keepends=True)), 'R24_EXISTING_TOOLING_REGRESSIONS')
+        if path == '.github/workflows/quality.yml': quality24_guard(data)
+        if path == 'package-lock.json':
+            before = json.loads(git23('show', RELEASE24_BASE+':package-lock.json'), object_pairs_hook=pairs)
+            lock = json.loads(data, object_pairs_hook=pairs)
+            require(type(lock) is dict and type(lock.get('lockfileVersion')) is int and
+                lock['lockfileVersion'] == before['lockfileVersion'] and type(lock.get('packages')) is dict,
+                'R24_LOCK_SCHEMA')
+            for name, node in lock['packages'].items():
+                if name.endswith('/node_modules/expo') or name.endswith('/node_modules/react-native') or name in ('node_modules/expo', 'node_modules/react-native'):
+                    require(name in before['packages'] and node.get('version') == before['packages'][name].get('version'), 'R24_LOCK_FRAMEWORK')
+
+
+
+def source24_endpoint():
+    head = git23('rev-parse', 'HEAD').decode().strip()
+    parents = git23('rev-list', '--parents', '-n', '1', head).decode().split()
+    require(len(parents) in (2, 3), 'R24_HEAD_PARENTS')
+    endpoint = head if len(parents) == 2 else parents[2]
+    if len(parents) == 3 or os.environ.get('GITHUB_ACTIONS') == 'true':
+        require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and os.environ.get('GITHUB_SHA') in (head, endpoint), 'R24_CI_CONTEXT')
+        candidate = candidate24_guard(regular23(ROOT/RELEASE24_CANDIDATE)); number = candidate['pr']
+        require(type(number) is int and number > 0, 'R24_CI_CONTEXT')
+        event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+        try:
+            # Keep regular23()'s complete ancestor checks, then bound the read itself.
+            for component in (event_path, *event_path.parents):
+                info = component.lstat()
+                require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+                    'R24_CI_EVENT_PATH')
+            before = event_path.lstat()
+            require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+                0 < before.st_size <= 1024*1024, 'R24_CI_EVENT_SIZE')
+            with event_path.open('rb') as stream:
+                opened = os.fstat(stream.fileno()); event_raw = stream.read(1024*1024+1)
+                finished = os.fstat(stream.fileno())
+            after = event_path.lstat()
+        except OSError:
+            require(False, 'R24_CI_EVENT_PATH')
+        identity = lambda value: (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns)
+        require(identity(before) == identity(opened) == identity(finished) == identity(after) and
+            len(event_raw) == before.st_size and len(event_raw) <= 1024*1024, 'R24_CI_EVENT_CHANGED')
+        try:
+            event = json.loads(event_raw, object_pairs_hook=pairs,
+                parse_constant=lambda _: require(False, 'R24_NONFINITE_JSON'))
+        except (ValueError, TypeError, UnicodeError):
+            require(False, 'R24_CI_EVENT_JSON')
+        require(type(event) is dict and type(event.get('repository')) is dict and
+            type(event.get('pull_request')) is dict, 'R24_CI_EVENT')
+        pr = event['pull_request']
+        require(type(pr.get('base')) is dict and type(pr.get('head')) is dict and
+            type(pr['head'].get('repo')) is dict, 'R24_CI_EVENT')
+        require(type(event.get('number')) is int and event['number'] == number and type(pr.get('number')) is int and pr['number'] == number and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+            pr.get('base', {}).get('sha') == RELEASE24_BASE and pr.get('base', {}).get('ref') == 'stage/m1-security-integration23' and
+            pr.get('head', {}).get('sha') == endpoint and
+            re.fullmatch(r'stage/m1-security-dependency-db24', pr.get('head', {}).get('ref', '')) is not None and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+            pr.get('maintainer_can_modify') is False and 'auto_merge' in pr and pr['auto_merge'] is None, 'R24_CI_EVENT')
+        if len(parents) == 3:
+            require(parents[1] == RELEASE24_BASE and os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+                git23('rev-parse', head+'^{tree}') == git23('rev-parse', endpoint+'^{tree}'), 'R24_CI_MERGE_TREE')
+    return endpoint
+
+
+
+def source24_history():
+    scope24_guard(RELEASE24_EXISTING, RELEASE24_NEW)
+    grafts = Path(git23('rev-parse', '--git-path', 'info/grafts').decode().strip())
+    if not grafts.is_absolute(): grafts = ROOT/grafts
+    require(not os.path.lexists(grafts) and not git23('for-each-ref', '--format=%(refname)', 'refs/replace').strip() and
+        not os.environ.get('GIT_REPLACE_REF_BASE'), 'R24_HISTORY_SUBSTITUTION')
+    require(git23('rev-parse', '--is-shallow-repository').strip() == b'false' and
+        git23('rev-parse', RELEASE24_BASE+'^{tree}').decode().strip() == RELEASE24_TREE, 'R24_FULL_PINNED_HISTORY')
+    endpoint = source24_endpoint()
+    require(git23('merge-base', RELEASE24_BASE, endpoint).decode().strip() == RELEASE24_BASE, 'R24_ANCESTRY')
+    previous = RELEASE24_BASE; frozen = evidence_seen = False
+    for commit in git23('rev-list', '--reverse', RELEASE24_BASE+'..'+endpoint).decode().splitlines():
+        require(git23('rev-list', '--parents', '-n', '1', commit).decode().split() == [commit, previous], 'R24_LINEAR_HISTORY')
+        require(not evidence_seen, 'R24_AFTER_EVIDENCE_TAIL')
+        validate24_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', previous, commit),
+            lambda path: git23('show', commit+':'+path), previous)
+        validate24_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE24_BASE, commit),
+            lambda path: git23('show', commit+':'+path))
+        paths = set(git23('diff', '--name-only', '--no-renames', '-z', previous, commit).decode().split('\0')[:-1])
+        evidence_seen = any(p.startswith(RELEASE24_CHECKPOINT) for p in paths)
+        require('ONSKIN_BRAIN_HANDOFF.txt' not in paths or evidence_seen, 'R24_HANDOFF_BEFORE_TAIL')
+        if evidence_seen:
+            expected = {p for p in RELEASE24_NEW if p.startswith(RELEASE24_CHECKPOINT)}
+            require(frozen and paths == expected | {'ONSKIN_BRAIN_HANDOFF.txt'}, 'R24_EVIDENCE_TAIL_SCOPE')
+        elif paths & RELEASE24_WORKLIST:
+            require(not frozen and paths == RELEASE24_WORKLIST, 'R24_WORKLIST_ONLY_FREEZE')
+            frozen = True
+        else:
+            require(not frozen, 'R24_SOURCE_AFTER_FREEZE')
+        previous = commit
+    return endpoint
+
+
+def evidence24_guard(endpoint):
+    names = {p for p in git23('diff', '--name-only', '--no-renames', '-z', RELEASE24_BASE, endpoint).decode().split('\0')
+        if p.startswith(RELEASE24_CHECKPOINT)}
+    expected = {p for p in RELEASE24_NEW if p.startswith(RELEASE24_CHECKPOINT)}
+    if not names:
+        require(not (ROOT/RELEASE24_CHECKPOINT).exists(), 'R24_UNCOMMITTED_EVIDENCE')
+        return
+    require(names == expected, 'R24_EVIDENCE_EXACT_PATHS')
+    manifest = json.loads(regular23(ROOT/(RELEASE24_CHECKPOINT+'manifest.json')), object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R24_NONFINITE_JSON'))
+    require(type(manifest) is dict and set(manifest) == {'schema', 'authority', 'status', 'acceptanceGranted',
+        'release', 'inputManifestSHA256', 'source', 'files', 'payload'} and
+        type(manifest['schema']) is int and manifest['schema'] == 1 and manifest['authority'] == RELEASE24_AUTHORITY and
+        manifest['status'] == 'SUBMITTED_REVIEW_REQUIRED' and manifest['acceptanceGranted'] is False and
+        manifest['release'] == 'NO_GO' and manifest['inputManifestSHA256'] ==
+        '4ad7e101bd0d6d47613a956c7958a3148d143f12dd333e40652e910ea8573298', 'R24_EVIDENCE_NO_ADMISSION')
+    source = manifest['source']
+    require(type(source) is dict and set(source) == {'base', 'baseTree', 'runtimeHead', 'runtimeTree', 'sourceHead', 'sourceTree'} and
+        source['base'] == RELEASE24_BASE and source['baseTree'] == RELEASE24_TREE and
+        all(type(v) is str and re.fullmatch('[0-9a-f]{40}', v) for v in source.values()), 'R24_EVIDENCE_SOURCE')
+    require(git23('rev-parse', source['runtimeHead']+'^{tree}').decode().strip() == source['runtimeTree'] and
+        git23('rev-parse', source['sourceHead']+'^{tree}').decode().strip() == source['sourceTree'] and
+        git23('rev-list', '--parents', '-n', '1', source['sourceHead']).decode().split() == [source['sourceHead'], source['runtimeHead']] and
+        git23('rev-list', '--parents', '-n', '1', endpoint).decode().split() == [endpoint, source['sourceHead']], 'R24_ONE_EVIDENCE_TAIL')
+    require(set(git23('diff', '--name-only', '--no-renames', '-z', source['runtimeHead'], source['sourceHead']).decode().split('\0')[:-1]) ==
+        RELEASE24_WORKLIST, 'R24_WORKLIST_ONLY_FREEZE')
+    require(set(git23('diff', '--name-only', '--no-renames', '-z', source['sourceHead'], endpoint).decode().split('\0')[:-1]) ==
+        expected | {'ONSKIN_BRAIN_HANDOFF.txt'}, 'R24_EVIDENCE_TAIL_SCOPE')
+    files = manifest['files']
+    require(type(files) is dict and set(files) == {'README.md', 'FINAL_REPORT.md', 'payload.zip', 'verify24.py'}, 'R24_EVIDENCE_FILES')
+    actual = set()
+    for path in (ROOT/RELEASE24_CHECKPOINT).iterdir():
+        info = path.lstat()
+        require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024, 'R24_EVIDENCE_LINK')
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'R24_EVIDENCE_REGULAR')
+        actual.add(path.relative_to(ROOT).as_posix())
+    require(actual == expected, 'R24_EVIDENCE_INVENTORY')
+    for name, witness in files.items():
+        raw = regular23(ROOT/(RELEASE24_CHECKPOINT+name))
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(raw) and witness['sha256'] == sha(raw), 'R24_EVIDENCE_HASH')
+    require(all(regular23(ROOT/path) == git23('show', endpoint+':'+path) for path in expected | {'ONSKIN_BRAIN_HANDOFF.txt'}),
+        'R24_EVIDENCE_COMMITTED_BYTES')
+
+
+
+def source24_guard():
+    endpoint = source24_history(); evidence24_guard(endpoint)
+    if (ROOT/(RELEASE24_CHECKPOINT+'manifest.json')).exists():
+        require(not git23('status', '--porcelain=v1', '--untracked-files=all', '-z'), 'R24_FROZEN_CHECKOUT_DIRTY')
+    candidate24_guard(regular23(ROOT/RELEASE24_CANDIDATE))
+    candidate24_guard(git23('show', ':'+RELEASE24_CANDIDATE))
+    validate24_diff(git23('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE24_BASE), lambda p: git23('show', ':'+p))
+    validate24_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE24_BASE), lambda p: regular23(ROOT/p))
+    identities = {}; tree = {}
+    for raw in git23('ls-tree', '-r', '-z', endpoint).split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, kind, oid = meta.decode().split(); path = name.decode()
+        require(kind == 'blob' and mode in ('100644', '100755'), 'R24_TREE_MODE')
+        tree[path] = (mode, oid); remember21(path, identities)
+    index = {}
+    for raw in git23('ls-files', '--stage', '-z').split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, oid, stage = meta.decode().split(); path = name.decode()
+        require(stage == '0' and mode in ('100644', '100755') and path not in index, 'R24_INDEX_STAGE_MODE')
+        index[path] = (mode, oid); remember21(path, identities)
+    for raw in git23('ls-files', '-v', '-z').split(b'\0'):
+        if raw: require(raw.startswith(b'H '), 'R24_INDEX_FLAGS')
+    for path in git23('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if not path: continue
+        require(path in RELEASE24_NEW and path not in index, 'R24_UNTRACKED_SCOPE'); remember21(path, identities); regular23(ROOT/path)
+    # Full clean-source inventory/scanner coverage is independently executed by security22.
+    # This guard proves finite source governance, never technical Security readiness.
+    return tree
+
+
+
+def validate24(bundle=BUNDLE):
+    # Explicit external bundle fixtures retain unchanged Release23 historical semantics.
+    try: current = Path(bundle).resolve() == BUNDLE.resolve()
+    except Exception: raise ValueError('R24_BUNDLE_SCOPE') from None
+    if not current: return validate23(bundle)
+    try:
+        source24_guard()
+        result = historical21_validate(BUNDLE)
+        result.update(current_source_governance='RELEASE24_FINITE_SCOPE_ONLY',
+            inherited_release23='IMMUTABLE_PR27_DEFINITIONS;NOT_REPLAYED_BY_CURRENT_PATH',
+            source_acceptance='SUBMITTED_REVIEW_REQUIRED', acceptanceGranted=False,
+            admissions=dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False), release='NO_GO')
+        return result
+    except Exception as error:
+        # Map through the unchanged Release23 fixed-code boundary to preserve
+        # original semantic refusals without exposing dynamic paths or exception text.
+        code = error.args[0] if type(error) is ValueError and len(error.args) == 1 and type(error.args[0]) is str else None
+        known = {
+            'R23_PUBLIC_BOUND', 'R23_PUBLIC_PATH', 'R23_PUBLIC_FILE', 'R23_PUBLIC_CHANGED',
+            'R23_PUBLIC_READ_INCOMPLETE', 'R23_GIT_ENV', 'R23_HISTORICAL_BACKPORT_PROFILES',
+            'R23_TOOLING_SYNTAX', 'R23_ACTIVE_BACKPORT_PROFILES',
+            'R24_AFTER_BLOB', 'R24_AFTER_EVIDENCE_TAIL', 'R24_ANCESTRY', 'R24_AUTHENTIC_FINITE_GRANT',
+            'R24_CI_CONTEXT', 'R24_CI_EVENT', 'R24_CI_EVENT_CHANGED', 'R24_CI_EVENT_JSON',
+            'R24_CI_EVENT_PATH', 'R24_CI_EVENT_SIZE', 'R24_CI_MERGE_TREE', 'R24_COMMAND_PRESERVATION',
+            'R24_CREATE_EDIT', 'R24_DEPENDENCY_SCHEMA', 'R24_DIFF_SHAPE', 'R24_DISPATCH',
+            'R24_DISPATCH_REQUIRED', 'R24_DUPLICATE_ASSIGNMENT', 'R24_EVIDENCE_COMMITTED_BYTES',
+            'R24_EVIDENCE_EXACT_PATHS', 'R24_EVIDENCE_FILES', 'R24_EVIDENCE_HASH',
+            'R24_EVIDENCE_INVENTORY', 'R24_EVIDENCE_LINK', 'R24_EVIDENCE_NO_ADMISSION',
+            'R24_EVIDENCE_REGULAR', 'R24_EVIDENCE_SOURCE', 'R24_EVIDENCE_TAIL_SCOPE',
+            'R24_EXISTING_TOOLING_REGRESSIONS', 'R24_FINITE_SCOPE', 'R24_FRAMEWORK_VERSION',
+            'R24_FROZEN_CHECKOUT_DIRTY', 'R24_FULL_PINNED_HISTORY', 'R24_FUNCTION_SCOPE',
+            'R24_GLOBAL_SCOPE', 'R24_GLOBAL_SIDE_EFFECT', 'R24_GRANT_SCHEMA', 'R24_HANDOFF_BEFORE_TAIL',
+            'R24_HEAD_PARENTS', 'R24_HISTORY_SUBSTITUTION', 'R24_INDEX_FLAGS', 'R24_INDEX_STAGE_MODE',
+            'R24_INHERITED_BYTES', 'R24_LINEAR_HISTORY', 'R24_LOCK_FRAMEWORK', 'R24_LOCK_SCHEMA',
+            'R24_MODE_OR_DELETION', 'R24_MODULE_SCOPE', 'R24_NEW_BLOB', 'R24_NONFINITE_JSON',
+            'R24_NO_ADMISSION', 'R24_ONE_EVIDENCE_TAIL', 'R24_PACKAGE_PURPOSE', 'R24_PACKAGE_SCHEMA',
+            'R24_PARENT_BLOB', 'R24_PARENT_PROVENANCE', 'R24_POSTINSTALL_PRESERVATION',
+            'R24_QUALITY_GATE_PRESERVATION', 'R24_QUALITY_BOOTSTRAP_BOUND', 'R24_SOURCE_AFTER_FREEZE',
+            'R24_TREE_MODE', 'R24_UNCOMMITTED_EVIDENCE', 'R24_UNTRACKED_SCOPE', 'R24_WORKLIST_ONLY_FREEZE',
+        }
+        if code in known: raise ValueError(code) from None
+        # Use the inherited semantic vocabulary. Only the inherited validator's
+        # fixed refusal labels are admitted; no caller-controlled suffix survives.
+        legacy = set((
+            'AUTHENTIC_HISTORY: BASE_BLOB_SHA256: BASE_TREE CONTRACT_BASE CONTRACT_VERSION C_ALIAS: '
+            'DAG38_EXACT_OWNERS DAG_CYCLE: DAG_EDGE: DAG_GATE: DAG_IDENTITIES DAG_NOT_ISSUANCE: '
+            'DAG_OPERATIONAL_GATES: DAG_ROW_OWNER: DAG_UNKNOWN_NODE: F09_DIARY F09_NOT_F18 FINITE_IDS: F_ALIAS: '
+            'GATE_CLOSED: GATE_IDENTITIES GATE_OWNER: HISTORICAL_COUNT: HISTORICAL_DEPS: HISTORICAL_IDENTITIES: '
+            'HISTORICAL_NODE: HISTORICAL_PROVENANCE: HISTORICAL_RECORD: HISTORICAL_STATUS: HISTORY_AUTHORITY '
+            'HISTORY_NO_ACCEPTANCE J01_DAG J01_G4_CHANGE_GATE J01_INTAKE J01_NO_CLAIMS J01_SINGLE_SCAN_GATES '
+            'JSON_DUPLICATE_KEY: JSON_NONFINITE: J_REGISTRY: J_ROW_GATES: LEDGER_CUSTODY LEGACY_CONSUMERS '
+            'LEGACY_DOC_BYTES: LEGACY_GUARD M103_TO_M2 MATRIX65_IDENTITIES MATRIX_COUNTS NO_ADMISSION '
+            'NO_FAKE_CUTOVER NO_SELF_ACCEPTANCE NO_STUB_GREEN: PLATFORM_TERRITORY PRECEDENCE_LIMIT '
+            'PRECEDENCE_NOTICE: PRECEDENCE_ORDER PRECEDENCE_PROPOSAL PRECEDENCE_SAFETY PRIORITY_NOT_J05_ADMISSION '
+            'PRODUCT_AUTHORITY PROTECTED_WITNESS_OMITTED P_ALIAS: REGULAR_PATH: ROW_EVIDENCE: ROW_GATES: '
+            'ROW_OVERLAP: ROW_QUALIFIED_OWNERS: ROW_REQUIRED_GATE: ROW_STATUS: ROW_TRACEABILITY: SAFE_OFFER '
+            'SCHEMA_CONST: SCHEMA_DIALECT SCHEMA_DUPLICATE: SCHEMA_ENUM: SCHEMA_MAX_ITEMS: SCHEMA_MIN_ITEMS: '
+            'SCHEMA_MIN_LENGTH: SCHEMA_REQUIRED: SCHEMA_TYPE: SCHEMA_UNKNOWN_KEY: SCHEMA_UNSUPPORTED: '
+            'SOURCE_ABSENT: SOURCE_IDENTITY: SOURCE_MATURITY: SOURCE_MODE: SOURCE_PATH SOURCE_SHA256: '
+            'UNTRACKED_SCOPE: WORKING_SCOPE: ZERO_SPEND '
+        ).split())
+        prefix = code.split(':', 1)[0]+':' if code is not None and ':' in code else code
+        safe = code if code in legacy else prefix if prefix in legacy else 'R24_EXECUTION_INCOMPLETE'
+        raise ValueError(safe) from None
+
+
+source_guard = source24_guard
+validate = validate24
+
+
 if __name__ == '__main__':
     sys.exit(main())
