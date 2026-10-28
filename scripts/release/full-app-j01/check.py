@@ -3613,7 +3613,7 @@ def validate23(bundle=BUNDLE):
         source23_guard()
         result = historical21_validate(bundle)
         result['current_source_governance'] = 'RELEASE23_FINITE_SCOPE_ONLY'
-        result['inherited_release22'] = 'IMMUTABLE_PR26_DEFINITIONS; HISTORICAL_CONSUMER_EXECUTED_SEPARATELY'
+        result['inherited_release22'] = 'IMMUTABLE_PR26_DEFINITIONS; NOT_REPLAYED_BY_CURRENT_PATH'
         result['source_acceptance'] = 'SUBMITTED_REVIEW_REQUIRED'
         result['release'] = 'NO_GO'
         return result
