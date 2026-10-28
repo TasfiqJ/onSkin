@@ -24,12 +24,13 @@ def digest(raw):
 
 GIT_COMMAND = ['git', '--no-pager', '--no-replace-objects', '--no-optional-locks',
                '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false',
-               '-c', 'diff.external=', '-c', 'core.hooksPath=']
+               '-c', 'core.longpaths=true', '-c', 'diff.external=', '-c', 'core.hooksPath=']
 
 
 def git(root, *args):
-    code, out, _ = execute([*GIT_COMMAND, *args], root, seconds=180, limit=64 * 1024 * 1024)
+    code, out, error = execute([*GIT_COMMAND, *args], root, seconds=180, limit=64 * 1024 * 1024)
     require(code == 0, 'GIT_INCOMPLETE')
+    require(not error.strip(), 'GIT_DIAGNOSTIC')
     return out
 
 
@@ -76,13 +77,21 @@ def regular(root, name, maximum):
     require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and info.st_size <= maximum,
             'NONREGULAR_OR_OVERSIZED')
     require(not info.st_mode & (stat.S_ISUID | stat.S_ISGID), 'SPECIAL_MODE')
-    with path.open('rb') as stream:
+    def stamp(value, comparable=False):
+        mode = value.st_mode & ~0o111 if os.name == 'nt' else value.st_mode
+        changed = getattr(value, 'st_birthtime_ns', value.st_ctime_ns) if comparable and os.name == 'nt' else value.st_ctime_ns
+        return (value.st_dev, value.st_ino, mode, value.st_nlink, value.st_size,
+                value.st_mtime_ns, changed)
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
+    with os.fdopen(descriptor, 'rb') as stream:
+        opened = os.fstat(stream.fileno())
+        require(stamp(opened, True) == stamp(info, True), 'CHANGED_INPUT')
         # Bound by the witnessed size as well as the policy ceiling; detect growth
         # without allocating a maximum-size buffer for every small source file.
         raw = stream.read(info.st_size + 1)
+        require(stamp(os.fstat(stream.fileno())) == stamp(opened), 'CHANGED_INPUT')
     after = path.lstat()
-    require(len(raw) <= maximum and (info.st_ino, info.st_size, info.st_mtime_ns) ==
-            (after.st_ino, after.st_size, after.st_mtime_ns), 'CHANGED_INPUT')
+    require(len(raw) == info.st_size and len(raw) <= maximum and stamp(info) == stamp(after), 'CHANGED_INPUT')
     return raw
 
 
@@ -210,10 +219,10 @@ def snapshot(root, policy):
     scope = [head] + list(refs.values())
     history = git(root, 'rev-list', '--objects', '--no-object-names', *scope).splitlines()
     # No arbitrary --all refs or private/dangling commits are read.
-    code, object_data, _ = execute([*GIT_COMMAND, 'cat-file', '--batch-check'], root, 180,
+    code, object_data, object_error = execute([*GIT_COMMAND, 'cat-file', '--batch-check'], root, 180,
                                   64*1024*1024, input_data=b'\n'.join(history)+b'\n')
     checked = object_data.splitlines()
-    require(code == 0 and len(checked) == len(history) and all(
+    require(code == 0 and not object_error.strip() and len(checked) == len(history) and all(
         re.fullmatch(rb'[0-9a-f]{40} (blob|tree|commit|tag) [0-9]+', row) and
         row.split()[0] == oid for row, oid in zip(checked, history)), 'HISTORY_OBJECTS_INCOMPLETE')
     commits = len(git(root, 'rev-list', *scope).splitlines())

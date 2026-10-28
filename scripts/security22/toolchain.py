@@ -192,6 +192,6 @@ def identity(root):
               'apps/mobile/package.json', 'apps/catalog-operator-console/package.json']
     paths += ['scripts/security22/patch-tooling.mjs', 'scripts/security22/patch-tooling.test.mjs',
               'scripts/security22/backports.json']
-    paths += ['scripts/security23/test_partial_results.py', 'scripts/security23/test_toolchain.py']
+    paths += ['scripts/security23/test_partial_results.py', 'scripts/security23/test_toolchain.py', 'scripts/security23/test_integration.py']
     sources = {name: hashlib.sha256(regular(root, name, 16*1024*1024)).hexdigest() for name in paths}
     return dict(schema=1, tools=tools, inputs=sources, identitySHA256=hashlib.sha256(canonical([tools, sources])).hexdigest())

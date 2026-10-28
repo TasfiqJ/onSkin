@@ -5,9 +5,11 @@ import hashlib
 import io
 import json
 import os
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -18,7 +20,7 @@ from redact import Refusal, canonical, diagnostic
 CANARY = 'SYNTHETIC_PRIVATE_OUTPUT_23_C:/private/eyJ.invalid.signature'
 GATE = dict(errors=0, failures=0, passed=True,
     qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=26)
-PARTIAL = dict(testsRun=10, failures=0, errors=0, skipped=0, passed=True,
+PARTIAL = dict(testsRun=13, failures=0, errors=0, skipped=0, passed=True,
     qualification='SYNTHETIC_PARTIAL_PUBLICATION_ONLY')
 TOOLS = {'identitySHA256': 'a' * 64}
 SOURCE = dict(head='b' * 40, tree='c' * 40, metadata={'state': 'PASS'},
@@ -27,10 +29,13 @@ SOURCE = dict(head='b' * 40, tree='c' * 40, metadata={'state': 'PASS'},
 
 
 def gates(argv, *args, **kwargs):
+    if argv[-1].endswith('test_integration.py'):
+        return 0, canonical(dict(testsRun=6, failures=0, errors=0, skipped=0, passed=True,
+            qualification='SYNTHETIC_PUBLIC_INPUT_CONTROLS_ONLY')), b''
     if argv[-1] == '--regressions':
         missing = 12 if os.name == 'nt' else 3
         return 0, canonical(dict(qualification='SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY',
-            state='PASS', platform=os.name, acceptanceGranted=False, tests=43, passed=43-missing,
+            state='PASS', platform=os.name, acceptanceGranted=False, tests=47, passed=47-missing,
             failed=0, errors=0, notRun=missing)), b''
     return 0, canonical(PARTIAL if argv[-1].endswith('test_partial_results.py') else GATE), b''
 
@@ -39,6 +44,7 @@ class Controls(unittest.TestCase):
     def preflight(self, where, error):
         with patch.object(run, 'execute', side_effect=gates), patch.object(run, 'policy', return_value={}), \
              patch.object(run, 'identity', return_value=TOOLS), patch.object(run, 'snapshot', return_value=SOURCE), \
+             patch.object(run, 'toolchain_gate_report', side_effect=lambda value, code: dict(value, exit=code)), \
              patch.object(run, where, side_effect=error):
             return run.perform(Path.cwd())
 
@@ -122,7 +128,8 @@ class Controls(unittest.TestCase):
         with patch.object(run, 'execute', side_effect=execute), patch.object(run, 'policy', return_value={}), \
              patch.object(run, 'identity', return_value=tools), patch.object(run, 'snapshot', return_value=SOURCE), \
              patch.object(run, 'dependency', return_value={'state': 'FINDINGS', 'exit': 1}), \
-             patch.object(run, 'regular', return_value=b'{}'), patch.object(run, 'tap', return_value={'state': 'PASS', 'exit': 0}):
+             patch.object(run, 'regular', return_value=b'{}'), patch.object(run, 'tap', return_value={'state': 'PASS', 'exit': 0}), \
+             patch.object(run, 'toolchain_gate_report', side_effect=lambda value, code: dict(value, exit=code)):
             return run.perform(Path.cwd())
 
     def test_completed_tooling_survives_patch_exception(self):
@@ -137,6 +144,52 @@ class Controls(unittest.TestCase):
         self.assertTrue(value['components']['dependencies']['executed'])
         self.assertEqual(value['components']['tooling_regressions']['state'], 'NOT_RUN')
         self.assertEqual(value['source'], SOURCE)
+
+    def test_progress_index_is_exclusive_and_hash_bound(self):
+        value = self.preflight('identity', Refusal(CANARY))
+        with tempfile.TemporaryDirectory(prefix='security23-journal-') as temporary:
+            target = Path(temporary) / 'new'
+            journal = run.OutputJournal(target); journal.record(value)
+            run.publish_components(target, value, journal)
+            index = json.loads((target/'index.json').read_bytes())
+            self.assertIn('progress-000.json', index['files'])
+            for name, record in index['files'].items():
+                raw = (target/name).read_bytes()
+                self.assertEqual(record, dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest()))
+                self.assertNotIn(CANARY, raw.decode())
+            with self.assertRaises(FileExistsError): run.OutputJournal(target)
+
+    def test_replaced_output_directory_refuses(self):
+        with tempfile.TemporaryDirectory(prefix='security23-journal-') as temporary:
+            target = Path(temporary)/'new'; journal = run.OutputJournal(target)
+            target.rename(Path(temporary)/'original'); target.mkdir()
+            with self.assertRaises(Refusal): journal.record({'synthetic': True})
+
+    def test_hard_process_stop_preserves_durable_partial_result(self):
+        with tempfile.TemporaryDirectory(prefix='security23-journal-') as temporary:
+            target = Path(temporary)/'new'
+            code = ('import sys,time; sys.path.insert(0,sys.argv[1]); import run; '
+                'c={"technical":{"state":"PASS"},"qualified_custody":{"state":"BLOCKED_EXTERNAL_CUSTODY"}}; '
+                'r=dict(schema=1,qualification="SYNTHETIC_INTERRUPTED_PUBLICATION_ONLY",source=None,toolchain=None,'
+                'components=c,executionComplete=False,**run.summary(c)); '
+                'j=run.OutputJournal(run.Path(sys.argv[2])); j.record(r); '
+                'open(sys.argv[2]+".ready","xb").close(); time.sleep(30)')
+            child = subprocess.Popen([sys.executable, '-B', '-c', code, str(Path(run.__file__).parent), str(target)],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                **({'creationflags': subprocess.CREATE_NO_WINDOW} if os.name == 'nt' else {}))
+            try:
+                deadline = time.monotonic()+5
+                path = target/'progress-000.json'
+                ready = Path(str(target)+'.ready')
+                while not ready.exists() and child.poll() is None and time.monotonic() < deadline: time.sleep(.02)
+                self.assertTrue(ready.exists())
+                self.assertTrue(path.exists()); child.terminate(); child.wait(timeout=5)
+                result = json.loads(path.read_bytes())
+                self.assertEqual(result['components']['technical']['state'], 'PASS')
+                self.assertIsNone(result['source']); self.assertIsNone(result['toolchain'])
+                self.assertFalse(result['executionComplete']); self.assertFalse(result['acceptanceGranted'])
+            finally:
+                if child.poll() is None: child.kill(); child.wait(timeout=5)
 
 
 def main():

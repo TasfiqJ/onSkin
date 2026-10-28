@@ -415,19 +415,37 @@ def regression_tests():
 
     class SafeResult(unittest.TestResult):
         def __init__(self): super().__init__(); self.cases = []
-        def addSuccess(self, test): self.cases.append(dict(name=test._testMethodName, state='PASS'))
+        def note(self, case):
+            rank = {'PASS': 0, 'NOT_RUN': 1, 'FAIL': 2, 'INCOMPLETE': 3}
+            for index, prior in enumerate(self.cases):
+                if prior['name'] == case['name']:
+                    if rank[case['state']] > rank[prior['state']]: self.cases[index] = case
+                    return
+            self.cases.append(case)
+        def addSuccess(self, test): self.note(dict(name=test._testMethodName, state='PASS'))
         def addFailure(self, test, error):
-            self.failures.append((test, 'ASSERTION_FAILED')); self.cases.append(dict(name=test._testMethodName, state='FAIL'))
+            self.failures.append((test, 'ASSERTION_FAILED')); self.note(dict(name=test._testMethodName, state='FAIL'))
         def addError(self, test, error):
-            self.errors.append((test, 'EXECUTION_INCOMPLETE')); self.cases.append(dict(name=test._testMethodName, state='INCOMPLETE'))
+            self.errors.append((test, 'EXECUTION_INCOMPLETE')); self.note(dict(name=test._testMethodName, state='INCOMPLETE'))
         def addSkip(self, test, reason):
-            self.skipped.append((test, reason)); self.cases.append(dict(name=test._testMethodName, state='NOT_RUN', reason=reason))
+            self.skipped.append((test, reason)); self.note(dict(name=test._testMethodName, state='NOT_RUN', reason=reason))
+    def combined_failure(self):
+        class Broken(unittest.TestCase):
+            def runTest(self): raise AssertionError('SYNTHETIC_BODY_FAILURE_PRIVATE_SENTINEL')
+            def tearDown(self): raise OSError('SYNTHETIC_CLEANUP_FAILURE_PRIVATE_SENTINEL')
+        result = SafeResult(); unittest.TestSuite([Broken()]).run(result)
+        self.assertEqual(result.testsRun, 1); self.assertEqual(len(result.cases), 1)
+        self.assertEqual(result.cases[0]['state'], 'INCOMPLETE')
+        self.assertEqual((len(result.failures), len(result.errors)), (1, 1))
+        self.assertNotIn('PRIVATE_SENTINEL', json.dumps(result.cases))
+    setattr(ToolchainTests, 'test_duplicate_failure_cleanup_is_one_incomplete_case', combined_failure)
     result = SafeResult(); unittest.defaultTestLoader.loadTestsFromTestCase(ToolchainTests).run(result)
     expected = {'POSIX_FILESYSTEM_CONTROL_NOT_RUN_ON_WINDOWS', 'WINDOWS_SHIM_CONTROL_NOT_RUN_ON_POSIX', 'WINDOWS_ACL_CONTROL_NOT_RUN_ON_POSIX', 'WINDOWS_REPARSE_CONTROL_NOT_RUN_ON_POSIX'}
     state = 'PASS' if not result.failures and not result.errors and not any(r not in expected for _, r in result.skipped) else 'INCOMPLETE'
     return dict(schema=1, qualification='SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY', state=state,
-        tests=result.testsRun, passed=sum(c['state'] == 'PASS' for c in result.cases), failed=len(result.failures),
-        errors=len(result.errors), notRun=len(result.skipped), platform=os.name, cases=result.cases, acceptanceGranted=False)
+        tests=result.testsRun, passed=sum(c['state'] == 'PASS' for c in result.cases),
+        failed=sum(c['state'] == 'FAIL' for c in result.cases), errors=sum(c['state'] == 'INCOMPLETE' for c in result.cases),
+        notRun=sum(c['state'] == 'NOT_RUN' for c in result.cases), platform=os.name, cases=result.cases, acceptanceGranted=False)
 
 
 if __name__ == '__main__':

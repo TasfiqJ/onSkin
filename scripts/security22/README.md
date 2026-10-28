@@ -6,6 +6,10 @@ publish fixed stage/predicate tokens only. Early refusals retain disclosure
 controls and explicit NOT_RUN/INCOMPLETE components; unknown source/tool bindings
 remain null. Interrupted attempted checks are INCOMPLETE. A failed native patch
 check cannot erase a completed tooling result. Readiness remains nonzero.
+Exclusive, fsynced progress records precede collection and retain completed
+components even after a hard process stop. Their unfinished stability state and
+null unestablished bindings are explicit. A completed run's index hashes both
+the journal and the final individual component receipts.
 
 The npm profile is a **fresh global npm 11.20.0 installation** in an isolated
 prefix containing a regular Node 22 binary. CI provisions this prefix normally.
@@ -27,6 +31,10 @@ expected content; they do not establish completeness by themselves. Windows
 path/fd stat executable-bit inference differs, so only those inferred bits are
 normalized; file type, identity, size, timestamps and actual ACL reads remain
 checked.
+Windows Python 3.12 reports path and handle ctime in different clock domains.
+Only cross-domain path/handle comparison uses birthtime; handle/handle raw
+ChangeTime and path/path raw timestamps still detect mutations. Git uses its
+native long-path support, and any diagnostic on stderr refuses enumeration.
 
 Run `python -B scripts/security23/test_partial_results.py` and
 `python -B scripts/security23/test_toolchain.py --regressions` in addition to
