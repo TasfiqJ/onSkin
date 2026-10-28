@@ -1,6 +1,6 @@
 # Campaign24 performed validation and proof scopes
 
-Every receipt binds its actual command, commit/tree, output hashes, exit and execution scope. The checkpoint and complete returned FINAL_REPORT.md retain final-head CI and independent checkout observations separately. No cached or historical result substitutes for current execution.
+Executed local-command receipts bind actual commands, commit/tree, captured output hashes, exits and execution scope. Restricted or unavailable hashes remain explicitly NOT_RUN. The checkpoint and complete returned FINAL_REPORT.md retain final-head CI and independent checkout observations separately. No cached or historical result substitutes for current execution.
 
 ## Integrated Windows source checks
 
@@ -23,3 +23,9 @@ Release24's separately committed source controls preserve all151 inherited funct
 The original PR27 canonical failure was independently re-read: ECR Data limit exceeded beforeSQL. A local baseline attempt reached an unresponsive Docker engine and a bounded180-second timeout before stack startup; exact task children and sandbox were cleaned. Actual hosted prefreeze runs first exercised ECR quota fallback then hit GHCR layer throttling, and later exposed the modern Docker index-ID model. Those failures caused bounded, tested repairs; they remain distinct actual failed attempts. A successful isolatedPG15/17 rehearsal is supporting evidence only. The actual final canonical run, reset-twice/SQL/RLS/drift/type outcome and final CI jobs are reported after source freeze without a second evidence tail. Unit image proof never asserts SQL acceptance.
 
 All work remains SUBMITTED_REVIEW_REQUIRED. G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. Native/J01/VoiceOver/provider/clinical/legal/Apple/public release CLOSED. USD0; no merges.
+
+## Completed runtime canonical result
+
+At exact runtime6488b220f6b4da6487f0048eb5e1db8da3e777a2, Quality40758426039 canonicaljob123063483970 completed successfully. Actual default PR-merge checkout33a5941cfdae39d7c206d14d96b383f112edbfe8 has the exact runtime tree63c88990a91ac87c2e3b644de5ff8357ddf113e8 and parentsPR27/runtime; this is tree-equal merge execution, not an exact-head checkout claim. Real ECRquota fallback activated, twoGHCRrate retries recovered, and the verified identical mirror started the canonical stack. Allfiveforward cutovers, bothfull97-migration resets/latest20261010000081, focusedSQL, full20-file structural/RLSdirectory, error-level lint, emptydrift, CAT08two-connection rehearsal, generatedtypes7381lines/repositoryparity and awaitedcleanup passed. The unchangedproducer does not emit an aggregate pgTAPassertioncount; none is fabricated. ActualPG15/17each passed15rehearsals. These are technical execution results; DB06/DB08/R2B remain NOT_ACCEPTED.
+
+The DockerHubsecondary path is unit/metadata verified but was not needed for the actual canonical run. FullPGrehearsal-log hashing was rejected by automaticapprovalreview because the JavaScript request exceeded64000bytes. Those hashes and the currentcanonical full-log hash remain NOT_RUN; no alternatewrapper/tool/identity was used. Sanitizedphase/count/outcome receipts and jobmetadata are preserved. Final-head execution is recorded separately after the sole evidence tail.

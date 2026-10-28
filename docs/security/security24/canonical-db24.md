@@ -199,3 +199,9 @@ Classification pending an actual full canonical execution:
 `IMPLEMENTED_NOT_EXECUTED` for end-to-end recovery; proven unit controls and
 public image metadata do not qualify SQL or database acceptance. All original
 release/custody gates remain closed and source requires independent Brain review.
+
+## Superseding runtime execution result, 2026-10-28
+
+The earlier pending-execution statements above are historical implementation snapshots. Actual runtime6488b220f6b4da6487f0048eb5e1db8da3e777a2 now has canonical technical FIXED_AND_PROVED evidence: Quality40758426039/job123063483970 succeeded. Its actual mergecheckout33a5941cfdae39d7c206d14d96b383f112edbfe8 is independently verified tree-equal to runtime63c88990a91ac87c2e3b644de5ff8357ddf113e8. Real ECRquota fallback, twoGHCRrate retries and identical nativeimage proof executed. Fiveforward cutovers, bothfull97-migration resets, SQL/RLS, lint, emptydrift, CAT08concurrency, generatedtypes7381lines/paritySHA2562b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795 and awaitedcleanup passed. The20structural sourcefiles/fivefocused selectedfiles are the source-scope denominator; aggregate runtime assertioncount is not emitted. PG15andPG17each passed15isolatedrehearsals. These do not grant database acceptance.
+
+ActualDockerHubsecondary pulling remains NOT_RUN because GHCRrecovered; its source/metadata/unit controls passed. The returnedcanonicalreceipt contains only sanitizedphase/count/outcomes. Automaticapprovalreview refused oversizedfullPGloghashing; those hashes and currentcanonicalfull-log hashing are NOT_RUN without rerouting. DB06/DB08/R2B remain NOT_ACCEPTED, G97FAIL/NO_GO. Final-head CI and independent Brain review follow the source freeze.
