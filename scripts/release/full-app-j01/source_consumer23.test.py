@@ -137,7 +137,28 @@ def main():
         try: expect('actual-public-hardlink-alias', lambda: check.regular23(public), 'R23_PUBLIC_FILE')
         finally: alias.unlink()
         expect('public-hardlink-restoration', lambda: check.require(check.regular23(public) == body, 'READ_MISMATCH'), expected=0)
-        actual_lstat = Path.lstat
+        actual_lstat = Path.lstat; actual_fstat = os.fstat
+        def domain_control(handle_change=False, path_change=False, windows=True):
+            reads = dict(path=0, handle=0)
+            def view(info, ctime, mode):
+                fields = {name:getattr(info,name) for name in ('st_dev','st_ino','st_nlink','st_size','st_mtime_ns')}
+                fields.update(st_mode=mode, st_ctime_ns=ctime, st_birthtime_ns=100,
+                    st_file_attributes=getattr(info,'st_file_attributes',0))
+                return type('SyntheticPublicTimeDomain', (), fields)()
+            def path_stat(path):
+                info = actual_lstat(path)
+                if path != public: return info
+                reads['path'] += 1
+                return view(info,100+(path_change and reads['path'] > 1),info.st_mode | 0o111)
+            def handle_stat(descriptor):
+                info = actual_fstat(descriptor); reads['handle'] += 1
+                return view(info,200+(handle_change and reads['handle'] > 1),info.st_mode & ~0o111)
+            with patch.object(check.os,'name','nt' if windows else 'posix'), patch.object(Path,'lstat',path_stat), patch.object(check.os,'fstat',handle_stat):
+                check.require(check.regular23(public) == body,'READ_MISMATCH')
+        expect('synthetic-Windows-path-handle-time-domains', domain_control, expected=0)
+        expect('synthetic-handle-ChangeTime-mutation', lambda: domain_control(handle_change=True), 'R23_PUBLIC_CHANGED')
+        expect('synthetic-path-raw-time-mutation', lambda: domain_control(path_change=True), 'R23_PUBLIC_CHANGED')
+        expect('POSIX-executable-mode-remains-strict', lambda: domain_control(windows=False), 'R23_PUBLIC_CHANGED')
         def linked_parent(path):
             info = actual_lstat(path)
             if path == public.parent:

@@ -3297,9 +3297,13 @@ def regular23(path, limit=128*1024*1024):
     """Read a single public current-path input with a stable, bounded identity."""
     require(isinstance(path, Path) and path.is_absolute() and type(limit) is int and
         0 <= limit <= 128*1024*1024, 'R23_PUBLIC_BOUND')
-    def identity(info):
-        return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_size,
-            info.st_mtime_ns, info.st_ctime_ns)
+    def identity(info, comparable=False):
+        # Windows path/handle APIs expose different ctime domains in CPython3.12.
+        # Keep raw ctime for same-domain stability; birthtime only joins the domains.
+        stamp = getattr(info, 'st_birthtime_ns', info.st_ctime_ns) if comparable and os.name == 'nt' else info.st_ctime_ns
+        mode = info.st_mode & ~0o111 if os.name == 'nt' else info.st_mode
+        return (info.st_dev, info.st_ino, mode, info.st_nlink, info.st_size,
+            info.st_mtime_ns, stamp)
     try:
         ancestors = []
         for parent in path.parents:
@@ -3314,7 +3318,8 @@ def regular23(path, limit=128*1024*1024):
         require(before.st_size <= limit, 'R23_PUBLIC_BOUND')
         descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
         try:
-            require(identity(os.fstat(descriptor)) == identity(before), 'R23_PUBLIC_CHANGED')
+            opened = os.fstat(descriptor)
+            require(identity(opened, comparable=True) == identity(before, comparable=True), 'R23_PUBLIC_CHANGED')
             pieces = []; total = 0
             while True:
                 chunk = os.read(descriptor, min(65536, limit-total+1))
@@ -3330,7 +3335,7 @@ def regular23(path, limit=128*1024*1024):
             info = parent.lstat()
             require((info.st_dev, info.st_ino, info.st_mode) == (device, inode, mode) and
                 not getattr(info, 'st_file_attributes', 0) & 1024, 'R23_PUBLIC_PATH')
-        require(identity(before) == identity(after) == identity(current) and total == before.st_size,
+        require(identity(opened) == identity(after) and identity(before) == identity(current) and total == before.st_size,
             'R23_PUBLIC_CHANGED')
         return b''.join(pieces)
     except OSError:
