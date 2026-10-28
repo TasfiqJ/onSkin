@@ -36,6 +36,13 @@ Only cross-domain path/handle comparison uses birthtime; handle/handle raw
 ChangeTime and path/path raw timestamps still detect mutations. Git uses its
 native long-path support, and any diagnostic on stderr refuses enumeration.
 
+The Windows deny-directory control uses a same-account restricted reader with
+optional privileges disabled. It privately verifies account identity and exact
+thread-token restoration. Public receipts retain only eight fixed boolean proof
+fields; no token, SID or arbitrary error is published. A missing capability or
+failed restoration is INCOMPLETE, and a denied enumeration is required before
+the inventory refusal counts as a performed positive control.
+
 Run `python -B scripts/security23/test_partial_results.py` and
 `python -B scripts/security23/test_toolchain.py --regressions` in addition to
 all inherited checks. Platform-specific counterparts are explicitly NOT_RUN

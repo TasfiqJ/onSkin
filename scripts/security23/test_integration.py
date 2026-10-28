@@ -21,6 +21,11 @@ TOKEN = 'SYNTHETIC_INPUT_WARNING_PRIVATE_PATH_23'
 def tool_fixture():
     cases = [dict(name=name, state='NOT_RUN', reason=run.TOOLCHAIN_NOT_RUN[name]) if name in run.TOOLCHAIN_NOT_RUN
         else dict(name=name, state='PASS') for name in sorted(run.TOOLCHAIN_CASES)]
+    if os.name == 'nt':
+        next(case for case in cases if case['name'] == 'test_actual_windows_acl_denial')['readerProof'] = dict(
+            sameAccount=True, threadTokenRestored=True, restrictedOptionalPrivilegesDisabled=True,
+            backupEnabledBefore=False, restoreEnabledBefore=False, backupEnabledDuring=False,
+            restoreEnabledDuring=False, hadThreadTokenBefore=False)
     return dict(schema=1, qualification='SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY', state='PASS',
         tests=48, passed=48-len(run.TOOLCHAIN_NOT_RUN), failed=0, errors=0,
         notRun=len(run.TOOLCHAIN_NOT_RUN), platform=os.name, cases=cases, acceptanceGranted=False)
@@ -63,6 +68,17 @@ class Controls(unittest.TestCase):
             variant = copy.deepcopy(good); variant[key] = value; variants.append(variant)
         variant = copy.deepcopy(good); variant['cases'].pop(); variants.append(variant)
         variant = copy.deepcopy(good); variant['cases'][0]['name'] = TOKEN; variants.append(variant)
+        if os.name == 'nt':
+            actual = next(case for case in good['cases'] if case['name'] == 'test_actual_windows_acl_denial')
+            self.assertEqual(run.toolchain_gate_report(good, 0)['readerProofs'], [dict(name=actual['name'], **actual['readerProof'])])
+            for key, replacement in [('sameAccount', False), ('threadTokenRestored', False),
+                    ('backupEnabledDuring', True), ('restoreEnabledDuring', True), ('hadThreadTokenBefore', 0)]:
+                variant = copy.deepcopy(good)
+                next(case for case in variant['cases'] if case['name'] == actual['name'])['readerProof'][key] = replacement
+                variants.append(variant)
+            variant = copy.deepcopy(good)
+            del next(case for case in variant['cases'] if case['name'] == actual['name'])['readerProof']
+            variants.append(variant)
         for value in variants:
             with self.assertRaises(Refusal): run.toolchain_gate_report(value, 0)
         with self.assertRaises(Refusal): run.toolchain_gate_report(good, False)

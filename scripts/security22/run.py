@@ -44,17 +44,33 @@ def toolchain_gate_report(value, code):
         value['platform'] == os.name and value['acceptanceGranted'] is False and
         all(type(value[k]) is int and 0 <= value[k] <= 48 for k in ('tests', 'passed', 'failed', 'errors', 'notRun')) and
         value['tests'] == 48 and type(value['cases']) is list and len(value['cases']) == 48, 'TOOLCHAIN_GATE_FAILED')
-    names, counts, failures, predicates = set(), {state: 0 for state in ('PASS', 'FAIL', 'INCOMPLETE', 'NOT_RUN')}, [], []
+    names, counts, failures, predicates, reader_proofs = set(), {state: 0 for state in ('PASS', 'FAIL', 'INCOMPLETE', 'NOT_RUN')}, [], [], []
     for case in value['cases']:
         extra = set(case) - {'name', 'state', 'reason'} if type(case) is dict else set()
         require(type(case) is dict and type(case.get('name')) is str and case['name'] in TOOLCHAIN_CASES and
             case['name'] not in names and case.get('state') in counts and
             set(case)-extra == ({'name', 'state', 'reason'} if case['state'] == 'NOT_RUN' else {'name', 'state'}), 'TOOLCHAIN_GATE_FAILED')
+        require(case['name'] != 'test_actual_windows_acl_denial' or case['state'] != 'PASS' or
+            'readerProof' in extra, 'TOOLCHAIN_GATE_FAILED')
+        if 'readerProof' in extra:
+            proof = case['readerProof']
+            require(case['name'] == 'test_actual_windows_acl_denial' and case['state'] != 'NOT_RUN' and
+                type(proof) is dict and set(proof) == {'sameAccount', 'threadTokenRestored',
+                    'restrictedOptionalPrivilegesDisabled', 'backupEnabledBefore', 'restoreEnabledBefore',
+                    'backupEnabledDuring', 'restoreEnabledDuring', 'hadThreadTokenBefore'} and
+                all(type(value) is bool for value in proof.values()), 'TOOLCHAIN_GATE_FAILED')
+            if case['state'] == 'PASS':
+                require(all(proof[key] is True for key in ('sameAccount', 'threadTokenRestored', 'restrictedOptionalPrivilegesDisabled')) and
+                    proof['backupEnabledDuring'] is False and proof['restoreEnabledDuring'] is False, 'TOOLCHAIN_GATE_FAILED')
+            reader_proofs.append(dict(name=case['name'], **proof))
+            extra = extra - {'readerProof'}
         if extra:
             require(case['name'] == 'test_actual_windows_acl_denial' and case['state'] in ('FAIL', 'INCOMPLETE') and
                 extra <= {'predicate', 'observedPredicate', 'directStatDenied'} and
                 case.get('predicate') in {'ACL_ENUMERATION_NOT_DENIED', 'ACL_INVENTORY_PREDICATE_MISMATCH',
-                    'ACL_RESTORE_COMMAND_FAILED', 'ACL_RESTORED_IDENTITY_MISMATCH'} and
+                    'ACL_RESTORE_COMMAND_FAILED', 'ACL_RESTORED_IDENTITY_MISMATCH', 'ACL_DENY_COMMAND_FAILED',
+                    'ACL_READER_CAPABILITY_UNAVAILABLE', 'ACL_READER_IDENTITY_CHANGED',
+                    'ACL_READER_PRIVILEGES_NOT_REDUCED', 'ACL_READER_RESTORE_FAILED'} and
                 ('observedPredicate' not in case or case['observedPredicate'] in {'NPM_TOOL_ENUMERATION', 'NPM_TOOL_READ',
                     'NPM_TOOL_CHANGED', 'NPM_IDENTITY', 'NPM_EXPECTED_CONTENT', 'NPM_TOOL_LINK', 'REFUSED'}) and
                 ('directStatDenied' not in case or type(case['directStatDenied']) is bool), 'TOOLCHAIN_GATE_FAILED')
@@ -69,7 +85,7 @@ def toolchain_gate_report(value, code):
     return dict(state='PASS' if code == 0 and value['state'] == 'PASS' and not failures and
         value['notRun'] == (12 if os.name == 'nt' else 3) else 'INCOMPLETE', exit=code,
         qualification=value['qualification'], platform=os.name, observedPythonVersion=list(sys.version_info[:3]),
-        failedCases=sorted(failures), failurePredicates=predicates,
+        failedCases=sorted(failures), failurePredicates=predicates, readerProofs=reader_proofs,
         **{k: value[k] for k in ('tests', 'passed', 'failed', 'errors', 'notRun')})
 
 
