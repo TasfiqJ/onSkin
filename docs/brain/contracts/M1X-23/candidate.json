@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-SECURITY-INTEGRATION23-REPAIR-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "34fac69f3ba527724ecdf2d1cef69f27372756ad",
+  "tree": "832baeae6421bfaa6fb668b025932d2c49a4f33c",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": null,
+  "inputManifestSHA256": "a18911e49a60663dd8b66b9d2e609235d153c4ad48d8dafc361225f341557576",
+  "scopeSHA256": "9c3aa1f8cb23109cf9909dfe1a8cb094baff8beeb2ee54b54db7d6df379e86af"
+}

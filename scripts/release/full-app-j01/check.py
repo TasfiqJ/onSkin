@@ -3226,5 +3226,401 @@ source_guard = source22_guard
 validate = validate22
 
 
+# Release23 successor. Every inherited Release08-22 byte above is immutable.
+RELEASE23_BASE = '34fac69f3ba527724ecdf2d1cef69f27372756ad'
+RELEASE23_TREE = '832baeae6421bfaa6fb668b025932d2c49a4f33c'
+RELEASE23_AUTHORITY = 'BRAIN-M1X-SECURITY-INTEGRATION23-REPAIR-01'
+RELEASE23_CANDIDATE = 'docs/brain/contracts/M1X-23/candidate.json'
+RELEASE23_CHECKPOINT = 'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/'
+RELEASE23_WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+RELEASE23_EXISTING = {
+    'scripts/security22/README.md',
+    'scripts/security22/run.py',
+    'scripts/security22/inventory.py',
+    'scripts/security22/toolchain.py',
+    'scripts/security22/collect.py',
+    'scripts/security22/evaluate.py',
+    'scripts/security22/redact.py',
+    'scripts/security22/dependency.mjs',
+    'scripts/security22/test_security22.py',
+    'scripts/security22/dependency.test.mjs',
+    'scripts/security22/toolchain.json',
+    'scripts/security22/policy.json',
+    'scripts/security22/patch-tooling.mjs',
+    'scripts/security22/patch-tooling.test.mjs',
+    'scripts/security22/backports.json',
+    '.github/workflows/security-candidate22.yml',
+    'package.json',
+    'package-lock.json',
+    'apps/mobile/package.json',
+    'apps/catalog-operator-console/package.json',
+    'scripts/postinstall.mjs',
+    'scripts/phase9/patch-tooling-security.mjs',
+    'scripts/phase9/patch-tooling-security.test.mjs',
+    'scripts/phase9/ios-privacy-contract.mjs',
+    'scripts/phase9/ios-privacy-source-audit.mjs',
+    'scripts/phase9/ios-privacy-source-audit.test.mjs',
+    'scripts/phase5/ios-extension-contract.mjs',
+    'scripts/phase5/check-native-config.mjs',
+    'scripts/release/full-app-j01/check.py',
+    'docs/phase-4/generated/source-worklist.json',
+    'docs/phase-4/generated/source-worklist.md',
+    'ONSKIN_BRAIN_HANDOFF.txt',
+}
+RELEASE23_NEW = {
+    'scripts/security23/README.md',
+    'scripts/security23/test_integration.py',
+    'scripts/security23/test_toolchain.py',
+    'scripts/security23/test_partial_results.py',
+    'scripts/security23/native-source.test.mjs',
+    'scripts/security23/fixtures.json',
+    'scripts/phase9/ios-privacy-lock-succession23.mjs',
+    'scripts/phase9/ios-privacy-lock-succession23.test.mjs',
+    'docs/phase-9/ios-sdk-lock-succession23.v1.json',
+    'scripts/release/full-app-j01/source_consumer23.test.py',
+    'docs/brain/contracts/M1X-23/candidate.json',
+    'docs/brain/task-specs/M1X-23/TASK.md',
+    'docs/security/security23/ROOT_CAUSES.md',
+    'docs/security/security23/REMEDIATION.md',
+    'docs/security/security23/VALIDATION.md',
+    'docs/security/security23/BLOCKERS.md',
+    'docs/security/security23/UPSTREAM_SOURCES.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/README.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/FINAL_REPORT.md',
+    'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/manifest.json',
+    'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/payload.zip',
+    'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/verify23.py',
+}
+
+
+def git23(*args):
+    require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R23_GIT_ENV')
+    return subprocess.check_output(['git', '--no-pager', '--no-replace-objects', '--no-optional-locks',
+        '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false', '-c', 'diff.external=',
+        '-c', 'core.hooksPath=', *args], cwd=ROOT, stderr=subprocess.PIPE)
+
+
+def allowed23(path):
+    return isinstance(path, str) and path in RELEASE23_EXISTING | RELEASE23_NEW
+
+
+def scope23_guard(existing, new):
+    require(type(existing) is set and type(new) is set and not existing & new and
+        all(type(path) is str for path in existing | new), 'R23_GRANT_SCHEMA')
+    document = dict(existingPaths=sorted(existing), newPaths=sorted(new))
+    require(sha(json.dumps(document, sort_keys=True, separators=(',', ':')).encode()) ==
+        'a38feac08dd51b74b3ca26f0cf783da7a44b0016614025b34619d5970ee52e50', 'R23_AUTHENTIC_FINITE_GRANT')
+
+
+def candidate23_guard(raw):
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R23_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'base', 'tree',
+        'acceptanceGranted', 'admissions', 'pr', 'inputManifestSHA256', 'scopeSHA256'} and type(value['schema']) is int and value['schema'] == 1 and
+        value['authority'] == RELEASE23_AUTHORITY and value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and
+        value['base'] == RELEASE23_BASE and value['tree'] == RELEASE23_TREE and
+        value['inputManifestSHA256'] == 'a18911e49a60663dd8b66b9d2e609235d153c4ad48d8dafc361225f341557576' and
+        value['scopeSHA256'] == '9c3aa1f8cb23109cf9909dfe1a8cb094baff8beeb2ee54b54db7d6df379e86af' and
+        value['acceptanceGranted'] is False and type(value['admissions']) is dict and
+        set(value['admissions']) == {'G97', 'DB', 'M103', 'M2', 'J01', 'PUBLIC'} and
+        all(flag is False for flag in value['admissions'].values()) and
+        (value['pr'] is None or (type(value['pr']) is int and value['pr'] > 0)), 'R23_NO_ADMISSION')
+    return value
+
+
+def validate23_checker(raw):
+    before = git23('show', RELEASE23_BASE+':scripts/release/full-app-j01/check.py')
+    tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(tail) and raw.startswith(before[:-len(tail)]) and raw.endswith(tail), 'R23_INHERITED_BYTES')
+    extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
+    functions = {'git23', 'allowed23', 'candidate23_guard', 'validate23_checker', 'package23_guard',
+        'tooling23_guard', 'validate23_diff', 'source23_endpoint', 'source23_history', 'evidence23_guard',
+        'source23_guard', 'scope23_guard', 'validate23'}
+    require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
+        len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R23_FUNCTION_SCOPE')
+    dispatch = set(); assigned = set()
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name), 'R23_MODULE_SCOPE')
+        name = node.targets[0].id
+        require(name not in assigned, 'R23_DUPLICATE_ASSIGNMENT'); assigned.add(name)
+        if name in {'source_guard', 'validate'}:
+            dispatch.add(name)
+            require(isinstance(node.value, ast.Name) and node.value.id ==
+                {'source_guard': 'source23_guard', 'validate': 'validate23'}[name], 'R23_DISPATCH')
+        else:
+            require(name.startswith('RELEASE23_'), 'R23_GLOBAL_SCOPE')
+            try: ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R23_GLOBAL_SIDE_EFFECT')
+    require(dispatch == {'source_guard', 'validate'}, 'R23_DISPATCH_REQUIRED')
+    values = {node.targets[0].id: ast.literal_eval(node.value) for node in extension.body
+        if isinstance(node, ast.Assign) and node.targets[0].id in {'RELEASE23_EXISTING', 'RELEASE23_NEW'}}
+    require(set(values) == {'RELEASE23_EXISTING', 'RELEASE23_NEW'}, 'R23_GRANT_SCHEMA')
+    scope23_guard(values['RELEASE23_EXISTING'], values['RELEASE23_NEW'])
+
+
+def package23_guard(path, raw):
+    before_raw = git23('show', RELEASE23_BASE+':'+path)
+    if path == 'scripts/postinstall.mjs':
+        require(raw == before_raw, 'R23_POSTINSTALL_PRESERVATION')
+        return
+    before = json.loads(before_raw, object_pairs_hook=pairs)
+    after = json.loads(raw, object_pairs_hook=pairs)
+    require(type(after) is dict, 'R23_PACKAGE_SCHEMA')
+    dependency_fields = {'dependencies', 'devDependencies', 'optionalDependencies'}
+    mutable = dependency_fields | ({'scripts'} if path == 'package.json' else set())
+    require({k:v for k,v in before.items() if k not in mutable} ==
+        {k:v for k,v in after.items() if k not in mutable}, 'R23_PACKAGE_PURPOSE')
+    for field in dependency_fields:
+        old, new = before.get(field, {}), after.get(field, {})
+        require(type(new) is dict and set(old) <= set(new) and
+            all(type(k) is str and type(v) is str and bool(v) for k,v in new.items()), 'R23_DEPENDENCY_SCHEMA')
+        for framework in ('expo', 'react-native'):
+            require(old.get(framework) == new.get(framework), 'R23_FRAMEWORK_VERSION')
+    if path == 'package.json':
+        old, new = before.get('scripts', {}), after.get('scripts', {})
+        additions = {'python -B scripts/security23/test_integration.py',
+            'python -B scripts/security23/test_toolchain.py',
+            'python -B scripts/security23/test_partial_results.py',
+            'python -B scripts/release/full-app-j01/source_consumer23.test.py',
+            'node --test scripts/phase9/ios-privacy-lock-succession23.test.mjs',
+            'node --test scripts/security23/native-source.test.mjs'}
+        def preserved(key, value):
+            current = new.get(key)
+            return current == value or (type(current) is str and current.startswith(value+' && ') and
+                all(command in additions for command in current[len(value)+4:].split(' && ')))
+        require(type(new) is dict and all(preserved(k, v) for k,v in old.items()) and
+            all(k.startswith('security23:') and type(v) is str and bool(v) for k,v in new.items() if k not in old),
+            'R23_COMMAND_PRESERVATION')
+
+
+def tooling23_guard(raw):
+    original = git23('show', RELEASE23_BASE+':scripts/phase9/patch-tooling-security.mjs')
+    def tokens(source):
+        pattern = rb"""'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|\`(?:\\.|[^\`\\])*\`|//[^\r\n]*|/\*[\s\S]*?\*/|[A-Za-z_$][A-Za-z0-9_$]*|[0-9]+|[^\s]"""
+        return [token for token in re.findall(pattern, source) if not token.startswith((b'//', b'/*'))]
+    start, end = original.index(b'const PROFILES = ['), original.index(b'const SCRIPT_ROOT = ')
+    expected = tokens(original[start:end]); actual = tokens(raw); depth = 0; found = 0
+    for index, token in enumerate(actual):
+        if depth == 0 and actual[index:index+3] == [b'const', b'PROFILES', b'=']:
+            require(actual[index:index+len(expected)] == expected, 'R23_HISTORICAL_BACKPORT_PROFILES')
+            found += 1
+        if token == b'{': depth += 1
+        if token == b'}': depth -= 1
+        require(depth >= 0, 'R23_TOOLING_SYNTAX')
+    require(found == 1 and depth == 0, 'R23_ACTIVE_BACKPORT_PROFILES')
+
+
+def validate23_diff(raw, read_after, parent=None):
+    require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R23_GIT_ENV')
+    parent = parent or RELEASE23_BASE
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R23_DIFF_SHAPE')
+    identities = {}; seen = set()
+    for index in range(0, len(fields)-1, 2):
+        meta = fields[index].decode('ascii').split(); path = fields[index+1].decode('utf-8')
+        require(len(meta) == 5 and allowed23(path) and path not in seen, 'R23_FINITE_SCOPE')
+        seen.add(path); remember21(path, identities)
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(oldmode in (':000000', ':100644') and newmode == '100644' and status in ('A', 'M') and
+            all(re.fullmatch('[0-9a-f]{40}', v) for v in (oldblob, newblob)), 'R23_MODE_OR_DELETION')
+        exists = subprocess.run(['git', '--no-replace-objects', 'cat-file', '-e', parent+':'+path],
+            cwd=ROOT, capture_output=True).returncode == 0
+        require(exists == (status == 'M') == (oldmode == ':100644'), 'R23_PARENT_PROVENANCE')
+        if exists: require(oldblob == git23('rev-parse', parent+':'+path).decode().strip(), 'R23_PARENT_BLOB')
+        else: require(oldblob == '0'*40, 'R23_NEW_BLOB')
+        if parent == RELEASE23_BASE:
+            require(exists == (path in RELEASE23_EXISTING), 'R23_CREATE_EDIT')
+        data = read_after(path)
+        require(newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob,
+            'R23_AFTER_BLOB')
+        if path == 'scripts/release/full-app-j01/check.py': validate23_checker(data)
+        if path == RELEASE23_CANDIDATE: candidate23_guard(data)
+        if path in ('package.json', 'apps/mobile/package.json', 'apps/catalog-operator-console/package.json', 'scripts/postinstall.mjs'):
+            package23_guard(path, data)
+        if path == 'scripts/phase9/patch-tooling-security.mjs':
+            tooling23_guard(data)
+        if path == 'scripts/phase9/patch-tooling-security.test.mjs':
+            original = git23('show', RELEASE23_BASE+':'+path)
+            lines = iter(data.splitlines(keepends=True))
+            require(all(any(old == new for new in lines) for old in original.splitlines(keepends=True)), 'R23_EXISTING_TOOLING_REGRESSIONS')
+        if path == 'package-lock.json':
+            before = json.loads(git23('show', RELEASE23_BASE+':package-lock.json'), object_pairs_hook=pairs)
+            lock = json.loads(data, object_pairs_hook=pairs)
+            require(type(lock) is dict and type(lock.get('lockfileVersion')) is int and
+                lock['lockfileVersion'] == before['lockfileVersion'] and type(lock.get('packages')) is dict,
+                'R23_LOCK_SCHEMA')
+            for name, node in lock['packages'].items():
+                if name.endswith('/node_modules/expo') or name.endswith('/node_modules/react-native') or name in ('node_modules/expo', 'node_modules/react-native'):
+                    require(name in before['packages'] and node.get('version') == before['packages'][name].get('version'), 'R23_LOCK_FRAMEWORK')
+
+
+def source23_endpoint():
+    head = git23('rev-parse', 'HEAD').decode().strip()
+    parents = git23('rev-list', '--parents', '-n', '1', head).decode().split()
+    require(len(parents) in (2, 3), 'R23_HEAD_PARENTS')
+    endpoint = head if len(parents) == 2 else parents[2]
+    if len(parents) == 3 or os.environ.get('GITHUB_ACTIONS') == 'true':
+        require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and os.environ.get('GITHUB_SHA') in (head, endpoint), 'R23_CI_CONTEXT')
+        candidate = candidate23_guard(regular(ROOT/RELEASE23_CANDIDATE)); number = candidate['pr']
+        require(type(number) is int and number > 0, 'R23_CI_CONTEXT')
+        event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+        try:
+            # Keep regular()'s complete ancestor checks, then bound the read itself.
+            for component in (event_path, *event_path.parents):
+                info = component.lstat()
+                require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+                    'R23_CI_EVENT_PATH')
+            before = event_path.lstat()
+            require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+                0 < before.st_size <= 1024*1024, 'R23_CI_EVENT_SIZE')
+            with event_path.open('rb') as stream:
+                opened = os.fstat(stream.fileno()); event_raw = stream.read(1024*1024+1)
+                finished = os.fstat(stream.fileno())
+            after = event_path.lstat()
+        except OSError:
+            require(False, 'R23_CI_EVENT_PATH')
+        identity = lambda value: (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns)
+        require(identity(before) == identity(opened) == identity(finished) == identity(after) and
+            len(event_raw) == before.st_size and len(event_raw) <= 1024*1024, 'R23_CI_EVENT_CHANGED')
+        try:
+            event = json.loads(event_raw, object_pairs_hook=pairs,
+                parse_constant=lambda _: require(False, 'R23_NONFINITE_JSON'))
+        except (ValueError, TypeError, UnicodeError):
+            require(False, 'R23_CI_EVENT_JSON')
+        require(type(event) is dict and type(event.get('repository')) is dict and
+            type(event.get('pull_request')) is dict, 'R23_CI_EVENT')
+        pr = event['pull_request']
+        require(type(pr.get('base')) is dict and type(pr.get('head')) is dict and
+            type(pr['head'].get('repo')) is dict, 'R23_CI_EVENT')
+        require(type(event.get('number')) is int and event['number'] == number and type(pr.get('number')) is int and pr['number'] == number and
+            event.get('repository', {}).get('full_name') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+            pr.get('base', {}).get('sha') == RELEASE23_BASE and pr.get('base', {}).get('ref') == 'stage/m1-security-recovery22' and
+            pr.get('head', {}).get('sha') == endpoint and
+            re.fullmatch(r'stage/m1-security-integration23', pr.get('head', {}).get('ref', '')) is not None and
+            pr.get('head', {}).get('repo', {}).get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+            pr.get('maintainer_can_modify') is False and 'auto_merge' in pr and pr['auto_merge'] is None, 'R23_CI_EVENT')
+        if len(parents) == 3:
+            require(parents[1] == RELEASE23_BASE and os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+                git23('rev-parse', head+'^{tree}') == git23('rev-parse', endpoint+'^{tree}'), 'R23_CI_MERGE_TREE')
+    return endpoint
+
+
+def source23_history():
+    scope23_guard(RELEASE23_EXISTING, RELEASE23_NEW)
+    grafts = Path(git23('rev-parse', '--git-path', 'info/grafts').decode().strip())
+    if not grafts.is_absolute(): grafts = ROOT/grafts
+    require(not os.path.lexists(grafts) and not git23('for-each-ref', '--format=%(refname)', 'refs/replace').strip() and
+        not os.environ.get('GIT_REPLACE_REF_BASE'), 'R23_HISTORY_SUBSTITUTION')
+    require(git23('rev-parse', '--is-shallow-repository').strip() == b'false' and
+        git23('rev-parse', RELEASE23_BASE+'^{tree}').decode().strip() == RELEASE23_TREE, 'R23_FULL_PINNED_HISTORY')
+    endpoint = source23_endpoint()
+    require(git23('merge-base', RELEASE23_BASE, endpoint).decode().strip() == RELEASE23_BASE, 'R23_ANCESTRY')
+    previous = RELEASE23_BASE; evidence_seen = False
+    for commit in git23('rev-list', '--reverse', RELEASE23_BASE+'..'+endpoint).decode().splitlines():
+        require(git23('rev-list', '--parents', '-n', '1', commit).decode().split() == [commit, previous], 'R23_LINEAR_HISTORY')
+        require(not evidence_seen, 'R23_AFTER_EVIDENCE_TAIL')
+        validate23_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', previous, commit),
+            lambda path: git23('show', commit+':'+path), previous)
+        validate23_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE23_BASE, commit),
+            lambda path: git23('show', commit+':'+path))
+        paths = git23('diff', '--name-only', '--no-renames', '-z', previous, commit).decode().split('\0')[:-1]
+        evidence_seen = any(p.startswith(RELEASE23_CHECKPOINT) for p in paths)
+        require('ONSKIN_BRAIN_HANDOFF.txt' not in paths or evidence_seen, 'R23_HANDOFF_BEFORE_TAIL')
+        previous = commit
+    return endpoint
+
+
+def evidence23_guard(endpoint):
+    names = {p for p in git23('diff', '--name-only', '--no-renames', '-z', RELEASE23_BASE, endpoint).decode().split('\0')
+        if p.startswith(RELEASE23_CHECKPOINT)}
+    expected = {p for p in RELEASE23_NEW if p.startswith(RELEASE23_CHECKPOINT)}
+    if not names:
+        require(not (ROOT/RELEASE23_CHECKPOINT).exists(), 'R23_UNCOMMITTED_EVIDENCE')
+        return
+    require(names == expected, 'R23_EVIDENCE_EXACT_PATHS')
+    manifest = load(ROOT/(RELEASE23_CHECKPOINT+'manifest.json'))
+    require(type(manifest) is dict and set(manifest) == {'schema', 'authority', 'status', 'acceptanceGranted',
+        'release', 'inputManifestSHA256', 'source', 'files', 'payload'} and
+        type(manifest['schema']) is int and manifest['schema'] == 1 and manifest['authority'] == RELEASE23_AUTHORITY and
+        manifest['status'] == 'SUBMITTED_REVIEW_REQUIRED' and manifest['acceptanceGranted'] is False and
+        manifest['release'] == 'NO_GO' and manifest['inputManifestSHA256'] ==
+        'a18911e49a60663dd8b66b9d2e609235d153c4ad48d8dafc361225f341557576', 'R23_EVIDENCE_NO_ADMISSION')
+    source = manifest['source']
+    require(type(source) is dict and set(source) == {'base', 'baseTree', 'runtimeHead', 'runtimeTree', 'sourceHead', 'sourceTree'} and
+        source['base'] == RELEASE23_BASE and source['baseTree'] == RELEASE23_TREE and
+        all(type(v) is str and re.fullmatch('[0-9a-f]{40}', v) for v in source.values()), 'R23_EVIDENCE_SOURCE')
+    require(git23('rev-parse', source['runtimeHead']+'^{tree}').decode().strip() == source['runtimeTree'] and
+        git23('rev-parse', source['sourceHead']+'^{tree}').decode().strip() == source['sourceTree'] and
+        git23('rev-list', '--parents', '-n', '1', source['sourceHead']).decode().split() == [source['sourceHead'], source['runtimeHead']] and
+        git23('rev-list', '--parents', '-n', '1', endpoint).decode().split() == [endpoint, source['sourceHead']], 'R23_ONE_EVIDENCE_TAIL')
+    require(set(git23('diff', '--name-only', '--no-renames', '-z', source['runtimeHead'], source['sourceHead']).decode().split('\0')[:-1]) ==
+        RELEASE23_WORKLIST, 'R23_WORKLIST_ONLY_FREEZE')
+    require(set(git23('diff', '--name-only', '--no-renames', '-z', source['sourceHead'], endpoint).decode().split('\0')[:-1]) ==
+        expected | {'ONSKIN_BRAIN_HANDOFF.txt'}, 'R23_EVIDENCE_TAIL_SCOPE')
+    files = manifest['files']
+    require(type(files) is dict and set(files) == {'README.md', 'FINAL_REPORT.md', 'payload.zip', 'verify23.py'}, 'R23_EVIDENCE_FILES')
+    actual = set()
+    for path in (ROOT/RELEASE23_CHECKPOINT).rglob('*'):
+        info = path.lstat()
+        require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024, 'R23_EVIDENCE_LINK')
+        if stat.S_ISDIR(info.st_mode): continue
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'R23_EVIDENCE_REGULAR')
+        actual.add(path.relative_to(ROOT).as_posix())
+    require(actual == expected, 'R23_EVIDENCE_INVENTORY')
+    for name, witness in files.items():
+        raw = regular(ROOT/(RELEASE23_CHECKPOINT+name))
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(raw) and witness['sha256'] == sha(raw), 'R23_EVIDENCE_HASH')
+    require(all(regular(ROOT/path) == git23('show', endpoint+':'+path) for path in expected | {'ONSKIN_BRAIN_HANDOFF.txt'}),
+        'R23_EVIDENCE_COMMITTED_BYTES')
+
+
+def source23_guard():
+    endpoint = source23_history(); evidence23_guard(endpoint)
+    if (ROOT/(RELEASE23_CHECKPOINT+'manifest.json')).exists():
+        require(not git23('status', '--porcelain=v1', '--untracked-files=all', '-z'), 'R23_FROZEN_CHECKOUT_DIRTY')
+    candidate23_guard(regular(ROOT/RELEASE23_CANDIDATE))
+    candidate23_guard(git23('show', ':'+RELEASE23_CANDIDATE))
+    validate23_diff(git23('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE23_BASE), lambda p: git23('show', ':'+p))
+    validate23_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE23_BASE), lambda p: regular(ROOT/p))
+    identities = {}; tree = {}
+    for raw in git23('ls-tree', '-r', '-z', endpoint).split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, kind, oid = meta.decode().split(); path = name.decode()
+        require(kind == 'blob' and mode in ('100644', '100755'), 'R23_TREE_MODE')
+        tree[path] = (mode, oid); remember21(path, identities)
+    index = {}
+    for raw in git23('ls-files', '--stage', '-z').split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, oid, stage = meta.decode().split(); path = name.decode()
+        require(stage == '0' and mode in ('100644', '100755') and path not in index, 'R23_INDEX_STAGE_MODE')
+        index[path] = (mode, oid); remember21(path, identities)
+    for raw in git23('ls-files', '-v', '-z').split(b'\0'):
+        if raw: require(raw.startswith(b'H '), 'R23_INDEX_FLAGS')
+    for path in git23('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
+        if not path: continue
+        require(path in RELEASE23_NEW and path not in index, 'R23_UNTRACKED_SCOPE'); remember21(path, identities); regular(ROOT/path)
+    # Full clean-source inventory/scanner coverage is independently executed by security22.
+    # This guard proves finite source governance, never technical Security readiness.
+    return tree
+
+
+def validate23(bundle=BUNDLE):
+    source23_guard()
+    result = historical21_validate(bundle)
+    result['current_source_governance'] = 'RELEASE23_FINITE_SCOPE_ONLY'
+    result['inherited_release22'] = 'IMMUTABLE_PR26_DEFINITIONS; HISTORICAL_CONSUMER_EXECUTED_SEPARATELY'
+    result['source_acceptance'] = 'SUBMITTED_REVIEW_REQUIRED'
+    result['release'] = 'NO_GO'
+    return result
+
+
+source_guard = source23_guard
+validate = validate23
+
+
 if __name__ == '__main__':
     sys.exit(main())
