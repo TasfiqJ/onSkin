@@ -3609,13 +3609,86 @@ def source23_guard():
 
 
 def validate23(bundle=BUNDLE):
-    source23_guard()
-    result = historical21_validate(bundle)
-    result['current_source_governance'] = 'RELEASE23_FINITE_SCOPE_ONLY'
-    result['inherited_release22'] = 'IMMUTABLE_PR26_DEFINITIONS; HISTORICAL_CONSUMER_EXECUTED_SEPARATELY'
-    result['source_acceptance'] = 'SUBMITTED_REVIEW_REQUIRED'
-    result['release'] = 'NO_GO'
-    return result
+    try:
+        source23_guard()
+        result = historical21_validate(bundle)
+        result['current_source_governance'] = 'RELEASE23_FINITE_SCOPE_ONLY'
+        result['inherited_release22'] = 'IMMUTABLE_PR26_DEFINITIONS; HISTORICAL_CONSUMER_EXECUTED_SEPARATELY'
+        result['source_acceptance'] = 'SUBMITTED_REVIEW_REQUIRED'
+        result['release'] = 'NO_GO'
+        return result
+    except Exception as error:
+        # The inherited CLI keeps its semantics; the current path emits fixed codes only.
+        code = error.args[0] if type(error) is ValueError and len(error.args) == 1 and type(error.args[0]) is str else None
+        fixed = {
+            'R23_ACTIVE_BACKPORT_PROFILES',
+            'R23_AFTER_BLOB',
+            'R23_AFTER_EVIDENCE_TAIL',
+            'R23_ANCESTRY',
+            'R23_AUTHENTIC_FINITE_GRANT',
+            'R23_CI_CONTEXT',
+            'R23_CI_EVENT',
+            'R23_CI_EVENT_CHANGED',
+            'R23_CI_EVENT_JSON',
+            'R23_CI_EVENT_PATH',
+            'R23_CI_EVENT_SIZE',
+            'R23_CI_MERGE_TREE',
+            'R23_COMMAND_PRESERVATION',
+            'R23_CREATE_EDIT',
+            'R23_DEPENDENCY_SCHEMA',
+            'R23_DIFF_SHAPE',
+            'R23_DISPATCH',
+            'R23_DISPATCH_REQUIRED',
+            'R23_DUPLICATE_ASSIGNMENT',
+            'R23_EVIDENCE_COMMITTED_BYTES',
+            'R23_EVIDENCE_EXACT_PATHS',
+            'R23_EVIDENCE_FILES',
+            'R23_EVIDENCE_HASH',
+            'R23_EVIDENCE_INVENTORY',
+            'R23_EVIDENCE_LINK',
+            'R23_EVIDENCE_NO_ADMISSION',
+            'R23_EVIDENCE_REGULAR',
+            'R23_EVIDENCE_SOURCE',
+            'R23_EVIDENCE_TAIL_SCOPE',
+            'R23_EXISTING_TOOLING_REGRESSIONS',
+            'R23_FINITE_SCOPE',
+            'R23_FRAMEWORK_VERSION',
+            'R23_FROZEN_CHECKOUT_DIRTY',
+            'R23_FULL_PINNED_HISTORY',
+            'R23_FUNCTION_SCOPE',
+            'R23_GIT_ENV',
+            'R23_GLOBAL_SCOPE',
+            'R23_GLOBAL_SIDE_EFFECT',
+            'R23_GRANT_SCHEMA',
+            'R23_HANDOFF_BEFORE_TAIL',
+            'R23_HEAD_PARENTS',
+            'R23_HISTORICAL_BACKPORT_PROFILES',
+            'R23_HISTORY_SUBSTITUTION',
+            'R23_INDEX_FLAGS',
+            'R23_INDEX_STAGE_MODE',
+            'R23_INHERITED_BYTES',
+            'R23_LINEAR_HISTORY',
+            'R23_LOCK_FRAMEWORK',
+            'R23_LOCK_SCHEMA',
+            'R23_MODE_OR_DELETION',
+            'R23_MODULE_SCOPE',
+            'R23_NEW_BLOB',
+            'R23_NONFINITE_JSON',
+            'R23_NO_ADMISSION',
+            'R23_ONE_EVIDENCE_TAIL',
+            'R23_PACKAGE_PURPOSE',
+            'R23_PACKAGE_SCHEMA',
+            'R23_PARENT_BLOB',
+            'R23_PARENT_PROVENANCE',
+            'R23_POSTINSTALL_PRESERVATION',
+            'R23_TOOLING_SYNTAX',
+            'R23_TREE_MODE',
+            'R23_UNCOMMITTED_EVIDENCE',
+            'R23_UNTRACKED_SCOPE',
+            'R23_WORKLIST_ONLY_FREEZE',
+        }
+        raise ValueError(code if code in fixed else 'R23_EXECUTION_INCOMPLETE') from None
+
 
 
 source_guard = source23_guard

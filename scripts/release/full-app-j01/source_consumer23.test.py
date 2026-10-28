@@ -50,6 +50,12 @@ def main():
     for name in ['inputManifestSHA256', 'scopeSHA256']:
         changed = copy.deepcopy(candidate); changed[name] = '0'*64
         expect('stale-provenance:'+name, lambda v=changed: check.candidate23_guard(encode(v)), 'R23_NO_ADMISSION')
+    for error in [ValueError('SYNTHETIC_EXCEPTION_TEXT_CANARY'), OSError('/SYNTHETIC_PATH_CANARY'),
+        ValueError('R23_SYNTHETIC_UNKNOWN_CODE_CANARY'), ValueError(123)]:
+        with patch.object(check, 'source23_guard', side_effect=error):
+            expect('current-wrapper-fixed-disclosure', check.validate23, 'R23_EXECUTION_INCOMPLETE')
+    with patch.object(check, 'source23_guard', side_effect=ValueError('R23_NO_ADMISSION')):
+        expect('current-wrapper-retains-typed-refusal', check.validate23, 'R23_NO_ADMISSION')
     expect('duplicate-candidate-key', lambda: check.candidate23_guard(encode(candidate).replace(b'"schema": 1', b'"schema": 1,"schema": 1')), 'JSON_DUPLICATE_KEY')
     expect('nonfinite-candidate', lambda: check.candidate23_guard(encode(candidate).replace(b'"pr": null', b'"pr": NaN')), 'R23_NONFINITE_JSON')
     raw = (HERE/'check.py').read_bytes()
