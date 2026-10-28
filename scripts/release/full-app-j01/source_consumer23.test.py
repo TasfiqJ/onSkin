@@ -72,6 +72,19 @@ def main():
     raw = (HERE/'check.py').read_bytes()
     expect('inherited-checker-exact', lambda: check.validate23_checker(raw), expected=0)
     expect('checker-grant-expansion-refused', lambda: check.validate23_checker(raw.replace(b"RELEASE23_EXISTING = {\n", b"RELEASE23_EXISTING = {\n    '.github/workflows/security.yml',\n")), 'R23_AUTHENTIC_FINITE_GRANT')
+    for historical_blob in [
+        '81266733cac51709cab8c7dc73d75c8d7979c532',
+        '3c3d35988764604a92c3271ff8263d26862c4f3c',
+        '409a56475aa99992ec9cebae370bdf0e61e45642',
+        'ed72d7ec7b5d983b0dea4da672c4ab493c0cf272',
+    ]:
+        authentic = check.git23('cat-file', 'blob', historical_blob)
+        expect('exact-pre-reader-checker-history', lambda b=authentic: check.validate23_checker(b), expected=0)
+        expect('forged-pre-reader-checker-history', lambda b=authentic: check.validate23_checker(b.replace(
+            b"RELEASE23_AUTHORITY = 'BRAIN-M1X-SECURITY-INTEGRATION23-REPAIR-01'",
+            b"RELEASE23_AUTHORITY = 'UNISSUED'")), 'R23_HISTORICAL_CHECKER')
+    reader_start = raw.index(b'def regular23('); reader_end = raw.index(b'def git23(', reader_start)
+    expect('current-stable-reader-cannot-remove', lambda: check.validate23_checker(raw[:reader_start]+raw[reader_end:]), 'R23_HISTORICAL_CHECKER')
     expect('inherited-G97-cannot-clear', lambda: check.validate23_checker(raw.replace(b"'FAIL/NO_GO'", b"'PASS'", 1)), 'R23_INHERITED_BYTES')
     expect('inherited-custody-cannot-clear', lambda: check.validate23_checker(raw.replace(b"'BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED'", b"'ACCEPTED'", 1)), 'R23_INHERITED_BYTES')
     terminal = b"if __name__ == '__main__':\n    sys.exit(main())\n"

@@ -3380,8 +3380,17 @@ def validate23_checker(raw):
     functions = {'regular23', 'git23', 'allowed23', 'candidate23_guard', 'validate23_checker', 'package23_guard',
         'tooling23_guard', 'validate23_diff', 'source23_endpoint', 'source23_history', 'evidence23_guard',
         'source23_guard', 'scope23_guard', 'validate23'}
-    require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
-        len([n for n in extension.body if isinstance(n, ast.FunctionDef)]) == len(functions), 'R23_FUNCTION_SCOPE')
+    declarations = [node for node in extension.body if isinstance(node, ast.FunctionDef)]
+    names = {node.name for node in declarations}
+    require(names in (functions, functions - {'regular23'}) and len(declarations) == len(names), 'R23_FUNCTION_SCOPE')
+    if names != functions:
+        # Only the four exact earlier Campaign23 checker versions lack the later stable reader.
+        require(sha(raw) in {
+            '3ef627dd93f086364d8df04e17261a1c1cc63a1e900df1c47e4e3a893d80fbb4',
+            '1f8dcb7f4573ed4f57354d67eb38f9db60e977d200362443a37040b21d5f86c4',
+            'a5f38441fa6609187353ac5603e142a72599baf8985b6e31d0986b05e2a525e6',
+            'bfd2f538293c78c5a43fca8906482a45618f48d0fe1da07f45dbc6ba913827cb',
+        }, 'R23_HISTORICAL_CHECKER')
     dispatch = set(); assigned = set()
     for node in extension.body:
         if isinstance(node, ast.FunctionDef): continue
@@ -3665,6 +3674,7 @@ def validate23(bundle=BUNDLE):
         # The inherited CLI keeps its semantics; the current path emits fixed codes only.
         code = error.args[0] if type(error) is ValueError and len(error.args) == 1 and type(error.args[0]) is str else None
         fixed = {
+            'R23_HISTORICAL_CHECKER',
             'R23_PUBLIC_BOUND',
             'R23_PUBLIC_PATH',
             'R23_PUBLIC_FILE',
