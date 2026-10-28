@@ -61,6 +61,12 @@ jobs:
       - name: Historical fixtures and current installed native source controls
         run: |
           python -B scripts/security23/test_integration.py --native-controls | tee "$RUNNER_TEMP/security23-native-controls.json"
+      - name: Campaign24 bounded advisory controls and exact installed graph
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          node --test scripts/security24/advisory-behavior.test.mjs scripts/security24/patch-tooling.test.mjs | tee "$RUNNER_TEMP/security24-advisory-controls.tap"
+          node scripts/security24/graph.mjs > "$RUNNER_TEMP/security24-advisory-graph.json"
       - name: Execute current public checks and preserve component results
         if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
@@ -77,5 +83,7 @@ jobs:
             ${{ runner.temp }}/security22-components/*.json
             ${{ runner.temp }}/security23-toolchain-controls.json
             ${{ runner.temp }}/security23-native-controls.json
+            ${{ runner.temp }}/security24-advisory-controls.tap
+            ${{ runner.temp }}/security24-advisory-graph.json
           if-no-files-found: ignore
           retention-days: 7

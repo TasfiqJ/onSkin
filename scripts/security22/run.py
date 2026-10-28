@@ -309,7 +309,8 @@ def perform_complete(root, components, progress):
     try:
         components['tooling_regressions'] = tap(['node', '--test', 'scripts/phase9/patch-tooling-security.test.mjs',
             'scripts/phase9/tooling-security-vulnerabilities.test.mjs', 'scripts/security22/dependency.test.mjs',
-            'scripts/security22/patch-tooling.test.mjs'], root)
+            'scripts/security22/patch-tooling.test.mjs', 'scripts/security24/advisory-behavior.test.mjs',
+            'scripts/security24/patch-tooling.test.mjs'], root)
     except Exception as error:
         components['tooling_regressions'] = dict(state='INCOMPLETE', reason=diagnostic(error))
     progress['stage'] = 'NATIVE_PATCHES'
