@@ -252,3 +252,37 @@ Both complete fresh remote checkouts actually installed through normal npm11.20 
 
 Artifact carrier corruption/restoration and actual public download are separate later controls. Their result is appended in the external delivery annex after ZIP freeze; no source acceptance is granted.
 
+
+
+## Observed frozen carrier and public delivery annex
+
+This annex was appended after the actual outer ZIP froze. It does not change the packaged report, source, checkpoint or sole evidence tail. The packaged report is the earlier byte-identical base of this complete external report; manifest.json authenticates those frozen bytes. This separation avoids circular self-hashes.
+
+| External anchor | SHA256 |
+| --- | --- |
+| Actual outer ZIP | `1c0587b97a8876bb1a35954be59ca088433a1c055a2cf146c92f2a68af75414b` |
+| Return manifest.json | `0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf` |
+| Standalone verify_return24.py | `eaa09de742c18eb090dfbe6ef8b2ecff64dacfe72525f1afe179719b22bb9fa4` |
+| Sealed checkpoint manifest | `ce4a2e34d070a1916d1957ff1cd6c6267fc54879d5e7a0485693eac034e8be9d` |
+
+The one actual ZIP contains 527 exact regular-file entries and 27029673 expanded bytes. Its downloaded compressed size is 8022078 bytes. The minimal v2 source.delta.bundle requires pinned PR27; complete Git prerequisites, exact final source semantics and strict pack-object dry-run passed. Construction returned VERIFIED for artifact/source consistency only. Independent final source checks were actually performed in the two complete clones described above.
+
+Actual carrier control used the same frozen ZIP path and verifier argv for current/corrupted/exact-restored states: **0 / 1 / 0**. The corruption appended a synthetic marker only to FINAL_REPORT.md while retaining the original anchored manifest. It refused ARTIFACT_HASH_MISMATCH with a fixed diagnostic and no marker disclosure. The original ZIP bytes, SHA256, device, inode, mode, mtime and attributes were restored exactly. Both positive artifact-only commands explicitly report source checks NOT_RUN; the separate complete-checkout proofs supply source execution. No context/source file was mutated.
+
+All nine files at artifacts-only orphan publication commit `33d361de216e92c5f05a978c5b7a64ccb54be3b0` were actually downloaded from immutable public URLs and compared byte-for-byte with committed Git blobs. The outer ZIP, manifest and verifier also matched the separately recorded external anchors. DOWNLOAD_VERIFICATION.json preserves the full actual URL/size/hash inventory. This history is independent of the sealed candidate branch and creates no new source tail or PR.
+
+| Downloaded file | Bytes | SHA256 |
+| --- | --- | --- |
+| [ANCHORS.json](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/ANCHORS.json) | 780 | `1e285dcf3ac1ba966fa52cd9ccae159c2c68ddea38d0435d70bbb806a5397e13` |
+| [FINAL_REPORT.md (frozen packaged-report base)](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/FINAL_REPORT.md) | 36994 | `99d5629ef4fda5ea38d8a8fdffb8bd61db3aa19af93aa85707700e69ff7e4af1` |
+| [README.md](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/README.md) | 669 | `c91261bdedcd9f3cb38d5d0bf48d40f9def7525dab318216f4143394edf089e6` |
+| [REPRODUCE.md](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/REPRODUCE.md) | 3155 | `070ca50e36463e8a6da358436d6ffc450e0b2232f055d23dd0e1886ab8776885` |
+| [SHA256SUMS.txt](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/SHA256SUMS.txt) | 719 | `f3c256d2c7db1bfcfc8f773b9b8490c2b1eca4a9f5a9014e4f124d537ce5f573` |
+| [artifact-control-final.receipt.json](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/artifact-control-final.receipt.json) | 4700 | `a2806b40076d595d507881f4563a63ca5ca7f9a3412a6db86edcc57f2ed58f6c` |
+| [manifest.json](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/manifest.json) | 92958 | `0edfc416b5438c06188fa03b32c23b39f4567e384fc6b95d05a07efefad60dbf` |
+| [onSkin_Campaign24_Security_Advisory_DB_Recovery_Return_2026-10-28.zip](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/onSkin_Campaign24_Security_Advisory_DB_Recovery_Return_2026-10-28.zip) | 8022078 | `1c0587b97a8876bb1a35954be59ca088433a1c055a2cf146c92f2a68af75414b` |
+| [verify_return24.py](https://raw.githubusercontent.com/TasfiqJ/onSkin/33d361de216e92c5f05a978c5b7a64ccb54be3b0/verify_return24.py) | 49728 | `eaa09de742c18eb090dfbe6ef8b2ecff64dacfe72525f1afe179719b22bb9fa4` |
+
+The complete external report and download receipt are published in a subsequent artifacts-only commit; their final public bytes are checked separately after publication. The final response links that immutable complete report and the already byte-verified immutable ZIP. SHA256SUMS.txt covers the delivered external files; ANCHORS.json covers the frozen ZIP/manifest/verifier identities.
+
+**The independent Brain retains sole source-acceptance authority. G97 FAIL/NO_GO. USD0. NO MERGES. SUBMITTED_REVIEW_REQUIRED.**
