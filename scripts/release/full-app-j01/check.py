@@ -3292,6 +3292,13 @@ RELEASE23_NEW = {
     'docs/brain/checkpoints/M1-03/SECURITY-INTEGRATION-23/verify23.py',
 }
 
+RELEASE23_FIXTURE_SOURCE = 'd08347f0011672cd309d835628c094b5e9f4725d'
+RELEASE23_FIXTURE_TREE = '0998881bc543840395dca375769ea1b7c9a8d4c7'
+RELEASE23_FIXTURE_CHECKER_SHA256 = '7118308899a2b6b89e98680697d486b85dacd9b9fad8702cdf39a54751f6b822'
+RELEASE23_FIXTURE_QUALIFICATION = 'HISTORICAL_BUNDLE_FIXTURE_ONLY_NOT_CURRENT_SOURCE'
+RELEASE23_FIXTURE_INPUTS = {'schema.v1.json': '14d6f9b7bae3596d615a37714257d023ab41c6ab22629a3b92a13c44c0e45b3c', 'contract.v1.json': '017635909e410d567879be077909bbccc049960f500b52a648a2af2dc1427996', 'matrix.v1.json': '3b3fd0bba1c668358326658f8a4dedeab7239ba8d0221dc01f415f506c080fe3', 'precedence.v1.json': '330804dfc5d3e83c5f7da83aeb53a003b3d68c2cecc8935afc9edd1cbc7a5ec8', 'roadmap.v1.json': '35ea2bdb913ec62127765108c0e4484a2b9e78914b7f073a20040f8fc3a4d0da', 'history-crosswalk.v1.json': '2a4018895dc74fda87b265df22ff9aee2468a8ab49de41f39186bc42614563f3', 'historical/roadmap_47.json': '7b6c4772e891babd310b40c421d036c91a51b340b5485448e7aa99d1b499fb39', 'historical/adr_registry_51.json': '2f910cf0cd0c473474141ff81bb7d639f2fba8bc10dc306b52243d5e52b215c1'}
+RELEASE23_FIXTURE_ERROR_CODES = {'MATRIX_COUNTS', 'LEGACY_GUARD', 'GATE_IDENTITIES', 'SCHEMA_UNSUPPORTED:', 'P_ALIAS:', 'SCHEMA_ENUM:', 'PRODUCT_AUTHORITY', 'R23_FIXTURE_SCHEMA', 'R23_FIXTURE_ARGUMENT', 'FINITE_IDS:', 'J_REGISTRY:', 'BASE_BLOB_SHA256:', 'PRIORITY_NOT_J05_ADMISSION', 'PRECEDENCE_NOTICE:', 'ROW_QUALIFIED_OWNERS:', 'PRECEDENCE_SAFETY', 'HISTORICAL_DEPS:', 'J01_SINGLE_SCAN_GATES', 'J01_G4_CHANGE_GATE', 'AUTHENTIC_HISTORY:', 'BASE_TREE', 'SCHEMA_DUPLICATE:', 'F09_DIARY', 'DAG_NOT_ISSUANCE:', 'SCHEMA_MIN_ITEMS:', 'HISTORICAL_STATUS:', 'SOURCE_ABSENT:', 'F09_NOT_F18', 'SCHEMA_REQUIRED:', 'PRECEDENCE_PROPOSAL', 'R23_FIXTURE_SOURCE', 'R23_PUBLIC_BOUND', 'ZERO_SPEND', 'MATRIX65_IDENTITIES', 'DAG38_EXACT_OWNERS', 'F_ALIAS:', 'J_ROW_GATES:', 'DAG_ROW_OWNER:', 'R23_FIXTURE_CHANGED', 'SCHEMA_MIN_LENGTH:', 'NO_STUB_GREEN:', 'SOURCE_MATURITY:', 'DAG_CYCLE:', 'CONTRACT_BASE', 'CONTRACT_VERSION', 'JSON_NONFINITE:', 'DAG_EDGE:', 'SCHEMA_UNKNOWN_KEY:', 'SOURCE_PATH', 'DAG_OPERATIONAL_GATES:', 'HISTORICAL_COUNT:', 'SAFE_OFFER', 'NO_ADMISSION', 'GATE_OWNER:', 'HISTORICAL_RECORD:', 'COMMIT_SCOPE:', 'HISTORY_AUTHORITY', 'PROTECTED_WITNESS_OMITTED', 'REGULAR_PATH:', 'UNTRACKED_SCOPE:', 'DAG_GATE:', 'C_ALIAS:', 'WORKING_SCOPE:', 'LEGACY_DOC_BYTES:', 'SCHEMA_MAX_ITEMS:', 'SCHEMA_CONST:', 'R23_FIXTURE_CANONICAL_INPUT', 'M103_TO_M2', 'PRECEDENCE_ORDER', 'LEGACY_CONSUMERS', 'SOURCE_SHA256:', 'NO_SELF_ACCEPTANCE', 'PRECEDENCE_LIMIT', 'HISTORICAL_NODE:', 'R23_FIXTURE_GIT_IDENTITY', 'ROW_GATES:', 'R23_PUBLIC_FILE', 'NO_FAKE_CUTOVER', 'SOURCE_IDENTITY:', 'J01_INTAKE', 'ROW_STATUS:', 'LEDGER_CUSTODY', 'J01_NO_CLAIMS', 'R23_PUBLIC_PATH', 'HISTORY_NO_ACCEPTANCE', 'ROW_REQUIRED_GATE:', 'R23_PUBLIC_READ_INCOMPLETE', 'JSON_DUPLICATE_KEY:', 'R23_FIXTURE_READ_SCOPE', 'R23_PUBLIC_CHANGED', 'R23_FIXTURE_SCOPE', 'SCHEMA_TYPE:', 'HISTORICAL_IDENTITIES:', 'ROW_TRACEABILITY:', 'SCHEMA_DIALECT', 'ROW_OVERLAP:', 'GATE_CLOSED:', 'DAG_IDENTITIES', 'SOURCE_MODE:', 'ROW_EVIDENCE:', 'HISTORICAL_PROVENANCE:', 'DAG_UNKNOWN_NODE:', 'PLATFORM_TERRITORY', 'J01_DAG', 'R23_FIXTURE_INCOMPLETE'}
+
 
 def regular23(path, limit=128*1024*1024):
     """Read a single public current-path input with a stable, bounded identity."""
@@ -3384,17 +3391,22 @@ def validate23_checker(raw):
     extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
     functions = {'regular23', 'git23', 'allowed23', 'candidate23_guard', 'validate23_checker', 'package23_guard',
         'tooling23_guard', 'validate23_diff', 'source23_endpoint', 'source23_history', 'evidence23_guard',
-        'source23_guard', 'scope23_guard', 'validate23'}
+        'source23_guard', 'scope23_guard', 'fixture23_validate', 'validate23'}
     declarations = [node for node in extension.body if isinstance(node, ast.FunctionDef)]
     names = {node.name for node in declarations}
-    require(names in (functions, functions - {'regular23'}) and len(declarations) == len(names), 'R23_FUNCTION_SCOPE')
+    prior = functions-{'fixture23_validate'}
+    require(names in (functions,functions-{'regular23'},prior,prior-{'regular23'}) and
+        len(declarations) == len(names), 'R23_FUNCTION_SCOPE')
     if names != functions:
-        # Only the four exact earlier Campaign23 checker versions lack the later stable reader.
+        # Earlier source profiles are exact inputs, never a blanket missing-helper allowance.
         require(sha(raw) in {
             '3ef627dd93f086364d8df04e17261a1c1cc63a1e900df1c47e4e3a893d80fbb4',
             '1f8dcb7f4573ed4f57354d67eb38f9db60e977d200362443a37040b21d5f86c4',
             'a5f38441fa6609187353ac5603e142a72599baf8985b6e31d0986b05e2a525e6',
             'bfd2f538293c78c5a43fca8906482a45618f48d0fe1da07f45dbc6ba913827cb',
+            '5385f222fb727196d47786d89aadf23647586455731d5437bcb4e8911aadfa92',
+            '20b5d2dd454bca9bd3672f90caa22685b83d040acbc978d340939cf10d1bc9cc',
+            'dcaa04dcf564c7c4749423416418a7b76701c9f575de302719820100674a3df6',
         }, 'R23_HISTORICAL_CHECKER')
     dispatch = set(); assigned = set()
     for node in extension.body:
@@ -3402,15 +3414,15 @@ def validate23_checker(raw):
         require(isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name), 'R23_MODULE_SCOPE')
         name = node.targets[0].id
         require(name not in assigned, 'R23_DUPLICATE_ASSIGNMENT'); assigned.add(name)
-        if name in {'source_guard', 'validate'}:
+        if name in {'source_guard','validate'}:
             dispatch.add(name)
             require(isinstance(node.value, ast.Name) and node.value.id ==
-                {'source_guard': 'source23_guard', 'validate': 'validate23'}[name], 'R23_DISPATCH')
+                {'source_guard':'source23_guard','validate':'validate23'}[name], 'R23_DISPATCH')
         else:
             require(name.startswith('RELEASE23_'), 'R23_GLOBAL_SCOPE')
             try: ast.literal_eval(node.value)
             except (ValueError, TypeError): require(False, 'R23_GLOBAL_SIDE_EFFECT')
-    require(dispatch == {'source_guard', 'validate'}, 'R23_DISPATCH_REQUIRED')
+    require(dispatch == {'source_guard','validate'}, 'R23_DISPATCH_REQUIRED')
     values = {node.targets[0].id: ast.literal_eval(node.value) for node in extension.body
         if isinstance(node, ast.Assign) and node.targets[0].id in {'RELEASE23_EXISTING', 'RELEASE23_NEW'}}
     require(set(values) == {'RELEASE23_EXISTING', 'RELEASE23_NEW'}, 'R23_GRANT_SCHEMA')
@@ -3666,8 +3678,104 @@ def source23_guard():
     return tree
 
 
+def fixture23_validate(bundle):
+    """Validate actual mutant bytes against authenticated Release08 source witnesses."""
+    bundle = Path(os.path.abspath(bundle))
+    require(bundle.resolve() != BUNDLE.resolve() and not bundle.resolve().is_relative_to(ROOT.resolve()), 'R23_FIXTURE_SCOPE')
+    require(git23('rev-parse', RELEASE23_FIXTURE_SOURCE+'^{tree}').decode().strip() == RELEASE23_FIXTURE_TREE,
+        'R23_FIXTURE_SOURCE')
+    checker = git23('show', RELEASE23_FIXTURE_SOURCE+':scripts/release/full-app-j01/check.py')
+    require(sha(checker) == RELEASE23_FIXTURE_CHECKER_SHA256, 'R23_FIXTURE_SOURCE')
+    # A changed canonical input cannot inherit this explicitly historical replay.
+    canonical = {}
+    for name, digest in RELEASE23_FIXTURE_INPUTS.items():
+        canonical[name] = regular23(BUNDLE/name,16*1024*1024)
+        require(sha(canonical[name]) == digest, 'R23_FIXTURE_CANONICAL_INPUT')
+    declared_sources = set()
+    def declare(value):
+        if type(value) is dict:
+            if type(value.get('path')) is str: declared_sources.add(value['path'])
+            for child in value.values(): declare(child)
+        elif type(value) is list:
+            for child in value: declare(child)
+    for name in FILES: declare(json.loads(canonical[name],object_pairs_hook=pairs))
+    before = {name:regular23(bundle/name,16*1024*1024) for name in RELEASE23_FIXTURE_INPUTS}
+    require(sha(before['schema.v1.json']) == RELEASE23_FIXTURE_INPUTS['schema.v1.json'], 'R23_FIXTURE_SCHEMA')
+    fixture_paths = {bundle/name:name for name in before}
+    tracked = {}
+    for row in git23('ls-tree','-r','-z',RELEASE23_FIXTURE_SOURCE).split(b'\0'):
+        if not row: continue
+        metadata,name = row.split(b'\t',1);mode,kind,oid = metadata.decode('ascii').split()
+        tracked[name.decode('utf8')] = (mode,kind,oid)
+    immutable = {}
+    def historical_regular(path):
+        path = Path(os.path.abspath(path))
+        if path in fixture_paths:
+            return before[fixture_paths[path]]  # Actual mutant bytes, never an old-input substitute.
+        try: name = path.relative_to(ROOT.absolute()).as_posix()
+        except ValueError: raise ValueError('R23_FIXTURE_READ_SCOPE') from None
+        require(name in declared_sources and name in tracked, 'R23_FIXTURE_READ_SCOPE')
+        mode,kind,oid = tracked[name]
+        require(kind == 'blob' and mode in ('100644','100755'), 'R23_FIXTURE_GIT_IDENTITY')
+        if oid not in immutable:
+            data = git23('cat-file','blob',oid)
+            require(hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == oid,
+                'R23_FIXTURE_GIT_IDENTITY')
+            immutable[oid] = data
+        return immutable[oid]
+    def historical_git(*args):
+        if args == ('rev-parse','HEAD'): return git23('rev-parse',RELEASE23_FIXTURE_SOURCE)
+        if args[0] == 'rev-list':
+            return git23(*[value.replace('..HEAD','..'+RELEASE23_FIXTURE_SOURCE) for value in args])
+        if args[0] == 'diff' and len([value for value in args[1:] if not value.startswith('-')]) == 1:
+            return git23(*[value for value in args if value != '--cached'],RELEASE23_FIXTURE_SOURCE)
+        if args[0] == 'show':
+            require(len(args) == 2 and ':' in args[1] and args[1].split(':',1)[1] in declared_sources,
+                'R23_FIXTURE_READ_SCOPE')
+            return git23('show',RELEASE23_FIXTURE_SOURCE+args[1]) if args[1].startswith(':') else git23(*args)
+        if args[0] == 'ls-files':
+            if '--others' in args: return b''
+            if '-v' in args: return b''.join(b'H '+name.encode()+b'\0' for name in tracked)
+            if '--stage' in args:
+                return b''.join((mode+' '+oid+' 0\t'+name).encode()+b'\0'
+                    for name,(mode,kind,oid) in tracked.items())
+        if args[0] == 'status': return b''
+        return git23(*args)
+    namespace = {'__name__':'release08_explicit_bundle_fixture',
+        '__file__':str(ROOT/'scripts/release/full-app-j01/check.py')}
+    exec(compile(checker,'authenticated-release08-fixture-checker','exec'),namespace)
+    namespace['git'],namespace['regular'] = historical_git,historical_regular
+    declared_sources.update(namespace['SAFE_DOCS'])
+    declared_sources.update('docs/brain/state/'+row[3] for row in namespace['SNAPSHOTS'].values())
+    # ROOT stays current. Only immutable Git-backed source-witness reads use the old source.
+    require(namespace['ROOT'] == ROOT and namespace['BUNDLE'] == BUNDLE, 'R23_FIXTURE_SOURCE')
+    try: result = namespace['validate'](bundle)
+    finally:
+        require(all(regular23(bundle/name,16*1024*1024) == data for name,data in before.items()),
+            'R23_FIXTURE_CHANGED')
+    result.update(qualification=RELEASE23_FIXTURE_QUALIFICATION,historical_source=RELEASE23_FIXTURE_SOURCE,
+        historical_tree=RELEASE23_FIXTURE_TREE,historical_checker_sha256=RELEASE23_FIXTURE_CHECKER_SHA256,
+        historical_source_witness_scope='AUTHENTIC_CANONICAL_DECLARED_PATHS_ONLY',
+        current_source='NOT_CHECKED_CURRENT',current_source_governance='NOT_CHECKED_CURRENT',
+        source_acceptance='NOT_CHECKED_CURRENT',acceptanceGranted=False,
+        admissions=dict(G97=False,DB=False,M103=False,M2=False,J01=False,PUBLIC=False),release='NO_GO')
+    return result
+
+
 def validate23(bundle=BUNDLE):
+    scope = ('HISTORICAL_BUNDLE_FIXTURE_ONLY_NOT_CURRENT_SOURCE;SOURCE=NOT_CHECKED_CURRENT;'
+        'GOVERNANCE=NOT_CHECKED_CURRENT;ADMISSIONS=FALSE;NO_GO')
+    try: current = Path(bundle).resolve() == BUNDLE.resolve()
+    except Exception: raise ValueError('R23_FIXTURE_SCOPE|'+scope) from None
+    if not current:
+        try: return fixture23_validate(bundle)
+        except Exception as error:
+            code = error.args[0] if type(error) is ValueError and len(error.args)==1 and type(error.args[0]) is str else None
+            code = code.split(':',1)[0]+':' if code is not None and ':' in code else code
+            safe = code if code in RELEASE23_FIXTURE_ERROR_CODES else 'R23_FIXTURE_INCOMPLETE'
+            raise ValueError(safe+'|'+scope) from None
     try:
+        bundle = BUNDLE
         source23_guard()
         result = historical21_validate(bundle)
         result['current_source_governance'] = 'RELEASE23_FINITE_SCOPE_ONLY'

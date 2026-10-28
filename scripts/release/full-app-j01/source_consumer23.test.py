@@ -1,10 +1,14 @@
 """Release23 synthetic Git falsification; separate from real-checkout/scanner proof."""
 import copy
+from contextlib import redirect_stdout
+import io
 import importlib.util
 import json
 import os
 from pathlib import Path
 import subprocess
+import shutil
+import sys
 import tempfile
 from unittest.mock import patch
 
@@ -188,6 +192,90 @@ def main():
         expect('public-read-mutation-restored', lambda: check.require(check.regular23(public) == body, 'READ_MISMATCH'), expected=0)
         public.unlink()
         expect('missing-public-input', lambda: check.regular23(public), 'R23_PUBLIC_READ_INCOMPLETE')
+    for blob in ['df3e5f5763a3cbfa7684a53e1138981c56ecb1dc',
+        'fe5b20c5c29c54e2376eb7314d94af2f8ed6f37c','6c7fc81a4fc32d450994b7c29240914feba9dc47']:
+        historical = check.git23('cat-file','blob',blob)
+        expect('exact-pre-fixture-current-profile',lambda b=historical:check.validate23_checker(b),expected=0)
+        expect('forged-pre-fixture-current-profile',lambda b=historical:check.validate23_checker(
+            b.replace(b"RELEASE23_AUTHORITY = 'BRAIN-M1X-SECURITY-INTEGRATION23-REPAIR-01'",
+            b"RELEASE23_AUTHORITY = 'UNISSUED'")),'R23_HISTORICAL_CHECKER')
+    fixture_start = raw.index(b'def fixture23_validate('); fixture_end = raw.index(b'def validate23(',fixture_start)
+    expect('fixture-helper-cannot-remove',lambda:check.validate23_checker(raw[:fixture_start]+raw[fixture_end:]),'R23_HISTORICAL_CHECKER')
+    current_calls = []
+    def current_replay(bundle):
+        current_calls.append(bundle)
+        return dict(valid=True,release='NO_GO')
+    with patch.object(check,'source23_guard',return_value={}), patch.object(check,'historical21_validate',current_replay), patch.object(check,'fixture23_validate',side_effect=AssertionError('current-is-not-fixture')):
+        expect('default-current-retains-full-dispatch',check.validate23,expected=0)
+        expect('noncanonical-current-bundle-retains-current-dispatch',lambda:check.validate23(check.BUNDLE/'..'/check.BUNDLE.name),expected=0)
+    assert current_calls == [check.BUNDLE,check.BUNDLE]
+    with tempfile.TemporaryDirectory(prefix='onskin-explicit-fixture23-') as temporary:
+        fixture = Path(temporary)/'bundle';shutil.copytree(check.BUNDLE,fixture)
+        result = check.fixture23_validate(fixture)
+        assert result['valid'] is True and result['qualification'] == check.RELEASE23_FIXTURE_QUALIFICATION
+        assert result['current_source_governance'] == result['current_source'] == result['source_acceptance'] == 'NOT_CHECKED_CURRENT'
+        assert result['acceptanceGranted'] is False and all(v is False for v in result['admissions'].values()) and result['release']=='NO_GO'
+        positives += 1
+        print(json.dumps(dict(case='actual-explicit-fixture-positive',exit=0,qualification=result['qualification'])),flush=True)
+        contract = fixture/'contract.v1.json';body=contract.read_bytes();changed=json.loads(body)
+        changed['admissions'][next(iter(changed['admissions']))]=True;contract.write_bytes(encode(changed))
+        try:
+            expect('actual-mutant-is-not-replaced-with-authentic-inputs',lambda:check.fixture23_validate(fixture),'NO_ADMISSION')
+            command=[sys.executable,'-B',str(HERE/'check.py'),'--bundle-dir',str(fixture)]
+            child=subprocess.run(command,capture_output=True,timeout=30);message=json.loads(child.stdout)
+            assert child.returncode==1 and message['error'].startswith('NO_ADMISSION') and check.RELEASE23_FIXTURE_QUALIFICATION in message['error']
+            assert 'SOURCE=NOT_CHECKED_CURRENT' in message['error'] and 'ADMISSIONS=FALSE' in message['error']
+            rejected += 1
+            print(json.dumps(dict(case='actual-fixture-cli-error-scope',exit=1,error=message['error'])),flush=True)
+        finally:contract.write_bytes(body)
+        matrix=fixture/'matrix.v1.json';matrix_body=matrix.read_bytes();changed=json.loads(matrix_body)
+        reference=next(row for row in changed['rows'] if row.get('source_refs'))['source_refs'][0]
+        metadata=check.git23('ls-tree',check.BASE,'--','.gitignore').decode().split('\t',1)[0].split()
+        mode,kind,unapproved_blob=metadata
+        reference.update(path='.gitignore',source_commit=check.BASE,mode=mode,blob=unapproved_blob,sha256='0'*64)
+        matrix.write_bytes(encode(changed));actual_git=check.git23
+        def refuse_unapproved_content(*args):
+            assert args != ('cat-file','blob',unapproved_blob),'UNAPPROVED_SOURCE_CONTENT_OPENED'
+            assert args != ('show',check.BASE+':.gitignore'),'UNAPPROVED_SOURCE_CONTENT_OPENED'
+            return actual_git(*args)
+        try:
+            with patch.object(check,'git23',refuse_unapproved_content):
+                expect('unapproved-public-tracked-witness-not-opened',lambda:check.fixture23_validate(fixture),'R23_FIXTURE_READ_SCOPE')
+        finally:matrix.write_bytes(matrix_body)
+        schema=fixture/'schema.v1.json';schema_body=schema.read_bytes();schema.write_bytes(b'{"$schema":"https://json-schema.org/draft/2020-12/schema"}')
+        try:expect('forged-fixture-schema-refused',lambda:check.fixture23_validate(fixture),'R23_FIXTURE_SCHEMA')
+        finally:schema.write_bytes(schema_body)
+        alias=fixture.parent/'public-contract-alias';os.link(contract,alias)
+        try:expect('actual-fixture-hardlink-refused',lambda:check.fixture23_validate(fixture),'R23_PUBLIC_FILE')
+        finally:alias.unlink()
+        empty=fixture.parent/'empty';empty.mkdir()
+        expect('missing-fixture-input-refused',lambda:check.fixture23_validate(empty),'R23_PUBLIC_READ_INCOMPLETE')
+        canonical=fixture.parent/'changed-canonical';shutil.copytree(check.BUNDLE,canonical)
+        (canonical/'contract.v1.json').write_bytes(body+b' ')
+        with patch.object(check,'BUNDLE',canonical):
+            expect('changed-canonical-meaning-does-not-inherit-history',lambda:check.fixture23_validate(fixture),'R23_FIXTURE_CANONICAL_INPUT')
+        saved=check.RELEASE23_FIXTURE_CHECKER_SHA256
+        with patch.object(check,'RELEASE23_FIXTURE_CHECKER_SHA256','0'*64):
+            expect('forged-fixture-checker-source-refused',lambda:check.fixture23_validate(fixture),'R23_FIXTURE_SOURCE')
+        with patch.object(check,'RELEASE23_FIXTURE_TREE','0'*40):
+            expect('forged-fixture-tree-refused',lambda:check.fixture23_validate(fixture),'R23_FIXTURE_SOURCE')
+        actual_git=check.git23;changed_during=[False]
+        def change_fixture(*args):
+            if args == ('ls-tree','-r','-z',check.RELEASE23_FIXTURE_SOURCE) and not changed_during[0]:
+                changed_during[0]=True;contract.write_bytes(body+b' ')
+            return actual_git(*args)
+        try:
+            with patch.object(check,'git23',change_fixture):
+                expect('fixture-mutates-during-validation',lambda:check.fixture23_validate(fixture),'R23_FIXTURE_CHANGED')
+        finally:contract.write_bytes(body)
+        sentinel=io.StringIO()
+        with patch.object(check,'fixture23_validate',side_effect=OSError('/SYNTHETIC_FIXTURE_PATH_CANARY')), patch.object(sys,'argv',[str(HERE/'check.py'),'--bundle-dir',str(fixture)]), redirect_stdout(sentinel):
+            code=check.main()
+        message=json.loads(sentinel.getvalue());assert code==1 and 'SYNTHETIC_FIXTURE_PATH_CANARY' not in sentinel.getvalue()
+        assert message['error'].startswith('R23_FIXTURE_INCOMPLETE') and check.RELEASE23_FIXTURE_QUALIFICATION in message['error']
+        rejected += 1
+        print(json.dumps(dict(case='fixture-errors-do-not-disclose-arbitrary-text',exit=1)),flush=True)
+        expect('explicit-fixture-exact-restoration',lambda:check.require(check.fixture23_validate(fixture)['valid'] is True,'FIXTURE_RESTORATION'),expected=0)
     old_root = check.ROOT
     common = Path(check.git('rev-parse', '--git-common-dir').decode().strip())
     if not common.is_absolute(): common = (old_root/common).resolve()
