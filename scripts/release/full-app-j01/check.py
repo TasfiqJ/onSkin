@@ -3293,6 +3293,50 @@ RELEASE23_NEW = {
 }
 
 
+def regular23(path, limit=128*1024*1024):
+    """Read a single public current-path input with a stable, bounded identity."""
+    require(isinstance(path, Path) and path.is_absolute() and type(limit) is int and
+        0 <= limit <= 128*1024*1024, 'R23_PUBLIC_BOUND')
+    def identity(info):
+        return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_size,
+            info.st_mtime_ns, info.st_ctime_ns)
+    try:
+        ancestors = []
+        for parent in path.parents:
+            info = parent.lstat()
+            require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+                not getattr(info, 'st_file_attributes', 0) & 1024, 'R23_PUBLIC_PATH')
+            ancestors.append((parent, info.st_dev, info.st_ino, info.st_mode))
+        before = path.lstat()
+        require(stat.S_ISREG(before.st_mode) and not stat.S_ISLNK(before.st_mode) and
+            before.st_nlink == 1 and not getattr(before, 'st_file_attributes', 0) & 1024,
+            'R23_PUBLIC_FILE')
+        require(before.st_size <= limit, 'R23_PUBLIC_BOUND')
+        descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
+        try:
+            require(identity(os.fstat(descriptor)) == identity(before), 'R23_PUBLIC_CHANGED')
+            pieces = []; total = 0
+            while True:
+                chunk = os.read(descriptor, min(65536, limit-total+1))
+                if not chunk: break
+                total += len(chunk)
+                require(total <= limit and total <= before.st_size, 'R23_PUBLIC_BOUND')
+                pieces.append(chunk)
+            after = os.fstat(descriptor)
+        finally:
+            os.close(descriptor)
+        current = path.lstat()
+        for parent, device, inode, mode in ancestors:
+            info = parent.lstat()
+            require((info.st_dev, info.st_ino, info.st_mode) == (device, inode, mode) and
+                not getattr(info, 'st_file_attributes', 0) & 1024, 'R23_PUBLIC_PATH')
+        require(identity(before) == identity(after) == identity(current) and total == before.st_size,
+            'R23_PUBLIC_CHANGED')
+        return b''.join(pieces)
+    except OSError:
+        raise ValueError('R23_PUBLIC_READ_INCOMPLETE') from None
+
+
 def git23(*args):
     require(not any(key.startswith('GIT_') and key not in {'GIT_PAGER', 'GIT_TERMINAL_PROMPT'} for key in os.environ), 'R23_GIT_ENV')
     return subprocess.check_output(['git', '--no-pager', '--no-replace-objects', '--no-optional-locks',
@@ -3333,7 +3377,7 @@ def validate23_checker(raw):
     tail = b"if __name__ == '__main__':\n    sys.exit(main())\n"
     require(before.endswith(tail) and raw.startswith(before[:-len(tail)]) and raw.endswith(tail), 'R23_INHERITED_BYTES')
     extension = ast.parse(raw[len(before)-len(tail):-len(tail)])
-    functions = {'git23', 'allowed23', 'candidate23_guard', 'validate23_checker', 'package23_guard',
+    functions = {'regular23', 'git23', 'allowed23', 'candidate23_guard', 'validate23_checker', 'package23_guard',
         'tooling23_guard', 'validate23_diff', 'source23_endpoint', 'source23_history', 'evidence23_guard',
         'source23_guard', 'scope23_guard', 'validate23'}
     require({n.name for n in extension.body if isinstance(n, ast.FunctionDef)} == functions and
@@ -3463,11 +3507,11 @@ def source23_endpoint():
     if len(parents) == 3 or os.environ.get('GITHUB_ACTIONS') == 'true':
         require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
             os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin' and os.environ.get('GITHUB_SHA') in (head, endpoint), 'R23_CI_CONTEXT')
-        candidate = candidate23_guard(regular(ROOT/RELEASE23_CANDIDATE)); number = candidate['pr']
+        candidate = candidate23_guard(regular23(ROOT/RELEASE23_CANDIDATE)); number = candidate['pr']
         require(type(number) is int and number > 0, 'R23_CI_CONTEXT')
         event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
         try:
-            # Keep regular()'s complete ancestor checks, then bound the read itself.
+            # Keep regular23()'s complete ancestor checks, then bound the read itself.
             for component in (event_path, *event_path.parents):
                 info = component.lstat()
                 require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
@@ -3541,7 +3585,8 @@ def evidence23_guard(endpoint):
         require(not (ROOT/RELEASE23_CHECKPOINT).exists(), 'R23_UNCOMMITTED_EVIDENCE')
         return
     require(names == expected, 'R23_EVIDENCE_EXACT_PATHS')
-    manifest = load(ROOT/(RELEASE23_CHECKPOINT+'manifest.json'))
+    manifest = json.loads(regular23(ROOT/(RELEASE23_CHECKPOINT+'manifest.json')), object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R23_NONFINITE_JSON'))
     require(type(manifest) is dict and set(manifest) == {'schema', 'authority', 'status', 'acceptanceGranted',
         'release', 'inputManifestSHA256', 'source', 'files', 'payload'} and
         type(manifest['schema']) is int and manifest['schema'] == 1 and manifest['authority'] == RELEASE23_AUTHORITY and
@@ -3563,18 +3608,17 @@ def evidence23_guard(endpoint):
     files = manifest['files']
     require(type(files) is dict and set(files) == {'README.md', 'FINAL_REPORT.md', 'payload.zip', 'verify23.py'}, 'R23_EVIDENCE_FILES')
     actual = set()
-    for path in (ROOT/RELEASE23_CHECKPOINT).rglob('*'):
+    for path in (ROOT/RELEASE23_CHECKPOINT).iterdir():
         info = path.lstat()
         require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024, 'R23_EVIDENCE_LINK')
-        if stat.S_ISDIR(info.st_mode): continue
         require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'R23_EVIDENCE_REGULAR')
         actual.add(path.relative_to(ROOT).as_posix())
     require(actual == expected, 'R23_EVIDENCE_INVENTORY')
     for name, witness in files.items():
-        raw = regular(ROOT/(RELEASE23_CHECKPOINT+name))
+        raw = regular23(ROOT/(RELEASE23_CHECKPOINT+name))
         require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
             witness['bytes'] == len(raw) and witness['sha256'] == sha(raw), 'R23_EVIDENCE_HASH')
-    require(all(regular(ROOT/path) == git23('show', endpoint+':'+path) for path in expected | {'ONSKIN_BRAIN_HANDOFF.txt'}),
+    require(all(regular23(ROOT/path) == git23('show', endpoint+':'+path) for path in expected | {'ONSKIN_BRAIN_HANDOFF.txt'}),
         'R23_EVIDENCE_COMMITTED_BYTES')
 
 
@@ -3582,10 +3626,10 @@ def source23_guard():
     endpoint = source23_history(); evidence23_guard(endpoint)
     if (ROOT/(RELEASE23_CHECKPOINT+'manifest.json')).exists():
         require(not git23('status', '--porcelain=v1', '--untracked-files=all', '-z'), 'R23_FROZEN_CHECKOUT_DIRTY')
-    candidate23_guard(regular(ROOT/RELEASE23_CANDIDATE))
+    candidate23_guard(regular23(ROOT/RELEASE23_CANDIDATE))
     candidate23_guard(git23('show', ':'+RELEASE23_CANDIDATE))
     validate23_diff(git23('diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE23_BASE), lambda p: git23('show', ':'+p))
-    validate23_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE23_BASE), lambda p: regular(ROOT/p))
+    validate23_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE23_BASE), lambda p: regular23(ROOT/p))
     identities = {}; tree = {}
     for raw in git23('ls-tree', '-r', '-z', endpoint).split(b'\0'):
         if not raw: continue
@@ -3602,7 +3646,7 @@ def source23_guard():
         if raw: require(raw.startswith(b'H '), 'R23_INDEX_FLAGS')
     for path in git23('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0'):
         if not path: continue
-        require(path in RELEASE23_NEW and path not in index, 'R23_UNTRACKED_SCOPE'); remember21(path, identities); regular(ROOT/path)
+        require(path in RELEASE23_NEW and path not in index, 'R23_UNTRACKED_SCOPE'); remember21(path, identities); regular23(ROOT/path)
     # Full clean-source inventory/scanner coverage is independently executed by security22.
     # This guard proves finite source governance, never technical Security readiness.
     return tree
@@ -3621,6 +3665,11 @@ def validate23(bundle=BUNDLE):
         # The inherited CLI keeps its semantics; the current path emits fixed codes only.
         code = error.args[0] if type(error) is ValueError and len(error.args) == 1 and type(error.args[0]) is str else None
         fixed = {
+            'R23_PUBLIC_BOUND',
+            'R23_PUBLIC_PATH',
+            'R23_PUBLIC_FILE',
+            'R23_PUBLIC_CHANGED',
+            'R23_PUBLIC_READ_INCOMPLETE',
             'R23_ACTIVE_BACKPORT_PROFILES',
             'R23_AFTER_BLOB',
             'R23_AFTER_EVIDENCE_TAIL',

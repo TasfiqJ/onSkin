@@ -113,6 +113,47 @@ def main():
     expect('postinstall-original', lambda: check.package23_guard('scripts/postinstall.mjs', postinstall), expected=0)
     expect('postinstall-early-exit-refused', lambda: check.package23_guard('scripts/postinstall.mjs', b'process.exit(0);\n'+postinstall), 'R23_POSTINSTALL_PRESERVATION')
     expect('postinstall-native-call-removal', lambda: check.package23_guard('scripts/postinstall.mjs', postinstall.replace(b'const viewShot = patchReactNativeViewShotPrivacy({ root, check });\n', b'')), 'R23_POSTINSTALL_PRESERVATION')
+    with tempfile.TemporaryDirectory(prefix='onskin-public-read23-') as temporary:
+        public = Path(temporary)/'public.json'; body = b'{"syntheticPublic":true}\n'
+        public.write_bytes(body)
+        expect('stable-bounded-public-read', lambda: check.require(check.regular23(public) == body, 'READ_MISMATCH'), expected=0)
+        expect('public-read-bound', lambda: check.regular23(public, 1), 'R23_PUBLIC_BOUND')
+        expect('public-read-boolean-bound', lambda: check.regular23(public, True), 'R23_PUBLIC_BOUND')
+        expect('public-read-relative-path', lambda: check.regular23(Path('relative-public.json')), 'R23_PUBLIC_BOUND')
+        alias = public.with_name('alias.json'); os.link(public, alias)
+        try: expect('actual-public-hardlink-alias', lambda: check.regular23(public), 'R23_PUBLIC_FILE')
+        finally: alias.unlink()
+        expect('public-hardlink-restoration', lambda: check.require(check.regular23(public) == body, 'READ_MISMATCH'), expected=0)
+        actual_lstat = Path.lstat
+        def linked_parent(path):
+            info = actual_lstat(path)
+            if path == public.parent:
+                fields = list(info); fields[0] = __import__('stat').S_IFLNK | 0o777
+                return os.stat_result(fields)
+            return info
+        with patch.object(Path, 'lstat', linked_parent):
+            expect('synthetic-ancestor-link', lambda: check.regular23(public), 'R23_PUBLIC_PATH')
+        def reparse_parent(path):
+            info = actual_lstat(path)
+            return type('SyntheticPublicReparse', (), dict(st_mode=info.st_mode, st_file_attributes=1024))() if path == public.parent else info
+        with patch.object(Path, 'lstat', reparse_parent):
+            expect('synthetic-ancestor-reparse', lambda: check.regular23(public), 'R23_PUBLIC_PATH')
+        with patch.object(check.os, 'open', side_effect=OSError('/SYNTHETIC_PUBLIC_READ_ERROR_CANARY')):
+            expect('public-read-error-fixed-code', lambda: check.regular23(public), 'R23_PUBLIC_READ_INCOMPLETE')
+        actual_read = os.read; mutated = [False]
+        def mutate_public(descriptor, amount):
+            chunk = actual_read(descriptor, amount)
+            if chunk and not mutated[0]:
+                mutated[0] = True
+                with public.open('ab') as stream: stream.write(b'synthetic mutation')
+            return chunk
+        try:
+            with patch.object(check.os, 'read', mutate_public):
+                expect('actual-public-read-mutation', lambda: check.regular23(public), 'R23_PUBLIC_')
+        finally: public.write_bytes(body)
+        expect('public-read-mutation-restored', lambda: check.require(check.regular23(public) == body, 'READ_MISMATCH'), expected=0)
+        public.unlink()
+        expect('missing-public-input', lambda: check.regular23(public), 'R23_PUBLIC_READ_INCOMPLETE')
     old_root = check.ROOT
     common = Path(check.git('rev-parse', '--git-common-dir').decode().strip())
     if not common.is_absolute(): common = (old_root/common).resolve()
@@ -232,6 +273,10 @@ def main():
             put('ONSKIN_BRAIN_HANDOFF.txt', b'synthetic factual handoff fixture\n')
             tail_head = commit(source_head); tail_tree = git('write-tree').decode().strip(); git('update-ref', 'HEAD', tail_head)
             expect('synthetic-envelope-exact', lambda: check.evidence23_guard(tail_head), expected=0)
+            unexpected_directory = checkpoint/'unexpected-public-directory'; unexpected_directory.mkdir()
+            try: expect('evidence-unexpected-directory', lambda: check.evidence23_guard(tail_head), 'R23_EVIDENCE_REGULAR')
+            finally: unexpected_directory.rmdir()
+            expect('evidence-directory-restored', lambda: check.evidence23_guard(tail_head), expected=0)
             for field, value, code in [('schema', True, 'R23_EVIDENCE_NO_ADMISSION'),
                 ('acceptanceGranted', 0, 'R23_EVIDENCE_NO_ADMISSION'), ('release', 'GO', 'R23_EVIDENCE_NO_ADMISSION')]:
                 changed = copy.deepcopy(manifest); changed[field] = value; (checkpoint/'manifest.json').write_bytes(encode(changed))
