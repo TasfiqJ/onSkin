@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { join, relative, resolve } from 'node:path';
 import test from 'node:test';
 import { auditIosPrivacySource, validateIosPrivacyAuditClaims } from '../phase9/ios-privacy-contract.mjs';
@@ -83,11 +82,14 @@ test('actual current non-strict default write refuses tampered and missing witne
     path: resolve(ROOT, path), bytes: readFileSync(resolve(ROOT, path)),
     stat: statSync(resolve(ROOT, path), { bigint: true }),
   }));
-  const directory = mkdtempSync(join(tmpdir(), 'layerwell-native23-write-'));
+  const backupParent = resolve(ROOT, '..');
+  const directory = mkdtempSync(join(backupParent, 'layerwell-native23-write-'));
   t.after(() => {
-    assert.match(relative(resolve(tmpdir()), directory), /^layerwell-native23-write-[^\\/]+$/);
+    assert.match(relative(backupParent, directory), /^layerwell-native23-write-[^\\/]+$/);
     rmSync(directory, { recursive: true, force: true });
   });
+  assert.equal(statSync(directory, { bigint: true }).dev, witnessStat.dev,
+    'The external witness backup must be on the same filesystem before any mutation.');
   const backup = join(directory, 'original-witness.json');
   const status = () => {
     const result = spawnSync('git', ['status', '--porcelain'], { cwd: ROOT, encoding: 'utf8', windowsHide: true });
