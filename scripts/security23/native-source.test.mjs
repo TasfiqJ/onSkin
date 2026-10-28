@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { mkdtempSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, relative, resolve } from 'node:path';
 import test from 'node:test';
 import { auditIosPrivacySource, validateIosPrivacyAuditClaims } from '../phase9/ios-privacy-contract.mjs';
 import { IOS_PRIVACY_LOCK_SUCCESSION23_PATH, checkCurrentAuditSnapshot23 } from '../phase9/ios-privacy-lock-succession23.mjs';
@@ -71,4 +72,68 @@ test('current widget compatibility authenticates real source; historical validat
   const wrongLock = structuredClone(input);
   wrongLock.packageLock.packages['node_modules/@expo/ui'].version = '57.0.25';
   assert.equal(validateIosExtensionConfig23(wrongLock).identity, null);
+});
+
+test('actual current non-strict default write refuses tampered and missing witnesses without historical overwrite', (t) => {
+  const witness = resolve(ROOT, IOS_PRIVACY_LOCK_SUCCESSION23_PATH);
+  const witnessBytes = readFileSync(witness);
+  const witnessStat = statSync(witness, { bigint: true });
+  const historical = ['docs/phase-9/generated/ios-privacy-source-audit.json',
+    'docs/phase-9/generated/ios-privacy-source-audit.md'].map((path) => ({
+    path: resolve(ROOT, path), bytes: readFileSync(resolve(ROOT, path)),
+    stat: statSync(resolve(ROOT, path), { bigint: true }),
+  }));
+  const directory = mkdtempSync(join(tmpdir(), 'layerwell-native23-write-'));
+  t.after(() => {
+    assert.match(relative(resolve(tmpdir()), directory), /^layerwell-native23-write-[^\\/]+$/);
+    rmSync(directory, { recursive: true, force: true });
+  });
+  const backup = join(directory, 'original-witness.json');
+  const status = () => {
+    const result = spawnSync('git', ['status', '--porcelain'], { cwd: ROOT, encoding: 'utf8', windowsHide: true });
+    assert.equal(result.status, 0);
+    return result.stdout;
+  };
+  const baselineStatus = status();
+  const cli = (args) => spawnSync(process.execPath,
+    ['scripts/phase9/ios-privacy-source-audit.mjs', ...args],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120000, maxBuffer: 4 * 1024 * 1024 });
+  const positive = () => {
+    const result = cli(['--strict', '--check']);
+    assert.equal(result.status, 0, 'The actual restored current source snapshot must pass.');
+    return result.status;
+  };
+  const unchanged = () => {
+    assert.deepEqual(readFileSync(witness), witnessBytes);
+    const actual = statSync(witness, { bigint: true });
+    for (const key of ['dev', 'ino', 'mode', 'size', 'mtimeNs']) assert.equal(actual[key], witnessStat[key]);
+    for (const record of historical) {
+      assert.deepEqual(readFileSync(record.path), record.bytes);
+      const current = statSync(record.path, { bigint: true });
+      for (const key of ['dev', 'ino', 'mode', 'size', 'mtimeNs']) assert.equal(current[key], record.stat[key]);
+    }
+    assert.equal(status(), baselineStatus);
+  };
+  const initial = positive();
+  const controls = [];
+  for (const state of ['tampered', 'missing']) {
+    renameSync(witness, backup);
+    try {
+      if (state === 'tampered') writeFileSync(witness, '{"schemaVersion":false}\n');
+      const refused = cli(['--write']);
+      assert.equal(refused.status, 1);
+      assert.equal(refused.stdout, '');
+      assert.equal(refused.stderr.trim(), 'CURRENT_NATIVE_SOURCE23_HISTORICAL_OUTPUTS_READ_ONLY');
+      controls.push({ state, exits: [initial, refused.status] });
+    } finally {
+      if (state === 'tampered') rmSync(witness);
+      renameSync(backup, witness);
+    }
+    unchanged();
+    controls.at(-1).exits.push(positive());
+  }
+  unchanged();
+  t.diagnostic(JSON.stringify({ qualification: 'ACTUAL_CURRENT_NATIVE_CLI_SOURCE_ONLY', controls,
+    exactWitnessRestoration: true, historicalOutputsUnchanged: true,
+    cleanBefore: baselineStatus === '', cleanAfter: status() === '', acceptanceGranted: false }));
 });
