@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
 import {
-  assertCanonicalPostgres24,
+  verifyCanonicalPostgres24,
   isCanonicalPostgresQuota24,
   prepareCanonicalPostgresMirror24,
 } from './canonical-postgres-mirror24.mjs';
@@ -595,8 +595,6 @@ async function prepareCanonicalPostgresImage() {
 async function prepareCanonicalPostgresImage24() {
   try {
     await prepareCanonicalPostgresImage();
-    // A moved upstream tag also fails before any database container starts.
-    assertCanonicalPostgres24(canonicalPostgresIdentity);
   } catch (error) {
     if (!isCanonicalPostgresQuota24(error)) throw error;
     canonicalPostgresIdentity = await prepareCanonicalPostgresMirror24({
@@ -605,7 +603,14 @@ async function prepareCanonicalPostgresImage24() {
       signal: signalCleanup.signal,
     });
     console.log(`[db05-local] canonical identical-mirror identity: ${JSON.stringify(canonicalPostgresIdentity)}`);
+    return;
   }
+  // A moved tag or failed native readback cannot enable another acquisition.
+  await verifyCanonicalPostgres24({
+    identity: canonicalPostgresIdentity,
+    runDocker: runHistoryDocker,
+    signal: signalCleanup.signal,
+  });
 }
 
 function assertHistoryDatabaseTarget(rawOutput) {

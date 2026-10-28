@@ -46,13 +46,37 @@ HTTP429; this did not alter the independent index/native-manifest comparison.
 | --- | --- |
 | OCI index | `af083ef64d0408c8f098ee6f5c364a59b26f36fbc0f3a334a62c5c1d57362e9b` |
 | linux/amd64 manifest, 9392 bytes | `caae3d066f437332d593011e3e7ecf78ab005ce9b89378efd53f97f0410563ad` |
-| linux/amd64 config/image ID | `8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d` |
+| linux/amd64 config / classic image ID | `8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d` |
 | linux/arm64 manifest, 9388 bytes | `4e4ce13a16fa33bae61c878d11ec002584b3a55114ccdcab79bc1dda3fe5e767` |
-| linux/arm64 config/image ID | `a5a0c2b809d5415edff7c010d9facf29063cb138f88ed3a66efdf24b83e79a96` |
+| linux/arm64 config / classic image ID | `a5a0c2b809d5415edff7c010d9facf29063cb138f88ed3a66efdf24b83e79a96` |
 
 The index binds both manifests; each manifest binds its config and all compressed
 layers. The fixed config ID additionally binds the expected native image after
 Docker's content-addressed pull. The helper never trusts a mirror tag as proof.
+
+Docker's modern containerd store instead reports the target OCI index as the
+unqualified image ID. The official
+[Docker storage documentation](https://docs.docker.com/engine/storage/containerd/)
+states containerd is the fresh-install default from Engine29 onward. Independently
+fetched Moby source at immutable commit
+[`9f07d9222f4277b9a46bda82b3db99186ee595ef`](https://github.com/moby/moby/tree/9f07d9222f4277b9a46bda82b3db99186ee595ef/daemon/containerd)
+binds both `GetImage` and unqualified `ImageInspect` to that target ID and obtains
+the selected native RootFS metadata from its OCI config. Source snapshots/hashes
+are in the external receipt. The original SQL/container ID assertion remains
+unchanged; the same index ID binds that store's actual container.
+
+An index ID alone is still refused. The current proof additionally requires its
+exact OCI descriptor media type, 1,609-byte size and digest, native Linux platform,
+and all 48 ordered RootFS diffIDs. These arrays were derived from independently
+downloaded native config bytes verified against the exact config hashes above.
+SHA256 of compact JSON encoding of the complete ordered diffID array is
+`563d7006e8b568b4c86e8896996b8007783083f9e57fe59a8d8f7b65b3a1d511`
+for amd64 and
+`6c70db9419343a875884a064d92f87d194fc9881ac292e293f1ac60b56b70f99`
+for arm64. Both actual public config objects and their request receipts are
+retained. Classic config-ID proof remains unchanged. Modern ECR success gets an
+additional read-only image inspection, and both mirror inspections require this
+native proof before or after any retag. No daemon configuration is changed.
 
 The pinned upstream CLI source already supports registry fallback and checks
 candidate image caches before pulling. Its public
@@ -144,6 +168,18 @@ This actual failure motivated the bounded retry and second identical official
 mirror extension. It was not a reset/SQL pass or an acceptance result. The job
 used the workflow's default PR checkout; exact tree binding belongs in the final
 integration report. Subsequent actual canonical results remain separate.
+
+Runtime head `255f51d1fe83b06b0ff2e1f224154ff266381328`, Quality
+`40756252549`, canonical job `123055844556`, passed the 40 bootstrap controls
+and all original database contracts. ECR acquisition succeeded, but Docker
+returned the pinned OCI index as `Image.Id`; the initial config-ID-only proof
+correctly refused with `H01_CANONICAL_POSTGRES24` before stack startup. This
+actual refusal motivated the separately constrained native RootFS proof above.
+Both PG15 and PG17 rehearsal jobs succeeded in that run, which does not replace
+the failed canonical job. The expanded 63-control suite executes valid and forged
+descriptor/RootFS/config/index combinations, both native platforms, ECR readback
+replacement/cancellation and refusal of quota fallback after native inspection.
+No failed execution is relabelled as canonical success.
 
 This Windows host initially had no Docker Linux engine pipe. Its existing Ubuntu
 WSL registration could not attach its missing `ext4.vhdx`; no distro was recreated

@@ -1,6 +1,7 @@
 // Campaign24: the official mirrors were independently read as identical OCI
 // bytes. Pins bind the index, native manifest and config, rather than tag names.
 import { setTimeout as delay } from 'node:timers/promises';
+import { createHash } from 'node:crypto';
 import { CANONICAL_POSTGRES_PULL_RETRY_DELAYS_MS } from './local-supabase-reset-retry.mjs';
 
 const INDEX = 'sha256:af083ef64d0408c8f098ee6f5c364a59b26f36fbc0f3a334a62c5c1d57362e9b';
@@ -16,10 +17,12 @@ const PLATFORMS = Object.freeze({
   amd64: Object.freeze({
     manifest: 'sha256:caae3d066f437332d593011e3e7ecf78ab005ce9b89378efd53f97f0410563ad',
     config: 'sha256:8613ba8eab946dff6674a2db6aab75b80aa101da39035fe20f62b0c7591ab35d',
+    rootfs: '563d7006e8b568b4c86e8896996b8007783083f9e57fe59a8d8f7b65b3a1d511',
   }),
   arm64: Object.freeze({
     manifest: 'sha256:4e4ce13a16fa33bae61c878d11ec002584b3a55114ccdcab79bc1dda3fe5e767',
     config: 'sha256:a5a0c2b809d5415edff7c010d9facf29063cb138f88ed3a66efdf24b83e79a96',
+    rootfs: '6c70db9419343a875884a064d92f87d194fc9881ac292e293f1ac60b56b70f99',
   }),
 });
 
@@ -32,10 +35,38 @@ function refuse() {
   throw new Error('H01_CANONICAL_POSTGRES24: exact pinned image proof required.');
 }
 
-export function assertCanonicalPostgres24(identity) {
+export function assertCanonicalPostgres24(identity, image) {
   if (!identity || !Object.hasOwn(PLATFORMS, identity.architecture)) refuse();
   const expected = PLATFORMS[identity.architecture];
-  if (identity.id !== expected.config || identity.digest !== INDEX) refuse();
+  if (identity.digest !== INDEX) refuse();
+  if (identity.id === expected.config) return;
+  // Modern Docker/containerd reports the OCI target index as Image.Id.
+  // An index alone is insufficient: independently bind its selected native
+  // config's complete ordered RootFS list, descriptor and platform as well.
+  if (identity.id !== INDEX || image?.Id !== INDEX || image.Os !== 'linux' ||
+      image.Architecture !== identity.architecture ||
+      image.Descriptor?.digest !== INDEX || image.Descriptor?.size !== 1609 ||
+      image.Descriptor?.mediaType !== 'application/vnd.oci.image.index.v1+json' ||
+      image.RootFS?.Type !== 'layers' || !Array.isArray(image.RootFS.Layers) ||
+      image.RootFS.Layers.length !== 48 ||
+      !image.RootFS.Layers.every(value => typeof value === 'string' && /^sha256:[a-f0-9]{64}$/u.test(value)) ||
+      createHash('sha256').update(JSON.stringify(image.RootFS.Layers)).digest('hex') !== expected.rootfs) refuse();
+}
+
+export async function verifyCanonicalPostgres24({ identity, runDocker, signal }) {
+  if (identity?.id !== INDEX) { assertCanonicalPostgres24(identity); return; }
+  if (!Object.hasOwn(PLATFORMS, identity?.architecture) || identity.digest !== INDEX ||
+      typeof runDocker !== 'function') refuse();
+  signal?.throwIfAborted();
+  let rows;
+  try { rows = JSON.parse((await runDocker(['image', 'inspect', CANONICAL])).stdout); }
+  catch (error) { if (error instanceof SyntaxError) refuse(); throw error; }
+  signal?.throwIfAborted();
+  const image = Array.isArray(rows) && rows.length === 1 ? rows[0] : null;
+  if (!image || !Array.isArray(image.RepoTags) || !image.RepoTags.includes(CANONICAL) ||
+      !Array.isArray(image.RepoDigests) || !image.RepoDigests.includes(`public.ecr.aws/supabase/postgres@${INDEX}`)) refuse();
+  assertCanonicalPostgres24(identity, image);
+  console.log(`[db05-local] canonical native RootFS proof: ${identity.architecture}/48`);
 }
 
 export function isCanonicalPostgresQuota24(error) {
@@ -82,11 +113,12 @@ function inspect(raw, architecture, canonical, source) {
   let rows;
   try { rows = JSON.parse(raw); } catch { refuse(); }
   const image = Array.isArray(rows) && rows.length === 1 ? rows[0] : null;
-  if (!image || !PLATFORMS[architecture] || image.Id !== PLATFORMS[architecture].config ||
+  if (!image || !PLATFORMS[architecture] ||
       image.Os !== 'linux' || image.Architecture !== architecture ||
       !Array.isArray(image.RepoDigests) || !source.repoDigests.some(value => image.RepoDigests.includes(value)) ||
       (canonical && (!Array.isArray(image.RepoTags) || !image.RepoTags.includes(CANONICAL)))) refuse();
-  return image.Id;
+  assertCanonicalPostgres24({ id: image.Id, digest: INDEX, architecture }, image);
+  return image;
 }
 
 export async function prepareCanonicalPostgresMirror24({ runDocker, architecture, signal, wait = delay }) {
@@ -107,16 +139,17 @@ export async function prepareCanonicalPostgresMirror24({ runDocker, architecture
   const digests = [...`${pulled.stdout}\n${pulled.stderr}`.matchAll(/^Digest: (sha256:[a-f0-9]{64})\s*$/gmu)];
   if (digests.length !== 1 || digests[0][1] !== INDEX) refuse();
   signal?.throwIfAborted();
-  const id = inspect((await runDocker(['image', 'inspect', source.reference])).stdout, architecture, false, source);
+  const id = inspect((await runDocker(['image', 'inspect', source.reference])).stdout, architecture, false, source).Id;
   signal?.throwIfAborted();
   // This is the SAME pinned image, never an alternative PostgreSQL build.
   // Seeding the CLI's first cache entry retains its exact canonical Config.Image
   // and every original run-owned SQL/container identity assertion.
   await runDocker(['image', 'tag', id, CANONICAL]);
   signal?.throwIfAborted();
-  if (inspect((await runDocker(['image', 'inspect', CANONICAL])).stdout, architecture, true, source) !== id) refuse();
+  const canonical = inspect((await runDocker(['image', 'inspect', CANONICAL])).stdout, architecture, true, source);
+  if (canonical.Id !== id) refuse();
   signal?.throwIfAborted();
   const identity = Object.freeze({ id, digest: INDEX, architecture });
-  assertCanonicalPostgres24(identity);
+  assertCanonicalPostgres24(identity, canonical);
   return identity;
 }
