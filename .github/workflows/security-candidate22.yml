@@ -34,7 +34,17 @@ jobs:
         with:
           node-version: 22
       - name: Use pinned npm
-        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+        run: |
+          prefix="$RUNNER_TEMP/security23-tools"
+          npm install --global --prefix "$prefix" npm@11.20.0 --ignore-scripts --no-audit --no-fund
+          if [ "$RUNNER_OS" = Windows ]; then
+            cp "$(node -p 'process.execPath')" "$prefix/node.exe"
+            echo "$prefix" >> "$GITHUB_PATH"
+          else
+            mkdir -p "$prefix/bin"
+            cp "$(node -p 'process.execPath')" "$prefix/bin/node"
+            echo "$prefix/bin" >> "$GITHUB_PATH"
+          fi
       - name: Synthetic disclosure gate
         run: python -B scripts/security22/test_security22.py && python -B scripts/security23/test_partial_results.py
       - name: Authentic historical inventory defect control

@@ -70,8 +70,8 @@ def publish_components(directory, result):
 def policy(root):
     value = loads(regular(root, 'scripts/security22/policy.json', 65536))
     expected = dict(schema=1, qualification='CURRENT_PUBLIC_TECHNICAL_CANDIDATE_ONLY',
-        baseHead='2cffa9e92be101af4e3b371f1815ec9f458d8da4', baseTree='9380dd155ee2c7879de7ef79eb27d0028b950d13',
-        requiredRefs=['refs/remotes/origin/stage/m1-f09-layout-compatibility21', 'refs/remotes/origin/main'],
+        baseHead='34fac69f3ba527724ecdf2d1cef69f27372756ad', baseTree='832baeae6421bfaa6fb668b025932d2c49a4f33c',
+        requiredRefs=['refs/remotes/origin/stage/m1-security-recovery22', 'refs/remotes/origin/main'],
         maxFileBytes=134217728, maxExpandedBytes=536870912, maxArchiveMembers=20000,
         maxArchiveDepth=4, maxRatio=500, release='NO_GO', acceptanceGranted=False,
         protectedScans='BLOCKED_EXTERNAL_CUSTODY')
@@ -100,19 +100,39 @@ def disclosure_gate(gate, code):
 
 def perform_complete(root, components, progress):
     # A failed synthetic disclosure gate prevents ANY real-output collection.
+    components['disclosure_controls'] = dict(state='INCOMPLETE', executed=True)
     code, out, _ = execute([sys.executable, '-B', 'scripts/security22/test_security22.py'], root, 60)
     gate = loads(out)
     disclosure_gate(gate, code)
     components['disclosure_controls'] = dict(state='PASS', exit=code, **gate)
     progress['stage'] = 'PARTIAL_DISCLOSURE_GATE'
+    progress['component'] = 'partial_disclosure_controls'
+    components['partial_disclosure_controls'] = dict(state='INCOMPLETE', executed=True)
     code, out, _ = execute([sys.executable, '-B', 'scripts/security23/test_partial_results.py'], root, 60)
     partial = loads(out)
-    require(code == 0 and partial == dict(testsRun=8, failures=0, errors=0, skipped=0, passed=True,
+    require(code == 0 and partial == dict(testsRun=10, failures=0, errors=0, skipped=0, passed=True,
         qualification='SYNTHETIC_PARTIAL_PUBLICATION_ONLY') and type(partial['testsRun']) is int and
         all(type(partial[k]) is int for k in ('failures', 'errors', 'skipped')) and type(partial['passed']) is bool,
         'PARTIAL_GATE_FAILED')
     components['partial_disclosure_controls'] = dict(state='PASS', exit=code, **partial)
+    progress['stage'] = 'TOOLCHAIN_DISCLOSURE_GATE'
+    progress['component'] = 'toolchain_controls'
+    components['toolchain_controls'] = dict(state='INCOMPLETE', executed=True)
+    code, out, _ = execute([sys.executable, '-B', 'scripts/security23/test_toolchain.py', '--regressions'], root, 120)
+    tooling_gate = loads(out)
+    expected_not_run = 12 if os.name == 'nt' else 3
+    require(code == 0 and tooling_gate.get('qualification') == 'SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY' and
+        tooling_gate.get('state') == 'PASS' and tooling_gate.get('platform') == os.name and
+        tooling_gate.get('acceptanceGranted') is False and
+        all(type(tooling_gate.get(k)) is int for k in ('tests', 'passed', 'failed', 'errors', 'notRun')) and
+        tooling_gate['tests'] == 43 and tooling_gate['passed'] == 43 - expected_not_run and
+        tooling_gate['notRun'] == expected_not_run and tooling_gate['failed'] == tooling_gate['errors'] == 0,
+        'TOOLCHAIN_GATE_FAILED')
+    components['toolchain_controls'] = dict(state='PASS', exit=code,
+        qualification=tooling_gate['qualification'], platform=os.name,
+        **{k: tooling_gate[k] for k in ('tests', 'passed', 'failed', 'errors', 'notRun')})
     progress['stage'] = 'POLICY'
+    progress['component'] = 'preflight'
     rules = policy(root)
     progress['stage'] = 'TOOLCHAIN'
     before_tools = identity(root)
@@ -127,6 +147,8 @@ def perform_complete(root, components, progress):
     components['generated_content'] = dict(state='PASS' if before['generated']['state'] == 'EXPLICIT_DEPENDENCY_COMPONENT_SCOPE' else 'INCOMPLETE',
                                             **{key: value for key, value in before['generated'].items() if key != 'state'})
     progress['stage'] = 'DEPENDENCIES'
+    progress['component'] = 'dependencies'
+    components['dependencies'] = dict(state='INCOMPLETE', executed=True)
     try:
         code, out, _ = execute(['node', 'scripts/security22/dependency.mjs'], root, seconds=600)
         components['dependencies'] = dependency(loads(out), code, before_tools['inputs']['package-lock.json'],
@@ -136,16 +158,25 @@ def perform_complete(root, components, progress):
     except Exception as error:
         components['dependencies'] = dict(state='INCOMPLETE', reason=diagnostic(error))
     progress['stage'] = 'TOOLING'
+    progress['component'] = 'tooling_regressions'
+    components['tooling_regressions'] = dict(state='INCOMPLETE', executed=True)
     try:
         components['tooling_regressions'] = tap(['node', '--test', 'scripts/phase9/patch-tooling-security.test.mjs',
             'scripts/phase9/tooling-security-vulnerabilities.test.mjs', 'scripts/security22/dependency.test.mjs',
             'scripts/security22/patch-tooling.test.mjs'], root)
+    except Exception as error:
+        components['tooling_regressions'] = dict(state='INCOMPLETE', reason=diagnostic(error))
+    progress['stage'] = 'NATIVE_PATCHES'
+    progress['component'] = 'mandatory_native_patches'
+    components['mandatory_native_patches'] = dict(state='INCOMPLETE', executed=True)
+    try:
         code, _, _ = execute(['node', 'scripts/postinstall.mjs', '--check'], root, seconds=120)
         components['mandatory_native_patches'] = dict(state='PASS' if code == 0 else 'INCOMPLETE', exit=code)
     except Exception as error:
-        components['tooling_regressions'] = dict(state='INCOMPLETE', reason=diagnostic(error))
-        components.setdefault('mandatory_native_patches', dict(state='NOT_RUN'))
+        components['mandatory_native_patches'] = dict(state='INCOMPLETE', reason=diagnostic(error))
     progress['stage'] = 'HISTORICAL_SOURCE_CONTRACT'
+    progress['component'] = 'original_source_contract'
+    components['original_source_contract'] = dict(state='INCOMPLETE', executed=True)
     try:
         code, out, _ = execute([sys.executable, '-B', 'scripts/phase9/security_acceptance/contract.py', 'source', '--root', '.'], root, 180)
         report = loads(out)
@@ -163,6 +194,7 @@ def perform_complete(root, components, progress):
     components['qualified_custody'] = dict(state='BLOCKED_EXTERNAL_CUSTODY', executed=False,
         clearanceAuthority='INDEPENDENT_QUALIFIED_REVIEW_ONLY')
     progress['stage'] = 'STABILITY'
+    progress['component'] = 'execution_stability'
     after = snapshot(root, rules)
     after_tools = identity(root)
     require(before == after and before_tools == after_tools, 'INPUT_CHANGED_DURING_EXECUTION')
@@ -174,17 +206,19 @@ def perform_complete(root, components, progress):
 
 def perform(root):
     # Unknown bindings remain null. A failed preflight cannot certify a source or tool.
-    names = ('disclosure_controls', 'partial_disclosure_controls', 'preflight', 'committed_metadata',
+    names = ('disclosure_controls', 'partial_disclosure_controls', 'toolchain_controls', 'preflight', 'committed_metadata',
              'working_bytes', 'archive_coverage', 'generated_content', 'dependencies', 'tooling_regressions',
              'mandatory_native_patches', 'original_source_contract', 'protected_secret_history',
              'protected_static_analysis', 'execution_stability')
     components = {name: dict(state='NOT_RUN', executed=False) for name in names}
     components['qualified_custody'] = dict(state='BLOCKED_EXTERNAL_CUSTODY', executed=False,
         clearanceAuthority='INDEPENDENT_QUALIFIED_REVIEW_ONLY')
-    progress = dict(stage='DISCLOSURE_GATE', source=None, toolchain=None)
+    progress = dict(stage='DISCLOSURE_GATE', component='disclosure_controls', source=None, toolchain=None)
     try:
         return perform_complete(root, components, progress)
     except (Exception, KeyboardInterrupt) as error:
+        components[progress['component']] = dict(state='INCOMPLETE', executed=True,
+            stage=progress['stage'], reason=diagnostic(error))
         components['execution_stability'] = dict(state='INCOMPLETE', stage=progress['stage'], reason=diagnostic(error))
         if components['preflight']['state'] != 'PASS':
             components['preflight'] = dict(state='INCOMPLETE', stage=progress['stage'], reason=diagnostic(error))

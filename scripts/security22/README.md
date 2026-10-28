@@ -1,5 +1,40 @@
 # Current public technical candidate
 
+Campaign23 repairs the current path; Campaign22 remains immutable historical
+evidence. The source base is exact PR26, never a moving substitute. Diagnostics
+publish fixed stage/predicate tokens only. Early refusals retain disclosure
+controls and explicit NOT_RUN/INCOMPLETE components; unknown source/tool bindings
+remain null. Interrupted attempted checks are INCOMPLETE. A failed native patch
+check cannot erase a completed tooling result. Readiness remains nonzero.
+
+The npm profile is a **fresh global npm 11.20.0 installation** in an isolated
+prefix containing a regular Node 22 binary. CI provisions this prefix normally.
+The authenticated public archive is
+https://registry.npmjs.org/npm/-/npm-11.20.0.tgz, SHA256
+`d1a92f40e6c407b84c3a00c3cf978a10b24fd42f153c527e2016cef7bb34a483`.
+The independently derived expected inventory is pinned in toolchain.json and
+its complete model digest is pinned in toolchain.py. POSIX requires all 1,943
+archive files plus all nine declared internal executable links. Windows requires
+all 1,970 regular files, including all 27 exact cmd-shim 8.0.0 generated files.
+There are no optional observed subsets and `.bin` is never omitted.
+
+All file names, contents, counts, bytes, directories and executable link targets
+must reconcile with that fixed profile. Package bin declarations and regular
+target hashes are checked; chained, undeclared, escaping, cyclic, dangling,
+reparse and aliased entries refuse. Enumeration/read/stat failures and exhausted
+bounds refuse explicitly. Stable before/after walks supplement the pinned
+expected content; they do not establish completeness by themselves. Windows
+path/fd stat executable-bit inference differs, so only those inferred bits are
+normalized; file type, identity, size, timestamps and actual ACL reads remain
+checked.
+
+Run `python -B scripts/security23/test_partial_results.py` and
+`python -B scripts/security23/test_toolchain.py --regressions` in addition to
+all inherited checks. Platform-specific counterparts are explicitly NOT_RUN
+on the other OS, never counted as performed. The default test_toolchain.py
+command runs the authenticated historical function and is labeled separately
+from current positive proof and real component execution.
+
 Run `python -B scripts/security22/test_security22.py` before collecting output.
 Run `python -B scripts/security22/run.py` from a clean full checkout after
 normal `npm ci`. Required public base/main refs must exist. Exit 1 is expected

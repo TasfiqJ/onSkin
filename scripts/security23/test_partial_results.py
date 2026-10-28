@@ -4,6 +4,7 @@ import copy
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -17,15 +18,20 @@ from redact import Refusal, canonical, diagnostic
 CANARY = 'SYNTHETIC_PRIVATE_OUTPUT_23_C:/private/eyJ.invalid.signature'
 GATE = dict(errors=0, failures=0, passed=True,
     qualification='SYNTHETIC_DISCLOSURE_AND_BOUNDS_ONLY', skipped=0, testsRun=26)
-PARTIAL = dict(testsRun=8, failures=0, errors=0, skipped=0, passed=True,
+PARTIAL = dict(testsRun=10, failures=0, errors=0, skipped=0, passed=True,
     qualification='SYNTHETIC_PARTIAL_PUBLICATION_ONLY')
 TOOLS = {'identitySHA256': 'a' * 64}
 SOURCE = dict(head='b' * 40, tree='c' * 40, metadata={'state': 'PASS'},
     workingBytes={'state': 'PASS'}, archiveCoverage={'state': 'PASS'},
-    generated={'state': 'EXPLICIT_DEPENDENCY_COMPONENT_SCOPE'})
+    generated={'state': 'EXPLICIT_DEPENDENCY_COMPONENT_SCOPE'}, history={'commits': 1, 'reachableObjects': 1})
 
 
 def gates(argv, *args, **kwargs):
+    if argv[-1] == '--regressions':
+        missing = 12 if os.name == 'nt' else 3
+        return 0, canonical(dict(qualification='SYNTHETIC_PINNED_MODEL_FILESYSTEM_CONTROLS_ONLY',
+            state='PASS', platform=os.name, acceptanceGranted=False, tests=43, passed=43-missing,
+            failed=0, errors=0, notRun=missing)), b''
     return 0, canonical(PARTIAL if argv[-1].endswith('test_partial_results.py') else GATE), b''
 
 
@@ -101,6 +107,36 @@ class Controls(unittest.TestCase):
         changed['components']['qualified_custody']['state'] = 'PASS'
         with self.assertRaises(Refusal):
             run.summary(changed['components'])
+
+    def later_failure(self, interrupted):
+        tools = {**TOOLS, 'inputs': {'package-lock.json': 'd' * 64},
+            'tools': {'npm': {'cliSHA256': 'e' * 64}, 'node': {'version': 'v22.21.0'}}}
+        def execute(argv, *args, **kwargs):
+            if 'scripts/security22/dependency.mjs' in argv:
+                if interrupted: raise KeyboardInterrupt(CANARY)
+                return 1, b'{}', b''
+            if 'scripts/postinstall.mjs' in argv: raise OSError(CANARY)
+            if 'scripts/phase9/security_acceptance/contract.py' in argv:
+                return 1, canonical(dict(code='SOURCE_INVENTORY_DRIFT', acceptanceGranted=False, rawScannerPass=False)), b''
+            return gates(argv)
+        with patch.object(run, 'execute', side_effect=execute), patch.object(run, 'policy', return_value={}), \
+             patch.object(run, 'identity', return_value=tools), patch.object(run, 'snapshot', return_value=SOURCE), \
+             patch.object(run, 'dependency', return_value={'state': 'FINDINGS', 'exit': 1}), \
+             patch.object(run, 'regular', return_value=b'{}'), patch.object(run, 'tap', return_value={'state': 'PASS', 'exit': 0}):
+            return run.perform(Path.cwd())
+
+    def test_completed_tooling_survives_patch_exception(self):
+        value = self.later_failure(False)
+        self.assertEqual(value['components']['tooling_regressions']['state'], 'PASS')
+        self.assertEqual(value['components']['mandatory_native_patches']['state'], 'INCOMPLETE')
+        self.assertNotIn(CANARY, canonical(value).decode())
+
+    def test_interrupted_attempt_is_incomplete_not_unexecuted(self):
+        value = self.later_failure(True)
+        self.assertEqual(value['components']['dependencies']['state'], 'INCOMPLETE')
+        self.assertTrue(value['components']['dependencies']['executed'])
+        self.assertEqual(value['components']['tooling_regressions']['state'], 'NOT_RUN')
+        self.assertEqual(value['source'], SOURCE)
 
 
 def main():

@@ -2,7 +2,109 @@
   "schema": 1,
   "nodeMajor": 22,
   "npmVersion": "11.20.0",
-  "pythonMinimum": [3, 9],
-  "checks": ["inventory", "dependency", "tooling", "historical_workflow_contract"],
-  "qualification": "TECHNICAL_ONLY_NO_ADMISSION"
+  "pythonMinimum": [
+    3,
+    9
+  ],
+  "checks": [
+    "inventory",
+    "dependency",
+    "tooling",
+    "historical_workflow_contract"
+  ],
+  "qualification": "TECHNICAL_ONLY_NO_ADMISSION",
+  "npmInstallation": {
+    "qualification": "PINNED_NPM11_20_GLOBAL_INSTALL_ONLY",
+    "source": {
+      "url": "https://registry.npmjs.org/npm/-/npm-11.20.0.tgz",
+      "sha256": "d1a92f40e6c407b84c3a00c3cf978a10b24fd42f153c527e2016cef7bb34a483",
+      "integrity": "sha512-dF3EDFwbYN+N5RUip+ZYDe0NeURK5BgqKOcvT1iNtUYhTMTl0FwWhBuXrS7KtXyduqyTMS5aaQaregnHDAxNgw=="
+    },
+    "profiles": {
+      "posix": {
+        "files": 1943,
+        "bytes": 12232392,
+        "treeSHA256": "b941f37688799d749409b6449dce4721c5e2ed96e9bfe43eaab79850fa11b7cd"
+      },
+      "nt": {
+        "files": 1970,
+        "bytes": 12246399,
+        "treeSHA256": "647e79f0d69d1230d85ceca24566affc9a840cded3cc80532d139eb919853cda"
+      }
+    },
+    "bins": [
+      {
+        "name": "arborist",
+        "target": "node_modules/@npmcli/arborist/bin/index.js",
+        "link": "../@npmcli/arborist/bin/index.js",
+        "targetSHA256": "31be30f7b233bbe76740fd497fce167f182e12886634650f112c4347d81f3512",
+        "package": "node_modules/@npmcli/arborist/package.json",
+        "binValue": "bin/index.js"
+      },
+      {
+        "name": "installed-package-contents",
+        "target": "node_modules/@npmcli/installed-package-contents/bin/index.js",
+        "link": "../@npmcli/installed-package-contents/bin/index.js",
+        "targetSHA256": "9a7da3ca72951dee31cdcc04ae700361c003d9c30c29403d3063499be60e613a",
+        "package": "node_modules/@npmcli/installed-package-contents/package.json",
+        "binValue": "bin/index.js"
+      },
+      {
+        "name": "cssesc",
+        "target": "node_modules/cssesc/bin/cssesc",
+        "link": "../cssesc/bin/cssesc",
+        "targetSHA256": "d46f3b9e3de9d4a40489fe2fb144429de2aa53ea5d7e4c856b1fa3ccaecc6e44",
+        "package": "node_modules/cssesc/package.json",
+        "binValue": "bin/cssesc"
+      },
+      {
+        "name": "node-gyp",
+        "target": "node_modules/node-gyp/bin/node-gyp.js",
+        "link": "../node-gyp/bin/node-gyp.js",
+        "targetSHA256": "733bdbf2080c31a67d94cb8f7123110f44b0a3e2be24b8e575754af550eee6bf",
+        "package": "node_modules/node-gyp/package.json",
+        "binValue": "./bin/node-gyp.js"
+      },
+      {
+        "name": "nopt",
+        "target": "node_modules/nopt/bin/nopt.js",
+        "link": "../nopt/bin/nopt.js",
+        "targetSHA256": "95527c67ac7a1e294f7fcb09e648d1e454f6cfef06346a18a297173389b97d21",
+        "package": "node_modules/nopt/package.json",
+        "binValue": "bin/nopt.js"
+      },
+      {
+        "name": "pacote",
+        "target": "node_modules/pacote/bin/index.js",
+        "link": "../pacote/bin/index.js",
+        "targetSHA256": "fbcdd6e4d3ea97e03d45a908cc143760e8908b59aadf7c27384a148ae19455c7",
+        "package": "node_modules/pacote/package.json",
+        "binValue": "bin/index.js"
+      },
+      {
+        "name": "qrcode-terminal",
+        "target": "node_modules/qrcode-terminal/bin/qrcode-terminal.js",
+        "link": "../qrcode-terminal/bin/qrcode-terminal.js",
+        "targetSHA256": "ca492212f6251d730aaaf738262819c9a9aa3fc81d5af51fab47094913e69f74",
+        "package": "node_modules/qrcode-terminal/package.json",
+        "binValue": "./bin/qrcode-terminal.js"
+      },
+      {
+        "name": "semver",
+        "target": "node_modules/semver/bin/semver.js",
+        "link": "../semver/bin/semver.js",
+        "targetSHA256": "bd6c871026985937dc945011fc54b74b47f5998154216d7b8d40d5ed782e4402",
+        "package": "node_modules/semver/package.json",
+        "binValue": "bin/semver.js"
+      },
+      {
+        "name": "node-which",
+        "target": "node_modules/which/bin/which.js",
+        "link": "../which/bin/which.js",
+        "targetSHA256": "7c37493fcac8af6526f51f4d83606a733ca7ca3c7b943d1e9239bb30346b019d",
+        "package": "node_modules/which/package.json",
+        "binValue": "./bin/which.js"
+      }
+    ]
+  }
 }
