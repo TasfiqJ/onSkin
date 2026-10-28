@@ -42,7 +42,7 @@ def main():
             return
         raise AssertionError('expected fixed-code refusal')
 
-    def archive(entries):
+    def archive(entries, compression=zipfile.ZIP_DEFLATED):
         stream = io.BytesIO()
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', UserWarning)
@@ -52,7 +52,7 @@ def main():
                     info = zipfile.ZipInfo(name)
                     info.create_system = 3
                     info.external_attr = mode << 16
-                    info.compress_type = zipfile.ZIP_DEFLATED
+                    info.compress_type = compression
                     if len(record) > 3:
                         info.extra = record[3]
                     output.writestr(info, data)
@@ -95,6 +95,32 @@ def main():
         test('local-central-'+name+'-disagreement', lambda data=bytes(malformed): refuse(lambda: module.Archive(data)))
     test('omitted-member', lambda: refuse(lambda: module.Archive(good).exact({'missing'})))
     test('undeclared-member', lambda: refuse(lambda: module.Archive(good).exact(set())))
+    def resize_stream(raw, delta):
+        eocd = len(raw)-22
+        central = struct.unpack_from('<I', raw, eocd+16)[0]
+        compressed = struct.unpack_from('<I', raw, 18)[0]
+        changed = bytearray(raw[:central] + b'X' + raw[central:]) if delta == 1 else bytearray(raw[:central-1]+raw[central:])
+        struct.pack_into('<I', changed, 18, compressed+delta)
+        struct.pack_into('<I', changed, central+delta+20, compressed+delta)
+        struct.pack_into('<I', changed, len(changed)-22+16, central+delta)
+        return bytes(changed)
+    test('trailing-deflate-byte', lambda: refuse(lambda: module.Archive(resize_stream(good,1)).read('file')))
+    test('truncated-deflate-byte', lambda: refuse(lambda: module.Archive(resize_stream(good,-1)).read('file')))
+    stored = archive([('file',b'public fixture',regular)],compression=zipfile.ZIP_STORED)
+    test('stored-positive', lambda: module.Archive(stored).read('file'))
+    test('trailing-stored-byte', lambda: refuse(lambda: module.Archive(resize_stream(stored,1)).read('file')))
+    corrupted = bytearray(good)
+    payload_start = 30+struct.unpack_from('<H', good,26)[0]
+    corrupted[payload_start] ^= 0xff
+    test('corrupt-deflate-stream', lambda: refuse(lambda: module.Archive(bytes(corrupted)).read('file')))
+    def total_expansion():
+        previous = module.MAX_TOTAL
+        try:
+            module.MAX_TOTAL = 7
+            refuse(lambda: module.Archive(archive([('a',b'1234',regular),('b',b'5678',regular)])))
+        finally:
+            module.MAX_TOTAL = previous
+    test('declared-total-expansion-preflight',total_expansion)
     test('duplicate-json-key', lambda: refuse(lambda: module.loads(b'{"a":1,"a":2}')))
     test('nonfinite-json', lambda: refuse(lambda: module.loads(b'{"a":NaN}')))
     test('float-schema', lambda: refuse(lambda: module.loads(b'{"a":1.0}')))
