@@ -67,6 +67,11 @@ jobs:
           set -o pipefail
           node --test scripts/security24/advisory-behavior.test.mjs scripts/security24/patch-tooling.test.mjs | tee "$RUNNER_TEMP/security24-advisory-controls.tap"
           node scripts/security24/graph.mjs > "$RUNNER_TEMP/security24-advisory-graph.json"
+      - name: Campaign24 finite source governance controls
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -B scripts/release/full-app-j01/source_consumer24.test.py | tee "$RUNNER_TEMP/security24-source-controls.jsonl"
       - name: Execute current public checks and preserve component results
         if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
@@ -85,5 +90,6 @@ jobs:
             ${{ runner.temp }}/security23-native-controls.json
             ${{ runner.temp }}/security24-advisory-controls.tap
             ${{ runner.temp }}/security24-advisory-graph.json
+            ${{ runner.temp }}/security24-source-controls.jsonl
           if-no-files-found: ignore
           retention-days: 7
