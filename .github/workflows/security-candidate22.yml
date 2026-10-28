@@ -1,4 +1,4 @@
-name: Security candidate22 (technical components only)
+name: Security candidate23 (technical components only)
 
 on:
   pull_request:
@@ -9,7 +9,14 @@ permissions:
 jobs:
   public-components:
     name: Current public components; custody remains required
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 30
     steps:
       - name: Checkout exact candidate source
@@ -20,7 +27,7 @@ jobs:
           persist-credentials: false
       - name: Bind required public refs
         run: |
-          git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main refs/heads/stage/m1-f09-layout-compatibility21:refs/remotes/origin/stage/m1-f09-layout-compatibility21
+          git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main refs/heads/stage/m1-f09-layout-compatibility21:refs/remotes/origin/stage/m1-f09-layout-compatibility21 refs/heads/stage/m1-security-recovery22:refs/remotes/origin/stage/m1-security-recovery22
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
       - name: Setup Node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
@@ -29,19 +36,21 @@ jobs:
       - name: Use pinned npm
         run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
       - name: Synthetic disclosure gate
-        run: python3 -B scripts/security22/test_security22.py
+        run: python -B scripts/security22/test_security22.py && python -B scripts/security23/test_partial_results.py
+      - name: Authentic historical inventory defect control
+        run: python -B scripts/security23/test_toolchain.py
       - name: Normal lockfile installation with mandatory hooks
         run: npm ci --no-audit --no-fund
       - name: Execute current public checks and preserve component results
         shell: bash
         run: |
           set -o pipefail
-          python3 -B scripts/security22/run.py --output-dir "$RUNNER_TEMP/security22-components" | tee "$RUNNER_TEMP/security22-public.json"
+          python -B scripts/security22/run.py --output-dir "$RUNNER_TEMP/security22-components" | tee "$RUNNER_TEMP/security22-public.json"
       - name: Retain only allowlisted public component evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: security22-public-components-${{ github.run_id }}
+          name: security23-public-components-${{ matrix.os }}-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/security22-public.json
             ${{ runner.temp }}/security22-components/*.json

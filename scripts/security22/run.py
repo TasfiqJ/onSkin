@@ -55,8 +55,10 @@ def publish_components(directory, result):
     for name, component in sorted(result['components'].items()):
         require(re.fullmatch('[a-z_]+', name), 'COMPONENT_NAME')
         value = dict(schema=1, qualification=result['qualification'], admission='NOT_GRANTED',
-                     head=result['source']['head'], tree=result['source']['tree'],
-                     toolchainIdentitySHA256=result['toolchain']['identitySHA256'], component=name, result=component)
+                     head=result['source']['head'] if result.get('source') is not None else None,
+                     tree=result['source']['tree'] if result.get('source') is not None else None,
+                     toolchainIdentitySHA256=result['toolchain']['identitySHA256'] if result.get('toolchain') is not None else None,
+                     component=name, result=component)
         raw = canonical(value) + b'\n'
         with (directory/(name+'.json')).open('xb') as stream:
             stream.write(raw)
@@ -96,21 +98,35 @@ def disclosure_gate(gate, code):
             for key, value in expected.items()), 'DISCLOSURE_GATE_FAILED')
 
 
-def perform(root):
-    components = {}
+def perform_complete(root, components, progress):
     # A failed synthetic disclosure gate prevents ANY real-output collection.
     code, out, _ = execute([sys.executable, '-B', 'scripts/security22/test_security22.py'], root, 60)
     gate = loads(out)
     disclosure_gate(gate, code)
     components['disclosure_controls'] = dict(state='PASS', exit=code, **gate)
+    progress['stage'] = 'PARTIAL_DISCLOSURE_GATE'
+    code, out, _ = execute([sys.executable, '-B', 'scripts/security23/test_partial_results.py'], root, 60)
+    partial = loads(out)
+    require(code == 0 and partial == dict(testsRun=8, failures=0, errors=0, skipped=0, passed=True,
+        qualification='SYNTHETIC_PARTIAL_PUBLICATION_ONLY') and type(partial['testsRun']) is int and
+        all(type(partial[k]) is int for k in ('failures', 'errors', 'skipped')) and type(partial['passed']) is bool,
+        'PARTIAL_GATE_FAILED')
+    components['partial_disclosure_controls'] = dict(state='PASS', exit=code, **partial)
+    progress['stage'] = 'POLICY'
     rules = policy(root)
+    progress['stage'] = 'TOOLCHAIN'
     before_tools = identity(root)
+    progress['toolchain'] = before_tools
+    progress['stage'] = 'SOURCE_INVENTORY'
     before = snapshot(root, rules)
+    progress['source'] = before
+    components['preflight'] = dict(state='PASS')
     components['committed_metadata'] = before['metadata']
     components['working_bytes'] = before['workingBytes']
     components['archive_coverage'] = before['archiveCoverage']
     components['generated_content'] = dict(state='PASS' if before['generated']['state'] == 'EXPLICIT_DEPENDENCY_COMPONENT_SCOPE' else 'INCOMPLETE',
                                             **{key: value for key, value in before['generated'].items() if key != 'state'})
+    progress['stage'] = 'DEPENDENCIES'
     try:
         code, out, _ = execute(['node', 'scripts/security22/dependency.mjs'], root, seconds=600)
         components['dependencies'] = dependency(loads(out), code, before_tools['inputs']['package-lock.json'],
@@ -119,6 +135,7 @@ def perform(root):
             node_version=before_tools['tools']['node']['version'])
     except Exception as error:
         components['dependencies'] = dict(state='INCOMPLETE', reason=diagnostic(error))
+    progress['stage'] = 'TOOLING'
     try:
         components['tooling_regressions'] = tap(['node', '--test', 'scripts/phase9/patch-tooling-security.test.mjs',
             'scripts/phase9/tooling-security-vulnerabilities.test.mjs', 'scripts/security22/dependency.test.mjs',
@@ -128,6 +145,7 @@ def perform(root):
     except Exception as error:
         components['tooling_regressions'] = dict(state='INCOMPLETE', reason=diagnostic(error))
         components.setdefault('mandatory_native_patches', dict(state='NOT_RUN'))
+    progress['stage'] = 'HISTORICAL_SOURCE_CONTRACT'
     try:
         code, out, _ = execute([sys.executable, '-B', 'scripts/phase9/security_acceptance/contract.py', 'source', '--root', '.'], root, 180)
         report = loads(out)
@@ -144,12 +162,35 @@ def perform(root):
     components['protected_static_analysis'] = dict(state='NOT_RUN', executed=False, reason='QUALIFIED_TOOL_RULE_AND_OUTPUT_CUSTODY_REQUIRED')
     components['qualified_custody'] = dict(state='BLOCKED_EXTERNAL_CUSTODY', executed=False,
         clearanceAuthority='INDEPENDENT_QUALIFIED_REVIEW_ONLY')
+    progress['stage'] = 'STABILITY'
     after = snapshot(root, rules)
     after_tools = identity(root)
     require(before == after and before_tools == after_tools, 'INPUT_CHANGED_DURING_EXECUTION')
+    components['execution_stability'] = dict(state='PASS')
     result = dict(schema=1, qualification='CURRENT_PUBLIC_TECHNICAL_CANDIDATE_ONLY', source=before,
-                  toolchain=before_tools, components=components, **summary(components))
+                  toolchain=before_tools, components=components, executionComplete=True, **summary(components))
     return result
+
+
+def perform(root):
+    # Unknown bindings remain null. A failed preflight cannot certify a source or tool.
+    names = ('disclosure_controls', 'partial_disclosure_controls', 'preflight', 'committed_metadata',
+             'working_bytes', 'archive_coverage', 'generated_content', 'dependencies', 'tooling_regressions',
+             'mandatory_native_patches', 'original_source_contract', 'protected_secret_history',
+             'protected_static_analysis', 'execution_stability')
+    components = {name: dict(state='NOT_RUN', executed=False) for name in names}
+    components['qualified_custody'] = dict(state='BLOCKED_EXTERNAL_CUSTODY', executed=False,
+        clearanceAuthority='INDEPENDENT_QUALIFIED_REVIEW_ONLY')
+    progress = dict(stage='DISCLOSURE_GATE', source=None, toolchain=None)
+    try:
+        return perform_complete(root, components, progress)
+    except (Exception, KeyboardInterrupt) as error:
+        components['execution_stability'] = dict(state='INCOMPLETE', stage=progress['stage'], reason=diagnostic(error))
+        if components['preflight']['state'] != 'PASS':
+            components['preflight'] = dict(state='INCOMPLETE', stage=progress['stage'], reason=diagnostic(error))
+        return dict(schema=1, qualification='CURRENT_PUBLIC_TECHNICAL_CANDIDATE_ONLY',
+            source=progress['source'], toolchain=progress['toolchain'], components=components,
+            executionComplete=False, **summary(components))
 
 
 def main():
@@ -174,8 +215,8 @@ def main():
         if args.output_dir is not None:
             publish_components(args.output_dir, result)
         print(canonical(result).decode())
-        return 1  # Required custody remains unresolved even if public components pass.
-    except Exception as error:
+        return 1 if result['executionComplete'] else 2
+    except (Exception, KeyboardInterrupt) as error:
         print(canonical(dict(schema=1, state='INCOMPLETE', reason=diagnostic(error), acceptanceGranted=False,
                              candidateReady=False, release='NO_GO')).decode())
         return 2
