@@ -13,7 +13,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).absolute().parents[1]/'security22'))
 import inventory
 import run
-from redact import Refusal, canonical
+from redact import Refusal, canonical, diagnostic, require
 
 TOKEN = 'SYNTHETIC_INPUT_WARNING_PRIVATE_PATH_23'
 
@@ -66,6 +66,8 @@ class Controls(unittest.TestCase):
         for value in variants:
             with self.assertRaises(Refusal): run.toolchain_gate_report(value, 0)
         with self.assertRaises(Refusal): run.toolchain_gate_report(good, False)
+        for raw in (b'# tests true\n', b'# tests 100001\n# pass 100001\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n'):
+            with patch.object(run, 'execute', return_value=(0, raw, b'')), self.assertRaises(Refusal): run.tap([], Path.cwd())
 
     def test_tool_gate_preserves_fixed_failed_case(self):
         value = tool_fixture()
@@ -84,4 +86,43 @@ def main():
     return 0 if result.wasSuccessful() and not result.skipped else 1
 
 
-if __name__ == '__main__': sys.exit(main())
+def native_controls():
+    """Bound real source tests and publish only counts/fixed diagnostic tokens."""
+    root = run.ROOT
+    result = dict(schema=1, qualification='ACTUAL_NATIVE_SOURCE_CONTROLS_ONLY', acceptanceGranted=False,
+        sourceAcceptance='SUBMITTED_REVIEW_REQUIRED', release='NO_GO', executionComplete=False,
+        tests=dict(state='NOT_RUN'), installedAudit=dict(state='NOT_RUN'))
+    stage = 'SOURCE_METADATA'
+    try:
+        head = inventory.git(root, 'rev-parse', 'HEAD').decode().strip()
+        tree = inventory.git(root, 'rev-parse', 'HEAD^{tree}').decode().strip()
+        require(run.re.fullmatch('[0-9a-f]{40}', head) and run.re.fullmatch('[0-9a-f]{40}', tree) and
+            not inventory.git(root, 'status', '--porcelain'), 'DIRTY_SOURCE')
+        result.update(headObserved=head, treeObserved=tree)
+        stage = 'NATIVE_SOURCE_TESTS'
+        result['tests'] = run.tap(['node', '--test', '--test-concurrency=1',
+            'scripts/phase9/ios-privacy-source-audit.test.mjs',
+            'scripts/phase9/ios-privacy-lock-succession23.test.mjs',
+            'scripts/security23/native-source.test.mjs'], root, seconds=600, diagnostics=True)
+        stage = 'CURRENT_INSTALLED_NATIVE_AUDIT'
+        code, _, _ = run.execute(['node', 'scripts/phase9/ios-privacy-source-audit.mjs', '--strict', '--check'], root, seconds=180)
+        result['installedAudit'] = dict(state='PASS' if code == 0 else 'INCOMPLETE', exit=code)
+        stage = 'SOURCE_STABILITY'
+        require(inventory.git(root, 'rev-parse', 'HEAD').decode().strip() == head and
+            not inventory.git(root, 'status', '--porcelain'), 'SOURCE_CHANGED')
+        result['executionComplete'] = True
+        # Preserve the real tool exits. Existing platform skips remain explicit
+        # in counts/state and never become performed passes or native admission.
+        exit_code = result['tests']['exit'] or code
+        result['state'] = 'PASS' if result['tests']['state'] == 'PASS' and code == 0 else 'INCOMPLETE'
+        print(canonical(result).decode()); return exit_code
+    except (Exception, KeyboardInterrupt) as error:
+        result.update(state='INCOMPLETE', stage=stage, reason=diagnostic(error))
+        print(canonical(result).decode()); return 2
+
+
+if __name__ == '__main__':
+    if sys.argv[1:] == ['--native-controls']: sys.exit(native_controls())
+    if len(sys.argv) != 1:
+        print(canonical(dict(state='INCOMPLETE', reason='ARGUMENT_SCOPE', acceptanceGranted=False)).decode()); sys.exit(2)
+    sys.exit(main())

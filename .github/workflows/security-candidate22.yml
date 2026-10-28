@@ -46,6 +46,7 @@ jobs:
             echo "$prefix/bin" >> "$GITHUB_PATH"
           fi
       - name: Synthetic disclosure gate
+        id: disclosure
         run: |
           python -c 'import json,sys; print(json.dumps({"qualification":"OBSERVED_RUNTIME_VERSION_NOT_TOOL_IDENTITY","python":list(sys.version_info[:3])}))'
           python -B scripts/security22/test_security22.py
@@ -55,12 +56,13 @@ jobs:
       - name: Authentic historical inventory defect control
         run: python -B scripts/security23/test_toolchain.py
       - name: Normal lockfile installation with mandatory hooks
+        id: install
         run: npm ci --no-audit --no-fund
       - name: Historical fixtures and current installed native source controls
         run: |
-          node --test scripts/phase9/ios-privacy-source-audit.test.mjs scripts/phase9/ios-privacy-lock-succession23.test.mjs scripts/security23/native-source.test.mjs
-          node scripts/phase9/ios-privacy-source-audit.mjs --strict --check
+          python -B scripts/security23/test_integration.py --native-controls | tee "$RUNNER_TEMP/security23-native-controls.json"
       - name: Execute current public checks and preserve component results
+        if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
         run: |
           set -o pipefail
@@ -74,5 +76,6 @@ jobs:
             ${{ runner.temp }}/security22-public.json
             ${{ runner.temp }}/security22-components/*.json
             ${{ runner.temp }}/security23-toolchain-controls.json
+            ${{ runner.temp }}/security23-native-controls.json
           if-no-files-found: ignore
           retention-days: 7

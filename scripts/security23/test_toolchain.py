@@ -371,13 +371,33 @@ def regression_tests():
             applied = subprocess.run(['icacls', str(denied), '/deny', '*' + sid + ':(RD)'], capture_output=True, timeout=15)
             if applied.returncode: self.skipTest('WINDOWS_ACL_DENY_UNAVAILABLE')
             try:
+                self._acl_phase = 'ACL_ENUMERATION_NOT_DENIED'
                 with self.assertRaises(PermissionError):
                     with os.scandir(denied) as stream: list(stream)
-                self.refused('NPM_TOOL_ENUMERATION')
+                try:
+                    denied.lstat(); self._acl_stat_denied = False
+                except PermissionError: self._acl_stat_denied = True
+                self._acl_phase = 'ACL_INVENTORY_PREDICATE_MISMATCH'
+                try:
+                    self.value()
+                except Refusal as error:
+                    allowed = {'NPM_TOOL_ENUMERATION', 'NPM_TOOL_READ', 'NPM_TOOL_CHANGED', 'NPM_IDENTITY', 'NPM_EXPECTED_CONTENT', 'NPM_TOOL_LINK'}
+                    self._acl_observed = error.args[0] if len(error.args) == 1 and type(error.args[0]) is str and error.args[0] in allowed else 'REFUSED'
+                    self.assertEqual(self._acl_observed, 'NPM_TOOL_ENUMERATION')
+                else: self.fail('ACL_CONTROL_ACCEPTED_INCOMPLETE_CONTENT')
+            except BaseException:
+                self._acl_failure = self._acl_phase
+                raise
             finally:
                 restore = subprocess.run(['icacls', str(denied), '/remove:d', '*' + sid], capture_output=True, timeout=15)
-                self.assertEqual(restore.returncode, 0)
-            self.assertEqual(self.value(), before)
+                try: self.assertEqual(restore.returncode, 0)
+                except BaseException:
+                    self._acl_failure = 'ACL_RESTORE_COMMAND_FAILED'
+                    raise
+            try: self.assertEqual(self.value(), before)
+            except BaseException:
+                self._acl_failure = 'ACL_RESTORED_IDENTITY_MISMATCH'
+                raise
 
     def mutation(self, kind):
         f = self.f; predicate = None
@@ -436,10 +456,20 @@ def regression_tests():
                     return
             self.cases.append(case)
         def addSuccess(self, test): self.note(dict(name=test._testMethodName, state='PASS'))
+        def failure(self, test, state):
+            case = dict(name=test._testMethodName, state=state)
+            predicate = getattr(test, '_acl_failure', None)
+            if test._testMethodName == 'test_actual_windows_acl_denial' and predicate in {
+                'ACL_ENUMERATION_NOT_DENIED', 'ACL_INVENTORY_PREDICATE_MISMATCH',
+                'ACL_RESTORE_COMMAND_FAILED', 'ACL_RESTORED_IDENTITY_MISMATCH'}:
+                case['predicate'] = predicate
+                if hasattr(test, '_acl_observed'): case['observedPredicate'] = test._acl_observed
+                if hasattr(test, '_acl_stat_denied'): case['directStatDenied'] = test._acl_stat_denied
+            return case
         def addFailure(self, test, error):
-            self.failures.append((test, 'ASSERTION_FAILED')); self.note(dict(name=test._testMethodName, state='FAIL'))
+            self.failures.append((test, 'ASSERTION_FAILED')); self.note(self.failure(test, 'FAIL'))
         def addError(self, test, error):
-            self.errors.append((test, 'EXECUTION_INCOMPLETE')); self.note(dict(name=test._testMethodName, state='INCOMPLETE'))
+            self.errors.append((test, 'EXECUTION_INCOMPLETE')); self.note(self.failure(test, 'INCOMPLETE'))
         def addSkip(self, test, reason):
             self.skipped.append((test, reason)); self.note(dict(name=test._testMethodName, state='NOT_RUN', reason=reason))
     def combined_failure(self):

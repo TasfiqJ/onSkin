@@ -44,11 +44,21 @@ def toolchain_gate_report(value, code):
         value['platform'] == os.name and value['acceptanceGranted'] is False and
         all(type(value[k]) is int and 0 <= value[k] <= 48 for k in ('tests', 'passed', 'failed', 'errors', 'notRun')) and
         value['tests'] == 48 and type(value['cases']) is list and len(value['cases']) == 48, 'TOOLCHAIN_GATE_FAILED')
-    names, counts, failures = set(), {state: 0 for state in ('PASS', 'FAIL', 'INCOMPLETE', 'NOT_RUN')}, []
+    names, counts, failures, predicates = set(), {state: 0 for state in ('PASS', 'FAIL', 'INCOMPLETE', 'NOT_RUN')}, [], []
     for case in value['cases']:
+        extra = set(case) - {'name', 'state', 'reason'} if type(case) is dict else set()
         require(type(case) is dict and type(case.get('name')) is str and case['name'] in TOOLCHAIN_CASES and
             case['name'] not in names and case.get('state') in counts and
-            set(case) == ({'name', 'state', 'reason'} if case['state'] == 'NOT_RUN' else {'name', 'state'}), 'TOOLCHAIN_GATE_FAILED')
+            set(case)-extra == ({'name', 'state', 'reason'} if case['state'] == 'NOT_RUN' else {'name', 'state'}), 'TOOLCHAIN_GATE_FAILED')
+        if extra:
+            require(case['name'] == 'test_actual_windows_acl_denial' and case['state'] in ('FAIL', 'INCOMPLETE') and
+                extra <= {'predicate', 'observedPredicate', 'directStatDenied'} and
+                case.get('predicate') in {'ACL_ENUMERATION_NOT_DENIED', 'ACL_INVENTORY_PREDICATE_MISMATCH',
+                    'ACL_RESTORE_COMMAND_FAILED', 'ACL_RESTORED_IDENTITY_MISMATCH'} and
+                ('observedPredicate' not in case or case['observedPredicate'] in {'NPM_TOOL_ENUMERATION', 'NPM_TOOL_READ',
+                    'NPM_TOOL_CHANGED', 'NPM_IDENTITY', 'NPM_EXPECTED_CONTENT', 'NPM_TOOL_LINK', 'REFUSED'}) and
+                ('directStatDenied' not in case or type(case['directStatDenied']) is bool), 'TOOLCHAIN_GATE_FAILED')
+            predicates.append({key: case[key] for key in ('name', 'predicate', 'observedPredicate', 'directStatDenied') if key in case})
         if case['state'] == 'NOT_RUN':
             require(case['name'] in TOOLCHAIN_NOT_RUN and case['reason'] == TOOLCHAIN_NOT_RUN[case['name']], 'TOOLCHAIN_GATE_FAILED')
         else: require(case['name'] not in TOOLCHAIN_NOT_RUN or case['state'] != 'PASS', 'TOOLCHAIN_GATE_FAILED')
@@ -59,7 +69,7 @@ def toolchain_gate_report(value, code):
     return dict(state='PASS' if code == 0 and value['state'] == 'PASS' and not failures and
         value['notRun'] == (12 if os.name == 'nt' else 3) else 'INCOMPLETE', exit=code,
         qualification=value['qualification'], platform=os.name, observedPythonVersion=list(sys.version_info[:3]),
-        failedCases=sorted(failures),
+        failedCases=sorted(failures), failurePredicates=predicates,
         **{k: value[k] for k in ('tests', 'passed', 'failed', 'errors', 'notRun')})
 
 
@@ -185,16 +195,22 @@ def policy(root):
     return value
 
 
-def tap(argv, root):
-    code, out, _ = execute(argv, root, seconds=300)
+def tap(argv, root, seconds=300, diagnostics=False):
+    code, out, _ = execute(argv, root, seconds=seconds)
     counts = {}
     for name in ('tests', 'pass', 'fail', 'cancelled', 'skipped', 'todo'):
         matches = re.findall(rb'^# '+name.encode()+rb' (\d+)\r?$', out, re.M)
-        require(len(matches) == 1, 'TAP_INCOMPLETE')
+        require(len(matches) == 1 and len(matches[0]) <= 6, 'TAP_INCOMPLETE')
         counts[name] = int(matches[0])
+        require(counts[name] <= 100000, 'TAP_INCOMPLETE')
     complete = counts['tests'] == counts['pass'] + counts['fail'] + counts['cancelled'] + counts['skipped'] + counts['todo']
     passed = code == 0 and complete and counts['tests'] > 0 and counts['tests'] == counts['pass']
-    return dict(state='PASS' if passed else 'INCOMPLETE', exit=code, counts=counts)
+    result = dict(state='PASS' if passed else 'INCOMPLETE', exit=code, counts=counts)
+    if diagnostics:
+        result['diagnosticCodes'] = sorted(code for code in ('EXDEV', 'EACCES', 'ENOENT', 'ERR_ASSERTION',
+            'CURRENT_NATIVE_SOURCE23_HISTORICAL_OUTPUTS_READ_ONLY', 'LOCK_SUCCESSION23_IDENTITY')
+            if re.search(rb'\b' + code.encode() + rb'\b', out)) if not passed else []
+    return result
 
 
 def disclosure_gate(gate, code):
