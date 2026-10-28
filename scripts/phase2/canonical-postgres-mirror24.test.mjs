@@ -5,6 +5,7 @@ import { runInNewContext } from 'node:vm';
 import {
   CANONICAL_POSTGRES24 as PIN,
   assertCanonicalPostgres24,
+  isCanonicalPostgresMirrorQuota24,
   isCanonicalPostgresQuota24,
   prepareCanonicalPostgresMirror24,
 } from './canonical-postgres-mirror24.mjs';
@@ -18,6 +19,10 @@ function quota(overrides = {}, diagnostic = 'Error response from daemon: error f
     reason: 'exit-nonzero', originReason: 'exit-nonzero',
     containment: 'posix-process-group-empty', diagnostic, ...overrides,
   } });
+}
+
+function mirrorQuota(overrides = {}, diagnostic = '0123456789ab: Download complete\nerror from registry: retry-after: 1.042664ms, allowed: 44000/minute') {
+  return quota(overrides, diagnostic);
 }
 
 function fixture(architecture = 'amd64') {
@@ -144,6 +149,93 @@ test('cancellation before or between every Docker command prevents further acqui
     await assert.rejects(prepareCanonicalPostgresMirror24({ ...f, signal: controller.signal }), { name: 'AbortError' });
     assert.equal(f.calls.length, abortAfter);
   }
+});
+
+test('only the observed structured contained mirror rate response allows bounded retries', () => {
+  assert.equal(isCanonicalPostgresMirrorQuota24(mirrorQuota()), true);
+  assert.equal(isCanonicalPostgresQuota24(mirrorQuota()), false);
+  for (const error of [
+    mirrorQuota({ containment: 'unconfirmed' }), mirrorQuota({ originReason: 'timeout' }),
+    mirrorQuota({ reason: 'cancelled' }), new Error('retry-after: 1ms'),
+    mirrorQuota({}, 'unauthorized: SENSITIVE_SENTINEL'),
+    mirrorQuota({}, 'error from registry: retry-after: Infinitys, allowed: 44000/minute'),
+    mirrorQuota({}, 'error from registry: retry-after: 1ms, allowed: 44000/minute\nSENSITIVE_SENTINEL'),
+    mirrorQuota({}, 'error from registry: retry-after: 1ms, allowed: 0/minute'),
+    mirrorQuota({}, 'SENSITIVE_SENTINEL'.repeat(5000)),
+    mirrorQuota({}, 'SENSITIVE_SENTINEL\nerror from registry: retry-after: 1ms, allowed: 44000/minute'),
+    mirrorQuota({}, 'unauthorized: access denied\nerror from registry: retry-after: 1ms, allowed: 44000/minute'),
+    mirrorQuota({}, 'network unavailable\nerror from registry: retry-after: 1ms, allowed: 44000/minute'),
+    mirrorQuota({}, 'foreign.invalid/postgres:latest: Pulling from supabase/postgres\nerror from registry: retry-after: 1ms, allowed: 44000/minute'),
+    mirrorQuota({}, '0123456789ab: Download complete\n'.repeat(301) + 'error from registry: retry-after: 1ms, allowed: 44000/minute'),
+  ]) assert.equal(isCanonicalPostgresMirrorQuota24(error), false);
+  assert.equal(isCanonicalPostgresMirrorQuota24(mirrorQuota({},
+    `${PIN.mirror}: Pulling from supabase/postgres\n0123456789ab: Pulling fs layer\n0123456789ab: Download complete\nerror from registry: retry-after: 1.042664ms, allowed: 44000/minute`)), true);
+});
+
+test('transient GHCR throttling retries exactly the same immutable source with fixed delays', async () => {
+  const f = fixture(); const original = f.runDocker; const waits = []; let attempts = 0;
+  f.runDocker = async args => {
+    if (args[0] === 'pull' && ++attempts < 3) { f.calls.push(args); throw mirrorQuota(); }
+    return await original(args);
+  };
+  const result = await prepareCanonicalPostgresMirror24({ ...f, wait: async milliseconds => { waits.push(milliseconds); } });
+  assert.equal(result.id, f.image.Id);
+  assert.deepEqual(waits, [3000, 10000]);
+  assert.equal(f.calls.filter(args => args[0] === 'pull').length, 3);
+  assert.ok(f.calls.filter(args => args[0] === 'pull').every(args => args[3] === PIN.mirror));
+});
+
+test('persistent GHCR quota permits only the second official identical-index mirror after four attempts', async t => {
+  for (const architecture of ['amd64', 'arm64']) {
+  for (const repoDigest of [PIN.secondaryMirror, `supabase/postgres@${PIN.index}`]) await t.test(`${architecture}:${repoDigest}`, async () => {
+    const f = fixture(architecture); const waits = []; const image = { ...f.image, RepoDigests: [repoDigest] };
+    f.runDocker = async args => {
+      f.calls.push(args);
+      if (args[0] === 'pull' && args[3] === PIN.mirror) throw mirrorQuota();
+      if (args[0] === 'pull') return f.state.pull;
+      if (args[1] === 'tag') return { stdout: '', stderr: '' };
+      return { stdout: JSON.stringify([image]), stderr: '' };
+    };
+    const result = await prepareCanonicalPostgresMirror24({ ...f, wait: async milliseconds => { waits.push(milliseconds); } });
+    assert.deepEqual(result, { id: image.Id, digest: PIN.index, architecture });
+    assert.deepEqual(waits, [3000, 10000, 30000]);
+    assert.deepEqual(f.calls.slice(0, 4), Array.from({ length: 4 }, () => ['pull', '--platform', `linux/${architecture}`, PIN.mirror]));
+    assert.deepEqual(f.calls[4], ['pull', '--platform', `linux/${architecture}`, PIN.secondaryMirror]);
+    assert.deepEqual(f.calls[5], ['image', 'inspect', PIN.secondaryMirror]);
+    assert.equal(f.calls.length, 8);
+  });
+  }
+});
+
+test('foreign, changed or malformed secondary image responses cannot use the canonical name', async () => {
+  for (const change of [row => ({ ...row, Id: PIN.platforms.arm64.config }),
+    row => ({ ...row, RepoDigests: [PIN.mirror] }), row => ({ ...row, Architecture: 'arm64' })]) {
+    const f = fixture();
+    f.runDocker = async args => {
+      f.calls.push(args);
+      if (args[0] === 'pull' && args[3] === PIN.mirror) throw mirrorQuota();
+      if (args[0] === 'pull') return f.state.pull;
+      return { stdout: JSON.stringify([change(f.image)]), stderr: '' };
+    };
+    await assert.rejects(prepareCanonicalPostgresMirror24({ ...f, wait: async () => {} }), refusal);
+    assert.ok(!f.calls.some(args => args[1] === 'tag'));
+  }
+});
+
+test('both quota-limited mirrors exhaust finite attempts and retain the actual last error', async () => {
+  const f = fixture(); const waits = []; let last;
+  f.runDocker = async args => { f.calls.push(args); last = mirrorQuota(); throw last; };
+  await assert.rejects(prepareCanonicalPostgresMirror24({ ...f, wait: async milliseconds => { waits.push(milliseconds); } }), error => error === last);
+  assert.equal(f.calls.length, 8);
+  assert.deepEqual(waits, [3000, 10000, 30000, 3000, 10000, 30000]);
+  assert.ok(f.calls.every(args => args[0] === 'pull'));
+});
+
+test('cancelling the real mirror backoff prevents another pull or registry transition', async () => {
+  const f = fixture(); const controller = new AbortController();
+  f.runDocker = async args => { f.calls.push(args); queueMicrotask(() => controller.abort()); throw mirrorQuota(); };
+  await assert.rejects(prepareCanonicalPostgresMirror24({ ...f, signal: controller.signal }), { name: 'AbortError' });
+  assert.equal(f.calls.length, 1);
 });
 
 function dispatcher(context) {

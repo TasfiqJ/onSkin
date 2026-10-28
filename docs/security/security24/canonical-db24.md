@@ -80,6 +80,22 @@ immutable image ID and inspect the canonical name again. Refusal diagnostics are
 fixed strings. Cancellation is checked before, between and after acquisition
 commands. No caller can provide another registry, version, digest or approval.
 
+An actual intermediate hosted run exposed a separate transient GHCR rate limit
+after pinned layers began downloading. Recovery now retries only its exact
+structured contained registry-rate diagnostic with the existing fixed
+3/10/30-second backoffs, at most four pulls per official mirror. It never accepts
+an unbounded server-supplied delay. If GHCR remains rate-limited after those
+attempts, it may pull the independently byte-proved official Docker Hub image
+at the **same index digest**, requiring the same native config ID and canonical
+readback. Authentication, network, timeout, cancellation, malformed/different
+digest and image-inspection failures never enable that transition. Both mirrors
+remaining quota-limited preserves the last actual failure and stops before SQL.
+The rate classifier also validates every preceding diagnostic line against
+bounded pinned-reference/Docker-progress forms. Mixed authentication, network,
+arbitrary or foreign-reference lines cannot become a retryable rate failure.
+Its hardened classifier was executed against the actual 63-line captured GHCR
+failure and accepted that response, while mixed-prefix adversarial controls fail.
+
 All migration bytes, SQL/RLS assertions, full history checks, credential scrub,
 reset-twice sequence, drift/type parity and run-owned cleanup remain unchanged.
 The same original final container ID/config-image checks bind every SQL probe.
@@ -109,6 +125,25 @@ exited0 with all original 171/171 controls, no skips, and DB05 contract PASS.
 `npm run postinstall:check` and syntax checks for both bootstrap modules exited0.
 The new controls use unchanged tests and real execution, while their Docker
 responses are explicitly fixtures. These results do not imply actual SQL ran.
+
+The subsequent quota-recovery extension has 40/40 executed controls, including
+the observed GHCR response, exact retry counts/delays, both native platforms and Docker Hub
+RepoDigest spellings, foreign/changed secondary images, finite exhaustion and
+real backoff cancellation. The original 30-control execution remains separately
+qualified as the initial implementation, rather than silently replaced.
+
+Intermediate Quality run `40754008916`, canonical job `123047918649`, was
+superseded by a new source push after installation and the new bootstrap controls
+passed; its original contract step was cancelled and reset step skipped.
+Intermediate Quality run `40754189070`, canonical job `123048722059`, passed
+installation, all new bootstrap controls and the original local database
+contract. Its real reset command failed before startup: ECR quota recovery
+activated, the fixed GHCR digest began downloading, then GHCR returned
+`retry-after: 1.042664ms, allowed: 44000/minute` with a contained exit1.
+This actual failure motivated the bounded retry and second identical official
+mirror extension. It was not a reset/SQL pass or an acceptance result. The job
+used the workflow's default PR checkout; exact tree binding belongs in the final
+integration report. Subsequent actual canonical results remain separate.
 
 This Windows host initially had no Docker Linux engine pipe. Its existing Ubuntu
 WSL registration could not attach its missing `ext4.vhdx`; no distro was recreated

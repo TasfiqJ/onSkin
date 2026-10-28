@@ -1,8 +1,17 @@
 // Campaign24: the official mirrors were independently read as identical OCI
 // bytes. Pins bind the index, native manifest and config, rather than tag names.
+import { setTimeout as delay } from 'node:timers/promises';
+import { CANONICAL_POSTGRES_PULL_RETRY_DELAYS_MS } from './local-supabase-reset-retry.mjs';
+
 const INDEX = 'sha256:af083ef64d0408c8f098ee6f5c364a59b26f36fbc0f3a334a62c5c1d57362e9b';
 const CANONICAL = 'public.ecr.aws/supabase/postgres:15.8.1.085';
 const MIRROR = `ghcr.io/supabase/postgres@${INDEX}`;
+const SECONDARY_MIRROR = `docker.io/supabase/postgres@${INDEX}`;
+const MIRRORS = Object.freeze([
+  Object.freeze({ reference: MIRROR, label: 'ghcr.io', repoDigests: Object.freeze([MIRROR]) }),
+  Object.freeze({ reference: SECONDARY_MIRROR, label: 'docker.io',
+    repoDigests: Object.freeze([SECONDARY_MIRROR, `supabase/postgres@${INDEX}`]) }),
+]);
 const PLATFORMS = Object.freeze({
   amd64: Object.freeze({
     manifest: 'sha256:caae3d066f437332d593011e3e7ecf78ab005ce9b89378efd53f97f0410563ad',
@@ -15,7 +24,7 @@ const PLATFORMS = Object.freeze({
 });
 
 export const CANONICAL_POSTGRES24 = Object.freeze({
-  index: INDEX, canonical: CANONICAL, mirror: MIRROR, platforms: PLATFORMS,
+  index: INDEX, canonical: CANONICAL, mirror: MIRROR, secondaryMirror: SECONDARY_MIRROR, platforms: PLATFORMS,
 });
 
 function refuse() {
@@ -38,32 +47,74 @@ export function isCanonicalPostgresQuota24(error) {
     /^Error response from daemon: error from registry: (?:Data limit exceeded|toomanyrequests: Rate exceeded|429 Too Many Requests)\s*$/u.test(failure.diagnostic);
 }
 
-function inspect(raw, architecture, canonical) {
+export function isCanonicalPostgresMirrorQuota24(error) {
+  const failure = error?.cause;
+  if (typeof error?.message !== 'string' || !error.message.startsWith('H01_SQL_PROBE_FAILED: ') ||
+      failure?.reason !== 'exit-nonzero' || failure?.originReason !== 'exit-nonzero' ||
+      !['posix-process-group-empty', 'windows-job-object-empty'].includes(failure?.containment) ||
+      typeof failure.diagnostic !== 'string' || failure.diagnostic.length > 65_536) return false;
+  const lines = failure.diagnostic.trimEnd().split(/\r?\n/u);
+  const terminal = lines.pop();
+  return lines.length <= 300 &&
+    /^error from registry: retry-after: \d{1,9}(?:\.\d{1,9})?(?:ns|us|µs|ms|s), allowed: [1-9]\d{0,7}\/minute$/u.test(terminal) &&
+    lines.every(line => line.length <= 512 && (
+      MIRRORS.some(source => line === `${source.reference}: Pulling from supabase/postgres`) ||
+      line === `supabase/postgres@${INDEX}: Pulling from supabase/postgres` ||
+      /^[a-f0-9]{12}: (?:Pulling fs layer|Already exists|Download complete|Pull complete|Waiting|Verifying Checksum)$/u.test(line) ||
+      /^[a-f0-9]{12}: (?:Downloading|Extracting)\s+\[[=> ]{1,80}\]\s+\d{1,9}(?:\.\d{1,3})?(?:B|kB|MB|GB)(?:\/\d{1,9}(?:\.\d{1,3})?(?:B|kB|MB|GB))?$/u.test(line)
+    ));
+}
+
+async function pull(runDocker, source, architecture, signal, wait) {
+  for (let attempt = 0; ; attempt += 1) {
+    signal?.throwIfAborted();
+    try {
+      return await runDocker(['pull', '--platform', `linux/${architecture}`, source.reference]);
+    } catch (error) {
+      if (attempt >= CANONICAL_POSTGRES_PULL_RETRY_DELAYS_MS.length || !isCanonicalPostgresMirrorQuota24(error)) throw error;
+      console.log(`[db05-local] canonical identical-image ${source.label} rate retry ${attempt + 1}/3`);
+      await wait(CANONICAL_POSTGRES_PULL_RETRY_DELAYS_MS[attempt], undefined, { signal });
+    }
+  }
+}
+
+function inspect(raw, architecture, canonical, source) {
   let rows;
   try { rows = JSON.parse(raw); } catch { refuse(); }
   const image = Array.isArray(rows) && rows.length === 1 ? rows[0] : null;
   if (!image || !PLATFORMS[architecture] || image.Id !== PLATFORMS[architecture].config ||
       image.Os !== 'linux' || image.Architecture !== architecture ||
-      !Array.isArray(image.RepoDigests) || !image.RepoDigests.includes(MIRROR) ||
+      !Array.isArray(image.RepoDigests) || !source.repoDigests.some(value => image.RepoDigests.includes(value)) ||
       (canonical && (!Array.isArray(image.RepoTags) || !image.RepoTags.includes(CANONICAL)))) refuse();
   return image.Id;
 }
 
-export async function prepareCanonicalPostgresMirror24({ runDocker, architecture, signal }) {
+export async function prepareCanonicalPostgresMirror24({ runDocker, architecture, signal, wait = delay }) {
   if (!Object.hasOwn(PLATFORMS, architecture) || typeof runDocker !== 'function') refuse();
   signal?.throwIfAborted();
-  const pulled = await runDocker(['pull', '--platform', `linux/${architecture}`, MIRROR]);
+  let pulled;
+  let source;
+  for (const candidate of MIRRORS) {
+    try {
+      pulled = await pull(runDocker, candidate, architecture, signal, wait);
+      source = candidate;
+      break;
+    } catch (error) {
+      if (candidate !== MIRRORS[0] || !isCanonicalPostgresMirrorQuota24(error)) throw error;
+      console.log('[db05-local] canonical identical-image GHCR quota persisted; using pinned official Docker Hub');
+    }
+  }
   const digests = [...`${pulled.stdout}\n${pulled.stderr}`.matchAll(/^Digest: (sha256:[a-f0-9]{64})\s*$/gmu)];
   if (digests.length !== 1 || digests[0][1] !== INDEX) refuse();
   signal?.throwIfAborted();
-  const id = inspect((await runDocker(['image', 'inspect', MIRROR])).stdout, architecture, false);
+  const id = inspect((await runDocker(['image', 'inspect', source.reference])).stdout, architecture, false, source);
   signal?.throwIfAborted();
   // This is the SAME pinned image, never an alternative PostgreSQL build.
   // Seeding the CLI's first cache entry retains its exact canonical Config.Image
   // and every original run-owned SQL/container identity assertion.
   await runDocker(['image', 'tag', id, CANONICAL]);
   signal?.throwIfAborted();
-  if (inspect((await runDocker(['image', 'inspect', CANONICAL])).stdout, architecture, true) !== id) refuse();
+  if (inspect((await runDocker(['image', 'inspect', CANONICAL])).stdout, architecture, true, source) !== id) refuse();
   signal?.throwIfAborted();
   const identity = Object.freeze({ id, digest: INDEX, architecture });
   assertCanonicalPostgres24(identity);
