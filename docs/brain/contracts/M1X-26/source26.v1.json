@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-FIRST-VALUE-RECOVERY26-REPAIR-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "52a3d01ebb36a6845d0ac21935ad35520732633f",
+  "tree": "ef49a81ca814f3d82b8a868e0308b6dda09c9cca",
+  "scopeCommit": "d970311fd0741414f9a96a15afc653f7e1cc39df",
+  "scopePlanSHA256": "6c0f5f6d4f66612551e79216e49b698fe487b9d3cefc0c3f0cf1bb30b9fbd7e7",
+  "inputManifestSHA256": "9d87a26cb84ed81c5f0deb950a919ae0899c1f8805ebea7e386eace05a7db112",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": 30
+}

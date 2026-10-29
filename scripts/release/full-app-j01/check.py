@@ -4928,5 +4928,573 @@ source_guard = source25_guard
 validate = validate25
 
 
+
+
+# Release26 successor. Every inherited Release08-25 byte/definition remains immutable.
+RELEASE26_BASE = '52a3d01ebb36a6845d0ac21935ad35520732633f'
+RELEASE26_TREE = 'ef49a81ca814f3d82b8a868e0308b6dda09c9cca'
+RELEASE26_AUTHORITY = 'BRAIN-M1X-FIRST-VALUE-RECOVERY26-REPAIR-01'
+RELEASE26_INPUT = '9d87a26cb84ed81c5f0deb950a919ae0899c1f8805ebea7e386eace05a7db112'
+RELEASE26_PLAN = 'docs/brain/task-specs/M1X-26/SCOPE_PLAN.md'
+RELEASE26_PLAN_COMMIT = 'd970311fd0741414f9a96a15afc653f7e1cc39df'
+RELEASE26_PLAN_SHA256 = '6c0f5f6d4f66612551e79216e49b698fe487b9d3cefc0c3f0cf1bb30b9fbd7e7'
+RELEASE26_APPENDIX_SHA256 = '07b0868c730703e169537561b3ba88eac9552ecd75b58d5f0c700aa7bee0d00c'
+RELEASE26_CANDIDATE = 'docs/brain/contracts/M1X-26/source26.v1.json'
+RELEASE26_CHECKPOINT = 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/'
+RELEASE26_CHECKPOINT_FILES = {'README.md', 'REPORT.md', 'manifest.json', 'payload.zip', 'verify26.py'}
+RELEASE26_WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+RELEASE26_EXISTING_APP = {'apps/mobile/src/app/shelf/[id].tsx', 'apps/mobile/src/app/shelf/_layout.tsx', 'apps/mobile/src/app/shelf/manual.tsx', 'apps/mobile/src/features/shelf/IntakeContext.tsx', 'apps/mobile/src/features/shelf/ShelfDataAvailabilityGate.tsx'}
+RELEASE26_NEW_APP = {'apps/mobile/src/features/shelf/detailActionSheet.campaign26.test.ts', 'apps/mobile/src/features/shelf/firstValue26TestPorts.ts', 'apps/mobile/src/features/shelf/manualDraftRecovery.campaign26.test.ts'}
+RELEASE26_OTHER_EXISTING = {'.github/workflows/security-candidate22.yml', 'ONSKIN_BRAIN_HANDOFF.txt', 'docs/USER_FLOW_TREE.md', 'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md', 'scripts/release/full-app-j01/check.py'}
+RELEASE26_OTHER_NEW = {'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/README.md', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/REPORT.md', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/manifest.json', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/payload.zip', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/verify26.py', 'docs/brain/contracts/M1X-26/source26.v1.json', 'docs/brain/task-specs/M1X-26/SCOPE_PLAN.md', 'docs/brain/task-specs/M1X-26/TASK.md', 'scripts/release/full-app-j01/source_consumer26.test.py'}
+RELEASE26_LEGACY_CODES = 'AUTHENTIC_HISTORY: BASE_BLOB_SHA256: BASE_TREE CONTRACT_BASE CONTRACT_VERSION C_ALIAS: DAG38_EXACT_OWNERS DAG_CYCLE: DAG_EDGE: DAG_GATE: DAG_IDENTITIES DAG_NOT_ISSUANCE: DAG_OPERATIONAL_GATES: DAG_ROW_OWNER: DAG_UNKNOWN_NODE: F09_DIARY F09_NOT_F18 FINITE_IDS: F_ALIAS: GATE_CLOSED: GATE_IDENTITIES GATE_OWNER: HISTORICAL_COUNT: HISTORICAL_DEPS: HISTORICAL_IDENTITIES: HISTORICAL_NODE: HISTORICAL_PROVENANCE: HISTORICAL_RECORD: HISTORICAL_STATUS: HISTORY_AUTHORITY HISTORY_NO_ACCEPTANCE J01_DAG J01_G4_CHANGE_GATE J01_INTAKE J01_NO_CLAIMS J01_SINGLE_SCAN_GATES JSON_DUPLICATE_KEY: JSON_NONFINITE: J_REGISTRY: J_ROW_GATES: LEDGER_CUSTODY LEGACY_CONSUMERS LEGACY_DOC_BYTES: LEGACY_GUARD M103_TO_M2 MATRIX65_IDENTITIES MATRIX_COUNTS NO_ADMISSION NO_FAKE_CUTOVER NO_SELF_ACCEPTANCE NO_STUB_GREEN: PLATFORM_TERRITORY PRECEDENCE_LIMIT PRECEDENCE_NOTICE: PRECEDENCE_ORDER PRECEDENCE_PROPOSAL PRECEDENCE_SAFETY PRIORITY_NOT_J05_ADMISSION PRODUCT_AUTHORITY PROTECTED_WITNESS_OMITTED P_ALIAS: REGULAR_PATH: ROW_EVIDENCE: ROW_GATES: ROW_OVERLAP: ROW_QUALIFIED_OWNERS: ROW_REQUIRED_GATE: ROW_STATUS: ROW_TRACEABILITY: SAFE_OFFER SCHEMA_CONST: SCHEMA_DIALECT SCHEMA_DUPLICATE: SCHEMA_ENUM: SCHEMA_MAX_ITEMS: SCHEMA_MIN_ITEMS: SCHEMA_MIN_LENGTH: SCHEMA_REQUIRED: SCHEMA_TYPE: SCHEMA_UNKNOWN_KEY: SCHEMA_UNSUPPORTED: SOURCE_ABSENT: SOURCE_IDENTITY: SOURCE_MATURITY: SOURCE_MODE: SOURCE_PATH SOURCE_SHA256: UNTRACKED_SCOPE: WORKING_SCOPE: ZERO_SPEND '
+RELEASE26_CONSUMER_SHA256 = 'c7015c8ab8f79022a185982e95ca26619f690c2b9595f7ec7661233d6c3be80f'
+RELEASE26_WORKFLOW_SHA256 = 'f13bb14e13bc39b44415da86f3c864903a64af03ec7dd2677defa65b07adaa27'
+
+
+def name26(path, identities):
+    require(type(path) is str and 0 < len(path) <= 4096 and path.isascii() and
+        not path.startswith('/') and '\\' not in path and
+        not any(ord(c) < 32 or ord(c) == 127 or c in ':<>"|?*' for c in path), 'R26_PATH')
+    parts = path.split('/')
+    require(len(parts) <= 64 and all(p and p not in ('.', '..') and not p.endswith((' ', '.')) and
+        re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?', p, re.I) is None for p in parts), 'R26_PATH')
+    for length in range(1, len(parts)+1):
+        original = '/'.join(parts[:length]); kind = 'file' if length == len(parts) else 'directory'
+        key = unicodedata.normalize('NFKC', original).casefold()
+        require(key not in identities or identities[key] == (original, kind), 'R26_PATH_ALIAS')
+        identities[key] = (original, kind)
+    require(len(identities) <= 100000, 'R26_PATH_BOUND')
+
+
+def scope26_guard(raw):
+    require(type(raw) is bytes and len(raw) == 10122 and sha(raw) ==
+        '6c0f5f6d4f66612551e79216e49b698fe487b9d3cefc0c3f0cf1bb30b9fbd7e7', 'R26_PLAN_IDENTITY')
+    blocks = re.findall(rb'```json\n(.*?)\n```', raw, re.S)
+    require(len(blocks) == 1, 'R26_PLAN_SCHEMA')
+    value = json.loads(blocks[0], object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R26_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'baseHead', 'baseTree',
+        'existingAppPaths', 'newAppTestHelperPaths', 'otherExistingPaths', 'otherNewPaths'} and
+        type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE26_AUTHORITY and
+        value['baseHead'] == RELEASE26_BASE and value['baseTree'] == RELEASE26_TREE, 'R26_PLAN_SCHEMA')
+    identities = {}; seen = set()
+    for key, expected in [('existingAppPaths', RELEASE26_EXISTING_APP), ('newAppTestHelperPaths', RELEASE26_NEW_APP),
+        ('otherExistingPaths', RELEASE26_OTHER_EXISTING), ('otherNewPaths', RELEASE26_OTHER_NEW)]:
+        paths = value[key]
+        require(type(paths) is list and all(type(p) is str for p in paths) and len(paths) == len(set(paths)) and
+            set(paths) == expected and not seen & set(paths), 'R26_AUTHENTIC_FINITE_GRANT')
+        for path in paths: name26(path, identities)
+        seen.update(paths)
+    require(len(RELEASE26_EXISTING_APP) <= 9 and len(RELEASE26_NEW_APP) <= 12, 'R26_APP_PATH_BUDGET')
+    return value
+
+
+def candidate26_guard(raw):
+    require(type(raw) is bytes and len(raw) <= 65536, 'R26_CANDIDATE_BOUND')
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R26_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'base', 'tree',
+        'scopeCommit', 'scopePlanSHA256', 'inputManifestSHA256', 'acceptanceGranted', 'admissions', 'pr'} and
+        type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE26_AUTHORITY and
+        value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and value['base'] == RELEASE26_BASE and value['tree'] == RELEASE26_TREE and
+        value['scopeCommit'] == RELEASE26_PLAN_COMMIT and value['scopePlanSHA256'] == RELEASE26_PLAN_SHA256 and
+        value['inputManifestSHA256'] == RELEASE26_INPUT and value['acceptanceGranted'] is False and
+        type(value['admissions']) is dict and set(value['admissions']) == {'G97', 'DB', 'M103', 'M2', 'J01', 'PUBLIC'} and
+        all(flag is False for flag in value['admissions'].values()) and
+        (value['pr'] is None or (type(value['pr']) is int and value['pr'] > 0)), 'R26_NO_ADMISSION')
+    return value
+
+
+def validate26_checker(raw):
+    before = git23('show', RELEASE26_BASE+':scripts/release/full-app-j01/check.py')
+    terminal = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(terminal) and raw.startswith(before[:-len(terminal)]) and raw.endswith(terminal), 'R26_INHERITED_BYTES')
+    extension = ast.parse(raw[len(before)-len(terminal):-len(terminal)])
+    functions = {'name26', 'scope26_guard', 'candidate26_guard', 'validate26_checker', 'validate26_diff',
+        'source26_endpoint', 'full26_store', 'source26_history', 'tree26', 'evidence26_guard',
+        'working26_guard', 'source26_guard', 'validate26'}
+    declarations = [n for n in extension.body if isinstance(n, ast.FunctionDef)]
+    require({n.name for n in declarations} == functions and len(declarations) == len(functions), 'R26_FUNCTION_SCOPE')
+    assigned = set(); dispatch = set(); literal = {}
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name), 'R26_MODULE_SCOPE')
+        name = node.targets[0].id
+        require(name not in assigned, 'R26_DUPLICATE_ASSIGNMENT'); assigned.add(name)
+        if name in {'source_guard', 'validate'}:
+            require(isinstance(node.value, ast.Name) and node.value.id ==
+                {'source_guard': 'source26_guard', 'validate': 'validate26'}[name], 'R26_DISPATCH')
+            dispatch.add(name)
+        else:
+            require(name.startswith('RELEASE26_'), 'R26_GLOBAL_SCOPE')
+            try: literal[name] = ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R26_GLOBAL_SIDE_EFFECT')
+    require(dispatch == {'source_guard', 'validate'}, 'R26_DISPATCH_REQUIRED')
+    expected_keys = ('RELEASE26_BASE', 'RELEASE26_TREE', 'RELEASE26_AUTHORITY', 'RELEASE26_INPUT', 'RELEASE26_PLAN',
+        'RELEASE26_PLAN_COMMIT', 'RELEASE26_PLAN_SHA256', 'RELEASE26_APPENDIX_SHA256', 'RELEASE26_CANDIDATE', 'RELEASE26_CHECKPOINT',
+        'RELEASE26_CHECKPOINT_FILES', 'RELEASE26_WORKLIST', 'RELEASE26_EXISTING_APP', 'RELEASE26_NEW_APP',
+        'RELEASE26_OTHER_EXISTING', 'RELEASE26_OTHER_NEW', 'RELEASE26_LEGACY_CODES',
+        'RELEASE26_CONSUMER_SHA256', 'RELEASE26_WORKFLOW_SHA256')
+    for key in expected_keys:
+        require(key in literal and literal[key] == globals()[key], 'R26_AUTHENTIC_FINITE_GRANT')
+    require(set(literal) == set(expected_keys), 'R26_GLOBAL_SCOPE')
+    extension_raw = raw[len(before)-len(terminal):-len(terminal)]
+    normalized, count = re.subn(rb"(?m)^RELEASE26_APPENDIX_SHA256 = '[0-9a-f]{64}'$",
+        b"RELEASE26_APPENDIX_SHA256 = '"+b'0'*64+b"'", extension_raw)
+    require(count == 1 and sha(normalized) == RELEASE26_APPENDIX_SHA256, 'R26_APPENDIX_BYTES')
+
+
+def validate26_diff(raw, read_after, parent=None, working=False):
+    parent = RELEASE26_BASE if parent is None else parent
+    require(type(raw) is bytes and type(working) is bool, 'R26_DIFF_SHAPE')
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R26_DIFF_SHAPE')
+    existing = RELEASE26_EXISTING_APP | RELEASE26_OTHER_EXISTING
+    new = RELEASE26_NEW_APP | RELEASE26_OTHER_NEW
+    seen = set(); identities = {}
+    for offset in range(0, len(fields)-1, 2):
+        meta = fields[offset].decode('ascii').split(); path = fields[offset+1].decode('utf-8')
+        require(len(meta) == 5 and path in existing | new and path not in seen, 'R26_FINITE_SCOPE')
+        seen.add(path); name26(path, identities)
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(oldmode in (':000000', ':100644') and newmode == '100644' and status in ('A', 'M') and
+            all(re.fullmatch('[0-9a-f]{40}', v) for v in (oldblob, newblob)), 'R26_MODE_OR_DELETION')
+        found = subprocess.run(['git', '--no-replace-objects', 'cat-file', '-e', parent+':'+path], cwd=ROOT, capture_output=True)
+        require(found.returncode in (0, 128), 'R26_PARENT_PROVENANCE')
+        exists = found.returncode == 0
+        require(exists == (status == 'M') == (oldmode == ':100644'), 'R26_PARENT_PROVENANCE')
+        require(oldblob == (git23('rev-parse', parent+':'+path).decode().strip() if exists else '0'*40), 'R26_PARENT_BLOB')
+        if parent == RELEASE26_BASE: require(exists == (path in existing), 'R26_CREATE_EDIT')
+        data = read_after(path)
+        require(type(data) is bytes and len(data) <= 128*1024*1024 and
+            (working and newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob), 'R26_AFTER_BLOB')
+        if path == RELEASE26_PLAN: scope26_guard(data)
+        if path == RELEASE26_CANDIDATE: candidate26_guard(data)
+        if path == 'scripts/release/full-app-j01/check.py': validate26_checker(data)
+        if path == 'scripts/release/full-app-j01/source_consumer26.test.py':
+            require(sha(data) == RELEASE26_CONSUMER_SHA256, 'R26_CONSUMER_IDENTITY')
+        if path == '.github/workflows/security-candidate22.yml':
+            require(sha(data) == RELEASE26_WORKFLOW_SHA256, 'R26_WORKFLOW_IDENTITY')
+    return seen
+
+
+def source26_endpoint():
+    head = git23('rev-parse', 'HEAD').decode().strip()
+    parents = git23('rev-list', '--parents', '-n', '1', head).decode().split()
+    require(len(parents) in (2, 3), 'R26_HEAD_PARENTS')
+    endpoint = head if len(parents) == 2 else parents[2]
+    if len(parents) == 3 or os.environ.get('GITHUB_ACTIONS') == 'true':
+        require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin', 'R26_CI_CONTEXT')
+        candidate = candidate26_guard(regular23(ROOT/RELEASE26_CANDIDATE)); number = candidate['pr']
+        require(type(number) is int and number > 0, 'R26_CI_CONTEXT')
+        event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+        require(event_path.is_absolute(), 'R26_CI_EVENT_PATH')
+        raw = regular23(event_path, 1024*1024)
+        event = json.loads(raw, object_pairs_hook=pairs,
+            parse_constant=lambda _: require(False, 'R26_NONFINITE_JSON'))
+        require(type(event) is dict and type(event.get('repository')) is dict and type(event.get('pull_request')) is dict,
+            'R26_CI_EVENT')
+        pr = event['pull_request']
+        require(type(pr.get('base')) is dict and type(pr.get('head')) is dict and type(pr['head'].get('repo')) is dict,
+            'R26_CI_EVENT')
+        require(type(event.get('number')) is int and event['number'] == number and type(pr.get('number')) is int and
+            pr['number'] == number and event['repository'].get('full_name') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+            pr['base'].get('sha') == RELEASE26_BASE and pr['base'].get('ref') == 'stage/m1-real-first-value25' and
+            pr['head'].get('sha') == endpoint and pr['head'].get('ref') == 'stage/m1-first-value-recovery26' and
+            pr['head']['repo'].get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+            pr.get('maintainer_can_modify') is False and 'auto_merge' in pr and pr['auto_merge'] is None,
+            'R26_CI_EVENT')
+        ci_sha = os.environ.get('GITHUB_SHA')
+        require(type(ci_sha) is str and re.fullmatch('[0-9a-f]{40}', ci_sha), 'R26_CI_CONTEXT')
+        if ci_sha not in (head, endpoint):
+            require(pr.get('merge_commit_sha') == ci_sha and
+                git23('rev-list', '--parents', '-n', '1', ci_sha).decode().split() == [ci_sha, RELEASE26_BASE, endpoint] and
+                git23('rev-parse', ci_sha+'^{tree}') == git23('rev-parse', endpoint+'^{tree}'), 'R26_CI_TEST_MERGE_IDENTITY')
+        if len(parents) == 3:
+            require(parents[1] == RELEASE26_BASE and git23('rev-parse', head+'^{tree}') ==
+                git23('rev-parse', endpoint+'^{tree}'), 'R26_CI_MERGE_TREE')
+    return endpoint
+
+
+def full26_store():
+    # Complete independent checkout metadata only; never open protected working bodies.
+    require(git23('rev-parse', '--is-shallow-repository').strip() == b'false', 'R26_FULL_HISTORY')
+    for parent in (ROOT, *ROOT.parents):
+        info = parent.lstat()
+        require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R26_CHECKOUT_PATH')
+    common = Path(git23('rev-parse', '--git-common-dir').decode().strip())
+    common = common if common.is_absolute() else ROOT/common
+    require(Path(os.path.abspath(common)) == ROOT/'.git', 'R26_STANDALONE_CHECKOUT')
+    info = common.lstat()
+    require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+        not getattr(info, 'st_file_attributes', 0) & 1024, 'R26_STANDALONE_CHECKOUT')
+    objects = common/'objects'
+    require(not os.path.lexists(objects/'info/alternates') and not os.path.lexists(objects/'info/http-alternates'), 'R26_ALTERNATES')
+    nodes = 0; stack = [(objects, 0)]
+    while stack:
+        path, depth = stack.pop(); info = path.lstat(); nodes += 1
+        require(nodes <= 1000000 and depth <= 8 and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R26_OBJECT_STORE')
+        if stat.S_ISDIR(info.st_mode):
+            with os.scandir(path) as entries:
+                stack.extend((Path(entry.path), depth+1) for entry in entries)
+        else: require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'R26_OBJECT_STORE')
+    for key in ('extensions.partialClone', 'remote.origin.promisor'):
+        result = subprocess.run(['git', '--no-replace-objects', 'config', '--get', key], cwd=ROOT, capture_output=True)
+        require(result.returncode == 1 and not result.stdout, 'R26_PARTIAL_CLONE')
+    grafts = Path(git23('rev-parse', '--git-path', 'info/grafts').decode().strip())
+    if not grafts.is_absolute(): grafts = ROOT/grafts
+    require(not os.path.lexists(grafts) and not git23('for-each-ref', '--format=%(refname)', 'refs/replace').strip(), 'R26_HISTORY_SUBSTITUTION')
+    require(not any(line.startswith(b'?') for line in git23('rev-list', '--objects', '--missing=print', 'HEAD').splitlines()),
+        'R26_MISSING_OBJECTS')
+    configured = subprocess.run(['git', '--no-replace-objects', 'config', '--get-regexp', r'^fsck\.'], cwd=ROOT, capture_output=True, timeout=30)
+    require(configured.returncode == 1 and not configured.stdout, 'R26_FSCK_CONFIG')
+    try:
+        integrity = subprocess.run(['git', '--no-replace-objects', '-c', 'core.hooksPath=', 'fsck', '--full', '--strict',
+            '--no-reflogs', '--no-dangling'], cwd=ROOT, capture_output=True, timeout=300)
+        require(integrity.returncode == 0 and len(integrity.stdout) + len(integrity.stderr) <= 65536, 'R26_OBJECT_HASH')
+    except (OSError, subprocess.SubprocessError): raise ValueError('R26_OBJECT_HASH') from None
+
+
+def source26_history():
+    require(git23('rev-parse', RELEASE26_BASE+'^{tree}').decode().strip() == RELEASE26_TREE and
+        git23('merge-base', RELEASE26_BASE, RELEASE26_PLAN_COMMIT).decode().strip() == RELEASE26_BASE and
+        git23('rev-list', '--parents', '-n', '1', RELEASE26_PLAN_COMMIT).decode().split() ==
+        [RELEASE26_PLAN_COMMIT, RELEASE26_BASE], 'R26_PINNED_BASE')
+    plan = git23('show', RELEASE26_PLAN_COMMIT+':'+RELEASE26_PLAN); scope26_guard(plan)
+    require(regular23(ROOT/RELEASE26_PLAN) == plan, 'R26_PLAN_IDENTITY')
+    endpoint = source26_endpoint()
+    require(git23('merge-base', RELEASE26_BASE, endpoint).decode().strip() == RELEASE26_BASE, 'R26_ANCESTRY')
+    commits = git23('rev-list', '--reverse', RELEASE26_BASE+'..'+endpoint).decode().splitlines()
+    require(1 <= len(commits) <= 128 and commits[0] == RELEASE26_PLAN_COMMIT, 'R26_PLAN_FIRST')
+    previous = RELEASE26_BASE; phase = 'SOURCE'; runtime = frozen = tail = None
+    for index, commit in enumerate(commits):
+        require(phase != 'TAIL', 'R26_AFTER_EVIDENCE_TAIL')
+        require(git23('rev-list', '--parents', '-n', '1', commit).decode().split() == [commit, previous], 'R26_LINEAR_HISTORY')
+        paths = validate26_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', previous, commit),
+            lambda path: git23('show', commit+':'+path), previous)
+        validate26_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE26_BASE, commit),
+            lambda path: git23('show', commit+':'+path))
+        if index == 0:
+            require(paths == {RELEASE26_PLAN}, 'R26_PLAN_FIRST')
+        else:
+            require(RELEASE26_PLAN not in paths, 'R26_PLAN_IMMUTABLE')
+            evidence = {RELEASE26_CHECKPOINT+n for n in RELEASE26_CHECKPOINT_FILES} | {'ONSKIN_BRAIN_HANDOFF.txt'}
+            if paths & evidence:
+                require(phase == 'FROZEN' and paths == evidence, 'R26_EVIDENCE_TAIL_SCOPE')
+                phase = 'TAIL'; tail = commit
+            elif paths & RELEASE26_WORKLIST:
+                require(phase == 'SOURCE' and paths == RELEASE26_WORKLIST, 'R26_WORKLIST_ONLY_FREEZE')
+                runtime = previous; frozen = commit; phase = 'FROZEN'
+            else: require(phase == 'SOURCE', 'R26_SOURCE_AFTER_FREEZE')
+        previous = commit
+    return dict(endpoint=endpoint, phase=phase, runtimeHead=runtime, sourceHead=frozen, tailHead=tail)
+
+
+def tree26(endpoint):
+    tree = {}; identities = {}
+    for raw in git23('ls-tree', '-r', '-z', endpoint).split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, kind, oid = meta.decode('ascii').split(); path = name.decode('utf-8')
+        require(kind == 'blob' and mode in ('100644', '100755') and re.fullmatch('[0-9a-f]{40}', oid) and path not in tree,
+            'R26_TREE_MODE')
+        name26(path, identities); tree[path] = (mode, oid)
+    return tree
+
+
+def evidence26_guard(history):
+    checkpoint = ROOT/RELEASE26_CHECKPOINT
+    if history['phase'] != 'TAIL':
+        require(not os.path.lexists(checkpoint), 'R26_UNCOMMITTED_EVIDENCE')
+        return
+    raw = regular23(checkpoint/'manifest.json', 16*1024*1024)
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R26_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'acceptanceGranted', 'release',
+        'inputManifestSHA256', 'source', 'files', 'payload'} and type(value['schema']) is int and value['schema'] == 1 and
+        value['authority'] == RELEASE26_AUTHORITY and value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and
+        value['acceptanceGranted'] is False and value['release'] == 'NO_GO' and value['inputManifestSHA256'] == RELEASE26_INPUT,
+        'R26_EVIDENCE_NO_ADMISSION')
+    source = value['source']
+    require(type(source) is dict and set(source) == {'base', 'baseTree', 'runtimeHead', 'runtimeTree', 'sourceHead', 'sourceTree'} and
+        all(type(v) is str and re.fullmatch('[0-9a-f]{40}', v) for v in source.values()) and source['base'] == RELEASE26_BASE and
+        source['baseTree'] == RELEASE26_TREE and source['runtimeHead'] == history['runtimeHead'] and
+        source['sourceHead'] == history['sourceHead'] and
+        git23('rev-parse', source['runtimeHead']+'^{tree}').decode().strip() == source['runtimeTree'] and
+        git23('rev-parse', source['sourceHead']+'^{tree}').decode().strip() == source['sourceTree'], 'R26_EVIDENCE_SOURCE')
+    files = value['files']
+    require(type(files) is dict and set(files) == RELEASE26_CHECKPOINT_FILES-{'manifest.json'}, 'R26_EVIDENCE_FILES')
+    found = set()
+    for path in checkpoint.iterdir():
+        regular23(path); found.add(path.name)
+    require(found == RELEASE26_CHECKPOINT_FILES, 'R26_EVIDENCE_INVENTORY')
+    for name, witness in files.items():
+        data = regular23(checkpoint/name)
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(data) and type(witness['sha256']) is str and witness['sha256'] == sha(data), 'R26_EVIDENCE_HASH')
+    for name in RELEASE26_CHECKPOINT_FILES:
+        require(regular23(checkpoint/name) == git23('show', history['endpoint']+':'+RELEASE26_CHECKPOINT+name),
+            'R26_EVIDENCE_COMMITTED_BYTES')
+    payload = value['payload']
+    require(type(payload) is dict and set(payload) == {'schema', 'files', 'qualification'} and
+        type(payload['schema']) is int and payload['schema'] == 1 and
+        payload['qualification'] == 'SANITIZED_TECHNICAL_EVIDENCE_NOT_ACCEPTANCE' and type(payload['files']) is dict and
+        0 < len(payload['files']) <= 20000, 'R26_PAYLOAD_SCHEMA')
+    # The separately anchored standalone verifier adds recursive nested-archive
+    # and outer-return checks. This guard proves this committed source envelope.
+    import io
+    import zipfile
+    import struct
+    import zlib
+    data = regular23(checkpoint/'payload.zip', 128*1024*1024)
+    end = data.rfind(b'PK\x05\x06', max(0, len(data)-65557))
+    require(end >= 0 and end+22 == len(data), 'R26_PAYLOAD_FRAME')
+    disk, start_disk, disk_count, count, size, offset, comment = struct.unpack_from('<HHHHIIH', data, end+4)
+    require(disk == start_disk == comment == 0 and disk_count == count == len(payload['files']) and
+        count < 65535 and offset+size == end, 'R26_PAYLOAD_FRAME')
+    cursor = offset; observed = 0; central = {}
+    while cursor < end:
+        require(cursor+46 <= end and data[cursor:cursor+4] == b'PK\x01\x02', 'R26_PAYLOAD_FRAME')
+        lengths = struct.unpack_from('<HHH', data, cursor+28)
+        header_offset = struct.unpack_from('<I', data, cursor+42)[0]
+        require(header_offset not in central, 'R26_PAYLOAD_FRAME')
+        central[header_offset] = struct.unpack_from('<5H', data, cursor+6)
+        require(central[header_offset][0] <= 20 and struct.unpack_from('<H', data, cursor+34)[0] == 0,
+            'R26_PAYLOAD_FRAME')
+        cursor += 46+sum(lengths); observed += 1
+        require(cursor <= end and observed <= count, 'R26_PAYLOAD_FRAME')
+    require(cursor == end and observed == count, 'R26_PAYLOAD_FRAME')
+    archive = zipfile.ZipFile(io.BytesIO(data)); members = archive.infolist(); identities = {}; seen = set(); total = 0
+    require(len(members) == len(payload['files']) and not archive.comment, 'R26_PAYLOAD_INVENTORY')
+    intervals = []
+    for member in members:
+        name = member.filename; name26(name, identities)
+        require(name == member.orig_filename and name not in seen and name in payload['files'] and not member.is_dir() and
+            member.create_system == 3 and stat.S_ISREG(member.external_attr >> 16) and
+            not (member.external_attr >> 16) & (stat.S_ISUID | stat.S_ISGID | stat.S_ISVTX) and
+            member.external_attr & 65535 in (0, 32) and not member.external_attr & (0x10 | 0x400) and
+            not member.extra and not member.comment and member.flag_bits in (0, 2048) and member.compress_type in (0, 8),
+            'R26_PAYLOAD_MEMBER')
+        seen.add(name); total += member.file_size
+        require(0 <= member.file_size <= 32*1024*1024 and total <= 256*1024*1024 and
+            member.file_size <= max(1024*1024, member.compress_size*100), 'R26_PAYLOAD_BOUND')
+        start = member.header_offset
+        require(0 <= start and start+30 <= offset, 'R26_PAYLOAD_FRAME')
+        header = struct.unpack_from('<4s5H3I2H', data, start)
+        signature, version, flags, method, _, _, crc, compressed, expanded, name_size, extra_size = header
+        require(signature == b'PK\x03\x04' and header[1:6] == central[start] and version <= 20 and extra_size == 0 and
+            (flags, method, crc, compressed, expanded) ==
+            (member.flag_bits, member.compress_type, member.CRC, member.compress_size, member.file_size), 'R26_PAYLOAD_FRAME')
+        require(data[start+30:start+30+name_size].decode('utf-8' if flags & 2048 else 'cp437') == name, 'R26_PAYLOAD_FRAME')
+        data_start = start+30+name_size; finish = data_start+compressed
+        require(finish <= offset, 'R26_PAYLOAD_FRAME'); intervals.append((start, finish))
+        packed = data[data_start:finish]
+        if method == 8:
+            decoder = zlib.decompressobj(-15); body = decoder.decompress(packed, expanded+1)
+            require(decoder.eof and not decoder.unused_data and not decoder.unconsumed_tail, 'R26_PAYLOAD_FRAME')
+        else: body = packed
+        require(len(body) == expanded and zlib.crc32(body) & 0xffffffff == crc, 'R26_PAYLOAD_FRAME')
+        witness = payload['files'][name]
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(body) and type(witness['sha256']) is str and witness['sha256'] == sha(body), 'R26_PAYLOAD_HASH')
+    require(seen == set(payload['files']), 'R26_PAYLOAD_INVENTORY')
+    cursor = 0
+    for start, finish in sorted(intervals):
+        require(start == cursor, 'R26_PAYLOAD_FRAME'); cursor = finish
+    require(cursor == offset, 'R26_PAYLOAD_FRAME')
+
+
+def working26_guard(index, permitted=()):
+    """Raw tracked-byte reconciliation; Git stat-cache results cannot substitute."""
+    permitted = set(permitted); checked = 0; directories = set(ROOT.parents) | {ROOT}
+    for path in index:
+        parent = (ROOT/path).parent
+        while parent not in directories:
+            directories.add(parent); parent = parent.parent
+    parents = {}
+    for parent in directories:
+        info = parent.lstat()
+        require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R26_WORKING_PATH')
+        parents[parent] = (info.st_dev, info.st_ino, info.st_mode)
+    def identity(info, comparable=False):
+        stamp = getattr(info, 'st_birthtime_ns', info.st_ctime_ns) if comparable and os.name == 'nt' else info.st_ctime_ns
+        mode = info.st_mode & ~0o111 if os.name == 'nt' else info.st_mode
+        return (info.st_dev, info.st_ino, mode, info.st_nlink, info.st_size, info.st_mtime_ns, stamp)
+    for path, (mode, oid) in index.items():
+        target = ROOT/path; before = target.lstat()
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and not stat.S_ISLNK(before.st_mode) and
+            not getattr(before, 'st_file_attributes', 0) & 1024 and before.st_size <= 128*1024*1024, 'R26_WORKING_REGULAR')
+        descriptor = os.open(target, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
+        try:
+            opened = os.fstat(descriptor)
+            require(identity(opened, True) == identity(before, True), 'R26_WORKING_CHANGED')
+            digest = hashlib.sha1(('blob '+str(before.st_size)+'\0').encode()); total = 0
+            while True:
+                block = os.read(descriptor, min(1024*1024, before.st_size-total+1))
+                if not block: break
+                total += len(block)
+                require(total <= before.st_size, 'R26_WORKING_CHANGED')
+                digest.update(block)
+            finished = os.fstat(descriptor)
+        finally: os.close(descriptor)
+        require(total == before.st_size and identity(opened) == identity(finished) and
+            identity(before) == identity(target.lstat()), 'R26_WORKING_CHANGED')
+        actual = digest.hexdigest()
+        require(actual == oid or path in permitted, 'R26_WORKING_BLOB')
+        checked += 1
+    for parent, expected in parents.items():
+        info = parent.lstat()
+        require((info.st_dev, info.st_ino, info.st_mode) == expected and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R26_WORKING_PATH')
+    return checked
+
+
+def source26_guard():
+    full26_store(); history = source26_history(); evidence26_guard(history)
+    endpoint = history['endpoint']; tree = tree26(endpoint)
+    scope26_guard(regular23(ROOT/RELEASE26_PLAN))
+    candidate = candidate26_guard(regular23(ROOT/RELEASE26_CANDIDATE))
+    if history['phase'] != 'SOURCE':
+        require(type(candidate['pr']) is int and candidate['pr'] > 0, 'R26_FINAL_PR_REQUIRED')
+    validate26_checker(regular23(ROOT/'scripts/release/full-app-j01/check.py'))
+    require(sha(regular23(ROOT/'scripts/release/full-app-j01/source_consumer26.test.py')) ==
+        RELEASE26_CONSUMER_SHA256, 'R26_CONSUMER_IDENTITY')
+    require(sha(regular23(ROOT/'.github/workflows/security-candidate22.yml')) ==
+        RELEASE26_WORKFLOW_SHA256, 'R26_WORKFLOW_IDENTITY')
+    # Empty all external Git conversion commands before status/diff can read a
+    # candidate file. Names are metadata only and strictly bounded before reuse.
+    result = subprocess.run(['git', '--no-replace-objects', 'config', '--null', '--name-only', '--get-regexp',
+        r'^filter\..*\.(clean|smudge|process)$'], cwd=ROOT, capture_output=True)
+    require(result.returncode in (0, 1) and len(result.stdout) <= 65536, 'R26_FILTER_CONFIG')
+    overrides = []
+    for key in result.stdout.decode('utf-8').split('\0'):
+        if not key: continue
+        require(re.fullmatch(r'filter\.[A-Za-z0-9_. -]{1,128}\.(clean|smudge|process)', key), 'R26_FILTER_CONFIG')
+        overrides += ['-c', key+'=', '-c', key.rsplit('.', 1)[0]+'.required=false']
+    head = git23('rev-parse', 'HEAD'); index_raw = git23('ls-files', '--stage', '-z')
+    status = git23(*overrides, 'status', '--porcelain=v1', '--untracked-files=all', '-z')
+    index = {}; identities = {}
+    for path in tree: name26(path, identities)
+    for raw in index_raw.split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, oid, stage = meta.decode('ascii').split(); path = name.decode('utf-8')
+        require(stage == '0' and mode in ('100644', '100755') and re.fullmatch('[0-9a-f]{40}', oid) and path not in index,
+            'R26_INDEX_STAGE_MODE')
+        name26(path, identities); index[path] = (mode, oid)
+    for raw in git23('ls-files', '-v', '-z').split(b'\0'):
+        if raw: require(raw.startswith(b'H '), 'R26_INDEX_FLAGS')
+    for path, (mode, _) in index.items():
+        info = (ROOT/path).lstat()
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R26_WORKING_REGULAR')
+        if os.name != 'nt':
+            require(bool(info.st_mode & 0o111) == (mode == '100755'), 'R26_WORKING_MODE')
+    staged = validate26_diff(git23(*overrides, 'diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE26_BASE),
+        lambda path: git23('show', ':'+path))
+    working = validate26_diff(git23(*overrides, 'diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE26_BASE),
+        lambda path: regular23(ROOT/path), working=True)
+    if RELEASE26_CANDIDATE in index: candidate26_guard(git23('show', ':'+RELEASE26_CANDIDATE))
+    untracked = set()
+    for path in git23('ls-files', '--others', '--exclude-standard', '-z').decode('utf-8').split('\0'):
+        if not path: continue
+        require(path in RELEASE26_NEW_APP | RELEASE26_OTHER_NEW and path not in index and path not in untracked,
+            'R26_UNTRACKED_SCOPE')
+        name26(path, identities); regular23(ROOT/path); untracked.add(path)
+    ignored = [p for p in git23('ls-files', '--others', '--ignored', '--exclude-standard', '--directory',
+        '--no-empty-directory', '-z').decode('utf-8').split('\0') if p]
+    ignored_identities = {}
+    for path in ignored:
+        name26(path.rstrip('/'), ignored_identities)
+        require(re.fullmatch(r'(?:node_modules/|(?:apps|packages)/[^/]+/node_modules/|'
+            r'\.turbo/|(?:apps|packages)/[^/]+/\.turbo/|\.expo/|apps/mobile/\.expo/|\.tmp/|'
+            r'apps/mobile/(?:ios|android)/|apps/mobile/expo-env\.d\.ts|'
+            r'(?:[^/]+|(?:apps|packages)/[^/]+/[^/]+)\.tsbuildinfo)', path) is not None,
+            'R26_IGNORED_SOURCE')
+    if history['phase'] == 'SOURCE':
+        pending = {path for path in set(index) | set(tree) if index.get(path) != tree.get(path)}
+        pending |= {p.decode('utf-8') for p in git23(*overrides, 'diff', '--name-only', '--no-renames', '-z').split(b'\0') if p}
+        pending |= untracked
+        require(not pending & (RELEASE26_WORKLIST | {RELEASE26_CHECKPOINT+n for n in RELEASE26_CHECKPOINT_FILES} |
+            {RELEASE26_PLAN, 'ONSKIN_BRAIN_HANDOFF.txt'}), 'R26_PREMATURE_FREEZE_OR_EVIDENCE')
+        permitted = RELEASE26_EXISTING_APP | RELEASE26_NEW_APP | {'docs/USER_FLOW_TREE.md',
+            'scripts/release/full-app-j01/check.py', RELEASE26_CANDIDATE, 'scripts/release/full-app-j01/source_consumer26.test.py',
+            '.github/workflows/security-candidate22.yml', 'docs/brain/task-specs/M1X-26/TASK.md'}
+        checked = working26_guard(index, permitted)
+    else:
+        require(index == tree and not status and not untracked, 'R26_FROZEN_CHECKOUT_DIRTY')
+        checked = working26_guard(index)
+        for path in working:
+            data = regular23(ROOT/path)
+            require(tree[path] == ('100644', hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()),
+                'R26_WORKING_BLOB')
+    require(git23('rev-parse', 'HEAD') == head and git23('ls-files', '--stage', '-z') == index_raw and
+        git23(*overrides, 'status', '--porcelain=v1', '--untracked-files=all', '-z') == status, 'R26_FINAL_SNAPSHOT')
+    return dict(endpoint=endpoint, tree=git23('rev-parse', endpoint+'^{tree}').decode().strip(), phase=history['phase'],
+        checkoutHead=head.decode().strip(), checkoutTree=git23('rev-parse', 'HEAD^{tree}').decode().strip(),
+        ciEventCommit=os.environ.get('GITHUB_SHA') if os.environ.get('GITHUB_ACTIONS') == 'true' else None,
+        metadataFiles=len(tree), stagedChangedPaths=len(staged), currentChangedPaths=len(working),
+        ignoredGeneratedNodesExcludedFromSourceEvidence=len(ignored),
+        trackedWorkingBlobsHashedLocally=checked,
+        workingQualification='FINITE_PENDING_ALLOWED' if history['phase'] == 'SOURCE' else 'RAW_TRACKED_BLOBS_EXACT',
+        unrelatedProtectedWorkingBytes='TRACKED_CHECKOUT_BYTES_HASHED_LOCALLY;NO_CONTENT_OR_NEW_HASH_DISCLOSED',
+        externalPrivateCustody='NOT_OPENED;UNTRACKED_IGNORED_UNKNOWN_NAMES_REFUSED_FROM_METADATA')
+
+
+def validate26(bundle=BUNDLE):
+    try: current = Path(bundle).resolve() == BUNDLE.resolve()
+    except Exception: raise ValueError('R26_BUNDLE_SCOPE') from None
+    if not current: return validate25(bundle)
+    try:
+        # Authenticate the extension before invoking any replaceable current
+        # guard. The return verifier independently pins the complete checker.
+        validate26_checker(regular23(ROOT/'scripts/release/full-app-j01/check.py'))
+        proof = source26_guard()
+        result = historical21_validate(BUNDLE)
+        result.update(current_source_governance='RELEASE26_FINITE_SCOPE_ONLY', source26=proof,
+            inherited_release25='IMMUTABLE_PR29_DEFINITIONS;AUTHENTIC_HISTORICAL_REPLAY_REQUIRED',
+            source_acceptance='SUBMITTED_REVIEW_REQUIRED', acceptanceGranted=False,
+            admissions=dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False), release='NO_GO')
+        return result
+    except Exception as error:
+        code = error.args[0] if type(error) is ValueError and len(error.args) == 1 and type(error.args[0]) is str else None
+        # Codes emitted by this extension are static uppercase identifiers; never
+        # disclose arbitrary exception text or caller-controlled paths/suffixes.
+        known = {'R23_PUBLIC_BOUND', 'R23_PUBLIC_PATH', 'R23_PUBLIC_FILE', 'R23_PUBLIC_CHANGED',
+            'R23_PUBLIC_READ_INCOMPLETE', 'R23_GIT_ENV', 'R26_PATH', 'R26_PATH_ALIAS', 'R26_PATH_BOUND',
+            'R26_PLAN_IDENTITY', 'R26_PLAN_SCHEMA', 'R26_NONFINITE_JSON', 'R26_AUTHENTIC_FINITE_GRANT', 'R26_APP_PATH_BUDGET',
+            'R26_CANDIDATE_BOUND', 'R26_NO_ADMISSION', 'R26_INHERITED_BYTES', 'R26_FUNCTION_SCOPE', 'R26_MODULE_SCOPE',
+            'R26_DUPLICATE_ASSIGNMENT', 'R26_DISPATCH', 'R26_GLOBAL_SCOPE', 'R26_GLOBAL_SIDE_EFFECT', 'R26_DISPATCH_REQUIRED',
+            'R26_APPENDIX_BYTES',
+            'R26_DIFF_SHAPE', 'R26_FINITE_SCOPE', 'R26_MODE_OR_DELETION', 'R26_PARENT_PROVENANCE', 'R26_PARENT_BLOB',
+            'R26_CREATE_EDIT', 'R26_AFTER_BLOB', 'R26_HEAD_PARENTS', 'R26_CI_CONTEXT', 'R26_CI_EVENT_PATH', 'R26_CI_EVENT',
+            'R26_CI_MERGE_TREE', 'R26_FULL_HISTORY', 'R26_CHECKOUT_PATH', 'R26_STANDALONE_CHECKOUT', 'R26_ALTERNATES',
+            'R26_OBJECT_STORE', 'R26_PARTIAL_CLONE', 'R26_HISTORY_SUBSTITUTION', 'R26_MISSING_OBJECTS', 'R26_PINNED_BASE',
+            'R26_ANCESTRY', 'R26_PLAN_FIRST', 'R26_AFTER_EVIDENCE_TAIL', 'R26_LINEAR_HISTORY', 'R26_PLAN_IMMUTABLE',
+            'R26_EVIDENCE_TAIL_SCOPE', 'R26_WORKLIST_ONLY_FREEZE', 'R26_SOURCE_AFTER_FREEZE', 'R26_TREE_MODE',
+            'R26_UNCOMMITTED_EVIDENCE', 'R26_EVIDENCE_NO_ADMISSION', 'R26_EVIDENCE_SOURCE', 'R26_EVIDENCE_FILES',
+            'R26_EVIDENCE_INVENTORY', 'R26_EVIDENCE_HASH', 'R26_EVIDENCE_COMMITTED_BYTES', 'R26_PAYLOAD_SCHEMA',
+            'R26_PAYLOAD_INVENTORY', 'R26_PAYLOAD_FRAME', 'R26_PAYLOAD_MEMBER', 'R26_PAYLOAD_BOUND', 'R26_PAYLOAD_HASH', 'R26_FILTER_CONFIG',
+            'R26_INDEX_STAGE_MODE', 'R26_INDEX_FLAGS', 'R26_WORKING_REGULAR', 'R26_WORKING_CHANGED', 'R26_WORKING_PATH',
+            'R26_WORKING_MODE', 'R26_FINAL_PR_REQUIRED',
+            'R26_UNTRACKED_SCOPE', 'R26_IGNORED_SOURCE', 'R26_PREMATURE_FREEZE_OR_EVIDENCE',
+            'R26_FROZEN_CHECKOUT_DIRTY', 'R26_WORKING_BLOB', 'R26_FINAL_SNAPSHOT',
+            'R26_CONSUMER_IDENTITY', 'R26_WORKFLOW_IDENTITY', 'R26_CI_TEST_MERGE_IDENTITY',
+            'R26_FSCK_CONFIG', 'R26_OBJECT_HASH'}
+        if code in known: raise ValueError(code) from None
+        legacy = set(RELEASE26_LEGACY_CODES.split())
+        prefix = code.split(':', 1)[0]+':' if code is not None and ':' in code else code
+        safe = code if code in legacy else prefix if prefix in legacy else 'R26_EXECUTION_INCOMPLETE'
+        raise ValueError(safe) from None
+
+
+source_guard = source26_guard
+validate = validate26
+
+
 if __name__ == '__main__':
     sys.exit(main())

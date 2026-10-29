@@ -17,7 +17,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Checkout exact candidate source
         uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
@@ -29,6 +29,8 @@ jobs:
         run: |
           git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main refs/heads/stage/m1-f09-layout-compatibility21:refs/remotes/origin/stage/m1-f09-layout-compatibility21 refs/heads/stage/m1-security-recovery22:refs/remotes/origin/stage/m1-security-recovery22
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          git fetch --no-tags origin refs/pull/${{ github.event.pull_request.number }}/merge
+          test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
       - name: Setup Node
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
@@ -38,6 +40,28 @@ jobs:
           prefix="$RUNNER_TEMP/security23-tools"
           npm install --global --prefix "$prefix" npm@11.20.0 --ignore-scripts --no-audit --no-fund
           if [ "$RUNNER_OS" = Windows ]; then
+            python -I -B - "$prefix" <<'PY'
+          import hashlib, os, stat, sys
+          from pathlib import Path
+          target = Path(sys.argv[1]).absolute() / 'node_modules/npm/npmrc'
+          if os.path.lexists(target):
+              assert sys.flags.optimize == 0 and target.resolve() == target
+              before = target.lstat()
+              assert stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and before.st_size == 22
+              assert not stat.S_ISLNK(before.st_mode) and not getattr(before, 'st_file_attributes', 0) & 1024
+              descriptor = os.open(target, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
+              try:
+                  opened = os.fstat(descriptor)
+                  assert (opened.st_dev, opened.st_ino, opened.st_size) == (before.st_dev, before.st_ino, before.st_size)
+                  raw = os.read(descriptor, 23)
+                  assert len(raw) == 22 and hashlib.sha256(raw).hexdigest() == 'af0199c6f93e02f7a6b946e9764cf19f2e598e547da1853f8205e0263872b9ef'
+                  after = target.lstat()
+                  assert (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns) == (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+              finally:
+                  os.close(descriptor)
+              target.unlink()
+              print('REMOVED_ONLY_AUTHENTIC_TARBALL_ABSENT_WINDOWS_BOOTSTRAP_CONFIG')
+          PY
             cp "$(node -p 'process.execPath')" "$prefix/node.exe"
             echo "$prefix" >> "$GITHUB_PATH"
           else
@@ -67,11 +91,17 @@ jobs:
           set -o pipefail
           node --test scripts/security24/advisory-behavior.test.mjs scripts/security24/patch-tooling.test.mjs | tee "$RUNNER_TEMP/security24-advisory-controls.tap"
           node scripts/security24/graph.mjs > "$RUNNER_TEMP/security24-advisory-graph.json"
-      - name: Campaign24 finite source governance controls
+      - name: Authenticated historical Release24 and Release25 source controls
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -B scripts/release/full-app-j01/source_consumer24.test.py | tee "$RUNNER_TEMP/security24-source-controls.jsonl"
+          python -I -B scripts/release/full-app-j01/source_consumer26.test.py --historical-replay --receipt "$RUNNER_TEMP/security26-historical-receipt.json" | tee "$RUNNER_TEMP/security26-historical-controls.jsonl"
+      - name: Current Campaign26 finite source governance controls
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -I -B scripts/release/full-app-j01/source_consumer26.test.py | tee "$RUNNER_TEMP/security26-source-controls.jsonl"
+          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security26-current-source.json"
       - name: Execute current public checks and preserve component results
         if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
@@ -90,6 +120,9 @@ jobs:
             ${{ runner.temp }}/security23-native-controls.json
             ${{ runner.temp }}/security24-advisory-controls.tap
             ${{ runner.temp }}/security24-advisory-graph.json
-            ${{ runner.temp }}/security24-source-controls.jsonl
+            ${{ runner.temp }}/security26-historical-receipt.json
+            ${{ runner.temp }}/security26-historical-controls.jsonl
+            ${{ runner.temp }}/security26-source-controls.jsonl
+            ${{ runner.temp }}/security26-current-source.json
           if-no-files-found: ignore
           retention-days: 7
