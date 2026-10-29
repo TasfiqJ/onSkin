@@ -470,6 +470,28 @@ def main():
     assert 'matrix:\n        os: [ubuntu-latest, windows-latest]' in workflow and 'permissions:\n  contents: read' in workflow
     assert 'python -B scripts/security22/run.py --output-dir ' in workflow and 'set -o pipefail' in workflow
     positive+=1
+    # Published ac01 is immutable historical data only. It cannot replace the
+    # active/staged checker or consumer after this narrowly scoped CI repair.
+    prior=check.RELEASE26_PREVIOUS_GOVERNANCE
+    prior_raw=check.git23('diff','--raw','--no-abbrev','--no-renames','-z',prior['parent'],prior['commit'])
+    old_read=lambda path:check.git23('show',prior['commit']+':'+path)
+    expect('authentic-published-C26-prior-transition-only',lambda:check.validate26_diff(prior_raw,old_read,prior['parent'],at_commit=prior['commit']),success=True)
+    cumulative=check.git23('diff','--raw','--no-abbrev','--no-renames','-z',check.RELEASE26_BASE,prior['commit'])
+    expect('authentic-published-C26-prior-cumulative-only',lambda:check.validate26_diff(cumulative,old_read,at_commit=prior['commit']),success=True)
+    expect('prior-checker-cannot-execute-as-current',lambda:check.validate26_checker(old_read('scripts/release/full-app-j01/check.py')))
+    expect('prior-transition-cannot-be-current-or-staged',lambda:check.validate26_diff(prior_raw,old_read,prior['parent']))
+    expect('prior-transition-cannot-be-working',lambda:check.validate26_diff(prior_raw,old_read,prior['parent'],working=True,at_commit=prior['commit']),'R26_PRIOR_CONTEXT')
+    expect('prior-transition-wrong-parent',lambda:check.validate26_diff(prior_raw,old_read,'0'*40,at_commit=prior['commit']),'R26_PRIOR_CONTEXT')
+    expect('prior-blobs-cannot-use-substituted-commit',lambda:check.validate26_diff(prior_raw,old_read,prior['parent'],at_commit=prior['parent']))
+    expect('prior-transition-raw-byte-corruption',lambda:check.validate26_diff(prior_raw+b'\0',old_read,prior['parent'],at_commit=prior['commit']),'R26_PRIOR_TRANSITION')
+    def corrupted_prior(path):
+        raw=old_read(path)
+        return raw+b'\n' if path=='scripts/release/full-app-j01/source_consumer26.test.py' else raw
+    expect('prior-consumer-raw-byte-corruption',lambda:check.validate26_diff(prior_raw,corrupted_prior,prior['parent'],at_commit=prior['commit']),'R26_AFTER_BLOB')
+    with patch.dict(prior,{'tree':'0'*40}):
+        expect('prior-tree-identity-refuted',lambda:check.validate26_diff(prior_raw,old_read,prior['parent'],at_commit=prior['commit']),'R26_PRIOR_IDENTITY')
+    with patch.object(check,'source26_endpoint',return_value=prior['commit']):
+        expect('authentic-published-C26-history-metadata-controlled-endpoint',check.source26_history,success=True)
 
     common=Path(check.git23('rev-parse','--git-common-dir').decode().strip())
     common=common if common.is_absolute() else source/common
@@ -549,8 +571,20 @@ def main():
             event_path.write_bytes(encoded(test_merge_event))
             with patch.dict(os.environ,{'GITHUB_SHA':merge}):
                 expect('CI-exact-head-with-separate-authenticated-test-merge',check.source26_endpoint,success=True)
-                test_merge_event['pull_request']['merge_commit_sha']='0'*40;event_path.write_bytes(encoded(test_merge_event))
-                expect('CI-swapped-test-merge-identity',check.source26_endpoint,'R26_CI_TEST_MERGE_IDENTITY')
+                for snapshot in (None, check.RELEASE26_BASE):
+                    test_merge_event['pull_request']['merge_commit_sha']=snapshot;event_path.write_bytes(encoded(test_merge_event))
+                    expect('CI-stale-or-pending-advisory-merge-snapshot',check.source26_endpoint,success=True)
+                test_merge_event['pull_request']['merge_commit_sha']=1;event_path.write_bytes(encoded(test_merge_event))
+                expect('CI-malformed-advisory-merge-snapshot',check.source26_endpoint,'R26_CI_MERGE_SNAPSHOT_SCHEMA')
+            event_path.write_bytes(encoded(event))
+            for wrong_parent,wrong_head,wrong_tree in [(check.RELEASE26_PLAN_COMMIT,authentic,authentic_tree),
+                (check.RELEASE26_BASE,check.RELEASE26_PLAN_COMMIT,authentic_tree),(check.RELEASE26_BASE,authentic,check.RELEASE26_TREE)]:
+                wrong_object=git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit-tree',wrong_tree,
+                    '-p',wrong_parent,'-p',wrong_head,data=b'Synthetic wrong CI object, never a real source checkout\n').decode().strip()
+                with patch.dict(os.environ,{'GITHUB_SHA':wrong_object}):
+                    expect('CI-wrong-actual-test-object-parents-or-tree',check.source26_endpoint,'R26_CI_TEST_MERGE_IDENTITY')
+            with patch.dict(os.environ,{'GITHUB_SHA':'0'*40}):
+                expect('CI-missing-actual-test-object',check.source26_endpoint)
             event_path.write_bytes(encoded(event))
             badmerge=git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit-tree',check.RELEASE26_TREE,
                 '-p',check.RELEASE26_BASE,'-p',authentic,data=b'Synthetic unequal CI merge\n').decode().strip();head(badmerge)

@@ -4938,7 +4938,7 @@ RELEASE26_INPUT = '9d87a26cb84ed81c5f0deb950a919ae0899c1f8805ebea7e386eace05a7db
 RELEASE26_PLAN = 'docs/brain/task-specs/M1X-26/SCOPE_PLAN.md'
 RELEASE26_PLAN_COMMIT = 'd970311fd0741414f9a96a15afc653f7e1cc39df'
 RELEASE26_PLAN_SHA256 = '6c0f5f6d4f66612551e79216e49b698fe487b9d3cefc0c3f0cf1bb30b9fbd7e7'
-RELEASE26_APPENDIX_SHA256 = '07b0868c730703e169537561b3ba88eac9552ecd75b58d5f0c700aa7bee0d00c'
+RELEASE26_APPENDIX_SHA256 = '08fc242b08f22f2838f6e2eccb057aacd7c1a371c7d4128f4af15fb90b705ea0'
 RELEASE26_CANDIDATE = 'docs/brain/contracts/M1X-26/source26.v1.json'
 RELEASE26_CHECKPOINT = 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/'
 RELEASE26_CHECKPOINT_FILES = {'README.md', 'REPORT.md', 'manifest.json', 'payload.zip', 'verify26.py'}
@@ -4948,8 +4948,9 @@ RELEASE26_NEW_APP = {'apps/mobile/src/features/shelf/detailActionSheet.campaign2
 RELEASE26_OTHER_EXISTING = {'.github/workflows/security-candidate22.yml', 'ONSKIN_BRAIN_HANDOFF.txt', 'docs/USER_FLOW_TREE.md', 'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md', 'scripts/release/full-app-j01/check.py'}
 RELEASE26_OTHER_NEW = {'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/README.md', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/REPORT.md', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/manifest.json', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/payload.zip', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/verify26.py', 'docs/brain/contracts/M1X-26/source26.v1.json', 'docs/brain/task-specs/M1X-26/SCOPE_PLAN.md', 'docs/brain/task-specs/M1X-26/TASK.md', 'scripts/release/full-app-j01/source_consumer26.test.py'}
 RELEASE26_LEGACY_CODES = 'AUTHENTIC_HISTORY: BASE_BLOB_SHA256: BASE_TREE CONTRACT_BASE CONTRACT_VERSION C_ALIAS: DAG38_EXACT_OWNERS DAG_CYCLE: DAG_EDGE: DAG_GATE: DAG_IDENTITIES DAG_NOT_ISSUANCE: DAG_OPERATIONAL_GATES: DAG_ROW_OWNER: DAG_UNKNOWN_NODE: F09_DIARY F09_NOT_F18 FINITE_IDS: F_ALIAS: GATE_CLOSED: GATE_IDENTITIES GATE_OWNER: HISTORICAL_COUNT: HISTORICAL_DEPS: HISTORICAL_IDENTITIES: HISTORICAL_NODE: HISTORICAL_PROVENANCE: HISTORICAL_RECORD: HISTORICAL_STATUS: HISTORY_AUTHORITY HISTORY_NO_ACCEPTANCE J01_DAG J01_G4_CHANGE_GATE J01_INTAKE J01_NO_CLAIMS J01_SINGLE_SCAN_GATES JSON_DUPLICATE_KEY: JSON_NONFINITE: J_REGISTRY: J_ROW_GATES: LEDGER_CUSTODY LEGACY_CONSUMERS LEGACY_DOC_BYTES: LEGACY_GUARD M103_TO_M2 MATRIX65_IDENTITIES MATRIX_COUNTS NO_ADMISSION NO_FAKE_CUTOVER NO_SELF_ACCEPTANCE NO_STUB_GREEN: PLATFORM_TERRITORY PRECEDENCE_LIMIT PRECEDENCE_NOTICE: PRECEDENCE_ORDER PRECEDENCE_PROPOSAL PRECEDENCE_SAFETY PRIORITY_NOT_J05_ADMISSION PRODUCT_AUTHORITY PROTECTED_WITNESS_OMITTED P_ALIAS: REGULAR_PATH: ROW_EVIDENCE: ROW_GATES: ROW_OVERLAP: ROW_QUALIFIED_OWNERS: ROW_REQUIRED_GATE: ROW_STATUS: ROW_TRACEABILITY: SAFE_OFFER SCHEMA_CONST: SCHEMA_DIALECT SCHEMA_DUPLICATE: SCHEMA_ENUM: SCHEMA_MAX_ITEMS: SCHEMA_MIN_ITEMS: SCHEMA_MIN_LENGTH: SCHEMA_REQUIRED: SCHEMA_TYPE: SCHEMA_UNKNOWN_KEY: SCHEMA_UNSUPPORTED: SOURCE_ABSENT: SOURCE_IDENTITY: SOURCE_MATURITY: SOURCE_MODE: SOURCE_PATH SOURCE_SHA256: UNTRACKED_SCOPE: WORKING_SCOPE: ZERO_SPEND '
-RELEASE26_CONSUMER_SHA256 = 'c7015c8ab8f79022a185982e95ca26619f690c2b9595f7ec7661233d6c3be80f'
+RELEASE26_CONSUMER_SHA256 = '8429fbd1f200b6d63064d524675c81d021f77228cfb232e8168df49ea88ff678'
 RELEASE26_WORKFLOW_SHA256 = 'f13bb14e13bc39b44415da86f3c864903a64af03ec7dd2677defa65b07adaa27'
+RELEASE26_PREVIOUS_GOVERNANCE = {'commit': 'ac01ec59bc8709e5ba629be5f95eecbfa5cfcb77', 'tree': 'afbe0409af0f6c20b6e8c6ffac28e8a50aecc63c', 'parent': '2df0e651bdb76b996674abaad3fe90d87dd86681', 'parentTree': '2f006cccbc71b82f8cbb09fbf28b1ed0a4654724', 'files': {'.github/workflows/security-candidate22.yml': {'mode': '100644', 'blob': 'c5221b789117dcb9ed4799896bf5ab76e3cb5ed8', 'sha256': 'f13bb14e13bc39b44415da86f3c864903a64af03ec7dd2677defa65b07adaa27'}, 'scripts/release/full-app-j01/check.py': {'mode': '100644', 'blob': '304a82c74117ce80842a61338ae0283d00830411', 'sha256': 'b10b056068a236bd608b3df12bffe8acf1a3a2b6f0bca0baafb9a4d5b4d060e5'}, 'scripts/release/full-app-j01/source_consumer26.test.py': {'mode': '100644', 'blob': '8f11f4e668467d5faaa6a1f00be68ba63130b144', 'sha256': 'c7015c8ab8f79022a185982e95ca26619f690c2b9595f7ec7661233d6c3be80f'}}}
 
 
 def name26(path, identities):
@@ -5035,7 +5036,7 @@ def validate26_checker(raw):
         'RELEASE26_PLAN_COMMIT', 'RELEASE26_PLAN_SHA256', 'RELEASE26_APPENDIX_SHA256', 'RELEASE26_CANDIDATE', 'RELEASE26_CHECKPOINT',
         'RELEASE26_CHECKPOINT_FILES', 'RELEASE26_WORKLIST', 'RELEASE26_EXISTING_APP', 'RELEASE26_NEW_APP',
         'RELEASE26_OTHER_EXISTING', 'RELEASE26_OTHER_NEW', 'RELEASE26_LEGACY_CODES',
-        'RELEASE26_CONSUMER_SHA256', 'RELEASE26_WORKFLOW_SHA256')
+        'RELEASE26_CONSUMER_SHA256', 'RELEASE26_WORKFLOW_SHA256', 'RELEASE26_PREVIOUS_GOVERNANCE')
     for key in expected_keys:
         require(key in literal and literal[key] == globals()[key], 'R26_AUTHENTIC_FINITE_GRANT')
     require(set(literal) == set(expected_keys), 'R26_GLOBAL_SCOPE')
@@ -5045,9 +5046,19 @@ def validate26_checker(raw):
     require(count == 1 and sha(normalized) == RELEASE26_APPENDIX_SHA256, 'R26_APPENDIX_BYTES')
 
 
-def validate26_diff(raw, read_after, parent=None, working=False):
+def validate26_diff(raw, read_after, parent=None, working=False, at_commit=None):
     parent = RELEASE26_BASE if parent is None else parent
     require(type(raw) is bytes and type(working) is bool, 'R26_DIFF_SHAPE')
+    previous = RELEASE26_PREVIOUS_GOVERNANCE
+    prior = at_commit == previous['commit']
+    if at_commit is not None:
+        require(type(at_commit) is str and re.fullmatch('[0-9a-f]{40}', at_commit), 'R26_PRIOR_CONTEXT')
+    if prior:
+        require(not working and parent in (RELEASE26_BASE, previous['parent']), 'R26_PRIOR_CONTEXT')
+        require(git23('rev-parse', at_commit+'^{tree}').decode().strip() == previous['tree'] and
+            git23('rev-list', '--parents', '-n', '1', at_commit).decode().split() == [at_commit, previous['parent']] and
+            git23('rev-parse', previous['parent']+'^{tree}').decode().strip() == previous['parentTree'], 'R26_PRIOR_IDENTITY')
+        require(raw == git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', parent, at_commit), 'R26_PRIOR_TRANSITION')
     fields = raw.split(b'\0')
     require(fields[-1] == b'' and len(fields) % 2 == 1, 'R26_DIFF_SHAPE')
     existing = RELEASE26_EXISTING_APP | RELEASE26_OTHER_EXISTING
@@ -5071,11 +5082,17 @@ def validate26_diff(raw, read_after, parent=None, working=False):
             (working and newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob), 'R26_AFTER_BLOB')
         if path == RELEASE26_PLAN: scope26_guard(data)
         if path == RELEASE26_CANDIDATE: candidate26_guard(data)
-        if path == 'scripts/release/full-app-j01/check.py': validate26_checker(data)
-        if path == 'scripts/release/full-app-j01/source_consumer26.test.py':
-            require(sha(data) == RELEASE26_CONSUMER_SHA256, 'R26_CONSUMER_IDENTITY')
-        if path == '.github/workflows/security-candidate22.yml':
-            require(sha(data) == RELEASE26_WORKFLOW_SHA256, 'R26_WORKFLOW_IDENTITY')
+        if prior and path in previous['files']:
+            pin = previous['files'][path]
+            require(newmode == pin['mode'] and newblob == pin['blob'] and sha(data) == pin['sha256'] and
+                git23('ls-tree', at_commit, '--', path).decode().strip() == pin['mode']+' blob '+pin['blob']+'\t'+path and
+                data == git23('show', at_commit+':'+path), 'R26_PRIOR_BLOB')
+        else:
+            if path == 'scripts/release/full-app-j01/check.py': validate26_checker(data)
+            if path == 'scripts/release/full-app-j01/source_consumer26.test.py':
+                require(sha(data) == RELEASE26_CONSUMER_SHA256, 'R26_CONSUMER_IDENTITY')
+            if path == '.github/workflows/security-candidate22.yml':
+                require(sha(data) == RELEASE26_WORKFLOW_SHA256, 'R26_WORKFLOW_IDENTITY')
     return seen
 
 
@@ -5110,7 +5127,12 @@ def source26_endpoint():
         ci_sha = os.environ.get('GITHUB_SHA')
         require(type(ci_sha) is str and re.fullmatch('[0-9a-f]{40}', ci_sha), 'R26_CI_CONTEXT')
         if ci_sha not in (head, endpoint):
-            require(pr.get('merge_commit_sha') == ci_sha and
+            snapshot = pr.get('merge_commit_sha')
+            require(snapshot is None or type(snapshot) is str and re.fullmatch('[0-9a-f]{40}', snapshot), 'R26_CI_MERGE_SNAPSHOT_SCHEMA')
+            # The event's asynchronously computed merge snapshot is advisory.
+            # GITHUB_SHA names the fetched service test object; authenticate
+            # its actual parents/tree against the exact event base/head.
+            require(
                 git23('rev-list', '--parents', '-n', '1', ci_sha).decode().split() == [ci_sha, RELEASE26_BASE, endpoint] and
                 git23('rev-parse', ci_sha+'^{tree}') == git23('rev-parse', endpoint+'^{tree}'), 'R26_CI_TEST_MERGE_IDENTITY')
         if len(parents) == 3:
@@ -5176,9 +5198,9 @@ def source26_history():
         require(phase != 'TAIL', 'R26_AFTER_EVIDENCE_TAIL')
         require(git23('rev-list', '--parents', '-n', '1', commit).decode().split() == [commit, previous], 'R26_LINEAR_HISTORY')
         paths = validate26_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', previous, commit),
-            lambda path: git23('show', commit+':'+path), previous)
+            lambda path: git23('show', commit+':'+path), previous, at_commit=commit)
         validate26_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE26_BASE, commit),
-            lambda path: git23('show', commit+':'+path))
+            lambda path: git23('show', commit+':'+path), at_commit=commit)
         if index == 0:
             require(paths == {RELEASE26_PLAN}, 'R26_PLAN_FIRST')
         else:
@@ -5484,7 +5506,8 @@ def validate26(bundle=BUNDLE):
             'R26_UNTRACKED_SCOPE', 'R26_IGNORED_SOURCE', 'R26_PREMATURE_FREEZE_OR_EVIDENCE',
             'R26_FROZEN_CHECKOUT_DIRTY', 'R26_WORKING_BLOB', 'R26_FINAL_SNAPSHOT',
             'R26_CONSUMER_IDENTITY', 'R26_WORKFLOW_IDENTITY', 'R26_CI_TEST_MERGE_IDENTITY',
-            'R26_FSCK_CONFIG', 'R26_OBJECT_HASH'}
+            'R26_FSCK_CONFIG', 'R26_OBJECT_HASH', 'R26_CI_MERGE_SNAPSHOT_SCHEMA',
+            'R26_PRIOR_CONTEXT', 'R26_PRIOR_IDENTITY', 'R26_PRIOR_TRANSITION', 'R26_PRIOR_BLOB'}
         if code in known: raise ValueError(code) from None
         legacy = set(RELEASE26_LEGACY_CODES.split())
         prefix = code.split(':', 1)[0]+':' if code is not None and ':' in code else code
