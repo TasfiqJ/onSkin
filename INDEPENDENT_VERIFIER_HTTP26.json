@@ -1,0 +1,22 @@
+{
+  "name": "verify_return26.py",
+  "requestedURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/verify_return26.py",
+  "expectedBytes": null,
+  "expectedSHA256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+  "networkMode": "NEW_HTTPS_REQUEST_NO_LOCAL_ZIP_OR_COPY",
+  "startedAtUTC": "2026-10-29T16:59:01.171063+00:00",
+  "httpStatus": 200,
+  "finalURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/verify_return26.py",
+  "headers": {
+    "Content-Length": "67840",
+    "Content-Type": "text/plain; charset=utf-8",
+    "ETag": "\"45a472ba846d88476fe34ce43ac9b6aa9415fdee323523a6c7591aa32aa7f145\"",
+    "Date": "Thu, 29 Oct 2026 16:59:01 GMT",
+    "X-Cache": "MISS"
+  },
+  "actualBytes": 67840,
+  "actualSHA256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+  "regularSingleLink": true,
+  "status": "AUTHENTICATED_ACTUAL_PUBLISHED_BYTES",
+  "elapsedSeconds": 0.21900000001187436
+}

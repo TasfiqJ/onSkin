@@ -1,0 +1,39 @@
+{
+  "status": "ACTUAL_PUBLISHED_HTTP_BYTES_EXTERNALLY_HASH_AUTHENTICATED",
+  "artifactCommit": "91e641cbf5d6ec73015445905e4027480ae4caf7",
+  "observedAtUTC": "2026-10-29T16:59:02.489533+00:00",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+      "httpStatus": 200,
+      "contentType": "application/zip",
+      "contentLength": "11324492",
+      "etag": "\"fa05b1abeda679a8fb62d04734e99bd37a420f44f6905cc9866ac28cdbe8ca86\"",
+      "bytes": 11324492,
+      "sha256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+      "elapsedSeconds": 0.263674259185791
+    },
+    {
+      "url": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/manifest.json",
+      "httpStatus": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "contentLength": "26228",
+      "etag": "\"061431bee7a2ab74bbd48a0e3e7dac98fd5867d3b442160d87d818e9c82b2ad4\"",
+      "bytes": 26228,
+      "sha256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+      "elapsedSeconds": 0.04551267623901367
+    },
+    {
+      "url": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/verify_return26.py",
+      "httpStatus": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "contentLength": "67840",
+      "etag": "\"45a472ba846d88476fe34ce43ac9b6aa9415fdee323523a6c7591aa32aa7f145\"",
+      "bytes": 67840,
+      "sha256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+      "elapsedSeconds": 0.05801105499267578
+    }
+  ],
+  "acceptanceGranted": false,
+  "release": "NO_GO"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+  "requestedURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+  "expectedBytes": 11324492,
+  "expectedSHA256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+  "networkMode": "NEW_HTTPS_REQUEST_NO_LOCAL_ZIP_OR_COPY",
+  "startedAtUTC": "2026-10-29T16:59:01.168564+00:00",
+  "httpStatus": 200,
+  "finalURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+  "headers": {
+    "Content-Length": "11324492",
+    "Content-Type": "application/zip",
+    "ETag": "\"fa05b1abeda679a8fb62d04734e99bd37a420f44f6905cc9866ac28cdbe8ca86\"",
+    "Date": "Thu, 29 Oct 2026 16:59:01 GMT",
+    "X-Cache": "MISS"
+  },
+  "actualBytes": 11324492,
+  "actualSHA256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+  "regularSingleLink": true,
+  "status": "AUTHENTICATED_ACTUAL_PUBLISHED_BYTES",
+  "elapsedSeconds": 0.5
+}

@@ -1,0 +1,56 @@
+{
+  "exit": 0,
+  "argv": [
+    "C:\\Python39\\python.exe",
+    "-I",
+    "-B",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign26-run-1b46eb3809914b21a97234dcffb185dc\\packaging26\\public-download26-root\\verify_return26.py",
+    "--archive",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign26-run-1b46eb3809914b21a97234dcffb185dc\\packaging26\\public-download26-root\\onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+    "--expected-manifest-sha256",
+    "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+    "--expected-verifier-sha256",
+    "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+    "--git-root",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\c26-final-a-8c02r2",
+    "--expected-head",
+    "8c02a02afd7f2e9775dcc512c800d4f71f733234",
+    "--expected-tree",
+    "ff0f76d11fa7775e27732f54ce7fdfbd51c8c676"
+  ],
+  "elapsedSeconds": 37.018022298812866,
+  "result": {
+    "acceptanceGranted": false,
+    "checkpointManifestSHA256": "6834657ba95846baa1178aba387a226ebc04c07b56e8194be4e30c38c0f20e3f",
+    "filesIncludingManifest": 145,
+    "git": {
+      "evidenceTail": true,
+      "head": "8c02a02afd7f2e9775dcc512c800d4f71f733234",
+      "ignoredGeneratedNodesExcludedFromSourceEvidence": 2,
+      "metadataFiles": 23513,
+      "qualification": "FINAL_SOURCE_IDENTITY_AND_SCOPE_NOT_ACCEPTANCE",
+      "trackedWorkingBlobsHashedLocally": 23513,
+      "tree": "ff0f76d11fa7775e27732f54ce7fdfbd51c8c676",
+      "workingQualification": "RAW_TRACKED_BLOBS_EXACT"
+    },
+    "gitBundlePrerequisites": "VERIFIED",
+    "gitDeltaSemantics": {
+      "originalObjects": 70,
+      "qualification": "EXACT_PR29_DELTA_OBJECTS_NO_SOURCE_OBJECT_WRITES",
+      "temporaryDeltaBases": 24
+    },
+    "gitHistorySemantics": "VERIFIED_ALL_CHANGED_PATH_HISTORY_MODES_BLOBS_HASHES",
+    "manifestSHA256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+    "payloadFiles": 269,
+    "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+    "release": "NO_GO",
+    "sourceChecks": {
+      "state": "NOT_RUN"
+    },
+    "status": "VERIFIED"
+  },
+  "qualification": "ACTUAL_DOWNLOADED_ZIP_FULL_GIT_RAW_SOURCE_CHECKPOINT_BUNDLE_HISTORY_VERIFICATION;SOURCE_EXECUTIONS_SEPARATELY_PROVED_BY_TWO_FRESH_CLONES",
+  "extraSourceTestExecution": "NOT_RUN_IN_THIS_INVOCATION_NO_CACHED_SUBSTITUTE",
+  "acceptanceGranted": false,
+  "release": "NO_GO"
+}

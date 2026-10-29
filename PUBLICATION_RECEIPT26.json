@@ -1,0 +1,89 @@
+{
+  "status": "PASS_ACTUAL_PUBLISHED_DOWNLOADS_AND_RETURN_GIT_SEMANTICS",
+  "artifactCommitContainingImmutableZIP": "91e641cbf5d6ec73015445905e4027480ae4caf7",
+  "zipURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+  "archiveBytes": 11324492,
+  "archiveSHA256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+  "manifestSHA256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+  "verifierSHA256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+  "outerFiles": 145,
+  "checkpointPayloadFiles": 269,
+  "actualOuterArtifactExits": [
+    0,
+    1,
+    0
+  ],
+  "firstOuterRefusal": "ZIP_READ_INVALID",
+  "actualIndependentHTTPDownloadedArtifactVerification": {
+    "exit": 0,
+    "status": "VERIFIED",
+    "sourceChecks": "NOT_RUN_ARTIFACT_ONLY"
+  },
+  "actualRootHTTPDownloadedFullGitVerification": {
+    "exit": 0,
+    "status": "VERIFIED",
+    "rawTrackedBlobs": 23513,
+    "deltaObjects": 70,
+    "temporaryDeltaBases": 24,
+    "bundlePrerequisite": "52a3d01ebb36a6845d0ac21935ad35520732633f",
+    "changedPathModeBlobHistory": "VERIFIED",
+    "extraSourceExecutions": "NOT_RUN_IN_THIS_INVOCATION;SEPARATELY_EXECUTED_IN_TWO_FRESH_COMPLETE_CLONES"
+  },
+  "sourceHead": "8c02a02afd7f2e9775dcc512c800d4f71f733234",
+  "sourceTree": "ff0f76d11fa7775e27732f54ce7fdfbd51c8c676",
+  "sealedZIPModifiedAfterPublication": false,
+  "sourceModifiedAfterEvidenceTail": false,
+  "files": {
+    "ROOT_PUBLISHED_DOWNLOAD26.json": {
+      "bytes": 1784,
+      "sha256": "4bafcbe1c8aa33f8764ccbbdb6a7faf6fe1a1ed500b56db9990e8d61d578ace1"
+    },
+    "ROOT_PUBLISHED_FULL_GIT26.json": {
+      "bytes": 2510,
+      "sha256": "4cc3c581dd746f4e9b06f7c4afa78377c32d256af094b24570f9ad0844666a2f"
+    },
+    "ROOT_PUBLISHED_FULL_GIT26.stdout.log": {
+      "bytes": 1036,
+      "sha256": "3e544cec4545b03640c7f0d176bfe9e3ea6f2be76a65df98293866b5be183353"
+    },
+    "ROOT_PUBLISHED_FULL_GIT26.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "INDEPENDENT_PUBLISHED_ARTIFACT_ONLY_PROOF26.json": {
+      "bytes": 3901,
+      "sha256": "c16bae6ab6d07e193de2c6db45b4dfe496c545f5361f6d81e7536bd6e976771f"
+    },
+    "INDEPENDENT_PUBLISHED_ARTIFACT_ONLY_PROOF26.initial-wrapper-schema.json": {
+      "bytes": 2838,
+      "sha256": "424c2ed3e22e291e78d7b5247a3724c28bfa5d06602aca6dd3cdf295c514c3a9"
+    },
+    "INDEPENDENT_HTTP_AUTHENTICATION26.json": {
+      "bytes": 4056,
+      "sha256": "e63239f86ea26a8bc72bca0c38ff8c020dd6684c83f495f95d7bbbd2177ba2f2"
+    },
+    "INDEPENDENT_ARTIFACT_VERIFIER26.stdout.log": {
+      "bytes": 569,
+      "sha256": "f66abc8654cea6addce6f149bdf674b5dccb96b6d0a21d4fecd8b373a8c43e6e"
+    },
+    "INDEPENDENT_ARTIFACT_VERIFIER26.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "INDEPENDENT_ZIP_HTTP26.json": {
+      "bytes": 1174,
+      "sha256": "ef9355f790839dc9653d952e7ae97cbdd065fff145262a90b05cfe0755af768e"
+    },
+    "INDEPENDENT_MANIFEST_HTTP26.json": {
+      "bytes": 1028,
+      "sha256": "b4f4847da5ecc14032636b7e6c5c23313892c6e324fecb0304fe30ea914285ea"
+    },
+    "INDEPENDENT_VERIFIER_HTTP26.json": {
+      "bytes": 1043,
+      "sha256": "43183ad70e08c278df3ec05d8118b6520c20a86395f7d5fbdd4af819ea39035d"
+    }
+  },
+  "acceptanceGranted": false,
+  "sourceAcceptance": "SUBMITTED_REVIEW_REQUIRED",
+  "release": "NO_GO"
+}

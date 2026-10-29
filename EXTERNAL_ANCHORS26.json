@@ -17,15 +17,18 @@
   "archive": {
     "filename": "onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
     "bytes": 11324492,
-    "sha256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a"
+    "sha256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+    "url": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip"
   },
   "manifest": {
     "filename": "manifest.json",
-    "sha256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004"
+    "sha256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+    "url": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/manifest.json"
   },
   "verifier": {
     "filename": "verify_return26.py",
-    "sha256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1"
+    "sha256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+    "url": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/verify_return26.py"
   },
   "checkpointManifestSHA256": "6834657ba95846baa1178aba387a226ebc04c07b56e8194be4e30c38c0f20e3f",
   "checkpointVerifierSHA256": "b648abc36e6ce73b3205dc9ba056fddbab0580c544f694ee6bbfc6110cf1ac2c",
@@ -35,8 +38,22 @@
     0
   ],
   "actualOuterFirstRefusal": "ZIP_READ_INVALID",
-  "publishedDownloadProof": "NOT_RUN_AT_INITIAL_PUBLICATION_SEE_LATER_EXTERNAL_ANNEX",
+  "publishedDownloadProof": {
+    "status": "PASS_TWO_FRESH_HTTP_DOWNLOADS_AND_ACTUAL_DOWNLOADED_VERIFIER_EXECUTIONS",
+    "rootFullGitReceipt": "ROOT_PUBLISHED_FULL_GIT26.json",
+    "independentArtifactOnlyReceipt": "INDEPENDENT_PUBLISHED_ARTIFACT_ONLY_PROOF26.json",
+    "independentReceiptSHA256": "c16bae6ab6d07e193de2c6db45b4dfe496c545f5361f6d81e7536bd6e976771f",
+    "publicationReceipt": "PUBLICATION_RECEIPT26.json",
+    "publicationReceiptSHA256": "5860ed923d9376d1e228ec32581040e514cd310a5f439501a72be4e9c6e8d3f0",
+    "sourceExecutions": "SEPARATELY_EXECUTED_IN_TWO_FRESH_COMPLETE_FINAL_CLONES;NOT_REPEATED_IN_DOWNLOADED_OUTER_INVOCATIONS"
+  },
   "sourceAcceptance": "REQUIRES_INDEPENDENT_BRAIN_REVIEW",
   "windowsHistoricalReplay": "OPEN_REQUIRED_R26_REPLAY_CHANGED_TWICE",
-  "qualifiedGates": "CLOSED_NO_GO"
+  "qualifiedGates": "CLOSED_NO_GO",
+  "artifactCommitContainingImmutableZIP": "91e641cbf5d6ec73015445905e4027480ae4caf7",
+  "externalCompleteReport": {
+    "filename": "FINAL_REPORT_EXTERNAL26.md",
+    "bytes": 59747,
+    "sha256": "a9c0bf767ef2b91cfd64e9ef020648fae8fedd0bcdcad49753395e201a63a6be"
+  }
 }

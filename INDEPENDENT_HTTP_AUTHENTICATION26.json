@@ -1,0 +1,78 @@
+{
+  "status": "ALL_THREE_DOWNLOADED_AND_AUTHENTICATED_BEFORE_EXECUTION",
+  "artifactCommit": "91e641cbf5d6ec73015445905e4027480ae4caf7",
+  "folder": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign26-run-1b46eb3809914b21a97234dcffb185dc\\public-download26-independent\\download-2e37d74fab1e41588d3b77647cf9b00c",
+  "files": [
+    {
+      "name": "onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+      "requestedURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+      "expectedBytes": 11324492,
+      "expectedSHA256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+      "networkMode": "NEW_HTTPS_REQUEST_NO_LOCAL_ZIP_OR_COPY",
+      "startedAtUTC": "2026-10-29T16:59:01.168564+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+      "headers": {
+        "Content-Length": "11324492",
+        "Content-Type": "application/zip",
+        "ETag": "\"fa05b1abeda679a8fb62d04734e99bd37a420f44f6905cc9866ac28cdbe8ca86\"",
+        "Date": "Thu, 29 Oct 2026 16:59:01 GMT",
+        "X-Cache": "MISS"
+      },
+      "actualBytes": 11324492,
+      "actualSHA256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a",
+      "regularSingleLink": true,
+      "status": "AUTHENTICATED_ACTUAL_PUBLISHED_BYTES",
+      "elapsedSeconds": 0.5
+    },
+    {
+      "name": "manifest.json",
+      "requestedURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/manifest.json",
+      "expectedBytes": null,
+      "expectedSHA256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+      "networkMode": "NEW_HTTPS_REQUEST_NO_LOCAL_ZIP_OR_COPY",
+      "startedAtUTC": "2026-10-29T16:59:01.170065+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/manifest.json",
+      "headers": {
+        "Content-Length": "26228",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"061431bee7a2ab74bbd48a0e3e7dac98fd5867d3b442160d87d818e9c82b2ad4\"",
+        "Date": "Thu, 29 Oct 2026 16:59:01 GMT",
+        "X-Cache": "MISS"
+      },
+      "actualBytes": 26228,
+      "actualSHA256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+      "regularSingleLink": true,
+      "status": "AUTHENTICATED_ACTUAL_PUBLISHED_BYTES",
+      "elapsedSeconds": 0.20300000000861473
+    },
+    {
+      "name": "verify_return26.py",
+      "requestedURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/verify_return26.py",
+      "expectedBytes": null,
+      "expectedSHA256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+      "networkMode": "NEW_HTTPS_REQUEST_NO_LOCAL_ZIP_OR_COPY",
+      "startedAtUTC": "2026-10-29T16:59:01.171063+00:00",
+      "httpStatus": 200,
+      "finalURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/91e641cbf5d6ec73015445905e4027480ae4caf7/verify_return26.py",
+      "headers": {
+        "Content-Length": "67840",
+        "Content-Type": "text/plain; charset=utf-8",
+        "ETag": "\"45a472ba846d88476fe34ce43ac9b6aa9415fdee323523a6c7591aa32aa7f145\"",
+        "Date": "Thu, 29 Oct 2026 16:59:01 GMT",
+        "X-Cache": "MISS"
+      },
+      "actualBytes": 67840,
+      "actualSHA256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1",
+      "regularSingleLink": true,
+      "status": "AUTHENTICATED_ACTUAL_PUBLISHED_BYTES",
+      "elapsedSeconds": 0.21900000001187436
+    }
+  ],
+  "verifierExecuted": false,
+  "acceptanceGranted": false,
+  "release": "NO_GO",
+  "sourceWrites": false,
+  "qualification": "FRESH_HTTP_PUBLISHED_BYTES_ONLY_NOT_GIT_OR_SOURCE_EXECUTION"
+}

@@ -1,0 +1,81 @@
+{
+  "status": "PASS_INDEPENDENT_ACTUAL_PUBLISHED_BYTES_ARTIFACT_ONLY_NOT_ACCEPTANCE",
+  "argv": [
+    "C:\\Python39\\python.exe",
+    "-I",
+    "-B",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign26-run-1b46eb3809914b21a97234dcffb185dc\\public-download26-independent\\download-2e37d74fab1e41588d3b77647cf9b00c\\verify_return26.py",
+    "--archive",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign26-run-1b46eb3809914b21a97234dcffb185dc\\public-download26-independent\\download-2e37d74fab1e41588d3b77647cf9b00c\\onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+    "--expected-manifest-sha256",
+    "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+    "--expected-verifier-sha256",
+    "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1"
+  ],
+  "cwd": "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign26-run-1b46eb3809914b21a97234dcffb185dc\\public-download26-independent\\download-2e37d74fab1e41588d3b77647cf9b00c",
+  "exit": 0,
+  "elapsedSeconds": 0.21900000001187436,
+  "observedAtUTC": "2026-10-29T16:59:31.809021+00:00",
+  "inputsAuthenticatedBeforeExecution": {
+    "onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip": {
+      "bytes": 11324492,
+      "sha256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a"
+    },
+    "manifest.json": {
+      "bytes": 26228,
+      "sha256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004"
+    },
+    "verify_return26.py": {
+      "bytes": 67840,
+      "sha256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1"
+    }
+  },
+  "stdoutBytes": 569,
+  "stderrBytes": 0,
+  "stdoutSHA256": "f66abc8654cea6addce6f149bdf674b5dccb96b6d0a21d4fecd8b373a8c43e6e",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifactCommit": "91e641cbf5d6ec73015445905e4027480ae4caf7",
+  "acceptanceGranted": false,
+  "release": "NO_GO",
+  "gitAndSourceInvocationQualification": "NOT_RUN_ARTIFACT_ONLY_NO_GIT_ROOT_NO_EXECUTE_SOURCE_CHECKS",
+  "sourceWrites": false,
+  "result": {
+    "acceptanceGranted": false,
+    "checkpointManifestSHA256": "6834657ba95846baa1178aba387a226ebc04c07b56e8194be4e30c38c0f20e3f",
+    "filesIncludingManifest": 145,
+    "gitBundlePrerequisites": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+    "gitDeltaSemantics": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+    "gitHistorySemantics": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+    "manifestSHA256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004",
+    "payloadFiles": 269,
+    "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+    "release": "NO_GO",
+    "sourceChecks": {
+      "state": "NOT_RUN"
+    },
+    "status": "VERIFIED"
+  },
+  "inputsUnchangedAfterExecution": {
+    "onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip": {
+      "bytes": 11324492,
+      "sha256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a"
+    },
+    "manifest.json": {
+      "bytes": 26228,
+      "sha256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004"
+    },
+    "verify_return26.py": {
+      "bytes": 67840,
+      "sha256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1"
+    }
+  },
+  "wrapperCorrection": {
+    "initialReceipt": "INDEPENDENT_PUBLISHED_ARTIFACT_ONLY_PROOF26.initial-wrapper-schema.json",
+    "initialReceiptSHA256": "424c2ed3e22e291e78d7b5247a3724c28bfa5d06602aca6dd3cdf295c514c3a9",
+    "cause": "OWN_RECEIPT_PARSER_EXPECTED_checkpointPayloadFiles_INSTEAD_OF_ACTUAL_payloadFiles_AND_ABSENT_git_FIELD",
+    "actualDownloadedVerifierHadAlreadyExitedZeroAndReturnedVERIFIED": true,
+    "verificationRerun": false,
+    "correctedValidationFromPreservedActualStdout": true,
+    "validatedAtUTC": "2026-10-29T16:59:56.255076+00:00"
+  }
+}
