@@ -1,4 +1,5 @@
 """Real filesystem and adversarial metadata controls; no historical assertions changed."""
+import ast
 import hashlib
 import importlib.util
 import json
@@ -7,6 +8,8 @@ from pathlib import Path
 import stat
 import sys
 import tempfile
+import subprocess
+import time
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -16,6 +19,73 @@ replay=importlib.util.module_from_spec(spec);spec.loader.exec_module(replay)
 
 def altered(info, **changes):
     return SimpleNamespace(**{**{name:getattr(info,name) for name in dir(info) if name.startswith('st_')},**changes})
+
+
+
+def original_reader_domain27(target, expected):
+    # Only these two unchanged helper ASTs execute. The original consumer/main
+    # is never invoked here; full pinned consumer execution is a separate job.
+    pin = replay.PINNED27[2]
+    script = 'scripts/release/full-app-j01/source_consumer26.test.py'
+    root = Path(replay.__file__).resolve().parents[3]
+    def git(*args):
+        child = subprocess.run(['git', '--no-replace-objects', *args], cwd=root, capture_output=True, timeout=30)
+        assert child.returncode == 0 and len(child.stdout) <= 1024*1024
+        return child.stdout
+    raw = git('show', pin['head']+':'+script)
+    proof = {'helper_only_not_consumer': True,
+        'helper_sha256_match': hashlib.sha256(raw).hexdigest() == pin['consumerSHA256'],
+        'helper_git_blob_match': hashlib.sha1(('blob '+str(len(raw))+'\0').encode()+raw).hexdigest() == pin['consumerBlob'],
+        'helper_git_mode_match': git('ls-tree', pin['head'], '--', script).decode().strip() == '100644 blob '+pin['consumerBlob']+'\t'+script,
+        'helper_pinned_tree_match': git('rev-parse', pin['head']+'^{tree}').decode().strip() == pin['tree']}
+    assert all(proof.values())
+    nodes = [node for node in ast.parse(raw).body if isinstance(node, ast.FunctionDef) and node.name in ('require26', 'bytes26')]
+    assert len(nodes) == 2 and {node.name for node in nodes} == {'require26', 'bytes26'} and all(not node.decorator_list for node in nodes)
+    namespace = dict(Path=Path, os=os, stat=stat)
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), '<authenticated-original-reader-helpers>', 'exec'), namespace)
+    proof['unchanged_original_helper_asts'] = True
+    # Finish all setup before measurement. This leaves bytes unchanged and gives
+    # Windows creation/change metadata an opportunity to represent distinct times.
+    setup = target.lstat(); time.sleep(0.02)
+    os.utime(target, ns=(setup.st_atime_ns, setup.st_mtime_ns+1000000))
+    before = target.lstat()
+    fields = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns', 'st_birthtime_ns')
+    with target.open('rb') as stream:
+        opened = os.fstat(stream.fileno())
+        observed = stream.read(len(expected)+1)
+        read_finished = os.fstat(stream.fileno())
+        after_read = target.lstat()
+        original_returned = original_refused = False
+        try:
+            original_returned = namespace['bytes26'](target) == expected
+        except ValueError as error:
+            assert error.args == ('R26_REPLAY_CHANGED',)
+            original_refused = True
+        current_returned = replay.bytes27(target) == expected
+        finished = os.fstat(stream.fileno())
+        after = target.lstat()
+    assert replay.same27(before, after_read) and replay.same27(before, after)
+    assert replay.same27(opened, read_finished) and replay.same27(opened, finished)
+    assert observed == expected and current_returned and replay.bytes27(target) == expected
+    assert replay.same27(after, target.lstat())
+    for field in fields:
+        available = all(hasattr(info, field) for info in (before, after, opened, finished))
+        proof[field+'_available'] = available
+        proof['path_before_after_'+field+'_equal'] = available and getattr(before, field) == getattr(after, field)
+        proof['handle_before_after_'+field+'_equal'] = available and getattr(opened, field) == getattr(finished, field)
+        proof['path_handle_before_'+field+'_equal'] = available and getattr(before, field) == getattr(opened, field)
+        proof['path_handle_after_'+field+'_equal'] = available and getattr(after, field) == getattr(finished, field)
+    proof['regular_type_equal'] = stat.S_ISREG(before.st_mode) and stat.S_ISREG(opened.st_mode)
+    proof['execute_bits_equal'] = before.st_mode & 0o111 == opened.st_mode & 0o111
+    proof['nonexecute_mode_equal'] = before.st_mode & ~0o111 == opened.st_mode & ~0o111
+    stamp_fields = ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+    compatible = all(getattr(before, field) == getattr(opened, field) == getattr(finished, field) == getattr(after, field) for field in stamp_fields)
+    assert original_returned == compatible and original_refused == (not compatible)
+    proof.update(original_stamp_compatible=compatible, original_helper_returned_expected_bytes=original_returned,
+        original_helper_refused_R26_REPLAY_CHANGED=original_refused, current_reader_returned_expected_bytes=current_returned,
+        fixture_bytes_unchanged=True, path_metadata_stable_excluding_only_atime=True, handle_metadata_stable_excluding_only_atime=True)
+    assert all(type(value) is bool for value in proof.values())
+    print(json.dumps(proof, sort_keys=True), flush=True)
 
 
 def main():
@@ -42,6 +112,7 @@ def main():
         target.write_bytes(original)
         def equal_read(): assert replay.bytes27(target)==original
         case('unchanged-real-filesystem',equal_read)
+        case('authenticated-original-helper-domain-observation',lambda:original_reader_domain27(target,original))
         for suffix in ('.exe','.com','.cmd','.bat','.txt','.py','.dll','.ps1'):
             path=root/('mode'+suffix);path.write_bytes(original)
             case('unchanged-mode'+suffix,lambda p=path: replay.require27(replay.bytes27(p)==original,'R27_TEST'))

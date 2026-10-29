@@ -1,4 +1,4 @@
-"""Release26 refusal controls. Synthetic controls remain separate from authenticated full-checkout historical replay."""
+"""Release27 refusal controls. Synthetic controls remain separate from authenticated full-checkout historical replay."""
 import argparse
 import ast
 import copy
@@ -213,6 +213,29 @@ def main():
     assert 'matrix:\n        os: [ubuntu-latest, windows-latest]' in workflow and 'permissions:\n  contents: read' in workflow
     assert 'python -B scripts/security22/run.py --output-dir ' in workflow and 'set -o pipefail' in workflow
     positive+=1
+    # Published f20a58c is immutable historical data only. It cannot replace the
+    # active/staged checker or consumer after this narrowly scoped CI repair.
+    prior=check.RELEASE27_PREVIOUS_GOVERNANCE
+    prior_raw=check.git23('diff','--raw','--no-abbrev','--no-renames','-z',prior['parent'],prior['commit'])
+    old_read=lambda path:check.git23('show',prior['commit']+':'+path)
+    expect('authentic-published-C27-prior-transition-only',lambda:check.validate27_diff(prior_raw,old_read,prior['parent'],at_commit=prior['commit']),success=True)
+    cumulative=check.git23('diff','--raw','--no-abbrev','--no-renames','-z',check.RELEASE27_BASE,prior['commit'])
+    expect('authentic-published-C27-prior-cumulative-only',lambda:check.validate27_diff(cumulative,old_read,at_commit=prior['commit']),success=True)
+    expect('prior-checker-cannot-execute-as-current',lambda:check.validate27_checker(old_read('scripts/release/full-app-j01/check.py')))
+    expect('prior-transition-cannot-be-current-or-staged',lambda:check.validate27_diff(prior_raw,old_read,prior['parent']))
+    expect('prior-transition-cannot-be-working',lambda:check.validate27_diff(prior_raw,old_read,prior['parent'],working=True,at_commit=prior['commit']),'R27_PRIOR_CONTEXT')
+    expect('prior-transition-wrong-parent',lambda:check.validate27_diff(prior_raw,old_read,'0'*40,at_commit=prior['commit']),'R27_PRIOR_CONTEXT')
+    expect('prior-blobs-cannot-use-substituted-commit',lambda:check.validate27_diff(prior_raw,old_read,prior['parent'],at_commit=prior['parent']))
+    expect('prior-transition-raw-byte-corruption',lambda:check.validate27_diff(prior_raw+b'\0',old_read,prior['parent'],at_commit=prior['commit']),'R27_PRIOR_TRANSITION')
+    def corrupted_prior(path):
+        raw=old_read(path)
+        return raw+b'\n' if path=='scripts/release/full-app-j01/source_consumer27.test.py' else raw
+    expect('prior-consumer-raw-byte-corruption',lambda:check.validate27_diff(prior_raw,corrupted_prior,prior['parent'],at_commit=prior['commit']),'R27_AFTER_BLOB')
+    with patch.dict(prior,{'tree':'0'*40}):
+        expect('prior-tree-identity-refuted',lambda:check.validate27_diff(prior_raw,old_read,prior['parent'],at_commit=prior['commit']),'R27_PRIOR_IDENTITY')
+    with patch.object(check,'source27_endpoint',return_value=prior['commit']):
+        expect('authentic-published-C27-history-metadata-controlled-endpoint',check.source27_history,success=True)
+
     common=Path(check.git23('rev-parse','--git-common-dir').decode().strip())
     common=common if common.is_absolute() else source/common
     temporary_parent=Path(tempfile.gettempdir()).resolve()

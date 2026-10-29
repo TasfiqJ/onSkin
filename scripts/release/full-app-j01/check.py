@@ -5527,7 +5527,7 @@ RELEASE27_INPUT = 'cb1e3106f40b2a81872bdfc0c4f2642a0700d113bbb0a43fd33e8da09fe0d
 RELEASE27_PLAN = 'docs/brain/task-specs/M1X-27/SCOPE_PLAN.md'
 RELEASE27_PLAN_COMMIT = 'b26c229aa140910ac34e1217f7bdad118c191e7f'
 RELEASE27_PLAN_SHA256 = '638e6c931b6effd6a8b93045c650c486d6be5e898a3c7214b673a0d996a8cc1f'
-RELEASE27_APPENDIX_SHA256 = '4f700f0f17a8ee0c9033bd2e3c4790ae3458908cfb2d59f34ddaa6f84bf35921'
+RELEASE27_APPENDIX_SHA256 = 'd471dd670cc5173766a42f0b1ae3431149f5f231ba250e50567c607ee17e0eda'
 RELEASE27_CANDIDATE = 'docs/brain/contracts/M1X-27/source27.v1.json'
 RELEASE27_CHECKPOINT = 'docs/brain/checkpoints/M1-02/FIRST-VALUE-SAFETY-CI-27/'
 RELEASE27_CHECKPOINT_FILES = {'README.md', 'REPORT.md', 'manifest.json', 'payload.zip', 'verify27.py'}
@@ -5537,11 +5537,12 @@ RELEASE27_NEW_APP = {'apps/mobile/src/features/shelf/confirmedDestructiveLease.c
 RELEASE27_OTHER_EXISTING = {'.github/workflows/security-candidate22.yml', 'ONSKIN_BRAIN_HANDOFF.txt', 'docs/USER_FLOW_TREE.md', 'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md', 'scripts/release/full-app-j01/check.py'}
 RELEASE27_OTHER_NEW = {'docs/brain/checkpoints/M1-02/FIRST-VALUE-SAFETY-CI-27/README.md', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-SAFETY-CI-27/REPORT.md', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-SAFETY-CI-27/manifest.json', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-SAFETY-CI-27/payload.zip', 'docs/brain/checkpoints/M1-02/FIRST-VALUE-SAFETY-CI-27/verify27.py', 'docs/brain/contracts/M1X-27/source27.v1.json', 'docs/brain/task-specs/M1X-27/SCOPE_PLAN.md', 'docs/brain/task-specs/M1X-27/TASK.md', 'scripts/release/full-app-j01/replay27.py', 'scripts/release/full-app-j01/replay27.test.py', 'scripts/release/full-app-j01/source_consumer27.test.py'}
 RELEASE27_LEGACY_CODES = 'AUTHENTIC_HISTORY: BASE_BLOB_SHA256: BASE_TREE CONTRACT_BASE CONTRACT_VERSION C_ALIAS: DAG38_EXACT_OWNERS DAG_CYCLE: DAG_EDGE: DAG_GATE: DAG_IDENTITIES DAG_NOT_ISSUANCE: DAG_OPERATIONAL_GATES: DAG_ROW_OWNER: DAG_UNKNOWN_NODE: F09_DIARY F09_NOT_F18 FINITE_IDS: F_ALIAS: GATE_CLOSED: GATE_IDENTITIES GATE_OWNER: HISTORICAL_COUNT: HISTORICAL_DEPS: HISTORICAL_IDENTITIES: HISTORICAL_NODE: HISTORICAL_PROVENANCE: HISTORICAL_RECORD: HISTORICAL_STATUS: HISTORY_AUTHORITY HISTORY_NO_ACCEPTANCE J01_DAG J01_G4_CHANGE_GATE J01_INTAKE J01_NO_CLAIMS J01_SINGLE_SCAN_GATES JSON_DUPLICATE_KEY: JSON_NONFINITE: J_REGISTRY: J_ROW_GATES: LEDGER_CUSTODY LEGACY_CONSUMERS LEGACY_DOC_BYTES: LEGACY_GUARD M103_TO_M2 MATRIX65_IDENTITIES MATRIX_COUNTS NO_ADMISSION NO_FAKE_CUTOVER NO_SELF_ACCEPTANCE NO_STUB_GREEN: PLATFORM_TERRITORY PRECEDENCE_LIMIT PRECEDENCE_NOTICE: PRECEDENCE_ORDER PRECEDENCE_PROPOSAL PRECEDENCE_SAFETY PRIORITY_NOT_J05_ADMISSION PRODUCT_AUTHORITY PROTECTED_WITNESS_OMITTED P_ALIAS: REGULAR_PATH: ROW_EVIDENCE: ROW_GATES: ROW_OVERLAP: ROW_QUALIFIED_OWNERS: ROW_REQUIRED_GATE: ROW_STATUS: ROW_TRACEABILITY: SAFE_OFFER SCHEMA_CONST: SCHEMA_DIALECT SCHEMA_DUPLICATE: SCHEMA_ENUM: SCHEMA_MAX_ITEMS: SCHEMA_MIN_ITEMS: SCHEMA_MIN_LENGTH: SCHEMA_REQUIRED: SCHEMA_TYPE: SCHEMA_UNKNOWN_KEY: SCHEMA_UNSUPPORTED: SOURCE_ABSENT: SOURCE_IDENTITY: SOURCE_MATURITY: SOURCE_MODE: SOURCE_PATH SOURCE_SHA256: UNTRACKED_SCOPE: WORKING_SCOPE: ZERO_SPEND '
-RELEASE27_CONSUMER_SHA256 = '0d36e9ec9832c88bd9b08310882f393d8410090d40a1fae62258b5cf5692baad'
+RELEASE27_CONSUMER_SHA256 = '305f56b9a1bc2a3d29c8ccedd013024cb82cacc7fda823b8083f6a54eee7daec'
 RELEASE27_WORKFLOW_SHA256 = '0fe89dcb0acad723519a018ba04f03dedb06a2b2d87f5ecb2adc5f624c876057'
+RELEASE27_PREVIOUS_GOVERNANCE = {'commit': 'f20a58c09fefb9b9b15d10bc59119462ecdec386', 'tree': '4fdd7eca278a8e9cd963b74ed2b066b848eb6dd3', 'parent': 'b26c229aa140910ac34e1217f7bdad118c191e7f', 'parentTree': '8fcb40f51013292566cfc9b7b705f853eb3a5631', 'files': {'scripts/release/full-app-j01/check.py': {'mode': '100644', 'blob': 'd5f26835659d291815e24cd548ad5def2fe9d735', 'sha256': 'eb779632762ce8fcd6c50870c0940e1e268de45e6cc33908777716cd36fc84cc'}, 'scripts/release/full-app-j01/source_consumer27.test.py': {'mode': '100644', 'blob': '5f7b7d1f4dc10d35df5efdf579b5b322f930bfa1', 'sha256': '0d36e9ec9832c88bd9b08310882f393d8410090d40a1fae62258b5cf5692baad'}, 'scripts/release/full-app-j01/replay27.test.py': {'mode': '100644', 'blob': '42519e855e455be415af98c90d9d7b4e353c024c', 'sha256': '8c9e835888578590d721ba015396112518477e7b6d109020b08b1c66f5f2997d'}}}
 
 RELEASE27_REPLAY_SHA256 = '344c6aea46306943ced4e3afdaa9c7b206b1a2d99d861a8fc1204736ffe97e18'
-RELEASE27_REPLAY_TEST_SHA256 = '8c9e835888578590d721ba015396112518477e7b6d109020b08b1c66f5f2997d'
+RELEASE27_REPLAY_TEST_SHA256 = 'db148996257c296497c1bf2f4aceb9ce24305d18ce30138efef79aa84b8c1ee0'
 
 def name27(path, identities):
     require(type(path) is str and 0 < len(path) <= 4096 and path.isascii() and
@@ -5626,7 +5627,7 @@ def validate27_checker(raw):
         'RELEASE27_PLAN_COMMIT', 'RELEASE27_PLAN_SHA256', 'RELEASE27_APPENDIX_SHA256', 'RELEASE27_CANDIDATE', 'RELEASE27_CHECKPOINT',
         'RELEASE27_CHECKPOINT_FILES', 'RELEASE27_WORKLIST', 'RELEASE27_EXISTING_APP', 'RELEASE27_NEW_APP',
         'RELEASE27_OTHER_EXISTING', 'RELEASE27_OTHER_NEW', 'RELEASE27_LEGACY_CODES',
-        'RELEASE27_CONSUMER_SHA256', 'RELEASE27_WORKFLOW_SHA256', 'RELEASE27_REPLAY_SHA256', 'RELEASE27_REPLAY_TEST_SHA256')
+        'RELEASE27_CONSUMER_SHA256', 'RELEASE27_WORKFLOW_SHA256', 'RELEASE27_PREVIOUS_GOVERNANCE', 'RELEASE27_REPLAY_SHA256', 'RELEASE27_REPLAY_TEST_SHA256')
     for key in expected_keys:
         require(key in literal and literal[key] == globals()[key], 'R27_AUTHENTIC_FINITE_GRANT')
     require(set(literal) == set(expected_keys), 'R27_GLOBAL_SCOPE')
@@ -5639,6 +5640,16 @@ def validate27_checker(raw):
 def validate27_diff(raw, read_after, parent=None, working=False, at_commit=None):
     parent = RELEASE27_BASE if parent is None else parent
     require(type(raw) is bytes and type(working) is bool, 'R27_DIFF_SHAPE')
+    previous = RELEASE27_PREVIOUS_GOVERNANCE
+    prior = at_commit == previous['commit']
+    if at_commit is not None:
+        require(type(at_commit) is str and re.fullmatch('[0-9a-f]{40}', at_commit), 'R27_PRIOR_CONTEXT')
+    if prior:
+        require(not working and parent in (RELEASE27_BASE, previous['parent']), 'R27_PRIOR_CONTEXT')
+        require(git23('rev-parse', at_commit+'^{tree}').decode().strip() == previous['tree'] and
+            git23('rev-list', '--parents', '-n', '1', at_commit).decode().split() == [at_commit, previous['parent']] and
+            git23('rev-parse', previous['parent']+'^{tree}').decode().strip() == previous['parentTree'], 'R27_PRIOR_IDENTITY')
+        require(raw == git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', parent, at_commit), 'R27_PRIOR_TRANSITION')
     fields = raw.split(b'\0')
     require(fields[-1] == b'' and len(fields) % 2 == 1, 'R27_DIFF_SHAPE')
     existing = RELEASE27_EXISTING_APP | RELEASE27_OTHER_EXISTING
@@ -5662,12 +5673,18 @@ def validate27_diff(raw, read_after, parent=None, working=False, at_commit=None)
             (working and newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob), 'R27_AFTER_BLOB')
         if path == RELEASE27_PLAN: scope27_guard(data)
         if path == RELEASE27_CANDIDATE: candidate27_guard(data)
-        if path == 'scripts/release/full-app-j01/check.py': validate27_checker(data)
-        pins = {'scripts/release/full-app-j01/source_consumer27.test.py': RELEASE27_CONSUMER_SHA256,
-            '.github/workflows/security-candidate22.yml': RELEASE27_WORKFLOW_SHA256,
-            'scripts/release/full-app-j01/replay27.py': RELEASE27_REPLAY_SHA256,
-            'scripts/release/full-app-j01/replay27.test.py': RELEASE27_REPLAY_TEST_SHA256}
-        if path in pins: require(sha(data) == pins[path], 'R27_SOURCE_TOOL_IDENTITY')
+        if prior and path in previous['files']:
+            pin = previous['files'][path]
+            require(newmode == pin['mode'] and newblob == pin['blob'] and sha(data) == pin['sha256'] and
+                git23('ls-tree', at_commit, '--', path).decode().strip() == pin['mode']+' blob '+pin['blob']+'\t'+path and
+                data == git23('show', at_commit+':'+path), 'R27_PRIOR_BLOB')
+        else:
+            if path == 'scripts/release/full-app-j01/check.py': validate27_checker(data)
+            pins = {'scripts/release/full-app-j01/source_consumer27.test.py': RELEASE27_CONSUMER_SHA256,
+                '.github/workflows/security-candidate22.yml': RELEASE27_WORKFLOW_SHA256,
+                'scripts/release/full-app-j01/replay27.py': RELEASE27_REPLAY_SHA256,
+                'scripts/release/full-app-j01/replay27.test.py': RELEASE27_REPLAY_TEST_SHA256}
+            if path in pins: require(sha(data) == pins[path], 'R27_SOURCE_TOOL_IDENTITY')
     return seen
 
 
