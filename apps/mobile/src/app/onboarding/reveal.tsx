@@ -8,6 +8,7 @@ import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { AXIS_LABELS, getQuizCompletionState } from '@/features/onboarding/quiz';
 import { recordFirstUsefulInsightAnalytics } from '@/features/routine/activationAnalytics';
 import { routineFirstInsightCopy, routineInsightCount } from '@/features/routine/firstInsight';
+import { planSourceViewState, PlanSourceNotice } from '@/features/routine/PlanSourceNotice';
 import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 
@@ -57,15 +58,17 @@ export default function RevealScreen() {
   const onboarding = useOnboarding();
   const { computeResult, profileResult, quizAnswers } = onboarding;
   const planResult = usePlan();
+  const sourceState = planSourceViewState(planResult);
   const trackedRevealInsight = useRef(false);
   const quizCompletion = useMemo(() => getQuizCompletionState(quizAnswers), [quizAnswers]);
   const result = useMemo(
     () => profileResult ?? (quizCompletion.complete ? computeResult() : null),
     [computeResult, profileResult, quizCompletion.complete],
   );
-  const firstInsight = planResult.data
-    ? routineFirstInsightCopy(planResult.data.plan, planResult.data.isExample)
-    : null;
+  const firstInsight =
+    sourceState === 'ready' && planResult.data
+      ? routineFirstInsightCopy(planResult.data.plan, planResult.data.isExample)
+      : null;
 
   const descriptor = useMemo(() => {
     if (!result) return '';
@@ -77,7 +80,14 @@ export default function RevealScreen() {
   }, [result]);
 
   useEffect(() => {
-    if (!onboarding.isCurrent() || !result || !planResult.data || trackedRevealInsight.current)
+    if (
+      !onboarding.isCurrent() ||
+      !result ||
+      sourceState !== 'ready' ||
+      !planResult.isSourceCurrent() ||
+      !planResult.data ||
+      trackedRevealInsight.current
+    )
       return;
 
     trackedRevealInsight.current = true;
@@ -86,7 +96,7 @@ export default function RevealScreen() {
       isExample: planResult.data.isExample,
       source: 'reveal',
     });
-  }, [onboarding, planResult.data, result]);
+  }, [onboarding, planResult, result, sourceState]);
 
   if (onboarding.privacyStatus !== 'ready') {
     return (
@@ -158,18 +168,31 @@ export default function RevealScreen() {
             ))}
           </View>
 
-          <Card tone="night" className="mt-4">
-            <Text variant="label" tone="inverseMuted" className="font-mono">
-              {(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()}
-            </Text>
-            <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
-              {firstInsight?.title ?? 'Your first routine starts gentle.'}
-            </Text>
-            <Text variant="bodySm" tone="inverseMuted" className="mt-1">
-              {firstInsight?.body ??
-                'Your routine draft keeps missing steps visible. Interaction guidance requires completed independent professional review before it can appear.'}
-            </Text>
-          </Card>
+          {sourceState === 'ready' ? (
+            <Card tone="night" className="mt-4">
+              <Text variant="label" tone="inverseMuted" className="font-mono">
+                {(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()}
+              </Text>
+              <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
+                {firstInsight?.title ?? 'Your first routine starts gentle.'}
+              </Text>
+              <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+                {firstInsight?.body ??
+                  'Your routine draft keeps missing steps visible. Interaction guidance requires completed independent professional review before it can appear.'}
+              </Text>
+            </Card>
+          ) : (
+            <PlanSourceNotice
+              dark
+              loading={sourceState === 'loading'}
+              onRetry={() => {
+                if (onboarding.isCurrent()) void planResult.retry().catch(() => undefined);
+              }}
+              onBack={() => {
+                if (onboarding.isCurrent()) router.replace('/onboarding/products');
+              }}
+            />
+          )}
         </ScrollView>
       </View>
       <View className="pb-4">
@@ -177,6 +200,8 @@ export default function RevealScreen() {
           label="Continue"
           variant="inverse"
           onPress={() => {
+            // Notifications consume no routine result. The independently current
+            // quiz profile can continue while routine guidance stays unavailable.
             if (!onboarding.isCurrent()) return;
             track('screen_viewed', { screen_name: 'reveal' });
             router.push('/onboarding/notifications');

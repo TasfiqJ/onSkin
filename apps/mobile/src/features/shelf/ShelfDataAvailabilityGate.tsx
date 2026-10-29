@@ -1,9 +1,13 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, StateLoading, StateNotice } from '@/components/ui';
 import { colors } from '@/theme/tokens';
+import {
+  activeHealthProcessingLeaseSnapshot,
+  subscribeActiveHealthProcessingLeaseChanges,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import { useShelf } from './useShelf';
 
@@ -14,7 +18,8 @@ export const SHELF_AVAILABILITY_COPY = {
   body: "We couldn't safely read the private Shelf data this screen needs. Layerwell did not reset or remove it. Shelf-based guidance and changes are paused until Layerwell can read it again.",
   retry: 'Try again',
   retrying: 'Trying again...',
-  retryFailed: 'Your private Shelf data is still unavailable. Layerwell did not reset or remove it.',
+  retryFailed:
+    'Your private Shelf data is still unavailable. Layerwell did not reset or remove it.',
 } as const;
 
 export type DataAvailabilityCopy = {
@@ -103,6 +108,8 @@ export type ShelfDataAvailabilityBoundaryProps = {
   children: ReactNode;
   onExit?: () => void;
   exitLabel?: string;
+  /** Only forms with synchronous source/action fences may preserve a mounted draft. */
+  preserveMountedDraft?: boolean;
 };
 
 /** Render Shelf availability from a query already owned by the current route. */
@@ -111,13 +118,24 @@ export function ShelfDataAvailabilityBoundary({
   children,
   onExit,
   exitLabel,
+  preserveMountedDraft = false,
 }: ShelfDataAvailabilityBoundaryProps) {
   const insets = useSafeAreaInsets();
+  const lease = useSyncExternalStore(
+    subscribeActiveHealthProcessingLeaseChanges,
+    activeHealthProcessingLeaseSnapshot,
+    () => null,
+  );
+  const generation = lease?.generation;
+  const ready = !query.isPending && !query.isError && (!preserveMountedDraft || !query.isFetching);
+  const [admittedGeneration, setAdmittedGeneration] = useState(ready ? generation : undefined);
+  if (ready && admittedGeneration !== generation) setAdmittedGeneration(generation);
+  const retain = generation !== undefined && (ready || admittedGeneration === generation);
 
-  if (!query.isPending && !query.isError) return children;
+  if (ready && !preserveMountedDraft) return children;
 
-  if (query.isPending) {
-    return (
+  const recovery =
+    query.isPending || query.isFetching ? (
       <View
         accessibilityLabel={SHELF_AVAILABILITY_COPY.loading}
         accessibilityLiveRegion="polite"
@@ -126,29 +144,42 @@ export function ShelfDataAvailabilityBoundary({
       >
         <StateLoading label={SHELF_AVAILABILITY_COPY.loading} />
       </View>
+    ) : (
+      <ScrollView
+        style={{ flex: 1, backgroundColor: colors.paper }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          paddingHorizontal: 28,
+          paddingTop: insets.top + 32,
+          paddingBottom: insets.bottom + 32,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <ShelfDataUnavailableNotice
+          onRetry={query.refetch}
+          retrying={query.isFetching}
+          onExit={onExit}
+          exitLabel={exitLabel}
+          retryAccessibilityLabel="Retry loading private Shelf data"
+        />
+      </ScrollView>
     );
-  }
-
+  if (!preserveMountedDraft) return recovery;
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.paper }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: 'center',
-        paddingHorizontal: 28,
-        paddingTop: insets.top + 32,
-        paddingBottom: insets.bottom + 32,
-      }}
-      showsVerticalScrollIndicator={false}
-    >
-      <ShelfDataUnavailableNotice
-        onRetry={query.refetch}
-        retrying={query.isFetching}
-        onExit={onExit}
-        exitLabel={exitLabel}
-        retryAccessibilityLabel="Retry loading private Shelf data"
-      />
-    </ScrollView>
+    <View className="flex-1">
+      <View
+        key={generation ?? 'closed'}
+        style={{ flex: 1, display: ready ? 'flex' : 'none' }}
+        pointerEvents={ready ? 'auto' : 'none'}
+        aria-hidden={!ready}
+        accessibilityElementsHidden={!ready}
+        importantForAccessibility={ready ? 'auto' : 'no-hide-descendants'}
+      >
+        {retain ? children : null}
+      </View>
+      {ready ? null : recovery}
+    </View>
   );
 }
 
