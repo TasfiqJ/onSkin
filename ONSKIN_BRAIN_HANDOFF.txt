@@ -1,65 +1,70 @@
-CAMPAIGN25 — SUBMITTED_REVIEW_REQUIRED / NO_GO
-Authority: BRAIN-M1X-REAL-FIRST-VALUE25-SOURCE-CANDIDATE-01
-One source integration owner; one new open draft PR29:
-https://github.com/TasfiqJ/onSkin/pull/29
-Branch: stage/m1-real-first-value25, directly stacked on untouched PR28.
+CAMPAIGN26 â€” SUBMITTED_REVIEW_REQUIRED / NO_GO
+Authority: BRAIN-M1X-FIRST-VALUE-RECOVERY26-REPAIR-01
+Independent Brain retains later source-only acceptance. No self-acceptance.
+USD0. No merges, rebases, force pushes, release promotion or additional PR.
+
+One open draft PR30: https://github.com/TasfiqJ/onSkin/pull/30
+Branch: stage/m1-first-value-recovery26, stacked on unchanged PR29.
+Auto-merge OFF. Maintainer modification OFF.
+Pinned PR29: 52a3d01ebb36a6845d0ac21935ad35520732633f
+Pinned PR29 tree: ef49a81ca814f3d82b8a868e0308b6dda09c9cca
 Pinned PR28: d0ccef65bcbe0c90483e6c0f691ed95f92228c6c
-Pinned tree: 22f91455d651a81296ab8724f9db7cfead65af08
-Untouched PR27: 5976394fd39f41550bde8107b9cc27c758b7ce14
+Pinned PR28 tree: 22f91455d651a81296ab8724f9db7cfead65af08
+External input manifest: 9d87a26cb84ed81c5f0deb950a919ae0899c1f8805ebea7e386eace05a7db112
 
-Immutable first scope commit: f25db3f5c74d0ad3ddd78ece70f79d315ab57662
-Scope plan SHA256: 80c81b9f93b696f3d14bf99689ed9f592b18258fd7a96fe01a88de695033d136
-Frozen substantive runtime: 24b876fe068823c964c6796b0c8bf5a3bf4c090e
-Runtime tree: 00f59923f687c3152cdfc63b2cabf4632e107634
-Sole unchanged-producer worklist child: 165055f1c840821d89df1d7673468c0a19f20185
-Worklist tree: 576ac3809428e551b3821e8ce0d5b2bcb366eeb9
-The current candidate is exactly one evidence-only tail containing this handoff.
-Its final head/tree, external CI and two independent complete clean remote
-checkout verifications are collected after sealing, outside the tail.
-They are NOT_RUN at this seal and are never represented by circular self-hashes.
+Immutable first-child scope: d970311fd0741414f9a96a15afc653f7e1cc39df
+Scope plan SHA256: 6c0f5f6d4f66612551e79216e49b698fe487b9d3cefc0c3f0cf1bb30b9fbd7e7
+Frozen substantive runtime: 436d708ead37fc9bcfd18bce72f0713a605244c3
+Runtime tree: 055c65f8ae3ed1a84ef558f974eee463b6d8c01f
+Sole unchanged-producer worklist child: 3aeafda1d5cf41c053807e9476cac5d43731bdeb
+Worklist tree: c7d9d5f2b60d188b9ab6b0c50349fe5f57daa3a0
+Unchanged strict Phase4 producer ran once from clean committed runtime; exit0.
+This handoff and exactly five checkpoint files constitute one evidence-only tail.
+Its final head/tree, final CI and two independent complete final checkout proofs
+are collected externally after sealing. They are NOT_RUN at this seal.
+Generated GitHub test commits are separate identities, even with equal trees.
 
-Checkpoint: docs/brain/checkpoints/M1-02/FIRST-VALUE-25/
-Manifest SHA256: ada1ced48b5e00472e0207c036e9fbab3d7903b60c94784ece44186188c23d87
-Verifier SHA256: e12a0e3ae733b3c611ce9f6493502e1b454f41b4f3c14868e8a45a76af493a01
-Payload SHA256: b5c550e6915598e514381817504b8db75446fa74e209b5f4deb49db139f3a6f6
-Payload: 1,221 exact regular files, 60,110,269 expanded bytes of sanitized evidence.
-Actual checkpoint current/corrupted/restored artifact verification: 0/1/0.
-It proves authenticated inventory only; source checks are NOT_RUN in that assay.
+Checkpoint: docs/brain/checkpoints/M1-02/FIRST-VALUE-RECOVERY-26/
+Manifest SHA256: 6834657ba95846baa1178aba387a226ebc04c07b56e8194be4e30c38c0f20e3f
+Verifier SHA256: b648abc36e6ce73b3205dc9ba056fddbab0580c544f694ee6bbfc6110cf1ac2c
+Payload SHA256: 730bb141d4837e257396ff12dc7e5b61befa825c74dfffa75d625f0aeca2b1ed
+Actual standalone checkpoint artifact verification: exit0 / VERIFIED5 / artifact integrity only; source checks NOT_RUN
+Artifact integrity does not qualify source, Security or release acceptance.
 
-Repairs inside the five existing app paths: confirmed canonical Shelf save and
-same-grant opening-draft recovery; actual-time opening shortcuts and display;
-truthful Reveal/Recent changes pending/unavailable states and safe continuation.
-Real Query/owner/current-grant/store tests include uncertain retry, duplicate
-Save, revoked storage, owner A/B/A, regrant, stale closure and late-result refusal.
-Forced mobile6,317/operator24 passed with zero task-cache substitutes. Original
-layout15/photos97 and original151/historical09–24 consumers executed unchanged.
-Typecheck/lint and clear-cache unsigned iOS/Android Expo exports passed.
-Strict Phase4 producer and clean --strict --check passed before this sole tail.
+Implemented/proved within finite scope: inert same-grant manual form recovery,
+typed/picker retention, synchronous query/draft/owner/health callback fences,
+retired-session purge, and bounded scrollable product confirmation geometry.
+Real query updates/removal permanently retire an open destructive confirmation;
+Close remains available and current reopening creates fresh options.
+App corpus: mobile6370 (original6317+manual29+detail24), operator24, zero cached
+tasks; forced typecheck/lint, original photo15+97, original151 and all authentic
+historical09-25 consumers passed with their exact platform/fixture qualifications.
+Both clear-cache unsigned Expo exports passed; no signing/native admission.
+Actual Expo web recovery, keyboard/scroll/large-text proofs are sanitized synthetic
+local flows. Requested375x667 measured375x666 due adapter rounding; exact mounted
+geometry is separate. Browser proof is not installed iPhone or VoiceOver proof.
 
-Actual Expo web core daily journey passed at360x640 with measured200% glyphs
-and keyboard pressure;375x667,390x844,430x932 full retained journeys passed.
-The extended360x640200% product-detail Remove action is unreachable: OPEN_REQUIRED
-and outside the committed finite grant. The separate manual route still loses
-uncommitted text and lacks a stale Continue fence: UNAPPLIED/OPEN_REQUIRED.
-The original core05 exact-string assertion fails equally at PR28: OPEN_REQUIRED.
-Existing Pro gating prevented the adaptation browser fault assay: NOT_RUN.
-No claim of full first-value, universal accessibility or professional completion.
+Historical CI routing uses unchanged24 at exact PR28, unchanged25 at exact PR29,
+and26 at exact current source. Genuine fresh historical installs/hooks and full
+original checkers passed independently. Linux and Windows at runtime436d passed
+current26 controls26/198 and full raw23508 source governance. Public components
+executed and remain exit1/candidateReady=false; qualified Security is not green.
+All inherited176 function ASTs and original Security workflow remain unchanged.
 
-Local canonical DB attempt failed before SQL because Docker was unavailable.
-Final-head canonical CI is collected externally; any CI pass grants no DB acceptance.
-No physical iPhone, VoiceOver, signing, real provider, clinical or production proof.
-Professional P01–P06 source/integration and external custody gaps stay explicit.
-The prior Campaign24 supplier binary was independently downloaded and verified;
-its source consistency is not acceptance. No original Security store was copied.
+OPEN_REQUIRED: original core05 exact-call-spelling assertion35/1 on both PR28/29;
+the original test is unchanged. SQL structural evidence is a separate claim.
+OPEN_REQUIRED: later Query/UI retirement does not cancel an already-dispatched,
+explicitly confirmed current private write while health/account remain current.
+Old callbacks cannot initiate writes after retirement. Stronger store/mutation
+commit-fence remediation remains precise UNAPPLIED proposal in REPORT.
+Local canonical DB attempt failed before SQL because Docker engine was unavailable.
+Current final canonical DB/PG15/17 CI must be recorded externally, never assumed.
 
-No source changes after freeze; exactly one worklist child and one evidence tail.
-No later source/evidence commit, merge, rebase, force-push or spend. USD0.
-Maintainer modification and auto-merge OFF. All earlier PRs remain untouched.
-G97 FAIL/NO_GO. DB06/DB08/R2B NOT_ACCEPTED.
-M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED. M2 NOT_AUTHORIZED.
-J01 optical G1/G2/G3/G5 and G4 qualification NOT_ACCEPTED.
-Native/VoiceOver/clinical/legal/licensing/provider/Apple/public release CLOSED.
-First public scope remains all genuine non-Korean F01–F17/F19–F20, all12 consumer
-and6 professional groups, private F09 manual photo history/comparison and exactly
-one independently qualified J01 Visible Pores. F18/J02–J27 including J05 deferred.
-Independent Brain review required. SUBMITTED_REVIEW_REQUIRED. NO SELF-ACCEPTANCE.
+G97 FAIL/NO_GO. DB06/DB08/R2B NOT_ACCEPTED. M1-03 BLOCKED_EXTERNAL_CUSTODY and
+NOT_ACCEPTED. M2 NOT_AUTHORIZED. J01 optical G1/G2/G3/G5 and longitudinal G4
+are not accepted. Installed iPhone, VoiceOver, signing, provider/catalog, paidPro,
+professional/clinical/legal/licensing, Apple and public release remain CLOSED.
+First public iPhone scope remains non-Korean F01-F17/F19-F20, C01-C12, P01-P06,
+private F09 diary/comparison, and exactly independently qualified Korean J01
+Visible Pores. F18 and J02-J27 including J05 remain deferred. Gate owners alone
+qualify their respective reviews; Brain alone makes later source acceptance.
