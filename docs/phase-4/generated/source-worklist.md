@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-10-29T16:06:24.657Z
+Generated: 2026-10-29T19:36:53.162Z
 Status: pass
-Git SHA: 436d708ead37fc9bcfd18bce72f0713a605244c3
+Git SHA: 97bb8341e979e5eb38034419fd0e5a106b794d90
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -539,7 +539,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66906 bytes - sha256 `a83cbda544e062d873a8f3905923e35fca2e72a0213c33b0d6f6d79d8d40ca02`
-- `docs/USER_FLOW_TREE.md` - 527480 bytes - sha256 `f692ab716b1ee6a8b2ec019896e1cec0d4f732c908f2db7412c463b48cc31a98`
+- `docs/USER_FLOW_TREE.md` - 528729 bytes - sha256 `ae7c2ae5b24c566f463d0357499d6c4c72a73743225a73958cb08b8aabed3ace`
 - `apps/mobile/src/app/onboarding/products.tsx` - 22193 bytes - sha256 `b27d66f46bd70674bf9971abd0b8f5def31d52191c1cf14d417899a035c5f113`
 - `apps/mobile/src/app/shelf/[id].tsx` - 53363 bytes - sha256 `5251793878420d1e7837cce6b3cf48ffc20d185277c4c58b1bcf8be5c9296ce5`
 - `apps/mobile/src/app/shelf/opened.tsx` - 21693 bytes - sha256 `3105764a90f0ec7fd3af89bd27669fa48a420a7614be1ad516d85fbc021552bb`
