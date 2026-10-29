@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-REAL-FIRST-VALUE25-SOURCE-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "d0ccef65bcbe0c90483e6c0f691ed95f92228c6c",
+  "tree": "22f91455d651a81296ab8724f9db7cfead65af08",
+  "scopeCommit": "f25db3f5c74d0ad3ddd78ece70f79d315ab57662",
+  "scopePlanSHA256": "80c81b9f93b696f3d14bf99689ed9f592b18258fd7a96fe01a88de695033d136",
+  "inputManifestSHA256": "c539789e768f94fd0e79c6ab97c64dd247b0fbfb0918921f1d77ee3f20e19fc0",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": 29
+}

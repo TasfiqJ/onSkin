@@ -543,7 +543,7 @@ it('does not let a captured backdrop dismiss a successor intake', async () => {
   await act(async () => {
     successor = intake.reset({
       name: 'Successor synthetic product',
-      category: 'moisturiser',
+      category: 'moisturiser_tube',
       addedVia: 'manual',
     });
     staleDismiss();
