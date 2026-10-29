@@ -1,0 +1,28 @@
+{
+  "acceptanceGranted": false,
+  "authority": "BRAIN-M1X-REAL-FIRST-VALUE25-SOURCE-CANDIDATE-01",
+  "checkpointManifestSHA256": "ada1ced48b5e00472e0207c036e9fbab3d7903b60c94784ece44186188c23d87",
+  "checkpointVerifierSHA256": "e12a0e3ae733b3c611ce9f6493502e1b454f41b4f3c14868e8a45a76af493a01",
+  "completeFinalReportSHA256": "2e3be8cdfc72cfeb74ea182886f9e27616f701627cd19516c765fa4db652ad49",
+  "inputManifestSHA256": "c539789e768f94fd0e79c6ab97c64dd247b0fbfb0918921f1d77ee3f20e19fc0",
+  "outerExpandedBytes": 108062025,
+  "outerManifestSHA256": "03b17f0f3743fc1432a740fc7d07fd31d5b249079abcc7331204e912eb926f96",
+  "outerMembers": 121,
+  "outerVerificationSequence": [
+    0,
+    1,
+    0
+  ],
+  "outerVerifierSHA256": "5a936900831f1cee8f413800969b34ca3253f90b585412388cf0bded333b522a",
+  "outerZIPBytes": 86473986,
+  "outerZIPSHA256": "2d12322299762578307c2583e6a92d0be795927377da1cccde140ca77493dcd3",
+  "prerequisite": "d0ccef65bcbe0c90483e6c0f691ed95f92228c6c",
+  "publicZIPIndependentlyDownloadedAndVerified": true,
+  "release": "NO_GO",
+  "schema": 1,
+  "sourceHead": "52a3d01ebb36a6845d0ac21935ad35520732633f",
+  "sourceTree": "ef49a81ca814f3d82b8a868e0308b6dda09c9cca",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "zipCommit": "affc8e491001487de9305a5fd114ab1e2bff54a4",
+  "zipURL": "https://raw.githubusercontent.com/TasfiqJ/onSkin/affc8e491001487de9305a5fd114ab1e2bff54a4/onSkin_Campaign25_Real_First_Value_Integration_Return_2026-10-29.zip"
+}

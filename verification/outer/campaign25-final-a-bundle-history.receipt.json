@@ -1,0 +1,55 @@
+{
+  "label": "campaign25-final-a-bundle-history",
+  "argv": [
+    "python",
+    "-B",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign25-review\\verify_return25.py",
+    "--archive",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_Campaign25_Real_First_Value_Integration_Return_2026-10-29.zip",
+    "--expected-manifest-sha256",
+    "03b17f0f3743fc1432a740fc7d07fd31d5b249079abcc7331204e912eb926f96",
+    "--expected-verifier-sha256",
+    "5a936900831f1cee8f413800969b34ca3253f90b585412388cf0bded333b522a",
+    "--git-root",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign25-final-a",
+    "--expected-head",
+    "52a3d01ebb36a6845d0ac21935ad35520732633f",
+    "--expected-tree",
+    "ef49a81ca814f3d82b8a868e0308b6dda09c9cca"
+  ],
+  "startedUTC": "2026-10-29T06:17:35.259053+00:00",
+  "seconds": 35.583,
+  "exit": 0,
+  "stdoutSHA256": "cb8434ee22c9c39fe860ee349402b2942789ffb6e15efc0f01803527d2719a61",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "result": {
+    "acceptanceGranted": false,
+    "checkpointManifestSHA256": "ada1ced48b5e00472e0207c036e9fbab3d7903b60c94784ece44186188c23d87",
+    "filesIncludingManifest": 121,
+    "git": {
+      "evidenceTail": true,
+      "head": "52a3d01ebb36a6845d0ac21935ad35520732633f",
+      "ignoredGeneratedNodesExcludedFromSourceEvidence": 2,
+      "metadataFiles": 23501,
+      "qualification": "FINAL_SOURCE_IDENTITY_AND_SCOPE_NOT_ACCEPTANCE",
+      "trackedWorkingBlobsHashedLocally": 23501,
+      "tree": "ef49a81ca814f3d82b8a868e0308b6dda09c9cca",
+      "workingQualification": "RAW_TRACKED_BLOBS_EXACT"
+    },
+    "gitBundlePrerequisites": "VERIFIED",
+    "gitDeltaSemantics": {
+      "originalObjects": 72,
+      "qualification": "EXACT_PR28_DELTA_OBJECTS_NO_SOURCE_OBJECT_WRITES",
+      "temporaryDeltaBases": 27
+    },
+    "gitHistorySemantics": "VERIFIED_ALL_CHANGED_PATH_HISTORY_MODES_BLOBS_HASHES",
+    "manifestSHA256": "03b17f0f3743fc1432a740fc7d07fd31d5b249079abcc7331204e912eb926f96",
+    "payloadFiles": 1221,
+    "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+    "release": "NO_GO",
+    "sourceChecks": {
+      "state": "NOT_RUN"
+    },
+    "status": "VERIFIED"
+  }
+}

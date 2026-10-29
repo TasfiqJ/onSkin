@@ -1,0 +1,26 @@
+{
+  "label": "corrupted",
+  "argv": [
+    "python",
+    "-B",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign25-review\\verify_return25.py",
+    "--archive",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_Campaign25_Real_First_Value_Integration_Return_2026-10-29.zip",
+    "--expected-manifest-sha256",
+    "03b17f0f3743fc1432a740fc7d07fd31d5b249079abcc7331204e912eb926f96",
+    "--expected-verifier-sha256",
+    "5a936900831f1cee8f413800969b34ca3253f90b585412388cf0bded333b522a"
+  ],
+  "startedUTC": "2026-10-29T06:17:33.327337+00:00",
+  "seconds": 0.503,
+  "exit": 1,
+  "stdoutSHA256": "3c060e0416dcf61055fe4e6e25440f2571bcadb0692cd733273552b904bf3c8f",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "result": {
+    "acceptanceGranted": false,
+    "error": "ZIP_READ_INVALID",
+    "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+    "release": "NO_GO",
+    "status": "CONTEXT_INVALID"
+  }
+}

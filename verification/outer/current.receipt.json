@@ -1,0 +1,35 @@
+{
+  "label": "current",
+  "argv": [
+    "python",
+    "-B",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign25-review\\verify_return25.py",
+    "--archive",
+    "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\onSkin_Campaign25_Real_First_Value_Integration_Return_2026-10-29.zip",
+    "--expected-manifest-sha256",
+    "03b17f0f3743fc1432a740fc7d07fd31d5b249079abcc7331204e912eb926f96",
+    "--expected-verifier-sha256",
+    "5a936900831f1cee8f413800969b34ca3253f90b585412388cf0bded333b522a"
+  ],
+  "startedUTC": "2026-10-29T06:17:31.933481+00:00",
+  "seconds": 1.343,
+  "exit": 0,
+  "stdoutSHA256": "2dd4ba97a59ff14cbe25a98d5ef45579cdfe34faf3a70c4b765315e1d0492905",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "result": {
+    "acceptanceGranted": false,
+    "checkpointManifestSHA256": "ada1ced48b5e00472e0207c036e9fbab3d7903b60c94784ece44186188c23d87",
+    "filesIncludingManifest": 121,
+    "gitBundlePrerequisites": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+    "gitDeltaSemantics": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+    "gitHistorySemantics": "NOT_CHECKED_WITHOUT_GIT_ROOT",
+    "manifestSHA256": "03b17f0f3743fc1432a740fc7d07fd31d5b249079abcc7331204e912eb926f96",
+    "payloadFiles": 1221,
+    "qualification": "ARTIFACT_INTEGRITY_ONLY_NOT_ACCEPTANCE",
+    "release": "NO_GO",
+    "sourceChecks": {
+      "state": "NOT_RUN"
+    },
+    "status": "VERIFIED"
+  }
+}
