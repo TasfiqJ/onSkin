@@ -1,4 +1,4 @@
-name: Security candidate23 (technical components only)
+name: Security candidate27 (technical components only)
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - name: Checkout exact candidate source
         uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
@@ -91,17 +91,31 @@ jobs:
           set -o pipefail
           node --test scripts/security24/advisory-behavior.test.mjs scripts/security24/patch-tooling.test.mjs | tee "$RUNNER_TEMP/security24-advisory-controls.tap"
           node scripts/security24/graph.mjs > "$RUNNER_TEMP/security24-advisory-graph.json"
-      - name: Authenticated historical Release24 and Release25 source controls
+      - name: Campaign27 reader controls on actual hosted Python
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -I -B scripts/release/full-app-j01/source_consumer26.test.py --historical-replay --receipt "$RUNNER_TEMP/security26-historical-receipt.json" | tee "$RUNNER_TEMP/security26-historical-controls.jsonl"
-      - name: Current Campaign26 finite source governance controls
+          python -I -B scripts/release/full-app-j01/replay27.test.py | tee "$RUNNER_TEMP/security27-hosted-reader.jsonl"
+      - name: Setup explicit Python 3.12 for independent replay
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Campaign27 reader controls on Python 3.12
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -I -B scripts/release/full-app-j01/source_consumer26.test.py | tee "$RUNNER_TEMP/security26-source-controls.jsonl"
-          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security26-current-source.json"
+          python -I -B scripts/release/full-app-j01/replay27.test.py | tee "$RUNNER_TEMP/security27-python312-reader.jsonl"
+      - name: Authenticated original Release24 Release25 and Release26 source controls
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -I -B scripts/release/full-app-j01/replay27.py --receipt "$RUNNER_TEMP/security27-historical-receipt.json" | tee "$RUNNER_TEMP/security27-historical-controls.jsonl"
+      - name: Current Campaign27 finite source governance controls
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -I -B scripts/release/full-app-j01/source_consumer27.test.py | tee "$RUNNER_TEMP/security27-source-controls.jsonl"
+          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security27-current-source.json"
       - name: Execute current public checks and preserve component results
         if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
@@ -120,9 +134,11 @@ jobs:
             ${{ runner.temp }}/security23-native-controls.json
             ${{ runner.temp }}/security24-advisory-controls.tap
             ${{ runner.temp }}/security24-advisory-graph.json
-            ${{ runner.temp }}/security26-historical-receipt.json
-            ${{ runner.temp }}/security26-historical-controls.jsonl
-            ${{ runner.temp }}/security26-source-controls.jsonl
-            ${{ runner.temp }}/security26-current-source.json
+            ${{ runner.temp }}/security27-hosted-reader.jsonl
+            ${{ runner.temp }}/security27-python312-reader.jsonl
+            ${{ runner.temp }}/security27-historical-receipt.json
+            ${{ runner.temp }}/security27-historical-controls.jsonl
+            ${{ runner.temp }}/security27-source-controls.jsonl
+            ${{ runner.temp }}/security27-current-source.json
           if-no-files-found: ignore
           retention-days: 7

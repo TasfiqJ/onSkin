@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-POSTDISPATCH-SAFETY-CI27-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "8c02a02afd7f2e9775dcc512c800d4f71f733234",
+  "tree": "ff0f76d11fa7775e27732f54ce7fdfbd51c8c676",
+  "scopeCommit": "b26c229aa140910ac34e1217f7bdad118c191e7f",
+  "scopePlanSHA256": "638e6c931b6effd6a8b93045c650c486d6be5e898a3c7214b673a0d996a8cc1f",
+  "inputManifestSHA256": "cb1e3106f40b2a81872bdfc0c4f2642a0700d113bbb0a43fd33e8da09fe0d2b0",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": 31
+}
