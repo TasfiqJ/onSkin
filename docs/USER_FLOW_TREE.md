@@ -2,6 +2,14 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## Campaign26: recover manual entry and reach product removal
+
+- Entry: synthetic consenting adult, actual Expo web with the existing development-only anonymous-owner fixture, no real account/photo or external provider. Baseline app source is exact PR29; after-source is the finite Campaign26 candidate.
+- Critical: Type name/brand/category/barcode/INCI and open the ingredient picker. Refuse the private Shelf read, require truthful unavailable/retry, hide and disable the admitted same-grant form, then recover through the canonical Query and retain the exact fields/picker choices. First entry while unreadable must not admit a form.
+- Critical: Captured Continue/Cancel/edit/category/picker callbacks must refuse synchronously during pending/error/refetch/invalidated Query, after unmount, owner A-to-B-to-A, same-owner regrant, withdrawal or replacement intake. Duplicate Continue admits one navigation/session; a genuine new session remains usable. No plaintext draft persistence or typed-data telemetry.
+- Critical: Open an owned product and its options at 360x640 with measured doubled glyphs, then 375x667, 390x844 and 430x932, including long names and short-height/keyboard/safe-area pressure. Scroll and keyboard-focus Remove and Close/cancel without horizontal overflow. Require explicit destructive confirmation; Close/backdrop, stale source or retired lease cannot delete.
+- Evidence: bounded sanitized screenshots, DOM roles, glyph/control/scroll geometry, keyboard actions and actual before/fail/after transcripts outside source, packaged in FIRST-VALUE-RECOVERY-26. Browser/source simulations do not qualify physical iPhone, VoiceOver, signing, providers, paid or release admission.
+
 
 ## M1 first-week experience 07: accessible return visits
 

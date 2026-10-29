@@ -1,6 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
+  Keyboard,
   Platform,
   Pressable,
   ScrollView,
@@ -24,12 +26,17 @@ import {
   type ProductCategory,
 } from '@/features/shelf/categories';
 import { isCurrentIntakeSession, useIntake } from '@/features/shelf/IntakeContext';
+import { useShelf } from '@/features/shelf/useShelf';
 import {
   SHELF_PRODUCT_BRAND_MAX_LENGTH,
   SHELF_PRODUCT_NAME_MAX_LENGTH,
 } from '@/features/shelf/limits';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -152,7 +159,62 @@ function CategoryPickerSheet({
 }
 
 export default function ManualAddScreen() {
-  const { clear, draft, reset, sessionId } = useIntake();
+  const { draftRevision } = useIntake();
+  return <ManualAddForm key={draftRevision} />;
+}
+
+function ManualAddForm() {
+  const { clear, draft, draftLeaseGeneration, isDraftCurrent, reset, sessionId } = useIntake();
+  const queryClient = useQueryClient();
+  const shelf = useShelf();
+  const queryAtRender = queryClient.getQueryCache().find({ queryKey: ['shelf'], exact: true });
+  const sourceUnavailable = shelf.isPending || shelf.isError || shelf.isFetching;
+  useEffect(() => {
+    if (sourceUnavailable) Keyboard.dismiss();
+  }, [sourceUnavailable]);
+  const mounted = useRef(true);
+  const continued = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      Keyboard.dismiss();
+    };
+  }, []);
+  let acceptedLease: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+  try {
+    acceptedLease = captureHealthDataWriteLease();
+  } catch {
+    /* admission closed */
+  }
+  const leaseAtRender = acceptedLease;
+  function canAct(): boolean {
+    if (
+      !mounted.current ||
+      continued.current ||
+      !leaseAtRender ||
+      !isDraftCurrent(draft) ||
+      !queryAtRender ||
+      queryClient.getQueryCache().find({ queryKey: ['shelf'], exact: true }) !== queryAtRender
+    )
+      return false;
+    try {
+      assertHealthDataWriteLease(leaseAtRender);
+    } catch {
+      return false;
+    }
+    const state = queryClient.getQueryState<NonNullable<ReturnType<typeof useShelf>['data']>>([
+      'shelf',
+    ]);
+    return (
+      state?.status === 'success' &&
+      state.fetchStatus === 'idle' &&
+      !state.isInvalidated &&
+      state.data !== undefined &&
+      state.data === shelf.data &&
+      state.data.sourceGeneration === leaseAtRender.generation
+    );
+  }
   // Arriving from an accepted recommendation (docs/09 §11): the rec passes the
   // category so the form is pre-filled. With a preset we start the other fields
   // fresh rather than inheriting a stale prior-intake draft.
@@ -162,7 +224,9 @@ export default function ManualAddScreen() {
       ? (params.presetCategory as ProductCategory)
       : null;
   const useIncomingDraft =
-    presetCategory == null && isCurrentIntakeSession(sessionId, params.intakeId);
+    presetCategory == null &&
+    draftLeaseGeneration === leaseAtRender?.generation &&
+    isCurrentIntakeSession(sessionId, params.intakeId);
   const sanitizedAddedVia = useIncomingDraft && draft.addedVia === 'ocr' ? 'ocr' : 'manual';
   const [name, setName] = useState(useIncomingDraft ? draft.name : '');
   const [brand, setBrand] = useState(useIncomingDraft ? (draft.brand ?? '') : '');
@@ -200,11 +264,14 @@ export default function ManualAddScreen() {
     name.trim().length > 0 && !barcodeNeedsFormat && !barcodeInvalid && !barcodeChecksumInvalid;
 
   const selectCategory = (nextCategory: ProductCategory) => {
+    if (!canAct()) return;
     setCategory(nextCategory);
     setPickerOpen(false);
   };
 
   const onContinue = () => {
+    if (!canContinue || !canAct()) return;
+    continued.current = true;
     const parsed = ingredients.trim() ? parseIngredientText(ingredients) : null;
     const tokens = parsed?.tokens.map((token) => token.displayName) ?? [];
     if (parsed) {
@@ -237,6 +304,8 @@ export default function ManualAddScreen() {
           accessibilityLabel="Cancel"
           glyph="x"
           onPress={() => {
+            if (!canAct()) return;
+            continued.current = true;
             clear();
             backOrReplace(router, APP_SHELF_ROUTE);
           }}
@@ -268,7 +337,9 @@ export default function ManualAddScreen() {
               accessibilityLabel="Product name"
               maxLength={SHELF_PRODUCT_NAME_MAX_LENGTH}
               value={name}
-              onChangeText={setName}
+              onChangeText={(next) => {
+                if (canAct()) setName(next);
+              }}
               placeholder="e.g. Gentle Retinol Night Serum"
               placeholderTextColor={colors.mutedLight}
               className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
@@ -282,7 +353,9 @@ export default function ManualAddScreen() {
                 accessibilityLabel="Brand"
                 maxLength={SHELF_PRODUCT_BRAND_MAX_LENGTH}
                 value={brand}
-                onChangeText={setBrand}
+                onChangeText={(next) => {
+                  if (canAct()) setBrand(next);
+                }}
                 placeholder="Brand"
                 placeholderTextColor={colors.mutedLight}
                 className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
@@ -296,7 +369,9 @@ export default function ManualAddScreen() {
                 }
                 accessibilityHint="Choose product category"
                 accessibilityRole="button"
-                onPress={() => setPickerOpen((o) => !o)}
+                onPress={() => {
+                  if (canAct()) setPickerOpen((o) => !o);
+                }}
                 className={cn(
                   compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3',
                   'flex-row items-center justify-between rounded-[14px] border border-hairline bg-paper-raised',
@@ -327,6 +402,7 @@ export default function ManualAddScreen() {
               accessibilityHint="Enter the numbers printed below the barcode"
               value={barcode}
               onChangeText={(next) => {
+                if (!canAct()) return;
                 setBarcode(next);
                 if (next !== barcode) setEightDigitFormat(null);
               }}
@@ -352,7 +428,9 @@ export default function ManualAddScreen() {
                       accessibilityRole="radio"
                       accessibilityLabel={`Eight-digit barcode type, ${label}`}
                       accessibilityState={{ checked: selected }}
-                      onPress={() => setEightDigitFormat(value)}
+                      onPress={() => {
+                        if (canAct()) setEightDigitFormat(value);
+                      }}
                       className={cn(
                         'min-h-[48px] flex-1 items-center justify-center rounded-pill border px-3 py-2',
                         selected ? 'border-clay bg-clay-tint' : 'border-hairline bg-paper-raised',
@@ -394,7 +472,9 @@ export default function ManualAddScreen() {
               <TextInput
                 accessibilityLabel="Ingredients"
                 value={ingredients}
-                onChangeText={setIngredients}
+                onChangeText={(next) => {
+                  if (canAct()) setIngredients(next);
+                }}
                 placeholder="Paste or type the INCI list…"
                 placeholderTextColor={colors.mutedLight}
                 multiline
@@ -432,7 +512,9 @@ export default function ManualAddScreen() {
         visible={pickerOpen}
         selectedCategory={category}
         onSelect={selectCategory}
-        onClose={() => setPickerOpen(false)}
+        onClose={() => {
+          if (canAct()) setPickerOpen(false);
+        }}
       />
     </Screen>
   );

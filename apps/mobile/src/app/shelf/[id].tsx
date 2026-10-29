@@ -1,7 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import {
+  KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -57,7 +60,11 @@ import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
-import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+  runCurrentHealthDataOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
 
 // Product detail. The management hub (design screen 06, docs/04 §5.6). Freshness
 // with provenance, the actives it contributes, the conflicts it's part of, where
@@ -162,16 +169,23 @@ function ProductDetailActionSheet({
   children: ReactNode;
   onClose: () => void;
 }) {
-  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const insets = useSafeAreaInsets();
+  const sheetMaxHeight = Math.max(0, viewportHeight - Math.max(44, insets.top + 12));
   const sheetPaddingBottom = bottomInset > 0 ? Math.max(32, bottomInset + 18) : 32;
 
   return (
-    <View
-      className="absolute inset-0 justify-end"
-      style={{ backgroundColor: 'rgba(32,27,21,0.42)', zIndex: 30, elevation: 30 }}
-      accessibilityLabel={title}
+    <Modal
+      transparent
+      visible
+      animationType="none"
+      onRequestClose={() => {
+        if (!closeDisabled) onClose();
+      }}
     >
-      <View className="flex-1 justify-end">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(32,27,21,0.42)' }}
+      >
         <Pressable
           accessibilityLabel={`Dismiss ${title}`}
           accessibilityRole="button"
@@ -187,46 +201,234 @@ function ProductDetailActionSheet({
           accessibilityViewIsModal
           className="overflow-hidden rounded-t-sheet bg-paper px-6 pt-4"
           style={{ maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }}
+          onAccessibilityEscape={() => {
+            if (!closeDisabled) onClose();
+          }}
         >
           <View
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
             style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
           />
-          <View className="mb-3 flex-row items-start justify-between gap-3">
-            <View className="flex-1">
-              <Text variant="titleSm" className="text-[24px] leading-[28px]">
-                {title}
-              </Text>
-              <Text variant="bodySm" tone="muted" className="mt-1.5">
-                {body}
-              </Text>
-            </View>
-            <Pressable
-              accessibilityLabel="Close product options"
-              accessibilityRole="button"
-              accessibilityState={{ disabled: closeDisabled }}
-              disabled={closeDisabled}
-              className={cn(
-                'min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3',
-                closeDisabled && 'opacity-40',
-              )}
-              onPress={onClose}
-            >
-              <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clay }}>
-                Close
-              </Text>
-            </Pressable>
-          </View>
           <ScrollView
-            showsVerticalScrollIndicator={false}
+            style={{ flexShrink: 1, minHeight: 0 }}
+            showsVerticalScrollIndicator
             keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
             contentContainerClassName="gap-2 pb-1"
           >
+            <View className="mb-3 flex-row items-start justify-between gap-3">
+              <View className="flex-1">
+                <Text variant="titleSm" className="text-[24px] leading-[28px]">
+                  {title}
+                </Text>
+                <Text variant="bodySm" tone="muted" className="mt-1.5">
+                  {body}
+                </Text>
+              </View>
+              <Pressable
+                accessibilityLabel="Close product options"
+                accessibilityRole="button"
+                accessibilityState={{ disabled: closeDisabled }}
+                disabled={closeDisabled}
+                className={cn(
+                  'min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3',
+                  closeDisabled && 'opacity-40',
+                )}
+                onPress={onClose}
+              >
+                <Text
+                  variant="bodySm"
+                  className="font-sans-semibold"
+                  style={{ color: colors.clay }}
+                >
+                  Close
+                </Text>
+              </Pressable>
+            </View>
             {children}
           </ScrollView>
         </View>
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+}
+
+/** Each open confirmation owns one exact source and authority. Dismissal retires
+ * it synchronously, including callbacks already queued before React unmounts. */
+function ProductManagementSheet({
+  id,
+  source,
+  body,
+  viewportHeight,
+  bottomInset,
+  onRemove,
+  onDiscard,
+  onClose,
+  onSaved,
+}: {
+  id: string;
+  source: ReturnType<typeof useShelf>['data'];
+  body: string;
+  viewportHeight: number;
+  bottomInset: number;
+  onRemove: () => Promise<void>;
+  onDiscard: () => Promise<void>;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const queryClient = useQueryClient();
+  const [accepted] = useState(() => {
+    const query = queryClient.getQueryCache().find({ queryKey: ['shelf'], exact: true });
+    let lease: ReturnType<typeof captureHealthDataWriteLease> | undefined;
+    try {
+      lease = captureHealthDataWriteLease();
+    } catch {
+      /* admission closed */
+    }
+    return {
+      lease,
+      source,
+      query,
+      dataUpdateCount: query?.state.dataUpdateCount,
+      errorUpdateCount: query?.state.errorUpdateCount,
+    };
+  });
+  const active = useRef(true);
+  const closed = useRef(false);
+  const mounted = useRef(true);
+  const inFlight = useRef(false);
+  const [busy, setBusy] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [sourceChanged, setSourceChanged] = useState(false);
+  const sourceChangedCopy =
+    'Shelf data changed. Close these options and open them again before confirming a change.';
+  useLayoutEffect(() => {
+    mounted.current = true;
+    const cache = queryClient.getQueryCache();
+    const retire = () => {
+      active.current = false;
+      setSourceChanged(true);
+    };
+    const query = cache.find({ queryKey: ['shelf'], exact: true });
+    if (
+      query !== accepted.query ||
+      query?.state.status !== 'success' ||
+      query.state.fetchStatus !== 'idle' ||
+      query.state.isInvalidated ||
+      query.state.data !== accepted.source ||
+      query.state.dataUpdateCount !== accepted.dataUpdateCount ||
+      query.state.errorUpdateCount !== accepted.errorUpdateCount
+    )
+      retire();
+    // Query counters can reset. Retire on the actual cache event as well, so
+    // reset/restore cannot revive an old confirmation with identical counters.
+    const unsubscribe = cache.subscribe((event) => {
+      if ((event.type === 'updated' || event.type === 'removed') && event.query === accepted.query)
+        retire();
+    });
+    return () => {
+      mounted.current = false;
+      unsubscribe();
+    };
+  }, [accepted, queryClient]);
+  function currentAuthority(): boolean {
+    if (closed.current || !mounted.current || !accepted.lease) return false;
+    try {
+      assertHealthDataWriteLease(accepted.lease);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  function currentSource(): boolean {
+    if (!active.current || !currentAuthority()) return false;
+    const query = queryClient.getQueryCache().find({ queryKey: ['shelf'], exact: true });
+    const state = queryClient.getQueryState<NonNullable<typeof source>>(['shelf']);
+    return (
+      query === accepted.query &&
+      query?.state.dataUpdateCount === accepted.dataUpdateCount &&
+      query?.state.errorUpdateCount === accepted.errorUpdateCount &&
+      state?.status === 'success' &&
+      state.fetchStatus === 'idle' &&
+      !state.isInvalidated &&
+      state.data !== undefined &&
+      state.data === accepted.source &&
+      state.data.sourceGeneration === accepted.lease?.generation &&
+      [...state.data.items, ...state.data.archive].some((item) => item.id === id)
+    );
+  }
+  function close() {
+    if (inFlight.current || closed.current || !mounted.current) return;
+    closed.current = true;
+    active.current = false;
+    onClose();
+  }
+  async function confirm(action: 'remove' | 'discard') {
+    if (inFlight.current || !currentSource()) return;
+    inFlight.current = true;
+    setBusy(true);
+    setFeedback(null);
+    try {
+      await runCurrentHealthDataOperation(async (lease) => {
+        if (!currentSource()) return;
+        await (action === 'remove' ? onRemove() : onDiscard());
+        lease.assertCurrent();
+        if (!currentAuthority()) return;
+        const state = queryClient.getQueryState<NonNullable<typeof source>>(['shelf']);
+        const data = state?.data;
+        const confirmed =
+          state?.status === 'success' &&
+          state.fetchStatus === 'idle' &&
+          !state.isInvalidated &&
+          data?.sourceGeneration === accepted.lease?.generation &&
+          (action === 'remove'
+            ? ![...(data?.items ?? []), ...(data?.archive ?? [])].some((item) => item.id === id)
+            : data?.archive.some((item) => item.id === id && item.product.status === 'discarded'));
+        if (!confirmed) throw new Error('SHELF_CHANGE_UNCONFIRMED');
+        active.current = false;
+        closed.current = true;
+        onSaved();
+      });
+    } catch {
+      if (currentAuthority())
+        setFeedback(
+          'Your change was not confirmed. Try again when private Shelf data is available.',
+        );
+    } finally {
+      inFlight.current = false;
+      if (mounted.current) setBusy(false);
+    }
+  }
+  return (
+    <ProductDetailActionSheet
+      title="Remove from shelf?"
+      body={feedback ?? (sourceChanged && !busy ? sourceChangedCopy : body)}
+      viewportHeight={viewportHeight}
+      bottomInset={bottomInset}
+      closeDisabled={busy}
+      onClose={close}
+    >
+      {feedback ? (
+        <Text accessibilityRole="alert" variant="bodySm">
+          {feedback}
+        </Text>
+      ) : null}
+      <SheetAction
+        label="Mark discarded"
+        description="Archive it and keep freshness and repurchase history."
+        busy={busy}
+        disabled={sourceChanged}
+        onPress={() => void confirm('discard')}
+      />
+      <SheetAction
+        label="Remove completely"
+        description="Delete this local shelf entry. This cannot be undone."
+        tone="destructive"
+        busy={busy}
+        disabled={sourceChanged}
+        onPress={() => void confirm('remove')}
+      />
+    </ProductDetailActionSheet>
   );
 }
 
@@ -1130,8 +1332,9 @@ export default function ProductDetailScreen() {
         </View>
       )}
       {activeSheet === 'manage' ? (
-        <ProductDetailActionSheet
-          title="Remove from shelf?"
+        <ProductManagementSheet
+          id={id}
+          source={data}
           body={
             mutationFeedback ??
             `Choose what should happen to ${p.name}. Discarding keeps your history; removing deletes this local shelf entry.`
@@ -1139,35 +1342,13 @@ export default function ProductDetailScreen() {
           viewportHeight={height}
           bottomInset={insets.bottom}
           onClose={() => setActiveSheet(null)}
-        >
-          <SheetAction
-            label="Mark discarded"
-            description="Archive it and keep freshness and repurchase history."
-            onPress={async () => {
-              await saveMutation(
-                () => m.markDiscarded(id),
-                () => {
-                  setActiveSheet(null);
-                  closeToShelf();
-                },
-              );
-            }}
-          />
-          <SheetAction
-            label="Remove completely"
-            description="Delete this local shelf entry. This cannot be undone."
-            tone="destructive"
-            onPress={async () => {
-              await saveMutation(
-                () => m.remove(id),
-                () => {
-                  setActiveSheet(null);
-                  closeToShelf();
-                },
-              );
-            }}
-          />
-        </ProductDetailActionSheet>
+          onDiscard={() => m.markDiscarded(id)}
+          onRemove={() => m.remove(id)}
+          onSaved={() => {
+            setActiveSheet(null);
+            closeToShelf();
+          }}
+        />
       ) : null}
       {activeSheet === 'report' ? (
         <ProductDetailActionSheet

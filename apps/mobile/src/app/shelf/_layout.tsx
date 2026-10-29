@@ -17,7 +17,9 @@ export default function ShelfLayout() {
         ['scan', 'search', 'catalog-recovery'].includes(route.name) ? (
           <Redirect href="/shelf/manual" />
         ) : (
-          <ShelfDataAvailabilityGate preserveMountedDraft={route.name === 'opened'}>
+          <ShelfDataAvailabilityGate
+            preserveMountedDraft={route.name === 'opened' || route.name === 'manual'}
+          >
             {children}
           </ShelfDataAvailabilityGate>
         )
