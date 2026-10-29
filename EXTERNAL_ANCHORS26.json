@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-FIRST-VALUE-RECOVERY26-REPAIR-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "acceptanceGranted": false,
+  "release": "NO_GO",
+  "source": {
+    "base": "52a3d01ebb36a6845d0ac21935ad35520732633f",
+    "baseTree": "ef49a81ca814f3d82b8a868e0308b6dda09c9cca",
+    "candidateHead": "8c02a02afd7f2e9775dcc512c800d4f71f733234",
+    "candidateTree": "ff0f76d11fa7775e27732f54ce7fdfbd51c8c676",
+    "runtimeHead": "436d708ead37fc9bcfd18bce72f0713a605244c3",
+    "runtimeTree": "055c65f8ae3ed1a84ef558f974eee463b6d8c01f",
+    "sourceHead": "3aeafda1d5cf41c053807e9476cac5d43731bdeb",
+    "sourceTree": "c7d9d5f2b60d188b9ab6b0c50349fe5f57daa3a0"
+  },
+  "archive": {
+    "filename": "onSkin_Campaign26_First_Value_Recovery_And_CI_Return_2026-10-29.zip",
+    "bytes": 11324492,
+    "sha256": "9f6c775c24ee4f6f5ac6da5a9422bd629ec624fa05ccbcf93e84b7cf644d9c7a"
+  },
+  "manifest": {
+    "filename": "manifest.json",
+    "sha256": "b7a6c2ffb8f4aad827dc147ee16388b3a60760bdfb79a16077f32ffa733e5004"
+  },
+  "verifier": {
+    "filename": "verify_return26.py",
+    "sha256": "2b24bf81d7d3dac652cc3cdee3ebed74f5ef9fcf3830ff1240c1da50cab17fc1"
+  },
+  "checkpointManifestSHA256": "6834657ba95846baa1178aba387a226ebc04c07b56e8194be4e30c38c0f20e3f",
+  "checkpointVerifierSHA256": "b648abc36e6ce73b3205dc9ba056fddbab0580c544f694ee6bbfc6110cf1ac2c",
+  "actualOuterArtifactExits": [
+    0,
+    1,
+    0
+  ],
+  "actualOuterFirstRefusal": "ZIP_READ_INVALID",
+  "publishedDownloadProof": "NOT_RUN_AT_INITIAL_PUBLICATION_SEE_LATER_EXTERNAL_ANNEX",
+  "sourceAcceptance": "REQUIRES_INDEPENDENT_BRAIN_REVIEW",
+  "windowsHistoricalReplay": "OPEN_REQUIRED_R26_REPLAY_CHANGED_TWICE",
+  "qualifiedGates": "CLOSED_NO_GO"
+}
