@@ -1,64 +1,38 @@
-CAMPAIGN28 - SUBMITTED_REVIEW_REQUIRED / NO_GO
-Authority: BRAIN-M1X-DESTRUCTIVE-COMMIT-CORE05-28-CANDIDATE-01
-Independent Brain retains source acceptance; qualified owners retain all other gates.
-USD0. NO MERGES. No auto-merge, rebase, force push or prior-PR modification.
+CAMPAIGN29 — SUBMITTED_REVIEW_REQUIRED / PARTIAL_DIAGNOSIS / NO_GO
+Authority: BRAIN-M1X-WINDOWS-READER-INTEGRITY29-CANDIDATE-01
+Independent Brain retains source acceptance; all qualified gates remain CLOSED.
+USD0. NO MERGES, MAIN PROMOTION, PUBLIC RELEASE OR PRIOR-PR MODIFICATION.
 
-One new open draft PR32: https://github.com/TasfiqJ/onSkin/pull/32
-Branch stage/m1-destructive-commit-core05-28, stacked only on stage/m1-first-value-safety-ci27.
-Auto-merge OFF; maintainer modification OFF. PR31 remains open/draft/unmerged.
-Pinned PR31 HEAD: 517b50413b136639413b783cf3e899a6bc6c19ed
-Pinned PR31 tree: 497f248472f775cef2a9922475fa9f3f62b75060
-External context manifest SHA256: 6bcd248c67f4db0eeb27691c34bcef5ebdc4bcaabf300e24f5e3dc7a3b941c81
-Original authenticated16-file packet verifier exit0 / VERIFIED; directive triad identical.
-Context verification proves integrity only.
+One draft PR33: https://github.com/TasfiqJ/onSkin/pull/33
+Branch stage/m1-windows-reader-integrity29, only on stage/m1-destructive-commit-core05-28.
+Auto-merge OFF; maintainer modification OFF. PR32/PR31 remain unmerged.
+Pinned PR32 HEAD bace116586d58ed955f0a024ca96ae9f4ad9286d; tree 6951590547b79a869464df987d16da6552907846.
+External replacement context manifest 7a94feecb69b09d46acb6465972f1c7b809fbfa9e657aa50c1f7bc4523643579.
+Exact packet verifier exit0 / VERIFIED15; prior return/Brain anchors HASH_VERIFIED.
+Context integrity is not source acceptance.
 
-Immutable first-child plan: fda89d90e92b05a094018f07d83077659f847509
-Plan SHA256: cd862ff6be2e30332f9e3810d565fd55402353fe016e4e684acaaa30b3a6222d
-Controlling explicit27-path scope array; immutable prose29 count is a typo and grants no added paths.
-Substantive source HEAD: 78f3198c996cee96168423557a7072f405b0391e
-Substantive tree: 8856134ca636ab510fea554cf6508f9225b2f9c4
-Sole two-worklist child: 90aef7cc6e86c4752d2fd89456ad4f15aad8418f
-Worklist tree: 63ee2218771ded2bdefe76c44d2f0a20d5569c8b
-Unchanged original Phase4 producer executed exactly once from clean committed source, exit0.
-Only its two generated worklists changed in that child. This root handoff and exactly five
-checkpoint files form the sole evidence tail. No source edit after freeze or second tail.
+Immutable first plan 9b395cbee7594f7dc03934aed4e08c4e3ea43c23; SHA256 c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe.
+Substantive source 8ad47414943eafdac974b2ae25850d603f960fce; tree 6fc2d7ec392c2d6f7dfdce736ecabefd9bd26de5.
+Sole original two-worklist child df685a74bcb41661e3126800ead25a5a7df9fef1; tree 480ce9a48b067df1e21c85519fc39700600f759f.
+Original Phase4 producer ran exactly once. No source edits after freeze.
+Exactly20 granted paths; only bytes27/bytes28 changed in old reader modules.
+All218 inherited checker functions, original27/28 tests and application bytes preserved.
+Current readers compare two bounded full observations and metadata/identity/parents.
+Consumed-byte alias gap is demonstrated/refused; no universal TOCTOU/native claim.
+Historical run41001481528 reader failures remain red; suppressed exception UNKNOWN.
+Bounded frozen reproductions did not recover it: OPEN_REQUIRED / NOT_REPRODUCED.
 
-Checkpoint: docs/brain/checkpoints/M1-02/DESTRUCTIVE-COMMIT-CORE05-28/
-Checkpoint manifest SHA256: f12b299fb7817d05dd5670c190fa372a32f1a25ecd9d4aabfe2918b985b8ecfb
-Checkpoint verifier SHA256: 9769435d01d678fd6acfcd1bd484f493578d2c32e2ecc7d5c431f2925c8d33f7
-Checkpoint payload SHA256: f5c79082d134748343a35b39c8cd8f94d6c450d67cc17a5c72ff96366a989460
-Checkpoint artifact preflight passed; final-head/source checks NOT_RUN_AT_SEAL.
-Final source HEAD/tree, generated GitHub test-merge identities, final CI, two fresh full
-independent remote clones, actual protected-source/artifact0/1/0, minimal exactPR31-required
-bundle, one actual return ZIP and fresh-download hashes are mandatory subsequent external
-evidence. No such result is fabricated inside this immutable pre-tail checkpoint.
+Checkpoint docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/
+Manifest SHA256 8898c490cab5821f0810b0a476ce9d3cc43568b22402f6f89fc09abcfab1fe95
+Verifier SHA256 272f5fe30fa40ad47fa79802e3f44c2717b6b708101922306e477247875227bd
+Payload SHA256 2fea7ee6831cb71f96d56132712d8996e0ae8e7aab3ee2bb314194a902e9cc3e
+This handoff and exactly five checkpoint files are the sole evidence tail.
+Final HEAD/tree, final CI, two complete independent supplier clones, actual source/artifact
+0/1/0 and one real downloadable return/fresh-download proof are NOT_RUN_AT_SEAL and
+must be recorded externally afterward. No second tail or producer is authorized.
 
-R28-A FIXED_AND_PROVED within the explicit JS pre-native API boundary: original unchanged
-mounted63 before59PASS4FAIL, after63PASS; independent boundary108PASS and untouched192PASS.
-Optional UI/source fence retires queued/preparation work at last synchronous preinvoke point.
-After native invocation it never adds UI rollback; stale publication is fenced separately.
-Original health/account authority and original postwrite compensation remain intact.
-Physical durability and safe cancellation after native invocation OPEN_REQUIRED / UNAPPLIED.
-R28-B FIXED_AND_PROVED source contract: original35PASS1FAIL red retained, corrected36PASS;
-focused69 includes original36 plus31 negative mutations and2 positives. Production route
-unchanged; genuine runtime guards and unrelated original assertions preserved.
-
-Actual clean substantive forced6478mobile+24operator tests/typecheck/lint,8tasks0cache;
-original photo112 included subset; both clear-cache unsigned development exports passed.
-Original151 and authenticated09-23 consumers passed with their original fixture qualifications.
-Hosted current Linux/Windows full fresh historical24-27, original27 at exactPR31, current28
-29positive216refusals202inherited ASTs and CORE05 69 passed before genuine readiness exit1.
-Prefreeze Quality stale-worklist failure is preserved; final CI must be observed separately.
-Hosted canonical reset twice/97migrations/SQL/pgTAP/RLS/lint/drift/types and PG15/17 mechanics
-passed; local Docker unavailable. Mechanics do not grant database acceptance.
-Browser viewport/200%/keyboard/focus NOT_RUN because browser use disabled.
-Strict native readiness remains exit1 with five existing warnings; unsigned exports are
-not installed-native, signed-build, VoiceOver, provider or Apple proof.
-
-G97 FAIL/NO_GO. DB06/DB08/R2B NOT_ACCEPTED. M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED.
-M2 NOT_AUTHORIZED. J01 optical G1/G2/G3/G5 and longitudinal G4 NOT_ACCEPTED.
-Qualified Security, database, native iPhone/VoiceOver, provider, paid, professional, clinical,
-legal/licensing, Apple and public release remain CLOSED. Preserve required genuine
-non-Korean F01-F17/F19-F20,C01-C12,P01-P06, private F09 diary/manual comparison and only
-independently qualified Korean J01 Visible Pores. F18 and J02-J27 including J05 deferred.
-Complete findings and explicit limits are in checkpoint REPORT.md and the later outer return.
+G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED;
+M2 NOT_AUTHORIZED; J01 optical G1/G2/G3/G5 and G4 NOT_ACCEPTED. Physical iPhone/VoiceOver,
+provider/paid/professional/clinical/legal/licensing/Apple/public release CLOSED.
+Future first iPhone scope: F01–F17/F19–F20,C01–C12,P01–P06,protected F09,exactly qualified
+Korean J01; automated F18 and J02–J27 including J05 deferred. Brain audits before further task.
