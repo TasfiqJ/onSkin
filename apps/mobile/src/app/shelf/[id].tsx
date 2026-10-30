@@ -271,8 +271,8 @@ function ProductManagementSheet({
   body: string;
   viewportHeight: number;
   bottomInset: number;
-  onRemove: () => Promise<void>;
-  onDiscard: () => Promise<void>;
+  onRemove: (assertBeforeNativeWrite: () => void, onWriteSettled: () => void) => Promise<void>;
+  onDiscard: (assertBeforeNativeWrite: () => void, onWriteSettled: () => void) => Promise<void>;
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -297,6 +297,11 @@ function ProductManagementSheet({
   const closed = useRef(false);
   const mounted = useRef(true);
   const inFlight = useRef(false);
+  const readback = useRef<{
+    phase: 'invalidate' | 'fetch' | 'success' | 'confirmed' | 'retired';
+    dataUpdateCount: number;
+    errorUpdateCount: number;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [sourceChanged, setSourceChanged] = useState(false);
@@ -323,8 +328,25 @@ function ProductManagementSheet({
     // Query counters can reset. Retire on the actual cache event as well, so
     // reset/restore cannot revive an old confirmation with identical counters.
     const unsubscribe = cache.subscribe((event) => {
-      if ((event.type === 'updated' || event.type === 'removed') && event.query === accepted.query)
+      if (
+        (event.type === 'updated' || event.type === 'removed') &&
+        event.query === accepted.query
+      ) {
+        const pending = readback.current;
+        if (pending) {
+          // Only this operation's ordered invalidate/refetch may confirm it.
+          // Manual replacements, reset/ABA, removal, errors and extra fetches
+          // permanently retire publication, even after native write invocation.
+          if (event.type === 'updated' && event.action.type === pending.phase) {
+            if (event.action.type === 'invalidate') pending.phase = 'fetch';
+            else if (event.action.type === 'fetch') pending.phase = 'success';
+            else if (event.action.type === 'success' && !event.action.manual)
+              pending.phase = 'confirmed';
+            else pending.phase = 'retired';
+          } else pending.phase = 'retired';
+        }
         retire();
+      }
     });
     return () => {
       mounted.current = false;
@@ -368,15 +390,39 @@ function ProductManagementSheet({
     inFlight.current = true;
     setBusy(true);
     setFeedback(null);
+    readback.current = null;
     try {
       await runCurrentHealthDataOperation(async (lease) => {
         if (!currentSource()) return;
-        await (action === 'remove' ? onRemove() : onDiscard());
+        const assertBeforeNativeWrite = () => {
+          if (!currentSource()) throw new Error('SHELF_CONFIRMATION_RETIRED');
+        };
+        const onWriteSettled = () => {
+          // A successful native invocation is already past UI cancellation.
+          // Always reconcile it, but only its still-current screen may publish.
+          const query = queryClient.getQueryCache().find({ queryKey: ['shelf'], exact: true });
+          readback.current =
+            currentSource() && query
+              ? {
+                  phase: 'invalidate',
+                  dataUpdateCount: query.state.dataUpdateCount,
+                  errorUpdateCount: query.state.errorUpdateCount,
+                }
+              : null;
+        };
+        await (action === 'remove'
+          ? onRemove(assertBeforeNativeWrite, onWriteSettled)
+          : onDiscard(assertBeforeNativeWrite, onWriteSettled));
         lease.assertCurrent();
         if (!currentAuthority()) return;
+        const query = queryClient.getQueryCache().find({ queryKey: ['shelf'], exact: true });
         const state = queryClient.getQueryState<NonNullable<typeof source>>(['shelf']);
         const data = state?.data;
         const confirmed =
+          readback.current?.phase === 'confirmed' &&
+          query === accepted.query &&
+          query?.state.dataUpdateCount === readback.current.dataUpdateCount + 1 &&
+          query?.state.errorUpdateCount === readback.current.errorUpdateCount &&
           state?.status === 'success' &&
           state.fetchStatus === 'idle' &&
           !state.isInvalidated &&
@@ -1342,8 +1388,12 @@ export default function ProductDetailScreen() {
           viewportHeight={height}
           bottomInset={insets.bottom}
           onClose={() => setActiveSheet(null)}
-          onDiscard={() => m.markDiscarded(id)}
-          onRemove={() => m.remove(id)}
+          onDiscard={(assertBeforeNativeWrite, onWriteSettled) =>
+            m.markDiscarded(id, assertBeforeNativeWrite, onWriteSettled)
+          }
+          onRemove={(assertBeforeNativeWrite, onWriteSettled) =>
+            m.remove(id, assertBeforeNativeWrite, onWriteSettled)
+          }
           onSaved={() => {
             setActiveSheet(null);
             closeToShelf();

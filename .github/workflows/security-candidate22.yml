@@ -1,4 +1,4 @@
-name: Security candidate27 (technical components only)
+name: Security candidate28 (technical components only)
 
 on:
   pull_request:
@@ -105,17 +105,23 @@ jobs:
         run: |
           set -o pipefail
           python -I -B scripts/release/full-app-j01/replay27.test.py | tee "$RUNNER_TEMP/security27-python312-reader.jsonl"
-      - name: Authenticated original Release24 Release25 and Release26 source controls
+      - name: Campaign28 reader controls preserving original Campaign27 diagnostics
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -I -B scripts/release/full-app-j01/replay27.py --receipt "$RUNNER_TEMP/security27-historical-receipt.json" | tee "$RUNNER_TEMP/security27-historical-controls.jsonl"
-      - name: Current Campaign27 finite source governance controls
+          python -I -B scripts/release/full-app-j01/replay28.test.py | tee "$RUNNER_TEMP/security28-reader.jsonl"
+      - name: Authenticated original Release24 Release25 Release26 and Release27 source controls
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -I -B scripts/release/full-app-j01/source_consumer27.test.py | tee "$RUNNER_TEMP/security27-source-controls.jsonl"
-          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security27-current-source.json"
+          python -I -B scripts/release/full-app-j01/replay28.py --receipt "$RUNNER_TEMP/security28-historical-receipt.json" | tee "$RUNNER_TEMP/security28-historical-controls.jsonl"
+      - name: Current Campaign28 finite source governance and CORE-05 structural controls
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -I -B scripts/release/full-app-j01/source_consumer28.test.py | tee "$RUNNER_TEMP/security28-source-controls.jsonl"
+          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security28-current-source.json"
+          node --test scripts/core05/adherence-source-contract28.test.mjs | tee "$RUNNER_TEMP/security28-core05.tap"
       - name: Execute current public checks and preserve component results
         if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
@@ -136,9 +142,11 @@ jobs:
             ${{ runner.temp }}/security24-advisory-graph.json
             ${{ runner.temp }}/security27-hosted-reader.jsonl
             ${{ runner.temp }}/security27-python312-reader.jsonl
-            ${{ runner.temp }}/security27-historical-receipt.json
-            ${{ runner.temp }}/security27-historical-controls.jsonl
-            ${{ runner.temp }}/security27-source-controls.jsonl
-            ${{ runner.temp }}/security27-current-source.json
+            ${{ runner.temp }}/security28-reader.jsonl
+            ${{ runner.temp }}/security28-historical-receipt.json
+            ${{ runner.temp }}/security28-historical-controls.jsonl
+            ${{ runner.temp }}/security28-source-controls.jsonl
+            ${{ runner.temp }}/security28-current-source.json
+            ${{ runner.temp }}/security28-core05.tap
           if-no-files-found: ignore
           retention-days: 7

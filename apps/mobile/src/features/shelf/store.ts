@@ -1213,6 +1213,7 @@ export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
 export async function updateProduct(
   id: string,
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
+  assertBeforeNativeWrite?: () => void,
 ): Promise<ShelfProduct | null> {
   if (
     (Object.hasOwn(patch, 'name') &&
@@ -1231,46 +1232,51 @@ export async function updateProduct(
     let updated: ShelfProduct | null = null;
     let outboxChanged = false;
     lease.assertCurrent();
-    await updatePrivateItem(KEY, (current) => {
-      lease.assertCurrent();
-      const decoded = decodeShelfState(current, ts);
-      const prepared = prepareShelfStateForWrite(decoded, ts);
-      const items = prepared.products;
-      const mirrorOutbox = prepared.mirrorOutbox;
-      outboxChanged = prepared.outboxChanged;
-      const next = items.map((product) => {
-        if (product.id !== id) return product;
-        updated = normalizeProductForWrite(
-          {
-            ...product,
-            ...patch,
-            id: product.id,
-            createdAt: product.createdAt,
-            replacementRootId: product.replacementRootId,
-            replacesProductId: product.replacesProductId,
-            replacementLineageAmbiguous: product.replacementLineageAmbiguous,
-            legacyUnverifiedExpiryDate:
-              Object.hasOwn(patch, 'expiryDate') || patch.legacyUnverifiedExpiryDate === null
-                ? null
-                : product.legacyUnverifiedExpiryDate,
-            updatedAt: ts,
-          },
-          ts,
-          product,
-          Object.hasOwn(patch, 'openedAt') || Object.hasOwn(patch, 'isOpened')
-            ? currentLocalDate()
-            : preserveExistingOpenedDateToday(product),
-        );
-        appendMirrorUpsert(mirrorOutbox, updated, ts);
-        outboxChanged = true;
-        return updated;
-      });
-      lease.assertCurrent();
-      if (updated) return encodeShelfState(next, mirrorOutbox, prepared.terminal);
-      return decoded.upgradeFrom === 'v2'
-        ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
-        : current;
-    });
+    await updatePrivateItem(
+      KEY,
+      (current) => {
+        lease.assertCurrent();
+        const decoded = decodeShelfState(current, ts);
+        const prepared = prepareShelfStateForWrite(decoded, ts);
+        const items = prepared.products;
+        const mirrorOutbox = prepared.mirrorOutbox;
+        outboxChanged = prepared.outboxChanged;
+        const next = items.map((product) => {
+          if (product.id !== id) return product;
+          updated = normalizeProductForWrite(
+            {
+              ...product,
+              ...patch,
+              id: product.id,
+              createdAt: product.createdAt,
+              replacementRootId: product.replacementRootId,
+              replacesProductId: product.replacesProductId,
+              replacementLineageAmbiguous: product.replacementLineageAmbiguous,
+              legacyUnverifiedExpiryDate:
+                Object.hasOwn(patch, 'expiryDate') || patch.legacyUnverifiedExpiryDate === null
+                  ? null
+                  : product.legacyUnverifiedExpiryDate,
+              updatedAt: ts,
+            },
+            ts,
+            product,
+            Object.hasOwn(patch, 'openedAt') || Object.hasOwn(patch, 'isOpened')
+              ? currentLocalDate()
+              : preserveExistingOpenedDateToday(product),
+          );
+          appendMirrorUpsert(mirrorOutbox, updated, ts);
+          outboxChanged = true;
+          return updated;
+        });
+        lease.assertCurrent();
+        if (updated) return encodeShelfState(next, mirrorOutbox, prepared.terminal);
+        return decoded.upgradeFrom === 'v2'
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          : current;
+      },
+      undefined,
+      assertBeforeNativeWrite,
+    );
     lease.assertCurrent();
     if (outboxChanged) notifyShelfMirrorOutboxChanged();
     return updated;
@@ -1362,36 +1368,44 @@ export function applyCatalogRecoveryProductUpdate(
   });
 }
 
-export async function removeProduct(id: string): Promise<ShelfProduct | null> {
+export async function removeProduct(
+  id: string,
+  assertBeforeNativeWrite?: () => void,
+): Promise<ShelfProduct | null> {
   return runCurrentHealthDataOperation(async (lease) => {
     const ts = nowISO();
     let removed: ShelfProduct | null = null;
     let outboxChanged = false;
     lease.assertCurrent();
-    await updatePrivateItem(KEY, (current) => {
-      lease.assertCurrent();
-      const decoded = decodeShelfState(current, ts);
-      const prepared = prepareShelfStateForWrite(decoded, ts);
-      const items = prepared.products;
-      const mirrorOutbox = prepared.mirrorOutbox;
-      outboxChanged = prepared.outboxChanged;
-      removed = items.find((product) => product.id === id) ?? null;
-      if (removed && validCanonicalOperationId(id)) {
-        appendMirrorDelete(mirrorOutbox, id, ts);
-        outboxChanged = true;
-      }
-      lease.assertCurrent();
-      if (removed) {
-        return encodeShelfState(
-          items.filter((product) => product.id !== id),
-          mirrorOutbox,
-          prepared.terminal,
-        );
-      }
-      return decoded.upgradeFrom === 'v2'
-        ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
-        : current;
-    });
+    await updatePrivateItem(
+      KEY,
+      (current) => {
+        lease.assertCurrent();
+        const decoded = decodeShelfState(current, ts);
+        const prepared = prepareShelfStateForWrite(decoded, ts);
+        const items = prepared.products;
+        const mirrorOutbox = prepared.mirrorOutbox;
+        outboxChanged = prepared.outboxChanged;
+        removed = items.find((product) => product.id === id) ?? null;
+        if (removed && validCanonicalOperationId(id)) {
+          appendMirrorDelete(mirrorOutbox, id, ts);
+          outboxChanged = true;
+        }
+        lease.assertCurrent();
+        if (removed) {
+          return encodeShelfState(
+            items.filter((product) => product.id !== id),
+            mirrorOutbox,
+            prepared.terminal,
+          );
+        }
+        return decoded.upgradeFrom === 'v2'
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          : current;
+      },
+      undefined,
+      assertBeforeNativeWrite,
+    );
     lease.assertCurrent();
     if (outboxChanged) notifyShelfMirrorOutboxChanged();
     return removed;

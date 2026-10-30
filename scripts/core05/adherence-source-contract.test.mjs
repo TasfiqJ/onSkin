@@ -592,7 +592,7 @@ test('notification opt-in is exact-time, authorization-aware, local-only, and ca
   assert.match(copy, /formatReminderTime\(DEFAULT_ROUTINE_REMINDER_TIMES\.amTime\)/u);
   assert.match(copy, /formatReminderTime\(DEFAULT_ROUTINE_REMINDER_TIMES\.pmTime\)/u);
   assert.match(copy, /Use these times/u);
-  assert.match(route, /acceptRoutineReminderSoftAsk\(PROPOSED_ROUTINE_REMINDER_TIMES\)/u);
+  assertReminderLifecycle28(route);
   assert.doesNotMatch(route, /notification_prompt_(?:shown|granted|denied)/u);
 
   for (const state of [
@@ -1159,3 +1159,75 @@ test('completion records remain registered for cleanup/export and this contract 
     );
   }
 });
+
+// Current source structure, including the real captured lifecycle authority.
+export function assertReminderLifecycle28(source) {
+  const file = ts.createSourceFile('notifications.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  assert.equal(file.parseDiagnostics.length, 0, 'valid onboarding TSX required');
+  const children = (node, predicate) => {
+    const found = [];
+    const visit = (child) => { if (predicate(child)) found.push(child); ts.forEachChild(child, visit); };
+    visit(node);
+    return found;
+  };
+  const named = (node, name) => ts.isIdentifier(node) && node.text === name;
+  const binding = (node, name) => (ts.isVariableDeclaration(node) || ts.isFunctionDeclaration(node) || ts.isParameter(node) || ts.isBindingElement(node) || ts.isClassDeclaration(node) || ts.isImportSpecifier(node) || ts.isImportClause(node) || ts.isNamespaceImport(node)) && node.name && named(node.name, name);
+  const call = (node, name, args) => ts.isCallExpression(node) && named(node.expression, name) &&
+    node.arguments.length === args.length && node.arguments.every((arg, index) => named(arg, args[index]));
+  const statementCall = (node, name, args) => ts.isExpressionStatement(node) && call(node.expression, name, args);
+  const one = (values, label) => { assert.equal(values.length, 1, label); return values[0]; };
+  const component = one(file.statements.filter((node) => ts.isFunctionDeclaration(node) && node.name?.text === 'NotificationsScreen'), 'actual NotificationsScreen');
+  const finish = one(component.body.statements.filter((node) => ts.isFunctionDeclaration(node) && node.name?.text === 'finish'), 'actual finish handler');
+  const current = one(component.body.statements.filter((node) => ts.isFunctionDeclaration(node) && node.name?.text === 'assertCurrent'), 'current focus/owner assertion');
+  assert.ok(current.parameters.length === 0 && !current.modifiers?.length, 'current assertion is synchronous with no injected parameters');
+  assert.equal(children(file, (node) => binding(node, 'undefined')).length, 0, 'undefined must be the actual default dependency lane');
+  const healthImports = file.statements.filter(ts.isImportDeclaration).filter((node) => ts.isStringLiteral(node.moduleSpecifier) && node.moduleSpecifier.text === '@/lib/consent/healthDataWriteAdmission');
+  assert.equal(healthImports.length, 1, 'actual health write admission import');
+  const healthBindings = healthImports[0].importClause?.namedBindings;
+  assert.ok(healthBindings && ts.isNamedImports(healthBindings));
+  assert.equal(healthBindings.elements.filter((node) => node.name.text === 'assertHealthDataWriteLease' && !node.propertyName).length, 1, 'exact unaliased health assertion import');
+  for (const name of ['assertCurrent', 'assertHealthDataWriteLease']) {
+    assert.equal(children(finish.body, (node) => binding(node, name)).length, 0, 'guard cannot be shadowed: ' + name);
+  }
+  assert.equal(children(component.body, (node) => binding(node, 'assertHealthDataWriteLease')).length, 0, 'imported health assertion cannot be shadowed');
+  const variable = (name) => one(children(finish.body, (node) => ts.isVariableDeclaration(node) && named(node.name, name)), 'one ' + name + ' binding');
+  const accepted = variable('accepted');
+  assert.ok(ts.isVariableDeclarationList(accepted.parent) && accepted.parent.flags & ts.NodeFlags.Const, 'captured lease is const');
+  assert.ok(ts.isVariableStatement(accepted.parent.parent) && accepted.parent.parent.parent === finish.body, 'lease capture is in finish scope');
+  assert.ok(ts.isNonNullExpression(accepted.initializer) && ts.isPropertyAccessExpression(accepted.initializer.expression) && named(accepted.initializer.expression.expression, 'authority') && accepted.initializer.expression.name.text === 'current', 'exact accepted authority capture');
+  const lifecycle = variable('assertLifecycle');
+  assert.ok(ts.isVariableDeclarationList(lifecycle.parent) && lifecycle.parent.flags & ts.NodeFlags.Const, 'lifecycle callback is const');
+  assert.ok(ts.isVariableStatement(lifecycle.parent.parent) && lifecycle.parent.parent.parent === finish.body, 'lifecycle callback is in finish scope');
+  assert.ok(ts.isArrowFunction(lifecycle.initializer) && lifecycle.initializer.parameters.length === 0 && !lifecycle.initializer.modifiers?.length && ts.isBlock(lifecycle.initializer.body), 'synchronous lifecycle callback');
+  const statements = lifecycle.initializer.body.statements;
+  assert.equal(statements.length, 2, 'lifecycle must perform both guards directly');
+  assert.ok(statementCall(statements[0], 'assertCurrent', []), 'focus assertion runs first');
+  assert.ok(statementCall(statements[1], 'assertHealthDataWriteLease', ['accepted']), 'captured lease asserted second');
+  const expression = (text) => ts.createSourceFile('expected.ts', 'const expected = ' + text + ';', ts.ScriptTarget.Latest, true).statements[0].declarationList.declarations[0].initializer;
+  const shape = (node) => {
+    const nested = [];
+    ts.forEachChild(node, (child) => { nested.push(shape(child)); });
+    return [node.kind, ts.isIdentifier(node) || ts.isStringLiteral(node) ? node.text : null, nested];
+  };
+  const guards = current.body.statements;
+  assert.equal(guards.length, 2, 'current assertion is not replaced with a no-op');
+  assert.ok(ts.isIfStatement(guards[0]) && !guards[0].elseStatement, 'retired state must refuse');
+  assert.deepEqual(shape(guards[0].expression), shape(expression('!focused.current || renderedFocus !== focusToken.current || navigated.current || !authority.current')), 'current focus token and authority predicates');
+  assert.ok(ts.isThrowStatement(guards[0].thenStatement) && ts.isNewExpression(guards[0].thenStatement.expression) && named(guards[0].thenStatement.expression.expression, 'Error') && guards[0].thenStatement.expression.arguments?.length === 1 && ts.isStringLiteral(guards[0].thenStatement.expression.arguments[0]) && guards[0].thenStatement.expression.arguments[0].text === 'ONBOARDING_REMINDER_RETIRED', 'retired state throws');
+  assert.ok(ts.isExpressionStatement(guards[1]) && ts.isCallExpression(guards[1].expression) && named(guards[1].expression.expression, 'assertHealthDataWriteLease') && guards[1].expression.arguments.length === 1 && ts.isPropertyAccessExpression(guards[1].expression.arguments[0]) && named(guards[1].expression.arguments[0].expression, 'authority') && guards[1].expression.arguments[0].name.text === 'current', 'current authority is asserted');
+  const enable = one(children(finish.body, (node) => ts.isIfStatement(node) && ts.isBinaryExpression(node.expression) && named(node.expression.left, 'choice') && node.expression.operatorToken.kind === ts.SyntaxKind.EqualsEqualsEqualsToken && ts.isStringLiteral(node.expression.right) && node.expression.right.text === 'enable'), 'actual enable choice branch');
+  assert.ok(ts.isBlock(enable.parent) && ts.isTryStatement(enable.parent.parent) && enable.parent.parent.tryBlock === enable.parent && enable.parent.parent.parent === finish.body, 'enable is in the actual finish try block');
+  assert.ok(ts.isBlock(enable.thenStatement), 'enable branch block');
+  const outcome = one(enable.thenStatement.statements.filter(ts.isVariableStatement).flatMap((node) => [...node.declarationList.declarations]).filter((node) => named(node.name, 'outcome')), 'awaited enable outcome');
+  assert.ok(ts.isAwaitExpression(outcome.initializer) && call(outcome.initializer.expression, 'acceptRoutineReminderSoftAsk', ['PROPOSED_ROUTINE_REMINDER_TIMES', 'undefined', 'assertLifecycle']), 'callee and all three ordered arguments');
+  assert.equal(children(finish.body, (node) => ts.isCallExpression(node) && named(node.expression, 'acceptRoutineReminderSoftAsk')).length, 1, 'one actual accept call');
+  assert.ok(accepted.pos < lifecycle.pos && lifecycle.pos < enable.pos, 'capture and callback precede acceptance');
+  const imports = file.statements.filter(ts.isImportDeclaration).filter((node) => ts.isStringLiteral(node.moduleSpecifier) && node.moduleSpecifier.text === '@/features/notifications/onboarding');
+  assert.equal(imports.length, 1, 'actual onboarding source import');
+  const bindings = imports[0].importClause?.namedBindings;
+  assert.ok(bindings && ts.isNamedImports(bindings));
+  for (const name of ['acceptRoutineReminderSoftAsk', 'PROPOSED_ROUTINE_REMINDER_TIMES']) {
+    assert.equal(bindings.elements.filter((node) => node.name.text === name && (!node.propertyName || node.propertyName.text === name)).length, 1, 'actual imported ' + name);
+    assert.equal(children(component.body, (node) => binding(node, name)).length, 0, 'import cannot be shadowed: ' + name);
+  }
+}

@@ -628,14 +628,20 @@ async function updatePrivateItemWithGuard(
   key: string,
   updater: (current: string | null) => string | null,
   assertMutationCurrent: () => void,
+  assertBeforeNativeWrite?: () => void,
 ): Promise<void> {
+  const assertPreparationCurrent = () => {
+    assertMutationCurrent();
+    assertBeforeNativeWrite?.();
+  };
   return withOperationTiming('private_kv_write', () =>
     runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
         assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
+        assertBeforeNativeWrite?.();
         const existingRaw = await assertNoFailedReadRewrite(key);
-        assertMutationCurrent();
+        assertPreparationCurrent();
         const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;
         if (
           existingRaw &&
@@ -655,7 +661,7 @@ async function updatePrivateItemWithGuard(
             rememberFailedRead(key, existingRaw);
             throw error;
           }
-          assertMutationCurrent();
+          assertPreparationCurrent();
           if (!contentKey) {
             rememberFailedRead(key, existingRaw);
             throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
@@ -670,9 +676,9 @@ async function updatePrivateItemWithGuard(
           currentValue = existingRaw;
         }
 
-        assertMutationCurrent();
+        assertPreparationCurrent();
         const nextValue = updater(currentValue);
-        assertMutationCurrent();
+        assertPreparationCurrent();
         if (
           nextValue === currentValue &&
           (nextValue === null || existingClassification?.kind === 'current')
@@ -681,7 +687,7 @@ async function updatePrivateItemWithGuard(
         }
 
         const latestRaw = await AsyncStorage.getItem(key);
-        assertMutationCurrent();
+        assertPreparationCurrent();
         if (latestRaw !== existingRaw) {
           if (latestRaw !== null) rememberFailedRead(key, latestRaw);
           throw new Error(PRIVATE_KV_WRITE_CONFLICT);
@@ -689,7 +695,7 @@ async function updatePrivateItemWithGuard(
         assertAccountScopedPrivateOperationAllowed(generation);
 
         if (nextValue === null) {
-          assertMutationCurrent();
+          assertPreparationCurrent();
           try {
             await AsyncStorage.removeItem(key);
           } catch (error) {
@@ -708,7 +714,7 @@ async function updatePrivateItemWithGuard(
         }
 
         contentKey ??= await getOrCreateContentKey();
-        assertMutationCurrent();
+        assertPreparationCurrent();
         const nonce = randomBytes(NONCE_BYTES);
         const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
         const envelope: PrivateEnvelope = {
@@ -717,9 +723,12 @@ async function updatePrivateItemWithGuard(
           ciphertextHex: bytesToHex(ciphertext),
         };
         await maybeRejectConflictChoiceWrite(key);
-        assertMutationCurrent();
+        assertPreparationCurrent();
         const committedRaw = JSON.stringify(envelope);
-        assertMutationCurrent();
+        // No await separates this opt-in admission from native invocation.
+        // UI retirement after invocation cannot safely cancel that write;
+        // the original post-write account/health compensation stays separate.
+        assertPreparationCurrent();
         try {
           await AsyncStorage.setItem(key, committedRaw);
         } catch (error) {
@@ -748,6 +757,7 @@ export async function updatePrivateItem(
   key: string,
   updater: (current: string | null) => string | null,
   assertAdditionalMutationCurrent?: () => void,
+  assertBeforeNativeWrite?: () => void,
 ): Promise<void> {
   // Generic read/transform/update may expose plaintext to its callback, so a
   // classified key requires exact health authority up front even if the
@@ -761,7 +771,12 @@ export async function updatePrivateItem(
     // ciphertext if either authority is lost during the write.
     assertAdditionalMutationCurrent?.();
   };
-  return updatePrivateItemWithGuard(key, updater, assertHealthMutationCurrent);
+  return updatePrivateItemWithGuard(
+    key,
+    updater,
+    assertHealthMutationCurrent,
+    assertBeforeNativeWrite,
+  );
 }
 
 const CATALOG_LOOKUP_QUEUE_STORAGE_KEY = 'layerwell.catalog.lookupQueue.v1';

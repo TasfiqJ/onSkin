@@ -32,8 +32,14 @@ export function useShelfMutations() {
   // Delayed form/confirmation callbacks belong to the render that accepted
   // them, even if a different owner or a fresh grant is active at dispatch.
   let accepted: ReturnType<typeof captureHealthDataWriteLease> | undefined;
-  try { accepted = captureHealthDataWriteLease(); } catch { /* admission closed */ }
-  async function runShelfMutation<T>(operation: (lease: HealthDataWriteOperationLease) => Promise<T>): Promise<T> {
+  try {
+    accepted = captureHealthDataWriteLease();
+  } catch {
+    /* admission closed */
+  }
+  async function runShelfMutation<T>(
+    operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
+  ): Promise<T> {
     if (!accepted) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
     assertHealthDataWriteLease(accepted);
     const expectedOwnerUserId = accepted.ownerUserId;
@@ -111,23 +117,37 @@ export function useShelfMutations() {
       });
     },
 
-    async markDiscarded(id: string): Promise<void> {
+    async markDiscarded(
+      id: string,
+      assertBeforeNativeWrite?: () => void,
+      onWriteSettled?: () => void,
+    ): Promise<void> {
       return runShelfMutation(async (lease) => {
-        await updateProduct(id, {
-          status: 'discarded',
-          finishedAt: localDateString(),
-        });
+        await updateProduct(
+          id,
+          {
+            status: 'discarded',
+            finishedAt: localDateString(),
+          },
+          assertBeforeNativeWrite,
+        );
         lease.assertCurrent();
+        onWriteSettled?.();
         track('product_discarded', { source: 'shelf' });
         await invalidate(lease);
         lease.assertCurrent();
       });
     },
 
-    async remove(id: string): Promise<void> {
+    async remove(
+      id: string,
+      assertBeforeNativeWrite?: () => void,
+      onWriteSettled?: () => void,
+    ): Promise<void> {
       return runShelfMutation(async (lease) => {
-        await removeProduct(id);
+        await removeProduct(id, assertBeforeNativeWrite);
         lease.assertCurrent();
+        onWriteSettled?.();
         await invalidate(lease);
         lease.assertCurrent();
       });

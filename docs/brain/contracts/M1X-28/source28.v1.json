@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-DESTRUCTIVE-COMMIT-CORE05-28-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "517b50413b136639413b783cf3e899a6bc6c19ed",
+  "tree": "497f248472f775cef2a9922475fa9f3f62b75060",
+  "scopeCommit": "fda89d90e92b05a094018f07d83077659f847509",
+  "scopePlanSHA256": "cd862ff6be2e30332f9e3810d565fd55402353fe016e4e684acaaa30b3a6222d",
+  "inputManifestSHA256": "6bcd248c67f4db0eeb27691c34bcef5ebdc4bcaabf300e24f5e3dc7a3b941c81",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": 32
+}
