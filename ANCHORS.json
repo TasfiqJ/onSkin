@@ -1,0 +1,93 @@
+{
+  "acceptanceGranted": false,
+  "checkpointManifestSHA256": "8898c490cab5821f0810b0a476ce9d3cc43568b22402f6f89fc09abcfab1fe95",
+  "checkpointVerifierSHA256": "272f5fe30fa40ad47fa79802e3f44c2717b6b708101922306e477247875227bd",
+  "files": {
+    "DELIVERY_PROOF.json": {
+      "bytes": 99881,
+      "provenance": "UNCHANGED_PUBLISHED_EXTERNAL_DELIVERY_PROOF",
+      "sha256": "217f7fb57e03d2c38439792f2d2c55532d0ff11171ef18d67dd8004940c32181"
+    },
+    "FINAL_FACTS.json": {
+      "bytes": 92525,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:evidence/FINAL_RETURN_FACTS29.json",
+      "sha256": "3712f8c16b13d2cab7a09b584a06c26f9f90151fa75bebf75155b5b062599e5b"
+    },
+    "FINAL_REPORT.md": {
+      "bytes": 92957,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:FINAL_REPORT.md",
+      "sha256": "1ee93e9667eacf342237396884e984f20caf6f806531353f7a6bd931b57a81d5"
+    },
+    "FULL_FACTS.md": {
+      "bytes": 193562,
+      "provenance": "UNCHANGED_FINAL_REPORT_PREFIX_PLUS_EXISTING_PUBLISHED_DELIVERY_PROOF",
+      "sha256": "9c2b60a0bf8ca8b61ac264b1df1bce3f82ae94804e6ff5624c45541c6552073f"
+    },
+    "checkpoint/README.md": {
+      "bytes": 361,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:checkpoint/README.md",
+      "sha256": "d4c544bfd0ea996efcd3ff4a915a298fefe86fe497f5fc34ede3c9d3cb955cb9"
+    },
+    "checkpoint/REPORT.md": {
+      "bytes": 9849,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:checkpoint/REPORT.md",
+      "sha256": "88e1c24e28ed500b8b388ec9fc4ce8e53a9d1e21bb1b7f740b122858ebf761f4"
+    },
+    "checkpoint/manifest.json": {
+      "bytes": 71895,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:checkpoint/manifest.json",
+      "sha256": "8898c490cab5821f0810b0a476ce9d3cc43568b22402f6f89fc09abcfab1fe95"
+    },
+    "checkpoint/payload.zip": {
+      "bytes": 735797,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:checkpoint/payload.zip",
+      "sha256": "2fea7ee6831cb71f96d56132712d8996e0ae8e7aab3ee2bb314194a902e9cc3e"
+    },
+    "checkpoint/verify29.py": {
+      "bytes": 73003,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:checkpoint/verify29.py",
+      "sha256": "272f5fe30fa40ad47fa79802e3f44c2717b6b708101922306e477247875227bd"
+    },
+    "onSkin_Campaign29_Windows_Reader_Integrity_Return_2026-10-30.zip": {
+      "bytes": 2757782,
+      "provenance": "UNCHANGED_ORIGINAL_RETURN_ZIP",
+      "sha256": "4c4dcd1e96eb9efbcead69afa5233d9c40ffb47594c00a37b391ddacde6508c7"
+    },
+    "source/GIT_HISTORY.json": {
+      "bytes": 24085,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:source/GIT_HISTORY.json",
+      "sha256": "6a61df2d22c73ebfebaa39749746b57998352c957d88f97ccb045b7ac8563b31"
+    },
+    "source/TRACKED_GIT_IDENTITIES.json": {
+      "bytes": 8539,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:source/TRACKED_GIT_IDENTITIES.json",
+      "sha256": "bbe52419b3bd50d6890e140cafa2c00dd79446e45b8e72086c2744d00c56d3be"
+    },
+    "source/campaign29-pr32-required.bundle": {
+      "bytes": 702297,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:source/campaign29-pr32-required.bundle",
+      "sha256": "cb260e37034f2c77e22f1d3bca33efc75b6aab36f821b7348c7047b9a55a3721"
+    },
+    "verification/manifest.json": {
+      "bytes": 18839,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:manifest.json",
+      "sha256": "ad5de8c1599431a524815865d9f79e8d3cb83a1da5060d881526d88626d57d01"
+    },
+    "verification/verify_return29.py": {
+      "bytes": 72999,
+      "provenance": "BYTE_EXACT_RETURN_MEMBER:verify_return29.py",
+      "sha256": "d0e620621c837f46a1e79e94e7eb4b226ab386bb24f07663edf663388fe650a2"
+    }
+  },
+  "qualification": "REVIEW_ARTIFACT_PUBLICATION_NOT_A_PRODUCT_RELEASE_OR_SOURCE_CHANGE",
+  "release": "NO_GO",
+  "returnManifestSHA256": "ad5de8c1599431a524815865d9f79e8d3cb83a1da5060d881526d88626d57d01",
+  "returnVerifierSHA256": "d0e620621c837f46a1e79e94e7eb4b226ab386bb24f07663edf663388fe650a2",
+  "reviewBranch": "evidence/campaign29-reader-integrity-71dde4e",
+  "schema": 1,
+  "sourceHead": "71dde4eed92edd20ff0e9611da42086d6e0f2b89",
+  "sourcePR": "https://github.com/TasfiqJ/onSkin/pull/33",
+  "sourceTree": "f9e5f995d37a7dc058b07271e6b98f79cf698951",
+  "zipBytes": 2757782,
+  "zipSHA256": "4c4dcd1e96eb9efbcead69afa5233d9c40ffb47594c00a37b391ddacde6508c7"
+}

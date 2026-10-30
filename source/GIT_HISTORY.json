@@ -1,0 +1,694 @@
+{
+  "base": "bace116586d58ed955f0a024ca96ae9f4ad9286d",
+  "baseTree": "6951590547b79a869464df987d16da6552907846",
+  "commits": [
+    {
+      "changes": [
+        {
+          "after": {
+            "blob": "5e630a21b5572758f2c1386675c629f74b63222c",
+            "bytes": 8805,
+            "mode": "100644",
+            "sha256": "c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe"
+          },
+          "before": null,
+          "path": "docs/brain/task-specs/M1X-29/SCOPE_PLAN.md",
+          "status": "A"
+        }
+      ],
+      "commit": "9b395cbee7594f7dc03934aed4e08c4e3ea43c23",
+      "parent": "bace116586d58ed955f0a024ca96ae9f4ad9286d",
+      "tree": "0e77d3b1b43e3b8d2bf552d0d6f6bc998f3fbefe"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "blob": "02f80cd4a48b3bb82b09028adc8970673a504eba",
+            "bytes": 9660,
+            "mode": "100644",
+            "sha256": "4a51fc735970bf2996bd89e6756f3388c619d0f7c82ec431775e26ef29271af4"
+          },
+          "before": {
+            "blob": "58fbf95f66c2baeb4e595159292096c4b253841d",
+            "bytes": 8416,
+            "mode": "100644",
+            "sha256": "2e8bcbc775231553ee5478094346ea0799a9ea6e0a98cbd02ce54aee3d3cd731"
+          },
+          "path": ".github/workflows/security-candidate22.yml",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "415e64fbf63aa4ce5da12e8854e2f78f5650da98",
+            "bytes": 652,
+            "mode": "100644",
+            "sha256": "c3d364d13f5a86bb68694b81b89d0764344a77899bb6f0f7fca9baa387f3e3b5"
+          },
+          "before": null,
+          "path": "docs/brain/contracts/M1X-29/source29.v1.json",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "ee567f2ab962a0a1f8db77f08608685bb18a2fab",
+            "bytes": 3343,
+            "mode": "100644",
+            "sha256": "a1b90a05734e6e17392d9564d4f69a9a8f0764ed933a5a4cd323611839e63b06"
+          },
+          "before": null,
+          "path": "docs/brain/task-specs/M1X-29/TASK.md",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "2d7b7121705468aa587b8f5bfe19b08a75c2aa34",
+            "bytes": 502801,
+            "mode": "100644",
+            "sha256": "dfc01c971a557d5017ab6e9d769b7a38f9ed58ea07c8fad0b5968b20f6f88d08"
+          },
+          "before": {
+            "blob": "651a140b57fe57db4a7f31c28bbd56c9ff375473",
+            "bytes": 450505,
+            "mode": "100644",
+            "sha256": "943e3c039e16cb5dff09732003e5383d78ff5c758097debc6d400d535349e050"
+          },
+          "path": "scripts/release/full-app-j01/check.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "14632c2a3310b43b1691041370e0f0cfad26d655",
+            "bytes": 13939,
+            "mode": "100644",
+            "sha256": "25fae31f124319eff85f50caad74347deabcedf7cbb95fbab4712be3fe3d5d1b"
+          },
+          "before": null,
+          "path": "scripts/release/full-app-j01/readerIntegrity29.test.py",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "e92b1204f4047a13e890cf70e4a88b47eccc7ee2",
+            "bytes": 7185,
+            "mode": "100644",
+            "sha256": "78718956904d257942c222acf2441d0959278cace49a1d4b2557751e5eb869fe"
+          },
+          "before": null,
+          "path": "scripts/release/full-app-j01/readerTrace29.py",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "224ab428d2dff30fb7695f8ceb5d3595380572c5",
+            "bytes": 28569,
+            "mode": "100644",
+            "sha256": "bec605fd1b0c4edd301f9015053be8578389e2d8451e2d53b272bd0d0c1435e5"
+          },
+          "before": {
+            "blob": "d965145b31b4e21789cc3972239e67090e4bb5dc",
+            "bytes": 27714,
+            "mode": "100644",
+            "sha256": "344c6aea46306943ced4e3afdaa9c7b206b1a2d99d861a8fc1204736ffe97e18"
+          },
+          "path": "scripts/release/full-app-j01/replay27.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "1cd56bd4be8ad202cb4f7d4a4f60935298cfcbef",
+            "bytes": 28904,
+            "mode": "100644",
+            "sha256": "447ae63e2f633757a5a081b6d4b873ab7e4daa4ff89c4665e1db247e9399724e"
+          },
+          "before": {
+            "blob": "c196c707a578214a53dc9bfcdeee98254a9a5b85",
+            "bytes": 28049,
+            "mode": "100644",
+            "sha256": "256b07a2378dd1cf2dbb3eb43073667bf286b1f7bed88e23d586e5c1498bc0d2"
+          },
+          "path": "scripts/release/full-app-j01/replay28.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "f51b65d0e7a6c9e2b3407853d2c35ba29041ffd1",
+            "bytes": 29502,
+            "mode": "100644",
+            "sha256": "e8e56eec6d57079c8396898411a9ef429d069003840fad5eb0c6cd16ca55dedd"
+          },
+          "before": null,
+          "path": "scripts/release/full-app-j01/replay29.py",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "6311d88e900e26b1363c0051dca0668c97682153",
+            "bytes": 10838,
+            "mode": "100644",
+            "sha256": "844dba1bf143e1d5fb881d8355b151153e83eee03107f074431f7216a8dee8f7"
+          },
+          "before": null,
+          "path": "scripts/release/full-app-j01/replay29.test.py",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "616a889172c5b9120d56072aab0af73629da5230",
+            "bytes": 18093,
+            "mode": "100644",
+            "sha256": "5b1153c2502a26e55fb4174ea094c85a11c4212bae6fde8b9aebca454b8b34d5"
+          },
+          "before": null,
+          "path": "scripts/release/full-app-j01/source_consumer29.test.py",
+          "status": "A"
+        }
+      ],
+      "commit": "a6f7e681f69380259876c3489f4d39be2b5244d0",
+      "parent": "9b395cbee7594f7dc03934aed4e08c4e3ea43c23",
+      "tree": "abe7249fdb08106a16e96b0febd72f8d7192f3c0"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "blob": "06a95ec5b05acf847e2291534e36f619d6a61dd5",
+            "bytes": 4369,
+            "mode": "100644",
+            "sha256": "4857853f43e5f1ca97650c8a89cf2af0eded082c4412d535ffb54bd9f2fe72f3"
+          },
+          "before": {
+            "blob": "ee567f2ab962a0a1f8db77f08608685bb18a2fab",
+            "bytes": 3343,
+            "mode": "100644",
+            "sha256": "a1b90a05734e6e17392d9564d4f69a9a8f0764ed933a5a4cd323611839e63b06"
+          },
+          "path": "docs/brain/task-specs/M1X-29/TASK.md",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "1d45330bb85c1654ee20e8b3a9bc07b3c1b16c6e",
+            "bytes": 505191,
+            "mode": "100644",
+            "sha256": "ba46baa0bc1bbc14787af9f886a1745ec030f2744ea87eaf5225d511179d8e3c"
+          },
+          "before": {
+            "blob": "2d7b7121705468aa587b8f5bfe19b08a75c2aa34",
+            "bytes": 502801,
+            "mode": "100644",
+            "sha256": "dfc01c971a557d5017ab6e9d769b7a38f9ed58ea07c8fad0b5968b20f6f88d08"
+          },
+          "path": "scripts/release/full-app-j01/check.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "4ff90be229ed9affa3e777f5019aef7f63bd1fe2",
+            "bytes": 34382,
+            "mode": "100644",
+            "sha256": "4365e20765752eb9653d3ef35462cc6b86bc63aca83f9185c394c7a0ac3495f4"
+          },
+          "before": {
+            "blob": "f51b65d0e7a6c9e2b3407853d2c35ba29041ffd1",
+            "bytes": 29502,
+            "mode": "100644",
+            "sha256": "e8e56eec6d57079c8396898411a9ef429d069003840fad5eb0c6cd16ca55dedd"
+          },
+          "path": "scripts/release/full-app-j01/replay29.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "866afc0f98ef0580ebe9767cf5ff17496b0b189f",
+            "bytes": 15457,
+            "mode": "100644",
+            "sha256": "339f8566eb11b53dd7cab6fd2fa6f5b31ba59d378ed21adcb28d1533128913f7"
+          },
+          "before": {
+            "blob": "6311d88e900e26b1363c0051dca0668c97682153",
+            "bytes": 10838,
+            "mode": "100644",
+            "sha256": "844dba1bf143e1d5fb881d8355b151153e83eee03107f074431f7216a8dee8f7"
+          },
+          "path": "scripts/release/full-app-j01/replay29.test.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "4bf68e1cd1d63cf0558617ed4c9f94c67f4fefa3",
+            "bytes": 19469,
+            "mode": "100644",
+            "sha256": "520d3da0f3e857b2237e61c656297d9d3e2cbe51546d3837f4d15062b8afaef1"
+          },
+          "before": {
+            "blob": "616a889172c5b9120d56072aab0af73629da5230",
+            "bytes": 18093,
+            "mode": "100644",
+            "sha256": "5b1153c2502a26e55fb4174ea094c85a11c4212bae6fde8b9aebca454b8b34d5"
+          },
+          "path": "scripts/release/full-app-j01/source_consumer29.test.py",
+          "status": "M"
+        }
+      ],
+      "commit": "2f42fa45f1f6e7d776ede548da20edc10d3c6bb2",
+      "parent": "a6f7e681f69380259876c3489f4d39be2b5244d0",
+      "tree": "015e185b35be44301e6d9a4be0c28d040150aec8"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "blob": "94f8ace0d0628421e62c2afaee4f368e867212ea",
+            "bytes": 5362,
+            "mode": "100644",
+            "sha256": "b95c2a9c7f9198814bb19c6c57eabcbdf59537c99f341a9b3742831aaf647a7b"
+          },
+          "before": {
+            "blob": "06a95ec5b05acf847e2291534e36f619d6a61dd5",
+            "bytes": 4369,
+            "mode": "100644",
+            "sha256": "4857853f43e5f1ca97650c8a89cf2af0eded082c4412d535ffb54bd9f2fe72f3"
+          },
+          "path": "docs/brain/task-specs/M1X-29/TASK.md",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "775bc6dec47474deacc376a1c07610fef6e92e35",
+            "bytes": 506394,
+            "mode": "100644",
+            "sha256": "944c04283b834e5f20bdfcbf95c265c7af57f8f4754952b4353dee5f8d8952dd"
+          },
+          "before": {
+            "blob": "1d45330bb85c1654ee20e8b3a9bc07b3c1b16c6e",
+            "bytes": 505191,
+            "mode": "100644",
+            "sha256": "ba46baa0bc1bbc14787af9f886a1745ec030f2744ea87eaf5225d511179d8e3c"
+          },
+          "path": "scripts/release/full-app-j01/check.py",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "b53132c764f74a4605f814f87bf1ff6509ff4a9f",
+            "bytes": 15467,
+            "mode": "100644",
+            "sha256": "3fd39d18196105de5325da59852a02cb71163b357c4867410e148ae7702349bf"
+          },
+          "before": {
+            "blob": "866afc0f98ef0580ebe9767cf5ff17496b0b189f",
+            "bytes": 15457,
+            "mode": "100644",
+            "sha256": "339f8566eb11b53dd7cab6fd2fa6f5b31ba59d378ed21adcb28d1533128913f7"
+          },
+          "path": "scripts/release/full-app-j01/replay29.test.py",
+          "status": "M"
+        }
+      ],
+      "commit": "8ad47414943eafdac974b2ae25850d603f960fce",
+      "parent": "2f42fa45f1f6e7d776ede548da20edc10d3c6bb2",
+      "tree": "6fc2d7ec392c2d6f7dfdce736ecabefd9bd26de5"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "blob": "22cd3494063b92eac7982fb00c0762bcc7589128",
+            "bytes": 141091,
+            "mode": "100644",
+            "sha256": "097c2b3478ee7eb9111181001d22f7de1dcf21ba31fbb87a814f37a640f692e1"
+          },
+          "before": {
+            "blob": "2832a4c0404cc4dd56feb55b51c741d9c4940654",
+            "bytes": 141091,
+            "mode": "100644",
+            "sha256": "7a558f5dfac109862dc81944ad5c54f22456f97fb2783d2ae19605d8fc53fa0b"
+          },
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "c5dd85f5311d60666929e5f158964f098a9b90bf",
+            "bytes": 84178,
+            "mode": "100644",
+            "sha256": "268172809cdacbeb2ed2e7dffa463d4eb8e87278ccf060b388f958aa8fd8dfc4"
+          },
+          "before": {
+            "blob": "9e9a4769b6eece763dc97d19031eac79638b4392",
+            "bytes": 84178,
+            "mode": "100644",
+            "sha256": "343b2b70ff9abd362ad25f1bd70f328dd687724bf6cf56efb26857387243bf21"
+          },
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "status": "M"
+        }
+      ],
+      "commit": "df685a74bcb41661e3126800ead25a5a7df9fef1",
+      "parent": "8ad47414943eafdac974b2ae25850d603f960fce",
+      "tree": "480ce9a48b067df1e21c85519fc39700600f759f"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "blob": "2f48e9d07fc6e609701a26955b33b2d290462fb4",
+            "bytes": 2886,
+            "mode": "100644",
+            "sha256": "f0206587d213e3611b440fae2d10ea7e8294066adec8e51b0cdbada16a90f504"
+          },
+          "before": {
+            "blob": "815a08c4bff95e7c9ca9893b62f35f2d561aa7f2",
+            "bytes": 4805,
+            "mode": "100644",
+            "sha256": "b3e6374ba17d9fc2b703d45f196d125daa76ab799e66ffa8e97d8567483d66f6"
+          },
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "status": "M"
+        },
+        {
+          "after": {
+            "blob": "1519cba79b844a598503d457ada4b2065fe419de",
+            "bytes": 361,
+            "mode": "100644",
+            "sha256": "d4c544bfd0ea996efcd3ff4a915a298fefe86fe497f5fc34ede3c9d3cb955cb9"
+          },
+          "before": null,
+          "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/README.md",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "ad2c49161d8741118cc36a4f0dbd9573261d8080",
+            "bytes": 9849,
+            "mode": "100644",
+            "sha256": "88e1c24e28ed500b8b388ec9fc4ce8e53a9d1e21bb1b7f740b122858ebf761f4"
+          },
+          "before": null,
+          "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/REPORT.md",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "e5e667207a158d84f2ce7d5207c145e7ef059375",
+            "bytes": 71895,
+            "mode": "100644",
+            "sha256": "8898c490cab5821f0810b0a476ce9d3cc43568b22402f6f89fc09abcfab1fe95"
+          },
+          "before": null,
+          "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/manifest.json",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "0e1d26bc539e42195eb0239a7472880a40023c8b",
+            "bytes": 735797,
+            "mode": "100644",
+            "sha256": "2fea7ee6831cb71f96d56132712d8996e0ae8e7aab3ee2bb314194a902e9cc3e"
+          },
+          "before": null,
+          "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/payload.zip",
+          "status": "A"
+        },
+        {
+          "after": {
+            "blob": "0507ccc86c2d67d471fd51f54b8d0334d7d697c4",
+            "bytes": 73003,
+            "mode": "100644",
+            "sha256": "272f5fe30fa40ad47fa79802e3f44c2717b6b708101922306e477247875227bd"
+          },
+          "before": null,
+          "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/verify29.py",
+          "status": "A"
+        }
+      ],
+      "commit": "71dde4eed92edd20ff0e9611da42086d6e0f2b89",
+      "parent": "df685a74bcb41661e3126800ead25a5a7df9fef1",
+      "tree": "f9e5f995d37a7dc058b07271e6b98f79cf698951"
+    }
+  ],
+  "delta": [
+    {
+      "after": {
+        "blob": "02f80cd4a48b3bb82b09028adc8970673a504eba",
+        "bytes": 9660,
+        "mode": "100644",
+        "sha256": "4a51fc735970bf2996bd89e6756f3388c619d0f7c82ec431775e26ef29271af4"
+      },
+      "before": {
+        "blob": "58fbf95f66c2baeb4e595159292096c4b253841d",
+        "bytes": 8416,
+        "mode": "100644",
+        "sha256": "2e8bcbc775231553ee5478094346ea0799a9ea6e0a98cbd02ce54aee3d3cd731"
+      },
+      "path": ".github/workflows/security-candidate22.yml",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "2f48e9d07fc6e609701a26955b33b2d290462fb4",
+        "bytes": 2886,
+        "mode": "100644",
+        "sha256": "f0206587d213e3611b440fae2d10ea7e8294066adec8e51b0cdbada16a90f504"
+      },
+      "before": {
+        "blob": "815a08c4bff95e7c9ca9893b62f35f2d561aa7f2",
+        "bytes": 4805,
+        "mode": "100644",
+        "sha256": "b3e6374ba17d9fc2b703d45f196d125daa76ab799e66ffa8e97d8567483d66f6"
+      },
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "1519cba79b844a598503d457ada4b2065fe419de",
+        "bytes": 361,
+        "mode": "100644",
+        "sha256": "d4c544bfd0ea996efcd3ff4a915a298fefe86fe497f5fc34ede3c9d3cb955cb9"
+      },
+      "before": null,
+      "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/README.md",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "ad2c49161d8741118cc36a4f0dbd9573261d8080",
+        "bytes": 9849,
+        "mode": "100644",
+        "sha256": "88e1c24e28ed500b8b388ec9fc4ce8e53a9d1e21bb1b7f740b122858ebf761f4"
+      },
+      "before": null,
+      "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/REPORT.md",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "e5e667207a158d84f2ce7d5207c145e7ef059375",
+        "bytes": 71895,
+        "mode": "100644",
+        "sha256": "8898c490cab5821f0810b0a476ce9d3cc43568b22402f6f89fc09abcfab1fe95"
+      },
+      "before": null,
+      "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/manifest.json",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "0e1d26bc539e42195eb0239a7472880a40023c8b",
+        "bytes": 735797,
+        "mode": "100644",
+        "sha256": "2fea7ee6831cb71f96d56132712d8996e0ae8e7aab3ee2bb314194a902e9cc3e"
+      },
+      "before": null,
+      "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/payload.zip",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "0507ccc86c2d67d471fd51f54b8d0334d7d697c4",
+        "bytes": 73003,
+        "mode": "100644",
+        "sha256": "272f5fe30fa40ad47fa79802e3f44c2717b6b708101922306e477247875227bd"
+      },
+      "before": null,
+      "path": "docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/verify29.py",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "415e64fbf63aa4ce5da12e8854e2f78f5650da98",
+        "bytes": 652,
+        "mode": "100644",
+        "sha256": "c3d364d13f5a86bb68694b81b89d0764344a77899bb6f0f7fca9baa387f3e3b5"
+      },
+      "before": null,
+      "path": "docs/brain/contracts/M1X-29/source29.v1.json",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "5e630a21b5572758f2c1386675c629f74b63222c",
+        "bytes": 8805,
+        "mode": "100644",
+        "sha256": "c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe"
+      },
+      "before": null,
+      "path": "docs/brain/task-specs/M1X-29/SCOPE_PLAN.md",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "94f8ace0d0628421e62c2afaee4f368e867212ea",
+        "bytes": 5362,
+        "mode": "100644",
+        "sha256": "b95c2a9c7f9198814bb19c6c57eabcbdf59537c99f341a9b3742831aaf647a7b"
+      },
+      "before": null,
+      "path": "docs/brain/task-specs/M1X-29/TASK.md",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "22cd3494063b92eac7982fb00c0762bcc7589128",
+        "bytes": 141091,
+        "mode": "100644",
+        "sha256": "097c2b3478ee7eb9111181001d22f7de1dcf21ba31fbb87a814f37a640f692e1"
+      },
+      "before": {
+        "blob": "2832a4c0404cc4dd56feb55b51c741d9c4940654",
+        "bytes": 141091,
+        "mode": "100644",
+        "sha256": "7a558f5dfac109862dc81944ad5c54f22456f97fb2783d2ae19605d8fc53fa0b"
+      },
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "c5dd85f5311d60666929e5f158964f098a9b90bf",
+        "bytes": 84178,
+        "mode": "100644",
+        "sha256": "268172809cdacbeb2ed2e7dffa463d4eb8e87278ccf060b388f958aa8fd8dfc4"
+      },
+      "before": {
+        "blob": "9e9a4769b6eece763dc97d19031eac79638b4392",
+        "bytes": 84178,
+        "mode": "100644",
+        "sha256": "343b2b70ff9abd362ad25f1bd70f328dd687724bf6cf56efb26857387243bf21"
+      },
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "775bc6dec47474deacc376a1c07610fef6e92e35",
+        "bytes": 506394,
+        "mode": "100644",
+        "sha256": "944c04283b834e5f20bdfcbf95c265c7af57f8f4754952b4353dee5f8d8952dd"
+      },
+      "before": {
+        "blob": "651a140b57fe57db4a7f31c28bbd56c9ff375473",
+        "bytes": 450505,
+        "mode": "100644",
+        "sha256": "943e3c039e16cb5dff09732003e5383d78ff5c758097debc6d400d535349e050"
+      },
+      "path": "scripts/release/full-app-j01/check.py",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "14632c2a3310b43b1691041370e0f0cfad26d655",
+        "bytes": 13939,
+        "mode": "100644",
+        "sha256": "25fae31f124319eff85f50caad74347deabcedf7cbb95fbab4712be3fe3d5d1b"
+      },
+      "before": null,
+      "path": "scripts/release/full-app-j01/readerIntegrity29.test.py",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "e92b1204f4047a13e890cf70e4a88b47eccc7ee2",
+        "bytes": 7185,
+        "mode": "100644",
+        "sha256": "78718956904d257942c222acf2441d0959278cace49a1d4b2557751e5eb869fe"
+      },
+      "before": null,
+      "path": "scripts/release/full-app-j01/readerTrace29.py",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "224ab428d2dff30fb7695f8ceb5d3595380572c5",
+        "bytes": 28569,
+        "mode": "100644",
+        "sha256": "bec605fd1b0c4edd301f9015053be8578389e2d8451e2d53b272bd0d0c1435e5"
+      },
+      "before": {
+        "blob": "d965145b31b4e21789cc3972239e67090e4bb5dc",
+        "bytes": 27714,
+        "mode": "100644",
+        "sha256": "344c6aea46306943ced4e3afdaa9c7b206b1a2d99d861a8fc1204736ffe97e18"
+      },
+      "path": "scripts/release/full-app-j01/replay27.py",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "1cd56bd4be8ad202cb4f7d4a4f60935298cfcbef",
+        "bytes": 28904,
+        "mode": "100644",
+        "sha256": "447ae63e2f633757a5a081b6d4b873ab7e4daa4ff89c4665e1db247e9399724e"
+      },
+      "before": {
+        "blob": "c196c707a578214a53dc9bfcdeee98254a9a5b85",
+        "bytes": 28049,
+        "mode": "100644",
+        "sha256": "256b07a2378dd1cf2dbb3eb43073667bf286b1f7bed88e23d586e5c1498bc0d2"
+      },
+      "path": "scripts/release/full-app-j01/replay28.py",
+      "status": "M"
+    },
+    {
+      "after": {
+        "blob": "4ff90be229ed9affa3e777f5019aef7f63bd1fe2",
+        "bytes": 34382,
+        "mode": "100644",
+        "sha256": "4365e20765752eb9653d3ef35462cc6b86bc63aca83f9185c394c7a0ac3495f4"
+      },
+      "before": null,
+      "path": "scripts/release/full-app-j01/replay29.py",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "b53132c764f74a4605f814f87bf1ff6509ff4a9f",
+        "bytes": 15467,
+        "mode": "100644",
+        "sha256": "3fd39d18196105de5325da59852a02cb71163b357c4867410e148ae7702349bf"
+      },
+      "before": null,
+      "path": "scripts/release/full-app-j01/replay29.test.py",
+      "status": "A"
+    },
+    {
+      "after": {
+        "blob": "4bf68e1cd1d63cf0558617ed4c9f94c67f4fefa3",
+        "bytes": 19469,
+        "mode": "100644",
+        "sha256": "520d3da0f3e857b2237e61c656297d9d3e2cbe51546d3837f4d15062b8afaef1"
+      },
+      "before": null,
+      "path": "scripts/release/full-app-j01/source_consumer29.test.py",
+      "status": "A"
+    }
+  ],
+  "head": "71dde4eed92edd20ff0e9611da42086d6e0f2b89",
+  "qualification": "GIT_HISTORY_AND_BLOB_IDENTITIES_NOT_ACCEPTANCE",
+  "schema": 1,
+  "scopeCommit": "9b395cbee7594f7dc03934aed4e08c4e3ea43c23",
+  "scopePlanSHA256": "c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe",
+  "tree": "f9e5f995d37a7dc058b07271e6b98f79cf698951"
+}
