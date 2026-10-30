@@ -128,7 +128,7 @@ def main():
     # This helper observes metadata only. It cannot authenticate npm or turn an
     # original guard refusal into success; tools29 always invokes that guard next.
     with tempfile.TemporaryDirectory(prefix='release29-preobservation-') as directory:
-        prefix=Path(directory)/'prefix';npm=prefix/'node_modules/npm';(npm/'bin').mkdir(parents=True)
+        prefix=Path(directory).resolve()/'prefix';npm=prefix/'node_modules/npm';(npm/'bin').mkdir(parents=True)
         node=prefix/'node.exe';node.write_bytes(b'public fixture, not executable')
         (npm/'package.json').write_bytes(b'{}');(npm/'bin/public.js').write_bytes(b'public fixture')
         nt=SimpleNamespace(**{**os.__dict__,'name':'nt'})

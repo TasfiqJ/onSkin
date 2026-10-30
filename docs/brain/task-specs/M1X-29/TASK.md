@@ -44,6 +44,20 @@ stage/exit/timing records preserve later diagnostics without raw paths or errors
 The exact first substantive source a6f7e681/parent9b395c/treeabe7249f and its eleven
 mode/blob/SHA witnesses are separately pinned; no historical function exclusion
 or amendment substitutes for that explicit transition.
+At source 2f42fa45, hosted Windows new replay controls returned
+R29_REPLAY_CONTROL_FAILED; this required failure remains red. The authentic
+hosted original24-28 replay passed separately at that exact source. A separate
+real Windows 8.3 temporary-path assay of unchanged source 2f42fa45 reproduced
+R29_NPM_METADATA_PATH in the synthetic metadata fixture; canonicalizing only
+that fixture prefix produced its unchanged five-positive/74-refusal controls.
+The next source revision changes that one fixture line, explicit source pins
+and this task record only. Its runner, original guards, reader implementations,
+application and workflow remain identical to 2f42fa45. App and authentic
+historical execution records retain their exact earlier source provenance;
+current controls and the full current checker execute separately at the new
+source. The complete exact 2f42fa45 parent/tree and five changed-path witnesses
+are pinned alongside the earlier a6f7e681 witnesses, without historical skips.
+
 Source29 history permits the immutable plan, substantive source, exactly one
 two-worklist freeze child, and one final five-checkpoint-file/root-handoff tail.
 Actual final-head CI, independent full-clone/tamper proofs and fresh-download
