@@ -97,12 +97,27 @@ def bytes27(path, bound=128*1024*1024):
         after = path.lstat(); regular27(after, bound)
         require27(total == before.st_size and same27(opened, finished) and same27(before, after) and
             cross27(path, after, finished), 'R27_REPLAY_CHANGED')
+        raw = b''.join(blocks)
+        # Metadata can alias a mutation to bytes already consumed. Independently
+        # reread this descriptor, bounded by the original size, before returning.
+        os.lseek(descriptor, 0, os.SEEK_SET)
+        verified = 0
+        while True:
+            block = os.read(descriptor, min(1024*1024, before.st_size-verified+1))
+            if not block: break
+            require27(verified+len(block) <= before.st_size and
+                block == raw[verified:verified+len(block)], 'R27_REPLAY_CHANGED')
+            verified += len(block)
+        finished = os.fstat(descriptor); regular27(finished, bound)
+        after = path.lstat(); regular27(after, bound)
+        require27(verified == before.st_size and same27(opened, finished) and same27(before, after) and
+            cross27(path, after, finished), 'R27_REPLAY_CHANGED')
     finally: os.close(descriptor)
     for parent, expected in parents.items():
         info = parent.lstat()
         require27((info.st_dev, info.st_ino, info.st_mode) == expected and not getattr(info, 'st_file_attributes', 0) & 1024,
             'R27_REPLAY_PARENT')
-    return b''.join(blocks)
+    return raw
 
 
 def tool27(path):

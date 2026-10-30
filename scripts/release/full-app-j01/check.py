@@ -6754,5 +6754,724 @@ source_guard = source28_guard
 validate = validate28
 
 
+
+
+def snapshot29(info):
+    return {name: getattr(info, name) for name in dir(info) if name.startswith('st_') and
+        name not in ('st_atime', 'st_atime_ns') and isinstance(getattr(info, name), (int, float))}
+def compatible29_metadata(path, named, opened):
+    fields = ('st_dev', 'st_ino', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_uid', 'st_gid')
+    if not all(getattr(named, name) == getattr(opened, name) for name in fields): return False
+    if os.name == 'nt':
+        execute = 0o111 if path.suffix.lower() in ('.exe', '.com', '.bat', '.cmd') else 0
+        if opened.st_mode & 0o111 or named.st_mode != opened.st_mode | execute: return False
+    elif named.st_mode != opened.st_mode: return False
+    for name in ('st_file_attributes', 'st_reparse_tag', 'st_birthtime_ns'):
+        if hasattr(named, name) and hasattr(opened, name) and getattr(named, name) != getattr(opened, name): return False
+    # ctime is compared within each API domain below. On Windows pathname
+    # creation time and handle change time need not represent the same event.
+    return True
+
+def regular29(path, limit=128*1024*1024):
+    """Observed bounded source stability; not universal adversarial TOCTOU safety."""
+    require(isinstance(path, Path) and path.is_absolute() and type(limit) is int and
+        0 <= limit <= 128*1024*1024, 'R29_PUBLIC_BOUND')
+    try:
+        parents = {}
+        for parent in path.parents:
+            info = parent.lstat()
+            require(stat.S_ISDIR(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+                'R29_PUBLIC_PATH')
+            parents[parent] = (info.st_dev, info.st_ino, info.st_mode, getattr(info, 'st_reparse_tag', None))
+        before = path.lstat()
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+            not before.st_mode & (stat.S_ISUID | stat.S_ISGID | stat.S_ISVTX) and
+            not getattr(before, 'st_file_attributes', 0) & 1024 and 0 <= before.st_size <= limit,
+            'R29_PUBLIC_FILE')
+        descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
+        try:
+            opened = os.fstat(descriptor)
+            require(compatible29_metadata(path, before, opened), 'R29_PUBLIC_CHANGED')
+            blocks = []; total = 0
+            while True:
+                block = os.read(descriptor, min(1024*1024, before.st_size-total+1))
+                if not block: break
+                total += len(block)
+                require(total <= before.st_size, 'R29_PUBLIC_CHANGED')
+                blocks.append(block)
+            finished = os.fstat(descriptor); after = path.lstat()
+            require(total == before.st_size and snapshot29(opened) == snapshot29(finished) and
+                snapshot29(before) == snapshot29(after) and compatible29_metadata(path, after, finished),
+                'R29_PUBLIC_CHANGED')
+            body = b''.join(blocks)
+            require(os.lseek(descriptor, 0, os.SEEK_SET) == 0, 'R29_PUBLIC_CHANGED')
+            total = 0
+            while True:
+                block = os.read(descriptor, min(1024*1024, before.st_size-total+1))
+                if not block: break
+                require(total+len(block) <= before.st_size and body[total:total+len(block)] == block,
+                    'R29_PUBLIC_CHANGED')
+                total += len(block)
+            finished = os.fstat(descriptor); after = path.lstat()
+            require(total == before.st_size and snapshot29(opened) == snapshot29(finished) and
+                snapshot29(before) == snapshot29(after) and compatible29_metadata(path, after, finished),
+                'R29_PUBLIC_CHANGED')
+        finally: os.close(descriptor)
+        for parent, expected in parents.items():
+            info = parent.lstat()
+            require((info.st_dev, info.st_ino, info.st_mode, getattr(info, 'st_reparse_tag', None)) == expected and
+                not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_PUBLIC_PATH')
+        return body
+    except OSError:
+        raise ValueError('R29_PUBLIC_READ_INCOMPLETE') from None
+
+# Release29 successor. Every inherited Release08-27 byte/definition remains immutable.
+RELEASE29_BASE = 'bace116586d58ed955f0a024ca96ae9f4ad9286d'
+RELEASE29_TREE = '6951590547b79a869464df987d16da6552907846'
+RELEASE29_AUTHORITY = 'BRAIN-M1X-WINDOWS-READER-INTEGRITY29-CANDIDATE-01'
+RELEASE29_INPUT = '7a94feecb69b09d46acb6465972f1c7b809fbfa9e657aa50c1f7bc4523643579'
+RELEASE29_PLAN = 'docs/brain/task-specs/M1X-29/SCOPE_PLAN.md'
+RELEASE29_PLAN_COMMIT = '9b395cbee7594f7dc03934aed4e08c4e3ea43c23'
+RELEASE29_PLAN_SHA256 = 'c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe'
+RELEASE29_APPENDIX_SHA256 = 'da949a5518bae091365086264620c6a764ded296ac3e52e29f91fd9fa514945f'
+RELEASE29_CANDIDATE = 'docs/brain/contracts/M1X-29/source29.v1.json'
+RELEASE29_CHECKPOINT = 'docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/'
+RELEASE29_CHECKPOINT_FILES = {'README.md', 'REPORT.md', 'manifest.json', 'payload.zip', 'verify29.py'}
+RELEASE29_WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+RELEASE29_EXISTING_APP = set()
+RELEASE29_NEW_APP = set()
+RELEASE29_OTHER_EXISTING = {'scripts/release/full-app-j01/check.py', 'scripts/release/full-app-j01/replay28.py', 'docs/phase-4/generated/source-worklist.md', 'docs/phase-4/generated/source-worklist.json', 'ONSKIN_BRAIN_HANDOFF.txt', '.github/workflows/security-candidate22.yml', 'scripts/release/full-app-j01/replay27.py'}
+RELEASE29_OTHER_NEW = {'docs/brain/task-specs/M1X-29/SCOPE_PLAN.md', 'scripts/release/full-app-j01/source_consumer29.test.py', 'docs/brain/task-specs/M1X-29/TASK.md', 'docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/README.md', 'docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/manifest.json', 'docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/REPORT.md', 'scripts/release/full-app-j01/replay29.py', 'docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/payload.zip', 'scripts/release/full-app-j01/readerIntegrity29.test.py', 'scripts/release/full-app-j01/replay29.test.py', 'scripts/release/full-app-j01/readerTrace29.py', 'docs/brain/contracts/M1X-29/source29.v1.json', 'docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/verify29.py'}
+RELEASE29_LEGACY_CODES = 'AUTHENTIC_HISTORY: BASE_BLOB_SHA256: BASE_TREE CONTRACT_BASE CONTRACT_VERSION C_ALIAS: DAG38_EXACT_OWNERS DAG_CYCLE: DAG_EDGE: DAG_GATE: DAG_IDENTITIES DAG_NOT_ISSUANCE: DAG_OPERATIONAL_GATES: DAG_ROW_OWNER: DAG_UNKNOWN_NODE: F09_DIARY F09_NOT_F18 FINITE_IDS: F_ALIAS: GATE_CLOSED: GATE_IDENTITIES GATE_OWNER: HISTORICAL_COUNT: HISTORICAL_DEPS: HISTORICAL_IDENTITIES: HISTORICAL_NODE: HISTORICAL_PROVENANCE: HISTORICAL_RECORD: HISTORICAL_STATUS: HISTORY_AUTHORITY HISTORY_NO_ACCEPTANCE J01_DAG J01_G4_CHANGE_GATE J01_INTAKE J01_NO_CLAIMS J01_SINGLE_SCAN_GATES JSON_DUPLICATE_KEY: JSON_NONFINITE: J_REGISTRY: J_ROW_GATES: LEDGER_CUSTODY LEGACY_CONSUMERS LEGACY_DOC_BYTES: LEGACY_GUARD M103_TO_M2 MATRIX65_IDENTITIES MATRIX_COUNTS NO_ADMISSION NO_FAKE_CUTOVER NO_SELF_ACCEPTANCE NO_STUB_GREEN: PLATFORM_TERRITORY PRECEDENCE_LIMIT PRECEDENCE_NOTICE: PRECEDENCE_ORDER PRECEDENCE_PROPOSAL PRECEDENCE_SAFETY PRIORITY_NOT_J05_ADMISSION PRODUCT_AUTHORITY PROTECTED_WITNESS_OMITTED P_ALIAS: REGULAR_PATH: ROW_EVIDENCE: ROW_GATES: ROW_OVERLAP: ROW_QUALIFIED_OWNERS: ROW_REQUIRED_GATE: ROW_STATUS: ROW_TRACEABILITY: SAFE_OFFER SCHEMA_CONST: SCHEMA_DIALECT SCHEMA_DUPLICATE: SCHEMA_ENUM: SCHEMA_MAX_ITEMS: SCHEMA_MIN_ITEMS: SCHEMA_MIN_LENGTH: SCHEMA_REQUIRED: SCHEMA_TYPE: SCHEMA_UNKNOWN_KEY: SCHEMA_UNSUPPORTED: SOURCE_ABSENT: SOURCE_IDENTITY: SOURCE_MATURITY: SOURCE_MODE: SOURCE_PATH SOURCE_SHA256: UNTRACKED_SCOPE: WORKING_SCOPE: ZERO_SPEND '
+RELEASE29_CONSUMER_SHA256 = '5b1153c2502a26e55fb4174ea094c85a11c4212bae6fde8b9aebca454b8b34d5'
+RELEASE29_WORKFLOW_SHA256 = '4a51fc735970bf2996bd89e6756f3388c619d0f7c82ec431775e26ef29271af4'
+RELEASE29_PREVIOUS_GOVERNANCE = {}
+
+RELEASE29_REPLAY_SHA256 = 'e8e56eec6d57079c8396898411a9ef429d069003840fad5eb0c6cd16ca55dedd'
+RELEASE29_READER_AST_SHA256 = {'scripts/release/full-app-j01/replay27.py': 'ea02834fdc63ae3ff4045e9ddb5b76f231fb67d165a658f90cf212ef6fda473a', 'scripts/release/full-app-j01/replay28.py': 'e4a9fc6e49097442f8f2717a560c3428ff511798e78769cd9ccacc570c64438e'}
+RELEASE29_READER_TOOLS_SHA256 = {'scripts/release/full-app-j01/readerTrace29.py': '78718956904d257942c222acf2441d0959278cace49a1d4b2557751e5eb869fe', 'scripts/release/full-app-j01/readerIntegrity29.test.py': '25fae31f124319eff85f50caad74347deabcedf7cbb95fbab4712be3fe3d5d1b'}
+RELEASE29_REPLAY_TEST_SHA256 = '844dba1bf143e1d5fb881d8355b151153e83eee03107f074431f7216a8dee8f7'
+
+def name29(path, identities):
+    require(type(path) is str and 0 < len(path) <= 4096 and path.isascii() and
+        not path.startswith('/') and '\\' not in path and
+        not any(ord(c) < 32 or ord(c) == 127 or c in ':<>"|?*' for c in path), 'R29_PATH')
+    parts = path.split('/')
+    require(len(parts) <= 64 and all(p and p not in ('.', '..') and not p.endswith((' ', '.')) and
+        re.fullmatch(r'(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?', p, re.I) is None for p in parts), 'R29_PATH')
+    for length in range(1, len(parts)+1):
+        original = '/'.join(parts[:length]); kind = 'file' if length == len(parts) else 'directory'
+        key = unicodedata.normalize('NFKC', original).casefold()
+        require(key not in identities or identities[key] == (original, kind), 'R29_PATH_ALIAS')
+        identities[key] = (original, kind)
+    require(len(identities) <= 100000, 'R29_PATH_BOUND')
+
+
+def scope29_guard(raw):
+    require(type(raw) is bytes and len(raw) == 8805 and sha(raw) == RELEASE29_PLAN_SHA256, 'R29_PLAN_IDENTITY')
+    blocks = re.findall(rb'```json\n(.*?)\n```', raw, re.S)
+    require(len(blocks) == 1, 'R29_PLAN_SCHEMA')
+    value = json.loads(blocks[0], object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R29_NONFINITE_JSON'))
+    expected = RELEASE29_EXISTING_APP | RELEASE29_NEW_APP | RELEASE29_OTHER_EXISTING | RELEASE29_OTHER_NEW
+    require(type(value) is list and all(type(p) is str for p in value) and
+        len(value) == len(set(value)) == len(expected) and set(value) == expected, 'R29_AUTHENTIC_FINITE_GRANT')
+    identities = {}
+    for path in value: name29(path, identities)
+    require(not RELEASE29_EXISTING_APP and not RELEASE29_NEW_APP and len(expected) == 20, 'R29_APP_PATH_BUDGET')
+    return value
+
+
+def candidate29_guard(raw):
+    require(type(raw) is bytes and len(raw) <= 65536, 'R29_CANDIDATE_BOUND')
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R29_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'base', 'tree',
+        'scopeCommit', 'scopePlanSHA256', 'inputManifestSHA256', 'acceptanceGranted', 'admissions', 'pr'} and
+        type(value['schema']) is int and value['schema'] == 1 and value['authority'] == RELEASE29_AUTHORITY and
+        value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and value['base'] == RELEASE29_BASE and value['tree'] == RELEASE29_TREE and
+        value['scopeCommit'] == RELEASE29_PLAN_COMMIT and value['scopePlanSHA256'] == RELEASE29_PLAN_SHA256 and
+        value['inputManifestSHA256'] == RELEASE29_INPUT and value['acceptanceGranted'] is False and
+        type(value['admissions']) is dict and set(value['admissions']) == {'G97', 'DB', 'M103', 'M2', 'J01', 'PUBLIC'} and
+        all(flag is False for flag in value['admissions'].values()) and
+        (value['pr'] is None or (type(value['pr']) is int and value['pr'] > 0)), 'R29_NO_ADMISSION')
+    return value
+
+
+def validate29_checker(raw):
+    before = git23('show', RELEASE29_BASE+':scripts/release/full-app-j01/check.py')
+    terminal = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+    require(before.endswith(terminal) and raw.startswith(before[:-len(terminal)]) and raw.endswith(terminal), 'R29_INHERITED_BYTES')
+    extension = ast.parse(raw[len(before)-len(terminal):-len(terminal)])
+    functions = {'snapshot29', 'compatible29_metadata', 'regular29', 'name29', 'scope29_guard', 'candidate29_guard', 'validate29_checker', 'validate29_diff',
+        'source29_endpoint', 'full29_store', 'source29_history', 'tree29', 'evidence29_guard',
+        'working29_guard', 'source29_guard', 'validate29', 'ast29_identity', 'reader29_guard'}
+    declarations = [n for n in extension.body if isinstance(n, ast.FunctionDef)]
+    require({n.name for n in declarations} == functions and len(declarations) == len(functions), 'R29_FUNCTION_SCOPE')
+    assigned = set(); dispatch = set(); literal = {}
+    for node in extension.body:
+        if isinstance(node, ast.FunctionDef): continue
+        require(isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name), 'R29_MODULE_SCOPE')
+        name = node.targets[0].id
+        require(name not in assigned, 'R29_DUPLICATE_ASSIGNMENT'); assigned.add(name)
+        if name in {'source_guard', 'validate'}:
+            require(isinstance(node.value, ast.Name) and node.value.id ==
+                {'source_guard': 'source29_guard', 'validate': 'validate29'}[name], 'R29_DISPATCH')
+            dispatch.add(name)
+        else:
+            require(name.startswith('RELEASE29_'), 'R29_GLOBAL_SCOPE')
+            try: literal[name] = ast.literal_eval(node.value)
+            except (ValueError, TypeError): require(False, 'R29_GLOBAL_SIDE_EFFECT')
+    require(dispatch == {'source_guard', 'validate'}, 'R29_DISPATCH_REQUIRED')
+    expected_keys = ('RELEASE29_BASE', 'RELEASE29_TREE', 'RELEASE29_AUTHORITY', 'RELEASE29_INPUT', 'RELEASE29_PLAN',
+        'RELEASE29_PLAN_COMMIT', 'RELEASE29_PLAN_SHA256', 'RELEASE29_APPENDIX_SHA256', 'RELEASE29_CANDIDATE', 'RELEASE29_CHECKPOINT',
+        'RELEASE29_CHECKPOINT_FILES', 'RELEASE29_WORKLIST', 'RELEASE29_EXISTING_APP', 'RELEASE29_NEW_APP',
+        'RELEASE29_OTHER_EXISTING', 'RELEASE29_OTHER_NEW', 'RELEASE29_LEGACY_CODES',
+        'RELEASE29_CONSUMER_SHA256', 'RELEASE29_WORKFLOW_SHA256', 'RELEASE29_PREVIOUS_GOVERNANCE', 'RELEASE29_REPLAY_SHA256', 'RELEASE29_REPLAY_TEST_SHA256', 'RELEASE29_READER_AST_SHA256', 'RELEASE29_READER_TOOLS_SHA256')
+    for key in expected_keys:
+        require(key in literal and literal[key] == globals()[key], 'R29_AUTHENTIC_FINITE_GRANT')
+    require(set(literal) == set(expected_keys), 'R29_GLOBAL_SCOPE')
+    extension_raw = raw[len(before)-len(terminal):-len(terminal)]
+    normalized, count = re.subn(rb"(?m)^RELEASE29_APPENDIX_SHA256 = '[0-9a-f]{64}'$",
+        b"RELEASE29_APPENDIX_SHA256 = '"+b'0'*64+b"'", extension_raw)
+    require(count == 1 and sha(normalized) == RELEASE29_APPENDIX_SHA256, 'R29_APPENDIX_BYTES')
+
+
+def ast29_identity(node):
+    """Stable semantic AST digest across hosts with optional empty type_params."""
+    def canonical(value):
+        if isinstance(value, ast.AST):
+            return [type(value).__name__, [[name, canonical(getattr(value, name))] for name in value._fields
+                if not (name == 'type_params' and getattr(value, name) == [])]]
+        if isinstance(value, list): return [canonical(item) for item in value]
+        if isinstance(value, bytes): return ['bytes', value.hex()]
+        return value
+    return sha(json.dumps(canonical(node), separators=(',', ':'), ensure_ascii=True, allow_nan=False).encode())
+
+
+def reader29_guard(path, raw):
+    """Only the two named reader implementations may differ from exact PR32."""
+    names = {'scripts/release/full-app-j01/replay27.py': 'bytes27',
+        'scripts/release/full-app-j01/replay28.py': 'bytes28'}
+    require(path in names and type(raw) is bytes, 'R29_READER_SCOPE')
+    before = git23('show', RELEASE29_BASE+':'+path)
+    old_tree = ast.parse(before); new_tree = ast.parse(raw)
+    require(len(old_tree.body) == len(new_tree.body), 'R29_READER_SCOPE')
+    matched = []
+    for left, right in zip(old_tree.body, new_tree.body):
+        if isinstance(left, ast.FunctionDef) and left.name == names[path]:
+            require(isinstance(right, ast.FunctionDef) and right.name == left.name and
+                ast.dump(left.args, include_attributes=False) == ast.dump(right.args, include_attributes=False) and
+                left.decorator_list == right.decorator_list == [], 'R29_READER_SCOPE')
+            require(ast29_identity(right) == RELEASE29_READER_AST_SHA256[path],
+                'R29_READER_IMPLEMENTATION')
+            matched.append((left, right))
+        else:
+            require(ast.dump(left, include_attributes=False) == ast.dump(right, include_attributes=False),
+                'R29_READER_INHERITED_AST')
+    require(len(matched) == 1, 'R29_READER_SCOPE')
+    left, right = matched[0]
+    old_lines = before.splitlines(keepends=True); new_lines = raw.splitlines(keepends=True)
+    require(b''.join(old_lines[:left.lineno-1]+old_lines[left.end_lineno:]) ==
+        b''.join(new_lines[:right.lineno-1]+new_lines[right.end_lineno:]), 'R29_READER_INHERITED_BYTES')
+    return names[path]
+
+
+def validate29_diff(raw, read_after, parent=None, working=False, at_commit=None):
+    parent = RELEASE29_BASE if parent is None else parent
+    require(type(raw) is bytes and type(working) is bool, 'R29_DIFF_SHAPE')
+    previous = RELEASE29_PREVIOUS_GOVERNANCE.get(at_commit)
+    prior = previous is not None
+    if at_commit is not None:
+        require(type(at_commit) is str and re.fullmatch('[0-9a-f]{40}', at_commit), 'R29_PRIOR_CONTEXT')
+    if prior:
+        require(not working and parent in (RELEASE29_BASE, previous['parent']), 'R29_PRIOR_CONTEXT')
+        require(git23('rev-parse', at_commit+'^{tree}').decode().strip() == previous['tree'] and
+            git23('rev-list', '--parents', '-n', '1', at_commit).decode().split() == [at_commit, previous['parent']] and
+            git23('rev-parse', previous['parent']+'^{tree}').decode().strip() == previous['parentTree'], 'R29_PRIOR_IDENTITY')
+        require(raw == git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', parent, at_commit), 'R29_PRIOR_TRANSITION')
+    fields = raw.split(b'\0')
+    require(fields[-1] == b'' and len(fields) % 2 == 1, 'R29_DIFF_SHAPE')
+    existing = RELEASE29_EXISTING_APP | RELEASE29_OTHER_EXISTING
+    new = RELEASE29_NEW_APP | RELEASE29_OTHER_NEW
+    seen = set(); identities = {}
+    for offset in range(0, len(fields)-1, 2):
+        meta = fields[offset].decode('ascii').split(); path = fields[offset+1].decode('utf-8')
+        require(len(meta) == 5 and path in existing | new and path not in seen, 'R29_FINITE_SCOPE')
+        seen.add(path); name29(path, identities)
+        oldmode, newmode, oldblob, newblob, status = meta
+        require(oldmode in (':000000', ':100644') and newmode == '100644' and status in ('A', 'M') and
+            all(re.fullmatch('[0-9a-f]{40}', v) for v in (oldblob, newblob)), 'R29_MODE_OR_DELETION')
+        found = subprocess.run(['git', '--no-replace-objects', 'cat-file', '-e', parent+':'+path], cwd=ROOT, capture_output=True)
+        require(found.returncode in (0, 128), 'R29_PARENT_PROVENANCE')
+        exists = found.returncode == 0
+        require(exists == (status == 'M') == (oldmode == ':100644'), 'R29_PARENT_PROVENANCE')
+        require(oldblob == (git23('rev-parse', parent+':'+path).decode().strip() if exists else '0'*40), 'R29_PARENT_BLOB')
+        if parent == RELEASE29_BASE: require(exists == (path in existing), 'R29_CREATE_EDIT')
+        data = read_after(path)
+        require(type(data) is bytes and len(data) <= 128*1024*1024 and
+            (working and newblob == '0'*40 or hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest() == newblob), 'R29_AFTER_BLOB')
+        if path == RELEASE29_PLAN: scope29_guard(data)
+        if path == RELEASE29_CANDIDATE: candidate29_guard(data)
+        if prior and path in previous['files']:
+            if path == 'scripts/release/full-app-j01/check.py':
+                inherited = git23('show', RELEASE29_BASE+':'+path)
+                terminal = b"if __name__ == '__main__':\n    sys.exit(main())\n"
+                require(data.startswith(inherited[:-len(terminal)]) and data.endswith(terminal), 'R29_INHERITED_BYTES')
+            pin = previous['files'][path]
+            require(newmode == pin['mode'] and newblob == pin['blob'] and sha(data) == pin['sha256'] and
+                git23('ls-tree', at_commit, '--', path).decode().strip() == pin['mode']+' blob '+pin['blob']+'\t'+path and
+                data == git23('show', at_commit+':'+path), 'R29_PRIOR_BLOB')
+        else:
+            if path == 'scripts/release/full-app-j01/check.py': validate29_checker(data)
+            pins = {'scripts/release/full-app-j01/source_consumer29.test.py': RELEASE29_CONSUMER_SHA256,
+                '.github/workflows/security-candidate22.yml': RELEASE29_WORKFLOW_SHA256,
+                'scripts/release/full-app-j01/replay29.py': RELEASE29_REPLAY_SHA256,
+                'scripts/release/full-app-j01/replay29.test.py': RELEASE29_REPLAY_TEST_SHA256}
+            if path in pins: require(sha(data) == pins[path], 'R29_SOURCE_TOOL_IDENTITY')
+            if path in RELEASE29_READER_AST_SHA256: reader29_guard(path, data)
+            if path in RELEASE29_READER_TOOLS_SHA256:
+                require(sha(data) == RELEASE29_READER_TOOLS_SHA256[path], 'R29_SOURCE_TOOL_IDENTITY')
+    return seen
+
+
+def source29_endpoint():
+    head = git23('rev-parse', 'HEAD').decode().strip()
+    parents = git23('rev-list', '--parents', '-n', '1', head).decode().split()
+    require(len(parents) in (2, 3), 'R29_HEAD_PARENTS')
+    endpoint = head if len(parents) == 2 else parents[2]
+    if len(parents) == 3 or os.environ.get('GITHUB_ACTIONS') == 'true':
+        require(os.environ.get('GITHUB_EVENT_NAME') == 'pull_request' and
+            os.environ.get('GITHUB_REPOSITORY') == 'TasfiqJ/onSkin', 'R29_CI_CONTEXT')
+        candidate = candidate29_guard(regular29(ROOT/RELEASE29_CANDIDATE)); number = candidate['pr']
+        require(type(number) is int and number > 0, 'R29_CI_CONTEXT')
+        event_path = Path(os.environ.get('GITHUB_EVENT_PATH', ''))
+        require(event_path.is_absolute(), 'R29_CI_EVENT_PATH')
+        raw = regular29(event_path, 1024*1024)
+        event = json.loads(raw, object_pairs_hook=pairs,
+            parse_constant=lambda _: require(False, 'R29_NONFINITE_JSON'))
+        require(type(event) is dict and type(event.get('repository')) is dict and type(event.get('pull_request')) is dict,
+            'R29_CI_EVENT')
+        pr = event['pull_request']
+        require(type(pr.get('base')) is dict and type(pr.get('head')) is dict and type(pr['head'].get('repo')) is dict,
+            'R29_CI_EVENT')
+        require(type(event.get('number')) is int and event['number'] == number and type(pr.get('number')) is int and
+            pr['number'] == number and event['repository'].get('full_name') == 'TasfiqJ/onSkin' and
+            os.environ.get('GITHUB_REF') == 'refs/pull/'+str(number)+'/merge' and
+            pr['base'].get('sha') == RELEASE29_BASE and pr['base'].get('ref') == 'stage/m1-destructive-commit-core05-28' and
+            pr['head'].get('sha') == endpoint and pr['head'].get('ref') == 'stage/m1-windows-reader-integrity29' and
+            pr['head']['repo'].get('full_name') == 'TasfiqJ/onSkin' and pr.get('draft') is True and
+            pr.get('maintainer_can_modify') is False and 'auto_merge' in pr and pr['auto_merge'] is None,
+            'R29_CI_EVENT')
+        ci_sha = os.environ.get('GITHUB_SHA')
+        require(type(ci_sha) is str and re.fullmatch('[0-9a-f]{40}', ci_sha), 'R29_CI_CONTEXT')
+        if ci_sha not in (head, endpoint):
+            snapshot = pr.get('merge_commit_sha')
+            require(snapshot is None or type(snapshot) is str and re.fullmatch('[0-9a-f]{40}', snapshot), 'R29_CI_MERGE_SNAPSHOT_SCHEMA')
+            # The event's asynchronously computed merge snapshot is advisory.
+            # GITHUB_SHA names the fetched service test object; authenticate
+            # its actual parents/tree against the exact event base/head.
+            require(
+                git23('rev-list', '--parents', '-n', '1', ci_sha).decode().split() == [ci_sha, RELEASE29_BASE, endpoint] and
+                git23('rev-parse', ci_sha+'^{tree}') == git23('rev-parse', endpoint+'^{tree}'), 'R29_CI_TEST_MERGE_IDENTITY')
+        if len(parents) == 3:
+            require(parents[1] == RELEASE29_BASE and git23('rev-parse', head+'^{tree}') ==
+                git23('rev-parse', endpoint+'^{tree}'), 'R29_CI_MERGE_TREE')
+    return endpoint
+
+
+def full29_store():
+    # Complete independent checkout metadata only; never open protected working bodies.
+    require(git23('rev-parse', '--is-shallow-repository').strip() == b'false', 'R29_FULL_HISTORY')
+    for parent in (ROOT, *ROOT.parents):
+        info = parent.lstat()
+        require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_CHECKOUT_PATH')
+    common = Path(git23('rev-parse', '--git-common-dir').decode().strip())
+    common = common if common.is_absolute() else ROOT/common
+    require(Path(os.path.abspath(common)) == ROOT/'.git', 'R29_STANDALONE_CHECKOUT')
+    info = common.lstat()
+    require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+        not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_STANDALONE_CHECKOUT')
+    objects = common/'objects'
+    require(not os.path.lexists(objects/'info/alternates') and not os.path.lexists(objects/'info/http-alternates'), 'R29_ALTERNATES')
+    nodes = 0; stack = [(objects, 0)]
+    while stack:
+        path, depth = stack.pop(); info = path.lstat(); nodes += 1
+        require(nodes <= 1000000 and depth <= 8 and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_OBJECT_STORE')
+        if stat.S_ISDIR(info.st_mode):
+            with os.scandir(path) as entries:
+                stack.extend((Path(entry.path), depth+1) for entry in entries)
+        else: require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'R29_OBJECT_STORE')
+    for key in ('extensions.partialClone', 'remote.origin.promisor'):
+        result = subprocess.run(['git', '--no-replace-objects', 'config', '--get', key], cwd=ROOT, capture_output=True)
+        require(result.returncode == 1 and not result.stdout, 'R29_PARTIAL_CLONE')
+    grafts = Path(git23('rev-parse', '--git-path', 'info/grafts').decode().strip())
+    if not grafts.is_absolute(): grafts = ROOT/grafts
+    require(not os.path.lexists(grafts) and not git23('for-each-ref', '--format=%(refname)', 'refs/replace').strip(), 'R29_HISTORY_SUBSTITUTION')
+    require(not any(line.startswith(b'?') for line in git23('rev-list', '--objects', '--missing=print', 'HEAD').splitlines()),
+        'R29_MISSING_OBJECTS')
+    configured = subprocess.run(['git', '--no-replace-objects', 'config', '--get-regexp', r'^fsck\.'], cwd=ROOT, capture_output=True, timeout=30)
+    require(configured.returncode == 1 and not configured.stdout, 'R29_FSCK_CONFIG')
+    try:
+        integrity = subprocess.run(['git', '--no-replace-objects', '-c', 'core.hooksPath=', 'fsck', '--full', '--strict',
+            '--no-reflogs', '--no-dangling'], cwd=ROOT, capture_output=True, timeout=300)
+        require(integrity.returncode == 0 and len(integrity.stdout) + len(integrity.stderr) <= 65536, 'R29_OBJECT_HASH')
+    except (OSError, subprocess.SubprocessError): raise ValueError('R29_OBJECT_HASH') from None
+
+
+def source29_history():
+    require(git23('rev-parse', RELEASE29_BASE+'^{tree}').decode().strip() == RELEASE29_TREE and
+        git23('merge-base', RELEASE29_BASE, RELEASE29_PLAN_COMMIT).decode().strip() == RELEASE29_BASE and
+        git23('rev-list', '--parents', '-n', '1', RELEASE29_PLAN_COMMIT).decode().split() ==
+        [RELEASE29_PLAN_COMMIT, RELEASE29_BASE], 'R29_PINNED_BASE')
+    plan = git23('show', RELEASE29_PLAN_COMMIT+':'+RELEASE29_PLAN); scope29_guard(plan)
+    require(regular29(ROOT/RELEASE29_PLAN) == plan, 'R29_PLAN_IDENTITY')
+    endpoint = source29_endpoint()
+    require(git23('merge-base', RELEASE29_BASE, endpoint).decode().strip() == RELEASE29_BASE, 'R29_ANCESTRY')
+    commits = git23('rev-list', '--reverse', RELEASE29_BASE+'..'+endpoint).decode().splitlines()
+    require(1 <= len(commits) <= 128 and commits[0] == RELEASE29_PLAN_COMMIT, 'R29_PLAN_FIRST')
+    previous = RELEASE29_BASE; phase = 'SOURCE'; runtime = frozen = tail = None
+    for index, commit in enumerate(commits):
+        require(phase != 'TAIL', 'R29_AFTER_EVIDENCE_TAIL')
+        require(git23('rev-list', '--parents', '-n', '1', commit).decode().split() == [commit, previous], 'R29_LINEAR_HISTORY')
+        paths = validate29_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', previous, commit),
+            lambda path: git23('show', commit+':'+path), previous, at_commit=commit)
+        validate29_diff(git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE29_BASE, commit),
+            lambda path: git23('show', commit+':'+path), at_commit=commit)
+        if index == 0:
+            require(paths == {RELEASE29_PLAN}, 'R29_PLAN_FIRST')
+        else:
+            require(RELEASE29_PLAN not in paths, 'R29_PLAN_IMMUTABLE')
+            evidence = {RELEASE29_CHECKPOINT+n for n in RELEASE29_CHECKPOINT_FILES} | {'ONSKIN_BRAIN_HANDOFF.txt'}
+            if paths & evidence:
+                require(phase == 'FROZEN' and paths == evidence, 'R29_EVIDENCE_TAIL_SCOPE')
+                phase = 'TAIL'; tail = commit
+            elif paths & RELEASE29_WORKLIST:
+                require(phase == 'SOURCE' and paths == RELEASE29_WORKLIST, 'R29_WORKLIST_ONLY_FREEZE')
+                runtime = previous; frozen = commit; phase = 'FROZEN'
+            else: require(phase == 'SOURCE', 'R29_SOURCE_AFTER_FREEZE')
+        previous = commit
+    return dict(endpoint=endpoint, phase=phase, runtimeHead=runtime, sourceHead=frozen, tailHead=tail)
+
+
+def tree29(endpoint):
+    tree = {}; identities = {}
+    for raw in git23('ls-tree', '-r', '-z', endpoint).split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, kind, oid = meta.decode('ascii').split(); path = name.decode('utf-8')
+        require(kind == 'blob' and mode in ('100644', '100755') and re.fullmatch('[0-9a-f]{40}', oid) and path not in tree,
+            'R29_TREE_MODE')
+        name29(path, identities); tree[path] = (mode, oid)
+    return tree
+
+
+def evidence29_guard(history):
+    checkpoint = ROOT/RELEASE29_CHECKPOINT
+    if history['phase'] != 'TAIL':
+        require(not os.path.lexists(checkpoint), 'R29_UNCOMMITTED_EVIDENCE')
+        return
+    raw = regular29(checkpoint/'manifest.json', 16*1024*1024)
+    value = json.loads(raw, object_pairs_hook=pairs,
+        parse_constant=lambda _: require(False, 'R29_NONFINITE_JSON'))
+    require(type(value) is dict and set(value) == {'schema', 'authority', 'status', 'acceptanceGranted', 'release',
+        'inputManifestSHA256', 'source', 'files', 'payload'} and type(value['schema']) is int and value['schema'] == 1 and
+        value['authority'] == RELEASE29_AUTHORITY and value['status'] == 'SUBMITTED_REVIEW_REQUIRED' and
+        value['acceptanceGranted'] is False and value['release'] == 'NO_GO' and value['inputManifestSHA256'] == RELEASE29_INPUT,
+        'R29_EVIDENCE_NO_ADMISSION')
+    source = value['source']
+    require(type(source) is dict and set(source) == {'base', 'baseTree', 'runtimeHead', 'runtimeTree', 'sourceHead', 'sourceTree'} and
+        all(type(v) is str and re.fullmatch('[0-9a-f]{40}', v) for v in source.values()) and source['base'] == RELEASE29_BASE and
+        source['baseTree'] == RELEASE29_TREE and source['runtimeHead'] == history['runtimeHead'] and
+        source['sourceHead'] == history['sourceHead'] and
+        git23('rev-parse', source['runtimeHead']+'^{tree}').decode().strip() == source['runtimeTree'] and
+        git23('rev-parse', source['sourceHead']+'^{tree}').decode().strip() == source['sourceTree'], 'R29_EVIDENCE_SOURCE')
+    files = value['files']
+    require(type(files) is dict and set(files) == RELEASE29_CHECKPOINT_FILES-{'manifest.json'}, 'R29_EVIDENCE_FILES')
+    found = set()
+    for path in checkpoint.iterdir():
+        regular29(path); found.add(path.name)
+    require(found == RELEASE29_CHECKPOINT_FILES, 'R29_EVIDENCE_INVENTORY')
+    for name, witness in files.items():
+        data = regular29(checkpoint/name)
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(data) and type(witness['sha256']) is str and witness['sha256'] == sha(data), 'R29_EVIDENCE_HASH')
+    for name in RELEASE29_CHECKPOINT_FILES:
+        require(regular29(checkpoint/name) == git23('show', history['endpoint']+':'+RELEASE29_CHECKPOINT+name),
+            'R29_EVIDENCE_COMMITTED_BYTES')
+    payload = value['payload']
+    require(type(payload) is dict and set(payload) == {'schema', 'files', 'qualification'} and
+        type(payload['schema']) is int and payload['schema'] == 1 and
+        payload['qualification'] == 'SANITIZED_TECHNICAL_EVIDENCE_NOT_ACCEPTANCE' and type(payload['files']) is dict and
+        0 < len(payload['files']) <= 20000, 'R29_PAYLOAD_SCHEMA')
+    # The separately anchored standalone verifier adds recursive nested-archive
+    # and outer-return checks. This guard proves this committed source envelope.
+    import io
+    import zipfile
+    import struct
+    import zlib
+    data = regular29(checkpoint/'payload.zip', 128*1024*1024)
+    end = data.rfind(b'PK\x05\x06', max(0, len(data)-65557))
+    require(end >= 0 and end+22 == len(data), 'R29_PAYLOAD_FRAME')
+    disk, start_disk, disk_count, count, size, offset, comment = struct.unpack_from('<HHHHIIH', data, end+4)
+    require(disk == start_disk == comment == 0 and disk_count == count == len(payload['files']) and
+        count < 65535 and offset+size == end, 'R29_PAYLOAD_FRAME')
+    cursor = offset; observed = 0; central = {}
+    while cursor < end:
+        require(cursor+46 <= end and data[cursor:cursor+4] == b'PK\x01\x02', 'R29_PAYLOAD_FRAME')
+        lengths = struct.unpack_from('<HHH', data, cursor+28)
+        header_offset = struct.unpack_from('<I', data, cursor+42)[0]
+        require(header_offset not in central, 'R29_PAYLOAD_FRAME')
+        central[header_offset] = struct.unpack_from('<5H', data, cursor+6)
+        require(central[header_offset][0] <= 20 and struct.unpack_from('<H', data, cursor+34)[0] == 0,
+            'R29_PAYLOAD_FRAME')
+        cursor += 46+sum(lengths); observed += 1
+        require(cursor <= end and observed <= count, 'R29_PAYLOAD_FRAME')
+    require(cursor == end and observed == count, 'R29_PAYLOAD_FRAME')
+    archive = zipfile.ZipFile(io.BytesIO(data)); members = archive.infolist(); identities = {}; seen = set(); total = 0
+    require(len(members) == len(payload['files']) and not archive.comment, 'R29_PAYLOAD_INVENTORY')
+    intervals = []
+    for member in members:
+        name = member.filename; name29(name, identities)
+        require(name == member.orig_filename and name not in seen and name in payload['files'] and not member.is_dir() and
+            member.create_system == 3 and stat.S_ISREG(member.external_attr >> 16) and
+            not (member.external_attr >> 16) & (stat.S_ISUID | stat.S_ISGID | stat.S_ISVTX) and
+            member.external_attr & 65535 in (0, 32) and not member.external_attr & (0x10 | 0x400) and
+            not member.extra and not member.comment and member.flag_bits in (0, 2048) and member.compress_type in (0, 8),
+            'R29_PAYLOAD_MEMBER')
+        seen.add(name); total += member.file_size
+        require(0 <= member.file_size <= 32*1024*1024 and total <= 256*1024*1024 and
+            member.file_size <= max(1024*1024, member.compress_size*100), 'R29_PAYLOAD_BOUND')
+        start = member.header_offset
+        require(0 <= start and start+30 <= offset, 'R29_PAYLOAD_FRAME')
+        header = struct.unpack_from('<4s5H3I2H', data, start)
+        signature, version, flags, method, _, _, crc, compressed, expanded, name_size, extra_size = header
+        require(signature == b'PK\x03\x04' and header[1:6] == central[start] and version <= 20 and extra_size == 0 and
+            (flags, method, crc, compressed, expanded) ==
+            (member.flag_bits, member.compress_type, member.CRC, member.compress_size, member.file_size), 'R29_PAYLOAD_FRAME')
+        require(data[start+30:start+30+name_size].decode('utf-8' if flags & 2048 else 'cp437') == name, 'R29_PAYLOAD_FRAME')
+        data_start = start+30+name_size; finish = data_start+compressed
+        require(finish <= offset, 'R29_PAYLOAD_FRAME'); intervals.append((start, finish))
+        packed = data[data_start:finish]
+        if method == 8:
+            decoder = zlib.decompressobj(-15); body = decoder.decompress(packed, expanded+1)
+            require(decoder.eof and not decoder.unused_data and not decoder.unconsumed_tail, 'R29_PAYLOAD_FRAME')
+        else: body = packed
+        require(len(body) == expanded and zlib.crc32(body) & 0xffffffff == crc, 'R29_PAYLOAD_FRAME')
+        witness = payload['files'][name]
+        require(type(witness) is dict and set(witness) == {'bytes', 'sha256'} and type(witness['bytes']) is int and
+            witness['bytes'] == len(body) and type(witness['sha256']) is str and witness['sha256'] == sha(body), 'R29_PAYLOAD_HASH')
+    require(seen == set(payload['files']), 'R29_PAYLOAD_INVENTORY')
+    cursor = 0
+    for start, finish in sorted(intervals):
+        require(start == cursor, 'R29_PAYLOAD_FRAME'); cursor = finish
+    require(cursor == offset, 'R29_PAYLOAD_FRAME')
+
+
+def working29_guard(index, permitted=()):
+    """Two-pass raw reconciliation with the original shared-parent snapshot model."""
+    permitted = set(permitted); directories = set(ROOT.parents) | {ROOT}
+    for path in index:
+        parent = (ROOT/path).parent
+        while parent not in directories:
+            directories.add(parent); parent = parent.parent
+    parents = {}
+    for parent in directories:
+        info = parent.lstat()
+        require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_WORKING_PATH')
+        parents[parent] = (info.st_dev, info.st_ino, info.st_mode, getattr(info, 'st_reparse_tag', None))
+    for path, (mode, oid) in index.items():
+        target = ROOT/path; before = target.lstat()
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and not stat.S_ISLNK(before.st_mode) and
+            not before.st_mode & (stat.S_ISUID | stat.S_ISGID | stat.S_ISVTX) and
+            not getattr(before, 'st_file_attributes', 0) & 1024 and 0 <= before.st_size <= 128*1024*1024,
+            'R29_WORKING_REGULAR')
+        descriptor = os.open(target, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0))
+        try:
+            opened = os.fstat(descriptor)
+            require(compatible29_metadata(target, before, opened), 'R29_WORKING_CHANGED')
+            digest = hashlib.sha1(('blob '+str(before.st_size)+'\0').encode()); blocks = []; total = 0
+            while True:
+                block = os.read(descriptor, min(1024*1024, before.st_size-total+1))
+                if not block: break
+                total += len(block)
+                require(total <= before.st_size, 'R29_WORKING_CHANGED')
+                digest.update(block); blocks.append(block)
+            finished = os.fstat(descriptor); after = target.lstat()
+            require(total == before.st_size and snapshot29(opened) == snapshot29(finished) and
+                snapshot29(before) == snapshot29(after) and compatible29_metadata(target, after, finished),
+                'R29_WORKING_CHANGED')
+            body = b''.join(blocks); del blocks
+            require(os.lseek(descriptor, 0, os.SEEK_SET) == 0, 'R29_WORKING_CHANGED')
+            total = 0
+            while True:
+                block = os.read(descriptor, min(1024*1024, before.st_size-total+1))
+                if not block: break
+                require(total+len(block) <= before.st_size and block == body[total:total+len(block)], 'R29_WORKING_CHANGED')
+                total += len(block)
+            finished = os.fstat(descriptor); after = target.lstat()
+            require(total == before.st_size and snapshot29(opened) == snapshot29(finished) and
+                snapshot29(before) == snapshot29(after) and compatible29_metadata(target, after, finished),
+                'R29_WORKING_CHANGED')
+        finally: os.close(descriptor)
+        require(digest.hexdigest() == oid or path in permitted, 'R29_WORKING_BLOB')
+        if os.name != 'nt':
+            require(bool(target.lstat().st_mode & 0o111) == (mode == '100755'), 'R29_WORKING_MODE')
+    for parent, expected in parents.items():
+        info = parent.lstat()
+        require((info.st_dev, info.st_ino, info.st_mode, getattr(info, 'st_reparse_tag', None)) == expected and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_WORKING_PATH')
+    return len(index)
+
+
+def source29_guard():
+    full29_store(); history = source29_history(); evidence29_guard(history)
+    endpoint = history['endpoint']; tree = tree29(endpoint)
+    scope29_guard(regular29(ROOT/RELEASE29_PLAN))
+    candidate = candidate29_guard(regular29(ROOT/RELEASE29_CANDIDATE))
+    if history['phase'] != 'SOURCE':
+        require(type(candidate['pr']) is int and candidate['pr'] > 0, 'R29_FINAL_PR_REQUIRED')
+    validate29_checker(regular29(ROOT/'scripts/release/full-app-j01/check.py'))
+    require(sha(regular29(ROOT/'scripts/release/full-app-j01/source_consumer29.test.py')) ==
+        RELEASE29_CONSUMER_SHA256, 'R29_CONSUMER_IDENTITY')
+    require(sha(regular29(ROOT/'.github/workflows/security-candidate22.yml')) ==
+        RELEASE29_WORKFLOW_SHA256, 'R29_WORKFLOW_IDENTITY')
+    for path, expected in [('replay29.py', RELEASE29_REPLAY_SHA256), ('replay29.test.py', RELEASE29_REPLAY_TEST_SHA256)]:
+        require(sha(regular29(ROOT/'scripts/release/full-app-j01'/path)) == expected, 'R29_SOURCE_TOOL_IDENTITY')
+    for path in RELEASE29_READER_AST_SHA256:
+        reader29_guard(path, regular29(ROOT/path))
+    for path, expected in RELEASE29_READER_TOOLS_SHA256.items():
+        require(sha(regular29(ROOT/path)) == expected, 'R29_SOURCE_TOOL_IDENTITY')
+    # Empty all external Git conversion commands before status/diff can read a
+    # candidate file. Names are metadata only and strictly bounded before reuse.
+    result = subprocess.run(['git', '--no-replace-objects', 'config', '--null', '--name-only', '--get-regexp',
+        r'^filter\..*\.(clean|smudge|process)$'], cwd=ROOT, capture_output=True)
+    require(result.returncode in (0, 1) and len(result.stdout) <= 65536, 'R29_FILTER_CONFIG')
+    overrides = []
+    for key in result.stdout.decode('utf-8').split('\0'):
+        if not key: continue
+        require(re.fullmatch(r'filter\.[A-Za-z0-9_. -]{1,128}\.(clean|smudge|process)', key), 'R29_FILTER_CONFIG')
+        overrides += ['-c', key+'=', '-c', key.rsplit('.', 1)[0]+'.required=false']
+    head = git23('rev-parse', 'HEAD'); index_raw = git23('ls-files', '--stage', '-z')
+    status = git23(*overrides, 'status', '--porcelain=v1', '--untracked-files=all', '-z')
+    index = {}; identities = {}
+    for path in tree: name29(path, identities)
+    for raw in index_raw.split(b'\0'):
+        if not raw: continue
+        meta, name = raw.split(b'\t', 1); mode, oid, stage = meta.decode('ascii').split(); path = name.decode('utf-8')
+        require(stage == '0' and mode in ('100644', '100755') and re.fullmatch('[0-9a-f]{40}', oid) and path not in index,
+            'R29_INDEX_STAGE_MODE')
+        name29(path, identities); index[path] = (mode, oid)
+    for raw in git23('ls-files', '-v', '-z').split(b'\0'):
+        if raw: require(raw.startswith(b'H '), 'R29_INDEX_FLAGS')
+    for path, (mode, _) in index.items():
+        info = (ROOT/path).lstat()
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_WORKING_REGULAR')
+        if os.name != 'nt':
+            require(bool(info.st_mode & 0o111) == (mode == '100755'), 'R29_WORKING_MODE')
+    staged = validate29_diff(git23(*overrides, 'diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE29_BASE),
+        lambda path: git23('show', ':'+path))
+    working = validate29_diff(git23(*overrides, 'diff', '--raw', '--no-abbrev', '--no-renames', '-z', RELEASE29_BASE),
+        lambda path: regular29(ROOT/path), working=True)
+    if RELEASE29_CANDIDATE in index: candidate29_guard(git23('show', ':'+RELEASE29_CANDIDATE))
+    untracked = set()
+    for path in git23('ls-files', '--others', '--exclude-standard', '-z').decode('utf-8').split('\0'):
+        if not path: continue
+        require(path in RELEASE29_NEW_APP | RELEASE29_OTHER_NEW and path not in index and path not in untracked,
+            'R29_UNTRACKED_SCOPE')
+        name29(path, identities); regular29(ROOT/path); untracked.add(path)
+    ignored = [p for p in git23('ls-files', '--others', '--ignored', '--exclude-standard', '--directory',
+        '--no-empty-directory', '-z').decode('utf-8').split('\0') if p]
+    ignored_identities = {}
+    for path in ignored:
+        name29(path.rstrip('/'), ignored_identities)
+        require(re.fullmatch(r'(?:node_modules/|(?:apps|packages)/[^/]+/node_modules/|'
+            r'\.turbo/|(?:apps|packages)/[^/]+/\.turbo/|\.expo/|apps/mobile/\.expo/|\.tmp/|'
+            r'apps/mobile/(?:ios|android)/|apps/mobile/expo-env\.d\.ts|'
+            r'(?:[^/]+|(?:apps|packages)/[^/]+/[^/]+)\.tsbuildinfo)', path) is not None,
+            'R29_IGNORED_SOURCE')
+    if history['phase'] == 'SOURCE':
+        pending = {path for path in set(index) | set(tree) if index.get(path) != tree.get(path)}
+        pending |= {p.decode('utf-8') for p in git23(*overrides, 'diff', '--name-only', '--no-renames', '-z').split(b'\0') if p}
+        pending |= untracked
+        require(not pending & (RELEASE29_WORKLIST | {RELEASE29_CHECKPOINT+n for n in RELEASE29_CHECKPOINT_FILES} |
+            {RELEASE29_PLAN, 'ONSKIN_BRAIN_HANDOFF.txt'}), 'R29_PREMATURE_FREEZE_OR_EVIDENCE')
+        permitted = (RELEASE29_EXISTING_APP | RELEASE29_NEW_APP | RELEASE29_OTHER_EXISTING | RELEASE29_OTHER_NEW) - (RELEASE29_WORKLIST | {RELEASE29_CHECKPOINT+n for n in RELEASE29_CHECKPOINT_FILES} | {RELEASE29_PLAN, 'ONSKIN_BRAIN_HANDOFF.txt'})
+        checked = working29_guard(index, permitted)
+    else:
+        require(index == tree and not status and not untracked, 'R29_FROZEN_CHECKOUT_DIRTY')
+        checked = working29_guard(index)
+        for path in working:
+            data = regular29(ROOT/path)
+            require(tree[path] == ('100644', hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()),
+                'R29_WORKING_BLOB')
+    require(git23('rev-parse', 'HEAD') == head and git23('ls-files', '--stage', '-z') == index_raw and
+        git23(*overrides, 'status', '--porcelain=v1', '--untracked-files=all', '-z') == status, 'R29_FINAL_SNAPSHOT')
+    return dict(endpoint=endpoint, tree=git23('rev-parse', endpoint+'^{tree}').decode().strip(), phase=history['phase'],
+        checkoutHead=head.decode().strip(), checkoutTree=git23('rev-parse', 'HEAD^{tree}').decode().strip(),
+        ciEventCommit=os.environ.get('GITHUB_SHA') if os.environ.get('GITHUB_ACTIONS') == 'true' else None,
+        metadataFiles=len(tree), stagedChangedPaths=len(staged), currentChangedPaths=len(working),
+        ignoredGeneratedNodesExcludedFromSourceEvidence=len(ignored),
+        trackedWorkingBlobsHashedLocally=checked,
+        workingQualification='FINITE_PENDING_ALLOWED' if history['phase'] == 'SOURCE' else 'RAW_TRACKED_BLOBS_EXACT',
+        unrelatedProtectedWorkingBytes='TRACKED_CHECKOUT_BYTES_HASHED_LOCALLY;NO_CONTENT_OR_NEW_HASH_DISCLOSED',
+        externalPrivateCustody='NOT_OPENED;UNTRACKED_IGNORED_UNKNOWN_NAMES_REFUSED_FROM_METADATA')
+
+
+def validate29(bundle=BUNDLE):
+    try: current = Path(bundle).resolve() == BUNDLE.resolve()
+    except Exception: raise ValueError('R29_BUNDLE_SCOPE') from None
+    if not current: return validate27(bundle)
+    try:
+        # Authenticate the extension before invoking any replaceable current
+        # guard. The return verifier independently pins the complete checker.
+        validate29_checker(regular29(ROOT/'scripts/release/full-app-j01/check.py'))
+        proof = source29_guard()
+        result = historical21_validate(BUNDLE)
+        result.update(current_source_governance='RELEASE29_FINITE_SCOPE_ONLY', source29=proof,
+            inherited_release28='IMMUTABLE_PR31_AND_PR32_DEFINITIONS;AUTHENTIC_HISTORICAL_REPLAY_REQUIRED',
+            source_acceptance='SUBMITTED_REVIEW_REQUIRED', acceptanceGranted=False,
+            admissions=dict(G97=False, DB=False, M103=False, M2=False, J01=False, PUBLIC=False), release='NO_GO')
+        return result
+    except Exception as error:
+        code = error.args[0] if type(error) is ValueError and len(error.args) == 1 and type(error.args[0]) is str else None
+        # Codes emitted by this extension are static uppercase identifiers; never
+        # disclose arbitrary exception text or caller-controlled paths/suffixes.
+        known = {'R29_PUBLIC_BOUND', 'R29_PUBLIC_PATH', 'R29_PUBLIC_FILE', 'R29_PUBLIC_CHANGED', 'R29_PUBLIC_READ_INCOMPLETE', 'R29_READER_SCOPE', 'R29_READER_IMPLEMENTATION', 'R29_READER_INHERITED_AST', 'R29_READER_INHERITED_BYTES', 'R23_PUBLIC_BOUND', 'R23_PUBLIC_PATH', 'R23_PUBLIC_FILE', 'R23_PUBLIC_CHANGED',
+            'R23_PUBLIC_READ_INCOMPLETE', 'R23_GIT_ENV', 'R29_PATH', 'R29_PATH_ALIAS', 'R29_PATH_BOUND',
+            'R29_PLAN_IDENTITY', 'R29_PLAN_SCHEMA', 'R29_NONFINITE_JSON', 'R29_AUTHENTIC_FINITE_GRANT', 'R29_APP_PATH_BUDGET',
+            'R29_CANDIDATE_BOUND', 'R29_NO_ADMISSION', 'R29_INHERITED_BYTES', 'R29_FUNCTION_SCOPE', 'R29_MODULE_SCOPE',
+            'R29_DUPLICATE_ASSIGNMENT', 'R29_DISPATCH', 'R29_GLOBAL_SCOPE', 'R29_GLOBAL_SIDE_EFFECT', 'R29_DISPATCH_REQUIRED',
+            'R29_APPENDIX_BYTES',
+            'R29_DIFF_SHAPE', 'R29_FINITE_SCOPE', 'R29_MODE_OR_DELETION', 'R29_PARENT_PROVENANCE', 'R29_PARENT_BLOB',
+            'R29_CREATE_EDIT', 'R29_AFTER_BLOB', 'R29_HEAD_PARENTS', 'R29_CI_CONTEXT', 'R29_CI_EVENT_PATH', 'R29_CI_EVENT',
+            'R29_CI_MERGE_TREE', 'R29_FULL_HISTORY', 'R29_CHECKOUT_PATH', 'R29_STANDALONE_CHECKOUT', 'R29_ALTERNATES',
+            'R29_OBJECT_STORE', 'R29_PARTIAL_CLONE', 'R29_HISTORY_SUBSTITUTION', 'R29_MISSING_OBJECTS', 'R29_PINNED_BASE',
+            'R29_ANCESTRY', 'R29_PLAN_FIRST', 'R29_AFTER_EVIDENCE_TAIL', 'R29_LINEAR_HISTORY', 'R29_PLAN_IMMUTABLE',
+            'R29_EVIDENCE_TAIL_SCOPE', 'R29_WORKLIST_ONLY_FREEZE', 'R29_SOURCE_AFTER_FREEZE', 'R29_TREE_MODE',
+            'R29_UNCOMMITTED_EVIDENCE', 'R29_EVIDENCE_NO_ADMISSION', 'R29_EVIDENCE_SOURCE', 'R29_EVIDENCE_FILES',
+            'R29_EVIDENCE_INVENTORY', 'R29_EVIDENCE_HASH', 'R29_EVIDENCE_COMMITTED_BYTES', 'R29_PAYLOAD_SCHEMA',
+            'R29_PAYLOAD_INVENTORY', 'R29_PAYLOAD_FRAME', 'R29_PAYLOAD_MEMBER', 'R29_PAYLOAD_BOUND', 'R29_PAYLOAD_HASH', 'R29_FILTER_CONFIG',
+            'R29_INDEX_STAGE_MODE', 'R29_INDEX_FLAGS', 'R29_WORKING_REGULAR', 'R29_WORKING_CHANGED', 'R29_WORKING_PATH',
+            'R29_WORKING_MODE', 'R29_FINAL_PR_REQUIRED',
+            'R29_UNTRACKED_SCOPE', 'R29_IGNORED_SOURCE', 'R29_PREMATURE_FREEZE_OR_EVIDENCE',
+            'R29_FROZEN_CHECKOUT_DIRTY', 'R29_WORKING_BLOB', 'R29_FINAL_SNAPSHOT',
+            'R29_SOURCE_TOOL_IDENTITY', 'R29_CONSUMER_IDENTITY', 'R29_WORKFLOW_IDENTITY', 'R29_CI_TEST_MERGE_IDENTITY',
+            'R29_FSCK_CONFIG', 'R29_OBJECT_HASH', 'R29_CI_MERGE_SNAPSHOT_SCHEMA',
+            'R29_PRIOR_CONTEXT', 'R29_PRIOR_IDENTITY', 'R29_PRIOR_TRANSITION', 'R29_PRIOR_BLOB'}
+        if code in known: raise ValueError(code) from None
+        legacy = set(RELEASE29_LEGACY_CODES.split())
+        prefix = code.split(':', 1)[0]+':' if code is not None and ':' in code else code
+        safe = code if code in legacy else prefix if prefix in legacy else 'R29_EXECUTION_INCOMPLETE'
+        raise ValueError(safe) from None
+
+
+source_guard = source29_guard
+validate = validate29
+
+
 if __name__ == '__main__':
     sys.exit(main())

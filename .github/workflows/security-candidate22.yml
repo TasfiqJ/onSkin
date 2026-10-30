@@ -1,4 +1,4 @@
-name: Security candidate28 (technical components only)
+name: Security candidate29 (technical components only)
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - name: Checkout exact candidate source
         uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
@@ -100,6 +100,11 @@ jobs:
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.12'
+      - name: Campaign29 authenticated frozen PR32 reader diagnostics
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -I -B scripts/release/full-app-j01/readerTrace29.py --baseline | tee "$RUNNER_TEMP/security29-frozen-reader-diagnostics.jsonl"
       - name: Campaign27 reader controls on Python 3.12
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
@@ -110,18 +115,24 @@ jobs:
         run: |
           set -o pipefail
           python -I -B scripts/release/full-app-j01/replay28.test.py | tee "$RUNNER_TEMP/security28-reader.jsonl"
-      - name: Authenticated original Release24 Release25 Release26 and Release27 source controls
+      - name: Campaign29 independent hostile reader and replay controls
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -I -B scripts/release/full-app-j01/replay28.py --receipt "$RUNNER_TEMP/security28-historical-receipt.json" | tee "$RUNNER_TEMP/security28-historical-controls.jsonl"
-      - name: Current Campaign28 finite source governance and CORE-05 structural controls
+          python -I -B scripts/release/full-app-j01/readerIntegrity29.test.py | tee "$RUNNER_TEMP/security29-reader-controls.jsonl"
+          python -I -B scripts/release/full-app-j01/replay29.test.py | tee "$RUNNER_TEMP/security29-replay-controls.jsonl"
+      - name: Current Campaign29 finite source governance and unchanged CORE-05 structural controls
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -o pipefail
-          python -I -B scripts/release/full-app-j01/source_consumer28.test.py | tee "$RUNNER_TEMP/security28-source-controls.jsonl"
-          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security28-current-source.json"
+          python -I -B scripts/release/full-app-j01/source_consumer29.test.py | tee "$RUNNER_TEMP/security29-source-controls.jsonl"
+          python -I -B scripts/release/full-app-j01/check.py | tee "$RUNNER_TEMP/security29-current-source.json"
           node --test scripts/core05/adherence-source-contract28.test.mjs | tee "$RUNNER_TEMP/security28-core05.tap"
+      - name: Authenticated original Release24 through Release28 source controls at their pinned commits
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          python -I -B scripts/release/full-app-j01/replay29.py --receipt "$RUNNER_TEMP/security29-historical-receipt.json" | tee "$RUNNER_TEMP/security29-historical-controls.jsonl"
       - name: Execute current public checks and preserve component results
         if: ${{ !cancelled() && steps.disclosure.outcome == 'success' && steps.install.outcome == 'success' }}
         shell: bash
@@ -148,5 +159,12 @@ jobs:
             ${{ runner.temp }}/security28-source-controls.jsonl
             ${{ runner.temp }}/security28-current-source.json
             ${{ runner.temp }}/security28-core05.tap
+            ${{ runner.temp }}/security29-frozen-reader-diagnostics.jsonl
+            ${{ runner.temp }}/security29-reader-controls.jsonl
+            ${{ runner.temp }}/security29-replay-controls.jsonl
+            ${{ runner.temp }}/security29-historical-receipt.json
+            ${{ runner.temp }}/security29-historical-controls.jsonl
+            ${{ runner.temp }}/security29-source-controls.jsonl
+            ${{ runner.temp }}/security29-current-source.json
           if-no-files-found: ignore
           retention-days: 7

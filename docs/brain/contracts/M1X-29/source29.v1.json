@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-M1X-WINDOWS-READER-INTEGRITY29-CANDIDATE-01",
+  "status": "SUBMITTED_REVIEW_REQUIRED",
+  "base": "bace116586d58ed955f0a024ca96ae9f4ad9286d",
+  "tree": "6951590547b79a869464df987d16da6552907846",
+  "scopeCommit": "9b395cbee7594f7dc03934aed4e08c4e3ea43c23",
+  "scopePlanSHA256": "c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe",
+  "inputManifestSHA256": "7a94feecb69b09d46acb6465972f1c7b809fbfa9e657aa50c1f7bc4523643579",
+  "acceptanceGranted": false,
+  "admissions": {
+    "G97": false,
+    "DB": false,
+    "M103": false,
+    "M2": false,
+    "J01": false,
+    "PUBLIC": false
+  },
+  "pr": 33
+}
