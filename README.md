@@ -13,6 +13,7 @@ tag, product release, main promotion, or source change accompanies this upload.
 - [Byte-exact engineering report](FINAL_REPORT.md).
 - [Complete delivery proof JSON](DELIVERY_PROOF.json) and [final facts JSON](FINAL_FACTS.json).
 - [External anchors](ANCHORS.json) and [SHA256 checksums](SHA256SUMS.txt).
+- [Actual fresh GitHub download and artifact-verifier proof](GITHUB_DOWNLOAD_PROOF.json).
 - [Immutable checkpoint](checkpoint/) including its original payload ZIP.
 - [Minimal PR32-required source/history bundle](source/).
 
