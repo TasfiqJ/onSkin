@@ -107,15 +107,67 @@ def tool29(path):
     return dict(executableSHA256=hashlib.sha256(raw).hexdigest(),bytes=len(raw))
 
 
+def metadata29(node):
+    """Observe Windows public npm directory metadata before the unchanged guard."""
+    if os.name != 'nt': return dict(platform='posix', directories=0, files=0, sizeChanges=0)
+    npm = node.parent/'node_modules/npm'
+    require29(npm.is_absolute() and npm.resolve() == npm, 'R29_NPM_METADATA_PATH')
+    for parent in npm.parents:
+        info = parent.lstat()
+        require29(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and
+            not getattr(info, 'st_file_attributes', 0) & 1024, 'R29_NPM_METADATA_PATH')
+    directories = files = changes = 0; nodes = 1
+    fields = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_mtime_ns', 'st_ctime_ns',
+        'st_birthtime_ns', 'st_file_attributes', 'st_reparse_tag')
+    stack = [(npm, 0, None)]
+    while stack:
+        path, depth, before = stack.pop()
+        require29(depth <= 64, 'R29_NPM_METADATA_BOUND')
+        if before is not None:
+            after = path.lstat()
+            require29(all(getattr(before, key, None) == getattr(after, key, None) for key in fields),
+                'R29_NPM_METADATA_CHANGED')
+            changes += before.st_size != after.st_size
+            continue
+        before = path.lstat()
+        require29(stat.S_ISDIR(before.st_mode) and not stat.S_ISLNK(before.st_mode) and
+            not getattr(before, 'st_file_attributes', 0) & 1024, 'R29_NPM_METADATA_NODE')
+        directories += 1
+        require29(nodes <= 50000, 'R29_NPM_METADATA_BOUND')
+        stack.append((path, depth, before))
+        with os.scandir(path) as entries:
+            for entry in entries:
+                nodes += 1
+                require29(nodes <= 50000, 'R29_NPM_METADATA_BOUND')
+                child = path/entry.name; info = child.lstat()
+                require29(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+                    'R29_NPM_METADATA_NODE')
+                if stat.S_ISDIR(info.st_mode): stack.append((child, depth+1, None))
+                else:
+                    require29(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and
+                        not info.st_mode & (stat.S_ISUID | stat.S_ISGID | stat.S_ISVTX), 'R29_NPM_METADATA_NODE')
+                    files += 1
+    return dict(platform='nt', directories=directories, files=files, sizeChanges=changes)
+
+
+def stage29(root, action):
+    name = root.name if root.name in ('release24', 'release25', 'release26', 'release27', 'release28') else 'current'
+    return name+'.'+action
+
+
 def tools29(root):
     require29(sys.flags.optimize==0,'R29_ASSERTIONS_REQUIRED')
+    observation = metadata29(Path(shutil.which('node')).resolve())
+    print(json.dumps(dict(kind='REPLAY29_METADATA_PREOBSERVATION', stage=stage29(root, 'tool-identity'),
+        qualification='METADATA_ONLY_NOT_NPM_AUTHENTICATION;UNCHANGED_ORIGINAL_GUARD_FOLLOWS',
+        observation=observation, acceptanceGranted=False)), flush=True)
     # The entire root was reconciled to authenticated Git bytes before this
     # existing protected toolchain code can execute. Its npm installation model
     # inventories every file/link against the separately pinned 11.20 profile.
     loader="import sys,json;from pathlib import Path;sys.path.insert(0,str(Path.cwd()/'scripts/security22'));from toolchain import identity;print(json.dumps(identity(Path.cwd()),sort_keys=True))"
     environment={key:value for key,value in os.environ.items() if not key.upper().startswith(('GIT_','NPM_','PYTHON')) and
         key.upper() not in ('NODE_OPTIONS','NODE_PATH','NODE_AUTH_TOKEN')}
-    raw=child29([str(Path(sys.executable).resolve()),'-I','-B','-c',loader],root,environment,180)
+    raw=child29([str(Path(sys.executable).resolve()),'-I','-B','-c',loader],root,environment,180,stage29(root,'tool-identity'))
     identity=json.loads(raw);tools=identity.get('tools') if type(identity) is dict else None
     require29(type(tools) is dict and set(tools)=={'git','python','node','npm'} and tools['npm'].get('version')=='11.20.0' and
         tools['npm'].get('installationModelSHA256')=='c1d3e494bb27b0ae253a41f06bd2621786f0d215dff2679e9005b25f6c3ca0b9' and
@@ -137,8 +189,8 @@ def installation29(root,pin,check,environment,tools):
     empty_config=cache/'empty-global.npmrc'
     with empty_config.open('xb') as stream:stream.write(b'')
     install_environment={**environment,'npm_config_userconfig':os.devnull,'npm_config_globalconfig':str(empty_config)}
-    child29([str(node),str(npm/'bin/npm-cli.js'),'ci','--ignore-scripts=false','--cache',str(cache),'--no-audit','--no-fund'],root,install_environment,900)
-    after=json.loads(child29([str(node),'scripts/postinstall.mjs','--check'],root,install_environment,180))
+    child29([str(node),str(npm/'bin/npm-cli.js'),'ci','--ignore-scripts=false','--cache',str(cache),'--no-audit','--no-fund'],root,install_environment,900,stage29(root,'normal-npm-ci'))
+    after=json.loads(child29([str(node),'scripts/postinstall.mjs','--check'],root,install_environment,180,stage29(root,'mandatory-hook-check')))
     require29(type(after) is dict and after.get('check') is True and bytes29(root/'package-lock.json')==lock,'R29_REPLAY_MANDATORY_HOOKS')
     previous=check.ROOT;check.ROOT=root
     try:
@@ -251,8 +303,30 @@ def checkout29(root,pin,check):
     finally:check.ROOT=previous
 
 
-def child29(arguments,root,environment,timeout=900):
-    child=subprocess.run(arguments,cwd=root,env=environment,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout)
+def child29(arguments,root,environment,timeout=900,stage='bounded-child'):
+    require29(type(stage) is str and re.fullmatch(r'[a-z0-9.-]{1,80}',stage) is not None,'R29_REPLAY_STAGE')
+    started=time.monotonic()
+    try:
+        child=subprocess.run(arguments,cwd=root,env=environment,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout)
+    except (OSError,subprocess.TimeoutExpired) as error:
+        print(json.dumps(dict(kind='REPLAY29_CHILD',stage=stage,exit=None,
+            elapsedMilliseconds=round((time.monotonic()-started)*1000),exceptionType=type(error).__name__,
+            acceptanceGranted=False)),flush=True)
+        raise
+    if len(child.stdout)>8*1024*1024 or len(child.stderr)>1024*1024:
+        print(json.dumps(dict(kind='REPLAY29_CHILD',stage=stage,exit=child.returncode,
+            elapsedMilliseconds=round((time.monotonic()-started)*1000),stdoutBytes=len(child.stdout),
+            stderrBytes=len(child.stderr),staticCode='R29_REPLAY_OUTPUT_BOUND',acceptanceGranted=False)),flush=True)
+        require29(False,'R29_REPLAY_OUTPUT_BOUND')
+    public_codes={'NPM_TOOL_CHANGED','NPM_EXPECTED_CONTENT','NPM_TOOL_READ','NPM_TOOL_FILE','NPM_TOOL_LINK',
+        'NPM_TOOL_ENUMERATION','TOOL_UNAVAILABLE','TOOL_VERSION','NPM_MODEL_IDENTITY','NPM_IDENTITY'}
+    code=None
+    for line in child.stderr.splitlines():
+        match=re.fullmatch(rb'(?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*: ([A-Z][A-Z0-9_]{1,79})',line)
+        if match and match.group(1).decode() in public_codes: code=match.group(1).decode()
+    print(json.dumps(dict(kind='REPLAY29_CHILD',stage=stage,exit=child.returncode,
+        elapsedMilliseconds=round((time.monotonic()-started)*1000),stdoutBytes=len(child.stdout),
+        stderrBytes=len(child.stderr),staticCode=code,acceptanceGranted=False)),flush=True)
     require29(len(child.stdout)<=8*1024*1024 and len(child.stderr)<=1024*1024,'R29_REPLAY_OUTPUT_BOUND')
     require29(child.returncode==0,'R29_REPLAY_CHILD_FAILURE')
     return child.stdout
@@ -310,15 +384,15 @@ def replay29(source,check,receipt):
         require29(not root.exists(),'R29_REPLAY_FRESH_WORKSPACE')
         child29([git,'-c','core.hooksPath=','-c','core.autocrlf=false','-c','core.longpaths=true',
             'clone','--no-checkout','--no-hardlinks','-c','core.autocrlf=false','-c','core.longpaths=true',
-            'https://github.com/TasfiqJ/onSkin.git',str(root)],workspace,environment,600)
+            'https://github.com/TasfiqJ/onSkin.git',str(root)],workspace,environment,600,stage29(root,'fresh-remote-clone'))
         child29([git,'-c','core.hooksPath=','-c','core.autocrlf=false','-c','core.longpaths=true',
-            'checkout','--detach',pin['head']],root,environment,300)
+            'checkout','--detach',pin['head']],root,environment,300,stage29(root,'exact-pinned-checkout'))
         before=checkout29(root,pin,check);before_tools=tools29(root)
         installed=installation29(root,pin,check,environment,tools)
         consumer='scripts/release/full-app-j01/source_consumer'+str(pin['release'])+'.test.py'
-        output=child29([python,'-I','-B',consumer],root,environment)
+        output=child29([python,'-I','-B',consumer],root,environment,900,stage29(root,'original-consumer'))
         controls=consumer_result29(output,pin)
-        checker_raw=child29([python,'-I','-B','scripts/release/full-app-j01/check.py'],root,environment)
+        checker_raw=child29([python,'-I','-B','scripts/release/full-app-j01/check.py'],root,environment,900,stage29(root,'original-source-checker'))
         result=json.loads(checker_raw)
         require29(type(result) is dict and result.get('valid') is True and result.get('release')=='NO_GO' and
             result.get('acceptanceGranted') is False and result.get('source_acceptance')=='SUBMITTED_REVIEW_REQUIRED' and
@@ -363,7 +437,7 @@ if __name__=='__main__':
     except Exception as error:
         code=error.args[0] if type(error) is ValueError and len(error.args)==1 else None
         # Never report arbitrary exception data, source paths or subprocess logs.
-        allowed=('R29_ASSERTIONS_REQUIRED', 'R29_RECEIPT_BOUND', 'R29_RECEIPT_CHANGED', 'R29_RECEIPT_DUPLICATE', 'R29_RECEIPT_FRESH_PATH', 'R29_RECEIPT_IDENTITY', 'R29_RECEIPT_INSTALLATION', 'R29_RECEIPT_NONFINITE', 'R29_RECEIPT_OUTSIDE_SOURCE', 'R29_RECEIPT_PIN', 'R29_RECEIPT_RECORDS', 'R29_RECEIPT_RESULT', 'R29_RECEIPT_SNAPSHOT', 'R29_RECEIPT_SOURCE_RESULT', 'R29_REPLAY_BLOB', 'R29_REPLAY_CASE', 'R29_REPLAY_CHANGED', 'R29_REPLAY_CHILD_FAILURE', 'R29_REPLAY_CONSUMER_IDENTITY', 'R29_REPLAY_COUNTERS', 'R29_REPLAY_CROSS_IDENTITY', 'R29_REPLAY_CURRENT_DIRTY', 'R29_REPLAY_CURRENT_SOURCE_CHANGED', 'R29_REPLAY_DIRTY', 'R29_REPLAY_FRESH_INSTALL', 'R29_REPLAY_FRESH_INSTALL_CACHE', 'R29_REPLAY_FRESH_WORKSPACE', 'R29_REPLAY_HOOK_IDENTITY', 'R29_REPLAY_IGNORED_SOURCE', 'R29_REPLAY_INCOMPLETE', 'R29_REPLAY_INDEX', 'R29_REPLAY_LOCK_IDENTITY', 'R29_REPLAY_MANDATORY_HOOKS', 'R29_REPLAY_MODE', 'R29_REPLAY_NATIVE_MANIFEST', 'R29_REPLAY_NATIVE_MAPPING', 'R29_REPLAY_NATIVE_PIN', 'R29_REPLAY_NATIVE_PIN_INVENTORY', 'R29_REPLAY_OUTPUT', 'R29_REPLAY_OUTPUT_BOUND', 'R29_REPLAY_OUTPUT_DUPLICATE', 'R29_REPLAY_OUTPUT_NONFINITE', 'R29_REPLAY_OUTSIDE_SOURCE', 'R29_REPLAY_PARENT', 'R29_REPLAY_READ_SIZE', 'R29_REPLAY_REF', 'R29_REPLAY_REGULAR', 'R29_REPLAY_SCRIPT', 'R29_REPLAY_SOURCE', 'R29_REPLAY_SOURCE_PHASE', 'R29_REPLAY_SOURCE_RESULT', 'R29_REPLAY_TERMINAL', 'R29_REPLAY_TOOLCHAIN_IDENTITY')
+        allowed=('R29_NPM_METADATA_PATH', 'R29_NPM_METADATA_BOUND', 'R29_NPM_METADATA_CHANGED', 'R29_NPM_METADATA_NODE', 'R29_REPLAY_STAGE', 'R29_ASSERTIONS_REQUIRED', 'R29_RECEIPT_BOUND', 'R29_RECEIPT_CHANGED', 'R29_RECEIPT_DUPLICATE', 'R29_RECEIPT_FRESH_PATH', 'R29_RECEIPT_IDENTITY', 'R29_RECEIPT_INSTALLATION', 'R29_RECEIPT_NONFINITE', 'R29_RECEIPT_OUTSIDE_SOURCE', 'R29_RECEIPT_PIN', 'R29_RECEIPT_RECORDS', 'R29_RECEIPT_RESULT', 'R29_RECEIPT_SNAPSHOT', 'R29_RECEIPT_SOURCE_RESULT', 'R29_REPLAY_BLOB', 'R29_REPLAY_CASE', 'R29_REPLAY_CHANGED', 'R29_REPLAY_CHILD_FAILURE', 'R29_REPLAY_CONSUMER_IDENTITY', 'R29_REPLAY_COUNTERS', 'R29_REPLAY_CROSS_IDENTITY', 'R29_REPLAY_CURRENT_DIRTY', 'R29_REPLAY_CURRENT_SOURCE_CHANGED', 'R29_REPLAY_DIRTY', 'R29_REPLAY_FRESH_INSTALL', 'R29_REPLAY_FRESH_INSTALL_CACHE', 'R29_REPLAY_FRESH_WORKSPACE', 'R29_REPLAY_HOOK_IDENTITY', 'R29_REPLAY_IGNORED_SOURCE', 'R29_REPLAY_INCOMPLETE', 'R29_REPLAY_INDEX', 'R29_REPLAY_LOCK_IDENTITY', 'R29_REPLAY_MANDATORY_HOOKS', 'R29_REPLAY_MODE', 'R29_REPLAY_NATIVE_MANIFEST', 'R29_REPLAY_NATIVE_MAPPING', 'R29_REPLAY_NATIVE_PIN', 'R29_REPLAY_NATIVE_PIN_INVENTORY', 'R29_REPLAY_OUTPUT', 'R29_REPLAY_OUTPUT_BOUND', 'R29_REPLAY_OUTPUT_DUPLICATE', 'R29_REPLAY_OUTPUT_NONFINITE', 'R29_REPLAY_OUTSIDE_SOURCE', 'R29_REPLAY_PARENT', 'R29_REPLAY_READ_SIZE', 'R29_REPLAY_REF', 'R29_REPLAY_REGULAR', 'R29_REPLAY_SCRIPT', 'R29_REPLAY_SOURCE', 'R29_REPLAY_SOURCE_PHASE', 'R29_REPLAY_SOURCE_RESULT', 'R29_REPLAY_TERMINAL', 'R29_REPLAY_TOOLCHAIN_IDENTITY')
         print(json.dumps(dict(status='REFUSED',code=code if type(code) is str and code in allowed else 'R29_REPLAY_INCOMPLETE',
             acceptanceGranted=False,release='NO_GO')),flush=True)
         raise SystemExit(1) from None

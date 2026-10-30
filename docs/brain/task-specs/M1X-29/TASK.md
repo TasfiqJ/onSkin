@@ -31,6 +31,19 @@ New replay29 authenticates and executes original Release24–28 in fresh complet
 remote clones with normal fresh npm-ci/mandatory hooks. Release27 remains pinned
 to exact PR31; Release28 remains pinned to exact PR32. Original151/09–23 retain
 their fixture/synthetic qualifications and require their separate executions.
+The first formal local replay at source a6f7e681 returned R29_REPLAY_CHILD_FAILURE;
+its suppressed exact child stage remains UNKNOWN. Separate external original24
+diagnostics passed the consumer, checker and hook check, and directly reproduced
+the unchanged npm guard refusing directory st_size0→4096 during enumeration.
+A bounded public-prefix metadata-only enumeration followed by two unchanged
+strict original24 identity calls produced two complete canonical-profile passes.
+New replay29 performs that bounded pre-observation on Windows before each strict
+original identity call. It opens no npm file contents, changes no original guard
+or profile, retries no refusal, and grants no authentication itself. Static child
+stage/exit/timing records preserve later diagnostics without raw paths or errors.
+The exact first substantive source a6f7e681/parent9b395c/treeabe7249f and its eleven
+mode/blob/SHA witnesses are separately pinned; no historical function exclusion
+or amendment substitutes for that explicit transition.
 Source29 history permits the immutable plan, substantive source, exactly one
 two-worklist freeze child, and one final five-checkpoint-file/root-handoff tail.
 Actual final-head CI, independent full-clone/tamper proofs and fresh-download

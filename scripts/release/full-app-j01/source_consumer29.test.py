@@ -101,6 +101,23 @@ def main():
         path = 'scripts/release/full-app-j01/replay27.py'
         delta = (':100644 '+mode+' '+'0'*40+' '+'0'*40+' '+status+'\0'+path+'\0').encode()
         expect('mode-or-deletion-'+mode, lambda b=delta: check.validate29_diff(b, lambda _: b'', working=True))
+    prior_id = 'a6f7e681f69380259876c3489f4d39be2b5244d0'
+    prior_parent = check.RELEASE29_PLAN_COMMIT
+    prior_raw = check.git23('diff', '--raw', '--no-abbrev', '--no-renames', '-z', prior_parent, prior_id)
+    prior_body = lambda path: check.git23('show', prior_id+':'+path)
+    expect('exact-first-substantive-prior-governance', lambda: check.validate29_diff(prior_raw, prior_body,
+        prior_parent, at_commit=prior_id), True)
+    expect('prior-governance-cannot-change-parent-context', lambda: check.validate29_diff(prior_raw, prior_body,
+        '0'*40, at_commit=prior_id), code='R29_PRIOR_CONTEXT')
+    expect('prior-governance-cannot-change-body', lambda: check.validate29_diff(prior_raw, lambda path: prior_body(path)+b'\n',
+        prior_parent, at_commit=prior_id), code='R29_AFTER_BLOB')
+    for key, code in [('tree', 'R29_PRIOR_IDENTITY'), ('checkerSHA', 'R29_PRIOR_BLOB')]:
+        changed = copy.deepcopy(check.RELEASE29_PREVIOUS_GOVERNANCE[prior_id])
+        if key == 'tree': changed['tree'] = '0'*40
+        else: changed['files']['scripts/release/full-app-j01/check.py']['sha256'] = '0'*64
+        with patch.dict(namespace['RELEASE29_PREVIOUS_GOVERNANCE'], {prior_id: changed}):
+            expect('prior-governance-exact-pin-'+key, lambda: check.validate29_diff(prior_raw, prior_body,
+                prior_parent, at_commit=prior_id), code=code)
     # Exercise the actual history state machine through a bounded synthetic Git
     # port. Diff parsing/scopes are independently exercised above and by the real
     # source check; this does not claim a complete independent Git checkout.
