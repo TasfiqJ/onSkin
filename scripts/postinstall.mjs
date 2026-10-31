@@ -5,6 +5,7 @@ import { patchReactNativeViewShotPrivacy } from './phase9/patch-react-native-vie
 import { patchToolingSecurity } from './phase9/patch-tooling-security.mjs';
 import { patchToolingSecurity22 } from './security22/patch-tooling.mjs';
 import { patchToolingSecurity24 } from './security24/patch-tooling.mjs';
+import { patchDevToolsTerminal } from './security31/patch-devtools-terminal.mjs';
 
 const args = process.argv.slice(2);
 if (args.length > 1 || (args.length === 1 && args[0] !== '--check')) {
@@ -18,7 +19,8 @@ const widgets = patchExpoWidgetsLifecycle({ root, check });
 const toolingSecurity = patchToolingSecurity({ root, check });
 const toolingSecurity22 = patchToolingSecurity22({ root, check });
 const toolingSecurity24 = patchToolingSecurity24({ root, check });
+const devToolsTerminal = patchDevToolsTerminal({ root, check });
 
 process.stdout.write(
-  `${JSON.stringify({ check, viewShot: viewShot.status, widgets: widgets.status, toolingSecurity: toolingSecurity.status })}\n`,
+  `${JSON.stringify({ check, viewShot: viewShot.status, widgets: widgets.status, toolingSecurity: toolingSecurity.status, devToolsTerminal: devToolsTerminal.status })}\n`,
 );

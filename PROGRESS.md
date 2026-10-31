@@ -1,5 +1,17 @@
 # Build Progress
 
+## 2026-10-31 — Campaign31 terminal output repair
+
+Both installed Expo CLI executor data handlers now ignore output after terminal
+settlement, before conversion/parsing. Independent before test: exit1, 0/1;
+repaired matrix: exit0, 8/8, including stdout/stderr and owned real-child close/
+timeout controls. Windows17/32 probes; Linux NOT_RUN (unavailable WSL disk).
+Normal install/all mandatory hooks and postinstall check pass. Root typecheck,
+lint and tests pass; mobile 499 files/6,478 tests. See
+docs/security/security31/devtools-terminal.md for identities and limitations.
+User requested development integration into main; qualified Security, DB,
+native/J01/provider/paid/Apple/public-release gates remain closed. NO_GO; USD0.
+
 ## 2026-10-31 — DevTools output diagnostic30 (review required)
 
 DIAGNOSTIC_ONLY / NO_GO. From exact PR33 71dde4eed92edd20ff0e9611da42086d6e0f2b89,
