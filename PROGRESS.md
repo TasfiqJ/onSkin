@@ -1,5 +1,18 @@
 # Build Progress
 
+## 2026-10-31 — DevTools output diagnostic30 (review required)
+
+DIAGNOSTIC_ONLY / NO_GO. From exact PR33 71dde4eed92edd20ff0e9611da42086d6e0f2b89,
+installed Expo CLI57.0.32/Zod3.25.76 consumer probes passed 8/8 observation tests;
+the independent terminal-output safety assertion remains actual exit1 (late
+callback/result mutation after injected executor error/timeout). Windows26/32
+bounded children; Linux NOT_RUN due unavailable WSL disk. No mitigation applied.
+See docs/security/security30/devtools-output-boundary.md for source hashes,
+six-cell issue/output matrix, limits, red result and publication constraint.
+CAMPAIGN29_ACCEPTED_SCOPED / PARTIAL_DIAGNOSIS / NO_GO is retained only within
+its prior reader scope. All Security/DB/native/J01/clinical/provider/release
+gates remain closed. USD0; no workflow/lock/package/gate or private-evidence changes.
+
 ## 2026-10-19 - M0-01 stage baseline investigation (review required)
 
 Fresh main remains `bbc28dc3d1f945191a81be56945b8bda7bb6ef73`.
