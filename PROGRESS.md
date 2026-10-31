@@ -1,5 +1,18 @@
 # Build Progress
 
+## 2026-10-31 — Campaign32 main Quality governance recovery
+
+Candidate source verification separates exact integrated ancestry and the new
+plan/source/worklist-seal interval from a fresh pinned PR33 Release29 replay.
+The historical checker and its negative tests remain byte-identical; its current
+context refusal is retained. Quality retains every later check and DB job.
+No Security, DB, native, provider, dependency or application source changes.
+PR10 remains open/unmerged: current lock already resolves Vitest/@vitest/mocker
+4.1.12; its five source-inventory-review utility files are absent from main.
+Other non-evidence deltas have successor bytes requiring separate review; no
+PR10 code is imported. Exact tests/CI and final source identities are returned
+externally. SUBMITTED_REVIEW_REQUIRED; all qualified gates remain NO_GO; USD0.
+
 ## 2026-10-31 — Campaign31 terminal output repair
 
 Both installed Expo CLI executor data handlers now ignore output after terminal
