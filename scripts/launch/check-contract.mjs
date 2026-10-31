@@ -7,6 +7,21 @@ import {
 } from './contract.mjs';
 
 try {
+  // Explicit product-scope adoption. Default callers retain the historical
+  // technical contract and output; this selector cannot activate a feature.
+  if (process.argv.includes('--scope')) {
+    const args = process.argv.slice(2);
+    const index = args.indexOf('--scope');
+    if (args[index + 1] !== 'full-app-j01-v2' || args.lastIndexOf('--scope') !== index) {
+      throw new Error('Unknown versioned product scope.');
+    }
+    args.splice(index, 2);
+    const { runContract33 } = await import('./full-app-contract33.mjs');
+    process.exit(runContract33(args));
+  }
+  if (process.argv.some((arg) => arg.startsWith('--scope') || arg === '--external-readiness')) {
+    throw new Error('Use --scope full-app-j01-v2 for versioned product readiness.');
+  }
   const contract = loadLaunchContract();
   const snapshot = launchContractSnapshot(contract);
   if (process.argv.includes('--json')) {

@@ -1,0 +1,1841 @@
+{
+  "schema_version": 2,
+  "status": "ACTIONABLE_PLAN_NOT_IMPLEMENTATION_ISSUANCE",
+  "observed_source": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+  "nodes": [
+    {
+      "id": "R33-GOV",
+      "depends_on": [],
+      "gates": [],
+      "owner": "Codex proposal; independent Brain",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Review strict artifacts, falsification and immutable guards; source acceptance still pending",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-GOV",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-RESEARCH",
+      "depends_on": [
+        "R33-GOV"
+      ],
+      "gates": [],
+      "owner": "Imaging/rights/statistical owners",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Early G1 optical experiment and G2 target/rights preregistration; safe documentary research can proceed independently, no unconsented collection",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-RESEARCH",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-BASELINE",
+      "depends_on": [
+        "R33-GOV"
+      ],
+      "gates": [
+        "M1-03",
+        "G97",
+        "DB"
+      ],
+      "owner": "Original Security/DB custodians",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Resolve exact original Security/rules/OSV/secret/source inventory and canonical DB replay; Brain whole M1-03 acceptance",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-BASELINE",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-IDENTITY",
+      "depends_on": [
+        "R33-GOV"
+      ],
+      "gates": [
+        "RIGHTS",
+        "APPLE"
+      ],
+      "owner": "Brand/counsel and account owner",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F01"
+      ],
+      "acceptance": "Exact brand/territory/entity and policy/support ownership evidence; no account setup in this task",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-IDENTITY",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-LEDGER",
+      "depends_on": [
+        "R33-BASELINE"
+      ],
+      "gates": [
+        "M1-03",
+        "M2-01"
+      ],
+      "owner": "Future engineering; Brain",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F02",
+        "V2-C01",
+        "V2-C03"
+      ],
+      "acceptance": "Separate M2 grant, owner/version/CAS/idempotency/deletion-win adapters and ADR038 non-destructive corrections",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-LEDGER",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-CATALOG",
+      "depends_on": [
+        "R33-LEDGER"
+      ],
+      "gates": [
+        "RIGHTS",
+        "PROVIDER"
+      ],
+      "owner": "Catalog/source-rights operator",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F03",
+        "F04",
+        "V2-C02"
+      ],
+      "acceptance": "Real rights-reviewed intake/records/formula history and correction/report/operator end-to-end flow",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-CATALOG",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-CORE",
+      "depends_on": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "CLINICAL"
+      ],
+      "owner": "Engineering and exact guidance reviewers",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F05",
+        "F06",
+        "F07",
+        "F08",
+        "V2-C04",
+        "V2-C05"
+      ],
+      "acceptance": "Routine/Today/cycle/exceptions/actual-versus-intended and offline integration with approved copy",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-CORE",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-PAY",
+      "depends_on": [
+        "R33-LEDGER",
+        "R33-IDENTITY"
+      ],
+      "gates": [
+        "PAYMENT",
+        "APPLE",
+        "PROVIDER"
+      ],
+      "owner": "StoreKit/RevenueCat merchant operators",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F11",
+        "F12",
+        "V2-C10"
+      ],
+      "acceptance": "Real standard purchase and approved offer; preserve free quota/rights/current terms and unknown denials",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-PAY",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-DECISIONS",
+      "depends_on": [
+        "R33-CORE",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "CLINICAL",
+        "RIGHTS",
+        "PROVIDER"
+      ],
+      "owner": "Content/privacy/provider reviewers",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F13",
+        "F14",
+        "F15",
+        "V2-C06",
+        "V2-C08"
+      ],
+      "acceptance": "Factual compare/what-if/brief/recommendations/Ask/share integration with safe abstention and actual provider operations",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-DECISIONS",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-PRO",
+      "depends_on": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "PROVIDER",
+        "CLINICAL",
+        "OPERATIONS",
+        "PAYMENT"
+      ],
+      "owner": "Professional/privacy/workspace billing operators",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06"
+      ],
+      "acceptance": "Dedicated text-only client/practice surface, roles/grants/plans/queue/offboarding/capacity with real tenants and restore proof",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-PRO",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-OPERATIONS",
+      "depends_on": [
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "OPERATIONS",
+        "MODERATION",
+        "RIGHTS"
+      ],
+      "owner": "Support/catalog/moderation leads",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F20",
+        "V2-C12"
+      ],
+      "acceptance": "Functional least-privilege operations and funded support, incident/restore/rights workflow; catalog console not practitioner workspace",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-OPERATIONS",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-COMMUNITY",
+      "depends_on": [
+        "R33-OPERATIONS",
+        "R33-LEDGER"
+      ],
+      "gates": [
+        "MODERATION",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner": "Community moderation lead",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F17"
+      ],
+      "acceptance": "Real posting/report/block/appeal/deletion rehearsal and coverage before public exposure",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-COMMUNITY",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-COMMERCE",
+      "depends_on": [
+        "R33-DECISIONS",
+        "R33-PAY",
+        "R33-OPERATIONS"
+      ],
+      "gates": [
+        "RIGHTS",
+        "PROVIDER",
+        "PAYMENT",
+        "CLINICAL"
+      ],
+      "owner": "Partner/privacy/merchant operators",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F16"
+      ],
+      "acceptance": "Executed truthful rail, disclosures, independent ranking and real refund/reconciliation; current COM-01A remains zero",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-COMMERCE",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-NATIVE",
+      "depends_on": [
+        "R33-CORE",
+        "R33-PAY"
+      ],
+      "gates": [
+        "DEVICE",
+        "APPLE",
+        "G5"
+      ],
+      "owner": "Native/device QA owners",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "F09",
+        "F10",
+        "F19",
+        "V2-C07",
+        "V2-C09"
+      ],
+      "acceptance": "Photos/history/manual compare, OS reminders, widgets and supported-profile lifecycle/accessibility at signed exact source",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-NATIVE",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-J01",
+      "depends_on": [
+        "R33-RESEARCH",
+        "R33-LEDGER",
+        "R33-NATIVE"
+      ],
+      "gates": [
+        "G1",
+        "G2",
+        "G3",
+        "G5"
+      ],
+      "owner": "Imaging/statistical/privacy/native reviewers",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "J01"
+      ],
+      "acceptance": "Separately authorized on-device J01 baseline and locked independent single-scan evaluation; unsupported/failed outputs unavailable",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-J01",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-INTEGRATION",
+      "depends_on": [
+        "R33-PRO",
+        "R33-COMMUNITY",
+        "R33-COMMERCE",
+        "R33-NATIVE",
+        "R33-J01",
+        "R33-IDENTITY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "CLINICAL",
+        "DEVICE",
+        "OPERATIONS"
+      ],
+      "owner": "Independent Brain plus all qualified owners",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [
+        "V2-C11"
+      ],
+      "acceptance": "All38 required rows genuine at one build, clean source/CI, no P0/P1, real operator/provider/device/reviewer evidence",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-INTEGRATION",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    },
+    {
+      "id": "R33-APPLE",
+      "depends_on": [
+        "R33-INTEGRATION"
+      ],
+      "gates": [
+        "APPLE",
+        "PUBLIC"
+      ],
+      "owner": "Founder, release owner and Apple",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "implementation_authorized": false,
+      "owns": [],
+      "acceptance": "Separate exact-build beta/App Review submission and public availability decisions; no committed date",
+      "stop_condition": "Missing independent owner evidence or failed applicable gate; unavailable is not completed functionality",
+      "historical_node": "R08-APPLE",
+      "source_preparation": "DESIGN_AND_GAP_PACKET_ONLY"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "BUILD-F01",
+      "obligation": "F01",
+      "workstream": "R33-IDENTITY",
+      "action": "Bind exact cleared spelling, seller, assets, territory and owned policy/support URLs; current identity is not legally cleared.",
+      "dependencies": [
+        "R33-GOV"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "RIGHTS",
+        "APPLE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "IP/content/source-rights reviewer",
+        "Apple account/release owner and Apple",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Exact public spelling, seller, territory, owned policy/support destinations and store copy cleared and authenticated",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F02",
+      "obligation": "F02",
+      "workstream": "R33-LEDGER",
+      "action": "Map retained identity/consent to immutable owner record and independent portability; verify signed native and actual hosted lifecycle.",
+      "dependencies": [
+        "R33-BASELINE"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Adult18+ guest/Apple/email lifecycle, same-owner linking, separate consents, withdrawal/export/deletion and no owner-content flash",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F03",
+      "obligation": "F03",
+      "workstream": "R33-CATALOG",
+      "action": "Confirm immutable bottle/formula versions and durable import provenance across search/barcode/OCR/manual paths; qualify native OCR separately.",
+      "dependencies": [
+        "R33-LEDGER"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "RIGHTS",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "IP/content/source-rights reviewer",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Durable manual plus genuinely supported search/barcode/local label OCR; wrong/unknown match recovery, variant/formula confirmation",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F04",
+      "obligation": "F04",
+      "workstream": "R33-CATALOG",
+      "action": "Supply real reviewed rights/catalog membership, signed current serving/readback and correction/withdrawal operator evidence.",
+      "dependencies": [
+        "R33-LEDGER"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "RIGHTS",
+        "PROVIDER",
+        "OPERATIONS",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "IP/content/source-rights reviewer",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Rights/provenance and reviewed usable records, atomic serving/import, source corrections, miss/wrong-match reports and operator closure",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F05",
+      "obligation": "F05",
+      "workstream": "R33-CORE",
+      "action": "Obtain exact dermatologist/chemist/regulatory corpus and copy reviews before any positive guidance admission.",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Exact evidence corpus, clinical/cosmetic/regulatory review; unknown concentration and eligibility abstain with recovery",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F06",
+      "obligation": "F06",
+      "workstream": "R33-CORE",
+      "action": "Implement separately authorized immutable actual-plan version/CAS and owner application; retain reviewed-generation gates.",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Owned-product immutable formula/routine versions and explicit owner application, stale-CAS/refusal/recovery, intended distinct from actual",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F07",
+      "obligation": "F07",
+      "workstream": "R33-CORE",
+      "action": "Implement separately authorized append-only actual-use/correction/idempotency and deletion-win projections; preserve durable confirmation.",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "AM/PM/date/offline durable checkoffs, idempotent replay, truthful silence and additive corrections before M2-03 readiness",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F08",
+      "obligation": "F08",
+      "workstream": "R33-CORE",
+      "action": "Bind exact cadence/ramp/recovery semantics to competent reviewer evidence and signed-device recovery tests.",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Reviewed cadence and ramp eligibility, interruption recovery and owner changes; no invented medical safety",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F09",
+      "obligation": "F09",
+      "workstream": "R33-NATIVE",
+      "action": "Preserve encrypted source; qualify signed iPhone capture/lock/key-loss/temp-thumbnail erasure, notes/manual comparison and VoiceOver.",
+      "dependencies": [
+        "R33-CORE",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "DEVICE",
+        "G5",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Physical-device QA",
+        "Privacy/security, clinical/regulatory reviewers and native release operator",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Encrypted capture/history/notes/manual side-by-side comparison, app lock and erasure including temp/thumbnail/restore; no automated trend required",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F10",
+      "obligation": "F10",
+      "workstream": "R33-NATIVE",
+      "action": "Run exact signed-iPhone permission/quiet-hours/DST/revoke/reschedule/owner-cleanup and real delivery scenarios.",
+      "dependencies": [
+        "R33-CORE",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Opt-in local OS delivery, quiet hours, DST/timezone/reschedule/revocation/denial, owner cleanup proven on phone",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F11",
+      "obligation": "F11",
+      "workstream": "R33-PAY",
+      "action": "Supply actual verified StoreKit/RevenueCat sandbox purchase/restore/refund/lapse/unknown ordering and exact signed-build evidence.",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-IDENTITY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "PAYMENT",
+        "PROVIDER",
+        "APPLE",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "StoreKit/RevenueCat and workspace billing owners",
+        "Provider/merchant operator",
+        "Apple account/release owner and Apple",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Actual StoreKit/RevenueCat exact-owner purchase/restore/manage/lapse/refund/unknown and event ordering with free rights continuity",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F12",
+      "obligation": "F12",
+      "workstream": "R33-PAY",
+      "action": "Obtain approved Apple-managed offer configuration/eligibility/terms and actual lifecycle proof; custom reverse grant stays closed.",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-IDENTITY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "PAYMENT",
+        "APPLE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "StoreKit/RevenueCat and workspace billing owners",
+        "Apple account/release owner and Apple",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Truthful approved Apple-managed offer/trial eligibility and lifecycle; never re-enable custom reverse full-Pro grant to satisfy inventory",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F13",
+      "obligation": "F13",
+      "workstream": "R33-DECISIONS",
+      "action": "Prepare exact approved catalog/rules/reviewer/consent chain; keep photo-derived advertising and commission ranking absent.",
+      "dependencies": [
+        "R33-CORE",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Approved catalog/rules and exact review, explicit consent, traceable uncertainty, no photo-derived advertising or commission ranking",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F14",
+      "obligation": "F14",
+      "workstream": "R33-DECISIONS",
+      "action": "Prepare grounded provider/terms/consent/retention/refusal/abuse/operator packet; obtain real provider evidence without mocked positive advice.",
+      "dependencies": [
+        "R33-CORE",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "CLINICAL",
+        "PROVIDER",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Provider/merchant operator",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Actual permitted provider, grounded reviewed answers/refusals, consent, minimization, rate/abuse/incident operations and failure recovery",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F15",
+      "obligation": "F15",
+      "workstream": "R33-DECISIONS",
+      "action": "Prepare owner-confirmed factual projection/brief and redaction/temporary-file lifecycle; obtain exact claims/privacy/rights reviews.",
+      "dependencies": [
+        "R33-CORE",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Explicit user-confirmed reviewed share/export projection and destination; redaction, revocation limits, temp cleanup and exact claims/rights review",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F16",
+      "obligation": "F16",
+      "workstream": "R33-COMMERCE",
+      "action": "Obtain separately reviewed real partner/data rights/rail/disclosure and reconciliation evidence; retain literal-zero current behavior.",
+      "dependencies": [
+        "R33-DECISIONS",
+        "R33-PAY",
+        "R33-OPERATIONS"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "RIGHTS",
+        "PROVIDER",
+        "PAYMENT",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "IP/content/source-rights reviewer",
+        "Provider/merchant operator",
+        "StoreKit/RevenueCat and workspace billing owners",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Executed partner terms, rights/dataflow/disclosures, independent ranking, real rail/order reconciliation/withdrawal; no health/photo targeting",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F17",
+      "obligation": "F17",
+      "workstream": "R33-COMMUNITY",
+      "action": "Separately grant adult18+ community key/consent migration and full moderation/report/block/appeal/retention tooling plus staffed evidence.",
+      "dependencies": [
+        "R33-OPERATIONS",
+        "R33-LEDGER"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "MODERATION",
+        "OPERATIONS",
+        "CLINICAL",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Named moderation lead",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Working posting/report/block/appeal/delete/retention, enforceable staffed moderation, escalation and incident coverage; mock feed insufficient",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F19",
+      "obligation": "F19",
+      "workstream": "R33-NATIVE",
+      "action": "Supply signed WidgetKit/ActivityKit archive/install and actual lock-screen privacy/action/expiry/VoiceOver QA.",
+      "dependencies": [
+        "R33-CORE",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "DEVICE",
+        "APPLE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Physical-device QA",
+        "Apple account/release owner and Apple",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Signed native extensions and physical lock-screen privacy/action/lifecycle/expiry QA; source target or simulator is insufficient",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-F20",
+      "obligation": "F20",
+      "workstream": "R33-OPERATIONS",
+      "action": "Finish authorized reviewer/moderator/support incident/restore workflows and funded coverage; do not relabel catalog console as practitioner UI.",
+      "dependencies": [
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "OPERATIONS",
+        "MODERATION",
+        "RIGHTS",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Support/security/release operators",
+        "Named moderation lead",
+        "IP/content/source-rights reviewer",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Real catalog/content reviewers and moderation/support/security operators, scoped roles, audit trail, funded coverage and restore/incident runbooks",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C01",
+      "obligation": "V2-C01",
+      "workstream": "R33-LEDGER",
+      "action": "Design and separately grant the exact V2-C01 contract delta: Independent owner access and explicit consent purposes survive practice exit; verified same-owner portability, free export/delete",
+      "dependencies": [
+        "R33-BASELINE"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Independent owner access and explicit consent purposes survive practice exit; verified same-owner portability, free export/delete",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C02",
+      "obligation": "V2-C02",
+      "workstream": "R33-CATALOG",
+      "action": "Design and separately grant the exact V2-C02 contract delta: Immutable confirmed bottle/formula versions, market/variant/provenance; reformulation cannot rewrite past observations",
+      "dependencies": [
+        "R33-LEDGER"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Immutable confirmed bottle/formula versions, market/variant/provenance; reformulation cannot rewrite past observations",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C03",
+      "obligation": "V2-C03",
+      "workstream": "R33-LEDGER",
+      "action": "Design and separately grant the exact V2-C03 contract delta: Append-only actual-use/change/correction ledger, event identity+payload hash, CAS, offline replay and deletion-win projections",
+      "dependencies": [
+        "R33-BASELINE"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Append-only actual-use/change/correction ledger, event identity+payload hash, CAS, offline replay and deletion-win projections",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C04",
+      "obligation": "V2-C04",
+      "workstream": "R33-CORE",
+      "action": "Design and separately grant the exact V2-C04 contract delta: Optional exceptions and corrections; no checkoff/silence means unknown, no coercive adherence or destructive undo",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Optional exceptions and corrections; no checkoff/silence means unknown, no coercive adherence or destructive undo",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C05",
+      "obligation": "V2-C05",
+      "workstream": "R33-CORE",
+      "action": "Design and separately grant the exact V2-C05 contract delta: Owner current actual plan version independent of professional immutable intended plan; acknowledgement never applies routine",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Owner current actual plan version independent of professional immutable intended plan; acknowledgement never applies routine",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C06",
+      "obligation": "V2-C06",
+      "workstream": "R33-DECISIONS",
+      "action": "Design and separately grant the exact V2-C06 contract delta: Basic unlimited factual compare, distinct advanced what-if decisions and atomic free quota; owner-confirm before applying, no causal efficacy",
+      "dependencies": [
+        "R33-CORE",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Basic unlimited factual compare, distinct advanced what-if decisions and atomic free quota; owner-confirm before applying, no causal efficacy",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C07",
+      "obligation": "V2-C07",
+      "workstream": "R33-NATIVE",
+      "action": "Design and separately grant the exact V2-C07 contract delta: Private diary always usable without measurement support; secure capture, cancellation, handle epochs; J01 separately unadmitted",
+      "dependencies": [
+        "R33-CORE",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Private diary always usable without measurement support; secure capture, cancellation, handle epochs; J01 separately unadmitted",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C08",
+      "obligation": "V2-C08",
+      "workstream": "R33-DECISIONS",
+      "action": "Design and separately grant the exact V2-C08 contract delta: Free dated factual appointment brief, intended/actual versions and questions, owner-selected local export photos, no hosted media grant",
+      "dependencies": [
+        "R33-CORE",
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Free dated factual appointment brief, intended/actual versions and questions, owner-selected local export photos, no hosted media grant",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C09",
+      "obligation": "V2-C09",
+      "workstream": "R33-NATIVE",
+      "action": "Design and separately grant the exact V2-C09 contract delta: Owner-approved local scheduling, safe reminder text, quiet hours and real denial/revoke/timezone/device proof",
+      "dependencies": [
+        "R33-CORE",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Owner-approved local scheduling, safe reminder text, quiet hours and real denial/revoke/timezone/device proof",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C10",
+      "obligation": "V2-C10",
+      "workstream": "R33-PAY",
+      "action": "Design and separately grant the exact V2-C10 contract delta: Free ordinary edits/history/photos/brief/rights survive expiry; three free advanced decisions never grant Plus; current SKUs preserved",
+      "dependencies": [
+        "R33-LEDGER",
+        "R33-IDENTITY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PAYMENT",
+        "APPLE"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "StoreKit/RevenueCat and workspace billing owners",
+        "Apple account/release owner and Apple"
+      ],
+      "acceptance": "Free ordinary edits/history/photos/brief/rights survive expiry; three free advanced decisions never grant Plus; current SKUs preserved",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C11",
+      "obligation": "V2-C11",
+      "workstream": "R33-INTEGRATION",
+      "action": "Design and separately grant the exact V2-C11 contract delta: Accessible recovery across all promised native/web flows, small phone and large text/VoiceOver, no provider or permission dead ends",
+      "dependencies": [
+        "R33-PRO",
+        "R33-COMMUNITY",
+        "R33-COMMERCE",
+        "R33-NATIVE",
+        "R33-J01",
+        "R33-IDENTITY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Accessible recovery across all promised native/web flows, small phone and large text/VoiceOver, no provider or permission dead ends",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-V2-C12",
+      "obligation": "V2-C12",
+      "workstream": "R33-OPERATIONS",
+      "action": "Design and separately grant the exact V2-C12 contract delta: Content-free service diagnostics, support/restore/deletion operations with actual staffed capacity; scientific and commercial evidence distinct",
+      "dependencies": [
+        "R33-CATALOG"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Content-free service diagnostics, support/restore/deletion operations with actual staffed capacity; scientific and commercial evidence distinct",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-P01",
+      "obligation": "P01",
+      "workstream": "R33-PRO",
+      "action": "Design and separately grant dedicated professional behavior: Dedicated professional surface; workspace owner/billing admin are not private-content authority; practitioner/assistant/support least privilege",
+      "dependencies": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PROVIDER",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel"
+      ],
+      "acceptance": "Dedicated professional surface; workspace owner/billing admin are not private-content authority; practitioner/assistant/support least privilege",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-P02",
+      "obligation": "P02",
+      "workstream": "R33-PRO",
+      "action": "Design and separately grant dedicated professional behavior: Independent client web/login, one active scoped text-only grant, atomic practice switch and publication-time epoch recheck; no browser private-text persistence",
+      "dependencies": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PROVIDER",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel"
+      ],
+      "acceptance": "Independent client web/login, one active scoped text-only grant, atomic practice switch and publication-time epoch recheck; no browser private-text persistence",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-P03",
+      "obligation": "P03",
+      "workstream": "R33-PRO",
+      "action": "Design and separately grant dedicated professional behavior: Immutable practitioner plans/templates and acknowledgement, owner explicit application only; no silent actual-routine edits",
+      "dependencies": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PROVIDER",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel"
+      ],
+      "acceptance": "Immutable practitioner plans/templates and acknowledgement, owner explicit application only; no silent actual-routine edits",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-P04",
+      "obligation": "P04",
+      "workstream": "R33-PRO",
+      "action": "Design and separately grant dedicated professional behavior: Material-event queue, idempotency, fixed24h grouping/seven-day reopen, capacity/digest/staffing thresholds; no emergency/silence inference",
+      "dependencies": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PROVIDER",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel"
+      ],
+      "acceptance": "Material-event queue, idempotency, fixed24h grouping/seven-day reopen, capacity/digest/staffing thresholds; no emergency/silence inference",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-P05",
+      "obligation": "P05",
+      "workstream": "R33-PRO",
+      "action": "Design and separately grant dedicated professional behavior: Pre-visit report, lawful retention and owner export, independent account after offboarding, tombstones before restore, export irrevocability disclosed",
+      "dependencies": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PROVIDER",
+        "OPERATIONS",
+        "CLINICAL"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel"
+      ],
+      "acceptance": "Pre-visit report, lawful retention and owner export, independent account after offboarding, tombstones before restore, export irrevocability disclosed",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-P06",
+      "obligation": "P06",
+      "workstream": "R33-PRO",
+      "action": "Design and separately grant dedicated professional behavior: Separate provider-verified workspace billing, atomic accepted-plan capacity and nondestructive downgrade/refund; no Plus from client link, native upsell closed",
+      "dependencies": [
+        "R33-CORE",
+        "R33-DECISIONS",
+        "R33-PAY"
+      ],
+      "gates": [
+        "G97",
+        "DB",
+        "M1-03",
+        "M2-01",
+        "DEVICE",
+        "PUBLIC",
+        "PROVIDER",
+        "OPERATIONS",
+        "CLINICAL",
+        "PAYMENT",
+        "APPLE"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Independent Brain and protected custodians",
+        "Independent Brain",
+        "Physical-device QA",
+        "Founder after independent Brain review",
+        "Provider/merchant operator",
+        "Support/security/release operators",
+        "Dermatologist, cosmetic chemist and regulatory counsel",
+        "StoreKit/RevenueCat and workspace billing owners",
+        "Apple account/release owner and Apple"
+      ],
+      "acceptance": "Separate provider-verified workspace billing, atomic accepted-plan capacity and nondestructive downgrade/refund; no Plus from client link, native upsell closed",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    },
+    {
+      "id": "BUILD-J01",
+      "obligation": "J01",
+      "workstream": "R33-J01",
+      "action": "Authenticate actual J01 research/rights intake and preregister G1 optical protocol before independently reviewed G2/G3/G5 qualification.",
+      "dependencies": [
+        "R33-RESEARCH",
+        "R33-LEDGER",
+        "R33-NATIVE"
+      ],
+      "gates": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5",
+        "G97",
+        "DB",
+        "DEVICE",
+        "PUBLIC"
+      ],
+      "owner_roles": [
+        "Codex future finite implementation",
+        "Independent Brain source audit",
+        "Physical iPhone imaging engineer",
+        "Source-rights counsel, image scientist and statistician",
+        "Independent image scientist and statistician",
+        "Independent longitudinal reviewer",
+        "Privacy/security, clinical/regulatory reviewers and native release operator",
+        "Original Security custodian",
+        "Canonical DB06/DB08/R2B custodian",
+        "Physical-device QA",
+        "Founder after independent Brain review"
+      ],
+      "acceptance": "Only unavailable/retake until exact G1/G2/G3/G5; no quantitative or medical claim; G4 separately required for change",
+      "evidence_needed": [
+        "Exact source and integration receipts",
+        "Signed supported iPhone and VoiceOver where applicable",
+        "Actual provider, rights, reviewer and operations decisions where applicable"
+      ],
+      "status": "OPEN_REQUIRED",
+      "implementation_authorized": false
+    }
+  ],
+  "protected_dependencies": {
+    "M2-01": [
+      "M1-03"
+    ],
+    "M2-02": [
+      "M2-01"
+    ],
+    "M2-03": [
+      "M2-02"
+    ],
+    "M2-04": [
+      "M2-03"
+    ]
+  },
+  "j05_measurement_enabled": false,
+  "removed_priority_predecessor": "M3-02",
+  "j01_change_requires": "G4",
+  "public_date": null,
+  "acceptanceGranted": false,
+  "release": "NO_GO",
+  "next_engineering_tranche": {
+    "id": "PROTECTED_SCOPE_READER_ADOPTION_NEXT",
+    "status": "UNAPPLIED_REQUIRES_INDEPENDENT_BRAIN_GRANT",
+    "order": [
+      "Review Campaign33 candidate and exact consumer inventory",
+      "Grant a bounded dual-version reader/projection change with historical fixtures at exact sources",
+      "Migrate protected app.config and coupled scope/provenance readers while every feature remains gated",
+      "Run affected native/source/negative contracts, then separately audit before runtime product-pointer adoption"
+    ],
+    "first_paths": [
+      "apps/mobile/app.config.js",
+      "scripts/launch/contract.mjs",
+      "scripts/launch/execution-baseline.mjs",
+      "scripts/brain/brain.py",
+      "scripts/launch/governed-evidence-chain.mjs"
+    ],
+    "parallel_documentary_work": "Authenticate actual J01 intake and preregister G1/G2 capture/rights experiment; no people/photos or positive inference here"
+  }
+}
