@@ -7,8 +7,8 @@
   "sourceHashes": {
     ".github/workflows/quality.yml": "9001a6633d3de2ff1c848193585b2cce7a2ea4ba0ea0d1a70e2cd90d43555137",
     "PROGRESS.md": "38a4d907fb4c040dfdd563c341014f87ec3b0ee6cc6a319f227901fe684cdef4",
-    "docs/release/full-app-j01/consumer-migration34.v1.json": "bbad30ea70b221c00932e6e867e9f76cb52c3890cb1786391acdbc3183064ce1",
-    "docs/release/full-app-j01/cutover34.md": "342e66d57df96d9e0fb078bc8765b8edf95d9766e9ddfbb0cad9ff55485234e9",
+    "docs/release/full-app-j01/consumer-migration34.v1.json": "3a8d6924a8d90ed06565ef40dbc7b7674e45eaa72392341c37c1ab39c922a240",
+    "docs/release/full-app-j01/cutover34.md": "7fecd16b1806349bc70901bea73533403e07cf58cef2a4cc38dd9168a5fec972",
     "scripts/launch/candidate-scope34.mjs": "fa6dce067635cbae72c06b9d30982bfc7b68a010a0b6c68203edf9707aadd855",
     "scripts/launch/candidate-scope34.test.mjs": "37e646f830ca4c435edd004cf52766ccb2e041520386761c7d3a4d51b1b20441",
     "scripts/launch/consumer-entry34.test.mjs": "acc5fb6b2ead69dd2dc589e6c5cc634936bbab83522ee710cacf860e9891aa1c",
