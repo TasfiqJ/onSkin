@@ -294,13 +294,20 @@ behavior open. This diagnostic supplies no private findings or risk sign-off.
 
 The existing `.github/workflows/security.yml:3-7` starts on every pull request,
 including drafts; its secret/static jobs launch scanners. It has no draft guard.
-Opening the requested PR would therefore trigger activity the current user scope
-explicitly forbids. No skip-CI marker, workflow edit, gate bypass or Actions-setting
-change was used to reconcile this. The diagnostic can be committed/pushed on the
-new non-main branch without those PR-triggered jobs; draft publication requires
-clarification of consent for the unchanged automatic checks. Final delivery records
-the actual branch/PR outcome and any hosted metadata separately. No hosted checks
-were manually dispatched or claimed as complete here.
+After the diagnostic was committed/pushed, this conflict with the user's scanner
+prohibition was disclosed in a concrete publication-consent question. The user
+replied **"auto push to main when you see fit"**. This reply is interpreted as
+authorization for unchanged automatic PR checks; that interpretation was stated
+to the user before publication. Main promotion is not justified while the safety
+regression remains red and independent review is outstanding, and is not performed.
+No skip-CI marker, workflow edit, gate bypass or Actions-setting change is used.
+The connected repository metadata says public; PR jobs use standard hosted
+Ubuntu/Windows runners, whose public-repository usage is free under
+[GitHub's billing documentation](https://docs.github.com/en/actions/concepts/billing-and-usage).
+No paid runner, manual workflow dispatch or account/billing change is authorized.
+Final delivery records actual PR/draft/source identities and hosted metadata
+separately. Queued/running automatic jobs must not be called completed checks;
+their private logs/findings remain unopened.
 
 **CAMPAIGN29_ACCEPTED_SCOPED / PARTIAL_DIAGNOSIS / NO_GO** remains limited to the
 prior reader work. G97 **FAIL/NO_GO**; DB06/DB08/R2B **NOT_ACCEPTED**;
