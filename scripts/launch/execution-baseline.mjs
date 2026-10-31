@@ -2,9 +2,14 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { format } from 'prettier';
-import { REQUIRED_FEATURE_IDS } from './contract.mjs';
+import { REQUIRED_FEATURE_IDS, loadCandidateLaunchScope34 } from './contract.mjs';
 
 export const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
+
+// A separate source-only obligation view, never a generated legacy status/evidence update.
+export function buildCandidateExecutionObligations34(sourceRoot = root, mode = 'verification') {
+  return loadCandidateLaunchScope34(sourceRoot, mode);
+}
 
 export const baselinePaths = {
   plan: 'docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md',
