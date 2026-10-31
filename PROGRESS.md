@@ -1,5 +1,31 @@
 # Build Progress
 
+## 2026-10-31 — Campaign35 saved-OFF first-session driver recovery
+
+Authenticated the supplied context/embedded historical return and live pinned
+PR37/PR36/main before edits. Plan-only commit74a1d1b449e3942677b327e748a41052552e8ae2
+precedes finite implementation. Original375x667 Chrome failure reproduced:
+Notifications had saved OFF and enabled Continue; the driver waited for Account.
+
+Driver now verifies truthful saved OFF, encrypted persistence and current owner/
+health consent, taps the appropriate explicit Continue, then uses real Account
+Not now/free Paywall/Today/Shelf/Progress UI. Supported375x667 and390x844 repaired
+runs passed; actual Shelf product/Back and closed age/reload recovery are covered.
+No Pro authority is injected. Independently authored45 driver-decision controls
+pass; source/synthetic controls remain distinct from browser/native proof.
+All mobile components, F09, original negative suites and protected programs stay
+unchanged. New strict35 source/history/event/index/raw-byte guard and bounded
+first Quality step preserve authentic34/33/32/29 historical replay and refusals.
+
+Fresh normal npm ci/hooks, typecheck/lint, tests, source contracts, Phase4 policy
+and unsigned exports have real external receipts. The initial broad test race
+and inherited core04/core06 string-expectation failures remain recorded, with
+baseline/final outcomes in the return report. Source observations do not admit
+Security, DB, J01, native/VoiceOver, providers, paid/clinical/Apple or PUBLIC.
+All prior closed gates remain closed; independent Brain reviews the draft only.
+See docs/release/full-app-j01/free-first-session35.md. acceptanceGranted=false;
+release=NO_GO; spend=USD0.
+
 ## 2026-10-31 — Campaign34 protected dual-scope source readers
 
 Authenticated the exact outer10/nested148 input files before extraction and ran

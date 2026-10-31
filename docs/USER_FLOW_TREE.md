@@ -2,6 +2,15 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## Campaign35: explicit saved-OFF continuation and free first session
+
+- Entry: fresh synthetic adult/health-consenting owner through the actual development Expo web Welcome, age, consent, goals, quiz and three manual products. Supported browser geometry: 375x667 and 390x844; browser proof grants no native or release admission.
+- Critical: after truthful pending clinical review, tap Not now on Notifications. Remain on Notifications, read back all seven purposes OFF from actual encrypted storage, require the current owner/health lease, truthful saved confirmation and reachable enabled Continue, then tap Continue before waiting for Account. Automatic advance, missing persistence/confirmation/Continue and retired authority are failures. Explicit saved-OFF delivery uncertainty requires its full warning and its separate Continue with delivery unconfirmed action; it never means OS cancellation/delivery was verified.
+- Critical: use Account Not now and the real free-plan Paywall action. Store pricing may be unavailable; preserve truthful paid/free copy and disabled purchase. Require Today, exactly the three owned products on Shelf, no Pro entitlement and the truthful Progress feature gate. No route injection may replace a required onboarding step.
+- Important: open an owned Shelf product and use Back; revisit tabs and refresh with normal owner/age gates. Where the existing development fixture cannot retain identity over a document reload, report the closed gate and remaining retention limit. No owner, age, consent or paid authority is inserted to make recovery pass.
+- Adversarial/source controls: consent/age denial, denied/OFF reminders, no false save/auto-advance, missing or blocked Continue, old owner, unknown/forged Pro authority, exact product retention and explicit uncertainty; existing negative suites remain unchanged. Capture actual browser screenshots, DOM/control geometry, console/network outcomes and source receipts separately from synthetic decision tests.
+- Closed: physical iPhone, VoiceOver, APNs, real StoreKit/providers, J01/clinical/rights, signed builds, owner decisions and PUBLIC remain NOT_RUN/NOT_ACCEPTED/NO_GO as applicable. Source is a draft candidate only.
+
 ## Campaign26: recover manual entry and reach product removal
 
 - Entry: synthetic consenting adult, actual Expo web with the existing development-only anonymous-owner fixture, no real account/photo or external provider. Baseline app source is exact PR29; after-source is the finite Campaign26 candidate.
