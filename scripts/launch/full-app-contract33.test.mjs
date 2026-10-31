@@ -42,6 +42,7 @@ const mutations = [
   ['history promoted to new acceptance', (b) => { matrix(b).history.new_acceptance = true; }],
   ['fake test owner evidence', (b) => { matrix(b).receipts[0].qualified_acceptance = true; }],
   ['forged test log hash', (b) => { matrix(b).receipts[0].log_sha256 = '0'.repeat(64); }],
+  ['wrong authentic preflight log substituted for all tests', (b) => { matrix(b).receipts[0].log_sha256 = 'a78a5386841eda7e5f0f87a0851618c8c0c3f175101ce76edb406a6057aeafbf'; }],
   ['stale test source', (b) => { matrix(b).receipts[0].head = '0'.repeat(40); }],
   ['fake zero-test proof', (b) => { row(b, 'F09').evidence_receipts[0].test_count = 0; }],
   ['missing test source', (b) => { row(b, 'F09').evidence_receipts[0].test_path = 'apps/mobile/src/missing.test.ts'; }],
@@ -51,13 +52,19 @@ const mutations = [
   ['fake completed cutover', (b) => { b['precedence.v2.json'].cutover.full_cutover_complete = true; }],
   ['fake runtime migration', (b) => { b['precedence.v2.json'].cutover.runtime_consumers_migrated = true; }],
   ['omitted protected consumer', (b) => { b['precedence.v2.json'].cutover.consumers.shift(); }],
+  ['invented grant for protected runtime consumer', (b) => { b['precedence.v2.json'].cutover.consumers[0].in_finite_grant = true; }],
+  ['replaced required source anchor by unrelated authentic source', (b) => { b['precedence.v2.json'].source_anchors[0] = structuredClone(row(b, 'F01').source_refs[0]); }],
   ['deferred roadmap task', (b) => { b['roadmap.v2.json'].tasks[0].obligation = 'F18'; }],
   ['duplicate implementation credit', (b) => { b['roadmap.v2.json'].nodes[0].owns.push('F09'); }],
   ['source plan authorizes M2', (b) => { b['roadmap.v2.json'].tasks[0].implementation_authorized = true; }],
   ['weakened M1-03 dependency', (b) => { b['roadmap.v2.json'].protected_dependencies['M2-01'] = []; }],
+  ['invented next-tranche implementation grant', (b) => { b['roadmap.v2.json'].next_engineering_tranche.implementation_authorized = true; }],
   ['owner gate missing', (b) => { b['owner-ledger33.v1.json'].gates.pop(); }],
   ['DB mechanics promoted to admission', (b) => { b['owner-ledger33.v1.json'].qualified_admissions.DB06 = true; }],
   ['owner-shaped unknown provider readiness', (b) => { b['owner-ledger33.v1.json'].providerReady = true; }],
+  ['extra provider readiness inside technical observation', (b) => { b['owner-ledger33.v1.json'].technical_observations[0].providerReady = true; }],
+  ['fabricated technical run identity', (b) => { b['owner-ledger33.v1.json'].technical_observations[0].run_id = 1; }],
+  ['original Security failure replaced by technical success', (b) => { b['owner-ledger33.v1.json'].technical_observations[1].status = 'SUCCESS'; }],
 ];
 for (const key of ['acceptanceGranted', 'candidateReady', 'productReady', 'providerReady', 'paidReady', 'professionalReady', 'j01Qualified'])
   mutations.push([`fabricated ${key}`, (b) => { contract(b)[key] = true; }]);

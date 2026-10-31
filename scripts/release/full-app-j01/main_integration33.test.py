@@ -93,6 +93,20 @@ class Controls(unittest.TestCase):
         for raw in [b'{"a":0,"a":1}',b'{"a":NaN}']:
             with self.assertRaises(ValueError):m.document(raw)
 
+    def test_original_progress_transcript_and_false_result_refusals(self):
+        p=m.parent()
+        result=dict(status='PASS',historicalCheckerExit=0,historicalHead=p.PR33,historicalTree=p.PR33_TREE,
+            checkerSHA256=p.CHECKER_SHA,acceptanceGranted=False,release='NO_GO',
+            originalCurrentRefusal=dict(valid=False,error='R29_AFTER_EVIDENCE_TAIL',release='NO_GO'),
+            qualification='INDEPENDENT_PINNED_CLONE_NORMAL_HOOKS_NO_HISTORICAL_CI_CLAIM')
+        prefix=b'R32_HISTORICAL_CLONE_AUTHENTICATED\nR32_HISTORICAL_NORMAL_INSTALL_AND_HOOKS_PASS\n'
+        raw=lambda value:prefix+m.json.dumps(value).encode()+b'\n'
+        self.assertEqual(m.historical_result(raw(result)),result)
+        for body in [m.json.dumps(result).encode(),b'FAKE\n'+raw(result),raw(result)+b'extra\n']:
+            with self.assertRaisesRegex(ValueError,'R33_HISTORICAL_TRANSCRIPT'):m.historical_result(body)
+        for key,bad in [('acceptanceGranted',True),('release','GO'),('historicalHead','0'*40),('historicalCheckerExit',1)]:
+            with self.assertRaisesRegex(ValueError,'R33_HISTORICAL_RESULT'):m.historical_result(raw({**result,key:bad}))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -218,6 +218,21 @@ def verify():
                 acceptanceGranted=False, admissions=dict.fromkeys(ADMISSIONS, False), release='NO_GO')
 
 
+def historical_result(raw):
+    """Original32 emits two progress lines before its final JSON result."""
+    p = parent(); lines = [line for line in raw.splitlines() if line]
+    need(len(lines) == 3 and lines[:2] == [b'R32_HISTORICAL_CLONE_AUTHENTICATED',
+         b'R32_HISTORICAL_NORMAL_INSTALL_AND_HOOKS_PASS'], 'R33_HISTORICAL_TRANSCRIPT')
+    result = document(lines[-1])
+    need(result.get('status') == 'PASS' and result.get('historicalCheckerExit') == 0 and
+         result.get('historicalHead') == p.PR33 and result.get('historicalTree') == p.PR33_TREE and
+         result.get('checkerSHA256') == p.CHECKER_SHA and result.get('acceptanceGranted') is False and
+         result.get('release') == 'NO_GO' and result.get('originalCurrentRefusal') ==
+         dict(valid=False, error='R29_AFTER_EVIDENCE_TAIL', release='NO_GO') and
+         result.get('qualification') == 'INDEPENDENT_PINNED_CLONE_NORMAL_HOOKS_NO_HISTORICAL_CI_CLAIM', 'R33_HISTORICAL_RESULT')
+    return result
+
+
 def historical():
     """Unchanged original32 and29 execute with no current CI event in a fresh clone.
 
@@ -257,15 +272,15 @@ def historical():
     p.child([str(node), str(npm), 'ci', '--ignore-scripts=false', '--no-audit', '--no-fund'], root, env)
     p.child([str(node), 'scripts/postinstall.mjs', '--check'], root, env)
     print('R33_PR35_NORMAL_INSTALL_AND_HOOKS_PASS', file=sys.stderr, flush=True)
-    result = document(p.child([sys.executable, '-I', '-B', PREFIX+'main_integration32.py', '--historical'],
-                              root, env, timeout=1500))
-    need(result.get('status') == 'PASS' and result.get('historicalCheckerExit') == 0 and
-         result.get('acceptanceGranted') is False and result.get('release') == 'NO_GO', 'R33_HISTORICAL_RESULT')
+    transcript = p.child([sys.executable, '-I', '-B', PREFIX+'main_integration32.py', '--historical'],
+                         root, env, timeout=1500)
+    result = historical_result(transcript)
     need(not pinned('status', '--porcelain=v1', '--untracked-files=all') and pinned('rev-parse', 'HEAD') == BASE and
          pinned('rev-parse', 'HEAD^{tree}') == BASE_TREE and text('rev-parse', 'HEAD') == checkout and
          text('rev-parse', 'HEAD^{tree}') == before_tree, 'R33_HISTORICAL_CHANGED')
     return dict(status='PASS', historicalParentHead=BASE, historicalParentTree=BASE_TREE,
                 parentCheckerSHA256=PARENT_SHA, originalCurrent32Refusal=refusal, release29=result,
+                historicalTranscriptSHA256=digest(transcript),
                 qualification='SUPPLIER_PINNED_HISTORICAL_CLONES_NOT_CURRENT33_OR_OWNER_ADMISSION',
                 current33Proof='SEPARATE_VERIFY_REQUIRED', npmCache='NORMAL_EXISTING_CACHE_NO_ZERO_CACHE_CLAIM',
                 acceptanceGranted=False, release='NO_GO')

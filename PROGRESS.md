@@ -8014,3 +8014,14 @@ version scope-reader adoption and all affected historical refusal fixtures,
 then independently audit before any runtime pointer change. Roadmap lists
 BUILD-ID tasks for every required obligation; no implementation issuance or
 percentage complete is implied.
+
+Campaign33 pre-seal hardening: strict v2 now binds the exact all-tests receipt
+line in the immutable plan, exact source-anchor inventory and finite-grant
+consumer classifications, and exact owner observations/next-tranche schema.
+Expanded123 Node checks PASS. A new historical wrapper attempt FAILED while
+parsing the original32 two progress lines as JSON; its failed receipt is
+preserved. The wrapper now validates the exact two-line transcript and original
+result/pins/refusal/NO_GO fields. The actual earlier authentic PR35/Release29
+transcript parses successfully, and9 Python unit controls PASS. No original
+checker, checksum, owner gate or historical refusal changed. Fresh full wrapper
+execution after freeze/CI remains an external final-report obligation.

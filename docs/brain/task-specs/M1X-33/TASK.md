@@ -6,7 +6,7 @@
   "planCommit": "4e9c20e7502e51750ac85a1227f7151c7334e2bb",
   "sourceHashes": {
     ".github/workflows/quality.yml": "70cbfb901dc4b407da22ca84a34846d2ca113de63222beca5af54ca101b81b5e",
-    "PROGRESS.md": "5b2f77abaf8ddb912c3747b096051d511dce5f9de1f875e7a29825e00c117de9",
+    "PROGRESS.md": "339df5d29370dc4c540c999b797d0da8dd4513938e41a59fb8d3dc56fc95cfae",
     "docs/release/full-app-j01/contract.v2.json": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495",
     "docs/release/full-app-j01/cutover33.md": "7af9e9697808ff23b2e0542579b30fa1c32118e4f1f59760da2017050634da54",
     "docs/release/full-app-j01/j01-capture-feasibility33.md": "acdd8cb5ee16195dc6420f241abbaf074fe6f1864fc6a34ff56dc03b41dd146b",
@@ -15,10 +15,10 @@
     "docs/release/full-app-j01/precedence.v2.json": "d386e395fc42c716f85121e977393b185d2c75344bdd63c4a4b44a896c4efa39",
     "docs/release/full-app-j01/roadmap.v2.json": "d057d0a2b6b3f6bb07150cf5a751ae922f186466a12bcd61edba824f0bee5017",
     "scripts/launch/check-contract.mjs": "f607e33da85a8d7cb4f75b3e4a6155af5921594e57060fcd541394d399ee8f18",
-    "scripts/launch/full-app-contract33.mjs": "7380b0b9a5bb38fb6d158296b798a1ef1631c3c07d9f132b702170d47e3f3fa2",
-    "scripts/launch/full-app-contract33.test.mjs": "01630e85b728b79e0ac02743d884c05e8be44b347f7a8d00b483f96066faa363",
-    "scripts/release/full-app-j01/main_integration33.py": "2ac2358722cbca9c8bb76d6c5b43fda6232345e7e605bfa4bac4acb96bbb8393",
-    "scripts/release/full-app-j01/main_integration33.test.py": "e3c209bc1def01e372ef6e38b15318e8e996a3970751cde309206c1782b01cb2",
+    "scripts/launch/full-app-contract33.mjs": "9bcc7fc1ce631f861faaea2857252a9c7cfc6639a00f742a5b71503e6744e5a0",
+    "scripts/launch/full-app-contract33.test.mjs": "da340a2082661edd4ea84ec4cdbdf8d674b2f04f8753306765c64d51513d77ef",
+    "scripts/release/full-app-j01/main_integration33.py": "1176d7fa42f23ecde717ac4c9a96e5eb855774ac4e3bc2813f970a4004065616",
+    "scripts/release/full-app-j01/main_integration33.test.py": "c5519994161b40f7db870b6f837e144f76e793faaa3fb85508390b9127e9acb0",
     "scripts/release/full-app-j01/source_consumer33.test.py": "fb7607f71a663ea936c4edc699f54a62b6548df1704e619ff9ae85347beca769"
   },
   "acceptanceGranted": false,

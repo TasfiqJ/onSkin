@@ -149,7 +149,10 @@ export function validateBundle33(bundle, root = ROOT33) {
   // The immutable plan independently records this supplier log hash. The raw
   // log is in the return packet; neither it nor these fields is owner evidence.
   const plan = regular(root, 'docs/brain/task-specs/M1X-33/SCOPE_PLAN.md');
-  need(sha256(plan) === 'd7b3675e1d6b81fca233eed8099157ccf9f31a8855b27305fdd6c2b65a5855ce' && plan.toString().includes('`' + receipt.log_sha256 + '`'), 'R33_RECEIPT_PLAN_ANCHOR');
+  const receiptLine = /^\| baseline-mobile-operator-all \| 0 \| 0 \| `([0-9a-f]{64})` \|$/mu.exec(plan.toString());
+  need(sha256(plan) === 'd7b3675e1d6b81fca233eed8099157ccf9f31a8855b27305fdd6c2b65a5855ce' && receiptLine && receipt.log_sha256 === receiptLine[1], 'R33_RECEIPT_PLAN_ANCHOR');
+  const granted = new Set([...plan.toString().matchAll(/^\d+\. `([^`]+)`$/gmu)].map((x) => x[1]));
+  need(granted.size === 33, 'R33_PLAN_GRANT');
   need(receipt.id === 'PR35-ALL-TESTS' && receipt.head === BASE33 && receipt.tree === TREE33 && receipt.status === 'PASS_SOURCE_ONLY' && receipt.exit_code === 0 &&
     receipt.mobile_test_files === 499 && receipt.mobile_tests === 6478 && receipt.operator_test_files === 7 && receipt.operator_tests === 24 && receipt.turbo_cache_hits === 0 &&
     receipt.node === '22.21.0' && receipt.npm === '11.20.0' && receipt.qualified_acceptance === false &&
@@ -214,11 +217,14 @@ export function validateBundle33(bundle, root = ROOT33) {
   same(cut.unapplied_paths, cut.consumers.map((x) => x.path), 'R33_OMITTED_CONSUMERS');
   for (const x of cut.consumers) {
     keys(x, ['path', 'historical_ref', 'exists_at_pr35', 'mode', 'blob', 'classification', 'in_finite_grant', 'migrated', 'decision', 'reason'], 'R33_CONSUMER_SCHEMA');
-    need(x.historical_ref.endsWith(':' + x.path) && x.exists_at_pr35 === true && x.migrated === false && x.decision === 'RETAIN_LEGACY_TECHNICAL_GUARD' && typeof x.in_finite_grant === 'boolean', 'R33_CONSUMER_STATE');
+    need(x.historical_ref.endsWith(':' + x.path) && x.exists_at_pr35 === true && x.migrated === false && x.decision === 'RETAIN_LEGACY_TECHNICAL_GUARD' && x.in_finite_grant === granted.has(x.path), 'R33_CONSUMER_STATE');
     same(tree.get(x.path), [x.mode, 'blob', x.blob], 'R33_CONSUMER_IDENTITY'); text(x.reason, 'R33_CONSUMER_REASON');
     need(['PROTECTED_CUSTODY_REFERENCE_NOT_OPENED', 'TEST_OR_HISTORICAL_READER', 'RUNTIME_OR_TOOLING_READER', 'PROVENANCE_INVENTORY_REFERENCE'].includes(x.classification), 'R33_CONSUMER_CLASS');
   }
-  need(p.source_anchors.length === 12 && new Set(p.source_anchors.map((x) => x.path)).size === 12, 'R33_ANCHOR_INVENTORY');
+  same(p.source_anchors.map((x) => x.path), [D + 'contract.v1.json', D + 'matrix.v1.json', D + 'precedence.v1.json', D + 'roadmap.v1.json',
+    D + 'history-crosswalk.v1.json', 'docs/hugeToDo/launch-contract.json', 'scripts/launch/contract.mjs',
+    'scripts/launch/check-contract.mjs', 'scripts/launch/contract-smoke.mjs', 'scripts/release/full-app-j01/check.py',
+    'scripts/release/full-app-j01/main_integration32.py', '.github/workflows/quality.yml'], 'R33_ANCHOR_INVENTORY');
   p.source_anchors.forEach((x) => witness(x, true));
   need(regular(root, '.github/workflows/quality.yml').toString().includes('main_integration33.py') && regular(root, 'scripts/launch/check-contract.mjs').toString().includes('full-app-j01-v2'), 'R33_CI_SELECTOR_WIRING');
 
@@ -235,12 +241,21 @@ export function validateBundle33(bundle, root = ROOT33) {
     same(t.dependencies, node.depends_on, 'R33_TASK_DEPENDENCY'); same(t.gates, r.gates, 'R33_TASK_GATES'); same(t.owner_roles, r.owner_roles, 'R33_TASK_OWNERS');
     need(Array.isArray(t.evidence_needed) && t.evidence_needed.length === 3 && t.evidence_needed.every((x) => typeof x === 'string' && x.length > 0), 'R33_TASK_EVIDENCE');
   }
-  need(dag.next_engineering_tranche.status === 'UNAPPLIED_REQUIRES_INDEPENDENT_BRAIN_GRANT' && dag.next_engineering_tranche.order.length === 4, 'R33_NEXT_GRANT');
+  const next = dag.next_engineering_tranche;
+  keys(next, ['id', 'status', 'order', 'first_paths', 'parallel_documentary_work'], 'R33_NEXT_GRANT_SCHEMA');
+  need(next.id === 'PROTECTED_SCOPE_READER_ADOPTION_NEXT' && next.status === 'UNAPPLIED_REQUIRES_INDEPENDENT_BRAIN_GRANT' &&
+    Array.isArray(next.order) && next.order.length === 4 && next.order.every((x) => typeof x === 'string' && x.length > 0), 'R33_NEXT_GRANT');
+  same(next.first_paths, ['apps/mobile/app.config.js', 'scripts/launch/contract.mjs', 'scripts/launch/execution-baseline.mjs',
+    'scripts/brain/brain.py', 'scripts/launch/governed-evidence-chain.mjs'], 'R33_NEXT_GRANT_PATHS');
+  text(next.parallel_documentary_work, 'R33_NEXT_DOCUMENTARY_WORK');
   keys(owner, ['schema_version', 'authority', 'observed_source', 'observed_tree', 'gates', 'qualified_admissions', 'technical_observations', 'gate_evidence_policy', 'acceptanceGranted', 'release'], 'R33_OWNER_SCHEMA');
   need(owner.schema_version === 1 && owner.authority === AUTHORITY33 && owner.observed_source === BASE33 && owner.observed_tree === TREE33 && owner.acceptanceGranted === false && owner.release === 'NO_GO', 'R33_OWNER_AUTHORITY');
   same(owner.gates, gates, 'R33_18_GATES_CLOSED');
   same(owner.qualified_admissions, Object.fromEntries(['DB06', 'DB08', 'R2B', 'M103', 'M2', 'NATIVE', 'J01', 'CLINICAL', 'PROVIDER', 'PAID', 'APPLE', 'PUBLIC', 'G97'].map((k) => [k, false])), 'R33_OWNER_NO_ADMISSION');
-  need(owner.technical_observations.length === 2 && owner.technical_observations.every((x) => x.head === BASE33 && x.owner_admission === false), 'R33_TECHNICAL_NOT_OWNER_EVIDENCE');
+  same(owner.technical_observations, [{ kind: 'LIVE_GITHUB_JOB_METADATA', head: BASE33, run_id: 41177675611,
+    status: 'SUCCESS_6_OF_6', meaning: 'Credential-free canonical DB and PG15/17 technical rehearsal only', owner_admission: false },
+  { kind: 'LIVE_GITHUB_RUN_METADATA', head: BASE33, run_id: 41177675604, status: 'FAILURE',
+    meaning: 'Original Security remains failed; private findings not opened', owner_admission: false }], 'R33_TECHNICAL_NOT_OWNER_EVIDENCE');
   text(owner.gate_evidence_policy, 'R33_OWNER_EVIDENCE_POLICY');
   for (const k of FALSE_FIELDS) need(c[k] === false, 'R33_NO_READINESS');
   return { valid: true, contract: c.contract_id, sourceHead: BASE33, sourceTree: TREE33,
