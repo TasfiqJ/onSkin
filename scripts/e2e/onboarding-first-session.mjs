@@ -72,10 +72,70 @@ const viewport = {
 };
 const isLaunchFloorViewport = viewport.width >= 375 && viewport.height >= 667;
 
-mkdirSync(evidenceDir, { recursive: true });
-
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+// These are the real driver's decisions. Synthetic IO tests cover refusals;
+// the separate Chrome run supplies actual UI and encrypted-store evidence.
+export async function continueAfterReminderChoice35({ readChoice, click, waitForAccount }) {
+  const choice = await readChoice();
+  assert(choice?.path === '/onboarding/notifications', 'Reminder choice auto-advanced or left its screen.');
+  assert(choice.persistedOff === true, 'OFF must be durably saved before continuation.');
+  assert(choice.sameOwner === true && choice.currentConsent === true, 'Reminder authority is not current.');
+  const deliveryUnconfirmed = choice.bodyText?.includes(
+    'Your off choice is saved, but delivery is unconfirmed. Existing reminders may remain. You can retry or continue with delivery unconfirmed.',
+  ) === true;
+  assert(deliveryUnconfirmed || choice.bodyText?.includes('Reminders are off. Your choice was saved.'),
+    'Missing truthful saved OFF confirmation.');
+  const label = deliveryUnconfirmed ? 'Continue with delivery unconfirmed' : 'Continue';
+  assert(choice.controls?.some((control) => control.label === label &&
+    control.role === 'button' && control.disabled === false && control.hitOk === true),
+  'Saved reminder choice has no enabled, reachable continuation.');
+  await click(label);
+  await waitForAccount();
+  return { deliveryUnconfirmed };
+}
+
+export function assertFreeFirstSession35(receipt, expectedNames) {
+  assert(receipt?.sameOwner === true && receipt.currentConsent === true,
+    'Free journey lost its current owner or health consent.');
+  assert(receipt.proActive === false, 'Free continuation must not grant Pro authority.');
+  assert(Array.isArray(receipt.products) && receipt.products.length === expectedNames.length &&
+    new Set(receipt.products).size === expectedNames.length &&
+    expectedNames.every((name) => receipt.products.includes(name)),
+  'Free journey did not preserve the exact synthetic Shelf products.');
+}
+
+async function observeFirstSession35(client, expectedOwnerBinding, includeProducts = false) {
+  return evaluate(client, `(async () => {
+    const mod = (suffix) => {
+      const m = [...__r.getModules().values()].find(m => (m.verboseName ?? '').replaceAll('\\\\', '/').endsWith(suffix));
+      if (!m?.publicModule?.exports) throw new Error('Missing loaded observation module: ' + suffix);
+      return m.publicModule.exports;
+    };
+    const health = mod('/lib/consent/healthProcessingEpoch.ts');
+    const ownership = mod('/lib/auth/sessionOwner.ts');
+    const lease = health.activeHealthProcessingLeaseSnapshot();
+    const proof = await ownership.readLocalDataOwnerProof();
+    const binding = lease?.ownerUserId ? await ownership.localDataOwnerBinding(lease.ownerUserId) : null;
+    const sameOwner = binding !== null && proof.kind === 'owned' && proof.ownerBinding === binding &&
+      (${JSON.stringify(expectedOwnerBinding)} === null || binding === ${JSON.stringify(expectedOwnerBinding)});
+    const raw = await mod('/lib/storage/privateKV.ts').getPrivateItem('layerwell.notifPrefs.v1');
+    const saved = raw === null ? null : JSON.parse(raw);
+    const purposes = ['amEnabled','pmEnabled','captureReminders','streakNudges','replenishmentAlerts','liveActivityEnabled','promotionalOptIn'];
+    const result = { sameOwner, currentConsent: lease !== null && health.activeHealthProcessingLeaseSnapshot() === lease,
+      persistedOff: saved?.version === 1 && purposes.every(key => saved.prefs?.[key] === false) };
+    if (${includeProducts}) {
+      const products = await mod('/features/shelf/store.ts').loadShelf();
+      const entitlement = await mod('/features/subscription/store.ts').readEntitlementCache();
+      result.proActive = entitlement.status === 'absent' ? false : entitlement.status === 'available'
+        ? mod('/features/subscription/entitlement.ts').deriveState(entitlement.entitlement, new Date().toISOString()).isPro : null;
+      result.products = products.map(product => product.name);
+      result.currentConsent = result.currentConsent && health.activeHealthProcessingLeaseSnapshot() === lease;
+    }
+    return ${JSON.stringify(expectedOwnerBinding)} === null ? { ...result, binding } : result;
+  })()`, true);
 }
 
 function clearPreviousEvidence() {
@@ -1333,6 +1393,7 @@ function writeReport(summary) {
 }
 
 async function run() {
+  mkdirSync(evidenceDir, { recursive: true });
   clearPreviousEvidence();
 
   const browserPath = findBrowserPath();
@@ -1512,6 +1573,8 @@ async function run() {
     await addProduct(client, productNames[0], '10-products-after-1');
     await addProduct(client, productNames[1], '11-products-after-2');
     await addProduct(client, productNames[2], '12-products-after-3');
+    const firstOwner35 = await observeFirstSession35(client, null);
+    assert(firstOwner35.sameOwner && firstOwner35.currentConsent, 'Product intake has no current synthetic owner.');
     await clickByText(client, 'Continue');
 
     await waitForCondition(
@@ -1561,8 +1624,20 @@ async function run() {
     await waitForPath(client, '/onboarding/notifications');
     await captureStep(client, '15-notifications');
     await clickByText(client, 'Not now');
-
-    await waitForPath(client, '/onboarding/account');
+    await waitForCondition(client, `(document.body?.innerText ?? '').includes('Reminders are off. Your choice was saved.') ||
+      (document.body?.innerText ?? '').includes('Your off choice is saved, but delivery is unconfirmed.')`,
+    30_000, 'durable OFF confirmation without automatic navigation');
+    const reminderContinuation35 = await continueAfterReminderChoice35({
+      readChoice: async () => {
+        const saved = await captureStep(client, '15a-reminders-off-saved');
+        const authority = await observeFirstSession35(client, firstOwner35.binding);
+        writeJson('15a-reminder-persistence35.json', authority);
+        return { ...saved, ...authority, path: new URL(saved.url).pathname };
+      },
+      click: (label) => clickByText(client, label),
+      waitForAccount: () => waitForPath(client, '/onboarding/account'),
+    });
+    writeJson('15b-reminder-continuation35.json', reminderContinuation35);
     const account = await captureStep(client, '16-account');
     let accountCodeError = null;
     let accountCodeEntry = null;
@@ -1597,6 +1672,11 @@ async function run() {
         paywall.bodyText.includes('Subscribe to Pro'),
       'Paywall did not expose a trial-eligible or non-trial paid CTA.',
     );
+    if (paywall.bodyText.includes('Store checkout is unavailable in this preview.')) {
+      assert(paywall.controls.some((control) =>
+        ['Start free trial', 'Subscribe to Pro'].includes(control.label) && control.disabled),
+      'Unavailable preview checkout exposed an enabled paid action.');
+    }
     if (accountUpgradeMode) {
       assert(accountCodeEntry, 'Account upgrade did not reach code entry.');
       assert(
@@ -1675,6 +1755,24 @@ async function run() {
       productNames.every((product) => shelfAfterOnboarding.bodyText.includes(product.name)),
       'Shelf did not retain every product added during onboarding.',
     );
+    const freeReceipt35 = await observeFirstSession35(client, firstOwner35.binding, true);
+    assertFreeFirstSession35(freeReceipt35, productNames.map((product) => product.name));
+    writeJson('20-free-first-session35.json', freeReceipt35);
+    assert(shelfAfterOnboarding.overflowX <= 1, 'Shelf has horizontal overflow.');
+    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
+    await clickByText(client, 'Mineral SPF 50', { exact: false });
+    await waitForCondition(client, `/^\\/shelf\\/[^/]+$/.test(window.location.pathname)`,
+      30_000, 'owned product detail after a visible Shelf tap');
+    await waitForText(client, 'Mineral SPF 50');
+    const firstProduct35 = await captureStep(client, '20a-owned-product-open35', { assertClean: false });
+    assert(firstProduct35.overflowX <= 1, 'Owned product detail has horizontal overflow.');
+    await clickByText(client, 'Back');
+    await waitForPath(client, '/shelf');
+    await waitForText(client, '3 products');
+    const afterBack35 = await observeFirstSession35(client, firstOwner35.binding, true);
+    assertFreeFirstSession35(afterBack35, productNames.map((product) => product.name));
+    await captureStep(client, '20b-shelf-back-recovery35', { assertClean: false });
+    writeJson('20b-shelf-back-authority35.json', afterBack35);
 
     if (crossOwnerMode) {
       if (process.argv.includes('--daily-loop')) {
@@ -2015,12 +2113,15 @@ async function run() {
         '12-products-after-3.png',
         '14-reveal-insight.png',
         '15-notifications.png',
+        '15a-reminders-off-saved.png',
         '16-account.png',
         ...(accountUpgradeMode ? ['16a-account-code-entry.png', '16b-account-code-error.png'] : []),
         '17-paywall-current.png',
         '18-paywall-free-path-visible.png',
         '19-today-free-current.png',
         '20-shelf-after-onboarding.png',
+        '20a-owned-product-open35.png',
+        '20b-shelf-back-recovery35.png',
         '21-progress-after-onboarding.png',
         '22-you-after-onboarding.png',
         '23-today-after-tab-round-trip.png',
@@ -2095,6 +2196,8 @@ async function run() {
           youAfterOnboarding.url.includes('/you') &&
           todayAfterTabRoundTrip.url.includes('/today'),
         notificationSkipLedToAccount: true,
+        reminderSavedOffThenExplicitContinue: true,
+        reminderDeliveryUnconfirmed: reminderContinuation35.deliveryUnconfirmed,
         ageReverificationClosedProtectedProviders:
           accountUpgradeMode ||
           accountIsolationMode ||
@@ -2132,7 +2235,7 @@ async function run() {
         'Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.',
         accountUpgradeMode
           ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
-          : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
+          : 'Saved reminders OFF, read back persistence under the current owner/consent, tapped the visible Continue, skipped account, and reached onboarding paywall.',
         'Used Continue with the free plan and reached Today without granting or implying Pro authority.',
         ...(accountIsolationMode
           ? [
@@ -2174,6 +2277,17 @@ async function run() {
     writeJson('ERROR.json', { status: 'FAIL', message: String(error.message), viewport });
     throw error;
   } finally {
+    if (client) writeJson('network-outcomes35.json', client.events.filter((event) =>
+      event.method === 'Network.responseReceived' || event.method === 'Network.loadingFailed').map((event) => {
+      const response = event.params.response;
+      let location = null;
+      if (response?.url) {
+        const url = new URL(response.url);
+        location = { origin: url.origin, path: url.pathname };
+      }
+      return { kind: event.method, location, status: response?.status ?? null,
+        error: event.params.errorText ?? null };
+    }));
     client?.close();
     await stopProcess(browser);
     await stopProcess(server);
@@ -2181,7 +2295,9 @@ async function run() {
   }
 }
 
-run().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  run().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

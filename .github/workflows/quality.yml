@@ -199,7 +199,7 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify read-only dual-scope34 and separately pinned33/32/29
+      - name: Verify finite free-first-session35 and separately pinned34/33/32/29
         run: |
           set -euo pipefail
           if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
@@ -209,15 +209,16 @@ jobs:
             git fetch --no-tags origin "$GITHUB_REF"
             test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           fi
-          python3 -I -B scripts/release/full-app-j01/main_integration34.test.py
-          python3 -I -B scripts/release/full-app-j01/source_consumer34.test.py
+          python3 -I -B scripts/release/full-app-j01/main_integration35.test.py
+          python3 -I -B scripts/release/full-app-j01/source_consumer35.test.py
+          node --test scripts/e2e/onboarding-first-session35.test.mjs
           node --test scripts/launch/candidate-scope34.test.mjs scripts/launch/consumer-entry34.test.mjs
           node scripts/launch/candidate-scope34.mjs --mode verification
           node scripts/launch/check-contract.mjs --scope full-app-j01-v2
-          python3 -I -B scripts/release/full-app-j01/main_integration34.py
-          # Exact original main_integration33.py and its source/negative/CLI tests run only at pinned PR36.
-          # Its --historical mode separately authenticates original32 and Release29; no current-source admission33.
-          python3 -I -B scripts/release/full-app-j01/main_integration34.py --historical
+          python3 -I -B scripts/release/full-app-j01/main_integration35.py
+          # Authentic original34 and its controls run only at exact PR37 in a fresh named34 checkout.
+          # Its historical mode independently replays original33/32/29; refusals remain refusals.
+          python3 -I -B scripts/release/full-app-j01/main_integration35.py --historical
           python3 -B scripts/release/full-app-j01/test_contract.py
           python3 -B scripts/release/full-app-j01/source_consumer09.test.py
           node scripts/docs/source-packet-supersession09.test.mjs
