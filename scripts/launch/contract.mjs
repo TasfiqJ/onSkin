@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
 export const LAUNCH_CONTRACT_PATH = 'docs/hugeToDo/launch-contract.json';
@@ -404,4 +405,10 @@ export function isFeatureRequired(featureIdOrKey, contract = loadLaunchContract(
 }
 export function isSurfaceRequired(surfaceKey, contract = loadLaunchContract()) {
   return contract.requiredSurfaces.includes(surfaceKey);
+}
+
+// Explicit source-planning opt-in; the legacy runtime contract remains the default.
+export function loadCandidateLaunchScope34(root = process.cwd(), mode = 'planning') {
+  // Historic consumers also copy this module alone; resolve the opt-in only when used.
+  return createRequire(import.meta.url)('./candidate-scope34.mjs').readCandidateScope34(root, mode);
 }

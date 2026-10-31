@@ -1,5 +1,42 @@
 # Build Progress
 
+## 2026-10-31 — Campaign34 protected dual-scope source readers
+
+Authenticated the exact outer10/nested148 input files before extraction and ran
+the exact verifier: VERIFIED, HASH_AND_TRIAD_VERIFIED, acceptanceGranted=false.
+Pinned PR36 HEAD4ca36e915608460a1ed97d7fff94a3ece61296ab/tree49945b4e453b4fc30ceb175f330c8b4b924afe31,
+stacked on exactPR35; immutable plan-only childfe0782e37b8eb74b1f097ae8b2def6cde4a478b8.
+
+Added a small hash-bound read-only candidate projection plus explicit named
+contract and execution-baseline opt-ins. Default LeanV1 CLI/smoke/snapshot and
+full legacy inventory/graph/status output match the captured baseline bytes;
+all25 actual build-config permutations also match. App config and governed
+signed-evidence chain remain UNAPPLIED and byte-identical. The complete37-reader
+inventory distinguishes two tooling-only opt-ins from runtime migration; no
+runtime consumer is claimed migrated. Source assessment remains attributed to
+PR35, with PR36 integration provenance separately verified, never renewed.
+
+Initial31 candidate/entry tests passed; own current34 hostile source/event guards
+were independently reviewed and hardened to bind all65 exact rows/gates and full
+provenance (six pins,112current refs,12historical anchors). A static-import fixture
+regression was found and corrected by resolving the helper only on opt-in.
+Original protected tests/validators/fixtures were not edited. Typecheck/lint and
+focused80photo/privacy plus350reminder/owner/F02 source tests passed. One full
+mobile run correctly rejected concurrent source edits; retain its failure and
+rerun on stable source. Exact final test/CI counts, historical replay outcomes,
+source freeze/seal and final delivery identities belong to external receipts;
+no result is assumed here. Local Docker unavailable; registered WSL disk missing.
+
+All38 required obligations remain incomplete, all65 output/owner flags false,
+all18 qualified gates closed. G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED;
+M1-03 blocked; M2 unauthorized. F09 encrypted local diary/history/notes/deletion/
+manual comparison required; F18/J02-J27 includingJ05 deferred. J01 optics/rights,
+physical iPhone/VoiceOver, provider/paid/professional/clinical/legal/operations,
+Apple and PUBLIC remain unqualified. No app/runtime, dependency, SQL, private
+Security inventory, owner pins, main/oldPR, provider or account changes; USD0.
+Independent Brain review required before any acceptance or further issuance.
+
+
 ## 2026-10-31 — Campaign32 main Quality governance recovery
 
 Candidate source verification separates exact integrated ancestry and the new

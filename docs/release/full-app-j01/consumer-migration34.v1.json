@@ -1,0 +1,2993 @@
+{
+  "schema_version": 1,
+  "authority": "BRAIN-M1X-FULLAPP-PROTECTED-READER-ADOPTION34-CANDIDATE-01",
+  "status": "SOURCE_ONLY",
+  "release": "NO_GO",
+  "acceptanceGranted": false,
+  "candidateReady": false,
+  "productReady": false,
+  "runtimeConsumersMigrated": false,
+  "fullCutoverComplete": false,
+  "planCommit": "fe0782e37b8eb74b1f097ae8b2def6cde4a478b8",
+  "integrationParent": {
+    "pr": 36,
+    "branch": "stage/m1-fullapp-j01-scope-cutover33",
+    "head": "4ca36e915608460a1ed97d7fff94a3ece61296ab",
+    "tree": "49945b4e453b4fc30ceb175f330c8b4b924afe31"
+  },
+  "assessedCandidateSource": {
+    "pr": 35,
+    "head": "cbbb5a83bd29d2833399c214f5b6c6dd14873d24",
+    "tree": "0745ad5f5595724a9b26de64324065dc3e53d2ea",
+    "scope": "UNCHANGED_CAMPAIGN33_EXACT_PINNED_SOURCE_INTERVAL; reading from PR36 ancestry does not renew source/owner/expiry facts"
+  },
+  "inputAuthentication": {
+    "outerBytes": 553679,
+    "outerSha256": "ba3118a891999cef0e3c11654b422f7e39fa49179634036d92dfb76044aa4243",
+    "manifestSha256": "9e86cee9faf0f55c6fa9153247d0eeeb59c4dca450012571d797814ff621e173",
+    "verifierSha256": "6f2dcba6b40307d2eb5d04382d61492071637b7828a4241aa5e90538f5117e41",
+    "independentPreflight": "PASSED_OUTER10_AND_NESTED148_FRAMING_CRC_MODES_PATHS_HASHES",
+    "exactVerifierExit": 0,
+    "status": "VERIFIED",
+    "nestedC33": "HASH_AND_TRIAD_VERIFIED",
+    "acceptanceGranted": false
+  },
+  "candidateDocumentSha256": {
+    "contract.v2.json": "0578cb851f28aa26c289793fad76edd862d4222073e0fcc5c3b5210849026495",
+    "matrix.v2.json": "1daafaa86df15dc14af8250a395ab86a7534f2d2a7738c0c0ce1555c1a91a7f0",
+    "owner-ledger33.v1.json": "a9390584684fbfef3c4988993be54c12bcfa7211ed2d4dffaa4ef9a2cc8cb420",
+    "precedence.v2.json": "d386e395fc42c716f85121e977393b185d2c75344bdd63c4a4b44a896c4efa39",
+    "roadmap.v2.json": "d057d0a2b6b3f6bb07150cf5a751ae922f186466a12bcd61edba824f0bee5017"
+  },
+  "readOnlyEntryPoints": [
+    {
+      "path": "scripts/launch/candidate-scope34.mjs",
+      "export": "readCandidateScope34(root, mode)",
+      "modes": [
+        "planning",
+        "verification"
+      ],
+      "modeRequired": true,
+      "purpose": "Authenticate and deeply freeze versioned planning/verification obligations, provenance and closed gate state; no user/provider/network writes."
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "export": "loadCandidateLaunchScope34(root = process.cwd(), mode = 'planning')",
+      "modes": [
+        "planning",
+        "verification"
+      ],
+      "purpose": "Explicit named candidate opt-in; preserve every ordinary v1 API/default."
+    },
+    {
+      "path": "scripts/launch/execution-baseline.mjs",
+      "export": "buildCandidateExecutionObligations34(root = moduleRoot, mode = 'verification')",
+      "modes": [
+        "planning",
+        "verification"
+      ],
+      "purpose": "Read-only planning projection; never invoke the historical baseline writer."
+    }
+  ],
+  "obligationIdentity": {
+    "requiredF": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "F10",
+      "F11",
+      "F12",
+      "F13",
+      "F14",
+      "F15",
+      "F16",
+      "F17",
+      "F19",
+      "F20"
+    ],
+    "requiredC": [
+      "V2-C01",
+      "V2-C02",
+      "V2-C03",
+      "V2-C04",
+      "V2-C05",
+      "V2-C06",
+      "V2-C07",
+      "V2-C08",
+      "V2-C09",
+      "V2-C10",
+      "V2-C11",
+      "V2-C12"
+    ],
+    "requiredP": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06"
+    ],
+    "requiredJ": [
+      "J01"
+    ],
+    "deferredF": [
+      "F18"
+    ],
+    "deferredJ": [
+      "J02",
+      "J03",
+      "J04",
+      "J05",
+      "J06",
+      "J07",
+      "J08",
+      "J09",
+      "J10",
+      "J11",
+      "J12",
+      "J13",
+      "J14",
+      "J15",
+      "J16",
+      "J17",
+      "J18",
+      "J19",
+      "J20",
+      "J21",
+      "J22",
+      "J23",
+      "J24",
+      "J25",
+      "J26",
+      "J27"
+    ],
+    "requiredCount": 38,
+    "deferredCount": 27,
+    "totalCount": 65,
+    "completeCount": 0,
+    "positiveOutputEnabledCount": 0,
+    "ownerAdmittedCount": 0,
+    "aliases": [
+      {
+        "id": "F01",
+        "aliases": [
+          "F-01",
+          "brand_identity"
+        ]
+      },
+      {
+        "id": "F02",
+        "aliases": [
+          "F-02",
+          "onboarding_consent"
+        ]
+      },
+      {
+        "id": "F03",
+        "aliases": [
+          "F-03",
+          "shelf_intake"
+        ]
+      },
+      {
+        "id": "F04",
+        "aliases": [
+          "F-04",
+          "catalog"
+        ]
+      },
+      {
+        "id": "F05",
+        "aliases": [
+          "F-05",
+          "conflict_engine"
+        ]
+      },
+      {
+        "id": "F06",
+        "aliases": [
+          "F-06",
+          "routine_builder"
+        ]
+      },
+      {
+        "id": "F07",
+        "aliases": [
+          "F-07",
+          "today_adherence"
+        ]
+      },
+      {
+        "id": "F08",
+        "aliases": [
+          "F-08",
+          "cycle_scheduler"
+        ]
+      },
+      {
+        "id": "F09",
+        "aliases": [
+          "F-09",
+          "photo_progress"
+        ]
+      },
+      {
+        "id": "F10",
+        "aliases": [
+          "F-10",
+          "reminders"
+        ]
+      },
+      {
+        "id": "F11",
+        "aliases": [
+          "F-11",
+          "subscriptions"
+        ]
+      },
+      {
+        "id": "F12",
+        "aliases": [
+          "F-12",
+          "reverse_trial"
+        ]
+      },
+      {
+        "id": "F13",
+        "aliases": [
+          "F-13",
+          "recommendations"
+        ]
+      },
+      {
+        "id": "F14",
+        "aliases": [
+          "F-14",
+          "ask_advisor"
+        ]
+      },
+      {
+        "id": "F15",
+        "aliases": [
+          "F-15",
+          "conflict_share"
+        ]
+      },
+      {
+        "id": "F16",
+        "aliases": [
+          "F-16",
+          "commerce"
+        ]
+      },
+      {
+        "id": "F17",
+        "aliases": [
+          "F-17",
+          "community"
+        ]
+      },
+      {
+        "id": "F18",
+        "aliases": [
+          "F-18",
+          "trend_insights"
+        ]
+      },
+      {
+        "id": "F19",
+        "aliases": [
+          "F-19",
+          "widgets_live_activities"
+        ]
+      },
+      {
+        "id": "F20",
+        "aliases": [
+          "F-20",
+          "admin_tooling"
+        ]
+      },
+      {
+        "id": "V2-C01",
+        "aliases": []
+      },
+      {
+        "id": "V2-C02",
+        "aliases": []
+      },
+      {
+        "id": "V2-C03",
+        "aliases": []
+      },
+      {
+        "id": "V2-C04",
+        "aliases": []
+      },
+      {
+        "id": "V2-C05",
+        "aliases": []
+      },
+      {
+        "id": "V2-C06",
+        "aliases": []
+      },
+      {
+        "id": "V2-C07",
+        "aliases": []
+      },
+      {
+        "id": "V2-C08",
+        "aliases": []
+      },
+      {
+        "id": "V2-C09",
+        "aliases": []
+      },
+      {
+        "id": "V2-C10",
+        "aliases": []
+      },
+      {
+        "id": "V2-C11",
+        "aliases": []
+      },
+      {
+        "id": "V2-C12",
+        "aliases": []
+      },
+      {
+        "id": "P01",
+        "aliases": [
+          "V2-P01"
+        ]
+      },
+      {
+        "id": "P02",
+        "aliases": [
+          "V2-P02"
+        ]
+      },
+      {
+        "id": "P03",
+        "aliases": [
+          "V2-P03"
+        ]
+      },
+      {
+        "id": "P04",
+        "aliases": [
+          "V2-P04"
+        ]
+      },
+      {
+        "id": "P05",
+        "aliases": [
+          "V2-P05"
+        ]
+      },
+      {
+        "id": "P06",
+        "aliases": [
+          "V2-P06"
+        ]
+      },
+      {
+        "id": "J01",
+        "aliases": [
+          "MOD-J01"
+        ]
+      },
+      {
+        "id": "J02",
+        "aliases": [
+          "MOD-J02"
+        ]
+      },
+      {
+        "id": "J03",
+        "aliases": [
+          "MOD-J03"
+        ]
+      },
+      {
+        "id": "J04",
+        "aliases": [
+          "MOD-J04"
+        ]
+      },
+      {
+        "id": "J05",
+        "aliases": [
+          "M3-02",
+          "M3-03",
+          "M5-01",
+          "M5-02"
+        ]
+      },
+      {
+        "id": "J06",
+        "aliases": [
+          "MOD-J06"
+        ]
+      },
+      {
+        "id": "J07",
+        "aliases": [
+          "MOD-J07"
+        ]
+      },
+      {
+        "id": "J08",
+        "aliases": [
+          "MOD-J08"
+        ]
+      },
+      {
+        "id": "J09",
+        "aliases": [
+          "MOD-J09"
+        ]
+      },
+      {
+        "id": "J10",
+        "aliases": [
+          "MOD-J10"
+        ]
+      },
+      {
+        "id": "J11",
+        "aliases": [
+          "MOD-J11"
+        ]
+      },
+      {
+        "id": "J12",
+        "aliases": [
+          "MOD-J12"
+        ]
+      },
+      {
+        "id": "J13",
+        "aliases": [
+          "MOD-J13"
+        ]
+      },
+      {
+        "id": "J14",
+        "aliases": [
+          "MOD-J14"
+        ]
+      },
+      {
+        "id": "J15",
+        "aliases": [
+          "MOD-J15"
+        ]
+      },
+      {
+        "id": "J16",
+        "aliases": [
+          "MOD-J16"
+        ]
+      },
+      {
+        "id": "J17",
+        "aliases": [
+          "MOD-J17"
+        ]
+      },
+      {
+        "id": "J18",
+        "aliases": [
+          "MOD-J18"
+        ]
+      },
+      {
+        "id": "J19",
+        "aliases": [
+          "MOD-J19"
+        ]
+      },
+      {
+        "id": "J20",
+        "aliases": [
+          "MOD-J20"
+        ]
+      },
+      {
+        "id": "J21",
+        "aliases": [
+          "MOD-J21"
+        ]
+      },
+      {
+        "id": "J22",
+        "aliases": [
+          "MOD-J22"
+        ]
+      },
+      {
+        "id": "J23",
+        "aliases": [
+          "MOD-J23"
+        ]
+      },
+      {
+        "id": "J24",
+        "aliases": [
+          "MOD-J24"
+        ]
+      },
+      {
+        "id": "J25",
+        "aliases": [
+          "MOD-J25"
+        ]
+      },
+      {
+        "id": "J26",
+        "aliases": [
+          "MOD-J26"
+        ]
+      },
+      {
+        "id": "J27",
+        "aliases": [
+          "MOD-J27"
+        ]
+      }
+    ],
+    "aliasPolicy": "Only exact authenticated canonical IDs/declared aliases may resolve; never conflate F09, F-09, photo_progress or MOD-J01 with distinct product obligations. V2-C and P rows are independent obligations, not extra F implementation credit."
+  },
+  "admissions": {
+    "source_accepted": false,
+    "main_promotion": false,
+    "security": false,
+    "database": false,
+    "m2": false,
+    "native": false,
+    "paid": false,
+    "provider": false,
+    "clinical": false,
+    "apple_submission": false,
+    "public_release": false
+  },
+  "qualifiedAdmissions": {
+    "DB06": false,
+    "DB08": false,
+    "R2B": false,
+    "M103": false,
+    "M2": false,
+    "NATIVE": false,
+    "J01": false,
+    "CLINICAL": false,
+    "PROVIDER": false,
+    "PAID": false,
+    "APPLE": false,
+    "PUBLIC": false
+  },
+  "ownerGates": [
+    {
+      "id": "G97",
+      "inheritedStatus": "FAIL/NO_GO",
+      "admitted": false
+    },
+    {
+      "id": "DB",
+      "inheritedStatus": "NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "M1-03",
+      "inheritedStatus": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "M2-01",
+      "inheritedStatus": "NOT_AUTHORIZED",
+      "admitted": false
+    },
+    {
+      "id": "G1",
+      "inheritedStatus": "NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "G2",
+      "inheritedStatus": "NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "G3",
+      "inheritedStatus": "NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "G4",
+      "inheritedStatus": "NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "G5",
+      "inheritedStatus": "NOT_ACCEPTED",
+      "admitted": false
+    },
+    {
+      "id": "RIGHTS",
+      "inheritedStatus": "GATED",
+      "admitted": false
+    },
+    {
+      "id": "CLINICAL",
+      "inheritedStatus": "GATED",
+      "admitted": false
+    },
+    {
+      "id": "PROVIDER",
+      "inheritedStatus": "NOT_RUN",
+      "admitted": false
+    },
+    {
+      "id": "PAYMENT",
+      "inheritedStatus": "NOT_RUN",
+      "admitted": false
+    },
+    {
+      "id": "MODERATION",
+      "inheritedStatus": "NOT_RUN",
+      "admitted": false
+    },
+    {
+      "id": "OPERATIONS",
+      "inheritedStatus": "NOT_RUN",
+      "admitted": false
+    },
+    {
+      "id": "DEVICE",
+      "inheritedStatus": "NOT_RUN",
+      "admitted": false
+    },
+    {
+      "id": "APPLE",
+      "inheritedStatus": "NOT_AUTHORIZED",
+      "admitted": false
+    },
+    {
+      "id": "PUBLIC",
+      "inheritedStatus": "NOT_AUTHORIZED",
+      "admitted": false
+    }
+  ],
+  "gateCount": 18,
+  "gateAdmittedCount": 0,
+  "count": 37,
+  "dispositionCounts": {
+    "ADOPTED_READ_ONLY": 2,
+    "RETAINED_HISTORICAL": 9,
+    "DEFERRED_PROTECTED": 24,
+    "UNAPPLIED": 2
+  },
+  "consumers": [
+    {
+      "path": "apps/mobile/app.config.js",
+      "priorGitBlob": "182ba180938c742c7a78b4925689e179b6271c9b",
+      "priorMode": "100644",
+      "priorSha256": "43d3617924bb46196a378ab85fb268a18c3ad8e39ebc485e17b4704703248a90",
+      "category": "BUILD_TIME_CONFIG_CONSUMER",
+      "actualUsage": {
+        "summary": "Actual Expo CommonJS configuration factory. Direct require of v1 launch JSON guards PAY-08 win-back and Android production identity/link evidence. No candidate source-preflight CLI or safe runtime config consumer exists.",
+        "imports": [
+          {
+            "line": 4,
+            "module": "../../docs/hugeToDo/launch-contract.json",
+            "statement": "require('../../docs/hugeToDo/launch-contract.json')"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 4,
+            "source": "const launchContract = require('../../docs/hugeToDo/launch-contract.json');"
+          },
+          {
+            "line": 50,
+            "source": "if (iosWinBackEnabled && launchContract.iosWinBackOfferAdmission?.winBackOfferAdmitted !== true) {"
+          },
+          {
+            "line": 52,
+            "source": "'EXPO_PUBLIC_IOS_WIN_BACK_ENABLED cannot be true while the versioned launch contract does not admit an iOS win-back offer. Reopen PAY-08 and update the reviewed admission before enabling a build.',"
+          },
+          {
+            "line": 64,
+            "source": "const androidReleaseRequired = launchContract.release.platforms.includes('android');"
+          }
+        ]
+      },
+      "decision": "UNAPPLIED",
+      "reason": "Actual Expo CommonJS configuration factory. Direct require of v1 launch JSON guards PAY-08 win-back and Android production identity/link evidence. No candidate source-preflight CLI or safe runtime config consumer exists. Kept byte-identical to pinned PR36; no genuinely useful safe existing candidate invocation path requires changing this protected consumer.",
+      "inFiniteGrant": true,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/brain/brain.py",
+      "priorGitBlob": "c88281958abffb85a0dfd7e7c992d31c5acae42b",
+      "priorMode": "100644",
+      "priorSha256": "75c6f2e83901a649c5f8b1997dd8c96f1546bc1842ec563db9128506a743f9b6",
+      "category": "HISTORIC_PROTECTED_PLANNING_GOVERNANCE",
+      "actualUsage": {
+        "summary": "Historic protected planning/governance: validate_state compares actual v1 JSON bytes against reference_legacy/LAUNCH_CONTRACT_RAW.json; not app runtime.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 386,
+            "source": "require(read(root, 'docs/hugeToDo/launch-contract.json') == read(root, INPUT + '/reference_legacy/LAUNCH_CONTRACT_RAW.json'), 'Runtime launch contract changed')"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/brain/test_brain.py",
+      "priorGitBlob": "ecf93853f86d5244d1cee96919fae6cc2d44d663",
+      "priorMode": "100644",
+      "priorSha256": "91d536b50a7c8d5ca3251ab3586e410343359fa6144559960efff7be3224e3c7",
+      "category": "HISTORIC_PROTECTED_PLANNING_GOVERNANCE",
+      "actualUsage": {
+        "summary": "Historic planning/governance regression test mutates v1 contract fixture and requires rejection; not app runtime.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 125,
+            "source": "def test_live_closed_launch_contract_cannot_upgrade(self):"
+          },
+          {
+            "line": 126,
+            "source": "name = 'docs/hugeToDo/launch-contract.json'"
+          },
+          {
+            "line": 130,
+            "source": "with self.assertRaisesRegex(ValueError, 'launch contract'):"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/com01/commerce-admission-source-contract.mjs",
+      "priorGitBlob": "838f63fe9048bb1175393ec71eddfb455ba7439f",
+      "priorMode": "100644",
+      "priorSha256": "af9e410a976ff9f5f9aee7e2a988ea2441f660b85212cd345625ccb015db35df",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Source-only commerce admission audit loads raw v1 JSON and inspects commerceAdmission closed booleans plus launch validator/smoke source.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 37,
+            "source": "launchContract: 'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 38,
+            "source": "launchContractModule: 'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 39,
+            "source": "launchContractSmoke: 'scripts/launch/contract-smoke.mjs',"
+          },
+          {
+            "line": 558,
+            "source": "launchAdmission = JSON.parse(snapshot[COM01A_SOURCE_PATHS.launchContract]).commerceAdmission;"
+          },
+          {
+            "line": 560,
+            "source": "add(false, COM01A_SOURCE_PATHS.launchContract, 'launch contract must be valid JSON');"
+          },
+          {
+            "line": 564,
+            "source": "COM01A_SOURCE_PATHS.launchContract,"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/core02/clinical-rule-source-contract.test.mjs",
+      "priorGitBlob": "186c61e2d7bea5cfdbd677142237f6e0151446a6",
+      "priorMode": "100644",
+      "priorSha256": "5bb7870b64999117ee9e6d8884d2c9ad1f78d24a42128e602858051c1ad22c5d",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Clinical source-contract regression reads v1 JSON, checks exact conflict_engine professional roles and hashes review input binding.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 36,
+            "source": "launchContract: 'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 245,
+            "source": "const launchContract = JSON.parse(read(paths.launchContract));"
+          },
+          {
+            "line": 266,
+            "source": "launchContract.featureProfessionalReviewRequirements.conflict_engine,"
+          },
+          {
+            "line": 278,
+            "source": "assert.equal(reviewInputs.launchContract.sha256, sha256(bytes(paths.launchContract)));"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/core06/recommendation-admission-source-contract.test.mjs",
+      "priorGitBlob": "fec56a75af3521caa88a176ec67e45c34fa91d39",
+      "priorMode": "100644",
+      "priorSha256": "e7ae488fbba9b6817679c46791ebd505f84aecce1fbb05cebf9db0c4e113855f",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Recommendation source-contract regression reads v1 JSON and validator source to check exact required professional roles.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 45,
+            "source": "launchContract: 'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 46,
+            "source": "launchContractSource: 'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 770,
+            "source": "test('the launch contract requires exact recommendation professional roles', () => {"
+          },
+          {
+            "line": 771,
+            "source": "const contract = JSON.parse(read(paths.launchContract));"
+          },
+          {
+            "line": 772,
+            "source": "const launchSource = read(paths.launchContractSource);"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/docs/device-support-policy-audit.mjs",
+      "priorGitBlob": "fdeec629eb05682568bb1e2a6b56c5a0a0e67a77",
+      "priorMode": "100644",
+      "priorSha256": "d4ed6a47032124db06578453b8930bd22c045a4adb236825f32f1fdc37fa40c4",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Tooling audit imports v1 load/snapshot/platform helpers, derives Android N/A and iOS support floor and emits historical generated audit.",
+        "imports": [
+          {
+            "line": 4,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 10,
+            "module": "./device-support-policy-source-contract.mjs",
+            "statement": "import { validateSupportedPhoneGates } from './device-support-policy-source-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 5,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 6,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 8,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 9,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 453,
+            "source": "`This generated audit keeps the contract-required device cutoff explicit: iOS ${launchContract.release.minimumIosVersion}+,`,"
+          },
+          {
+            "line": 457,
+            "source": "`Android release evidence: ${platformRequirementStatus('android', launchContract)}.`,"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/docs/performance-readiness-audit.mjs",
+      "priorGitBlob": "b8de74cc72d7764c0f5f710ef978f56143e4e942",
+      "priorMode": "100644",
+      "priorSha256": "e2555a20477a665e6c2c7ea0c287c9ea43779cb636c004d01523f950e0d3bfc5",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Tooling audit imports v1 load/snapshot/platform helpers and emits exact release-platform performance evidence projection.",
+        "imports": [
+          {
+            "line": 4,
+            "module": "../launch/contract.mjs",
+            "statement": "import { launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 5,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 7,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 8,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 11,
+            "source": "const launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 288,
+            "source": "android: platformRequirementStatus('android', launchContract),"
+          },
+          {
+            "line": 327,
+            "source": "`Required performance platforms: ${launchContract.release.platforms.join(', ')}. Android evidence: ${platformRequirementStatus('android', launchContract)}.`,"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/docs/readiness-status-audit.mjs",
+      "priorGitBlob": "f7752f642da71d799f5a69d796c60edeaf7b784f",
+      "priorMode": "100644",
+      "priorSha256": "15fa6f19c04b6c2a557089021cf59c129bd51185d3aab0db13c0db4806174235",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Protected historical final F readiness producer reads snapshotted v1 bytes, validates schema, computes platform evidence and includes v1 snapshot in generated readiness audit.",
+        "imports": [
+          {
+            "line": 7,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, platformRequirementStatus, validateLaunchContract, } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 13,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, governedEvidenceLedgerPath, renderGovernedEvidenceLedger, validateGovernedPublicationCompletion, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 8,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 9,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 10,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 12,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 1518,
+            "source": "android: platformRequirementStatus('android', launchContract),"
+          },
+          {
+            "line": 1577,
+            "source": "`Required release platforms: ${launchContract.release.platforms.join(', ')}. Android release evidence: ${platformRequirementStatus('android', launchContract)}.`,"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/docs/tas-todo-audit.mjs",
+      "priorGitBlob": "7ee4352e53d3b6ac755b70712b22d3fa294da6af",
+      "priorMode": "100644",
+      "priorSha256": "bf97ab15dea57243737d4818a95beafd7c46b842bab5d90b1144e0d465b9b2fb",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Founder register tooling imports v1 loader and emits charter identity, effective date and required/deferred historical feature IDs; no runtime feature availability.",
+        "imports": [
+          {
+            "line": 6,
+            "module": "../launch/contract.mjs",
+            "statement": "import { loadLaunchContract } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 6,
+            "source": "import { loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 11,
+            "source": "const contractPath = 'docs/hugeToDo/launch-contract.json';"
+          },
+          {
+            "line": 146,
+            "source": "launchContract: source ? { programId: source.contract.programId, effectiveDate: source.contract.effectiveDate, platforms: source.contract.release.platforms, androidRelease: source.contract.release.androidRelease, requiredFeatureIds: source.contract.requiredFeatures.map((f) => f.id), deferredFeatureIds: source.contract.deferredFeatures.map((f) => f.id) } : null,"
+          },
+          {
+            "line": 156,
+            "source": "return ['# Founder Touchpoint Audit', '', `Status: ${audit.status}`, `Charter effective: ${audit.launchContract?.effectiveDate ?? 'invalid'}`, 'Strict source validation: yes', 'External evidence: pending. Release authorized: no.', '', audit.purpose, '',"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/docs/tas-todo-audit.test.mjs",
+      "priorGitBlob": "a4540f790651883c0bcf2d0610bb948027080746",
+      "priorMode": "100755",
+      "priorSha256": "0297b09f2c2f709926e6e6ba90e0b15d2cfb7bdc61005a82897bdb5970496c91",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Historical founder register regression fixture copies v1 module/JSON and asserts original ios-lean-v1-2026 identity/date.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 10,
+            "source": "const paths = ['scripts/docs/tas-todo-audit.mjs', 'scripts/launch/contract.mjs', 'docs/FOR_TAS_TO_DO.md',"
+          },
+          {
+            "line": 11,
+            "source": "'docs/MASTER_PLAN.md', 'docs/hugeToDo/launch-contract.json', 'docs/hugeToDo/IOS_LEAN_V1_EXECUTION_PLAN.md',"
+          },
+          {
+            "line": 16,
+            "source": "const contractPath = 'docs/hugeToDo/launch-contract.json';"
+          },
+          {
+            "line": 44,
+            "source": "assert.equal(audit.status, 'pass'); assert.equal(audit.launchContract.programId, 'ios-lean-v1-2026');"
+          },
+          {
+            "line": 45,
+            "source": "assert.equal(audit.launchContract.effectiveDate, '2026-09-27');"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "priorGitBlob": "4e772f57ed76a9119657071cae9a4c06212d3830",
+      "priorMode": "100644",
+      "priorSha256": "0c7aabc43c1a49585bce7fb6739d4b2715b4fe0a0061e5f47bd327e9670fbdc1",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Shared v1 validator/loader/snapshot/platform/feature module. Ordinary readers import its exact numeric feature arrays and default loader. Campaign34 may add a separate named explicit read-only candidate API without replacing any defaults.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 4,
+            "source": "export const LAUNCH_CONTRACT_PATH = 'docs/hugeToDo/launch-contract.json';"
+          },
+          {
+            "line": 7,
+            "source": "export const REQUIRED_FEATURE_IDS = Object.freeze([1, 2, 3, 5, 6, 7, 8, 9, 10, 11]);"
+          },
+          {
+            "line": 8,
+            "source": "export const DEFERRED_FEATURE_IDS = Object.freeze([4, 12, 13, 14, 15, 16, 17, 18, 19, 20]);"
+          },
+          {
+            "line": 220,
+            "source": "if (!sameMembers(featureIds, REQUIRED_FEATURE_IDS)) {"
+          },
+          {
+            "line": 400,
+            "source": "export function isFeatureRequired(featureIdOrKey, contract = loadLaunchContract()) {"
+          },
+          {
+            "line": 405,
+            "source": "export function isSurfaceRequired(surfaceKey, contract = loadLaunchContract()) {"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "ADOPTED_READ_ONLY",
+      "reason": "Separate named loadCandidateLaunchScope34(root, mode) opt-in reads candidate planning/verification obligations only. Existing v1 exports/signatures/constants/snapshot and ordinary CLI remain historical technical guards. No runtime pointer migration.",
+      "inFiniteGrant": true,
+      "candidateReadOnlyAdopted": true,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/launch/execution-baseline.mjs",
+      "priorGitBlob": "cc118eedf504ad32312713b7e5c85549d6e89dd3",
+      "priorMode": "100644",
+      "priorSha256": "5230619f6ba849b8b69dbd67af67e47b2024de572e3e482c12b999877a362d11",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Source inventory/task/status tooling imports v1 REQUIRED_FEATURE_IDS; classifies 20 retained F-XX features with 10 launchRequired and no required grouped surfaces. Campaign34 may add a separate planning-only candidate projection.",
+        "imports": [
+          {
+            "line": 5,
+            "module": "./contract.mjs",
+            "statement": "import { REQUIRED_FEATURE_IDS } from './contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 5,
+            "source": "import { REQUIRED_FEATURE_IDS } from './contract.mjs';"
+          },
+          {
+            "line": 11,
+            "source": "launchContract: 'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 62,
+            "source": "launchRequired: REQUIRED_FEATURE_IDS.includes(number),"
+          }
+        ]
+      },
+      "decision": "ADOPTED_READ_ONLY",
+      "reason": "Separate named buildCandidateExecutionObligations34(root, mode) opt-in projects immutable candidate obligations without writing generated inventory/status/graph or relabeling implementation as accepted. Existing features/readiness/default builders retain historical semantics.",
+      "inFiniteGrant": true,
+      "candidateReadOnlyAdopted": true,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/launch/governed-evidence-chain.mjs",
+      "priorGitBlob": "e69e486c0cc8bc28cc946ad87e931137160ec08a",
+      "priorMode": "100644",
+      "priorSha256": "98e0ea245598002719ab36ea9177b145833751c31cbca2190e87a04e6f4f0b0e",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Protected evidence lineage API imports v1 IDs/validator/snapshot and captures pinned source S JSON bytes plus exact SHA256; completion strictly checks lean-v1 and old exact IDs. Candidate intent must not enter this historical ledger.",
+        "imports": [
+          {
+            "line": 11,
+            "module": "./contract.mjs",
+            "statement": "import { REQUIRED_FEATURE_IDS, launchContractSnapshot, validateLaunchContract } from './contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 11,
+            "source": "import { REQUIRED_FEATURE_IDS, launchContractSnapshot, validateLaunchContract } from './contract.mjs';"
+          },
+          {
+            "line": 26,
+            "source": "export const GOVERNED_LAUNCH_CONTRACT_PATH = 'docs/hugeToDo/launch-contract.json';"
+          },
+          {
+            "line": 494,
+            "source": "launchContract: {"
+          },
+          {
+            "line": 525,
+            "source": "'launchContract',"
+          },
+          {
+            "line": 1460,
+            "source": "'evidence-ledger publication policy does not match the pinned S launch contract and source snapshots',"
+          },
+          {
+            "line": 1621,
+            "source": "throw new Error('pinned S launch contract or source-snapshot units changed by HEAD');"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "UNAPPLIED",
+      "reason": "Protected evidence lineage API imports v1 IDs/validator/snapshot and captures pinned source S JSON bytes plus exact SHA256; completion strictly checks lean-v1 and old exact IDs. Candidate intent must not enter this historical ledger. Kept byte-identical to pinned PR36; no genuinely useful safe existing candidate invocation path requires changing this protected consumer.",
+      "inFiniteGrant": true,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/pay08/ios-win-back-source-contract.mjs",
+      "priorGitBlob": "9e18e1e0464b8f6a07d64475b9e1d706e6606686",
+      "priorMode": "100644",
+      "priorSha256": "4d7848d220236b66f572b7666507ffc6c21daf21bef7a695d4a475bfb0115a53",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Source-only PAY-08 audit reads v1 JSON/validator and verifies app config refuses enabled win-back unless positively admitted.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 9,
+            "source": "launchContract: 'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 10,
+            "source": "launchContractValidator: 'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 98,
+            "source": "const contractPath = PAY08_SOURCE_PATHS.launchContract;"
+          },
+          {
+            "line": 109,
+            "source": "const validatorPath = PAY08_SOURCE_PATHS.launchContractValidator;"
+          },
+          {
+            "line": 425,
+            "source": "if (!String(scripts[script] ?? '').includes('npm run launch:contract:verify')) {"
+          },
+          {
+            "line": 426,
+            "source": "errors.push(`${packagePath}: ${script} must inherit PAY-08 through launch:contract:verify.`);"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase10/beta-readiness.mjs",
+      "priorGitBlob": "5967ecc77ffe8400a8d7aafdb10965cf639de5c4",
+      "priorMode": "100644",
+      "priorSha256": "0a52de285a9953c0f49cc35774afdefd3fb2fd5afb096702bca09054b16283be",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "CLI readiness check imports v1 loader/platform helper and maps Android beta evidence to historical N/A.",
+        "imports": [
+          {
+            "line": 22,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 22,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 28,
+            "source": "const launchContract = loadLaunchContract();"
+          },
+          {
+            "line": 29,
+            "source": "const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);"
+          },
+          {
+            "line": 35,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 89,
+            "source": "'npm run launch:contract:verify',"
+          },
+          {
+            "line": 272,
+            "source": "'N/A Google Play closed testing and 12-testers/14-days evidence: excluded by launch contract.',"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase10/lib.mjs",
+      "priorGitBlob": "24e0f312fe6f2274541db2cd71103acdf69dc2c7",
+      "priorMode": "100644",
+      "priorSha256": "8aadf10a2f267366b2d23166793476ed4cb7c3511856f27858801c43884b98e3",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Shared beta evidence tooling imports v1 loader/platform helper and defaults contract argument to historical launch JSON; selects required/N/A evidence keys and source-bound inputs.",
+        "imports": [
+          {
+            "line": 119,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 56,
+            "source": "return isReleasePlatformRequired('android', contract)"
+          },
+          {
+            "line": 64,
+            "source": "return isReleasePlatformRequired('android', contract) ? [] : [...PHASE10_ANDROID_EVIDENCE_KEYS];"
+          },
+          {
+            "line": 85,
+            "source": "if (isReleasePlatformRequired('android', contract)) {"
+          },
+          {
+            "line": 94,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 95,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 119,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase11/launch-readiness.mjs",
+      "priorGitBlob": "d3edce32d114fa4aee22f9209b0ec54e5f9bf1b1",
+      "priorMode": "100644",
+      "priorSha256": "93c9d037ea5ab4dad68b5cd11a945d4ad87aaff456ad09e918d9ef9f0ea77425",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "CLI launch readiness check imports v1 loader/platform helper; retains historical iOS required/Android N/A evidence logic.",
+        "imports": [
+          {
+            "line": 22,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 22,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 28,
+            "source": "const launchContract = loadLaunchContract();"
+          },
+          {
+            "line": 29,
+            "source": "const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);"
+          },
+          {
+            "line": 35,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 92,
+            "source": "'npm run launch:contract:verify',"
+          },
+          {
+            "line": 273,
+            "source": "console.log('N/A Google Play release controls and Play Store URL: excluded by launch contract.');"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase11/lib.mjs",
+      "priorGitBlob": "82fc47b0b60a9cd312706456f853a3d7994a4e14",
+      "priorMode": "100644",
+      "priorSha256": "fd43bdd477fd6474ed33bc4303404dd64ed226c5004b8288b06f254a067773ef",
+      "category": "PROVENANCE_OR_SOURCE_BINDING_REFERENCE",
+      "actualUsage": {
+        "summary": "Historical launch packet shared source input registry includes v1 launch JSON and validator paths as provenance; this inventory reference is not a direct candidate/runtime adapter.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 78,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 79,
+            "source": "'scripts/launch/contract.mjs',"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase3/build-review-packet.mjs",
+      "priorGitBlob": "0c04134ac4b949fac8e29cd9c8c745ffe260af15",
+      "priorMode": "100644",
+      "priorSha256": "c04495822e328b39f0b6ca26ed8055615b6b1035b7fe781a4ee8eb4358627d23",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "CLI professional review packet producer imports v1 load/platform/snapshot and includes exact legacy contract as review input across feature review sections.",
+        "imports": [
+          {
+            "line": 6,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 7,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 8,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 10,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 13,
+            "source": "const launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 191,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 316,
+            "source": "launchContract: launchContractSnapshot(launchContract),"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase4/beta-coverage-committed-check.test.mjs",
+      "priorGitBlob": "942a7ba44aa50dc41a01be4da899b7faac2a7902",
+      "priorMode": "100644",
+      "priorSha256": "7021b1d85786bffc2cebb331ccf906f1e06f0b62d7ebdee8659a99af40d2c856",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Historical governed beta coverage regression pins v1 bytes before swap/use/restore races; not app runtime.",
+        "imports": [
+          {
+            "line": 6,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { buildGovernedPublicationPolicyTemplate, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 258,
+            "source": "test('pins launch-contract semantics before a swap-use-restore race window', () => {"
+          },
+          {
+            "line": 259,
+            "source": "const pinnedBytes = readFileSync('docs/hugeToDo/launch-contract.json');"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase4/beta-coverage-report.mjs",
+      "priorGitBlob": "df153a1acb33a7c427807ad6aa026b3f87a45801",
+      "priorMode": "100644",
+      "priorSha256": "7bb1ba8b05f90f7fe3c80a23cc30dfc790d7999cb0e37db421cb71e3bdfec7a1",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Historical beta coverage producer reads pinned v1 source snapshot when governed, otherwise default v1 loader; includes v1 snapshot in coverage artifact.",
+        "imports": [
+          {
+            "line": 11,
+            "module": "../launch/contract.mjs",
+            "statement": "import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 19,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+          },
+          {
+            "line": 27,
+            "module": "./beta-coverage-packet-contract.mjs",
+            "statement": "import { BETA_COVERAGE_EVIDENCE_KEYS, validateBetaCoverageEvidenceInventory, } from './beta-coverage-packet-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 11,
+            "source": "import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 39,
+            "source": "let launchContract = null;"
+          },
+          {
+            "line": 68,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 69,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 257,
+            "source": "launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 697,
+            "source": "launchContract: launchContractSnapshot(launchContract),"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase4/source-policy.mjs",
+      "priorGitBlob": "d11b7b8c27feaa02ec0e96da24e748c662c5068c",
+      "priorMode": "100644",
+      "priorSha256": "75242c44fe3ff9e46472647fbcfb9d59070a1306fb4638ae106117a30c9cc634",
+      "category": "PROVENANCE_OR_SOURCE_BINDING_REFERENCE",
+      "actualUsage": {
+        "summary": "Protected catalog authority source bindings include v1 launch JSON/validator and app config paths in QA/source hashes; production evidence resolves actual app config under exact EAS identity. Not a direct candidate reader.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 56,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 57,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 2077,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase5/build-device-qa-packet.mjs",
+      "priorGitBlob": "b0b33872ceca68cfb789227c573354f287f03421",
+      "priorMode": "100644",
+      "priorSha256": "1332172977272d47d0868242d91df7d7d19d3d0b8804344948553fd3131d6df3",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Governed device QA producer reads actual snapshotted v1 JSON bytes, validates, derives platform gates and snapshots policy into historical packet.",
+        "imports": [
+          {
+            "line": 13,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, GOVERNED_EVIDENCE_LEDGER_MAX_BYTES, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+          },
+          {
+            "line": 20,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, platformRequirementStatus, validateLaunchContract, } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 26,
+            "module": "./widget-lifecycle-evidence-contract.mjs",
+            "statement": "import { validateWidgetLifecycleEvidence, WIDGET_LIFECYCLE_EVIDENCE_ROOT, } from './widget-lifecycle-evidence-contract.mjs'"
+          },
+          {
+            "line": 30,
+            "module": "./native-ocr-evidence-contract.mjs",
+            "statement": "import { NATIVE_OCR_EVIDENCE_ROOT, NATIVE_OCR_REQUIRED_SOURCE_FILES, normalizeNativeOcrEvidencePath, validateNativeOcrEvidence, } from './native-ocr-evidence-contract.mjs'"
+          },
+          {
+            "line": 36,
+            "module": "./camera-lifecycle-evidence-contract.mjs",
+            "statement": "import { CAMERA_LIFECYCLE_EVIDENCE_ROOT, CAMERA_LIFECYCLE_MANIFEST_BYTES_MAX, CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES, CAMERA_LIFECYCLE_SCENARIOS, normalizeCameraLifecycleEasBuildId, normalizeCameraLifecycleEvidencePath, readCameraLifecycleContainedFile, validateCameraLifecycleEvidence, } from './camera-lifecycle-evidence-contract.mjs'"
+          },
+          {
+            "line": 46,
+            "module": "./performance-evidence-contract.mjs",
+            "statement": "import { normalizePerformanceEvidencePath, validatePerformanceEvidence, } from './performance-evidence-contract.mjs'"
+          },
+          {
+            "line": 50,
+            "module": "./device-qa-packet-contract.mjs",
+            "statement": "import { PHASE5_DEVICE_QA_PACKET_SCHEMA_VERSION, PHASE5_REQUIRED_QA_EVIDENCE, } from './device-qa-packet-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 21,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 22,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 23,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 25,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 1227,
+            "source": "launchContract.release.supportsIpad"
+          },
+          {
+            "line": 1278,
+            "source": "launchContract: launchContractSnapshot(launchContract),"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase5/check-native-config.mjs",
+      "priorGitBlob": "aaa36661e5c213972d6181d372dddf7e575e5559",
+      "priorMode": "100644",
+      "priorSha256": "acc0cab86dafd5c0dc4f2869fa4782c60b8e15999dedadea089b1dc74450f5bd",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Native config CLI imports v1 loader/platform helper; resolves actual config and requires iOS floor17.0, Android N/A and exact native/privacy assertions.",
+        "imports": [
+          {
+            "line": 5,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 6,
+            "module": "./ios-extension-contract.mjs",
+            "statement": "import { validateIosExtensionConfig23, validateIosExtensionVariantIsolation, } from './ios-extension-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 5,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 13,
+            "source": "const launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 14,
+            "source": "const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);"
+          },
+          {
+            "line": 375,
+            "source": "launchContract.release"
+          },
+          {
+            "line": 611,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 744,
+            "source": "console.log('N/A Android production identity and device evidence: excluded by launch contract.');"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase5/device-qa-packet-smoke.mjs",
+      "priorGitBlob": "cecf8ae1e76aafd403033a8c20fe7b541938cd50",
+      "priorMode": "100644",
+      "priorSha256": "78a15d417b026abd68cb7944e111d6192ed0864ed2735ddae50ceb9f1ef67ba6",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Historical device packet regression asserts exact v1 JSON and module presence in source snapshots; not runtime migration.",
+        "imports": [
+          {
+            "line": 20,
+            "module": "./widget-lifecycle-evidence-contract.mjs",
+            "statement": "import { createWidgetLifecycleEvidenceTemplate, WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION, WIDGET_LIFECYCLE_SUPPORTED_FAMILIES, } from './widget-lifecycle-evidence-contract.mjs'"
+          },
+          {
+            "line": 25,
+            "module": "./native-ocr-evidence-contract.mjs",
+            "statement": "import { createNativeOcrEvidenceTemplate, NATIVE_OCR_LABEL_CLASSES, NATIVE_OCR_REQUIRED_SOURCE_FILES, } from './native-ocr-evidence-contract.mjs'"
+          },
+          {
+            "line": 30,
+            "module": "./camera-lifecycle-evidence-contract.mjs",
+            "statement": "import { CAMERA_LIFECYCLE_REQUIRED_SOURCE_FILES, CAMERA_LIFECYCLE_REVIEWED_CURRENT_IOS_SOURCE_URL, CAMERA_LIFECYCLE_REVIEWED_CURRENT_PUBLIC_IOS_VERSION, createCameraLifecycleEvidenceTemplate, } from './camera-lifecycle-evidence-contract.mjs'"
+          },
+          {
+            "line": 36,
+            "module": "./performance-evidence-contract.mjs",
+            "statement": "import { createPerformanceEvidenceTemplate, summarizePerformanceSamples, } from './performance-evidence-contract.mjs'"
+          },
+          {
+            "line": 40,
+            "module": "./device-qa-packet-contract.mjs",
+            "statement": "import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from './device-qa-packet-contract.mjs'"
+          },
+          {
+            "line": 43,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { buildGovernedEvidenceLedger, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+          },
+          {
+            "line": 50,
+            "module": "../launch/governed-evidence-test-fixture.mjs",
+            "statement": "import { publishGovernedFixtureTail, publishGovernedFixtureUnit, } from '../launch/governed-evidence-test-fixture.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 2206,
+            "source": "packet.files.some((file) => file.path === 'docs/hugeToDo/launch-contract.json') &&"
+          },
+          {
+            "line": 2207,
+            "source": "packet.files.some((file) => file.path === 'scripts/launch/contract.mjs') &&"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase6/build-payments-qa-packet.mjs",
+      "priorGitBlob": "14c0f22e7477f376402ab1eabe9d0578baf58370",
+      "priorMode": "100644",
+      "priorSha256": "caade2b96d77995fbac918e72b42ae3fb77257bf923ff8d11d2e0c74796d9fee",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Payments QA producer loads/snapshots v1 contract and maps platform-specific evidence to historical required/N/A arrays.",
+        "imports": [
+          {
+            "line": 13,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformEvidenceStatus, platformRequirementStatus, } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 14,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 15,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 18,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 19,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 719,
+            "source": "launchContract,"
+          },
+          {
+            "line": 724,
+            "source": "launchContract,"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase6/check-payments-env.mjs",
+      "priorGitBlob": "61ea381f1bc101853ec0aebfc6a86bf1dd03c3eb",
+      "priorMode": "100644",
+      "priorSha256": "9425baf7a8c01bc8a084c3d9e51da895e5edac3242beb19fd7a0839414abd519",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Payments environment CLI imports v1 loader/platform helper and validates contract/platform-specific evidence plus source constraints; no paid provider authorization.",
+        "imports": [
+          {
+            "line": 4,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 12,
+            "module": "./payments-source-contract.mjs",
+            "statement": "import { auditRevenueCatDeletionSourceContract } from './payments-source-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 4,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 25,
+            "source": "const launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 26,
+            "source": "const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);"
+          },
+          {
+            "line": 235,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 237,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 649,
+            "source": "console.log('N/A Android RevenueCat key and license-test evidence: excluded by launch contract.');"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
+      "priorGitBlob": "519efda77293b1744119f3a0872afddeca9403f9",
+      "priorMode": "100644",
+      "priorSha256": "f533e751b5aa254cc4f1d6816e90032d1c501b5a9c0c5d3db5305b3db2e21951",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Governed core-loop QA producer parses pinned v1 HEAD bytes, validates and snapshots exact closed share/trend/commerce admission booleans.",
+        "imports": [
+          {
+            "line": 11,
+            "module": "../launch/contract.mjs",
+            "statement": "import { launchContractSnapshot, validateLaunchContract } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 12,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+          },
+          {
+            "line": 25,
+            "module": "../e2e/human-e2e-manifest-contract.mjs",
+            "statement": "import { validateHumanE2eManifestReleaseRole } from '../e2e/human-e2e-manifest-contract.mjs'"
+          },
+          {
+            "line": 26,
+            "module": "../phase5/device-qa-packet-contract.mjs",
+            "statement": "import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from '../phase5/device-qa-packet-contract.mjs'"
+          },
+          {
+            "line": 27,
+            "module": "../photo05/trend-admission-source-contract.mjs",
+            "statement": "import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs'"
+          },
+          {
+            "line": 28,
+            "module": "../com01/commerce-admission-source-contract.mjs",
+            "statement": "import { COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS } from '../com01/commerce-admission-source-contract.mjs'"
+          },
+          {
+            "line": 29,
+            "module": "./core-loop-qa-packet-contract.mjs",
+            "statement": "import { validatePhase7EvidenceInventory } from './core-loop-qa-packet-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 11,
+            "source": "import { launchContractSnapshot, validateLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 62,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 66,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 574,
+            "source": "let launchContract;"
+          },
+          {
+            "line": 798,
+            "source": "if (launchContract.commerceAdmission.commerceAdmitted !== true) {"
+          },
+          {
+            "line": 826,
+            "source": "launchContract: launchContractSnapshot(launchContract),"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase7/check-core-loop.mjs",
+      "priorGitBlob": "c56769c5040d8a1fdda24b3b440b21a7d5b19e12",
+      "priorMode": "100644",
+      "priorSha256": "4acb5ef04037dfca9062a3e06da799c2b31ee8b7defa5a56011551a2f35ae356",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Core-loop CLI imports v1 helpers; checks exact source/contract guards and keeps historical evidence semantics.",
+        "imports": [
+          {
+            "line": 10,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isSurfaceRequired, loadLaunchContract, REQUIRED_SURFACE_KEYS, } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 15,
+            "module": "../core07/share-admission-source-contract.mjs",
+            "statement": "import { auditCore07aShareAdmission } from '../core07/share-admission-source-contract.mjs'"
+          },
+          {
+            "line": 16,
+            "module": "../photo05/trend-admission-source-contract.mjs",
+            "statement": "import { auditPhoto05aTrendAdmission, PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS, } from '../photo05/trend-admission-source-contract.mjs'"
+          },
+          {
+            "line": 20,
+            "module": "../com01/commerce-admission-source-contract.mjs",
+            "statement": "import { auditCom01aCommerceAdmission, COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS, } from '../com01/commerce-admission-source-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 11,
+            "source": "isSurfaceRequired,"
+          },
+          {
+            "line": 14,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 27,
+            "source": "const launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 59,
+            "source": "require(isSurfaceRequired("
+          },
+          {
+            "line": 217,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 218,
+            "source": "'scripts/launch/contract.mjs',"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase8/build-growth-store-qa-packet.mjs",
+      "priorGitBlob": "164d6bc241114465a2d93cfa93e1c16b98797f0e",
+      "priorMode": "100644",
+      "priorSha256": "ac6279c12bb2f5f3314db3d1333ec30fa0b873712a5d14424e28ad3976009683",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Growth/store QA producer imports v1 load/platform/snapshot and derives closed share/public-link admission plus platform evidence.",
+        "imports": [
+          {
+            "line": 17,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 18,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 19,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 21,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 22,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 237,
+            "source": "ios: platformRequirementStatus('ios', launchContract),"
+          },
+          {
+            "line": 238,
+            "source": "android: platformRequirementStatus('android', launchContract),"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase8/check-growth-store-readiness.mjs",
+      "priorGitBlob": "0714f8b6abecec68af66f77b0d547020e9ac96d3",
+      "priorMode": "100644",
+      "priorSha256": "75106f91f70732d79811924589958cb7c469b477fef9278fb3d61da13aa8d3af",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Growth/store readiness CLI imports v1 load/platform helper; checks app config link/store source and Android historical N/A evidence.",
+        "imports": [
+          {
+            "line": 13,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 14,
+            "module": "../core07/share-admission-source-contract.mjs",
+            "statement": "import { auditCore07aShareAdmission } from '../core07/share-admission-source-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 13,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 18,
+            "source": "const launchContract = loadLaunchContract(root);"
+          },
+          {
+            "line": 19,
+            "source": "const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);"
+          },
+          {
+            "line": 361,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 362,
+            "source": "'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 448,
+            "source": "'N/A Android App Links, Play Store packet, URL, and certificate evidence: excluded by launch contract.',"
+          }
+        ]
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase8/check-growth-store-smoke.mjs",
+      "priorGitBlob": "9bc05250663b10363003143260e723c996f8c681",
+      "priorMode": "100644",
+      "priorSha256": "0f3454f83188b7c2994ad97d869bd43c915db4f25743b9bc959220b35518ef72",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Growth/store historical regression asserts Android N/A message and v1 JSON/module source hashes.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 239,
+            "source": "/Android App Links, Play Store packet, URL, and certificate evidence: excluded by launch contract/.test("
+          },
+          {
+            "line": 263,
+            "source": "Boolean(result.packet.sourceHashes['docs/hugeToDo/launch-contract.json']) &&"
+          },
+          {
+            "line": 264,
+            "source": "Boolean(result.packet.sourceHashes['scripts/launch/contract.mjs']) &&"
+          }
+        ]
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase9/build-release-qa-packet.mjs",
+      "priorGitBlob": "567643e7a512ef7f5d7565fca59db757752c479c",
+      "priorMode": "100644",
+      "priorSha256": "8e4cd6753cf8a462fdc5b51c6fe6be2e46ebdf5108f8f42e12b408aec9b1fb7a",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Governed release QA producer reads pinned v1 HEAD bytes, validates closed admission fields, exact evidence arrays and snapshots historical policy.",
+        "imports": [
+          {
+            "line": 25,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, launchContractSnapshot, platformRequirementStatus, validateLaunchContract, } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 46,
+            "module": "./release-candidate-git-contract.mjs",
+            "statement": "import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs'"
+          },
+          {
+            "line": 47,
+            "module": "../launch/governed-evidence-chain.mjs",
+            "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+          },
+          {
+            "line": 55,
+            "module": "../phase5/device-qa-packet-contract.mjs",
+            "statement": "import { PHASE5_REQUIRED_QA_EVIDENCE_KEYS } from '../phase5/device-qa-packet-contract.mjs'"
+          },
+          {
+            "line": 56,
+            "module": "../photo05/trend-admission-source-contract.mjs",
+            "statement": "import { PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS } from '../photo05/trend-admission-source-contract.mjs'"
+          },
+          {
+            "line": 57,
+            "module": "../com01/commerce-admission-source-contract.mjs",
+            "statement": "import { COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS } from '../com01/commerce-admission-source-contract.mjs'"
+          },
+          {
+            "line": 58,
+            "module": "../phase7/core-loop-qa-packet-contract.mjs",
+            "statement": "import { validatePhase7EvidenceInventory } from '../phase7/core-loop-qa-packet-contract.mjs'"
+          },
+          {
+            "line": 59,
+            "module": "./upstream-packet-contract.mjs",
+            "statement": "import { validateClaimedBetaUpstreamPacket, validatePhase5UpstreamPacket, validatePhase7UpstreamPacket, } from './upstream-packet-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 26,
+            "source": "isReleasePlatformRequired,"
+          },
+          {
+            "line": 27,
+            "source": "launchContractSnapshot,"
+          },
+          {
+            "line": 28,
+            "source": "platformRequirementStatus,"
+          },
+          {
+            "line": 30,
+            "source": "} from '../launch/contract.mjs';"
+          },
+          {
+            "line": 1045,
+            "source": "android: platformRequirementStatus('android', launchContract),"
+          },
+          {
+            "line": 1337,
+            "source": "const requiredEvidenceKeys = requiredPhase9EvidenceKeys(launchContract);"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase9/release-smoke.mjs",
+      "priorGitBlob": "875cee0f8db0196c4d28820a303effa67a98e661",
+      "priorMode": "100644",
+      "priorSha256": "3d315fe3154350fdbd46fd18eb75298372f782171af7d353c2bf3a7a93523727",
+      "category": "TEST_OR_HISTORICAL_READER",
+      "actualUsage": {
+        "summary": "Historical release smoke imports v1 load/platform helper and verifies exact packet-source, privacy and native config evidence wiring; no launch admission.",
+        "imports": [
+          {
+            "line": 26,
+            "module": "../launch/contract.mjs",
+            "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+          },
+          {
+            "line": 27,
+            "module": "./release-candidate-git-contract.mjs",
+            "statement": "import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs'"
+          },
+          {
+            "line": 28,
+            "module": "./verification-wiring-contract.mjs",
+            "statement": "import { auditVerificationWiring } from './verification-wiring-contract.mjs'"
+          },
+          {
+            "line": 35,
+            "module": "../photo05/trend-admission-source-contract.mjs",
+            "statement": "import { auditPhoto05aTrendAdmission, PHOTO05A_TREND_AUTHORITY_SOURCE_PATHS, } from '../photo05/trend-admission-source-contract.mjs'"
+          },
+          {
+            "line": 39,
+            "module": "../com01/commerce-admission-source-contract.mjs",
+            "statement": "import { auditCom01aCommerceAdmission, COM01A_COMMERCE_AUTHORITY_SOURCE_PATHS, } from '../com01/commerce-admission-source-contract.mjs'"
+          }
+        ],
+        "contractReferences": [
+          {
+            "line": 26,
+            "source": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';"
+          },
+          {
+            "line": 48,
+            "source": "const launchContract = loadLaunchContract();"
+          },
+          {
+            "line": 49,
+            "source": "const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);"
+          },
+          {
+            "line": 173,
+            "source": "'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 1113,
+            "source": "'Phase 9 packet inputs must cache pinned env defaults and launch contract, recheck optional .env bytes, and guard the process environment.',"
+          },
+          {
+            "line": 1768,
+            "source": "'N/A Android build, Play testing, Play packet, and Play Store URL evidence: excluded by launch contract.',"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "RETAINED_HISTORICAL",
+      "reason": "Preserve exact historical planning/technical test semantics. Outside the Campaign34 finite write grant; no active candidate adoption.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    },
+    {
+      "path": "scripts/phase9/security_acceptance/source-manifest.json",
+      "priorGitBlob": "a774abbf05448ff9a283f2214c13c2c231fc964b",
+      "priorMode": "100644",
+      "priorSha256": null,
+      "category": "PROTECTED_CUSTODY_REFERENCE_NOT_OPENED",
+      "actualUsage": {
+        "summary": "Protected custody reference only. Body deliberately NOT_OPENED; exact path/blob/mode observed solely through Git tree metadata and authenticated C33 inventory.",
+        "imports": [],
+        "contractReferences": []
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": false
+    },
+    {
+      "path": "scripts/photo05/trend-admission-source-contract.mjs",
+      "priorGitBlob": "a7c056cdc2376459743a20b0ba98a8ee6f686efb",
+      "priorMode": "100644",
+      "priorSha256": "9c2fcb94a8c1729496799b0701b9b27c5df4bbc37a10a81233e4e2b34dda7e6e",
+      "category": "TOOLING_OR_GOVERNANCE_READER",
+      "actualUsage": {
+        "summary": "Source-only PHOTO-05A audit loads raw v1 JSON and verifies exact all-false trendInsightAdmission plus validator/check/smoke integration.",
+        "imports": [],
+        "contractReferences": [
+          {
+            "line": 19,
+            "source": "launchContract: 'docs/hugeToDo/launch-contract.json',"
+          },
+          {
+            "line": 20,
+            "source": "launchContractModule: 'scripts/launch/contract.mjs',"
+          },
+          {
+            "line": 21,
+            "source": "launchContractSmoke: 'scripts/launch/contract-smoke.mjs',"
+          },
+          {
+            "line": 22,
+            "source": "launchContractCheck: 'scripts/launch/check-contract.mjs',"
+          },
+          {
+            "line": 829,
+            "source": "'launch contract verification must block on PHOTO-05A',"
+          },
+          {
+            "line": 833,
+            "source": "/launch:contract:verify/u.test(packageScripts[parent] ?? ''),"
+          }
+        ],
+        "contractReferenceSelection": "Representative first4/last2 observed references; complete inspected usage retained in external consumer audit receipt."
+      },
+      "decision": "DEFERRED_PROTECTED",
+      "reason": "Outside exact Campaign34 finite write grant; requires separately authorized downstream source/evidence/owner cutover. Existing legacy technical guard retained.",
+      "inFiniteGrant": false,
+      "candidateReadOnlyAdopted": false,
+      "runtimeMigrated": false,
+      "bodyOpened": true
+    }
+  ],
+  "firstFourImportGraph": {
+    "scripts/launch/contract.mjs": {
+      "incomingObservedCount": 36,
+      "actualEdges": [
+        {
+          "caller": "scripts/docs/device-support-policy-audit.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/docs/performance-readiness-audit.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/docs/readiness-status-audit.mjs",
+          "line": 7,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, platformRequirementStatus, validateLaunchContract, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/docs/tas-todo-audit.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/launch/check-contract.mjs",
+          "line": 2,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { LAUNCH_CONTRACT_PATH, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from './contract.mjs'"
+        },
+        {
+          "caller": "scripts/launch/contract-smoke.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { DEFERRED_FEATURE_IDS, REQUIRED_FEATURE_IDS, isFeatureRequired, isReleasePlatformRequired, isSurfaceRequired, launchContractSnapshot, loadLaunchContract, platformEvidenceStatus, platformRequirementStatus, validateLaunchContract, } from './contract.mjs'"
+        },
+        {
+          "caller": "scripts/launch/execution-baseline.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { REQUIRED_FEATURE_IDS } from './contract.mjs'"
+        },
+        {
+          "caller": "scripts/launch/governed-evidence-chain.mjs",
+          "line": 11,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { REQUIRED_FEATURE_IDS, launchContractSnapshot, validateLaunchContract } from './contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase10/beta-readiness.mjs",
+          "line": 22,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase10/build-beta-packet.mjs",
+          "line": 24,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase10/lib.mjs",
+          "line": 119,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase11/build-launch-packet.mjs",
+          "line": 23,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase11/launch-readiness.mjs",
+          "line": 22,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase11/launch-ring-gates.mjs",
+          "line": 13,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase2/check-env.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase3/build-review-packet.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/beta-coverage-committed-check.mjs",
+          "line": 7,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { validateLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/beta-coverage-report.mjs",
+          "line": 11,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/catalog-promotion-contract.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/catalog-promotion-contract.test.mjs",
+          "line": 17,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/catalog-qa-report.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/build-device-qa-packet.mjs",
+          "line": 20,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, platformRequirementStatus, validateLaunchContract, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/check-native-config.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/performance-evidence-contract.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { loadLaunchContract, platformRequirementStatus, requiredReleasePlatforms, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase6/build-payments-qa-packet.mjs",
+          "line": 13,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformEvidenceStatus, platformRequirementStatus, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase6/check-payments-env.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase7/build-core-loop-qa-packet.mjs",
+          "line": 11,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { launchContractSnapshot, validateLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase7/check-core-loop.mjs",
+          "line": 10,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isSurfaceRequired, loadLaunchContract, REQUIRED_SURFACE_KEYS, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase8/build-growth-store-qa-packet.mjs",
+          "line": 17,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase8/check-growth-store-readiness.mjs",
+          "line": 13,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/build-release-qa-packet.mjs",
+          "line": 25,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, platformRequirementStatus, validateLaunchContract, } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/lib.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/release-artifact-contract-smoke.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/release-artifact-contract.mjs",
+          "line": 1,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { platformRequirementStatus } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/release-smoke.mjs",
+          "line": 26,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/store-build-inspect.mjs",
+          "line": 17,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { isReleasePlatformRequired, launchContractSnapshot, loadLaunchContract, platformRequirementStatus, } from '../launch/contract.mjs'"
+        }
+      ]
+    },
+    "scripts/launch/execution-baseline.mjs": {
+      "incomingObservedCount": 3,
+      "actualEdges": [
+        {
+          "caller": "scripts/launch/build-execution-baseline.mjs",
+          "line": 3,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { baselinePaths, buildExecutionStatus, buildFeatureInventory, buildTaskGraph, root, stableJson, } from './execution-baseline.mjs'"
+        },
+        {
+          "caller": "scripts/launch/execution-baseline-smoke.mjs",
+          "line": 2,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildFeatureInventory, exactSetProblems, gatedSurfaces, parsePlanRows, } from './execution-baseline.mjs'"
+        },
+        {
+          "caller": "scripts/launch/validate-execution-baseline.mjs",
+          "line": 2,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { baselinePaths, buildFeatureInventory, buildTaskGraph, features, gatedSurfaces, discoverRuntimeCredentialNames, exactSetProblems, parsePlanRows, readJson, readRepo, readinessLabels, root, stableJson, } from './execution-baseline.mjs'"
+        }
+      ]
+    },
+    "apps/mobile/app.config.js": {
+      "incomingObservedCount": 8,
+      "actualEdges": [
+        {
+          "caller": "apps/mobile/src/lib/appConfig.test.ts",
+          "line": 9,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "requireConfig.resolve('../../app.config.js')"
+        },
+        {
+          "caller": "scripts/core01/native-age-assurance-source-contract.test.mjs",
+          "line": 15,
+          "kind": "DYNAMIC_BUILD_CONFIG_SOURCE_OR_SPAWN_REFERENCE",
+          "statement": "const appConfigPath = resolve(root, 'apps/mobile/app.config.js');"
+        },
+        {
+          "caller": "scripts/phase4/source-policy.mjs",
+          "line": 1445,
+          "kind": "DYNAMIC_BUILD_CONFIG_SOURCE_OR_SPAWN_REFERENCE",
+          "statement": "\"const factory=require('./apps/mobile/app.config.js'); const value=factory(); process.stdout.write(JSON.stringify(value.expo));\","
+        },
+        {
+          "caller": "scripts/phase5/check-native-config.mjs",
+          "line": 100,
+          "kind": "DYNAMIC_BUILD_CONFIG_SOURCE_OR_SPAWN_REFERENCE",
+          "statement": "const appConfigPath = resolve(root, 'apps/mobile/app.config.js');"
+        },
+        {
+          "caller": "scripts/phase5/check-native-config.mjs",
+          "line": 121,
+          "kind": "DYNAMIC_BUILD_CONFIG_SOURCE_OR_SPAWN_REFERENCE",
+          "statement": "const appConfigPath = resolve(root, 'apps/mobile/app.config.js');"
+        },
+        {
+          "caller": "scripts/phase5/check-native-config.mjs",
+          "line": 213,
+          "kind": "DYNAMIC_BUILD_CONFIG_SOURCE_OR_SPAWN_REFERENCE",
+          "statement": "const appConfigSource = readFileSync(resolve(root, 'apps/mobile/app.config.js'), 'utf8');"
+        },
+        {
+          "caller": "scripts/phase9/store-build-inspect.mjs",
+          "line": 56,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "require.resolve('../../apps/mobile/app.config.js')"
+        },
+        {
+          "caller": "scripts/phase9/store-build-inspect.mjs",
+          "line": 56,
+          "kind": "DYNAMIC_BUILD_CONFIG_SOURCE_OR_SPAWN_REFERENCE",
+          "statement": "const appConfigPath = require.resolve('../../apps/mobile/app.config.js');"
+        }
+      ]
+    },
+    "scripts/launch/governed-evidence-chain.mjs": {
+      "incomingObservedCount": 31,
+      "actualEdges": [
+        {
+          "caller": "scripts/docs/readiness-status-audit.mjs",
+          "line": 13,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, governedEvidenceLedgerPath, renderGovernedEvidenceLedger, validateGovernedPublicationCompletion, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/docs/readiness-status-audit.test.mjs",
+          "line": 19,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_PUBLICATION_UNITS, GOVERNED_LAUNCH_CONTRACT_PATH, GOVERNED_POST_E_PUBLICATION_DAG_EDGES, GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS, GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS, auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, captureGovernedPublicationPolicy, renderGovernedEvidenceLedger, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/e2e/human-e2e-manifest-contract.mjs",
+          "line": 1,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { validateGovernedEvidenceChainBinding } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/e2e/human-e2e-manifest-contract.test.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedPublicationPolicyTemplate, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/e2e/human-e2e-manifest.mjs",
+          "line": 56,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_GENERATED_PATHS, GOVERNED_DOWNSTREAM_PUBLICATION_UNITS, GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID, GOVERNED_LAUNCH_CONTRACT_PATH, GOVERNED_POST_E_PUBLICATION_DAG_EDGES, GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS, GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS, auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, captureGovernedPublicationPolicy, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/launch/governed-evidence-chain.test.mjs",
+          "line": 19,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_GENERATED_PATHS, GOVERNED_DOWNSTREAM_PUBLICATION_UNITS, GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID, GOVERNED_LAUNCH_CONTRACT_PATH, GOVERNED_POST_E_PUBLICATION_DAG_EDGES, GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS, GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS, auditGovernedEvidenceChain, buildGovernedEvidenceLedger, buildGovernedPublicationPolicyTemplate, captureGovernedPublicationPolicy, captureGovernedEvidenceWorkingBindings, parseGovernedEvidenceLedger, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, validateGovernedPublicationCompletion, verifyGovernedEvidenceWorkingBindings, } from './governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/launch/governed-evidence-test-fixture.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_PUBLICATION_UNITS, GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID, GOVERNED_LAUNCH_CONTRACT_PATH, GOVERNED_POST_E_PUBLICATION_DAG_EDGES, GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS, GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS, } from './governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/launch/governed-publication-coverage.mjs",
+          "line": 1,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_PUBLICATION_UNITS, GOVERNED_FINAL_READINESS_PUBLICATION_UNIT_ID, GOVERNED_REQUIRED_POST_E_PUBLICATION_UNIT_IDS, GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS, } from './governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/launch/governed-publication-coverage.test.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_GENERATED_PATHS, GOVERNED_POST_E_PUBLICATION_DAG_EDGES, } from './governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/beta-coverage-committed-check.mjs",
+          "line": 3,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/beta-coverage-committed-check.test.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedPublicationPolicyTemplate, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase4/beta-coverage-report.mjs",
+          "line": 19,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/build-device-qa-packet.mjs",
+          "line": 13,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, GOVERNED_EVIDENCE_LEDGER_MAX_BYTES, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/camera-lifecycle-evidence-smoke.mjs",
+          "line": 32,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedEvidenceLedger, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, GOVERNED_DOWNSTREAM_GENERATED_PATHS, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/check-camera-lifecycle-evidence.mjs",
+          "line": 7,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/check-native-ocr-evidence.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/check-performance-evidence.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/check-widget-lifecycle-evidence.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/device-qa-packet-smoke.mjs",
+          "line": 43,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedEvidenceLedger, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/native-ocr-evidence-smoke.mjs",
+          "line": 23,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedEvidenceLedger, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/performance-evidence-smoke.mjs",
+          "line": 13,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedEvidenceLedger, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase5/widget-lifecycle-evidence-smoke.mjs",
+          "line": 16,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedEvidenceLedger, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase7/build-core-loop-qa-packet.mjs",
+          "line": 12,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/build-evidence-chain-ledger.mjs",
+          "line": 7,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_EVIDENCE_AGGREGATE_MAX_BYTES, GOVERNED_EVIDENCE_ENTRY_MAX_BYTES, buildGovernedEvidenceLedger, canonicalGovernedEvidencePath, captureGovernedPublicationPolicy, governedEvidenceLedgerPath, governedEvidenceRoleForPath, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/build-evidence-chain-ledger.test.mjs",
+          "line": 19,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_PUBLICATION_UNITS, GOVERNED_LAUNCH_CONTRACT_PATH, GOVERNED_SOURCE_SNAPSHOT_PUBLICATION_UNIT_IDS, auditGovernedEvidenceChain, parseGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/build-release-qa-packet.mjs",
+          "line": 47,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain, captureGovernedEvidenceWorkingBindings, renderGovernedEvidenceLedger, validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, verifyGovernedEvidenceWorkingBindings, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/lib.mjs",
+          "line": 6,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { GOVERNED_DOWNSTREAM_GENERATED_PATHS } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/release-candidate-git-contract.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { auditGovernedEvidenceChain } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/release-candidate-git-contract.test.mjs",
+          "line": 10,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { captureGovernedPublicationPolicy, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/upstream-packet-contract.mjs",
+          "line": 4,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { validateGovernedEvidenceChainBinding, validateGovernedGeneratedPublication, } from '../launch/governed-evidence-chain.mjs'"
+        },
+        {
+          "caller": "scripts/phase9/upstream-packet-contract.test.mjs",
+          "line": 5,
+          "kind": "STATIC_IMPORT_OR_REQUIRE",
+          "statement": "import { buildGovernedPublicationPolicyTemplate, renderGovernedEvidenceLedger, } from '../launch/governed-evidence-chain.mjs'"
+        }
+      ]
+    }
+  },
+  "graphScope": "Observed at pinned PR36 before Campaign34 source additions: static imports/require plus app-config spawn/source references in nonsecurity tracked source. These edge counts do not redefine the exact37 historical consumer inventory.",
+  "unappliedProof": {
+    "apps/mobile/app.config.js": {
+      "decision": "UNAPPLIED",
+      "priorGitBlob": "182ba180938c742c7a78b4925689e179b6271c9b",
+      "priorSha256": "43d3617924bb46196a378ab85fb268a18c3ad8e39ebc485e17b4704703248a90",
+      "proof": [
+        "CommonJS module directly requires legacy JSON at line4.",
+        "Only contract use is line50 PAY08 winback refusal and line64 Android release requirements.",
+        "Exports only synchronous Expo factory; no CLI/preflight entrypoint.",
+        "Candidate preflight belongs separate source-only reader; wiring into config changes protected build-time invocation with no practical product value."
+      ],
+      "defaultPreservation": "Byte-identical file required; comparison receipts and actual execution results belong to final return evidence."
+    },
+    "scripts/launch/governed-evidence-chain.mjs": {
+      "decision": "UNAPPLIED",
+      "priorGitBlob": "e69e486c0cc8bc28cc946ad87e931137160ec08a",
+      "priorSha256": "98e0ea245598002719ab36ea9177b145833751c31cbca2190e87a04e6f4f0b0e",
+      "proof": [
+        "captureGovernedPublicationPolicy reads pinned source S v1 JSON from Git and validates exact schema.",
+        "source SHA256 and launchContractSnapshot are copied into publicationPolicy.",
+        "validateGovernedPublicationCompletion requires exact lean-v1 releaseMode and old numeric REQUIRED_FEATURE_IDS.",
+        "Existing test at governed-evidence-chain.test.mjs around487 explicitly rejects releaseMode all-features and swapped feature IDs.",
+        "Independent candidate planning projection has no authority to rewrite or renew this ledger."
+      ],
+      "defaultPreservation": "Byte-identical file required; comparison receipts and actual execution results belong to final return evidence."
+    }
+  },
+  "conditionalGrantUnused": [
+    "apps/mobile/app.config.js",
+    "scripts/launch/contract-smoke.mjs",
+    "scripts/launch/build-execution-baseline.mjs",
+    "scripts/launch/validate-execution-baseline.mjs",
+    "scripts/launch/governed-evidence-chain.mjs",
+    "scripts/launch/governed-evidence-chain.test.mjs"
+  ],
+  "validationEvidencePolicy": "This inventory asserts source disposition only. candidate-scope34.test.mjs, consumer-entry34.test.mjs, source_consumer34.test.py, main_integration34.test.py and actual regression/CI logs establish execution results in the final return; no test PASS or hosted conclusion is inferred here.",
+  "limitations": [
+    "Only two existing tooling readers gain separate named read-only opt-ins; no runtime consumer has switched product pointers.",
+    "Legacy v1 numeric IDs and F-XX source inventory are preserved; candidate Fxx/V2-Cxx/Pxx/Jxx remain distinct.",
+    "All38 required obligations incomplete; all65 rows positive_output_enabled=false and owner_admitted=false.",
+    "All12 consumer and6 professional obligations still require direct implementation and independent owner evidence.",
+    "18 F-family source-tested portions are unqualified; J01 unavailable/retake does not fulfill measurement.",
+    "F09 encrypted local diary/history/photos/notes/deletion/manual comparison mandatory; F18 automated trend andJ02-J27 includingJ05 deferred.",
+    "Historical Security/provenance/expiry facts are preserved; no protected scanner inventory or source-manifest body opened.",
+    "Source, fixtures, exports and supplier tests cannot qualify physical iPhone/VoiceOver, J01 optics/statistics/rights, providers/payments, professional services, clinical/legal, Apple or public release.",
+    "No authorized successor, main promotion, merge, provider operation, deployment, account mutation or spend is inferred."
+  ]
+}
