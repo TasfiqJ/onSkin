@@ -7957,3 +7957,71 @@ The adopted planning entrypoint is [docs/v2/README.md](docs/v2/README.md); durab
 ## M0-02 / FIX-01 (2026-10-20)
 
 Brain REVIEW-01 is FIX_REQUIRED. Repair scope is governance evidence, CI/Git bindings, anchored task issuance and mirror write containment only. Versioned review: docs/brain/reviews/M0-02/REVIEW-01; separate repair evidence/report: docs/brain/checkpoints/M0-02/FIX-01. Original submitted report/inputs/state are preserved. No runtime, protected gate, M1 or main promotion is authorized.
+
+
+## Campaign33 - full-app/J01 scope and bounded consumer adoption candidate
+
+Authority BRAIN-M1X-MASTERV2-FULLAPP-J01-SCOPE-CUTOVER33-CANDIDATE-01.
+SOURCE_CANDIDATE / NO_GO; independent Brain source review pending. Exact parent
+PR35 cbbb5a83bd29d2833399c214f5b6c6dd14873d24/tree
+0745ad5f5595724a9b26de64324065dc3e53d2ea. Immutable plan first:
+4e9c20e7502e51750ac85a1227f7151c7334e2bb. No main promotion or owner admission.
+
+New v2 contract/matrix/precedence/roadmap and owner/capture/cutover notes preserve
+all65 rows: required19F+12C+6P+J01=38, deferred F18+J02-J27=27; all complete and
+positive-output flags remain false. Current PR35 source plus77 actual test files
+prove source portions for18F rows. C/P target deltas remain unaccepted and J01
+measurement evidence UNKNOWN/NOT_RUN. All47 historical task/51ADR identities and
+records persist. F09 encrypted diary/history/notes/manual compare/delete is
+mandatory; unavailable/retake does not finish J01; quantitative change needs G4.
+
+Bounded migration: explicit --scope full-app-j01-v2 in existing check-contract
+CLI and first Quality governance step only. Default Lean V1 technical behavior
+and launch-contract.json/contract.mjs remain unchanged. Actual historical
+precedence has37 consumers (orientation claimed40), all still present; protected
+app.config/Brain/provenance/native readers prevent full runtime cutover. Status
+PARTIAL_CONSUMER_CUTOVER / CUTOVER_OPEN_REQUIRED; exact omissions in cutover33.md.
+
+Before source freeze: clean-cache normal npm ci/root postinstall patches PASS;
+PR35 forced typecheck/lint and6478 mobile+24operator tests PASS, zero Turbo cache
+hits; unsigned --clear iOS/Android exports PASS. Original Sep27 full clone
+validator/smoke PASS. Original151 bundle negatives PASS; unchanged Release29
+full-source replay and original integration32 at exact PR35 PASS. Current old
+checker genuinely refuses R29_AFTER_EVIDENCE_TAIL. F09/privacy80 source controls
+PASS. New v2 structural/mutation/selector suite116 PASS; Python33 event/phase/
+manifest8 and real-object/disposable-reader6 controls PASS on the documented
+working source before source commit. Final clean/sealed receipts and live CI
+are external report obligations, not asserted completed in this frozen handoff.
+
+New integration33 binds exact PR35/plan/finite source/worklist phases and real
+draft PR event/live refs/test merge; it retains current original32 refusal and
+replays32/29 only at their original full-clone pins. Later Quality bytes and
+original Security/candidate workflows stay unchanged. One unchanged Phase4
+producer invocation on clean source and a two-worklist-only seal are required;
+no source writes after seal. Source/test execution is supplier evidence only.
+
+G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED despite parent hosted mechanical
+success; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01
+G1-G5, real signed iPhone/VoiceOver, provider/paid, clinical/legal/rights/IP,
+operations, Apple and public gates remain closed; candidateReady=false. Local
+Docker daemon unavailable; no fake DB or device proof. No private findings,
+credentials, real photographs, scanner exceptions or approval pins opened or
+changed. No spend, release, deployment, merge, rebase or force push. Root
+handoff is PROGRESS within the grant; ungranted old handoff remains untouched.
+
+Next proposed engineering tranche: separately grant bounded protected dual-
+version scope-reader adoption and all affected historical refusal fixtures,
+then independently audit before any runtime pointer change. Roadmap lists
+BUILD-ID tasks for every required obligation; no implementation issuance or
+percentage complete is implied.
+
+Campaign33 pre-seal hardening: strict v2 now binds the exact all-tests receipt
+line in the immutable plan, exact source-anchor inventory and finite-grant
+consumer classifications, and exact owner observations/next-tranche schema.
+Expanded123 Node checks PASS. A new historical wrapper attempt FAILED while
+parsing the original32 two progress lines as JSON; its failed receipt is
+preserved. The wrapper now validates the exact two-line transcript and original
+result/pins/refusal/NO_GO fields. The actual earlier authentic PR35/Release29
+transcript parses successfully, and9 Python unit controls PASS. No original
+checker, checksum, owner gate or historical refusal changed. Fresh full wrapper
+execution after freeze/CI remains an external final-report obligation.

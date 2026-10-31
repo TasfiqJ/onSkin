@@ -199,7 +199,7 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify current integration32 and separately pinned Release29
+      - name: Verify full-app scope33 and separately pinned integration32/Release29
         run: |
           set -euo pipefail
           if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
@@ -209,10 +209,14 @@ jobs:
             git fetch --no-tags origin "$GITHUB_REF"
             test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           fi
+          python3 -I -B scripts/release/full-app-j01/main_integration33.test.py
+          python3 -I -B scripts/release/full-app-j01/source_consumer33.test.py
+          node --test scripts/launch/full-app-contract33.test.mjs
+          node scripts/launch/check-contract.mjs --scope full-app-j01-v2
           python3 -I -B scripts/release/full-app-j01/main_integration32.test.py
           python3 -I -B scripts/release/full-app-j01/source_consumer32.test.py
-          python3 -I -B scripts/release/full-app-j01/main_integration32.py
-          python3 -I -B scripts/release/full-app-j01/main_integration32.py --historical
+          python3 -I -B scripts/release/full-app-j01/main_integration33.py
+          python3 -I -B scripts/release/full-app-j01/main_integration33.py --historical
           python3 -B scripts/release/full-app-j01/test_contract.py
           python3 -B scripts/release/full-app-j01/source_consumer09.test.py
           node scripts/docs/source-packet-supersession09.test.mjs
