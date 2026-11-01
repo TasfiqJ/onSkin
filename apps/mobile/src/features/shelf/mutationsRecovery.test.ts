@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   add: vi.fn(),
   edit: vi.fn(),
   remove: vi.fn(),
+  confirmBottle: vi.fn(),
   assertCurrent: vi.fn(),
 }));
 vi.mock('./store', () => ({
@@ -18,6 +19,7 @@ vi.mock('./store', () => ({
   removeProduct: mocks.remove,
   reAddProduct: vi.fn(),
   applyCatalogRecoveryProductUpdate: vi.fn(),
+  confirmOwnedBottleVersion38: mocks.confirmBottle,
 }));
 vi.mock('@/features/today/useToday', () => ({ localDateString: () => '2026-10-23' }));
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
@@ -63,6 +65,10 @@ beforeEach(() => {
   mocks.remove.mockImplementation(async () => {
     durable = [];
   });
+  mocks.confirmBottle.mockImplementation(async (_input, assertBeforeNativeWrite) => {
+    assertBeforeNativeWrite();
+    return { revision: 1, localOnly: true };
+  });
 });
 afterEach(async () => {
   releaseOld?.();
@@ -99,6 +105,28 @@ async function mountWithDelayedRead(initial: string[]) {
 }
 
 describe('committed Shelf changes versus an older initial query', () => {
+  it('fences a delayed bottle confirmation before touching storage and preserves the draft cache', async () => {
+    await mountWithDelayedRead(['Original synthetic balm']);
+    const fence = vi.fn(() => { throw new Error('FORMULA38_STALE'); });
+    await act(async () => {
+      await expect(mutations.confirmBottleObservation({} as never, fence))
+        .rejects.toThrow('FORMULA38_STALE');
+    });
+    expect(fence).toHaveBeenCalledOnce();
+    expect(reads).toBe(1);
+    expect(durable).toEqual(['Original synthetic balm']);
+  });
+
+  it('refuses a bottle callback from a retired owner lease before the store is invoked', async () => {
+    await mountWithDelayedRead(['Original synthetic balm']);
+    mocks.assertCurrent.mockImplementation(() => { throw new Error('ENDED_HEALTH_LEASE'); });
+    await act(async () => {
+      await expect(mutations.confirmBottleObservation({} as never, () => {}))
+        .rejects.toThrow('ENDED_HEALTH_LEASE');
+    });
+    expect(mocks.confirmBottle).not.toHaveBeenCalled();
+  });
+
   it('does not invalidate successor data if the owner/consent lease ends during cancellation', async () => {
     await mountWithDelayedRead([]);
     const invalidate = vi.spyOn(client, 'invalidateQueries');

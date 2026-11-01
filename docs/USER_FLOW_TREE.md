@@ -2,6 +2,16 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## Campaign38: owner-confirmed bottle and formula history
+
+- Entry (Critical): ordinary free Shelf product button → product detail → **Bottle & formula history**. The owned unit starts with label/market/variant unknown. User-entered, parsed and catalog source text remain separate from explicit bottle confirmation. No Pro or provider is required.
+- Draft (Critical): **Record label observation** → explicitly choose **I have the printed label** or **Keep label unknown** → optionally enter variant/market/date as observed. Nothing commits before **Confirm this bottle observation**. Cancel/Back discards only memory; labels never enter diagnostics or browser plaintext persistence.
+- Save/history (Critical): encrypted single Shelf transaction compares product identity/update time/revision/current pointer. Save appends immutable factual identity/formula/unit versions and reads back before success. Identical retry is idempotent. Corrections retain prior observations. An empty label cannot become a confirmed label. Future dates, unsafe or excessive text, forged provenance/owner and unknown/stale IDs refuse without resetting bytes.
+- Failure (Critical): stale source or overlapping edit shows outdated draft and requires cancel/refresh; retired owner/consent/account generation cannot read or write. Storage refusal retains draft with honest unconfirmed status. Corrupt/future history stays unavailable with retry. Remove deletes unit history; archive retains it; re-add/replenish creates an unconfirmed new unit. No mirror replay carries formula content.
+- Persistence (Critical): real same-owner Back/re-enter/reload and offline confirmation/readback at 375x667 and 390x844, preferably 430x932; actual taps, accessible names, clipping/hit ownership and scrolling. Preserve the original full first-session path and existing lifecycle actions. Exercise cancel, unknown, explicit confirmation, old/current history, storage retry, outdated revision and owner retirement with disclosed synthetic fixtures.
+- Privacy/export (Important): local history is absent from cloud mirror/provider/analytics. Existing owner-requested local-device export can include the history and retained legacy Shelf data; import/cloud restore is unsupported. Deleting the product/local private data removes history. No new remote/export contract or portability claim.
+- Evidence: external campaign folder with screenshots/DOM/console/network, command and source hashes, all failures/limitations. Browser proof is not signed native iPhone, VoiceOver, chemistry/clinical, provider/StoreKit or release admission. All permanent NO_GO gates stay closed.
+
 ## Campaign37: foreground compact Shelf activation
 
 - Entry: the complete Campaign35 free first session, with three synthetic owned products, current health consent, durable reminders OFF and no Pro entitlement. Observe the actual 375x667 and 390x844 Chrome surface at device scale 2; also exercise 430x932. Keep every failed attempt.

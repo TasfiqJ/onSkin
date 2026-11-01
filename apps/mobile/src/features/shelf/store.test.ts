@@ -10,10 +10,12 @@ import {
   addProduct,
   applyCatalogRecoveryProductUpdate,
   clearShelf,
+  confirmOwnedBottleVersion38,
   getPendingShelfMirrorOperations,
   getShelfMirrorIncompatibilities,
   hasUnresolvedTerminalShelfMirrorOperationForProduct,
   loadShelf,
+  loadOwnedBottleHistory38,
   reAddProduct,
   rejectShelfMirrorOperation,
   removeProduct,
@@ -28,8 +30,13 @@ import {
   type ShelfMirrorOperation,
   type ShelfMirrorTerminal,
   type ShelfProduct,
+  type ConfirmOwnedBottleVersionInput38,
 } from './store';
 import { normalizeShelfFreshnessV1 } from './freshness';
+import {
+  FORMULA38_INVALID, FORMULA38_MISSING, FORMULA38_OWNER_MISMATCH,
+  FORMULA38_READBACK_UNCONFIRMED, FORMULA38_STALE,
+} from './formulaVersion38';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -38,6 +45,8 @@ const mocks = vi.hoisted(() => ({
   updateFailure: null as Error | null,
   updateGate: null as Promise<void> | null,
   updateStarted: null as (() => void) | null,
+  skipCommit: false,
+  readFailure: null as Error | null,
 }));
 
 vi.mock('expo-crypto', () => ({
@@ -45,7 +54,10 @@ vi.mock('expo-crypto', () => ({
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  getPrivateItem: vi.fn(async (key: string) => {
+    if (mocks.readFailure) throw mocks.readFailure;
+    return mocks.storage.get(key) ?? null;
+  }),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -63,8 +75,10 @@ vi.mock('@/lib/storage/privateKV', () => ({
         mocks.updateStarted?.();
         if (mocks.updateGate) await mocks.updateGate;
         const next = updater(mocks.storage.get(key) ?? null);
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
+        if (!mocks.skipCommit) {
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+        }
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -152,6 +166,8 @@ describe('shelf local store recovery', () => {
     mocks.updateFailure = null;
     mocks.updateGate = null;
     mocks.updateStarted = null;
+    mocks.skipCommit = false;
+    mocks.readFailure = null;
     setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
@@ -1668,5 +1684,264 @@ describe('shelf local store recovery', () => {
     await clearShelf();
 
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  async function observationInput(productId: string, patch: Partial<ConfirmOwnedBottleVersionInput38> = {}): Promise<ConfirmOwnedBottleVersionInput38> {
+    const snapshot = await loadOwnedBottleHistory38(productId);
+    if (!snapshot) throw new Error('TEST_PRODUCT_MISSING');
+    return {
+      productId, expectedUpdatedAt: snapshot.productUpdatedAt, expectedProductIdentityHash: snapshot.productIdentityHash,
+      expectedRevision: snapshot.revision, expectedCurrentVersionId: snapshot.currentVersionId,
+      confirmation: 'confirm_label', labelText: 'Aqua, Glycerin\n油', market: 'Canada', variant: 'Unscented',
+      observedOn: '2026-07-01', ...patch,
+    };
+  }
+
+  it('loads an unconfirmed owned unit as unknown without writing or inferring from ingredients', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual', ingredients: ['Water', 'Oil'] });
+    const original = mocks.storage.get(KEY);
+    expect(await loadOwnedBottleHistory38(product.id)).toMatchObject({ ownedUnitId: product.id, revision: 0, currentVersion: null, versions: [], localOnly: true });
+    expect(await loadOwnedBottleHistory38('missing')).toBeNull();
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(JSON.parse(original!).version).toBe(3);
+  });
+
+  it('commits distinct immutable identities/formulas/owned versions and exactly one current pointer', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const original = mocks.storage.get(KEY)!;
+    const mirror = JSON.stringify(storedMirrorOutbox());
+    const input = await observationInput(product.id);
+    const first = await confirmOwnedBottleVersion38(input);
+    const firstBytes = JSON.stringify(first.versions[0]);
+    expect(first.revision).toBe(1);
+    expect(first.currentVersion?.id).toMatch(/^owned38:/);
+    expect(first.currentVersion?.productIdentity.id).toMatch(/^identity38:/);
+    expect(first.currentVersion?.formulaVersion.id).toMatch(/^formula38:/);
+    const persisted = JSON.parse(mocks.storage.get(KEY)!);
+    expect(persisted.version).toBe(4);
+    expect(persisted.originalShelfBytes).toBe(original);
+    expect(JSON.stringify(storedMirrorOutbox())).toBe(mirror);
+    const second = await confirmOwnedBottleVersion38(await observationInput(product.id, { labelText: 'Aqua, New Oil', variant: 'New bottle label' }));
+    expect(second.revision).toBe(2);
+    expect(second.currentVersionId).toBe(second.versions[1]?.id);
+    expect(second.currentVersion?.previousVersionId).toBe(first.currentVersionId);
+    expect(second.currentVersion?.formulaVersion.previousFormulaVersionId).toBe(first.currentVersion?.formulaVersion.id);
+    expect(JSON.stringify(second.versions[0])).toBe(firstBytes);
+    expect(second.currentVersion?.formulaVersion.variant).toBe('New bottle label');
+    expect((await loadShelf())[0]?.ingredients).toEqual([]);
+    expect(JSON.stringify(storedMirrorOutbox())).toBe(mirror);
+    expect(mocks.storage.size).toBe(1);
+  });
+
+  it('is idempotent for exact confirmation and uncertain retry but refuses changed stale submissions', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const input = await observationInput(product.id);
+    const [left, right] = await Promise.all([confirmOwnedBottleVersion38(input), confirmOwnedBottleVersion38(input)]);
+    expect(left.currentVersionId).toBe(right.currentVersionId);
+    const bytes = mocks.storage.get(KEY);
+    expect((await confirmOwnedBottleVersion38(input)).revision).toBe(1);
+    expect((await confirmOwnedBottleVersion38(await observationInput(product.id))).revision).toBe(1);
+    expect(mocks.storage.get(KEY)).toBe(bytes);
+    await expect(confirmOwnedBottleVersion38({ ...input, labelText: 'Changed stale label' })).rejects.toThrow(FORMULA38_STALE);
+    await expect(confirmOwnedBottleVersion38({ ...input, expectedCurrentVersionId: `owned38:${'0'.repeat(64)}` })).rejects.toThrow(FORMULA38_STALE);
+    expect(mocks.storage.get(KEY)).toBe(bytes);
+  });
+
+  it('lets one overlapping edit win and retains the losing draft as stale', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const input = await observationInput(product.id);
+    const results = await Promise.allSettled([confirmOwnedBottleVersion38(input), confirmOwnedBottleVersion38({ ...input, variant: 'Other variant' })]);
+    expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
+    expect(results.filter((result) => result.status === 'rejected')).toMatchObject([{ reason: { message: FORMULA38_STALE } }]);
+    expect((await loadOwnedBottleHistory38(product.id))?.revision).toBe(1);
+  });
+
+  it('requires explicit confirmation and rejects forged provenance/owner/id fields and unsafe labels', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const input = await observationInput(product.id);
+    const original = mocks.storage.get(KEY);
+    const { confirmation: _confirmation, ...noTap } = input;
+    for (const candidate of [noTap, { ...input, confirmation: false }, { ...input, ownerUserId: 'other' }, { ...input, marketProvenance: 'source-reviewed' }, { ...input, versionId: 'fake' }, { ...input, labelText: 'a'.repeat(8001) }, { ...input, labelText: 'Aqua\u202e' }, { ...input, labelText: '\ud800' }, { ...input, market: 'US\nCanada' }]) {
+      await expect(confirmOwnedBottleVersion38(candidate as ConfirmOwnedBottleVersionInput38)).rejects.toThrow(FORMULA38_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(original);
+    }
+  });
+
+  it('records explicit unknown, then appends a later observed label', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual', ingredients: ['Not a confirmed label'] });
+    const unknown = await confirmOwnedBottleVersion38(await observationInput(product.id, { confirmation: 'retain_unknown', labelText: null, market: null, variant: null, observedOn: null }));
+    expect(unknown.currentVersion?.formulaVersion).toMatchObject({ labelStatus: 'unknown', labelText: null, observedOn: null });
+    const next = await confirmOwnedBottleVersion38(await observationInput(product.id));
+    expect(next.revision).toBe(2);
+    expect(next.versions[0]?.formulaVersion.labelStatus).toBe('unknown');
+  });
+
+  it('preserves exact v1/v2/v3 original bytes on opt-in migration and never silently confirms legacy labels', async () => {
+    const product = await addProduct({ name: 'Legacy cream', addedVia: 'manual', ingredients: ['Legacy INCI'] });
+    const v3 = mocks.storage.get(KEY)!;
+    const rawVersions = [JSON.stringify({ version: 1, products: [v1Product(product)] }), JSON.stringify({ version: 2, products: [product] }), v3];
+    for (const original of rawVersions) {
+      mocks.storage.set(KEY, original);
+      expect((await loadOwnedBottleHistory38(product.id))?.revision).toBe(0);
+      expect(mocks.storage.get(KEY)).toBe(original);
+      await confirmOwnedBottleVersion38(await observationInput(product.id));
+      expect(JSON.parse(mocks.storage.get(KEY)!).originalShelfBytes).toBe(original);
+      expect((await loadShelf())[0]?.ingredients).toEqual(['Legacy INCI']);
+    }
+  });
+
+  it('retains exact history through edits, catalog attachment, archive, mirror ack and terminal operations', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const confirmed = await confirmOwnedBottleVersion38(await observationInput(product.id));
+    const historical = JSON.stringify(confirmed.versions);
+    await updateProduct(product.id, { brand: 'Changed display brand' });
+    const updated = (await loadShelf())[0]!;
+    await applyCatalogRecoveryProductUpdate(catalogRecoveryInput(product.id, updated.updatedAt));
+    await updateProduct(product.id, { status: 'finished', finishedAt: '2026-07-02' });
+    const head = (await getPendingShelfMirrorOperations())[0]!;
+    await acknowledgeShelfMirrorOperation(head.operationId);
+    const nextHead = (await getPendingShelfMirrorOperations())[0]!;
+    await rejectShelfMirrorOperation(nextHead.operationId, 'SHELF_PRODUCT_PAYLOAD_INVALID');
+    expect(JSON.stringify((await loadOwnedBottleHistory38(product.id))?.versions)).toBe(historical);
+    expect((await loadOwnedBottleHistory38(product.id))?.currentVersion?.productIdentity.brand).toBeNull();
+  });
+
+  it('rejects outdated identity even when the device timestamp is unchanged', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-19T12:00:00.000Z'));
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const input = await observationInput(product.id);
+    await updateProduct(product.id, { name: 'Changed identity' });
+    expect((await loadShelf())[0]?.updatedAt).toBe(input.expectedUpdatedAt);
+    const bytes = mocks.storage.get(KEY);
+    await expect(confirmOwnedBottleVersion38(input)).rejects.toThrow(FORMULA38_STALE);
+    expect(mocks.storage.get(KEY)).toBe(bytes);
+  });
+
+  it('gives a replacement a new unknown unit, preserving the old unit formula/variant', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const previous = await confirmOwnedBottleVersion38(await observationInput(product.id));
+    const replacement = await reAddProduct(product.id, { isOpened: false, openedAt: null }, operationId(901));
+    const fresh = await loadOwnedBottleHistory38(replacement!.id);
+    expect(fresh).toMatchObject({ ownedUnitId: operationId(901), revision: 0, currentVersionId: null, versions: [] });
+    expect((await loadOwnedBottleHistory38(product.id))?.versions).toEqual(previous.versions);
+    const confirmedNew = await confirmOwnedBottleVersion38(await observationInput(replacement!.id, { variant: 'Fragranced' }));
+    expect(confirmedNew.currentVersion?.previousVersionId).toBeNull();
+    expect(confirmedNew.currentVersion?.formulaVersion.variant).toBe('Fragranced');
+    expect((await loadOwnedBottleHistory38(product.id))?.currentVersion?.formulaVersion.variant).toBe('Unscented');
+    expect(confirmedNew.currentVersionId).not.toBe(previous.currentVersionId);
+  });
+
+  it('deletes local versions and the exact-byte migration backup without stale read or replay resurrection', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    await confirmOwnedBottleVersion38(await observationInput(product.id));
+    const stale = await observationInput(product.id);
+    await removeProduct(product.id);
+    const after = mocks.storage.get(KEY)!;
+    expect(after).not.toContain('Aqua');
+    expect(after).not.toContain('originalShelfBytes');
+    expect(await loadOwnedBottleHistory38(product.id)).toBeNull();
+    await expect(confirmOwnedBottleVersion38(stale)).rejects.toThrow(FORMULA38_MISSING);
+    while ((await getPendingShelfMirrorOperations()).length) await acknowledgeShelfMirrorOperation((await getPendingShelfMirrorOperations())[0]!.operationId);
+    expect(await loadOwnedBottleHistory38(product.id)).toBeNull();
+  });
+
+  it('removes one history/backup while retaining another unit and does not accept a deleted late commit', async () => {
+    const one = await addProduct({ name: 'One', addedVia: 'manual' });
+    const two = await addProduct({ name: 'Two', addedVia: 'manual' });
+    await confirmOwnedBottleVersion38(await observationInput(one.id));
+    await confirmOwnedBottleVersion38(await observationInput(two.id, { labelText: 'Second label' }));
+    await removeProduct(one.id);
+    const parsed = JSON.parse(mocks.storage.get(KEY)!);
+    expect(parsed.originalShelfBytes).toBeNull();
+    expect(parsed.ownedBottleHistories).toHaveLength(1);
+    expect((await loadOwnedBottleHistory38(two.id))?.currentVersion?.formulaVersion.labelText).toBe('Second label');
+  });
+
+  it('retains prior bytes after refused storage and requires canonical readback after a silent noncommit', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const input = await observationInput(product.id);
+    const original = mocks.storage.get(KEY);
+    mocks.updateFailure = new Error('STORAGE_REFUSED');
+    await expect(confirmOwnedBottleVersion38(input)).rejects.toThrow('STORAGE_REFUSED');
+    expect(mocks.storage.get(KEY)).toBe(original);
+    mocks.updateFailure = null;
+    mocks.skipCommit = true;
+    await expect(confirmOwnedBottleVersion38(input)).rejects.toThrow(FORMULA38_READBACK_UNCONFIRMED);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    mocks.skipCommit = false;
+    expect((await confirmOwnedBottleVersion38(input)).revision).toBe(1);
+    mocks.readFailure = new Error('PRIVATE_READ_FAILED');
+    await expect(loadOwnedBottleHistory38(product.id)).rejects.toThrow('PRIVATE_READ_FAILED');
+  });
+
+  it('rejects foreign history after an owner switch and reveals no fallback success', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    await confirmOwnedBottleVersion38(await observationInput(product.id));
+    const original = mocks.storage.get(KEY);
+    setActiveHealthProcessingEpoch(2, { ownerUserId: 'user-b', accountGeneration: 0 });
+    await expect(loadOwnedBottleHistory38(product.id)).rejects.toThrow(FORMULA38_OWNER_MISMATCH);
+    await expect(loadShelf()).rejects.toThrow(FORMULA38_OWNER_MISMATCH);
+    await expect(updateProduct(product.id, { name: 'Foreign edit' })).rejects.toThrow(FORMULA38_OWNER_MISMATCH);
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('refuses a queued history write after consent clear/regrant and preserves original bytes', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    const input = await observationInput(product.id);
+    const original = mocks.storage.get(KEY);
+    let release!: () => void;
+    mocks.updateGate = new Promise<void>((resolve) => { release = resolve; });
+    let started!: () => void;
+    const dispatched = new Promise<void>((resolve) => { started = resolve; });
+    mocks.updateStarted = started;
+    const pending = confirmOwnedBottleVersion38(input);
+    const rejected = expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    await dispatched;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
+    release();
+    await rejected;
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('fails closed on corrupt hashes, duplicate/unknown pointers, foreign bindings and future bytes without reset', async () => {
+    const product = await addProduct({ name: 'Plain cream', addedVia: 'manual' });
+    await confirmOwnedBottleVersion38(await observationInput(product.id));
+    const original = mocks.storage.get(KEY)!;
+    const corruptions = [
+      (envelope: any) => { envelope.ownedBottleHistories[0].versions[0].formulaVersion.labelText = 'Tampered'; },
+      (envelope: any) => { envelope.ownedBottleHistories[0].currentVersionId = `owned38:${'0'.repeat(64)}`; },
+      (envelope: any) => { envelope.ownedBottleHistories.push(envelope.ownedBottleHistories[0]); },
+      (envelope: any) => { envelope.ownedBottleHistories[0].versions.push(envelope.ownedBottleHistories[0].versions[0]); envelope.ownedBottleHistories[0].revision = 2; },
+      (envelope: any) => { envelope.ownedBottleHistories[0].versions[0].ownedUnitId = 'other-unit'; },
+      (envelope: any) => { envelope.ownedBottleHistories[0].revision = 8; },
+    ];
+    for (const change of corruptions) {
+      const envelope = JSON.parse(original);
+      change(envelope);
+      const corrupt = JSON.stringify(envelope);
+      mocks.storage.set(KEY, corrupt);
+      await expect(loadOwnedBottleHistory38(product.id)).rejects.toThrow(SHELF_STATE_INVALID);
+      await expect(updateProduct(product.id, { name: 'Must not overwrite' })).rejects.toThrow(SHELF_STATE_INVALID);
+      expect(mocks.storage.get(KEY)).toBe(corrupt);
+    }
+    const future = JSON.stringify({ version: 5, products: ['private bytes'] });
+    mocks.storage.set(KEY, future);
+    await expect(loadOwnedBottleHistory38(product.id)).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
+    expect(mocks.storage.get(KEY)).toBe(future);
+  });
+
+  it('bounds immutable history without pruning old versions or claiming a refused append succeeded', async () => {
+    const product = await addProduct({ name: 'Bounded history', addedVia: 'manual' });
+    for (let revision = 0; revision < 64; revision += 1) {
+      await confirmOwnedBottleVersion38(await observationInput(product.id, { variant: `Variant ${revision}` }));
+    }
+    const original = mocks.storage.get(KEY);
+    const snapshot = await loadOwnedBottleHistory38(product.id);
+    expect(snapshot?.versions).toHaveLength(64);
+    await expect(confirmOwnedBottleVersion38(await observationInput(product.id, { variant: 'Version beyond limit' }))).rejects.toThrow(FORMULA38_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect((await confirmOwnedBottleVersion38(await observationInput(product.id, { variant: 'Variant 63' }))).revision).toBe(64);
   });
 });

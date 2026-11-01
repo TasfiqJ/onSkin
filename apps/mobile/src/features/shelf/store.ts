@@ -2,7 +2,7 @@ import { randomUUID } from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@layerwell/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
-import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import { captureHealthDataWriteLease, runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
@@ -18,6 +18,17 @@ import {
   SHELF_PRODUCT_NAME_MAX_LENGTH,
   SHELF_PRODUCT_TEXT_MAX_BYTES,
 } from './limits';
+import {
+  FORMULA38_INVALID, FORMULA38_STALE, FORMULA38_MISSING, FORMULA38_OWNER_MISMATCH,
+  FORMULA38_READBACK_UNCONFIRMED, validateObservation38,
+} from './formulaVersion38';
+import {
+  createOwnedProductVersion38, historySnapshot38, sameObservation38, validateOwnedBottleHistory38,
+  OWNED_BOTTLE38_MAX_VERSIONS,
+  type ConfirmOwnedBottleVersionInput38, type OwnedBottleHistory38, type OwnedBottleHistorySnapshot38,
+} from './ownedBottleVersion38';
+
+export type { ConfirmOwnedBottleVersionInput38, OwnedBottleHistorySnapshot38 } from './ownedBottleVersion38';
 
 export {
   SHELF_PRODUCT_BRAND_MAX_LENGTH,
@@ -36,6 +47,8 @@ const KEY = 'layerwell.shelf.v1';
 const LEGACY_SCHEMA_VERSION = 1 as const;
 const PREVIOUS_SCHEMA_VERSION = 2 as const;
 const SCHEMA_VERSION = 3 as const;
+const HISTORY_SCHEMA_VERSION = 4 as const;
+const HISTORY38_MAX_ENVELOPE_CHARS = 8 * 1024 * 1024;
 
 export const SHELF_STATE_INVALID = 'SHELF_STATE_INVALID';
 export const SHELF_STATE_UNSUPPORTED_VERSION = 'SHELF_STATE_UNSUPPORTED_VERSION';
@@ -235,6 +248,8 @@ type DecodedShelfState = {
   terminal: ShelfMirrorTerminal[];
   mirrorIncompatibilities: ShelfMirrorIncompatibility[];
   upgradeFrom: 'none' | 'legacy' | 'v2';
+  ownedBottleHistories: OwnedBottleHistory38[];
+  originalShelfBytes: string | null;
 };
 
 const SHELF_MIRROR_TERMINAL_CODES = new Set<ShelfMirrorTerminalCode>([
@@ -849,8 +864,10 @@ function canonicalV1Product(
 }
 
 function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedShelfState {
+  const noHistory = { ownedBottleHistories: [] as OwnedBottleHistory38[], originalShelfBytes: null };
   if (raw === null) {
     return {
+      ...noHistory,
       products: [],
       mirrorOutbox: [],
       terminal: [],
@@ -876,6 +893,7 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
     );
     if (!legacy) throw new Error(SHELF_STATE_INVALID);
     return {
+      ...noHistory,
       products: legacy,
       mirrorOutbox: [],
       terminal: [],
@@ -884,15 +902,20 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
     };
   }
   if (!isRecord(parsed)) throw new Error(SHELF_STATE_INVALID);
+  // Predecessor clients already refused version=4 bytes. Only the explicitly
+  // identified history shape is this additive contract; other v4 shapes stay
+  // unavailable with the original unsupported-version result.
+  if (parsed.version === HISTORY_SCHEMA_VERSION && (!hasOwn(parsed, 'ownedBottleHistories') || !hasOwn(parsed, 'originalShelfBytes'))) throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
   if (
     parsed.version !== LEGACY_SCHEMA_VERSION &&
     parsed.version !== PREVIOUS_SCHEMA_VERSION &&
-    parsed.version !== SCHEMA_VERSION
+    parsed.version !== SCHEMA_VERSION &&
+    parsed.version !== HISTORY_SCHEMA_VERSION
   ) {
     if (
       typeof parsed.version === 'number' &&
       Number.isSafeInteger(parsed.version) &&
-      parsed.version > SCHEMA_VERSION
+      parsed.version > HISTORY_SCHEMA_VERSION
     ) {
       throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
     }
@@ -931,6 +954,7 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
     const upgraded = current ? attachHistoricalReplacementLineage(current) : null;
     if (!upgraded) throw new Error(SHELF_STATE_INVALID);
     return {
+      ...noHistory,
       products: upgraded,
       mirrorOutbox: [],
       terminal: [],
@@ -952,6 +976,7 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
       throw new Error(SHELF_STATE_INVALID);
     }
     return {
+      ...noHistory,
       products,
       mirrorOutbox: [],
       terminal: [],
@@ -966,6 +991,7 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
       'mirrorOutbox',
       'terminal',
       'mirrorIncompatibilities',
+      ...(parsed.version === HISTORY_SCHEMA_VERSION ? ['ownedBottleHistories', 'originalShelfBytes'] : []),
     ])
   ) {
     throw new Error(SHELF_STATE_INVALID);
@@ -984,6 +1010,30 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
   const mirrorOutbox = decodeShelfMirrorOutbox(parsed.mirrorOutbox);
   const terminal = decodeShelfMirrorTerminal(parsed.terminal);
   const mirrorIncompatibilities = shelfMirrorIncompatibilities(products ?? []);
+  const ownedBottleHistories: OwnedBottleHistory38[] = [];
+  let originalShelfBytes: string | null = null;
+  if (parsed.version === HISTORY_SCHEMA_VERSION) {
+    if (raw.length > HISTORY38_MAX_ENVELOPE_CHARS) throw new Error(SHELF_STATE_INVALID);
+    if (!Array.isArray(parsed.ownedBottleHistories) || parsed.ownedBottleHistories.length < 1 || parsed.ownedBottleHistories.length > 1000 ||
+        (parsed.originalShelfBytes !== null && (typeof parsed.originalShelfBytes !== 'string' || parsed.originalShelfBytes.length > HISTORY38_MAX_ENVELOPE_CHARS / 2))) throw new Error(SHELF_STATE_INVALID);
+    const ids = new Set<string>();
+    for (const candidate of parsed.ownedBottleHistories) {
+      try { validateOwnedBottleHistory38(candidate as OwnedBottleHistory38); } catch { throw new Error(SHELF_STATE_INVALID); }
+      const history = candidate as OwnedBottleHistory38;
+      if (history.ownerUserId !== captureHealthDataWriteLease().ownerUserId) throw new Error(FORMULA38_OWNER_MISMATCH);
+      if (ids.has(history.productId) || !products?.some((product) => product.id === history.productId)) throw new Error(SHELF_STATE_INVALID);
+      ids.add(history.productId);
+      ownedBottleHistories.push(history);
+    }
+    originalShelfBytes = parsed.originalShelfBytes as string | null;
+    if (originalShelfBytes !== null) {
+      let original: unknown;
+      try { original = JSON.parse(originalShelfBytes); } catch { throw new Error(SHELF_STATE_INVALID); }
+      if (isRecord(original) && original.version === HISTORY_SCHEMA_VERSION) throw new Error(SHELF_STATE_INVALID);
+      const originalState = decodeShelfState(originalShelfBytes, fallbackISO);
+      if (originalState.products.some((product) => !products?.some((current) => current.id === product.id))) throw new Error(SHELF_STATE_INVALID);
+    }
+  }
   if (
     !products ||
     !mirrorOutbox ||
@@ -992,7 +1042,7 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
     terminal.some(({ operation }) =>
       mirrorOutbox.some((pending) => pending.operationId === operation.operationId),
     ) ||
-    raw !== encodeShelfState(products, mirrorOutbox, terminal)
+    raw !== encodeShelfState(products, mirrorOutbox, terminal, { ownedBottleHistories, originalShelfBytes })
   ) {
     throw new Error(SHELF_STATE_INVALID);
   }
@@ -1002,6 +1052,8 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): DecodedSh
     terminal,
     mirrorIncompatibilities,
     upgradeFrom: 'none',
+    ownedBottleHistories,
+    originalShelfBytes,
   };
 }
 
@@ -1009,7 +1061,21 @@ function encodeShelfState(
   products: ShelfProduct[],
   mirrorOutbox: ShelfMirrorOperation[],
   terminal: ShelfMirrorTerminal[],
+  historyState: Pick<DecodedShelfState, 'ownedBottleHistories' | 'originalShelfBytes'> = { ownedBottleHistories: [], originalShelfBytes: null },
 ): string {
+  const ownedBottleHistories = (historyState?.ownedBottleHistories ?? []).filter((history) => products.some((product) => product.id === history.productId));
+  let originalShelfBytes = historyState?.originalShelfBytes ?? null;
+  // Erasure wins over retaining the pre-migration byte archive. Never keep a
+  // deleted unit's original label in a hidden migration backup.
+  if (originalShelfBytes !== null && decodeShelfState(originalShelfBytes).products.some((original) => !products.some((product) => product.id === original.id))) originalShelfBytes = null;
+  if (ownedBottleHistories.length > 0) {
+    const encoded = JSON.stringify({
+      version: HISTORY_SCHEMA_VERSION, products, mirrorOutbox, terminal,
+      mirrorIncompatibilities: shelfMirrorIncompatibilities(products), ownedBottleHistories, originalShelfBytes,
+    });
+    if (encoded.length > HISTORY38_MAX_ENVELOPE_CHARS || (originalShelfBytes !== null && originalShelfBytes.length > HISTORY38_MAX_ENVELOPE_CHARS / 2)) throw new Error(SHELF_STATE_INVALID);
+    return encoded;
+  }
   return JSON.stringify({
     version: SCHEMA_VERSION,
     products,
@@ -1065,6 +1131,8 @@ function prepareShelfStateForWrite(
   terminal: ShelfMirrorTerminal[];
   mirrorIncompatibilities: ShelfMirrorIncompatibility[];
   outboxChanged: boolean;
+  ownedBottleHistories: OwnedBottleHistory38[];
+  originalShelfBytes: string | null;
 } {
   const mirrorOutbox = [...decoded.mirrorOutbox];
   if (decoded.upgradeFrom === 'v2') {
@@ -1078,6 +1146,8 @@ function prepareShelfStateForWrite(
     }
   }
   return {
+    ownedBottleHistories: decoded.ownedBottleHistories,
+    originalShelfBytes: decoded.originalShelfBytes,
     products: decoded.products,
     mirrorOutbox,
     terminal: decoded.terminal,
@@ -1107,6 +1177,84 @@ export function loadShelf(): Promise<ShelfProduct[]> {
     const decoded = decodeShelfState(raw);
     lease.assertCurrent();
     return decoded.products;
+  });
+}
+
+/** Device-only owner observation. No catalog/mirror/provider is consulted. */
+export function loadOwnedBottleHistory38(productId: string): Promise<OwnedBottleHistorySnapshot38 | null> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const decoded = decodeShelfState(raw);
+    const product = decoded.products.find((candidate) => candidate.id === productId);
+    const latest = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    if (latest !== raw) throw new Error(FORMULA38_STALE);
+    lease.assertCurrent();
+    return product ? historySnapshot38(product, decoded.ownedBottleHistories.find((history) => history.productId === productId)) : null;
+  });
+}
+
+/** Append and pointer CAS share the existing encrypted Shelf transaction.
+ * Formula observations never enter the unrelated user_products replay schema. */
+export function confirmOwnedBottleVersion38(
+  input: ConfirmOwnedBottleVersionInput38,
+  assertBeforeNativeWrite?: () => void,
+): Promise<OwnedBottleHistorySnapshot38> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const expectedKeys = ['productId', 'expectedUpdatedAt', 'expectedProductIdentityHash', 'expectedRevision', 'expectedCurrentVersionId', 'confirmation', 'labelText', 'market', 'variant', 'observedOn'];
+    if (!isRecord(input) || !hasExactKeys(input, expectedKeys) || !Number.isSafeInteger(input.expectedRevision) || input.expectedRevision < 0 ||
+        !/^[0-9a-f]{64}$/.test(input.expectedProductIdentityHash) ||
+        (input.expectedCurrentVersionId !== null && !/^owned38:[0-9a-f]{64}$/.test(input.expectedCurrentVersionId))) throw new Error(FORMULA38_INVALID);
+    validateObservation38(input, currentLocalDate());
+    const ts = nowISO();
+    let committed: OwnedBottleHistorySnapshot38 | null = null;
+    let outboxChanged = false;
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const decoded = decodeShelfState(current, ts);
+      const product = decoded.products.find((candidate) => candidate.id === input.productId);
+      if (!product) throw new Error(FORMULA38_MISSING);
+      const previous = decoded.ownedBottleHistories.find((history) => history.productId === product.id);
+      const snapshot = historySnapshot38(product, previous);
+      if (input.expectedUpdatedAt !== snapshot.productUpdatedAt || input.expectedProductIdentityHash !== snapshot.productIdentityHash) throw new Error(FORMULA38_STALE);
+      // An uncertain retry may repeat only the immediately preceding identical
+      // observation. A changed payload with an old revision always fails.
+      const currentVersion = snapshot.currentVersion;
+      const exactRevision = input.expectedRevision === snapshot.revision && input.expectedCurrentVersionId === snapshot.currentVersionId;
+      const retryRevision = currentVersion !== null && input.expectedRevision === snapshot.revision - 1 && input.expectedCurrentVersionId === currentVersion.previousVersionId;
+      if (currentVersion && (exactRevision || retryRevision) && sameObservation38(currentVersion, product, input)) {
+        committed = snapshot;
+        return current;
+      }
+      if (!exactRevision) throw new Error(FORMULA38_STALE);
+      if (snapshot.revision >= OWNED_BOTTLE38_MAX_VERSIONS || (!previous && decoded.ownedBottleHistories.length >= 1000)) throw new Error(FORMULA38_INVALID);
+      const version = createOwnedProductVersion38(product, lease.ownerUserId, input, currentVersion, ts);
+      const history: OwnedBottleHistory38 = {
+        productId: product.id, ownerUserId: lease.ownerUserId, revision: snapshot.revision + 1,
+        currentVersionId: version.id, versions: [...snapshot.versions, version],
+      };
+      validateOwnedBottleHistory38(history);
+      const prepared = prepareShelfStateForWrite(decoded, ts);
+      outboxChanged = prepared.outboxChanged;
+      const ownedBottleHistories = [...decoded.ownedBottleHistories.filter((candidate) => candidate.productId !== product.id), history];
+      committed = historySnapshot38(product, history);
+      lease.assertCurrent();
+      return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal, {
+        ownedBottleHistories,
+        originalShelfBytes: decoded.ownedBottleHistories.length === 0 ? current : decoded.originalShelfBytes,
+      });
+    }, undefined, assertBeforeNativeWrite);
+    lease.assertCurrent();
+    if (outboxChanged) notifyShelfMirrorOutboxChanged();
+    // A returned storage promise alone cannot prove persistence. Read the
+    // canonical source again before announcing success; retry is idempotent.
+    const readback = await loadOwnedBottleHistory38(input.productId);
+    lease.assertCurrent();
+    if (!committed || !readback || readback.currentVersionId !== (committed as OwnedBottleHistorySnapshot38).currentVersionId ||
+        readback.revision !== (committed as OwnedBottleHistorySnapshot38).revision || readback.productIdentityHash !== input.expectedProductIdentityHash) throw new Error(FORMULA38_READBACK_UNCONFIRMED);
+    return readback;
   });
 }
 
@@ -1197,12 +1345,12 @@ export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
         committed = existing;
         return decoded.upgradeFrom === 'none'
           ? current
-          : encodeShelfState(items, mirrorOutbox, prepared.terminal);
+          : encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared);
       }
       appendMirrorUpsert(mirrorOutbox, product, ts);
       outboxChanged = true;
       lease.assertCurrent();
-      return encodeShelfState([product, ...items], mirrorOutbox, prepared.terminal);
+      return encodeShelfState([product, ...items], mirrorOutbox, prepared.terminal, prepared);
     });
     lease.assertCurrent();
     if (outboxChanged) notifyShelfMirrorOutboxChanged();
@@ -1269,9 +1417,9 @@ export async function updateProduct(
           return updated;
         });
         lease.assertCurrent();
-        if (updated) return encodeShelfState(next, mirrorOutbox, prepared.terminal);
+        if (updated) return encodeShelfState(next, mirrorOutbox, prepared.terminal, prepared);
         return decoded.upgradeFrom === 'v2'
-          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
           : current;
       },
       undefined,
@@ -1314,7 +1462,7 @@ export function applyCatalogRecoveryProductUpdate(
       const index = items.findIndex((product) => product.id === input.id);
       if (index < 0) {
         return decoded.upgradeFrom === 'v2'
-          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
           : current;
       }
 
@@ -1322,7 +1470,7 @@ export function applyCatalogRecoveryProductUpdate(
       if (existing.updatedAt !== input.expectedUpdatedAt) {
         result = { status: 'stale' };
         return decoded.upgradeFrom === 'v2'
-          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
           : current;
       }
 
@@ -1360,7 +1508,7 @@ export function applyCatalogRecoveryProductUpdate(
       appendMirrorUpsert(mirrorOutbox, updated, ts);
       outboxChanged = true;
       lease.assertCurrent();
-      return encodeShelfState(next, mirrorOutbox, prepared.terminal);
+      return encodeShelfState(next, mirrorOutbox, prepared.terminal, prepared);
     });
     lease.assertCurrent();
     if (outboxChanged) notifyShelfMirrorOutboxChanged();
@@ -1397,10 +1545,11 @@ export async function removeProduct(
             items.filter((product) => product.id !== id),
             mirrorOutbox,
             prepared.terminal,
+            prepared,
           );
         }
         return decoded.upgradeFrom === 'v2'
-          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
           : current;
       },
       undefined,
@@ -1450,7 +1599,7 @@ export async function reAddProduct(
       if (!prev) {
         lease.assertCurrent();
         return decoded.upgradeFrom === 'v2'
-          ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+          ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
           : current;
       }
       const existingOperation = items.find((product) => product.id === replacementId);
@@ -1462,7 +1611,7 @@ export async function reAddProduct(
         ) {
           fresh = existingOperation;
           return decoded.upgradeFrom === 'v2'
-            ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+            ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
             : current;
         }
         throw new Error(SHELF_STATE_INVALID);
@@ -1481,7 +1630,7 @@ export async function reAddProduct(
         if (activeDescendant) fresh = activeDescendant;
         if (descendants.length > 0) {
           return decoded.upgradeFrom === 'v2'
-            ? encodeShelfState(items, mirrorOutbox, prepared.terminal)
+            ? encodeShelfState(items, mirrorOutbox, prepared.terminal, prepared)
             : current;
         }
       }
@@ -1525,6 +1674,7 @@ export async function reAddProduct(
         [fresh, ...items.map((product) => (product.id === id ? archived : product))],
         mirrorOutbox,
         prepared.terminal,
+        prepared,
       );
     });
     lease.assertCurrent();
@@ -1552,7 +1702,7 @@ export function getPendingShelfMirrorOperations(): Promise<ShelfMirrorOperation[
       pending = prepared.mirrorOutbox;
       outboxChanged = prepared.outboxChanged;
       if (decoded.upgradeFrom !== 'v2') return current;
-      return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal);
+      return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal, prepared);
     });
     lease.assertCurrent();
     if (outboxChanged) notifyShelfMirrorOutboxChanged();
@@ -1582,11 +1732,11 @@ export function acknowledgeShelfMirrorOperation(operationId: string): Promise<bo
         prepared.mirrorOutbox.shift();
         acknowledged = true;
         outboxChanged = true;
-        return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal);
+        return encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal, prepared);
       }
       outboxChanged = prepared.outboxChanged;
       return decoded.upgradeFrom === 'v2'
-        ? encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal)
+        ? encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal, prepared)
         : current;
     });
     lease.assertCurrent();
@@ -1622,11 +1772,11 @@ export function rejectShelfMirrorOperation(
         const terminal = [...prepared.terminal, { operation: head, code }];
         rejected = true;
         outboxChanged = true;
-        return encodeShelfState(prepared.products, prepared.mirrorOutbox, terminal);
+        return encodeShelfState(prepared.products, prepared.mirrorOutbox, terminal, prepared);
       }
       outboxChanged = prepared.outboxChanged;
       return decoded.upgradeFrom === 'v2'
-        ? encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal)
+        ? encodeShelfState(prepared.products, prepared.mirrorOutbox, prepared.terminal, prepared)
         : current;
     });
     lease.assertCurrent();

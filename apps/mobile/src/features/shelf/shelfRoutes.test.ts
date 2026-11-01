@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { createElement, useEffect } from 'react';
+import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+import { describe, expect, it, vi } from 'vitest';
 
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
 
@@ -44,6 +46,7 @@ describe('Shelf route mobile contracts', () => {
   it('keeps direct-entry Shelf screens safe for no-history launches', () => {
     for (const route of [
       'shelf/[id].tsx',
+      'shelf/formula-history.tsx',
       'shelf/archive.tsx',
       'shelf/search.tsx',
       'shelf/manual.tsx',
@@ -61,6 +64,7 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf route escape controls touchable on phones', () => {
     for (const route of [
       'shelf/[id].tsx',
+      'shelf/formula-history.tsx',
       'shelf/archive.tsx',
       'shelf/search.tsx',
       'shelf/manual.tsx',
@@ -1273,5 +1277,134 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('key={conflictKey(c)}');
     expect(source).toContain('router.push(conflictDetailRoute(c))');
     expect(source).not.toContain('key={c.rule.id}');
+  });
+});
+
+describe('real bottle-history screen privacy retirement', () => {
+  it('removes memory-only label drafts on owner generation and unit changes before another confirmation', async () => {
+    (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    let id = 'synthetic-unit-a';
+    let generation = 1;
+    const confirm = vi.fn();
+    const makeShelf = () => ({ data: { sourceGeneration: generation, items: [{ id, product: {
+      id, name: 'Synthetic balm', brand: null, ingredients: [], addedVia: 'manual',
+    } }], archive: [] }, isError: false, isFetching: false });
+    let shelf = makeShelf();
+    const useShelfMock = () => shelf;
+    const mocked = [
+      'react-native', '@/components/ui', 'expo-router', '@tanstack/react-query',
+      '@/features/shelf/useShelf', '@/features/shelf/mutations', '@/features/shelf/store',
+      '@/lib/consent/healthDataWriteAdmission', '@/features/today/useToday',
+    ];
+    vi.doMock('react-native', () => ({ View: 'View', ScrollView: 'ScrollView', TextInput: 'TextInput' }));
+    vi.doMock('@/components/ui', () => ({ Button: 'Button', RouteIconButton: 'RouteIconButton', Screen: 'Screen', Text: 'Text' }));
+    vi.doMock('expo-router', () => ({
+      router: {}, useLocalSearchParams: () => ({ id }),
+      useFocusEffect: (callback: () => (() => void)) => useEffect(callback, [callback]),
+    }));
+    vi.doMock('@/features/shelf/useShelf', () => ({ useShelf: useShelfMock }));
+    vi.doMock('@/features/shelf/mutations', () => ({ useShelfMutations: () => ({ confirmBottleObservation: confirm }) }));
+    vi.doMock('@/features/shelf/store', () => ({ loadOwnedBottleHistory38: vi.fn() }));
+    vi.doMock('@/features/today/useToday', () => ({ localDateString: () => '2026-11-01' }));
+    vi.doMock('@/lib/consent/healthDataWriteAdmission', () => ({
+      captureHealthDataWriteLease: () => ({ generation }),
+      assertHealthDataWriteLease: (lease: { generation: number }) => {
+        if (lease.generation !== generation) throw new Error('RETIRED_SYNTHETIC_LEASE');
+      },
+      runCurrentHealthDataOperation: vi.fn(),
+    }));
+    vi.doMock('@tanstack/react-query', () => ({
+      onlineManager: { subscribe: () => () => {}, isOnline: () => true },
+      useQueryClient: () => ({ getQueryData: () => shelf.data, getQueryState: () => ({ status: 'success', fetchStatus: 'idle' }) }),
+      useQuery: () => ({ data: { generation, snapshot: {
+        productId: id, ownedUnitId: id, productUpdatedAt: '', productIdentityHash: '',
+        revision: 0, currentVersionId: null, currentVersion: null, versions: [], localOnly: true,
+      } }, isError: false, isFetching: false, isPending: false, refetch: vi.fn() }),
+    }));
+    let screen: ReactTestRenderer | undefined;
+    try {
+      const Route = (await import('../../app/shelf/formula-history')).default;
+      await act(async () => { screen = create(createElement(Route)); });
+      for (const boundary of ['health-generation', 'owned-unit'] as const) {
+        await act(async () => screen!.root.findByProps({ label: 'Record label observation' }).props.onPress());
+        await act(async () => screen!.root.findByProps({ label: 'I have the printed label' }).props.onPress());
+        await act(async () => screen!.root.findByProps({ accessibilityLabel: 'Ingredient label as printed' }).props.onChangeText('PRIVATE SYNTHETIC LABEL'));
+        expect(JSON.stringify(screen!.toJSON())).toContain('PRIVATE SYNTHETIC LABEL');
+        if (boundary === 'health-generation') generation += 1;
+        else id = 'synthetic-unit-b';
+        shelf = makeShelf();
+        await act(async () => screen!.update(createElement(Route)));
+        expect(JSON.stringify(screen!.toJSON())).not.toContain('PRIVATE SYNTHETIC LABEL');
+        expect(screen!.root.findAllByProps({ label: 'Cancel draft' })).toHaveLength(0);
+        expect(confirm).not.toHaveBeenCalled();
+      }
+    } finally {
+      if (screen) await act(async () => screen!.unmount());
+      for (const name of mocked) vi.doUnmock(name);
+    }
+  });
+});
+
+describe('actual Shelf hook health-lease publication', () => {
+  it('masks a static cached source on closure, owner rotation and same-owner regrant until a matching generation is read', async () => {
+    (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    // Keep React Query and the canonical health publisher real. Only source
+    // ports are inert: this regression must react to publication, not a manual
+    // Surface rerender or an owner-aware useShelf mock.
+    vi.resetModules();
+    const mocked = [
+      '@/features/intelligence/engine', '@/features/intelligence/overrides',
+      '@/features/scheduler/profile', '@/features/today/useToday', './store',
+    ];
+    const privateRead = vi.fn(() => { throw new Error('UNEXPECTED_PRIVATE_READ'); });
+    vi.doMock('@/features/intelligence/engine', () => ({ evaluateConflicts: vi.fn(), isReassuring: vi.fn() }));
+    vi.doMock('@/features/intelligence/overrides', () => ({ getConflictChoices: privateRead }));
+    vi.doMock('@/features/scheduler/profile', () => ({ readProfileBits: privateRead }));
+    vi.doMock('@/features/today/useToday', () => ({ localDateString: () => '2026-11-01' }));
+    vi.doMock('./store', () => ({ loadShelf: privateRead, getShelfMirrorIncompatibilities: privateRead }));
+    const { QueryClient, QueryClientProvider } = await import('@tanstack/react-query');
+    const health = await import('@/lib/consent/healthProcessingEpoch');
+    const { useShelf } = await import('./useShelf');
+    const client = new QueryClient({ defaultOptions: { queries: { staleTime: Infinity, retry: false, gcTime: Infinity } } });
+    let observed: ReturnType<typeof useShelf> | undefined;
+    let screen: ReactTestRenderer | undefined;
+    const source = (generation: number) => ({
+      sourceGeneration: generation, sourceDate: '2026-11-01',
+      items: [{ id: 'synthetic-owned-unit', product: { name: 'Private cached owner A bottle' } }],
+      archive: [], conflicts: [], unresolvedConflicts: [], conflictChoices: {}, reassurances: [],
+      banner: null, conflictCoverageStatus: 'unavailable', unsupportedConflictPairs: [], mirrorIncompatibilities: [],
+    });
+    function Surface() { observed = useShelf(); return null; }
+    try {
+      const original = health.setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-owner-a', accountGeneration: 0 });
+      const originalSource = source(original.generation);
+      client.setQueryData(['shelf'], originalSource);
+      await act(async () => { screen = create(createElement(QueryClientProvider, { client }, createElement(Surface))); });
+      expect(observed?.data).toBe(originalSource);
+
+      await act(async () => { health.clearActiveHealthProcessingEpoch(); });
+      expect(observed?.data).toBeUndefined();
+      expect(client.getQueryData(['shelf'])).toBe(originalSource);
+
+      await act(async () => { health.setActiveHealthProcessingEpoch(2, { ownerUserId: 'synthetic-owner-b', accountGeneration: 0 }); });
+      expect(observed?.data).toBeUndefined();
+      await act(async () => { health.clearActiveHealthProcessingEpoch(); });
+      let renewed!: ReturnType<typeof health.setActiveHealthProcessingEpoch>;
+      await act(async () => { renewed = health.setActiveHealthProcessingEpoch(1, { ownerUserId: 'synthetic-owner-a', accountGeneration: 0 }); });
+      expect(renewed.generation).not.toBe(original.generation);
+      expect(observed?.data).toBeUndefined();
+      expect(client.getQueryData(['shelf'])).toBe(originalSource);
+
+      const refreshed = source(renewed.generation);
+      await act(async () => { client.setQueryData(['shelf'], refreshed); await new Promise((resolve) => setTimeout(resolve, 0)); });
+      expect(observed?.data?.sourceGeneration).toBe(renewed.generation);
+      expect(observed?.data?.items[0]?.id).toBe('synthetic-owned-unit');
+      expect(privateRead).not.toHaveBeenCalled();
+    } finally {
+      if (screen) await act(async () => screen!.unmount());
+      client.clear();
+      health.clearActiveHealthProcessingEpoch();
+      for (const name of mocked) vi.doUnmock(name);
+    }
   });
 });

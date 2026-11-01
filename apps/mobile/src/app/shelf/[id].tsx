@@ -870,6 +870,18 @@ export default function ProductDetailScreen() {
             </View>
           ) : null}
 
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Bottle & formula history"
+            onPress={() => router.push({ pathname: '/shelf/formula-history', params: { id: p.id } })}
+            className="mt-4 min-h-[64px] rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5"
+          >
+            <Text variant="bodySm" className="font-sans-semibold">Bottle &amp; formula history</Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              View or record this bottle’s label, variant and market. Confirmation is your observation.
+            </Text>
+          </Pressable>
+
           {/* Catalog source and quality disclosure (Phase 4). */}
           <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px] py-3.5">
             <View className="flex-row items-start justify-between gap-3">

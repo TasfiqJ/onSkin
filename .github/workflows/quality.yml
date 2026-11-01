@@ -199,27 +199,27 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify current37 compact Shelf source and authentic pinned36/35/34/33/32/29
+      - name: Verify current38 local bottle history and separately pinned37/36/35/34/33/32/29
         run: |
           set -euo pipefail
-          phase="${C37_PREFLIGHT_PHASE:-SOURCE_FROZEN}"
+          phase="${C38_PREFLIGHT_PHASE:-SOURCE_FROZEN}"
           if [ "${GITHUB_EVENT_NAME:-}" = pull_request ]; then
             git fetch --no-tags origin "$GITHUB_REF"
             test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           fi
-          python3 -I -B scripts/release/full-app-j01/main_integration37.test.py
-          python3 -I -B scripts/release/full-app-j01/source_consumer37.test.py
-          node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs scripts/e2e/compact-shelf-target37.test.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration37.py --phase "$phase"
-          python3 -I -B scripts/release/full-app-j01/main_integration37.py --phase "$phase" --scope full-app-j01-v2
-          if python3 -I -B scripts/release/full-app-j01/main_integration37.py --phase "$phase" --scope full-app-j01-v2 --external-readiness; then
+          python3 -I -B scripts/release/full-app-j01/main_integration38.test.py
+          python3 -I -B scripts/release/full-app-j01/source_consumer38.test.py
+          node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs scripts/e2e/compact-shelf-target37.test.mjs scripts/e2e/owned-bottle-formula38.test.mjs
+          python3 -I -B scripts/release/full-app-j01/main_integration38.py --phase "$phase"
+          python3 -I -B scripts/release/full-app-j01/main_integration38.py --phase "$phase" --scope full-app-j01-v2
+          if python3 -I -B scripts/release/full-app-j01/main_integration38.py --phase "$phase" --scope full-app-j01-v2 --external-readiness; then
             echo 'External readiness must remain refused' >&2
             exit 1
           else
             test "$?" = 2
           fi
           node scripts/launch/check-contract.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration37.py --historical
+          python3 -I -B scripts/release/full-app-j01/main_integration38.py --historical
           node scripts/docs/source-packet-supersession09.test.mjs
 
       - name: Verify tooling security backports
