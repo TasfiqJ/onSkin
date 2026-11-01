@@ -450,6 +450,7 @@ def historical_result(raw):
     root = workspace/'pr37'
     node = receipts[2].get('command', [None])[0]
     need(type(node) is str and Path(node).is_absolute(), 'R36_HISTORICAL_COMMAND')
+    python = historical_python()
     commands = {
         'clone-pr37': ['git', '-c', 'core.hooksPath=', 'clone', '--no-checkout', '--no-hardlinks',
             '--single-branch', '--branch', PINS[37][2], '-c', 'core.autocrlf=false', '-c', 'core.longpaths=true',
@@ -457,16 +458,16 @@ def historical_result(raw):
         'checkout-pr37-named34': ['git', '-c', 'core.hooksPath=', 'checkout', PINS[37][2]],
         'node-version': [node, '--version'],
         'postinstall-check': [node, 'scripts/postinstall.mjs', '--check'],
-        **{name: [sys.executable, '-I', '-B', PREFIX+name] for name in ('main_integration34.test.py', 'source_consumer34.test.py')},
+        **{name: [python, '-I', '-B', PREFIX+name] for name in ('main_integration34.test.py', 'source_consumer34.test.py')},
         'original34-node-controls': [node, '--test', 'scripts/launch/candidate-scope34.test.mjs', 'scripts/launch/consumer-entry34.test.mjs'],
         'original34-candidate-cli': [node, 'scripts/launch/candidate-scope34.mjs', '--mode', 'verification'],
         'original34-default-cli': [node, 'scripts/launch/check-contract.mjs'],
         'original34-explicit-cli': [node, 'scripts/launch/check-contract.mjs', '--scope', 'full-app-j01-v2'],
         'original34-external-readiness': [node, 'scripts/launch/check-contract.mjs', '--scope', 'full-app-j01-v2', '--external-readiness'],
-        'original34-current-source': [sys.executable, '-I', '-B', PREFIX+'main_integration34.py'],
-        'original151-negatives': [sys.executable, '-B', PREFIX+'test_contract.py'],
-        'original09-source-controls': [sys.executable, '-B', PREFIX+'source_consumer09.test.py'],
-        'original34-pinned33-32-29': [sys.executable, '-I', '-B', PREFIX+'main_integration34.py', '--historical'],
+        'original34-current-source': [python, '-I', '-B', PREFIX+'main_integration34.py'],
+        'original151-negatives': [python, '-B', PREFIX+'test_contract.py'],
+        'original09-source-controls': [python, '-B', PREFIX+'source_consumer09.test.py'],
+        'original34-pinned33-32-29': [python, '-I', '-B', PREFIX+'main_integration34.py', '--historical'],
     }
     for row in receipts:
         expected = 2 if row['name'] == 'original34-external-readiness' else 0
@@ -484,11 +485,21 @@ def historical_result(raw):
     return value
 
 
+def historical_python():
+    # Old replay deliberately scrubs its environment again. A Windows Store
+    # alias writes %SystemDrive% caches into cwd under that original scrub.
+    # Use the already-installed normal interpreter; never ignore those files.
+    path = Path(shutil.which('python') or sys.executable).resolve() if os.name == 'nt' else Path(sys.executable).resolve()
+    need(path.is_file() and (os.name != 'nt' or 'windowsapps' not in str(path).lower()), 'R36_HISTORICAL_PYTHON')
+    return str(path)
+
+
 def historical():
     """Execute fresh exact PR38 without fabricating any GitHub environment/event."""
     authenticate_parent()
     start_head = text('rev-parse', 'HEAD')
     env = primitives().clean_environment()
+    python = historical_python()
     workspace = Path(tempfile.mkdtemp(prefix='integration36-')).resolve()
     need(not workspace.is_relative_to(ROOT), 'R36_EXTERNAL_CLONE')
     root, logs = workspace/'pr38', workspace/'logs'
@@ -530,20 +541,23 @@ def historical():
     need(run('node-version', [str(node), '--version']).strip() == b'v22.21.0', 'R36_RUNTIME')
     npm = next((p for p in candidates if p.is_file() and subprocess.check_output([str(node), str(p), '--version'], env=env).strip() == b'11.20.0'), None)
     need(npm is not None, 'R36_RUNTIME')
+    runtime = document(run('python-runtime', [python, '-I', '-B', '-c',
+        'import json,sys;print(json.dumps(list(sys.version_info[:3])))']))
+    need(type(runtime) is list and len(runtime) == 3 and tuple(runtime) >= (3, 9, 0), 'R36_HISTORICAL_PYTHON')
     run('normal-npm-ci', [str(node), str(npm), 'ci', '--ignore-scripts=false', '--no-audit', '--no-fund'])
     run('postinstall-check', [str(node), 'scripts/postinstall.mjs', '--check'])
     for name in ('main_integration35.test.py', 'source_consumer35.test.py'):
-        run('original35-'+name, [sys.executable, '-I', '-B', PREFIX+name])
+        run('original35-'+name, [python, '-I', '-B', PREFIX+name])
     driver = run('original35-driver49', [str(node), '--test', 'scripts/e2e/onboarding-first-session35.test.mjs', 'scripts/e2e/retained-safety-assertions.test.mjs'])
     test_summary(driver, 49, 49, 0)
-    refusal35 = document(run('original35-current-refusal', [sys.executable, '-I', '-B', PREFIX+'main_integration35.py'], expected=1))
+    refusal35 = document(run('original35-current-refusal', [python, '-I', '-B', PREFIX+'main_integration35.py'], expected=1))
     need(refusal35 == dict(valid=False, error='R32_CHILD_EXIT', acceptanceGranted=False, release='NO_GO'), 'R36_ORIGINAL35_REFUSAL')
     refusal34 = document(run('original34-cli-pr38-refusal', [str(node), 'scripts/launch/candidate-scope34.mjs', '--mode', 'verification'], expected=1))
     need(refusal34 == dict(valid=False, error='R34_SOURCE_INTERVAL', acceptanceGranted=False, release='NO_GO'), 'R36_ORIGINAL34_REFUSAL')
     tests = run('original34-pr38-tests-refusal', [str(node), '--test', 'scripts/launch/candidate-scope34.test.mjs', 'scripts/launch/consumer-entry34.test.mjs'], expected=1)
     test_summary(tests, 31, 2, 29)
     need(tests.count(b'R34_SOURCE_INTERVAL') >= 29, 'R36_ORIGINAL34_REFUSAL')
-    result = historical_result(run('original35-authentic-historical', [sys.executable, '-I', '-B', PREFIX+'main_integration35.py', '--historical'], timeout=5400))
+    result = historical_result(run('original35-authentic-historical', [python, '-I', '-B', PREFIX+'main_integration35.py', '--historical'], timeout=5400))
     for row in result['receipts']:
         body = regular(Path(row['log']), 8*1024*1024)
         need(len(body) == row['bytes'] and digest(body) == row['sha256'], 'R36_HISTORICAL_LOG_HASH')
@@ -580,7 +594,7 @@ def main():
         return 2 if args.external_readiness else 0
     except Exception as exc:
         code = str(exc)
-        reason = code if re.fullmatch(r'(?:R36|R32|R29|R23)_[A-Z_]+', code) else 'R36_EXECUTION_INCOMPLETE'
+        reason = code if re.fullmatch(r'(?:R36|R35|R34|R33|R32|R29|R23)_[A-Z0-9_]{1,96}', code) else 'R36_EXECUTION_INCOMPLETE'
         print(json.dumps(dict(valid=False, error=reason, acceptanceGranted=False, release='NO_GO')))
         return 1
 

@@ -15,6 +15,16 @@ spec.loader.exec_module(m)
 
 
 class SourceControls(unittest.TestCase):
+    def test_historical_python_in_original_scrubbed_environment_creates_no_cwd_cache(self):
+        with tempfile.TemporaryDirectory(prefix='source36-python-') as directory:
+            root=Path(directory).resolve()
+            result=subprocess.run([m.historical_python(),'-I','-B','-c',
+                'import json,sys;print(json.dumps(list(sys.version_info[:3])))'],
+                cwd=root,env=m.primitives().clean_environment(),capture_output=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertGreaterEqual(tuple(m.document(result.stdout)),(3,9,0))
+            self.assertEqual(list(root.iterdir()),[],'Historical runtime contaminated its source cwd')
+
     def test_real_parent_phases_exact_plan_and_ten_path_grant(self):
         m.authenticate_parent()
         raw=(m.ROOT/m.PLAN).read_bytes()

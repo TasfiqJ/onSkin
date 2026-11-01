@@ -6,11 +6,11 @@
   "planCommit": "71540ac12cfb3111166c074e6e017dac3de7ba76",
   "sourceHashes": {
     ".github/workflows/quality.yml": "d68b45727eede68a4b1760e5cbdc419690e65f32130a2915830e010c0736813d",
-    "PROGRESS.md": "a31520d2c9ec11984660f1256f067364d50d5cb942f93523f6b24cd0f5f23065",
-    "docs/release/full-app-j01/ci-integration36.md": "ad8004eceac95ff0bcf59d433f6ff3c987252f210569e0d4625ba4bdfe6a1383",
-    "scripts/release/full-app-j01/main_integration36.py": "5792f66cad19fa890a99ac2411e5ba1923ed4ac2ddadcf33af859748f37fbd37",
+    "PROGRESS.md": "248c28941d0612ffac02e91163bd7c8eb9280857f604a9d42b04b66ab8ac9002",
+    "docs/release/full-app-j01/ci-integration36.md": "56afc72a8a77e9d059047ba9b4fe3e01f0c05cf7ac216ec4df7e8009f034fce0",
+    "scripts/release/full-app-j01/main_integration36.py": "d96f2c9064bb8d84bada071b9cc162c4558f3d5e9742723cd384a8a2af3b1bc1",
     "scripts/release/full-app-j01/main_integration36.test.py": "0507dc44e154bff8ca0fe87cb85694c6d84ff19dc780f7ca332fb8e0dab2433d",
-    "scripts/release/full-app-j01/source_consumer36.test.py": "b4e989614361c71c0d0ac8326a16e400c547543e3dc6d1575c01e74cb4d6ab69"
+    "scripts/release/full-app-j01/source_consumer36.test.py": "34c195fc9585373d3c3ef2bf43ce86d03d12dd230f95ad23648a8f69119fe219"
   },
   "acceptanceGranted": false,
   "admissions": {
