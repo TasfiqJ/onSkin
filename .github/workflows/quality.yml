@@ -199,28 +199,30 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify finite free-first-session35 and separately pinned34/33/32/29
+      - name: Verify current36 integrity and separately pinned35/34/33/32/29
         run: |
           set -euo pipefail
+          phase="${C36_PREFLIGHT_PHASE:-SOURCE_FROZEN}"
           if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
             git fetch --no-tags --unshallow origin
           fi
-          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+          if [ "${GITHUB_EVENT_NAME:-}" = pull_request ]; then
             git fetch --no-tags origin "$GITHUB_REF"
             test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           fi
-          python3 -I -B scripts/release/full-app-j01/main_integration35.test.py
-          python3 -I -B scripts/release/full-app-j01/source_consumer35.test.py
-          node --test scripts/e2e/onboarding-first-session35.test.mjs
-          node --test scripts/launch/candidate-scope34.test.mjs scripts/launch/consumer-entry34.test.mjs
-          node scripts/launch/candidate-scope34.mjs --mode verification
-          node scripts/launch/check-contract.mjs --scope full-app-j01-v2
-          python3 -I -B scripts/release/full-app-j01/main_integration35.py
-          # Authentic original34 and its controls run only at exact PR37 in a fresh named34 checkout.
-          # Its historical mode independently replays original33/32/29; refusals remain refusals.
-          python3 -I -B scripts/release/full-app-j01/main_integration35.py --historical
-          python3 -B scripts/release/full-app-j01/test_contract.py
-          python3 -B scripts/release/full-app-j01/source_consumer09.test.py
+          python3 -I -B scripts/release/full-app-j01/main_integration36.test.py
+          python3 -I -B scripts/release/full-app-j01/source_consumer36.test.py
+          node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs
+          python3 -I -B scripts/release/full-app-j01/main_integration36.py --phase "$phase"
+          python3 -I -B scripts/release/full-app-j01/main_integration36.py --phase "$phase" --scope full-app-j01-v2
+          if python3 -I -B scripts/release/full-app-j01/main_integration36.py --phase "$phase" --scope full-app-j01-v2 --external-readiness; then
+            echo 'External readiness must remain refused' >&2
+            exit 1
+          else
+            test "$?" = 2
+          fi
+          node scripts/launch/check-contract.mjs
+          python3 -I -B scripts/release/full-app-j01/main_integration36.py --historical
           node scripts/docs/source-packet-supersession09.test.mjs
 
       - name: Verify tooling security backports

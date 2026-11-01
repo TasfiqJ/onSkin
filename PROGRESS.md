@@ -8088,3 +8088,8 @@ result/pins/refusal/NO_GO fields. The actual earlier authentic PR35/Release29
 transcript parses successfully, and9 Python unit controls PASS. No original
 checker, checksum, owner gate or historical refusal changed. Fresh full wrapper
 execution after freeze/CI remains an external final-report obligation.
+
+
+## Campaign36 current-source integrity repair
+
+Bounded successor of exact PR38; immutable plan71540ac12cfb3111166c074e6e017dac3de7ba76. Original35 R32_CHILD_EXIT and34 R34_SOURCE_INTERVAL reproduced, original34 controls31/31 at PR37, driver49/49. New current36 verifier separates finite source integrity from fresh pinned historical35/34/33/32/29 execution; only Quality first governance step changes. New boundary11/source9 controls pass; complete candidate preflight, root/browser/export, single worklist seal and hosted results pending in external final receipts. All app/harness/prior validators/Security/DB sources unchanged. Source candidate only; independent Brain review required; acceptanceGranted=false; release=NO_GO; USD0.
