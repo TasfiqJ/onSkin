@@ -2,6 +2,13 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## Campaign37: foreground compact Shelf activation
+
+- Entry: the complete Campaign35 free first session, with three synthetic owned products, current health consent, durable reminders OFF and no Pro entitlement. Observe the actual 375x667 and 390x844 Chrome surface at device scale 2; also exercise 430x932. Keep every failed attempt.
+- Critical: Shelf must be the selected foreground tab with All selected. Enumerate partial-text/background candidates, then select one active button whose accessible name begins exactly with the owned product name plus comma and freshness label. Scroll only that button's owning active container, re-evaluate its full clipped bounds and center/corner elementFromPoint ownership, recheck owner/consent generation and exact product identity, and send genuine CDP touchStart/touchEnd. Require the exact owned detail route and timestamps. Absent, duplicate, hidden, clipped, stale, under-dock and overlay targets refuse before touch.
+- Recovery: real Back retains all three products, consent, saved OFF and free entitlement. Deliberately tap Expiring separately, confirm the truthful zero matches for these unknown-date products, restore All, then visit Progress/You/Today. Underage re-verification must still deny protected Today and reload access. Never invent dates, paid authority, clinical advice or product navigation.
+- Evidence boundary: source/driver and synthetic Chrome DOM negatives are distinct from complete actual Expo journeys; neither qualifies physical iPhone, VoiceOver, J01 or any owner/release gate. Conditional production paths remain unchanged unless a correct visible user-equivalent ProductCard tap proves an app defect before its direct red/green repair.
+
 ## Campaign35: explicit saved-OFF continuation and free first session
 
 - Entry: fresh synthetic adult/health-consenting owner through the actual development Expo web Welcome, age, consent, goals, quiz and three manual products. Supported browser geometry: 375x667 and 390x844; browser proof grants no native or release admission.

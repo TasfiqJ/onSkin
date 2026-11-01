@@ -1,5 +1,17 @@
 # Build Progress
 
+## 2026-11-01 — Campaign37 compact Shelf first-session source candidate
+
+Exact PR39 parent1f4014f80402176ad2a208154d4da03db711ae5f/treebc859097ad3c8273cf341802474c28a5b13a1d43; immutable plan55372107ca1d6138477627ef863fba329aa6c42d. Raw archive and externally pinned packet verifier passed (context only). Two actual375x667 Chrome runs reproduced the failure: the generic locator chose aria-hidden Today checkbox Mineral SPF50 at187.5/227; the foreground Shelf filter row owned that point, Expiring activated and /shelf stayed closed to product detail. Shelf's correct button was below fold at187.5/717. Original390 comparator passed.
+
+The repaired driver selects one foreground Shelf accessible ProductCard button, scrolls its owning container, rechecks clipped bounds/center/corner hit ownership and owner/consent generation, exact product ID, persisted OFF and absent Pro, then sends real CDP touchStart/touchEnd and awaits that exact owned route. Back retains all three; explicit Expiring separately shows truthful unknown-date zero matches and All restores three. Final-harness fresh results:375x6672/2,390x8442/2,430x9321/1 PASS at scale2, with distinct profiles/ports and full screenshots/DOM/dispatch/authority evidence. Earlier repaired passes and both original compact failures remain external. Baseline1's overwritten detailed probe is disclosed; baseline2 preserves the complete chain. All production app/conditional and protected safety sources remain byte-identical.
+
+Normal Node22.21.0/npm11.20.0 install/hooks/postinstall, forced typecheck/lint, final6502/6502 root tests (0/2 cache hits),83 driver/real-DOM controls,11+11 current37 controls, source policy, native privacy79PASS/2Windows-linkSKIP, DB source contracts and both unsigned --clear exports pass. Initial root6501/6502 is retained: an extra diagnostic radio-selector literal conflicted with a protected source-count test; the new diagnostic query now enumerates roles generally while preserving the original radio locators and untouched test. Original photo/core194/196 remains red; core04/core06 remains24/26 with identical failures at exact PR39. No protected test was rewritten.
+
+Current37 source/ledger/event/service-merge integrity is separate from original36 at named36 PR39 and authentic original35/34/33/32/29 at their own pins. All112 row/history source references retain their historical assessment; all38 required obligations stay incomplete and18 qualified gates unadmitted. Only Quality's first governance step changes. Complete clean-source preflight/historical replay, sole final two-worklist seal and hosted outcomes belong to the external final report; this source note does not predeclare them PASS.
+
+Source candidate only; independent Brain reviews next. acceptanceGranted=false; release=NO_GO; USD0. G97 FAIL/NO_GO; original Security FAILED; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED. J01G1-G5/clinical/rights/statistics/legal/IP, native iPhone/VoiceOver/signing/Apple, paid/provider/professional/public/operations remain closed. F09 encrypted private diary/history/manual comparison protected and required; F18/J02-J27 includingJ05 deferred. This is not complete C11 or release acceptance. No main write, merge or deployment.
+
 ## 2026-10-31 — Campaign35 saved-OFF first-session driver recovery
 
 Authenticated the supplied context/embedded historical return and live pinned
