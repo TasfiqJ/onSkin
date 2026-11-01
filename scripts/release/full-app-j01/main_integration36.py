@@ -438,7 +438,6 @@ def historical_result(raw):
     ns = {'__name__': 'original35_transcript_parser_only', '__file__': str(path)}
     exec(compile(raw_program, str(path), 'exec'), ns)
     nested = value.get('original33And32And29')
-    ns['historical_result'](b'R34_HISTORICAL_WORKSPACE /already-executed-child\nR34_EXACT_PR36_FULL_CLONE_AUTHENTICATED\nR34_PR36_NORMAL_INSTALL_AND_HOOKS_PASS\n'+json.dumps(nested).encode())
     expected_names = ['clone-pr37', 'checkout-pr37-named34', 'node-version', 'normal-npm-ci', 'postinstall-check',
         'main_integration34.test.py', 'source_consumer34.test.py', 'original34-node-controls',
         'original34-candidate-cli', 'original34-default-cli', 'original34-explicit-cli', 'original34-external-readiness',
@@ -482,6 +481,12 @@ def historical_result(raw):
                  ['ci', '--ignore-scripts=false', '--no-audit', '--no-fund'], 'R36_HISTORICAL_COMMAND')
         else:
             need(row['command'] == commands[row['name']], 'R36_HISTORICAL_COMMAND')
+    receipt = receipts[-1]
+    child_log = workspace/'logs/original34-pinned33-32-29.log'
+    need(Path(receipt.get('log', '')) == child_log, 'R36_HISTORICAL_LOG_PATH')
+    child_raw = regular(child_log, 8*1024*1024)
+    need(len(child_raw) == receipt['bytes'] and digest(child_raw) == receipt['sha256'], 'R36_HISTORICAL_LOG_HASH')
+    need(ns['historical_result'](child_raw) == nested, 'R36_HISTORICAL_NESTED_RESULT')
     return value
 
 
