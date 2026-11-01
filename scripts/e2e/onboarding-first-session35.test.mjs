@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   assertFreeFirstSession35,
   continueAfterReminderChoice35,
+  tapOwnedShelfProduct37,
 } from './onboarding-first-session.mjs';
 
 // Source-level checks of the actual driver decisions with synthetic boundary
@@ -232,3 +233,77 @@ for (const [name, receipt] of refusedReceipts) {
     assert.throws(() => assertFreeFirstSession35(receipt, productNames));
   });
 }
+
+// Additive Campaign37 driver lifecycle controls; all retained35 cases above
+// still exercise their original decisions. The separate DOM suite uses Chrome.
+const productId37 = '12345678-1234-4234-8234-123456789abc';
+const authority37 = { generation: 2, epoch: 1, ownerBinding: 'a'.repeat(64), accountGeneration: 1, identityGeneration: 1 };
+function shelfDriver37({ receipt = {}, snapshot = {}, change = () => {}, arrival = '/shelf/' + productId37 } = {}) {
+  const sent = [], records = [], reads = [];
+  let current = { sameOwner: true, currentConsent: true, persistedOff: true, proActive: false,
+    products: productNames, productIds37: [{ name: 'Mineral SPF 50', id: productId37 }], authority37, ...receipt };
+  const visible = { path: '/shelf', routeActive: true, exactCandidates: 1,
+    filters: [{ active: true, label: 'All', pressed: 'true' }],
+    target: { role: 'button', active: true, disabled: false, label: 'Mineral SPF 50, Date unknown',
+      fullyVisible: true, hitOwned: true, rect: { x: 187.5, y: 285.5 } }, ...snapshot };
+  return { sent, records, reads, io: { name: 'Mineral SPF 50', expectedNames: productNames,
+    inspect: async () => structuredClone(visible),
+    scroll: async () => { current = { ...current, ...change() }; return structuredClone(visible); },
+    readAuthority: async () => { reads.push('authority'); return structuredClone(current); },
+    send: async (method, params) => { sent.push({ method, params }); },
+    waitForDetail: async () => ({ path: arrival, at: 'synthetic fixture, not a browser timestamp' }),
+    record: async (stage, value) => { records.push({ stage, value }); } } };
+}
+
+test('owned Shelf lifecycle rechecks authority, sends genuine CDP start/end, and awaits exact owned ID', async () => {
+  const d = shelfDriver37(); await tapOwnedShelfProduct37(d.io);
+  assert.equal(d.reads.length, 3);
+  assert.deepEqual(d.sent.map((s) => [s.method, s.params.type]), [
+    ['Input.dispatchTouchEvent', 'touchStart'], ['Input.dispatchTouchEvent', 'touchEnd']]);
+  assert.deepEqual(d.sent[0].params.touchPoints[0], { force: 1, id: 1, radiusX: 2, radiusY: 2, x: 187.5, y: 285.5 });
+  assert.equal(d.records.at(-1).stage, 'detail-arrived');
+});
+
+for (const [reason, receipt] of [
+  ['retired owner', { sameOwner: false }], ['withdrawn consent', { currentConsent: false }],
+  ['false Pro', { proActive: true }], ['unknown paid status', { proActive: null }],
+  ['OFF unconfirmed', { persistedOff: false }], ['absent epoch', { authority37: null }],
+  ['malformed epoch', { authority37: {} }], ['old product identity', { productIds37: [] }],
+]) test(`owned Shelf refuses ${reason} before any touch`, async () => {
+  const d = shelfDriver37({ receipt }); await assert.rejects(() => tapOwnedShelfProduct37(d.io));
+  assert.equal(d.sent.length, 0); assert.equal(d.records.at(-1).stage, 'refused');
+});
+
+for (const [reason, change] of [
+  ['owner switch', () => ({ sameOwner: false })], ['consent withdrawal', () => ({ currentConsent: false })],
+  ['same-owner regrant', () => ({ authority37: { ...authority37, generation: 3 } })],
+  ['owner epoch switch', () => ({ authority37: { ...authority37, epoch: 2, ownerBinding: 'b'.repeat(64) } })],
+  ['previous product after switch', () => ({ productIds37: [{ name: 'Mineral SPF 50', id: '87654321-1234-4234-8234-123456789abc' }] })],
+]) test(`owned Shelf refuses ${reason} after scroll before touching`, async () => {
+  const d = shelfDriver37({ change }); await assert.rejects(() => tapOwnedShelfProduct37(d.io)); assert.equal(d.sent.length, 0);
+});
+
+test('deactivated route cannot trigger a Shelf touch', async () => {
+  const d = shelfDriver37({ snapshot: { routeActive: false } });
+  await assert.rejects(() => tapOwnedShelfProduct37(d.io), /foreground/); assert.equal(d.sent.length, 0);
+});
+
+test('occlusion that appears after scrolling is recorded and refuses touch', async () => {
+  const d = shelfDriver37(); let checks = 0;
+  const inspect = d.io.inspect;
+  d.io.inspect = async () => { const s = await inspect(); if (++checks > 1) s.target.hitOwned = false; return s; };
+  await assert.rejects(() => tapOwnedShelfProduct37(d.io), /occluded/); assert.equal(d.sent.length, 0);
+  assert.equal(d.records.at(-1).value.last.target.hitOwned, false);
+});
+
+test('touch dispatch failure does not publish product arrival', async () => {
+  const d = shelfDriver37(); d.io.send = async () => { throw new Error('CDP disconnected'); };
+  await assert.rejects(() => tapOwnedShelfProduct37(d.io), /CDP disconnected/);
+  assert.equal(d.records.some((r) => r.stage === 'detail-arrived'), false);
+});
+
+test('a wrong product route after the touch remains a failed browser outcome', async () => {
+  const d = shelfDriver37({ arrival: '/shelf/other-owner' });
+  await assert.rejects(() => tapOwnedShelfProduct37(d.io), /exact owned product/);
+  assert.equal(d.sent.length, 2); assert.equal(d.records.at(-1).stage, 'refused');
+});

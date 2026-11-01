@@ -107,6 +107,157 @@ export function assertFreeFirstSession35(receipt, expectedNames) {
   'Free journey did not preserve the exact synthetic Shelf products.');
 }
 
+// A mounted background tab is not a foreground control, even when its own
+// computed style and rectangle look visible. This runs in the real document.
+export function shelfTargetExpression37(name, { scroll = false, label = null } = {}) {
+  return `(${shelfTargetDocument37.toString()})(${JSON.stringify({ name, scroll, label })})`;
+}
+
+function shelfTargetDocument37({ name, scroll, label }) {
+  const normalize = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
+  const box = (node) => {
+    const r = node.getBoundingClientRect();
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom,
+      width: r.width, height: r.height, x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  };
+  const describe = (node) => node ? { tag: node.tagName,
+    role: node.getAttribute('role') || (node.tagName === 'BUTTON' ? 'button' : null),
+    label: normalize(node.getAttribute('aria-label') || node.getAttribute('accessibilitylabel') || node.textContent),
+    text: normalize(node.textContent).slice(0, 180), rect: box(node) } : null;
+  const ancestors = (node) => {
+    const result = [];
+    for (let current = node; current; current = current.parentElement) {
+      const s = getComputedStyle(current);
+      result.push({ ...describe(current), display: s.display, visibility: s.visibility,
+        opacity: s.opacity, pointerEvents: s.pointerEvents, overflowX: s.overflowX,
+        overflowY: s.overflowY, position: s.position, hidden: current.hidden,
+        ariaHidden: current.getAttribute('aria-hidden'), inert: current.hasAttribute('inert'),
+        scrollTop: current.scrollTop, scrollHeight: current.scrollHeight, clientHeight: current.clientHeight });
+    }
+    return result;
+  };
+  const active = (chain) => chain.every((a) => !a.hidden && !a.inert && a.ariaHidden !== 'true' &&
+    a.display !== 'none' && !['hidden', 'collapse'].includes(a.visibility) && Number(a.opacity) > 0 && a.pointerEvents !== 'none');
+  const tabs = [...document.querySelectorAll('[role="tab"]')].map((node) => ({ ...describe(node),
+    selected: node.getAttribute('aria-selected'), active: active(ancestors(node)) }));
+  const routeActive = location.pathname === '/shelf' && document.visibilityState === 'visible' &&
+    tabs.filter((tab) => tab.active && tab.selected === 'true').length === 1 &&
+    tabs.some((tab) => tab.active && tab.selected === 'true' && tab.label === 'Shelf');
+  const controls = [...document.querySelectorAll('button,[role],a,label')];
+  const filters = controls.filter((node) => ['All', 'Actives', 'Expiring'].includes(describe(node).label))
+    .map((node) => ({ ...describe(node), active: active(ancestors(node)), pressed: node.getAttribute('aria-pressed') }));
+  const matching = controls.filter((node) => [node.getAttribute('aria-label'), node.getAttribute('accessibilitylabel'),
+    node.textContent, node.getAttribute('title')].some((value) => normalize(value).includes(name)));
+  const owned = matching.filter((node) => {
+    const d = describe(node);
+    return d.role === 'button' && d.label.startsWith(name + ', ') && d.label.length > name.length + 2 &&
+      (label === null || d.label === label) && active(ancestors(node));
+  });
+  const selected = owned.length === 1 ? owned[0] : null;
+  let scrolled = false;
+  if (scroll && routeActive && selected && filters.filter((f) => f.active && f.pressed === 'true').length === 1 &&
+      filters.some((f) => f.active && f.label === 'All' && f.pressed === 'true')) {
+    for (let p = selected.parentElement; p; p = p.parentElement) {
+      const style = getComputedStyle(p);
+      if (!/(auto|scroll)/.test(style.overflowY) || p.scrollHeight <= p.clientHeight) continue;
+      const r = box(p);
+      p.scrollTop += box(selected).y - (Math.max(0, r.top) + Math.min(innerHeight, r.bottom)) / 2;
+      scrolled = true;
+      break;
+    }
+  }
+  const candidates = matching.map((node) => {
+    const r = box(node), chain = ancestors(node);
+    const clip = { left: 0, top: 0, right: innerWidth, bottom: innerHeight };
+    for (const a of chain.slice(1)) {
+      if (/(auto|hidden|scroll|clip)/.test(a.overflowX)) {
+        clip.left = Math.max(clip.left, a.rect.left); clip.right = Math.min(clip.right, a.rect.right);
+      }
+      if (/(auto|hidden|scroll|clip)/.test(a.overflowY)) {
+        clip.top = Math.max(clip.top, a.rect.top); clip.bottom = Math.min(clip.bottom, a.rect.bottom);
+      }
+    }
+    const hit = document.elementFromPoint(r.x, r.y), hitChain = [];
+    for (let p = hit; p; p = p.parentElement) hitChain.push(describe(p));
+    const points = [[r.x, r.y], [r.left + 4, r.top + 4], [r.right - 4, r.top + 4],
+      [r.left + 4, r.bottom - 4], [r.right - 4, r.bottom - 4]];
+    const pointHits = points.map(([x, y]) => {
+      const root = document.elementFromPoint(x, y);
+      return { x, y, root: describe(root), owned: root !== null && (root === node || node.contains(root)) };
+    });
+    return { ...describe(node), ancestors: chain, active: active(chain), clip,
+      scrollContainer: chain.slice(1).find((a) => /(auto|scroll)/.test(a.overflowY) && a.scrollHeight > a.clientHeight) ?? null,
+      disabled: node.disabled === true || node.getAttribute('aria-disabled') === 'true',
+      fullyVisible: r.width >= 44 && r.height >= 44 && r.left >= clip.left && r.right <= clip.right &&
+        r.top >= clip.top && r.bottom <= clip.bottom,
+      hitRoot: describe(hit), hitChain, pointHits, hitOwned: pointHits.every((p) => p.owned), selected: node === selected };
+  });
+  return { at: new Date().toISOString(), path: location.pathname, routeActive, tabs, filters,
+    viewport: { width: innerWidth, height: innerHeight, deviceScaleFactor: devicePixelRatio },
+    exactCandidates: owned.length, candidates, target: candidates.find((c) => c.selected) ?? null, scrolled };
+}
+
+export function selectShelfTarget37(snapshot, requireHit = true) {
+  assert(snapshot?.path === '/shelf' && snapshot.routeActive === true, 'Shelf route is not foreground.');
+  assert(snapshot.exactCandidates === 1 && snapshot.target?.role === 'button' && snapshot.target.active === true,
+    'Shelf product needs exactly one active accessible button.');
+  assert(snapshot.filters?.filter((f) => f.active && f.pressed === 'true').length === 1 &&
+    snapshot.filters.some((f) => f.active && f.label === 'All' && f.pressed === 'true'),
+  'Shelf All filter changed before the product tap.');
+  const target = snapshot.target;
+  assert(target.disabled === false, 'Shelf product is disabled.');
+  if (requireHit) assert(target.fullyVisible === true && target.hitOwned === true &&
+    Number.isFinite(target.rect?.x) && Number.isFinite(target.rect?.y),
+  'Shelf product is offscreen, clipped or occluded; touch refused.');
+  return target;
+}
+
+export async function tapOwnedShelfProduct37({ name, expectedNames, inspect, scroll, readAuthority,
+  send, waitForDetail, record }) {
+  let last = null;
+  const observe = async (stage, operation) => {
+    last = await operation(); await record(stage, last); return last;
+  };
+  try {
+    const before = await readAuthority();
+    const guard = (receipt) => {
+      assertFreeFirstSession35(receipt, expectedNames);
+      assert(receipt.persistedOff === true && before.authority37 !== null &&
+        typeof before.authority37 === 'object' && Number.isSafeInteger(before.authority37.generation) &&
+        before.authority37.generation > 0 && Number.isSafeInteger(before.authority37.epoch) && before.authority37.epoch > 0 &&
+        /^[a-f0-9]{64}$/.test(before.authority37.ownerBinding) &&
+        JSON.stringify(receipt.authority37) === JSON.stringify(before.authority37),
+      'Shelf owner/consent epoch or saved OFF choice changed.');
+      const products = receipt.productIds37?.filter((p) => p.name === name);
+      assert(products?.length === 1 && /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(products[0].id),
+        'Shelf has no unique current owned product identity.');
+      return products[0].id;
+    };
+    const id = guard(before);
+    const initial = selectShelfTarget37(await observe('before-scroll', () => inspect(null)), false);
+    await observe('scrolled', () => scroll(initial.label));
+    const current = await readAuthority();
+    assert(guard(current) === id, 'Shelf product identity changed after scrolling.');
+    const target = selectShelfTarget37(await observe('pre-touch', () => inspect(initial.label)));
+    assert(target.label === initial.label && target.label.startsWith(name + ', '), 'Shelf product accessible name changed.');
+    const start = { type: 'touchStart', touchPoints: [{ force: 1, id: 1, radiusX: 2, radiusY: 2,
+      x: target.rect.x, y: target.rect.y }] };
+    await record('dispatch-touchStart', { at: new Date().toISOString(), ...start });
+    await send('Input.dispatchTouchEvent', start);
+    const end = { type: 'touchEnd', touchPoints: [] };
+    await record('dispatch-touchEnd', { at: new Date().toISOString(), ...end });
+    await send('Input.dispatchTouchEvent', end);
+    const outcome = await waitForDetail('/shelf/' + id);
+    assert(outcome?.path === '/shelf/' + id, 'Shelf touch did not open the exact owned product.');
+    assert(guard(await readAuthority()) === id, 'Shelf detail lost its product authority.');
+    await record('detail-arrived', outcome);
+    return outcome;
+  } catch (error) {
+    await record('refused', { at: new Date().toISOString(), error: error.message, last });
+    throw error;
+  }
+}
+
 async function observeFirstSession35(client, expectedOwnerBinding, includeProducts = false) {
   return evaluate(client, `(async () => {
     const mod = (suffix) => {
@@ -125,13 +276,16 @@ async function observeFirstSession35(client, expectedOwnerBinding, includeProduc
     const saved = raw === null ? null : JSON.parse(raw);
     const purposes = ['amEnabled','pmEnabled','captureReminders','streakNudges','replenishmentAlerts','liveActivityEnabled','promotionalOptIn'];
     const result = { sameOwner, currentConsent: lease !== null && health.activeHealthProcessingLeaseSnapshot() === lease,
-      persistedOff: saved?.version === 1 && purposes.every(key => saved.prefs?.[key] === false) };
+      persistedOff: saved?.version === 1 && purposes.every(key => saved.prefs?.[key] === false),
+      authority37: lease ? { generation: lease.generation, epoch: lease.epoch, ownerBinding: lease.ownerBinding,
+        accountGeneration: lease.accountGeneration, identityGeneration: lease.identityGeneration } : null };
     if (${includeProducts}) {
       const products = await mod('/features/shelf/store.ts').loadShelf();
       const entitlement = await mod('/features/subscription/store.ts').readEntitlementCache();
       result.proActive = entitlement.status === 'absent' ? false : entitlement.status === 'available'
         ? mod('/features/subscription/entitlement.ts').deriveState(entitlement.entitlement, new Date().toISOString()).isPro : null;
       result.products = products.map(product => product.name);
+      result.productIds37 = products.map(product => ({ name: product.name, id: product.id }));
       result.currentConsent = result.currentConsent && health.activeHealthProcessingLeaseSnapshot() === lease;
     }
     return ${JSON.stringify(expectedOwnerBinding)} === null ? { ...result, binding } : result;
@@ -1410,6 +1564,10 @@ async function run() {
     await client.send('Runtime.enable');
     await client.send('Log.enable');
     await client.send('Network.enable');
+    writeJson('C37-run-environment.json', { startedAt: new Date().toISOString(),
+      browser: await client.send('Browser.getVersion'), userDataDir, appPort, debugPort,
+      baseUrl, viewport: { ...viewport, deviceScaleFactor: 2 },
+      surface: 'Real Chrome/CDP development Expo web; synthetic local owner; no external provider' });
     await client.send('Emulation.setDeviceMetricsOverride', {
       deviceScaleFactor: 2,
       height: viewport.height,
@@ -1759,8 +1917,24 @@ async function run() {
     assertFreeFirstSession35(freeReceipt35, productNames.map((product) => product.name));
     writeJson('20-free-first-session35.json', freeReceipt35);
     assert(shelfAfterOnboarding.overflowX <= 1, 'Shelf has horizontal overflow.');
-    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
-    await clickByText(client, 'Mineral SPF 50', { exact: false });
+    const shelfTrace37 = [];
+    await tapOwnedShelfProduct37({ name: 'Mineral SPF 50', expectedNames: productNames.map((p) => p.name),
+      inspect: (label) => evaluate(client, shelfTargetExpression37('Mineral SPF 50', { label })),
+      scroll: async (label) => {
+        const snapshot = await evaluate(client, shelfTargetExpression37('Mineral SPF 50', { label, scroll: true }));
+        await delay(350);
+        await captureStep(client, '20-C37-product-before-touch', { assertClean: false });
+        return snapshot;
+      },
+      readAuthority: () => observeFirstSession35(client, firstOwner35.binding, true),
+      send: (method, params) => client.send(method, params),
+      waitForDetail: async (expected) => {
+        await waitForCondition(client, `location.pathname === ${JSON.stringify(expected)}`, 30_000,
+          'exact owned product detail after a verified Shelf touch');
+        return evaluate(client, `({path:location.pathname,at:new Date().toISOString()})`);
+      },
+      record: (stage, value) => { shelfTrace37.push({ stage, value }); writeJson('20-C37-Shelf-hit-chain.json', shelfTrace37); },
+    });
     await waitForCondition(client, `/^\\/shelf\\/[^/]+$/.test(window.location.pathname)`,
       30_000, 'owned product detail after a visible Shelf tap');
     await waitForText(client, 'Mineral SPF 50');
@@ -1773,6 +1947,22 @@ async function run() {
     assertFreeFirstSession35(afterBack35, productNames.map((product) => product.name));
     await captureStep(client, '20b-shelf-back-recovery35', { assertClean: false });
     writeJson('20b-shelf-back-authority35.json', afterBack35);
+
+    // Exercise the real filter separately. Unknown dates stay unknown.
+    await scrollTextIntoView(client, 'Expiring');
+    selectShelfTarget37(await evaluate(client, shelfTargetExpression37('Mineral SPF 50')), false);
+    const filterRect37 = await evaluate(client, rectByTextExpression('Expiring', true));
+    assert(filterRect37 && await evaluate(client, `(() => {
+      const n=document.elementFromPoint(${filterRect37?.x},${filterRect37?.y});
+      return n?.closest('[role="button"]')?.getAttribute('aria-label') === 'Expiring'; })()`), 'Expiring chip is not hittable.');
+    await clickByText(client, 'Expiring');
+    const expiring37 = await captureStep(client, '20c-C37-explicit-expiring', { assertClean: false });
+    const filtered37 = await evaluate(client, shelfTargetExpression37('Mineral SPF 50'));
+    assert(filtered37.filters.some((f) => f.active && f.label === 'Expiring' && f.pressed === 'true') &&
+      expiring37.bodyText.includes('0 of 3 saved products'), 'Explicit Expiring filter did not preserve truthful unknown dates.');
+    await clickByText(client, 'All');
+    await waitForText(client, '3 of 3 saved products');
+    await captureStep(client, '20d-C37-All-restored', { assertClean: false });
 
     if (crossOwnerMode) {
       if (process.argv.includes('--daily-loop')) {
@@ -1824,6 +2014,10 @@ async function run() {
     const todayAfterTabRoundTrip = await captureStep(client, '23-today-after-tab-round-trip', {
       assertClean: false,
     });
+    const roundTrip37 = await observeFirstSession35(client, firstOwner35.binding, true);
+    assertFreeFirstSession35(roundTrip37, productNames.map((product) => product.name));
+    assert(roundTrip37.persistedOff === true, 'Saved OFF choice was lost after the tab round trip.');
+    writeJson('23-C37-round-trip-authority.json', roundTrip37);
     if (process.argv.includes('--daily-loop')) {
       await dailyLoopFlow({ client, evaluate, retainedRoute, waitForText, waitForCondition,
         clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson });
