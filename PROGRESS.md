@@ -1,5 +1,82 @@
 # Build Progress
 
+## 2026-11-01 — Campaign38 owner-confirmed bottle history source candidate
+
+Authority BRAIN-M1X-MASTERV2-OWNED-FORMULA-VERSION38-SOURCE-CANDIDATE-01.
+Exact PR40 parent530da5d8af8c3b74a1675a4cfdffc03dca2ec9c1 /
+tree034cd0b1708362f377a88dbef24e6fe0ddfbd1e3; immutable plan-first
+619679d8774743176d9c59d2e68561b27f7765b6. SMALL packet's externally pinned
+ZIP/manifest/verifier, all7 regular entries and exact verifier passed before
+implementation. Original large C37 archive remains reference-only, not downloaded.
+
+Implemented distinct immutable owner/unit ProductIdentity38, FormulaVersion38
+and OwnedProductVersion38, explicit printed-label/unknown observations,
+market/variant/basis/times, deterministic SHA256/stable IDs, predecessor chain,
+revision/current-pointer CAS, idempotent retry and durable canonical readback.
+Opt-in v4 shares the existing encrypted Shelf transaction; unconfirmed v3 remains
+unchanged and exact original input bytes at first history opt-in are retained
+until deletion erasure wins. Existing lifecycle/FIFO/mirror schema remains;
+history never enters ingredients/engine/mirror/analytics/provider/network.
+Archive keeps history, re-add starts a new unconfirmed unit, removal deletes
+history and affected byte archive. Local-device export can include retained
+history/legacy bytes; no import/cloud portability contract is promised.
+
+Actual detail entry and accessible private history/draft/cancel/explicit confirm
+are implemented. The real stable closed-epoch browser privacy failure was fixed
+by rendering useShelf authority from its subscribed snapshot; generation/unit
+changes also retire memory-only drafts. Initially offscreen error/success copy
+now stays visible below the fixed header. Neither issue was waived.
+
+Reviewed Node22.21.0/npm11.20.0 normal npm ci/hooks/postinstall passed. Final
+working-candidate root execution6538mobile+24operator=6562/6562,0/2 test cache
+hits; forced typecheck/lint passed with0/3 cached tasks and exact unchanged
+source fingerprints during each run. Focused domain/store111 tests include
+real privateKV encryption/rollback through synthetic native ports; source lease
+subscription regression passes. Tool-only early focused outputs are explicitly
+distinguished from saved raw final root logs in DOMAIN_REPORT38.
+
+Final actual Chrome/CDP Expo journeys375x667,390x844,430x932 all PASS/exit0 at
+identical10 app/harness hashes, with182 final screenshots, visible alert geometry,
+explicit tap, unknown/history, Back/Forward/reload, offline/idempotency, storage
+refusal/retry, concurrent stale CAS, closed/forged owner masks, exact ciphertext
+preservation, zero disabled-load requests and no Pro/formula egress. The430 run
+also passes computed-font CSS200% stress; not native DynamicType/VoiceOver.
+Retained/new driver and genuine Chrome DOM controls103/103 pass. All10 earlier
+failed journeys remain, including one stable real privacy red, corrected harness
+navigation/runtime assumptions and one CDP startup failure with cause UNKNOWN.
+
+Current38 independent governance14 admission+12 source controls pass, including
+raw Git/index/mode/history negatives, closed owner/feature admission and forged
+service merge/ref rejection. Exact PR40 fresh full original37 checks/scope and
+readiness refusal plus authentic nested36-to29 replay PASS; expected old
+successor refusals retain their actual exit1 and are not source successes.
+Original core04/core06 remains24/26 exit1 at BOTH current candidate and exact
+PR40 with identical2 inherited literal failures; protected assertions untouched.
+The historical replay launched before final current-CI merge-ref hardening;
+function/AST receipts prove every replay function/dependency byte-identical.
+
+TASK binds all substantive source SHA256, command exits/log hashes and NO_GO.
+Current source proof and strict sole two-worklist final seal run only after this
+substantive commit. Hosted runs are NOT_RUN at this bookkeeping point; actual
+post-seal PR/run/service-merge identities/results belong in the external return,
+without changing sealed source. No prior stage, main or protected source changes.
+
+Selected before/after Git objects (candidate bytes, before the substantive commit):
+- apps/mobile/src/features/shelf/store.ts: original 5fdcef634976a752843930898aee462e64bbe1fb; candidate blob 5049a116081ab1385ea7f0803cb14248afa4cc6a; SHA256 8cc2546a87f48f4ae1667ec48c19ebaee768c68d893a49471ff8363d4d34b118.
+- apps/mobile/src/features/shelf/useShelf.ts: original 0f3354cf6b866db72dda3943f30d735719a834cd; candidate blob 72dc5fb94a695417228742d393dc98ac03a7355a; SHA256 79532fb77fb1af3f8f615adb1d91805126d2838e793d56eb2341721126274321.
+- apps/mobile/src/app/shelf/formula-history.tsx: original ABSENT; candidate blob e538a549a46241c65ec1c94231f1d71c9b069632; SHA256 7203c50f30d49a3203de144851b6184c75f72abbb49129c623377ac18ef02c3e.
+
+All38 obligations remain complete=false, all18 owner gates admitted=false;
+acceptanceGranted=false, release=NO_GO, G97 FAIL/NO_GO, original Security FAILED,
+DB06/DB08/R2B NOT_ACCEPTED, M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED,
+M2 NOT_AUTHORIZED. J01 remains a single candidate; optical G1/G2/G3/G5 and
+longitudinal G4 NOT_ACCEPTED. F09 encrypted private diary/photos/history/manual
+comparison preserved; F18/J02-J27 includingJ05 deferred. Native signed iPhone/
+VoiceOver, chemistry/clinical/rights/IP, paid/StoreKit/RevenueCat, real provider/
+Ask/professional billing/permissions, moderation/operations, Apple/public release
+remain closed. No merge/deploy/spend/real owner/photo/provider use or advice.
+
+
 ## 2026-11-01 — Campaign37 compact Shelf first-session source candidate
 
 Exact PR39 parent1f4014f80402176ad2a208154d4da03db711ae5f/treebc859097ad3c8273cf341802474c28a5b13a1d43; immutable plan55372107ca1d6138477627ef863fba329aa6c42d. Raw archive and externally pinned packet verifier passed (context only). Two actual375x667 Chrome runs reproduced the failure: the generic locator chose aria-hidden Today checkbox Mineral SPF50 at187.5/227; the foreground Shelf filter row owned that point, Expiring activated and /shelf stayed closed to product detail. Shelf's correct button was below fold at187.5/717. Original390 comparator passed.

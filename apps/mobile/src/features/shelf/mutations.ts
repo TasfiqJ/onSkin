@@ -13,6 +13,7 @@ import {
 import {
   addProduct,
   applyCatalogRecoveryProductUpdate,
+  confirmOwnedBottleVersion38,
   reAddProduct,
   removeProduct,
   updateProduct,
@@ -21,6 +22,8 @@ import {
   type CatalogRecoveryProductUpdateResult,
   type ReplacementOpeningState,
   type ShelfProduct,
+  type ConfirmOwnedBottleVersionInput38,
+  type OwnedBottleHistorySnapshot38,
 } from './store';
 
 // Shelf lifecycle mutations (docs/04 §5.7) write the local-first source of
@@ -54,6 +57,20 @@ export function useShelfMutations() {
   };
 
   return {
+    /** Local observation only: no mirror fields, analytics or catalog admission. */
+    async confirmBottleObservation(
+      input: ConfirmOwnedBottleVersionInput38,
+      assertBeforeNativeWrite: () => void,
+    ): Promise<OwnedBottleHistorySnapshot38> {
+      return runShelfMutation(async (lease) => {
+        const snapshot = await confirmOwnedBottleVersion38(input, assertBeforeNativeWrite);
+        lease.assertCurrent();
+        await invalidate(lease);
+        lease.assertCurrent();
+        return snapshot;
+      });
+    },
+
     async add(input: NewShelfProduct): Promise<ShelfProduct> {
       return runShelfMutation(async (lease) => {
         const product = await addProduct(input);

@@ -1940,6 +1940,12 @@ async function run() {
     await waitForText(client, 'Mineral SPF 50');
     const firstProduct35 = await captureStep(client, '20a-owned-product-open35', { assertClean: false });
     assert(firstProduct35.overflowX <= 1, 'Owned product detail has horizontal overflow.');
+    if (process.argv.includes('--owned-formula38')) {
+      const { runOwnedBottleFormula38 } = await import('./owned-bottle-formula38.mjs');
+      await runOwnedBottleFormula38({ client, evaluate, waitForText, waitForCondition, captureStep, writeJson,
+        tapOwnedShelfProduct37, shelfTargetExpression37,
+        readAuthority: () => observeFirstSession35(client, firstOwner35.binding, true) });
+    }
     await clickByText(client, 'Back');
     await waitForPath(client, '/shelf');
     await waitForText(client, '3 products');

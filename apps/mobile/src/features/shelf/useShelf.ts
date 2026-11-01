@@ -172,7 +172,9 @@ export function useShelf() {
     );
     return () => clearTimeout(timer);
   }, [published]);
-  const authority = activeHealthProcessingLeaseSnapshot();
+  // Render from the subscribed snapshot. A separate global getter can be
+  // memoized independently of the subscription in compiled web renders.
+  const authority = published;
 
   const query = useQuery<ShelfData & { sourceGeneration: number; sourceDate: string }>({
     queryKey: ['shelf'],
