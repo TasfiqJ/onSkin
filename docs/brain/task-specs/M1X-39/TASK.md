@@ -39,6 +39,19 @@
     },
     {
       "command": [
+        "C:/Python39/python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration39.py",
+        "--phase",
+        "SOURCE_PENDING"
+      ],
+      "exit": 0,
+      "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
+      "logSha256": "8a0ce85aaf4767a3969fbc1485a775da2743c3a8ceaa20511835be9b6794546f"
+    },
+    {
+      "command": [
         "C:\\Program Files\\nodejs\\node.EXE",
         "--test",
         "scripts/e2e/onboarding-first-session35.test.mjs",
@@ -116,6 +129,16 @@
       ],
       "exit": 0,
       "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
+      "logSha256": "ca45a5b304b20f76d6a19baa895d05315bab167d0886bce56e41c74cab55e64a"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.EXE",
+        "--test",
+        "scripts/launch/formula-route-inventory39.test.mjs"
+      ],
+      "exit": 0,
+      "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
       "logSha256": "5bd4741e522121013a5f44f266a9e78d78279a9349a9bf08b5fc02a2369f3f22"
     },
     {
@@ -140,6 +163,17 @@
       "exit": 0,
       "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
       "logSha256": "3d78c2c4ea162543b79641ff689d2044c8bfeaf37eca53aaf7b4bd6c0f02eed4"
+    },
+    {
+      "command": [
+        "C:/Python39/python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration39.test.py"
+      ],
+      "exit": 0,
+      "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
+      "logSha256": "4572e847357892a09c74b1955fe5362148c15280127d69c222d84e6312b0b0c6"
     },
     {
       "command": [
@@ -183,6 +217,17 @@
       "exit": 0,
       "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
       "logSha256": "3bb09abbc106b5d2c57f3267673e02df12c5f693c53c029ec947c13f0f45abd9"
+    },
+    {
+      "command": [
+        "C:/Python39/python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/source_consumer39.test.py"
+      ],
+      "exit": 0,
+      "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
+      "logSha256": "265edd8b74762ec84948eefcbc1a41fb18beec70a3509d489f5947009521194a"
     },
     {
       "command": [
