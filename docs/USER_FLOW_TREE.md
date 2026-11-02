@@ -2,6 +2,16 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## Campaign41: optional owner-local Today changes
+
+- Entry (Critical): genuine adult/current-consent free first session -> existing Today -> **Record a change (optional)**. This inline section is independent of check-offs. A successful empty read says **Nothing recorded**; silence never means no changes, adherence or a positive assessment.
+- Draft (Critical): choose observed local date and an explicit category, including affirmative **No change to report**. Enter bounded factual personal text where required. Review the draft, then explicitly confirm each save. Cancel/Back invalidates memory-only draft; neither action writes an event.
+- History (Critical): confirmed immutable event displays observed date, recorded time, owner-reported basis, category and original text. Append a correction or retraction referencing a prior event; retain original and lineage. No ordinary overwrite/delete action. Duplicate taps and exact uncertain retries create at most one event.
+- Failure (Critical): unavailable/corrupt/future storage never renders empty success. Stale revision/source, forged ID/hash/owner, changed account/health lease, withdrawal, expiry and deletion refuse. Immediately mask previous-owner text/drafts; an older callback cannot adopt a later grant. An ambiguous readback says unconfirmed, with canonical reload before a fresh action.
+- Persistence (Critical): at 375x667,390x844 and preferably430x932 use real accessible taps/hit ownership to save, correct, Back/re-enter and refresh. Exercise explicit none, canceled draft, duplicate tap, deliberate storage refusal and closed/foreign owner as disclosed negatives. Preserve Campaign37/38 controls, no Pro and no horizontal overflow; measure large text where feasible.
+- Isolation/privacy (Critical): no event from checkoff/missing tap/silence/pending review. The existing encrypted completion key holds opt-in v4; original checkoffs, completed-day proofs, streak and remote sync journal/outbox remain intact. No new route/key/provider/network/analytics payload. Existing local-device export may include notes; full-data deletion/withdrawal removes the health-purpose key. Uninstall/key loss may lose data; exported copies cannot be revoked.
+- Evidence boundary: external task artifacts carry exact source/test/browser receipts including failures. This is a limited V2-C04 source candidate pending independent Brain review. All38 obligations incomplete/all18 owner gates unadmitted, R33-LEDGER/R33-CORE PLANNED_NOT_AUTHORIZED, M2 NOT_AUTHORIZED and release NO_GO. Browser evidence does not qualify signed native/VoiceOver/clinical or public release.
+
 ## Campaign38: owner-confirmed bottle and formula history
 
 - Entry (Critical): ordinary free Shelf product button → product detail → **Bottle & formula history**. The owned unit starts with label/market/variant unknown. User-entered, parsed and catalog source text remain separate from explicit bottle confirmation. No Pro or provider is required.

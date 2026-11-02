@@ -31,6 +31,7 @@ import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion
 import { projectTodayRoutine } from '@/features/today/routineProjection';
 import { useRoutineClock } from '@/features/today/useRoutineClock';
 import { NextVisitCard, type NextVisitRoute } from '@/features/today/NextVisitCard';
+import { OptionalChangePanel41 } from '@/features/today/OptionalChangePanel41';
 import { currentRoutineType, localDateString } from '@/features/today/useToday';
 import {
   completionQueryScope,
@@ -1059,6 +1060,7 @@ export default function TodayScreen() {
           )}
 
           {nextVisit}
+          <OptionalChangePanel41 key={completionStorageKey} lease={completionLease!} isSourceCurrent={planSource.isSourceCurrent} />
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           {showRecommendations ? (
             <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
@@ -1380,6 +1382,7 @@ export default function TodayScreen() {
         )}
 
         {nextVisit}
+        <OptionalChangePanel41 key={completionStorageKey} lease={completionLease!} isSourceCurrent={planSource.isSourceCurrent} dark />
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (
           <View

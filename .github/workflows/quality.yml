@@ -199,32 +199,56 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify current40 CAT-08 cleanup and separately pinned39/38/37/36/35/34/33/32/29
+      - name: Verify current41 optional Today changes and separately pinned40/39/38/37/36/35/34/33/32/29
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          phase="${C40_PREFLIGHT_PHASE:-SOURCE_FROZEN}"
+          phase="${C41_PREFLIGHT_PHASE:-SOURCE_FROZEN}"
           if [ "${GITHUB_EVENT_NAME:-}" = pull_request ]; then
             git fetch --no-tags origin "$GITHUB_REF"
             test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
           fi
-          python3 -I -B scripts/release/full-app-j01/main_integration40.test.py
-          python3 -I -B scripts/release/full-app-j01/source_consumer40.test.py
+          python3 -I -B scripts/release/full-app-j01/main_integration41.test.py
+          python3 -I -B scripts/release/full-app-j01/source_consumer41.test.py
           node --test scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs
           node scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs --behavioral
           node --test scripts/launch/formula-route-inventory39.test.mjs
+          node --input-type=module <<'C41_UI_TEST'
+          import { mkdtempSync, writeFileSync, unlinkSync, rmdirSync } from 'node:fs';
+          import { tmpdir } from 'node:os';
+          import { join, resolve } from 'node:path';
+          import { spawnSync } from 'node:child_process';
+          const directory = mkdtempSync(join(tmpdir(), 'optional-change41-vitest-'));
+          const config = join(directory, 'ui.config.mjs');
+          try {
+            const root = resolve('apps/mobile');
+            writeFileSync(config, 'export default ' + JSON.stringify({ root,
+              resolve: { alias: { '@': join(root, 'src') } },
+              test: { environment: 'node', include: ['src/features/today/OptionalChangePanel41.test.tsx'] }
+            }) + ';\n');
+            const result = spawnSync(process.execPath, [resolve('node_modules/vitest/vitest.mjs'),
+              'run', '--config', config, '--passWithNoTests=false', '--reporter=verbose'],
+              { stdio: 'inherit', timeout: 120000 });
+            if (result.error) throw result.error;
+            process.exitCode = result.status ?? 1;
+          } finally {
+            unlinkSync(config);
+            rmdirSync(directory);
+          }
+          C41_UI_TEST
+          node --test scripts/e2e/optional-change41.test.mjs
           node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs scripts/e2e/compact-shelf-target37.test.mjs scripts/e2e/owned-bottle-formula38.test.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration40.py --phase "$phase"
-          python3 -I -B scripts/release/full-app-j01/main_integration40.py --phase "$phase" --scope full-app-j01-v2
-          if python3 -I -B scripts/release/full-app-j01/main_integration40.py --phase "$phase" --scope full-app-j01-v2 --external-readiness; then
+          python3 -I -B scripts/release/full-app-j01/main_integration41.py --phase "$phase"
+          python3 -I -B scripts/release/full-app-j01/main_integration41.py --phase "$phase" --scope full-app-j01-v2
+          if python3 -I -B scripts/release/full-app-j01/main_integration41.py --phase "$phase" --scope full-app-j01-v2 --external-readiness; then
             echo 'External readiness must remain refused' >&2
             exit 1
           else
             test "$?" = 2
           fi
           node scripts/launch/check-contract.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration40.py --historical
+          python3 -I -B scripts/release/full-app-j01/main_integration41.py --historical
           node scripts/docs/source-packet-supersession09.test.mjs
 
       - name: Verify tooling security backports
