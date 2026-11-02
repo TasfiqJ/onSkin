@@ -647,8 +647,59 @@ from extensions.dblink_get_result(
   'cat08_race_a'
 ) as drained(result text);
 
-select extensions.dblink_disconnect('cat08_race_a');
-select extensions.dblink_disconnect('cat08_race_b');
+-- The final empty-result drains above complete both asynchronous commands.
+-- Disconnect does not acknowledge remote temporary-object destruction. Drop
+-- these exact helpers synchronously as their owner before closing the sessions.
+select extensions.dblink_exec(
+  'cat08_race_a',
+  $cleanup_a$
+    reset role;
+    do $owner$
+    begin
+      if session_user <> 'cat08_rehearsal_connection'
+         or current_user <> 'cat08_rehearsal_connection'
+         or (
+           select count(*)
+           from pg_catalog.pg_proc as helper
+           where helper.oid in (
+             'pg_temp.cat08_queue_then_latch(uuid,bigint)'::pg_catalog.regprocedure,
+             'pg_temp.cat08_session_then_latch(uuid,bigint)'::pg_catalog.regprocedure
+           )
+             and helper.pronamespace = pg_catalog.pg_my_temp_schema()
+             and helper.proowner = current_user::pg_catalog.regrole
+         ) <> 2
+      then
+        raise exception 'CAT08_CLEANUP40_A_OWNER_INVALID';
+      end if;
+    end;
+    $owner$;
+    drop function pg_temp.cat08_queue_then_latch(uuid, bigint),
+      pg_temp.cat08_session_then_latch(uuid, bigint);
+  $cleanup_a$
+);
+select extensions.dblink_exec(
+  'cat08_race_b',
+  $cleanup_b$
+    do $owner$
+    begin
+      if session_user <> 'cat08_rehearsal_connection'
+         or current_user <> 'cat08_rehearsal_connection'
+         or (
+           select count(*)
+           from pg_catalog.pg_proc as helper
+           where helper.oid =
+             'pg_temp.cat08_revoke_then_latch(uuid,bigint)'::pg_catalog.regprocedure
+             and helper.pronamespace = pg_catalog.pg_my_temp_schema()
+             and helper.proowner = current_user::pg_catalog.regrole
+         ) <> 1
+      then
+        raise exception 'CAT08_CLEANUP40_B_OWNER_INVALID';
+      end if;
+    end;
+    $owner$;
+    drop function pg_temp.cat08_revoke_then_latch(uuid, bigint);
+  $cleanup_b$
+);
 
 revoke execute on function
   catalog_operator_gateway.cat08_rehearsal_revoke_then_latch(uuid, bigint)
@@ -658,7 +709,49 @@ drop function
 revoke usage on schema catalog_operator_gateway
   from cat08_rehearsal_connection;
 revoke catalog_operator_edge from cat08_rehearsal_connection;
+
+-- Read back shared dependencies while both remote sessions are still alive.
+-- A missing helper drop must fail here even if disconnect would later erase it.
+do $cleanup_dependencies$
+declare
+  v_connections text[] := extensions.dblink_get_connections();
+  v_dependencies bigint;
+begin
+  if not coalesce(
+    'cat08_race_a' = any(v_connections)
+    and 'cat08_race_b' = any(v_connections),
+    false
+  ) then
+    raise exception 'CAT08_CLEANUP40_CONNECTIONS_MISSING';
+  end if;
+  select count(*) into v_dependencies
+  from pg_catalog.pg_shdepend
+  where refclassid = 'pg_catalog.pg_authid'::pg_catalog.regclass
+    and refobjid = 'cat08_rehearsal_connection'::pg_catalog.regrole;
+  raise notice 'CAT08_CLEANUP40_DEPENDENCIES_BEFORE_DISCONNECT=%', v_dependencies;
+  if v_dependencies <> 0 then
+    raise exception 'CAT08_CLEANUP40_DEPENDENCIES_REMAIN';
+  end if;
+end;
+$cleanup_dependencies$;
+
+select extensions.dblink_disconnect('cat08_race_a');
+select extensions.dblink_disconnect('cat08_race_b');
 drop role cat08_rehearsal_connection;
+do $cleanup_absence$
+begin
+  if exists (
+    select 1 from pg_catalog.pg_roles
+    where rolname = 'cat08_rehearsal_connection'
+  ) or coalesce(
+    extensions.dblink_get_connections() && array['cat08_race_a', 'cat08_race_b'],
+    false
+  ) then
+    raise exception 'CAT08_CLEANUP40_ROLE_OR_CONNECTION_REMAINS';
+  end if;
+  raise notice 'CAT08_CLEANUP40_ROLE_ABSENT_AND_HANDLES_CLOSED';
+end;
+$cleanup_absence$;
 select pg_catalog.set_config('test.cat08_dblink_password', '', false);
 revoke catalog_operator_edge from postgres;
 select pg_catalog.set_config('test.cat08_dblink_host', '', false);

@@ -8222,3 +8222,8 @@ J01 G1-G5/rights/clinical/statistical/native/provider/paid/professional/legal/IP
 Apple/public gates remain CLOSED. F18/J02-J27 including J05 deferred. F09 private
 encrypted diary/manual comparison/deletion preserved. No release/date/flag,
 provider, payment, photo upload or qualified-product admission is granted.
+
+
+## Campaign40 CAT-08 cleanup source candidate (2026-11-01 issuance)
+
+Authority BRAIN-M1X-CAT08-ROLE-CLEANUP40-SOURCE-REPAIR-01. Final cleanup now synchronously removes the exact owned remote temporary helpers, checks zero shared role dependencies while both named sessions remain alive, disconnects, drops the role and verifies absence. The original17,689-byte SQL prefix, all10 concurrency assertions and final runtime freeze remain byte-identical. Independent cleanup/source controls and unchanged root6,562 tests pass; protected core04/core06 failures and initial environment-dependent Edge failure remain recorded. Real local CAT-08 is NOT_RUN because Docker startup and the registered WSL disk are unavailable; genuine hosted execution remains required. See docs/release/full-app-j01/cat08-role-cleanup40.md and the external final evidence cutoff for precise results. Only the granted12 paths, new task branch and one stacked draft PR are authorized. Independent Brain reviews source; all38 obligations incomplete, all18 owner gates unadmitted, original Security/candidate29 failures unchanged, every applicable release gate NO_GO.
