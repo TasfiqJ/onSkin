@@ -1,3 +1,44 @@
+# Campaign41 optional Today changes: local source candidate, NO_GO
+
+Authority BRAIN-M1X-TODAY-OPTIONAL-CHANGES41-SOURCE-CANDIDATE-01. Exact PR43
+HEAD e3d7e439cd32ccfbe4e5ac4eebcc8d31b007c84c/tree e87b8701d48ff7862e651d77f127104ee9b94c6a;
+immutable first-plan106354b34afe98eb4c19aa6a392135ef22fbad91.
+
+Free inline Today disclosure opens owner-local factual notes, distinct empty and
+affirmative-none states, explicit save review/confirmation and immutable appended
+corrections/retractions. Existing encrypted completion key only; opt-inv4 retains
+exact original completion bytes, original completion/sync operations retain notes.
+Captured owner/account/consent leases, source-byte+hash/revision CAS, idempotency,
+canonical readback and synchronous editor revocation prevent false save success.
+No new route/key/dependency/network/provider/outbox/analytics payload or paid gate.
+Existing generic export/delete contracts tested through real privateKV synthetic
+native ports; historical ordinary edits do not overwrite/delete events.
+
+Final local forced typecheck/lint pass0/3cache; root6614mobile+24operator=6638/6638,
+0/2cache. Separate UI19/19, focused storage/domain128/128, driver113/113 and new
+source/governance30/30 pass. Exact-parent root6562/6562 passed. Both parent/current
+original core04/core06 remain24/26 red, same2 source-literal failures preserved.
+Real unsigned Expo iOS/Android exports pass. Fresh actual375/390/430 Chrome/CDP
+full journeys pass, including C38/free/daily/retained/age controls, five immutable
+notes, visible save/refusal alerts, later original checkbox, reload/Back/Forward,
+closed/foreign authority,150% text/no overflow/no Pro/no note network content and
+actual consent withdrawal ciphertext removal. Source/harness hashes stable.
+
+Retain new import-time regression, actual offscreen save feedback defect and all
+browser/fixture/logger failures with fixes and subsequent proof; no protected
+test edit or waiver. Original40 current/source/scope/controls passed only exact
+PR43; authentic nested39-to29 replay is RUNNING at this source-ledger cutoff.
+Hosted CI/PR event NOT_RUN before push; actual final terminals belong in external
+FINAL_REPORT/return receipts. No source edits after sole final Phase4 seal.
+
+Limited V2-C04 candidate awaiting independent Brain review; all38 obligations
+complete=false/all18 owner gates admitted=false, acceptanceGranted=false,
+release=NO_GO. R33-LEDGER/R33-CORE PLANNED_NOT_AUTHORIZED; M2 NOT_AUTHORIZED.
+G97 FAIL; original Security/candidate29 FAILED; DB06/DB08/R2B NOT_ACCEPTED;
+M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED. J01/native/VoiceOver/clinical/rights/
+chemistry/provider/payment/Apple/public gates unqualified; F09 preserved,
+F18/J02-J27 including J05 deferred. No merge/deploy/signing/real customer data.
+
 # Build Progress
 
 ## 2026-11-01 — Campaign38 owner-confirmed bottle history source candidate
