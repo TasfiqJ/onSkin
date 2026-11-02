@@ -263,7 +263,7 @@
     "feature-flag": 17,
     "generated-packet": 33,
     "native-module": 46,
-    "route": 93,
+    "route": 94,
     "vendor-call": 16
   },
   "items": [
@@ -2714,6 +2714,13 @@
       "id": "route:shelf/catalog-recovery.tsx",
       "category": "route",
       "source": "apps/mobile/src/app/shelf/catalog-recovery.tsx",
+      "featureIds": ["F-03", "F-04"],
+      "readiness": "needs-device-verification"
+    },
+    {
+      "id": "route:shelf/formula-history.tsx",
+      "category": "route",
+      "source": "apps/mobile/src/app/shelf/formula-history.tsx",
       "featureIds": ["F-03", "F-04"],
       "readiness": "needs-device-verification"
     },

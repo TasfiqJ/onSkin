@@ -8186,3 +8186,39 @@ Bounded successor of exact PR38; immutable plan71540ac12cfb3111166c074e6e017dac3
 Campaign36 pre-seal attempt1 FAILED in historical lane: Store Python created untracked Windows cache files; original35 R35_DIRTY preserved. Current pending/structural proofs passed. Use installed normal historical Python, add empty-cwd regression, rerun fresh before seal. Root6502/6502, policy27, DB-source63+171 and both unsigned exports pass;390 browser passes,375 fails twice at product tap with unchanged harness/app. No seal/push or acceptance.
 
 Campaign36 development preflight2 interrupted before seal after authentic PR37 current/31/151 passed, to bind the receipt parser directly to the actual nested child transcript. No complete historical/first-step PASS is claimed for that attempt; final fresh preflight required.
+
+
+## 2026-11-01 — Campaign39 exact route inventory source candidate / NO_GO
+
+Authority BRAIN-M1X-MASTERV2-FORMULA-ROUTE-INVENTORY39-CORRECTION-01.
+Immutable plan 317a1c29 is the first child of exact PR41. Corrected only generated
+route count 93->94 and the sole Shelf formula-history row, mapped to F-03/F-04
+with needs-device-verification. Inventory SHA256:
+166193bb73f389565aa141848546ee56e6f76967c0fdee3086dcc935772cf8a3.
+All app/launch producer/validator/Lean V1/Security/database/provider bytes remain
+protected. Only Quality's initial governance block changes; current39 source,
+real Git/event/service-merge and hostile controls are independent of unchanged
+historical programs 38 through 29 at exact original pins.
+
+Local original launch check+smoke pass; original PR41 stale refusal remains an
+actual exit 1. Normal Node 22.21.0/npm 11.20.0 ci/hooks/postinstall, typecheck/lint
+and 6,562/6,562 mobile/operator tests passed with zero Turbo cache hits. Focused
+Shelf/formula/privacy 233/233, retained drivers 103/103, current boundary 20/20,
+source 13/13 and inventory/default legacy 5/5 passed. Both new actual synthetic-owner
+375x667 and 390x844 Expo web reruns passed, without native/VoiceOver claims.
+The full pinned replay passed its expected-outcome checks, retaining historical
+refusals, after one Windows long-path environment failure; only new39 temp
+placement changed, original programs did not.
+Older opt-in 33/34 source readers refuse the newer interval; exploratory 123/154
+passed, 31 failed remains red, with default Lean V1 snapshots unchanged. TASK and the
+external return retain actual commands/exits/hashes/custody and failure records.
+Hosted CI occurs after the sole final worklist seal; its outcomes are recorded
+externally rather than predicted here. One stacked draft PR only; no integration.
+
+All 38 obligations remain complete=false and all 18 qualified gates admitted=false.
+acceptanceGranted=false; release=NO_GO; G97/Security FAILED; DB06/DB08/R2B
+NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED.
+J01 G1-G5/rights/clinical/statistical/native/provider/paid/professional/legal/IP/
+Apple/public gates remain CLOSED. F18/J02-J27 including J05 deferred. F09 private
+encrypted diary/manual comparison/deletion preserved. No release/date/flag,
+provider, payment, photo upload or qualified-product admission is granted.
