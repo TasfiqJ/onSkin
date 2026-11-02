@@ -44,6 +44,8 @@ vi.mock('expo-router', () => ({ router: { push: mocks.push } }));
 vi.mock('@/features/ask/AskTeaser', () => ({ AskTeaser: 'AskTeaser' }));
 vi.mock('@/features/recommendations/RecommendationsTeaser', () => ({ RecommendationsTeaser: 'RecommendationsTeaser' }));
 vi.mock('@/features/subscription/ReverseTrialBanner', () => ({ ReverseTrialBanner: 'ReverseTrialBanner' }));
+// The independently exercised optional panel has no authority over check-offs.
+vi.mock('@/features/today/OptionalChangePanel41', () => ({ OptionalChangePanel41: 'OptionalChangePanel41' }));
 // PLAN-R1: exercise the actual usePlan and real query observers. Only canonical
 // IO and clinical generation are controlled here; readiness is never mocked.
 vi.mock('@/features/shelf/useShelf', async () => {

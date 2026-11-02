@@ -9,6 +9,14 @@ function readAppRoute(path: string): string {
 }
 
 describe('Today route mobile contracts', () => {
+  it('offers the same private optional notes panel inside both existing Today phases', () => {
+    const source = readAppRoute('(tabs)/today.tsx');
+    expect(source.match(/<OptionalChangePanel41/g)).toHaveLength(2);
+    expect(source).toContain('key={completionStorageKey} lease={completionLease!} isSourceCurrent={planSource.isSourceCurrent}');
+    const completionHandler = source.slice(source.indexOf('async function handleCompletion'), source.indexOf('const nextVisit'));
+    expect(completionHandler).not.toContain('appendOptionalChange41');
+    expect(source).not.toContain("router.push('/today/");
+  });
   it('keeps the home summary and streak control comfortably tappable on phones', () => {
     const source = readAppRoute('(tabs)/today.tsx');
     const header = readFileSync(

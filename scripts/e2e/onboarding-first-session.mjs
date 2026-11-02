@@ -2028,6 +2028,11 @@ async function run() {
       await dailyLoopFlow({ client, evaluate, retainedRoute, waitForText, waitForCondition,
         clickByText, scrollTextIntoView, fillByLabel, captureStep, writeJson });
     }
+    if (process.argv.includes('--optional-change41')) {
+      const { runOptionalChange41 } = await import('./optional-change41.mjs');
+      await runOptionalChange41({ client, evaluate, waitForText, waitForCondition, captureStep, writeJson,
+        readAuthority: () => observeFirstSession35(client, firstOwner35.binding, true) });
+    }
     if (process.argv.includes('--retained-safety')) await retainedShelfFlow(client);
 
     let ageReverificationBefore = null;
@@ -2108,6 +2113,13 @@ async function run() {
         await clickByText(client, 'Retry / check status');
         await waitForText(client, 'Status: withdrawn.');
         await captureStep(client, 'M1-11-age-closed-withdrawal');
+        if (process.argv.includes('--optional-change41')) {
+          const removed = await evaluate(client, `({completionCipherRemoved:localStorage.getItem('layerwell.completions.v1')===null,
+            privateNotesHidden:!document.body.innerText.includes('Synthetic41')})`);
+          assert(removed.completionCipherRemoved && removed.privateNotesHidden,
+            'Actual consent withdrawal did not remove and mask optional changes with existing health data.');
+          writeJson('C41-actual-consent-withdrawal-deletion.json', { ...removed, actualExistingPrivacyUi:true, release:'NO_GO' });
+        }
         assert(
           !(await evaluate(client, 'document.body.innerText')).includes('Review fresh consent'),
           'Rights shell offered health activation.',

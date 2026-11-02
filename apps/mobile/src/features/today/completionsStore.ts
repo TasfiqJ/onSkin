@@ -5,9 +5,14 @@ import {
   updatePrivateItem,
 } from '@/lib/storage/privateKV';
 import { randomUUID } from 'expo-crypto';
+import { utf8ToBytes } from '@noble/ciphers/utils.js';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+  runHealthDataOperation,
   runCurrentHealthDataOperation,
+  type HealthDataWriteLease,
   type HealthDataWriteOperationLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import {
@@ -30,6 +35,17 @@ import {
   type CompletionSyncUnsynced,
 } from './completionSync';
 import { localDateString } from './useToday';
+import {
+  OPTIONAL_CHANGE41_BOUND, OPTIONAL_CHANGE41_MAX_BYTES, OPTIONAL_CHANGE41_READBACK_UNCONFIRMED,
+  invalidOptionalChange41, type OptionalChangeInput41,
+} from './optionalChange41';
+import {
+  appendOptionalChangeEnvelope41, decodeOptionalChangeEnvelope41, encodeOptionalChangeEnvelope41,
+  snapshotOptionalChange41, type OptionalChangeJournal41, type OptionalChangeSnapshot41,
+} from './optionalChangeJournal41';
+
+export type { OptionalChangeInput41, OptionalChangeEvent41 } from './optionalChange41';
+export type { OptionalChangeSnapshot41 } from './optionalChangeJournal41';
 
 // Local-first daily check-off log (docs/03 §6: the activation + streak loop, and
 // the research verdict's #1 lever, "make the daily loop the engine"). This is the
@@ -55,6 +71,8 @@ type CompletionState = {
   completedDays: Set<string>;
   /** Stable pseudonymous identities plus the append-only sync journal/outbox. */
   sync: CompletionSyncState;
+  /** Present only after an explicit owner-confirmed optional note write. */
+  changes?: OptionalChangeJournal41;
 };
 type CompletionLogEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -199,7 +217,7 @@ function normalizeCompletedDays(value: unknown, days: Log): Set<string> {
   return out;
 }
 
-function decodeCompletionLog(raw: string | null): CompletionState {
+function decodeCompletionLog(raw: string | null, allowOptionalChanges = true): CompletionState {
   if (raw === null) {
     return { days: {}, completedDays: new Set(), sync: emptyCompletionSyncState() };
   }
@@ -210,6 +228,19 @@ function decodeCompletionLog(raw: string | null): CompletionState {
     throw completionLogError(COMPLETION_LOG_INVALID);
   }
   if (!isRecord(parsed)) throw completionLogError(COMPLETION_LOG_INVALID);
+
+  if (parsed.version === 4) {
+    // Historical unknown v4 shapes remain unsupported; only the explicit
+    // Campaign41 wrapper opts into the registered extension.
+    if (!hasOwn(parsed, 'completionBytes') || !hasOwn(parsed, 'changes')) {
+      throw completionLogError(COMPLETION_LOG_UNSUPPORTED_VERSION);
+    }
+    if (!allowOptionalChanges || utf8ToBytes(raw).length > OPTIONAL_CHANGE41_MAX_BYTES) {
+      throw completionLogError(COMPLETION_LOG_INVALID);
+    }
+    const envelope = decodeOptionalChangeEnvelope41(parsed, captureHealthDataWriteLease().ownerUserId);
+    return { ...decodeCompletionLog(envelope.completionBytes, false), changes: envelope.changes };
+  }
 
   if (!hasOwn(parsed, 'version')) {
     return {
@@ -290,7 +321,67 @@ function encodeCompletionLog(state: CompletionState): string {
   // In particular, legacy product keys admitted to the unsynced lane have
   // stricter bounds than the historical visible step log.
   decodeCompletionLog(encoded);
-  return encoded;
+  return state.changes ? encodeOptionalChangeEnvelope41(encoded, state.changes) : encoded;
+}
+
+/** Exact-owner local snapshot; ordinary reads never upgrade completion bytes. */
+export async function getOptionalChanges41(expectedLease: HealthDataWriteLease): Promise<OptionalChangeSnapshot41> {
+  const captured = Object.freeze({ ...expectedLease });
+  assertHealthDataWriteLease(captured);
+  return runHealthDataOperation(captured.ownerUserId, async (lease) => {
+    const assertCurrent = () => { assertHealthDataWriteLease(captured); lease.assertCurrent(); };
+    assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    assertCurrent();
+    if (raw !== null && utf8ToBytes(raw).length > OPTIONAL_CHANGE41_MAX_BYTES) invalidOptionalChange41(OPTIONAL_CHANGE41_BOUND);
+    decodeCompletionLog(raw);
+    const envelope = raw === null ? null : JSON.parse(raw) as unknown;
+    const extension = isRecord(envelope) && envelope.version === 4 ?
+      decodeOptionalChangeEnvelope41(envelope, lease.ownerUserId) : null;
+    const latest = await getPrivateItem(KEY);
+    assertCurrent();
+    if (latest !== raw) invalidOptionalChange41(OPTIONAL_CHANGE41_READBACK_UNCONFIRMED);
+    return snapshotOptionalChange41(raw, extension);
+  });
+}
+
+/** Append only: notes never change check-offs, wake sync, or leave this key. */
+export async function appendOptionalChange41(
+  input: OptionalChangeInput41,
+  expectedLease: HealthDataWriteLease,
+  editorCurrent?: () => void,
+): Promise<OptionalChangeSnapshot41> {
+  const captured = Object.freeze({ ...expectedLease });
+  const requested = Object.freeze({ ...input });
+  assertHealthDataWriteLease(captured);
+  editorCurrent?.();
+  return runHealthDataOperation(captured.ownerUserId, async (lease) => {
+    const assertCurrent = () => { assertHealthDataWriteLease(captured); lease.assertCurrent(); };
+    const recordedAt = new Date().toISOString();
+    const today = localDateString();
+    let committed: string | null = null;
+    await updatePrivateItem(KEY, (raw) => {
+      assertCurrent();
+      editorCurrent?.();
+      decodeCompletionLog(raw);
+      const parsed = raw === null ? null : JSON.parse(raw) as unknown;
+      const envelope = isRecord(parsed) && parsed.version === 4 ?
+        decodeOptionalChangeEnvelope41(parsed, lease.ownerUserId) : null;
+      committed = appendOptionalChangeEnvelope41(raw, envelope, requested, lease.ownerUserId, recordedAt, today);
+      assertCurrent();
+      return committed;
+    }, assertCurrent, () => { assertCurrent(); editorCurrent?.(); });
+    assertCurrent();
+    // A fulfilled storage promise is not evidence of a committed save. Require
+    // two stable canonical reads and every expected byte before reporting it.
+    const readback = await getOptionalChanges41(captured);
+    assertCurrent();
+    if (committed === null || readback.sourceBytes !== committed) {
+      invalidOptionalChange41(OPTIONAL_CHANGE41_READBACK_UNCONFIRMED);
+    }
+    editorCurrent?.();
+    return readback;
+  });
 }
 
 /** Stable per-step key. Phase-scoped so an AM and a PM step for the same product
