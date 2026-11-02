@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-11-02T05:06:19.037Z
+Generated: 2026-11-02T12:46:45.040Z
 Status: pass
-Git SHA: a216df82accd84a5ada6f48943f565424ae42208
+Git SHA: 9c482130523b2479a534e248f34cf9bbcead6f39
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -327,7 +327,7 @@ Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
 - `package.json` - 47029 bytes - sha256 `1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9`
-- `.github/workflows/quality.yml` - 15219 bytes - sha256 `25d3c4c73405d7e4d6dcbb3b9ef86a2beb89d87760d9107464c4fcddb76e27e7`
+- `.github/workflows/quality.yml` - 16533 bytes - sha256 `9252755840759ec8ad5f14454b654c0794797176a430bc577063ab89d76ffe35`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45531 bytes - sha256 `92a0b946a5e431e787f95d0513289ef1938a8964b23272d329f5cb15395d2be9`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9406 bytes - sha256 `bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a`
 - `docs/phase-4/beta-shelf-corpus.template.json` - 24378 bytes - sha256 `eab0f3ab1ac78f53307b69976163c9edd07350a7fdc5dd52c05cb7c3b40106d5`
@@ -546,7 +546,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 66906 bytes - sha256 `a83cbda544e062d873a8f3905923e35fca2e72a0213c33b0d6f6d79d8d40ca02`
-- `docs/USER_FLOW_TREE.md` - 537711 bytes - sha256 `50c6f34cd3aebac23eb970ad8a0820053150be97c8c3d7e58fe32fc23b10e414`
+- `docs/USER_FLOW_TREE.md` - 540330 bytes - sha256 `1525743f161ec725f2fe1a812b1e619c1f4ac12dbd60a8a2a089c1c5429cdedf`
 - `apps/mobile/src/app/onboarding/products.tsx` - 22193 bytes - sha256 `b27d66f46bd70674bf9971abd0b8f5def31d52191c1cf14d417899a035c5f113`
 - `apps/mobile/src/app/shelf/[id].tsx` - 56536 bytes - sha256 `3b2e5413dcb41df26a96dca3499a7a0fc6ecbd804aff32209cc6611527f9921a`
 - `apps/mobile/src/app/shelf/opened.tsx` - 21693 bytes - sha256 `3105764a90f0ec7fd3af89bd27669fa48a420a7614be1ad516d85fbc021552bb`
