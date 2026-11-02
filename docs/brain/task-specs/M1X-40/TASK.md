@@ -78,6 +78,19 @@
         "--phase",
         "SOURCE_PENDING"
       ],
+      "exit": 0,
+      "qualification": "ACTUAL_LOCAL_COMMAND_NOT_HOSTED_OR_QUALIFIED_ACCEPTANCE",
+      "logSha256": "71e2cc5ce13db5abea41c16325e3e45b6af260a07200b083e0f96690a7e40615"
+    },
+    {
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration40.py",
+        "--phase",
+        "SOURCE_PENDING"
+      ],
       "exit": 1,
       "qualification": "ACTUAL_NONZERO_ATTEMPT_PRESERVED_NOT_ACCEPTANCE",
       "logSha256": "522c32b33e8275b346262ad2619fda067542175d0215df1db87b5e906b3656e7"
