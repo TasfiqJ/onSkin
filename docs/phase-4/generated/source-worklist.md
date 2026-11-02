@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-11-01T21:14:30.523Z
+Generated: 2026-11-02T01:35:35.505Z
 Status: pass
-Git SHA: 0f53b3e17635302c3dca11ec553c4d78ad281a8e
+Git SHA: 3b3d1c7ea32db80de6dcee654485f26ecbcca360
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -327,7 +327,7 @@ Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
 - `package.json` - 47029 bytes - sha256 `1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9`
-- `.github/workflows/quality.yml` - 14930 bytes - sha256 `9a5cd3e37819f5c56a31d347259e8980dbc2c714f2ec2827c7513a5ac3f9c317`
+- `.github/workflows/quality.yml` - 15059 bytes - sha256 `f24c49a0da9997455a11a99346a17db5a744d7bba269d2021936d3b91cc5f5fd`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45531 bytes - sha256 `92a0b946a5e431e787f95d0513289ef1938a8964b23272d329f5cb15395d2be9`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9406 bytes - sha256 `bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a`
 - `docs/phase-4/beta-shelf-corpus.template.json` - 24378 bytes - sha256 `eab0f3ab1ac78f53307b69976163c9edd07350a7fdc5dd52c05cb7c3b40106d5`
