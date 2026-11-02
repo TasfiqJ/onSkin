@@ -1,3 +1,21 @@
+# Campaign44 PARTIAL_BLOCKED / NO_GO (2026-11-02)
+
+Local-only five-key encrypted source fence and ephemeral factual adapter were
+implemented, but the COMPLETE reset prerequisite is NOT IMPLEMENTED/NOT ACCEPTED.
+Three real native-IO counterexamples remain RED: overlapping wider cleanup loses
+its recovery marker; gated dev reset clears a marker committed before outer
+boundary begin; unrelated outer completion reopens a direct helper and permits
+a photo key to survive purge. No failing evidence is waived.
+Shared marker/scope ownership requires currently read-only sessionOwner.ts,
+sessionOwner.test.ts and localAccountIsolation.ts; exact diagnosis and limitations
+are in docs/release/full-app-j01/plan-source-reset-fence44.md and external return.
+No push, new PR, hosted Campaign44 CI, final worklist producer/seal or deployment.
+Original C42 3PASS/3FAIL and C43 2PASS/1FAIL reproduced unchanged on exact PR44.
+Baseline6638 PASS; protected core04/core06 remain24/26, exit1. Final actual
+checks/failures are recorded in M1X-44/TASK.md and the authenticated return.
+All38 obligations incomplete; all18 owner gates false; Security/candidate29
+FAILED, M2 NOT_AUTHORIZED, J01/native/public release NO_GO.
+
 # Campaign41 optional Today changes: local source candidate, NO_GO
 
 Authority BRAIN-M1X-TODAY-OPTIONAL-CHANGES41-SOURCE-CANDIDATE-01. Exact PR43

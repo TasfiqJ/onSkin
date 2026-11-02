@@ -21,6 +21,26 @@ function expectTouchableRouteIcon(route: string): void {
 }
 
 describe('Settings route contracts', () => {
+  it('keeps dev reset controls inside successful private cleanup and its exclusion', () => {
+    const source = readAppRoute('index.tsx');
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
+    expect(source).toContain("return value === 'local'");
+    expect(source).toContain('await clearLocalPrivateDataForDevReset(async () => {');
+    const start = source.indexOf('await clearLocalPrivateDataForDevReset(async () => {');
+    const controls = source.indexOf('await clearE2ELocalControlState();', start);
+    const cache = source.indexOf('queryClient.clear();', controls);
+    const close = source.indexOf('});', cache);
+    const failure = source.indexOf('} catch {', close);
+    expect(controls).toBeGreaterThan(start);
+    expect(cache).toBeGreaterThan(controls);
+    expect(close).toBeGreaterThan(cache);
+    expect(failure).toBeGreaterThan(close);
+    expect(source.slice(failure, source.indexOf('if (!active) return;', failure))).not.toContain(
+      'clearE2ELocalControlState()',
+    );
+  });
+
   it('keeps privacy direct entries inside the You tab privacy controls surface', () => {
     const privacyAlias = readAppRoute('settings/privacy.tsx');
     const you = readAppRoute('(tabs)/you.tsx');

@@ -2,6 +2,7 @@ import type { ConsentType } from '@layerwell/types';
 import * as Crypto from 'expo-crypto';
 
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 
 import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from './consentCopy';
 
@@ -153,27 +154,36 @@ export async function setHealthDataCollectionConsentLocal(params: {
   consentText: string;
 }): Promise<void> {
   const mutationGeneration = ++consentMutationGeneration;
-  let consentTextHash = canonicalConsentHash(params.consentText);
-  if (consentTextHash === null) {
-    consentTextHash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      params.consentText,
-    );
-    assertConsentMutationCurrent(mutationGeneration);
-  }
+  // Disclosure hashing can yield before privateKV starts tracking the write.
+  // Bind that preparation to its original account, without requiring active
+  // health processing (a paused owner must still be able to record consent).
+  await runAccountGenerationOperation(async (accountLease) => {
+    const assertCurrent = () => {
+      accountLease.assertCurrent();
+      assertConsentMutationCurrent(mutationGeneration);
+    };
+    let consentTextHash = canonicalConsentHash(params.consentText);
+    if (consentTextHash === null) {
+      consentTextHash = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        params.consentText,
+      );
+      assertCurrent();
+    }
 
-  const consent: LocalHealthDataConsent = {
-    type: 'health_data_collection',
-    granted: params.granted,
-    version: params.version,
-    consentTextHash,
-    recordedAt: new Date().toISOString(),
-  };
-  assertConsentMutationCurrent(mutationGeneration);
-  await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
-    assertConsentMutationCurrent(mutationGeneration);
-    if (current !== null) decodeConsent(current);
-    return encodeConsent(consent);
+    const consent: LocalHealthDataConsent = {
+      type: 'health_data_collection',
+      granted: params.granted,
+      version: params.version,
+      consentTextHash,
+      recordedAt: new Date().toISOString(),
+    };
+    assertCurrent();
+    await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
+      assertCurrent();
+      if (current !== null) decodeConsent(current);
+      return encodeConsent(consent);
+    }, assertCurrent);
   });
 }
 

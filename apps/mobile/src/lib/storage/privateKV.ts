@@ -779,6 +779,145 @@ export async function updatePrivateItem(
   );
 }
 
+export const PRIVATE_KV_SOURCE_UNAUTHENTICATED = 'PRIVATE_KV_SOURCE_UNAUTHENTICATED';
+export const PRIVATE_KV_SOURCE_TRANSFORM_INVALID = 'PRIVATE_KV_SOURCE_TRANSFORM_INVALID';
+
+/**
+ * Opt-in source transaction for one JS runtime. Reserve sources and destination
+ * in the ordinary sorted per-key queue until native readback/rollback finishes.
+ * Non-null sources must already be authenticated encrypted records. Absence is
+ * exact source state, not a successful domain default.
+ *
+ * prepareSources may only read/validate domain stores. It must never invoke or
+ * await a mutation of a reserved key. The destination transform is synchronous;
+ * callers retain their ORIGINAL authority and expected full-key source bytes.
+ */
+export async function updatePrivateItemWithSources(
+  key: string,
+  sourceKeys: readonly string[],
+  updater: (values: ReadonlyMap<string, string | null>) => string | null,
+  assertCurrent: () => void,
+  prepareSources?: (values: ReadonlyMap<string, string | null>) => Promise<void>,
+): Promise<void> {
+  const keys = [...new Set([...sourceKeys, key])].sort();
+  for (const sourceKey of keys) assertPrivateDataKey(sourceKey);
+  // Capture synchronously, before queuing. A stale callback cannot inherit a
+  // lease granted while it waited for a source reservation.
+  const healthLeases = keys.map(captureHealthPurposePrivateDataWriteLease);
+  const assertAuthority = () => {
+    for (const lease of healthLeases) {
+      if (lease !== null) assertHealthDataWriteLease(lease);
+    }
+    assertCurrent();
+  };
+  assertAuthority();
+  return withOperationTiming('private_kv_write', () =>
+    runAccountScopedPrivateOperation((generation) =>
+      runSerializedPrivateMutations(keys, async () => {
+        const assertAllowed = () => {
+          assertAccountScopedPrivateOperationAllowed(generation);
+          assertAuthority();
+        };
+        const rawSources = new Map<string, string | null>();
+        const values = new Map<string, string | null>();
+        let contentKey: Uint8Array | null = null;
+        assertAllowed();
+        for (const sourceKey of keys) {
+          const raw = await assertNoFailedReadRewrite(sourceKey);
+          assertAllowed();
+          rawSources.set(sourceKey, raw);
+          if (raw === null) {
+            values.set(sourceKey, null);
+            continue;
+          }
+          const classification = classifyEnvelope(sourceKey, raw);
+          if (classification.kind === 'legacy') {
+            throw new Error(PRIVATE_KV_SOURCE_UNAUTHENTICATED);
+          }
+          if (classification.kind !== 'current') {
+            rememberFailedRead(sourceKey, raw);
+            throw envelopeClassificationError(classification.kind);
+          }
+          try {
+            contentKey ??= await getExistingContentKey();
+            assertAllowed();
+            if (!contentKey) throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+          } catch (error) {
+            rememberFailedRead(sourceKey, raw);
+            throw error;
+          }
+          try {
+            values.set(sourceKey, decryptEnvelope(classification.envelope, contentKey));
+          } catch {
+            rememberFailedRead(sourceKey, raw);
+            throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+          }
+        }
+
+        await prepareSources?.(values);
+        assertAllowed();
+        const nextValue = updater(values);
+        if (nextValue !== null && typeof nextValue !== 'string') {
+          throw new Error(PRIVATE_KV_SOURCE_TRANSFORM_INVALID);
+        }
+        assertAllowed();
+        const existingRaw = rawSources.get(key)!;
+        const currentValue = values.get(key)!;
+        // Recheck every source after asynchronous domain preparation, while all
+        // reservations still belong to this operation. No unlocked cache read
+        // can certify a source or repair a destination after the fact.
+        const assertExactSources = async (destinationRaw: string | null) => {
+          for (const sourceKey of keys) {
+            const latestRaw = await AsyncStorage.getItem(sourceKey);
+            assertAllowed();
+            const expected = sourceKey === key ? destinationRaw : rawSources.get(sourceKey);
+            if (latestRaw !== expected) throw new Error(PRIVATE_KV_WRITE_CONFLICT);
+          }
+        };
+        await assertExactSources(existingRaw);
+        if (nextValue === currentValue) return;
+
+        let committedRaw: string | null = null;
+        if (nextValue !== null) {
+          contentKey ??= await getOrCreateContentKey();
+          assertAllowed();
+          const nonce = randomBytes(NONCE_BYTES);
+          committedRaw = JSON.stringify({
+            version: ENCRYPTION_VERSION,
+            nonceHex: bytesToHex(nonce),
+            ciphertextHex: bytesToHex(
+              xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue)),
+            ),
+          } satisfies PrivateEnvelope);
+        }
+        await maybeRejectConflictChoiceWrite(key);
+        assertAllowed();
+        try {
+          // No await separates admission from the actual native invocation.
+          if (committedRaw === null) await AsyncStorage.removeItem(key);
+          else await AsyncStorage.setItem(key, committedRaw);
+          assertAllowed();
+          await assertExactSources(committedRaw);
+          // Exact envelope bytes plus authenticated plaintext readback prevents
+          // omitted native writes and noncanonical/ambiguous success claims.
+          if (committedRaw !== null) {
+            const classification = classifyEnvelope(key, committedRaw);
+            if (classification.kind !== 'current' || !contentKey ||
+                decryptEnvelope(classification.envelope, contentKey) !== nextValue) {
+              throw new Error(PRIVATE_KV_WRITE_CONFLICT);
+            }
+          }
+          assertAllowed();
+        } catch (error) {
+          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          throw error;
+        }
+        for (const sourceKey of keys) failedReadSnapshots.delete(sourceKey);
+      }),
+    ),
+  );
+}
+
 const CATALOG_LOOKUP_QUEUE_STORAGE_KEY = 'layerwell.catalog.lookupQueue.v1';
 
 /**

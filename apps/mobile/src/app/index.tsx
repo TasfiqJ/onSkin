@@ -20,7 +20,7 @@ import {
   acknowledgeAccountDeletionNotice,
   peekAccountDeletionNotice,
 } from '@/features/settings/accountDeletionNotice';
-import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
+import { clearLocalPrivateDataForDevReset } from '@/features/settings/localPrivateData';
 import {
   LOCAL_PRIVATE_CONTROL_KEYS,
   LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
@@ -28,6 +28,7 @@ import {
 } from '@/features/settings/localPrivateDataKeys';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { LOCAL_DATA_CLEANUP_REQUIRED_KEY } from '@/lib/auth/sessionOwnerKey';
 import { BRAND } from '@/lib/brand';
 import { runHealthDataWriteOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -48,7 +49,9 @@ async function clearE2ELocalControlState(): Promise<void> {
     LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES.some((prefix) => key.startsWith(prefix)),
   );
   await AsyncStorage.multiRemove([
-    ...LOCAL_PRIVATE_CONTROL_KEYS,
+    // The shared reset helper clears this marker only after owner-proof
+    // removal, and also resets its matching in-memory quarantine.
+    ...LOCAL_PRIVATE_CONTROL_KEYS.filter((key) => key !== LOCAL_DATA_CLEANUP_REQUIRED_KEY),
     ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
     ...prefixedControlKeys,
   ]);
@@ -93,16 +96,15 @@ export default function WelcomeScreen() {
     async function resetLocalState() {
       setResetting(true);
       try {
-        await clearLocalPrivateData();
+        await clearLocalPrivateDataForDevReset(async () => {
+          await clearE2ELocalControlState();
+          queryClient.clear();
+        });
       } catch {
-        // Dev-only fixture reset stays best-effort.
+        // Retain recovery controls and owner proofs after any partial reset.
+        // Clearing render cache remains privacy-reducing on this failure path.
+        queryClient.clear();
       }
-      try {
-        await clearE2ELocalControlState();
-      } catch {
-        // Keep the fixture reachable so stale state can surface visibly.
-      }
-      queryClient.clear();
       if (!active) return;
       setResetting(false);
       router.replace('/');
