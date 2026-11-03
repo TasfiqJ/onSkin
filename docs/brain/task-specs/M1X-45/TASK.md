@@ -6,7 +6,7 @@
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
     ".github/workflows/quality.yml": "eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf",
-    "PROGRESS.md": "211c60d1386867e3cca3de97a7a27fd9f7f4ffac3362c25c5fdead43deb0c1a4",
+    "PROGRESS.md": "b16cfe22d420963198b02052fd7d5edc13258047bf3e76a9c4990626581b5887",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -26,8 +26,8 @@
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts": "27e659c9d242a147ba18ffc235e58d4ad3c1faa7b3c0b41c684c78bc65d0b64d",
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
     "apps/mobile/src/lib/storage/privateKV.ts": "2f6cb91144098609abbace74f650c8aead05b4d4607d57eb0537986fb21a2bf8",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "17e6329e9fb44e766dde7101434556137dc6dbf95921d5e2768210215bf27380",
-    "docs/release/full-app-j01/owner-plan-history45.md": "cf9d770a572c086bc1b9e277c32c6fe04ef3e290593b018046e8d911620a7ba0",
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "317697455aeaf883e06e101493bc8fa9f6a24ad2b7c021c6d22aab0890e68c0e",
+    "docs/release/full-app-j01/owner-plan-history45.md": "f99a1c2d4ad41ad0b26a31b7a19ea44a5685167142127e5189edd3f102da12d0",
     "scripts/release/full-app-j01/historicalReplay45.py": "e26294a43fc48607214fcefae5afb95d04295775b310c31034045899f5bae4d5",
     "scripts/release/full-app-j01/historicalReplay45.test.py": "36f1931598cb24cd23630ba1870a6562666681b7f6b595e515fcf42a9d9a1f50",
     "scripts/release/full-app-j01/main_integration45.py": "5d56435a463f0c6d39c55c4cb9577748cef229d6f07752d6dce3642d86f314ae",
@@ -476,6 +476,87 @@
       "exit": 0,
       "qualification": "C04_RAW_ACTUAL_AFFECTED_SIX_FILE278_PASS_NOT_FINAL_SOURCE_ACCEPTANCE",
       "logSha256": "43bb401d35eb543a49bc02a2a6d0c79e91f6997051205edfdef53cabce8b4a59"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "exit": 0,
+      "qualification": "C04_E2_STABLE_ROOT_6939_PASS_0_FAIL_0_CACHE_PRE_FINAL_METADATA",
+      "logSha256": "0f8f33e2338c5404fb4ae7ff1227acb37c5298ef1078d2ee859c29466ca0fc5c"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "run",
+        "typecheck",
+        "--",
+        "--force"
+      ],
+      "exit": 0,
+      "qualification": "C04_E2_FORCED_TYPECHECK_0_CACHE_PRE_FINAL_METADATA",
+      "logSha256": "43b26ec1bef460ff0fd6ecc97e776318178c6e912cc8573a224b9c410d3bc8d8"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "run",
+        "lint",
+        "--",
+        "--force"
+      ],
+      "exit": 0,
+      "qualification": "C04_E2_FORCED_LINT_0_CACHE_PRE_FINAL_METADATA",
+      "logSha256": "206074c592cfa8bbbffd27c772227a73fa688c6086d061da7cefcaf1f474f55c"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/launch/formula-route-inventory39.test.mjs"
+      ],
+      "exit": 0,
+      "qualification": "C04_E2_EXACT94_ROUTES_5_PASS_PRE_FINAL_METADATA",
+      "logSha256": "c37edc6f55fb0b34d6dabf6e2ea6427b622bf1b88d1b6bfa4eb1c4cd8b741e89"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/core04/persistence-source-contract.test.mjs",
+        "scripts/core06/recommendation-admission-source-contract.test.mjs"
+      ],
+      "exit": 1,
+      "qualification": "C04_E2_PROTECTED24_OF26_SAME_TWO_OPEN_UNWAIVED",
+      "logSha256": "cb1019a1030b33101c88126070aefaf4198a8c4fddec73564e933310869088c5"
+    },
+    {
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration45.py",
+        "--phase",
+        "SOURCE_PENDING"
+      ],
+      "exit": 0,
+      "qualification": "C04_E2_SOURCE_PENDING_ONLY_NOT_SEAL_OR_ACCEPTANCE",
+      "logSha256": "da1e6e2c37bd22cda7ab75efa089d0c6aed259a34148e7ddea075ea18b2268a2"
+    },
+    {
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration44.py",
+        "--historical"
+      ],
+      "exit": 0,
+      "qualification": "C04_ACTUAL_COMPLETE_NORMAL_ORIGINAL44_THROUGH29_QUALIFIED_TOOL_FINGERPRINT_LATER_NOT_C45_COMPOSITE_OR_ACCEPTANCE",
+      "logSha256": "16efc88d4ec9a04c22e3512266e696a29684294a87dd61fb723c77230a911cfe"
     }
   ],
   "acceptanceGranted": false,

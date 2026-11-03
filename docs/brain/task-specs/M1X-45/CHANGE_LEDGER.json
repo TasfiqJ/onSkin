@@ -84,6 +84,10 @@
     {
       "id": "C04-07",
       "decision": "Genuine additional batch REDs: missing/duplicate requestedhistory row fulfilled/exported asabsence or accepteddata; unsolicited authenticatedhistory row in consent-only batch returned afterhealthclosure. Added exact history-row requestedcount/type/equality validation beforedecrypt; validduplicaterequests remain supported, allotherlegacykeys unchanged. Realnativeportspies/sourcefailures preserved; firsttestharnessspyteardown defect corrected andretained separately, no falsegreen. Four transportcases addcoverage; currentnative92, six-file278 passing."
+    },
+    {
+      "id": "C04-08",
+      "decision": "Actual NORMAL unmodified original44 --historical completed exit0 in4093.187s and unchanged recursive original reader accepted44-through29. Raw279843bytes SHA25616efc88d4ec9a04c22e3512266e696a29684294a87dd61fb723c77230a911cfe; hardened completed-result SHA256c83e88a42078cbc4d03f40a470c569986f539741bdf0b89cf6b356f086dd605a. Launch records actual tool versions/path/lock/hooks; binary/npm byte fingerprints were captured later and are explicitly qualified, never retrospectively asserted before launch. C45 local caller remains an explicitly qualified composite with fresh original controls/live refs; CI default runs a fresh full normal invocation. Current clean e2 source root6939/6939, forced typecheck/lint, route94 and pending proof pass; original protected core24/26 remains2 OPEN, never acceptance. Final source/frozen proof and hosted final-head results remain separate required evidence."
     }
   ]
 }
