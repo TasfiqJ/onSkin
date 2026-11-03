@@ -130,6 +130,22 @@ export function beginAccountGenerationBoundary(): void {
 }
 
 /**
+ * Own an independently releasable private-data cleanup scope, including when
+ * another account/consent cleanup is already closed. Closing admission is
+ * privacy-reducing; it neither grants owner authority nor changes Auth identity.
+ * The caller drains its storage work, never an account operation awaiting itself.
+ */
+export function beginPrivateDataCleanupAccountBoundary(): () => void {
+  beginBoundary(false);
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    endAccountGenerationBoundary();
+  };
+}
+
+/**
  * Atomically converts a still-current tracked operation into the destructive
  * account boundary it is about to own. The caller must return from its tracked
  * operation immediately after acquiring this release handle: beginning the

@@ -8,6 +8,7 @@ import {
   assertAccountIdentityGeneration,
   beginAccountGenerationBoundary,
   beginAccountGenerationBoundaryFromLease,
+  beginPrivateDataCleanupAccountBoundary,
   captureAccountIdentityGeneration,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
@@ -16,10 +17,22 @@ import {
 } from './accountGeneration';
 import {
   activeHealthProcessingEpoch,
+  clearActiveHealthProcessingEpoch,
   setActiveHealthProcessingEpoch,
 } from '@/lib/consent/healthProcessingEpoch';
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 
 let boundaryDepth = 0;
+const cleanupBoundaryReleases = new Set<() => void>();
+
+function beginCleanupBoundary(): () => void {
+  const release = beginPrivateDataCleanupAccountBoundary();
+  cleanupBoundaryReleases.add(release);
+  return release;
+}
 
 function beginBoundary(): void {
   beginAccountGenerationBoundary();
@@ -32,6 +45,8 @@ function endBoundary(): void {
 }
 
 afterEach(() => {
+  for (const release of cleanupBoundaryReleases) release();
+  cleanupBoundaryReleases.clear();
   while (boundaryDepth > 0) endBoundary();
 });
 
@@ -208,5 +223,125 @@ describe('account generation operations', () => {
     releaseBoundary();
     boundaryDepth = Math.max(0, boundaryDepth - 1);
     await expect(runAccountGenerationOperation(async () => 'ready')).resolves.toBe('ready');
+  });
+});
+
+describe('Campaign44 independently owned private-data cleanup account scopes', () => {
+  it.each(['cleanup-first', 'auth-first'] as const)(
+    'keeps admission closed across mixed boundaries released %s without extra identity advances', async (order) => {
+      const identityBefore = captureAccountIdentityGeneration();
+      const before = await runAccountGenerationOperation((lease) => lease);
+      const firstCleanup = beginCleanupBoundary();
+      beginBoundary();
+      const secondCleanup = beginCleanupBoundary();
+      expect(captureAccountIdentityGeneration()).toBe(identityBefore + 1);
+      if (order === 'cleanup-first') firstCleanup();
+      else endBoundary();
+      await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+      secondCleanup();
+      secondCleanup();
+      await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+      if (order === 'cleanup-first') endBoundary();
+      else firstCleanup();
+      const after = await runAccountGenerationOperation((lease) => lease);
+      expect(after.generation).toBe(before.generation + 1);
+      expect(captureAccountIdentityGeneration()).toBe(identityBefore + 1);
+      expect(() => before.assertCurrent()).toThrow(ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE);
+    },
+  );
+
+  it('owns exclusion after an unrelated purpose-limited scope releases', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    const releaseOuter = await runAccountGenerationOperation((lease) =>
+      beginAccountGenerationBoundaryFromLease(lease),
+    );
+    cleanupBoundaryReleases.add(releaseOuter);
+    const releasePrivate = beginCleanupBoundary();
+    releaseOuter();
+    releaseOuter();
+    await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    expect(captureAccountIdentityGeneration()).toBe(identityBefore);
+    releasePrivate();
+    await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
+  });
+
+  it('closes health and aborts original operations synchronously without draining its caller', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    let releaseOperation!: () => void;
+    const gate = new Promise<void>((resolve) => { releaseOperation = resolve; });
+    let original!: AccountGenerationLease;
+    const operation = runAccountGenerationOperation(async (lease) => {
+      original = lease;
+      setActiveHealthProcessingEpoch(44, {
+        ownerUserId: 'owner-a', accountGeneration: lease.generation, serverVerifiedAt: null,
+      });
+      await gate;
+      lease.assertCurrent();
+    });
+    const outcome = operation.then(() => null, (error: unknown) => error);
+    const releaseCleanup = beginCleanupBoundary();
+    try {
+      expect(original.signal.aborted).toBe(true);
+      expect(activeHealthProcessingEpoch()).toBeNull();
+      expect(captureAccountIdentityGeneration()).toBe(identityBefore);
+      await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    } finally {
+      releaseOperation();
+      expect(await outcome).toBeInstanceOf(AccountGenerationLeaseError);
+      releaseCleanup();
+    }
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+  });
+
+  it('can close cleanup from a tracked caller without waiting on that same operation', async () => {
+    await runAccountGenerationOperation(async (lease) => {
+      const releaseCleanup = beginCleanupBoundary();
+      try {
+        expect(lease.signal.aborted).toBe(true);
+        await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+      } finally {
+        releaseCleanup();
+      }
+      expect(() => lease.assertCurrent()).toThrow(ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE);
+    });
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+  });
+
+  it('retires the original generation and health lease despite identical owner and epoch regrant', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    const before = await runAccountGenerationOperation((lease) => lease);
+    setActiveHealthProcessingEpoch(44, {
+      ownerUserId: 'owner-a', accountGeneration: before.generation, serverVerifiedAt: null,
+    });
+    const oldHealth = captureHealthDataWriteLease('owner-a');
+    const firstCleanup = beginCleanupBoundary();
+    const secondCleanup = beginCleanupBoundary();
+    expect(activeHealthProcessingEpoch()).toBeNull();
+    firstCleanup();
+    await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    secondCleanup();
+    const after = await runAccountGenerationOperation((lease) => lease);
+    setActiveHealthProcessingEpoch(44, {
+      ownerUserId: 'owner-a', accountGeneration: after.generation, serverVerifiedAt: null,
+    });
+    expect(after.generation).toBe(before.generation + 1);
+    expect(captureAccountIdentityGeneration()).toBe(identityBefore);
+    expect(() => before.assertCurrent()).toThrow(ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE);
+    expect(() => assertHealthDataWriteLease(oldHealth)).toThrow();
+    clearActiveHealthProcessingEpoch();
+  });
+
+  it('does not weaken the existing FromLease owner handoff while cleanup is closed', async () => {
+    const before = await runAccountGenerationOperation((lease) => lease);
+    const releaseCleanup = beginCleanupBoundary();
+    expect(() => beginAccountGenerationBoundaryFromLease(before)).toThrow(AccountGenerationLeaseError);
+    releaseCleanup();
+    const releaseHandoff = await runAccountGenerationOperation((lease) =>
+      beginAccountGenerationBoundaryFromLease(lease),
+    );
+    cleanupBoundaryReleases.add(releaseHandoff);
+    await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    releaseHandoff();
+    await expect(runAccountGenerationOperation(() => undefined)).resolves.toBeUndefined();
   });
 });

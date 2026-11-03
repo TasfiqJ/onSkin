@@ -1,3 +1,18 @@
+# Campaign44 source/reset fence (2026-11-02)
+
+The five-key encrypted source fence, factual local adapter and direct reset
+synchronization are implemented. Forced root: 6,771 pass; focused encrypted
+storage/reset selection: 335 pass; marker/account/photo suites: 34/15/51 pass.
+Actual 375x812 retained Chrome browser checks passed. Protected core04/core06
+remain 24/26, exit1, unchanged. Both explicit user scope extensions are recorded
+in M1X-44/TASK.md; the finite maximum is 43 paths. Immutable plan and local
+diagnostic80 preserve original red custody. The complete authentic historical41-to29 replay passed, including expected
+refusals. Final source seal and hosted Campaign44 evidence remain pending at this
+source-report cutoff.
+All38 obligations remain incomplete and all18 owner gates false. Security and
+candidate29 FAILED; M2 NOT_AUTHORIZED; J01/native/public release NO_GO.
+Routine-plan history remains NOT_IMPLEMENTED.
+
 # Campaign41 optional Today changes: local source candidate, NO_GO
 
 Authority BRAIN-M1X-TODAY-OPTIONAL-CHANGES41-SOURCE-CANDIDATE-01. Exact PR43

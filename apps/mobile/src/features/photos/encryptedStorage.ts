@@ -1055,26 +1055,35 @@ export async function reconcileEncryptedPhotoStorage(
 }
 
 export async function clearEncryptedPhotoStorage(): Promise<void> {
-  const clearPhotoDirectory = async () => {
-    if (Platform.OS === 'web') {
-      // Expo's legacy file API has no web backend, so web cannot own photo files.
-      // Its unavailable-method stub throws synchronously, before .catch exists.
-      return;
+  // This public eraser owns its lifetime even when an unrelated account or
+  // consent cleanup already has a photo boundary. Drain older native writes
+  // and their compensation before deleting key/file authority.
+  beginEncryptedPhotoAccountBoundary();
+  try {
+    await waitForEncryptedPhotoWritesToSettle();
+    const clearPhotoDirectory = async () => {
+      if (Platform.OS === 'web') {
+        // Expo's legacy file API has no web backend, so web cannot own photo files.
+        // Its unavailable-method stub throws synchronously, before .catch exists.
+        return;
+      }
+      await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true });
+    };
+    const operations: Promise<unknown>[] = [
+      clearPhotoDirectory(),
+      AsyncStorage.removeItem(KEY_CREATION_MARKER),
+      AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY),
+      // Both account erasure and health-purpose withdrawal call this boundary.
+      AsyncStorage.removeItem('layerwell.photos.deleteJournal.v1'),
+    ];
+    if (Platform.OS !== 'web') operations.push(SecureStore.deleteItemAsync(KEY_STORE_NAME));
+    const results = await Promise.allSettled(operations);
+    const failures = results.filter((result) => result.status === 'rejected');
+    if (failures.length > 0) {
+      throw new Error(`PHOTO_STORAGE_CLEAR_FAILED:${failures.length}`);
     }
-    await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true });
-  };
-  const operations: Promise<unknown>[] = [
-    clearPhotoDirectory(),
-    AsyncStorage.removeItem(KEY_CREATION_MARKER),
-    AsyncStorage.removeItem(PUBLICATION_JOURNAL_KEY),
-    // Both account erasure and health-purpose withdrawal call this boundary.
-    AsyncStorage.removeItem('layerwell.photos.deleteJournal.v1'),
-  ];
-  if (Platform.OS !== 'web') operations.push(SecureStore.deleteItemAsync(KEY_STORE_NAME));
-  const results = await Promise.allSettled(operations);
-  const failures = results.filter((result) => result.status === 'rejected');
-  if (failures.length > 0) {
-    throw new Error(`PHOTO_STORAGE_CLEAR_FAILED:${failures.length}`);
+  } finally {
+    endEncryptedPhotoAccountBoundary();
   }
 }
 

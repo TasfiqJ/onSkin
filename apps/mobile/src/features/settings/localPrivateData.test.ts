@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearLocalPrivateData } from './localPrivateData';
 
 const mocks = vi.hoisted(() => ({
+  beginPrivateKVAccountBoundary: vi.fn(),
   cancelAllScheduledNotificationsAsync: vi.fn(),
   cancelScheduledNotificationAsync: vi.fn(),
   clearLastNotificationResponseAsync: vi.fn(),
@@ -12,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   deleteAsync: vi.fn(),
   dismissAllNotificationsAsync: vi.fn(),
   dismissNotificationAsync: vi.fn(),
+  endPrivateKVAccountBoundary: vi.fn(),
   multiRemove: vi.fn(),
   platformOS: 'ios',
   readDirectoryAsync: vi.fn(),
@@ -19,11 +21,19 @@ const mocks = vi.hoisted(() => ({
   resetRevenueCatIdentity: vi.fn(),
   scheduleNotificationAsync: vi.fn(),
   setBadgeCountAsync: vi.fn(),
+  setItem: vi.fn(),
+  getItem: vi.fn(),
+  removeItem: vi.fn(),
+  markerStorage: new Map<string, string>(),
+  waitForPrivateKVWritesToSettle: vi.fn(),
 }));
 
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     multiRemove: mocks.multiRemove,
+    setItem: mocks.setItem,
+    getItem: mocks.getItem,
+    removeItem: mocks.removeItem,
   },
 }));
 
@@ -51,6 +61,8 @@ vi.mock('react-native', () => ({
   },
 }));
 
+vi.mock('expo-crypto', () => ({}));
+
 vi.mock('@/features/photos/encryptedStorage', () => ({
   clearEncryptedPhotoStorage: mocks.clearEncryptedPhotoStorage,
 }));
@@ -68,11 +80,17 @@ vi.mock('@/lib/iap/revenuecat', () => ({
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
+  beginPrivateKVAccountBoundary: mocks.beginPrivateKVAccountBoundary,
   clearPrivateKVContentKey: mocks.clearPrivateKVContentKey,
+  endPrivateKVAccountBoundary: mocks.endPrivateKVAccountBoundary,
+  waitForPrivateKVWritesToSettle: mocks.waitForPrivateKVWritesToSettle,
 }));
 
 describe('local private data cleanup', () => {
   beforeEach(() => {
+    mocks.beginPrivateKVAccountBoundary.mockReset();
+    mocks.endPrivateKVAccountBoundary.mockReset();
+    mocks.waitForPrivateKVWritesToSettle.mockReset().mockResolvedValue(undefined);
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
     mocks.cancelScheduledNotificationAsync.mockReset();
     mocks.clearLastNotificationResponseAsync.mockReset();
@@ -89,6 +107,16 @@ describe('local private data cleanup', () => {
     mocks.resetRevenueCatIdentity.mockReset();
     mocks.scheduleNotificationAsync.mockReset();
     mocks.setBadgeCountAsync.mockReset();
+    mocks.markerStorage.clear();
+    mocks.setItem.mockReset().mockImplementation(async (key: string, value: string) => {
+      mocks.markerStorage.set(key, value);
+    });
+    mocks.getItem.mockReset().mockImplementation(async (key: string) =>
+      mocks.markerStorage.get(key) ?? null,
+    );
+    mocks.removeItem.mockReset().mockImplementation(async (key: string) => {
+      mocks.markerStorage.delete(key);
+    });
 
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
     mocks.cancelScheduledNotificationAsync.mockResolvedValue(undefined);
@@ -252,5 +280,52 @@ describe('local private data cleanup', () => {
     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
 
     expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenCalled();
+  });
+
+  it('closes and drains direct cleanup before its widget prelude or native destructive calls', async () => {
+    let release!: () => void;
+    let releasePhoto!: () => void;
+    let photoStarted!: () => void;
+    const photoEntered = new Promise<void>((resolve) => { photoStarted = resolve; });
+    const photoGate = new Promise<void>((resolve) => { releasePhoto = resolve; });
+    mocks.clearEncryptedPhotoStorage.mockImplementationOnce(() => {
+      photoStarted();
+      return photoGate;
+    });
+    mocks.waitForPrivateKVWritesToSettle.mockReturnValueOnce(
+      new Promise<void>((resolve) => { release = resolve; }),
+    );
+    const cleanup = clearLocalPrivateData();
+    await Promise.resolve();
+    expect(mocks.beginPrivateKVAccountBoundary).toHaveBeenCalledOnce();
+    await Promise.resolve();
+    expect(mocks.multiRemove).not.toHaveBeenCalled();
+    expect(mocks.clearPrivateKVContentKey).not.toHaveBeenCalled();
+    release();
+    await photoEntered;
+    expect(mocks.multiRemove).not.toHaveBeenCalled();
+    expect(mocks.clearPrivateKVContentKey).not.toHaveBeenCalled();
+    releasePhoto();
+    await cleanup;
+    expect(mocks.waitForPrivateKVWritesToSettle.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.clearRoutineWidgetNativeState.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.clearRoutineWidgetNativeState.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.clearEncryptedPhotoStorage.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.clearEncryptedPhotoStorage.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.multiRemove.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.endPrivateKVAccountBoundary).toHaveBeenCalledOnce();
+  });
+
+  it('releases its own exclusion on a partial cleanup failure', async () => {
+    mocks.clearPrivateKVContentKey.mockRejectedValueOnce(new Error('key unavailable'));
+    await expect(clearLocalPrivateData()).rejects.toThrow('private_kv_key');
+    expect(mocks.multiRemove).toHaveBeenCalledTimes(1);
+    expect(mocks.endPrivateKVAccountBoundary).toHaveBeenCalledOnce();
+    expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledOnce();
+    const { runAccountGenerationOperation } = await import('@/lib/auth/accountGeneration');
+    await expect(runAccountGenerationOperation(() => undefined)).resolves.toBeUndefined();
   });
 });
