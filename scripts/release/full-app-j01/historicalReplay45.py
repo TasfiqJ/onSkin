@@ -119,15 +119,23 @@ def fixture_identity(root):
 def selected_fixture_identity(root, trusted_fixture):
     """Neutral read-only store/index/whole-tree guard before tracing older code."""
     root = Path(root).resolve()
-    trusted = Path(trusted_fixture)/PREFIX/'check.py'
+    trusted_fixture = Path(trusted_fixture).resolve()
+    trusted = trusted_fixture/PREFIX/'check.py'
     raw = regular(trusted)
     need(digest(raw) == NEUTRAL_SHA, 'NEUTRAL_IDENTITY')
+    authority = ModuleType('authenticated_pr45_ancestry_store_only')
+    authority.__file__ = str(trusted)
+    exec(compile(raw, str(trusted), 'exec'), authority.__dict__)
+    authority.full29_store()
+    need(git(trusted_fixture, 'rev-parse', 'HEAD').strip().decode() == BASE and
+         git(trusted_fixture, 'rev-parse', 'HEAD^{tree}').strip().decode() == TREE, 'TRUSTED_FIXTURE_PIN')
     guard = ModuleType('authenticated_neutral_store_helpers_only')
     guard.__file__ = str(root/PREFIX/'check.py')
     exec(compile(raw, str(trusted), 'exec'), guard.__dict__)
     guard.full29_store()
     head = git(root, 'rev-parse', 'HEAD').strip().decode()
-    git(root, 'merge-base', '--is-ancestor', head, BASE)
+    # A genuine older single-branch clone need not contain its future PR45 base.
+    git(trusted_fixture, 'merge-base', '--is-ancestor', head, BASE)
     tree = guard.tree29(head)
     index = git(root, 'ls-files', '--stage', '-z')
     need(index == b''.join((mode+' '+oid+' 0\t'+path+'\0').encode()

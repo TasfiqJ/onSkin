@@ -6,7 +6,7 @@
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
     ".github/workflows/quality.yml": "eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf",
-    "PROGRESS.md": "b16cfe22d420963198b02052fd7d5edc13258047bf3e76a9c4990626581b5887",
+    "PROGRESS.md": "8b126fcb6b738602c9c5eb8e9c58c81b9a4ce626b985e5a4bcfd68d92f221f85",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -17,7 +17,7 @@
     "apps/mobile/src/features/routine/usePlan.test.ts": "340ef5d081f2ae9aa0d27ac65ecaf081fe8aa842f90e3df34dc290db035820f8",
     "apps/mobile/src/features/settings/localDeviceExport.test.ts": "e4424e2cc304b453e4d5c0db6f0d4bb2c9887859acbbc68e44cfc19fcd83d579",
     "apps/mobile/src/features/settings/localDeviceExport.ts": "fe68af8f82ef1c8496c0f22b1018e2b6fe500eee45defba5a36b6ec2f552e851",
-    "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts": "d9812d9aaee74a99dc7fc98a56da0fa76fa47a67754c5984efe89d41c21451fa",
+    "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts": "6f62de363572841e76f781eca501d87c9c5d3ca813912e10d32bcd220276d669",
     "apps/mobile/src/features/settings/localPrivateDataKeys.test.ts": "3918cf3883603a0f695b23b0b23ab3efcdfedf7fde2d0772c943969809672330",
     "apps/mobile/src/features/settings/localPrivateDataKeys.ts": "b0a6f1f8cb776af0549f44dc44d5c7e6cfa2828e5c0d2f201ec48a983c695d8f",
     "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
@@ -25,11 +25,11 @@
     "apps/mobile/src/lib/auth/sessionOwner.ts": "5f892775afaa04cdd2b5d655d12dee5314de3bc77dae57fa304b99e86dc15485",
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts": "27e659c9d242a147ba18ffc235e58d4ad3c1faa7b3c0b41c684c78bc65d0b64d",
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
-    "apps/mobile/src/lib/storage/privateKV.ts": "2f6cb91144098609abbace74f650c8aead05b4d4607d57eb0537986fb21a2bf8",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "317697455aeaf883e06e101493bc8fa9f6a24ad2b7c021c6d22aab0890e68c0e",
-    "docs/release/full-app-j01/owner-plan-history45.md": "f99a1c2d4ad41ad0b26a31b7a19ea44a5685167142127e5189edd3f102da12d0",
-    "scripts/release/full-app-j01/historicalReplay45.py": "e26294a43fc48607214fcefae5afb95d04295775b310c31034045899f5bae4d5",
-    "scripts/release/full-app-j01/historicalReplay45.test.py": "36f1931598cb24cd23630ba1870a6562666681b7f6b595e515fcf42a9d9a1f50",
+    "apps/mobile/src/lib/storage/privateKV.ts": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "8d74c6acfcc45cd00a22b28cd97e1a284ce9d5f85ea582691f7cabca6aacc8bd",
+    "docs/release/full-app-j01/owner-plan-history45.md": "c423994650257359dc9c623f6c107fb78325aa208a4055380a9142f4f3f89a37",
+    "scripts/release/full-app-j01/historicalReplay45.py": "0440de6e0fd5d83fc197348b035d2f473b70a9be6416a06c411a24cf00ced8ca",
+    "scripts/release/full-app-j01/historicalReplay45.test.py": "2f21fbfc914d6bd8668f1ce10bb12a8efa7ac2b098dd9432a0a28113a3e92ba7",
     "scripts/release/full-app-j01/main_integration45.py": "5d56435a463f0c6d39c55c4cb9577748cef229d6f07752d6dce3642d86f314ae",
     "scripts/release/full-app-j01/main_integration45.test.py": "bcdbb1c73c2be16925d5b4a36d0564a4435ae158e047bafeeb5f1ae99d8a867d",
     "scripts/release/full-app-j01/source_consumer45.test.py": "31a621583c60baffd3cb3800059901a5118fd4af0e4b55a52c3735064a7356c5"
@@ -557,6 +557,95 @@
       "exit": 0,
       "qualification": "C04_ACTUAL_COMPLETE_NORMAL_ORIGINAL44_THROUGH29_QUALIFIED_TOOL_FINGERPRINT_LATER_NOT_C45_COMPOSITE_OR_ACCEPTANCE",
       "logSha256": "16efc88d4ec9a04c22e3512266e696a29684294a87dd61fb723c77230a911cfe"
+    },
+    {
+      "command": [
+        "node",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign45-closure04-relabel-diagnostic-44eef5cd\\run-diagnostic-checkout-esm.mjs"
+      ],
+      "exit": 1,
+      "qualification": "C04_B990_GENUINE_CONFIRMED_PENDING_RELABEL_READ_EXPORT_TWO_RED_PRESERVED",
+      "logSha256": "969c99079dd8e7a3519a000c5835c47f3d523474dd5a58e1550ff8985f4731d6"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--root",
+        "apps/mobile",
+        "--passWithNoTests=false",
+        "--reporter=verbose",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "-t",
+        "C45 authenticated history storage-purpose binding"
+      ],
+      "exit": 1,
+      "qualification": "C04_NEW_ASSERTION_HARNESS_COUNTED_ABSENT_SHADOW_REMOVAL_2_PASS9_FAIL_NOT_PRODUCT_REGRESSION",
+      "logSha256": "bd67b00e141686ef3168c3510a5f8211b4fc0d14f6552497a910d0b97a124856"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--root",
+        "apps/mobile",
+        "--passWithNoTests=false",
+        "--reporter=verbose",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "-t",
+        "C45 authenticated history storage-purpose binding"
+      ],
+      "exit": 0,
+      "qualification": "C04_AAD11_PASS_FILTERED_FOCUSED_NOT_FINAL_FULL_SOURCE_PROOF",
+      "logSha256": "7748b3dcae33244d3bfdb4f080e01efb01abf5c8f08530ba92be625f05ed2202"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--root",
+        "apps/mobile",
+        "--passWithNoTests=false",
+        "--reporter=verbose",
+        "src/lib/storage/privateKV.test.ts",
+        "src/lib/storage/privateKVContentKey.test.ts",
+        "src/lib/storage/privateKVCommitFence28.test.ts",
+        "src/lib/storage/privateKVSourceFence44.test.ts",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "src/features/routine/planSourceFence44.test.ts",
+        "src/features/routine/planHistory45.test.ts",
+        "src/features/routine/planHistory45Encrypted.test.ts",
+        "src/features/settings/localDeviceExport.test.ts",
+        "src/features/settings/localPrivateDataKeys.test.ts"
+      ],
+      "exit": 0,
+      "qualification": "C04_AAD_NATIVE_STORAGE_DOMAIN359_PASS_103_NATIVE_CASES_NOT_FINAL_SOURCE_PROOF",
+      "logSha256": "ca92da4b8fc45a8f4e45feb7e3d2480b5ef20d28dceffe1c0149b63159dc8538"
+    },
+    {
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/historicalReplay45.test.py"
+      ],
+      "exit": 1,
+      "qualification": "C04_NEW_SINGLE_BRANCH_FIXTURE_CRLF_CORRECTLY_REFUSED_NOT_SOURCE_GUARD_WEAKENED",
+      "logSha256": "3570a31cea9e77c7e6315976d13c69bbcf919837a449abbc25e19ead88d72746"
+    },
+    {
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/historicalReplay45.test.py"
+      ],
+      "exit": 0,
+      "qualification": "C04_HELPER21_PASS_ACTUAL_SINGLE_BRANCH_FOREIGN_CONTROLS_NOT_FULL_COMPOSITE_PROOF",
+      "logSha256": "49193b6a8f4655043718713a0859a6351aa0581832cab4596b17fe59c09ac0ce"
     }
   ],
   "acceptanceGranted": false,

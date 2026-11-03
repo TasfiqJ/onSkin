@@ -1412,6 +1412,177 @@ describe('Campaign45 pending encrypted owner-history cleanup successors', () => 
   });
 });
 
+describe('C45 authenticated history storage-purpose binding', () => {
+  const nativeFingerprint = () => createHash('sha256').update(JSON.stringify([
+    [...native.bytes], [...native.secure],
+  ])).digest('hex');
+  const assertReadOnlyNative = (eventOffset: number, fingerprint: string) => {
+    expect(nativeFingerprint()).toBe(fingerprint);
+    // Existing SecureStore reads idempotently remove an absent plaintext-key
+    // shadow. No stored bytes or secure key may change during these refusals.
+    expect(native.bytes.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+    expect(native.events.slice(eventOffset).filter((event) =>
+      event !== `remove:${PRIVATE_KV_CONTENT_KEY_NAME}`)).toEqual([]);
+  };
+
+  beforeEach(async () => {
+    const secureStore = await secureStorePort45;
+    vi.doMock('expo-secure-store', () => ({
+      ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+    }));
+  });
+
+  afterEach(() => { vi.doUnmock('expo-secure-store'); });
+
+  it.each(['confirmed', 'pending'] as const)('refuses %s history relabelled by native batch reads as consent after health closes', async (mode) => {
+    const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const storage = (await import('@react-native-async-storage/async-storage')).default;
+    const fixture = await prepareHistory45();
+    const entered = deferred();
+    const release = deferred();
+    let held = false;
+    if (mode === 'pending') {
+      native.getHook = async (key, raw) => {
+        if (key === PLAN_HISTORY45_KEY && raw !== null && !held) {
+          held = true;
+          entered.resolve();
+          await release.promise;
+        }
+      };
+    }
+    const saving = observe(savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    }));
+    let spy: ReturnType<typeof vi.spyOn> | undefined;
+    try {
+      if (mode === 'pending') await entered.promise;
+      else expect(await saving).toMatchObject({ status: 'fulfilled' });
+      const ciphertext = native.bytes.get(PLAN_HISTORY45_KEY)!;
+      expect(JSON.parse(ciphertext).version).toBe('xchacha20poly1305:v1');
+      expect(native.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(mode === 'pending');
+      const consentKey = 'layerwell.healthDataCollectionConsent.v1';
+      const original = storage.multiGet;
+      spy = vi.spyOn(storage, 'multiGet').mockImplementation(async (keys) => {
+        const rows = await original(keys);
+        return rows.map(([key, value]) => [key, key === consentKey ? ciphertext : value]);
+      });
+      clearActiveHealthProcessingEpoch();
+      await expect(getPrivateItem(PLAN_HISTORY45_KEY)).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      const { getPrivateItems } = await import('@/lib/storage/privateKV');
+      await expect(getPrivateItems([consentKey])).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+      release.resolve();
+      expect(await saving).toMatchObject({ status: mode === 'pending' ? 'rejected' : 'fulfilled' });
+      const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+      await expect(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)))
+        .rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+      expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(mode === 'pending' ? undefined : ciphertext);
+    } finally {
+      release.resolve();
+      await saving;
+      spy?.mockRestore();
+    }
+  });
+
+  it('refuses native history ciphertext copied into a direct consent-key read without changing either record', async () => {
+    const { savePlanHistory45, loadPlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const fixture = await prepareHistory45();
+    const saved = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    });
+    const ciphertext = native.bytes.get(PLAN_HISTORY45_KEY)!;
+    const consentKey = 'layerwell.healthDataCollectionConsent.v1';
+    native.bytes.set(consentKey, ciphertext);
+    const writeCount = native.events.length;
+    const fingerprint = nativeFingerprint();
+    clearActiveHealthProcessingEpoch();
+    await expect(getPrivateItem(consentKey)).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    const { getPrivateItems, assertPrivateKVReadable } = await import('@/lib/storage/privateKV');
+    await expect(getPrivateItems([consentKey])).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    await expect(assertPrivateKVReadable()).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+    await expect(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)))
+      .rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    expect(native.bytes.get(consentKey)).toBe(ciphertext);
+    expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(ciphertext);
+    assertReadOnlyNative(writeCount, fingerprint);
+    await grant();
+    await expect(loadPlanHistory45(captureHealthDataWriteLease(OWNER))).resolves.toEqual(saved);
+  });
+
+  async function expectInvalidHistoryCiphertext45(fixture: Awaited<ReturnType<typeof prepareHistory45>>, raw: string) {
+    const { savePlanHistory45, loadPlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const { getPrivateItems, assertPrivateKVReadable } = await import('@/lib/storage/privateKV');
+    const writeCount = native.events.length;
+    const fingerprint = nativeFingerprint();
+    await expect(loadPlanHistory45(fixture.lease)).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    await expect(getPrivateItem(PLAN_HISTORY45_KEY)).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    await expect(getPrivateItems([PLAN_HISTORY45_KEY])).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    await expect(assertPrivateKVReadable()).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    await expect(savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    })).rejects.toThrow('PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE');
+    clearActiveHealthProcessingEpoch();
+    const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+    await expect(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)))
+      .rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(raw);
+    assertReadOnlyNative(writeCount, fingerprint);
+  }
+
+  it('refuses a valid unbound candidate-v1 history ciphertext in every read, append and export lane without migration', async () => {
+    const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const fixture = await prepareHistory45();
+    const saved = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    });
+    const consentKey = 'layerwell.healthDataCollectionConsent.v1';
+    const originalConsent = native.bytes.get(consentKey)!;
+    // The genuine existing non-history writer produces the older no-AAD
+    // ciphertext format, carrying an otherwise strictly valid history body.
+    await setPrivateItem(consentKey, JSON.stringify(saved));
+    const unbound = native.bytes.get(consentKey)!;
+    expect(await getPrivateItem(consentKey)).toBe(JSON.stringify(saved));
+    native.bytes.set(consentKey, originalConsent);
+    native.bytes.set(PLAN_HISTORY45_KEY, unbound);
+    await expectInvalidHistoryCiphertext45(fixture, unbound);
+  });
+
+  it.each(['flip', 'truncate'] as const)('refuses a %s history authentication tag without fallback or ciphertext repair', async (mode) => {
+    const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const fixture = await prepareHistory45();
+    await savePlanHistory45(fixture.snapshot, fixture.lease, { id: randomUUID(), createdAt: new Date().toISOString() });
+    const envelope = JSON.parse(native.bytes.get(PLAN_HISTORY45_KEY)!) as { ciphertextHex: string };
+    const before = envelope.ciphertextHex;
+    envelope.ciphertextHex = mode === 'truncate' ? before.slice(0, -2) :
+      before.slice(0, -2) + (Number.parseInt(before.slice(-2), 16) ^ 1).toString(16).padStart(2, '0');
+    expect(envelope.ciphertextHex).not.toBe(before);
+    const raw = JSON.stringify(envelope);
+    native.bytes.set(PLAN_HISTORY45_KEY, raw);
+    await expectInvalidHistoryCiphertext45(fixture, raw);
+  });
+
+  it.each([
+    'layerwell.shelf.v1', 'layerwell.skinprofile.v1', 'layerwell.conflict.overrides',
+    'layerwell.healthDataCollectionConsent.v1', 'layerwell.routineOrder.v1',
+  ])('refuses authenticated history copied into the %s source before capture or append', async (sourceKey) => {
+    const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const { capturePlanSource44 } = await import('@/features/routine/planSourceFence44');
+    const fixture = await prepareHistory45();
+    await savePlanHistory45(fixture.snapshot, fixture.lease, { id: randomUUID(), createdAt: new Date().toISOString() });
+    const ciphertext = native.bytes.get(PLAN_HISTORY45_KEY)!;
+    native.bytes.set(sourceKey, ciphertext);
+    const writeCount = native.events.length;
+    const fingerprint = nativeFingerprint();
+    await expect(capturePlanSource44(fixture.lease)).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
+    await expect(savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    })).rejects.toThrow('PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE');
+    expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(ciphertext);
+    expect(native.bytes.get(sourceKey)).toBe(ciphertext);
+    assertReadOnlyNative(writeCount, fingerprint);
+  });
+});
+
 it('C45 export waits behind a tentative native history commit and exports only confirmed facts after rollback', async () => {
   const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
   const storage = (await import('@react-native-async-storage/async-storage')).default;

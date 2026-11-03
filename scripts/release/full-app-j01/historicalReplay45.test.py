@@ -177,22 +177,37 @@ class HistoricalExecutionControls(unittest.TestCase):
                     m.checkpoint_guard(checkpoint, identity, actual)
 
     def test_older_diagnostic_fixture_refuses_actual_replace_graft_alternates_shallow_and_dirty_bytes(self):
-        trusted = Path(__file__).resolve().parents[3]
+        neutral = (Path(__file__).resolve().parents[3]/m.PREFIX/'check.py').read_bytes()
         with tempfile.TemporaryDirectory(prefix='c45-selected-history-') as directory:
-            root = Path(directory).resolve()
-            def git(*args):
-                return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.PIPE)
-            git('init', '--quiet')
-            git('config', 'user.name', 'Synthetic source test')
-            git('config', 'user.email', 'fixture@example.invalid')
-            git('config', 'core.autocrlf', 'false')
-            path = root/'tracked.txt'
+            directory = Path(directory).resolve()
+            trusted, root = directory/'trusted', directory/'older'
+            trusted.mkdir()
+            def git(where, *args):
+                return subprocess.check_output(['git', *args], cwd=where, stderr=subprocess.PIPE)
+            git(trusted, 'init', '--quiet')
+            git(trusted, 'config', 'user.name', 'Synthetic source test')
+            git(trusted, 'config', 'user.email', 'fixture@example.invalid')
+            git(trusted, 'config', 'core.autocrlf', 'false')
+            checker = trusted/m.PREFIX/'check.py'
+            checker.parent.mkdir(parents=True)
+            checker.write_bytes(neutral)
+            path = trusted/'tracked.txt'
             path.write_bytes(b'original synthetic source\n')
-            git('add', '--', 'tracked.txt')
-            git('commit', '--quiet', '-m', 'Synthetic fixture only, no acceptance')
-            head = git('rev-parse', 'HEAD').decode().strip()
-            with patch.object(m, 'BASE', head):
-                self.assertEqual(m.selected_fixture_identity(root, trusted)['trackedBlobs'], 1)
+            git(trusted, 'add', '--all')
+            git(trusted, 'commit', '--quiet', '-m', 'Synthetic fixture only, no acceptance')
+            head = git(trusted, 'rev-parse', 'HEAD').decode().strip()
+            git(directory, 'clone', '--quiet', '--no-local', '--no-hardlinks', '--single-branch',
+                '-c', 'core.autocrlf=false', '-c', 'core.longpaths=true', str(trusted), str(root))
+            path.write_bytes(b'future synthetic authority\n')
+            git(trusted, 'commit', '--all', '--quiet', '-m', 'Synthetic future base, no acceptance')
+            future = git(trusted, 'rev-parse', 'HEAD').decode().strip()
+            future_tree = git(trusted, 'rev-parse', 'HEAD^{tree}').decode().strip()
+            absent = subprocess.run(['git', 'cat-file', '-e', future+'^{commit}'], cwd=root,
+                                    capture_output=True)
+            self.assertNotEqual(absent.returncode, 0, 'older single-branch clone lacks future base')
+            path = root/'tracked.txt'
+            with patch.object(m, 'BASE', future), patch.object(m, 'TREE', future_tree):
+                self.assertEqual(m.selected_fixture_identity(root, trusted)['trackedBlobs'], 2)
                 for name in ('objects/info/alternates', 'info/grafts', 'shallow'):
                     metadata = root/'.git'/name
                     metadata.write_bytes((head+'\n').encode() if name == 'shallow' else b'')
@@ -201,13 +216,45 @@ class HistoricalExecutionControls(unittest.TestCase):
                             m.selected_fixture_identity(root, trusted)
                     finally:
                         metadata.unlink()
-                git('replace', head, head)
+                git(root, 'replace', head, head)
                 with self.assertRaises(ValueError):
                     m.selected_fixture_identity(root, trusted)
-                git('replace', '-d', head)
+                git(root, 'replace', '-d', head)
                 path.write_bytes(b'changed synthetic source\n')
                 with self.assertRaises(ValueError):
                     m.selected_fixture_identity(root, trusted)
+
+    def test_known_foreign_selected_commit_is_not_admitted_by_trusted_future_store(self):
+        neutral = (Path(__file__).resolve().parents[3]/m.PREFIX/'check.py').read_bytes()
+        with tempfile.TemporaryDirectory(prefix='c45-foreign-history-') as directory:
+            directory = Path(directory).resolve()
+            trusted, foreign = directory/'trusted', directory/'foreign'
+            for root in (trusted, foreign):
+                root.mkdir()
+                subprocess.run(['git', 'init', '--quiet'], cwd=root, check=True)
+                subprocess.run(['git', 'config', 'core.autocrlf', 'false'], cwd=root, check=True)
+                (root/'synthetic.txt').write_bytes(root.name.encode())
+                subprocess.run(['git', 'add', '--all'], cwd=root, check=True)
+                subprocess.run(['git', '-c', 'user.name=Synthetic source test', '-c',
+                                'user.email=fixture@example.invalid', 'commit', '--quiet', '-m',
+                                'Synthetic unrelated source, no acceptance'], cwd=root, check=True)
+            checker = trusted/m.PREFIX/'check.py'
+            checker.parent.mkdir(parents=True)
+            checker.write_bytes(neutral)
+            subprocess.run(['git', 'add', '--all'], cwd=trusted, check=True)
+            subprocess.run(['git', '-c', 'user.name=Synthetic source test', '-c',
+                            'user.email=fixture@example.invalid', 'commit', '--quiet', '-m',
+                            'Synthetic trusted authority, no acceptance'], cwd=trusted, check=True)
+            # Native test-only transport makes the unrelated commit known to the
+            # trusted store; the production helper never fetches missing proof.
+            subprocess.run(['git', 'fetch', '--quiet', '--no-tags', str(foreign),
+                            'HEAD:refs/c45-synthetic-foreign'], cwd=trusted, check=True)
+            head = m.git(trusted, 'rev-parse', 'HEAD').decode().strip()
+            tree = m.git(trusted, 'rev-parse', 'HEAD^{tree}').decode().strip()
+            with patch.object(m, 'BASE', head), patch.object(m, 'TREE', tree):
+                with self.assertRaises(subprocess.CalledProcessError) as refusal:
+                    m.selected_fixture_identity(foreign, trusted)
+                self.assertEqual(refusal.exception.returncode, 1, 'known unrelated commit is not an ancestor')
 
     def test_expected_readiness_two_remains_distinct_from_success_zero(self):
         result = dict(exit=2, expectedExit=2)

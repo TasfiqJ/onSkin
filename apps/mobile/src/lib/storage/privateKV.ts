@@ -316,14 +316,22 @@ function envelopeClassificationError(kind: 'malformed' | 'unsupported'): Error {
   return new Error(PRIVATE_KV_ENVELOPE_INVALID);
 }
 
-function decryptEnvelopeBytes(envelope: PrivateEnvelope, contentKey: Uint8Array): Uint8Array {
-  return xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
+function cipherForPrivateKey45(key: string, contentKey: Uint8Array, nonce: Uint8Array) {
+  // Bind history to its fixed storage purpose. Native ciphertext copied under a
+  // non-health key must not bypass history admission or recovery quarantine.
+  // Other existing keys retain their original no-AAD encrypted format.
+  const associatedData = key === 'layerwell.routinePlanHistory.v1' ? utf8ToBytes(key) : undefined;
+  return xchacha20poly1305(contentKey, nonce, associatedData);
+}
+
+function decryptEnvelopeBytes(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): Uint8Array {
+  return cipherForPrivateKey45(key, contentKey, hexToBytes(envelope.nonceHex)).decrypt(
     hexToBytes(envelope.ciphertextHex),
   );
 }
 
-function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): string {
-  const plaintext = decryptEnvelopeBytes(envelope, contentKey);
+function decryptEnvelope(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): string {
+  const plaintext = decryptEnvelopeBytes(key, envelope, contentKey);
   try {
     return bytesToUtf8(plaintext);
   } finally {
@@ -332,8 +340,8 @@ function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): str
 }
 
 /** Authenticate one envelope without materializing a JavaScript string. */
-function validateEnvelopeAuthentication(envelope: PrivateEnvelope, contentKey: Uint8Array): void {
-  const plaintext = decryptEnvelopeBytes(envelope, contentKey);
+function validateEnvelopeAuthentication(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): void {
+  const plaintext = decryptEnvelopeBytes(key, envelope, contentKey);
   plaintext.fill(0);
 }
 
@@ -461,7 +469,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       }
       let value: string;
       try {
-        value = decryptEnvelope(classification.envelope, contentKey);
+        value = decryptEnvelope(key, classification.envelope, contentKey);
       } catch {
         rememberFailedRead(key, raw);
         throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
@@ -541,7 +549,7 @@ async function readPrivateItems(
       }
       for (const [key, envelope, raw] of encryptedEntries) {
         try {
-          result.set(key, decryptEnvelope(envelope, contentKey));
+          result.set(key, decryptEnvelope(key, envelope, contentKey));
           failedReadSnapshots.delete(key);
         } catch {
           rememberFailedRead(key, raw);
@@ -635,7 +643,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
         for (const [key, envelope, raw] of encryptedEntries) {
           assertCurrent();
           try {
-            validateEnvelopeAuthentication(envelope, contentKey);
+            validateEnvelopeAuthentication(key, envelope, contentKey);
             failedReadSnapshots.delete(key);
           } catch {
             rememberFailedRead(key, raw);
@@ -730,7 +738,7 @@ async function updatePrivateItemWithGuard(
             throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
           }
           try {
-            currentValue = decryptEnvelope(existingClassification.envelope, contentKey);
+            currentValue = decryptEnvelope(key, existingClassification.envelope, contentKey);
           } catch {
             rememberFailedRead(key, existingRaw);
             throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
@@ -779,7 +787,7 @@ async function updatePrivateItemWithGuard(
         contentKey ??= await getOrCreateContentKey();
         assertPreparationCurrent();
         const nonce = randomBytes(NONCE_BYTES);
-        const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
+        const ciphertext = cipherForPrivateKey45(key, contentKey, nonce).encrypt(utf8ToBytes(nextValue));
         const envelope: PrivateEnvelope = {
           version: ENCRYPTION_VERSION,
           nonceHex: bytesToHex(nonce),
@@ -913,7 +921,7 @@ export async function updatePrivateItemWithSources(
             throw error;
           }
           try {
-            values.set(sourceKey, decryptEnvelope(classification.envelope, contentKey));
+            values.set(sourceKey, decryptEnvelope(sourceKey, classification.envelope, contentKey));
           } catch {
             rememberFailedRead(sourceKey, raw);
             throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
@@ -956,7 +964,7 @@ export async function updatePrivateItemWithSources(
             version: ENCRYPTION_VERSION,
             nonceHex: bytesToHex(nonce),
             ciphertextHex: bytesToHex(
-              xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue)),
+              cipherForPrivateKey45(key, contentKey, nonce).encrypt(utf8ToBytes(nextValue)),
             ),
           } satisfies PrivateEnvelope);
         }
@@ -985,7 +993,7 @@ export async function updatePrivateItemWithSources(
           if (committedRaw !== null) {
             const classification = classifyEnvelope(key, committedRaw);
             if (classification.kind !== 'current' || !contentKey ||
-                decryptEnvelope(classification.envelope, contentKey) !== nextValue) {
+                decryptEnvelope(key, classification.envelope, contentKey) !== nextValue) {
               throw new Error(PRIVATE_KV_WRITE_CONFLICT);
             }
           }
