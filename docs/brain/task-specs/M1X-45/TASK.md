@@ -6,7 +6,7 @@
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
     ".github/workflows/quality.yml": "cb37e42589b0040ba23606bd601a32891212dda57a98d1ddc24b4dd401f7fc93",
-    "PROGRESS.md": "c48361d58bc76e6d2ab2d2e61c02974a74537b4c794be8c4a927e7213126bb27",
+    "PROGRESS.md": "8a0d9219476b936b7c7d91c494a079caea2a0e9657260b746a03c9c545970b93",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -27,13 +27,13 @@
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
     "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts": "2abac4d5fcedb4905d57d24245dcc122980161ceb449224ec896510d8495ea6d",
     "apps/mobile/src/lib/storage/privateKV.ts": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "0a24c0949ff6f9bd3d48b8b8f47a3cfad6ec01b14d8094094cd794b055bb1026",
-    "docs/release/full-app-j01/owner-plan-history45.md": "81468865462727e5f82d1dfca82512622d88dd4df9fea1ff666dd060c91d9fed",
-    "scripts/release/full-app-j01/historicalReplay45.py": "a183b78f14c8df65d1bbd6c75abbb624781bee331be48c1afd42ffec3ca813a3",
-    "scripts/release/full-app-j01/historicalReplay45.test.py": "d8f187ec23336b3219306c8f7573b0d5fb51bdd15f6d04ee50eaafdfff10241c",
-    "scripts/release/full-app-j01/main_integration45.py": "fa9a95527248897c5daf5c1c04469f14c8fcc143a6bd3ef18994df56d096f5f2",
-    "scripts/release/full-app-j01/main_integration45.test.py": "14bc3623e091d930bdd538232046f8c1a9411925258796688cb578d17c530a45",
-    "scripts/release/full-app-j01/source_consumer45.test.py": "7c0e122a2a78e69bf58a467d16b30bd1e37aa703eaeaadf013838fbaf5f428d4"
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "0613a051baf64e31b03b4283482818e6e0320511254c79b7a2754b3aeb7bb8f8",
+    "docs/release/full-app-j01/owner-plan-history45.md": "4aba7b8a1ddcd166d696d1be2c2b91a9f0ae26255a64e619a2c66877a4b784de",
+    "scripts/release/full-app-j01/historicalReplay45.py": "f29e846a2b876e2e2a6dfa39163c045ce497e1967dda8dd210260854d783fe4f",
+    "scripts/release/full-app-j01/historicalReplay45.test.py": "a7dd6dbf2c6e24a9cd34cfbd55afdf21e20593fb0839c0190a22b33d889feeb9",
+    "scripts/release/full-app-j01/main_integration45.py": "89eb083b0b75f374b10bebb7064cf1c4ca927655cbb59f28baef4d9957d106a0",
+    "scripts/release/full-app-j01/main_integration45.test.py": "b503afe0b7f5e59cd45d8389d03b73b521313d215e9d5871f4f776f33c9bd7eb",
+    "scripts/release/full-app-j01/source_consumer45.test.py": "fc34fb37ef4cc6d08a5ee23500929bad9313fadbbeecb62bc8dafbddf2592fba"
   },
   "commands": [
     {
@@ -770,6 +770,47 @@
       "command": "C04-18 stable diagnostic checkpoint: rerun all required local/source/replay controls before a new seal or push",
       "exit": null,
       "qualification": "PENDING_NEW_DIAGNOSTIC_SOURCE_CHECKS_NOT_ACCEPTANCE",
+      "logSha256": null
+    },
+    {
+      "command": "Hosted708 repository Quality job126221771847 / original44 normal historical invocation",
+      "exit": 1,
+      "qualification": "ACTUAL_PRIOR708_FAILURE_ORIGINAL38_DRIVER103_TIMEOUT_1800S_99_REPORTS_CAUSE_UNPROVEN_NOT_ACCEPTANCE",
+      "logSha256": "deda25e8bb6c6b691af69cb92e05c170fac9db26e529c6f6e61f6fbc4e38a524"
+    },
+    {
+      "command": "Genuine isolated Linux control of unchanged708 run_command session escape",
+      "exit": 0,
+      "qualification": "ACTUAL_RED_DEMONSTRATED_FALSE_DESCENDANTS_DRAINED_RECEIPT_NOT_SOURCE_PASS",
+      "logSha256": "efe5153539879dedc903d6e4e9a36c39463e76a0942b8d8dd21b6be63a7f2414"
+    },
+    {
+      "command": "C04-19 development Windows full helper45",
+      "exit": 0,
+      "qualification": "DEVELOPMENT_UNSEALED_SOURCE_ALL45_NO_SKIPS_ORIGINAL37_METHOD_BODIES_EXACT_NOT_FINAL_PROOF",
+      "logSha256": "ffe27311a4cb3223b0a65ce2a6eaef369f8a7305406b7c8202650ff0a6d18328"
+    },
+    {
+      "command": "C04-19 development genuine Linux selected native11",
+      "exit": 0,
+      "qualification": "ACTUAL_LINUX_NATIVE_11_NOT_FULL45_LINUX_NOT_HISTORICAL_NORMAL_SUCCESS",
+      "logSha256": "8d0a516bc272c2fcd20c9f9246053ab10b920f90edf40aff8fd7576f205a0208"
+    },
+    {
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration45.test.py"
+      ],
+      "exit": 0,
+      "qualification": "DEVELOPMENT_MAIN39_THREE_EXACT_PRIOR_SEALS_NOT_FINAL_SOURCE_PROOF",
+      "logSha256": "2e86d56a255cd90e5e9bca7778fcdcd938eadd42becc15e90b9480b14495472f"
+    },
+    {
+      "command": "C04-19 stable repaired source: rerun all mandatory source/native/replay checks before new seal or push",
+      "exit": null,
+      "qualification": "PENDING_FINAL_NATIVE_REPAIR_SOURCE_CHECKS_NOT_ACCEPTANCE",
       "logSha256": null
     }
   ],

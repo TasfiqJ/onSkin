@@ -12,6 +12,41 @@ spec=importlib.util.spec_from_file_location('current45',Path(__file__).with_name
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class PriorSealControls(unittest.TestCase):
+    def test_three_prior_seals_still_require_new_source_and_one_exact_last_seal(self):
+        base,plan,source,first,repair1,second,repair2,third,repair3,final = [format(n,'040x') for n in range(1,11)]
+        allowed={'a.ts','b.ts'};worklist={'w.json','w.md'}
+        pending=[plan,source,first,repair1,second,repair2,third,repair3]
+        ancestry={commit:[commit,parent] for parent,commit in zip(pending,pending[1:])}
+        ancestry[final]=[final,repair3]
+        trees={first:'a'*40,second:'b'*40,third:'c'*40}
+        policy=((first,source,trees[first]),(second,repair1,trees[second]),(third,repair2,trees[third]))
+        deltas={(plan,source):allowed,(source,first):worklist,(first,repair1):{'a.ts'},
+                (repair1,second):worklist,(second,repair2):{'b.ts'},(repair2,third):worklist,
+                (third,repair3):{'a.ts'},(repair3,final):worklist,
+                (base,repair3):allowed|{'plan.md'}|worklist}
+        def changed(before,after,permitted):
+            result=deltas[(before,after)]
+            m.need(result<=permitted,'SYNTHETIC_FINITE_DELTA')
+            return result
+        with patch.object(m,'BASE',base),patch.object(m,'PLAN_COMMIT',plan),patch.object(m,'PLAN','plan.md'), \
+             patch.object(m,'SOURCE',allowed),patch.object(m,'ESSENTIAL',allowed),patch.object(m,'WORKLIST',worklist), \
+             patch.object(m,'PREVIOUS_SEALS',policy),patch.object(m,'parents',side_effect=ancestry.__getitem__), \
+             patch.object(m,'text',side_effect=lambda *args:trees[args[1].split('^',1)[0]]), \
+             patch.object(m,'changed',side_effect=changed):
+            self.assertEqual(m.phase_guard(pending,'SOURCE_PENDING',allowed),(repair3,None))
+            self.assertEqual(m.phase_guard(pending+[final],'SOURCE_FROZEN',allowed),(repair3,final))
+            for history,phase in ((pending[:-1],'SOURCE_PENDING'),(pending[:-1],'SOURCE_FROZEN'),
+                                  (pending+[final],'SOURCE_PENDING')):
+                with self.subTest(history=history,phase=phase),self.assertRaises(ValueError):
+                    m.phase_guard(history,phase,allowed)
+            for wrong in (policy[:2],policy[::-1],policy+(policy[-1],),
+                          policy[:2]+((third,source,trees[third]),)):
+                with patch.object(m,'PREVIOUS_SEALS',wrong),self.subTest(policy=wrong),self.assertRaises(ValueError):
+                    m.phase_guard(pending+[final],'SOURCE_FROZEN',allowed)
+            deltas[(repair3,final)]=worklist|{'a.ts'}
+            with self.assertRaises(ValueError):
+                m.phase_guard(pending+[final],'SOURCE_FROZEN',allowed)
+
     def test_previous_seal_identity_and_delta_are_both_required(self):
         seal, parent, tree = m.PREVIOUS_SEALS[0]
         with patch.object(m, 'text', return_value=tree), patch.object(m, 'parents', return_value=[seal,parent]), \

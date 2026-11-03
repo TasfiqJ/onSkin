@@ -804,5 +804,313 @@ class HistoricalExecutionControls(unittest.TestCase):
                 m.report_replay_failure(value.result, value.evidence, io.StringIO())
 
 
+class NativeSupervisorControls(unittest.TestCase):
+    def wait_for(self, predicate, seconds=3):
+        deadline = time.monotonic()+seconds
+        while not predicate():
+            self.assertLess(time.monotonic(), deadline, 'controlled native handshake deadline')
+            time.sleep(0.01)
+
+    @contextmanager
+    def windows_process_handle(self, pid):
+        import ctypes
+        from ctypes import wintypes
+        self.assertEqual(os.name, 'nt', 'this is an actual Windows native control')
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        kernel.OpenProcess.restype = wintypes.HANDLE
+        kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+        kernel.WaitForSingleObject.restype = wintypes.DWORD
+        kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+        handle = kernel.OpenProcess(0x00100000, False, pid)
+        self.assertTrue(handle, 'pin the actual live native process before its original command finishes')
+        try:
+            yield lambda: kernel.WaitForSingleObject(handle, 1000) == 0
+        finally:
+            kernel.CloseHandle(handle)
+
+    def windows_new_group_tree(self, root, exit_code=0, timeout=False, double=False):
+        marker, release = root/'child.pid', root/'release'
+        grandchild = ('import os,time;from pathlib import Path;Path('+repr(str(marker))+')'
+                      '.write_text(str(os.getpid()));time.sleep(30)')
+        launch = ('import subprocess,sys;subprocess.Popen([sys.executable,"-I","-B","-c",'+
+                  repr(grandchild)+'],creationflags=512)')
+        if double:
+            launch = ('import subprocess,sys;subprocess.run([sys.executable,"-I","-B","-c",'+
+                      repr(launch)+'],creationflags=512,check=True)')
+        child = (launch+'\nimport time;from pathlib import Path;p=Path('+repr(str(release))+');deadline=time.monotonic()+10\n'
+                 'while not p.exists() and time.monotonic()<deadline:time.sleep(.01)\n'
+                 'assert p.exists()\n'+('time.sleep(30)' if timeout else 'raise SystemExit('+str(exit_code)+')'))
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            future = pool.submit(m.run_command, [sys.executable, '-I', '-B', '-c', child], root,
+                                 dict(os.environ), root/'native.log', 0, 2 if timeout else 5)
+            self.wait_for(marker.exists)
+            with self.windows_process_handle(int(marker.read_text())) as terminal:
+                release.write_bytes(b'controlled parent release\n')
+                row = future.result(timeout=15)
+                self.assertTrue(terminal(), 'Windows Job must contain descendants across new process groups')
+            self.assertEqual(row['timedOut'], timeout)
+            self.assertTrue(row['descendantsDrained'])
+            self.assertEqual(row['processControl'], 'WINDOWS_OWNED_JOB')
+            self.assertEqual(row['exit'], exit_code) if not timeout else self.assertNotEqual(row['exit'], 0)
+            self.assertNotIn('nativeObservation', row)
+            return row
+
+    def actual_parent_abort(self, abrupt):
+        import signal
+        with tempfile.TemporaryDirectory(prefix='c45-native-parent-abort-') as directory:
+            root = Path(directory).resolve()
+            marker, release = root/'grandchild.pid', root/'abort'
+            grandchild = ('import os,time;from pathlib import Path;Path('+repr(str(marker))+')'
+                          '.write_text(str(os.getpid()));time.sleep(30)')
+            option = 'start_new_session=True' if sys.platform == 'linux' else 'creationflags=512'
+            child = ('import subprocess,sys,time;subprocess.Popen([sys.executable,"-I","-B","-c",'+
+                     repr(grandchild)+'],'+option+');time.sleep(30)')
+            worker = ('import importlib.util,os,sys,threading,time;from pathlib import Path;'
+                      'p='+repr(str(Path(m.__file__).resolve()))+';'
+                      's=importlib.util.spec_from_file_location("actual_native_worker",p);'
+                      'm=importlib.util.module_from_spec(s);s.loader.exec_module(m)\n')
+            if os.name == 'nt' and not abrupt:
+                worker += ('def abort():\n'
+                           ' p=Path('+repr(str(release))+');deadline=time.monotonic()+15\n'
+                           ' while not p.exists() and time.monotonic()<deadline:time.sleep(.01)\n'
+                           ' os._exit(9)\nthreading.Thread(target=abort,daemon=True).start()\n')
+            worker += ('m.run_command([sys.executable,"-I","-B","-c",'+repr(child)+'],Path('+repr(str(root))+'),'
+                       'dict(os.environ),Path('+repr(str(root/'command.log'))+'),timeout=20)\n'
+                       'print("UNEXPECTED_CONTROL_COMPLETION")\n')
+            descriptors, process = [], None
+            with (root/'worker.log').open('wb') as output, ExitStack() as stack:
+                try:
+                    process = subprocess.Popen([sys.executable, '-I', '-B', '-c', worker], stdout=output,
+                                               stderr=subprocess.STDOUT)
+                    self.wait_for(marker.exists)
+                    pid = int(marker.read_text())
+                    if sys.platform == 'linux':
+                        import select
+                        children = m.linux_direct_children(process.pid)
+                        self.assertEqual(len(children), 1, 'dedicated guardian is the worker only native child')
+                        guardian_pid = children[0]
+                        for owned_pid in (pid, guardian_pid):
+                            descriptor = os.pidfd_open(owned_pid)
+                            descriptors.append(descriptor)
+                        pollers = []
+                        for descriptor in descriptors:
+                            poller = select.poll()
+                            poller.register(descriptor, select.POLLIN)
+                            pollers.append(poller)
+                        terminal = lambda: bool(pollers[0].poll(1000))
+                    else:
+                        terminal = stack.enter_context(self.windows_process_handle(pid))
+                    if abrupt:
+                        process.kill()
+                    elif sys.platform == 'linux':
+                        process.send_signal(signal.SIGINT)
+                    else:
+                        release.write_bytes(b'actual parent exits abruptly without Python finally\n')
+                    self.assertNotEqual(process.wait(timeout=15), 0)
+                    self.assertTrue(terminal(), 'owned grandchild cannot survive its parent scope abort')
+                    if sys.platform == 'linux':
+                        self.assertTrue(pollers[1].poll(5000), 'guardian must drain before its own terminal state')
+                        native = m.document(m.regular(root/'command.log.native.json'))
+                        self.assertTrue(native['aborted'])
+                        self.assertTrue(native['drain']['complete'])
+                        self.assertIsNone(native['error'])
+                        self.assertFalse(native['timedOut'])
+                        self.assertLess(native['exit'], 0)
+                    self.assertNotIn(b'UNEXPECTED_CONTROL_COMPLETION', (root/'worker.log').read_bytes())
+                finally:
+                    if process is not None and process.poll() is None:
+                        process.kill()
+                        process.wait()
+                    if sys.platform == 'linux':
+                        for descriptor in reversed(descriptors):
+                            try:
+                                signal.pidfd_send_signal(descriptor, signal.SIGTERM)
+                            except ProcessLookupError:
+                                pass
+                            os.close(descriptor)
+
+    def test_actual_parent_interruption_drains_before_propagating_failure(self):
+        self.actual_parent_abort(abrupt=False)
+
+    def test_actual_parent_death_drains_without_fabricating_command_completion(self):
+        self.actual_parent_abort(abrupt=True)
+
+    def test_native_schedule_inputs_are_finite_bounded_and_explicit(self):
+        with tempfile.TemporaryDirectory(prefix='c45-schedule-schema-') as directory:
+            root = Path(directory)
+            for timeout in (0, -1, True, float('inf'), float('nan'), 21601):
+                with self.subTest(timeout=timeout), self.assertRaisesRegex(ValueError, 'NATIVE_SCHEDULE_SCHEMA'):
+                    m.run_command([sys.executable], root, dict(os.environ), root/'absent.log', timeout=timeout)
+            for single_cpu in (None, 1, 'true'):
+                with self.subTest(single_cpu=single_cpu), self.assertRaisesRegex(ValueError, 'NATIVE_SCHEDULE_SCHEMA'):
+                    m.run_command([sys.executable], root, dict(os.environ), root/'absent.log', single_cpu=single_cpu)
+            self.assertEqual(list(root.iterdir()), [])
+
+    def test_actual_setsid_grandchild_cannot_survive_timeout_or_falsely_drained_receipt(self):
+        if sys.platform != 'linux':
+            with tempfile.TemporaryDirectory(prefix='c45-windows-newgroup-') as directory:
+                self.windows_new_group_tree(Path(directory).resolve(), timeout=True)
+            return
+        import select
+        with tempfile.TemporaryDirectory(prefix='c45-native-setsid-') as directory:
+            root = Path(directory).resolve()
+            marker = root/'escaped.json'
+            grandchild = ('import os,json,time;from pathlib import Path;Path('+repr(str(marker))+')'
+                '.write_text(json.dumps(dict(pid=os.getpid(),group=os.getpgrp(),session=os.getsid(0))));time.sleep(30)')
+            child = ('import subprocess,sys,time;subprocess.Popen([sys.executable,"-I","-B","-c",'+
+                     repr(grandchild)+'],start_new_session=True);time.sleep(30)')
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                future = pool.submit(m.run_command, [sys.executable, '-I', '-B', '-c', child],
+                                     root, dict(os.environ), root/'timeout.log', 0, 2)
+                self.wait_for(marker.exists)
+                identity = json.loads(marker.read_text())
+                self.assertEqual(identity['pid'], identity['group'])
+                self.assertEqual(identity['pid'], identity['session'])
+                descriptor = os.pidfd_open(identity['pid'])
+                try:
+                    row = future.result(timeout=15)
+                    poller = select.poll()
+                    poller.register(descriptor, select.POLLIN)
+                    self.assertTrue(poller.poll(1000), 'exact escaped native process must be terminal')
+                    self.assertTrue(row['timedOut'])
+                    self.assertNotEqual(row['exit'], 0)
+                    self.assertTrue(row['descendantsDrained'])
+                    self.assertEqual(row['processControl'], 'LINUX_EXCLUSIVE_SUBREAPER')
+                    native = m.document(m.regular(Path(row['nativeObservation']['path'])))
+                    self.assertTrue(native['drain']['complete'])
+                    self.assertIn(identity['pid'], [item['pid'] for item in native['drain']['terminated']])
+                finally:
+                    os.close(descriptor)
+
+    def test_actual_doublefork_is_reaped_after_natural_exit_preserving_zero_and_failure(self):
+        if sys.platform != 'linux':
+            for exit_code in (0, 7):
+                with self.subTest(exit=exit_code), tempfile.TemporaryDirectory(prefix='c45-windows-double-') as directory:
+                    self.windows_new_group_tree(Path(directory).resolve(), exit_code=exit_code, double=True)
+            return
+        for exit_code in (0, 7):
+            with self.subTest(exit=exit_code), tempfile.TemporaryDirectory(prefix='c45-native-doublefork-') as directory:
+                root = Path(directory).resolve()
+                marker = root/'adopted.pid'
+                grandchild = ('import os,time;from pathlib import Path;Path('+repr(str(marker))+')'
+                              '.write_text(str(os.getpid()));time.sleep(30)')
+                intermediate = ('import subprocess,sys;subprocess.Popen([sys.executable,"-I","-B","-c",'+
+                                repr(grandchild)+'],start_new_session=True)')
+                child = ('import subprocess,sys,time;from pathlib import Path;subprocess.run([sys.executable,"-I","-B","-c",'+
+                    repr(intermediate)+'],check=True);p=Path('+repr(str(marker))+');deadline=time.monotonic()+3\n'
+                    'while not p.exists() and time.monotonic()<deadline:time.sleep(.01)\n'
+                    'assert p.exists();print("ACTUAL_NATIVE_ORIGINAL_EXIT");raise SystemExit('+str(exit_code)+')')
+                row = m.run_command([sys.executable, '-I', '-B', '-c', child], root, dict(os.environ),
+                                    root/'natural.log', timeout=5)
+                self.assertEqual((row['exit'], row['timedOut']), (exit_code, False))
+                self.assertIn(b'ACTUAL_NATIVE_ORIGINAL_EXIT', m.verify_receipt(row))
+                self.assertIsNone(m.linux_process_identity(int(marker.read_text())), 'adopted grandchild is reaped')
+                native = m.document(m.regular(Path(row['nativeObservation']['path'])))
+                self.assertGreaterEqual(native['drain']['reaped'], 1)
+                self.assertTrue(native['drain']['complete'])
+
+    def test_live_support_child_and_unrelated_owned_process_are_not_terminated(self):
+        with tempfile.TemporaryDirectory(prefix='c45-native-exclusive-') as directory:
+            root = Path(directory).resolve()
+            support, probe, witnessed, release = [root/name for name in ('support.pid', 'probe', 'witness', 'release')]
+            grandchild = ('import os,time;from pathlib import Path;root=Path('+repr(str(root))+');'
+                '(root/"support.pid").write_text(str(os.getpid()));deadline=time.monotonic()+15\n'
+                'while time.monotonic()<deadline:\n'
+                ' if (root/"probe").exists():(root/"witness").write_text("live original command still owns support child")\n'
+                ' time.sleep(.01)')
+            launch_option = 'start_new_session=True' if sys.platform == 'linux' else 'creationflags=512'
+            child = ('import subprocess,sys,time;from pathlib import Path;subprocess.Popen([sys.executable,"-I","-B","-c",'+
+                repr(grandchild)+'],'+launch_option+');p=Path('+repr(str(release))+');deadline=time.monotonic()+10\n'
+                'while not p.exists() and time.monotonic()<deadline:time.sleep(.01)\nassert p.exists()')
+            outsider = subprocess.Popen([sys.executable, '-I', '-B', '-c', 'import time;time.sleep(30)'])
+            try:
+                with ThreadPoolExecutor(max_workers=1) as pool:
+                    future = pool.submit(m.run_command, [sys.executable, '-I', '-B', '-c', child],
+                                         root, dict(os.environ), root/'live.log', 0, 8)
+                    with ExitStack() as stack:
+                        try:
+                            self.wait_for(support.exists)
+                            terminal = stack.enter_context(self.windows_process_handle(int(support.read_text()))) if os.name == 'nt' else None
+                            self.assertFalse(future.done())
+                            probe.write_bytes(b'controlled support operation\n')
+                            self.wait_for(witnessed.exists)
+                            self.assertIsNone(outsider.poll())
+                        finally:
+                            release.write_bytes(b'original command may now finish\n')
+                        row = future.result(timeout=15)
+                        if terminal is not None:
+                            self.assertTrue(terminal())
+                    self.assertEqual((row['exit'], row['timedOut']), (0, False))
+                    self.assertIsNone(outsider.poll(), 'dedicated guardian must not adopt or kill caller siblings')
+                    if sys.platform == 'linux':
+                        self.assertIsNone(m.linux_process_identity(int(support.read_text())))
+                    else:
+                        self.assertEqual(row['processControl'], 'WINDOWS_OWNED_JOB')
+            finally:
+                if outsider.poll() is None:
+                    outsider.kill()
+                outsider.wait()
+
+    def test_single_cpu_is_inherited_by_original_and_descendant_without_changing_caller(self):
+        if sys.platform != 'linux':
+            with tempfile.TemporaryDirectory(prefix='c45-windows-schedule-') as directory:
+                root = Path(directory).resolve()
+                with self.assertRaisesRegex(ValueError, 'SUPPORTED_NATIVE_CONTAINMENT'):
+                    m.run_command([sys.executable], root, dict(os.environ), root/'unsupported.log', single_cpu=True)
+                self.assertFalse((root/'unsupported.log').exists())
+                self.windows_new_group_tree(root)
+            return
+        with tempfile.TemporaryDirectory(prefix='c45-native-affinity-') as directory:
+            root = Path(directory).resolve()
+            before = os.sched_getaffinity(0)
+            grandchild = 'import os,json;print(json.dumps(sorted(os.sched_getaffinity(0))))'
+            child = ('import os,json,subprocess,sys;print(json.dumps(dict(original=sorted(os.sched_getaffinity(0)),'
+                     'descendant=json.loads(subprocess.check_output([sys.executable,"-I","-B","-c",'+repr(grandchild)+'])))))')
+            row = m.run_command([sys.executable, '-I', '-B', '-c', child], root, dict(os.environ),
+                                root/'affinity.log', single_cpu=True)
+            observed = json.loads(m.verify_receipt(row))
+            self.assertEqual(len(observed['original']), 1)
+            self.assertEqual(observed['original'], observed['descendant'])
+            native = m.document(m.regular(Path(row['nativeObservation']['path'])))
+            self.assertTrue(native['scheduling']['singleCpuRequested'])
+            self.assertEqual(native['scheduling']['selectedCPUs'], observed['original'])
+            self.assertEqual(native['scheduling']['originalObservedCPUs'], observed['original'])
+            self.assertEqual(os.sched_getaffinity(0), before)
+            self.assertEqual((row['exit'], row['timedOut']), (0, False))
+
+    def test_native_observations_are_bounded_and_do_not_record_arguments_or_environment(self):
+        if sys.platform != 'linux':
+            with tempfile.TemporaryDirectory(prefix='c45-windows-observation-') as directory:
+                root = Path(directory).resolve()
+                row = m.run_command([sys.executable, '-I', '-B', '-c', 'raise SystemExit(3)'],
+                                    root, dict(os.environ), root/'observation.log')
+                self.assertEqual((row['exit'], row['timedOut']), (3, False))
+                self.assertEqual(row['processControl'], 'WINDOWS_OWNED_JOB')
+                self.assertTrue(row['descendantsDrained'])
+                self.assertNotIn('nativeObservation', row, 'Windows receipt must not claim Linux observations')
+                self.assertEqual(list(root.glob('*.native.json')), [])
+            return
+        with tempfile.TemporaryDirectory(prefix='c45-native-observe-') as directory:
+            root = Path(directory).resolve()
+            private = 'SYNTHETIC_PRIVATE_ARG_AND_ENV_NOT_OBSERVATION_DATA'
+            environment = dict(os.environ, C45_SYNTHETIC_PRIVATE=private)
+            row = m.run_command([sys.executable, '-I', '-B', '-c', 'import time;time.sleep(.05)', private],
+                                root, environment, root/'observation.log')
+            raw = m.regular(Path(row['nativeObservation']['path']))
+            native = m.document(raw)
+            self.assertLessEqual(len(raw), 512*1024)
+            self.assertNotIn(private.encode(), raw)
+            self.assertTrue(native['samples'])
+            self.assertLessEqual(len(native['samples']), 16)
+            for sample in native['samples']:
+                self.assertLessEqual(len(sample['processes']), 128)
+                for process in sample['processes']:
+                    self.assertNotIn('command', process)
+                    self.assertNotIn('environment', process)
+                    self.assertIs(type(process['startTicks']), int)
+                    self.assertIs(type(process['userTicks']), int)
+
+
 if __name__ == '__main__':
     unittest.main()

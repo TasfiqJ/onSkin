@@ -5,9 +5,11 @@ the unchanged authenticated original44 reader, qualifies as a complete invocatio
 Diagnostic or resumed individual stages never stand in for that requirement.
 """
 import argparse
+import ctypes
 import hashlib
 import importlib.util
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -289,6 +291,234 @@ def verify_receipt(row, expected_command=None, expected_exit=None):
     return raw
 
 
+LINUX_GUARDIAN_ENTRY = r'''
+import hashlib,json,sys
+from pathlib import Path
+path,expected=sys.argv[1:]
+with Path(path).open('rb') as stream:raw=stream.read(2*1024*1024+1)
+assert len(raw)<=2*1024*1024 and hashlib.sha256(raw).hexdigest()==expected
+scope={'__file__':path,'__name__':'c45_owned_native_guardian'}
+exec(compile(raw,path,'exec'),scope)
+payload=sys.stdin.buffer.read(2*1024*1024+1)
+assert len(payload)<=2*1024*1024
+raise SystemExit(scope['linux_guardian'](json.loads(payload)))
+'''
+
+
+def linux_process_identity(pid):
+    """Content-free native identity; never read argv, environment or page data."""
+    try:
+        with (Path('/proc')/str(pid)/'stat').open('rb') as stream:
+            raw = stream.read(4097)
+        need(len(raw) <= 4096, 'NATIVE_STAT_LIMIT')
+        end = raw.rindex(b') ')
+        fields = raw[end+2:].split()
+        name = raw[raw.index(b'(')+1:end].decode('ascii', 'replace')
+        return dict(pid=pid, parent=int(fields[1]), group=int(fields[2]), session=int(fields[3]),
+                    startTicks=int(fields[19]), state=fields[0].decode('ascii'),
+                    userTicks=int(fields[11]), systemTicks=int(fields[12]),
+                    name=re.sub('[^A-Za-z0-9_.-]', '?', name)[:40])
+    except (FileNotFoundError, ProcessLookupError):
+        return None
+
+
+def linux_direct_children(pid):
+    children = set()
+    tasks = list((Path('/proc')/str(pid)/'task').iterdir())
+    need(len(tasks) <= 1024, 'NATIVE_TASK_LIMIT')
+    for task in tasks:
+        try:
+            with (task/'children').open('rb') as stream:
+                raw = stream.read(16385)
+        except FileNotFoundError:
+            continue
+        need(len(raw) <= 16384, 'NATIVE_CHILD_LIMIT')
+        children.update(int(value) for value in raw.split())
+    need(len(children) <= 1024, 'NATIVE_CHILD_LIMIT')
+    return sorted(children)
+
+
+def linux_native_sample(guardian):
+    queue, rows, seen, limited = [(guardian, None, None)], [], set(), False
+    while queue and len(rows) < 128:
+        pid, parent, parent_start = queue.pop(0)
+        if pid in seen:
+            continue
+        seen.add(pid)
+        if parent is not None:
+            owner = linux_process_identity(parent)
+            if owner is None or owner['startTicks'] != parent_start:
+                continue
+        row = linux_process_identity(pid)
+        if row is None or (parent is not None and row['parent'] != parent):
+            continue
+        rows.append(row)
+        try:
+            children = linux_direct_children(pid)
+            current = linux_process_identity(pid)
+            if current is not None and current['startTicks'] == row['startTicks']:
+                remaining = 1024-len(queue)
+                limited |= len(children) > remaining
+                queue.extend((child, pid, row['startTicks']) for child in children[:remaining])
+        except (FileNotFoundError, ProcessLookupError):
+            pass
+        except ValueError:
+            limited = True
+    return dict(atMonotonic=round(time.monotonic(), 3), processes=rows, truncated=bool(queue) or limited)
+
+
+def linux_drain_adopted(guardian):
+    """The fresh guardian has no children except this command and its descendants."""
+    deadline, killed, reaped = time.monotonic()+10, [], 0
+    while True:
+        while True:
+            try:
+                pid, _ = os.waitpid(-1, os.WNOHANG)
+            except ChildProcessError:
+                return dict(complete=True, reaped=reaped, terminated=killed)
+            if pid == 0:
+                break
+            reaped += 1
+        for pid in linux_direct_children(guardian):
+            descriptor = None
+            try:
+                descriptor = os.pidfd_open(pid)
+                identity = linux_process_identity(pid)
+                if identity is not None and identity['parent'] == guardian:
+                    # pidfd pins the kernel process, including across PID reuse.
+                    signal.pidfd_send_signal(descriptor, signal.SIGKILL)
+                    need(len(killed) < 1024, 'NATIVE_DRAIN_LIMIT')
+                    killed.append(dict(pid=pid, startTicks=identity['startTicks']))
+            except ProcessLookupError:
+                pass
+            finally:
+                if descriptor is not None:
+                    os.close(descriptor)
+        need(time.monotonic() < deadline, 'NATIVE_DRAIN_TIMEOUT')
+        time.sleep(0.01)
+
+
+def linux_guardian(payload):
+    """Dedicated fresh interpreter: exclusive subreaper, not the caller's process."""
+    need(sys.platform == 'linux' and hasattr(os, 'pidfd_open') and
+         hasattr(signal, 'pidfd_send_signal'), 'LINUX_NATIVE_SUPPORT')
+    guardian, process, error = os.getpid(), None, None
+    start, timed_out, samples = time.monotonic(), False, []
+    stopping = []
+    def request_stop(number, _frame):
+        stopping[:] = [number]
+    # Installed before any command admission. A signal during interpreter startup
+    # can only terminate a guardian which has not yet launched the command.
+    signal.signal(signal.SIGTERM, request_stop)
+    signal.signal(signal.SIGINT, request_stop)
+    result = dict(schema=1, kind='LINUX_EXCLUSIVE_SUBREAPER', guardianPid=guardian,
+                  commandSHA256=digest(json.dumps(payload['args']).encode()), drain=None)
+    try:
+        need(not linux_direct_children(guardian), 'GUARDIAN_NOT_EXCLUSIVE')
+        libc = ctypes.CDLL(None, use_errno=True)
+        need(libc.prctl(1, signal.SIGTERM, 0, 0, 0) == 0, 'GUARDIAN_PARENT_DEATH_SIGNAL')
+        need(os.getppid() == payload['parentPid'], 'GUARDIAN_PARENT_CHANGED')
+        need(libc.prctl(36, 1, 0, 0, 0) == 0, 'SUBREAPER_ADMISSION')
+        value = ctypes.c_int()
+        need(libc.prctl(37, ctypes.byref(value), 0, 0, 0) == 0 and value.value == 1,
+             'SUBREAPER_READBACK')
+        inherited = sorted(os.sched_getaffinity(0))
+        need(inherited and len(inherited) <= 1024, 'NATIVE_AFFINITY')
+        if payload['singleCpu']:
+            os.sched_setaffinity(0, {inherited[0]})
+        selected = sorted(os.sched_getaffinity(0))
+        need(selected == ([inherited[0]] if payload['singleCpu'] else inherited), 'AFFINITY_READBACK')
+        result['scheduling'] = dict(singleCpuRequested=payload['singleCpu'], inheritedCPUs=inherited,
+                                    selectedCPUs=selected, originalObservedCPUs=None)
+        need(not stopping, 'NATIVE_ABORTED_BEFORE_ADMISSION')
+        with os.fdopen(payload['logFd'], 'wb', closefd=False) as output:
+            process = subprocess.Popen(payload['args'], cwd=payload['cwd'], env=dict(os.environ),
+                                       stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
+            result['originalPid'] = process.pid
+            result['originalIdentity'] = linux_process_identity(process.pid)
+            try:
+                result['scheduling']['originalObservedCPUs'] = sorted(os.sched_getaffinity(process.pid))
+            except ProcessLookupError:
+                pass
+            next_sample = 0
+            while process.poll() is None:
+                now = time.monotonic()
+                if now >= next_sample:
+                    samples.append(linux_native_sample(guardian))
+                    samples = samples[-16:]
+                    next_sample = now+15
+                if now-start >= payload['timeout']:
+                    timed_out = True
+                    process.kill()
+                    break
+                if stopping:
+                    process.kill()
+                    break
+                time.sleep(0.02)
+            process.wait()
+    except Exception as caught:
+        error = dict(type=type(caught).__name__, code=str(caught)[:300])
+    finally:
+        if process is not None and process.poll() is None:
+            process.kill()
+            process.wait()
+        try:
+            # No support child is killed while the original command is alive.
+            samples.append(linux_native_sample(guardian))
+            samples = samples[-16:]
+            result['drain'] = linux_drain_adopted(guardian)
+        except Exception as caught:
+            error = dict(type=type(caught).__name__, code=str(caught)[:300])
+        result.update(exit=None if process is None else process.returncode, timedOut=timed_out,
+                      aborted=bool(stopping), abortSignal=None if not stopping else stopping[-1],
+                      seconds=round(time.monotonic()-start, 3), samples=samples, error=error)
+        packed = (json.dumps(result, sort_keys=True)+'\n').encode()
+        need(len(packed) <= 512*1024, 'NATIVE_OBSERVATION_LIMIT')
+        with Path(payload['receipt']).open('xb') as stream:
+            stream.write(packed)
+    return 0 if error is None else 1
+
+
+def linux_run_command(args, cwd, env, log, expected, timeout, single_cpu):
+    source = Path(__file__).resolve()
+    source_sha = digest(regular(source, 2*1024*1024))
+    receipt = Path(str(log)+'.native.json')
+    start, guardian = time.monotonic(), None
+    with Path(log).open('xb') as stream:
+        payload = dict(args=args, cwd=str(cwd), logFd=stream.fileno(), timeout=timeout,
+                       singleCpu=single_cpu, receipt=str(receipt), parentPid=os.getpid())
+        try:
+            guardian = subprocess.Popen([sys.executable, '-I', '-B', '-c', LINUX_GUARDIAN_ENTRY,
+                str(source), source_sha], cwd=cwd, env=env, stdin=subprocess.PIPE,
+                stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, pass_fds=(stream.fileno(),),
+                start_new_session=True)
+            _, errors = guardian.communicate(json.dumps(payload).encode(), timeout=timeout+30)
+            need(len(errors) <= 64*1024 and guardian.returncode == 0, 'LINUX_GUARDIAN_EXIT')
+        finally:
+            if guardian is not None and guardian.poll() is None:
+                # Never SIGKILL the sole subreaper before its owned tree drains.
+                guardian.terminate()
+                try:
+                    guardian.wait(timeout=15)
+                except subprocess.TimeoutExpired:
+                    need(False, 'LINUX_GUARDIAN_SHUTDOWN_INCOMPLETE')
+    native = document(regular(receipt, 512*1024))
+    need(native.get('kind') == 'LINUX_EXCLUSIVE_SUBREAPER' and native.get('error') is None and
+         native.get('drain', {}).get('complete') is True and
+         native.get('commandSHA256') == digest(json.dumps(args).encode()) and
+         type(native.get('exit')) is int and type(native.get('timedOut')) is bool,
+         'NATIVE_TERMINAL_PROOF')
+    need(native.get('aborted') is False, 'NATIVE_ABORTED_INVOCATION')
+    raw = regular(Path(log))
+    return dict(command=args, cwd=str(cwd), exit=native['exit'], expectedExit=expected,
+                timedOut=native['timedOut'], seconds=round(time.monotonic()-start, 3), log=str(log),
+                bytes=len(raw), sha256=digest(raw), descendantsDrained=True,
+                processControl='LINUX_EXCLUSIVE_SUBREAPER',
+                nativeObservation=dict(path=str(receipt), bytes=receipt.stat().st_size,
+                                       sha256=digest(regular(receipt, 512*1024)),
+                                       sourceSHA256=source_sha))
+
+
 class WindowsJob:
     """Admit a suspended child before it can create descendants; drain on close."""
     def __init__(self):
@@ -389,9 +619,15 @@ def drain_posix_group(pid):
         time.sleep(0.01)
 
 
-def run_command(args, cwd, env, log, expected=0, timeout=21600):
+def run_command(args, cwd, env, log, expected=0, timeout=21600, single_cpu=False):
     need(type(expected) is int and type(args) is list and args and
          all(type(v) is str and v for v in args), 'COMMAND_SCHEMA')
+    need(type(single_cpu) is bool and type(timeout) in (int, float) and
+         math.isfinite(timeout) and 0 < timeout <= 21600,
+         'NATIVE_SCHEDULE_SCHEMA')
+    if sys.platform == 'linux':
+        return linux_run_command(args, cwd, env, log, expected, timeout, single_cpu)
+    need(os.name == 'nt' and not single_cpu, 'SUPPORTED_NATIVE_CONTAINMENT')
     start = time.monotonic()
     timed_out = False
     job = WindowsJob() if os.name == 'nt' else None
@@ -998,7 +1234,8 @@ def replay(root, evidence, max_attempts=MAX_ATTEMPTS):
         need(tools_before == checkpoint['tools'], 'INVOCATION_TOOL_INPUTS_CHANGED')
         live_preflight(module, directory)
         args = [sys.executable, '-I', '-B', PREFIX+'main_integration44.py', '--historical']
-        row = run_command(args, root, env, directory/'normal-full-invocation.log')
+        row = run_command(args, root, env, directory/'normal-full-invocation.log',
+                          single_cpu=sys.platform == 'linux')
         tools_after = tools_identity(checkpoint['node'], checkpoint['npm'])
         row.update(head=BASE, tree=TREE, toolInputsBefore=tools_before, toolInputsAfter=tools_after,
                    toolInputQualification='HASHED_BEFORE_AND_AFTER_ACTUAL_NORMAL_INVOCATION')

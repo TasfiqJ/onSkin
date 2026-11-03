@@ -36,6 +36,10 @@ PREVIOUS_SEALS = ((
     '007aff70c652303890e03336ddc9a7ac0afb18ee',
     'b6f0f57efebfc531ecded46fc3f9233489713d61',
     '2090720900a2e892672a835d79bee4b0b73789a3',
+), (
+    '708c49e4509e0b4637cc2ed39a804414eb58771f',
+    '9a370a012101060dc6881aa7e53482ef69b61e6a',
+    'f25eaaeaa24414f84d01cf9fba07058aa9d0b5e7',
 ))
 PREFIX = 'scripts/release/full-app-j01/'
 DOCS = 'docs/release/full-app-j01/'
