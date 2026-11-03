@@ -321,6 +321,95 @@ class CompositeHistoricalControls(unittest.TestCase):
             with self.subTest(mode=mode,fixture=fixture,env=env),self.assertRaises(ValueError):
                 m.historical_options(mode,fixture,result,env)
 
+    def test_evidence_path_is_historical_only_and_creates_only_a_new_external_workspace(self):
+        with tempfile.TemporaryDirectory(prefix='c45-evidence-path-') as directory:
+            root=Path(directory).resolve();target=root/'new-owned-workspace'
+            m.historical_options(True,None,None,{},target)
+            for mode,path in ((False,target),(True,Path('relative'))):
+                with self.subTest(mode=mode,path=path),self.assertRaisesRegex(ValueError,'R45_HISTORICAL_EVIDENCE_PATH'):
+                    m.historical_options(mode,None,None,{},path)
+            self.assertEqual(m.historical_workspace(target),target)
+            self.assertEqual(list(target.iterdir()),[])
+            with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_EVIDENCE_NEW'):
+                m.historical_workspace(target)
+            fixture=root/'source';fixture.mkdir()
+            with patch.object(m,'ROOT',fixture),self.assertRaisesRegex(ValueError,'R45_EXTERNAL_CLONE'):
+                m.historical_workspace(fixture/'must-not-be-created')
+            self.assertFalse((fixture/'must-not-be-created').exists())
+            with self.assertRaisesRegex(ValueError,'R45_EXTERNAL_CLONE'):
+                m.historical_workspace(fixture/'must-stay-read-only',(fixture,))
+            self.assertFalse((fixture/'must-stay-read-only').exists())
+            with patch.object(m.tempfile,'gettempdir',return_value=str(fixture)), \
+                 patch.object(m.tempfile,'mkdtemp') as create, self.assertRaisesRegex(ValueError,'R45_EXTERNAL_CLONE'):
+                m.historical_workspace(forbidden_roots=(fixture,))
+            create.assert_not_called()
+            parent_file=root/'not-a-directory';parent_file.write_bytes(b'unchanged')
+            with self.assertRaises((OSError,ValueError)):
+                m.historical_workspace(parent_file/'child')
+            self.assertEqual(parent_file.read_bytes(),b'unchanged')
+
+    def test_cli_evidence_dispatch_and_refusal_never_write_to_a_rejected_existing_path(self):
+        with tempfile.TemporaryDirectory(prefix='c45-cli-evidence-') as directory:
+            target=Path(directory).resolve();sentinel=target/'sentinel';sentinel.write_bytes(b'keep')
+            for mode in (False,True):
+                args=['main45']+(['--historical'] if mode else [])+['--historical-evidence-dir',str(target)]
+                output=io.StringIO()
+                with patch.dict(m.os.environ,{},clear=True),patch.object(m.sys,'argv',args), \
+                     patch.object(m,'historical',side_effect=ValueError('R45_HISTORICAL_EVIDENCE_NEW')) as history, \
+                     patch.object(m,'verify') as current,patch.object(m.sys,'stderr',io.StringIO()),redirect_stdout(output):
+                    self.assertEqual(m.main(),1)
+                    current.assert_not_called()
+                    if mode:history.assert_called_once_with(None,None,target)
+                    else:history.assert_not_called()
+                self.assertFalse(json.loads(output.getvalue())['valid'])
+                self.assertEqual(list(target.iterdir()),[sentinel]);self.assertEqual(sentinel.read_bytes(),b'keep')
+
+    def test_incomplete_normal_result_is_retained_and_reported_without_changing_its_refusal(self):
+        helper=m.historical_helper()
+        for reporting_error in (False,True):
+            with self.subTest(reportingError=reporting_error),tempfile.TemporaryDirectory(prefix='c45-incomplete-routing-') as directory:
+                workspace=Path(directory).resolve()/'owned';checkpoint=dict(node='synthetic-node',npm='synthetic-npm-cli.js')
+                incomplete=dict(status='INCOMPLETE_REQUIRES_RESUME_OR_REPAIR',attempts=[],stopReason=None,
+                    qualification='SYNTHETIC_UNIT_ROUTING_ONLY_NOT_HISTORICAL_EVIDENCE',acceptanceGranted=False,release='NO_GO')
+                identity=dict(head='a'*40,tree='b'*40,indexBytes=0,indexSHA256=m.digest(b''),trackedBlobs=0)
+                def clone(args,cwd,env,path,expected,timeout):
+                    path.write_bytes(b'synthetic clone routing fixture only\n')
+                    return dict(command=args,cwd=str(cwd),exit=0,expectedExit=0,timedOut=False,
+                        log=str(path),bytes=path.stat().st_size,sha256=m.digest(path.read_bytes()))
+                def report(value,evidence,stream):
+                    self.assertEqual(value,incomplete)
+                    self.assertEqual(evidence,workspace/'full-normal-original44')
+                    if reporting_error:raise ValueError('C45H_SYNTHETIC_REPORT_FAILURE')
+                    print('SYNTHETIC_INCOMPLETE_ROUTING_REPORT',file=stream)
+                error=io.StringIO()
+                with patch.dict(m.os.environ,{},clear=True),patch.object(m,'authenticate_parent'), \
+                     patch.object(m,'source_identity',return_value=identity),patch.object(m,'historical_helper',return_value=helper), \
+                     patch.object(helper,'prepare',return_value=(None,{},checkpoint)), \
+                     patch.object(helper,'git',return_value=(m.PARENT_BRANCH+'\n').encode()), \
+                     patch.object(helper,'run_command',side_effect=clone),patch.object(helper,'replay',return_value=incomplete), \
+                     patch.object(helper,'report_replay_failure',side_effect=report,create=True) as reported, \
+                     patch.object(m,'run_historical_control',return_value={}),patch.object(m.sys,'stderr',error), \
+                     self.assertRaisesRegex(ValueError,'R45_FULL_NORMAL_INVOCATION_INCOMPLETE'):
+                    m.historical(evidence_directory=workspace)
+                reported.assert_called_once()
+                self.assertEqual(json.loads((workspace/'logs/original44-replay-result.json').read_bytes()),incomplete)
+                retained=json.loads((workspace/'cli-failure.json').read_bytes())
+                self.assertEqual(retained['error'],'R45_FULL_NORMAL_INVOCATION_INCOMPLETE')
+                self.assertFalse(retained['acceptanceGranted']);self.assertEqual(retained['release'],'NO_GO')
+                self.assertIn('C45H_SYNTHETIC_REPORT_FAILURE' if reporting_error else
+                    'SYNTHETIC_INCOMPLETE_ROUTING_REPORT',error.getvalue())
+
+    def test_retained_artifact_keeps_all_existing_commands_and_fixed_bounded_evidence_paths(self):
+        step=m.new_step()
+        self.assertIn('main_integration45.py --historical --historical-evidence-dir "$RUNNER_TEMP/c45-history"',step)
+        self.assertIn('if: always()',step);self.assertNotIn('continue-on-error',step)
+        for member in ('logs/**','full-normal-original44/**','diagnostics/**','cli-failure.json'):
+            self.assertIn('${{ runner.temp }}/c45-history/'+member,step)
+        self.assertIn('actions/upload-artifact@v4',step)
+        self.assertIn('retention-days: 7',step)
+        self.assertIn('compact-shelf-target37.test.mjs',step)
+        self.assertIn('owned-bottle-formula38.test.mjs',step)
+
     def test_composite_controls_keep_original_counts_and_refusal_literal_commands(self):
         root=Path(tempfile.gettempdir()).resolve()/'named-fixture-is-not-required-to-be-pr45-directory'
         checkpoint=dict(node=str(root/'node'),npm=str(root/'npm-cli.js'))

@@ -3,6 +3,7 @@ import copy
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager, ExitStack
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -18,6 +19,51 @@ from unittest.mock import patch
 spec = importlib.util.spec_from_file_location('historical45', Path(__file__).with_name('historicalReplay45.py'))
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
+
+
+@contextmanager
+def native_failed_stage(child_message='C45_OWNED_NATIVE_FAILURE', padding=0, recorded_stage=True):
+    """Actual owned failing subprocesses/Git/FS; synthetic test programs only."""
+    with tempfile.TemporaryDirectory(prefix='c45-failed-stage-') as directory:
+        base = Path(directory).resolve()
+        fixture, workspace = base/'fixture', base/'child-workspace'
+        source = workspace/'source'
+        fixture.mkdir()
+        source.mkdir(parents=True)
+        for root in (fixture, source):
+            subprocess.run(['git', 'init', '--quiet'], cwd=root, check=True, capture_output=True)
+            subprocess.run(['git', 'config', 'core.autocrlf', 'false'], cwd=root, check=True)
+            (root/'fixture.txt').write_bytes(b'SYNTHETIC_NATIVE_CONTROL_NOT_CAMPAIGN_SOURCE\n')
+        script = fixture/m.PREFIX/'main_integration44.py'
+        script.parent.mkdir(parents=True)
+        text = 'print("N"*'+str(padding)+')\n'
+        if recorded_stage:
+            text += 'print('+repr('R44_HISTORICAL_WORKSPACE '+str(workspace))+')\n'
+        text += 'print("SYNTHETIC_NORMAL_INVOCATION_FAILURE");raise SystemExit(1)\n'
+        script.write_bytes(text.encode())
+        for root in (fixture, source):
+            subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+            subprocess.run(['git', '-c', 'user.name=C45 native control', '-c', 'user.email=c45@invalid.test',
+                            'commit', '--quiet', '-m', 'synthetic native control'], cwd=root, check=True)
+        head = m.git(fixture, 'rev-parse', 'HEAD').decode().strip()
+        tree = m.git(fixture, 'rev-parse', 'HEAD^{tree}').decode().strip()
+        evidence = base/'evidence'
+        attempt = evidence/'attempt-1'
+        attempt.mkdir(parents=True)
+        (workspace/'logs').mkdir()
+        child = m.run_command([sys.executable, '-I', '-B', '-c',
+            'print("C"*'+str(padding)+');print('+repr(child_message)+');raise SystemExit(7)'],
+            source, dict(os.environ), workspace/'logs/control.log')
+        child['name'] = 'control'
+        (workspace/'logs/receipts.json').write_text(json.dumps([child]))
+        with patch.object(m, 'BASE', head), patch.object(m, 'TREE', tree):
+            command = [sys.executable, '-I', '-B', m.PREFIX+'main_integration44.py', '--historical']
+            row = m.run_command(command, fixture, dict(os.environ), attempt/'normal-full-invocation.log')
+            row.update(head=head, tree=tree)
+            result = dict(status='INCOMPLETE_REQUIRES_RESUME_OR_REPAIR', attempts=[row],
+                          acceptanceGranted=False, release='NO_GO')
+            yield SimpleNamespace(base=base, fixture=fixture, workspace=workspace, source=source,
+                evidence=evidence, attempt=attempt, child=child, row=row, result=result, command=command)
 
 
 class HistoricalExecutionControls(unittest.TestCase):
@@ -490,8 +536,11 @@ class HistoricalExecutionControls(unittest.TestCase):
             base = Path(directory).resolve()
             root = base/'fixture'
             root.mkdir()
+            evidence = base/'external-evidence'
+            directory = evidence/'attempt-1'
+            directory.mkdir(parents=True)
             raw = b'{"valid":false,"error":"R44_PARENT_TREE"}\n'
-            path = root/'semantic.log'
+            path = directory/'normal-full-invocation.log'
             path.write_bytes(raw)
             row = dict(command=[sys.executable, '-I', '-B', m.PREFIX+'main_integration44.py', '--historical'],
                        cwd=str(root), head=m.BASE, tree=m.TREE, exit=1, expectedExit=0,
@@ -500,14 +549,14 @@ class HistoricalExecutionControls(unittest.TestCase):
                        toolInputsBefore={'synthetic': 'metadata-test-only'},
                        toolInputsAfter={'synthetic': 'metadata-test-only'})
             self.assertEqual(m.original_refusal(row, root), 'R44_PARENT_TREE')
-            diagnosis = m.diagnose(dict(root=str(root), row=row), root, root, dict(os.environ))
+            diagnosis = m.diagnose(dict(root=str(root), row=row), root, directory, dict(os.environ))
             self.assertEqual(diagnosis['classification'], 'ORIGINAL_SEMANTIC_OR_CUSTODY_REFUSAL_NO_RETRY')
             self.assertFalse((root/'diagnostic.log').exists())
+            self.assertFalse((directory/'diagnostic.log').exists())
+            self.assertEqual(m.document(m.regular(directory/'diagnosis.json')), diagnosis)
             success = dict(row, exit=0)
             with self.assertRaisesRegex(ValueError, 'C45H_SEMANTIC_REFUSAL_RETRIED_WITHOUT_REPAIR'):
                 m.verify_attempts(root, [row, success])
-            evidence = base/'external-evidence'
-            evidence.mkdir()
             (evidence/'attempts.json').write_text(json.dumps([row]))
             with patch.object(m, 'prepare', return_value=(None, {}, {})), \
                  patch.object(m, 'run_command', side_effect=AssertionError('must not execute after semantic stop')):
@@ -588,6 +637,171 @@ class HistoricalExecutionControls(unittest.TestCase):
         for value in (0, 4, -1, True, None, '3'):
             with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'C45H_ATTEMPT_LIMIT'):
                 m.replay(Path.cwd(), Path.cwd(), value)
+
+    def test_native_failed_child_is_immutably_copied_and_reported_without_executing_receipt_command(self):
+        with native_failed_stage() as value:
+            marker = value.base/'must-not-execute'
+            forged = dict(value.child, command=[sys.executable, '-c',
+                'from pathlib import Path;Path('+repr(str(marker))+').write_text("unsafe")'])
+            (value.workspace/'logs/receipts.json').write_text(json.dumps([forged]))
+            preserved = m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+            self.assertEqual(preserved['status'], 'VERIFIED_FAILED_STAGE_RETAINED')
+            self.assertEqual(m.regular(value.attempt/'failed-stage.log'), m.verify_receipt(value.child))
+            self.assertEqual(preserved['selectedSource']['head'], m.git(value.source, 'rev-parse', 'HEAD').decode().strip())
+            with patch.object(m, 'run_command', side_effect=AssertionError('must not execute receipt-provided code')):
+                diagnosis = m.diagnose(preserved['originalStage'], value.fixture, value.attempt, dict(os.environ))
+            self.assertEqual(diagnosis['classification'], 'SEMANTIC_OR_UNBOUNDED_DIAGNOSTIC_NOT_RETRIED')
+            self.assertFalse(marker.exists())
+            stream = io.StringIO()
+            metadata = m.report_replay_failure(value.result, value.evidence, stream)
+            reported = json.loads(stream.getvalue())
+            self.assertEqual(reported['result'], value.result)
+            self.assertEqual(metadata['logs'], 3)
+            self.assertIn('C45_OWNED_NATIVE_FAILURE', stream.getvalue())
+            self.assertTrue(all(log['tailBytes'] <= 65536 for log in reported['logs']))
+            self.assertEqual(m.preserve_failed_stage(value.row, value.fixture, value.attempt), preserved)
+
+    def test_semantic_failed_child_keeps_diagnosis_before_stop_and_never_executes_a_diagnostic(self):
+        with native_failed_stage('{"error":"R41_PARENT_TREE"}') as value:
+            preserved = m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+            with patch.object(m, 'run_command', side_effect=AssertionError('semantic refusal cannot run diagnostic')):
+                diagnosis = m.diagnose(preserved['originalStage'], value.fixture, value.attempt, dict(os.environ))
+            self.assertEqual(diagnosis['classification'], 'ORIGINAL_SEMANTIC_OR_CUSTODY_REFUSAL_NO_RETRY')
+            self.assertEqual(diagnosis['refusal'], 'R41_PARENT_TREE')
+            self.assertEqual(m.document(m.regular(value.attempt/'diagnosis.json')), diagnosis)
+            self.assertTrue((value.attempt/'diagnosis-receipt.json').is_file())
+            self.assertFalse((value.attempt/'diagnostic.log').exists())
+
+    def test_no_recorded_stage_preserves_actual_full_normal_failure_and_unknown_diagnosis(self):
+        with native_failed_stage(recorded_stage=False) as value:
+            before = m.regular(Path(value.row['log']))
+            preserved = m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+            self.assertEqual((preserved['status'], preserved['cause']), ('NO_RECORDED_FAILED_STAGE', 'UNKNOWN'))
+            diagnosis = m.diagnose(None, value.fixture, value.attempt, dict(os.environ))
+            self.assertEqual(diagnosis['classification'], 'UNCLASSIFIED_NO_RECORDED_STAGE')
+            self.assertFalse((value.attempt/'failed-stage.log').exists())
+            stream = io.StringIO()
+            self.assertEqual(m.report_replay_failure(value.result, value.evidence, stream)['logs'], 2)
+            self.assertEqual(m.regular(Path(value.row['log'])), before)
+            self.assertIn('SYNTHETIC_NORMAL_INVOCATION_FAILURE', stream.getvalue())
+
+    def test_failure_evidence_bad_hash_child_path_and_normal_path_refuse_without_copy(self):
+        for change in ('normal-hash', 'normal-path', 'child-hash', 'child-path'):
+            with self.subTest(change=change), native_failed_stage() as value:
+                row = dict(value.row)
+                if change == 'normal-hash':
+                    row['sha256'] = '0'*64
+                elif change == 'normal-path':
+                    row['log'] = str(value.base/'unowned.log')
+                else:
+                    child = dict(value.child)
+                    child['sha256' if change == 'child-hash' else 'log'] = '0'*64 if change == 'child-hash' else str(value.base/'other.log')
+                    (value.workspace/'logs/receipts.json').write_text(json.dumps([child]))
+                with self.assertRaises(ValueError):
+                    m.preserve_failed_stage(row, value.fixture, value.attempt)
+                self.assertFalse((value.attempt/'failed-stage.log').exists())
+                self.assertFalse((value.attempt/'failed-stage.json').exists())
+
+    def test_failure_evidence_rejects_linked_oversized_and_changed_destination_native_files(self):
+        for change in ('linked', 'oversized', 'changed-copy'):
+            with self.subTest(change=change), native_failed_stage() as value:
+                if change == 'linked':
+                    os.link(value.child['log'], value.base/'linked-child.log')
+                elif change == 'oversized':
+                    Path(value.child['log']).write_bytes(b'X'*(8*1024*1024+1))
+                else:
+                    m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+                    (value.attempt/'failed-stage.log').write_bytes(b'changed')
+                with self.assertRaises(ValueError):
+                    m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+                if change == 'changed-copy':
+                    self.assertEqual((value.attempt/'failed-stage.log').read_bytes(), b'changed')
+
+    def test_regular_growth_is_bounded_before_allocating_the_changed_file(self):
+        with tempfile.TemporaryDirectory(prefix='c45-bounded-failure-read-') as directory:
+            path = Path(directory)/'log'
+            path.write_bytes(b'original')
+            actual = Path.lstat
+            grown = []
+            def lstat(target):
+                value = actual(target)
+                if target == path and not grown:
+                    grown.append(True)
+                    path.write_bytes(b'G'*200)
+                return value
+            with patch.object(Path, 'lstat', lstat), self.assertRaisesRegex(ValueError, 'C45H_REGULAR_LIMIT'):
+                m.regular(path, 8)
+
+    def test_report_refuses_changed_child_or_diagnosis_hash_before_writing_any_tail(self):
+        for changed in ('failed-stage.log', 'diagnosis.json'):
+            with self.subTest(changed=changed), native_failed_stage() as value:
+                m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+                m.diagnose(None, value.fixture, value.attempt, dict(os.environ))
+                path = value.attempt/changed
+                path.write_bytes(path.read_bytes()+b' ')
+                stream = io.StringIO()
+                with self.assertRaisesRegex(ValueError, 'C45H_FAILURE_REPORT_'):
+                    m.report_replay_failure(value.result, value.evidence, stream)
+                self.assertEqual(stream.getvalue(), '')
+
+    def test_report_rejects_arbitrary_normal_path_without_reading_it(self):
+        with native_failed_stage() as value:
+            row = dict(value.row, log=str(value.base/'private-unowned-file'))
+            result = dict(value.result, attempts=[row])
+            with patch.object(m, 'regular', side_effect=AssertionError('unowned path must never be read')):
+                with self.assertRaisesRegex(ValueError, 'C45H_FAILURE_REPORT_LOG_PATH'):
+                    m.report_replay_failure(result, value.evidence, io.StringIO())
+
+    def test_report_caps_each_tail_total_bytes_and_retains_all_native_full_logs(self):
+        with native_failed_stage(padding=200000) as value:
+            attempts = []
+            full = {}
+            for number in range(1, 4):
+                directory = value.evidence/('attempt-'+str(number))
+                directory.mkdir(exist_ok=True)
+                row = value.row if number == 1 else m.run_command(value.command, value.fixture,
+                    dict(os.environ), directory/'normal-full-invocation.log')
+                row.update(head=m.BASE, tree=m.TREE)
+                attempts.append(row)
+                m.preserve_failed_stage(row, value.fixture, directory)
+                m.persist_diagnosis(value.fixture, directory, dict(classification='SYNTHETIC_BUDGET_CONTROL',
+                    padding='D'*200000))
+                for name in ('normal-full-invocation.log', 'failed-stage.log', 'diagnosis.json'):
+                    path = directory/name
+                    full[path] = m.digest(m.regular(path))
+            stream = io.StringIO()
+            result = dict(value.result, attempts=attempts)
+            metadata = m.report_replay_failure(result, value.evidence, stream)
+            raw = stream.getvalue().encode('ascii')
+            self.assertLessEqual(len(raw), 512*1024)
+            self.assertEqual(metadata['logs'], 9)
+            logs = json.loads(raw)['logs']
+            self.assertTrue(all(log['tailBytes'] <= 65536 for log in logs))
+            self.assertTrue(any(log['tailBytes'] < 65536 for log in logs))
+            self.assertTrue(all(m.digest(m.regular(path)) == expected for path, expected in full.items()))
+
+    def test_report_refuses_oversized_result_metadata_without_partial_output(self):
+        with native_failed_stage() as value:
+            result = dict(value.result, oversized='M'*(512*1024))
+            stream = io.StringIO()
+            with self.assertRaisesRegex(ValueError, 'C45H_FAILURE_REPORT_TOTAL_LIMIT'):
+                m.report_replay_failure(result, value.evidence, stream)
+            self.assertEqual(stream.getvalue(), '')
+
+    def test_report_includes_actual_owned_diagnostic_raw_tail_and_refuses_its_changed_receipt(self):
+        with native_failed_stage() as value:
+            m.preserve_failed_stage(value.row, value.fixture, value.attempt)
+            diagnostic = m.run_command([sys.executable, '-I', '-B', '-c',
+                'print("ACTUAL_OWNED_DIAGNOSTIC_FAILURE");raise SystemExit(3)'], value.source,
+                dict(os.environ), value.attempt/'diagnostic.log')
+            m.persist_diagnosis(value.fixture, value.attempt, dict(classification='SYNTHETIC_DIAGNOSTIC_CONTROL',
+                diagnostic=diagnostic))
+            stream = io.StringIO()
+            self.assertEqual(m.report_replay_failure(value.result, value.evidence, stream)['logs'], 4)
+            self.assertIn('ACTUAL_OWNED_DIAGNOSTIC_FAILURE', stream.getvalue())
+            Path(diagnostic['log']).write_bytes(b'changed')
+            with self.assertRaisesRegex(ValueError, 'C45H_LOG_CHANGED'):
+                m.report_replay_failure(value.result, value.evidence, io.StringIO())
 
 
 if __name__ == '__main__':

@@ -54,7 +54,9 @@ def regular(path, limit=8*1024*1024):
     before = path.lstat()
     need(path.is_file() and not path.is_symlink() and before.st_nlink == 1 and
          not getattr(before, 'st_file_attributes', 0) & 1024 and before.st_size <= limit, 'REGULAR_FILE')
-    raw = path.read_bytes()
+    with path.open('rb') as stream:
+        raw = stream.read(limit+1)
+    need(len(raw) <= limit, 'REGULAR_LIMIT')
     after = path.lstat()
     need((before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) ==
          (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns), 'CHANGED_READ')
@@ -607,6 +609,133 @@ def failure_stage(raw, fixture):
     return selected
 
 
+def failure_directory(fixture, evidence):
+    path = Path(evidence).absolute()
+    need(path == external_evidence(fixture, path), 'FAILURE_EVIDENCE_PATH')
+    for parent in (path, *path.parents):
+        info = parent.lstat()
+        need(parent.is_dir() and not parent.is_symlink() and
+             not getattr(info, 'st_file_attributes', 0) & 1024, 'FAILURE_EVIDENCE_DIRECTORY')
+    return path
+
+
+def immutable_failure_file(path, raw):
+    need(type(raw) is bytes and len(raw) <= 8*1024*1024, 'FAILURE_EVIDENCE_LIMIT')
+    if path.exists():
+        need(regular(path) == raw, 'FAILURE_EVIDENCE_CHANGED')
+        return
+    with path.open('xb') as stream:
+        stream.write(raw)
+    need(regular(path) == raw, 'FAILURE_EVIDENCE_READBACK')
+
+
+def persist_diagnosis(fixture, evidence, value):
+    directory = failure_directory(fixture, evidence)
+    value = dict(value, diagnosticOnly=True, normalOriginalCommandStillRequired=True,
+                 acceptanceGranted=False, release='NO_GO')
+    target = directory/'diagnosis.json'
+    raw = (json.dumps(value, sort_keys=True, indent=2)+'\n').encode()
+    immutable_failure_file(target, raw)
+    immutable_failure_file(directory/'diagnosis-receipt.json', (json.dumps(dict(
+        schema=1, log=str(target), bytes=len(raw), sha256=digest(raw), diagnosticOnly=True,
+        acceptanceGranted=False, release='NO_GO'), sort_keys=True, indent=2)+'\n').encode())
+    return value
+
+
+def preserve_failed_stage(row, fixture, evidence):
+    """Copy only a verified failed child log; never execute its command."""
+    fixture = Path(fixture).resolve()
+    directory = failure_directory(fixture, evidence)
+    need(row.get('cwd') == str(fixture) and row.get('head') == BASE and row.get('tree') == TREE and
+         type(row.get('timedOut')) is bool, 'FAILED_INVOCATION_FIXTURE')
+    need(row.get('log') == str(directory/'normal-full-invocation.log'), 'FAILED_INVOCATION_LOG_PATH')
+    raw = verify_receipt(row, [sys.executable, '-I', '-B', PREFIX+'main_integration44.py', '--historical'], 0)
+    need(row['exit'] != row['expectedExit'] or row['timedOut'], 'FAILED_INVOCATION_REQUIRED')
+    stage = failure_stage(raw, fixture)
+    value = dict(schema=1, normalInvocation=row, originalStage=stage,
+                 qualification='VERIFIED_FAILURE_EVIDENCE_NOT_SOURCE_ACCEPTANCE',
+                 acceptanceGranted=False, release='NO_GO')
+    if stage is None:
+        value.update(status='NO_RECORDED_FAILED_STAGE', cause='UNKNOWN',
+                     explanation='Verified normal log retained; no deepest failed child receipt was recorded.')
+    else:
+        child = verify_receipt(stage['row'])
+        source = Path(stage['root'])
+        head = git(source, 'rev-parse', 'HEAD').decode().strip()
+        tree = git(source, 'rev-parse', 'HEAD^{tree}').decode().strip()
+        need(re.fullmatch('[0-9a-f]{40}', head) and re.fullmatch('[0-9a-f]{40}', tree), 'FAILED_SOURCE_IDENTITY')
+        target = directory/'failed-stage.log'
+        immutable_failure_file(target, child)
+        value.update(status='VERIFIED_FAILED_STAGE_RETAINED', selectedSource=dict(root=str(source), head=head, tree=tree),
+                     failedLog=dict(log=str(target), bytes=len(child), sha256=digest(child)))
+    immutable_failure_file(directory/'failed-stage.json',
+                           (json.dumps(value, sort_keys=True, indent=2)+'\n').encode())
+    return value
+
+
+def report_replay_failure(result, evidence, stream=None):
+    """Emit actual incomplete metadata and verified tails within one512KiB budget."""
+    need(type(result) is dict and result.get('status') != 'COMPLETE_ORIGINAL44_FULL_INVOCATION' and
+         result.get('acceptanceGranted') is False and result.get('release') == 'NO_GO', 'FAILURE_REPORT_STATUS')
+    attempts = result.get('attempts', [])
+    need(type(attempts) is list and len(attempts) <= MAX_ATTEMPTS, 'FAILURE_REPORT_ATTEMPTS')
+    evidence = Path(evidence).resolve()
+    logs = []
+    def add(path, raw):
+        need(len(logs) < 16, 'FAILURE_REPORT_LOG_LIMIT')
+        logs.append(dict(path=str(path), bytes=len(raw), sha256=digest(raw), tail=raw[-65536:]))
+    for row in attempts:
+        path = Path(row['log'])
+        need(path.is_absolute() and path.name == 'normal-full-invocation.log' and
+             path.parent.parent == evidence and re.fullmatch('attempt-[1-3]', path.parent.name),
+             'FAILURE_REPORT_LOG_PATH')
+        directory = failure_directory(Path(row['cwd']), path.parent)
+        add(path, verify_receipt(row, [sys.executable, '-I', '-B', PREFIX+'main_integration44.py', '--historical'], 0))
+        preserved = directory/'failed-stage.json'
+        if preserved.exists():
+            value = document(regular(preserved))
+            need(value.get('normalInvocation') == row and value.get('acceptanceGranted') is False and
+                 value.get('release') == 'NO_GO', 'FAILURE_REPORT_STAGE')
+            if 'failedLog' in value:
+                failed = value['failedLog']
+                target = directory/'failed-stage.log'
+                need(failed.get('log') == str(target), 'FAILURE_REPORT_CHILD_PATH')
+                raw = regular(target)
+                need(len(raw) == failed.get('bytes') and digest(raw) == failed.get('sha256'), 'FAILURE_REPORT_CHILD_HASH')
+                add(target, raw)
+        diagnosis = directory/'diagnosis.json'
+        if diagnosis.exists():
+            raw = regular(diagnosis)
+            receipt = document(regular(directory/'diagnosis-receipt.json'))
+            need(receipt.get('log') == str(diagnosis) and receipt.get('bytes') == len(raw) and
+                 receipt.get('sha256') == digest(raw), 'FAILURE_REPORT_DIAGNOSIS_HASH')
+            value = document(raw)
+            need(value.get('diagnosticOnly') is True and value.get('acceptanceGranted') is False and
+                 value.get('release') == 'NO_GO', 'FAILURE_REPORT_DIAGNOSIS')
+            add(diagnosis, raw)
+            if 'diagnostic' in value:
+                diagnostic = value['diagnostic']
+                target = directory/'diagnostic.log'
+                need(diagnostic.get('log') == str(target), 'FAILURE_REPORT_DIAGNOSTIC_PATH')
+                add(target, verify_receipt(diagnostic))
+    def encode():
+        return (json.dumps(dict(result=result, logs=[dict(
+            path=row['path'], bytes=row['bytes'], sha256=row['sha256'], tailBytes=len(row['tail']),
+            tailSHA256=digest(row['tail']), tailUTF8=row['tail'].decode('utf-8', errors='replace'))
+            for row in logs], qualification='BOUNDED_VERIFIED_FAILURE_TAILS_FULL_RAW_FILES_RETAINED',
+            acceptanceGranted=False, release='NO_GO'), sort_keys=True)+'\n').encode('ascii')
+    packed = encode()
+    while len(packed) > 512*1024 and any(row['tail'] for row in logs):
+        row = max(logs, key=lambda item: len(item['tail']))
+        row['tail'] = row['tail'][len(row['tail'])//2+1:]
+        packed = encode()
+    need(len(packed) <= 512*1024, 'FAILURE_REPORT_TOTAL_LIMIT')
+    stream = sys.stderr if stream is None else stream
+    stream.write(packed.decode('ascii'))
+    stream.flush()
+    return dict(bytes=len(packed), sha256=digest(packed), logs=len(logs))
+
+
 TRACE_CODE = r'''
 import hashlib,importlib.util,json,sys,time,traceback
 from pathlib import Path
@@ -639,16 +768,17 @@ raise SystemExit(code)
 def diagnose(stage, fixture, evidence, env):
     """A traced diagnostic cannot certify an original normal command as passed."""
     if stage is None:
-        return dict(classification='UNCLASSIFIED_NO_RECORDED_STAGE')
+        return persist_diagnosis(fixture, evidence, dict(classification='UNCLASSIFIED_NO_RECORDED_STAGE'))
     root, row = Path(stage['root']).resolve(), stage['row']
     refusal = explicit_refusal(verify_receipt(row))
     if refusal:
-        return dict(classification='ORIGINAL_SEMANTIC_OR_CUSTODY_REFUSAL_NO_RETRY', refusal=refusal,
-                    originalStage=stage, normalOriginalCommandStillRequired=True)
+        return persist_diagnosis(fixture, evidence, dict(
+            classification='ORIGINAL_SEMANTIC_OR_CUSTODY_REFUSAL_NO_RETRY', refusal=refusal, originalStage=stage))
     args = row['command']
     scripts = [v for v in args if re.fullmatch(r'scripts/release/full-app-j01/(?:main_integration[0-9]+|check)\.py', v)]
     if len(scripts) != 1 or '--historical' in args:
-        return dict(classification='SEMANTIC_OR_UNBOUNDED_DIAGNOSTIC_NOT_RETRIED', stage=stage)
+        return persist_diagnosis(fixture, evidence, dict(
+            classification='SEMANTIC_OR_UNBOUNDED_DIAGNOSTIC_NOT_RETRIED', stage=stage))
     evidence = external_evidence(root, evidence)
     relative = scripts[0]
     source_before = selected_fixture_identity(root, fixture)
@@ -664,8 +794,7 @@ def diagnose(stage, fixture, evidence, env):
     value = dict(classification=classification, originalStage=stage, diagnostic=result, exceptionEvents=events,
                  selectedSource=source_before,
                  normalOriginalCommandStillRequired=True)
-    write_json(Path(evidence)/'diagnosis.json', value)
-    return value
+    return persist_diagnosis(fixture, evidence, value)
 
 
 def diagnostic_classification(result, events):
@@ -842,6 +971,12 @@ def replay(root, evidence, max_attempts=MAX_ATTEMPTS):
         verify_attempts(root, attempts)
         refusal = original_refusal(attempts[-1], root)
         if refusal:
+            directory = Path(attempts[-1]['log']).parent
+            need(directory.parent == evidence, 'FAILED_INVOCATION_LOG_PATH')
+            preserved = preserve_failed_stage(attempts[-1], root, directory)
+            stage = dict(root=str(root), row=attempts[-1]) if explicit_refusal(
+                verify_receipt(attempts[-1])) else preserved['originalStage']
+            diagnose(stage, root, directory, env)
             result = dict(status='INCOMPLETE_REQUIRES_RESUME_OR_REPAIR', attempts=attempts,
                           stopReason=refusal, qualification='ORIGINAL_SEMANTIC_REFUSAL_PERSISTS_NO_AUTOMATIC_RETRY',
                           acceptanceGranted=False, release='NO_GO')
@@ -874,12 +1009,13 @@ def replay(root, evidence, max_attempts=MAX_ATTEMPTS):
         write_json(evidence/'attempts.json', attempts)
         if row['exit'] == 0 and not row['timedOut']:
             return completed_result(root, evidence, checkpoint, row, attempts, module)
+        preserved = preserve_failed_stage(row, root, directory)
         refusal = original_refusal(row, root)
+        stage = dict(root=str(root), row=row) if explicit_refusal(verify_receipt(row)) else preserved['originalStage']
+        diagnosis = diagnose(stage, root, directory, env)
         if refusal:
             stop_reason = refusal
             break
-        stage = failure_stage(verify_receipt(row), root)
-        diagnosis = diagnose(stage, root, directory, env)
         if diagnosis['classification'] not in ('REPRODUCED_RETRYABLE_HTTP', 'DIAGNOSTIC_RECOVERED_CAUSE_UNPROVEN'):
             break
         # Never turn diagnostic success into original success. The next iteration

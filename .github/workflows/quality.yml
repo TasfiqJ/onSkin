@@ -250,8 +250,21 @@ jobs:
             test "$?" = 2
           fi
           node scripts/launch/check-contract.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration45.py --historical
+          python3 -I -B scripts/release/full-app-j01/main_integration45.py --historical --historical-evidence-dir "$RUNNER_TEMP/c45-history"
           node scripts/docs/source-packet-supersession09.test.mjs
+
+      - name: Retain Campaign45 historical replay evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: campaign45-history-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/c45-history/logs/**
+            ${{ runner.temp }}/c45-history/full-normal-original44/**
+            ${{ runner.temp }}/c45-history/diagnostics/**
+            ${{ runner.temp }}/c45-history/cli-failure.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Verify tooling security backports
         run: npm run phase9:tooling-security:test

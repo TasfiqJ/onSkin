@@ -131,6 +131,10 @@ class SourceControls45(unittest.TestCase):
             (b'OptionalChangePanel41.test.tsx', b'Missing.test.tsx'),
             (b'            unlinkSync(config);', b'            // omitted cleanup'),
             (b'            rmdirSync(directory);', b'            // omitted cleanup'),
+            (b'--historical-evidence-dir "$RUNNER_TEMP/c45-history"', b'--historical-evidence-dir "$GITHUB_WORKSPACE/history"'),
+            (b'        if: always()', b'        if: false'),
+            (b'${{ runner.temp }}/c45-history/full-normal-original44/**', b'${{ runner.temp }}/c45-history/omitted/**'),
+            (b'          retention-days: 7', b'          retention-days: 0'),
         ):
             bad = current.replace(old, new)
             self.assertNotEqual(current, bad)
@@ -327,7 +331,10 @@ class SourceControls45(unittest.TestCase):
     def test_published_prior_seal_pin_has_actual_exact_tree_parent_and_two_file_delta(self):
         expected = (('812a4208154cef9b3d0f3078dd0a56329caedb3d',
                      'a140cf67b78b61dc12f6c53bd4ec684f8b687b9c',
-                     '118a9d345109cb1fef03ffbaefa65afe847749a1'),)
+                     '118a9d345109cb1fef03ffbaefa65afe847749a1'),
+                    ('007aff70c652303890e03336ddc9a7ac0afb18ee',
+                     'b6f0f57efebfc531ecded46fc3f9233489713d61',
+                     '2090720900a2e892672a835d79bee4b0b73789a3'))
         self.assertEqual(m.PREVIOUS_SEALS, expected)
         for seal, parent, tree in expected:
             m.previous_seal_guard(seal, parent, tree)

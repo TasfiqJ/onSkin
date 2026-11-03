@@ -5,8 +5,8 @@
   "baseTree": "c02c58151aa2c23090712494bb8b758f1feb7dab",
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
-    ".github/workflows/quality.yml": "eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf",
-    "PROGRESS.md": "4fe8e85d1bc251bd0120f94abc6f4010f6c9bb33f6ca33bbfac451804ef01767",
+    ".github/workflows/quality.yml": "cb37e42589b0040ba23606bd601a32891212dda57a98d1ddc24b4dd401f7fc93",
+    "PROGRESS.md": "c48361d58bc76e6d2ab2d2e61c02974a74537b4c794be8c4a927e7213126bb27",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -27,13 +27,13 @@
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
     "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts": "2abac4d5fcedb4905d57d24245dcc122980161ceb449224ec896510d8495ea6d",
     "apps/mobile/src/lib/storage/privateKV.ts": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "ebb55733c3937edee12ba040553bf2bdb95be97b33101e5c71b3d396856a7dc7",
-    "docs/release/full-app-j01/owner-plan-history45.md": "c3f10ea245f2ed4bec0503e28c5301a58541b9e87852108582308c8d3cfea02e",
-    "scripts/release/full-app-j01/historicalReplay45.py": "a12137717b55ed4cd1edf055e1f0572679f7bbf7b7adc40bf104bc4372bb527d",
-    "scripts/release/full-app-j01/historicalReplay45.test.py": "1c2df03ed3ee0fefe65dca2972eaeba94ca5e50b37cee988c9ff145ddbe17263",
-    "scripts/release/full-app-j01/main_integration45.py": "f421f148feeb33c73b86afdaccdd83e8429c8c4b7af830b98bb18eb9127d11b4",
-    "scripts/release/full-app-j01/main_integration45.test.py": "de0b05c3cdcac63024ad24b447a1a3355780e299da5a128dee4b094ce391d310",
-    "scripts/release/full-app-j01/source_consumer45.test.py": "0c5d77694be3081878f1f6553ef0bcda5c34bd623a4fed6bc75d829d9a69ec41"
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "0a24c0949ff6f9bd3d48b8b8f47a3cfad6ec01b14d8094094cd794b055bb1026",
+    "docs/release/full-app-j01/owner-plan-history45.md": "81468865462727e5f82d1dfca82512622d88dd4df9fea1ff666dd060c91d9fed",
+    "scripts/release/full-app-j01/historicalReplay45.py": "a183b78f14c8df65d1bbd6c75abbb624781bee331be48c1afd42ffec3ca813a3",
+    "scripts/release/full-app-j01/historicalReplay45.test.py": "d8f187ec23336b3219306c8f7573b0d5fb51bdd15f6d04ee50eaafdfff10241c",
+    "scripts/release/full-app-j01/main_integration45.py": "fa9a95527248897c5daf5c1c04469f14c8fcc143a6bd3ef18994df56d096f5f2",
+    "scripts/release/full-app-j01/main_integration45.test.py": "14bc3623e091d930bdd538232046f8c1a9411925258796688cb578d17c530a45",
+    "scripts/release/full-app-j01/source_consumer45.test.py": "7c0e122a2a78e69bf58a467d16b30bd1e37aa703eaeaadf013838fbaf5f428d4"
   },
   "commands": [
     {
@@ -747,6 +747,30 @@
       "exit": 1,
       "qualification": "C04_COMMITTED449_FULL_NATIVE20_51_PASS52_PRE_ASSERTION_ERRORS_ORDERING_RED_NOT_PASS",
       "logSha256": "e8e214d6a17d8595867b28f942ed0c9020237e35c8586aef84e68c02376eaf66"
+    },
+    {
+      "command": "Hosted007 Quality41692688917 attempt1 repository126115059900 original four-file browser command",
+      "exit": 1,
+      "qualification": "ACTUAL_HOSTED007_ATTEMPT1_67PASS36_BROWSER_STARTUP_HOOK_FAILURES_FULL_HISTORY_NOT_STARTED_CAUSE_UNPROVEN",
+      "logSha256": "e46242727c69e95197d4c0923c23fbf10b27b24e878a907f4303c86ec55bb4d9"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration45.py",
+        "--historical"
+      ],
+      "exit": 1,
+      "qualification": "ACTUAL_HOSTED007_ATTEMPT2_BROWSER103PASS_SOURCE_FROZEN_SCOPE_REFUSAL_PASS_FULL_NORMAL_INVOCATION_INCOMPLETE_CHILD_CAUSE_UNPROVEN_REPAIR_PENDING_NOT_ACCEPTANCE",
+      "logSha256": "f66f3cc65747022701ebcf019b04beabc0e236fc302f8fc46b49d173b1aaa9d3"
+    },
+    {
+      "command": "C04-18 stable diagnostic checkpoint: rerun all required local/source/replay controls before a new seal or push",
+      "exit": null,
+      "qualification": "PENDING_NEW_DIAGNOSTIC_SOURCE_CHECKS_NOT_ACCEPTANCE",
+      "logSha256": null
     }
   ],
   "acceptanceGranted": false,

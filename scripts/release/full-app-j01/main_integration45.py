@@ -32,7 +32,11 @@ PREVIOUS_SEALS = ((
     '812a4208154cef9b3d0f3078dd0a56329caedb3d',
     'a140cf67b78b61dc12f6c53bd4ec684f8b687b9c',
     '118a9d345109cb1fef03ffbaefa65afe847749a1',
-),)
+), (
+    '007aff70c652303890e03336ddc9a7ac0afb18ee',
+    'b6f0f57efebfc531ecded46fc3f9233489713d61',
+    '2090720900a2e892672a835d79bee4b0b73789a3',
+))
 PREFIX = 'scripts/release/full-app-j01/'
 DOCS = 'docs/release/full-app-j01/'
 PLAN = 'docs/brain/task-specs/M1X-45/SCOPE_PLAN.md'
@@ -354,6 +358,20 @@ def new_step():
         'src/lib/storage/privateKVSourceFence44.test.ts ')
     step = step.replace("include: ['src/features/today/OptionalChangePanel41.test.tsx']",
         "include: ['src/features/today/OptionalChangePanel41.test.tsx', 'src/features/routine/PlanHistoryPanel45.test.tsx']")
+    step = step.replace('main_integration45.py --historical\n',
+        'main_integration45.py --historical --historical-evidence-dir "$RUNNER_TEMP/c45-history"\n')
+    step += ('      - name: Retain Campaign45 historical replay evidence\n'
+        '        if: always()\n'
+        '        uses: actions/upload-artifact@v4\n'
+        '        with:\n'
+        '          name: campaign45-history-${{ github.run_id }}-${{ github.run_attempt }}\n'
+        '          path: |\n'
+        '            ${{ runner.temp }}/c45-history/logs/**\n'
+        '            ${{ runner.temp }}/c45-history/full-normal-original44/**\n'
+        '            ${{ runner.temp }}/c45-history/diagnostics/**\n'
+        '            ${{ runner.temp }}/c45-history/cli-failure.json\n'
+        '          if-no-files-found: warn\n'
+        '          retention-days: 7\n\n')
     return step
 
 
@@ -575,11 +593,42 @@ def historical_controls(fixture, checkpoint, python):
     return historical_commands(fixture.parent, checkpoint['node'], checkpoint['npm'], python, fixture)[6:12]
 
 
-def historical_options(historical_mode, fixture, result, env):
+def historical_options(historical_mode, fixture, result, env, evidence_directory=None):
     need((fixture is None) == (result is None), 'R45_HISTORICAL_REUSE_PAIR')
     if fixture is not None:
         need(historical_mode and not any(k.startswith('GITHUB_') for k in env), 'R45_LOCAL_REUSE_ONLY')
         need(Path(fixture).is_absolute() and Path(result).is_absolute(), 'R45_HISTORICAL_REUSE_PATH')
+    if evidence_directory is not None:
+        need(historical_mode and Path(evidence_directory).is_absolute(), 'R45_HISTORICAL_EVIDENCE_PATH')
+
+
+def historical_workspace(requested=None, forbidden_roots=()):
+    forbidden = (ROOT, *[Path(path) for path in forbidden_roots])
+    def outside(path):
+        need(all(path != root.resolve() and not path.is_relative_to(root.resolve()) for root in forbidden),
+             'R45_EXTERNAL_CLONE')
+    if requested is None:
+        parent = Path(tempfile.gettempdir()).resolve()
+        outside(parent)
+        return Path(tempfile.mkdtemp(prefix='integration45-', dir=str(parent))).resolve()
+    target = Path(requested)
+    need(target.is_absolute(), 'R45_HISTORICAL_EVIDENCE_NEW')
+    # lstat also observes existing dangling Windows junctions. Following
+    # exists()/is_symlink() alone could mistake one for a new destination.
+    try:
+        target.lstat()
+    except FileNotFoundError:
+        pass
+    else:
+        raise ValueError('R45_HISTORICAL_EVIDENCE_NEW')
+    for parent in target.parents:
+        info = parent.lstat()
+        need(stat.S_ISDIR(info.st_mode) and not parent.is_symlink() and
+             not getattr(info, 'st_file_attributes', 0) & 1024, 'R45_HISTORICAL_EVIDENCE_DIRECTORY')
+    target = target.resolve()
+    outside(target)
+    target.mkdir(mode=0o700, exist_ok=False)
+    return target
 
 
 def run_historical_control(helper, name, command, expected, fixture, workspace, env):
@@ -756,20 +805,36 @@ def historical_result(raw):
     return value
 
 
-def historical(fixture=None, completed_result=None):
+def historical(fixture=None, completed_result=None, evidence_directory=None):
     """Original44 CURRENT checks run only in a fresh exact named PR45 checkout.
 
     Explicit local reuse revalidates a completed normal invocation in its retained
     fixture and runs fresh controls; it does not claim a newly executed full chain.
     """
-    historical_options(True, fixture, completed_result, os.environ)
+    historical_options(True, fixture, completed_result, os.environ, evidence_directory)
     authenticate_parent()
     before = source_identity()
     env = primitives().clean_environment()
     python = original44().original41().historical_python()
     helper = historical_helper()
-    workspace = Path(tempfile.mkdtemp(prefix='integration45-')).resolve()
+    workspace = historical_workspace(evidence_directory, (fixture,) if fixture is not None else ())
     need(not workspace.is_relative_to(ROOT), 'R45_EXTERNAL_CLONE')
+    try:
+        return historical_in_workspace(fixture, completed_result, workspace, before, env, python, helper)
+    except Exception as exc:
+        # Only a workspace created by this invocation may receive this record.
+        # Refused CLI paths never acquire write authority from an error handler.
+        failure = dict(type=type(exc).__name__, error=str(exc), traceback=traceback.format_exc(),
+                       acceptanceGranted=False, release='NO_GO')
+        try:
+            with (workspace/'cli-failure.json').open('xb') as stream:
+                stream.write((json.dumps(failure, sort_keys=True)+'\n').encode())
+        except OSError:
+            traceback.print_exc(file=sys.stderr)
+        raise
+
+
+def historical_in_workspace(fixture, completed_result, workspace, before, env, python, helper):
     logs = workspace/'logs'
     logs.mkdir()
     env.update(TEMP=str(workspace.parent), TMP=str(workspace.parent), TMPDIR=str(workspace.parent))
@@ -802,6 +867,14 @@ def historical(fixture=None, completed_result=None):
         helper.write_json(logs/'controls.json', controls)
     if completed_result is None:
         completed = helper.replay(fixture, proof_directory)
+        helper.write_json(logs/'original44-replay-result.json', completed)
+        if completed.get('status') != 'COMPLETE_ORIGINAL44_FULL_INVOCATION':
+            try:
+                helper.report_replay_failure(completed, proof_directory, sys.stderr)
+            except Exception:
+                # Reporting failure is additional evidence, never permission to
+                # hide or accept the already retained incomplete normal result.
+                traceback.print_exc(file=sys.stderr)
         need(completed.get('status') == 'COMPLETE_ORIGINAL44_FULL_INVOCATION', 'R45_FULL_NORMAL_INVOCATION_INCOMPLETE')
         completed_result = proof_directory/'result.json'
     else:
@@ -833,11 +906,17 @@ def main():
     parser.add_argument('--external-readiness', action='store_true')
     parser.add_argument('--historical-fixture', type=Path)
     parser.add_argument('--historical-result', type=Path)
+    parser.add_argument('--historical-evidence-dir', type=Path)
     args = parser.parse_args()
     try:
         need(not args.external_readiness or args.scope is not None, 'R45_EXPLICIT_SCOPE_REQUIRED')
-        historical_options(args.historical, args.historical_fixture, args.historical_result, os.environ)
-        result = historical(args.historical_fixture, args.historical_result) if args.historical else verify(args.phase)
+        historical_options(args.historical, args.historical_fixture, args.historical_result, os.environ,
+                           args.historical_evidence_dir)
+        if args.historical:
+            result = historical(args.historical_fixture, args.historical_result) if args.historical_evidence_dir is None else \
+                historical(args.historical_fixture, args.historical_result, args.historical_evidence_dir)
+        else:
+            result = verify(args.phase)
         if args.scope:
             result = dict(result['productScope'], head=result['head'], tree=result['tree'], phase=args.phase,
                           sourceQualification=result['qualification'])
