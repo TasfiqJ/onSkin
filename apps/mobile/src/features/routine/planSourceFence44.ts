@@ -11,6 +11,7 @@ import { functionalTagsForCategory } from '@/features/shelf/categories';
 import { loadShelf } from '@/features/shelf/store';
 import {
   assertHealthDataWriteLease,
+  assertOriginalHealthDataWriteLease,
   type HealthDataWriteLease,
 } from '@/lib/consent/healthDataWriteAdmission';
 import { updatePrivateItemWithSources } from '@/lib/storage/privateKV';
@@ -43,6 +44,7 @@ export type PlanSourceSnapshot44 = Readonly<{
 
 type SourceProof44 = Readonly<{
   lease: HealthDataWriteLease;
+  originalLease: HealthDataWriteLease;
   expected: ReadonlyMap<string, string | null>;
 }>;
 // Exact source bytes and authority stay private in memory. A copied or forged
@@ -123,7 +125,7 @@ export async function capturePlanSource44(
   );
   assertCurrent();
   if (!snapshot || !expected) throw new Error(PLAN_SOURCE44_UNAVAILABLE);
-  proofs.set(snapshot, Object.freeze({ lease, expected }));
+  proofs.set(snapshot, Object.freeze({ lease, originalLease: expectedLease, expected }));
   return snapshot;
 }
 
@@ -160,4 +162,29 @@ export async function savePlanOrderWithSource44(
   }, assertCurrent);
   assertCurrent();
   return next;
+}
+
+/** Only the fixed C45 destination is writable. Source plaintext and proof stay
+ * private; the caller can synchronously transform only the history value.
+ * No original C44 order API or lock ordering changes. */
+export async function appendPlanHistoryWithSources44(
+  snapshot: PlanSourceSnapshot44,
+  originalLease: HealthDataWriteLease,
+  transform: (current: string | null) => string,
+): Promise<void> {
+  const proof = proofs.get(snapshot);
+  if (!proof || proof.originalLease !== originalLease) throw new Error(PLAN_SOURCE44_STALE);
+  const assertCurrent = () => {
+    assertOriginalHealthDataWriteLease(originalLease);
+    assertHealthDataWriteLease(proof.lease);
+  };
+  assertCurrent();
+  const historyKey = 'layerwell.routinePlanHistory.v1';
+  await updatePrivateItemWithSources(historyKey, SOURCE_KEYS, (values) => {
+    assertCurrent();
+    if (snapshot.sourceHash !== sourceHash(proof.expected) || SOURCE_KEYS.some((key) =>
+      values.get(key) !== proof.expected.get(key))) throw new Error(PLAN_SOURCE44_STALE);
+    return transform(values.get(historyKey) ?? null);
+  }, assertCurrent);
+  assertCurrent();
 }

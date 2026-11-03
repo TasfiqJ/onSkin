@@ -517,6 +517,50 @@ describe('local device data export', () => {
     );
   });
 
+  it('exports validated dated plan snapshots without the encrypted owner binding', async () => {
+    const version = {
+      id: '3d9c8799-71a6-4e95-a668-47a63519d5bf',
+      sequence: 1,
+      createdAt: '2026-11-03T12:00:00.000Z',
+      sourceHash: 'a'.repeat(64),
+      am: [{ productId: '5d9c8799-71a6-4e95-a668-47a63519d5bf', name: 'Owner cleanser' }],
+      pm: [],
+    };
+    mocks.getPrivateItemsForPurposeLimitedExport.mockResolvedValueOnce(new Map([
+      ['layerwell.routinePlanHistory.v1', JSON.stringify({
+        schemaVersion: 1, ownerUserId: expectedUserId, versions: [version],
+      })],
+    ]));
+    const result = await collectLocalDeviceExportData(accountLease, expectedUserId);
+    expect(result.sections.shelf_and_routine.routine_plan_history).toEqual({
+      schemaVersion: 1, versions: [version],
+    });
+    expect(JSON.stringify(result)).not.toContain(expectedUserId);
+  });
+
+  it.each([
+    '{',
+    JSON.stringify({ schemaVersion: 2, ownerUserId: 'user-1', versions: [] }),
+    JSON.stringify({ schemaVersion: 1, ownerUserId: 'predecessor', versions: [] }),
+    JSON.stringify({ schemaVersion: 1, ownerUserId: 'user-1', versions: [{ name: 'unsupported' }] }),
+  ])('refuses malformed, future or foreign-owner history during export without fallback', async (raw) => {
+    mocks.getPrivateItemsForPurposeLimitedExport.mockResolvedValueOnce(new Map([
+      ['layerwell.routinePlanHistory.v1', raw],
+    ]));
+    await expect(collectLocalDeviceExportData(accountLease, expectedUserId)).rejects.toThrow();
+  });
+
+  it('does not expose owner-bound saved history through an unclaimed local export', async () => {
+    mocks.getPrivateItemsForPurposeLimitedExport.mockResolvedValueOnce(new Map([
+      ['layerwell.routinePlanHistory.v1', JSON.stringify({
+        schemaVersion: 1, ownerUserId: expectedUserId, versions: [],
+      })],
+    ]));
+    await expect(collectLocalDeviceExportData(accountLease, null)).rejects.toThrow(
+      'LOCAL_DEVICE_EXPORT_INVALID:routine_plan_history_owner',
+    );
+  });
+
   it('wraps server and local scopes in a versioned, explicit bundle', async () => {
     const localDeviceData = await collectLocalDeviceExportData(
       accountLease,

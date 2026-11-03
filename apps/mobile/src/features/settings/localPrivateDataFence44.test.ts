@@ -1038,3 +1038,377 @@ it('AUDIT_RESUME: independent reset drains pending photo creation and retains qu
   expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
   await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
 });
+
+// Capture the original mocked native namespace during module collection so a
+// per-test extension can be restored without importing the real native bridge.
+const secureStorePort45 = import('expo-secure-store');
+
+// Campaign45 successors below leave every original C44 test body unchanged.
+// Source capture, history, crypto, owner/health admission and cleanup stay real.
+// Node supplies WHATWG URL directly; the RN-only compatibility shim has no
+// native module in this harness. The real Supabase client remains unmocked.
+vi.mock('react-native-url-polyfill/auto', () => ({}));
+async function prepareHistory45() {
+  vi.stubGlobal('__DEV__', true);
+  const { HEALTH_DATA_CONSENT } = await import('@/features/onboarding/consentCopy');
+  const { ONBOARDING_QUIZ, scoreQuiz } = await import('@/features/onboarding/quiz');
+  const { setStoredSkinProfileFromExplicitQuiz } = await import('@/features/onboarding/skinProfileStore');
+  const { addProduct } = await import('@/features/shelf/store');
+  const { capturePlanSource44 } = await import('@/features/routine/planSourceFence44');
+  native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+  await setHealthDataCollectionConsentLocal({
+    granted: true, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.fullText,
+  });
+  const answers = Object.fromEntries(ONBOARDING_QUIZ.map((question) => [
+    question.id, question.multiSelect ? [question.options[0]!.id] : question.options[0]!.id,
+  ]));
+  await setStoredSkinProfileFromExplicitQuiz({
+    result: scoreQuiz(answers), goals: ['clear_skin'], completedAt: new Date().toISOString(),
+  });
+  const product = await addProduct({
+    operationId: randomUUID(), name: 'Synthetic45 actual owner cleanser', category: 'cleanser', addedVia: 'manual',
+  });
+  const lease = captureHealthDataWriteLease(OWNER);
+  const snapshot = await capturePlanSource44(lease);
+  expect(snapshot.am).toContainEqual({ productId: product.id, name: product.name });
+  return { lease, snapshot, product };
+}
+
+async function pendingHistory45() {
+  const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+  const fixture = await prepareHistory45();
+  const entered = deferred();
+  const release = deferred();
+  let held = false;
+  native.setHook = async (key) => {
+    if (key === PLAN_HISTORY45_KEY && !held) {
+      held = true;
+      entered.resolve();
+      await release.promise;
+    }
+  };
+  const saving = observe(savePlanHistory45(fixture.snapshot, fixture.lease, {
+    id: randomUUID(), createdAt: new Date().toISOString(),
+  }));
+  await entered.promise;
+  expect(native.bytes.has(PLAN_HISTORY45_KEY)).toBe(false);
+  return { ...fixture, saving, release: release.resolve, key: PLAN_HISTORY45_KEY };
+}
+
+async function healthClosure45() {
+  const { subscribeActiveHealthProcessingLeaseChanges } = await import('@/lib/consent/healthProcessingEpoch');
+  const closed = deferred();
+  const unsubscribe = subscribeActiveHealthProcessingLeaseChanges((lease) => {
+    if (lease === null) closed.resolve();
+  });
+  return { closed: closed.promise, unsubscribe };
+}
+
+describe('Campaign45 pending encrypted owner-history cleanup successors', () => {
+  it.each(['full', 'dev', 'account', 'selective'] as const)(
+    '%s cleanup drains a held genuine history commit and prevents owner-history resurrection', async (kind) => {
+      const { loadPlanHistory45 } = await import('@/features/routine/planHistory45');
+      const pendingHistory = await pendingHistory45();
+      const closure = await healthClosure45();
+      let cleanup: ReturnType<typeof observe<void>>;
+      if (kind === 'dev') {
+        vi.stubGlobal('__DEV__', true);
+        vi.stubEnv('EXPO_PUBLIC_E2E_LOCAL_RESET', '1');
+        cleanup = observe(clearLocalPrivateDataForDevReset(async () => {
+          expect(native.bytes.has(pendingHistory.key)).toBe(false);
+          expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+        }));
+      } else if (kind === 'account') {
+        const { clearAccountIsolatedState } = await import('@/lib/auth/localAccountIsolation');
+        cleanup = observe(clearAccountIsolatedState());
+      } else if (kind === 'selective') {
+        native.configuredForSelective = true;
+        const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+        cleanup = observe(clearHealthPurposeLocalData(OWNER));
+      } else cleanup = observe(clearLocalPrivateData());
+      await closure.closed;
+      closure.unsubscribe();
+      await expect(runAccountGenerationOperation(() => 'closed')).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+      expect(native.events).not.toContain('purge:registered_records');
+      pendingHistory.release();
+      expect(await pendingHistory.saving).toMatchObject({ status: 'rejected' });
+      expect(await cleanup).toMatchObject({ status: 'fulfilled' });
+      expect(native.bytes.has(pendingHistory.key)).toBe(false);
+      expect(native.secure.has(PHOTO_KEY)).toBe(false);
+      if (kind !== 'selective') expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+      await expect(loadPlanHistory45(pendingHistory.lease)).rejects.toThrow();
+      if (kind === 'selective') await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+      else await expect(readLocalDataOwnership(OWNER)).resolves.toBe('unclaimed');
+      const accountGeneration = await runAccountGenerationOperation((lease) => lease.generation);
+      setActiveHealthProcessingEpoch(45, { ownerUserId: 'successor45', accountGeneration, serverVerifiedAt: null });
+      await expect(loadPlanHistory45(captureHealthDataWriteLease('successor45'))).resolves.toEqual({
+        schemaVersion: 1, ownerUserId: 'successor45', versions: [],
+      });
+      expect(native.bytes.has(pendingHistory.key)).toBe(false);
+    },
+  );
+
+  it('ordinary native multiRemove queues after the successful history reservation and removes its ciphertext', async () => {
+    const { loadPlanHistory45 } = await import('@/features/routine/planHistory45');
+    const pendingHistory = await pendingHistory45();
+    const removal = observe(multiRemovePrivateItems([pendingHistory.key]));
+    pendingHistory.release();
+    expect(await pendingHistory.saving).toMatchObject({ status: 'fulfilled' });
+    expect(await removal).toMatchObject({ status: 'fulfilled' });
+    expect(native.bytes.has(pendingHistory.key)).toBe(false);
+    await expect(loadPlanHistory45(pendingHistory.lease)).resolves.toEqual({
+      schemaVersion: 1, ownerUserId: OWNER, versions: [],
+    });
+  });
+
+  it('full cleanup drains pending photo-key creation and history compensation before destructive purge', async () => {
+    const pendingHistory = await pendingHistory45();
+    const photoEntered = deferred();
+    const photoRelease = deferred();
+    native.secureSetHook = async (key) => {
+      if (key === PHOTO_KEY) {
+        photoEntered.resolve();
+        await photoRelease.promise;
+      }
+    };
+    const photo = observe(encryptPhotoNote('synthetic45 prior-owner pending photo'));
+    await photoEntered.promise;
+    const closure = await healthClosure45();
+    const cleanup = observe(clearLocalPrivateData());
+    await closure.closed;
+    closure.unsubscribe();
+    pendingHistory.release();
+    expect(await pendingHistory.saving).toMatchObject({ status: 'rejected' });
+    expect(native.events).not.toContain('purge:registered_records');
+    photoRelease.resolve();
+    expect(await photo).toMatchObject({ status: 'rejected' });
+    expect(await cleanup).toMatchObject({ status: 'fulfilled' });
+    expect(native.bytes.has(pendingHistory.key)).toBe(false);
+    expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+    expect(native.secure.has(PHOTO_KEY)).toBe(false);
+    expect(native.events.indexOf(`secure-set:${PHOTO_KEY}`)).toBeLessThan(
+      native.events.indexOf(`secure-delete:${PHOTO_KEY}`),
+    );
+  });
+
+  it('a full reset owns its boundary after an unrelated outer scope releases during a pending history write', async () => {
+    const pendingHistory = await pendingHistory45();
+    beginAccountGenerationBoundary();
+    beginPrivateKVAccountBoundary();
+    const markerEntered = deferred();
+    native.markerDeliveryHook = async () => { markerEntered.resolve(); };
+    const cleanup = observe(clearLocalPrivateData());
+    await markerEntered.promise;
+    endPrivateKVAccountBoundary();
+    endAccountGenerationBoundary();
+    await expect(runAccountGenerationOperation(() => 'closed')).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    pendingHistory.release();
+    expect(await pendingHistory.saving).toMatchObject({ status: 'rejected' });
+    expect(await cleanup).toMatchObject({ status: 'fulfilled' });
+    expect(native.bytes.has(pendingHistory.key)).toBe(false);
+    expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+    await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
+  });
+
+  it('marker delivery hold and failed native registered purge preserve original history quarantine and owner proof', async () => {
+    const { PLAN_HISTORY45_KEY, savePlanHistory45, loadPlanHistory45 } = await import('@/features/routine/planHistory45');
+    const fixture = await prepareHistory45();
+    await savePlanHistory45(fixture.snapshot, fixture.lease, { id: randomUUID(), createdAt: new Date().toISOString() });
+    const originalCiphertext = native.bytes.get(PLAN_HISTORY45_KEY);
+    const proof = native.bytes.get(PROOFS[0]);
+    const writeEntered = deferred();
+    const writeRelease = deferred();
+    let held = false;
+    native.setHook = async (key) => {
+      if (key === PLAN_HISTORY45_KEY && !held) {
+        held = true; writeEntered.resolve(); await writeRelease.promise;
+      }
+    };
+    const saving = observe(savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    }));
+    await writeEntered.promise;
+    const markerEntered = deferred();
+    const markerRelease = deferred();
+    native.markerDeliveryHook = async () => { markerEntered.resolve(); await markerRelease.promise; };
+    native.failures.add('registered_records');
+    const cleanup = observe(clearLocalPrivateData());
+    await markerEntered.promise;
+    writeRelease.resolve();
+    expect(await saving).toMatchObject({ status: 'rejected' });
+    expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(originalCiphertext);
+    expect(native.bytes.get(PROOFS[0])).toBe(proof);
+    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+    expect(native.events).not.toContain('purge:registered_records');
+    markerRelease.resolve();
+    expect(await cleanup).toMatchObject({ status: 'rejected' });
+    expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(originalCiphertext);
+    expect(native.bytes.get(PROOFS[0])).toBe(proof);
+    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+    await expect(readLocalDataOwnership(OWNER)).resolves.toBe('cleanup_required');
+    await expect(loadPlanHistory45(fixture.lease)).rejects.toThrow();
+    expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+    native.failures.clear();
+    native.markerDeliveryHook = null;
+    // A private-only retry cannot release an earlier abandoned wider marker.
+    // The real wider recovery owns the full staging/query/private proof.
+    const { clearAccountIsolatedState } = await import('@/lib/auth/localAccountIsolation');
+    await clearAccountIsolatedState();
+    expect(native.bytes.has(PLAN_HISTORY45_KEY)).toBe(false);
+    expect(native.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(false);
+  });
+
+  it('real encrypted history roundtrips through consent-independent owner export and explicit full deletion', async () => {
+    const { savePlanHistory45, loadPlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const secureStore = await secureStorePort45;
+    // Extend the native-only fixture for the real Supabase export dependency.
+    // Existing C44 modules keep their original adapter and test bytes.
+    vi.doMock('expo-secure-store', () => ({
+      ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+    }));
+    try {
+      const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+      const fixture = await prepareHistory45();
+      const saved = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+        id: randomUUID(), createdAt: new Date().toISOString(),
+      });
+      expect(JSON.parse(native.bytes.get(PLAN_HISTORY45_KEY)!).version).toBe('xchacha20poly1305:v1');
+      expect(native.bytes.get(PLAN_HISTORY45_KEY)).not.toContain(fixture.product.name);
+      clearActiveHealthProcessingEpoch();
+      await expect(loadPlanHistory45(fixture.lease)).rejects.toThrow();
+      const exported = await runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER));
+      expect(exported.sections.shelf_and_routine.routine_plan_history).toEqual({
+        schemaVersion: 1, versions: saved.versions,
+      });
+      expect(JSON.stringify(exported.sections.shelf_and_routine.routine_plan_history)).not.toContain(OWNER);
+      await clearLocalPrivateData();
+      expect(native.bytes.has(PLAN_HISTORY45_KEY)).toBe(false);
+      const afterDeletion = await runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, null));
+      expect(afterDeletion.sections.shelf_and_routine).not.toHaveProperty('routine_plan_history');
+    } finally {
+      vi.doUnmock('expo-secure-store');
+    }
+  });
+});
+
+it('C45 export waits behind a tentative native history commit and exports only confirmed facts after rollback', async () => {
+  const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+  const storage = (await import('@react-native-async-storage/async-storage')).default;
+  const secureStore = await secureStorePort45;
+  vi.doMock('expo-secure-store', () => ({
+    ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+  }));
+  let nativeWrite: ReturnType<typeof vi.spyOn> | undefined;
+  try {
+    const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+    const fixture = await prepareHistory45();
+    const confirmed = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    });
+    const committed = deferred();
+    const rejectCommit = deferred();
+    const originalSet = storage.setItem;
+    let held = false;
+    nativeWrite = vi.spyOn(storage, 'setItem').mockImplementation(async (key, raw) => {
+      await originalSet(key, raw);
+      if (key === PLAN_HISTORY45_KEY && !held) {
+        held = true;
+        committed.resolve();
+        await rejectCommit.promise;
+        throw new Error('SYNTHETIC45_EXPORT_COMMIT_THEN_REJECT');
+      }
+    });
+    const saving = observe(savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    }));
+    await committed.promise;
+    let exportCompleted = false;
+    const exporting = observe(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)));
+    void exporting.then(() => { exportCompleted = true; });
+    // All native ports are immediate Promises except the explicitly held write.
+    // Advancing one host turn drains that finite read queue without releasing it.
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    const completedWhileTentative = exportCompleted;
+    rejectCommit.resolve();
+    expect(await saving).toMatchObject({ status: 'rejected' });
+    const exported = await exporting;
+    expect(exported.status).toBe('fulfilled');
+    if (exported.status === 'fulfilled') {
+      expect(exported.value.sections.shelf_and_routine.routine_plan_history).toEqual({
+        schemaVersion: 1, versions: confirmed.versions,
+      });
+    }
+    expect(completedWhileTentative).toBe(false);
+  } finally {
+    nativeWrite?.mockRestore();
+    vi.doUnmock('expo-secure-store');
+  }
+});
+
+it('C45 export native read reserves history before a later append with failed rollback can enter', async () => {
+  const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+  const storage = (await import('@react-native-async-storage/async-storage')).default;
+  const secureStore = await secureStorePort45;
+  vi.doMock('expo-secure-store', () => ({
+    ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+  }));
+  let nativeRead: ReturnType<typeof vi.spyOn> | undefined;
+  let nativeWrite: ReturnType<typeof vi.spyOn> | undefined;
+  try {
+    const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+    const fixture = await prepareHistory45();
+    const confirmed = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    });
+    const readEntered = deferred();
+    const readRelease = deferred();
+    const originalMultiGet = storage.multiGet;
+    nativeRead = vi.spyOn(storage, 'multiGet').mockImplementation(async (keys) => {
+      const raw = await originalMultiGet(keys);
+      if (keys.includes(PLAN_HISTORY45_KEY)) {
+        readEntered.resolve();
+        await readRelease.promise;
+      }
+      return raw;
+    });
+    const exporting = observe(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)));
+    await readEntered.promise;
+    const originalSet = storage.setItem;
+    let attempts = 0;
+    nativeWrite = vi.spyOn(storage, 'setItem').mockImplementation(async (key, raw) => {
+      if (key === PLAN_HISTORY45_KEY) {
+        attempts += 1;
+        if (attempts > 1) throw new Error('SYNTHETIC45_EXPORT_ROLLBACK_REFUSED');
+        await originalSet(key, raw);
+        throw new Error('SYNTHETIC45_EXPORT_AMBIGUOUS_COMMIT');
+      }
+      await originalSet(key, raw);
+    });
+    const saving = observe(savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    }));
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    const invocationsDuringRead = attempts;
+    readRelease.resolve();
+    const exported = await exporting;
+    expect(await saving).toMatchObject({ status: 'rejected' });
+    expect(invocationsDuringRead).toBe(0);
+    expect(exported.status).toBe('fulfilled');
+    if (exported.status === 'fulfilled') {
+      expect(exported.value.sections.shelf_and_routine.routine_plan_history).toEqual({
+        schemaVersion: 1, versions: confirmed.versions,
+      });
+    }
+    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+  } finally {
+    nativeRead?.mockRestore();
+    nativeWrite?.mockRestore();
+    vi.doUnmock('expo-secure-store');
+    await clearLocalPrivateData();
+    await clearLocalDataCleanupRequired();
+  }
+});

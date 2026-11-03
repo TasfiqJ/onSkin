@@ -1,6 +1,7 @@
 import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
 import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
 import { AGE_POLICY_RECEIPT_KEY } from '@/features/onboarding/ageGate';
+import { decodePlanHistory45 } from '@/features/routine/planHistory45';
 import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { purgeExpiredCatalogLookupQueueForPurposeLimitedExport } from '@/lib/offline/catalogLookupQueue';
 import { getPrivateItemsForPurposeLimitedExport } from '@/lib/storage/privateKV';
@@ -163,6 +164,11 @@ const LOCAL_EXPORT_SPECS = [
     key: 'layerwell.routineOrder.v1',
     section: 'shelf_and_routine',
     field: 'routine_order_overrides',
+  },
+  {
+    key: 'layerwell.routinePlanHistory.v1',
+    section: 'shelf_and_routine',
+    field: 'routine_plan_history',
   },
   { key: 'layerwell.ramp.v1', section: 'shelf_and_routine', field: 'active_ramps' },
   {
@@ -403,7 +409,15 @@ export async function collectLocalDeviceExportData(
   for (const spec of LOCAL_EXPORT_SPECS) {
     const raw = stored.get(spec.key) ?? null;
     if (raw !== null) {
-      const parsed = parseStoredValue(raw);
+      // Access/export uses its existing exact-owner account authority even
+      // while health processing is paused. Do not turn invalid history into
+      // arbitrary JSON or expose a different owner's local record.
+      if (spec.key === 'layerwell.routinePlanHistory.v1' && expectedUserId === null) {
+        throw new Error('LOCAL_DEVICE_EXPORT_INVALID:routine_plan_history_owner');
+      }
+      const parsed = spec.key === 'layerwell.routinePlanHistory.v1'
+        ? decodePlanHistory45(raw, expectedUserId!)
+        : parseStoredValue(raw);
       const exportValue =
         spec.key === 'layerwell.conflict.overrides'
           ? normalizeConflictChoicesForExport(parsed)

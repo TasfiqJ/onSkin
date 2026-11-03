@@ -64,6 +64,12 @@ describe('local private data registry', () => {
     expect(photoDataKeys.filter((key) => !healthKeys.has(key))).toEqual([]);
   });
 
+  it('registers saved local routine history for full and selective health cleanup exactly once', () => {
+    const key = 'layerwell.routinePlanHistory.v1';
+    expect(LOCAL_PRIVATE_DATA_KEYS.filter((item) => item === key)).toEqual([key]);
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS.filter((item) => item === key)).toEqual([key]);
+  });
+
   it('covers every on-device private storage key', () => {
     const registered = new Set([
       ...LOCAL_PRIVATE_CONTROL_KEYS,

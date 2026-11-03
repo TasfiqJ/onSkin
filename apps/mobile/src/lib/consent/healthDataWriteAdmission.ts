@@ -38,6 +38,7 @@ export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
   'layerwell.cycle.v2',
   'layerwell.routineActivation.v1',
   'layerwell.routineOrder.v1',
+  'layerwell.routinePlanHistory.v1',
   'layerwell.widgetActionMap.v1',
   'layerwell.widgetActionMap.v2',
   'layerwell.widgetOwnerAuthority.v1',
@@ -64,6 +65,10 @@ export type HealthDataWriteOperationLease = HealthDataWriteLease &
     assertCurrent: () => void;
   }>;
 
+// C45's snapshot append requires the original admitted capability, not copied
+// identity fields. Existing operation leases retain their established contract.
+const originalHealthDataWriteLeases = new WeakSet<HealthDataWriteLease>();
+
 export function isHealthPurposePrivateDataKey(key: string): boolean {
   return HEALTH_PURPOSE_KEYS.has(key);
 }
@@ -77,13 +82,15 @@ export function captureHealthDataWriteLease(expectedOwnerUserId?: string): Healt
   if (expectedOwnerUserId !== undefined && active.ownerUserId !== expectedOwnerUserId) {
     throw new Error(HEALTH_DATA_WRITE_OWNER_MISMATCH);
   }
-  return Object.freeze({
+  const lease = Object.freeze({
     generation: active.generation,
     epoch: active.epoch,
     ownerUserId: active.ownerUserId,
     accountGeneration: active.accountGeneration,
     expiresAt: active.expiresAt,
   });
+  originalHealthDataWriteLeases.add(lease);
+  return lease;
 }
 
 /** Reassert that no withdrawal, expiry, owner transition, or re-grant occurred. */
@@ -100,6 +107,14 @@ export function assertHealthDataWriteLease(lease: HealthDataWriteLease): void {
     active.epoch !== lease.epoch ||
     active.accountGeneration !== lease.accountGeneration
   ) {
+    throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  }
+}
+
+/** Require an unchanged original capture for owner-saved historical facts. */
+export function assertOriginalHealthDataWriteLease(lease: HealthDataWriteLease): void {
+  assertHealthDataWriteLease(lease);
+  if (!originalHealthDataWriteLeases.has(lease)) {
     throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
   }
 }

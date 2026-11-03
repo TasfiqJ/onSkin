@@ -26,6 +26,8 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
+import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+import { markLocalDataCleanupRequired, type LocalDataCleanupMarkerRequest } from '@/lib/auth/localAccountIsolation';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
@@ -41,6 +43,7 @@ export const PRIVATE_KV_ENVELOPE_UNSUPPORTED = 'PRIVATE_KV_ENVELOPE_UNSUPPORTED'
 export const PRIVATE_KV_ENVELOPE_FOREIGN = 'PRIVATE_KV_ENVELOPE_FOREIGN';
 export const PRIVATE_KV_RESERVED_KEY = 'PRIVATE_KV_RESERVED_KEY';
 export const PRIVATE_KV_WRITE_CONFLICT = 'PRIVATE_KV_WRITE_CONFLICT';
+export const PRIVATE_KV_RECOVERY_REQUIRED = 'PRIVATE_KV_RECOVERY_REQUIRED';
 export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
 export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
@@ -61,6 +64,7 @@ type EnvelopeClassification =
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const failedReadSnapshots = new Map<string, string>();
+const quarantinedMutationKeys = new Set<string>();
 const inFlightOperations = new Set<Promise<unknown>>();
 const privateMutationTails = new Map<string, Promise<void>>();
 let accountBoundaryWriteBlocked = false;
@@ -217,6 +221,11 @@ function isKnownForeignStorageKey(key: string): boolean {
 function assertPrivateDataKey(key: string): void {
   if (key === PRIVATE_KV_CONTENT_KEY_NAME) throw new Error(PRIVATE_KV_RESERVED_KEY);
   if (isKnownForeignStorageKey(key)) throw new Error(PRIVATE_KV_ENVELOPE_FOREIGN);
+}
+
+function assertPrivateReadAllowed(key: string): void {
+  assertPrivateDataKey(key);
+  if (quarantinedMutationKeys.has(key)) throw new Error(PRIVATE_KV_RECOVERY_REQUIRED);
 }
 
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
@@ -379,11 +388,12 @@ export async function getPrivateItem(key: string): Promise<string | null> {
   // returned only to the exact processing lease that began the read.
   const healthReadLease = captureHealthPurposePrivateDataWriteLease(key);
   const assertHealthReadCurrent = () => {
+    assertPrivateReadAllowed(key);
     if (healthReadLease !== null) assertHealthDataWriteLease(healthReadLease);
   };
   return withOperationTiming('private_kv_read', () =>
     runAccountScopedPrivateOperation(async (generation) => {
-      assertPrivateDataKey(key);
+      assertPrivateReadAllowed(key);
       const raw = await AsyncStorage.getItem(key);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
@@ -442,13 +452,14 @@ async function readPrivateItems(
     : [];
   const assertHealthReadsCurrent = () => {
     assertPurposeCurrent();
+    for (const key of keys) assertPrivateReadAllowed(key);
     for (const lease of healthReadLeases) assertHealthDataWriteLease(lease);
   };
   assertHealthReadsCurrent();
   return withOperationTiming('private_kv_batch_read', () =>
     runAccountScopedPrivateOperation(async (generation) => {
       assertHealthReadsCurrent();
-      for (const key of keys) assertPrivateDataKey(key);
+      for (const key of keys) assertPrivateReadAllowed(key);
       const entries = await AsyncStorage.multiGet([...keys]);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
@@ -521,6 +532,14 @@ export function getPrivateItemsForPurposeLimitedExport(
   accountLease: AccountGenerationLease,
 ): Promise<Map<string, string | null>> {
   accountLease.assertCurrent();
+  const historyKey = 'layerwell.routinePlanHistory.v1';
+  // An owner export may run without processing consent, but must never read a
+  // tentative history append while native confirmation/compensation is pending.
+  // Hold only this existing destination slot; unrelated private keys progress.
+  if (keys.includes(historyKey)) {
+    return runSerializedPrivateMutations([historyKey], () =>
+      readPrivateItems(keys, false, accountLease.assertCurrent));
+  }
   return readPrivateItems(keys, false, accountLease.assertCurrent);
 }
 
@@ -532,7 +551,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
   await withOperationTiming('private_kv_batch_read', () =>
     runAccountScopedPrivateOperation(async () => {
       assertCurrent();
-      for (const key of keys) assertPrivateDataKey(key);
+      for (const key of keys) assertPrivateReadAllowed(key);
       const entries = await AsyncStorage.multiGet([...keys]);
       assertCurrent();
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
@@ -637,7 +656,7 @@ async function updatePrivateItemWithGuard(
   return withOperationTiming('private_kv_write', () =>
     runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
-        assertPrivateDataKey(key);
+        assertPrivateReadAllowed(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         assertBeforeNativeWrite?.();
         const existingRaw = await assertNoFailedReadRewrite(key);
@@ -800,7 +819,7 @@ export async function updatePrivateItemWithSources(
   prepareSources?: (values: ReadonlyMap<string, string | null>) => Promise<void>,
 ): Promise<void> {
   const keys = [...new Set([...sourceKeys, key])].sort();
-  for (const sourceKey of keys) assertPrivateDataKey(sourceKey);
+  for (const sourceKey of keys) assertPrivateReadAllowed(sourceKey);
   // Capture synchronously, before queuing. A stale callback cannot inherit a
   // lease granted while it waited for a source reservation.
   const healthLeases = keys.map(captureHealthPurposePrivateDataWriteLease);
@@ -891,6 +910,9 @@ export async function updatePrivateItemWithSources(
           } satisfies PrivateEnvelope);
         }
         await maybeRejectConflictChoiceWrite(key);
+        // History also closes the asynchronous content-key/preparation window.
+        // Ordinary source writers cannot enter while this union is reserved.
+        if (key === 'layerwell.routinePlanHistory.v1') await assertExactSources(existingRaw);
         assertAllowed();
         try {
           // No await separates admission from the actual native invocation.
@@ -909,7 +931,23 @@ export async function updatePrivateItemWithSources(
           }
           assertAllowed();
         } catch (error) {
-          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          try {
+            await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          } catch (rollbackError) {
+            if (key === 'layerwell.routinePlanHistory.v1') {
+              // A tentative version is never readable or appendable after failed
+              // compensation. Close processing before releasing this reservation.
+              // Reuse the existing owned recovery marker; a full cleanup can
+              // later adopt this abandoned claim, a private-only reset cannot.
+              quarantinedMutationKeys.add(key);
+              clearActiveHealthProcessingEpoch();
+              const request: LocalDataCleanupMarkerRequest = { preserveExisting: true };
+              try { await markLocalDataCleanupRequired(request); }
+              catch { /* Volatile quarantine remains closed if native marker I/O fails. */ }
+              finally { request.scope?.abandon(); }
+            }
+            throw rollbackError;
+          }
           throw error;
         }
         for (const sourceKey of keys) failedReadSnapshots.delete(sourceKey);
@@ -962,6 +1000,7 @@ export async function removePrivateItem(key: string): Promise<void> {
         assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         await AsyncStorage.removeItem(key);
+        quarantinedMutationKeys.delete(key);
         failedReadSnapshots.delete(key);
       }),
     ),
@@ -974,7 +1013,10 @@ export async function multiRemovePrivateItems(keys: readonly string[]): Promise<
       for (const key of keys) assertPrivateDataKey(key);
       assertAccountScopedPrivateOperationAllowed(generation);
       await AsyncStorage.multiRemove([...keys]);
-      for (const key of keys) failedReadSnapshots.delete(key);
+      for (const key of keys) {
+        failedReadSnapshots.delete(key);
+        quarantinedMutationKeys.delete(key);
+      }
     }),
   );
 }
@@ -1008,6 +1050,7 @@ export async function clearRoutineWidgetActionPrivateItems(): Promise<void> {
 export async function clearPrivateKVContentKey(): Promise<void> {
   await clearStoredPrivateKVContentKey();
   failedReadSnapshots.clear();
+  quarantinedMutationKeys.clear();
 }
 
 export const privateKVEncryptionInfo = {

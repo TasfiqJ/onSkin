@@ -5,6 +5,7 @@ import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { recordRoutinePlanAnalytics } from '@/features/routine/activationAnalytics';
+import { PlanHistoryPanel45 } from '@/features/routine/PlanHistoryPanel45';
 import {
   routineInsightCount,
   routineFirstInsightCopy,
@@ -300,11 +301,14 @@ export default function PlanScreen() {
   if (sourceState !== 'ready') {
     return (
       <Screen edges={['top', 'bottom']}>
-        <PlanSourceNotice
-          loading={sourceState === 'loading'}
-          onRetry={() => void planSource.retry().catch(() => undefined)}
-          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
-        />
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}>
+          <PlanSourceNotice
+            loading={sourceState === 'loading'}
+            onRetry={() => void planSource.retry().catch(() => undefined)}
+            onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+          />
+          <PlanHistoryPanel45 source={planSource} canSave={false} />
+        </ScrollView>
       </Screen>
     );
   }
@@ -312,12 +316,15 @@ export default function PlanScreen() {
   if (cycleState === 'loading' || cycleState === 'unavailable') {
     return (
       <Screen edges={['top', 'bottom']}>
-        <PlanSourceNotice
-          cycle
-          loading={cycleState === 'loading'}
-          onRetry={() => void cycleSource.retry().catch(() => undefined)}
-          onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
-        />
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}>
+          <PlanSourceNotice
+            cycle
+            loading={cycleState === 'loading'}
+            onRetry={() => void cycleSource.retry().catch(() => undefined)}
+            onBack={() => backOrReplace(router, APP_YOU_ROUTE)}
+          />
+          <PlanHistoryPanel45 source={planSource} canSave={false} />
+        </ScrollView>
       </Screen>
     );
   }
@@ -596,6 +603,7 @@ export default function PlanScreen() {
                 </Text>
               </View>
             ) : null}
+            <PlanHistoryPanel45 source={planSource} canSave />
           </View>
         </ScrollView>
       </View>

@@ -49,6 +49,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'layerwell.healthDataLifecycle.v1',
   'layerwell.routineActivation.v1',
   'layerwell.routineOrder.v1',
+  'layerwell.routinePlanHistory.v1',
   'layerwell.widgetActionMap.v1',
   'layerwell.widgetActionMap.v2',
   'layerwell.widgetOwnerAuthority.v1',
