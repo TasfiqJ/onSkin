@@ -5,12 +5,11 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import stat
 import subprocess
 import sys
 import tempfile
-import time
+import traceback
 from types import ModuleType
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -22,9 +21,11 @@ PARENT_BRANCH = 'stage/m1-plan-source-reset-fence44'
 PLAN_COMMIT = '054f2adf7169fa2c7da8b29150193835b27e62c0'
 PLAN_SHA = '43dec79273fad05121ce5aaf0d13100b708a3e0fc7585c5760e25b7cf6b474f6'
 DIAGNOSTIC_COMMITS = ('421c309ea057d1b7d0710a505f79b876d9820f44',
-                      '95ba43456fbabc7cec4c581b5c97b11ff84dd8b9')
+                      '95ba43456fbabc7cec4c581b5c97b11ff84dd8b9',
+                      '0f1521d639e54c44d30457faa463c2bff1e08bb1')
 DIAGNOSTIC_TREES = ('f72e2367afb36ab5aa1cf9dca40dd6f00bc393c9',
-                    'cbd2b0e7f1294d79cd2128547b825fec14c91581')
+                    'cbd2b0e7f1294d79cd2128547b825fec14c91581',
+                    '76de39be856a33b3731222e238d2e4cce4329b7f')
 PREFIX = 'scripts/release/full-app-j01/'
 DOCS = 'docs/release/full-app-j01/'
 PLAN = 'docs/brain/task-specs/M1X-45/SCOPE_PLAN.md'
@@ -33,6 +34,12 @@ AUTHORITY = 'M1X-V2-C05-OWNER-PLAN-VERSIONS45-SOURCE-CANDIDATE-01'
 REPAIR_AUTHORITY = 'BRAIN-C45-MARKER-OWNERSHIP-REPAIR-03'
 REPAIR_PATHS = {'apps/mobile/src/lib/auth/localAccountIsolation.ts',
                 'apps/mobile/src/lib/auth/sessionOwner.ts'}
+CLOSURE_AUTHORITY = 'BRAIN-C45-AUTONOMOUS-CLOSURE-04'
+LEDGER = 'docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json'
+# Final exercised inventory remains finite; amendments are explicit preimages,
+# never a wildcard authorizing all files beneath a delegated directory.
+CLOSURE_PATHS = {LEDGER, 'apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts',
+                 PREFIX+'historicalReplay45.py', PREFIX+'historicalReplay45.test.py'}
 PHASES = ('SOURCE_PENDING', 'SOURCE_FROZEN')
 WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
 ORIGINAL_GRANT = {
@@ -69,10 +76,10 @@ ORIGINAL_GRANT = {
     DOCS+'owner-plan-history45.md', PREFIX+'main_integration45.py',
     PREFIX+'main_integration45.test.py', PREFIX+'source_consumer45.test.py',
 }
-GRANT = ORIGINAL_GRANT | REPAIR_PATHS
+GRANT = ORIGINAL_GRANT | REPAIR_PATHS | CLOSURE_PATHS
 SOURCE = GRANT-WORKLIST-{PLAN}
 ESSENTIAL = {
-    *REPAIR_PATHS,
+    *REPAIR_PATHS, *CLOSURE_PATHS,
     TASK, 'PROGRESS.md', '.github/workflows/quality.yml',
     'apps/mobile/src/features/routine/planHistory45.ts',
     'apps/mobile/src/features/routine/planHistory45.test.ts',
@@ -206,11 +213,12 @@ def phase_guard(commits, phase, source_paths):
 
 
 def task_guard(value, read_body):
-    need(type(value) is dict and set(value) == {'schema', 'authority', 'additionalAuthorization', 'base', 'baseTree', 'planCommit',
+    need(type(value) is dict and set(value) == {'schema', 'authority', 'additionalAuthorization', 'closureAuthorization', 'base', 'baseTree', 'planCommit',
          'sourceHashes', 'commands', 'acceptanceGranted', 'admissions', 'release', 'qualification'},
          'R45_TASK_SCHEMA')
     need(type(value['schema']) is int and value['schema'] == 1 and value['authority'] == AUTHORITY and
          value['additionalAuthorization'] == REPAIR_AUTHORITY and
+         value['closureAuthorization'] == CLOSURE_AUTHORITY and
          value['base'] == BASE and value['baseTree'] == BASE_TREE and value['planCommit'] == PLAN_COMMIT and
          value['qualification'] == 'SOURCE_INTEGRITY_NOT_QUALIFIED_ACCEPTANCE', 'R45_TASK_AUTHORITY')
     no_admission(value, 'R45_NO_ADMISSION')
@@ -230,6 +238,40 @@ def task_guard(value, read_body):
              (row['logSha256'] is None or type(row['logSha256']) is str and
               re.fullmatch('[0-9a-f]{64}', row['logSha256'])), 'R45_COMMAND_LEDGER')
     return set(hashes)|{TASK}
+
+
+def ledger_guard(value, preimage):
+    need(type(value) is dict and set(value) == {'schema', 'authority', 'originalPlanCommit',
+         'frozenPlanSha256', 'preservedRepair03Checkpoint', 'preservedRepair03Tree',
+         'scopePolicy', 'additionalPaths', 'decisions'}, 'R45_LEDGER_SCHEMA')
+    need(type(value['schema']) is int and value['schema'] == 1 and
+         value['authority'] == CLOSURE_AUTHORITY and value['originalPlanCommit'] == PLAN_COMMIT and
+         value['frozenPlanSha256'] == PLAN_SHA and
+         value['preservedRepair03Checkpoint'] == DIAGNOSTIC_COMMITS[-1] and
+         value['preservedRepair03Tree'] == DIAGNOSTIC_TREES[-1] and
+         value['scopePolicy'] == 'Task-bounded necessity; exact final exercised inventory, no wildcard acceptance',
+         'R45_LEDGER_AUTHORITY')
+    rows = value['additionalPaths']
+    need(type(rows) is list and len(rows) == len(CLOSURE_PATHS) and
+         all(type(row) is dict and type(row.get('path')) is str for row in rows) and
+         {row.get('path') for row in rows} == CLOSURE_PATHS, 'R45_LEDGER_INVENTORY')
+    fields = {'path', 'authority', 'recordedBeforeFirstEdit', 'preimageCommit', 'preimageSha256',
+              'preimageBytes', 'causalNecessity', 'affectedInvariant', 'plannedValidation'}
+    for row in rows:
+        need(set(row) == fields and row['authority'] == CLOSURE_AUTHORITY and
+             row['recordedBeforeFirstEdit'] is True and
+             row['preimageCommit'] == DIAGNOSTIC_COMMITS[-1] and
+             all(type(row[k]) is str and 1 <= len(row[k]) <= 2000 for k in
+                 ('causalNecessity', 'affectedInvariant', 'plannedValidation')), 'R45_LEDGER_ROW')
+        raw = preimage(row['path'])
+        need((raw is None and row['preimageSha256'] is None and row['preimageBytes'] is None) or
+             (raw is not None and type(row['preimageBytes']) is int and len(raw) == row['preimageBytes'] and
+              digest(raw) == row['preimageSha256']), 'R45_LEDGER_PREIMAGE')
+    decisions = value['decisions']
+    need(type(decisions) is list and 1 <= len(decisions) <= 100 and all(type(row) is dict and
+         set(row) == {'id', 'decision'} and all(type(v) is str and 1 <= len(v) <= 4000 for v in row.values())
+         for row in decisions) and len({row['id'] for row in decisions}) == len(decisions), 'R45_LEDGER_DECISIONS')
+    return set(row['path'] for row in rows)
 
 
 def scope(source_paths=None):
@@ -274,8 +316,12 @@ def new_step():
         'Verify current45 owner-saved local plan history').replace('separately pinned41/', 'separately pinned44/41/')
     step = step.replace('C44_PREFLIGHT_PHASE', 'C45_PREFLIGHT_PHASE')
     step = step.replace('main_integration44', 'main_integration45').replace('source_consumer44', 'source_consumer45')
+    step = step.replace('          python3 -I -B '+PREFIX+'main_integration45.test.py\n',
+        '          python3 -I -B '+PREFIX+'main_integration45.test.py\n'
+        '          python3 -I -B '+PREFIX+'historicalReplay45.test.py\n')
     step = step.replace('src/lib/storage/privateKVSourceFence44.test.ts ',
         'src/features/routine/planHistory45.test.ts src/features/routine/planHistory45Encrypted.test.ts '
+        'src/features/shelf/ownedBottleVersion38.test.ts '
         'src/features/settings/localPrivateDataKeys.test.ts src/features/settings/localDeviceExport.test.ts '
         'src/lib/storage/privateKVSourceFence44.test.ts ')
     step = step.replace("include: ['src/features/today/OptionalChangePanel41.test.tsx']",
@@ -316,8 +362,8 @@ def authenticate_parent():
         need(parents(commit) == [commit, prior] and text('rev-parse', commit+'^{tree}') == tree,
              'R45_AUTHENTICATED_DIAGNOSTIC_HISTORY')
         prior = commit
-    need(set(BASELINES) == GRANT and len(ORIGINAL_GRANT) == 39 and len(GRANT) == 41 and
-         GRANT-ORIGINAL_GRANT == REPAIR_PATHS, 'R45_BASELINE_INVENTORY')
+    need(set(BASELINES) == GRANT and len(ORIGINAL_GRANT) == 39 and len(GRANT) == 45 and
+         GRANT-ORIGINAL_GRANT == REPAIR_PATHS|CLOSURE_PATHS, 'R45_BASELINE_INVENTORY')
     for path, entry in BASELINES.items():
         mode, blob, sha, size = entry
         expected = b'' if blob is None else (mode+' blob '+blob+'\t'+path+'\n').encode()
@@ -388,9 +434,12 @@ def verify(phase='SOURCE_FROZEN'):
     in_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
     need(phase == 'SOURCE_FROZEN' if in_ci else text('symbolic-ref', '--short', 'HEAD') == BRANCH, 'R45_BRANCH_OR_CI_SEAL')
     commits = text('rev-list', '--reverse', BASE+'..'+head).splitlines()
-    need(len(commits) >= 4 and commits[:3] == [PLAN_COMMIT, *DIAGNOSTIC_COMMITS], 'R45_SOURCE_HISTORY')
+    need(len(commits) >= 5 and commits[:4] == [PLAN_COMMIT, *DIAGNOSTIC_COMMITS], 'R45_SOURCE_HISTORY')
     substantive = commits[-1] if phase == 'SOURCE_PENDING' else commits[-2]
     paths = task_guard(document(git('show', substantive+':'+TASK)), lambda path: git('show', substantive+':'+path))
+    ledger_guard(document(git('show', substantive+':'+LEDGER)), lambda path:
+        git('show', DIAGNOSTIC_COMMITS[-1]+':'+path) if
+        git('ls-tree', DIAGNOSTIC_COMMITS[-1], '--', path) else None)
     source, seal = phase_guard(commits, phase, paths)
     need(git('show', head+':'+PLAN) == git('show', PLAN_COMMIT+':'+PLAN), 'R45_PLAN_IMMUTABLE')
     quality_guard(git('show', source+':.github/workflows/quality.yml'), git('show', BASE+':.github/workflows/quality.yml'))
@@ -432,8 +481,8 @@ def verify(phase='SOURCE_FROZEN'):
                 acceptanceGranted=False, admissions=dict.fromkeys(ADMISSIONS, False), release='NO_GO')
 
 
-def historical_commands(workspace, node, npm, python):
-    root = workspace/'pr45'
+def historical_commands(workspace, node, npm, python, fixture=None):
+    root = workspace/'pr45' if fixture is None else fixture
     return [
         ('clone-pr45', ['git', 'clone', '--no-local', '--no-hardlinks', '--no-checkout', '--branch', PARENT_BRANCH,
          '-c', 'core.autocrlf=false', '-c', 'core.longpaths=true', 'https://github.com/TasfiqJ/onSkin.git', str(root)], 0),
@@ -476,105 +525,274 @@ def validate_receipts(value, workspace, commands):
     return logs
 
 
-def historical_result(raw):
-    lines = [line for line in raw.replace(b'\r', b'').splitlines() if line]
-    need(len(lines) == 2 and lines[0].startswith(b'R45_HISTORICAL_WORKSPACE '), 'R45_HISTORICAL_TRANSCRIPT')
-    value = document(lines[-1])
-    no_admission(value, 'R45_HISTORICAL_NO_ADMISSION')
-    need(value.get('status') == 'PASS' and value.get('historicalHead') == BASE and value.get('historicalTree') == BASE_TREE and
-         value.get('qualification') == 'FRESH_AUTHENTIC_PR45_44_41_TO_29_NOT_CURRENT_OR_OWNER_ACCEPTANCE', 'R45_HISTORICAL_PIN')
-    workspace = Path(value.get('workspace', ''))
-    need(workspace.is_absolute() and lines[0] == ('R45_HISTORICAL_WORKSPACE '+str(workspace)).encode(), 'R45_HISTORICAL_WORKSPACE')
-    rows = value.get('receipts')
-    need(type(rows) is list and len(rows) == 13, 'R45_HISTORICAL_INTERVAL')
-    by_name = {r.get('name'): r for r in rows}
-    node = by_name.get('node-version', {}).get('command', [None])[0]
-    npm_command = by_name.get('normal-npm-ci', {}).get('command', [])
-    need(type(node) is str and Path(node).is_absolute() and len(npm_command) == 6 and
-         type(npm_command[1]) is str and Path(npm_command[1]).is_absolute() and
-         Path(npm_command[1]).name == 'npm-cli.js', 'R45_HISTORICAL_TOOLS')
-    python = original44().original41().historical_python()
-    logs = validate_receipts(value, workspace, historical_commands(workspace, node, npm_command[1], python))
-    need(logs['node-version'].strip() == b'v22.21.0' and logs['npm-version'].strip() == b'11.20.0', 'R45_RUNTIME')
+def historical_helper():
+    path = ROOT/PREFIX/'historicalReplay45.py'
+    raw = regular(path)
+    module = ModuleType('current45_bounded_historical_execution_not_acceptance')
+    module.__file__ = str(path)
+    exec(compile(raw, str(path), 'exec'), module.__dict__)
+    return module
+
+
+def source_identity():
+    primitives().helpers().full29_store()
+    head, tree = text('rev-parse', 'HEAD'), text('rev-parse', 'HEAD^{tree}')
+    index, count = snapshot(head)
+    return dict(head=head, tree=tree, indexBytes=len(index), indexSHA256=digest(index), trackedBlobs=count)
+
+
+def historical_controls(fixture, checkpoint, python):
+    # Keep the literal original controls, including its refusal exit of two.
+    return historical_commands(fixture.parent, checkpoint['node'], checkpoint['npm'], python, fixture)[6:12]
+
+
+def historical_options(historical_mode, fixture, result, env):
+    need((fixture is None) == (result is None), 'R45_HISTORICAL_REUSE_PAIR')
+    if fixture is not None:
+        need(historical_mode and not any(k.startswith('GITHUB_') for k in env), 'R45_LOCAL_REUSE_ONLY')
+        need(Path(fixture).is_absolute() and Path(result).is_absolute(), 'R45_HISTORICAL_REUSE_PATH')
+
+
+def run_historical_control(helper, name, command, expected, fixture, workspace, env):
+    attempts = []
+    for number in range(1, 4):
+        path = workspace/'logs'/(name+'-attempt-'+str(number)+'.log')
+        row = helper.run_command(command, fixture, env, path, expected, 1800)
+        row.update(historicalHead=BASE, historicalTree=BASE_TREE)
+        attempts.append(row)
+        helper.write_json(workspace/'logs'/(name+'-attempts.json'), attempts)
+        if row['exit'] == expected and row['timedOut'] is False:
+            return dict(name=name, attempts=attempts)
+        if number == 3 or name not in ('original44-exact-source', 'original44-fullapp-scope',
+                                      'original44-external-readiness-refusal') or row['timedOut'] or \
+                helper.original_refusal(row, fixture) is not None:
+            break
+        directory = workspace/'diagnostics'/(name+'-attempt-'+str(number))
+        directory.mkdir(parents=True)
+        diagnosis = helper.diagnose(dict(root=str(fixture), row=dict(row)), fixture, directory, env)
+        raw = regular(directory/'diagnosis.json', 8*1024*1024)
+        row['diagnosis'] = dict(path=str(directory/'diagnosis.json'), bytes=len(raw), sha256=digest(raw))
+        helper.write_json(workspace/'logs'/(name+'-attempts.json'), attempts)
+        if diagnosis['classification'] not in ('REPRODUCED_RETRYABLE_HTTP', 'DIAGNOSTIC_RECOVERED_CAUSE_UNPROVEN'):
+            break
+    raise ValueError('R45_HISTORICAL_CONTROL_FAILED')
+
+
+def control_receipts(value, workspace, fixture, commands, helper):
+    controls = value.get('controls')
+    need(type(controls) is list and all(type(c) is dict for c in controls) and
+         [c.get('name') for c in controls] == [c[0] for c in commands], 'R45_HISTORICAL_INTERVAL')
+    logs = {}
+    for control, (name, command, expected) in zip(controls, commands):
+        attempts = control.get('attempts')
+        need(type(attempts) is list and 1 <= len(attempts) <= 3, 'R45_HISTORICAL_CONTROL_ATTEMPTS')
+        for number, row in enumerate(attempts, 1):
+            need(type(row) is dict and row.get('cwd') == str(fixture) and
+                 row.get('historicalHead') == BASE and row.get('historicalTree') == BASE_TREE and
+                 type(row.get('timedOut')) is bool and
+                 row.get('log') == str(workspace/'logs'/(name+'-attempt-'+str(number)+'.log')),
+                 'R45_HISTORICAL_CONTROL_FIXTURE')
+            raw = helper.verify_receipt(row, command, expected)
+            need(row['timedOut'] is False, 'R45_HISTORICAL_CONTROL_TIMEOUT')
+            if number < len(attempts):
+                need(row['exit'] != expected and name in ('original44-exact-source', 'original44-fullapp-scope',
+                     'original44-external-readiness-refusal') and helper.original_refusal(row, fixture) is None,
+                     'R45_HISTORICAL_RETRY')
+                proof = row.get('diagnosis', {})
+                path = workspace/'diagnostics'/(name+'-attempt-'+str(number))/'diagnosis.json'
+                need(proof.get('path') == str(path), 'R45_HISTORICAL_DIAGNOSIS_PATH')
+                data = regular(path, 8*1024*1024)
+                need(type(proof.get('bytes')) is int and len(data) == proof['bytes'] and
+                     digest(data) == proof.get('sha256'), 'R45_HISTORICAL_DIAGNOSIS_HASH')
+                diagnosis = document(data)
+                original = dict(row)
+                del original['diagnosis']
+                need(diagnosis.get('originalStage') == dict(root=str(fixture), row=original) and
+                     diagnosis.get('normalOriginalCommandStillRequired') is True and
+                     diagnosis.get('classification') in ('REPRODUCED_RETRYABLE_HTTP',
+                     'DIAGNOSTIC_RECOVERED_CAUSE_UNPROVEN'), 'R45_HISTORICAL_DIAGNOSIS')
+                relative = PREFIX+'main_integration44.py'
+                output = path.parent/'exception-events.json'
+                payload = [str(fixture), relative, PROGRAMS['main_integration44.py'],
+                           command[command.index(relative)+1:], str(output)]
+                diagnostic_command = [sys.executable, '-I', '-B', '-c', helper.TRACE_CODE, json.dumps(payload)]
+                helper.verify_receipt(diagnosis['diagnostic'], diagnostic_command, expected)
+                need(diagnosis['diagnostic'].get('cwd') == str(fixture) and
+                     diagnosis['diagnostic'].get('timedOut') is False and
+                     diagnosis['diagnostic'].get('log') == str(path.parent/'diagnostic.log') and
+                     document(regular(output, 8*1024*1024)) == diagnosis.get('exceptionEvents'),
+                     'R45_HISTORICAL_DIAGNOSIS_TRANSCRIPT')
+                selected = diagnosis.get('selectedSource', {})
+                need(selected.get('root') == str(fixture) and selected.get('head') == BASE and
+                     selected.get('tree') == BASE_TREE and
+                     diagnosis['exceptionEvents'].get('originalSourceSHA256') == PROGRAMS['main_integration44.py'],
+                     'R45_HISTORICAL_DIAGNOSIS_SOURCE')
+                need(helper.diagnostic_classification(diagnosis['diagnostic'], diagnosis['exceptionEvents']) ==
+                     diagnosis['classification'], 'R45_HISTORICAL_DIAGNOSIS')
+            else:
+                need(row['exit'] == expected, 'R45_HISTORICAL_CONTROL_NOT_PASSED')
+                logs[name] = raw
+    return logs
+
+
+def original44_control_results(logs, value):
     for name, count in (('original44-main_integration44.test.py', 22), ('original44-source_consumer44.test.py', 13)):
         need(re.search(('Ran '+str(count)+' tests? in ').encode(), logs[name]) is not None and
              logs[name].strip().endswith(b'OK'), 'R45_HISTORICAL_CONTROLS')
     source_log = re.sub(rb'\x1b\[[0-9;]*m', b'', logs['original44-source-regressions'])
     need(re.search(rb'Test Files\s+3 passed\s+\(3\)', source_log) is not None and
          re.search(rb'Tests\s+94 passed\s+\(94\)', source_log) is not None, 'R45_ORIGINAL44_REGRESSION_INTERVAL')
-    for name, field in (('original44-exact-source', 'original44'), ('original44-fullapp-scope', 'original44Scope')):
-        need(document(logs[name]) == value.get(field), 'R45_ACTUAL_TRANSCRIPT')
-    need(original44().historical_result(logs['original44-authentic-historical']) == value.get('original44Historical'),
+    exact = document(logs['original44-exact-source'])
+    scoped = document(logs['original44-fullapp-scope'])
+    refused = document(logs['original44-external-readiness-refusal'])
+    need(exact == value.get('original44') and scoped == value.get('original44Scope') and
+         scoped == refused, 'R45_ACTUAL_TRANSCRIPT')
+    need(exact.get('valid') is True and exact.get('head') == BASE and exact.get('tree') == BASE_TREE and
+         exact.get('governance') == 'CURRENT44_FINITE_SOURCE_ONLY' and
+         exact.get('qualification') == 'LOCAL_EXACT_CHECKOUT_NOT_HOSTED_CI', 'R45_ORIGINAL44_VERDICT')
+    no_admission(exact, 'R45_ORIGINAL44_NO_ADMISSION')
+    projection = dict(exact.get('productScope', {}), head=BASE, tree=BASE_TREE, phase='SOURCE_FROZEN',
+                      sourceQualification=exact['qualification'])
+    need(scoped == projection and scoped.get('requiredRows') == 38 and
+         len(scoped.get('unadmittedGates', [])) == 18 and scoped.get('externalReady') is False and
+         scoped.get('assessmentRenewed') is False and scoped.get('acceptanceGranted') is False and
+         scoped.get('release') == 'NO_GO', 'R45_ORIGINAL44_SCOPE_REFUSAL')
+    need(all(row.get(key) is False for row in scoped.get('obligations', [])
+             for key in ('complete', 'ownerAdmitted', 'positiveOutputEnabled')) and
+         len(scoped.get('obligations', [])) == 65, 'R45_ORIGINAL44_SCOPE_REFUSAL')
+    names = ('contract.v2.json', 'matrix.v2.json', 'precedence.v2.json', 'roadmap.v2.json', 'owner-ledger33.v1.json')
+    frozen = original44().original41().scope_guard({name: document(git('show', BASE+':'+DOCS+name)) for name in names})
+    need(all(scoped.get(key) == item for key, item in frozen.items()), 'R45_ORIGINAL44_SCOPE_REFUSAL')
+
+
+def historical_result(raw):
+    lines = [line for line in raw.replace(b'\r', b'').splitlines() if line]
+    need(len(lines) == 2 and lines[0].startswith(b'R45_HISTORICAL_WORKSPACE '), 'R45_HISTORICAL_TRANSCRIPT')
+    value = document(lines[-1])
+    no_admission(value, 'R45_HISTORICAL_NO_ADMISSION')
+    need(value.get('schema') == 2 and type(value.get('schema')) is int and value.get('status') == 'PASS' and
+         value.get('historicalHead') == BASE and value.get('historicalTree') == BASE_TREE and
+         value.get('qualification') == 'COMPOSITE_PR45_CONTROLS_AND_COMPLETE_NORMAL_ORIGINAL44_INVOCATION_NOT_OWNER_ACCEPTANCE' and
+         value.get('mode') in ('FRESH_NAMED_PR45', 'EXPLICIT_LOCAL_COMPLETED_PROOF_REUSE'), 'R45_HISTORICAL_PIN')
+    primitives().helpers().full29_store()
+    workspace = Path(value.get('workspace', ''))
+    need(workspace.is_absolute() and lines[0] == ('R45_HISTORICAL_WORKSPACE '+str(workspace)).encode(), 'R45_HISTORICAL_WORKSPACE')
+    fixture = Path(value.get('fixture', ''))
+    need(fixture.is_absolute() and not fixture.is_relative_to(ROOT) and not workspace.is_relative_to(ROOT),
+         'R45_EXTERNAL_CLONE')
+    helper = historical_helper()
+    need(value.get('helperSHA256') == digest(regular(ROOT/PREFIX/'historicalReplay45.py')),
+         'R45_HISTORICAL_HELPER_CHANGED')
+    proof = value.get('completedNormalInvocation', {})
+    path = Path(proof.get('path', ''))
+    need(path.is_absolute() and not path.is_relative_to(ROOT), 'R45_HISTORICAL_FULL_PROOF_PATH')
+    data = regular(path, 8*1024*1024)
+    need(type(proof.get('bytes')) is int and len(data) == proof['bytes'] and digest(data) == proof.get('sha256'),
+         'R45_HISTORICAL_FULL_PROOF_HASH')
+    completed = helper.verify_result(fixture, path)
+    need(completed == document(data) and completed.get('original44Historical') == value.get('original44Historical'),
          'R45_NESTED_ACTUAL_TRANSCRIPT')
-    verdict = value.get('original44', {})
-    need(verdict.get('valid') is True and verdict.get('head') == BASE and verdict.get('tree') == BASE_TREE and
-         verdict.get('governance') == 'CURRENT44_FINITE_SOURCE_ONLY' and
-         verdict.get('qualification') == 'LOCAL_EXACT_CHECKOUT_NOT_HOSTED_CI', 'R45_ORIGINAL44_VERDICT')
-    no_admission(verdict, 'R45_ORIGINAL44_NO_ADMISSION')
+    checkpoint = completed['checkpoint']
+    need(helper.git(fixture, 'symbolic-ref', '--short', 'HEAD').strip().decode() == PARENT_BRANCH,
+         'R45_HISTORICAL_NAMED_PARENT')
+    python = original44().original41().historical_python()
+    if value['mode'] == 'FRESH_NAMED_PR45':
+        need(fixture == workspace/'pr45', 'R45_HISTORICAL_FRESH_FIXTURE')
+        commands = historical_commands(workspace, checkpoint['node'], checkpoint['npm'], python)[:2]
+        rows = value.get('cloneReceipts')
+        need(type(rows) is list and len(rows) == 2, 'R45_HISTORICAL_CLONE_RECEIPTS')
+        for row, (name, command, expected) in zip(rows, commands):
+            need(row.get('name') == name and row.get('cwd') == str(workspace if name == 'clone-pr45' else fixture) and
+                 row.get('log') == str(workspace/'logs'/(name+'.log')), 'R45_HISTORICAL_CLONE_RECEIPTS')
+            helper.verify_receipt(row, command, expected)
+            need(row['exit'] == expected and row.get('timedOut') is False, 'R45_HISTORICAL_CLONE_RECEIPTS')
+    else:
+        need(value.get('cloneReceipts') == [], 'R45_HISTORICAL_REUSE_CLAIM')
+    logs = control_receipts(value, workspace, fixture, historical_controls(fixture, checkpoint, python), helper)
+    original44_control_results(logs, value)
+    measured = value.get('measuredSource', {})
+    head = measured.get('head', '')
+    need(type(head) is str and re.fullmatch('[0-9a-f]{40}', head) and
+         text('rev-parse', head+'^{tree}') == measured.get('tree') and text('merge-base', BASE, head) == BASE,
+         'R45_HISTORICAL_SOURCE_IDENTITY')
+    source_tree = primitives().helpers().tree29(head)
+    index = b''.join((mode+' '+oid+' 0\t'+path+'\0').encode() for path, (mode, oid) in source_tree.items())
+    need(measured == dict(head=head, tree=measured['tree'], indexBytes=len(index), indexSHA256=digest(index),
+                         trackedBlobs=len(source_tree)), 'R45_HISTORICAL_SOURCE_IDENTITY')
+    current = text('rev-parse', 'HEAD')
+    if current != head:
+        need(parents(current) == [current, head] and
+             changed(head, current, WORKLIST) == WORKLIST, 'R45_HISTORICAL_CALLER_SOURCE')
+    need(source_identity()['head'] == current, 'R45_HISTORICAL_CALLER_SOURCE')
     return value
 
 
-def historical():
-    """Original44 CURRENT checks run only in a fresh exact named PR45 checkout."""
+def historical(fixture=None, completed_result=None):
+    """Original44 CURRENT checks run only in a fresh exact named PR45 checkout.
+
+    Explicit local reuse revalidates a completed normal invocation in its retained
+    fixture and runs fresh controls; it does not claim a newly executed full chain.
+    """
+    historical_options(True, fixture, completed_result, os.environ)
     authenticate_parent()
-    start = text('rev-parse', 'HEAD')
+    before = source_identity()
     env = primitives().clean_environment()
     python = original44().original41().historical_python()
+    helper = historical_helper()
     workspace = Path(tempfile.mkdtemp(prefix='integration45-')).resolve()
     need(not workspace.is_relative_to(ROOT), 'R45_EXTERNAL_CLONE')
-    root, logs = workspace/'pr45', workspace/'logs'
+    logs = workspace/'logs'
     logs.mkdir()
     env.update(TEMP=str(workspace.parent), TMP=str(workspace.parent), TMPDIR=str(workspace.parent))
     print('R45_HISTORICAL_WORKSPACE '+str(workspace), file=sys.stderr, flush=True)
-    node = Path(shutil.which('node')).resolve()
-    candidates = [node.parent/'node_modules/npm/bin/npm-cli.js'] if os.name == 'nt' else [node.parent.parent/'lib/node_modules/npm/bin/npm-cli.js']
-    if env.get('APPDATA'):
-        candidates.insert(0, Path(env['APPDATA'])/'npm/node_modules/npm/bin/npm-cli.js')
-    npm = next((p for p in candidates if p.is_file() and
-               subprocess.check_output([str(node), str(p), '--version'], env=env).strip() == b'11.20.0'), None)
-    need(npm is not None, 'R45_RUNTIME')
-    config = workspace/'empty.npmrc'
-    config.write_bytes(b'')
-    env.update(npm_config_userconfig=os.devnull, npm_config_globalconfig=str(config))
-    commands = historical_commands(workspace, str(node), str(npm), python)
-    receipts, output = [], {}
-    def pinned(*args):
-        return subprocess.check_output(['git', '--no-replace-objects', *args], cwd=root, env=env).decode().strip()
-    for name, args, expected in commands:
-        if name == 'node-version':
-            need(pinned('rev-parse', 'HEAD') == BASE and pinned('rev-parse', 'HEAD^{tree}') == BASE_TREE and
-                 pinned('rev-parse', '--is-shallow-repository') == 'false', 'R45_HISTORICAL_PIN')
-            for program, sha in PROGRAMS.items():
-                need(digest(regular(root/PREFIX/program)) == sha, 'R45_HISTORICAL_PROGRAM')
-        path = logs/(name+'.log')
-        started, timed_out = time.monotonic(), False
-        with path.open('wb') as stream:
-            process = subprocess.Popen(args, cwd=workspace if name == 'clone-pr45' else root,
-                                       env=env, stdout=stream, stderr=subprocess.STDOUT)
-            try:
-                process.wait(timeout=21600 if name == 'original44-authentic-historical' else 1800)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait()
-                timed_out = True
-        raw = path.read_bytes()
-        receipts.append(dict(name=name, command=args, exit=process.returncode, expectedExit=expected,
-                             seconds=round(time.monotonic()-started, 3), timedOut=timed_out, bytes=len(raw),
-                             sha256=digest(raw), log=str(path), historicalHead=BASE, historicalTree=BASE_TREE))
-        (logs/'receipts.json').write_bytes((json.dumps(receipts, indent=2)+'\n').encode())
-        need(not timed_out and len(raw) <= 8*1024*1024, 'R45_HISTORICAL_TIMEOUT_OR_OUTPUT')
-        need(process.returncode == expected, 'R45_HISTORICAL_CHILD_EXIT')
-        output[name] = raw
-    need(pinned('status', '--porcelain=v1', '--untracked-files=all') == '' and pinned('rev-parse', 'HEAD') == BASE and
-         text('rev-parse', 'HEAD') == start, 'R45_HISTORICAL_CHANGED')
-    result = dict(status='PASS', historicalHead=BASE, historicalTree=BASE_TREE,
+    clone_receipts = []
+    if fixture is None:
+        fixture = workspace/'pr45'
+        # Tool arguments do not affect these first two literal clone/checkout commands.
+        for name, command, expected in historical_commands(workspace, '', '', python)[:2]:
+            row = helper.run_command(command, workspace if name == 'clone-pr45' else fixture,
+                                     env, logs/(name+'.log'), expected, 1800)
+            row['name'] = name
+            clone_receipts.append(row)
+            helper.write_json(logs/'clone-receipts.json', clone_receipts)
+            need(row['exit'] == expected and row['timedOut'] is False, 'R45_HISTORICAL_CLONE_FAILED')
+        proof_directory = workspace/'full-normal-original44'
+        mode = 'FRESH_NAMED_PR45'
+    else:
+        fixture = Path(fixture).resolve()
+        completed_result = Path(completed_result).resolve()
+        helper.verify_result(fixture, completed_result, workspace/'explicit-reuse-live')
+        proof_directory = Path(document(regular(completed_result, 8*1024*1024))['checkpointDirectory'])
+        mode = 'EXPLICIT_LOCAL_COMPLETED_PROOF_REUSE'
+    need(helper.git(fixture, 'symbolic-ref', '--short', 'HEAD').strip().decode() == PARENT_BRANCH,
+         'R45_HISTORICAL_NAMED_PARENT')
+    _, control_env, checkpoint = helper.prepare(fixture, proof_directory)
+    controls = []
+    for name, command, expected in historical_controls(fixture, checkpoint, python):
+        controls.append(run_historical_control(helper, name, command, expected, fixture, workspace, control_env))
+        helper.write_json(logs/'controls.json', controls)
+    if completed_result is None:
+        completed = helper.replay(fixture, proof_directory)
+        need(completed.get('status') == 'COMPLETE_ORIGINAL44_FULL_INVOCATION', 'R45_FULL_NORMAL_INVOCATION_INCOMPLETE')
+        completed_result = proof_directory/'result.json'
+    else:
+        completed = helper.verify_result(fixture, completed_result, workspace/'post-controls-reuse-live')
+    need(source_identity() == before, 'R45_HISTORICAL_CHANGED')
+    output = control_receipts(dict(controls=controls), workspace, fixture,
+                              historical_controls(fixture, checkpoint, python), helper)
+    full_raw = regular(completed_result, 8*1024*1024)
+    result = dict(schema=2, status='PASS', mode=mode, historicalHead=BASE, historicalTree=BASE_TREE,
                   original44=document(output['original44-exact-source']),
                   original44Scope=document(output['original44-fullapp-scope']),
-                  original44Historical=original44().historical_result(output['original44-authentic-historical']),
-                  receipts=receipts, workspace=str(workspace),
-                  qualification='FRESH_AUTHENTIC_PR45_44_41_TO_29_NOT_CURRENT_OR_OWNER_ACCEPTANCE',
+                  original44Historical=completed['original44Historical'], controls=controls,
+                  cloneReceipts=clone_receipts, workspace=str(workspace), fixture=str(fixture),
+                  helperSHA256=digest(regular(ROOT/PREFIX/'historicalReplay45.py')), measuredSource=before,
+                  completedNormalInvocation=dict(path=str(completed_result), bytes=len(full_raw), sha256=digest(full_raw)),
+                  qualification='COMPOSITE_PR45_CONTROLS_AND_COMPLETE_NORMAL_ORIGINAL44_INVOCATION_NOT_OWNER_ACCEPTANCE',
                   acceptanceGranted=False, admissions=dict.fromkeys(ADMISSIONS, False), release='NO_GO')
-    return historical_result(('R45_HISTORICAL_WORKSPACE '+str(workspace)+'\n'+json.dumps(result)).encode())
+    parsed = historical_result(('R45_HISTORICAL_WORKSPACE '+str(workspace)+'\n'+json.dumps(result)).encode())
+    need(source_identity() == before, 'R45_HISTORICAL_CHANGED')
+    return parsed
 
 
 def main():
@@ -584,18 +802,25 @@ def main():
     group.add_argument('--historical', action='store_true')
     group.add_argument('--scope', choices=['full-app-j01-v2'])
     parser.add_argument('--external-readiness', action='store_true')
+    parser.add_argument('--historical-fixture', type=Path)
+    parser.add_argument('--historical-result', type=Path)
     args = parser.parse_args()
     try:
         need(not args.external_readiness or args.scope is not None, 'R45_EXPLICIT_SCOPE_REQUIRED')
-        result = historical() if args.historical else verify(args.phase)
+        historical_options(args.historical, args.historical_fixture, args.historical_result, os.environ)
+        result = historical(args.historical_fixture, args.historical_result) if args.historical else verify(args.phase)
         if args.scope:
             result = dict(result['productScope'], head=result['head'], tree=result['tree'], phase=args.phase,
                           sourceQualification=result['qualification'])
         print(json.dumps(result, sort_keys=True))
         return 2 if args.external_readiness else 0
     except Exception as exc:
+        if args.historical:
+            # Retain actual failure diagnostics, including coded orchestration
+            # refusals, without dumping environment, headers or frame locals.
+            traceback.print_exc(file=sys.stderr)
         reason = str(exc)
-        if not re.fullmatch(r'(?:R45|R44|R41|R40|R39|R38|R37|R36|R35|R34|R33|R32|R29|R23)_[A-Z0-9_]{1,96}', reason):
+        if not re.fullmatch(r'(?:C45H|R45|R44|R41|R40|R39|R38|R37|R36|R35|R34|R33|R32|R29|R23)_[A-Z0-9_]{1,96}', reason):
             reason = 'R45_EXECUTION_INCOMPLETE'
         print(json.dumps(dict(valid=False, error=reason, acceptanceGranted=False, release='NO_GO')))
         return 1
@@ -603,6 +828,10 @@ def main():
 
 # Exact pinned PR45 preimages, not a regenerated source grant.
 BASELINES = {
+    'docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json': (None, None, None, None),
+    'apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts': ('100644', '929f1eaf4aa54f67fcd34c5d921ae61250bff344', 'f550a350ea02c2a313b599aae81d7d8a4b95eb9f35798baccc238054e21809a9', 16416),
+    'scripts/release/full-app-j01/historicalReplay45.py': (None, None, None, None),
+    'scripts/release/full-app-j01/historicalReplay45.test.py': (None, None, None, None),
     'apps/mobile/src/lib/auth/localAccountIsolation.ts': ('100644', 'dba115379250aa4d1987551066bf41ca62665538', '54536c5fe1f9e1fe207359d4824de8b481c0f550fa2bd51a0ee0d901671e7490', 14970),
     'apps/mobile/src/lib/auth/sessionOwner.ts': ('100644', '545e8615aef56268ae96b219914350edda907b78', '96137032c2286422281a5fd9d33d1c950591773b1cddf6875ab17084b29ead1c', 8669),
     '.github/workflows/quality.yml': ('100644', '89d7289ef9d7097757f591ed81cd8a2834c7e329', '0ea1bbe82006df100ec489d49c575fd61ee5cb9858772584419a5c2933675ec5', 16985),

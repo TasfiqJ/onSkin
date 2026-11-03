@@ -1,10 +1,12 @@
 """Current45 pure boundary tests. All event/approval objects below are synthetic fixtures."""
 import copy
 import importlib.util
+import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from unittest.mock import patch
 spec=importlib.util.spec_from_file_location('current45',Path(__file__).with_name('main_integration45.py'))
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
@@ -24,7 +26,8 @@ class AdmissionControls(unittest.TestCase):
 
     def setUp(self):
         self.bodies = {p: ('public synthetic fixture '+p).encode() for p in m.SOURCE-{m.TASK}}
-        self.task = dict(schema=1, authority=m.AUTHORITY, additionalAuthorization=m.REPAIR_AUTHORITY, base=m.BASE, baseTree=m.BASE_TREE,
+        self.task = dict(schema=1, authority=m.AUTHORITY, additionalAuthorization=m.REPAIR_AUTHORITY,
+            closureAuthorization=m.CLOSURE_AUTHORITY, base=m.BASE, baseTree=m.BASE_TREE,
             planCommit=m.PLAN_COMMIT, sourceHashes={p:m.digest(b) for p,b in self.bodies.items()},
             commands=[dict(command=['node','--version'],exit=0,qualification='SYNTHETIC_TEST_ONLY',logSha256=None)],
             acceptanceGranted=False, admissions=dict.fromkeys(m.ADMISSIONS,False), release='NO_GO',
@@ -50,8 +53,8 @@ class AdmissionControls(unittest.TestCase):
 
     def test_exact_task_and_no_self_hash_cycle(self):
         m.task_guard(self.task,self.bodies.__getitem__)
-        self.assertEqual(len(m.SOURCE),38)
-        self.assertEqual(len(m.GRANT),41)
+        self.assertEqual(len(m.SOURCE),42)
+        self.assertEqual(len(m.GRANT),45)
         self.assertNotIn(m.TASK,self.task['sourceHashes'])
 
 
@@ -61,6 +64,7 @@ class AdmissionControls(unittest.TestCase):
     def test_fabricated_approval_release_authority_and_parent_refuse(self):
         for key,bad in [('acceptanceGranted',True),('release','GO'),('authority','new grant'),
             ('additionalAuthorization','unissued extension'),
+            ('closureAuthorization','unissued task mandate'),
             ('base','0'*40),('baseTree','0'*40),('planCommit','0'*40),('schema',True),
             ('qualification','ACCEPTED')]:
             value=copy.deepcopy(self.task);value[key]=bad
@@ -246,5 +250,292 @@ class AdmissionControls(unittest.TestCase):
         self.assertIn('catalog-operator-cat08-cleanup40.test.mjs --behavioral',m.new_step())
         self.assertIn('PlanHistoryPanel45.test.tsx',m.new_step())
         self.assertIn('planHistory45Encrypted.test.ts',m.new_step())
+        self.assertIn('ownedBottleVersion38.test.ts',m.new_step())
+        self.assertIn('historicalReplay45.test.py',m.new_step())
+
+class CompositeHistoricalControls(unittest.TestCase):
+    """Synthetic unit boundaries; these receipts confer no historical acceptance."""
+    def test_explicit_resume_pair_is_local_only_and_requires_historical_mode(self):
+        root=Path(tempfile.gettempdir()).resolve()
+        m.historical_options(True,root/'fixture',root/'result.json',{})
+        m.historical_options(True,None,None,{'GITHUB_ACTIONS':'true'})
+        for mode,fixture,result,env in (
+            (True,root/'fixture',None,{}),(True,None,root/'result.json',{}),
+            (False,root/'fixture',root/'result.json',{}),
+            (True,root/'fixture',root/'result.json',{'GITHUB_ACTIONS':'true'}),
+            (True,root/'fixture',root/'result.json',{'GITHUB_SHA':'a'*40}),
+            (True,Path('relative'),root/'result.json',{})):
+            with self.subTest(mode=mode,fixture=fixture,env=env),self.assertRaises(ValueError):
+                m.historical_options(mode,fixture,result,env)
+
+    def test_composite_controls_keep_original_counts_and_refusal_literal_commands(self):
+        root=Path(tempfile.gettempdir()).resolve()/'named-fixture-is-not-required-to-be-pr45-directory'
+        checkpoint=dict(node=str(root/'node'),npm=str(root/'npm-cli.js'))
+        rows=m.historical_controls(root,checkpoint,str(root/'python'))
+        self.assertEqual([row[0] for row in rows],[row[0] for row in
+            m.historical_commands(root.parent,checkpoint['node'],checkpoint['npm'],str(root/'python'))[6:12]])
+        self.assertEqual(len(rows),6)
+        self.assertEqual(rows[-1][2],2)
+        self.assertEqual(rows[-1][1], [str(root/'python'),'-I','-B',m.PREFIX+'main_integration44.py',
+            '--scope','full-app-j01-v2','--external-readiness'])
+        self.assertIn(str(root/'node_modules/vitest/vitest.mjs'),rows[2][1])
+        self.assertNotIn('--historical', [arg for _,command,_ in rows for arg in command])
+
+    def test_cli_reuse_requires_both_arguments_and_never_runs_current_or_history_on_refusal(self):
+        root=Path(tempfile.gettempdir()).resolve()
+        fixture,result=root/'fixture',root/'result.json'
+        with patch.dict(m.os.environ,{},clear=True),patch.object(m.sys,'argv',
+            ['main45','--historical','--historical-fixture',str(fixture),'--historical-result',str(result)]), \
+            patch.object(m,'historical',return_value={'status':'SYNTHETIC_UNIT_ONLY'}) as history, \
+            patch.object(m,'verify') as current,redirect_stdout(io.StringIO()):
+            self.assertEqual(m.main(),0)
+            history.assert_called_once_with(fixture,result);current.assert_not_called()
+        for args,env in ((['--historical','--historical-fixture',str(fixture)],{}),
+            (['--historical-fixture',str(fixture),'--historical-result',str(result)],{}),
+            (['--historical','--historical-fixture',str(fixture),'--historical-result',str(result)],
+                {'GITHUB_ACTIONS':'true'})):
+            output=io.StringIO()
+            with patch.dict(m.os.environ,env,clear=True),patch.object(m.sys,'argv',['main45',*args]), \
+                patch.object(m,'historical') as history,patch.object(m,'verify') as current, \
+                patch.object(m.sys,'stderr',io.StringIO()),redirect_stdout(output):
+                self.assertEqual(m.main(),1)
+                history.assert_not_called();current.assert_not_called()
+                self.assertEqual(json.loads(output.getvalue())['release'],'NO_GO')
+
+    def test_historical_exceptions_retain_actual_diagnostics_and_never_report_pass(self):
+        for exception,code in ((RuntimeError('synthetic operational exception'),'R45_EXECUTION_INCOMPLETE'),
+                               (ValueError('C45H_SETUP_EXIT'),'C45H_SETUP_EXIT')):
+            output,error=io.StringIO(),io.StringIO()
+            with self.subTest(kind=type(exception).__name__),patch.dict(m.os.environ,{},clear=True), \
+                patch.object(m.sys,'argv',['main45','--historical']), \
+                patch.object(m,'historical',side_effect=exception),patch.object(m.sys,'stderr',error),redirect_stdout(output):
+                self.assertEqual(m.main(),1)
+            value=json.loads(output.getvalue())
+            self.assertFalse(value['valid']);self.assertEqual(value['error'],code)
+            self.assertEqual(value['release'],'NO_GO');self.assertFalse(value['acceptanceGranted'])
+            self.assertIn(type(exception).__name__+': '+str(exception),error.getvalue())
+
+    def test_explicit_completed_proof_reuse_does_not_execute_another_full_chain(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-routing-unit-') as directory:
+            root=Path(directory).resolve();fixture=root/'pr45';proofdir=root/'original-full';proofdir.mkdir()
+            workspace=root/'composite';workspace.mkdir()
+            checkpoint=dict(node=str(root/'node'),npm=str(root/'npm-cli.js'))
+            completed=dict(status='COMPLETE_ORIGINAL44_FULL_INVOCATION',checkpointDirectory=str(proofdir),
+                original44Historical={'status':'SYNTHETIC_UNIT_ONLY'})
+            proof=proofdir/'result.json';helper.write_json(proof,completed)
+            outputs={'original44-exact-source':b'{"valid":true}',
+                'original44-fullapp-scope':b'{"scope":"SYNTHETIC_UNIT_ONLY"}'}
+            identity=dict(head='a'*40,tree='b'*40,indexBytes=0,indexSHA256=m.digest(b''),trackedBlobs=0)
+            def parse(raw):return json.loads(raw.splitlines()[-1])
+            with patch.dict(m.os.environ,{},clear=True),patch.object(m,'authenticate_parent'), \
+                patch.object(m,'source_identity',return_value=identity),patch.object(m,'historical_helper',return_value=helper), \
+                patch.object(helper,'verify_result',return_value=completed) as revalidate, \
+                patch.object(helper,'prepare',return_value=(None,{},checkpoint)), \
+                patch.object(helper,'git',return_value=(m.PARENT_BRANCH+'\n').encode()), \
+                patch.object(helper,'replay') as replay,patch.object(m,'run_historical_control',return_value={}) as controls, \
+                patch.object(m,'control_receipts',return_value=outputs),patch.object(m,'historical_result',side_effect=parse), \
+                patch.object(m.tempfile,'mkdtemp',return_value=str(workspace)), \
+                patch.object(m.sys,'stderr',io.StringIO()):
+                value=m.historical(fixture,proof)
+                replay.assert_not_called();self.assertEqual(controls.call_count,6)
+                self.assertEqual(revalidate.call_count,2)
+                self.assertEqual(value['mode'],'EXPLICIT_LOCAL_COMPLETED_PROOF_REUSE')
+                self.assertIn('COMPOSITE_',value['qualification'])
+                self.assertEqual(value['completedNormalInvocation']['path'],str(proof))
+                self.assertEqual(value['original44Historical'],completed['original44Historical'])
+                self.assertFalse(value['acceptanceGranted']);self.assertEqual(value['release'],'NO_GO')
+
+    def test_default_hosted_path_creates_fresh_https_fixture_and_executes_normal_full_replay(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-fresh-routing-unit-') as directory:
+            workspace=Path(directory).resolve()
+            checkpoint=dict(node=str(workspace/'node'),npm=str(workspace/'npm-cli.js'))
+            completed=dict(status='COMPLETE_ORIGINAL44_FULL_INVOCATION',
+                original44Historical={'status':'SYNTHETIC_UNIT_ONLY'})
+            identity=dict(head='a'*40,tree='b'*40,indexBytes=0,indexSHA256=m.digest(b''),trackedBlobs=0)
+            commands=[]
+            def command(args,cwd,env,path,expected,timeout):
+                commands.append(args);path.write_bytes(b'synthetic clone or checkout only')
+                return dict(command=args,cwd=str(cwd),exit=0,expectedExit=0,timedOut=False,
+                    log=str(path),bytes=32,sha256=m.digest(path.read_bytes()))
+            def replay(fixture,evidence):
+                evidence.mkdir();helper.write_json(evidence/'result.json',completed)
+                return completed
+            with patch.dict(m.os.environ,{'GITHUB_ACTIONS':'true'},clear=True),patch.object(m,'authenticate_parent'), \
+                patch.object(m,'source_identity',return_value=identity),patch.object(m,'historical_helper',return_value=helper), \
+                patch.object(helper,'prepare',return_value=(None,{},checkpoint)), \
+                patch.object(helper,'git',return_value=(m.PARENT_BRANCH+'\n').encode()), \
+                patch.object(helper,'run_command',side_effect=command),patch.object(helper,'replay',side_effect=replay) as normal, \
+                patch.object(m,'run_historical_control',return_value={}) as controls, \
+                patch.object(m,'control_receipts',return_value={'original44-exact-source':b'{}',
+                    'original44-fullapp-scope':b'{}'}), \
+                patch.object(m,'historical_result',side_effect=lambda raw:json.loads(raw.splitlines()[-1])), \
+                patch.object(m.tempfile,'mkdtemp',return_value=str(workspace)),patch.object(m.sys,'stderr',io.StringIO()):
+                value=m.historical()
+                normal.assert_called_once_with(workspace/'pr45',workspace/'full-normal-original44')
+                self.assertEqual(controls.call_count,6)
+                self.assertEqual(value['mode'],'FRESH_NAMED_PR45')
+                self.assertEqual(len(value['cloneReceipts']),2)
+                self.assertIn('https://github.com/TasfiqJ/onSkin.git',commands[0])
+                self.assertIn('--no-hardlinks',commands[0]);self.assertIn(m.PARENT_BRANCH,commands[0])
+                self.assertEqual(commands[1],['git','checkout',m.PARENT_BRANCH])
+
+    def test_fresh_control_receipts_bind_actual_logs_cwd_commands_and_refusal_exit(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-composite-unit-') as directory:
+            workspace=Path(directory).resolve();(workspace/'logs').mkdir();fixture=workspace/'pr45'
+            commands=[('original44-external-readiness-refusal',['python','original44','--external-readiness'],2)]
+            raw=b'public synthetic refusal fixture only\n'
+            path=workspace/'logs'/'original44-external-readiness-refusal-attempt-1.log';path.write_bytes(raw)
+            row=dict(command=commands[0][1],cwd=str(fixture),exit=2,expectedExit=2,timedOut=False,
+                historicalHead=m.BASE,historicalTree=m.BASE_TREE,log=str(path),bytes=len(raw),sha256=m.digest(raw))
+            control=dict(name=commands[0][0],attempts=[row])
+            self.assertEqual(m.control_receipts(dict(controls=[control]),workspace,fixture,commands,helper),
+                {commands[0][0]:raw})
+            for field,bad in (('command',['python','forged']),('cwd',str(workspace)),('exit',0),
+                ('exit',True),('expectedExit',0),('timedOut',True),('historicalHead','0'*40),
+                ('historicalTree','0'*40),('log',str(workspace/'elsewhere.log')),('sha256','0'*64),('bytes',True)):
+                changed=dict(control,attempts=[dict(row,**{field:bad})])
+                with self.subTest(field=field,bad=bad),self.assertRaises(ValueError):
+                    m.control_receipts(dict(controls=[changed]),workspace,fixture,commands,helper)
+            for controls in ([],[control,control],[dict(control,attempts=[])],[dict(control,attempts=[row]*4)]):
+                with self.assertRaises(ValueError):m.control_receipts(dict(controls=controls),workspace,fixture,commands,helper)
+            path.write_bytes(raw+b'changed')
+            with self.assertRaisesRegex(ValueError,'C45H_LOG_CHANGED'):
+                m.control_receipts(dict(controls=[control]),workspace,fixture,commands,helper)
+
+    def test_normal_failure_diagnostic_success_is_never_returned_as_control_success(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-retry-unit-') as directory:
+            workspace=Path(directory).resolve();(workspace/'logs').mkdir();fixture=workspace/'pr45'
+            calls=[]
+            def run(command,cwd,env,path,expected,timeout):
+                calls.append(command)
+                raw=b'public synthetic original NORMAL failure\n';path.write_bytes(raw)
+                return dict(command=command,cwd=str(cwd),exit=1,expectedExit=expected,timedOut=False,
+                    log=str(path),bytes=len(raw),sha256=m.digest(raw))
+            def diagnose(stage,root,evidence,env):
+                value=dict(classification='DIAGNOSTIC_RECOVERED_CAUSE_UNPROVEN',originalStage=stage,
+                    normalOriginalCommandStillRequired=True)
+                helper.write_json(evidence/'diagnosis.json',value)
+                return value
+            with patch.object(helper,'run_command',side_effect=run),patch.object(helper,'diagnose',side_effect=diagnose):
+                with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_CONTROL_FAILED'):
+                    m.run_historical_control(helper,'original44-exact-source',['python','original44'],0,
+                        fixture,workspace,{})
+            self.assertEqual(calls,[['python','original44']]*3)
+            attempts=helper.document((workspace/'logs'/'original44-exact-source-attempts.json').read_bytes())
+            self.assertEqual([row['exit'] for row in attempts],[1,1,1])
+            self.assertTrue(all(Path(row['log']).is_file() for row in attempts))
+            self.assertTrue(all('diagnosis' in row for row in attempts[:2]))
+
+    def test_semantic_control_failure_is_not_automatically_retried(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-semantic-unit-') as directory:
+            workspace=Path(directory).resolve();(workspace/'logs').mkdir()
+            def run(command,cwd,env,path,expected,timeout):
+                path.write_bytes(b'synthetic refusal')
+                return dict(command=command,cwd=str(cwd),exit=1,expectedExit=expected,timedOut=False,
+                    log=str(path),bytes=17,sha256=m.digest(b'synthetic refusal'))
+            def diagnose(stage,root,evidence,env):
+                value=dict(classification='SEMANTIC_OR_UNCLASSIFIED_NO_AUTOMATIC_RETRY',originalStage=stage,
+                    normalOriginalCommandStillRequired=True)
+                helper.write_json(evidence/'diagnosis.json',value)
+                return value
+            with patch.object(helper,'run_command',side_effect=run) as execute, \
+                 patch.object(helper,'diagnose',side_effect=diagnose):
+                with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_CONTROL_FAILED'):
+                    m.run_historical_control(helper,'original44-fullapp-scope',['python','original44'],0,
+                        workspace/'pr45',workspace,{})
+                self.assertEqual(execute.call_count,1)
+
+    def test_original_custody_refusal_stops_before_diagnostic_even_if_a_diagnostic_could_recover(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-custody-refusal-unit-') as directory:
+            workspace=Path(directory).resolve();(workspace/'logs').mkdir()
+            def run(command,cwd,env,path,expected,timeout):
+                raw=b'{"valid":false,"error":"R44_PR_CUSTODY","acceptanceGranted":false,"release":"NO_GO"}\n'
+                path.write_bytes(raw)
+                return dict(command=command,cwd=str(cwd),exit=1,expectedExit=expected,timedOut=False,
+                    log=str(path),bytes=len(raw),sha256=m.digest(raw))
+            with patch.object(helper,'run_command',side_effect=run) as execute,patch.object(helper,'diagnose') as diagnostic:
+                with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_CONTROL_FAILED'):
+                    m.run_historical_control(helper,'original44-exact-source',['python','original44'],0,
+                        workspace/'pr45',workspace,{})
+                self.assertEqual(execute.call_count,1);diagnostic.assert_not_called()
+
+    def test_control_retry_reader_binds_diagnostic_command_source_and_raw_exception_events(self):
+        helper=m.historical_helper()
+        with tempfile.TemporaryDirectory(prefix='current45-diagnostic-reader-unit-') as directory:
+            workspace=Path(directory).resolve();(workspace/'logs').mkdir();fixture=workspace/'pr45'
+            name='original44-exact-source';relative=m.PREFIX+'main_integration44.py'
+            command=[m.sys.executable,'-I','-B',relative]
+            def receipt(args,cwd,path,raw,exit):
+                path.write_bytes(raw)
+                return dict(command=args,cwd=str(cwd),exit=exit,expectedExit=0,timedOut=False,
+                    historicalHead=m.BASE,historicalTree=m.BASE_TREE,
+                    log=str(path),bytes=len(raw),sha256=m.digest(raw))
+            failed=receipt(command,fixture,workspace/'logs'/(name+'-attempt-1.log'),b'synthetic failed normal',1)
+            passed=receipt(command,fixture,workspace/'logs'/(name+'-attempt-2.log'),b'synthetic passed normal',0)
+            diagdir=workspace/'diagnostics'/(name+'-attempt-1');diagdir.mkdir(parents=True)
+            events=dict(diagnosticOnly=True,exit=0,events=[],originalSourceSHA256=m.PROGRAMS['main_integration44.py'])
+            output=diagdir/'exception-events.json';helper.write_json(output,events)
+            payload=[str(fixture),relative,m.PROGRAMS['main_integration44.py'],[],str(output)]
+            args=[m.sys.executable,'-I','-B','-c',helper.TRACE_CODE,json.dumps(payload)]
+            diagnostic=receipt(args,fixture,diagdir/'diagnostic.log',b'synthetic diagnostic only',0)
+            diagnosis=dict(classification='DIAGNOSTIC_RECOVERED_CAUSE_UNPROVEN',
+                originalStage=dict(root=str(fixture),row=dict(failed)),diagnostic=diagnostic,exceptionEvents=events,
+                selectedSource=dict(root=str(fixture),head=m.BASE,tree=m.BASE_TREE),normalOriginalCommandStillRequired=True)
+            def bind():
+                path=diagdir/'diagnosis.json';helper.write_json(path,diagnosis);raw=path.read_bytes()
+                failed['diagnosis']=dict(path=str(path),bytes=len(raw),sha256=m.digest(raw))
+            bind()
+            value=dict(controls=[dict(name=name,attempts=[failed,passed])]);commands=[(name,command,0)]
+            self.assertEqual(m.control_receipts(value,workspace,fixture,commands,helper)[name],b'synthetic passed normal')
+            diagnosis['diagnostic']['command']=['python','fabricated-diagnostic'];bind()
+            with self.assertRaisesRegex(ValueError,'C45H_COMMAND_CHANGED'):
+                m.control_receipts(value,workspace,fixture,commands,helper)
+            diagnosis['diagnostic']['command']=args;bind();output.write_bytes(b'{}')
+            with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_DIAGNOSIS_TRANSCRIPT'):
+                m.control_receipts(value,workspace,fixture,commands,helper)
+            raw=b'{"valid":false,"error":"R44_PR_CUSTODY"}\n';Path(failed['log']).write_bytes(raw)
+            failed.update(bytes=len(raw),sha256=m.digest(raw))
+            with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_RETRY'):
+                m.control_receipts(value,workspace,fixture,commands,helper)
+
+    def test_scope_and_readiness_equal_body_and_all_original_gates_stay_closed(self):
+        names=('contract.v2.json','matrix.v2.json','precedence.v2.json','roadmap.v2.json','owner-ledger33.v1.json')
+        frozen=m.original44().original41().scope_guard({name:m.document(m.git('show',m.BASE+':'+m.DOCS+name))
+            for name in names})
+        exact=dict(valid=True,head=m.BASE,tree=m.BASE_TREE,governance='CURRENT44_FINITE_SOURCE_ONLY',
+            qualification='LOCAL_EXACT_CHECKOUT_NOT_HOSTED_CI',productScope=frozen,
+            acceptanceGranted=False,release='NO_GO',admissions=dict.fromkeys(m.ADMISSIONS,False))
+        scoped=dict(frozen,head=m.BASE,tree=m.BASE_TREE,phase='SOURCE_FROZEN',sourceQualification=exact['qualification'])
+        logs={'original44-main_integration44.test.py':b'Ran 22 tests in 1.0s\n\nOK\n',
+            'original44-source_consumer44.test.py':b'Ran 13 tests in 1.0s\n\nOK\n',
+            'original44-source-regressions':b'Test Files 3 passed (3)\nTests 94 passed (94)\n',
+            'original44-exact-source':json.dumps(exact).encode(),
+            'original44-fullapp-scope':json.dumps(scoped).encode(),
+            'original44-external-readiness-refusal':json.dumps(scoped).encode()}
+        value=dict(original44=exact,original44Scope=scoped)
+        m.original44_control_results(logs,value)
+        for name,bad in (('original44-main_integration44.test.py',b'Ran 21 tests in 1s\nOK'),
+            ('original44-source_consumer44.test.py',b'Ran 12 tests in 1s\nOK'),
+            ('original44-source-regressions',b'Test Files 3 passed (3)\nTests 93 passed (93)'),
+            ('original44-external-readiness-refusal',json.dumps(dict(scoped,externalReady=True)).encode())):
+            with self.subTest(name=name),self.assertRaises(ValueError):m.original44_control_results(dict(logs,**{name:bad}),value)
+        for edit in ('required','owner','obligation','different-id'):
+            changed=copy.deepcopy(scoped)
+            if edit=='required':changed['requiredRows']=37
+            elif edit=='owner':changed['unadmittedGates'].pop()
+            elif edit=='obligation':changed['obligations'][0]['ownerAdmitted']=True
+            else:changed['obligations'][0]['id']='invented'
+            altered=copy.deepcopy(exact);altered['productScope']={k:v for k,v in changed.items() if k in frozen}
+            changed_logs=dict(logs,**{'original44-exact-source':json.dumps(altered).encode(),
+                'original44-fullapp-scope':json.dumps(changed).encode(),
+                'original44-external-readiness-refusal':json.dumps(changed).encode()})
+            with self.subTest(edit=edit),self.assertRaises(ValueError):
+                m.original44_control_results(changed_logs,dict(original44=altered,original44Scope=changed))
 
 if __name__=='__main__':unittest.main()

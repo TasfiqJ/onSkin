@@ -1,3 +1,17 @@
+# Campaign45 Autonomous Closure04 - source verification in progress
+
+Authority BRAIN-C45-AUTONOMOUS-CLOSURE-04 supersedes the earlier file ceiling and stop-on-red/local-commit bans. The authenticated supplemental packet and exact Repair03 working tree were verified before edits; local checkpoint0f1521d639e54c44d30457faa463c2bff1e08bb1 preserves tree76de39be856a33b3731222e238d2e4cce4329b7f. Frozen plan and all ancestors remain immutable. CHANGE_LEDGER.json records necessary extra paths and preimages before editing; the current verifier enforces an exact45-path inventory, never a wildcard.
+
+The bottle fixture now guarantees a bit change with a deterministic all256-byte check including00; production crypto is unchanged. Controlled native I/O and held real Query notifications reproduced cache-idle before committed source/capture/render readiness; the React helper now observes actual completion with finite content-free diagnostics. Original assertions and REDs are preserved. UI26/26, ten shuffle orders, prior focused622/622, and bottle/Shelf/storage170/170 passed. Two late marker-retirement schedules bring native recovery controls to86, preserving canonical-confirmation linearization and real withdrawal deletion-win.
+
+Further genuine encrypted native-port counterexamples exposed unauthenticated plaintext/empty history reads/export and malformed/missing/duplicate/unsolicited history batch rows. Narrow fixed-history guards now reject legacy native history and validate exact requested batch scope before decrypt/return. Other legacy stores remain unchanged; no extra persistent key or route exists. Current native file92 tests and affected six-file278 selection pass. Initial native-spy teardown harness error was corrected and retained before the genuine repeated REDs; no false-green outcome is admitted.
+
+C45 orchestration now preserves attempts, binds source/toolchain/lock/log inputs, verifies actual NORMAL original44 full-invocation proof through unchanged recursive readers, and supports explicitly qualified local completed-proof reuse plus fresh live controls. Default CI uses fresh HTTPS PR45. Desktop process-tree controls drain owned descendants; semantic/custody refusals cannot become retry passes. Helper20/main31/source16 controls passed. The actual complete normal historical invocation is still running independently; no complete replay or hosted CI pass is claimed at this checkpoint.
+
+All mandatory final frozen-source/full-root checks remain to be recorded. No worklist seal, push or PR until they and replay/provenance pass. Browser NOT_VERIFIED under the source-only exception; physical restart/power-loss/iPhone/accessibility unqualified. All38 full-app obligations and18 owner gates remain unaccepted; original core04/core06 two OPEN failures, Security/candidate29/G97/M2/public release remain unwaived. Implementation is NOT accepted; release NO_GO. No Campaign46, merge or deployment.
+
+## Earlier diagnostic reports below - historical only
+
 # Campaign45 Repair03 — mandatory replay blocked
 
 PARTIAL_BLOCKED / NO_GO. BRAIN-C45-MARKER-OWNERSHIP-REPAIR-03 authorizes exactly the original39 paths plus localAccountIsolation.ts and sessionOwner.ts:41 paths. The frozen plan and all earlier commits remain immutable. Existing auth tests remain unchanged. The repair is retained as an uncommitted reviewable patch because mandatory historical replay has not passed; no source-frozen proof, worklist seal, push, PR or final-head hosted CI is claimed.

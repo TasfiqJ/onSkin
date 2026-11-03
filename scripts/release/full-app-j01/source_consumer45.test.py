@@ -1,7 +1,9 @@
 """Actual Git, raw-byte, finite-grant and historical-reader negatives; disposable fixtures only."""
 import ast
+import copy
 import hashlib
 import importlib.util
+import json
 import os
 from pathlib import Path
 import re
@@ -41,13 +43,36 @@ def repository(prefix):
 
 
 class SourceControls45(unittest.TestCase):
-    def test_exact_parent_immutable_original_plan_and_all_fortyone_preimages(self):
+    def test_exact_task_amendment_ledger_and_checkpoint_preimages(self):
+        value = m.document(m.regular(m.ROOT/m.LEDGER))
+        def before(path):
+            return m.git('show', m.DIAGNOSTIC_COMMITS[-1]+':'+path) if \
+                m.git('ls-tree', m.DIAGNOSTIC_COMMITS[-1], '--', path) else None
+        self.assertEqual(m.ledger_guard(value, before), m.CLOSURE_PATHS)
+        for field, bad in (('authority', 'unissued'), ('frozenPlanSha256', '0'*64),
+                           ('preservedRepair03Tree', '0'*40), ('scopePolicy', 'apps/mobile/src/**')):
+            changed = copy.deepcopy(value);changed[field] = bad
+            with self.subTest(field=field), self.assertRaises(ValueError):m.ledger_guard(changed, before)
+        for edit in ('omit', 'extra', 'duplicate', 'hash', 'not-recorded', 'wildcard', 'no-reason'):
+            changed = copy.deepcopy(value)
+            row = next(r for r in changed['additionalPaths'] if r['preimageSha256'] is not None)
+            if edit == 'omit':changed['additionalPaths'].pop()
+            elif edit == 'extra':changed['additionalPaths'].append(copy.deepcopy(row))
+            elif edit == 'duplicate':changed['additionalPaths'][0] = copy.deepcopy(row)
+            elif edit == 'hash':row['preimageSha256'] = '0'*64
+            elif edit == 'not-recorded':row['recordedBeforeFirstEdit'] = False
+            elif edit == 'wildcard':row['path'] = 'apps/mobile/src/**'
+            else:row['causalNecessity'] = ''
+            with self.subTest(edit=edit), self.assertRaises(ValueError):m.ledger_guard(changed, before)
+
+    def test_exact_parent_immutable_original_plan_and_all_finite_preimages(self):
         m.authenticate_parent()
         self.assertEqual(hashlib.sha256((m.ROOT/m.PLAN).read_bytes()).hexdigest(), m.PLAN_SHA)
         self.assertEqual(set(m.BASELINES), m.GRANT)
-        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (41, 38))
-        self.assertEqual(m.GRANT-m.ORIGINAL_GRANT, m.REPAIR_PATHS)
+        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (45, 42))
+        self.assertEqual(m.GRANT-m.ORIGINAL_GRANT, m.REPAIR_PATHS|m.CLOSURE_PATHS)
         self.assertEqual(m.REPAIR_AUTHORITY, 'BRAIN-C45-MARKER-OWNERSHIP-REPAIR-03')
+        self.assertEqual(m.CLOSURE_AUTHORITY, 'BRAIN-C45-AUTONOMOUS-CLOSURE-04')
         self.assertEqual(m.parents(m.PLAN_COMMIT), [m.PLAN_COMMIT, m.BASE])
         plan = m.git('show', m.PLAN_COMMIT+':'+m.PLAN).decode()
         self.assertEqual(set(re.findall(r'^- `([^`]+)` — (?:ABSENT|SHA256)', plan, re.M)), m.ORIGINAL_GRANT)
@@ -94,6 +119,8 @@ class SourceControls45(unittest.TestCase):
             (b'planSourceFence44.test.ts', b'Missing.test.ts'),
             (b'planHistory45.test.ts', b'Missing.test.ts'),
             (b'planHistory45Encrypted.test.ts', b'Missing.test.ts'),
+            (b'ownedBottleVersion38.test.ts', b'Missing.test.ts'),
+            (b'historicalReplay45.test.py', b'Missing.test.py'),
             (b'PlanHistoryPanel45.test.tsx', b'Missing.test.tsx'),
             (b'localPrivateDataKeys.test.ts', b'Missing.test.ts'),
             (b'localDeviceExport.test.ts', b'Missing.test.ts'),
@@ -153,6 +180,42 @@ class SourceControls45(unittest.TestCase):
             with patch.object(m, 'ROOT', root), self.assertRaisesRegex(ValueError, 'R45_REGULAR_FILE'):
                 m.original44()
             link.unlink()
+
+    def test_composite_reader_requires_hashed_complete_normal_invocation_not_diagnostic_or_staged_success(self):
+        # Actual helper reader and actual raw files. These are rejection fixtures,
+        # never substitutes for the complete original invocation.
+        with tempfile.TemporaryDirectory(prefix='source45-composite-refusal-') as directory:
+            workspace=Path(directory).resolve();proof=workspace/'result.json'
+            value=dict(schema=2,status='PASS',mode='EXPLICIT_LOCAL_COMPLETED_PROOF_REUSE',
+                workspace=str(workspace),fixture=str(workspace/'pr45'),historicalHead=m.BASE,
+                historicalTree=m.BASE_TREE,
+                qualification='COMPOSITE_PR45_CONTROLS_AND_COMPLETE_NORMAL_ORIGINAL44_INVOCATION_NOT_OWNER_ACCEPTANCE',
+                helperSHA256=m.digest(m.regular(m.ROOT/m.PREFIX/'historicalReplay45.py')),
+                acceptanceGranted=False,admissions=dict.fromkeys(m.ADMISSIONS,False),release='NO_GO')
+            def transcript(v):return ('R45_HISTORICAL_WORKSPACE '+str(workspace)+'\n'+json.dumps(v)).encode()
+            for status in ('PASS','STAGED_SUCCESS','INCOMPLETE_REQUIRES_RESUME_OR_REPAIR','DIAGNOSTIC_SUCCESS'):
+                raw=(json.dumps(dict(status=status,acceptanceGranted=False,release='NO_GO'))+'\n').encode()
+                proof.write_bytes(raw)
+                current=dict(value,completedNormalInvocation=dict(path=str(proof),bytes=len(raw),sha256=m.digest(raw)))
+                with self.subTest(status=status),self.assertRaisesRegex(ValueError,'C45H_RESULT_NOT_COMPLETE'):
+                    m.historical_result(transcript(current))
+            current=dict(value,completedNormalInvocation=dict(path=str(proof),bytes=len(raw),sha256='0'*64))
+            with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_FULL_PROOF_HASH'):
+                m.historical_result(transcript(current))
+            current['helperSHA256']='0'*64
+            with self.assertRaisesRegex(ValueError,'R45_HISTORICAL_HELPER_CHANGED'):
+                m.historical_result(transcript(current))
+
+    def test_new_execution_helper_obeys_regular_file_and_hardlink_boundary(self):
+        raw=m.regular(m.ROOT/m.PREFIX/'historicalReplay45.py')
+        with tempfile.TemporaryDirectory(prefix='source45-helper-boundary-') as directory:
+            root=Path(directory).resolve();path=root/m.PREFIX/'historicalReplay45.py'
+            path.parent.mkdir(parents=True);path.write_bytes(raw)
+            with patch.object(m,'ROOT',root):
+                self.assertTrue(callable(m.historical_helper().verify_result))
+                link=root/'linked.py';os.link(path,link)
+                with self.assertRaisesRegex(ValueError,'R45_REGULAR_FILE'):m.historical_helper()
+                link.unlink()
 
     def test_actual_git_source_and_sole_final_seal_reject_postseal_edits(self):
         with repository('source45-history-') as (root, git):
@@ -235,6 +298,23 @@ class SourceControls45(unittest.TestCase):
                 check.full29_store()
             (root/'.git/shallow').unlink()
             check.full29_store()
+
+    def test_standalone_historical_source_identity_checks_actual_caller_object_store(self):
+        with repository('source45-historical-caller-store-') as (root, git):
+            baseline=m.source_identity()
+            self.assertEqual(baseline['head'],git('rev-parse','HEAD').decode().strip())
+            self.assertEqual(baseline['trackedBlobs'],2)
+            for name,reason in (('objects/info/alternates','R29_ALTERNATES'),('info/grafts','R29_HISTORY_SUBSTITUTION')):
+                path=root/'.git'/name;path.write_bytes(b'')
+                with self.subTest(store=name),self.assertRaisesRegex(ValueError,reason):m.source_identity()
+                path.unlink()
+            git('replace',baseline['head'],baseline['head'])
+            with self.assertRaisesRegex(ValueError,'R29_HISTORY_SUBSTITUTION'):m.source_identity()
+            git('replace','-d',baseline['head'])
+            shallow=root/'.git/shallow';shallow.write_bytes((baseline['head']+'\n').encode())
+            with self.assertRaisesRegex(ValueError,'R29_FULL_HISTORY'):m.source_identity()
+            shallow.unlink()
+            self.assertEqual(m.source_identity(),baseline)
 
     def test_thirtyeight_obligations_and_eighteen_owner_gates_remain_unaccepted(self):
         projection = m.scope(m.SOURCE)
