@@ -2197,3 +2197,109 @@ describe('C45 Repair03 durable intent and native control windows', () => {
     } finally { await closeRepairFixture45(fixture); }
   });
 });
+
+it('C45 Closure04 canonical confirmation precedes a held intent retirement; later regrant refuses stale success while retaining confirmed facts', async () => {
+  const fixture = await repairFixture45(false);
+  try {
+    const intent = { id: randomUUID(), createdAt: new Date().toISOString() };
+    const originalRemove = fixture.storage.removeItem;
+    const originalSet = fixture.storage.setItem;
+    const finishing = deferred();
+    const release = deferred();
+    let historyWrites = 0;
+    let held = false;
+    vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+      if (key === fixture.key) historyWrites += 1;
+      await originalSet(key, raw);
+    });
+    vi.spyOn(fixture.storage, 'removeItem').mockImplementation(async (key) => {
+      if (key === fixture.markerKey && !held) {
+        // The genuine writer enters retirement only AFTER encrypted destination
+        // and all six source/authority readbacks completed under its reservation.
+        held = true; finishing.resolve(); await release.promise;
+      }
+      await originalRemove(key);
+    });
+    const saving = observe(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, intent));
+    await finishing.promise;
+    const confirmedRaw = native.bytes.get(fixture.key)!;
+    expect(JSON.parse(confirmedRaw).version).toBe('xchacha20poly1305:v1');
+    expect(historyWrites).toBe(1);
+    expect(fixture.modules.isolation.decodeHistoryIntentMarker45(native.bytes.get(fixture.markerKey)!)).toMatchObject({
+      kind: 'routine-plan-history', ownerBinding: await fixture.modules.owner.localDataOwnerBinding(OWNER),
+    });
+    fixture.modules.processing.clearActiveHealthProcessingEpoch();
+    const freshLease = await grantRestartOwner45(fixture.modules, OWNER);
+    expect(freshLease.generation).not.toBe(fixture.lease.generation);
+    release.resolve();
+    const result = await saving;
+    expect(result.status).toBe('rejected');
+    if (result.status === 'rejected') expect((result.error as Error).message).toBe('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    await expect(fixture.modules.history.loadPlanHistory45(fixture.lease)).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    const confirmed = await fixture.modules.history.loadPlanHistory45(freshLease);
+    expect(confirmed.versions).toHaveLength(1);
+    expect(confirmed.versions[0]).toMatchObject({
+      id: intent.id, sequence: 1, createdAt: intent.createdAt, sourceHash: fixture.snapshot.sourceHash,
+      am: fixture.snapshot.am, pm: fixture.snapshot.pm,
+    });
+    expect(historyWrites).toBe(1);
+    expect(native.bytes.get(fixture.key)).toBe(confirmedRaw);
+    expect(native.bytes.has(fixture.markerKey)).toBe(false);
+  } finally { await closeRepairFixture45(fixture); }
+});
+
+it('C45 Closure04 actual health withdrawal waits for postconfirmation intent retirement then purges history/photo without resurrection', async () => {
+  const fixture = await repairFixture45(false);
+  try {
+    native.configuredForSelective = true;
+    const photos = await import('@/features/photos/encryptedStorage');
+    await photos.encryptPhotoNote('Synthetic45 Closure04 confirmed-before-withdrawal note');
+    expect(native.secure.has(PHOTO_KEY)).toBe(true);
+    const originalRemove = fixture.storage.removeItem;
+    const originalSet = fixture.storage.setItem;
+    const finishing = deferred();
+    const release = deferred();
+    let held = false;
+    let historyWrites = 0;
+    vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+      if (key === fixture.key) historyWrites += 1;
+      await originalSet(key, raw);
+    });
+    vi.spyOn(fixture.storage, 'removeItem').mockImplementation(async (key) => {
+      if (key === fixture.markerKey && !held) {
+        held = true; finishing.resolve(); await release.promise;
+      }
+      await originalRemove(key);
+    });
+    const saving = observe(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+      id: randomUUID(), createdAt: new Date().toISOString(),
+    }));
+    await finishing.promise;
+    expect(historyWrites).toBe(1);
+    expect(native.bytes.has(fixture.key)).toBe(true);
+    const closed = deferred();
+    const unsubscribe = fixture.modules.processing.subscribeActiveHealthProcessingLeaseChanges((lease) => {
+      if (lease === null) closed.resolve();
+    });
+    const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+    const withdrawing = observe(clearHealthPurposeLocalData(OWNER));
+    await closed.promise;
+    unsubscribe();
+    expect(native.bytes.has(fixture.key)).toBe(true); // the admitted private write still owns its reservation
+    release.resolve();
+    expect(await saving).toMatchObject({ status: 'rejected' });
+    expect(await withdrawing).toMatchObject({ status: 'fulfilled' });
+    expect(historyWrites).toBe(1); // no compensation is started after intent retirement
+    expect(native.bytes.has(fixture.key)).toBe(false);
+    expect(native.bytes.has(fixture.markerKey)).toBe(false);
+    expect(native.secure.has(PHOTO_KEY)).toBe(false);
+    expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(true);
+    expect(native.events.indexOf(`set:${fixture.key}`)).toBeLessThan(native.events.indexOf('purge:registered_records'));
+    await expect(fixture.modules.account.runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
+    const freshLease = await grantRestartOwner45(fixture.modules, OWNER);
+    await expect(fixture.modules.history.loadPlanHistory45(freshLease)).resolves.toEqual({
+      schemaVersion: 1, ownerUserId: OWNER, versions: [],
+    });
+    expect(native.bytes.has(fixture.key)).toBe(false);
+  } finally { await closeRepairFixture45(fixture); }
+});
