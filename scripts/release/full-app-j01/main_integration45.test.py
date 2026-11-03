@@ -11,6 +11,58 @@ from unittest.mock import patch
 spec=importlib.util.spec_from_file_location('current45',Path(__file__).with_name('main_integration45.py'))
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
+class PriorSealControls(unittest.TestCase):
+    def test_previous_seal_identity_and_delta_are_both_required(self):
+        seal, parent, tree = m.PREVIOUS_SEALS[0]
+        with patch.object(m, 'text', return_value=tree), patch.object(m, 'parents', return_value=[seal,parent]), \
+             patch.object(m, 'changed', return_value=m.WORKLIST) as delta:
+            m.previous_seal_guard(seal,parent,tree)
+            delta.assert_called_once_with(parent,seal,m.WORKLIST)
+        for actual_tree, actual_parents, actual_delta in (
+            ('0'*40,[seal,parent],m.WORKLIST), (tree,[seal,m.BASE],m.WORKLIST),
+            (tree,[seal,parent],set()), (tree,[seal,parent],m.WORKLIST|{'source.ts'})):
+            with self.subTest(tree=actual_tree,parents=actual_parents,delta=actual_delta), \
+                 patch.object(m,'text',return_value=actual_tree),patch.object(m,'parents',return_value=actual_parents), \
+                 patch.object(m,'changed',return_value=actual_delta),self.assertRaises(ValueError):
+                m.previous_seal_guard(seal,parent,tree)
+
+    def test_policy_and_32_commit_cap_refuse_before_any_git_admission(self):
+        row=m.PREVIOUS_SEALS[0]
+        for policy in ([row], (row,row), ((row[0],row[1],'not-a-tree'),), ((row[0],),)):
+            with self.subTest(policy=policy),patch.object(m,'PREVIOUS_SEALS',policy), \
+                 patch.object(m,'parents',side_effect=AssertionError('invalid policy must not query ancestry')), \
+                 self.assertRaisesRegex(ValueError,'R45_PREVIOUS_SEAL_POLICY'):
+                m.phase_guard([m.PLAN_COMMIT,'f'*40],'SOURCE_PENDING',m.SOURCE)
+        history=[m.PLAN_COMMIT]+[format(value,'040x') for value in range(1,33)]
+        with patch.object(m,'parents',side_effect=AssertionError('cap must precede ancestry')), \
+             self.assertRaisesRegex(ValueError,'R45_HISTORY_PHASES'):
+            m.phase_guard(history,'SOURCE_PENDING',m.SOURCE)
+
+    def test_known_seal_is_excluded_only_from_source_union_and_new_last_seal_is_mandatory(self):
+        base,plan,source,older,repair,final,tree=[value*40 for value in '1234567']
+        allowed={'a.ts','b.ts'};worklist={'w.json','w.md'}
+        ancestry={source:[source,plan],older:[older,source],repair:[repair,older],final:[final,repair]}
+        deltas={(plan,source):allowed,(source,older):worklist,(older,repair):{'a.ts'},
+                (repair,final):worklist,(base,repair):allowed|{'plan.md'}|worklist}
+        calls=[]
+        def changed(before,after,permitted):
+            result=deltas[(before,after)]
+            m.need(result<=permitted,'SYNTHETIC_FINITE_DELTA')
+            calls.append((before,after,permitted));return result
+        with patch.object(m,'BASE',base),patch.object(m,'PLAN_COMMIT',plan),patch.object(m,'PLAN','plan.md'), \
+             patch.object(m,'SOURCE',allowed),patch.object(m,'ESSENTIAL',allowed),patch.object(m,'WORKLIST',worklist), \
+             patch.object(m,'PREVIOUS_SEALS',((older,source,tree),)),patch.object(m,'text',return_value=tree), \
+             patch.object(m,'parents',side_effect=ancestry.__getitem__),patch.object(m,'changed',side_effect=changed):
+            self.assertEqual(m.phase_guard([plan,source,older,repair],'SOURCE_PENDING',allowed),(repair,None))
+            self.assertEqual(m.phase_guard([plan,source,older,repair,final],'SOURCE_FROZEN',allowed),(repair,final))
+            self.assertIn((base,repair,allowed|{'plan.md'}|worklist),calls)
+            for history,phase in (([plan,source,older],'SOURCE_PENDING'),
+                                  ([plan,source,older],'SOURCE_FROZEN'),
+                                  ([plan,source,older,repair,final],'SOURCE_PENDING')):
+                with self.subTest(history=history,phase=phase),self.assertRaises(ValueError):
+                    m.phase_guard(history,phase,allowed)
+
+
 class AdmissionControls(unittest.TestCase):
     def test_builtin_read_token_only_in_hosted_context_and_never_forwarded_to_history(self):
         token='ghs_synthetic_fixture_not_a_real_credential'

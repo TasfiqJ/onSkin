@@ -1,15 +1,18 @@
 """C45 orchestration controls. All synthetic receipts below are test fixtures only."""
 import copy
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager, ExitStack
 import importlib.util
 import json
 import os
 from pathlib import Path
 import subprocess
+import stat
 import sys
 import tempfile
 import time
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location('historical45', Path(__file__).with_name('historicalReplay45.py'))
@@ -175,6 +178,159 @@ class HistoricalExecutionControls(unittest.TestCase):
                 self.assertNotEqual(actual, before)
                 with self.assertRaisesRegex(ValueError, 'C45H_TOOLCHAIN_CHANGED'):
                     m.checkpoint_guard(checkpoint, identity, actual)
+
+    @contextmanager
+    def tool_links(self):
+        with tempfile.TemporaryDirectory(prefix='c45-tool-links-') as directory, ExitStack() as ports:
+            root = Path(directory).resolve()
+            checkpoint, identity = self.checkpoint(root)
+            package = root/'npm'
+            (package/'.bin').mkdir()
+            for name in ('target.js', 'same.js'):
+                (package/name).write_bytes(b'actual filesystem target, never executed\n')
+            (package/'folder').mkdir()
+            link = package/'.bin/tool'
+            fake = {}
+            native_readlink, native_lstat = os.readlink, Path.lstat
+            try:
+                os.symlink('../target.js', link)
+                backend = 'NATIVE_'+os.name
+            except OSError as error:
+                if os.name != 'nt' or getattr(error, 'winerror', None) != 1314:
+                    raise
+                backend = 'SYNTHETIC_NATIVE_FS_PORT_NT_1314_POSIX_NOT_RUN'
+                link.write_bytes(b'')
+                fake[link] = '../target.js'
+                def lstat(path):
+                    info = native_lstat(path)
+                    if path not in fake:
+                        return info
+                    values = {k: getattr(info, k) for k in ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns', 'st_nlink')}
+                    return SimpleNamespace(**values, st_mode=stat.S_IFLNK | 0o777, st_file_attributes=1024)
+                ports.enter_context(patch.object(Path, 'lstat', lstat))
+                ports.enter_context(patch.object(os, 'readlink', lambda path: fake[path] if path in fake else native_readlink(path)))
+            print('C45H_LINK_CONTROL_BACKEND='+backend, file=sys.stderr)
+            def change(literal, path=link):
+                if fake:
+                    if not path.exists():
+                        path.write_bytes(b'')
+                    fake[path] = literal
+                else:
+                    if path.is_symlink():
+                        path.unlink()
+                    os.symlink(literal, path)
+            yield root, checkpoint, identity, package, link, change
+
+    def test_internal_tool_file_links_hash_literal_canonical_target_and_actual_target_bytes(self):
+        with self.tool_links() as (root, checkpoint, identity, package, link, change):
+            first = m.tools_identity(checkpoint['node'], checkpoint['npm'])
+            row = first['npmPackageLinks'][0]
+            self.assertEqual((row['path'], row['linkTarget'], row['resolvedTarget']), ('.bin/tool', '../target.js', 'target.js'))
+            self.assertEqual(row['sha256'], m.digest((package/'target.js').read_bytes()))
+            checkpoint['tools'] = first
+            self.assertEqual(m.checkpoint_guard(checkpoint, identity, first), checkpoint)
+            change('../same.js')
+            retargeted = m.tools_identity(checkpoint['node'], checkpoint['npm'])
+            self.assertNotEqual(retargeted['npmPackageSHA256'], first['npmPackageSHA256'], 'literal and target path matter even with identical bytes')
+            (package/'same.js').write_bytes(b'changed same-version target bytes\n')
+            actual = m.tools_identity(checkpoint['node'], checkpoint['npm'])
+            self.assertNotEqual(actual['npmPackageSHA256'], retargeted['npmPackageSHA256'])
+            with self.assertRaisesRegex(ValueError, 'C45H_TOOLCHAIN_CHANGED'):
+                m.checkpoint_guard(checkpoint, identity, actual)
+
+    def test_tool_links_refuse_escape_directory_cycle_chain_and_junction_without_traversal(self):
+        for literal in ('../../outside.js', '../folder', 'tool', '../chain',
+                        '../target.js/../same.js', '.././target.js', '..//target.js', '..\\target.js'):
+            with self.subTest(literal=literal), self.tool_links() as (_, checkpoint, _, package, link, change):
+                change('target.js', package/'chain')
+                change(literal)
+                with self.assertRaises(ValueError):
+                    m.tools_identity(checkpoint['node'], checkpoint['npm'])
+        with self.tool_links() as (_, checkpoint, _, package, link, change):
+            original = Path.lstat
+            def junction(path):
+                info = original(path)
+                if path != package/'folder':
+                    return info
+                values = {k: getattr(info, k) for k in ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns', 'st_nlink', 'st_mode')}
+                return SimpleNamespace(**values, st_file_attributes=1024)
+            with patch.object(Path, 'lstat', junction), self.assertRaisesRegex(ValueError, 'C45H_TOOL_LINK_DIRECTORY'):
+                m.tools_identity(checkpoint['node'], checkpoint['npm'])
+
+    def test_tool_link_and_parent_retarget_during_target_read_refuse(self):
+        for mutation in ('link', 'parent'):
+            with self.subTest(mutation=mutation), self.tool_links() as (_, checkpoint, _, package, link, change):
+                original, entered = Path.open, []
+                def opened(path, *args, **kwargs):
+                    stream = original(path, *args, **kwargs)
+                    if path == package/'target.js' and not entered:
+                        entered.append(True)
+                        if mutation == 'link':
+                            change('../same.js')
+                        else:
+                            info = link.parent.stat()
+                            os.utime(link.parent, ns=(info.st_atime_ns, info.st_mtime_ns+1000000000))
+                    return stream
+                with patch.object(Path, 'open', opened), self.assertRaisesRegex(ValueError, 'C45H_TOOL_LINK_CHANGED'):
+                    m.tools_identity(checkpoint['node'], checkpoint['npm'])
+                self.assertTrue(entered, 'actual target-file read must enter the controlled window')
+
+    def test_tool_package_depth_is_bounded_before_recursing(self):
+        with tempfile.TemporaryDirectory(prefix='c45-tool-depth-') as directory:
+            root = Path(directory).resolve()
+            checkpoint, _ = self.checkpoint(root)
+            deep = root/'npm'
+            for _ in range(33):
+                deep = deep/'d'
+                deep.mkdir()
+            with self.assertRaisesRegex(ValueError, 'C45H_TOOL_PACKAGE_LIMIT'):
+                m.tools_identity(checkpoint['node'], checkpoint['npm'])
+
+    def test_actual_normal_file_parent_junction_retarget_after_traversal_is_refused_before_read(self):
+        with tempfile.TemporaryDirectory(prefix='c45-tool-parent-race-') as directory:
+            root = Path(directory).resolve()
+            checkpoint, _ = self.checkpoint(root)
+            package, outside = root/'npm', root/'outside'
+            ordinary, held = package/'ordinary', root/'held-original'
+            ordinary.mkdir(); outside.mkdir()
+            payload = ordinary/'payload.js'
+            payload.write_bytes(b'identical bytes, but outside package\n')
+            (outside/'payload.js').write_bytes(payload.read_bytes())
+            m.tools_identity(checkpoint['node'], checkpoint['npm'])
+            original_lstat, original_open, calls, swapped, reads = Path.lstat, Path.open, [], [], []
+            def lstat(path):
+                if path == payload:
+                    calls.append(True)
+                    if len(calls) == 3:
+                        self.assertTrue(ordinary.resolve().is_relative_to(root))
+                        self.assertTrue(outside.resolve().is_relative_to(root))
+                        ordinary.rename(held)
+                        if os.name == 'nt':
+                            quote = lambda p: "'"+str(p).replace("'", "''")+"'"
+                            subprocess.run(['powershell.exe', '-NoProfile', '-Command',
+                                'New-Item -ItemType Junction -Path '+quote(ordinary)+' -Value '+quote(outside)+' | Out-Null'],
+                                check=True, capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
+                        else:
+                            os.symlink(outside, ordinary, target_is_directory=True)
+                        swapped.append(True)
+                return original_lstat(path)
+            def opened(path, *args, **kwargs):
+                if path == payload:
+                    reads.append(True)
+                return original_open(path, *args, **kwargs)
+            try:
+                with patch.object(Path, 'lstat', lstat), patch.object(Path, 'open', opened), \
+                        self.assertRaisesRegex(ValueError, 'C45H_TOOL_PACKAGE_DIRECTORY_CHANGED'):
+                    m.tools_identity(checkpoint['node'], checkpoint['npm'])
+                self.assertTrue(swapped, 'real native directory junction/symlink window must execute')
+                self.assertFalse(payload.resolve().is_relative_to(package))
+                self.assertEqual(reads, [], 'outside-package ordinary input must not be opened')
+            finally:
+                if swapped:
+                    self.assertTrue(ordinary.resolve().is_relative_to(root))
+                    os.rmdir(ordinary) if os.name == 'nt' else ordinary.unlink()
+                    self.assertTrue(held.resolve().is_relative_to(root))
+                    held.rename(ordinary)
 
     def test_older_diagnostic_fixture_refuses_actual_replace_graft_alternates_shallow_and_dirty_bytes(self):
         neutral = (Path(__file__).resolve().parents[3]/m.PREFIX/'check.py').read_bytes()

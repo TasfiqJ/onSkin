@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import time
@@ -153,30 +154,123 @@ def tools_identity(node, npm):
     node, npm = Path(node).resolve(), Path(npm).resolve()
     package = npm.parent.parent
     need(npm.name == 'npm-cli.js' and (package/'package.json').is_file(), 'NPM_PACKAGE')
+    def signature(info):
+        return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
     def file_hash(path, limit=256*1024*1024):
         before = path.lstat()
+        if path.is_relative_to(package):
+            check_parents(path)
         need(path.is_file() and not path.is_symlink() and before.st_nlink == 1 and
              not getattr(before, 'st_file_attributes', 0) & 1024 and before.st_size <= limit, 'TOOL_FILE')
-        sha = hashlib.sha256()
+        sha, count = hashlib.sha256(), 0
         with path.open('rb') as stream:
+            if path.is_relative_to(package):
+                check_parents(path)
             for block in iter(lambda: stream.read(1024*1024), b''):
+                count += len(block)
+                need(count <= limit, 'TOOL_FILE_LIMIT')
                 sha.update(block)
         after = path.lstat()
-        need((before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns) ==
-             (after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns), 'TOOL_CHANGED_READ')
+        if path.is_relative_to(package):
+            check_parents(path)
+        need(count == before.st_size and signature(before) == signature(after), 'TOOL_CHANGED_READ')
         return dict(bytes=before.st_size, sha256=sha.hexdigest())
+    def link_hash(path):
+        before = path.lstat()
+        literal = os.readlink(path)
+        need(stat.S_ISLNK(before.st_mode) and before.st_nlink == 1 and type(literal) is str and
+             0 < len(literal) <= 1024 and '\0' not in literal and ':' not in literal and
+             not Path(literal).is_absolute() and not re.match(r'^(?:[A-Za-z]:|[/\\])', literal), 'TOOL_LINK')
+        components = literal.split('/')
+        need('\\' not in literal and all(part not in ('', '.') for part in components), 'TOOL_LINK_CANONICAL')
+        ordinary = False
+        for part in components:
+            need(part != '..' or not ordinary, 'TOOL_LINK_CANONICAL')
+            ordinary = ordinary or part != '..'
+        parts = list(path.parent.relative_to(package).parts)
+        for part in components:
+            if part == '..':
+                need(parts, 'TOOL_LINK_ESCAPE')
+                parts.pop()
+            elif part not in ('', '.'):
+                parts.append(part)
+        target = package.joinpath(*parts)
+        parents = {}
+        for directory in (path.parent, target.parent):
+            while directory.is_relative_to(package):
+                info = directory.lstat()
+                need(stat.S_ISDIR(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+                     'TOOL_LINK_DIRECTORY')
+                parents[directory] = signature(info)
+                if directory == package:
+                    break
+                directory = directory.parent
+        info = target.lstat()
+        # Deliberately support only direct canonical file targets. Directory
+        # links, chains, cycles and reparse/junction targets remain unsupported.
+        need(stat.S_ISREG(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+             'TOOL_LINK_TARGET')
+        hashed = file_hash(target, 16*1024*1024)
+        need(signature(path.lstat()) == signature(before) and os.readlink(path) == literal and
+             all(signature(parent.lstat()) == original for parent, original in parents.items()), 'TOOL_LINK_CHANGED')
+        return dict(linkTarget=literal, resolvedTarget='/'.join(parts), **hashed)
+    # Never recurse through a directory link/junction, or materialize an
+    # unbounded rglob before checking node/depth limits.
+    paths, pending, directories = [], [(package, 0)], {}
+    def directory_unchanged(directory):
+        info = directory.lstat()
+        need(stat.S_ISDIR(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024 and
+             (directory not in directories or signature(info) == directories[directory]), 'TOOL_PACKAGE_DIRECTORY_CHANGED')
+        return signature(info)
+    def check_parents(path):
+        directory = path.parent
+        while directory.is_relative_to(package):
+            need(directory in directories, 'TOOL_PACKAGE_DIRECTORY_CHANGED')
+            directory_unchanged(directory)
+            if directory == package:
+                break
+            directory = directory.parent
+    while pending:
+        directory, depth = pending.pop()
+        need(depth <= 32, 'TOOL_PACKAGE_LIMIT')
+        directories[directory] = directory_unchanged(directory)
+        for path in directory.iterdir():
+            paths.append(path)
+            need(len(paths) <= 20000, 'TOOL_PACKAGE_LIMIT')
+            info = path.lstat()
+            if stat.S_ISDIR(info.st_mode):
+                need(not getattr(info, 'st_file_attributes', 0) & 1024, 'TOOL_LINK_DIRECTORY')
+                directories[path] = signature(info)
+                pending.append((path, depth+1))
+            else:
+                need(stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode), 'TOOL_FILE')
     rows, total = [], 0
-    for path in sorted(package.rglob('*')):
-        need(not path.is_symlink() and not getattr(path.lstat(), 'st_file_attributes', 0) & 1024, 'TOOL_LINK')
-        if path.is_file() and path.suffix in ('.js', '.cjs', '.mjs', '.json'):
-            row = dict(path=str(path.relative_to(package)).replace('\\', '/'), **file_hash(path, 16*1024*1024))
-            rows.append(row)
-            total += row['bytes']
-            need(len(rows) <= 15000 and total <= 128*1024*1024, 'TOOL_PACKAGE_LIMIT')
+    for path in sorted(paths):
+        check_parents(path)
+        info = path.lstat()
+        if stat.S_ISLNK(info.st_mode):
+            hashed = link_hash(path)
+        elif stat.S_ISREG(info.st_mode) and path.suffix in ('.js', '.cjs', '.mjs', '.json'):
+            hashed = file_hash(path, 16*1024*1024)
+        else:
+            need(not getattr(info, 'st_file_attributes', 0) & 1024, 'TOOL_LINK_DIRECTORY')
+            continue
+        row = dict(path=str(path.relative_to(package)).replace('\\', '/'), **hashed)
+        rows.append(row)
+        total += row['bytes']
+        need(len(rows) <= 15000 and total <= 128*1024*1024, 'TOOL_PACKAGE_LIMIT')
     need(rows, 'TOOL_PACKAGE_EMPTY')
-    return dict(nodePath=str(node), node=file_hash(node), npmCLIPath=str(npm), npmCLI=file_hash(npm),
-                npmPackagePath=str(package), npmPackageFiles=len(rows), npmPackageBytes=total,
-                npmPackageSHA256=digest(json.dumps(rows, sort_keys=True, separators=(',', ':')).encode()))
+    for directory in directories:
+        directory_unchanged(directory)
+    identity = dict(nodePath=str(node), node=file_hash(node), npmCLIPath=str(npm), npmCLI=file_hash(npm),
+                    npmPackagePath=str(package), npmPackageFiles=len(rows), npmPackageBytes=total,
+                    npmPackageSHA256=digest(json.dumps(rows, sort_keys=True, separators=(',', ':')).encode()))
+    links = [row for row in rows if 'linkTarget' in row]
+    if links:
+        identity['npmPackageLinks'] = links
+    for directory in directories:
+        directory_unchanged(directory)
+    return identity
 
 
 def verify_receipt(row, expected_command=None, expected_exit=None):

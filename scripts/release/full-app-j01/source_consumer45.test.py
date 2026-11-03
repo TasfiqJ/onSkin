@@ -232,7 +232,7 @@ class SourceControls45(unittest.TestCase):
             extended = commit({'a.txt': b'post-seal mutation\n'})
             with patch.object(m, 'BASE', base), patch.object(m, 'PLAN_COMMIT', plan), patch.object(m, 'PLAN', 'plan.md'), \
                  patch.object(m, 'SOURCE', {'a.txt', 'b.txt'}), patch.object(m, 'ESSENTIAL', {'a.txt','b.txt'}), \
-                 patch.object(m, 'WORKLIST', {'w.json', 'w.md'}):
+                 patch.object(m, 'WORKLIST', {'w.json', 'w.md'}), patch.object(m, 'PREVIOUS_SEALS', ()):
                 self.assertEqual(m.phase_guard([plan, source], 'SOURCE_PENDING', {'a.txt','b.txt'}), (source, None))
                 self.assertEqual(m.phase_guard([plan, source, seal], 'SOURCE_FROZEN', {'a.txt','b.txt'}), (source, seal))
                 for history, phase in (([plan, source, seal], 'SOURCE_PENDING'), ([plan, source], 'SOURCE_FROZEN'),
@@ -278,6 +278,65 @@ class SourceControls45(unittest.TestCase):
             link.unlink()
             self.assertEqual(m.snapshot(head), original)
 
+    def test_declared_prior_seals_allow_only_verified_repair_and_a_new_final_seal(self):
+        with repository('source45-reseal-') as (root, git):
+            def commit(files):
+                for path, body in files.items():
+                    (root/path).write_bytes(body)
+                git('add', '--', *files)
+                git('commit', '--quiet', '-m', 'Synthetic finite reseal fixture only')
+                return git('rev-parse', 'HEAD').decode().strip()
+            base = commit({'base.txt': b'base\n'})
+            plan = commit({'plan.md': b'plan\n'})
+            source = commit({'a.txt': b'source\n', 'b.txt': b'source\n'})
+            older = commit({'w.json': b'old1\n', 'w.md': b'old1\n'})
+            repair = commit({'a.txt': b'first genuine source repair\n'})
+            second = commit({'w.json': b'old2\n', 'w.md': b'old2\n'})
+            last_source = commit({'b.txt': b'second genuine source repair\n'})
+            final = commit({'w.json': b'current\n', 'w.md': b'current\n'})
+            postseal = commit({'a.txt': b'undeclared postseal edit\n'})
+            declared = ((older, source, git('rev-parse', older+'^{tree}').decode().strip()),
+                        (second, repair, git('rev-parse', second+'^{tree}').decode().strip()))
+            pending = [plan, source, older, repair, second, last_source]
+            with patch.object(m, 'BASE', base), patch.object(m, 'PLAN_COMMIT', plan), patch.object(m, 'PLAN', 'plan.md'), \
+                 patch.object(m, 'SOURCE', {'a.txt', 'b.txt'}), patch.object(m, 'ESSENTIAL', {'a.txt', 'b.txt'}), \
+                 patch.object(m, 'WORKLIST', {'w.json', 'w.md'}), patch.object(m, 'PREVIOUS_SEALS', declared, create=True):
+                self.assertEqual(m.phase_guard(pending, 'SOURCE_PENDING', {'a.txt','b.txt'}), (last_source, None))
+                self.assertEqual(m.phase_guard(pending+[final], 'SOURCE_FROZEN', {'a.txt','b.txt'}), (last_source, final))
+                for history, phase in (
+                    ([plan, source, repair, second, last_source], 'SOURCE_PENDING'),
+                    ([plan, source, second, repair, older, last_source], 'SOURCE_PENDING'),
+                    (pending[:3], 'SOURCE_PENDING'), (pending[:-1], 'SOURCE_FROZEN'),
+                    (pending+[final], 'SOURCE_PENDING'), (pending+[final, postseal], 'SOURCE_FROZEN')):
+                    with self.subTest(history=history, phase=phase), self.assertRaises(ValueError):
+                        m.phase_guard(history, phase, {'a.txt','b.txt'})
+                for wrong in (declared[::-1], declared[:1], declared+(declared[0],),
+                              ((older, source, '0'*40), declared[1]),
+                              ((older, base, declared[0][2]), declared[1])):
+                    with patch.object(m, 'PREVIOUS_SEALS', wrong), self.subTest(policy=wrong), self.assertRaises(ValueError):
+                        m.phase_guard(pending+[final], 'SOURCE_FROZEN', {'a.txt','b.txt'})
+                git('checkout', '--detach', last_source)
+                mixed = commit({'w.json': b'mixed\n', 'w.md': b'mixed\n', 'a.txt': b'forbidden seal source\n'})
+                with self.assertRaises(ValueError):
+                    m.phase_guard(pending+[mixed], 'SOURCE_FROZEN', {'a.txt','b.txt'})
+                after_mixed = commit({'b.txt': b'new source after a mixed seal\n'})
+                with patch.object(m, 'PREVIOUS_SEALS', declared+((mixed, last_source, git('rev-parse', mixed+'^{tree}').decode().strip()),)):
+                    with self.assertRaises(ValueError):
+                        m.phase_guard(pending+[mixed, after_mixed], 'SOURCE_PENDING', {'a.txt','b.txt'})
+
+    def test_published_prior_seal_pin_has_actual_exact_tree_parent_and_two_file_delta(self):
+        expected = (('812a4208154cef9b3d0f3078dd0a56329caedb3d',
+                     'a140cf67b78b61dc12f6c53bd4ec684f8b687b9c',
+                     '118a9d345109cb1fef03ffbaefa65afe847749a1'),)
+        self.assertEqual(m.PREVIOUS_SEALS, expected)
+        for seal, parent, tree in expected:
+            m.previous_seal_guard(seal, parent, tree)
+            self.assertEqual(m.parents(seal), [seal, parent])
+            self.assertEqual(m.text('rev-parse', seal+'^{tree}'), tree)
+            self.assertEqual(m.changed(parent, seal, m.WORKLIST), m.WORKLIST)
+            for bad_parent, bad_tree in ((m.BASE, tree), (parent, '0'*40)):
+                with self.subTest(parent=bad_parent, tree=bad_tree), self.assertRaisesRegex(ValueError, 'R45_PREVIOUS_SEAL_IDENTITY'):
+                    m.previous_seal_guard(seal, bad_parent, bad_tree)
     def test_actual_object_store_rejects_alternates_grafts_replaces_and_shallow(self):
         with repository('source45-objects-') as (root, git):
             check = m.primitives().helpers()

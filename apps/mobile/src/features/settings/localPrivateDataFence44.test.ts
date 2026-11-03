@@ -1048,7 +1048,49 @@ const secureStorePort45 = import('expo-secure-store');
 // Node supplies WHATWG URL directly; the RN-only compatibility shim has no
 // native module in this harness. The real Supabase client remains unmocked.
 vi.mock('react-native-url-polyfill/auto', () => ({}));
+
+const remoteCalls45 = { webSocket: 0, fetch: 0 };
+const guardedCapabilities45 = new WeakSet<object>();
+
+async function ensureNativeCapabilities45() {
+  // React Native supplies WebSocket. Node20 does not; use the already-locked
+  // real ws implementation instead of replacing Supabase or its authority.
+  const { createRequire } = await import('node:module');
+  const WebSocketImplementation = globalThis.WebSocket ??
+    createRequire(import.meta.url)('ws') as typeof globalThis.WebSocket;
+  expect(typeof WebSocketImplementation).toBe('function');
+  if (!guardedCapabilities45.has(WebSocketImplementation)) {
+    const guarded = new Proxy(WebSocketImplementation, {
+      construct: () => {
+        remoteCalls45.webSocket += 1;
+        throw new Error('UNEXPECTED_C45_REMOTE_WEBSOCKET');
+      },
+    });
+    guardedCapabilities45.add(guarded);
+    vi.stubGlobal('WebSocket', guarded);
+  }
+  // Fail before any transport dispatch rather than returning a synthetic
+  // provider response. The genuine client must stay passive in these tests.
+  if (!guardedCapabilities45.has(globalThis.fetch)) {
+    const guarded = new Proxy(globalThis.fetch, {
+      apply: () => {
+        remoteCalls45.fetch += 1;
+        throw new Error('UNEXPECTED_C45_REMOTE_FETCH');
+      },
+    });
+    guardedCapabilities45.add(guarded);
+    vi.stubGlobal('fetch', guarded);
+  }
+}
+
+const { afterAll: afterAll45 } = await import('vitest');
+afterAll45(() => {
+  // Cumulative counters cannot be reset by a module restart or a later test.
+  expect(remoteCalls45).toEqual({ webSocket: 0, fetch: 0 });
+});
+
 async function prepareHistory45() {
+  await ensureNativeCapabilities45();
   vi.stubGlobal('__DEV__', true);
   const { HEALTH_DATA_CONSENT } = await import('@/features/onboarding/consentCopy');
   const { ONBOARDING_QUIZ, scoreQuiz } = await import('@/features/onboarding/quiz');
@@ -1706,6 +1748,7 @@ it('C45 export native read reserves history before a later append with failed ro
 });
 
 async function restartModules45() {
+  await ensureNativeCapabilities45();
   const [history, source, admission, processing, account, isolation, owner, kv, consent, profile, quiz, shelf, exporter, cleanup] = await Promise.all([
     import('@/features/routine/planHistory45'),
     import('@/features/routine/planSourceFence44'),

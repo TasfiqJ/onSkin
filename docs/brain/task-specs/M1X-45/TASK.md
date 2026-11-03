@@ -6,7 +6,7 @@
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
     ".github/workflows/quality.yml": "eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf",
-    "PROGRESS.md": "d5f49d6101a31704b881877589546fff4b91e03820aa233b8779ade5726101c6",
+    "PROGRESS.md": "e69d02314a26bcd6c94bf38a695279efebecc25b151ceec63dfbb742ac2da354",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -17,7 +17,7 @@
     "apps/mobile/src/features/routine/usePlan.test.ts": "340ef5d081f2ae9aa0d27ac65ecaf081fe8aa842f90e3df34dc290db035820f8",
     "apps/mobile/src/features/settings/localDeviceExport.test.ts": "e4424e2cc304b453e4d5c0db6f0d4bb2c9887859acbbc68e44cfc19fcd83d579",
     "apps/mobile/src/features/settings/localDeviceExport.ts": "fe68af8f82ef1c8496c0f22b1018e2b6fe500eee45defba5a36b6ec2f552e851",
-    "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts": "6f62de363572841e76f781eca501d87c9c5d3ca813912e10d32bcd220276d669",
+    "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts": "3ca6c8d65398ea1b95807b0fadfacc484b6d087e254c7b07b0969c2b00c1a4e2",
     "apps/mobile/src/features/settings/localPrivateDataKeys.test.ts": "3918cf3883603a0f695b23b0b23ab3efcdfedf7fde2d0772c943969809672330",
     "apps/mobile/src/features/settings/localPrivateDataKeys.ts": "b0a6f1f8cb776af0549f44dc44d5c7e6cfa2828e5c0d2f201ec48a983c695d8f",
     "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
@@ -27,13 +27,13 @@
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
     "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts": "2abac4d5fcedb4905d57d24245dcc122980161ceb449224ec896510d8495ea6d",
     "apps/mobile/src/lib/storage/privateKV.ts": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "edb98f5570f76c40a1516e534288d718be2f657771c87006af184c56dc14e884",
-    "docs/release/full-app-j01/owner-plan-history45.md": "a1e33a160fce83559308070baa69236345a710a5d2b235efcaa05a2bdddd2ca5",
-    "scripts/release/full-app-j01/historicalReplay45.py": "0440de6e0fd5d83fc197348b035d2f473b70a9be6416a06c411a24cf00ced8ca",
-    "scripts/release/full-app-j01/historicalReplay45.test.py": "2f21fbfc914d6bd8668f1ce10bb12a8efa7ac2b098dd9432a0a28113a3e92ba7",
-    "scripts/release/full-app-j01/main_integration45.py": "4a42c5b138930350807c1d919bd5a1f347da0449ffb5f5445d160e07c2b2445c",
-    "scripts/release/full-app-j01/main_integration45.test.py": "eca16d103c900509a74d78ea9f04043e9ad2adc54cb34de0b54d9c4682191533",
-    "scripts/release/full-app-j01/source_consumer45.test.py": "868e75e1c7d28fd9646ec0cccd9923286e8ec4ae0a76dca9598b0dde83a59162"
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "9a1bfc7d7cd96dedee990241be50456accda56623ad4f088a73abd2a28074ecd",
+    "docs/release/full-app-j01/owner-plan-history45.md": "7e1e0e6b919c66faab3b8c1aeaf2b25dd392e90ff11d07cdc6aacb950aaf4225",
+    "scripts/release/full-app-j01/historicalReplay45.py": "a12137717b55ed4cd1edf055e1f0572679f7bbf7b7adc40bf104bc4372bb527d",
+    "scripts/release/full-app-j01/historicalReplay45.test.py": "1c2df03ed3ee0fefe65dca2972eaeba94ca5e50b37cee988c9ff145ddbe17263",
+    "scripts/release/full-app-j01/main_integration45.py": "f421f148feeb33c73b86afdaccdd83e8429c8c4b7af830b98bb18eb9127d11b4",
+    "scripts/release/full-app-j01/main_integration45.test.py": "de0b05c3cdcac63024ad24b447a1a3355780e299da5a128dee4b094ce391d310",
+    "scripts/release/full-app-j01/source_consumer45.test.py": "0c5d77694be3081878f1f6553ef0bcda5c34bd623a4fed6bc75d829d9a69ec41"
   },
   "commands": [
     {
@@ -686,6 +686,53 @@
       "exit": 0,
       "qualification": "C04_RAW_LOG_REF_STATIC_CONTRACT5_OR_FINITE_MAIN31_NOT_FINAL_SOURCE_PROOF",
       "logSha256": "bdd41278512541381e707beefd13b81568996c8476c915189f948e21fccc1b46"
+    },
+    {
+      "command": [
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign45-node20-native-ejo4dscg\\node.exe",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign45-source-20261103\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "--reporter=verbose"
+      ],
+      "exit": 1,
+      "qualification": "C04_ACTUAL_NODE20_ENVIRONMENT_REPRO_51_PASS52_PRE_ASSERTION_ERRORS_NOT_HISTORY_SAFETY_RESULT",
+      "logSha256": "4bd0996d1855176853f39e42cf90b9c8a8786b18b7bf76c314b6ebcac2def2db"
+    },
+    {
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/historicalReplay45.test.py",
+        "HistoricalExecutionControls.test_tool_links_refuse_escape_directory_cycle_chain_and_junction_without_traversal"
+      ],
+      "exit": 1,
+      "qualification": "C04_CONTROLLED_FILESYSTEM_PORT_NONCANONICAL_TOOL_LINK_RED_POSIX_NATIVE_NOT_RUN",
+      "logSha256": "902d17d2ddc9b8beb2f131835e90b75d076f915571a4b0d5c1f6045a328533ea"
+    },
+    {
+      "command": [
+        "C:\\Python39\\python.exe",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/historicalReplay45.test.py"
+      ],
+      "exit": 0,
+      "qualification": "C04_DEVELOPMENT_HELPER26_OWNED_INPUTS_STABLE_NOT_GLOBAL_FINAL_SOURCE_PROOF",
+      "logSha256": "7d854f392c4e0e781ad17f9f2148a30603d4ba8de7ba970380c9ca7dbb57534b"
+    },
+    {
+      "command": "ACTUAL_GITHUB_HEAD812_JOB_quality-126070740971",
+      "exit": 1,
+      "qualification": "C04_PRESERVED_FIRST_HEAD_HOSTED_PORTABILITY_FAILURE_NOT_FINAL_SOURCE_SUCCESS",
+      "logSha256": "b09deb1fdaade12cc4734bebda68ef8082d648f75c10fda6d6897c4e2749fab1"
+    },
+    {
+      "command": "ACTUAL_GITHUB_HEAD812_JOB_ios-launch-126070737548",
+      "exit": 1,
+      "qualification": "C04_PRESERVED_FIRST_HEAD_HOSTED_PORTABILITY_FAILURE_NOT_FINAL_SOURCE_SUCCESS",
+      "logSha256": "3b0061d38e757f081d6005b3b63c8299869b652f7ce76e9de924990c493580ba"
     }
   ],
   "acceptanceGranted": false,

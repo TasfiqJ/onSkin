@@ -26,6 +26,13 @@ DIAGNOSTIC_COMMITS = ('421c309ea057d1b7d0710a505f79b876d9820f44',
 DIAGNOSTIC_TREES = ('f72e2367afb36ab5aa1cf9dca40dd6f00bc393c9',
                     'cbd2b0e7f1294d79cd2128547b825fec14c91581',
                     '76de39be856a33b3731222e238d2e4cce4329b7f')
+# Immutable prior source checkpoint, never a successful hosted-CI admission.
+# Later source repairs retain it in ancestry and require a new final seal.
+PREVIOUS_SEALS = ((
+    '812a4208154cef9b3d0f3078dd0a56329caedb3d',
+    'a140cf67b78b61dc12f6c53bd4ec684f8b687b9c',
+    '118a9d345109cb1fef03ffbaefa65afe847749a1',
+),)
 PREFIX = 'scripts/release/full-app-j01/'
 DOCS = 'docs/release/full-app-j01/'
 PLAN = 'docs/brain/task-specs/M1X-45/SCOPE_PLAN.md'
@@ -191,24 +198,44 @@ def no_admission(value, code):
          all(v is False for v in admissions.values()), code)
 
 
+def previous_seal_guard(seal, parent, tree):
+    need(text('rev-parse', seal+'^{tree}') == tree and parents(seal) == [seal, parent],
+         'R45_PREVIOUS_SEAL_IDENTITY')
+    need(changed(parent, seal, WORKLIST) == WORKLIST, 'R45_PREVIOUS_SEAL_WORKLIST')
+
+
 def phase_guard(commits, phase, source_paths):
     allowed = set(source_paths)
     need(ESSENTIAL <= allowed <= SOURCE and phase in PHASES and 2 <= len(commits) <= 32 and
          len(set(commits)) == len(commits) and commits[0] == PLAN_COMMIT, 'R45_HISTORY_PHASES')
     source_commits = commits[1:] if phase == 'SOURCE_PENDING' else commits[1:-1]
     need(source_commits, 'R45_SOURCE_REQUIRED')
-    previous, union = PLAN_COMMIT, set()
+    need(type(PREVIOUS_SEALS) is tuple and all(type(row) is tuple and len(row) == 3 and
+         all(type(value) is str and re.fullmatch('[0-9a-f]{40}', value) for value in row)
+         for row in PREVIOUS_SEALS) and
+         len({row[0] for row in PREVIOUS_SEALS}) == len(PREVIOUS_SEALS), 'R45_PREVIOUS_SEAL_POLICY')
+    prior = {row[0]: row for row in PREVIOUS_SEALS}
+    required = [row[0] for row in PREVIOUS_SEALS]
+    previous, union, seen = PLAN_COMMIT, set(), []
     for current in source_commits:
         need(parents(current) == [current, previous], 'R45_LINEAR_HISTORY')
-        paths = changed(previous, current, allowed)
-        need(paths, 'R45_EMPTY_SOURCE')
-        union.update(paths)
+        if current in prior:
+            need(current == required[len(seen)] and previous == prior[current][1], 'R45_PREVIOUS_SEAL_ORDER')
+            previous_seal_guard(*prior[current])
+            seen.append(current)
+        else:
+            paths = changed(previous, current, allowed)
+            need(paths, 'R45_EMPTY_SOURCE')
+            union.update(paths)
         previous = current
-    need(union == allowed and changed(BASE, previous, allowed|{PLAN}) == allowed|{PLAN}, 'R45_EXACT_SOURCE')
+    need(seen == required, 'R45_PREVIOUS_SEALS_REQUIRED')
+    need(previous not in prior, 'R45_SOURCE_AFTER_PREVIOUS_SEAL')
+    aggregate = allowed | {PLAN} | (WORKLIST if seen else set())
+    need(union == allowed and changed(BASE, previous, aggregate) == aggregate, 'R45_EXACT_SOURCE')
     seal = None
     if phase == 'SOURCE_FROZEN':
         seal = commits[-1]
-        need(parents(seal) == [seal, previous] and changed(previous, seal, WORKLIST) == WORKLIST,
+        need(seal not in prior and parents(seal) == [seal, previous] and changed(previous, seal, WORKLIST) == WORKLIST,
              'R45_SOLE_FINAL_SEAL')
     return previous, seal
 
