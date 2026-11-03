@@ -247,6 +247,17 @@ function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
   }
 }
 
+function assertHistoryBatchShape45(keys: readonly string[], entries: unknown): void {
+  const historyKey = 'layerwell.routinePlanHistory.v1';
+  const requested = keys.filter((key) => key === historyKey).length;
+  if (!Array.isArray(entries)) throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+  const rows = entries.filter((entry: unknown): entry is unknown[] => Array.isArray(entry) && entry[0] === historyKey);
+  if (rows.length !== requested || rows.some((row) => row.length !== 2 ||
+      (row[1] !== null && typeof row[1] !== 'string') || row[1] !== rows[0]?.[1])) {
+    throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+  }
+}
+
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
   const appOwned = isPrivateKVOwnedKey(key);
   let parsed: unknown;
@@ -488,6 +499,7 @@ async function readPrivateItems(
       await assertHistoryKeysReadable45(keys);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
+      assertHistoryBatchShape45(keys, entries);
       const result = new Map<string, string | null>();
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
@@ -582,6 +594,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
       for (const key of keys) assertPrivateReadAllowed(key);
       const entries = await AsyncStorage.multiGet([...keys]);
       assertCurrent();
+      assertHistoryBatchShape45(keys, entries);
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
       for (const [key, raw] of entries) {

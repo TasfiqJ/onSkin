@@ -1331,6 +1331,85 @@ describe('Campaign45 pending encrypted owner-history cleanup successors', () => 
       vi.doUnmock('expo-secure-store');
     }
   });
+
+  it.each(['missing', 'duplicate', 'nonstring'] as const)('C04 refuses a %s native history batch row without fallback absence', async (kind) => {
+    const { savePlanHistory45, loadPlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const storage = (await import('@react-native-async-storage/async-storage')).default;
+    const secureStore = await secureStorePort45;
+    vi.doMock('expo-secure-store', () => ({
+      ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+    }));
+    let batchSpy: ReturnType<typeof vi.spyOn> | undefined;
+    try {
+      const fixture = await prepareHistory45();
+      const saved = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+        id: randomUUID(), createdAt: new Date().toISOString(),
+      });
+      const ciphertext = native.bytes.get(PLAN_HISTORY45_KEY);
+      const { getPrivateItems, assertPrivateKVReadable } = await import('@/lib/storage/privateKV');
+      const duplicatedRequest = await getPrivateItems([PLAN_HISTORY45_KEY, PLAN_HISTORY45_KEY]);
+      expect(JSON.parse(duplicatedRequest.get(PLAN_HISTORY45_KEY)!)).toEqual(saved);
+      const original = storage.multiGet;
+      batchSpy = vi.spyOn(storage, 'multiGet').mockImplementation(async (keys) => {
+        const rows = await original(keys);
+        if (!keys.includes(PLAN_HISTORY45_KEY)) return rows;
+        const retained = rows.filter(([key]) => key !== PLAN_HISTORY45_KEY);
+        if (kind === 'missing') return retained;
+        const history = rows.find(([key]) => key === PLAN_HISTORY45_KEY)!;
+        return kind === 'duplicate' ? [...retained, history, history] :
+          [...retained, [PLAN_HISTORY45_KEY, false as unknown as string]];
+      });
+      // Individual reads remain genuinely authenticated; the malformed native
+      // batch transport alone must fail, including consent-independent export.
+      await expect(loadPlanHistory45(fixture.lease)).resolves.toEqual(saved);
+      const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+      const batch = await observe(getPrivateItems([PLAN_HISTORY45_KEY]));
+      const availability = await observe(assertPrivateKVReadable());
+      clearActiveHealthProcessingEpoch();
+      const exported = await observe(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)));
+      console.info('C04_HISTORY_BATCH_SHAPE', JSON.stringify({ kind, batch: batch.status,
+        availability: availability.status, exported: exported.status }));
+      expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(ciphertext);
+      for (const result of [batch, availability, exported]) {
+        if (result.status === 'rejected') {
+          expect(result.error).toBeInstanceOf(Error);
+          expect((result.error as Error).message).toMatch(/^PRIVATE_KV_(?:ENVELOPE_INVALID|SOURCE_UNAUTHENTICATED)$/u);
+        }
+      }
+      expect({ batch: batch.status, availability: availability.status, exported: exported.status })
+        .toEqual({ batch: 'rejected', availability: 'rejected', exported: 'rejected' });
+    } finally {
+      batchSpy?.mockRestore();
+      vi.doUnmock('expo-secure-store');
+    }
+  });
+
+  it('C04 refuses an unexpected authenticated history row in a consent-only read after health closes', async () => {
+    const { savePlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const storage = (await import('@react-native-async-storage/async-storage')).default;
+    const fixture = await prepareHistory45();
+    await savePlanHistory45(fixture.snapshot, fixture.lease, { id: randomUUID(), createdAt: new Date().toISOString() });
+    const ciphertext = native.bytes.get(PLAN_HISTORY45_KEY)!;
+    const consentKey = 'layerwell.healthDataCollectionConsent.v1';
+    const original = storage.multiGet;
+    const spy = vi.spyOn(storage, 'multiGet').mockImplementation(async (keys) => {
+      const rows = await original(keys);
+      return keys.length === 1 && keys[0] === consentKey ? [...rows, [PLAN_HISTORY45_KEY, ciphertext]] : rows;
+    });
+    try {
+      clearActiveHealthProcessingEpoch();
+      await expect(getPrivateItem(PLAN_HISTORY45_KEY)).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      const { getPrivateItems } = await import('@/lib/storage/privateKV');
+      const reading = await observe(getPrivateItems([consentKey]));
+      console.info('C04_UNEXPECTED_HISTORY_ROW', JSON.stringify({ reading: reading.status,
+        historyReturned: reading.status === 'fulfilled' && reading.value.has(PLAN_HISTORY45_KEY) }));
+      expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(ciphertext);
+      expect(reading.status).toBe('rejected');
+      if (reading.status === 'rejected') expect((reading.error as Error).message).toBe('PRIVATE_KV_ENVELOPE_INVALID');
+    } finally {
+      spy.mockRestore();
+    }
+  });
 });
 
 it('C45 export waits behind a tentative native history commit and exports only confirmed facts after rollback', async () => {
