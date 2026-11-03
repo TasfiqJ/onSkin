@@ -21,14 +21,21 @@ BRANCH = 'stage/m1-owner-plan-history45'
 PARENT_BRANCH = 'stage/m1-plan-source-reset-fence44'
 PLAN_COMMIT = '054f2adf7169fa2c7da8b29150193835b27e62c0'
 PLAN_SHA = '43dec79273fad05121ce5aaf0d13100b708a3e0fc7585c5760e25b7cf6b474f6'
+DIAGNOSTIC_COMMITS = ('421c309ea057d1b7d0710a505f79b876d9820f44',
+                      '95ba43456fbabc7cec4c581b5c97b11ff84dd8b9')
+DIAGNOSTIC_TREES = ('f72e2367afb36ab5aa1cf9dca40dd6f00bc393c9',
+                    'cbd2b0e7f1294d79cd2128547b825fec14c91581')
 PREFIX = 'scripts/release/full-app-j01/'
 DOCS = 'docs/release/full-app-j01/'
 PLAN = 'docs/brain/task-specs/M1X-45/SCOPE_PLAN.md'
 TASK = 'docs/brain/task-specs/M1X-45/TASK.md'
 AUTHORITY = 'M1X-V2-C05-OWNER-PLAN-VERSIONS45-SOURCE-CANDIDATE-01'
+REPAIR_AUTHORITY = 'BRAIN-C45-MARKER-OWNERSHIP-REPAIR-03'
+REPAIR_PATHS = {'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+                'apps/mobile/src/lib/auth/sessionOwner.ts'}
 PHASES = ('SOURCE_PENDING', 'SOURCE_FROZEN')
 WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
-GRANT = {
+ORIGINAL_GRANT = {
     PLAN, TASK, *WORKLIST, 'PROGRESS.md', '.github/workflows/quality.yml',
     'apps/mobile/src/features/routine/planHistory45.ts',
     'apps/mobile/src/features/routine/planHistory45.test.ts',
@@ -62,8 +69,10 @@ GRANT = {
     DOCS+'owner-plan-history45.md', PREFIX+'main_integration45.py',
     PREFIX+'main_integration45.test.py', PREFIX+'source_consumer45.test.py',
 }
+GRANT = ORIGINAL_GRANT | REPAIR_PATHS
 SOURCE = GRANT-WORKLIST-{PLAN}
 ESSENTIAL = {
+    *REPAIR_PATHS,
     TASK, 'PROGRESS.md', '.github/workflows/quality.yml',
     'apps/mobile/src/features/routine/planHistory45.ts',
     'apps/mobile/src/features/routine/planHistory45.test.ts',
@@ -197,10 +206,11 @@ def phase_guard(commits, phase, source_paths):
 
 
 def task_guard(value, read_body):
-    need(type(value) is dict and set(value) == {'schema', 'authority', 'base', 'baseTree', 'planCommit',
+    need(type(value) is dict and set(value) == {'schema', 'authority', 'additionalAuthorization', 'base', 'baseTree', 'planCommit',
          'sourceHashes', 'commands', 'acceptanceGranted', 'admissions', 'release', 'qualification'},
          'R45_TASK_SCHEMA')
     need(type(value['schema']) is int and value['schema'] == 1 and value['authority'] == AUTHORITY and
+         value['additionalAuthorization'] == REPAIR_AUTHORITY and
          value['base'] == BASE and value['baseTree'] == BASE_TREE and value['planCommit'] == PLAN_COMMIT and
          value['qualification'] == 'SOURCE_INTEGRITY_NOT_QUALIFIED_ACCEPTANCE', 'R45_TASK_AUTHORITY')
     no_admission(value, 'R45_NO_ADMISSION')
@@ -301,7 +311,13 @@ def authenticate_parent():
     primitives().worklist_guard(document(git('show', BASE+':docs/phase-4/generated/source-worklist.json')), source)
     need(parents(PLAN_COMMIT) == [PLAN_COMMIT, BASE] and changed(BASE, PLAN_COMMIT, {PLAN}) == {PLAN} and
          digest(git('show', PLAN_COMMIT+':'+PLAN)) == PLAN_SHA, 'R45_PLAN_FIRST')
-    need(set(BASELINES) == GRANT and len(GRANT) == 39, 'R45_BASELINE_INVENTORY')
+    prior = PLAN_COMMIT
+    for commit, tree in zip(DIAGNOSTIC_COMMITS, DIAGNOSTIC_TREES):
+        need(parents(commit) == [commit, prior] and text('rev-parse', commit+'^{tree}') == tree,
+             'R45_AUTHENTICATED_DIAGNOSTIC_HISTORY')
+        prior = commit
+    need(set(BASELINES) == GRANT and len(ORIGINAL_GRANT) == 39 and len(GRANT) == 41 and
+         GRANT-ORIGINAL_GRANT == REPAIR_PATHS, 'R45_BASELINE_INVENTORY')
     for path, entry in BASELINES.items():
         mode, blob, sha, size = entry
         expected = b'' if blob is None else (mode+' blob '+blob+'\t'+path+'\n').encode()
@@ -372,7 +388,7 @@ def verify(phase='SOURCE_FROZEN'):
     in_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
     need(phase == 'SOURCE_FROZEN' if in_ci else text('symbolic-ref', '--short', 'HEAD') == BRANCH, 'R45_BRANCH_OR_CI_SEAL')
     commits = text('rev-list', '--reverse', BASE+'..'+head).splitlines()
-    need(len(commits) >= 2 and commits[0] == PLAN_COMMIT, 'R45_SOURCE_HISTORY')
+    need(len(commits) >= 4 and commits[:3] == [PLAN_COMMIT, *DIAGNOSTIC_COMMITS], 'R45_SOURCE_HISTORY')
     substantive = commits[-1] if phase == 'SOURCE_PENDING' else commits[-2]
     paths = task_guard(document(git('show', substantive+':'+TASK)), lambda path: git('show', substantive+':'+path))
     source, seal = phase_guard(commits, phase, paths)
@@ -587,6 +603,8 @@ def main():
 
 # Exact pinned PR45 preimages, not a regenerated source grant.
 BASELINES = {
+    'apps/mobile/src/lib/auth/localAccountIsolation.ts': ('100644', 'dba115379250aa4d1987551066bf41ca62665538', '54536c5fe1f9e1fe207359d4824de8b481c0f550fa2bd51a0ee0d901671e7490', 14970),
+    'apps/mobile/src/lib/auth/sessionOwner.ts': ('100644', '545e8615aef56268ae96b219914350edda907b78', '96137032c2286422281a5fd9d33d1c950591773b1cddf6875ab17084b29ead1c', 8669),
     '.github/workflows/quality.yml': ('100644', '89d7289ef9d7097757f591ed81cd8a2834c7e329', '0ea1bbe82006df100ec489d49c575fd61ee5cb9858772584419a5c2933675ec5', 16985),
     'PROGRESS.md': ('100644', '23128e6c6e274bfbac8c46791ec4465db8055f9e', '9aafe432348ab16bf7a308cb42f5e2e7943ef80c9b5045db49a4adf49f4e46db', 560656),
     'apps/mobile/src/app/routine/plan.tsx': ('100644', '8a3b7940d537b5e5fc1bad9775868f438118e82c', 'b6f6b40fedeac6581fb6be601e5a5220c5e7c25c558f720939001dc4540b2a17', 22885),

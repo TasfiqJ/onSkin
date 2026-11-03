@@ -1239,12 +1239,16 @@ describe('Campaign45 pending encrypted owner-history cleanup successors', () => 
     const cleanup = observe(clearLocalPrivateData());
     await markerEntered.promise;
     writeRelease.resolve();
-    expect(await saving).toMatchObject({ status: 'rejected' });
+    // Repair03 retires its intent through the same marker FIFO. Compensation
+    // can finish while the unrelated native marker delivery remains held;
+    // final rejection correctly waits for that delivery instead of bypassing it.
+    await new Promise<void>((resolve) => setImmediate(resolve));
     expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(originalCiphertext);
     expect(native.bytes.get(PROOFS[0])).toBe(proof);
     expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
     expect(native.events).not.toContain('purge:registered_records');
     markerRelease.resolve();
+    expect(await saving).toMatchObject({ status: 'rejected' });
     expect(await cleanup).toMatchObject({ status: 'rejected' });
     expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(originalCiphertext);
     expect(native.bytes.get(PROOFS[0])).toBe(proof);
@@ -1403,7 +1407,11 @@ it('C45 export native read reserves history before a later append with failed ro
         schemaVersion: 1, versions: confirmed.versions,
       });
     }
-    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+    const { decodeHistoryIntentMarker45 } = await import('@/lib/auth/localAccountIsolation');
+    expect(decodeHistoryIntentMarker45(native.bytes.get('layerwell.localDataCleanupRequired.v1')!)).toMatchObject({
+      v: 1, kind: 'routine-plan-history',
+      ownerBinding: createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'),
+    });
   } finally {
     nativeRead?.mockRestore();
     nativeWrite?.mockRestore();
@@ -1440,7 +1448,7 @@ async function grantRestartOwner45(modules: Awaited<ReturnType<typeof restartMod
 }
 
 it.each(['same-owner', 'successor'] as const)(
-  'C45 native restart-like safety: %s cannot expose failed-rollback history when marker persistence also fails', async (scenario) => {
+  'C45 Repair03 prearm failure: %s restart has zero history dispatch or exposure', async (scenario) => {
     vi.stubGlobal('__DEV__', true);
     const storage = (await import('@react-native-async-storage/async-storage')).default;
     const secureStore = await secureStorePort45;
@@ -1501,7 +1509,9 @@ it.each(['same-owner', 'successor'] as const)(
       await expect(before.history.savePlanHistory45(snapshot, originalLease, {
         id: randomUUID(), createdAt: new Date().toISOString(),
       })).rejects.toThrow();
-      expect(markerPersistenceAttempts).toBeGreaterThan(0);
+      expect(markerPersistenceAttempts).toBe(1);
+      expect(historyNativeAttempts).toBe(0);
+      expect(rollbackAttempts).toBe(0);
       expect(native.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(false);
       const retainedBytes = new Map(native.bytes);
       const retainedSecureBytes = new Map(native.secure);
@@ -1573,14 +1583,13 @@ it.each(['same-owner', 'successor'] as const)(
   },
 );
 
-it('C45 normal-save marker prearm cannot authorize automatic deletion of previously confirmed history after restart', async () => {
+it('C45 Repair03 interrupted typed prearm retains confirmed history and photo key without automatic deletion', async () => {
   vi.stubGlobal('__DEV__', true);
   const secureStore = await secureStorePort45;
   vi.doMock('expo-secure-store', () => ({
     ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
   }));
   let fresh: Awaited<ReturnType<typeof restartModules45>> | undefined;
-  let markerRequest: import('@/lib/auth/localAccountIsolation').LocalDataCleanupMarkerRequest | undefined;
   try {
     const before = await restartModules45();
     await before.isolation.clearLocalDataCleanupRequired();
@@ -1618,10 +1627,12 @@ it('C45 normal-save marker prearm cannot authorize automatic deletion of previou
     expect(native.secure.has(PHOTO_KEY)).toBe(true);
     // Model interruption immediately after the proposed save prearm, before
     // any new history destination mutation or explicit deletion/withdrawal.
-    markerRequest = { preserveExisting: true };
-    await before.isolation.markLocalDataCleanupRequired(markerRequest);
+    const interruptedIntent = await before.isolation.armPlanHistoryMutation45(lease);
     expect(native.bytes.get(historyKey)).toBe(confirmedCiphertext);
-    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+    const intentRaw = native.bytes.get('layerwell.localDataCleanupRequired.v1')!;
+    expect(before.isolation.decodeHistoryIntentMarker45(intentRaw)).toMatchObject({
+      v: 1, kind: 'routine-plan-history', ownerBinding: await before.owner.localDataOwnerBinding(OWNER),
+    });
     const retainedBytes = new Map(native.bytes);
     const retainedSecureBytes = new Map(native.secure);
     vi.resetModules();
@@ -1629,7 +1640,15 @@ it('C45 normal-save marker prearm cannot authorize automatic deletion of previou
     expect(fresh.isolation.prepareLocalDataForSession).not.toBe(before.isolation.prepareLocalDataForSession);
     expect(native.bytes).toEqual(retainedBytes);
     expect(native.secure).toEqual(retainedSecureBytes);
-    await expect(fresh.owner.readLocalDataOwnership(OWNER)).resolves.toBe('cleanup_required');
+    await expect(fresh.isolation.finishPlanHistoryMutation45(interruptedIntent)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+    await expect(fresh.owner.readLocalDataOwnership(OWNER)).resolves.toBe('match');
+    await expect(fresh.owner.readLocalDataOwnership(null)).resolves.toBe('retained');
+    await expect(fresh.isolation.prepareLocalDataForSession(null, null)).resolves.toEqual({
+      cleared: false, resetRoute: false,
+    });
+    await expect(fresh.owner.preserveLocalDataForForcedSignOut()).resolves.toBe('retained-owner');
+    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe(intentRaw);
+    expect(native.bytes.get(PROOFS[1])).toBe(await fresh.owner.localDataOwnerBinding(OWNER));
     const startup = await observe(fresh.isolation.prepareLocalDataForSession(OWNER, OWNER));
     const automaticallyCleared = startup.status === 'fulfilled' && startup.value.cleared;
     const historyCiphertextUnchanged = native.bytes.get(historyKey) === confirmedCiphertext;
@@ -1643,6 +1662,12 @@ it('C45 normal-save marker prearm cannot authorize automatic deletion of previou
       expect(startup.error).toBeInstanceOf(Error);
       expect((startup.error as Error).message).toMatch(/CLEANUP|RECOVERY|OWNER/u);
     }
+    expect(startup.status).toBe('rejected');
+    const directLease = await grantRestartOwner45(fresh, OWNER);
+    await expect(fresh.history.loadPlanHistory45(directLease)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+    await expect(fresh.account.runAccountGenerationOperation((accountLease) =>
+      fresh!.exporter.collectLocalDeviceExportData(accountLease, OWNER))).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+    expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe(intentRaw);
     console.info('C45_PREARM_RETENTION_WINDOW', JSON.stringify({
       automaticallyCleared, historyCiphertextUnchanged, photoKeyRetained,
       confirmedVersionsBefore: confirmed.versions.length, confirmedVersionsAfterStartup,
@@ -1652,11 +1677,523 @@ it('C45 normal-save marker prearm cannot authorize automatic deletion of previou
     });
     if (confirmedVersionsAfterStartup !== null) expect(confirmedVersionsAfterStartup).toBe(1);
   } finally {
-    markerRequest?.scope?.abandon();
     if (fresh) {
       await fresh.cleanup.clearLocalPrivateData();
       await fresh.isolation.clearLocalDataCleanupRequired();
     }
     vi.doUnmock('expo-secure-store');
   }
+});
+
+async function repairFixture45(savePrior = true) {
+  vi.stubGlobal('__DEV__', true);
+  const secureStore = await secureStorePort45;
+  vi.doMock('expo-secure-store', () => ({
+    ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+  }));
+  const modules = await restartModules45();
+  await modules.isolation.clearLocalDataCleanupRequired();
+  native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  const lease = await grantRestartOwner45(modules, OWNER);
+  const { HEALTH_DATA_CONSENT } = await import('@/features/onboarding/consentCopy');
+  await modules.consent.setHealthDataCollectionConsentLocal({
+    granted: true, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.fullText,
+  });
+  const answers = Object.fromEntries(modules.quiz.ONBOARDING_QUIZ.map((question) => [
+    question.id, question.multiSelect ? [question.options[0]!.id] : question.options[0]!.id,
+  ]));
+  await modules.profile.setStoredSkinProfileFromExplicitQuiz({
+    result: modules.quiz.scoreQuiz(answers), goals: ['clear_skin'], completedAt: new Date().toISOString(),
+  });
+  const product = await modules.shelf.addProduct({
+    operationId: randomUUID(), name: 'Synthetic45 Repair03 owner cleanser', category: 'cleanser', addedVia: 'manual',
+  });
+  const snapshot = await modules.source.capturePlanSource44(lease);
+  const saved = savePrior ? await modules.history.savePlanHistory45(snapshot, lease, {
+    id: randomUUID(), createdAt: new Date().toISOString(),
+  }) : undefined;
+  const storage = (await import('@react-native-async-storage/async-storage')).default;
+  const key = modules.history.PLAN_HISTORY45_KEY;
+  return { modules, lease, snapshot, product, saved, storage, key,
+    priorCiphertext: native.bytes.get(key), markerKey: 'layerwell.localDataCleanupRequired.v1' };
+}
+
+async function closeRepairFixture45(fixture: Awaited<ReturnType<typeof repairFixture45>>) {
+  vi.restoreAllMocks();
+  await fixture.modules.cleanup.clearLocalPrivateData();
+  await fixture.modules.isolation.clearLocalDataCleanupRequired();
+  expect(native.bytes.has(fixture.key)).toBe(false);
+  expect(native.bytes.has(fixture.markerKey)).toBe(false);
+  expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(false);
+  expect(native.secure.has(PHOTO_KEY)).toBe(false);
+  vi.doUnmock('expo-secure-store');
+}
+
+describe('C45 Repair03 durable intent and native control windows', () => {
+  it('rejects an invalid native UUID before persisting either prearm or history', async () => {
+    const fixture = await repairFixture45();
+    try {
+      const crypto = await import('expo-crypto');
+      const invalidUuid = vi.spyOn(crypto, 'randomUUID').mockReturnValue('invalid-native-uuid');
+      const writes = vi.spyOn(fixture.storage, 'setItem');
+      await expect(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+        id: randomUUID(), createdAt: new Date().toISOString(),
+      })).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      expect(invalidUuid).toHaveBeenCalledOnce();
+      expect(writes.mock.calls.filter(([key]) => key === fixture.key || key === fixture.markerKey)).toHaveLength(0);
+      expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+      expect(native.bytes.has(fixture.markerKey)).toBe(false);
+    } finally { await closeRepairFixture45(fixture); }
+  });
+
+  it.each(['reject-before', 'commit-reject', 'omit', 'stale-readback', 'read-failure'] as const)(
+    'prearm %s refuses before any history native call and preserves exact prior ciphertext', async (mode) => {
+      const fixture = await repairFixture45();
+      try {
+        const originalSet = fixture.storage.setItem;
+        const originalGet = fixture.storage.getItem;
+        let markerWrites = 0;
+        let historyWrites = 0;
+        let staleDelivered = false;
+        let failedRead = false;
+        vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+          if (key === fixture.key) historyWrites += 1;
+          if (key === fixture.markerKey) {
+            markerWrites += 1;
+            if (mode === 'reject-before') throw new Error('SYNTHETIC_REPAIR03_PREARM_REJECT');
+            if (mode === 'omit') return;
+            await originalSet(key, raw);
+            if (mode === 'commit-reject') throw new Error('SYNTHETIC_REPAIR03_PREARM_COMMIT_REJECT');
+            return;
+          }
+          await originalSet(key, raw);
+        });
+        vi.spyOn(fixture.storage, 'getItem').mockImplementation(async (key) => {
+          if (key === fixture.markerKey && mode === 'read-failure' && !failedRead) {
+            failedRead = true;
+            throw new Error('SYNTHETIC_REPAIR03_PREARM_READ_FAILED');
+          }
+          if (key === fixture.markerKey && mode === 'stale-readback' && markerWrites > 0 && !staleDelivered) {
+            staleDelivered = true;
+            return '1';
+          }
+          return originalGet(key);
+        });
+        await expect(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+          id: randomUUID(), createdAt: new Date().toISOString(),
+        })).rejects.toThrow();
+        expect(historyWrites).toBe(0);
+        expect(markerWrites).toBe(mode === 'read-failure' ? 0 : 1);
+        expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+        if (mode === 'commit-reject' || mode === 'stale-readback') {
+          expect(fixture.modules.isolation.decodeHistoryIntentMarker45(native.bytes.get(fixture.markerKey)!)).toMatchObject({
+            kind: 'routine-plan-history', ownerBinding: await fixture.modules.owner.localDataOwnerBinding(OWNER),
+          });
+          await expect(fixture.modules.history.loadPlanHistory45(fixture.lease)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+        } else expect(native.bytes.has(fixture.markerKey)).toBe(false);
+      } finally { await closeRepairFixture45(fixture); }
+    },
+  );
+
+  it('confirmed prearm survives failed rollback and later marker write refusal across fresh-module owner/read/export admission', async () => {
+    const fixture = await repairFixture45();
+    let fresh: Awaited<ReturnType<typeof restartModules45>> | undefined;
+    try {
+      const originalSet = fixture.storage.setItem;
+      let markerWrites = 0;
+      let historyWrites = 0;
+      vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+        if (key === fixture.markerKey && ++markerWrites > 1) throw new Error('SYNTHETIC_REPAIR03_LATE_MARKER_FAILED');
+        if (key === fixture.key) {
+          historyWrites += 1;
+          if (historyWrites > 1) throw new Error('SYNTHETIC_REPAIR03_RESTORE_FAILED');
+          await originalSet(key, raw);
+          throw new Error('SYNTHETIC_REPAIR03_HISTORY_COMMIT_REJECT');
+        }
+        await originalSet(key, raw);
+      });
+      await expect(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+        id: randomUUID(), createdAt: new Date().toISOString(),
+      })).rejects.toThrow('PRIVATE_KV_WRITE_ROLLBACK_FAILED');
+      expect(historyWrites).toBe(2);
+      expect(markerWrites).toBe(1); // no post-failure marker write is required
+      const intentRaw = native.bytes.get(fixture.markerKey)!;
+      expect(fixture.modules.isolation.decodeHistoryIntentMarker45(intentRaw)).toMatchObject({
+        kind: 'routine-plan-history', ownerBinding: await fixture.modules.owner.localDataOwnerBinding(OWNER),
+      });
+      expect(native.bytes.get(fixture.key)).not.toBe(fixture.priorCiphertext);
+      expect(fixture.modules.processing.activeHealthProcessingLeaseSnapshot()).toBeNull();
+      const bytesBeforeRestart = new Map(native.bytes);
+      const secureBeforeRestart = new Map(native.secure);
+      vi.restoreAllMocks();
+      vi.resetModules();
+      fresh = await restartModules45();
+      expect(fresh.kv.getPrivateItem).not.toBe(fixture.modules.kv.getPrivateItem);
+      expect(fresh.account.runAccountGenerationOperation).not.toBe(fixture.modules.account.runAccountGenerationOperation);
+      expect(native.bytes).toEqual(bytesBeforeRestart);
+      expect(native.secure).toEqual(secureBeforeRestart);
+      await expect(fresh.owner.readLocalDataOwnership(OWNER)).resolves.toBe('match');
+      await expect(fresh.isolation.prepareLocalDataForSession(OWNER, OWNER)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      for (const owner of [OWNER, 'synthetic45-Repair03-successor']) {
+        const lease = await grantRestartOwner45(fresh, owner);
+        await expect(fresh.history.loadPlanHistory45(lease)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+        await expect(fresh.account.runAccountGenerationOperation((accountLease) =>
+          fresh!.exporter.collectLocalDeviceExportData(accountLease, owner))).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      }
+      expect(native.bytes.get(fixture.markerKey)).toBe(intentRaw);
+      expect(native.bytes).toEqual(bytesBeforeRestart);
+    } finally {
+      vi.restoreAllMocks();
+      if (fresh) {
+        await fresh.cleanup.clearLocalPrivateData();
+        await fresh.isolation.clearLocalDataCleanupRequired();
+        vi.doUnmock('expo-secure-store');
+      } else await closeRepairFixture45(fixture);
+    }
+  });
+
+  it('only the original intent token can finish once; copied, repeated and stale tokens cannot remove a marker', async () => {
+    const fixture = await repairFixture45();
+    try {
+      const writes = vi.spyOn(fixture.storage, 'setItem');
+      await expect(fixture.modules.isolation.armPlanHistoryMutation45({ ...fixture.lease })).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      expect(writes.mock.calls.filter(([key]) => key === fixture.markerKey)).toHaveLength(0);
+      const intent = await fixture.modules.isolation.armPlanHistoryMutation45(fixture.lease);
+      const raw = native.bytes.get(fixture.markerKey);
+      const removals = vi.spyOn(fixture.storage, 'removeItem');
+      await expect(fixture.modules.isolation.finishPlanHistoryMutation45({ ...intent })).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      await expect(fixture.modules.isolation.armPlanHistoryMutation45(fixture.lease)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      expect(removals).not.toHaveBeenCalled();
+      expect(native.bytes.get(fixture.markerKey)).toBe(raw);
+      await fixture.modules.isolation.finishPlanHistoryMutation45(intent);
+      expect(removals.mock.calls.filter(([key]) => key === fixture.markerKey)).toHaveLength(1);
+      await expect(fixture.modules.isolation.finishPlanHistoryMutation45(intent)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      const next = await fixture.modules.isolation.armPlanHistoryMutation45(fixture.lease);
+      const nextRaw = native.bytes.get(fixture.markerKey);
+      expect(nextRaw).not.toBe(raw);
+      await expect(fixture.modules.isolation.finishPlanHistoryMutation45(intent)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      expect(native.bytes.get(fixture.markerKey)).toBe(nextRaw);
+      await fixture.modules.isolation.finishPlanHistoryMutation45(next);
+      expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+    } finally { await closeRepairFixture45(fixture); }
+  });
+
+  it.each(['read-failure', 'reject-before', 'commit-reject', 'omit', 'stale-readback', 'restore-failure'] as const)(
+    'intent finish %s cannot report successful retirement or change prior confirmed history', async (mode) => {
+      const fixture = await repairFixture45();
+      try {
+        const intent = await fixture.modules.isolation.armPlanHistoryMutation45(fixture.lease);
+        const intentRaw = native.bytes.get(fixture.markerKey)!;
+        const originalRemove = fixture.storage.removeItem;
+        const originalGet = fixture.storage.getItem;
+        const originalSet = fixture.storage.setItem;
+        let removals = 0;
+        let restores = 0;
+        let failedRead = false;
+        let staleDelivered = false;
+        vi.spyOn(fixture.storage, 'removeItem').mockImplementation(async (key) => {
+          if (key === fixture.markerKey) {
+            removals += 1;
+            if (mode === 'reject-before') throw new Error('SYNTHETIC_REPAIR03_FINISH_REJECT');
+            if (mode === 'omit') return;
+            await originalRemove(key);
+            if (mode === 'commit-reject' || mode === 'restore-failure') throw new Error('SYNTHETIC_REPAIR03_FINISH_COMMIT_REJECT');
+            return;
+          }
+          await originalRemove(key);
+        });
+        vi.spyOn(fixture.storage, 'getItem').mockImplementation(async (key) => {
+          if (key === fixture.markerKey && mode === 'read-failure' && !failedRead) {
+            failedRead = true; throw new Error('SYNTHETIC_REPAIR03_FINISH_READ_FAILED');
+          }
+          if (key === fixture.markerKey && mode === 'stale-readback' && removals > 0 && !staleDelivered) {
+            staleDelivered = true; return intentRaw;
+          }
+          return originalGet(key);
+        });
+        vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+          if (key === fixture.markerKey) {
+            restores += 1;
+            if (mode === 'restore-failure') throw new Error('SYNTHETIC_REPAIR03_FINISH_RESTORE_FAILED');
+          }
+          await originalSet(key, raw);
+        });
+        await expect(fixture.modules.isolation.finishPlanHistoryMutation45(intent)).rejects.toThrow();
+        expect(removals).toBe(mode === 'read-failure' ? 0 : 1);
+        expect(restores).toBe(['commit-reject', 'stale-readback', 'restore-failure'].includes(mode) ? 1 : 0);
+        expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+        expect(native.bytes.get(fixture.markerKey) ?? null).toBe(mode === 'restore-failure' ? null : intentRaw);
+        await expect(fixture.modules.history.loadPlanHistory45(fixture.lease)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      } finally { await closeRepairFixture45(fixture); }
+    },
+  );
+
+  it('a destructive claim registered during held intent removal restores legacy1 and cannot be cleared by history finish', async () => {
+    const fixture = await repairFixture45();
+    const request: import('@/lib/auth/localAccountIsolation').LocalDataCleanupMarkerRequest = {};
+    try {
+      const intent = await fixture.modules.isolation.armPlanHistoryMutation45(fixture.lease);
+      const originalRemove = fixture.storage.removeItem;
+      const removed = deferred();
+      const release = deferred();
+      let held = false;
+      vi.spyOn(fixture.storage, 'removeItem').mockImplementation(async (key) => {
+        await originalRemove(key);
+        if (key === fixture.markerKey && !held) {
+          held = true; removed.resolve(); await release.promise;
+        }
+      });
+      const finishing = observe(fixture.modules.isolation.finishPlanHistoryMutation45(intent));
+      await removed.promise;
+      const destructiveMark = observe(fixture.modules.isolation.markLocalDataCleanupRequired(request));
+      release.resolve();
+      expect(await finishing).toMatchObject({ status: 'rejected' });
+      expect(await destructiveMark).toMatchObject({ status: 'fulfilled' });
+      expect(native.bytes.get(fixture.markerKey)).toBe('1');
+      expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+      await expect(fixture.modules.isolation.finishPlanHistoryMutation45(intent)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      expect(native.bytes.get(fixture.markerKey)).toBe('1');
+    } finally {
+      request.scope?.abandon();
+      vi.restoreAllMocks();
+      await fixture.modules.isolation.clearAccountIsolatedState();
+      await fixture.modules.isolation.clearLocalDataCleanupRequired();
+      vi.doUnmock('expo-secure-store');
+    }
+  });
+
+  for (const key of ['layerwell.shelf.v1', 'layerwell.skinprofile.v1', 'layerwell.conflict.overrides', 'layerwell.healthDataCollectionConsent.v1', 'layerwell.routineOrder.v1']) {
+    it(`rechecks exact ${key} bytes changed during verified native prearm before any history dispatch`, async () => {
+      const fixture = await repairFixture45();
+      try {
+        const priorRaw = native.bytes.get(key);
+        if (key === 'layerwell.shelf.v1') await fixture.modules.shelf.updateProduct(fixture.product.id, { brand: 'Synthetic45 Repair03 prep metadata' });
+        if (key === 'layerwell.skinprofile.v1') await fixture.modules.profile.updateStoredPregnancyStatus('pregnant');
+        if (key === 'layerwell.conflict.overrides') await fixture.modules.kv.updatePrivateItem(key, () => '[]');
+        if (key === 'layerwell.healthDataCollectionConsent.v1') {
+          const { HEALTH_DATA_CONSENT } = await import('@/features/onboarding/consentCopy');
+          await fixture.modules.consent.setHealthDataCollectionConsentLocal({
+            granted: false, version: HEALTH_DATA_CONSENT.version, consentText: HEALTH_DATA_CONSENT.declineText,
+          });
+        }
+        if (key === 'layerwell.routineOrder.v1') {
+          const order = await import('@/features/routine/orderStore');
+          await order.saveRoutineOrderOverrides({ previous: await order.loadRoutineOrderOverrides(fixture.lease),
+            next: { schemaVersion: 1, am: [fixture.product.id], pm: [] } }, fixture.lease);
+        }
+        const changedRaw = native.bytes.get(key)!;
+        expect(changedRaw).not.toBe(priorRaw);
+        if (priorRaw === undefined) native.bytes.delete(key); else native.bytes.set(key, priorRaw);
+        const originalSet = fixture.storage.setItem;
+        const prearmed = deferred();
+        const release = deferred();
+        let historyWrites = 0;
+        let held = false;
+        vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (item, raw) => {
+          if (item === fixture.key) historyWrites += 1;
+          await originalSet(item, raw);
+          if (item === fixture.markerKey && !held) {
+            held = true; prearmed.resolve(); await release.promise;
+          }
+        });
+        const saving = observe(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+          id: randomUUID(), createdAt: new Date().toISOString(),
+        }));
+        await prearmed.promise;
+        native.bytes.set(key, changedRaw);
+        release.resolve();
+        expect(await saving).toMatchObject({ status: 'rejected' });
+        expect(historyWrites).toBe(0);
+        expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+        expect(native.bytes.get(key)).toBe(changedRaw);
+        expect(native.bytes.has(fixture.markerKey)).toBe(false);
+      } finally { await closeRepairFixture45(fixture); }
+    });
+  }
+
+  it.each(['withdrawal', 'regrant', 'successor'] as const)(
+    '%s during native prearm readback preserves prior ciphertext and never dispatches history', async (transition) => {
+      const fixture = await repairFixture45();
+      try {
+        const originalSet = fixture.storage.setItem;
+        const prearmed = deferred();
+        const release = deferred();
+        let historyWrites = 0;
+        let markerWrites = 0;
+        vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+          if (key === fixture.key) historyWrites += 1;
+          await originalSet(key, raw);
+          if (key === fixture.markerKey && markerWrites++ === 0) {
+            prearmed.resolve(); await release.promise;
+          }
+        });
+        const saving = observe(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+          id: randomUUID(), createdAt: new Date().toISOString(),
+        }));
+        await prearmed.promise;
+        const intentRaw = native.bytes.get(fixture.markerKey)!;
+        if (transition === 'withdrawal') fixture.modules.processing.clearActiveHealthProcessingEpoch();
+        else {
+          // Re-publishing identical active status is deliberately not a new
+          // grant. Close it first to exercise actual withdrawal/regrant.
+          if (transition === 'regrant') fixture.modules.processing.clearActiveHealthProcessingEpoch();
+          await grantRestartOwner45(fixture.modules, transition === 'successor' ? 'synthetic45-prearm-successor' : OWNER);
+        }
+        release.resolve();
+        expect(await saving).toMatchObject({ status: 'rejected' });
+        expect(historyWrites).toBe(0);
+        expect(markerWrites).toBe(1);
+        expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+        expect(native.bytes.get(fixture.markerKey)).toBe(intentRaw);
+        await expect(fixture.modules.isolation.assertPlanHistoryReadable45()).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      } finally { await closeRepairFixture45(fixture); }
+    },
+  );
+
+  it('actual selective withdrawal deletes failed-rollback history and photo key while retaining harmless recovery control until explicit full cleanup', async () => {
+    const fixture = await repairFixture45();
+    try {
+      native.configuredForSelective = true;
+      const photos = await import('@/features/photos/encryptedStorage');
+      await photos.encryptPhotoNote('Synthetic45 Repair03 health-withdrawal note');
+      expect(native.secure.has(PHOTO_KEY)).toBe(true);
+      const originalSet = fixture.storage.setItem;
+      const committed = deferred();
+      const release = deferred();
+      let historyWrites = 0;
+      vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+        if (key === fixture.key) {
+          historyWrites += 1;
+          if (historyWrites > 1) throw new Error('SYNTHETIC_REPAIR03_WITHDRAWAL_ROLLBACK_FAILED');
+          await originalSet(key, raw);
+          committed.resolve();
+          await release.promise;
+          throw new Error('SYNTHETIC_REPAIR03_WITHDRAWAL_COMMIT_REJECT');
+        }
+        await originalSet(key, raw);
+      });
+      const saving = observe(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+        id: randomUUID(), createdAt: new Date().toISOString(),
+      }));
+      await committed.promise;
+      const intentRaw = native.bytes.get(fixture.markerKey)!;
+      expect(fixture.modules.isolation.decodeHistoryIntentMarker45(intentRaw).kind).toBe('routine-plan-history');
+      const closed = deferred();
+      const unsubscribe = fixture.modules.processing.subscribeActiveHealthProcessingLeaseChanges((lease) => {
+        if (lease === null) closed.resolve();
+      });
+      const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+      const withdrawing = observe(clearHealthPurposeLocalData(OWNER));
+      await closed.promise;
+      unsubscribe();
+      release.resolve();
+      expect(await saving).toMatchObject({ status: 'rejected' });
+      expect(await withdrawing).toMatchObject({ status: 'fulfilled' });
+      expect(historyWrites).toBe(2);
+      expect(native.bytes.has(fixture.key)).toBe(false);
+      expect(native.secure.has(PHOTO_KEY)).toBe(false);
+      expect(native.secure.has(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(true);
+      expect(native.bytes.get(fixture.markerKey)).toBe(intentRaw);
+      await expect(fixture.modules.owner.readLocalDataOwnership(OWNER)).resolves.toBe('match');
+      const regranted = await grantRestartOwner45(fixture.modules, OWNER);
+      await expect(fixture.modules.history.loadPlanHistory45(regranted)).rejects.toThrow(/RECOVERY_REQUIRED/u);
+      await expect(fixture.modules.account.runAccountGenerationOperation((lease) =>
+        fixture.modules.exporter.collectLocalDeviceExportData(lease, OWNER))).rejects.toThrow(/RECOVERY_REQUIRED/u);
+      await expect(fixture.modules.isolation.prepareLocalDataForSession(OWNER, OWNER)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+      expect(native.bytes.has(fixture.key)).toBe(false);
+    } finally { await closeRepairFixture45(fixture); }
+  });
+
+  it.each(['malformed', 'future', 'wrong-owner', 'bad-nonce', 'extra-field', 'duplicate-field', 'whitespace', 'future-kind'] as const)(
+    'history control %s fails closed without rewriting, fallback empty or automatic cleanup', async (mode) => {
+      const fixture = await repairFixture45();
+      try {
+        const value = { v: 1, kind: 'routine-plan-history',
+          ownerBinding: await fixture.modules.owner.localDataOwnerBinding(OWNER), nonce: randomUUID() };
+        let raw = JSON.stringify(value);
+        if (mode === 'malformed') raw = '{';
+        if (mode === 'future') raw = JSON.stringify({ ...value, v: 2 });
+        if (mode === 'wrong-owner') raw = JSON.stringify({ ...value, ownerBinding: 'a'.repeat(64) });
+        if (mode === 'bad-nonce') raw = JSON.stringify({ ...value, nonce: 'not-a-capability' });
+        if (mode === 'extra-field') raw = JSON.stringify({ ...value, added: true });
+        if (mode === 'duplicate-field') raw = raw.replace('{"v":1,', '{"v":1,"v":1,');
+        if (mode === 'whitespace') raw = ` ${raw}`;
+        if (mode === 'future-kind') raw = JSON.stringify({ ...value, kind: 'future-history' });
+        native.bytes.set(fixture.markerKey, raw);
+        const nativeSet = vi.spyOn(fixture.storage, 'setItem');
+        await expect(fixture.modules.owner.readLocalDataOwnerProof()).rejects.toThrow(/HISTORY_RECOVERY_REQUIRED|OWNER_PROOF_INVALID/u);
+        await expect(fixture.modules.isolation.prepareLocalDataForSession(OWNER, OWNER)).rejects.toThrow();
+        await expect(fixture.modules.history.loadPlanHistory45(fixture.lease)).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+        await expect(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, {
+          id: randomUUID(), createdAt: new Date().toISOString(),
+        })).rejects.toThrow('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+        expect(nativeSet.mock.calls.filter(([key]) => key === fixture.key)).toHaveLength(0);
+        expect(native.bytes.get(fixture.markerKey)).toBe(raw);
+        expect(native.bytes.get(fixture.key)).toBe(fixture.priorCiphertext);
+      } finally {
+        // Remove only deliberately injected invalid native control bytes for
+        // fixture teardown; no product recovery path repairs them as empty.
+        native.bytes.delete(fixture.markerKey);
+        await closeRepairFixture45(fixture);
+      }
+    },
+  );
+
+  it('verified rollback permits a subsequent successful same-intent save and exact retry, while a held original-owner arm rejects a second owner', async () => {
+    const fixture = await repairFixture45(false);
+    try {
+      const intent = { id: randomUUID(), createdAt: new Date().toISOString() };
+      const originalSet = fixture.storage.setItem;
+      let failedNativeWrites = 0;
+      const failingWrite = vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+        await originalSet(key, raw);
+        if (key === fixture.key && failedNativeWrites++ === 0) {
+          throw new Error('SYNTHETIC_REPAIR03_RECOVERABLE_WRITE');
+        }
+      });
+      await expect(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, intent)).rejects.toThrow(
+        'SYNTHETIC_REPAIR03_RECOVERABLE_WRITE',
+      );
+      expect(failedNativeWrites).toBe(1);
+      expect(native.bytes.has(fixture.key)).toBe(false);
+      expect(native.bytes.has(fixture.markerKey)).toBe(false);
+      expect(() => fixture.modules.admission.assertOriginalHealthDataWriteLease(fixture.lease)).not.toThrow();
+      failingWrite.mockRestore();
+      const successful = await fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, intent);
+      const confirmedRaw = native.bytes.get(fixture.key);
+      expect(successful.versions).toHaveLength(1);
+      expect(successful.versions[0]).toMatchObject({ id: intent.id, sequence: 1 });
+      const retryWrites = vi.spyOn(fixture.storage, 'setItem');
+      await expect(fixture.modules.history.savePlanHistory45(fixture.snapshot, fixture.lease, intent)).resolves.toEqual(successful);
+      expect(retryWrites.mock.calls.filter(([key]) => key === fixture.key || key === fixture.markerKey)).toHaveLength(0);
+      expect(native.bytes.get(fixture.key)).toBe(confirmedRaw);
+      retryWrites.mockRestore();
+      const prearmed = deferred();
+      const release = deferred();
+      let markerWrites = 0;
+      vi.spyOn(fixture.storage, 'setItem').mockImplementation(async (key, raw) => {
+        await originalSet(key, raw);
+        if (key === fixture.markerKey && markerWrites++ === 0) {
+          prearmed.resolve(); await release.promise;
+        }
+      });
+      const firstArm = observe(fixture.modules.isolation.armPlanHistoryMutation45(fixture.lease));
+      await prearmed.promise;
+      const firstRaw = native.bytes.get(fixture.markerKey);
+      const secondOwnerLease = await grantRestartOwner45(fixture.modules, 'synthetic45-second-arm-owner');
+      await expect(fixture.modules.owner.readLocalDataOwnership('synthetic45-second-arm-owner')).resolves.toBe('mismatch');
+      await expect(fixture.modules.isolation.armPlanHistoryMutation45(secondOwnerLease)).rejects.toThrow(
+        'LOCAL_DATA_HISTORY_RECOVERY_REQUIRED',
+      );
+      expect(markerWrites).toBe(1);
+      expect(native.bytes.get(fixture.markerKey)).toBe(firstRaw);
+      release.resolve();
+      expect(await firstArm).toMatchObject({ status: 'rejected' });
+      expect(native.bytes.get(fixture.key)).toBe(confirmedRaw);
+      expect(native.bytes.get(fixture.markerKey)).toBe(firstRaw);
+    } finally { await closeRepairFixture45(fixture); }
+  });
 });

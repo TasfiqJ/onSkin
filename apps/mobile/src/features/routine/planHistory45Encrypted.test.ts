@@ -10,14 +10,14 @@ import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
 import { setConflictOverride } from '@/features/intelligence/overrides';
 import { beginAccountGenerationBoundary, endAccountGenerationBoundary } from '@/lib/auth/accountGeneration';
-import { clearLocalDataCleanupRequired, isLocalDataCleanupRequiredInMemory } from '@/lib/auth/localAccountIsolation';
+import { clearLocalDataCleanupRequired, decodeHistoryIntentMarker45, isLocalDataCleanupRequiredInMemory, markLocalDataCleanupRequired } from '@/lib/auth/localAccountIsolation';
 import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
 import { activeHealthProcessingLeaseSnapshot, clearActiveHealthProcessingEpoch, setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import { clearPrivateKVContentKey, getPrivateItem, removePrivateItem, setPrivateItem, updatePrivateItem, waitForPrivateKVWritesToSettle } from '@/lib/storage/privateKV';
 import { PRIVATE_KV_CONTENT_KEY_NAME } from '@/lib/storage/privateKVContentKey';
 
 import { loadRoutineOrderOverrides, saveRoutineOrderOverrides } from './orderStore';
-import { capturePlanSource44, PLAN_SOURCE44_STALE, type PlanSourceSnapshot44 } from './planSourceFence44';
+import { appendPlanHistoryWithSources44, capturePlanSource44, PLAN_SOURCE44_STALE, type PlanSourceSnapshot44 } from './planSourceFence44';
 import { decodePlanHistory45, loadPlanHistory45, PLAN_HISTORY45_CAPACITY_REACHED, PLAN_HISTORY45_KEY as HISTORY, PLAN_HISTORY45_RETRY_CONFLICT, savePlanHistory45 } from './planHistory45';
 
 // Genuine encryption/content key/domain codecs/admission/queues. Only the
@@ -77,6 +77,7 @@ async function prepared() {
 beforeEach(async () => {
   vi.stubGlobal('__DEV__', true);
   client = await reset26(); await profile26();
+  await (await import('@/lib/auth/sessionOwner')).claimLocalDataOwnership('synthetic-first-value-a');
   productId = (await addProduct({ operationId: randomUUID(), name: 'Synthetic45 cleanser', category: 'cleanser', addedVia: 'manual' })).id;
 });
 afterEach(async () => {
@@ -85,6 +86,7 @@ afterEach(async () => {
   vi.restoreAllMocks();
   await removePrivateItem(HISTORY);
   await clearPrivateKVContentKey();
+  await markLocalDataCleanupRequired();
   await clearLocalDataCleanupRequired();
   await close26(client);
   vi.unstubAllGlobals();
@@ -106,6 +108,20 @@ describe('Campaign45 genuine encrypted owner plan history', () => {
     await expect(savePlanHistory45(snapshot, lease, { ...intent, createdAt: '2020-01-01T00:00:00.000Z' })).rejects.toThrow(PLAN_HISTORY45_RETRY_CONFLICT);
     expect(ports26.bytes.get(HISTORY)).toBe(ciphertext);
     expect(ports26.track).not.toHaveBeenCalled();
+  });
+
+  it('refuses generic history writers and source-less mutation before native dispatch', async () => {
+    const { lease } = await prepared();
+    const calls = vi.spyOn(AsyncStorage, 'setItem');
+    await expect(setPrivateItem(HISTORY, 'unfenced')).rejects.toThrow('PRIVATE_KV_SOURCE_TRANSFORM_INVALID');
+    await expect(updatePrivateItem(HISTORY, () => 'unfenced')).rejects.toThrow('PRIVATE_KV_SOURCE_TRANSFORM_INVALID');
+    const { updatePrivateItemWithSources } = await import('@/lib/storage/privateKV');
+    await expect(updatePrivateItemWithSources(HISTORY, [], () => 'unfenced', () => {
+      expect(lease.ownerUserId).toBe('synthetic-first-value-a');
+    })).rejects.toThrow('PRIVATE_KV_SOURCE_TRANSFORM_INVALID');
+    expect(calls.mock.calls.filter(([key]) => key === HISTORY)).toHaveLength(0);
+    expect(ports26.bytes.has(HISTORY)).toBe(false);
+    expect(ports26.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(false);
   });
 
   it('retains all previous facts across ordinary source mutations', async () => {
@@ -282,8 +298,8 @@ describe('Campaign45 genuine encrypted owner plan history', () => {
     await expect(savePlanHistory45(snapshot, lease, request())).rejects.toThrow('PRIVATE_KV_WRITE_ROLLBACK_FAILED');
     expect(ports26.bytes.get(HISTORY)).toBe('synthetic45-foreign-ambiguity');
     expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
-    expect(isLocalDataCleanupRequiredInMemory()).toBe(true);
-    expect(ports26.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+    expect(isLocalDataCleanupRequiredInMemory()).toBe(false);
+    expect(decodeHistoryIntentMarker45(ports26.bytes.get('layerwell.localDataCleanupRequired.v1')!).kind).toBe('routine-plan-history');
     await grant26();
     await expect(loadPlanHistory45(captureHealthDataWriteLease())).rejects.toThrow('PRIVATE_KV_RECOVERY_REQUIRED');
   });
@@ -301,7 +317,7 @@ describe('Campaign45 genuine encrypted owner plan history', () => {
     await expect(savePlanHistory45(snapshot, lease, request())).rejects.toThrow('PRIVATE_KV_WRITE_ROLLBACK_FAILED');
     await grant26();
     await expect(loadPlanHistory45(captureHealthDataWriteLease())).rejects.toThrow('PRIVATE_KV_RECOVERY_REQUIRED');
-    expect(ports26.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+    expect(decodeHistoryIntentMarker45(ports26.bytes.get('layerwell.localDataCleanupRequired.v1')!).kind).toBe('routine-plan-history');
   });
 
   for (const bad of ['malformed', 'future', 'wrong-owner', 'oversized', 'duplicate-id', 'bad-time', 'sequence', 'bad-am-pm']) {
@@ -315,7 +331,8 @@ describe('Campaign45 genuine encrypted owner plan history', () => {
       if (bad === 'bad-time') row.versions[0].createdAt = '2026-02-30T00:00:00.000Z';
       if (bad === 'sequence') row.versions[0].sequence = 2;
       if (bad === 'bad-am-pm') row.versions[0].pm = {};
-      await setPrivateItem(HISTORY, bad === 'malformed' ? '{invalid' : bad === 'oversized' ? 'x'.repeat(1_048_577) : JSON.stringify(row));
+      await appendPlanHistoryWithSources44(snapshot, lease, () =>
+        bad === 'malformed' ? '{invalid' : bad === 'oversized' ? 'x'.repeat(1_048_577) : JSON.stringify(row));
       const before = ports26.bytes.get(HISTORY);
       await expect(loadPlanHistory45(lease)).rejects.toThrow();
       await expect(savePlanHistory45(snapshot, lease, request())).rejects.toThrow();

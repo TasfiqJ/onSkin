@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { QueryClient } from '@tanstack/react-query';
+import type { HealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
 
 import {
   shouldClearLocalPrivateDataForSessionChange,
@@ -13,6 +14,135 @@ import {
 import { LOCAL_DATA_CLEANUP_REQUIRED_KEY } from './sessionOwnerKey';
 
 const CLEANUP_REQUIRED_VALUE = '1';
+
+type HistoryIntentMarker45 = Readonly<{
+  v: 1;
+  kind: 'routine-plan-history';
+  ownerBinding: string;
+  nonce: string;
+}>;
+export type PlanHistoryMutationIntent45 = Readonly<{ kind: 'history-mutation-capability45' }>;
+type HistoryIntentClaim45 = { raw: string | null; active: boolean };
+const historyIntentClaims45 = new Set<HistoryIntentClaim45>();
+const historyIntentTokens45 = new WeakMap<PlanHistoryMutationIntent45, HistoryIntentClaim45>();
+export const LOCAL_DATA_HISTORY_RECOVERY_REQUIRED = 'LOCAL_DATA_HISTORY_RECOVERY_REQUIRED';
+
+/** Content-free control state, never a destructive-cleanup authorization. */
+export function decodeHistoryIntentMarker45(raw: string): HistoryIntentMarker45 {
+  if (typeof raw !== 'string' || raw.length > 256) throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+  let value: unknown;
+  try { value = JSON.parse(raw) as unknown; } catch { throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED); }
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+  }
+  const row = value as Record<string, unknown>;
+  if (Object.keys(row).sort().join(',') !== 'kind,nonce,ownerBinding,v' ||
+      row.v !== 1 || row.kind !== 'routine-plan-history' ||
+      typeof row.ownerBinding !== 'string' || !/^[a-f0-9]{64}$/u.test(row.ownerBinding) ||
+      typeof row.nonce !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u.test(row.nonce)) {
+    throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+  }
+  if (raw !== JSON.stringify({ v: 1, kind: row.kind, ownerBinding: row.ownerBinding, nonce: row.nonce })) {
+    throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+  }
+  return row as HistoryIntentMarker45;
+}
+
+function destructiveClaimPending45(): boolean {
+  return cleanupRequiredInMemory || [...cleanupMarkerClaims].some((claim) =>
+    claim.active || claim.pendingMark || claim.required);
+}
+
+/** Also used on raw reads/export: absence must be freshly confirmed, never cached. */
+export async function assertPlanHistoryReadable45(): Promise<void> {
+  if (historyIntentClaims45.size > 0 || destructiveClaimPending45()) {
+    throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+  }
+  const raw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+  if (raw !== null || historyIntentClaims45.size > 0 || destructiveClaimPending45()) {
+    throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+  }
+}
+
+/** Called under the history destination reservation, before any native mutation.
+ * The marker FIFO never waits for a privateKV/account/photo drain. */
+export function armPlanHistoryMutation45(lease: HealthDataWriteLease): Promise<PlanHistoryMutationIntent45> {
+  if (historyIntentClaims45.size > 0 || destructiveClaimPending45()) {
+    return Promise.reject(new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED));
+  }
+  const claim: HistoryIntentClaim45 = { raw: null, active: true };
+  const token = Object.freeze({ kind: 'history-mutation-capability45' } as const);
+  historyIntentClaims45.add(claim); // synchronous read quarantine, before native dispatch
+  historyIntentTokens45.set(token, claim);
+  return serializeCleanupMarker(async () => {
+    try {
+      const admission = await import('@/lib/consent/healthDataWriteAdmission');
+      admission.assertOriginalHealthDataWriteLease(lease);
+      const owner = await import('./sessionOwner');
+      const Crypto = await import('expo-crypto');
+      const proof = await owner.readLocalDataOwnerProof();
+      const binding = await owner.localDataOwnerBinding(lease.ownerUserId);
+      admission.assertOriginalHealthDataWriteLease(lease);
+      if (proof.kind !== 'owned' || proof.ownerBinding !== binding || destructiveClaimPending45() ||
+          await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== null) {
+        throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+      }
+      claim.raw = JSON.stringify({ v: 1, kind: 'routine-plan-history', ownerBinding: binding,
+        nonce: Crypto.randomUUID() } satisfies HistoryIntentMarker45);
+      decodeHistoryIntentMarker45(claim.raw);
+      await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, claim.raw);
+      if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== claim.raw || destructiveClaimPending45()) {
+        throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+      }
+      admission.assertOriginalHealthDataWriteLease(lease);
+      return token;
+    } catch (error) {
+      // Nothing in the destination has been dispatched. Proven native absence
+      // releases this volatile claim; ambiguous persistence remains blocked.
+      try {
+        if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) === null) {
+          claim.active = false;
+          historyIntentClaims45.delete(claim);
+        }
+      } catch { /* Lack of readback never proves absence. */ }
+      throw error;
+    }
+  });
+}
+
+/** Only the original capability can release its own exact marker. Called only
+ * after canonical destination confirmation OR verified exact compensation. */
+export function finishPlanHistoryMutation45(token: PlanHistoryMutationIntent45): Promise<void> {
+  const claim = historyIntentTokens45.get(token);
+  if (!claim?.active || claim.raw === null) return Promise.reject(new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED));
+  const expectedRaw = claim.raw;
+  return serializeCleanupMarker(async () => {
+    if (!claim.active || destructiveClaimPending45() ||
+        await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== expectedRaw) {
+      throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+    }
+    try {
+      await AsyncStorage.removeItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+      if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== null || destructiveClaimPending45()) {
+        throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+      }
+    } catch (error) {
+      // A synchronous destructive claim may arrive during held native remove.
+      // Restore its legacy marker, never replace it with a harmless intent.
+      if (destructiveClaimPending45()) await restoreRequiredCleanupMarker();
+      else {
+        try {
+          if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) === null) {
+            await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, expectedRaw);
+          }
+        } catch { /* Confirmed destination is safe; current process stays blocked. */ }
+      }
+      throw error;
+    }
+    claim.active = false;
+    historyIntentClaims45.delete(claim);
+  });
+}
 
 let cleanupRequiredInMemory = false;
 
@@ -57,6 +187,10 @@ function rememberExistingCleanupMarker(
   adoptable: Set<CleanupMarkerClaim>,
   mayAdoptExisting: boolean,
 ): void {
+  if (raw !== null && raw !== CLEANUP_REQUIRED_VALUE) {
+    decodeHistoryIntentMarker45(raw);
+    return; // explicit cleanup supersedes history maintenance, not another cleanup
+  }
   if (raw === null || [...cleanupMarkerClaims].some((claim) => claim.required)) return;
   // A marker present at process entry has no in-memory owner. A whole cleanup
   // may adopt it; a private-only helper must preserve the broader recovery.
@@ -171,6 +305,11 @@ export function clearLocalDataCleanupRequired(
   const clearing = serializeCleanupMarker(async () => {
     if (claim && !claim.active) throw new Error(LOCAL_DATA_CLEANUP_MARKER_SCOPE_INVALID);
     const previous = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+    if (previous !== null && previous !== CLEANUP_REQUIRED_VALUE) {
+      // Clearing the destructive marker is not an intent cancellation API.
+      // A genuine destructive mark must precede a cleanup's own clear.
+      throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
+    }
     rememberExistingCleanupMarker(previous, adoptable, claim === null);
     const retainOtherOwner = async () => {
       await restoreRequiredCleanupMarker();
@@ -200,6 +339,8 @@ export function clearLocalDataCleanupRequired(
     }
     if (claim) releaseCleanupMarkerClaim(claim, true);
     cleanupRequiredInMemory = false;
+    for (const historyClaim of historyIntentClaims45) historyClaim.active = false;
+    historyIntentClaims45.clear();
     return true;
   });
   return scope === undefined ? clearing.then(() => undefined) : clearing;

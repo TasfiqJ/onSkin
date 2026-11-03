@@ -24,7 +24,7 @@ class AdmissionControls(unittest.TestCase):
 
     def setUp(self):
         self.bodies = {p: ('public synthetic fixture '+p).encode() for p in m.SOURCE-{m.TASK}}
-        self.task = dict(schema=1, authority=m.AUTHORITY, base=m.BASE, baseTree=m.BASE_TREE,
+        self.task = dict(schema=1, authority=m.AUTHORITY, additionalAuthorization=m.REPAIR_AUTHORITY, base=m.BASE, baseTree=m.BASE_TREE,
             planCommit=m.PLAN_COMMIT, sourceHashes={p:m.digest(b) for p,b in self.bodies.items()},
             commands=[dict(command=['node','--version'],exit=0,qualification='SYNTHETIC_TEST_ONLY',logSha256=None)],
             acceptanceGranted=False, admissions=dict.fromkeys(m.ADMISSIONS,False), release='NO_GO',
@@ -50,8 +50,8 @@ class AdmissionControls(unittest.TestCase):
 
     def test_exact_task_and_no_self_hash_cycle(self):
         m.task_guard(self.task,self.bodies.__getitem__)
-        self.assertEqual(len(m.SOURCE),36)
-        self.assertEqual(len(m.GRANT),39)
+        self.assertEqual(len(m.SOURCE),38)
+        self.assertEqual(len(m.GRANT),41)
         self.assertNotIn(m.TASK,self.task['sourceHashes'])
 
 
@@ -60,6 +60,7 @@ class AdmissionControls(unittest.TestCase):
 
     def test_fabricated_approval_release_authority_and_parent_refuse(self):
         for key,bad in [('acceptanceGranted',True),('release','GO'),('authority','new grant'),
+            ('additionalAuthorization','unissued extension'),
             ('base','0'*40),('baseTree','0'*40),('planCommit','0'*40),('schema',True),
             ('qualification','ACCEPTED')]:
             value=copy.deepcopy(self.task);value[key]=bad

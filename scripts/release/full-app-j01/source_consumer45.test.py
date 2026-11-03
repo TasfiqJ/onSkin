@@ -41,14 +41,16 @@ def repository(prefix):
 
 
 class SourceControls45(unittest.TestCase):
-    def test_exact_parent_immutable_plan_and_all_thirtynine_preimages(self):
+    def test_exact_parent_immutable_original_plan_and_all_fortyone_preimages(self):
         m.authenticate_parent()
         self.assertEqual(hashlib.sha256((m.ROOT/m.PLAN).read_bytes()).hexdigest(), m.PLAN_SHA)
         self.assertEqual(set(m.BASELINES), m.GRANT)
-        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (39, 36))
+        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (41, 38))
+        self.assertEqual(m.GRANT-m.ORIGINAL_GRANT, m.REPAIR_PATHS)
+        self.assertEqual(m.REPAIR_AUTHORITY, 'BRAIN-C45-MARKER-OWNERSHIP-REPAIR-03')
         self.assertEqual(m.parents(m.PLAN_COMMIT), [m.PLAN_COMMIT, m.BASE])
         plan = m.git('show', m.PLAN_COMMIT+':'+m.PLAN).decode()
-        self.assertEqual(set(re.findall(r'^- `([^`]+)` — (?:ABSENT|SHA256)', plan, re.M)), m.GRANT)
+        self.assertEqual(set(re.findall(r'^- `([^`]+)` — (?:ABSENT|SHA256)', plan, re.M)), m.ORIGINAL_GRANT)
 
     def test_current_diff_finite_and_all_protected_bytes_and_programs_unchanged(self):
         m.primitives().delta(m.git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', m.BASE), m.GRANT)
@@ -57,6 +59,8 @@ class SourceControls45(unittest.TestCase):
         for name, sha in m.PROGRAMS.items():
             self.assertEqual(m.digest(m.regular(m.ROOT/m.PREFIX/name)), sha)
         paths = ('package.json', 'package-lock.json', 'supabase', 'scripts/launch', 'scripts/brain',
+                 'apps/mobile/src/lib/auth/localAccountIsolation.test.ts',
+                 'apps/mobile/src/lib/auth/sessionOwner.test.ts',
                  'apps/mobile/src/lib/consent/healthProcessingEpoch.ts',
                  'scripts/core04', 'scripts/core06', m.PREFIX+'main_integration44.py',
                  m.PREFIX+'main_integration44.test.py', m.PREFIX+'source_consumer44.test.py',

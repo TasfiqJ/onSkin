@@ -27,7 +27,12 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
-import { markLocalDataCleanupRequired, type LocalDataCleanupMarkerRequest } from '@/lib/auth/localAccountIsolation';
+import {
+  armPlanHistoryMutation45,
+  assertPlanHistoryReadable45,
+  finishPlanHistoryMutation45,
+  type PlanHistoryMutationIntent45,
+} from '@/lib/auth/localAccountIsolation';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
@@ -228,6 +233,10 @@ function assertPrivateReadAllowed(key: string): void {
   if (quarantinedMutationKeys.has(key)) throw new Error(PRIVATE_KV_RECOVERY_REQUIRED);
 }
 
+async function assertHistoryKeysReadable45(keys: readonly string[]): Promise<void> {
+  if (keys.includes('layerwell.routinePlanHistory.v1')) await assertPlanHistoryReadable45();
+}
+
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
   const appOwned = isPrivateKVOwnedKey(key);
   let parsed: unknown;
@@ -393,8 +402,10 @@ export async function getPrivateItem(key: string): Promise<string | null> {
   };
   return withOperationTiming('private_kv_read', () =>
     runAccountScopedPrivateOperation(async (generation) => {
+      await assertHistoryKeysReadable45([key]);
       assertPrivateReadAllowed(key);
       const raw = await AsyncStorage.getItem(key);
+      await assertHistoryKeysReadable45([key]);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
       if (!raw) {
@@ -434,6 +445,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
         throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
       }
       failedReadSnapshots.delete(key);
+      await assertHistoryKeysReadable45([key]);
       assertHealthReadCurrent();
       return value;
     }),
@@ -458,9 +470,11 @@ async function readPrivateItems(
   assertHealthReadsCurrent();
   return withOperationTiming('private_kv_batch_read', () =>
     runAccountScopedPrivateOperation(async (generation) => {
+      await assertHistoryKeysReadable45(keys);
       assertHealthReadsCurrent();
       for (const key of keys) assertPrivateReadAllowed(key);
       const entries = await AsyncStorage.multiGet([...keys]);
+      await assertHistoryKeysReadable45(keys);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
       const result = new Map<string, string | null>();
@@ -510,6 +524,7 @@ async function readPrivateItems(
           throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
         }
       }
+      await assertHistoryKeysReadable45(keys);
       assertHealthReadsCurrent();
       return result;
     }),
@@ -547,6 +562,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
   keys: readonly string[],
   assertCurrent: () => void,
 ): Promise<void> {
+  await assertHistoryKeysReadable45(keys);
   assertCurrent();
   await withOperationTiming('private_kv_batch_read', () =>
     runAccountScopedPrivateOperation(async () => {
@@ -604,6 +620,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
       } finally {
         contentKey.fill(0);
       }
+      await assertHistoryKeysReadable45(keys);
     }),
   );
   assertCurrent();
@@ -656,6 +673,7 @@ async function updatePrivateItemWithGuard(
   return withOperationTiming('private_kv_write', () =>
     runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
+        await assertHistoryKeysReadable45([key]);
         assertPrivateReadAllowed(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         assertBeforeNativeWrite?.();
@@ -778,6 +796,8 @@ export async function updatePrivateItem(
   assertAdditionalMutationCurrent?: () => void,
   assertBeforeNativeWrite?: () => void,
 ): Promise<void> {
+  // Historical facts may be appended only through the source-fenced lane.
+  if (key === 'layerwell.routinePlanHistory.v1') throw new Error(PRIVATE_KV_SOURCE_TRANSFORM_INVALID);
   // Generic read/transform/update may expose plaintext to its callback, so a
   // classified key requires exact health authority up front even if the
   // callback later returns null. Privacy-reducing callers use the explicit
@@ -840,6 +860,7 @@ export async function updatePrivateItemWithSources(
         const rawSources = new Map<string, string | null>();
         const values = new Map<string, string | null>();
         let contentKey: Uint8Array | null = null;
+        await assertHistoryKeysReadable45(keys);
         assertAllowed();
         for (const sourceKey of keys) {
           const raw = await assertNoFailedReadRewrite(sourceKey);
@@ -895,6 +916,10 @@ export async function updatePrivateItemWithSources(
         };
         await assertExactSources(existingRaw);
         if (nextValue === currentValue) return;
+        if (key === 'layerwell.routinePlanHistory.v1' && [...new Set(sourceKeys)].sort().join('|') !== [
+          'layerwell.shelf.v1', 'layerwell.skinprofile.v1', 'layerwell.conflict.overrides',
+          'layerwell.healthDataCollectionConsent.v1', 'layerwell.routineOrder.v1',
+        ].sort().join('|')) throw new Error(PRIVATE_KV_SOURCE_TRANSFORM_INVALID);
 
         let committedRaw: string | null = null;
         if (nextValue !== null) {
@@ -912,7 +937,16 @@ export async function updatePrivateItemWithSources(
         await maybeRejectConflictChoiceWrite(key);
         // History also closes the asynchronous content-key/preparation window.
         // Ordinary source writers cannot enter while this union is reserved.
-        if (key === 'layerwell.routinePlanHistory.v1') await assertExactSources(existingRaw);
+        let historyIntent: PlanHistoryMutationIntent45 | undefined;
+        if (key === 'layerwell.routinePlanHistory.v1') {
+          historyIntent = await armPlanHistoryMutation45(healthLeases[keys.indexOf(key)]!);
+          try {
+            await assertExactSources(existingRaw);
+          } catch (error) {
+            await finishPlanHistoryMutation45(historyIntent);
+            throw error;
+          }
+        }
         assertAllowed();
         try {
           // No await separates admission from the actual native invocation.
@@ -937,19 +971,18 @@ export async function updatePrivateItemWithSources(
             if (key === 'layerwell.routinePlanHistory.v1') {
               // A tentative version is never readable or appendable after failed
               // compensation. Close processing before releasing this reservation.
-              // Reuse the existing owned recovery marker; a full cleanup can
-              // later adopt this abandoned claim, a private-only reset cannot.
+              // The content-free intent was durably confirmed BEFORE dispatch.
+              // Retain it across restart; no fallible post-failure marker write
+              // is required, and ordinary recovery cannot authorize deletion.
               quarantinedMutationKeys.add(key);
               clearActiveHealthProcessingEpoch();
-              const request: LocalDataCleanupMarkerRequest = { preserveExisting: true };
-              try { await markLocalDataCleanupRequired(request); }
-              catch { /* Volatile quarantine remains closed if native marker I/O fails. */ }
-              finally { request.scope?.abandon(); }
             }
             throw rollbackError;
           }
+          if (historyIntent) await finishPlanHistoryMutation45(historyIntent);
           throw error;
         }
+        if (historyIntent) await finishPlanHistoryMutation45(historyIntent);
         for (const sourceKey of keys) failedReadSnapshots.delete(sourceKey);
       }),
     ),

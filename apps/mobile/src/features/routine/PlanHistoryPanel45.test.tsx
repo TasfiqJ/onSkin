@@ -19,13 +19,12 @@ import {
 import {
   getPrivateItem,
   removePrivateItem,
-  setPrivateItem,
   waitForPrivateKVWritesToSettle,
 } from '@/lib/storage/privateKV';
 
 import { PlanHistoryPanel45 } from './PlanHistoryPanel45';
 import { loadPlanHistory45, PLAN_HISTORY45_KEY, savePlanHistory45 } from './planHistory45';
-import { capturePlanSource44 } from './planSourceFence44';
+import { appendPlanHistoryWithSources44, capturePlanSource44 } from './planSourceFence44';
 import { usePlan, type RecoverablePlanHookResult } from './usePlan';
 
 let client: QueryClient;
@@ -83,6 +82,7 @@ beforeEach(async () => {
   vi.stubGlobal('__DEV__', true);
   vi.stubGlobal('React', React);
   client = await reset26();
+  await (await import('@/lib/auth/sessionOwner')).claimLocalDataOwnership('synthetic-first-value-a');
   await profile26();
   productId = (await addProduct({ operationId: randomUUID(), name: 'C45 owner cleanser',
     category: 'cleanser', addedVia: 'manual' })).id;
@@ -173,8 +173,12 @@ describe('Campaign45 real encrypted owner Plan panel', () => {
     expect(ports26.bytes.has(PLAN_HISTORY45_KEY)).toBe(false);
     ports26.failWrite = null;
     await press('Retry same save');
-    expect(uuid).toHaveBeenCalledTimes(1);
-    expect((await loadPlanHistory45(captureHealthDataWriteLease())).versions).toHaveLength(1);
+    const saved = await loadPlanHistory45(captureHealthDataWriteLease());
+    expect(saved.versions).toHaveLength(1);
+    // Marker capabilities have independent nonces. The plan retry retains the
+    // original explicit-save ID, rather than consuming another version ID.
+    expect(saved.versions[0]!.id).toBe(uuid.mock.results[0]!.value);
+    expect(uuid.mock.results.filter((result) => result.value === saved.versions[0]!.id)).toHaveLength(1);
     expect(text(renderer!.root)).toContain('Plan saved on this device.');
   });
 
@@ -263,7 +267,9 @@ describe('Campaign45 real encrypted owner Plan panel', () => {
   });
 
   it('never renders invalid encrypted history as empty or leaks its payload', async () => {
-    await setPrivateItem(PLAN_HISTORY45_KEY, '{"schemaVersion":99,"secret":"C45 forbidden plaintext"}');
+    const lease = captureHealthDataWriteLease();
+    await appendPlanHistoryWithSources44(await capturePlanSource44(lease), lease, () =>
+      '{"schemaVersion":99,"secret":"C45 forbidden plaintext"}');
     const originalRaw = ports26.bytes.get(PLAN_HISTORY45_KEY);
     await mount();
     expect(text(renderer!.root)).toContain('Saved plans are unavailable.');
