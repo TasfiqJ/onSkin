@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-11-03T00:47:11.247Z
+Generated: 2026-11-03T16:43:04.595Z
 Status: pass
-Git SHA: 3802dd386928a966226e0fd3ec5fa678c561b6a6
+Git SHA: a140cf67b78b61dc12f6c53bd4ec684f8b687b9c
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -327,7 +327,7 @@ Sources:
 
 - `.gitignore` - 1644 bytes - sha256 `066737865fcf01e54f00ead1cd32e4cc46e3b8571ffc0bbf685113da5059469a`
 - `package.json` - 47029 bytes - sha256 `1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9`
-- `.github/workflows/quality.yml` - 16985 bytes - sha256 `0ea1bbe82006df100ec489d49c575fd61ee5cb9858772584419a5c2933675ec5`
+- `.github/workflows/quality.yml` - 17374 bytes - sha256 `eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf`
 - `docs/phase-4/catalog-curation-release-runbook.md` - 45531 bytes - sha256 `92a0b946a5e431e787f95d0513289ef1938a8964b23272d329f5cb15395d2be9`
 - `docs/phase-4/catalog-coverage-quality-targets.template.json` - 9406 bytes - sha256 `bd6a316f1d520cee3d5ef347d82bff445cbf810b0ca5c8a551b0c13a083dca7a`
 - `docs/phase-4/beta-shelf-corpus.template.json` - 24378 bytes - sha256 `eab0f3ab1ac78f53307b69976163c9edd07350a7fdc5dd52c05cb7c3b40106d5`
@@ -436,7 +436,7 @@ Sources:
 - `apps/mobile/src/features/shelf/mutations.ts` - 6290 bytes - sha256 `33267719ade4f0312c2b2c1809fded621488957e1fcf1d0651a523399bf5b9c9`
 - `apps/mobile/src/features/shelf/mutationsRecovery.test.ts` - 7270 bytes - sha256 `34703661402d4baa2bc2d36acd860432ab033de5b9c71baf7c4b67e671a47e88`
 - `apps/mobile/src/features/shelf/openingClock.campaign25.test.ts` - 4143 bytes - sha256 `40c1b51f8080c005a09fcbe65346f742db82af3c7f8c0763b7060515d4611a6a`
-- `apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts` - 16416 bytes - sha256 `f550a350ea02c2a313b599aae81d7d8a4b95eb9f35798baccc238054e21809a9`
+- `apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts` - 17440 bytes - sha256 `138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56`
 - `apps/mobile/src/features/shelf/ownedBottleVersion38.ts` - 7162 bytes - sha256 `7ba9b94542d1f22c0d6587d22dfd998a465f46d1af14ef6aa7c019726c70f6c5`
 - `apps/mobile/src/features/shelf/pairedConflicts.ts` - 766 bytes - sha256 `eb4cc3b857828ae8d123890b0771a44fe57e73e29da3e6207604fd3ed640a918`
 - `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
