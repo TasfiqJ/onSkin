@@ -52,6 +52,23 @@ vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
 } }));
 
 const KEY = 'layerwell.shelf.v1';
+
+// Corruption must change authenticated bytes even when the original starts00.
+function corruptFirstCiphertextByte45(hex: string): string {
+  return `${(Number.parseInt(hex.slice(0, 2), 16) ^ 1).toString(16).padStart(2, '0')}${hex.slice(2)}`;
+}
+
+it('guarantees ciphertext fixture mutation for every original byte, including00', () => {
+  for (let byte = 0; byte <= 255; byte += 1) {
+    const original = `${byte.toString(16).padStart(2, '0')}abcd`;
+    const damaged = corruptFirstCiphertextByte45(original);
+    expect(damaged).not.toBe(original);
+    expect(damaged).toMatch(/^[a-f0-9]{6}$/u);
+    expect(damaged.slice(2)).toBe(original.slice(2));
+    expect(Number.parseInt(damaged.slice(0, 2), 16)).toBe(byte ^ 1);
+  }
+  expect(corruptFirstCiphertextByte45('00abcd')).toBe('01abcd');
+});
 const product: ProductIdentitySource38 = {
   id: 'bottle-a', name: 'Owner cream', brand: null, barcode: null, category: 'moisturizer',
   addedVia: 'manual', catalogSource: 'user_local', catalogMatchQuality: 'manual', ingredientParseStatus: null,
@@ -227,8 +244,14 @@ describe('history38 through real encrypted privateKV and health/account leases',
     await expect(loadOwnedBottleHistory38(owned.id)).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
     expect(ports.raw.get(KEY)).toBe(prior);
     ports.rejectKeyRead = false;
-    const damaged = JSON.parse(prior); damaged.ciphertextHex = `00${damaged.ciphertextHex.slice(2)}`;
-    const corrupt = JSON.stringify(damaged); ports.raw.set(KEY, corrupt);
+    const damaged = JSON.parse(prior);
+    const originalHex = damaged.ciphertextHex as string;
+    damaged.ciphertextHex = corruptFirstCiphertextByte45(originalHex);
+    expect(damaged.ciphertextHex).not.toBe(originalHex);
+    expect(damaged.ciphertextHex).toHaveLength(originalHex.length);
+    const corrupt = JSON.stringify(damaged);
+    expect(corrupt).not.toBe(prior);
+    ports.raw.set(KEY, corrupt);
     await expect(loadOwnedBottleHistory38(owned.id)).rejects.toThrow('PRIVATE_KV_DECRYPTION_FAILED');
     await expect(updateProduct(owned.id, { name: 'Must not reset' })).rejects.toThrow();
     expect(ports.raw.get(KEY)).toBe(corrupt);

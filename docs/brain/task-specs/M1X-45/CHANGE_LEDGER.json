@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-C45-AUTONOMOUS-CLOSURE-04",
+  "originalPlanCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
+  "frozenPlanSha256": "43dec79273fad05121ce5aaf0d13100b708a3e0fc7585c5760e25b7cf6b474f6",
+  "preservedRepair03Checkpoint": "0f1521d639e54c44d30457faa463c2bff1e08bb1",
+  "preservedRepair03Tree": "76de39be856a33b3731222e238d2e4cce4329b7f",
+  "scopePolicy": "Task-bounded necessity; exact final exercised inventory, no wildcard acceptance",
+  "additionalPaths": [
+    {
+      "path": "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json",
+      "authority": "BRAIN-C45-AUTONOMOUS-CLOSURE-04",
+      "recordedBeforeFirstEdit": true,
+      "preimageCommit": "0f1521d639e54c44d30457faa463c2bff1e08bb1",
+      "preimageSha256": null,
+      "preimageBytes": null,
+      "causalNecessity": "Immutable authorization/change trace and exact final exercised inventory",
+      "affectedInvariant": "Preserve original plan while enforcing exact path authority",
+      "plannedValidation": "C45 finite-ledger tests, final preimages/diff/path audit"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts",
+      "authority": "BRAIN-C45-AUTONOMOUS-CLOSURE-04",
+      "recordedBeforeFirstEdit": true,
+      "preimageCommit": "0f1521d639e54c44d30457faa463c2bff1e08bb1",
+      "preimageSha256": "f550a350ea02c2a313b599aae81d7d8a4b95eb9f35798baccc238054e21809a9",
+      "preimageBytes": 16416,
+      "causalNecessity": "Guaranteed corruption fixture mutation including original00 byte",
+      "affectedInvariant": "Authenticated valid ciphertext must remain readable; fixture must actually mutate",
+      "plannedValidation": "Isolated bottle, Shelf/privateKV selections, final root; deterministic00 check"
+    },
+    {
+      "path": "scripts/release/full-app-j01/historicalReplay45.py",
+      "authority": "BRAIN-C45-AUTONOMOUS-CLOSURE-04",
+      "recordedBeforeFirstEdit": true,
+      "preimageCommit": "0f1521d639e54c44d30457faa463c2bff1e08bb1",
+      "preimageSha256": null,
+      "preimageBytes": null,
+      "causalNecessity": "Resilient authenticated historical replay with bounded retries and checkpoints",
+      "affectedInvariant": "No source/API substitution; actual exits/digests and pinned unchanged fixtures",
+      "plannedValidation": "Wrapper unit tests, complete original44-through29 commands and final live refs"
+    },
+    {
+      "path": "scripts/release/full-app-j01/historicalReplay45.test.py",
+      "authority": "BRAIN-C45-AUTONOMOUS-CLOSURE-04",
+      "recordedBeforeFirstEdit": true,
+      "preimageCommit": "0f1521d639e54c44d30457faa463c2bff1e08bb1",
+      "preimageSha256": null,
+      "preimageBytes": null,
+      "causalNecessity": "Adversarial tests for historical retry/checkpoint refusal",
+      "affectedInvariant": "Semantic/custody failures may not become infrastructure passes",
+      "plannedValidation": "Run all C45 finite and orchestration tests with negative receipt/source substitutions"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "C04-00",
+      "decision": "Supplemental ZIP23000bytes SHA256746818a5073f18f6f737942d295447895c81f0283efbf2a8016e1fe75df740d5; manifest59f87d669f2984b2ac4d4993a49f13d484f09be678427b7357b9373fc48978ca; verifier67b40f67c304fce319e45c959c59f3227eacb3cca32b88c6dbbce2227b04cda8; raw prompt15466bytes254407988c963c495c138d5c039f32be60c012967a64d4fb2455c421ce4c2868. Authenticated safe extraction and C45_CLOSURE04_CONTEXT_VERIFIED before source edits. This mandate supersedes file ceiling/stop-on-red/local-commit ban, never product safety or release gates."
+    },
+    {
+      "id": "C04-01",
+      "decision": "Preserve exact Repair03 in truthful local checkpoint with red results; do not seal/push until required source and replay pass"
+    },
+    {
+      "id": "C04-02",
+      "decision": "Run independent historical work despite unrelated test repairs; retry only classified infrastructure failures, preserve all attempts and actual exits"
+    },
+    {
+      "id": "C04-03",
+      "decision": "Bottle fixture flips one bit of first ciphertext byte and asserts actual ciphertext/envelope mutation; deterministic all256-byte test includes00; production crypto unchanged. Original fixture/red proof preserved."
+    },
+    {
+      "id": "C04-04",
+      "decision": "Controlled React RED: native history read gated, Query timer delivery held; active fetch count0 while rendered source still loading/refreshing and capture pending/idle. Runtime correctly refused Save. Replace cache-idle heuristic with observable committed source/capture/render completion and finite diagnostic timeout, no readiness injection."
+    },
+    {
+      "id": "C04-05",
+      "decision": "History linearizes at canonical native destination/source/authority confirmation under6locks, before marker retirement. Controlled late authority retirement rejects stale result but does not undo earlier confirmed facts after durable intent retirement. Genuine selective withdrawal drains then purges; two new encrypted controls pass. No physical-device inference."
+    }
+  ]
+}
