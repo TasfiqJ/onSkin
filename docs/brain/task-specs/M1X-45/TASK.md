@@ -6,7 +6,7 @@
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
     ".github/workflows/quality.yml": "eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf",
-    "PROGRESS.md": "e69d02314a26bcd6c94bf38a695279efebecc25b151ceec63dfbb742ac2da354",
+    "PROGRESS.md": "4fe8e85d1bc251bd0120f94abc6f4010f6c9bb33f6ca33bbfac451804ef01767",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -17,7 +17,7 @@
     "apps/mobile/src/features/routine/usePlan.test.ts": "340ef5d081f2ae9aa0d27ac65ecaf081fe8aa842f90e3df34dc290db035820f8",
     "apps/mobile/src/features/settings/localDeviceExport.test.ts": "e4424e2cc304b453e4d5c0db6f0d4bb2c9887859acbbc68e44cfc19fcd83d579",
     "apps/mobile/src/features/settings/localDeviceExport.ts": "fe68af8f82ef1c8496c0f22b1018e2b6fe500eee45defba5a36b6ec2f552e851",
-    "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts": "3ca6c8d65398ea1b95807b0fadfacc484b6d087e254c7b07b0969c2b00c1a4e2",
+    "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts": "8209900541d9426287675b2797c0cb5fd1eec9350e35db9620026fff066db501",
     "apps/mobile/src/features/settings/localPrivateDataKeys.test.ts": "3918cf3883603a0f695b23b0b23ab3efcdfedf7fde2d0772c943969809672330",
     "apps/mobile/src/features/settings/localPrivateDataKeys.ts": "b0a6f1f8cb776af0549f44dc44d5c7e6cfa2828e5c0d2f201ec48a983c695d8f",
     "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
@@ -27,8 +27,8 @@
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
     "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts": "2abac4d5fcedb4905d57d24245dcc122980161ceb449224ec896510d8495ea6d",
     "apps/mobile/src/lib/storage/privateKV.ts": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "9a1bfc7d7cd96dedee990241be50456accda56623ad4f088a73abd2a28074ecd",
-    "docs/release/full-app-j01/owner-plan-history45.md": "7e1e0e6b919c66faab3b8c1aeaf2b25dd392e90ff11d07cdc6aacb950aaf4225",
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "ebb55733c3937edee12ba040553bf2bdb95be97b33101e5c71b3d396856a7dc7",
+    "docs/release/full-app-j01/owner-plan-history45.md": "c3f10ea245f2ed4bec0503e28c5301a58541b9e87852108582308c8d3cfea02e",
     "scripts/release/full-app-j01/historicalReplay45.py": "a12137717b55ed4cd1edf055e1f0572679f7bbf7b7adc40bf104bc4372bb527d",
     "scripts/release/full-app-j01/historicalReplay45.test.py": "1c2df03ed3ee0fefe65dca2972eaeba94ca5e50b37cee988c9ff145ddbe17263",
     "scripts/release/full-app-j01/main_integration45.py": "f421f148feeb33c73b86afdaccdd83e8429c8c4b7af830b98bb18eb9127d11b4",
@@ -733,6 +733,20 @@
       "exit": 1,
       "qualification": "C04_PRESERVED_FIRST_HEAD_HOSTED_PORTABILITY_FAILURE_NOT_FINAL_SOURCE_SUCCESS",
       "logSha256": "3b0061d38e757f081d6005b3b63c8299869b652f7ce76e9de924990c493580ba"
+    },
+    {
+      "command": [
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign45-node20-native-ejo4dscg\\node.exe",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign45-source-20261103\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "src/features/settings/localPrivateDataFence44.test.ts",
+        "--no-cache",
+        "--passWithNoTests=false",
+        "--reporter=verbose"
+      ],
+      "exit": 1,
+      "qualification": "C04_COMMITTED449_FULL_NATIVE20_51_PASS52_PRE_ASSERTION_ERRORS_ORDERING_RED_NOT_PASS",
+      "logSha256": "e8e214d6a17d8595867b28f942ed0c9020237e35c8586aef84e68c02376eaf66"
     }
   ],
   "acceptanceGranted": false,

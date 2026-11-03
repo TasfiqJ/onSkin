@@ -131,6 +131,10 @@
     {
       "id": "C04-16",
       "decision": "Append-only reseal guard pins earlier812/a140/tree118 exactly by literal SHA/tree/single-parent/exact2generated delta. Every declared checkpoint is mandatory in order; a genuine later source commit is required; only known generated deltas are excluded from source union, aggregate includes their inherited2files, and newestLASTseal remains exactly2generatedfiles. Cap32, frozen original plan, exact46-path preimages, original assertions and all38/18 nonadmissions remain. Real Git counterexample plus strengthened pure/native-Git successors preserved; current main34/helper26/source18 and Node20/22 native/fullroot tests must run after this committed global freeze. Earlier812 CI failures and source capture remain historical, never final-head validation. SameDRAFTPR46/branch only, no merge, deployment, credentials, backend, package/lock or iOS-workflow edits."
+    },
+    {
+      "id": "C04-17",
+      "decision": "Actual whole native Node20 run on committed449 remained51PASS/52FAIL103, raw e8e214d6a17d8595867b28f942ed0c9020237e35c8586aef84e68c02376eaf66, all33source/46grant+configs/index unchanged. Corrected diagnosis: the real factory DOES honor supplied WebSocket; first whole-file C45 export test imports the genuine client BEFORE prepareHistory45 capability setup, caching the missing-port error. Filtered11 development order prepared first and was insufficient, not full-proof. Add only beforeEach(ensureNativeCapabilities45) before all testbodies; keep original C44prefix, all103 assertions, real crypto/owner/admission/Supabase, real ws/native capability and cumulative zero transport guards. No Node-version spoof, success mock, production auth policy or workflow change. Preserve449commit/red and prior mistaken hypothesis qualification. New committed source must execute complete native20/native22/mobile20 and all mandatory final checks before reseal/push."
     }
   ]
 }

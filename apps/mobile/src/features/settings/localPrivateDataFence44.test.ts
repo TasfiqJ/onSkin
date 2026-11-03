@@ -1083,6 +1083,8 @@ async function ensureNativeCapabilities45() {
   }
 }
 
+beforeEach(ensureNativeCapabilities45);
+
 const { afterAll: afterAll45 } = await import('vitest');
 afterAll45(() => {
   // Cumulative counters cannot be reset by a module restart or a later test.
