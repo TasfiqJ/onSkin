@@ -39,6 +39,7 @@ LEDGER = 'docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json'
 # Final exercised inventory remains finite; amendments are explicit preimages,
 # never a wildcard authorizing all files beneath a delegated directory.
 CLOSURE_PATHS = {LEDGER, 'apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts',
+                 'apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts',
                  PREFIX+'historicalReplay45.py', PREFIX+'historicalReplay45.test.py'}
 PHASES = ('SOURCE_PENDING', 'SOURCE_FROZEN')
 WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
@@ -362,7 +363,8 @@ def authenticate_parent():
         need(parents(commit) == [commit, prior] and text('rev-parse', commit+'^{tree}') == tree,
              'R45_AUTHENTICATED_DIAGNOSTIC_HISTORY')
         prior = commit
-    need(set(BASELINES) == GRANT and len(ORIGINAL_GRANT) == 39 and len(GRANT) == 45 and
+    need(set(BASELINES) == GRANT and len(ORIGINAL_GRANT) == 39 and len(CLOSURE_PATHS) == 5 and
+         len(GRANT) == 46 and
          GRANT-ORIGINAL_GRANT == REPAIR_PATHS|CLOSURE_PATHS, 'R45_BASELINE_INVENTORY')
     for path, entry in BASELINES.items():
         mode, blob, sha, size = entry
@@ -828,6 +830,7 @@ def main():
 
 # Exact pinned PR45 preimages, not a regenerated source grant.
 BASELINES = {
+    'apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts': ('100644', '41e0281da9b2335eb4d9a72d8afc32a86e6228e2', 'd6f6d14e558078ce4d07ef72c166a3c8b43b3b79b1f1e5bb0764dad9530eb1dd', 13144),
     'docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json': (None, None, None, None),
     'apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts': ('100644', '929f1eaf4aa54f67fcd34c5d921ae61250bff344', 'f550a350ea02c2a313b599aae81d7d8a4b95eb9f35798baccc238054e21809a9', 16416),
     'scripts/release/full-app-j01/historicalReplay45.py': (None, None, None, None),

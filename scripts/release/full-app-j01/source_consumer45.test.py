@@ -69,7 +69,7 @@ class SourceControls45(unittest.TestCase):
         m.authenticate_parent()
         self.assertEqual(hashlib.sha256((m.ROOT/m.PLAN).read_bytes()).hexdigest(), m.PLAN_SHA)
         self.assertEqual(set(m.BASELINES), m.GRANT)
-        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (45, 42))
+        self.assertEqual((len(m.GRANT), len(m.SOURCE), len(m.CLOSURE_PATHS)), (46, 43, 5))
         self.assertEqual(m.GRANT-m.ORIGINAL_GRANT, m.REPAIR_PATHS|m.CLOSURE_PATHS)
         self.assertEqual(m.REPAIR_AUTHORITY, 'BRAIN-C45-MARKER-OWNERSHIP-REPAIR-03')
         self.assertEqual(m.CLOSURE_AUTHORITY, 'BRAIN-C45-AUTONOMOUS-CLOSURE-04')

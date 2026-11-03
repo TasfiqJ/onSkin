@@ -53,8 +53,9 @@ class AdmissionControls(unittest.TestCase):
 
     def test_exact_task_and_no_self_hash_cycle(self):
         m.task_guard(self.task,self.bodies.__getitem__)
-        self.assertEqual(len(m.SOURCE),42)
-        self.assertEqual(len(m.GRANT),45)
+        self.assertEqual(len(m.SOURCE),43)
+        self.assertEqual(len(m.GRANT),46)
+        self.assertEqual(len(m.CLOSURE_PATHS),5)
         self.assertNotIn(m.TASK,self.task['sourceHashes'])
 
 

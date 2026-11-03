@@ -6,7 +6,7 @@
   "planCommit": "054f2adf7169fa2c7da8b29150193835b27e62c0",
   "sourceHashes": {
     ".github/workflows/quality.yml": "eef5f8d6f0a90d251a9fc154fdf2e1eaf37a07572f1396c337a95555e4ce1fcf",
-    "PROGRESS.md": "8b126fcb6b738602c9c5eb8e9c58c81b9a4ce626b985e5a4bcfd68d92f221f85",
+    "PROGRESS.md": "d5f49d6101a31704b881877589546fff4b91e03820aa233b8779ade5726101c6",
     "apps/mobile/src/app/routine/plan.tsx": "597932ab61f5c3292eb2da7217c242058c9a263992586c561b89d384b265504f",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.test.tsx": "bb97e4815f5b8918548696579924a43d470c0bc3a8ab13bf4c62d5232bb82887",
     "apps/mobile/src/features/routine/PlanHistoryPanel45.tsx": "d1a72785e6518bb7c72fe7e269013c87975abcf32c3af2904c38039fc7f97239",
@@ -25,14 +25,15 @@
     "apps/mobile/src/lib/auth/sessionOwner.ts": "5f892775afaa04cdd2b5d655d12dee5314de3bc77dae57fa304b99e86dc15485",
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts": "27e659c9d242a147ba18ffc235e58d4ad3c1faa7b3c0b41c684c78bc65d0b64d",
     "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6",
+    "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts": "2abac4d5fcedb4905d57d24245dcc122980161ceb449224ec896510d8495ea6d",
     "apps/mobile/src/lib/storage/privateKV.ts": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
-    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "8d74c6acfcc45cd00a22b28cd97e1a284ce9d5f85ea582691f7cabca6aacc8bd",
-    "docs/release/full-app-j01/owner-plan-history45.md": "c423994650257359dc9c623f6c107fb78325aa208a4055380a9142f4f3f89a37",
+    "docs/brain/task-specs/M1X-45/CHANGE_LEDGER.json": "edb98f5570f76c40a1516e534288d718be2f657771c87006af184c56dc14e884",
+    "docs/release/full-app-j01/owner-plan-history45.md": "a1e33a160fce83559308070baa69236345a710a5d2b235efcaa05a2bdddd2ca5",
     "scripts/release/full-app-j01/historicalReplay45.py": "0440de6e0fd5d83fc197348b035d2f473b70a9be6416a06c411a24cf00ced8ca",
     "scripts/release/full-app-j01/historicalReplay45.test.py": "2f21fbfc914d6bd8668f1ce10bb12a8efa7ac2b098dd9432a0a28113a3e92ba7",
-    "scripts/release/full-app-j01/main_integration45.py": "5d56435a463f0c6d39c55c4cb9577748cef229d6f07752d6dce3642d86f314ae",
-    "scripts/release/full-app-j01/main_integration45.test.py": "bcdbb1c73c2be16925d5b4a36d0564a4435ae158e047bafeeb5f1ae99d8a867d",
-    "scripts/release/full-app-j01/source_consumer45.test.py": "31a621583c60baffd3cb3800059901a5118fd4af0e4b55a52c3735064a7356c5"
+    "scripts/release/full-app-j01/main_integration45.py": "4a42c5b138930350807c1d919bd5a1f347da0449ffb5f5445d160e07c2b2445c",
+    "scripts/release/full-app-j01/main_integration45.test.py": "eca16d103c900509a74d78ea9f04043e9ad2adc54cb34de0b54d9c4682191533",
+    "scripts/release/full-app-j01/source_consumer45.test.py": "868e75e1c7d28fd9646ec0cccd9923286e8ec4ae0a76dca9598b0dde83a59162"
   },
   "commands": [
     {
@@ -646,6 +647,45 @@
       "exit": 0,
       "qualification": "C04_HELPER21_PASS_ACTUAL_SINGLE_BRANCH_FOREIGN_CONTROLS_NOT_FULL_COMPOSITE_PROOF",
       "logSha256": "49193b6a8f4655043718713a0859a6351aa0581832cab4596b17fe59c09ac0ce"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--force"
+      ],
+      "exit": 1,
+      "qualification": "C04_FF8_POST_AAD_ROOT_6949_PASS1_STALE_CALL_CONTRACT_RED_NOT_FINAL_PASS",
+      "logSha256": "2bcb3fbcb27a821a01293552b0bc7bb8e96e52a0c163f294d607be292f6a6845"
+    },
+    {
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "scripts/release/full-app-j01/main_integration45.py",
+        "--historical",
+        "--historical-fixture",
+        "C:\\Users\\jasim\\AppData\\Local\\Temp\\integration45-nk1i2x0p\\pr45",
+        "--historical-result",
+        "C:\\Users\\jasim\\Documents\\ChatGPT\\MasterV2Code\\campaign45-closure04-history-z63t4nz7\\hardened-toolchain-checkpoint\\result.json"
+      ],
+      "exit": 4294967295,
+      "qualification": "C04_FF8_DUPLICATE_CURRENT_SOURCE_PREFLIGHT_INTENTIONALLY_STOPPED_FOR_FINITE_CONTRACT_REPAIR_NOT_PASS",
+      "logSha256": "7217d0fb1b5141f04b3a991281992edbe09cdaa2cb6e47e2b82c8dfa0e5b33d1"
+    },
+    {
+      "command": "contract-scope46-isolated.log",
+      "exit": 0,
+      "qualification": "C04_RAW_LOG_REF_STATIC_CONTRACT5_OR_FINITE_MAIN31_NOT_FINAL_SOURCE_PROOF",
+      "logSha256": "e172726e11fb8f08c6681f427e4c5cf20849c914ee59f1c1f4b5811363d6f36c"
+    },
+    {
+      "command": "contract-scope46-main-unit.log",
+      "exit": 0,
+      "qualification": "C04_RAW_LOG_REF_STATIC_CONTRACT5_OR_FINITE_MAIN31_NOT_FINAL_SOURCE_PROOF",
+      "logSha256": "bdd41278512541381e707beefd13b81568996c8476c915189f948e21fccc1b46"
     }
   ],
   "acceptanceGranted": false,

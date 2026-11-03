@@ -237,10 +237,19 @@ describe('health-purpose local write coverage', () => {
       privateKV.indexOf('async function validatePrivateItemsWithoutRetainingPlaintext'),
       privateKV.indexOf('export function assertPrivateKVReadable'),
     );
-    expect(validation).toContain('validateEnvelopeAuthentication(envelope, contentKey)');
+    expect(validation).toContain('validateEnvelopeAuthentication(key, envelope, contentKey)');
     expect(validation).toContain('contentKey.fill(0)');
     expect(validation).not.toContain('bytesToUtf8');
     expect(validation).not.toContain('new Map');
+
+    const authentication = privateKV.slice(
+      privateKV.indexOf('function validateEnvelopeAuthentication('),
+      privateKV.indexOf('function rememberFailedRead('),
+    );
+    expect(authentication).toContain('decryptEnvelopeBytes(key, envelope, contentKey)');
+    expect(authentication).toContain('plaintext.fill(0)');
+    expect(authentication).not.toContain('bytesToUtf8');
+    expect(authentication).not.toContain('decryptEnvelope(');
 
     const exportNote = photos.slice(
       photos.indexOf('export async function decryptPhotoNoteForPurposeLimitedExport'),

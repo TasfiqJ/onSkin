@@ -50,6 +50,17 @@
       "causalNecessity": "Adversarial tests for historical retry/checkpoint refusal",
       "affectedInvariant": "Semantic/custody failures may not become infrastructure passes",
       "plannedValidation": "Run all C45 finite and orchestration tests with negative receipt/source substitutions"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts",
+      "authority": "BRAIN-C45-AUTONOMOUS-CLOSURE-04",
+      "recordedBeforeFirstEdit": true,
+      "preimageCommit": "0f1521d639e54c44d30457faa463c2bff1e08bb1",
+      "preimageSha256": "d6f6d14e558078ce4d07ef72c166a3c8b43b3b79b1f1e5bb0764dad9530eb1dd",
+      "preimageBytes": 13144,
+      "causalNecessity": "Final full-root source contract still expects the old two-argument authentication call; history purpose binding requires the logical key",
+      "affectedInvariant": "Authenticate encrypted startup bytes with exact logical storage purpose while zeroing plaintext and never retaining strings",
+      "plannedValidation": "Preserve original contract in immutable Git/evidence; require key forwarding plus prior buffer-zero/noUTF8/noMap assertions, isolated contract, full root and exact46-path finite proof"
     }
   ],
   "decisions": [
@@ -100,6 +111,14 @@
     {
       "id": "C04-11",
       "decision": "Both bounded repairs frozen: H-only UTF8(fixedhistorykey) AEAD associated data now reaches all six decrypt/authenticate and both encryption sites; no new I/O, queue, storage key or ordinary-store format change. Native relabel11/11 and all10-file359/359 pass, including103 native cleanup/recovery cases. First new-test no-operation assertion mistakenly counted existing absent plaintext-key-shadow removal; corrected to all-native+SecureStore byte fingerprint equality and disallow all other mutation events, preserving failed candidate/log. Original C44 test bytes remain an exact prefix and all prior lines remain in order. Pre-acceptance no-AAD history refuses authentication unchanged, never migrates/rewrites/returns empty. Helper21/21 passes actual missing-future-object single-branch and known foreign commit controls; first fixture CRLF failure retained and fixture clone corrected to reviewed core.autocrlf=false without weakening source guard. Final forced root/type/lint/source/composite checks must measure this repaired source, not earlier b990 passes."
+    },
+    {
+      "id": "C04-12",
+      "decision": "Final ff8 forced-root raw SHA2562bcb3fbcb27a821a01293552b0bc7bb8e96e52a0c163f294d607be292f6a6845:6949 PASS/1 FAIL of6950, zero cached. Only failure is unchanged healthDataWriteAdmissionContracts startup-auth literal expecting old two-argument helper. Record this additional related test path/preimage BEFORE edit; preserve all plaintext-zeroing/no-string assertions and require actual key-aware call. Exact finite inventory expands from45 to46, never wildcard. Duplicate C45 current-source composite at ff8 intentionally stopped before proof so the corrected inventory can be measured; actual exit4294967295/raw7217d0fb... and stop receipt retained, not a pass. Complete original44 normal chain16ef/c83 was already finished and remains unchanged. No new runtime defect or waiver inferred."
+    },
+    {
+      "id": "C04-13",
+      "decision": "New startup-auth contract now requires validateEnvelopeAuthentication(key,envelope,contentKey), retaining existing contentKey.fill(0), noUTF8 and noMap assertions and adding actual decrypt key forwarding/plaintext-byte zero/no-string assertions. Same5 contract tests pass, main31 passes; no discovery/count reduction or runtime change. Exact newpath BASE/0f/ff8 preimage d6f6d14e...13144bytes recorded before edit. C45 finite reader enforces46 total potential paths,43 source-only paths and5 C04 extras with exact preimages, not a directory wildcard. Final metadata now binds all candidate hashes; root/focused/type/lint/route/protected/finite/source/composite proofs must be rerun on the new committed source."
     }
   ]
 }
