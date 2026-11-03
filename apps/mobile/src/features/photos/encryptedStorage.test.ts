@@ -1105,4 +1105,164 @@ describe('encrypted photo storage', () => {
     expect(mocks.asyncStorage.has('layerwell.photos.deleteJournal.v1')).toBe(false);
   });
 
+  it('C44 direct erasure drains pending native key creation before destroying the key', async () => {
+    let entered!: () => void;
+    let release!: () => void;
+    const started = new Promise<void>((done) => { entered = done; });
+    const gate = new Promise<void>((done) => { release = done; });
+    const events: string[] = [];
+    mocks.setItemAsync.mockImplementationOnce(async (key: string, value: string) => {
+      entered();
+      await gate;
+      mocks.secureStorage.set(key, value);
+      events.push('key-created');
+    });
+    mocks.deleteItemAsync.mockImplementation(async (key: string) => {
+      events.push('key-deleted');
+      mocks.secureStorage.delete(key);
+    });
+    const writing = encryptPhotoNote('synthetic C44 pending key').then(
+      () => 'accepted',
+      (error: Error) => error.message,
+    );
+    await started;
+    const clearing = clearEncryptedPhotoStorage();
+    try {
+      await expect(encryptPhotoNote('synthetic late note')).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
+      expect(mocks.deleteAsync).not.toHaveBeenCalled();
+      release();
+      expect(await writing).toBe(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      await clearing;
+      expect(events).toEqual(['key-created', 'key-deleted']);
+      expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+      expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
+      await expect(encryptPhotoNote('synthetic later owner operation')).resolves.toEqual(expect.any(String));
+    } finally {
+      release();
+      await Promise.allSettled([writing, clearing]);
+    }
+  });
+
+  it('C44 direct erasure holds through a native rendition move and its rollback', async () => {
+    const sourceUri = 'file://capture/c44-pending.png';
+    const finalUri = 'file://document/photos/v1/c44-pending.layerwellphoto';
+    mocks.files.set(sourceUri, Buffer.from('synthetic C44 pixels').toString('base64'));
+    let entered!: () => void;
+    let release!: () => void;
+    const started = new Promise<void>((done) => { entered = done; });
+    mocks.moveGate = new Promise<void>((done) => { release = done; });
+    mocks.moveStarted = entered;
+    const deletions: string[] = [];
+    mocks.deleteAsync.mockImplementation(async (uri: string) => {
+      deletions.push(uri);
+      for (const file of [...mocks.files.keys()]) {
+        if (file === uri || file.startsWith(uri.endsWith('/') ? uri : `${uri}/`)) mocks.files.delete(file);
+      }
+    });
+    const writing = encryptPhotoRendition(sourceUri, {
+      photoId: 'c44-pending', captureSessionId: null, rendition: 'original',
+    }).then(() => 'accepted', (error: Error) => error.message);
+    await started;
+    const clearing = clearEncryptedPhotoStorage();
+    try {
+      expect(deletions).not.toContain('file://document/photos/v1/');
+      release();
+      expect(await writing).toBe(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      await clearing;
+      expect(deletions.indexOf(finalUri)).toBeGreaterThanOrEqual(0);
+      expect(deletions.indexOf(finalUri)).toBeLessThan(deletions.indexOf('file://document/photos/v1/'));
+      expect(mocks.files.has(finalUri)).toBe(false);
+      expect([...mocks.files.keys()].some((uri) => uri.includes('c44-pending.layerwellphoto.tmp-'))).toBe(false);
+      expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    } finally {
+      release();
+      await Promise.allSettled([writing, clearing]);
+    }
+  });
+
+  it('C44 inner erasure does not reopen an existing outer photo boundary', async () => {
+    await encryptPhotoNote('synthetic prior note');
+    beginEncryptedPhotoAccountBoundary();
+    try {
+      await clearEncryptedPhotoStorage();
+      await expect(encryptPhotoNote('synthetic prohibited nested note')).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    } finally {
+      endEncryptedPhotoAccountBoundary();
+    }
+    await expect(encryptPhotoNote('synthetic permitted successor')).resolves.toEqual(expect.any(String));
+  });
+
+  it('C44 keeps new operations blocked while native key deletion is held', async () => {
+    await encryptPhotoNote('synthetic prior note');
+    let entered!: () => void;
+    let release!: () => void;
+    const started = new Promise<void>((done) => { entered = done; });
+    const gate = new Promise<void>((done) => { release = done; });
+    mocks.deleteItemAsync.mockImplementationOnce(async (key: string) => {
+      entered();
+      await gate;
+      mocks.secureStorage.delete(key);
+    });
+    const clearing = clearEncryptedPhotoStorage();
+    await started;
+    try {
+      await expect(encryptPhotoNote('synthetic late note')).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      release();
+      await clearing;
+      expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    } finally {
+      release();
+      await Promise.allSettled([clearing]);
+    }
+  });
+
+  it('C44 aggregates native deletion failures and releases only its own boundary', async () => {
+    mocks.secureStorage.set(CONTENT_KEY_NAME, 'a'.repeat(64));
+    mocks.asyncStorage.set(CONTENT_KEY_MARKER, '1');
+    mocks.asyncStorage.set('layerwell.photo.publication_journal.v1', 'synthetic journal');
+    mocks.asyncStorage.set('layerwell.photos.deleteJournal.v1', 'synthetic delete journal');
+    mocks.deleteAsync.mockRejectedValueOnce(new Error('synthetic directory failure'));
+    mocks.deleteItemAsync.mockRejectedValueOnce(new Error('synthetic key deletion failure'));
+    beginEncryptedPhotoAccountBoundary();
+    try {
+      await expect(clearEncryptedPhotoStorage()).rejects.toThrow('PHOTO_STORAGE_CLEAR_FAILED:2');
+      expect(mocks.deleteItemAsync).toHaveBeenCalledWith(CONTENT_KEY_NAME);
+      expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
+      expect(mocks.asyncStorage.has('layerwell.photo.publication_journal.v1')).toBe(false);
+      expect(mocks.asyncStorage.has('layerwell.photos.deleteJournal.v1')).toBe(false);
+      await expect(encryptPhotoNote('synthetic outer remains blocked')).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    } finally {
+      endEncryptedPhotoAccountBoundary();
+    }
+    await expect(encryptPhotoNote('synthetic operation after failed erasure')).resolves.toEqual(expect.any(String));
+  });
+
+  it('C44 overlapping erasures retain exclusion until every native deletion settles', async () => {
+    await encryptPhotoNote('synthetic prior note');
+    let entered!: () => void;
+    let release!: () => void;
+    const started = new Promise<void>((done) => { entered = done; });
+    const gate = new Promise<void>((done) => { release = done; });
+    mocks.deleteItemAsync.mockImplementationOnce(async (key: string) => {
+      entered();
+      await gate;
+      mocks.secureStorage.delete(key);
+    });
+    const first = clearEncryptedPhotoStorage();
+    await started;
+    try {
+      await clearEncryptedPhotoStorage();
+      await expect(encryptPhotoNote('synthetic first purge still pending')).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      release();
+      await first;
+      expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+      await expect(encryptPhotoNote('synthetic after both erasures')).resolves.toEqual(expect.any(String));
+    } finally {
+      release();
+      await Promise.allSettled([first]);
+    }
+  });
+
 });

@@ -2,31 +2,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Platform } from 'react-native';
 
-import {
-  beginEncryptedPhotoAccountBoundary,
-  clearEncryptedPhotoStorage,
-  endEncryptedPhotoAccountBoundary,
-  waitForEncryptedPhotoWritesToSettle,
-} from '@/features/photos/encryptedStorage';
+import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
 import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
 import {
   LOCAL_DATA_OWNER_HASH_KEY,
-  LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
   LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 } from '@/lib/auth/sessionOwnerKey';
-import {
-  AccountGenerationLeaseError,
-  beginAccountGenerationBoundaryFromLease,
-  runAccountGenerationOperation,
-} from '@/lib/auth/accountGeneration';
+import { beginPrivateDataCleanupAccountBoundary } from '@/lib/auth/accountGeneration';
 import {
   clearLocalDataCleanupRequired,
   markLocalDataCleanupRequired,
-} from '@/lib/auth/sessionOwner';
+  type LocalDataCleanupMarkerRequest,
+} from '@/lib/auth/localAccountIsolation';
 import {
   beginPrivateKVAccountBoundary,
   clearPrivateKVContentKey,
@@ -81,12 +72,17 @@ async function clearLocalPrivateDataRecords(finishDevReset?: () => Promise<void>
   } catch {
     failed.push('routine_widget_native_state');
   }
+  // The existing photo clear owns/drains its native writers. Finish that lane
+  // before any registered-record or private-key purge; retain its original
+  // result so every other cleanup is still attempted and failures aggregate.
+  const photoCleanup = clearEncryptedPhotoStorage();
+  await photoCleanup.catch(() => undefined);
   const operations = [
     {
       label: 'registered_records',
       promise: AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS, ...metadataWithoutOwnerProof]),
     },
-    { label: 'encrypted_photos', promise: clearEncryptedPhotoStorage() },
+    { label: 'encrypted_photos', promise: photoCleanup },
     { label: 'private_kv_key', promise: clearPrivateKVContentKey() },
     { label: 'generated_cache', promise: clearGeneratedPrivateCacheFiles() },
     {
@@ -131,47 +127,28 @@ async function clearLocalPrivateDataRecords(finishDevReset?: () => Promise<void>
 async function clearLocalPrivateDataWithBoundary(
   finishDevReset?: () => Promise<void>,
 ): Promise<void> {
-  // Close synchronously, before the account handoff or widget prelude yields.
+  // Every invocation owns its depth, even beneath an unrelated open boundary.
   // Native purge and content-key destruction must follow every older private
   // operation, including its compensation after an ambiguous native mutation.
   beginPrivateKVAccountBoundary();
-  let releaseAccountBoundary: (() => void) | null = null;
-  let enteredAccountHandoff = false;
-  let ownsPhotoBoundary = false;
-  let clearsDirectCleanupMarker = false;
+  const releaseAccountBoundary = beginPrivateDataCleanupAccountBoundary();
+  const markerRequest: LocalDataCleanupMarkerRequest = { preserveExisting: true };
+  let completed = false;
   try {
-    try {
-      releaseAccountBoundary = await runAccountGenerationOperation((lease) => {
-        enteredAccountHandoff = true;
-        return beginAccountGenerationBoundaryFromLease(lease);
-      });
-    } catch (error) {
-      // Existing account/consent cleanup already owns account and photo
-      // exclusion and awaits this helper before releasing it. Do not advance
-      // subject identity again or reopen that enclosing boundary.
-      if (enteredAccountHandoff || !(error instanceof AccountGenerationLeaseError)) throw error;
-    }
-    if (releaseAccountBoundary) {
-      beginEncryptedPhotoAccountBoundary();
-      ownsPhotoBoundary = true;
-      // A direct caller lacks clearAccountIsolatedState's durable retry mark.
-      // If it cannot be committed, do not start destructive cleanup.
-      const previousCleanupMarker = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
-      // An existing recovery marker may cover staging/query cleanup outside
-      // this helper. Only an explicit dev reset may clear that wider state.
-      clearsDirectCleanupMarker = previousCleanupMarker === null || finishDevReset !== undefined;
-      await markLocalDataCleanupRequired();
-    }
+    // The marker module orders prior-marker observation with its scoped mark.
+    // A private-only helper cannot certify broader staging/query recovery.
+    await markLocalDataCleanupRequired(markerRequest);
     await waitForPrivateKVWritesToSettle();
-    if (ownsPhotoBoundary) await waitForEncryptedPhotoWritesToSettle();
     // Do not drain account operations here: a tracked caller can be awaiting
     // this helper. The handoff invalidates its old authority; the storage
-    // drains above cover every native write and rollback before destruction.
+    // private drain and the photo clear's own drain cover native writes and
+    // rollback before their respective destructive calls.
     await clearLocalPrivateDataRecords(finishDevReset);
-    if (clearsDirectCleanupMarker) await clearLocalDataCleanupRequired();
+    await clearLocalDataCleanupRequired(markerRequest.scope);
+    completed = true;
   } finally {
-    if (ownsPhotoBoundary) endEncryptedPhotoAccountBoundary();
-    releaseAccountBoundary?.();
+    if (!completed) markerRequest.scope?.abandon();
+    releaseAccountBoundary();
     endPrivateKVAccountBoundary();
   }
 }
@@ -204,5 +181,12 @@ export function clearLocalPrivateDataForDevReset(
   ) {
     return Promise.reject(new Error('DEV_LOCAL_RESET_DISABLED'));
   }
-  return enqueueLocalPrivateDataCleanup(finishDevReset);
+  return import('@/lib/auth/localAccountIsolation').then(({ clearAccountIsolatedState }) =>
+    clearAccountIsolatedState(undefined, (canCommitControls) =>
+      enqueueLocalPrivateDataCleanup(async () => {
+        if (!canCommitControls()) throw new Error('LOCAL_PRIVATE_DATA_CLEAR_FAILED:wider_cleanup');
+        await finishDevReset();
+      }),
+    ),
+  );
 }

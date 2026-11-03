@@ -87,6 +87,31 @@ describe('local account isolation', () => {
     accountGenerationMocks.waitForAccountGenerationOperationsToSettle.mockClear();
   });
 
+  it('carries the original marker scope through the wider cleanup before clearing it', async () => {
+    const deps = dependencies();
+    const scope = Object.freeze({ abandon: vi.fn() });
+    deps.markCleanupRequired = vi.fn(async (request) => {
+      request!.scope = scope;
+      deps.calls.push('mark:cleanup-required');
+    });
+    await clearAccountIsolatedState(deps);
+    expect(deps.clearCleanupRequired).toHaveBeenCalledExactlyOnceWith(scope);
+    expect(scope.abandon).not.toHaveBeenCalled();
+    expect(deps.calls.at(-1)).toBe('clear:cleanup-required');
+  });
+
+  it('abandons the original marker claim on wider failure while preserving retry quarantine', async () => {
+    const deps = dependencies();
+    const scope = Object.freeze({ abandon: vi.fn() });
+    deps.markCleanupRequired = vi.fn(async (request) => { request!.scope = scope; });
+    vi.mocked(deps.clearPlaintextStaging!).mockRejectedValueOnce(new Error('staging retained'));
+    await expect(clearAccountIsolatedState(deps)).rejects.toThrow('staging retained');
+    expect(scope.abandon).toHaveBeenCalledOnce();
+    expect(deps.clearCleanupRequired).not.toHaveBeenCalled();
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
+    expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
+  });
+
   it('keeps same-user refreshes and claims an unclaimed legacy owner', async () => {
     const deps = dependencies('unclaimed');
 

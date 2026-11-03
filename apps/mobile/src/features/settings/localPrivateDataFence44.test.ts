@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   beginEncryptedPhotoAccountBoundary,
+  clearEncryptedPhotoStorage,
   endEncryptedPhotoAccountBoundary,
   encryptPhotoNote,
   waitForEncryptedPhotoWritesToSettle,
@@ -10,6 +11,7 @@ import {
 import { setHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
 import { saveRoutineOrderOverrides } from '@/features/routine/orderStore';
 import {
+  AccountGenerationLeaseError,
   beginAccountGenerationBoundary,
   captureAccountIdentityGeneration,
   endAccountGenerationBoundary,
@@ -54,6 +56,12 @@ const native = vi.hoisted(() => ({
   failures: new Set<string>(),
   digestHook: null as (() => Promise<void>) | null,
   markerDeliveryHook: null as (() => Promise<void>) | null,
+  purgeHook: null as ((stage: string) => void) | null,
+  configuredForSelective: false,
+  queryCancellations: 0,
+  queryCancelHook: null as (() => Promise<void>) | null,
+  stagingFailure: false,
+  stagingCalls: 0,
   getHook: null as ((key: string, raw: string | null) => Promise<void>) | null,
   setHook: null as ((key: string, raw: string) => Promise<void>) | null,
   secureSetHook: null as ((key: string) => Promise<void>) | null,
@@ -93,8 +101,16 @@ vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
     native.events.push(`remove:${key}`);
   },
   multiRemove: async (keys: string[]) => {
-    const stage = keys.includes('layerwell.routineOrder.v1') ? 'registered_records' : 'owner_proof';
+    const ownerProofOnly = keys.length === 3 && [
+      'layerwell.localDataOwnerHash.v1',
+      'layerwell.localDataRetainedOwnerHash.v1',
+      'layerwell.localDataUnclaimedQuarantine.v1',
+    ].every((key) => keys.includes(key));
+    const stage = keys.includes('layerwell.routineOrder.v1')
+      ? 'registered_records'
+      : ownerProofOnly ? 'owner_proof' : 'dev_controls';
     native.events.push(`purge:${stage}`);
+    native.purgeHook?.(stage);
     if (native.failures.has(stage)) throw new Error(`SYNTHETIC_${stage}`);
     for (const key of keys) native.bytes.delete(key);
   },
@@ -232,6 +248,12 @@ beforeEach(async () => {
   native.failures.clear();
   native.digestHook = null;
   native.markerDeliveryHook = null;
+  native.purgeHook = null;
+  native.configuredForSelective = false;
+  native.queryCancellations = 0;
+  native.queryCancelHook = null;
+  native.stagingFailure = false;
+  native.stagingCalls = 0;
   native.getHook = null;
   native.setHook = null;
   native.secureSetHook = null;
@@ -645,7 +667,31 @@ describe('Campaign44 development Welcome reset continuity', () => {
   });
 });
 vi.mock('@/lib/query/queryClient', () => ({
-  queryClient: { cancelQueries: async () => undefined, clear: () => undefined },
+  queryClient: {
+    cancelQueries: async () => {
+      native.queryCancellations += 1;
+      await native.queryCancelHook?.();
+    },
+    clear: () => undefined,
+  },
+}));
+// Only independent native/vendor effects are synthetic for the selective
+// overlap proof. Its owner check, account/photo/privateKV boundaries and raw
+// erasure remain the real source implementation.
+vi.mock('@/features/notifications/deliver', () => ({
+  waitForHealthNotificationOperationsToSettle: async () => undefined,
+  scheduleTrialReminder: async () => undefined,
+}));
+vi.mock('@/features/photos/sensitiveImageMemory', () => ({ purgeSensitiveImageMemory: async () => true }));
+vi.mock('@/lib/storage/plaintextStaging', () => ({ scavengePlaintextStaging: async () => {
+  native.stagingCalls += 1;
+  if (native.stagingFailure) throw new Error('SYNTHETIC_STAGING_RETAINED');
+  return 0;
+} }));
+vi.mock('@/features/photos/photoDeleteRemoteCleanup', () => ({ erasePhotoDeleteRemoteCleanupForOwner: async () => undefined }));
+vi.mock('@/lib/env', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/env')>()),
+  get isSupabaseConfigured() { return native.configuredForSelective; },
 }));
 
 it('AUDIT: failed wider account cleanup retains its marker across an overlapping direct purge', async () => {
@@ -748,7 +794,12 @@ it('AUDIT: dev reset cannot clear a wider cleanup mark held after native commit 
   const firstRelease = deferred();
   const outerMarkEntered = deferred();
   const outerMarkRelease = deferred();
-  const identity = captureAccountIdentityGeneration();
+  const firstProofPurge = deferred();
+  let firstCompleted = false;
+  native.purgeHook = (stage) => {
+    if (stage === 'owner_proof') firstProofPurge.resolve();
+  };
+  let identity = captureAccountIdentityGeneration();
   let held = false;
   native.secureDeleteHook = async (key) => {
     if (key === PRIVATE_KV_CONTENT_KEY_NAME && !held) {
@@ -768,7 +819,11 @@ it('AUDIT: dev reset cannot clear a wider cleanup mark held after native commit 
       ...prefixed,
     ]);
   }));
+  void first.then(() => { firstCompleted = true; });
   await firstEntered.promise;
+  // A full dev reset may itself establish its account boundary once. The
+  // following assertion concerns B's still-undelivered native marker only.
+  identity = captureAccountIdentityGeneration();
   let markerHeld = false;
   native.markerDeliveryHook = async () => {
     if (!markerHeld) {
@@ -788,13 +843,198 @@ it('AUDIT: dev reset cannot clear a wider cleanup mark held after native commit 
   expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
   expect(captureAccountIdentityGeneration()).toBe(identity);
   firstRelease.resolve();
-  expect(await first).toMatchObject({ status: 'fulfilled' });
+  // Successor scheduling: an earlier native marker IO remains held, so a
+  // correctly serialized final marker release must wait for it. The original
+  // diagnostic80 body/log remains immutable historical evidence.
+  await firstProofPurge.promise;
+  expect(firstCompleted).toBe(false);
+  expect(native.events).not.toContain('remove:layerwell.localDataCleanupRequired.v1');
   expect(captureAccountIdentityGeneration()).toBe(identity);
   const markerAfterDevBeforeOuterBegin = native.bytes.get('layerwell.localDataCleanupRequired.v1') ?? null;
   outerMarkRelease.resolve();
+  expect(await first).toMatchObject({ status: 'fulfilled' });
   expect(await outer).toMatchObject({ status: 'rejected' });
   expect({
     markerAfterDevBeforeOuterBegin,
     markerAfterFailedOuter: native.bytes.get('layerwell.localDataCleanupRequired.v1') ?? null,
   }).toEqual({ markerAfterDevBeforeOuterBegin: '1', markerAfterFailedOuter: '1' });
+});
+
+it('AUDIT_RESUME: direct purge cannot inherit actual selective-consent account/photo lifetime', async () => {
+  const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+  native.configuredForSelective = true;
+  native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+  const postPhotoEntered = deferred();
+  const postPhotoRelease = deferred();
+  const directPurgeEntered = deferred();
+  const directPurgeRelease = deferred();
+  native.queryCancelHook = async () => {
+    if (native.queryCancellations === 2) {
+      postPhotoEntered.resolve();
+      await postPhotoRelease.promise;
+    }
+  };
+  let heldPrivateKey = false;
+  native.secureDeleteHook = async (key) => {
+    if (key === PRIVATE_KV_CONTENT_KEY_NAME && !heldPrivateKey) {
+      heldPrivateKey = true;
+      directPurgeEntered.resolve();
+      await directPurgeRelease.promise;
+    }
+  };
+  const selective = observe(clearHealthPurposeLocalData(OWNER));
+  await postPhotoEntered.promise;
+  expect(native.secure.has(PHOTO_KEY)).toBe(false);
+  const direct = observe(clearLocalPrivateData());
+  await directPurgeEntered.promise;
+  postPhotoRelease.resolve();
+  // Read-only selective cleanup attempts its billing reminder only after its
+  // own purge. The independent full reset still owns account exclusion, so
+  // that callback must refuse with the exact account-lease error.
+  const selectiveResult = await selective;
+  expect(selectiveResult.status).toBe('rejected');
+  if (selectiveResult.status === 'rejected') {
+    expect(selectiveResult.error).toBeInstanceOf(AccountGenerationLeaseError);
+  }
+  const accountAdmission = await observe(runAccountGenerationOperation((lease) => lease.generation));
+  if (accountAdmission.status === 'fulfilled') {
+    setActiveHealthProcessingEpoch(44, {
+      ownerUserId: OWNER, accountGeneration: accountAdmission.value, serverVerifiedAt: null,
+    });
+  }
+  const photo = await observe(encryptPhotoNote('synthetic selective-overlap late owner note'));
+  directPurgeRelease.resolve();
+  expect(await direct).toMatchObject({ status: 'fulfilled' });
+  expect({
+    accountReopenedDuringDirectPurge: accountAdmission.status === 'fulfilled',
+    photoAcceptedAfterSelectivePhotoPurge: photo.status === 'fulfilled',
+    photoKeySurvivedSuccessfulDirectPurge: native.secure.has(PHOTO_KEY),
+  }).toEqual({
+    accountReopenedDuringDirectPurge: false,
+    photoAcceptedAfterSelectivePhotoPurge: false,
+    photoKeySurvivedSuccessfulDirectPurge: false,
+  });
+});
+
+it('AUDIT_RESUME CONTROL: actual selective cleanup succeeds alone and preserves owner identity', async () => {
+  const { clearHealthPurposeLocalData } = await import('@/features/healthConsent/selectiveCleanup');
+  native.configuredForSelective = true;
+  native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+  const identity = captureAccountIdentityGeneration();
+  await expect(clearHealthPurposeLocalData(OWNER)).resolves.toBeUndefined();
+  expect(captureAccountIdentityGeneration()).toBe(identity);
+  expect(native.secure.has(PHOTO_KEY)).toBe(false);
+  expect(native.bytes.has(ORDER_KEY)).toBe(false);
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+  await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
+});
+
+it('AUDIT_RESUME: existing photo clear drains native key creation before deleting its content key', async () => {
+  native.secure.delete(PHOTO_KEY);
+  const keyCreationEntered = deferred();
+  const keyCreationRelease = deferred();
+  native.secureSetHook = async (key) => {
+    if (key === PHOTO_KEY) {
+      keyCreationEntered.resolve();
+      await keyCreationRelease.promise;
+    }
+  };
+  const photo = observe(encryptPhotoNote('synthetic pre-clear pending owner note'));
+  await keyCreationEntered.promise;
+  const clearing = observe(clearEncryptedPhotoStorage());
+  // Release directly after the actual clear API invocation: event ordering is
+  // determined by its synchronous boundary/drain, without timers or polling.
+  keyCreationRelease.resolve();
+  const photoResult = await photo;
+  expect(await clearing).toMatchObject({ status: 'fulfilled' });
+  expect({
+    pendingPhotoRejected: photoResult.status === 'rejected',
+    keyCreatedBeforeDeletion: native.events.indexOf(`secure-set:${PHOTO_KEY}`) <
+      native.events.indexOf(`secure-delete-enter:${PHOTO_KEY}`),
+    photoKeySurvivedSuccessfulClear: native.secure.has(PHOTO_KEY),
+  }).toEqual({
+    pendingPhotoRejected: true,
+    keyCreatedBeforeDeletion: true,
+    photoKeySurvivedSuccessfulClear: false,
+  });
+});
+
+it('AUDIT_RESUME: dev reset retries the actual wider cleanup before releasing a failed staging quarantine', async () => {
+  const { clearAccountIsolatedState } = await import('@/lib/auth/localAccountIsolation');
+  const { markLocalDataCleanupRequired, clearLocalDataCleanupRequired } = await import('@/lib/auth/sessionOwner');
+  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  native.failures.add('registered_records');
+  await expect(clearAccountIsolatedState({
+    markCleanupRequired: markLocalDataCleanupRequired,
+    clearCleanupRequired: clearLocalDataCleanupRequired,
+    clearPersistedPrivateData: clearLocalPrivateData,
+    clearPlaintextStaging: async () => { throw new Error('SYNTHETIC_STAGING_RETAINED'); },
+    queryCache: { cancelQueries: async () => undefined, clear: () => undefined },
+  })).rejects.toThrow('SYNTHETIC_STAGING_RETAINED');
+  native.failures.delete('registered_records');
+  const proofsBeforeRetry = PROOFS.map((key) => native.bytes.get(key));
+  expect(proofsBeforeRetry[0]).toMatch(/^[a-f0-9]{64}$/u);
+  expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+  vi.stubGlobal('__DEV__', true);
+  vi.stubEnv('EXPO_PUBLIC_E2E_LOCAL_RESET', '1');
+  const controls = vi.fn(async () => undefined);
+  native.stagingFailure = true;
+  await expect(clearLocalPrivateDataForDevReset(controls)).rejects.toThrow();
+  expect(controls).not.toHaveBeenCalled();
+  expect(PROOFS.map((key) => native.bytes.get(key))).toEqual(proofsBeforeRetry);
+  expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('cleanup_required');
+  native.stagingFailure = false;
+  await clearLocalPrivateDataForDevReset(controls);
+  expect(native.stagingCalls).toBeGreaterThanOrEqual(2);
+  expect(controls).toHaveBeenCalledOnce();
+  for (const key of PROOFS) expect(native.bytes.has(key)).toBe(false);
+  expect(native.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(false);
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('unclaimed');
+});
+
+it('AUDIT_RESUME: independent reset drains pending photo creation and retains quarantine after a native partial failure', async () => {
+  native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+  native.bytes.set(PROOFS[0], createHash('sha256').update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  const ownerProof = native.bytes.get(PROOFS[0]);
+  const photoEntered = deferred();
+  const photoRelease = deferred();
+  const markerEntered = deferred();
+  native.secureSetHook = async (key) => {
+    if (key === PHOTO_KEY) {
+      photoEntered.resolve();
+      await photoRelease.promise;
+    }
+  };
+  const photo = observe(encryptPhotoNote('synthetic pending photo before partial reset'));
+  await photoEntered.promise;
+  native.markerDeliveryHook = async () => { markerEntered.resolve(); };
+  native.failures.add('private_kv_key');
+  const cleanup = observe(clearLocalPrivateData());
+  await markerEntered.promise;
+  await expect(runAccountGenerationOperation(() => undefined)).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+  photoRelease.resolve();
+  expect(await photo).toMatchObject({ status: 'rejected' });
+  expect(await cleanup).toMatchObject({ status: 'rejected' });
+  expect(native.secure.has(PHOTO_KEY)).toBe(false);
+  expect(native.events.indexOf(`secure-set:${PHOTO_KEY}`)).toBeLessThan(
+    native.events.indexOf(`secure-delete:${PHOTO_KEY}`),
+  );
+  expect(native.bytes.get(PROOFS[0])).toBe(ownerProof);
+  expect(native.bytes.get('layerwell.localDataCleanupRequired.v1')).toBe('1');
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('cleanup_required');
+  expect(activeHealthProcessingLeaseSnapshot()).toBeNull();
+  await expect(runAccountGenerationOperation(() => 'released')).resolves.toBe('released');
 });

@@ -29,6 +29,45 @@ DOCS = 'docs/release/full-app-j01/'
 AUTHORITY = 'BRAIN-M1X-PLAN-SOURCE-RESET-FENCE44-SOURCE-CANDIDATE-01'
 PHASES = ('SOURCE_PENDING', 'SOURCE_FROZEN')
 WORKLIST = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+DIAGNOSTIC_HEAD = '80b43a41273b6502bb5f1be816d2074d17fddda9'
+DIAGNOSTIC_TREE = '732db26df18cbfb0c27459243c15499906499d8f'
+DIAGNOSTIC_TASK_SHA = 'b5c0923da61785c7b09367e88ca052dd1441a62f03cb8028c5b9300f349f8ec3'
+DIAGNOSTIC_RED_TEST = 'apps/mobile/src/features/settings/localPrivateDataFence44.test.ts'
+DIAGNOSTIC_RED_SHA = '1b8a4d597844cadc8398a7150d833285bec38b3a78a7546855c66a85c2eac8ff'
+ADDITIONAL_PATHS = (
+    'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+    'apps/mobile/src/lib/auth/sessionOwner.ts',
+    'apps/mobile/src/lib/auth/sessionOwner.test.ts',
+)
+LIFETIME_PATHS = (
+    'apps/mobile/src/lib/auth/accountGeneration.ts',
+    'apps/mobile/src/lib/auth/accountGeneration.test.ts',
+    'apps/mobile/src/features/photos/encryptedStorage.ts',
+    'apps/mobile/src/features/photos/encryptedStorage.test.ts',
+)
+EXTENDED_PATHS = ADDITIONAL_PATHS+LIFETIME_PATHS
+USER_EXTENSION_TEXT_SHA = 'bd01fe2bf501dfa73ee1d8de6fc9ff014f08fc56e664c277bbdad0f18de5b02a'
+EXTENSION_PROVENANCE_SHA = '47ae153955bbeccc552ae8238c389f631048887bc68b802282ab968c5b3d4ef3'
+# Explicit user scope extension, not an invented Brain issuance or admission.
+EXTENSION_PROVENANCE = {
+    'acceptanceGranted': False,
+    'grantedPaths': list(ADDITIONAL_PATHS),
+    'originalPlanCommit': PLAN_COMMIT,
+    'release': 'NO_GO',
+    'resumesHead': DIAGNOSTIC_HEAD,
+    'userText': 'i grant it\ndo it for me',
+}
+LIFETIME_PROVENANCE_SHA = 'c384f762ed367ac90eddde4f6e4f18f4592904f0a33a38c0d24e1c481b6556ab'
+USER_LIFETIME_TEXT_SHA = 'e9917d29e7aeef91b4652fc524e1a3d256b5a0accf336b786b61be203d6167bc'
+LIFETIME_PROVENANCE = {
+    'acceptanceGranted': False,
+    'grantedPaths': list(LIFETIME_PATHS),
+    'originalPlanCommit': PLAN_COMMIT,
+    'previousScopeExtensionSha256': EXTENSION_PROVENANCE_SHA,
+    'release': 'NO_GO',
+    'resumesHead': DIAGNOSTIC_HEAD,
+    'userText': 'Authorize these four paths',
+}
 GRANT = {
     PLAN, TASK, 'PROGRESS.md', '.github/workflows/quality.yml', *WORKLIST,
     'apps/mobile/src/lib/storage/privateKV.ts',
@@ -60,6 +99,8 @@ GRANT = {
     DOCS+'plan-source-reset-fence44.md', PREFIX+'main_integration44.py',
     PREFIX+'main_integration44.test.py', PREFIX+'source_consumer44.test.py',
 }
+ORIGINAL_GRANT = set(GRANT)
+GRANT.update(EXTENDED_PATHS)
 SOURCE = GRANT - WORKLIST - {PLAN}
 ESSENTIAL = {
     TASK, 'PROGRESS.md', '.github/workflows/quality.yml',
@@ -72,6 +113,7 @@ ESSENTIAL = {
     DOCS+'plan-source-reset-fence44.md', PREFIX+'main_integration44.py',
     PREFIX+'main_integration44.test.py', PREFIX+'source_consumer44.test.py',
 }
+ESSENTIAL.update(EXTENDED_PATHS)
 PROGRAMS = {
     'main_integration32.py': '5b48f78917aaf39e4da66138e3d5c52654af7defd1eaf37ab6404fdc631ceda4',
     'check.py': '944c04283b834e5f20bdfcbf95c265c7af57f8f4754952b4353dee5f8d8952dd',
@@ -188,13 +230,34 @@ def phase_guard(commits, phase, source_paths=None):
     return previous, seal
 
 
+def scope_extension_guard(value):
+    need(type(value) is dict and value == EXTENSION_PROVENANCE, 'R44_USER_SCOPE_EXTENSION')
+    canonical = (json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)+'\n').encode()
+    need(digest(canonical) == EXTENSION_PROVENANCE_SHA and
+         digest(value['userText'].encode()) == USER_EXTENSION_TEXT_SHA and
+         len(ORIGINAL_GRANT) == 36 and len(GRANT) == 43 and
+         GRANT-ORIGINAL_GRANT == set(EXTENDED_PATHS), 'R44_USER_EXTENSION_PROVENANCE')
+
+
+def lifetime_extension_guard(value):
+    need(type(value) is dict and value == LIFETIME_PROVENANCE, 'R44_USER_LIFETIME_EXTENSION')
+    canonical = (json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)+'\n').encode()
+    need(digest(canonical) == LIFETIME_PROVENANCE_SHA and
+         digest(value['userText'].encode()) == USER_LIFETIME_TEXT_SHA and
+         value['previousScopeExtensionSha256'] == EXTENSION_PROVENANCE_SHA,
+         'R44_USER_LIFETIME_PROVENANCE')
+
+
 def task_guard(value, read_body):
     need(type(value) is dict and set(value) == {'schema', 'authority', 'base', 'baseTree', 'planCommit',
-         'sourceHashes', 'commands', 'acceptanceGranted', 'admissions', 'release', 'qualification'}, 'R44_TASK_SCHEMA')
+         'sourceHashes', 'commands', 'acceptanceGranted', 'admissions', 'release', 'qualification',
+         'scopeExtension', 'scopeExtension2'}, 'R44_TASK_SCHEMA')
     need(type(value['schema']) is int and value['schema'] == 1 and value['authority'] == AUTHORITY and
          value['base'] == BASE and value['baseTree'] == BASE_TREE and value['planCommit'] == PLAN_COMMIT and
          value['qualification'] == 'SOURCE_INTEGRITY_NOT_QUALIFIED_ACCEPTANCE', 'R44_TASK_AUTHORITY')
     no_admission(value, 'R44_NO_ADMISSION')
+    scope_extension_guard(value['scopeExtension'])
+    lifetime_extension_guard(value['scopeExtension2'])
     hashes = value['sourceHashes']
     need(type(hashes) is dict and ESSENTIAL-{TASK} <= set(hashes) <= SOURCE-{TASK}, 'R44_HASH_INVENTORY')
     for path, sha in hashes.items():
@@ -263,7 +326,11 @@ def new_step():
                'src/lib/storage/privateKVSourceFence44.test.ts '
                'src/features/settings/localPrivateDataFence44.test.ts '
                'src/features/routine/planSourceFence44.test.ts '
-               'src/features/onboarding/healthConsentStore.test.ts\n')
+               'src/features/onboarding/healthConsentStore.test.ts '
+               'src/lib/auth/sessionOwner.test.ts '
+               'src/lib/auth/localAccountIsolation.test.ts '
+               'src/lib/auth/accountGeneration.test.ts '
+               'src/features/photos/encryptedStorage.test.ts\n')
     need(step.count(marker) == 1, 'R44_QUALITY_TEMPLATE')
     return step.replace(marker, focused+marker)
 
@@ -304,7 +371,32 @@ def authenticate_parent():
         if blob is not None:
             raw = git('show', BASE+':'+path)
             need(digest(raw) == sha and len(raw) == size, 'R44_BASELINE_IDENTITY')
-    need(set(BASELINES) == GRANT and len(GRANT) == 36, 'R44_BASELINE_INVENTORY')
+    need(set(BASELINES) == GRANT and len(GRANT) == 43, 'R44_BASELINE_INVENTORY')
+    diagnostic_guard()
+
+
+def diagnostic_guard():
+    """Keep the prior failed C44 interval and its red evidence immutable, never an accepted base."""
+    need(text('rev-parse', DIAGNOSTIC_HEAD+'^{tree}') == DIAGNOSTIC_TREE and
+         parents(DIAGNOSTIC_HEAD) == [DIAGNOSTIC_HEAD, PLAN_COMMIT], 'R44_DIAGNOSTIC_HISTORY')
+    raw = git('show', DIAGNOSTIC_HEAD+':'+TASK)
+    need(digest(raw) == DIAGNOSTIC_TASK_SHA, 'R44_DIAGNOSTIC_TASK')
+    value = document(raw)
+    no_admission(value, 'R44_DIAGNOSTIC_NO_ADMISSION')
+    need('scopeExtension' not in value and value['base'] == BASE and value['baseTree'] == BASE_TREE and
+         value['planCommit'] == PLAN_COMMIT and value['authority'] == AUTHORITY, 'R44_DIAGNOSTIC_AUTHORITY')
+    old_source = ORIGINAL_GRANT-WORKLIST-{PLAN}
+    old_paths = set(value['sourceHashes'])|{TASK}
+    need(old_paths <= old_source and changed(PLAN_COMMIT, DIAGNOSTIC_HEAD, old_paths) == old_paths and
+         changed(BASE, DIAGNOSTIC_HEAD, ORIGINAL_GRANT) == old_paths|{PLAN}, 'R44_DIAGNOSTIC_SCOPE')
+    for path, sha in value['sourceHashes'].items():
+        need(digest(git('show', DIAGNOSTIC_HEAD+':'+path)) == sha, 'R44_DIAGNOSTIC_SOURCE_HASH')
+    red = git('show', DIAGNOSTIC_HEAD+':'+DIAGNOSTIC_RED_TEST)
+    need(digest(red) == DIAGNOSTIC_RED_SHA and red.count(b"it('AUDIT:") == 3, 'R44_DIAGNOSTIC_RED_CUSTODY')
+    qualification = 'PARTIAL_BLOCKED_ACTUAL_THREE_ADDITIVE_REGRESSIONS_ALL_FAIL_EXIT1'
+    rows = [r for r in value['commands'] if r['qualification'] == qualification]
+    need(len(rows) == 1 and rows[0]['exit'] == 1 and rows[0]['logSha256'] ==
+         'b8455a546939083b5fe0b44252b1923b59e757faadca80a265cd7f54949a3315', 'R44_DIAGNOSTIC_RED_RECEIPT')
 
 
 def snapshot(head):
@@ -387,7 +479,7 @@ def verify(phase='SOURCE_FROZEN'):
     in_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
     need(phase == 'SOURCE_FROZEN' if in_ci else text('symbolic-ref', '--short', 'HEAD') == BRANCH, 'R44_BRANCH_OR_CI_SEAL')
     commits = text('rev-list', '--reverse', BASE+'..'+head).splitlines()
-    need(len(commits) >= 2, 'R44_SOURCE_REQUIRED')
+    need(len(commits) >= 3 and commits[:2] == [PLAN_COMMIT, DIAGNOSTIC_HEAD], 'R44_RESUMED_HISTORY')
     substantive = commits[-1] if phase == 'SOURCE_PENDING' else commits[-2]
     source_paths = task_guard(document(git('show', substantive+':'+TASK)), lambda path: git('show', substantive+':'+path))
     source, seal = phase_guard(commits, phase, source_paths)
@@ -668,6 +760,13 @@ def main():
 
 # Immutable PR44 preimages, independently inventoried before implementation.
 BASELINES = {
+    'apps/mobile/src/lib/auth/accountGeneration.ts': ('100644', '00afcec330c4875909a69f02cac6ca055a318bc2', 'aa0a702874069f12a968f4e7edbaa1a35ad5ac3487ffea25ac451d69c7553217', 5604),
+    'apps/mobile/src/lib/auth/accountGeneration.test.ts': ('100644', 'f060a1195fcb42d0f68b4333e5d50bb1e9bbb6e1', 'd372f38fcf8f24a4c07c3b19e5b7b428ffc4a4d8837d24c065cfa36bfae849d1', 6652),
+    'apps/mobile/src/features/photos/encryptedStorage.ts': ('100644', '55aafc5dec99fe89dd092e961b389076ef05d555', '4a5de9b5dd3d49c90b36e1c2d732a7bbbe1d686bec8b9a7d9c8fa09fbdf2a399', 44257),
+    'apps/mobile/src/features/photos/encryptedStorage.test.ts': ('100644', '7e7f4c46185394e19f29130fec3a9437f955e268', 'dc56de1aeb07bf54bf7e33da018b79007dd81dbc3076ce82ba1687d16ab340d2', 46722),
+    'apps/mobile/src/lib/auth/localAccountIsolation.ts': ('100644', 'a2ace9f1ec47e6f2617eacd67c2cf404e0fc5ec2', '1af3f7888388489d53c7ce7a803d4ed657a182e48dba5a83a7b300ab4a527509', 4831),
+    'apps/mobile/src/lib/auth/sessionOwner.ts': ('100644', 'e04e8f6302b343c14da71cd8c4975820a5536bee', '19a80b00e69e3826da7f5bc7856cc166693d405af48aae43df1711b58ab5d20b', 7771),
+    'apps/mobile/src/lib/auth/sessionOwner.test.ts': ('100644', '00deb51abdd0f77e3154a4bcad35a044c9cc35d2', 'a885092e3b6021e13d475db804e908e6c4a6947bfc7e7a56f43128875e96283d', 10358),
     '.github/workflows/quality.yml': ('100644', '15c2279631b155ae12740a17a0bc3842d77d06ca', '9252755840759ec8ad5f14454b654c0794797176a430bc577063ab89d76ffe35', 16533),
     'PROGRESS.md': ('100644', '83356e0dc630dad04d2e421ea8ab337b3ee38377', '52b778351d09ae9647d06ca1c66e781a07985b31ace6ca987d2db9415a828b01', 559724),
     'apps/mobile/src/app/index.tsx': ('100644', '10c1ec97a9a5c449314844b9327d834a70101425', '59d83117ef288c6db76bef2ec506803556371070b7b13b8fd8b139b96e0e0169', 12012),

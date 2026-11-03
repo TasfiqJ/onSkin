@@ -28,7 +28,8 @@ class AdmissionControls(unittest.TestCase):
             planCommit=m.PLAN_COMMIT, sourceHashes={p:m.digest(b) for p,b in self.bodies.items()},
             commands=[dict(command=['node','--version'],exit=0,qualification='SYNTHETIC_TEST_ONLY',logSha256=None)],
             acceptanceGranted=False, admissions=dict.fromkeys(m.ADMISSIONS,False), release='NO_GO',
-            qualification='SOURCE_INTEGRITY_NOT_QUALIFIED_ACCEPTANCE')
+            qualification='SOURCE_INTEGRITY_NOT_QUALIFIED_ACCEPTANCE',scopeExtension=copy.deepcopy(m.EXTENSION_PROVENANCE),
+            scopeExtension2=copy.deepcopy(m.LIFETIME_PROVENANCE))
         self.head, self.tree, self.merge = 'a'*40, 'b'*40, 'c'*40
         repo = dict(full_name='TasfiqJ/onSkin')
         self.pr = dict(number=45,state='open',draft=True,merged=False,merged_at=None,closed_at=None,
@@ -50,9 +51,55 @@ class AdmissionControls(unittest.TestCase):
 
     def test_exact_task_and_no_self_hash_cycle(self):
         m.task_guard(self.task,self.bodies.__getitem__)
-        self.assertEqual(len(m.SOURCE),33)
-        self.assertEqual(len(m.GRANT),36)
+        self.assertEqual(len(m.SOURCE),40)
+        self.assertEqual(len(m.GRANT),43)
         self.assertNotIn(m.TASK,self.task['sourceHashes'])
+
+    def test_explicit_user_extension_binds_exact_three_paths_text_and_original_history(self):
+        m.scope_extension_guard(copy.deepcopy(m.EXTENSION_PROVENANCE))
+        self.assertEqual(m.GRANT-m.ORIGINAL_GRANT,set(m.EXTENDED_PATHS))
+        self.assertEqual((len(m.ORIGINAL_GRANT),len(m.GRANT)),(36,43))
+        variants=[]
+        for key,bad in [('userText','new instruction'),('resumesHead','0'*40),
+            ('originalPlanCommit','0'*40),('release','GO'),('acceptanceGranted',True),('acceptanceGranted',0),
+            ('grantedPaths',list(m.ADDITIONAL_PATHS)+['apps/mobile/src/lib/auth/accountGeneration.ts']),
+            ('grantedPaths',list(m.ADDITIONAL_PATHS)[:-1]),('grantedPaths',list(m.ADDITIONAL_PATHS)[::-1])]:
+            value=copy.deepcopy(m.EXTENSION_PROVENANCE);value[key]=bad;variants.append(value)
+        variants += [None,dict(m.EXTENSION_PROVENANCE,authority='fabricated Brain issuance')]
+        for value in variants:
+            task=copy.deepcopy(self.task);task['scopeExtension']=value
+            with self.subTest(extension=value),self.assertRaises(ValueError):
+                m.task_guard(task,self.bodies.__getitem__)
+        missing=copy.deepcopy(self.task);del missing['scopeExtension']
+        with self.assertRaisesRegex(ValueError,'R44_TASK_SCHEMA'):m.task_guard(missing,self.bodies.__getitem__)
+
+    def test_second_user_extension_cannot_rewrite_first_authority_or_expand_four_paths(self):
+        m.lifetime_extension_guard(copy.deepcopy(m.LIFETIME_PROVENANCE))
+        variants=[]
+        for key,bad in [('userText','grant more'),('resumesHead','0'*40),
+            ('originalPlanCommit','0'*40),('release','GO'),('acceptanceGranted',True),('acceptanceGranted',0),
+            ('previousScopeExtensionSha256','0'*64),
+            ('grantedPaths',list(m.LIFETIME_PATHS)+['apps/mobile/src/lib/consent/healthProcessingEpoch.ts']),
+            ('grantedPaths',list(m.LIFETIME_PATHS)[:-1]),('grantedPaths',list(m.LIFETIME_PATHS)[::-1])]:
+            value=copy.deepcopy(m.LIFETIME_PROVENANCE);value[key]=bad;variants.append(value)
+        variants += [None,dict(m.LIFETIME_PROVENANCE,authority='fabricated Brain issuance')]
+        for value in variants:
+            task=copy.deepcopy(self.task);task['scopeExtension2']=value
+            with self.subTest(extension=value),self.assertRaises(ValueError):
+                m.task_guard(task,self.bodies.__getitem__)
+        missing=copy.deepcopy(self.task);del missing['scopeExtension2']
+        with self.assertRaisesRegex(ValueError,'R44_TASK_SCHEMA'):m.task_guard(missing,self.bodies.__getitem__)
+
+    def test_prior_failed_task_is_immutable_custody_and_cannot_admit_current_repair(self):
+        raw=m.git('show',m.DIAGNOSTIC_HEAD+':'+m.TASK)
+        self.assertEqual(m.digest(raw),m.DIAGNOSTIC_TASK_SHA)
+        prior=m.document(raw)
+        with self.assertRaisesRegex(ValueError,'R44_TASK_SCHEMA'):
+            m.task_guard(prior,lambda path:m.git('show',m.DIAGNOSTIC_HEAD+':'+path))
+        for path in m.EXTENDED_PATHS:
+            task=copy.deepcopy(self.task);del task['sourceHashes'][path]
+            with self.subTest(path=path),self.assertRaisesRegex(ValueError,'R44_HASH_INVENTORY'):
+                m.task_guard(task,self.bodies.__getitem__)
 
 
     def test_fabricated_approval_release_authority_and_parent_refuse(self):

@@ -3,11 +3,26 @@ import * as Crypto from 'expo-crypto';
 
 import type { LocalDataOwnership } from './sessionBoundary';
 import {
+  clearLocalDataCleanupRequired as clearSharedLocalDataCleanupRequired,
+  isLocalDataCleanupRequiredInMemory,
+  markLocalDataCleanupRequired as markSharedLocalDataCleanupRequired,
+  type LocalDataCleanupMarkerRequest,
+  type LocalDataCleanupMarkerScope,
+} from './localAccountIsolation';
+
+import {
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   LOCAL_DATA_OWNER_HASH_KEY,
   LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
   LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 } from './sessionOwnerKey';
+
+export {
+  LOCAL_DATA_CLEANUP_MARKER_SCOPE_INVALID,
+  LOCAL_DATA_CLEANUP_MARKER_UNCONFIRMED,
+  LOCAL_DATA_CLEANUP_MARKER_RESTORE_FAILED,
+} from './localAccountIsolation';
+export type { LocalDataCleanupMarkerRequest, LocalDataCleanupMarkerScope } from './localAccountIsolation';
 
 export {
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
@@ -25,8 +40,6 @@ const OWNER_PROOF_KEYS = [
   LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
   LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 ] as const;
-let cleanupRequiredInMemory = false;
-
 type ForcedSignOutPreservation = 'resume-cleanup' | 'retained-owner' | 'unclaimed-quarantine';
 
 export type LocalDataOwnerProof =
@@ -84,7 +97,7 @@ export async function readLocalDataOwnerProof(): Promise<LocalDataOwnerProof> {
     throw invalidOwnerProof();
   }
 
-  const cleanupRequired = cleanupRequiredInMemory || cleanupValue === CLEANUP_REQUIRED_VALUE;
+  const cleanupRequired = isLocalDataCleanupRequiredInMemory() || cleanupValue === CLEANUP_REQUIRED_VALUE;
   if (cleanupRequired) {
     return { kind: 'cleanup_required', ownerBinding: storedHash };
   }
@@ -185,12 +198,21 @@ export async function preserveLocalDataForForcedSignOut(): Promise<ForcedSignOut
   return 'retained-owner';
 }
 
-export async function markLocalDataCleanupRequired(): Promise<void> {
-  await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, '1');
-  cleanupRequiredInMemory = true;
+export function markLocalDataCleanupRequired(
+  request?: LocalDataCleanupMarkerRequest,
+): Promise<void> {
+  return markSharedLocalDataCleanupRequired(request);
 }
 
-export async function clearLocalDataCleanupRequired(): Promise<void> {
-  await AsyncStorage.removeItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
-  cleanupRequiredInMemory = false;
+export function clearLocalDataCleanupRequired(): Promise<void>;
+export function clearLocalDataCleanupRequired(scope: LocalDataCleanupMarkerScope): Promise<boolean>;
+export function clearLocalDataCleanupRequired(
+  scope: LocalDataCleanupMarkerScope | undefined,
+): Promise<void | boolean>;
+export function clearLocalDataCleanupRequired(
+  scope?: LocalDataCleanupMarkerScope,
+): Promise<void | boolean> {
+  return scope === undefined
+    ? clearSharedLocalDataCleanupRequired()
+    : clearSharedLocalDataCleanupRequired(scope);
 }

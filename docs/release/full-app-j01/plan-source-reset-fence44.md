@@ -1,227 +1,74 @@
-# Campaign44 source fence and direct reset synchronization
+# Campaign44 encrypted source fence and reset synchronization
 
-**PARTIAL_BLOCKED / SHARED_CLEANUP_SCOPE_OWNERSHIP_REQUIRED / NO_GO.**
-This local candidate is incomplete and unsafe to publish. No Campaign44 push,
-PR, hosted event, worklist generation/seal or release admission exists.
+Local implementation, encrypted-storage safety tests, full root tests, retained browser checks and the complete authentic historical replay pass. Final source seal and hosted evidence are pending at this source-report cutoff. This is source-safety evidence only: all 38 obligations remain incomplete, all 18 owner gates remain false and release remains **NO_GO**. Routine-plan history remains NOT_IMPLEMENTED.
 
 Authority: BRAIN-M1X-PLAN-SOURCE-RESET-FENCE44-SOURCE-CANDIDATE-01.
-This is a source-only prerequisite, not V2-C05 routine-plan history or release
-approval. All 38 obligations remain incomplete and all 18 owner gates closed.
-Security/candidate29 remain FAILED; G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED;
-M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED;
-R33-LEDGER/CORE PLANNED_NOT_AUTHORIZED. J01, clinical, native-device,
-provider/paid/Apple and public release remain NO_GO.
 
-## Decisive remaining safety failures
+## Provenance and scope
 
-Three additive real-IO regressions remain red. Synthetic native platform ports
-hold Promise delivery; account/health authority, encrypted stores, the direct
-helper and the wider `clearAccountIsolatedState` control are actual source.
+The authenticated packet's external ZIP, manifest and verifier hashes were checked before safe extraction; isolated packet verification passed. The packet supplied evidence, not executable project source. Implementation began in a fresh complete, non-hardlinked HTTPS clone of exact draft PR44 HEAD `302e2b83216e7d100e7da3b3f579ee33db8dc5af`, tree `075ee95de6e23282bdaf40890bf7bc5ed8aa7c18`.
 
-1. A direct helper starts without a recovery marker and pauses during key
-   destruction. A wider account cleanup marks recovery, owns a broader boundary,
-   and encounters a staging failure. The direct helper succeeds and clears the
-   identical marker, so the failed wider cleanup loses its durable quarantine.
-2. Gated dev reset runs its actual control-clear algorithm while a wider
-   cleanup's native marker write has committed but its Promise is held BEFORE
-   account-boundary begin. Dev reset clears that marker; the wider cleanup then
-   begins and fails. Recovery marker is absent both before begin and after the
-   failure. Account identity observation cannot detect the earlier held mark.
-3. A wider cleanup finishes its helper and pauses in post-cleanup query work.
-   Independent direct helper B begins and mistakes that open boundary for its
-   own caller's scope. After B's photo purge, its private-key deletion is held.
-   The wider scope finishes and releases account/photo exclusion. A genuine
-   fresh grant and encrypted photo-note write now succeed; B later returns
-   success with a recreated photo content key surviving its purge.
+The first commit is immutable plan-only `5387a7a2b3b0c5d5f7f04191b74bdaf474d40ab8`. Local diagnostic `80b43a41273b6502bb5f1be816d2074d17fddda9` preserved three genuine additional cleanup failures without push, PR or seal. It is diagnostic history, not an accepted product or replacement base. Current44 independently pins its TASK and original red test. Earlier local C42/C43 diagnostics are not parents and were not cherry-picked or rewritten.
 
-The cleanup-only FIFO does not own the wider marker/staging/query lifecycle.
-Retaining an ordinary marker alone does not solve dev clearance or unrelated
-boundary lifetime; read-then-remove cannot distinguish identical writes of `1`.
-The public account API rejects handoff while closed, and its generic nested
-begin advances subject identity. No safe in-grant ownership repair was found
-without narrowing away reset/writers or changing protected lifecycle code.
-These executions concern an overlapping independent direct helper; they do not
-claim a demonstrated failure in the ordinary production cleanup control alone.
+The original finite 36-path grant has two explicit user extensions:
 
-The smallest additional custody request identified is shared cleanup-scope and
-marker coordination in `apps/mobile/src/lib/auth/localAccountIsolation.ts`,
-`apps/mobile/src/lib/auth/sessionOwner.ts` and its `sessionOwner.test.ts`.
-The first two source files and the marker tests are expressly read-only in this
-campaign. A follow-up must also audit selective/account/photo lifetime callers;
-this proposed extension is not a claim that untested schedules already pass.
-No read-only file was changed and no failing test was waived.
+- "i grant it\ndo it for me": localAccountIsolation.ts, sessionOwner.ts and sessionOwner.test.ts. Canonical provenance SHA-256 `47ae153955bbeccc552ae8238c389f631048887bc68b802282ab968c5b3d4ef3`.
+- "Authorize these four paths": accountGeneration.ts, accountGeneration.test.ts, features/photos/encryptedStorage.ts and its test. Canonical provenance SHA-256 `c384f762ed367ac90eddde4f6e4f18f4592904f0a33a38c0d24e1c481b6556ab`.
 
-External original red logs, successor pre-repair failures, these three final
-counterexamples, actual full-suite exits and exact source context are retained.
-All positive source-fence observations below remain bounded component evidence,
-not a completed cleanup prerequisite or accepted campaign.
+These grant seven exact source/test paths, bringing the maximum to 43. They grant no owner admission or release acceptance. The original plan is unchanged. Native marker, selective-consent overlap and pending photo-key red schedules retain original exits/source contexts externally.
 
-## Authenticated source and input
+## Shared encrypted source reservation
 
-Exact base: draft PR44, stage/m1-today-optional-changes41,
-HEAD 302e2b83216e7d100e7da3b3f579ee33db8dc5af,
-tree 075ee95de6e23282bdaf40890bf7bc5ed8aa7c18.
-PR43 remains draft/open/unmerged at e3d7e439cd32ccfbe4e5ac4eebcc8d31b007c84c,
-tree e87b8701d48ff7862e651d77f127104ee9b94c6a. Main remains
-53a84d921d14dbff1d2e9b8f1b3bb27e10dcede6.
-Initial live GitHub API ref/PR/tree/ancestry checks passed, auto-merge and
-maintainer edits off. A new full non-shallow HTTPS checkout with no hardlinks
-was used; all 23,651 baseline working bodies matched Git blob identities.
-Local diagnostic C42/C43 commits were never used as source parents.
+The opt-in `updatePrivateItemWithSources` reserves the sorted unique union of source keys and destination through the existing privateKV queue. It captures original account/health authority before awaiting, authenticates encrypted sources and preserves exact absence. Trusted read-only async preparation and synchronous validation/transform execute under the same locks, held through native conflict checks, encrypted write, canonical readback, rollback and final authority checks. Account in-flight tracking covers the whole operation. Default privateKV function bodies retain their semantics; no persistent key, journal, package or global storage mutex across unrelated keys was added.
 
-Input ZIP SHA256: 289f516926710bb653a0c07db24946528fe828cb7fff9315347126a9ea09fcec.
-Manifest: 60eeedc1b9a60154f1bdf46895ed48d15611e3ec72acde9a952015f17124df51.
-Verifier: 4895092fff64fa5382bee6146fbb2741e2c836402a4ce63a5175694bb3395ad7.
-The 36,752-byte archive passed external hash, EOCD/local/central record,
-regular mode, safe name/alias, bounded expansion, CRC and inventory checks
-before extraction into a new empty directory outside Git. Exact isolated
-verifier: VERIFIED, 14 files, 85,533 expanded bytes, exit0, NO_GO.
-Immutable plan-only first child: 5387a7a2b3b0c5d5f7f04191b74bdaf474d40ab8.
+The synchronous transform rejects promises and non-string/null values. The preparation callback is trusted internal read-only code, not a JavaScript sandbox; recursive mutation of a held key is forbidden. There is no lease refresh after owner/account/consent changes.
 
-## Storage contract
+The factual adapter reserves exactly Shelf, local skinprofile, conflict overrides, health consent and routineOrder, the last both current state and destination. It uses actual domain loaders under those locks. Shelf, local profile and consent must be valid/current/present. Server-only profile and failed conflict reads refuse local-current authority. Absent conflict/order retain truthful empty semantics; malformed, future or unreadable values refuse.
 
-`updatePrivateItemWithSources` is opt-in. It captures classified health leases
-before waiting, reserves the sorted distinct union of source keys and one
-destination in the existing privateKV queue, authenticates current ciphertext,
-and holds every reservation through domain preparation, synchronous transform,
-native write, exact authenticated readback and compensation. Non-null legacy
-plaintext cannot establish an authenticated source; absent bytes remain exact
-absence for domain validation. Async destination transforms are refused.
-Read-only asynchronous preparation may call strict domain loaders; it must not
-mutate or await a mutation of a reserved key. The implemented adapter only reads.
-Default privateKV APIs and purpose-limited export semantics are unchanged.
+Frozen AM/PM snapshots carry immutable source hashes and private WeakMap proofs of exact full-key expected plaintext/absence and original copied leases. Any full-key change refuses a stale save, including unrelated metadata. `savePlanOrderWithSource44` writes only the existing order format, creating no history, route or product UI. Shelf/profile/quiz/pregnancy, override and consent writers were audited against the shared queue.
 
-A completed earlier source mutation is observed before validation and an old
-capture refuses before destination dispatch. A source mutation already holding
-its key finishes or fails before validation. A source mutation queued behind
-the fence runs after the snapshot commits: the snapshot is truthful at its
-linearization point, not a claim about future changes. Destination omission,
-ambiguous native failure, source/native conflict or changed authority never
-produces success. Compensation keeps exact prior ciphertext when possible;
-foreign divergence or failed restoration surfaces PRIVATE_KV_WRITE_ROLLBACK_FAILED.
-Deletion closes admission and drains that compensation before native erasure.
+Prior mutations settle before validation; committed source changes are detected. A mutation queued behind the reservation may correctly commit afterward: freshness is a statement at the serialized commit. Native bypass conflicts are detected where observable. Physical multi-process atomicity, process death and power-loss recovery are not claimed.
 
-## Exact factual graph and owner adapter
+## Reset, lifetimes and recovery ownership
 
-| Private key | Consumed local facts / dependency |
+Once admitted from the cleanup FIFO, each `clearLocalPrivateData` invocation takes its own privateKV and account depths synchronously before its first await or destructive native work. Additive `beginPrivateDataCleanupAccountBoundary` closes admission without advancing identity and releases only its own depth. It composes with existing account/selective-consent boundaries without borrowing fresh authority, reopening another owner, double-advancing identity or draining its own caller.
+
+Cleanup marks quarantine, drains privateKV writes/rollback, performs the existing widget privacy prelude, then awaits the existing photo-clear operation before registered-key/content-key deletion. Photo clear owns/drains its existing photo boundary, including pending key creation. The same photo promise remains in the original allSettled aggregation, retaining other cleanup attempts/failure labels. Registered keys, metadata retention and final owner-proof ordering are preserved. The invocation FIFO does not replace actual write-exclusion boundaries.
+
+Shared recovery-marker claims live in localAccountIsolation; sessionOwner supplies thin wrappers. Claims register synchronously, including before awaited native marks. Serialized marker reads/writes/removals and exact readback prevent one cleanup from erasing an overlapping wider owner's quarantine. A claim arriving during native removal restores the existing marker before returning. Ambiguous reads preserve volatile quarantine; proven absent precommit failure does not invent authority. Scoped capabilities are opaque, validated and idempotently abandoned on failure. No new persistent key exists.
+
+Welcome reset retains its __DEV__/E2E_LOCAL_RESET/e2eReset gates. Full account isolation includes staging/image/query cleanup before control clearing and owner-proof release. A failed wider cleanup cannot be disguised as a private-only retry. Its marker is excluded from raw control removal. There is no new production route/UI.
+
+Health-consent disclosure hashing retains the original captured account scope before privateKV; stale pre-privateKV callbacks cannot resurrect consent ciphertext or the content key. Existing consent policy and ungranted selective-cleanup source remain unchanged. Selective/full overlap correctly refuses a stale continuation while independent full reset remains closed; selective-only cleanup passes.
+
+## Actual local validation
+
+| Check | Observed result |
 | --- | --- |
-| layerwell.shelf.v1 | Active product identity, name, category, ingredients; full record including formula and mirror metadata is expected state |
-| layerwell.skinprofile.v1 | Strict local quiz axes, pregnancy/reproductive status and goals |
-| layerwell.conflict.overrides | Strict conflict choices, never a render error fallback |
-| layerwell.healthDataCollectionConsent.v1 | Exact current granted local disclosure receipt |
-| layerwell.routineOrder.v1 | Current order state and the sole optional destination |
+| Untouched PR44 root | 6,638 pass |
+| Normal npm ci and repository hooks | PASS, exit0; dependencies unchanged |
+| Current forced full root | 6,771 pass (6,747 mobile +24 operator), exit0 |
+| Actual encrypted source/reset focused selection | 335/335, 12 suites, exit0 |
+| Marker/account/photo suites | 34/15/51 pass; original13/8/45 retained |
+| Forced typecheck/lint | 3/3 tasks each, exit0 |
+| Current44 hostile boundary / actual Git controls | 22/22 and13/13, exit0 |
+| Privacy payload / health inventory source controls | PASS, exit0 |
+| Original protected core04/core06 | 24/26, exit1; unchanged failures retained |
 
-`capturePlanSource44` runs actual strict Shelf/profile/choice/order/consent
-loaders while reserved and derives only ephemeral factual AM/PM product IDs and
-names through the existing generator/projections. It never falls back to a
-server-only profile. Missing profile/Shelf/consent or no active Shelf refuses;
-absent conflict/order uses the existing explicit successful empty semantics.
-Malformed/future records and I/O failure refuse. Whole-key expectations, source
-hash and original owner/account/health generation/epoch/expiry stay in memory.
-Proofs are privately branded; a copied snapshot cannot invent authority.
+Tests exercise actual encryption/privateKV/domain/owner/health/account code, with explicit synthetic native/effect adapters. They cover preexisting/acquisition/queued mutations, lock order/reentrancy, absent/malformed/future inputs, owner/epoch/consent revoke/regrant, native commit/reject/omitted writes/divergent readback/rollback failure, both deletion orders, held native conflict/write/key windows, nested/partial cleanup, overlapping marker IO, wider dev retry and stale-authority refusal. Protected tests were not weakened. The independent runtime review found no open defect; authorship and source-only limits are recorded externally.
 
-`savePlanOrderWithSource44` is an opt-in adapter for the existing order-v1
-record, not a plan-version append or new UI action. It validates order membership,
-original authority and all five full-key expected values under the same fence.
-Ordinary Shelf/profile/conflict/order writers already use the shared queue.
-Clinical generation, Today/Shelf/formula history, notes, sync and entitlements
-are unchanged. This bounded factual snapshot excludes current-use/cycle/expiry
-display state; a richer future cut requires a new dependency audit.
+The unchanged retained browser driver passed in real Chrome at375x812: dev reset, onboarding, free Today/Shelf, existing formula history, daily AM/PM loop, optional notes/owner lineage, retained failure/retry and age refusal across direct navigation/reload. Its229 artifacts include98 original PNGs. Source bytes stayed unchanged. All65 raw warning/error events are retained; the unchanged disallowed classifier found zero, with zero uncaught runtime exceptions. This proves synthetic Expo-web continuity only.
 
-## Direct reset and deletion
+## Historical proof and publication contract
 
-Production account isolation and selective consent cleanup already closed and
-drained before purge. Campaign43 demonstrated the separate direct exported
-helper/development Welcome reset bypass, not an ordinary production-deletion
-exploit. Campaign44 closes the actual helper path; it does not exclude dev mode.
+Original C42/C43 diagnostics were reproduced unchanged on disposable exactPR44 fixtures: respectively3pass/3fail and2pass/1fail, exit1. New successor tests exercise the implemented API/real encrypted stores; historical tests were not rewritten green.
 
-Each cleanup uses real privateKV close/drain/end. A direct cleanup retires old
-account/health authority through the existing purpose-limited account handoff
-without advancing subject identity, and drains photo operations before destroying
-their key. Nested outer cleanup retains its own boundaries. Account operations
-are not self-drained by a helper their tracked caller may be awaiting.
-Widget privacy prelude, registered keys, independent cleanup aggregation and
-owner/quarantine proofs are preserved. Proofs are removed only after successful
-cleanup. The gated dev control finalizer runs within exclusion and is not run
-after failed private cleanup. Partial cleanup never reports all data gone.
+The first local historical wrapper mistakenly invoked hosted-only CAT08, refused, and was corrected in new44 only. A safety-blocked replay was cancelled. A later full replay failed at unchanged original38 with sanitized R38_EXECUTION_INCOMPLETE. All exits/transcripts are preserved. A separate unchanged original38 diagnostic passed; it does not replace the failed full-chain receipt, whose earlier cause remains unknown. The new complete authentic41->40->39->38->37->36->35->34->33->32->29 replay passed, exit0 after4296.25 seconds, with all required expected refusals authenticated. Its raw full-log SHA-256 is d174579c38f6e4c1817cefb6fb5d6e99b974725744dc0992f55e40d6f8142f32. The finite preserved custody inventory contains146 files/2,191,086 bytes. Earlier failed and cancelled attempts remain preserved and are not relabelled as passes.
 
-A newly demonstrated local-consent preparation bypass yielded while hashing
-before privateKV registration, then recreated consent ciphertext/content key
-after direct purge. Its original red log is retained. The permitted consent
-store now account-scopes that preparation and passes its original assertion
-into privateKV; recording a consent receipt still does not require an active
-health-processing grant or alter consent policy.
+A pre-seal synthetic-CI reproduction found that the new legacy-refusal test inherited hosted settings and received R32_FINITE_SCOPE rather than the intended local branch refusal. Its original red receipt is preserved. The new test now runs that original reader in a clean credential-free environment; the targeted synthetic-CI check and hostile22 pass. The complete actual-Git source13 rerun also passes (exit0). No original reader, application code or release gate was changed.
 
-## Evidence custody and limits
+Current44 pins both grants, exact ancestry/tree, plan-first/diagnostic custody, protected preimages, raw index flags/modes/working bytes, the sole final two-file seal, livePR43/PR44/main and hosted pull_request ordered equal-tree service merge. Original41 must refuse the newhead. Only Quality's first governance block changes; downstream PostgreSQL/Supabase/export/iOS and Security/candidate controls retain original bytes. Strict worklist generation occurs once after safe committed source, followed only by the two-file seal and no subsequent source edits.
 
-Untouched baseline: normal npm ci/hooks PASS with Node22.21.0/npm11.20.0;
-root 6,614 mobile +24 operator =6,638 PASS; typecheck/lint PASS.
-Protected original core04/core06: 24 PASS/2 FAIL, exit1, unchanged.
-Inherited dependency advisories and uncovered dependency scripts were not fixed
-or waived. No package, lock, protected test, DB or clinical gate changed.
+The external final report/return will record final HEAD/tree, seal, PR, hosted job/head/attempt outcomes and fresh-download receipt after they exist. Pending outcomes are not asserted successful. Earlier PRs/main, merge/deployment and release admissions remain outside scope.
 
-Original C42 diagnostic SHA256:
-69a9ed953b1c3f071bd1273dbada502def7a26d417dd3a03aad506c593ecd592;
-historical 3 PASS/3 FAIL. Original C43 diagnostic SHA256:
-b8230053453d27be0e25e42a2e9f8d635cf610b8bfdd4231417aca0d4ca9988a;
-historical 2 PASS/1 FAIL. Original files and historical failure claims remain
-immutable; successor tests use the new API and corrected scheduling semantics.
-External return contains exact source context and actual reproduction outcomes.
-
-New tests exercise real XChaCha20-Poly1305/privateKV, real domain stores and
-real account/health authority. Explicit synthetic native ports control Promise
-delivery and injected platform failures. They prove one JS runtime's ordering,
-not real iOS durability. Initial successor test harness import-order failures
-and a test-only generic type error are preserved alongside corrected checks;
-they are not rewritten as historical campaign evidence.
-
-TASK records actual pre-seal command exits and log hashes. The external final
-return records final HEAD/tree, complete local checks, original historical replay,
-genuine hosted pull_request service merge/event and terminal workflow/job outcomes.
-Hosted CI is NOT_RUN until an actual post-push event exists; earlier PR runs do
-not count. Original current41 must refuse current44. Current44 verifies protected
-preimages/raw Git/source scope, no admissions, final worklist seal and live PR
-identity; only Quality's first governance block may change.
-
-No physical native multi-process, process death, power loss, real device,
-provider/payment, real remote user data, signed build, deployment, merge or
-release qualification is claimed. Those axes remain NOT_RUN/NO_GO.
-
-## Terminal diagnostic results
-
-| Actual check | Terminal result |
-| --- | --- |
-| Untouched full root | 6,638 PASS, exit0 |
-| Final full root, forced uncached | 6,703 mobile +24 operator PASS, 3 genuine cleanup failures, exit1 |
-| Final typecheck / lint, forced uncached | Each 3/3 tasks PASS, exit0 |
-| Final explicit 11-suite storage/privacy/compatibility selection | 225 PASS /3 FAIL, exit1 |
-| Broader engineer 11-suite source/reset/compatibility selection | 246 PASS /3 FAIL, exit1; overlapping selection, not additive |
-| Cleanup-only successor | 29 PASS /3 FAIL, exit1 |
-| Plan-source factual adapter | 33 PASS, exit0 |
-| New low-level source-fence tests | 24 PASS, exit0 |
-| Protected core04/core06 | 24 PASS /2 FAIL, exit1, original bodies unchanged |
-| Health processor inventory / privacy payload source controls | Each PASS, exit0 |
-| New governance hostile boundaries | 19 PASS, exit0 |
-| New actual-Git source controls | 12 PASS, exit0; source integrity only |
-| Original C42 / C43 exact diagnostic reproduction | 3 PASS /3 FAIL and 2 PASS /1 FAIL, each exit1 |
-
-The first current full-root run had one original release-inspection child timeout
-(ETIMEDOUT at60 seconds), with 6,701 mobile passes and24 operator passes.
-It was preserved. The final unchanged protected test passes; final full-root
-failures are exactly the three new honest cleanup counterexamples.
-
-Fresh exact PR44 original41 current-source, scope, external-readiness refusal2,
-17 pure/13 source controls, UI19, original drivers103, cleanup23 and inventory5
-actually passed. Authentic nested replay reached exact PR43 original40 pure22,
-source12, drivers103, cleanup23 and inventory5. Its current40 validation child
-was deliberately cancelled after the decisive safety blocker; nested39-to29
-and the remaining40 suffix are NOT_RUN. Original41 and outer44 historical
-wrappers terminated exit1. This is not a completed historical replay PASS.
-An earlier new-driver invocation incorrectly attempted a hosted-only CAT08
-behavioral lane locally; its genuine refusal is also retained, and the new
-driver was corrected without changing that hosted-only test or hosted gate.
-
-Current44 final seal/worklist producer, push, new PR, GitHub service merge/event,
-Campaign44 hosted Quality/iOS/Security/candidate29: NOT_RUN after safety stop.
-Existing earlier-PR hosted results, if included in the return, are inherited
-metadata only. This candidate is PARTIAL_BLOCKED, not implemented/accepted.
+All38 obligations remain incomplete and all18 owner gates false. Security/candidate29 FAILED; G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED; M2 NOT_AUTHORIZED; R33-LEDGER/CORE PLANNED_NOT_AUTHORIZED. J01/clinical/native/provider/paid/Apple/public release remain NO_GO. F18 and J02-J27 includingJ05 are deferred. V2-C05 routine-plan history remains NOT_IMPLEMENTED.

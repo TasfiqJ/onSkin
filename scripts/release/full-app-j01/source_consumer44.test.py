@@ -40,11 +40,11 @@ def repository(prefix):
 
 
 class SourceControls(unittest.TestCase):
-    def test_exact_parent_immutable_plan_and_all_thirtysix_preimages(self):
+    def test_exact_parent_immutable_plan_and_all_fortythree_preimages(self):
         m.authenticate_parent()
         self.assertEqual(hashlib.sha256((m.ROOT/m.PLAN).read_bytes()).hexdigest(), m.PLAN_SHA)
         self.assertEqual(set(m.BASELINES), m.GRANT)
-        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (36, 33))
+        self.assertEqual((len(m.GRANT), len(m.SOURCE)), (43, 40))
         self.assertEqual(m.parents(m.PLAN_COMMIT), [m.PLAN_COMMIT, m.BASE])
 
     def test_current_diff_finite_and_all_protected_bytes_and_programs_unchanged(self):
@@ -54,21 +54,43 @@ class SourceControls(unittest.TestCase):
         for name, sha in m.PROGRAMS.items():
             self.assertEqual(m.digest(m.regular(m.ROOT/m.PREFIX/name)), sha)
         paths = ('package.json', 'package-lock.json', 'supabase', 'scripts/launch', 'scripts/brain',
-                 'apps/mobile/src/lib/auth/localAccountIsolation.ts',
-                 'apps/mobile/src/lib/auth/accountGeneration.ts',
                  'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
                  'apps/mobile/src/lib/consent/healthProcessingEpoch.ts',
                  'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
-                 'apps/mobile/src/features/photos',
                  'scripts/core04', 'scripts/core06',
                  'scripts/phase4/build-source-worklist.mjs', 'docs/hugeToDo',
                  '.github/workflows/security.yml', '.github/workflows/security-candidate22.yml',
                  '.github/workflows/ios-launch-contract.yml', '.github/workflows/ios-simulator-compile.yml')
+        # Only the two explicitly granted photo files may change; every other
+        # F09 source and regression keeps its exact original bytes.
+        photo_paths=tuple(path for path in m.text('ls-tree','-r','--name-only',m.BASE,'--',
+            'apps/mobile/src/features/photos').splitlines() if path not in m.GRANT)
+        paths += photo_paths
         self.assertEqual(m.git('diff', '--raw', m.BASE, '--', *paths), b'')
         for name in paths:
             path = m.ROOT/name
             if path.is_file():
                 self.assertEqual(m.regular(path), m.git('show', m.BASE+':'+name))
+
+    def test_resumed_grant_diagnostic_and_red_receipts_have_exact_unaccepted_custody(self):
+        m.diagnostic_guard()
+        self.assertEqual(m.parents(m.DIAGNOSTIC_HEAD),[m.DIAGNOSTIC_HEAD,m.PLAN_COMMIT])
+        self.assertEqual(m.text('rev-parse',m.DIAGNOSTIC_HEAD+'^{tree}'),m.DIAGNOSTIC_TREE)
+        self.assertEqual(m.GRANT-m.ORIGINAL_GRANT,set(m.EXTENDED_PATHS))
+        for path in m.EXTENDED_PATHS:
+            self.assertEqual(m.git('show',m.BASE+':'+path),m.git('show',m.DIAGNOSTIC_HEAD+':'+path))
+        red=m.git('show',m.DIAGNOSTIC_HEAD+':'+m.DIAGNOSTIC_RED_TEST)
+        self.assertEqual(m.digest(red),m.DIAGNOSTIC_RED_SHA)
+        self.assertEqual(red.count(b"it('AUDIT:"),3)
+        actual=m.git
+        for target,raw in (
+            (('rev-parse',m.DIAGNOSTIC_HEAD+'^{tree}'),b'0'*40),
+            (('show',m.DIAGNOSTIC_HEAD+':'+m.TASK),b'{"release":"GO"}'),
+            (('show',m.DIAGNOSTIC_HEAD+':'+m.DIAGNOSTIC_RED_TEST),red.replace(b"it('AUDIT:",b"it.skip('AUDIT:")),
+        ):
+            def read(*args):return raw if args==target else actual(*args)
+            with self.subTest(target=target),patch.object(m,'git',side_effect=read),self.assertRaises(ValueError):
+                m.diagnostic_guard()
 
     def test_quality_changes_only_first_block_and_requires_actual_suites_and_history(self):
         before = m.git('show', m.BASE+':.github/workflows/quality.yml')
@@ -84,6 +106,10 @@ class SourceControls(unittest.TestCase):
             (b'privateKVSourceFence44.test.ts', b'Missing.test.ts'),
             (b'localPrivateDataFence44.test.ts', b'Missing.test.ts'),
             (b'planSourceFence44.test.ts', b'Missing.test.ts'),
+            (b'sessionOwner.test.ts', b'Missing.test.ts'),
+            (b'localAccountIsolation.test.ts', b'Missing.test.ts'),
+            (b'accountGeneration.test.ts', b'Missing.test.ts'),
+            (b'encryptedStorage.test.ts', b'Missing.test.ts'),
             (b'OptionalChangePanel41.test.tsx', b'Missing.test.tsx'),
             (b'            unlinkSync(config);', b'            // omitted cleanup'),
             (b'            rmdirSync(directory);', b'            // omitted cleanup'),
@@ -229,7 +255,7 @@ class SourceControls(unittest.TestCase):
     def test_protected_sources_refuse_finite_diff_in_actual_disposable_git(self):
         paths = ('scripts/launch/build-execution-baseline.mjs', 'scripts/launch/validate-execution-baseline.mjs',
                  'docs/hugeToDo/launch-contract.json', m.PREFIX+'main_integration41.py',
-                 'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+                 'apps/mobile/src/lib/consent/healthProcessingEpoch.ts',
                  'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
                  'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
                  '.github/workflows/security.yml', '.github/workflows/security-candidate22.yml')
@@ -258,7 +284,10 @@ class SourceControls(unittest.TestCase):
     def test_unchanged_original41_current_reader_refuses_current44_successor(self):
         path = m.ROOT/m.PREFIX/'main_integration41.py'
         before = path.read_bytes()
-        result = subprocess.run([m.original41().historical_python(), '-I', '-B', str(path)], cwd=m.ROOT, capture_output=True)
+        # This negative reader must not inherit the current PR's hosted event
+        # or read token; it is a separate historical-source refusal check.
+        result = subprocess.run([m.original41().historical_python(), '-I', '-B', str(path)],
+            cwd=m.ROOT, env=m.primitives().clean_environment(), capture_output=True)
         self.assertEqual(result.returncode, 1, result.stdout+result.stderr)
         value = m.document(result.stdout)
         self.assertFalse(value['valid'])
