@@ -76,6 +76,10 @@
     {
       "id": "C04-05",
       "decision": "History linearizes at canonical native destination/source/authority confirmation under6locks, before marker retirement. Controlled late authority retirement rejects stale result but does not undo earlier confirmed facts after durable intent retirement. Genuine selective withdrawal drains then purges; two new encrypted controls pass. No physical-device inference."
+    },
+    {
+      "id": "C04-06",
+      "decision": "Genuine additional RED: native plaintext valid history and native empty string both rejected by strict domain load but accepted by direct privateKV and consent-independent export. Preserved redsource/log; fixed ONLY history-key legacy refusal in direct/batch/startup availability before legacy absence fallback. Current authenticated envelopes still pass MAC verification; all other legacy stores unchanged. Native bytes remain unchanged. Two successor cases cover direct/batch/availability/export; six-file274-pass selection, currentcleanup88/88."
     }
   ]
 }

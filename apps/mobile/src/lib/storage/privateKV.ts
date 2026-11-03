@@ -237,6 +237,16 @@ async function assertHistoryKeysReadable45(keys: readonly string[]): Promise<voi
   if (keys.includes('layerwell.routinePlanHistory.v1')) await assertPlanHistoryReadable45();
 }
 
+function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
+  // This new key has no plaintext legacy format. In particular, native '' is
+  // invalid data, never the null absence used by the strict history decoder.
+  if (key === 'layerwell.routinePlanHistory.v1' && raw !== null &&
+      classifyEnvelope(key, raw).kind === 'legacy') {
+    rememberFailedRead(key, raw);
+    throw new Error(PRIVATE_KV_SOURCE_UNAUTHENTICATED);
+  }
+}
+
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
   const appOwned = isPrivateKVOwnedKey(key);
   let parsed: unknown;
@@ -408,6 +418,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       await assertHistoryKeysReadable45([key]);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
+      rejectLegacyHistoryRaw45(key, raw);
       if (!raw) {
         failedReadSnapshots.delete(key);
         return null;
@@ -481,6 +492,7 @@ async function readPrivateItems(
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
       for (const [key, raw] of entries) {
+        rejectLegacyHistoryRaw45(key, raw);
         if (!raw) {
           failedReadSnapshots.delete(key);
           result.set(key, null);
@@ -574,6 +586,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
 
       for (const [key, raw] of entries) {
         assertCurrent();
+        rejectLegacyHistoryRaw45(key, raw);
         if (!raw) {
           failedReadSnapshots.delete(key);
           continue;

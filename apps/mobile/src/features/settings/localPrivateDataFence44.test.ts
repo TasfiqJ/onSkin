@@ -1297,6 +1297,40 @@ describe('Campaign45 pending encrypted owner-history cleanup successors', () => 
       vi.doUnmock('expo-secure-store');
     }
   });
+
+  it.each(['plaintext', 'empty'] as const)('C04 rejects unauthenticated %s history in direct reads and owner export without rewriting', async (kind) => {
+    const { savePlanHistory45, loadPlanHistory45, PLAN_HISTORY45_KEY } = await import('@/features/routine/planHistory45');
+    const secureStore = await secureStorePort45;
+    vi.doMock('expo-secure-store', () => ({
+      ...secureStore, WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'synthetic45-this-device',
+    }));
+    try {
+      const { collectLocalDeviceExportData } = await import('./localDeviceExport');
+      const fixture = await prepareHistory45();
+      const saved = await savePlanHistory45(fixture.snapshot, fixture.lease, {
+        id: randomUUID(), createdAt: new Date().toISOString(),
+      });
+      expect(JSON.parse(native.bytes.get(PLAN_HISTORY45_KEY)!).version).toBe('xchacha20poly1305:v1');
+      const unauthenticated = kind === 'plaintext' ? JSON.stringify(saved) : '';
+      native.bytes.set(PLAN_HISTORY45_KEY, unauthenticated);
+      await expect(loadPlanHistory45(fixture.lease)).rejects.toThrow('PRIVATE_KV_SOURCE_UNAUTHENTICATED');
+      const direct = await observe(getPrivateItem(PLAN_HISTORY45_KEY));
+      const { getPrivateItems, assertPrivateKVReadable } = await import('@/lib/storage/privateKV');
+      const batch = await observe(getPrivateItems([PLAN_HISTORY45_KEY]));
+      const availability = await observe(assertPrivateKVReadable());
+      clearActiveHealthProcessingEpoch();
+      const exported = await observe(runAccountGenerationOperation((lease) => collectLocalDeviceExportData(lease, OWNER)));
+      console.info('C04_UNAUTHENTICATED_HISTORY_READ', JSON.stringify({
+        kind, direct: direct.status, batch: batch.status, availability: availability.status, exported: exported.status,
+        nativeBytesUnchanged: native.bytes.get(PLAN_HISTORY45_KEY) === unauthenticated,
+      }));
+      expect(native.bytes.get(PLAN_HISTORY45_KEY)).toBe(unauthenticated);
+      expect({ direct: direct.status, batch: batch.status, availability: availability.status, exported: exported.status })
+        .toEqual({ direct: 'rejected', batch: 'rejected', availability: 'rejected', exported: 'rejected' });
+    } finally {
+      vi.doUnmock('expo-secure-store');
+    }
+  });
 });
 
 it('C45 export waits behind a tentative native history commit and exports only confirmed facts after rollback', async () => {
