@@ -257,11 +257,11 @@ jobs:
             npm ci --no-audit --no-fund
             npm run phase9:ios-privacy-source-audit:test
             npm run phase9:ios-privacy-source-audit:check
+            npm run phase9:store-build-inspect:check
           )
           npm run phase9:ios-archive-privacy-evidence:test
           npm run phase9:release-candidate-git-contract:test
           npm run phase9:verification-wiring:test
-          npm run phase9:store-build-inspect:check
 
       - name: Verify store-only client delivery
         run: node scripts/optimization/store-only-release-audit-smoke.mjs

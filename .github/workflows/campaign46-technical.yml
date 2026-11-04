@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
@@ -109,6 +110,7 @@ jobs:
           run('npm-graph', ['node', tools['npm'], 'ls', '--all', '--json', '--long'], root)
           run('semantic-security', ['node', '--test', 'scripts/release/full-app-j01/security_completion46.test.mjs'], root)
           run('historical-native-current-refusal', ['node', tools['npm'], 'run', 'phase5:check-native-config'], root)
+          run('historical-store-inspection-current-refusal', ['node', tools['npm'], 'run', 'phase9:store-build-inspect:check'], root)
           run('current-native-technical', ['node', 'scripts/release/full-app-j01/native_completion46.mjs'], root)
           summary = {'head': head, 'qualification': 'CURRENT_SOURCE_TECHNICAL_ONLY_NOT_G97',
               'completeSnapshotFiles': len(rows), 'completeSnapshotBytes': sum(row['bytes'] for row in rows),
