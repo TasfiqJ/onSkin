@@ -225,6 +225,42 @@
       "causal_need": "Preserve all90 predecessor cases with explicit current47 checks",
       "invariant": "Original assertions, executable invocations and controls unchanged",
       "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29",
+      "preimage_bytes": 5224,
+      "causal_need": "Continuation02 demonstrated Swift build repair and actual-function behavioral validation",
+      "invariant": "Strict optional rejection, propagated throwing receipts, unchanged owner/transaction/deletion authority and installer allowlist",
+      "validation": "Clean ordinary installation/hooks/exact installed bytes, current202 native successor and actual Swift behavior plus app build/runtime"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30",
+      "preimage_bytes": 75303,
+      "causal_need": "Continuation02 demonstrated Swift build repair and actual-function behavioral validation",
+      "invariant": "Strict optional rejection, propagated throwing receipts, unchanged owner/transaction/deletion authority and installer allowlist",
+      "validation": "Clean ordinary installation/hooks/exact installed bytes, current202 native successor and actual Swift behavior plus app build/runtime"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c",
+      "preimage_bytes": 16969,
+      "causal_need": "Continuation02 demonstrated Swift build repair and actual-function behavioral validation",
+      "invariant": "Strict optional rejection, propagated throwing receipts, unchanged owner/transaction/deletion authority and installer allowlist",
+      "validation": "Clean ordinary installation/hooks/exact installed bytes, current202 native successor and actual Swift behavior plus app build/runtime"
+    },
+    {
+      "path": "scripts/release/full-app-j01/swift_behavior47.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Continuation02 demonstrated Swift build repair and actual-function behavioral validation",
+      "invariant": "Strict optional rejection, propagated throwing receipts, unchanged owner/transaction/deletion authority and installer allowlist",
+      "validation": "Clean ordinary installation/hooks/exact installed bytes, current202 native successor and actual Swift behavior plus app build/runtime"
     }
   ],
   "amendments": [
@@ -341,6 +377,164 @@
           "proposal_sha256": "985eca3cf45d21c882601e32050eccc11936d9357cf797078585439370150a8c"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-04T22:02:01.770824+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+        "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+        "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+        "scripts/release/full-app-j01/swift_behavior47.py",
+        "scripts/release/full-app-j01/source_completion47.py",
+        "scripts/release/full-app-j01/source_completion47.test.py",
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "scripts/release/full-app-j01/native_generated47.test.mjs",
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "scripts/release/full-app-j01/pods_compat47.py",
+        "scripts/release/full-app-j01/pods_compat47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "scripts/phase9/ios-native-obligations47.json",
+        ".github/workflows/quality.yml",
+        ".github/workflows/campaign46-technical.yml"
+      ],
+      "reason": "Externally authenticated continuation02: apply demonstrated3-file Swift repair and smallest additive current-source/installed successor, actual-function Swift harness and causal branch wiring. Recorded before implementation. Preserve all prior REDs, historical90 assertions and original frozen plan.",
+      "current_preimages": [
+        {
+          "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29",
+          "preimage_bytes": 5224
+        },
+        {
+          "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30",
+          "preimage_bytes": 75303
+        },
+        {
+          "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c",
+          "preimage_bytes": 16969
+        },
+        {
+          "path": "scripts/release/full-app-j01/swift_behavior47.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "ABSENT",
+          "preimage_sha256": null,
+          "preimage_bytes": null
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "021668667f053c0abf23eca9d4c05204a4322d8cb4d6975ad0c650c507a39d7a",
+          "preimage_bytes": 8492
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "8ea685ed0e21ebac59c48d37976c687c7128137baf0f4e3b6c15831c15c596ae",
+          "preimage_bytes": 6525
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "1ba21c6bb09471d9c21cc8e342a84e6f2aac47731efb0e8d50744796518e2b8b",
+          "preimage_bytes": 19627
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "ba3d71691479c0e0e3772ea6dad5a9b973c940fd25fb6198601720d270199903",
+          "preimage_bytes": 7971
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "a5730cc7a22cb1b6d1ded3a36cfa2bdd9c8577ad94ce77cd26df46f09cde73e3",
+          "preimage_bytes": 93545
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "018fd17c0f05eb4f4b8f10efd8a5d747dca72a29f2097754a08a35fe5afea8dc",
+          "preimage_bytes": 24289
+        },
+        {
+          "path": "scripts/release/full-app-j01/pods_compat47.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "553140c63c7e4e7ccc03fa68960b8f980bc649acd6e276d7632a220a4a337541",
+          "preimage_bytes": 11354
+        },
+        {
+          "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "096225117e0acc1adcdce67badd02dee63adb6416e6990c8c7004d3df60a948d",
+          "preimage_bytes": 6899
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "985eca3cf45d21c882601e32050eccc11936d9357cf797078585439370150a8c",
+          "preimage_bytes": 10817
+        },
+        {
+          "path": "scripts/phase9/ios-native-obligations47.json",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "67f9236fbdc49077df0d51f5b85fb34895416a18c4dd9b9fb85fa02218c2470e",
+          "preimage_bytes": 122326
+        },
+        {
+          "path": ".github/workflows/quality.yml",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "47d00a47f3abc05904aaae58b61c0db6a76280f162ebe13edfe14c080fcae7f5",
+          "preimage_bytes": 16702
+        },
+        {
+          "path": ".github/workflows/campaign46-technical.yml",
+          "preimage_head": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+          "preimage_state": "PRESENT",
+          "preimage_sha256": "a480b5003275a6eb312a10269aa6dccab247496d380623f0dc65841641ce496b",
+          "preimage_bytes": 14844
+        }
+      ],
+      "previous_hosted_budget": 6,
+      "amended_total_hosted_budget": 18,
+      "additional_jobs": 12,
+      "permitted_attempts": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "one_concurrent_job": true,
+      "job_timeout_minutes": 90,
+      "unchanged_failure_reruns_allowed": false,
+      "signing_or_paid_changes_authorized": false
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
