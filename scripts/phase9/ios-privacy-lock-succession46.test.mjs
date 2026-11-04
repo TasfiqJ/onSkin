@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync,
+import { cpSync, existsSync, linkSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync,
   statSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -9,7 +9,7 @@ import { Worker } from 'node:worker_threads';
 import test from 'node:test';
 import { auditIosPrivacySource, canonicalAuditJson, proveCurrentNativeSource46,
   validateIosPrivacyAuditClaims } from './ios-privacy-contract.mjs';
-import { nativeTree23, checkCurrentAuditSnapshot23 } from './ios-privacy-lock-succession23.mjs';
+import { nativeTree23 } from './ios-privacy-lock-succession23.mjs';
 import { IOS_PRIVACY_LOCK_SUCCESSION46_PATH, LOCK_SUCCESSION46_SHA256,
   checkedNativeRoot46, checkCurrentAuditSnapshot46, nativeSourceIdentity46,
   readNativeFile46, verifyNativeCandidate46, assertCurrentNativeHead46, checkWindowsReparse } from './ios-privacy-lock-succession46.mjs';
@@ -294,17 +294,23 @@ test('current46 actual non-strict tampered and missing descriptor writes preserv
           assert.equal(hash(readFileSync(item.backup)), hash(item.bytes));
           writeFileSync(item.path, item.old);
         }
-        const oldReport = auditIosPrivacySource({ root: ROOT });
-        assert.equal(oldReport.status, 'archive_required', JSON.stringify(oldReport.errors));
-        assert.deepEqual(oldReport.errors, []);
-        assert.equal(checkCurrentAuditSnapshot23(oldReport,
-          readFileSync(join(ROOT, 'docs/phase-9/ios-sdk-lock-succession23.v1.json'))), true,
-        'This is a genuine old-profile positive, so a current-head metadata fallback would be unsafe.');
-        assert.equal(cli(['--strict', '--check']).status, 1);
+        assert.equal(lstatSync(join(ROOT, 'node_modules/decode-uri-component')).isSymbolicLink(), true);
+        assert.throws(() => auditIosPrivacySource({ root: ROOT }), error =>
+          error.code === 'PATH_SYMLINK' && error.path === 'node_modules/decode-uri-component',
+        'The genuine current workspace link also prevents calling this an old-profile positive.');
+        const sourceCheck = cli(['--strict', '--check']);
+        assert.equal(sourceCheck.status, 1);
+        assert.match(sourceCheck.stderr, /ios-sdk-lock-succession46\.v1\.json/u,
+          'Current source validation must require its current witness, not fall back to the legacy link refusal.');
         const store = spawnSync(process.execPath, ['scripts/phase9/store-build-inspect.mjs', '--check'],
           { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
         assert.equal(store.status, 1);
         assert.match(store.stdout + store.stderr, /Installed iOS privacy source audit/u);
+        assert.match(store.stdout + store.stderr, /ios-sdk-lock-succession46\.v1\.json/u);
+        t.diagnostic(JSON.stringify({ state, legacyAudit: 'PATH_SYMLINK',
+          legacyProfileSnapshotValidated: false, counterexamplePassManufactured: false,
+          currentSourceExit: sourceCheck.status, currentStoreExit: store.status,
+          currentWitnessMandatory: true, acceptanceGranted: false }));
       }
       const result = cli(['--write']); assert.equal(result.status, 1); assert.equal(result.stdout, '');
       assert.equal(result.stderr.trim(), 'CURRENT_NATIVE_SOURCE46_HISTORICAL_OUTPUTS_READ_ONLY');

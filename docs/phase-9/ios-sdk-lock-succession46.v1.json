@@ -1497,8 +1497,8 @@
     },
     {
       "path": "scripts/phase9/ios-privacy-lock-succession46.test.mjs",
-      "bytes": 25678,
-      "sha256": "6aac7262a873bb9a053eda9c8c3e9c9d8e8aeaad47d1fd4031733e59e772adf5"
+      "bytes": 26213,
+      "sha256": "15804cc12146dbcc5e355d178c0fe0320d7f3028c6f07609c63651818cd215b8"
     },
     {
       "path": "scripts/phase9/ios-privacy-source-audit.mjs",
