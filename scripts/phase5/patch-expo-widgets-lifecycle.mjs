@@ -39,7 +39,7 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
     target: 'node_modules/expo-widgets/ios/Widgets/AppIntent.swift',
     payload: 'AppIntent.swift',
     original: 'f9c61057350a4f42cba5d90642688ea1abe182fec6c503702238d48e828f5fbd',
-    patched: '4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29',
+    patched: '1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/EntryView.swift',
@@ -79,7 +79,7 @@ export const EXPO_WIDGETS_PATCH_TARGETS = Object.freeze([
       '47a9ffdfbc63c7ecaa477df6e3d7ff67c57572333d8b608d4e74a39e6884a83c',
       'b688c74b340c6ec36a38602d5466e57f1723f8fee5f43abd12a45e78f24959c4',
     ],
-    patched: 'b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30',
+    patched: '9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c',
   },
   {
     target: 'node_modules/expo-widgets/ios/Widgets/TimelineProvider.swift',

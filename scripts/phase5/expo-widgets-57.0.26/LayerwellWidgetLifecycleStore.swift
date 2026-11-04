@@ -1185,7 +1185,8 @@ enum LayerwellWidgetLifecycleStore {
       expectedAuthorityNonce: expectedNonce,
       timelineJSON: try canonicalJSON(entries)
     )
-    guard result == try canonicalJSON(["status": "published"]) else {
+    let publishedReceipt = try canonicalJSON(["status": "published"])
+    guard result == publishedReceipt else {
       throw LayerwellWidgetLifecycleError.stale
     }
   }
