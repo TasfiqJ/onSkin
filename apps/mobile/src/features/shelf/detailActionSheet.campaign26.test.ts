@@ -11,6 +11,7 @@ import { IntakeProvider } from './IntakeContext';
 import { addProduct, loadShelf } from './store';
 import type { useShelf } from './useShelf';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Actual route, layout, Query, authority, encrypted Shelf and mutations. Only
 // native rendering/storage/router/absent external transport are platform ports.
@@ -329,10 +330,22 @@ it('cancels an explicitly confirmed pending store write when the health grant re
 it('does not report success when a committed removal cannot be read back canonically', async () => {
   await mount();
   await open();
+  const nativeRead = AsyncStorage.getItem.bind(AsyncStorage);
+  let awaitingCommitReadback = false;
   vi.spyOn(ports26.bytes, 'set').mockImplementation((key, raw) => {
     Map.prototype.set.call(ports26.bytes, key, raw);
-    if (key === 'layerwell.shelf.v1') ports26.failRead = key;
+    if (key === 'layerwell.shelf.v1') awaitingCommitReadback = true;
     return ports26.bytes;
+  });
+  vi.spyOn(AsyncStorage, 'getItem').mockImplementation(async (key) => {
+    const raw = await nativeRead(key);
+    if (key === 'layerwell.shelf.v1' && awaitingCommitReadback) {
+      // Let the shared writer confirm exact native bytes; fail the subsequent
+      // domain/Query readback, which is the boundary this route test exercises.
+      awaitingCommitReadback = false;
+      ports26.failRead = key;
+    }
+    return raw;
   });
   await press('Remove completely');
   await flush26();

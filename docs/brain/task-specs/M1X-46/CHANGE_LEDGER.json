@@ -1,0 +1,992 @@
+{
+  "schema": 1,
+  "authorization": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+  "base": "20c761fa5e3fbf427fb33ab319218bd0c1d022bd",
+  "base_tree": "23563c36af990df5fc74d6a79507cfc24a1ff8ac",
+  "plan_commit": "5b635c9d822f862b50c03f923c441e9b22161ff7",
+  "plan_sha256": "06a5d45db892bd64a72c8010ec23a5b6fa27901e32c35b4b29c1f746fb9b37f6",
+  "inventory_frozen": true,
+  "paths": [
+    {
+      "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Finite preimage/need/invariant/authority/validation record",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/TASK.md",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Subsequent decisions/checks without self-acceptance",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/COMPLETION_MATRIX.json",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual38/18 current implementation and separate evidence axes",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/EXTERNAL_ACTIONS.md",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Exact external owner acts/prerequisites/evidence",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/FINAL_REPORT.md",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Truthful source review handoff",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/manual.tsx",
+      "preimage_sha256": "56ec9e3c1ffda7ed2537babf81d782b55ee0ebb161e91e8069bcd6a09db8d251",
+      "bytes": 20074,
+      "need": "Preserve Ingredients input at compact/accessibility sizes; no data-model or admission change",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/_layout.tsx",
+      "preimage_sha256": "a1cd0d1e1393593e65c4589c628e8befe7b39bade812c42e65974141d2a00d83",
+      "bytes": 1778,
+      "need": "Supply safe exit through existing route from unreadable/pending Shelf",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/ShelfDataAvailabilityGate.tsx",
+      "preimage_sha256": "8176faf40a6182265be3e2044ec7a359056225ba41dbbce81a2c5ed77d994cc5",
+      "bytes": 6357,
+      "need": "Honor optional exit during loading; preserve closed private children and retry",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/compactManual46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Genuine mounted RED/fixed compact input and pending/error exit; real intake/store/crypto/lease/Query",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_completion46.py",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Finite preimages/frozen first-plan/source equivalence/38rows18gates/exact94routes technical verifier",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_completion46.test.py",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Real Git/strict metadata negative controls for C46 verifier",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "preimage_sha256": "cb37e42589b0040ba23606bd601a32891212dda57a98d1ddc24b4dd401f7fc93",
+      "bytes": 17963,
+      "need": "Replace only current-source C45 preflight with C46 technical check; all downstream checks preserved",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "PROGRESS.md",
+      "preimage_sha256": "8a0d9219476b936b7c7d91c494a079caea2a0e9657260b746a03c9c545970b93",
+      "bytes": 584020,
+      "need": "Append C46 result and preserved NO_GO",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "preimage_sha256": "f0206587d213e3611b440fae2d10ea7e8294066adec8e51b0cdbada16a90f504",
+      "bytes": 2886,
+      "need": "Current handoff; no acceptance",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "preimage_sha256": "86057ae0b3c39c2e9d169906b67d5b8c0f178d136d6faebbaa761224e0e9bbe5",
+      "bytes": 142034,
+      "need": "Existing source-worklist only last separate seal after source checks",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "preimage_sha256": "22af289d2540203f3150638cbbc043fc02d628325e4f1624a451eab42eb7e174",
+      "bytes": 84773,
+      "need": "Existing source-worklist only last separate seal after source checks",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "package.json",
+      "preimage_sha256": "1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9",
+      "bytes": 47029,
+      "need": "Actual decode-uri-component<=0.5.0 GHSA-qr28-fpjm-wq7f; narrow supported patch override0.5.1",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "package-lock.json",
+      "preimage_sha256": "1485297ffa6cc20367a5f2fda35bc33e12dc11ef422c813f5f28a4e339cb3b95",
+      "bytes": 572798,
+      "need": "Resolve exact supported security patch0.5.1; normal install/hooks, no platform migration",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "scripts/release/full-app-j01/security_completion46.test.mjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Semantic current-source URI denial-of-service regression with bounded native subprocess; separate technical evidence",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "apps/mobile/src/features/routine/connectedJourney46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Integrated real encrypted manualShelf -> order/history -> Today/offline facts -> export -> owner-denial source journey",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/exportConfirmation46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Reproduce potential concurrent owner export of tentative Shelf/Today note native commit before failed compensation; no runtime edit until proven",
+      "invariant": "Only confirmed owner facts exported; genuine crypto/store/authority and native adapter barriers",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Native commit-then-reject controlled RED, then fixed export ordering plus plan/photo/cleanup regressions"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/package.json",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual inherited CommonJS query-string7 decoder API mismatch; local compatibility export of official fixed0.5.1, no node_modules edit",
+      "invariant": "Use canonical upstream patched implementation; existing Expo/Node20.20.2/22.21 platform; no provider SDK or policy change",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved actual query-string RED, real Expo Router/consumer decode and malformed input bounded checks; normal ci/hooks/lockgraph, type/lint/native/exports"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/index.cjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual inherited CommonJS query-string7 decoder API mismatch; local compatibility export of official fixed0.5.1, no node_modules edit",
+      "invariant": "Use canonical upstream patched implementation; existing Expo/Node20.20.2/22.21 platform; no provider SDK or policy change",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved actual query-string RED, real Expo Router/consumer decode and malformed input bounded checks; normal ci/hooks/lockgraph, type/lint/native/exports"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/index.d.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual inherited CommonJS query-string7 decoder API mismatch; local compatibility export of official fixed0.5.1, no node_modules edit",
+      "invariant": "Use canonical upstream patched implementation; existing Expo/Node20.20.2/22.21 platform; no provider SDK or policy change",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved actual query-string RED, real Expo Router/consumer decode and malformed input bounded checks; normal ci/hooks/lockgraph, type/lint/native/exports"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.ts",
+      "preimage_sha256": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
+      "checkout_preimage_sha256": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
+      "bytes": 43736,
+      "need": "Genuine RED real export returns unconfirmed optional note before native rejected write compensation; reserve exact export keys through existing sorted key queues",
+      "invariant": "Export only settled owner facts, no global lock/key/policy; preserve genuine plan-history recovery/read authority and deletion priority",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Native held encrypted write -> export waits -> exact rollback, success/retry and owner/cleanup cancellation; all C44/C45 private/crypto/photo regressions and forced root"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
+      "preimage_sha256": "7f02e125f82f5a2fdc576645ae1abd94513ee6fdc6132009a94e965a6609a265",
+      "checkout_preimage_sha256": "7f02e125f82f5a2fdc576645ae1abd94513ee6fdc6132009a94e965a6609a265",
+      "bytes": 22201,
+      "need": "Proven failed-compensation history exposure requires durable prearmed nondestructive recovery at existing marker/owner boundary",
+      "invariant": "Never ordinary-save-as-deletion consent, no lost confirmed/photos/owner proof, fail-closed across module reset, preserve legacy1/C45v1, no global private mutex",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real native blocked export/read/rewrite/restart, marker write/read/clear failures, deletion priority and full C44/C45/owner regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+      "preimage_sha256": "5f892775afaa04cdd2b5d655d12dee5314de3bc77dae57fa304b99e86dc15485",
+      "checkout_preimage_sha256": "5f892775afaa04cdd2b5d655d12dee5314de3bc77dae57fa304b99e86dc15485",
+      "bytes": 9856,
+      "need": "Proven failed-compensation history exposure requires durable prearmed nondestructive recovery at existing marker/owner boundary",
+      "invariant": "Never ordinary-save-as-deletion consent, no lost confirmed/photos/owner proof, fail-closed across module reset, preserve legacy1/C45v1, no global private mutex",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real native blocked export/read/rewrite/restart, marker write/read/clear failures, deletion priority and full C44/C45/owner regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Genuine native marker/owner/concurrency/restart/generation and destructive-priority controls for durable recovery",
+      "invariant": "Existing v1/legacy1 and owner proofs preserved; no ownership/deletion grant from unclaimed v2; no mocked critical store/lease",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Controlled native marker commit/reject/omission/ABA, concurrentcapabilities/ownerchanges/fullcleanup; forcedroot/type/lint"
+    },
+    {
+      "path": ".github/workflows/campaign46-technical.yml",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Exact-current-head supported Linux static scanner run unavailable locally; explicit C46 technical diagnostics only",
+      "invariant": "Original Security/candidate/G97 workflows/rules/pins/custody unchanged; full scope/coverage/raw exits/artifacts, no admission or exceptions",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Official pinned tool provenance, scope/diff audit, actual final-head run/jobs/logs/artifacts retained on failures"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteJournal.c08b2.test.ts",
+      "preimage_sha256": "311f57789bfa97303ce2d7a04c0c278cca67d9e7afc001e72b6ef14c7789b0c2",
+      "checkout_preimage_sha256": "311f57789bfa97303ce2d7a04c0c278cca67d9e7afc001e72b6ef14c7789b0c2",
+      "bytes": 5175,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+      "preimage_sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c",
+      "checkout_preimage_sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c",
+      "bytes": 42863,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteWithdrawal.c08b2.test.ts",
+      "preimage_sha256": "c0bfbfa1717b6737b3b4e05e39ca14894ca0b419e8a716a94826a22bd5fda135",
+      "checkout_preimage_sha256": "c0bfbfa1717b6737b3b4e05e39ca14894ca0b419e8a716a94826a22bd5fda135",
+      "bytes": 21408,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/routine/planSourceFence44.test.ts",
+      "preimage_sha256": "1ec61b14e6d73cbc66223e996e12fd010108b692e0607cfa82c87a6dbe159659",
+      "checkout_preimage_sha256": "1ec61b14e6d73cbc66223e996e12fd010108b692e0607cfa82c87a6dbe159659",
+      "bytes": 17677,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts",
+      "preimage_sha256": "8209900541d9426287675b2797c0cb5fd1eec9350e35db9620026fff066db501",
+      "checkout_preimage_sha256": "8209900541d9426287675b2797c0cb5fd1eec9350e35db9620026fff066db501",
+      "bytes": 136828,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/detailActionSheet.campaign26.test.ts",
+      "preimage_sha256": "d631698efa7a182c192ea035d9abcc8cc933f3af256c47454e4ad4f3b07d9154",
+      "checkout_preimage_sha256": "d631698efa7a182c192ea035d9abcc8cc933f3af256c47454e4ad4f3b07d9154",
+      "bytes": 13031,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/intakeRecovery.campaign25.test.ts",
+      "preimage_sha256": "b8695bf0def6ebf0107f59a0492c64fd40ab7096b4f1c2e541660dcc089f7fc7",
+      "checkout_preimage_sha256": "b8695bf0def6ebf0107f59a0492c64fd40ab7096b4f1c2e541660dcc089f7fc7",
+      "bytes": 18915,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts",
+      "preimage_sha256": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
+      "checkout_preimage_sha256": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
+      "bytes": 17440,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/postDispatchCommit28.test.ts",
+      "preimage_sha256": "f4ed27d371a05404095243b68bc20fe4c753e4e33b37c32d9d12957229d690cf",
+      "checkout_preimage_sha256": "f4ed27d371a05404095243b68bc20fe4c753e4e33b37c32d9d12957229d690cf",
+      "bytes": 9185,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
+      "preimage_sha256": "0c0dafea3afb414972004d4160b723384cb42fe23a93e9631d7c84cd9c190b7c",
+      "checkout_preimage_sha256": "0c0dafea3afb414972004d4160b723384cb42fe23a93e9631d7c84cd9c190b7c",
+      "bytes": 77787,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/today/optionalChangeJournal41.test.ts",
+      "preimage_sha256": "d45de01454611cdd0128a2289d57bfb83930547a60f74f49c48739c26ba9792e",
+      "checkout_preimage_sha256": "d45de01454611cdd0128a2289d57bfb83930547a60f74f49c48739c26ba9792e",
+      "bytes": 18227,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
+      "preimage_sha256": "a498442cce32e2a330a416793883528ef2a58234c1f2f0100a5b8f8f1ff8b969",
+      "checkout_preimage_sha256": "a498442cce32e2a330a416793883528ef2a58234c1f2f0100a5b8f8f1ff8b969",
+      "bytes": 51654,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVCommitFence28.test.ts",
+      "preimage_sha256": "c7162d6d966ba84847a49ff08855900bbb92825ad60d338fe37685be2084181a",
+      "checkout_preimage_sha256": "c7162d6d966ba84847a49ff08855900bbb92825ad60d338fe37685be2084181a",
+      "bytes": 9095,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVSourceFence44.test.ts",
+      "preimage_sha256": "b6d68f5bf5cb97edf1dc94031d6ace694e1d9f42c12ac040a651e66bffad82ef",
+      "checkout_preimage_sha256": "b6d68f5bf5cb97edf1dc94031d6ace694e1d9f42c12ac040a651e66bffad82ef",
+      "bytes": 13628,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "scripts/release/full-app-j01/c46-rules/owasp-top-ten-current.yaml",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Genuine supported currentSAST despite originalOWASP remotehashdrift; distinctC46 technicalpack copied from actualofficialendpoint, no originalrule/pin edits",
+      "invariant": "Original587894... custodyrefusal remainsOPEN; currentpack separatelyhashed/attributed, no originalGateequivalence/no allowlist/severitywaiver; allactualfindings retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "ExactofficialHTTPbytes/currentSHA+unchangedother3packs, explicitoriginaldriftreceipt; actualfinalheadSemgreprawresultsandcoverage"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_completion46.mjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Authorizedsecurity12node nonnativepatch changescomplete lockhash; oldNative23 historicalreader correctlyrefuses newlock. Prove actualcurrentnativeidentity/config invariants independently without historicalreader/custody edits",
+      "invariant": "Exactbase-lock reversal/native node+source+installedtree equality; all originalpureconfig/lifecycle assertions preserved; technicalsource only NO native/owner/releaseadmission; originalcurrentrefusal retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real complete nativeinventory, exact12node deltas, actualvariantconfig, tamperrefusals and oldpinnedparent nativecommand unchangedPASS; actualcurrentoldguardrefusalretained; exports/type/root/finaltechnicalCI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_completion46.test.mjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Authorizedsecurity12node nonnativepatch changescomplete lockhash; oldNative23 historicalreader correctlyrefuses newlock. Prove actualcurrentnativeidentity/config invariants independently without historicalreader/custody edits",
+      "invariant": "Exactbase-lock reversal/native node+source+installedtree equality; all originalpureconfig/lifecycle assertions preserved; technicalsource only NO native/owner/releaseadmission; originalcurrentrefusal retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real complete nativeinventory, exact12node deltas, actualvariantconfig, tamperrefusals and oldpinnedparent nativecommand unchangedPASS; actualcurrentoldguardrefusalretained; exports/type/root/finaltechnicalCI"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "C46-01",
+      "decision": "Historical C25/C27 symptoms already repaired. Current compact Ingredients omission and Shelf gate missing exit require preserved genuine REDs. Existing entitlement gates unchanged; browser denial respected."
+    },
+    {
+      "id": "C46-02",
+      "decision": "Record canonical pinned Git preimage plus initial checkout CRLF hash separately; never relabel working bytes as Git blob. Frozen plan normalized to its committed LF bytes. No source semantics changed by normalization."
+    },
+    {
+      "id": "C46-03",
+      "decision": "Reproduced unconfirmed note export with genuine crypto/authority/native barrier. Original RED preserved separately from test import-order timeout. Authorize causal privateKV shared export queue fix; investigate failed compensation separately before candidate eligibility."
+    },
+    {
+      "id": "C46-04",
+      "decision": "Additional genuine shared ordinary-writer failed-compensation defect remains candidate blocker. Implement durable prearm/recovery, not memory-only quarantine; preserve actual unclaimed bootstrap provenance without manufacturing owner proof. Any related recovery key would require explicit ledger amendment before edit (mandate excludes unrelated keys, not causally necessary control state). No unsafe seal/push."
+    },
+    {
+      "id": "C46-05",
+      "decision": "Durable shared health-write recovery uses existing content-free marker protocol; private plaintext reads refuse while v2 mutation registry pending to prevent relabel of old nonAAD ciphertext. No new encryption format or global private mutex. Disjoint writes whose preparation reads private data may require retry; preserve ordinary confirmed facts/photo keys and explicit cleanup priority. Actual owner proof remains genuine; unclaimed test bootstrap provenance cannot grant ownership. Completion/journey agents own disjoint auth/privateKV paths."
+    },
+    {
+      "id": "C46-06",
+      "decision": "Actual forcedroot development133fail/6817pass of6950mobile plus24operator; all14 failing fixturepaths prelogged before any changes. Nativecrypto adapter omissions, broad-fault injection and pending-plaintext expectations require precise native fixture/semantic corrections; introduced post-dispatch removal cancellation is runtime bug to repair. Preserve rawRED and original assertions/intent, no retroactive inherited exception."
+    },
+    {
+      "id": "C46-07",
+      "decision": "Before execution, source review found historical compact37/bottle38 Node controls spawn headless Chrome. C46 preflight does not invoke these browser programs under inherited browser/URL denial. Original programs unchanged; accepted prior exact-source evidence remains attributed, current browser/DOM/native NOT_RUN. Retain permitted pure driver-decision controls, actual mounted components, real domain/crypto tests and exact route inventory. No alternate browser route or test pass manufactured."
+    },
+    {
+      "id": "C46-08",
+      "decision": "OriginalOWASP expected587894... liveendpoint returnsdifferent0be8...;21trackedarchives36candidatebodiessearchedwithout authenticoldbytes. Originalprotectedrule/pin remains unchanged and BLOCKED_RULE_CUSTODY. C46 uses distinctlynamed officialcurrentOWASP technicalcopy with its own exactretrievedhash plus3unchangedpacks, explicitnonequivalence and no originalSecurity/G97admission. This is authorized current-source technicalanalysis, not renewal/replacement oforiginalgate. Never-written oldcopyauthority retained separately."
+    },
+    {
+      "id": "C46-09",
+      "decision": "CurrentNative23 complete-lock hardpin fails on authorizedsecuritypatch; acceptedparent exactsame nativeconfigcommandPASS0, newheadFAIL3. No fakeexternalidentity or modifiedhistoricalreader/witness. Add C46 technicalnative compatibility proof over exactchangednonnativegraph and unchangednativeinstalledtrees/config; preserve oldguardactual refusal asOPEN and invoke oldpinnedreaders only at their pinnedsource. New sourcecompatibility is not native/signing/owneradmission."
+    },
+    {
+      "id": "C46-10",
+      "decision": "Final runtime/native/test/source-tool inventory46paths frozen. Canonical independent finalcheckout cloned with core.autocrlf=false beforecheckout; full normalnpmci hooks passed. Native technical proof170observations/1559files/12exactnodes and3tampertests PASS; originalcurrentNative23refusal staysOPEN, originalparentfullcommandPASS0. Final exact-head checks must measure canonicalbytes after this sourcecommit; only two existing generatedworklists may form finalseallast."
+    },
+    {
+      "id": "C46-11",
+      "decision": "Actual current store-build inspection also embeds original full-lock Native23 audit and refuses4sourceidentityerrors after authorizedsecuritypatch; no productionclearance flags supplied. Keep originalcurrentrefusal as explicittechnicaljobrawresult, run unchanged historicalstorecheck at exact20cfixture beside originalnativeaudit, and require C46actualcurrentnative/config proof. No historicalreader or custodyartifact edits, no store/deviceadmission. Other native/archive/provenance/wiring/lifecycle/backport controls executed onactual6db currenthead PASS. Revalidate finalworkflow/source after this causalpreflight routing amendment."
+    }
+  ],
+  "unused_authority": [
+    {
+      "path": "scripts/release/full-app-j01/c46-rules/owasp-top-ten.yaml",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Current remoteOWASP rules drift from originalfrozenSHA; preserve exact authenticated frozenbytes as C46 technical copy so genuine scan canexecute without changing originalpins/rules",
+      "invariant": "Byte-identical5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1 only; no newrules/allowlists/exceptions/owneradmission",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Hash frozenproposal anchor beforecopy/use, actualSemgrep finalheadrawresults+coverage; untouchedoriginalrules/pins verified",
+      "state": "NEVER_WRITTEN_OR_SHIPPED; exact original bytes unavailable"
+    }
+  ],
+  "final_inventory_note": "Exact46 potentially exercised paths, plus separately frozen first plan. No directory wildcard. Never-written old OWASP copy is retained only under unused_authority, not shipped.",
+  "closure02": {
+    "authorization": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+    "brain_decision": "CAMPAIGN46_PARTIAL_BLOCKED_NO_GO",
+    "predecessor_source": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+    "predecessor_tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020",
+    "inventory_frozen": true,
+    "packet_zip_sha256": "fb21895db480e7f73ea55e8c47f9d004c51893079364de005318fe20ea678425",
+    "prompt_sha256": "e1d8a720069020b7a7d765f1343f85be09f668bd283d16857e86e3d4a0521f8d",
+    "historical_seals": [
+      {
+        "commit": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "tested_source": "a8b305b186e2beff20065e05b27f23b8fd1d637c",
+        "tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020"
+      },
+      {
+        "commit": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+        "tested_source": "9af711340129a364fd70464d806d0ac89181aa9b",
+        "tree": "ef2fcae820c5391861fe5f8c8397126b7eacd7ce"
+      }
+    ],
+    "paths": [
+      {
+        "path": ".github/workflows/campaign46-technical.yml",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "ad80aa682259a50d11eba9bca7c7a8ef96df4612796c92b1897237520b522c07",
+        "bytes": 8762,
+        "need": "Improve exact-current security coverage and full-history/current-native execution with raw results",
+        "invariant": "ProtectedSecurity/candidate/rules/pins unchanged; findings notsilenced; actual errors preserved",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Authenticated tools, beforeafter coverage+finding table, finalhead hosted scanner/native receipts"
+      },
+      {
+        "path": ".github/workflows/quality.yml",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "a0b310fec68039521b42b3df1ef08acb5405d659420ae2bf090c0ae530b88f20",
+        "bytes": 16943,
+        "need": "Restore applicable current regression and current-native active successor execution",
+        "invariant": "CanonicalDB/CAT08/PG15/17,exports,iOS/provenance preserved; no browser bypass or parent-only currentproof",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Coverage obligation table, workflow source contracts, all6actual finalhead jobs"
+      },
+      {
+        "path": "ONSKIN_BRAIN_HANDOFF.txt",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "33cf070383b6ee244bb43487ce1fe2eaa4e11614a882d0b4482a730d1da69465",
+        "bytes": 940,
+        "need": "Update bounded currentcandidate review handoff without changing independent approvals",
+        "invariant": "No owner/releaseacceptance or historicalfailureerasure",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Exactfinalhead/tree/report/return identity andopenfinding crosscheck"
+      },
+      {
+        "path": "PROGRESS.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "e72cac0cd9fcd20e3b759dffe01a656f000e895f63070afb4561ff6689424602",
+        "bytes": 584833,
+        "need": "Append closure02 implementation/checkpoint outcomes",
+        "invariant": "Historicalrecord retained; source-only limits explicit",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Finalsource/hash/test/CIreceipt reconciliation"
+      },
+      {
+        "path": "apps/mobile/src/features/onboarding/AgeReverificationRights.integration.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "e729c3416322b1c3d6a05460ec4ab719f96c3ad791402e93c46356c80bf9ae65",
+        "bytes": 8441,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "74881a7f169bffa450dc3ee41291268b96d416f8ea425e463792c7387ec007a8",
+        "bytes": 42954,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/photos/photoDeleteWithdrawal.c08b2.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "15eca57bbc7e6eb43359da7dcaf18beed9da406f33bf61298b76a253550b2554",
+        "bytes": 21670,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "4cee6dbed43cafa74bd69c2d6db7d97d4c47b84eeb5a4ac637dfd1e56ed9d500",
+        "bytes": 137570,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/today/optionalChange41.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "6bbc96f5998df412fd947d8fc2c3582cfb5d0abba2388cfde91b417ab2126aad",
+        "bytes": 5881,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/lib/storage/privateKVCommitFence28.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "387adf7b2d8c3cd8fbd18a5cbad8b68c40d86882f2d5add1902d3546540fb0b4",
+        "bytes": 9324,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "a14320ac344080071b664184d38487a16481d4789cd14078d21e48bb6afc6a5e",
+        "bytes": 41683,
+        "need": "Append closure02 authority and finite preimages without rewriting original46path records",
+        "invariant": "Original preimages/plan unchanged; new records exactdeaf; no admission",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Strict original+closure finite sets, preimage hashes and append-only ancestry controls"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CLOSURE02_QUALITY_COVERAGE.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Exact displaced Quality obligation/current/historical/browser boundary table",
+        "invariant": "No silently reduceddenominator or DOMreplacement claim; CAT08actualbehavior andpacket09actualcurrentproducer execute",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "CurrentNode/hostedPG15receipts and exactoldsource identity/historical limits"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CLOSURE02_REPORT.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Truthful closure source handoff with exact current native/coverage/security outcomes and limits",
+        "invariant": "Preserve priorreport/REDs; no source/owner/release acceptance manufacture",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Rawreceipt/hash/currenthead reconciliation and independent internal evidence review"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CLOSURE02_SECURITY_REPORT.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Beforeafter finding/coverage/caller reachability/repair/openaction table",
+        "invariant": "Redactedrawfindings, officialsourceverification and genuineexits; unchangednotproofharmless; no waiver or pin/rulechanges",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actualcurrent boundedconsumer tests, fullsource scanners andcoverage/error accounting"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/EXTERNAL_ACTIONS.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "0376d96e95d1c553647d18743bf7a621396560ac940b1f53c49478468a1dc87e",
+        "bytes": 13981,
+        "need": "Append currentclosure exact successor-review/tool/coverage boundaries without granting any18gate",
+        "invariant": "Originalowneracts retained; sourcecandidatedescriptor notindependentadmission",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "All38/18remainfalse and exactscope/prerequisites/verification bindfinalcandidate"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/TASK.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "a24d825e72c6abe9fce51c0cb072ea9baf6588f66fc5ceea9e2e54266d99bb7b",
+        "bytes": 1996,
+        "need": "Record authenticated amendment and subsequent decisions without changing original plan",
+        "invariant": "Keep existing checkpoint history and Brain PARTIAL_BLOCKED status explicit",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "ExactplanSHA, sixancestor identities, task/source audit"
+      },
+      {
+        "path": "docs/phase-4/generated/source-worklist.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "6a605a39148ebf7137407028e4ca23684fa31b95421aa703bc31827cf274ec01",
+        "bytes": 142269,
+        "need": "New separate two-worklist-only finalseal for tested append-only closure candidate",
+        "invariant": "Only strictgenerator output after mandatorysourcechecks; preserve deafhistoricalseal andtested/final equivalence",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "PENDINGbeforegenerator, exact2pathseal, strict--check SOURCE_FROZEN andcommit/treeequivalence"
+      },
+      {
+        "path": "docs/phase-4/generated/source-worklist.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "baebf001f8c704a6cfc8f296f2fdee624ae15ca649416122dbdf0226c52afb41",
+        "bytes": 84921,
+        "need": "New separate two-worklist-only finalseal for tested append-only closure candidate",
+        "invariant": "Only strictgenerator output after mandatorysourcechecks; preserve deafhistoricalseal andtested/final equivalence",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "PENDINGbeforegenerator, exact2pathseal, strict--check SOURCE_FROZEN andcommit/treeequivalence"
+      },
+      {
+        "path": "docs/phase-9/ios-sdk-lock-succession46.v1.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "package.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "cc37998ca18d43326f11e47cc78f2b3aa62231b0381d1948578804190ec2269b",
+        "bytes": 47279,
+        "need": "Run new exact-source Expo output bound module after existing unchanged normal postinstall andcheck commands",
+        "invariant": "No existing hookremoved/reordered; dependencies/workspaces/platform/lockgraph retained; rootpackage newbyteidentity explicitlybound in native successor",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Normalnpmci thenpostinstall:check, npmgraph accounting, realconsumersecurity tests, exactpackage delta, native successor, forcedroot/type/lint,exports"
+      },
+      {
+        "path": "scripts/e2e/formula-driver-coverage46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Execute actual current formula authority/dispatch logic within permitted browser-free ports",
+        "invariant": "No DOM/geometry qualification; keep original37/38 source and refused browser boundary explicit",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Real selector/message/touch exports against adversarial route/identity/disabled/occlusion/snapshot/guard/event state"
+      },
+      {
+        "path": "scripts/phase5/check-native-config.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "acc0cab86dafd5c0dc4f2869fa4782c60b8e15999dedadea089b1dc74450f5bd",
+        "bytes": 37808,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-native-obligations46.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-contract.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "eb575e71a39eda38caa495c4d2f0d4db27e44fcbeed8347c8f26e32d264856c0",
+        "bytes": 84017,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-source-audit.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "6bf73a2c1c34310cc48a2d2f1102c8440fe7ff274b6e151d126ec4453a9b08a9",
+        "bytes": 12216,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/release-install-wiring46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Execute currentactual releaseinstall wiringinvariants ratherthanweaken oldliteral test orassume genericfixturePASS",
+        "invariant": "Extract real map/predicate; actualauditorandpatchcheck usecanonicalpackage/nativecandidate; allunsafehookvariantsrefuse; no realproviders orreleaseapproval",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Realcurrentcanonical0 thenmutantcommanddefinitions/conditionalQuality/head/package/patch failures; originalgenericwiringtestsretained"
+      },
+      {
+        "path": "scripts/phase9/release-smoke.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "3d315fe3154350fdbd46fd18eb75298372f782171af7d353c2bf3a7a93523727",
+        "bytes": 76670,
+        "need": "Two actualexact installation-wiring assertions must recognize finite newcanonical security compositehooks; realcurrentRED preserved",
+        "invariant": "Only2exact expectedcommandliteralchanges; EVERYotherstatement/assertionunchanged; existinghook module byteidentical andnewmodule+rootpackage exactcandidatepins; no broadwildcard",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actualexportedaudit/predicate RED/fixed fromrealrelease-smoke, exactdiff plus adversarialomission/reorder/duplicate/shortcircuit/echo/refusal controls and currentnative descriptor"
+      },
+      {
+        "path": "scripts/phase9/store-build-inspect.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "0bc92afcbb1f530277fe0f4c80a83a13b4dc7be2cb7e7833a9e7dfee5f17150b",
+        "bytes": 20304,
+        "need": "Active current46 inspector must require complete actual installed native proof/snapshot, notgenericpartialfixture audit",
+        "invariant": "Only boundedimport/call dispatch; everyoriginalinspector/archive/config/source assertion retained; historicalpath unchangedatimmutablecommit; no build/deviceacceptance",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "ActualcurrentinspectorCLI and originalinspectornegativecontrols, fabricated/omitted/stalereceipt refusals, nativeparitytable"
+      },
+      {
+        "path": "scripts/release/full-app-j01/fixtures46/expo-cli57.0.32/DevToolsPlugin.schema.cjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Retain byte-identical authenticated official prepatch schema for reproducible actualconsumer RED/fixed and safe patch tests after normalinstallation",
+        "invariant": "Exactofficialsourcehash4da5edad8daa6eda49fecc646934d372008952004b2c19abc03e27bcffc904a5, no fake schema or productionAPI change",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Officialregistry/tgzSRI/sourceidentity then boundedsyntheticchild realZod consumer and patchpre/postimage verification"
+      },
+      {
+        "path": "scripts/release/full-app-j01/fixtures46/expo-cli57.0.32/DevToolsPluginCliExtensionResults.cjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Retain byte-identical authenticated official prepatch outputcollector for reproducible realconsumer RED/fixed and atomic patch tests",
+        "invariant": "Exactofficialsourcehashab531966e34f5009d65fab4a00204cc999580d21b921f58ef58e00c568801c02, no usable secrets or protocolassertion reduction",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Officialregistry/tgzSRI/sourceidentity, 200k malformedoutputOOM before and finitebounds after, genuine normalcollector/executor behavior"
+      },
+      {
+        "path": "scripts/release/full-app-j01/mounted_journey46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Move exact existing mounted33test invocation out of mixed Bash/Node Quality heredoc so authenticated Semgrep can parse active workflow without dropping coverage",
+        "invariant": "Same actual2UItestfiles, aliases/environment, childarguments/timeout/failurepropagation andcleanup; no browser/native qualification or assertion reduction",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Exact beforeafter block behavior/sourcecomparison, actualmounted33testexecution and currentworkflowunchanged4packSemgrep coverage"
+      },
+      {
+        "path": "scripts/release/full-app-j01/mounted_journey46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Prove actual moved mountedtest runner cannot silently drop a failingchild or reduce twofilescope and activeworkflowinvocation",
+        "invariant": "SyntheticVitestchildport tests onlytooling; actual33mountedcasesstillseparate; preserveexistingC41/node/domain tests",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actualhelpersubprocess success/nonzerofailure/cleanup/configscope and parsedcurrentQuality activecall withoutconditional/echo bypass; realhelperexecutesreal33cases"
+      },
+      {
+        "path": "scripts/release/full-app-j01/native_current46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bound actual reachable Expo plugin schema and output collector before unbounded Zod issue accumulation",
+        "invariant": "Exact official package/SRI/pre/postimages; finite1024lines/1MiBbudget; normal protocol/types/error/kill behavior retained; idempotent safe stage/rollback; no manual installed-source shippedrepair",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Real Expo schema+append boundedchild RED/fixed, executorports+normaloutputs, drift/link/hardlink/race/partialwrite refusals, normalnpmci/hooks andWindows/Linux CI"
+      },
+      {
+        "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Adversarial consumer and installation repair tests for reproduced high-severity tool output DoS",
+        "invariant": "Use actual installed Expo consumers; preserve existing patches and readerassertions; no severitydowngrade or advisorywaiver",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actual normal/adversarialschema, collector, childexecutor, idempotence/drift/link/rollback/control cases onstable finalsource"
+      },
+      {
+        "path": "scripts/release/full-app-j01/source_completion46.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "07b3513fb3e1f2aaa17cab7e36c0659a89b209b0cf52c84fa29ad6658222e02d",
+        "bytes": 9298,
+        "need": "Recognize explicit append-only closure source/reseal lineage and exact finite amendment paths",
+        "invariant": "No wildcard; original46preimages/sixcommits/seal preserved; final tested-source delta exactly2worklists",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "RealGit negative tests for ancestry/preimages/inventory/intermediate seals/merge trees/worklist generation"
+      },
+      {
+        "path": "scripts/release/full-app-j01/source_completion46.test.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "fce3a9653fb9bf65690e393fd4924674332f3ded908a509b5ec8d750d7fc62d1",
+        "bytes": 5507,
+        "need": "Adversarial controls for append-only reseal and amendment preimages",
+        "invariant": "Preserve all existing map/gate/selfacceptance/duplicate/path tests; add realGit refusals",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actual Pythonisolated test suite and pending/frozen full invocations"
+      },
+      {
+        "path": "scripts/release/full-app-j01/workflow_context46.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Supplement frozencandidate22 Semgrep partialparse with exact-source authenticatedGitHubexpression materialization, retainingoriginalwarning andfullsourceoriginalscan",
+        "invariant": "Nevereditfrozenworkflow/rules/pins; onlyfiniteheadSHA/PR47 literalsubstitutions overentireauthenticatedsource; offsets/beforeafterhashes/analysis-onlyscope explicit; no shell/networkexecution orcleanoriginalclaim",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Wrongsource/unsafehead/wrongPR/template/extra omission refuse; wholefilebytecomparison and hostedunchanged4config contextscan withallrawerrors"
+      },
+      {
+        "path": "scripts/release/full-app-j01/workflow_context46.test.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Prove contextualstaticcoveragecannothide/drop frozenworkflowlines orintroduceunsafe substitutions",
+        "invariant": "Exactfrozeninput digest andfiniteonly replacements; sourceandcontextbothretained; no fakeworkflowexecution",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Real sourcecopy plus exactdiff/scope and adversarial source/head/PR/pathrefusals"
+      }
+    ],
+    "decisions": [
+      {
+        "id": "C46-C02-01",
+        "decision": "Authenticated closure02 authorizes exact current native successor and bounded active validation wiring, coverage restoration and actionable security work. Preserve first six commits, original plan/seal/REDs, old witnesses/rules/pins and unaccepted owner gates. All edits prelogged at exactdeaf preimages; inventory freezes after integration. No browser/Docker bypass."
+      },
+      {
+        "id": "C46-C02-02",
+        "decision": "Actual installed Expo CLI schema and append collector abort134/OOM with200k malformed plugin output under96MB. Add finite schema/output budgets via exact-source reproducible first-party installation patch; preserve immutable existing postinstall module/patches, real normal consumer protocol and normal npm installation. Root package scripts append new module after original command; lock graph expected unchanged. This is development-tool input hardening, not Zod/platform migration or advisory waiver."
+      },
+      {
+        "id": "C46-C02-03",
+        "decision": "Add exact-source current native46 descriptor/reader/full original-purpose audit dispatch and complete90obligation parity, after actualcurrent installed proof. Original C23 witness/readers/baselines and deaf narrowhelper unchanged historical; owner/native/deviceflagsfalse. Preserve currentstore inspector itself, its sharedaudit dispatch checksactualcurrentgraph."
+      },
+      {
+        "id": "C46-C02-04",
+        "decision": "Actual current native suite checkpoint4eab ran14cases:10pass4restored-positive failures. Pinpointed unrelated Windows Temp ancestor mtime/ctime churn; retain directoryidentity/reparse/canonicalpath and strictleaf fdmetadata/content/fullscope guards. Real leafrace and20k enumeration controls preserved; subsequent source/audit snapshots remain review-required."
+      },
+      {
+        "id": "C46-C02-05",
+        "decision": "Independent actual sourcechecker counterfeit fixture showed falsePENDING with4of23713files via GIT view overrides/skipworktree andforgedfrozenflag. Added sanitized allGit/preimage views, actualalltracked regular boundedstream Gitblob/SHA256 verification, index/HEAD/identity/race guards and exact originalledgerdata preservation; original6tests unchanged plus10real controls. Oldfalseacceptance andfixedrefusal retained."
+      },
+      {
+        "id": "C46-C02-06",
+        "decision": "Active installwiring releaseSmoke requires2exactcanonical compositehook literals, with EVERYotherbyte original and21adversarialcontrols. Restoredoriginal9nativecommands onCURRENTsource; completecurrent inspector explicitlyrequiresfresh completeproof/snapshot. Windows hostednative/current-source technicaljob supplements LinuxQuality and localWindows; source-only, no independentnative/owneradmission."
+      },
+      {
+        "id": "C46-C02-07",
+        "decision": "Actual hosted Windows job126669075689 on finalf5 failed new sourceguard controls: C46_GIT_WORKTREE_ROOT / C46_SOURCE_OPEN_RACE:main.txt. Current-source portability defect, not inherited waiver. Preserve this seal as historical; append the bounded portability repair and reseal after real current checks. No original Security/candidate/native refusal or safety assertion is waived.",
+        "preimages": [
+          {
+            "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 76112,
+            "sha256": "147044a5232b700bc09acaf1e5b6dda37f120161ee1a823f1a72f98243a99ad5"
+          },
+          {
+            "path": "docs/brain/task-specs/M1X-46/TASK.md",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 5059,
+            "sha256": "afba14de97ed6de30d25c43010bfe80f5abcf9d82cbfa9244a1d7669f305973e"
+          },
+          {
+            "path": "scripts/release/full-app-j01/source_completion46.py",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 23948,
+            "sha256": "b3ec8ec4caff3b3860e6542bda29db36b3336089cc9b94cbb19538b115a129b9"
+          },
+          {
+            "path": "scripts/release/full-app-j01/source_completion46.test.py",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 25490,
+            "sha256": "8ebd779f3daa844861bd59b3bfe279c9ce8882640204d1361e1538f90e5ae0ec"
+          }
+        ],
+        "invariants": "Same finite41-path inventory; no new paths. Repair directory/root and opened-file identity portability only; preserve every original assertion, all tracked-file/content/denominator/index/Git-view/reparse/hardlink/race checks.",
+        "validation": "Authenticate/reproduce WindowsPython3.12 identities and exact short/long path semantics; complete sourceguard controls on supported runtimes, real negative controls, full actual working-tree PENDING/FROZEN proof, required stable-source repeats and final-headCI. Preservef5seal and all actual failures; append source checkpoint then a fresh separate two-worklist-only seal."
+      }
+    ]
+  }
+}

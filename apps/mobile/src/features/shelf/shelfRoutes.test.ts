@@ -777,9 +777,11 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;',
     );
-    expect(source).toContain(
-      'const showManualIngredientsField = !supportFloorTextPressureManualPhone;',
-    );
+    // Compact layout must retain the same ingredient input. C46's mounted
+    // compactManual46 controls verify it remains editable through source retry.
+    expect(source).not.toContain('const showManualIngredientsField');
+    expect(source).not.toContain('{showManualIngredientsField ?');
+    expect(source).toContain('accessibilityLabel="Ingredients"');
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
@@ -810,7 +812,7 @@ describe('Shelf route mobile contracts', () => {
       "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
     );
     expect(source).toContain('compactManualPhone');
-    expect(source).toContain('{showManualIngredientsField ? (');
+    expect(source).toMatch(/accessibilityLabel="Ingredients"[\s\S]*?value=\{ingredients\}[\s\S]*?if \(canAct\(\)\) setIngredients\(next\);[\s\S]*?multiline/);
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',

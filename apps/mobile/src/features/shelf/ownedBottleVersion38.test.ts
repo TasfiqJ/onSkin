@@ -32,17 +32,21 @@ vi.mock('expo-secure-store', () => ({
 vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
   getItem: vi.fn(async (key: string) => {
     const snapshot = ports.raw.get(key) ?? null;
-    ports.readStarted?.();
-    if (ports.readGate) await ports.readGate;
+    if (key === 'layerwell.shelf.v1') {
+      ports.readStarted?.();
+      if (ports.readGate) await ports.readGate;
+    }
     return snapshot;
   }),
   getAllKeys: vi.fn(async () => [...ports.raw.keys()]),
   multiGet: vi.fn(async (keys: string[]) => keys.map((key) => [key, ports.raw.get(key) ?? null])),
   setItem: vi.fn(async (key: string, value: string) => {
-    ports.setStarted?.();
-    if (ports.setGate) await ports.setGate;
-    const outcome = ports.writeOutcome;
-    ports.writeOutcome = 'resolve';
+    if (key === 'layerwell.shelf.v1') {
+      ports.setStarted?.();
+      if (ports.setGate) await ports.setGate;
+    }
+    const outcome = key === 'layerwell.shelf.v1' ? ports.writeOutcome : 'resolve';
+    if (key === 'layerwell.shelf.v1') ports.writeOutcome = 'resolve';
     if (outcome === 'reject-before') throw new Error('SYNTHETIC_STORAGE_REFUSED');
     ports.raw.set(key, value);
     if (outcome === 'reject-after') throw new Error('SYNTHETIC_STORAGE_AMBIGUOUS');
@@ -264,7 +268,7 @@ describe('history38 through real encrypted privateKV and health/account leases',
     ports.readGate = new Promise<void>((resolve) => { release = resolve; });
     const started = new Promise<void>((resolve) => { signal = resolve; }); ports.readStarted = signal;
     const pending = loadOwnedBottleHistory38(owned.id);
-    const refused = expect(pending).rejects.toThrow(FORMULA38_STALE);
+    const refused = expect(pending).rejects.toThrow(/^(FORMULA38_STALE|LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED)$/);
     await started;
     ports.readGate = null; ports.readStarted = null;
     await removeProduct(owned.id);

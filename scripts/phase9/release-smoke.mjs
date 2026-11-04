@@ -635,7 +635,7 @@ for (const script of [
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
 const iosPrivacyVerifierDefinitions = {
-  'postinstall:check': 'node scripts/postinstall.mjs --check',
+  'postinstall:check': 'node scripts/postinstall.mjs --check && node scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs --check',
   'phase5:expo-widgets-lifecycle:test':
     'node --test scripts/phase5/patch-expo-widgets-lifecycle.test.mjs scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
   'phase9:view-shot-privacy:test':
@@ -679,7 +679,7 @@ block(
 );
 block(
   errors,
-  packageJson.scripts?.postinstall === 'node scripts/postinstall.mjs',
+  packageJson.scripts?.postinstall === 'node scripts/postinstall.mjs && node scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs',
   'Root postinstall must run the exact reviewed composite native-source patch installer.',
 );
 block(

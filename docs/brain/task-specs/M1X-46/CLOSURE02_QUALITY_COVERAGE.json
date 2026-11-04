@@ -1,0 +1,237 @@
+{
+  "schema": 1,
+  "authorization": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+  "reviewed_source": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+  "coverage_stage": "DEVELOPMENT_TARGETED_EXECUTION_NOT_FINAL_HEAD_CLOSURE",
+  "original_quality_diff": {
+    "path": "quality20c-deaf.diff",
+    "sha256": "02b48c7dac11399e48a9b207bcc0ae44a9f0e0da5f190dc0959126b83216bff4"
+  },
+  "rows": [
+    {
+      "id": "Q37",
+      "removed_invocation": "node --test scripts/e2e/compact-shelf-target37.test.mjs",
+      "obligation": "Real Chrome document ownership, active accessible identity, clipping/occlusion/fivepoint hit-testing, owned scroll and genuine touch dispatch. Independent HTML controls, not Expo flow qualification.",
+      "classification": "CURRENT_DRIVER_BROWSER_CONTROL_WITH_UNCHANGED_ACCEPTED_PARENT_BYTES",
+      "current_status": "NOT_RUN_POLICY_BROWSER_DENIAL",
+      "denominator": 16,
+      "executed": 0,
+      "cases": [
+        "real DOM excludes mounted aria-hidden Today and hidden partial text, then owns the exact button",
+        "real offscreen product fails before scrolling; only actual Shelf container scrolls",
+        "real two exact active product buttons fail closed without choosing one",
+        "real DOM refuses absent product",
+        "real DOM refuses wrong accessible role",
+        "real DOM refuses partial accessible name",
+        "real DOM refuses hidden exact button",
+        "real DOM refuses retired aria-hidden panel",
+        "real DOM refuses inert panel",
+        "real modal overlay at the product center refuses the foreground sibling hit",
+        "real clipped ancestor refuses even when the center remains visible",
+        "real product below sticky bottom bar refuses even with visible text",
+        "real scrolled-away row refuses before a new touch",
+        "real non-Shelf route and deactivated Shelf tab both refuse",
+        "real Expiring selection cannot masquerade as an owned product tap",
+        "real CDP touch lands on the authenticated descendant and fires the product control"
+      ],
+      "evidence": "unchanged-obligations46.json",
+      "historical": "Authenticated C45 Brain audit corroborates its exact final Quality6/6 and qualified historical replay. Unchanged source identity is not a new current DOM pass; missing nested raw remains qualified.",
+      "supplement": {
+        "command": "node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs",
+        "actual": {
+          "path": "shelf-driver35-current46.json",
+          "log": "shelf-driver35-current46.log",
+          "exit": 0,
+          "measured_sources_stable": true,
+          "log_sha256": "39491f644a105d4a13a87dabc429863bca3f77065e6fa7c05ecc0ce57e327775",
+          "qualification": "STABLE_MEASURED_FILES_NOT_FULL_WORKTREE_OR_FINAL_HEAD_EXECUTION"
+        },
+        "tests": 67,
+        "limit": "Actual driver decisions with synthetic IO. Cannot establish browser geometry/hit testing."
+      }
+    },
+    {
+      "id": "Q38",
+      "removed_invocation": "node --test scripts/e2e/owned-bottle-formula38.test.mjs",
+      "obligation": "Real Chrome formula control/message identity, visibility, route, clipping, occlusion, scroll, textbox role, explicit touch and retired owner/revision refusal.",
+      "classification": "CURRENT_DRIVER_BROWSER_CONTROL_WITH_UNCHANGED_ACCEPTED_PARENT_BYTES",
+      "current_status": "NOT_RUN_POLICY_BROWSER_DENIAL",
+      "denominator": 20,
+      "executed": 0,
+      "cases": [
+        "real foreground exact accessible button owns its touch",
+        "real DOM refuses missing control",
+        "real DOM refuses hidden control",
+        "real DOM refuses retired aria-hidden screen",
+        "real DOM refuses inert screen",
+        "real DOM refuses transparent screen",
+        "real DOM refuses pointer-disabled screen",
+        "real DOM refuses wrong accessible role",
+        "real DOM refuses partial accessible name",
+        "real ambiguous duplicate accessible names refuse",
+        "real disabled confirmation refuses",
+        "real wrong route refuses even with matching control",
+        "real opaque overlay refuses occult confirmation",
+        "real clipped button refuses",
+        "real below-fold control refuses until its actual container scrolls",
+        "real text input requires the exact accessible textbox identity",
+        "owner or revision retirement between inspection and touch sends no event",
+        "real accessible status alert must be visible after confirmation",
+        "real matching error text below the fold cannot masquerade as visible feedback",
+        "real matching status under a modal cannot masquerade as visible feedback"
+      ],
+      "evidence": "unchanged-obligations46.json",
+      "historical": "Same authenticated C45 evidence and source identity limit asQ37; no current DOM pass inferred.",
+      "supplement": {
+        "command": "node --test scripts/e2e/formula-driver-coverage46.test.mjs",
+        "actual": {
+          "path": "formula-driver46.json",
+          "log": "formula-driver46.log",
+          "exit": 0,
+          "measured_sources_stable": true,
+          "log_sha256": "707059c89e59d1f7aacefa5940238f8bfb1756cd339eeb809cba14b6865c6095",
+          "qualification": "STABLE_MEASURED_FILES_NOT_FULL_WORKTREE_OR_FINAL_HEAD_EXECUTION"
+        },
+        "tests": 27,
+        "source": {
+          "path": "scripts/e2e/formula-driver-coverage46.test.mjs",
+          "bytes": 5914,
+          "sha256": "5593af5ca78a04ec2871d839fc5bf889b009cb1e7256d088c260d44b790f6e7f"
+        },
+        "limit": "Actual formula selector/status/touch decisions with synthetic IO. These27 do not replace or add to the20 DOM cases."
+      }
+    },
+    {
+      "id": "Q40-source",
+      "removed_invocation": "node --test scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs",
+      "obligation": "Authentic historical SQL prefix/tail, all10 race assertion bytes and drains, precise current cleanup SQL, owner/dependency/delete/readback ordering, negative mutations and child refusal exits.",
+      "classification": "CURRENT_SOURCE_REGRESSION_WITH_PINNED_ORIGINAL_PREIMAGE",
+      "current_status": "EXECUTED_CURRENT_SOURCE_PASS",
+      "tests": 23,
+      "actual": {
+        "path": "cat08-source46.json",
+        "log": "cat08-source46.log",
+        "exit": 0,
+        "measured_sources_stable": true,
+        "log_sha256": "cf792f7f0241297a35fa1344043bc6ad203f18d1311f4ad8cca7ebaae96c29ed",
+        "qualification": "STABLE_MEASURED_FILES_NOT_FULL_WORKTREE_OR_FINAL_HEAD_EXECUTION"
+      },
+      "restoration": "Root restores exact command in Quality checks on final current source."
+    },
+    {
+      "id": "Q40-behavior",
+      "removed_invocation": "node scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs --behavioral",
+      "obligation": "Execute actual current SQL cleanup tail against real disposable PostgreSQL15 databases:2fresh positives+8 precise negative cases; prove setup completed, exact expected errors, dependency absence before disconnect, role absence and closed handles.",
+      "classification": "CURRENT_REAL_DATABASE_REGRESSION",
+      "current_status": "PENDING_FINAL_HOSTED_EXECUTION",
+      "denominator": 10,
+      "positive": 2,
+      "negative": 8,
+      "custody": "Existing real checks job PostgreSQL15 service, actual GitHub repository/pull_request/job=checks predicates. No spoofed environment or local Docker.",
+      "restoration": "Root restores exact behavioral command in checks job, retaining canonicalDB/CAT08/PG15/17 unchanged."
+    },
+    {
+      "id": "Q09",
+      "removed_invocation": "node scripts/docs/source-packet-supersession09.test.mjs",
+      "obligation": "Actual current producer CLI proves5 exact authorized notices versus frozen original packet; current generated projections, tampering, missing/extra docs, duplicate keys, traversal/output-overwrite/link refusal and restored outputs. Disposable fixtures only, not full-checkout proof.",
+      "classification": "CURRENT_PRODUCER_AND_INPUT_REGRESSION_WITH_FROZEN_AUTHORITY",
+      "current_status": "EXECUTED_CURRENT_WINDOWS_PASS",
+      "actual": {
+        "path": "packet09-current46.json",
+        "log": "packet09-current46.log",
+        "exit": 0,
+        "measured_sources_stable": true,
+        "log_sha256": "b237e6d0386a3118591be92aa71b852bda2ed32163a364b6042b71ea6215a313",
+        "qualification": "STABLE_MEASURED_FILES_NOT_FULL_WORKTREE_OR_FINAL_HEAD_EXECUTION"
+      },
+      "negative_refusals": 30,
+      "windows_not_run": [
+        "original-file-symlink:EPERM",
+        "active-file-symlink:EPERM",
+        "manifest-symlink:EPERM",
+        "output-symlink:EPERM",
+        "case-colliding-packet-names:case-insensitive-host"
+      ],
+      "directory_junction": "Executed negative refusal",
+      "restoration": "Root restores exact command on current source in Linux Quality; retain actual supported-platform denominator."
+    },
+    {
+      "id": "Q-native",
+      "removed_invocations": [
+        "npm run phase9:ios-privacy-source-audit:test",
+        "npm run phase9:ios-privacy-source-audit:check",
+        "npm run phase9:store-build-inspect:check"
+      ],
+      "obligation": "Current whole-lock/native source/config/lifecycle, complete installed native trees/patches and all original-purpose adversarial tests; current non-writing store inspector with archive/evidence/provenance checks. Parent pass alone does not close this.",
+      "classification": "CURRENT_SOURCE_OBLIGATION_WITH_SEPARATE_IMMUTABLE_HISTORICAL_CONTROLS",
+      "current_status": "NATIVE_LEAD_IMPLEMENTING_VERSIONED_SUCCESSOR",
+      "original_denominator": 90,
+      "plan": "81original existing source-audit cases current via bounded audit dispatch;5C23+4security23 counterparts mapped to executable exact46 successor tests. Original9 remain historical; original current8REFUSAL evidence preserved.",
+      "current_commands": [
+        "npm run phase9:ios-privacy-source-audit:test",
+        "npm run phase9:ios-privacy-source-audit:check",
+        "npm run phase5:check-native-config",
+        "npm run phase9:store-build-inspect:check",
+        "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+        "node scripts/release/full-app-j01/native_current46.mjs"
+      ],
+      "interface_limit": "Native lead owns final exact parity/execution evidence. This row is a plan, not PASS or native/device admission."
+    },
+    {
+      "id": "Q45-governance",
+      "removed_invocations": [
+        "python3 -I -B scripts/release/full-app-j01/main_integration45.test.py",
+        "python3 -I -B scripts/release/full-app-j01/historicalReplay45.test.py",
+        "python3 -I -B scripts/release/full-app-j01/source_consumer45.test.py",
+        "python3 -I -B scripts/release/full-app-j01/main_integration45.py --phase SOURCE_FROZEN",
+        "python3 -I -B scripts/release/full-app-j01/main_integration45.py --phase SOURCE_FROZEN --scope full-app-j01-v2",
+        "python3 -I -B scripts/release/full-app-j01/main_integration45.py --phase SOURCE_FROZEN --scope full-app-j01-v2 --external-readiness",
+        "python3 -I -B scripts/release/full-app-j01/main_integration45.py --historical"
+      ],
+      "obligation": "Exact immutable Campaign45 source/event/inventory/seal and separate original44 replay through earlier accepted programs. Hardcoded C45 plan/path/source/workflow identities make these historical on C46, not adaptable current checks.",
+      "classification": "GENUINELY_PINNED_HISTORICAL_GOVERNANCE",
+      "current_status": "REUSE_AUTHENTICATED_ACCEPTED_SCOPE_EVIDENCE_WITH_LIMITS",
+      "historical_counts": {
+        "integration": 39,
+        "historical_orchestration": 45,
+        "finite_consumer": 18
+      },
+      "historical_artifact": {
+        "id": 13284366167,
+        "name": "campaign45-history-41743601115-1",
+        "sha256": "dcc75a5eec559bfe88af6cd49df545008372b2366872fa8a8c7c9ef6d6452799",
+        "original44_normal_attempts": [
+          {
+            "attempt": 1,
+            "exit": 1
+          },
+          {
+            "attempt": 2,
+            "exit": 0
+          }
+        ]
+      },
+      "limits": "Qualified C39 missing nested raw/cause unproven remains. No recursive historical rebuild or C46 source acceptance inferred.",
+      "current_replacement": "Actual C46 source_completion46 tests and exact current source/inventory/seal checks, updated append-only reseal lineage by root; all38/18 remain unaccepted."
+    },
+    {
+      "id": "Q45-mobile-selection",
+      "removed_invocation": "C45 named mobile regression selection in first Quality preflight",
+      "obligation": "Plan history, owned bottle, private export/cleanup, source fences, health consent and owner/account/photo regressions on current app source.",
+      "classification": "CURRENT_APP_REGRESSIONS",
+      "current_status": "PENDING_FINAL_STABLE_FORCED_ROOT_AND_FOCUSED_EXECUTION",
+      "existing_evidence": "Revieweddeaf root6955mobile+24operator and focused464 from prior sealed candidate remain historical. Newfinal source must have fresh stable forced root/focused execution.",
+      "denominator": "All original named.ts files remain root-discovered; do not substitute test-source presence for actual execution. Mounted.tsx cases remain separately executed.",
+      "restoration": "Root owns final forced/focused/mounted commands plus current CI; no test discovery reductions."
+    }
+  ],
+  "acceptanceGranted": false,
+  "release": "NO_GO",
+  "browser_dom_denominator": 36,
+  "browser_dom_current_executed": 0,
+  "platform_qualification": "Windows pure-source/driver receipts bind measured input file hashes only. Concurrent agents may edit other unrelated files; no stable-full-tree or later-final claim.",
+  "evidence_directory": "c46-closure02-evidence/coverage (external execution receipts; archive mapping supplied in final return)",
+  "mapping_status": "OBLIGATIONS_MAPPED_WITH_EXPLICIT_PENDING_FINAL_EXECUTIONS",
+  "historical_byte_proof": "External coverage/unchanged-obligations46.json binds15 source paths to accepted20c SHA256 and Git blobs.",
+  "final_head_qualification": "Targeted development records are not final-head CI. Final integration receipt must append actual newhead source/test/native/database/CI outcomes without promoting pending or browser NOT_RUN entries."
+}

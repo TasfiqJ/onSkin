@@ -6,6 +6,7 @@ import {
   clearLocalDataCleanupRequired as clearSharedLocalDataCleanupRequired,
   isLocalDataCleanupRequiredInMemory,
   decodeHistoryIntentMarker45,
+  decodePrivateMutationMarker46,
   markLocalDataCleanupRequired as markSharedLocalDataCleanupRequired,
   type LocalDataCleanupMarkerRequest,
   type LocalDataCleanupMarkerScope,
@@ -41,11 +42,12 @@ const OWNER_PROOF_KEYS = [
   LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
   LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 ] as const;
-type ForcedSignOutPreservation = 'resume-cleanup' | 'retained-owner' | 'unclaimed-quarantine';
+type ForcedSignOutPreservation = 'resume-cleanup' | 'retained-owner' | 'unclaimed-quarantine' | 'mutation-recovery';
 
 export type LocalDataOwnerProof =
   | { kind: 'cleanup_required'; ownerBinding: string | null }
   | { kind: 'history_recovery'; ownerBinding: string }
+  | { kind: 'mutation_recovery'; ownerBinding: string | null }
   | { kind: 'owned'; ownerBinding: string; retained: boolean }
   | { kind: 'quarantined' }
   | { kind: 'unclaimed' };
@@ -99,6 +101,13 @@ export async function readLocalDataOwnerProof(): Promise<LocalDataOwnerProof> {
   }
 
   if (cleanupValue !== null && cleanupValue !== CLEANUP_REQUIRED_VALUE) {
+    try {
+      const mutation = decodePrivateMutationMarker46(cleanupValue);
+      if (mutation.ownerBinding !== storedHash || unclaimedQuarantine !== null) throw invalidOwnerProof();
+      return { kind: 'mutation_recovery', ownerBinding: mutation.ownerBinding };
+    } catch {
+      // Preserve the exact accepted C45 v1 format and its owner binding.
+    }
     let intent: ReturnType<typeof decodeHistoryIntentMarker45>;
     try { intent = decodeHistoryIntentMarker45(cleanupValue); } catch { throw invalidOwnerProof(); }
     if (intent.ownerBinding !== storedHash || unclaimedQuarantine !== null) throw invalidOwnerProof();
@@ -119,7 +128,7 @@ export async function readLocalDataOwnerProof(): Promise<LocalDataOwnerProof> {
 /** Canonical validated binding used by owner-bound recovery decisions. */
 export async function readLocalDataOwnerProofBinding(): Promise<string | null> {
   const proof = await readLocalDataOwnerProof();
-  return proof.kind === 'owned' || proof.kind === 'cleanup_required' || proof.kind === 'history_recovery'
+  return proof.kind === 'owned' || proof.kind === 'cleanup_required' || proof.kind === 'history_recovery' || proof.kind === 'mutation_recovery'
     ? proof.ownerBinding : null;
 }
 
@@ -136,6 +145,13 @@ export async function readLocalDataOwnership(userId: string | null): Promise<Loc
   if (proof.kind === 'cleanup_required') return 'cleanup_required';
   if (proof.kind === 'quarantined') return userId === null ? 'retained' : 'mismatch';
   if (proof.kind === 'unclaimed') return 'unclaimed';
+  if (proof.kind === 'mutation_recovery') {
+    // An interrupted unclaimed bootstrap never becomes ownership, adoption or
+    // automatic destructive cleanup. Explicit local cleanup remains available.
+    if (proof.ownerBinding === null) throw new Error('LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED');
+    if (userId === null) return 'retained';
+    return proof.ownerBinding === await localDataOwnerBinding(userId) ? 'match' : 'mismatch';
+  }
   if (proof.kind === 'history_recovery') {
     // Owner-scoped privacy deletion/withdrawal may still proceed. Session
     // admission below and every history read independently refuse the intent.
@@ -149,6 +165,7 @@ export async function readLocalDataOwnership(userId: string | null): Promise<Loc
 export async function claimLocalDataOwnership(userId: string): Promise<void> {
   const proof = await readLocalDataOwnerProof();
   if (proof.kind === 'history_recovery') throw new Error('LOCAL_DATA_HISTORY_RECOVERY_REQUIRED');
+  if (proof.kind === 'mutation_recovery') throw new Error('LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED');
   if (proof.kind === 'cleanup_required') {
     throw new Error('LOCAL_DATA_CLEANUP_REQUIRED');
   }
@@ -175,7 +192,7 @@ export async function claimLocalDataOwnership(userId: string): Promise<void> {
 export async function retainLocalDataOwnerForSignedOutRestore(): Promise<void> {
   const proof = await readLocalDataOwnerProof();
   const ownerBinding =
-    proof.kind === 'owned' || proof.kind === 'cleanup_required' || proof.kind === 'history_recovery'
+    proof.kind === 'owned' || proof.kind === 'cleanup_required' || proof.kind === 'history_recovery' || proof.kind === 'mutation_recovery'
       ? proof.ownerBinding : null;
   if (ownerBinding === null) {
     throw new Error('LOCAL_DATA_RETAINED_OWNER_INVALID');
@@ -190,8 +207,9 @@ export async function retainLocalDataOwnerForSignedOutRestore(): Promise<void> {
  */
 export async function quarantineUnclaimedLocalDataForSignedOutRestore(): Promise<void> {
   const proof = await readLocalDataOwnerProof();
+  if (proof.kind === 'mutation_recovery' && proof.ownerBinding === null) return;
   if (
-    proof.kind === 'owned' || proof.kind === 'history_recovery' ||
+    proof.kind === 'owned' || proof.kind === 'history_recovery' || proof.kind === 'mutation_recovery' ||
     (proof.kind === 'cleanup_required' && proof.ownerBinding !== null)
   ) {
     throw new Error('LOCAL_DATA_UNCLAIMED_QUARANTINE_INVALID');
@@ -208,7 +226,8 @@ export async function quarantineUnclaimedLocalDataForSignedOutRestore(): Promise
 export async function preserveLocalDataForForcedSignOut(): Promise<ForcedSignOutPreservation> {
   const proof = await readLocalDataOwnerProof();
   if (proof.kind === 'cleanup_required') return 'resume-cleanup';
-  const ownerBinding = proof.kind === 'owned' || proof.kind === 'history_recovery' ? proof.ownerBinding : null;
+  if (proof.kind === 'mutation_recovery' && proof.ownerBinding === null) return 'mutation-recovery';
+  const ownerBinding = proof.kind === 'owned' || proof.kind === 'history_recovery' || proof.kind === 'mutation_recovery' ? proof.ownerBinding : null;
   if (ownerBinding === null) {
     await AsyncStorage.setItem(LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY, UNCLAIMED_QUARANTINE_VALUE);
     return 'unclaimed-quarantine';

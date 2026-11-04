@@ -1,0 +1,503 @@
+{
+  "schema": 1,
+  "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+  "campaign": 46,
+  "pr": 47,
+  "baselineHead": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+  "sourceIdentity": "PRESEAL_WORKING_SOURCE_HASH_BOUND; final-head CI/evidence external to avoid hash cycle",
+  "recordedRepositoryHEAD": "5fb6530f41ca48fa232e14bd0ff6c7afba11d688",
+  "qualification": "ACTIONABLE_TOOLING_FIX_AND_CONTENT_FREE_TRIAGE_CURRENT_SOURCE_CANDIDATE_REVIEW_REQUIRED",
+  "acceptanceGranted": false,
+  "release": "NO_GO",
+  "originalSecurityCandidateG97Unwaived": true,
+  "sourceInputs": [
+    {
+      "path": "package.json",
+      "sha256": "863a3b92e2d3cb1122b13efc2220d5311706d0d0ea6ab20b039cbbbf000735b9",
+      "bytes": 47431
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa",
+      "bytes": 574016
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "sha256": "e5bba48cf23a56df1722f9e7abd70ecfefc222df9677094667b5794868e77d7b",
+      "bytes": 1382
+    },
+    {
+      "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs",
+      "sha256": "a19203b0e5f2d4c98f14cf6ea988416ef6c4af1c57420a25869daa960067eebf",
+      "bytes": 8257
+    },
+    {
+      "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs",
+      "sha256": "7b38c70ca9ab5088859cc2255e7620da7488c60f0102923735444013a105eeee",
+      "bytes": 8781
+    },
+    {
+      "path": "scripts/release/full-app-j01/fixtures46/expo-cli57.0.32/DevToolsPlugin.schema.cjs",
+      "sha256": "4da5edad8daa6eda49fecc646934d372008952004b2c19abc03e27bcffc904a5",
+      "bytes": 2389
+    },
+    {
+      "path": "scripts/release/full-app-j01/fixtures46/expo-cli57.0.32/DevToolsPluginCliExtensionResults.cjs",
+      "sha256": "ab531966e34f5009d65fab4a00204cc999580d21b921f58ef58e00c568801c02",
+      "bytes": 2957
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/AgeReverificationRights.integration.test.ts",
+      "sha256": "3aedaf39440ab9d8d2e77c13fa5b70772dfcf9930857b8b633c10ee6c4a5e2dc",
+      "bytes": 8474
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+      "sha256": "303d101985b609b4f7c8d9b44c078c57602094718ba640e04ea7850a06ebf391",
+      "bytes": 43005
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteWithdrawal.c08b2.test.ts",
+      "sha256": "fa7709149e5b4ce3579d3f26fa66c22f1b772da6a2641b6750f74468ff88d7c7",
+      "bytes": 21721
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts",
+      "sha256": "5c9af05b15dd08ac355baedfa5c076385ba0dbb011467415401ca1cbc345af69",
+      "bytes": 137603
+    },
+    {
+      "path": "apps/mobile/src/features/today/optionalChange41.test.ts",
+      "sha256": "03842408673de8b5bda18587e836e72beaea3d165f2a131a095945b599d0b6de",
+      "bytes": 5920
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVCommitFence28.test.ts",
+      "sha256": "1ed67e81a3a09705aa784b9942f6da55582946776c4d9b260bb6b81d6316e729",
+      "bytes": 9363
+    },
+    {
+      "path": "scripts/release/full-app-j01/workflow_context46.py",
+      "sha256": "eaf01bee4bda56c5e0d2eb323e0722f84855837960461dc1f772e459750baf44",
+      "bytes": 8029
+    },
+    {
+      "path": "scripts/release/full-app-j01/workflow_context46.test.py",
+      "sha256": "d857cc6791d99c7a1cf81f7aa6ecfb4b4047795153692be9719dbca36caf815f",
+      "bytes": 6559
+    }
+  ],
+  "beforeAfterFindingCoverageTable": [
+    {
+      "finding": "Zod high GHSA-mrhx-c7xc-m3w5",
+      "caller": "@expo/cli57.0.32 DevToolsPluginCliExtensionExecutor\u2192Results.append\u2192parseOutputText\u2192DevToolsPluginOutputSchema.safeParse; MCP CLI extension final output uses same schema",
+      "before": {
+        "identity": "deafce53 + official CLI schema4da5edad/resultsab531966",
+        "actualExit": 134,
+        "proof": "actual schema and actual Results.append both abort/OOM at200000 malformed entries under96MiB; existing bounded .max(4) rejects100kwith1issue"
+      },
+      "after": {
+        "identity": "normal installation consumes source-owned additive a19203b0 module after untouched original hook; packageSHA863a3b92/lock71aef9",
+        "actualExit": 0,
+        "proof": "actual same consumers200000entries complete under96MiB;5newtestsPASS, combined18PASS"
+      },
+      "disposition": "REACHABLE_EXPO_TOOLING_CONSUMER_RESOURCE_EXHAUSTION_MITIGATED_NOT_UPSTREAM_ADVISORY_CLEARANCE",
+      "remainingAction": "Version finding remainsOPEN_REQUIRED. Broader upstream Zod4API migration not needed for demonstrated consumer fix and not performed. New unbounded consumers need explicit input bounds."
+    },
+    {
+      "finding": "Deepmerge GHSA-gcqx-w48m-w2h4",
+      "caller": "@expo/config.modifyConfigAsync project app.json merges; local developer tooling, not app-domain network input",
+      "before": {
+        "actualExit": 0,
+        "proof": "C24 existing exact-source patch and original vectors preserved; upstream4.3.1 remains flagged"
+      },
+      "after": {
+        "actualExit": 0,
+        "proof": "real Expo config dry-run adversarial inherited prototype=false; actual consumers/log current-consumer-c24-probe.log"
+      },
+      "disposition": "EXISTING_MITIGATION_REVALIDATED_VERSION_FINDING_OPEN_REQUIRED",
+      "remainingAction": "Independent security review of exact source mitigation; upstream advisory offers no fixed release. No blanket exception/expiry renewal."
+    },
+    {
+      "finding": "Legacy minimatch3.1.5 GHSA-g3hv-75wg-m249",
+      "caller": "local ESLint/config/import tool patterns; root legacy API",
+      "before": {
+        "versionFinding": true,
+        "advisoryPrimitive": "firstPhasePreProcess/secondPhasePreProcess with optimizationLevel>=2 introduced in modern API"
+      },
+      "after": {
+        "actualExit": 0,
+        "proof": "actual installed legacy source746849f2 has neither implicated function; exact299-byte attack gives1globparts entry with optimizationLevel2; modern affected copies already upgraded and genuine expansion bound testPASS"
+      },
+      "disposition": "LEGACY_VERSION_RANGE_FINDING_WITH_DEMONSTRATED_IMPLICATED_PRIMITIVE_ABSENT",
+      "remainingAction": "Version finding retained; owner must review applicability or govern API migration, not relabel original scannerPASS."
+    },
+    {
+      "finding": "MCP1.29.0 and OpenTelemetry API1.37.0 Python OSV tool findings",
+      "caller": "frozen scanner/historical requirement files; Semgrep OSS CLI command, not production app",
+      "before": {
+        "actualExit": 1,
+        "proof": "6package instances across3lockfiles in submitted OSV; exact original pins preserved"
+      },
+      "after": {
+        "actualExit": 0,
+        "proof": "exact unchanged scanner socket.bind audit guard tested: Internet bind denied before OS. Actual CLI argv has no MCP endpoint/transport command/custom-credential headers. This guards server-side transport; no claim it patches outgoing client redirects."
+      },
+      "disposition": "FROZEN_TOOL_VERSION_FINDINGS_RETAINED_SCOPE_SPECIFIC_RUNTIME_CONTROL",
+      "remainingAction": "Owner-governed frozen scanner tooling update/custody needed; pin edits prohibited. MCP advisories require specific HTTP client/server transport/auth usage; no such app caller found. Do not clear entire dependency solely from listener guard."
+    },
+    {
+      "finding": "Semgrep2timeouts",
+      "before": {
+        "head": "deafce53",
+        "actualExit": 1,
+        "scope": "18088scanned targets,4configs; original30sec/768MiB",
+        "count": 2,
+        "path": "scripts/release/full-app-j01/check.py"
+      },
+      "after": {
+        "actualExit": null,
+        "state": "FINAL_HOSTED_EXECUTION_PENDING",
+        "plan": "same frozen tool/rules/all source/26forcedSQL; timeout120/max-memory1536, bounded240retry if stilltimedout; preserve every raw attempt"
+      },
+      "disposition": "COVERAGE_NOT_YET_CLOSED",
+      "remainingAction": "Require actual final-source hosted scanner output; no rule deletion/exclusion or inferredPASS."
+    },
+    {
+      "finding": "Semgrep6TypeScriptpartialparses",
+      "before": {
+        "head": "deafce53",
+        "count": 6,
+        "pattern": "importOriginal<typeof import(module)>()",
+        "actualExit": 1
+      },
+      "after": {
+        "actualExit": 0,
+        "proof": "type-only aliases retain exact typeof module and real importOriginal;6genuine suites197/197PASS",
+        "scannerExit": null,
+        "scannerState": "FINAL_HOSTED_EXECUTION_PENDING"
+      },
+      "disposition": "SOURCE_GRAMMAR_REPAIR_TESTED_SCANNER_PROOF_PENDING",
+      "remainingAction": "Final unchanged-tool/rules scan must establish parsed coverage; no assumption from TypeScript validity alone."
+    },
+    {
+      "finding": "SemgrepQualitymixed-languageYAMLpartialparse",
+      "before": {
+        "count": 1,
+        "cause": "inline Node heredoc embedded in Bash run fails a YAML-rule nested Bash parse"
+      },
+      "after": {
+        "actualExit": null,
+        "state": "ROOT_OWNS_EXACT_BODY_EXTRACTION_AND_FINAL_EXECUTION"
+      },
+      "disposition": "PERMITTED_QUALITY_TOOLING_REPAIR_INTEGRATING",
+      "remainingAction": "Run exact extracted Node behavior and final scanner on current workflow; retain original warning."
+    },
+    {
+      "finding": "Semgrepprotectedcandidate22GitHub-expressionYAMLpartialparse",
+      "before": {
+        "count": 1,
+        "cause": "nested Bash parser sees raw GitHub headsha/PR-number expressions"
+      },
+      "after": {
+        "actualExit": null,
+        "state": "PROTECTED_SOURCE_UNMODIFIED",
+        "supplement": "Permitted contextual materialization only with exact sourceSHA/replacement provenance and same4configs; original result remains partialparse",
+        "helperExit": 0,
+        "tests": 10,
+        "proof": "Complete frozen workflow4a51fc73 byte-authenticated; only2headSHA/1PR-number typed substitutions, exactoffsets/allotherbytechunks/losslessreverse proof; actualGitHEAD independently read without shell. Wrongsource/head/PR/missing scope/hardlink/race/output/ref traversal controls PASS.",
+        "contextualScannerState": "FINAL_HOSTED_SAME4CONFIGS_EXECUTION_PENDING"
+      },
+      "disposition": "PROTECTED_TOOL_GRAMMAR_BOUNDARY",
+      "remainingAction": "Owner-governed original parser/workflow evolution or honest separate contextual evidence; no original-source clean claim."
+    },
+    {
+      "finding": "Shallow-history succession13 fixture failure",
+      "before": {
+        "actualExit": 1,
+        "scope": "original Security merge checkout;81tests77pass4fail",
+        "cause": "git show exact historical2cffa9e9 package-lock status128"
+      },
+      "after": {
+        "actualExit": null,
+        "state": "CURRENT_FULLREFS_LANE_EXECUTION_PENDING",
+        "requiredCommit": "2cffa9e92be101af4e3b371f1815ec9f458d8da4",
+        "expectedLockSHA256": "7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb",
+        "command": "node --test --test-concurrency=1 scripts/phase9/ios-privacy-source-audit.test.mjs"
+      },
+      "disposition": "AUTHENTICATED_SOURCE_AVAILABILITY_REPAIR_PERMITTED",
+      "remainingAction": "Execute after stable integration in fullrefs technical lane; original workflow remains untouched/failed."
+    },
+    {
+      "finding": "Current source Gitleaks1157",
+      "before": {
+        "head": "deafce53",
+        "actualExit": 2,
+        "count": 1157,
+        "scope": "23695files/911511238bytes snapshot, unchanged tracked config; all archives present but archivecontentsNOT_QUALIFIED"
+      },
+      "after": {
+        "actualExit": null,
+        "state": "FINAL_EXACT_SOURCE_SCAN_PENDING",
+        "semanticTriage": {
+          "DECLARED_LOCAL_SECURITY_TEST_SENTINEL": 4,
+          "DECLARED_FILE_OR_RULE_SHA256_IN_AUTHENTICATED_INVENTORY": 45,
+          "INTEGRITY_DIGEST_OR_RECEIPT_IDENTIFIER": 67,
+          "VERIFIED_SOURCE_SHA256_REFERENCE_NOT_SENTRY_CREDENTIAL": 2,
+          "ENVIRONMENT_VARIABLE_NAME_NOT_VALUE": 2,
+          "RULE_FAMILY_CUSTODY_SHA256": 1,
+          "STORAGE_KEY_IDENTIFIER": 1,
+          "SYNTHETIC_QA_NARRATIVE_IDENTIFIER": 1,
+          "INTENTIONALLY_INVALID_AUTH_PROBE_SENTINEL": 1,
+          "HUMAN_READABLE_ASSERTION_MESSAGE": 1,
+          "SYNTHETIC_QA_PUSH_TOKEN_LITERAL": 1,
+          "FIXED_REFUSAL_CODE_TEXT": 4,
+          "NONKEY_PEM_MARKER_CONFIGURATION_TEST_FIXTURE": 1,
+          "WEBSOCKET_CLIENT_HANDSHAKE_NONCE": 1026
+        },
+        "proof": "All exact spans classified with source/span/contextSHA.1026RFC6455handshake nonces;2Sentry hits parsed named-source SHA256 values matching actual current files; private-key bodies actual crypto parser rejects placeholders. No provider credentials exercised or disclosed."
+      },
+      "disposition": "CONTENT_FREE_SEMANTIC_TRIAGE_RECORDED_FINDINGS_NOT_WAIVED",
+      "remainingAction": "Actual final head scan and independent security custody review. No claimed provider token clearance from unchanged source."
+    },
+    {
+      "finding": "Current Semgrep121results",
+      "before": {
+        "head": "deafce53",
+        "actualExit": 1,
+        "count": 121,
+        "warnings": 10,
+        "scope": "598configured/318run rules;18088targets;14oversized+3defaultignored directories,26SQLforcedscanned"
+      },
+      "after": {
+        "actualExit": null,
+        "state": "FINAL_HOSTED_SCAN_PENDING",
+        "semanticTriage": {
+          "GIT_OBJECT_PACK_OR_INDEX_FORMAT_SHA1": 107,
+          "EXPLICIT_LOCAL_COMMAND_EXECUTION_RECORDER": 1,
+          "LOOPBACK_OWNED_BROWSER_CDP_DIAGNOSTIC": 5,
+          "OFFICIAL_RULE_PATTERN_DATA": 5,
+          "SYNTHETIC_REFUSAL_SUBPROCESS_CONTROL": 1,
+          "GIT_HISTORY_OBJECT_HYDRATION": 1,
+          "EXPLICIT_SANDBOX_EXEC_ENTRYPOINT": 1
+        },
+        "proof": "All121exact finding spans have enclosing definition/caller purpose and source/spanSHA;107Git format SHA1,5fixed loopback CDP,5official literal ruledata,4explicit local diagnostic execution paths. No newly reachable app-owned code issue identified in those spans; coverage errors remain separately open."
+      },
+      "disposition": "SEMANTIC_TRIAGE_NOT_SCANNER_CLEANNESS",
+      "remainingAction": "Preserve original raw results and actual final scan/errors/coverage; independently review context dispositions."
+    }
+  ],
+  "patchDesign": {
+    "package": "@expo/cli57.0.32",
+    "officialRegistrySRIAuthenticated": true,
+    "originalHooksUnchanged": true,
+    "hookOrder": "original node scripts/postinstall.mjs first; additive C46 exact-source patch second; same for --check",
+    "limits": {
+      "totalUTF8OutputBytes": 1048576,
+      "storedOutputRecordsIncludingTruncationNotice": 1024,
+      "schemaCollectionEntries": 1024
+    },
+    "limitRationale": "Development plugin results are already an array of paginatable text/image/audio records. A1024record/1MiB payload budget permits ordinary protocol data and produces explicit truncation/error plus existing childtermination on excess. Tests prove exact boundary, Unicode bytes, fragmentation, plaintext newlines, normalerror handling and terminal invariants; no app domain data modified.",
+    "installedSourcePostimages": {
+      "schema": "51fe90ef5a41227d330f047326a646172e787693edf27f5c3e0ad6d0f956c28b",
+      "results": "17d132616071ed41057ffdba8444f3f932b916b4ac5198d602ff3f924954a230"
+    },
+    "sourceSafety": "Official package version/resolution/SRI/packagebody and exact before/after source hashes; every lock-declared copy validated before writes; inherited safe bounded reads refuse symlink/hardlink/path/races; exclusive staged files, fsync/atomic rename/recheck and exact rollback. New tests inject a real second rename failure and verify full restoration.",
+    "upstreamAdvisoryCleared": false
+  },
+  "actualDevelopmentTests": [
+    {
+      "scope": "6modified genuine mobile fixtures",
+      "tests": 197,
+      "pass": 197,
+      "fail": 0,
+      "exit": 0
+    },
+    {
+      "scope": "new installpatch/actual consumer tests",
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "exit": 0
+    },
+    {
+      "scope": "post-normalci newpatch + unchanged Security31+Security46",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "exit": 0
+    },
+    {
+      "scope": "unchanged original postinstall --check after additive patch",
+      "exit": 0
+    },
+    {
+      "scope": "candidate22 contextual materialization and filesystem/source refusal controls",
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "exit": 0
+    }
+  ],
+  "evidenceDirectory": "c46-closure02-evidence/security",
+  "evidence": [
+    {
+      "path": "zod-expo-baseline.json",
+      "sha256": "e4edb3acb87f200c09a1db68d86f48144569a8c1b60d9f8c04b1c4b7452599e2",
+      "bytes": 2771
+    },
+    {
+      "path": "expo-schema-200000.receipt.json",
+      "sha256": "c126537d9d9c271515f24137a8d42d17e622f2a8dc745891b24c595726429dbe",
+      "bytes": 294
+    },
+    {
+      "path": "expo-schema-200000.stderr",
+      "sha256": "864225f84b561c8c3a8375c21b4c5b10e01ac65fe4577f38b8a541394a09b160",
+      "bytes": 1425
+    },
+    {
+      "path": "expo-append-200000.receipt.json",
+      "sha256": "66d54f96ae900bc7b9406cc6a9d5ccfcef4f4bfb8d70c3f1444e1bf2dceaf30c",
+      "bytes": 327
+    },
+    {
+      "path": "expo-append-200000.stderr",
+      "sha256": "792a96749ce9584eef5b5ed450997a385dae4e9c59e6110689ec621817f6de28",
+      "bytes": 1953
+    },
+    {
+      "path": "official-expo-source-receipt.json",
+      "sha256": "4e6c845150acd3e81aeae993a2cd928a735aa57a4c4dbf88d54815f8131fe6f9",
+      "bytes": 1224
+    },
+    {
+      "path": "fixture-alias-six-suites.log",
+      "sha256": "386be039ac32c57ce6a71a23b78c7416453b36c454f8bb8e273621b0303ef30f",
+      "bytes": 272
+    },
+    {
+      "path": "fixture-alias-six-suites.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    {
+      "path": "new-bounds-check-before.log",
+      "sha256": "6b0b917add2fbc6a8591a072c55103fb5763b0eb0f791be3d3376ce4ef2118d0",
+      "bytes": 837
+    },
+    {
+      "path": "new-bounds-check-before.exit",
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "bytes": 3
+    },
+    {
+      "path": "new-bounds-tests-run1.log",
+      "sha256": "92791a0aa5745032a25e7d7086a13ae46266121c5a050ce0d732924e70d18db6",
+      "bytes": 1375
+    },
+    {
+      "path": "after-normalci-check.log",
+      "sha256": "96b7b8a38ba1488c812105bbd5ea0b9d5a82687082e47c87448993f045f58bc5",
+      "bytes": 90
+    },
+    {
+      "path": "after-normalci-check.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    {
+      "path": "after-normalci-security18.log",
+      "sha256": "4d26d2210d90a84db83a975e615af5f22cd45b9e1961150f58b89645f5976346",
+      "bytes": 5161
+    },
+    {
+      "path": "after-normalci-security18.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    {
+      "path": "original-postinstall-check-after-newpatch.log",
+      "sha256": "e9f14b301c1ca65cbf60e3a616b876f4aca8c1306ced8c9a1d3ffb05d624961a",
+      "bytes": 114
+    },
+    {
+      "path": "original-postinstall-check-after-newpatch.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    {
+      "path": "legacy-minimatch-reachability.json",
+      "sha256": "c8358836e7a26d71378e27256c09ce5f592623d7aafede6258875676e3d3accb",
+      "bytes": 414
+    },
+    {
+      "path": "current-consumer-c24-probe.log",
+      "sha256": "0594cb4fc7304f1b074de3ba42a437f67c4e9502ea98ed9204d714843f4aa815",
+      "bytes": 342
+    },
+    {
+      "path": "frozen-scanner-listener-guard.receipt.json",
+      "sha256": "7df708a9fc05208654fbf40814246bdbcda295b81f9e8b064523aa7fcc18530b",
+      "bytes": 382
+    },
+    {
+      "path": "priority-secret-span-validation.json",
+      "sha256": "6f4232a60c749297a664f7b89c6d101567b2219f3f5a56262f12d58393bb8ecb",
+      "bytes": 1712
+    },
+    {
+      "path": "private-key-placeholder-parser-proof.json",
+      "sha256": "7f7a70b6bf021ea7c712408a7ed08ca98a7da6dc8ccff7c69b477f9c10bac94d",
+      "bytes": 303
+    },
+    {
+      "path": "static-content-free-triage.json",
+      "sha256": "52b6a6b914e09b9e461c1b02249ddc3a4910acf038aa7891d2196765ff308424",
+      "bytes": 106616
+    },
+    {
+      "path": "secrets-content-free-triage.json",
+      "sha256": "9477d3a90b8d246187ff21d3180abb8f4f05536c99af1d26c10de26354fa5196",
+      "bytes": 766550
+    },
+    {
+      "path": "workflow-context-tests-run1.log",
+      "sha256": "b04be412f6130fce91af8e7a22dc3302729a3a783285af65370147127932fde2",
+      "bytes": 940
+    },
+    {
+      "path": "workflow-context-tests-run1.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    }
+  ],
+  "externalBoundaries": [
+    "original Security/candidate29/G97 admission and proposal expiry unchanged",
+    "original OWASP587894 rule custody unavailable; separately frozen current0be8 snapshot never equivalent",
+    "archive content security unqualified where binary/format/size limits apply",
+    "browser/physical device/account/provider/clinical/owner acceptance not granted",
+    "frozen Python tool pin upgrades require independent governed custody; not modified here"
+  ],
+  "primarySourceLinks": [
+    "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+    "https://github.com/colinhacks/zod/commit/a0ebf97",
+    "https://registry.npmjs.org/@expo%2fcli/57.0.32",
+    "https://registry.npmjs.org/@expo/cli/-/cli-57.0.32.tgz",
+    "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+    "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+    "https://github.com/advisories/GHSA-w4fh-qvv9-3v23",
+    "https://github.com/advisories/GHSA-5h93-6whr-6q8j",
+    "https://datatracker.ietf.org/doc/html/rfc6455#section-4.1",
+    "https://git-scm.com/book/en/v2/Git-Internals-Git-Objects"
+  ],
+  "sourceMutationState": "SECURITY_SOURCE_FROZEN_PENDING_ROOT_INTEGRATION_AND_FINAL_SCANS",
+  "contextualCoverageInterface": {
+    "command": "python -I -B scripts/release/full-app-j01/workflow_context46.py --root . --output-directory TEMP/candidate22-context --head ACTUAL_HEAD --pr 47",
+    "generatedWholeWorkflow": "candidate22-context.yml",
+    "receipt": "context-receipt.json",
+    "scanner": "Same frozen tool and all4originallyselectedconfigs on complete generatedYAML, separate from fullsource rawreport. No command execution by helper.",
+    "originalWarningRetained": true,
+    "originalG97EquivalenceGranted": false
+  }
+}

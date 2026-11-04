@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-03T23:54:48.368Z",
+  "generatedAt": "2026-11-04T15:45:16.148Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "1bc7e7349d3502fe6ca2d3d73a45106dd09dbdc9",
+  "gitSha": "898981c3aabc8f9fb5f6de1da7da72fb457b2d72",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 7
     },
-    "sourcePathCount": 433,
+    "sourcePathCount": 434,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -1186,14 +1186,14 @@
         {
           "path": "package.json",
           "exists": true,
-          "bytes": 47029,
-          "sha256": "1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9"
+          "bytes": 47431,
+          "sha256": "863a3b92e2d3cb1122b13efc2220d5311706d0d0ea6ab20b039cbbbf000735b9"
         },
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 17963,
-          "sha256": "cb37e42589b0040ba23606bd601a32891212dda57a98d1ddc24b4dd401f7fc93"
+          "bytes": 15985,
+          "sha256": "c453e9f345ae9321f3ae06557b2eb96b57c67b19fffae8e54179c8705a75f1d7"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
@@ -1618,6 +1618,12 @@
           "sha256": "1a8449afa7536dca3ec6b744016af047f3e98c97b8e2a71412e0d3d90b3d1864"
         },
         {
+          "path": "apps/mobile/src/features/shelf/compactManual46.test.ts",
+          "exists": true,
+          "bytes": 6793,
+          "sha256": "9a8d2a3c76f326f5277e91afed3e8c2619292efabe87aeb1f2b55b4d6db3a0fd"
+        },
+        {
           "path": "apps/mobile/src/features/shelf/confirmedDestructive28.test.ts",
           "exists": true,
           "bytes": 5370,
@@ -1638,8 +1644,8 @@
         {
           "path": "apps/mobile/src/features/shelf/detailActionSheet.campaign26.test.ts",
           "exists": true,
-          "bytes": 13031,
-          "sha256": "d631698efa7a182c192ea035d9abcc8cc933f3af256c47454e4ad4f3b07d9154"
+          "bytes": 13641,
+          "sha256": "684864a72bce804ab40bc2df0095a7a9d4d5e661822783fb10219fb478aa6d3d"
         },
         {
           "path": "apps/mobile/src/features/shelf/expiry.test.ts",
@@ -1710,8 +1716,8 @@
         {
           "path": "apps/mobile/src/features/shelf/intakeRecovery.campaign25.test.ts",
           "exists": true,
-          "bytes": 18915,
-          "sha256": "b8695bf0def6ebf0107f59a0492c64fd40ab7096b4f1c2e541660dcc089f7fc7"
+          "bytes": 19402,
+          "sha256": "5aff52ceac0c37e746292caf11b6298e308c4dc41e59fd8fa2490718eb355187"
         },
         {
           "path": "apps/mobile/src/features/shelf/intakeSession.ts",
@@ -1776,8 +1782,8 @@
         {
           "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts",
           "exists": true,
-          "bytes": 17440,
-          "sha256": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56"
+          "bytes": 17669,
+          "sha256": "2e38baf47f563dbf86561aa59eca25450fa5184704ceaa806ffdc43abd130f70"
         },
         {
           "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.ts",
@@ -1806,8 +1812,8 @@
         {
           "path": "apps/mobile/src/features/shelf/postDispatchCommit28.test.ts",
           "exists": true,
-          "bytes": 9185,
-          "sha256": "f4ed27d371a05404095243b68bc20fe4c753e4e33b37c32d9d12957229d690cf"
+          "bytes": 9899,
+          "sha256": "a7e7c72c411488f0e810b91e540fdf364b2a0fc609ed64c79445ee8bdb0b3157"
         },
         {
           "path": "apps/mobile/src/features/shelf/productOpeningRecovery.test.ts",
@@ -1854,8 +1860,8 @@
         {
           "path": "apps/mobile/src/features/shelf/ShelfDataAvailabilityGate.tsx",
           "exists": true,
-          "bytes": 6357,
-          "sha256": "8176faf40a6182265be3e2044ec7a359056225ba41dbbce81a2c5ed77d994cc5"
+          "bytes": 6570,
+          "sha256": "3883569085d27ef62db67a50725ab3c43a4d291551147543a779a38018152fde"
         },
         {
           "path": "apps/mobile/src/features/shelf/shelfRenderDiagnostics.test.ts",
@@ -1872,8 +1878,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 77787,
-          "sha256": "0c0dafea3afb414972004d4160b723384cb42fe23a93e9631d7c84cd9c190b7c"
+          "bytes": 78121,
+          "sha256": "13365b15db1c6d09bf3a772aac8a21ec4ff8742bde4a17ba67f076adc8d075b3"
         },
         {
           "path": "apps/mobile/src/features/shelf/shelfScanOutboxMigration.test.ts",
@@ -1932,8 +1938,8 @@
         {
           "path": "apps/mobile/src/app/shelf/manual.tsx",
           "exists": true,
-          "bytes": 20074,
-          "sha256": "56ec9e3c1ffda7ed2537babf81d782b55ee0ebb161e91e8069bcd6a09db8d251"
+          "bytes": 19885,
+          "sha256": "2e481e8d9fd3a1ad2a6deb779f431e0dcf3a1836d3441174fd2ecdad2eab3b55"
         },
         {
           "path": "apps/mobile/src/features/recommendations/admission.test.ts",

@@ -1,4 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { randomUUID, createHash } from 'node:crypto';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import {
@@ -19,6 +20,12 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock('react-native-get-random-values', () => ({}));
 vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
+vi.mock('expo-crypto', () => ({
+  randomUUID: () => randomUUID(),
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: async (_algorithm: string, value: string) =>
+    createHash('sha256').update(value).digest('hex'),
+}));
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     getItem: async (key: string) => mocks.storage.get(key) ?? null,

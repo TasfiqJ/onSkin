@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { clearPrivateMutationAfterRemoval46 } from '@/lib/auth/localAccountIsolation';
 
 import { beginAccountGenerationBoundary, endAccountGenerationBoundary, runAccountGenerationOperation, waitForAccountGenerationOperationsToSettle } from '@/lib/auth/accountGeneration';
 import { captureHealthDataWriteLease } from '@/lib/consent/healthDataWriteAdmission';
@@ -15,7 +16,7 @@ const native = vi.hoisted(() => ({
   raw: new Map<string, string>(), keys: new Map<string, string>(), id: 0,
   outcome: 'resolve' as 'resolve' | 'reject-before' | 'reject-after' | 'silent',
   afterWrite: undefined as (() => void) | undefined,
-  readFailure: false, keyFailure: false,
+  readFailure: false, readsBeforeFailure: 0, keyFailure: false,
   setGate: null as Promise<void> | null, setStarted: undefined as (() => void) | undefined,
 }));
 vi.mock('expo-crypto', () => ({ randomUUID: () => `41000000-0000-4000-8000-${String(++native.id).padStart(12, '0')}` }));
@@ -32,20 +33,25 @@ vi.mock('expo-secure-store', () => ({
 }));
 vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
   getItem: async (key: string) => {
-    if (native.readFailure && key === 'layerwell.completions.v1') throw new Error('SYNTHETIC_READ_FAILURE');
+    if (native.readFailure && key === 'layerwell.completions.v1') {
+      if (native.readsBeforeFailure > 0) native.readsBeforeFailure -= 1;
+      else throw new Error('SYNTHETIC_READ_FAILURE');
+    }
     return native.raw.get(key) ?? null;
   },
   getAllKeys: async () => [...native.raw.keys()],
   multiGet: async (keys: string[]) => keys.map((key) => [key, native.raw.get(key) ?? null]),
   setItem: async (key: string, value: string) => {
     const outcome = key === 'layerwell.completions.v1' ? native.outcome : 'resolve';
-    native.outcome = 'resolve';
-    native.setStarted?.();
-    if (native.setGate) await native.setGate;
+    if (key === 'layerwell.completions.v1') {
+      native.outcome = 'resolve';
+      native.setStarted?.();
+      if (native.setGate) await native.setGate;
+    }
     if (outcome === 'reject-before') throw new Error('SYNTHETIC_REJECT_BEFORE');
     if (outcome === 'silent') return;
     native.raw.set(key, value);
-    native.afterWrite?.();
+    if (key === 'layerwell.completions.v1') native.afterWrite?.();
     if (outcome === 'reject-after') throw new Error('SYNTHETIC_REJECT_AFTER');
   },
   removeItem: async (key: string) => { native.raw.delete(key); },
@@ -151,13 +157,17 @@ describe('Campaign41 actual encrypted privateKV, export and full-deletion contra
   beforeEach(async () => {
     vi.useFakeTimers(); vi.setSystemTime(new Date(NOW));
     native.raw.clear(); native.keys.clear(); native.id = 0;
-    native.outcome = 'resolve'; native.afterWrite = undefined; native.readFailure = false; native.keyFailure = false;
+    native.outcome = 'resolve'; native.afterWrite = undefined; native.readFailure = false; native.readsBeforeFailure = 0; native.keyFailure = false;
     native.setGate = null; native.setStarted = undefined;
     clearActiveHealthProcessingEpoch();
     const generation = await runAccountGenerationOperation((lease) => lease.generation);
     setActiveHealthProcessingEpoch(1, { ownerUserId: OWNER, accountGeneration: generation });
   });
-  afterEach(() => { clearActiveHealthProcessingEpoch(); vi.useRealTimers(); });
+  afterEach(async () => {
+    clearActiveHealthProcessingEpoch(); vi.useRealTimers();
+    native.raw.clear();
+    await clearPrivateMutationAfterRemoval46([KEY]);
+  });
   async function request() {
     const snapshot = await getOptionalChanges41(captureHealthDataWriteLease());
     return input(snapshot.sourceBytes, snapshot.events.length ? decode(snapshot.sourceBytes!) : null);
@@ -188,12 +198,17 @@ describe('Campaign41 actual encrypted privateKV, export and full-deletion contra
   it('real privateKV silent native no-commit is refused by canonical readback', async () => {
     await toggleCompletion('AM:original', DAY); const prior = native.raw.get(KEY);
     const requested = await request(); native.outcome = 'silent';
-    await expect(appendOptionalChange41(requested, captureHealthDataWriteLease())).rejects.toThrow('OPTIONAL_CHANGE41_READBACK_UNCONFIRMED');
+    await expect(appendOptionalChange41(requested, captureHealthDataWriteLease())).rejects.toThrow('PRIVATE_KV_WRITE_CONFLICT');
     expect(native.raw.get(KEY)).toBe(prior);
   });
   it('real encrypted readback failure retains committed bytes and exact retry cannot duplicate the event', async () => {
     const requested = await request();
-    native.afterWrite = () => { native.readFailure = true; };
+    native.afterWrite = () => {
+      // Confirm the real private writer first, then refuse the domain's fresh
+      // encrypted readback. A failure inside the writer is a separate durable
+      // recovery case covered by exportConfirmation46.
+      native.readFailure = true; native.readsBeforeFailure = 1;
+    };
     await expect(appendOptionalChange41(requested, captureHealthDataWriteLease())).rejects.toThrow('SYNTHETIC_READ_FAILURE');
     const committed = native.raw.get(KEY);
     native.afterWrite = undefined; native.readFailure = false;

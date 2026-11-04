@@ -1,0 +1,1164 @@
+{
+  "schemaVersion": 1,
+  "kind": "native_original90_obligation_parity46",
+  "originalTests": 90,
+  "originalPrograms": [
+    {
+      "path": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "bytes": 51222,
+      "sha256": "fd6e84cadbc2980eb96dcbcc741ece02e5fcac044d2831f582abfe15863adcf4"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-lock-succession23.test.mjs",
+      "bytes": 7533,
+      "sha256": "0d3567581a0cf925e8c4c62b2e05b1fec7e9439109d0b5c9bab30d276cb00770"
+    },
+    {
+      "path": "scripts/security23/native-source.test.mjs",
+      "bytes": 7786,
+      "sha256": "270e84ae6601c763fefe76c5cb6e12377d7a3db7b7ff091b6496b94fdab54287"
+    }
+  ],
+  "cases": [
+    {
+      "id": "NATIVE90-001",
+      "originalName": "current23 fixture proves its exact two-node complete-lock delta and installed native denominators",
+      "originalProgram": "scripts/phase9/ios-privacy-lock-succession23.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 bounded fixture proves exact transition and refuses using it as complete installed receipt",
+      "assertions": [
+        "valid exact source transition",
+        "no historical input alias",
+        "false claims",
+        "bounded fixture cannot attest full installed snapshot"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-002",
+      "originalName": "current23 refuses complete-lock changes, native transitive changes, missing and extra nodes",
+      "originalProgram": "scripts/phase9/ios-privacy-lock-succession23.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 refuses every native node, integrity, thirteenth node, ordering and complete-lock drift",
+      "assertions": [
+        "complete-lock bytes",
+        "every unchanged native version and dependency",
+        "integrity and resolution",
+        "missing/extra nodes",
+        "exact restored positive"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-003",
+      "originalName": "current23 refuses stale/forged/missing witness, every admission flag, duplicate keys and traversal",
+      "originalProgram": "scripts/phase9/ios-privacy-lock-succession23.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 refuses wrong authority owner base head, all admission fields, omitted scope and forged witness",
+      "assertions": [
+        "base/owner/source identity",
+        "all source pins",
+        "all native tree denominators",
+        "all admissions/claims/gates/spend",
+        "duplicate/traversal/absolute/missing witness",
+        "restored positive"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-004",
+      "originalName": "current23 refuses missing/changed native files, omitted directories, aliases and actual contained links",
+      "originalProgram": "scripts/phase9/ios-privacy-lock-succession23.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 refuses changed missing extra native files, omitted directories, aliases, links and hardlinks",
+      "assertions": [
+        "changed/missing native file",
+        "omitted directory",
+        "NFKC alias",
+        "actual contained link",
+        "exact restored positive"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-005",
+      "originalName": "current23 bounds actual directory enumeration before any child content read",
+      "originalProgram": "scripts/phase9/ios-privacy-lock-succession23.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 retains the original actual enumeration ceiling before child content reads",
+      "assertions": [
+        "real 20000-entry bound",
+        "one root path check",
+        "zero child reads"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-006",
+      "originalName": "pins and parses the installed react-native-view-shot privacy manifest",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "pins and parses the installed react-native-view-shot privacy manifest",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-007",
+      "originalName": "checked-in SDK mapping resolves hoisted lock entries and installed source pins",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "checked-in SDK mapping resolves hoisted lock entries and installed source pins",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-008",
+      "originalName": "accepts a minimal dictionary and deterministically normalizes a complete valid manifest",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "accepts a minimal dictionary and deterministically normalizes a complete valid manifest",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-009",
+      "originalName": "non-buffer",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "non-buffer",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-010",
+      "originalName": "incomplete XML",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "incomplete XML",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-011",
+      "originalName": "malformed XML that passes the document boundary check",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "malformed XML that passes the document boundary check",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-012",
+      "originalName": "non-XML junk before the plist root",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "non-XML junk before the plist root",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-013",
+      "originalName": "binary plist",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "binary plist",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-014",
+      "originalName": "non-dictionary root",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "non-dictionary root",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-015",
+      "originalName": "UTF-8 BOM",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "UTF-8 BOM",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-016",
+      "originalName": "invalid UTF-8",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "invalid UTF-8",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-017",
+      "originalName": "rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects non-buffer, malformed, binary, non-dictionary, BOM, and invalid UTF-8 inputs",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-018",
+      "originalName": "rejects duplicate top-level dictionary keys before parser last-value recovery",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects duplicate top-level dictionary keys before parser last-value recovery",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-019",
+      "originalName": "unknown key",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "unknown key",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-020",
+      "originalName": "tracking string",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "tracking string",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-021",
+      "originalName": "domains string",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "domains string",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-022",
+      "originalName": "accessed API dictionary",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "accessed API dictionary",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-023",
+      "originalName": "collected data dictionary",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "collected data dictionary",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-024",
+      "originalName": "rejects unknown top-level keys and wrong top-level value types",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects unknown top-level keys and wrong top-level value types",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-025",
+      "originalName": "rejects an explicitly empty accessed-API array",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects an explicitly empty accessed-API array",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-026",
+      "originalName": "reason belongs to another category",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "reason belongs to another category",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-027",
+      "originalName": "duplicate reason",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "duplicate reason",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-028",
+      "originalName": "duplicate category",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "duplicate category",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-029",
+      "originalName": "unknown category",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "unknown category",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-030",
+      "originalName": "empty reasons",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "empty reasons",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-031",
+      "originalName": "rejects required-reason mismatches, duplicate reasons, and duplicate categories",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects required-reason mismatches, duplicate reasons, and duplicate categories",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-032",
+      "originalName": "unknown collected data type",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "unknown collected data type",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-033",
+      "originalName": "unknown collected data purpose",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "unknown collected data purpose",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-034",
+      "originalName": "empty purposes",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "empty purposes",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-035",
+      "originalName": "rejects collected-data values outside Apple enums and invalid field values",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects collected-data values outside Apple enums and invalid field values",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-036",
+      "originalName": "rejects duplicate collected types",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects duplicate collected types",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-037",
+      "originalName": "domains while tracking is false",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "domains while tracking is false",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-038",
+      "originalName": "tracking true without domains",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "tracking true without domains",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-039",
+      "originalName": "collected item tracks while top-level tracking is false",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "collected item tracks while top-level tracking is false",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-040",
+      "originalName": "rejects every tracking contradiction",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects every tracking contradiction",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-041",
+      "originalName": "query",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "query",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-042",
+      "originalName": "wildcard",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "wildcard",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-043",
+      "originalName": "leading hyphen",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "leading hyphen",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-044",
+      "originalName": "trailing hyphen",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "trailing hyphen",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-045",
+      "originalName": "empty label",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "empty label",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-046",
+      "originalName": "IPv4",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "IPv4",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-047",
+      "originalName": "IPv6",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "IPv6",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-048",
+      "originalName": "localhost",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "localhost",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-049",
+      "originalName": "port",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "port",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-050",
+      "originalName": "scheme",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "scheme",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-051",
+      "originalName": "path",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "path",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-052",
+      "originalName": "unicode label",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "unicode label",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-053",
+      "originalName": "case-insensitive duplicate",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "case-insensitive duplicate",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-054",
+      "originalName": "case-insensitive two-label duplicate",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "case-insensitive two-label duplicate",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-055",
+      "originalName": "overlong label",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "overlong label",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-056",
+      "originalName": "accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "accepts DNS-style tracking hosts and rejects unsafe, ambiguous, duplicate, and IP hosts",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-057",
+      "originalName": "rejects source-only reports that make archive, labels, signatures, review, or acceptance claims",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects source-only reports that make archive, labels, signatures, review, or acceptance claims",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-058",
+      "originalName": "rejects nested archive-inclusion and signature claims anywhere in report arrays or records",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects nested archive-inclusion and signature claims anywhere in report arrays or records",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-059",
+      "originalName": "audits a minimal fixture deterministically and still requires archive follow-up",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "audits a minimal fixture deterministically and still requires archive follow-up",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-060",
+      "originalName": "deeply freezes the audit report so mutation cannot alter deterministic serialization",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "deeply freezes the audit report so mutation cannot alter deterministic serialization",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-061",
+      "originalName": "rejects a mutated baseline even when its published and sorted digests are recomputed",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects a mutated baseline even when its published and sorted digests are recomputed",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-062",
+      "originalName": "binds exact podspec privacy resources and ignores Ruby comments as evidence",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "binds exact podspec privacy resources and ignores Ruby comments as evidence",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-063",
+      "originalName": "retains unresolved standalone manifests as archive-required warnings",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "retains unresolved standalone manifests as archive-required warnings",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-064",
+      "originalName": "does not treat an arbitrary quoted podspec string as a resource binding",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "does not treat an arbitrary quoted podspec string as a resource binding",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-065",
+      "originalName": "does not parse a .resources assignment token embedded inside a Ruby string literal",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "does not parse a .resources assignment token embedded inside a Ruby string literal",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-066",
+      "originalName": "treats an embedded XCFramework manifest as source-container bound",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "treats an embedded XCFramework manifest as source-container bound",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-067",
+      "originalName": "glob reference",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "glob reference",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-068",
+      "originalName": "package escape",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "package escape",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-069",
+      "originalName": "missing exact target",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "missing exact target",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-070",
+      "originalName": "rejects non-exact, escaping, and missing podspec privacy resources",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects non-exact, escaping, and missing podspec privacy resources",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-071",
+      "originalName": "does not silently skip a malformed native package.json",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "does not silently skip a malformed native package.json",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-072",
+      "originalName": "ledgers a malformed installed package.json even without another native root signal",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "ledgers a malformed installed package.json even without another native root signal",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-073",
+      "originalName": "applies the total native traversal bound globally across packages",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "applies the total native traversal bound globally across packages",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-074",
+      "originalName": "rejects oversized manifests, excessive depth, and unreviewed bound overrides",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects oversized manifests, excessive depth, and unreviewed bound overrides",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-075",
+      "originalName": "rejects a symlink or junction inside native source traversal",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "rejects a symlink or junction inside native source traversal",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-076",
+      "originalName": "CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI rejects unknown, duplicate, conflicting, unsafe, and colliding arguments",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-077",
+      "originalName": "CLI --write is deterministic and --check is read-only on success and drift",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI --write is deterministic and --check is read-only on success and drift",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-078",
+      "originalName": "CLI strict mode fails closed before writing invalid source evidence",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI strict mode fails closed before writing invalid source evidence",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-079",
+      "originalName": "CLI refuses a generated-output directory link without touching its target",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI refuses a generated-output directory link without touching its target",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-080",
+      "originalName": "CLI refuses existing output paths that are distinct hardlinks to one inode",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI refuses existing output paths that are distinct hardlinks to one inode",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-081",
+      "originalName": "CLI follows host case rules when output paths differ only by case",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI follows host case rules when output paths differ only by case",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-082",
+      "originalName": "CLI refuses an existing output-file symlink without mutating its target",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "CLI refuses an existing output-file symlink without mutating its target",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-083",
+      "originalName": "succession13 preserves original lock meaning and admits only the exact source candidate",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "succession13 preserves original lock meaning and admits only the exact source candidate",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-084",
+      "originalName": "succession13 refuses forged versions, identities, claims, duplicate keys and traversal",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "succession13 refuses forged versions, identities, claims, duplicate keys and traversal",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-085",
+      "originalName": "succession13 refuses every native lock and source-pin change and any extra lock node",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "succession13 refuses every native lock and source-pin change and any extra lock node",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-086",
+      "originalName": "succession13 refuses an actual linked manifest and preserves strict output integrity",
+      "originalProgram": "scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "execution": "UNCHANGED_CURRENT",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-source-audit.test.mjs",
+      "currentTest": "succession13 refuses an actual linked manifest and preserves strict output integrity",
+      "assertions": [
+        "Every original assertion executes unchanged against current imported code and its genuine fixture; no substituted result."
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-087",
+      "originalName": "actual current checkout audits installed native source and exact successor snapshot with all claims false",
+      "originalProgram": "scripts/security23/native-source.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 actual checkout proves complete current audit, finite transition and false admissions",
+      "assertions": [
+        "actual current installed source",
+        "complete exact current snapshot",
+        "native and privacy inventories nonempty",
+        "false claims",
+        "forged snapshot refusal"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-088",
+      "originalName": "actual current CLI enforces current source snapshot while preserving historical reports and mandatory patches",
+      "originalProgram": "scripts/security23/native-source.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 actual CLI checks current receipt, preserves historical bytes and refuses default writes",
+      "assertions": [
+        "actual strict current check",
+        "mandatory patch checks",
+        "strict write refusal",
+        "missing alternate outputs refusal",
+        "historical output bytes/inodes unchanged"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-089",
+      "originalName": "current widget compatibility authenticates real source; historical validator and config refusals remain",
+      "originalProgram": "scripts/security23/native-source.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 widget proof preserves historical six dependency refusals and every current config assertion",
+      "assertions": [
+        "actual resolved development config",
+        "six original historical dependency refusals",
+        "current authenticated positive",
+        "source-only false flags",
+        "extra entitlement refusal",
+        "wrong native lock refusal"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    },
+    {
+      "id": "NATIVE90-090",
+      "originalName": "actual current non-strict default write refuses tampered and missing witnesses without historical overwrite",
+      "originalProgram": "scripts/security23/native-source.test.mjs",
+      "execution": "CURRENT46_SUCCESSOR",
+      "currentInvocation": "node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "currentTest": "current46 actual non-strict tampered and missing descriptor writes preserve original inode and historical outputs",
+      "assertions": [
+        "actual current positive",
+        "tampered/missing witness write exits1 with exact read-only diagnostic",
+        "empty stdout",
+        "same-filesystem external backup",
+        "exact inode/mode/mtime/content restoration",
+        "historical outputs unchanged",
+        "restored positive after each control"
+      ],
+      "historicalControl": "Exact original at accepted20c preserved; original current-deaf refusal remains separately recorded."
+    }
+  ],
+  "archiveAndConfig": {
+    "archiveProgram": {
+      "path": "scripts/phase9/ios-archive-privacy-evidence.test.mjs",
+      "bytes": 74639,
+      "sha256": "f89578798b9a6c0720687051cd1532f440a90a5e30af7ce6ca6b5375af853114"
+    },
+    "configProgram": {
+      "path": "scripts/phase5/ios-extension-contract.test.mjs",
+      "bytes": 5480,
+      "sha256": "b490a8dfdcf085a7b886b9e8861ae49c36fe0b604e9d76a9d67b3415aabf94d9"
+    },
+    "currentInvocations": [
+      "npm run phase9:ios-archive-privacy-evidence:test",
+      "npm run phase5:ios-extension-contract:smoke",
+      "npm run phase5:check-native-config",
+      "npm run phase9:store-build-inspect:check"
+    ],
+    "assertionPolicy": "All original archive evidence/schema/provenance/reviewer/path/bounds/cross-binding and pure config assertions remain unchanged and execute current. Store inspector changes only its bounded current-source proof import/call dispatch; all other statements remain exact original."
+  },
+  "hostLimits": "Two original file-symlink cases are unavailable on this Windows host and stay attributed as original host skips. Linux must execute them. Actual junction/hardlink/ancestor/race controls are separately executable on Windows.",
+  "acceptanceGranted": false,
+  "nativeAccepted": false,
+  "release": "NO_GO"
+}

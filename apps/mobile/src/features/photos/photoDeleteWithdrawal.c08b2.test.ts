@@ -48,6 +48,8 @@ import { usePhotos } from './usePhotos';
 // Only platform/service ports are mocked. The actual cleanup functions, photo
 // store/journal, encryption/private KV, account/health boundaries, and read hook
 // run together. In particular neither cleanup function nor its key list is mocked.
+type SessionOwnerModule46 = typeof import('@/lib/auth/sessionOwner');
+
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   secure: new Map<string, string>(),
@@ -67,7 +69,12 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock('react-native-get-random-values', () => ({}));
 vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
-vi.mock('expo-crypto', () => ({ randomUUID: () => randomUUID() }));
+vi.mock('expo-crypto', () => ({
+  randomUUID: () => randomUUID(),
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: async (_algorithm: string, value: string) =>
+    createHash('sha256').update(value).digest('hex'),
+}));
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     getItem: async (key: string) => mocks.storage.get(key) ?? null,
@@ -164,7 +171,8 @@ vi.mock('@/features/photos/sensitiveImageMemory', () => ({
 vi.mock('@/features/photos/photoThumbnail', () => ({ createEncryptedPhotoThumbnail: vi.fn() }));
 vi.mock('@/lib/analytics/track', () => ({ resetAnalyticsIdentity: async () => undefined }));
 vi.mock('@/lib/iap/revenuecat', () => ({ resetRevenueCatIdentity: async () => undefined }));
-vi.mock('@/lib/auth/sessionOwner', () => ({
+vi.mock('@/lib/auth/sessionOwner', async (importOriginal) => ({
+  ...await importOriginal<SessionOwnerModule46>(),
   localDataOwnerBinding: async (owner: string) => createHash('sha256').update('layerwell:local-data-owner:v1:' + owner).digest('hex'),
   readLocalDataOwnership: async (owner: string) => (owner === mocks.owner ? 'match' : 'mismatch'),
 }));

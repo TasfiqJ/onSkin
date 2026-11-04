@@ -1,38 +1,14 @@
-CAMPAIGN29 — SUBMITTED_REVIEW_REQUIRED / PARTIAL_DIAGNOSIS / NO_GO
-Authority: BRAIN-M1X-WINDOWS-READER-INTEGRITY29-CANDIDATE-01
-Independent Brain retains source acceptance; all qualified gates remain CLOSED.
-USD0. NO MERGES, MAIN PROMOTION, PUBLIC RELEASE OR PRIOR-PR MODIFICATION.
+CAMPAIGN46 - source candidate / NO_GO / INDEPENDENT_REVIEW_REQUIRED
+Authority BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01.
+Preserve parentPR46 HEAD20c761fa5e3fbf427fb33ab319218bd0c1d022bd and all earlier refs/main.
+Only branch stage/m1-app-completion46, draft base stage/m1-owner-plan-history45.
+Frozen first plan5b635c9d822f862b50c03f923c441e9b22161ff7.
+Current source fixes compactmanual/recovery, unconfirmedexport/failedcompensation/readABA and proven supported tooling dependencies.
+Runtime9404 actual root6979 PASS cached0; final canonical checks, seal and final-head CI are separately bound in authenticated delivery report.
+38 requirements/18 gates false; original Security/candidate/core failures retained.
+Browser/device/provider/clinical/paid/M2/release unaccepted; no merge/deploy/production accounts or Campaign47.
+See docs/brain/task-specs/M1X-46 and authenticated external FINAL_REPORT/return for exact final identities/status.
 
-One draft PR33: https://github.com/TasfiqJ/onSkin/pull/33
-Branch stage/m1-windows-reader-integrity29, only on stage/m1-destructive-commit-core05-28.
-Auto-merge OFF; maintainer modification OFF. PR32/PR31 remain unmerged.
-Pinned PR32 HEAD bace116586d58ed955f0a024ca96ae9f4ad9286d; tree 6951590547b79a869464df987d16da6552907846.
-External replacement context manifest 7a94feecb69b09d46acb6465972f1c7b809fbfa9e657aa50c1f7bc4523643579.
-Exact packet verifier exit0 / VERIFIED15; prior return/Brain anchors HASH_VERIFIED.
-Context integrity is not source acceptance.
 
-Immutable first plan 9b395cbee7594f7dc03934aed4e08c4e3ea43c23; SHA256 c6548573be9be966446ef5ab7fe78e7b16cdbff0a9eb14559d8019ae7057eabe.
-Substantive source 8ad47414943eafdac974b2ae25850d603f960fce; tree 6fc2d7ec392c2d6f7dfdce736ecabefd9bd26de5.
-Sole original two-worklist child df685a74bcb41661e3126800ead25a5a7df9fef1; tree 480ce9a48b067df1e21c85519fc39700600f759f.
-Original Phase4 producer ran exactly once. No source edits after freeze.
-Exactly20 granted paths; only bytes27/bytes28 changed in old reader modules.
-All218 inherited checker functions, original27/28 tests and application bytes preserved.
-Current readers compare two bounded full observations and metadata/identity/parents.
-Consumed-byte alias gap is demonstrated/refused; no universal TOCTOU/native claim.
-Historical run41001481528 reader failures remain red; suppressed exception UNKNOWN.
-Bounded frozen reproductions did not recover it: OPEN_REQUIRED / NOT_REPRODUCED.
-
-Checkpoint docs/brain/checkpoints/M1-02/WINDOWS-READER-INTEGRITY-29/
-Manifest SHA256 8898c490cab5821f0810b0a476ce9d3cc43568b22402f6f89fc09abcfab1fe95
-Verifier SHA256 272f5fe30fa40ad47fa79802e3f44c2717b6b708101922306e477247875227bd
-Payload SHA256 2fea7ee6831cb71f96d56132712d8996e0ae8e7aab3ee2bb314194a902e9cc3e
-This handoff and exactly five checkpoint files are the sole evidence tail.
-Final HEAD/tree, final CI, two complete independent supplier clones, actual source/artifact
-0/1/0 and one real downloadable return/fresh-download proof are NOT_RUN_AT_SEAL and
-must be recorded externally afterward. No second tail or producer is authorized.
-
-G97 FAIL/NO_GO; DB06/DB08/R2B NOT_ACCEPTED; M1-03 BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED;
-M2 NOT_AUTHORIZED; J01 optical G1/G2/G3/G5 and G4 NOT_ACCEPTED. Physical iPhone/VoiceOver,
-provider/paid/professional/clinical/legal/licensing/Apple/public release CLOSED.
-Future first iPhone scope: F01–F17/F19–F20,C01–C12,P01–P06,protected F09,exactly qualified
-Korean J01; automated F18 and J02–J27 including J05 deferred. Brain audits before further task.
+CAMPAIGN46 CLOSURE02 CONTINUATION (BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02)
+Preserve originaldeafce53 submission/sixcommits and frozenplan. Independent review was PARTIAL_BLOCKED/NO_GO. Current additive native candidate and complete current audit/obligation parity are source-only, not owner/native admission. Exact official Expo output bounds and restored current Quality/CAT08/packet/source controls are integrated. See docs/brain/task-specs/M1X-46/CLOSURE02_REPORT.md; final exact-head report/CI/authenticated return delivered separately after source seal. Same draftPR47 only; no Campaign47, merge, deployment or release. All38requirements/18gates remainunaccepted.

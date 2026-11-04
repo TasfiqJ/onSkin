@@ -27,6 +27,310 @@ const historyIntentClaims45 = new Set<HistoryIntentClaim45>();
 const historyIntentTokens45 = new WeakMap<PlanHistoryMutationIntent45, HistoryIntentClaim45>();
 export const LOCAL_DATA_HISTORY_RECOVERY_REQUIRED = 'LOCAL_DATA_HISTORY_RECOVERY_REQUIRED';
 
+type PrivateMutationMarker46 = Readonly<{
+  v: 2;
+  kind: 'private-kv-mutations';
+  // Null records genuine unclaimed bootstrap provenance, never an owner grant.
+  ownerBinding: string | null;
+  claims: readonly Readonly<{ key: string; nonce: string }>[];
+}>;
+export type PrivateMutationIntent46 = Readonly<{ kind: 'private-mutation-capability46' }>;
+type PrivateMutationClaim46 = {
+  key: string; nonce: string | null; ownerBinding: string | null;
+  active: boolean; persisted: boolean; failed: boolean;
+  settled: Promise<void>; settle: () => void;
+};
+const privateMutationClaims46 = new Map<string, PrivateMutationClaim46>();
+const privateMutationTokens46 = new WeakMap<PrivateMutationIntent46, PrivateMutationClaim46>();
+let privateMutationRevision46 = 0;
+export const LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED = 'LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED';
+
+function invalidPrivateMutation46(): never {
+  throw new Error(LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED);
+}
+
+export function decodePrivateMutationMarker46(raw: string): PrivateMutationMarker46 {
+  if (typeof raw !== 'string' || raw.length > 16_384) invalidPrivateMutation46();
+  let value: unknown;
+  try { value = JSON.parse(raw) as unknown; } catch { invalidPrivateMutation46(); }
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) invalidPrivateMutation46();
+  const row = value as Record<string, unknown>;
+  if (Object.keys(row).sort().join(',') !== 'claims,kind,ownerBinding,v' ||
+      row.v !== 2 || row.kind !== 'private-kv-mutations' ||
+      (row.ownerBinding !== null && (typeof row.ownerBinding !== 'string' || !/^[a-f0-9]{64}$/u.test(row.ownerBinding))) ||
+      !Array.isArray(row.claims) || row.claims.length < 1 || row.claims.length > 64) invalidPrivateMutation46();
+  let previous = '';
+  const nonces = new Set<string>();
+  for (const claim of row.claims) {
+    if (typeof claim !== 'object' || claim === null || Array.isArray(claim) ||
+        Object.keys(claim).sort().join(',') !== 'key,nonce') invalidPrivateMutation46();
+    const entry = claim as Record<string, unknown>;
+    if (typeof entry.key !== 'string' || entry.key.length < 1 || entry.key.length > 128 ||
+        /[\u0000-\u0020\u007f-\u009f\ud800-\udfff]/u.test(entry.key) || entry.key <= previous ||
+        typeof entry.nonce !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/u.test(entry.nonce) ||
+        nonces.has(entry.nonce)) invalidPrivateMutation46();
+    previous = entry.key;
+    nonces.add(entry.nonce);
+  }
+  const marker = row as PrivateMutationMarker46;
+  if (raw !== JSON.stringify({ v: 2, kind: marker.kind, ownerBinding: marker.ownerBinding,
+    claims: marker.claims.map(({ key, nonce }) => ({ key, nonce })) })) invalidPrivateMutation46();
+  return marker;
+}
+
+/** Capture synchronously before native reads; an arm/clear ABA still retires them. */
+export function privateMutationReadGeneration46(): number { return privateMutationRevision46; }
+export function assertPrivateMutationReadGeneration46(expected: number): void {
+  if (expected !== privateMutationRevision46) invalidPrivateMutation46();
+}
+
+/** Global plaintext refusal prevents non-AAD native ciphertext relabeling.
+ * This rejects reads rather than holding a global private-data mutex. */
+export async function assertPrivateMutationReadable46(_keys?: readonly string[]): Promise<void> {
+  if (privateMutationClaims46.size > 0) invalidPrivateMutation46();
+  const revision = privateMutationRevision46;
+  const raw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+  assertPrivateMutationReadGeneration46(revision);
+  if (privateMutationClaims46.size > 0) invalidPrivateMutation46();
+  if (raw !== null && raw !== CLEANUP_REQUIRED_VALUE) {
+    // The unchanged C45 lane has its own AAD and read quarantine.
+    try { decodePrivateMutationMarker46(raw); } catch { decodeHistoryIntentMarker45(raw); return; }
+    invalidPrivateMutation46();
+  }
+}
+
+function encodedPrivateMutationClaims46(ownerBinding: string | null,
+  claims: readonly PrivateMutationClaim46[]): string | null {
+  if (!claims.length) return null;
+  const raw = JSON.stringify({ v: 2, kind: 'private-kv-mutations', ownerBinding,
+    claims: [...claims].sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0)
+      .map(({ key, nonce }) => ({ key, nonce })) });
+  decodePrivateMutationMarker46(raw);
+  return raw;
+}
+
+function livePrivateMutationMarker46(raw: string | null): PrivateMutationMarker46 | null {
+  const persisted = [...privateMutationClaims46.values()].filter((claim) => claim.active && claim.persisted);
+  if (raw === null) {
+    if (persisted.length) invalidPrivateMutation46();
+    return null;
+  }
+  const marker = decodePrivateMutationMarker46(raw);
+  if (raw !== encodedPrivateMutationClaims46(marker.ownerBinding, persisted) ||
+      persisted.some((claim) => claim.ownerBinding !== marker.ownerBinding)) invalidPrivateMutation46();
+  return marker;
+}
+
+/** Internal reserved-key preparation may run beside a different live writer.
+ * Orphan/restarted registries and same-key uncertainty never reach an updater. */
+export async function assertPrivateMutationWritable46(key: string): Promise<void> {
+  if (privateMutationClaims46.has(key) || destructiveClaimPending45()) invalidPrivateMutation46();
+  const raw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+  if (privateMutationClaims46.has(key) || destructiveClaimPending45()) invalidPrivateMutation46();
+  if (raw !== null) {
+    // A read-only/no-op preparation beside C45 history remains permitted.
+    // A real new ordinary mutation still cannot replace the v1 marker in arm.
+    try { decodePrivateMutationMarker46(raw); } catch { decodeHistoryIntentMarker45(raw); return; }
+  }
+  livePrivateMutationMarker46(raw);
+}
+
+/** Preparation-only wait for this process's known raw-only writers. They hold
+ * every causal private slot already and acquire no more after arming. Failed
+ * or restarted intents are recovery, never a wait or permission to retry them. */
+export async function waitForPrivateMutationReadWindow46(assertCurrent: () => void): Promise<void> {
+  while (true) {
+    assertCurrent();
+    const claims = [...privateMutationClaims46.values()];
+    if (claims.some((claim) => claim.failed)) invalidPrivateMutation46();
+    if (claims.length) {
+      await Promise.all(claims.map((claim) => claim.settled));
+      assertCurrent();
+      continue;
+    }
+    const raw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+    assertCurrent();
+    if (privateMutationClaims46.size > 0) continue;
+    if (raw !== null && raw !== CLEANUP_REQUIRED_VALUE) {
+      try { decodePrivateMutationMarker46(raw); } catch { decodeHistoryIntentMarker45(raw); return; }
+      invalidPrivateMutation46(); // durable orphan, never auto-resume it
+    }
+    return;
+  }
+}
+
+/** Failed native compensation retires waiters without consuming quarantine. */
+export function abandonPrivateMutation46(token: PrivateMutationIntent46): void {
+  const claim = privateMutationTokens46.get(token);
+  if (!claim?.active || privateMutationClaims46.get(claim.key) !== claim) return;
+  claim.failed = true;
+  claim.settle();
+  privateMutationRevision46 += 1;
+}
+
+/** Short marker FIFO only: no private-key/account/photo drain is awaited here. */
+export function armPrivateMutation46(key: string, assertCurrent: () => void,
+  expectedOwnerUserId?: string): Promise<PrivateMutationIntent46> {
+  assertCurrent();
+  if (typeof key !== 'string' || key.length < 1 || key.length > 128 ||
+      /[\u0000-\u0020\u007f-\u009f\ud800-\udfff]/u.test(key) ||
+      privateMutationClaims46.has(key) || destructiveClaimPending45() || historyIntentClaims45.size > 0) {
+    return Promise.reject(new Error(LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED));
+  }
+  let settle!: () => void;
+  const settled = new Promise<void>((resolve) => { settle = resolve; });
+  const claim: PrivateMutationClaim46 = { key, nonce: null, ownerBinding: null,
+    active: true, persisted: false, failed: false, settled, settle };
+  const token = Object.freeze({ kind: 'private-mutation-capability46' } as const);
+  privateMutationClaims46.set(key, claim);
+  privateMutationTokens46.set(token, claim);
+  privateMutationRevision46 += 1;
+  return serializeCleanupMarker(async () => {
+    let previousRaw: string | null | undefined;
+    let attemptedRaw: string | null = null;
+    try {
+      assertCurrent();
+      previousRaw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+      const marker = livePrivateMutationMarker46(previousRaw);
+      const owner = await import('./sessionOwner');
+      const proof = await owner.readLocalDataOwnerProof();
+      if (proof.kind !== 'owned' && proof.kind !== 'unclaimed' && proof.kind !== 'mutation_recovery') invalidPrivateMutation46();
+      const binding = proof.kind === 'unclaimed' ? null : proof.ownerBinding;
+      if ((marker !== null && marker.ownerBinding !== binding) ||
+          (proof.kind === 'mutation_recovery' && marker === null)) invalidPrivateMutation46();
+      if (binding !== null && expectedOwnerUserId !== undefined &&
+          binding !== await owner.localDataOwnerBinding(expectedOwnerUserId)) invalidPrivateMutation46();
+      assertCurrent();
+      if (destructiveClaimPending45() || await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== previousRaw) invalidPrivateMutation46();
+      const Crypto = await import('expo-crypto');
+      claim.nonce = Crypto.randomUUID();
+      claim.ownerBinding = binding;
+      attemptedRaw = encodedPrivateMutationClaims46(binding,
+        [...privateMutationClaims46.values()].filter((entry) => entry.active && entry.persisted).concat(claim));
+      assertCurrent();
+      await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, attemptedRaw!);
+      if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== attemptedRaw || destructiveClaimPending45()) invalidPrivateMutation46();
+      claim.persisted = true;
+      assertCurrent();
+      return token;
+    } catch (error) {
+      // No destination dispatch occurred. Remove only this prearm when exact
+      // metadata compensation can be proved, never another operation's claim.
+      if (attemptedRaw === null) {
+        claim.active = false;
+        privateMutationClaims46.delete(key);
+        claim.settle();
+        privateMutationRevision46 += 1;
+        throw error;
+      }
+      try {
+        if (destructiveClaimPending45()) await restoreRequiredCleanupMarker();
+        else if (previousRaw !== undefined) {
+          const current = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+          if (attemptedRaw !== null && current === attemptedRaw) {
+            if (previousRaw === null) await AsyncStorage.removeItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+            else await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, previousRaw);
+          }
+          if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) === previousRaw) {
+            claim.active = false;
+            privateMutationClaims46.delete(key);
+            claim.settle();
+            privateMutationRevision46 += 1;
+          }
+        }
+      } catch { /* Ambiguous control state stays quarantined, including restart. */ }
+      if (claim.active) abandonPrivateMutation46(token);
+      throw error;
+    }
+  });
+}
+
+/** Caller holds the destination slot and has confirmed exact commit/rollback. */
+export function finishPrivateMutation46(token: PrivateMutationIntent46): Promise<void> {
+  const claim = privateMutationTokens46.get(token);
+  if (!claim?.active || !claim.persisted || claim.failed || privateMutationClaims46.get(claim.key) !== claim) {
+    return Promise.reject(new Error(LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED));
+  }
+  return serializeCleanupMarker(async () => {
+    if (!claim.active || claim.failed || destructiveClaimPending45()) invalidPrivateMutation46();
+    const previousRaw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+    const marker = livePrivateMutationMarker46(previousRaw);
+    if (!marker || !marker.claims.some((entry) => entry.key === claim.key && entry.nonce === claim.nonce)) invalidPrivateMutation46();
+    const nextRaw = encodedPrivateMutationClaims46(marker.ownerBinding,
+      [...privateMutationClaims46.values()].filter((entry) => entry.active && entry.persisted && entry !== claim));
+    try {
+      if (nextRaw === null) await AsyncStorage.removeItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+      else await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, nextRaw);
+      if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== nextRaw || destructiveClaimPending45()) invalidPrivateMutation46();
+    } catch (error) {
+      if (destructiveClaimPending45()) await restoreRequiredCleanupMarker();
+      else {
+        try {
+          if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) === nextRaw) {
+            await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, previousRaw!);
+          }
+        } catch { /* Destination is confirmed; uncertain release stays blocked. */ }
+      }
+      throw error;
+    }
+    claim.active = false;
+    privateMutationClaims46.delete(claim.key);
+    claim.settle();
+    privateMutationRevision46 += 1;
+  }).catch((error) => {
+    abandonPrivateMutation46(token);
+    throw error;
+  });
+}
+
+/** Explicit privacy removal, called while its exact destination slots remain
+ * reserved. Absence discharges only those keys, never unrelated recovery. */
+export function clearPrivateMutationAfterRemoval46(keys: readonly string[]): Promise<void> {
+  const removed = new Set(keys);
+  privateMutationRevision46 += 1;
+  return serializeCleanupMarker(async () => {
+    const previousRaw = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+    // Existing destructive recovery owns its own broader completion protocol.
+    if (destructiveClaimPending45() || previousRaw === CLEANUP_REQUIRED_VALUE) return;
+    if (previousRaw !== null) {
+      try { decodeHistoryIntentMarker45(previousRaw); return; } catch { /* v2 below */ }
+    }
+    const marker = previousRaw === null ? null : decodePrivateMutationMarker46(previousRaw);
+    for (const key of removed) {
+      if (await AsyncStorage.getItem(key) !== null) invalidPrivateMutation46();
+    }
+    if (destructiveClaimPending45()) return;
+    if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== previousRaw) invalidPrivateMutation46();
+    const remaining = marker?.claims.filter((claim) => !removed.has(claim.key)) ?? [];
+    const nextRaw = remaining.length ? JSON.stringify({ v: 2, kind: 'private-kv-mutations',
+      ownerBinding: marker!.ownerBinding, claims: remaining }) : null;
+    if (nextRaw !== null) decodePrivateMutationMarker46(nextRaw);
+    try {
+      if (nextRaw !== previousRaw) {
+        if (nextRaw === null) await AsyncStorage.removeItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+        else await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, nextRaw);
+      }
+      if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) !== nextRaw || destructiveClaimPending45()) invalidPrivateMutation46();
+    } catch (error) {
+      if (destructiveClaimPending45()) await restoreRequiredCleanupMarker();
+      else if (previousRaw !== null) {
+        try {
+          if (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY) === nextRaw) {
+            await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, previousRaw);
+          }
+        } catch { /* No deletion completion is reported from ambiguous metadata. */ }
+      }
+      throw error;
+    }
+    for (const key of removed) {
+      const claim = privateMutationClaims46.get(key);
+      if (claim) { claim.active = false; claim.settle(); }
+      privateMutationClaims46.delete(key);
+    }
+    privateMutationRevision46 += 1;
+  });
+}
+
 /** Content-free control state, never a destructive-cleanup authorization. */
 export function decodeHistoryIntentMarker45(raw: string): HistoryIntentMarker45 {
   if (typeof raw !== 'string' || raw.length > 256) throw new Error(LOCAL_DATA_HISTORY_RECOVERY_REQUIRED);
@@ -188,7 +492,7 @@ function rememberExistingCleanupMarker(
   mayAdoptExisting: boolean,
 ): void {
   if (raw !== null && raw !== CLEANUP_REQUIRED_VALUE) {
-    decodeHistoryIntentMarker45(raw);
+    try { decodeHistoryIntentMarker45(raw); } catch { decodePrivateMutationMarker46(raw); }
     return; // explicit cleanup supersedes history maintenance, not another cleanup
   }
   if (raw === null || [...cleanupMarkerClaims].some((claim) => claim.required)) return;
@@ -341,6 +645,12 @@ export function clearLocalDataCleanupRequired(
     cleanupRequiredInMemory = false;
     for (const historyClaim of historyIntentClaims45) historyClaim.active = false;
     historyIntentClaims45.clear();
+    for (const privateClaim of privateMutationClaims46.values()) {
+      privateClaim.active = false;
+      privateClaim.settle();
+    }
+    privateMutationClaims46.clear();
+    privateMutationRevision46 += 1;
     return true;
   });
   return scope === undefined ? clearing.then(() => undefined) : clearing;

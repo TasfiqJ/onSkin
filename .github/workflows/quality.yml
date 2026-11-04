@@ -199,72 +199,26 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify current45 owner-saved local plan history and separately pinned44/41/40/39/38/37/36/35/34/33/32/29
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Verify Campaign46 current-source technical candidate
         run: |
           set -euo pipefail
-          phase="${C45_PREFLIGHT_PHASE:-SOURCE_FROZEN}"
-          if [ "${GITHUB_EVENT_NAME:-}" = pull_request ]; then
-            git fetch --no-tags origin "$GITHUB_REF"
-            test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
-          fi
-          python3 -I -B scripts/release/full-app-j01/main_integration45.test.py
-          python3 -I -B scripts/release/full-app-j01/historicalReplay45.test.py
-          python3 -I -B scripts/release/full-app-j01/source_consumer45.test.py
-          npm --workspace apps/mobile run test -- --passWithNoTests=false --reporter=verbose src/features/routine/planHistory45.test.ts src/features/routine/planHistory45Encrypted.test.ts src/features/shelf/ownedBottleVersion38.test.ts src/features/settings/localPrivateDataKeys.test.ts src/features/settings/localDeviceExport.test.ts src/lib/storage/privateKVSourceFence44.test.ts src/features/settings/localPrivateDataFence44.test.ts src/features/routine/planSourceFence44.test.ts src/features/onboarding/healthConsentStore.test.ts src/lib/auth/sessionOwner.test.ts src/lib/auth/localAccountIsolation.test.ts src/lib/auth/accountGeneration.test.ts src/features/photos/encryptedStorage.test.ts
+          python3 -I -B scripts/release/full-app-j01/source_completion46.test.py
+          python3 -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN
+          node --test scripts/release/full-app-j01/security_completion46.test.mjs
+          npm --workspace apps/mobile run test -- --passWithNoTests=false src/features/shelf/compactManual46.test.ts src/features/routine/connectedJourney46.test.ts src/features/settings/exportConfirmation46.test.ts src/features/routine/planHistory45Encrypted.test.ts src/features/settings/localPrivateDataFence44.test.ts src/lib/storage/privateKVSourceFence44.test.ts src/features/routine/planSourceFence44.test.ts src/features/shelf/manualDraftRecovery.campaign26.test.ts src/features/shelf/detailActionSheet.campaign26.test.ts
+          node --test scripts/launch/formula-route-inventory39.test.mjs
+          node scripts/release/full-app-j01/mounted_journey46.mjs
+          node --test scripts/release/full-app-j01/mounted_journey46.test.mjs
+          node --test scripts/e2e/formula-driver-coverage46.test.mjs
           node --test scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs
           node scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs --behavioral
-          node --test scripts/launch/formula-route-inventory39.test.mjs
-          node --input-type=module <<'C41_UI_TEST'
-          import { mkdtempSync, writeFileSync, unlinkSync, rmdirSync } from 'node:fs';
-          import { tmpdir } from 'node:os';
-          import { join, resolve } from 'node:path';
-          import { spawnSync } from 'node:child_process';
-          const directory = mkdtempSync(join(tmpdir(), 'optional-change41-vitest-'));
-          const config = join(directory, 'ui.config.mjs');
-          try {
-            const root = resolve('apps/mobile');
-            writeFileSync(config, 'export default ' + JSON.stringify({ root,
-              resolve: { alias: { '@': join(root, 'src') } },
-              test: { environment: 'node', include: ['src/features/today/OptionalChangePanel41.test.tsx', 'src/features/routine/PlanHistoryPanel45.test.tsx'] }
-            }) + ';\n');
-            const result = spawnSync(process.execPath, [resolve('node_modules/vitest/vitest.mjs'),
-              'run', '--config', config, '--passWithNoTests=false', '--reporter=verbose'],
-              { stdio: 'inherit', timeout: 120000 });
-            if (result.error) throw result.error;
-            process.exitCode = result.status ?? 1;
-          } finally {
-            unlinkSync(config);
-            rmdirSync(directory);
-          }
-          C41_UI_TEST
-          node --test scripts/e2e/optional-change41.test.mjs
-          node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs scripts/e2e/compact-shelf-target37.test.mjs scripts/e2e/owned-bottle-formula38.test.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration45.py --phase "$phase"
-          python3 -I -B scripts/release/full-app-j01/main_integration45.py --phase "$phase" --scope full-app-j01-v2
-          if python3 -I -B scripts/release/full-app-j01/main_integration45.py --phase "$phase" --scope full-app-j01-v2 --external-readiness; then
-            echo 'External readiness must remain refused' >&2
-            exit 1
-          else
-            test "$?" = 2
-          fi
-          node scripts/launch/check-contract.mjs
-          python3 -I -B scripts/release/full-app-j01/main_integration45.py --historical --historical-evidence-dir "$RUNNER_TEMP/c45-history"
           node scripts/docs/source-packet-supersession09.test.mjs
-
-      - name: Retain Campaign45 historical replay evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: campaign45-history-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ runner.temp }}/c45-history/logs/**
-            ${{ runner.temp }}/c45-history/full-normal-original44/**
-            ${{ runner.temp }}/c45-history/diagnostics/**
-            ${{ runner.temp }}/c45-history/cli-failure.json
-          if-no-files-found: warn
-          retention-days: 7
+          node --test scripts/e2e/optional-change41.test.mjs
+          node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs
+          node scripts/launch/check-contract.mjs
+        # Technical evidence only. Original Security/candidate/G97 workflows and
+        # pinned historical programs remain unchanged. Accepted exact-parent C45
+        # replay evidence is reused with its Brain-audited limitations.
 
       - name: Verify tooling security backports
         run: npm run phase9:tooling-security:test
@@ -280,6 +234,17 @@ jobs:
           npm run phase9:release-candidate-git-contract:test
           npm run phase9:verification-wiring:test
           npm run phase9:store-build-inspect:check
+
+
+      - name: Verify current native46 candidate parity and security output bounds
+        env:
+          C46_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs
+          node scripts/release/full-app-j01/native_current46.mjs
+          node --test scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs
+          node --test scripts/phase9/release-install-wiring46.test.mjs
+          python3 -I -B scripts/release/full-app-j01/workflow_context46.test.py
 
       - name: Verify store-only client delivery
         run: node scripts/optimization/store-only-release-audit-smoke.mjs

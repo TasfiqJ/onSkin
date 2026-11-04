@@ -78,6 +78,12 @@ afterEach(async () => {
   releases.forEach((release) => release());
   await waitForPrivateKVWritesToSettle();
   vi.restoreAllMocks();
+  ports26.failRead = null;
+  ports26.failWrite = null;
+  ports26.holdRead = null;
+  // A deliberately failed compensation now leaves a durable recovery intent.
+  // Teardown uses the real explicit deletion lane before the next fixture.
+  await multiRemovePrivateItems([ORDER, ...SOURCES]);
   await close26(client);
 });
 
@@ -170,10 +176,13 @@ describe('Campaign44 real encrypted opt-in source reservation', () => {
     const writing = fence().then(() => { events.push('snapshot'); });
     await gate.entered;
     const mutation = setPrivateItem(PROFILE, 'profile1').then(() => { events.push('source'); });
-    expect(await getPrivateItem(PROFILE)).toBe('profile0');
+    await expect(getPrivateItem(PROFILE)).rejects.toThrow('LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED');
+    expect(events).toEqual([]);
     gate.release();
     await Promise.all([writing, mutation]);
     expect(events).toEqual(['snapshot', 'source']);
+    expect(await getPrivateItem(ORDER)).toBe('order1');
+    expect(await getPrivateItem(PROFILE)).toBe('profile1');
   });
 
   it('refuses a deletion completed before validation and leaves destination exact', async () => {

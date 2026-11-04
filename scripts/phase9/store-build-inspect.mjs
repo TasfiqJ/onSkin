@@ -26,7 +26,8 @@ import {
 } from './ios-archive-privacy-evidence.mjs';
 import { auditIosReleaseCandidateCrossBinding } from './ios-release-candidate-cross-binding.mjs';
 import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
-import { IosPrivacyContractError, auditIosPrivacySource } from './ios-privacy-contract.mjs';
+import { IosPrivacyContractError, proveCurrentNativeSource46 } from './ios-privacy-contract.mjs';
+import { assertCurrentNativeHead46 } from './ios-privacy-lock-succession46.mjs';
 import {
   auditStoreOnlyResolvedApp,
   auditStoreOnlyRelease,
@@ -91,7 +92,8 @@ try {
 
 let iosPrivacySourceAudit = null;
 try {
-  iosPrivacySourceAudit = auditIosPrivacySource();
+  assertCurrentNativeHead46(process.cwd());
+  iosPrivacySourceAudit = proveCurrentNativeSource46(process.cwd()).report;
   block(
     errors,
     iosPrivacySourceAudit.status !== 'source_invalid',

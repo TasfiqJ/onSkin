@@ -61,6 +61,8 @@ import {
 // Only platform/service ports are mocked. The actual cleanup functions, photo
 // store/journal, encryption/private KV, account/health boundaries, and read hook
 // run together. In particular neither cleanup function nor its key list is mocked.
+type SessionOwnerModule46 = typeof import('@/lib/auth/sessionOwner');
+
 const PHOTO_DELETE_CLEANUP_VAULT_KEY =
   PHOTO_DELETE_CLEANUP_VAULT_KEY_PREFIX +
   createHash('sha256').update('layerwell:local-data-owner:v1:owner-a').digest('hex');
@@ -217,7 +219,8 @@ vi.mock('@/features/photos/sensitiveImageMemory', () => ({
 vi.mock('@/features/photos/photoThumbnail', () => ({ createEncryptedPhotoThumbnail: vi.fn() }));
 vi.mock('@/lib/analytics/track', () => ({ resetAnalyticsIdentity: async () => undefined }));
 vi.mock('@/lib/iap/revenuecat', () => ({ resetRevenueCatIdentity: async () => undefined }));
-vi.mock('@/lib/auth/sessionOwner', () => ({
+vi.mock('@/lib/auth/sessionOwner', async (importOriginal) => ({
+  ...await importOriginal<SessionOwnerModule46>(),
   readLocalDataOwnership: async (owner: string) => (owner === mocks.owner ? 'match' : 'mismatch'),
   localDataOwnerBinding: async (owner: string) =>
     createHash('sha256')

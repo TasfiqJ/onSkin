@@ -15,9 +15,11 @@ import {
 import { getPrivateItem, updatePrivateItem } from './privateKV';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 
+type ChachaModule46 = typeof import('@noble/ciphers/chacha.js');
+
 const crypto28 = vi.hoisted(() => ({ failEncrypt: false }));
 vi.mock('@noble/ciphers/chacha.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@noble/ciphers/chacha.js')>();
+  const actual = await importOriginal<ChachaModule46>();
   return {
     ...actual,
     xchacha20poly1305: (key: Uint8Array, nonce: Uint8Array, aad?: Uint8Array) => {
@@ -137,7 +139,9 @@ it('does not retroactively cancel an already fulfilled write', async () => {
   current = false;
   await settle28();
   expect(ports26.bytes.get(KEY28)).toBe(committed);
-  expect(writes).toHaveBeenCalledTimes(1);
+  expect(writes.mock.calls.filter(([key]) => key === KEY28)).toHaveLength(1);
+  expect(writes.mock.calls.filter(([key]) => key === 'layerwell.localDataCleanupRequired.v1')).toHaveLength(1);
+  expect(ports26.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(false);
 });
 
 it('preserves the original post-native additional guard and exact compensation semantics', async () => {

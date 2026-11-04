@@ -1,0 +1,13 @@
+{
+  "name": "@onskin/decode-uri-component-compat",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "exports": {
+    "types": "./index.d.ts",
+    "default": "./index.cjs"
+  },
+  "engines": { "node": ">=20.19.4" },
+  "dependencies": { "decode-uri-component": "0.5.1" }
+}

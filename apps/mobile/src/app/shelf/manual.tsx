@@ -250,7 +250,6 @@ function ManualAddForm() {
   const supportFloorTextPressureManualPhone =
     viewportWidth <= 390 && viewportHeight < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;
-  const showManualIngredientsField = !supportFloorTextPressureManualPhone;
 
   const barcodeNeedsFormat =
     manualBarcodeRequiresEightDigitFormat(barcode) && eightDigitFormat === null;
@@ -458,34 +457,32 @@ function ManualAddForm() {
             ) : null}
           </View>
 
-          {showManualIngredientsField ? (
-            <View className={compactManualPhone ? 'mt-1' : 'mt-2'}>
-              <Text variant="label" tone="muted" className="mb-1.5 uppercase">
-                Ingredients
-                <Text
-                  className="font-mono text-[10.5px]"
-                  style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}
-                >
-                  {' · optional, we’ll find the actives'}
-                </Text>
+          <View className={compactManualPhone ? 'mt-1' : 'mt-2'}>
+            <Text variant="label" tone="muted" className="mb-1.5 uppercase">
+              Ingredients
+              <Text
+                className="font-mono text-[10.5px]"
+                style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}
+              >
+                {' · optional, we’ll find the actives'}
               </Text>
-              <TextInput
-                accessibilityLabel="Ingredients"
-                value={ingredients}
-                onChangeText={(next) => {
-                  if (canAct()) setIngredients(next);
-                }}
-                placeholder="Paste or type the INCI list…"
-                placeholderTextColor={colors.mutedLight}
-                multiline
-                className={cn(
-                  inputClass,
-                  ultraShortPhone ? 'min-h-[52px] py-2.5' : 'min-h-[64px] py-3',
-                )}
-                style={{ textAlignVertical: 'top' }}
-              />
-            </View>
-          ) : null}
+            </Text>
+            <TextInput
+              accessibilityLabel="Ingredients"
+              value={ingredients}
+              onChangeText={(next) => {
+                if (canAct()) setIngredients(next);
+              }}
+              placeholder="Paste or type the INCI list…"
+              placeholderTextColor={colors.mutedLight}
+              multiline
+              className={cn(
+                inputClass,
+                ultraShortPhone ? 'min-h-[52px] py-2.5' : 'min-h-[64px] py-3',
+              )}
+              style={{ textAlignVertical: 'top' }}
+            />
+          </View>
 
           {!ultraShortPhone ? (
             <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3">

@@ -4,12 +4,14 @@ import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 import {
-  validateIosExtensionConfig23,
   validateIosExtensionVariantIsolation,
 } from './ios-extension-contract.mjs';
+import { validateIosExtensionConfig46 as validateIosExtensionConfig23 } from '../release/full-app-j01/native_current46.mjs';
+import { assertCurrentNativeHead46 } from '../phase9/ios-privacy-lock-succession46.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+assertCurrentNativeHead46(root);
 const launchContract = loadLaunchContract(root);
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const REVIEWED_CAMERA_PERMISSION_TEMPLATE =
