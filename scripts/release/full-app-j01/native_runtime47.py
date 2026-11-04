@@ -527,8 +527,11 @@ def execute(r):
     tools = {}
     for name, argv in [
         ('os', ['sw_vers']), ('architecture', ['uname', '-m']),
+        ('disk', ['df', '-k', r.output]),
         ('node', ['node', '--version']), ('npm', ['npm', '--version']),
         ('ruby', ['ruby', '--version']), ('cocoapods', ['pod', '--version']),
+        ('xcodeproj', ['ruby', '-rxcodeproj', '-e', 'puts Xcodeproj::VERSION']),
+        ('swift', ['xcrun', 'swiftc', '--version']),
         ('xcode', ['xcodebuild', '-version']), ('sdks', ['xcodebuild', '-showsdks']),
         ('simulator-sdk', ['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-version']),
     ]:
@@ -541,17 +544,18 @@ def execute(r):
     r.passed('toolchain', tools)
     r.run('normal-install', ['npm', 'ci', '--no-audit', '--no-fund'], timeout=1000)
     r.run('postinstall-check', ['npm', 'run', 'postinstall:check'], timeout=180)
+    r.run('swift-behavior47', ['python3', '-I', '-B',
+          'scripts/release/full-app-j01/swift_behavior47.py', '--output', r.output / 'swift-behavior47'], timeout=120)
     r.run('ocr-source-contract', ['npm', 'run', 'cat05:native-ocr-source-contract:test'], timeout=240)
     r.run('existing-workflow-contract', ['npm', 'run', 'phase5:ios-simulator-compile-workflow:test'], timeout=120)
-    r.run('current-native46', ['node', 'scripts/release/full-app-j01/native_current46.mjs'], timeout=600)
-    r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=120)
+    r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=600)
     r.run('generated47-properties-controls', ['python3', '-I', '-B', 'scripts/release/full-app-j01/pods_compat47.test.py'], timeout=120)
     source47 = r.output / 'current-generated47-source.json'
     r.run('current-generated47-source', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
                                        '--phase', 'SOURCE', '--output', source47], timeout=600)
     r.run('dependency-graph', ['npm', 'ls', '--all', '--json', '--long'], timeout=180)
     r.source_proof('source-after-install', head)
-    r.passed('installation', {'normal_hooks_executed': True, 'reviewed_native_source': 'CURRENT_SOURCE46_TECHNICAL_ONLY'})
+    r.passed('installation', {'normal_hooks_executed': True, 'reviewed_native_source': 'CURRENT_SOURCE47_TECHNICAL_ONLY'})
     mobile = r.root / 'apps/mobile'
     r.run('resolved-expo-config', ['npx', '--no-install', 'expo', 'config', '--json'], cwd=mobile, timeout=120)
     r.run('prebuild', ['npx', '--no-install', 'expo', 'prebuild', '--platform', 'ios', '--clean',

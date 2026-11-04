@@ -238,24 +238,41 @@ jobs:
         run: npm run phase9:tooling-security:test
 
       - name: Verify installed iOS native sources
+        env:
+          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+          C47_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
         run: |
           npm run postinstall:check
           npm run phase5:expo-widgets-lifecycle:test
           npm run phase9:view-shot-privacy:test
           npm run phase9:ios-privacy-source-audit:test
-          npm run phase9:ios-privacy-source-audit:check
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --native-audit47 --strict --check
+          else
+            npm run phase9:ios-privacy-source-audit:check
+          fi
           npm run phase9:ios-archive-privacy-evidence:test
           npm run phase9:release-candidate-git-contract:test
           npm run phase9:verification-wiring:test
-          npm run phase9:store-build-inspect:check
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --native-store47 --check
+          else
+            npm run phase9:store-build-inspect:check
+          fi
 
 
       - name: Verify current native46 candidate parity and security output bounds
         env:
           C46_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
-          node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs
-          node scripts/release/full-app-j01/native_current46.mjs
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node --test scripts/release/full-app-j01/native_generated47.test.mjs
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE
+          else
+            node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs
+            node scripts/release/full-app-j01/native_current46.mjs
+          fi
           node --test scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs
           node --test scripts/phase9/release-install-wiring46.test.mjs
           python3 -I -B scripts/release/full-app-j01/workflow_context46.test.py

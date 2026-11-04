@@ -11,6 +11,19 @@ spec.loader.exec_module(c)
 
 
 class Source47Tests(unittest.TestCase):
+    def test_continuation02_scope_is_exact_and_historical_swift_stays_protected(self):
+        repair = {'scripts/phase5/expo-widgets-57.0.26/AppIntent.swift',
+                  'scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift',
+                  'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
+                  'scripts/release/full-app-j01/swift_behavior47.py'}
+        c.check_scope(repair, c.PATHS)
+        for path in ['scripts/phase5/expo-widgets-57.0.9/AppIntent.swift',
+                     'scripts/phase5/expo-widgets-56.0.23/LayerwellWidgetLifecycleStore.swift',
+                     'scripts/phase9/ios-privacy-lock-succession46.mjs',
+                     'docs/phase-9/ios-sdk-lock-succession46.v1.json']:
+            with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'UNDECLARED_CHANGED_PATH'):
+                c.check_scope({path}, c.PATHS | {path})
+
     def ledger(self):
         raw = b'accepted original progress bytes'
         value = {'schema': 1, 'campaign': 47, 'authorization': c.AUTH, 'base': c.BASE,

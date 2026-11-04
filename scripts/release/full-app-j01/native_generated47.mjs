@@ -1,15 +1,18 @@
 /** Current C47 generated native-input successor. No device, owner or release admission. */
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { registerHooks } from 'node:module';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, isAbsolute, relative, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { parseDocument } from 'yaml';
-import { runNativeCurrent46 } from './native_current46.mjs';
+import { auditIosPrivacySource as legacyAuditIosPrivacySource, canonicalAuditJson } from '../../phase9/ios-privacy-contract.mjs';
+import { nativeTree23 } from '../../phase9/ios-privacy-lock-succession23.mjs';
+import { validateIosExtensionConfig, validateIosExtensionVariantIsolation, IOS_WIDGET_EXTENSION_CONTRACT } from '../../phase5/ios-extension-contract.mjs';
 import { checkedNativeRoot46, nativeSourceIdentity46, readNativeFile46, verifyNativeTree46,
-  LOCK_SUCCESSION46_SHA256 } from '../../phase9/ios-privacy-lock-succession46.mjs';
+  LOCK_SUCCESSION46_SHA256, checkedNativePath46, assertCurrentNativeHead46, checkCurrentAuditSnapshot46, checkWindowsReparse } from '../../phase9/ios-privacy-lock-succession46.mjs';
 
 export const DESCRIPTOR47 = 'docs/phase-9/ios-generated-input-succession47.v1.json';
 export const MAP47 = 'scripts/phase9/ios-native-obligations47.json';
@@ -20,6 +23,10 @@ export const SOURCE_PATHS47 = [
   'scripts/release/full-app-j01/native_generated47.test.mjs', MAP47,
   'scripts/release/full-app-j01/native_runtime47.py',
   'scripts/release/full-app-j01/native_runtime47.test.py',
+  'scripts/release/full-app-j01/swift_behavior47.py',
+  'scripts/phase5/expo-widgets-57.0.26/AppIntent.swift',
+  'scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift',
+  'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
 ].sort();
 export const PODS47 = [{ name: 'GoogleUtilities/Environment', modular_headers: true },
   { name: 'RecaptchaInterop', modular_headers: true }];
@@ -30,6 +37,77 @@ const hash = raw => createHash('sha256').update(raw).digest('hex');
 const same = (a, b) => assert.deepEqual(a, b);
 const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object'
   ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;
+
+export const SWIFT_SUCCESSION47 = {
+  "authority": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+  "checkpointHead": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+  "checkpointTree": "33898bf4d4e7424a8479139fd0906f8df6f94ae2",
+  "sourceInputs": [
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "before": {
+        "bytes": 5224,
+        "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+      },
+      "after": {
+        "bytes": 5325,
+        "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+      }
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "before": {
+        "bytes": 75303,
+        "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+      },
+      "after": {
+        "bytes": 75347,
+        "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+      }
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "before": {
+        "bytes": 16969,
+        "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+      },
+      "after": {
+        "bytes": 16969,
+        "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+      }
+    }
+  ],
+  "installedFiles": [
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/AppIntent.swift",
+      "sourcePath": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "before": {
+        "bytes": 5224,
+        "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+      },
+      "after": {
+        "bytes": 5325,
+        "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+      }
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift",
+      "sourcePath": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "before": {
+        "bytes": 75303,
+        "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+      },
+      "after": {
+        "bytes": 75347,
+        "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+      }
+    }
+  ],
+  "projection": "VERIFY_CURRENT_POSTIMAGES_THEN_INVERT_ONLY_TWO_FILES_FOR_IMMUTABLE_TREE_COMPARISON",
+  "legacy46": "EXPECTED_IDENTITY_REFUSAL_RETAINED_NOT_RELABELLED_PASS",
+  "admissions": false
+};
+export function validateSwiftSuccession47(value) { same(value, SWIFT_SUCCESSION47); return true; }
 
 export function strictJson47(raw) {
   assert.ok(Buffer.isBuffer(raw) && raw.length > 0 && raw.length <= 16 * 1024 * 1024);
@@ -43,7 +121,7 @@ export function strictJson47(raw) {
 export function validateDescriptor47(value) {
   same(Object.keys(value).sort(), ['schemaVersion', 'kind', 'authority', 'repository', 'acceptedParent',
     'predecessor46', 'sourceBinding', 'sourcePins', 'registry', 'installedConsumers', 'generatedTransition',
-    'obligations', 'claims', 'admissions', 'release'].sort());
+    'obligations', 'claims', 'admissions', 'release', 'swiftSourceSuccession'].sort());
   same(value.schemaVersion, 1);
   same(value.kind, 'ios_generated_input_succession47_source_candidate');
   same(value.authority, 'BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01');
@@ -65,6 +143,7 @@ export function validateDescriptor47(value) {
     same(Object.keys(pin).sort(), ['bytes', 'path', 'sha256']);
     assert.ok(Number.isSafeInteger(pin.bytes) && pin.bytes > 0 && /^[a-f0-9]{64}$/.test(pin.sha256));
   }
+  validateSwiftSuccession47(value.swiftSourceSuccession);
   const transition = value.generatedTransition;
   same(Object.keys(transition).sort(), ['property', 'beforeState', 'pods', 'representation',
     'propertiesPreimage', 'podfilePreimage', 'scope', 'primarySources', 'allowedProfiles',
@@ -125,6 +204,15 @@ export function validateMapping47(value, predecessor) {
     same(current47.unchangedInvocationRequired, unchanged.currentInvocation);
     same(current47.unchangedNamedTestRequired, unchanged.currentTest);
     same(current47.predecessorCaseSHA256, hash(Buffer.from(JSON.stringify(canonical(unchanged)))));
+    if (unchanged.execution === 'CURRENT46_SUCCESSOR') {
+      const continued = current47.continuation02;
+      same(continued.required, true);
+      same(continued.effectiveInvocation, 'node --test scripts/release/full-app-j01/native_generated47.test.mjs');
+      same(continued.effectiveNamedTest, unchanged.currentTest.replace(/^current46 /, 'current47 continuation02 '));
+      same(continued.actualCurrentSourceReceiptRequired, true);
+      same(continued.installedNativeInventoryRequired, true);
+      same(continued.parentOrHistoricalPassSubstitutionAllowed, false);
+    } else same(current47.continuation02, undefined);
   }
   same(value.acceptanceGranted, false);
   same(value.nativeAccepted, false);
@@ -157,6 +245,14 @@ export function validateResolvedLock47(value) {
     assert.match(value['SPEC CHECKSUMS'][name], /^[a-f0-9]{40}$/);
   }
   return selected;
+}
+
+export function validateOutput47(value, root = ROOT) {
+  const destination = resolve(value);
+  assert.ok(relative(root, destination).startsWith('..' + sep), 'CURRENT47_OUTPUT_OUTSIDE_SOURCE');
+  checkedNativeRoot46(dirname(destination));
+  assert.equal(existsSync(destination), false, 'CURRENT47_OUTPUT_ALREADY_EXISTS');
+  return destination;
 }
 
 export function readSourceProof47(path) {
@@ -219,12 +315,21 @@ function inputs47(rootValue) {
   return { root, source, file, descriptor, witness };
 }
 
-function projectedInputs47(root, witness, sourceHead) {
+function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneration = true) {
   const pins = [...witness.unchangedInputs, ...witness.currentSourceInputs, witness.rootPackage];
+  const stamps = {};
   same(pins.length, 202);
   for (const pin of pins) {
-    if (pin.status === 'ABSENT') { same(existsSync(resolve(root.absolute, pin.path)), false); continue; }
+    if (pin.status === 'ABSENT') { absentInput47(root, pin.path); continue; }
     const actual = readNativeFile46(root, pin.path);
+    stamps[pin.path] = actual.identity;
+    const changed = descriptor.swiftSourceSuccession.sourceInputs.find(row => row.path === pin.path);
+    if (changed) {
+      same({ bytes: pin.bytes, sha256: pin.sha256 }, changed.before);
+      same({ bytes: actual.bytes.length, sha256: actual.sha256 }, changed.after);
+      continue;
+    }
+    assert.ok(allowGeneration || actual.sha256 === pin.sha256, 'CURRENT47_UNPROJECTED_SOURCE_REQUIRED:' + pin.path);
     if (pin.path !== 'apps/mobile/package.json' || actual.sha256 === pin.sha256) {
       same(actual.sha256, pin.sha256);
       same(actual.bytes.length, pin.bytes);
@@ -243,21 +348,275 @@ function projectedInputs47(root, witness, sourceHead) {
     }
     same(projected, after);
   }
-  return { verifiedInputCount: pins.length,
-    installedNativeTrees: witness.installedNativeTrees.map(expected => verifyNativeTree46(root, expected)),
+  return { verifiedInputCount: pins.length, stamps,
+    installedNativeTrees: witness.installedNativeTrees.map(expected => currentTree47(root, expected, descriptor.swiftSourceSuccession, stamps)),
     qualification: 'ACTUAL_CURRENT_INPUTS_WITH_ONLY_DECLARED_ISOLATED_PREBUILD_PACKAGE_SCRIPT_PROJECTION' };
 }
 
-export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profile = 'staging' }) {
+
+function absentInput47(root, name) {
+  let prefix = '';
+  for (const part of name.split('/')) {
+    prefix += (prefix ? '/' : '') + part;
+    try { const found = checkedNativePath46(root, prefix); checkWindowsReparse([found.absolute]); }
+    catch (error) { if (error.code === 'ENOENT') return; throw error; }
+  }
+  assert.fail('CURRENT47_EXPECTED_ABSENCE:' + name);
+}
+
+function currentTree47(root, expected, transition, stamps) {
+  if (expected.path !== 'node_modules/expo-widgets') return verifyNativeTree46(root, expected, stamps);
+  const rows = [], seen = new Set();
+  let actualBytes = 0;
+  const prior = new Map(transition.installedFiles.map(change => {
+    const before = git47(root, 'show', transition.checkpointHead + ':' + change.sourcePath);
+    same({ bytes: before.length, sha256: hash(before) }, change.before);
+    return [change.path, { change, before }];
+  }));
+  const projected = nativeTree23(root, expected.path, {
+    checkedPath(current, path) {
+      const entry = checkedNativePath46(current, path);
+      const stat = entry.ancestors.at(-1).stat;
+      stamps[path] = ['dev', 'ino', 'size', 'mtimeNs', 'ctimeNs', 'nlink'].map(key => String(stat[key]));
+      if (entry.ancestors.at(-1).stat.isDirectory()) rows.push({ path, kind: 'directory' });
+      return entry;
+    },
+    readBoundedFile(current, path, maximum) {
+      const actual = readNativeFile46(current, path, maximum);
+      rows.push({ path, kind: 'file', bytes: actual.bytes.length, sha256: actual.sha256 });
+      actualBytes += actual.bytes.length;
+      if (!prior.has(path)) return actual;
+      const { change, before } = prior.get(path);
+      same({ bytes: actual.bytes.length, sha256: actual.sha256 }, change.after);
+      same(actual.bytes, readNativeFile46(current, change.sourcePath).bytes);
+      seen.add(path);
+      return { ...actual, bytes: before, sha256: change.before.sha256 };
+    },
+    reject(message) { assert.fail('CURRENT47_NATIVE_TREE:' + message); },
+  });
+  same([...seen].sort(), [...prior.keys()].sort());
+  same(projected, expected);
+  return { actualHashDomain: 'SHA256(JSON.stringify(actual preorder directory/file rows,null,2)+newline)',
+    path: expected.path, files: projected.files, directories: projected.directories,
+    bytes: actualBytes, sha256: hash(Buffer.from(JSON.stringify(rows, null, 2) + '\n')),
+    immutable46InverseProjection: projected, verifiedInstalledFileSuccessors: 2 };
+}
+
+function verifyLockAndPackage47(root, witness, lockFile) {
+  const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const jsonBytes = value => Buffer.from(JSON.stringify(value, null, 2) + '\n');
+  const historicalBase = witness.acceptedBase.commit, predecessor = witness.predecessor.commit;
+  const baseLock = witness.acceptedBase.lockSHA256, currentLock = witness.candidateLock.sha256;
+  const reject = message => assert.fail('CURRENT47_LOCK_PACKAGE:' + message);
+  const currentPackage = readNativeFile46(root, 'package.json');
+  const basePackage = git47(root, ...['show', `${historicalBase}:package.json`]);
+  const priorPackage = git47(root, ...['show', `${predecessor}:package.json`]);
+  const priorLock = git47(root, ...['show', `${predecessor}:package-lock.json`]);
+  const transition = witness.rootPackageTransition;
+  if (hash(basePackage) !== transition.acceptedParent.sha256 || basePackage.length !== transition.acceptedParent.bytes ||
+      hash(priorPackage) !== transition.predecessor.sha256 || priorPackage.length !== transition.predecessor.bytes ||
+      transition.predecessor.sha256 !== 'cc37998ca18d43326f11e47cc78f2b3aa62231b0381d1948578804190ec2269b' ||
+      hash(basePackage) !== witness.acceptedBase.rootPackageSHA256 ||
+      hash(priorPackage) !== witness.predecessor.rootPackageSHA256 ||
+      hash(priorLock) !== witness.predecessor.lockSHA256 || !priorLock.equals(lockFile.bytes) ||
+      !equal(transition.closureChangedScripts, ['postinstall', 'postinstall:check'])) reject('PACKAGE_predecessor');
+  const expectedPackage = JSON.parse(priorPackage);
+  expectedPackage.scripts.postinstall += ` && ${transition.appendedHook}`;
+  expectedPackage.scripts['postinstall:check'] += ` && ${transition.appendedHook} --check`;
+  if (!jsonBytes(expectedPackage).equals(currentPackage.bytes)) reject('EXACT_PACKAGE_HOOK_DELTA');
+  const baseBytes = git47(root, ...['show', `${historicalBase}:package-lock.json`]);
+  if (hash(baseBytes) !== baseLock) reject('baseLock');
+  const lock = JSON.parse(lockFile.bytes);
+  const before = JSON.parse(baseBytes);
+  const changed = [...new Set([...Object.keys(lock.packages), ...Object.keys(before.packages)])]
+    .filter(path => !equal(lock.packages[path], before.packages[path])).sort();
+  if (!equal(changed, witness.changedNodes)) reject('FINITE_LOCK_DELTA');
+  const historical = structuredClone(lock);
+  for (const path of changed) {
+    if (!equal(lock.packages[path], witness.candidateNodes[path]) ||
+        !equal(before.packages[path] ?? null, witness.originalNodes[path])) reject('NODE_IDENTITY');
+    if (Object.hasOwn(before.packages, path)) historical.packages[path] = before.packages[path];
+    else delete historical.packages[path];
+  }
+  if (!jsonBytes(historical).equals(baseBytes)) reject('LOSSLESS_predecessor');
+  for (const [path, node] of Object.entries(witness.unchangedNativeNodes)) {
+    if (!equal(lock.packages[path], node)) reject('NATIVE_NODE');
+  }
+
+  return { changedLockNodes: changed, historicalLockSHA256: hash(baseBytes) };
+}
+
+export function currentPrivacyProjection47(legacy, witnessBytes, requireSnapshot = true) {
+  same(legacy.status, 'source_invalid');
+  same(legacy.errors, [{ code: 'UNEXPECTED_AUDIT_ERROR', path: 'docs/phase-9/ios-sdk-lock-succession46.v1.json',
+    message: 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:scripts/phase5/expo-widgets-57.0.26/AppIntent.swift' }]);
+  const report = structuredClone(legacy);
+  same(report.summary.errorCount, 1);
+  report.status = 'archive_required'; report.errors = []; report.summary.errorCount = 0;
+  report.inputs.lockSuccession46 = { path: 'docs/phase-9/ios-sdk-lock-succession46.v1.json',
+    bytes: witnessBytes.length, sha256: hash(witnessBytes) };
+  // The raw RED remains intact. This only accepts the complete unchanged privacy
+  // inventory hash after an independently proven exact current-source successor.
+  if (requireSnapshot) checkCurrentAuditSnapshot46(report, witnessBytes);
+  return report;
+}
+
+export function verifyCurrentNative47(rootValue = ROOT, { audit = true, evidenceDirectory } = {}) {
+  if (evidenceDirectory) {
+    checkedNativeRoot46(evidenceDirectory);
+    assert.ok(relative(ROOT, resolve(evidenceDirectory)).startsWith('..' + sep), 'CURRENT47_OUTPUT_OUTSIDE_SOURCE');
+  }
+  const current = inputs47(rootValue);
+  const committed = assertCurrentNativeHead46(rootValue, current.source.sourceHead);
+  const finite = [...current.witness.unchangedInputs, ...current.witness.currentSourceInputs, current.witness.rootPackage];
+  const regular = finite.filter(pin => pin.status !== 'ABSENT').map(pin => resolve(current.root.absolute, pin.path));
+  const trees = current.witness.installedNativeTrees.map(tree => resolve(current.root.absolute, tree.path));
+  checkWindowsReparse(regular, trees);
+  const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead, current.descriptor, false);
+  const lockFile = readNativeFile46(current.root, 'package-lock.json');
+  const history = verifyLockAndPackage47(current.root, current.witness, lockFile);
+  const legacy46File = readNativeFile46(current.root, current.descriptor.predecessor46.path);
+  let legacyAudit, privacyInventory;
+  if (audit) {
+    legacyAudit = legacyAuditIosPrivacySource({ root: current.root.absolute });
+    if (evidenceDirectory) writeFileSync(resolve(evidenceDirectory, 'legacy46-audit-current47.json'),
+      canonicalAuditJson(legacyAudit), { flag: 'wx' });
+    privacyInventory = currentPrivacyProjection47(legacyAudit, legacy46File.bytes);
+  }
+  checkWindowsReparse(regular, trees);
+  same(nativeSourceIdentity46(current.root), current.source);
+  return { status: 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED', source: current.source,
+    descriptorSHA256: current.file.sha256, committedSourceProof: committed,
+    verifiedInputCount: verification.verifiedInputCount, committedCriticalInputs: committed.committedCriticalInputs,
+    stamps: verification.stamps, installedNativeTrees: verification.installedNativeTrees, trees: verification.installedNativeTrees, sourceSuccessors: 3, installedFileSuccessors: 2,
+    historical46Identity: 'EXPECTED_SOURCE_PIN_RED_NOT_CURRENT_PASS',
+    legacy46File, witness: current.witness, file: current.file, root: current.root,
+    lockHistory: history, legacyAudit, privacyInventory,
+    claims: current.witness.claims, admissions: current.witness.admissions,
+    sourceOnly: true, acceptanceGranted: false, nativeAccepted: false, release: 'NO_GO' };
+}
+
+export function validateIosExtensionConfig47({ root, config, packageJson, packageLock, variant }) {
+  try {
+    const proof = verifyCurrentNative47(root, { audit: false });
+    same(proof.source, nativeSourceIdentity46(checkedNativeRoot46(root)));
+    same(hash(Buffer.from(JSON.stringify(packageJson, null, 2) + '\n')), proof.witness.mobilePackage.sha256);
+    same(hash(Buffer.from(JSON.stringify(packageLock, null, 2) + '\n')), proof.witness.candidateLock.sha256);
+    const old = strictJson47(readNativeFile46(proof.root, 'docs/phase-9/ios-sdk-lock-succession23.v1.json').bytes);
+    for (const [name, expected] of Object.entries(old.widgetCompatibility)) {
+      const actual = packageLock.packages['node_modules/' + name];
+      same(packageJson.dependencies[name], expected.specifier);
+      same(packageLock.packages['apps/mobile'].dependencies[name], expected.specifier);
+      for (const key of ['version', 'resolved', 'integrity']) same(actual[key], expected[key]);
+    }
+    const historicalPackage = structuredClone(packageJson), historicalLock = structuredClone(packageLock);
+    for (const [name, expected] of Object.entries(IOS_WIDGET_EXTENSION_CONTRACT.reviewedDependencyLocks)) {
+      historicalPackage.dependencies[name] = expected.specifier;
+      historicalLock.packages['apps/mobile'].dependencies[name] = expected.specifier;
+      for (const key of ['version', 'resolved', 'integrity']) historicalLock.packages[expected.path][key] = expected[key];
+    }
+    return { ...validateIosExtensionConfig({ config, packageJson: historicalPackage,
+      packageLock: historicalLock, variant }), sourceCompatibility: { kind: 'CURRENT_NATIVE_SOURCE47',
+        sourceOnly: true, nativeAccepted: false, acceptanceGranted: false, descriptorSHA256: proof.descriptorSHA256 } };
+  } catch { return { errors: [variant + ': CURRENT_NATIVE_SOURCE47_IDENTITY_REQUIRED'], identity: null }; }
+}
+export { validateIosExtensionConfig47 as validateIosExtensionConfig46 };
+
+
+export function auditCurrentNative47({ root = ROOT } = {}) {
+  try {
+    const proof = verifyCurrentNative47(root, { audit: false });
+    const legacy = legacyAuditIosPrivacySource({ root });
+    return currentPrivacyProjection47(legacy, proof.legacy46File.bytes, false);
+  } catch (error) {
+    return { status: 'source_invalid', errors: [{ code: 'CURRENT_NATIVE_SOURCE47_REFUSAL', path: null,
+      message: String(error.message ?? error) }], claims: { appStoreAcceptanceProven: false, appStorePrivacyLabelsVerified: false,
+      archiveInspected: false, binarySignaturesVerified: false, mergedPrivacyReportVerified: false }, qualification: 'CURRENT_INPUT_REFUSED_BEFORE_COMPLETE_AUDIT' };
+  }
+}
+export function proveCurrentNativeSource47(root = ROOT) {
+  const proof = verifyCurrentNative47(root);
+  return { report: proof.privacyInventory, witness: proof.witness, source47: proof };
+}
+export { auditCurrentNative47 as auditIosPrivacySource, proveCurrentNativeSource47 as proveCurrentNativeSource46 };
+export { IOS_PRIVACY_AUDIT_JSON_PATH, IOS_PRIVACY_AUDIT_MARKDOWN_PATH, IosPrivacyContractError,
+  canonicalAuditJson, renderIosPrivacySourceAuditMarkdown, validateIosPrivacyAuditClaims }
+  from '../../phase9/ios-privacy-contract.mjs';
+
+async function originalProgramBridge47(mode, arguments47) {
+  const root = checkedNativeRoot46(ROOT), source = nativeSourceIdentity46(root);
+  same(process.env.C47_EXPECTED_HEAD ?? source.sourceHead, source.sourceHead);
+  // Pin from actual Git, so tampered/missing-witness WRITE refusal controls can
+  // still execute the immutable original refusal before any current positive.
+  same(git47(root, 'show', source.sourceHead + ':scripts/release/full-app-j01/native_generated47.mjs'),
+    readNativeFile46(root, 'scripts/release/full-app-j01/native_generated47.mjs').bytes);
+  const witnessBytes = git47(root, 'show', source.sourceHead + ':docs/phase-9/ios-sdk-lock-succession46.v1.json');
+  same(hash(witnessBytes), LOCK_SUCCESSION46_SHA256);
+  const witness = strictJson47(witnessBytes);
+  const profiles = {
+    config: ['scripts/phase5/check-native-config.mjs', '../release/full-app-j01/native_current46.mjs'],
+    audit: ['scripts/phase9/ios-privacy-source-audit.mjs', './ios-privacy-contract.mjs'],
+    store: ['scripts/phase9/store-build-inspect.mjs', './ios-privacy-contract.mjs'],
+  };
+  const [path, specifier47] = profiles[mode];
+  const pin = [...witness.unchangedInputs, ...witness.currentSourceInputs].find(row => row.path === path);
+  assert.ok(pin && pin.status !== 'ABSENT');
+  const checker = readNativeFile46(root, path);
+  same({ bytes: checker.bytes.length, sha256: checker.sha256 }, { bytes: pin.bytes, sha256: pin.sha256 });
+  same(checker.bytes, git47(root, 'show', source.sourceHead + ':' + path));
+  const filename = resolve(ROOT, path), parent = pathToFileURL(filename).href;
+  let redirected = 0;
+  const hooks = registerHooks({ resolve(specifier, context, nextResolve) {
+    if (context.parentURL === parent && specifier === specifier47) {
+      redirected += 1;
+      return { url: import.meta.url, shortCircuit: true };
+    }
+    return nextResolve(specifier, context);
+  } });
+  const originalArgv = process.argv;
+  process.argv = [process.execPath, filename, ...arguments47];
+  try { await import(parent); same(redirected, 1); }
+  finally { process.argv = originalArgv; hooks.deregister(); }
+}
+
+function runCurrentSource47(root, evidenceDirectory) {
+  const proof = verifyCurrentNative47(root, { evidenceDirectory });
+  const identities = [];
+  for (const variant of ['development', 'staging']) {
+    const result = spawnSync(process.execPath, [resolve(root, 'scripts/phase5/resolve-ios-extension-config.mjs'), variant],
+      { cwd: root, encoding: 'utf8', windowsHide: true, timeout: 120000, maxBuffer: 4 * 1024 * 1024 });
+    assert.equal(result.status, 0, result.stderr);
+    const checked = validateIosExtensionConfig47({ root, config: JSON.parse(result.stdout), variant,
+      packageJson: JSON.parse(readFileSync(resolve(root, 'apps/mobile/package.json'))),
+      packageLock: JSON.parse(readFileSync(resolve(root, 'package-lock.json'))) });
+    same(checked.errors, []); assert.ok(checked.identity); identities.push(checked.identity);
+  }
+  same(validateIosExtensionVariantIsolation(identities), []);
+  const native = spawnSync(process.execPath, [fileURLToPath(import.meta.url), '--native-config47'],
+    { cwd: root, env: process.env, windowsHide: true, encoding: 'utf8', timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
+  assert.equal(native.status, 0, native.stderr || native.stdout);
+  const after = verifyCurrentNative47(root, { audit: false });
+  same(proof.source, after.source); same(proof.installedNativeTrees, after.installedNativeTrees); same(proof.stamps, after.stamps);
+  return { ...proof, root: undefined, file: undefined, legacy46File: undefined, witness: undefined,
+    legacyAudit: undefined, privacyInventory: undefined, stamps: undefined, identities,
+    inputStampsSHA256: hash(Buffer.from(JSON.stringify(proof.stamps))),
+    completeInstalledAudit: proof.privacyInventory.summary,
+    privacyInventorySHA256: hash(canonicalAuditJson(proof.privacyInventory)),
+    rawLegacy46AuditSHA256: hash(canonicalAuditJson(proof.legacyAudit)),
+    originalPurposeNativeConfig: { exit: native.status, stdoutSHA256: hash(native.stdout), stderrSHA256: hash(native.stderr),
+      qualification: 'UNCHANGED_FULL_CHECKER_SOURCE_ONE_EXACT_CONFIG_VALIDATOR_IMPORT_REDIRECT' } };
+}
+
+export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profile = 'staging', evidenceDirectory }) {
   assert.ok(['SOURCE', 'GENERATED', 'RESOLVED'].includes(phase));
   assert.ok(['staging', 'development'].includes(profile));
   const current = inputs47(root);
   let details;
   if (phase === 'SOURCE') {
-    details = { currentNative46: runNativeCurrent46(root) };
-    same(details.currentNative46.source.sourceHead, current.source.sourceHead);
-    same(details.currentNative46.verifiedInputCount, 202);
-    same(details.currentNative46.identities.map(value => value.variant).sort(), ['development', 'staging']);
+    details = { currentNative47: runCurrentSource47(root, evidenceDirectory) };
+    same(details.currentNative47.source.sourceHead, current.source.sourceHead);
+    same(details.currentNative47.verifiedInputCount, 202);
+    same(details.currentNative47.identities.map(value => value.variant).sort(), ['development', 'staging']);
   } else {
     assert.ok(isAbsolute(receipt) && isAbsolute(sourceProof));
     const proofBytes = readSourceProof47(sourceProof);
@@ -266,9 +625,10 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profi
     same(proof.profiles, ['development', 'staging']);
     same(proof.sourceHead, current.source.sourceHead);
     same(proof.descriptorSHA256, current.file.sha256);
-    same(proof.currentNative46.verifiedInputCount, 202);
-    same(proof.currentNative46.source.sourceHead, current.source.sourceHead);
-    const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead);
+    same(proof.currentNative47.status, 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED');
+    same(proof.currentNative47.verifiedInputCount, 202);
+    same(proof.currentNative47.source.sourceHead, current.source.sourceHead);
+    const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead, current.descriptor);
     const helper = resolve(root, 'scripts/release/full-app-j01/pods_compat47.py');
     const processResult = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['-I', '-B', helper,
       '--ios-directory', resolve(root, 'apps/mobile/ios'), '--source-proof', sourceProof, '--verify-receipt', receipt,
@@ -326,11 +686,17 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profi
     acceptanceGranted: false, nativeAccepted: false, release: 'NO_GO' };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+const bridge47 = { '--native-config47': 'config', '--native-audit47': 'audit', '--native-store47': 'store' };
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url) && bridge47[process.argv[2]]) {
+  setImmediate(() => originalProgramBridge47(bridge47[process.argv[2]], process.argv.slice(3))
+    .catch(error => { console.error(error.message); process.exitCode = 1; }));
+} else if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const { values } = parseArgs({ options: { phase: { type: 'string' }, receipt: { type: 'string' },
     'source-proof': { type: 'string' }, output: { type: 'string' }, profile: { type: 'string', default: 'staging' } } });
+  if (values.output) validateOutput47(values.output);
   const result = runGenerated47({ phase: values.phase, receipt: values.receipt,
-    sourceProof: values['source-proof'], profile: values.profile });
+    sourceProof: values['source-proof'], profile: values.profile,
+    evidenceDirectory: values.output ? dirname(resolve(values.output)) : undefined });
   const raw = JSON.stringify(result, null, 2) + '\n';
   if (values.output) {
     const destination = resolve(values.output);

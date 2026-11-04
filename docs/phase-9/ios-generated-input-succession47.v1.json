@@ -21,23 +21,23 @@
   "sourcePins": [
     {
       "path": "scripts/phase9/ios-native-obligations47.json",
-      "bytes": 122326,
-      "sha256": "67f9236fbdc49077df0d51f5b85fb34895416a18c4dd9b9fb85fa02218c2470e"
+      "bytes": 129559,
+      "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 19627,
-      "sha256": "1ba21c6bb09471d9c21cc8e342a84e6f2aac47731efb0e8d50744796518e2b8b"
+      "bytes": 41493,
+      "sha256": "f31fbed9edbf53c8b9992c3ea6925e167c38190f4ea736dd2e75ad13b74f1a59"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 7971,
-      "sha256": "ba3d71691479c0e0e3772ea6dad5a9b973c940fd25fb6198601720d270199903"
+      "bytes": 36046,
+      "sha256": "38e140cd997b0dd83a987516ee7576e16dc78b667301f05b27f0ca423e31a073"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 93545,
-      "sha256": "a5730cc7a22cb1b6d1ded3a36cfa2bdd9c8577ad94ce77cd26df46f09cde73e3"
+      "bytes": 93788,
+      "sha256": "6b1780a7e25288dff61915fdf321c209decf4f70ab462e7a4826a7f9afad7816"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
@@ -46,13 +46,33 @@
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
-      "bytes": 11354,
-      "sha256": "553140c63c7e4e7ccc03fa68960b8f980bc649acd6e276d7632a220a4a337541"
+      "bytes": 11688,
+      "sha256": "d6f606d958b1b28bbd753687ba3c5bde1c6dcb71f02fcc60586c594069e72b98"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.test.py",
-      "bytes": 6899,
-      "sha256": "096225117e0acc1adcdce67badd02dee63adb6416e6990c8c7004d3df60a948d"
+      "bytes": 8054,
+      "sha256": "0d5390eb51e1634dbb6799583b99badf34c96bbd5fbda64ad1de3e1d128e10ff"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "bytes": 5325,
+      "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "bytes": 75347,
+      "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "bytes": 16969,
+      "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+    },
+    {
+      "path": "scripts/release/full-app-j01/swift_behavior47.py",
+      "bytes": 23554,
+      "sha256": "b382ebe01a65ae40bf2c8f028152d800a9f9272c54da5cf4a33ee7e698eb2462"
     }
   ],
   "registry": [
@@ -164,7 +184,7 @@
   },
   "obligations": {
     "path": "scripts/phase9/ios-native-obligations47.json",
-    "sha256": "67f9236fbdc49077df0d51f5b85fb34895416a18c4dd9b9fb85fa02218c2470e",
+    "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6",
     "originalTests": 90,
     "predecessorSHA256": "eb3c1c1aabc5637cdb9185534656c84fabdbd0eb25e383314ec9378bc66c23bc"
   },
@@ -188,5 +208,74 @@
     "apple": false,
     "public_release": false
   },
-  "release": "NO_GO"
+  "release": "NO_GO",
+  "swiftSourceSuccession": {
+    "authority": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+    "checkpointHead": "a1fc7ab64d6f66b9d1ecd1d3fc948233e76c3886",
+    "checkpointTree": "33898bf4d4e7424a8479139fd0906f8df6f94ae2",
+    "sourceInputs": [
+      {
+        "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+        "before": {
+          "bytes": 5224,
+          "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+        },
+        "after": {
+          "bytes": 5325,
+          "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+        }
+      },
+      {
+        "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+        "before": {
+          "bytes": 75303,
+          "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+        },
+        "after": {
+          "bytes": 75347,
+          "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+        }
+      },
+      {
+        "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+        "before": {
+          "bytes": 16969,
+          "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+        },
+        "after": {
+          "bytes": 16969,
+          "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+        }
+      }
+    ],
+    "installedFiles": [
+      {
+        "path": "node_modules/expo-widgets/ios/Widgets/AppIntent.swift",
+        "sourcePath": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+        "before": {
+          "bytes": 5224,
+          "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+        },
+        "after": {
+          "bytes": 5325,
+          "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+        }
+      },
+      {
+        "path": "node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift",
+        "sourcePath": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+        "before": {
+          "bytes": 75303,
+          "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+        },
+        "after": {
+          "bytes": 75347,
+          "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+        }
+      }
+    ],
+    "projection": "VERIFY_CURRENT_POSTIMAGES_THEN_INVERT_ONLY_TWO_FILES_FOR_IMMUTABLE_TREE_COMPARISON",
+    "legacy46": "EXPECTED_IDENTITY_REFUSAL_RETAINED_NOT_RELABELLED_PASS",
+    "admissions": false
+  }
 }

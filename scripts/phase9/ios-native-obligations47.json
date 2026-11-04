@@ -42,7 +42,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 bounded fixture proves exact transition and refuses using it as complete installed receipt",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -68,7 +77,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 refuses every native node, integrity, thirteenth node, ordering and complete-lock drift",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -95,7 +113,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 refuses wrong authority owner base head, all admission fields, omitted scope and forged witness",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -121,7 +148,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 refuses changed missing extra native files, omitted directories, aliases, links and hardlinks",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -145,7 +181,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 retains the original actual enumeration ceiling before child content reads",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -1953,7 +1998,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 actual checkout proves complete current audit, finite transition and false admissions",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -1979,7 +2033,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 actual CLI checks current receipt, preserves historical bytes and refuses default writes",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -2006,7 +2069,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 widget proof preserves historical six dependency refusals and every current config assertion",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     },
     {
@@ -2034,7 +2106,16 @@
         "sourceGateRequired": true,
         "generatedGateRequired": true,
         "freshCurrentSourceReceiptRequired": true,
-        "parentReceiptSubstitutionAllowed": false
+        "parentReceiptSubstitutionAllowed": false,
+        "continuation02": {
+          "required": true,
+          "effectiveInvocation": "node --test scripts/release/full-app-j01/native_generated47.test.mjs",
+          "effectiveNamedTest": "current47 continuation02 actual non-strict tampered and missing descriptor writes preserve original inode and historical outputs",
+          "qualification": "Explicit current47 successor at actual current source for the three authoritative input and two installed-file changes. Original row, assertions, program and current46 metadata remain preserved; historical current46 refusal is recorded separately and is not admitted as current PASS.",
+          "actualCurrentSourceReceiptRequired": true,
+          "installedNativeInventoryRequired": true,
+          "parentOrHistoricalPassSubstitutionAllowed": false
+        }
       }
     }
   ],

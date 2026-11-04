@@ -121,6 +121,21 @@ class PodsCompat47Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             p.profile_preimages(invalid, 'development')
 
+    def test_actual_current47_proof_refuses_old46_label_stale_head_and_forged_count(self):
+        proof = {'phase': 'SOURCE', 'sourceHead': 'a' * 40, 'descriptorSHA256': 'b' * 64,
+                 'profiles': ['development', 'staging'], 'currentNative47': {
+                     'status': 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED',
+                     'verifiedInputCount': 202, 'source': {'sourceHead': 'a' * 40}}}
+        self.assertTrue(p.validate_current_source_proof47(proof, 'a' * 40, 'b' * 64))
+        for mutate in [lambda v: v.update(currentNative46=v.pop('currentNative47')),
+                       lambda v: v.update(sourceHead='0' * 40),
+                       lambda v: v['currentNative47'].update(status='CURRENT_SOURCE46'),
+                       lambda v: v['currentNative47'].update(verifiedInputCount=201),
+                       lambda v: v['currentNative47']['source'].update(sourceHead='0' * 40)]:
+            value = copy.deepcopy(proof); mutate(value)
+            with self.assertRaisesRegex(ValueError, 'FRESH_CURRENT_SOURCE_PROOF'):
+                p.validate_current_source_proof47(value, 'a' * 40, 'b' * 64)
+
 
 if __name__ == '__main__':
     unittest.main()

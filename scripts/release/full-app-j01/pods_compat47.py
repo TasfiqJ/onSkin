@@ -164,6 +164,16 @@ def verify_receipt(path, ios, binding):
     return receipt
 
 
+def validate_current_source_proof47(proof, head, descriptor_sha256):
+    require('currentNative46' not in proof and proof.get('phase') == 'SOURCE' and proof.get('sourceHead') == head and
+            proof.get('descriptorSHA256') == descriptor_sha256 and
+            proof.get('profiles') == ['development', 'staging'] and
+            proof.get('currentNative47', {}).get('status') == 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED' and
+            proof.get('currentNative47', {}).get('verifiedInputCount') == 202 and
+            proof.get('currentNative47', {}).get('source', {}).get('sourceHead') == head, 'FRESH_CURRENT_SOURCE_PROOF')
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--ios-directory', required=True, type=Path)
@@ -182,11 +192,7 @@ def main():
     descriptor = document(descriptor_raw)
     proof_raw = regular(args.source_proof, 16 * 1024 * 1024)
     proof = document(proof_raw)
-    require(proof.get('phase') == 'SOURCE' and proof.get('sourceHead') == head and
-            proof.get('descriptorSHA256') == digest(descriptor_raw) and
-            proof.get('profiles') == ['development', 'staging'] and
-            proof.get('currentNative46', {}).get('verifiedInputCount') == 202 and
-            proof['currentNative46']['source']['sourceHead'] == head, 'FRESH_CURRENT_SOURCE_PROOF')
+    validate_current_source_proof47(proof, head, digest(descriptor_raw))
     require(args.ios_directory.absolute() == ROOT / 'apps/mobile/ios', 'GENERATED_IOS_ROOT')
     require(os.environ.get('APP_VARIANT') == args.profile and os.environ.get('EXPO_PUBLIC_APP_ENV') == args.profile,
             'ACTUAL_ENVIRONMENT_PROFILE')

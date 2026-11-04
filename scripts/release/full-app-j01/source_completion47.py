@@ -33,12 +33,17 @@ PATHS = {
     'scripts/release/full-app-j01/native_workflow47.test.mjs',
     'scripts/release/full-app-j01/source_completion47.py',
     'scripts/release/full-app-j01/source_completion47.test.py',
+    'scripts/release/full-app-j01/mounted_journey46.test.mjs',
     'scripts/release/full-app-j01/pods_compat47.py',
     'scripts/release/full-app-j01/pods_compat47.test.py',
     'scripts/release/full-app-j01/native_generated47.mjs',
     'scripts/release/full-app-j01/native_generated47.test.mjs',
     'docs/phase-9/ios-generated-input-succession47.v1.json',
     'scripts/phase9/ios-native-obligations47.json',
+    'scripts/phase5/expo-widgets-57.0.26/AppIntent.swift',
+    'scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift',
+    'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
+    'scripts/release/full-app-j01/swift_behavior47.py',
     'docs/USER_FLOW_TREE.md', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt',
 } | WORKLISTS
 

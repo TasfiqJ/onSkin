@@ -261,6 +261,15 @@
       "causal_need": "Continuation02 demonstrated Swift build repair and actual-function behavioral validation",
       "invariant": "Strict optional rejection, propagated throwing receipts, unchanged owner/transaction/deletion authority and installer allowlist",
       "validation": "Clean ordinary installation/hooks/exact installed bytes, current202 native successor and actual Swift behavior plus app build/runtime"
+    },
+    {
+      "path": "scripts/release/full-app-j01/mounted_journey46.test.mjs",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 6405,
+      "preimage_sha256": "9b3a4409e515aae506e5699a0fa7277ed2fd4c3ee9185882c3793547c2fa1ebf",
+      "causal_need": "Exact CI wiring assertion must cover the authorized current-native47 replacement of two historical identity tools",
+      "invariant": "All nine effective checks remain unconditional per branch; original nine retained for non-C47; all other mounted/native/privacy assertions and frozen native witnesses unchanged",
+      "validation": "Exact original/C47 workflow branch assertions and unchanged remaining mounted controls; current-source native and full CI"
     }
   ],
   "amendments": [
@@ -535,6 +544,22 @@
       "job_timeout_minutes": 90,
       "unchanged_failure_reruns_allowed": false,
       "signing_or_paid_changes_authorized": false
+    },
+    {
+      "recorded_utc": "2026-11-04T22:18:35.270859+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/mounted_journey46.test.mjs"
+      ],
+      "reason": "Pre-edit causal wiring-only amendment: prefer explicit branch commands and exact two-profile assertions over runtime preload substitution or an avoidable false-current historical identity failure. Original assertion preimage retained; no native proof/90-obligation assertion changed.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/mounted_journey46.test.mjs",
+          "preimage_head": "e92cccb6e84aeda54f4502115ecdf395ac1e2499",
+          "preimage_bytes": 6405,
+          "preimage_sha256": "9b3a4409e515aae506e5699a0fa7277ed2fd4c3ee9185882c3793547c2fa1ebf"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
