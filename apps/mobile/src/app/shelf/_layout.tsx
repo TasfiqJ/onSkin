@@ -1,5 +1,6 @@
-import { Redirect, Stack } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 
 import {
   shouldReduceMotion,
@@ -18,6 +19,7 @@ export default function ShelfLayout() {
           <Redirect href="/shelf/manual" />
         ) : (
           <ShelfDataAvailabilityGate
+            onExit={() => backOrReplace(router, APP_SHELF_ROUTE)}
             preserveMountedDraft={route.name === 'opened' || route.name === 'manual'}
           >
             {children}

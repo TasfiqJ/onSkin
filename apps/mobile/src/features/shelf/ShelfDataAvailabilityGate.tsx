@@ -143,6 +143,14 @@ export function ShelfDataAvailabilityBoundary({
         style={{ backgroundColor: colors.paper }}
       >
         <StateLoading label={SHELF_AVAILABILITY_COPY.loading} />
+        {onExit ? (
+          <Button
+            className="mt-6 min-h-[48px] py-3"
+            label={exitLabel ?? 'Back'}
+            onPress={onExit}
+            variant="ghost"
+          />
+        ) : null}
       </View>
     ) : (
       <ScrollView

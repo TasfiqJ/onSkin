@@ -1,0 +1,251 @@
+{
+  "schema": 1,
+  "authorization": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+  "base": "20c761fa5e3fbf427fb33ab319218bd0c1d022bd",
+  "base_tree": "23563c36af990df5fc74d6a79507cfc24a1ff8ac",
+  "plan_commit": "5b635c9d822f862b50c03f923c441e9b22161ff7",
+  "plan_sha256": "06a5d45db892bd64a72c8010ec23a5b6fa27901e32c35b4b29c1f746fb9b37f6",
+  "inventory_frozen": false,
+  "paths": [
+    {
+      "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Finite preimage/need/invariant/authority/validation record",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/TASK.md",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Subsequent decisions/checks without self-acceptance",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/COMPLETION_MATRIX.json",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual38/18 current implementation and separate evidence axes",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/EXTERNAL_ACTIONS.md",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Exact external owner acts/prerequisites/evidence",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-46/FINAL_REPORT.md",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Truthful source review handoff",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/manual.tsx",
+      "preimage_sha256": "56ec9e3c1ffda7ed2537babf81d782b55ee0ebb161e91e8069bcd6a09db8d251",
+      "bytes": 20074,
+      "need": "Preserve Ingredients input at compact/accessibility sizes; no data-model or admission change",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/_layout.tsx",
+      "preimage_sha256": "a1cd0d1e1393593e65c4589c628e8befe7b39bade812c42e65974141d2a00d83",
+      "bytes": 1778,
+      "need": "Supply safe exit through existing route from unreadable/pending Shelf",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/ShelfDataAvailabilityGate.tsx",
+      "preimage_sha256": "8176faf40a6182265be3e2044ec7a359056225ba41dbbce81a2c5ed77d994cc5",
+      "bytes": 6357,
+      "need": "Honor optional exit during loading; preserve closed private children and retry",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/compactManual46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Genuine mounted RED/fixed compact input and pending/error exit; real intake/store/crypto/lease/Query",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_completion46.py",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Finite preimages/frozen first-plan/source equivalence/38rows18gates/exact94routes technical verifier",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_completion46.test.py",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Real Git/strict metadata negative controls for C46 verifier",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "preimage_sha256": "cb37e42589b0040ba23606bd601a32891212dda57a98d1ddc24b4dd401f7fc93",
+      "bytes": 17963,
+      "need": "Replace only current-source C45 preflight with C46 technical check; all downstream checks preserved",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "PROGRESS.md",
+      "preimage_sha256": "8a0d9219476b936b7c7d91c494a079caea2a0e9657260b746a03c9c545970b93",
+      "bytes": 584020,
+      "need": "Append C46 result and preserved NO_GO",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "preimage_sha256": "f0206587d213e3611b440fae2d10ea7e8294066adec8e51b0cdbada16a90f504",
+      "bytes": 2886,
+      "need": "Current handoff; no acceptance",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "preimage_sha256": "86057ae0b3c39c2e9d169906b67d5b8c0f178d136d6faebbaa761224e0e9bbe5",
+      "bytes": 142034,
+      "need": "Existing source-worklist only last separate seal after source checks",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "preimage_sha256": "22af289d2540203f3150638cbbc043fc02d628325e4f1624a451eab42eb7e174",
+      "bytes": 84773,
+      "need": "Existing source-worklist only last separate seal after source checks",
+      "invariant": "Preserve real encryption/owner/health/source/cleanup boundaries; exact94routes; no fabricated admissions or historical gate changes",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "RED/fixed semantic controls where runtime changes; relevant regression, full forced root/type/lint, exact source audit and final-head technical CI"
+    },
+    {
+      "path": "package.json",
+      "preimage_sha256": "1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9",
+      "bytes": 47029,
+      "need": "Actual decode-uri-component<=0.5.0 GHSA-qr28-fpjm-wq7f; narrow supported patch override0.5.1",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "package-lock.json",
+      "preimage_sha256": "1485297ffa6cc20367a5f2fda35bc33e12dc11ef422c813f5f28a4e339cb3b95",
+      "bytes": 572798,
+      "need": "Resolve exact supported security patch0.5.1; normal install/hooks, no platform migration",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "scripts/release/full-app-j01/security_completion46.test.mjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Semantic current-source URI denial-of-service regression with bounded native subprocess; separate technical evidence",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "apps/mobile/src/features/routine/connectedJourney46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Integrated real encrypted manualShelf -> order/history -> Today/offline facts -> export -> owner-denial source journey",
+      "invariant": "Existing supported platform, real crypto/domain/authority and normal installation hooks; no protected gate changes or fabricated approval",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved audit RED and semantic adversarial successor; normal ci/hooks, transitive graph, exports/native/type/lint/root"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/exportConfirmation46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Reproduce potential concurrent owner export of tentative Shelf/Today note native commit before failed compensation; no runtime edit until proven",
+      "invariant": "Only confirmed owner facts exported; genuine crypto/store/authority and native adapter barriers",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Native commit-then-reject controlled RED, then fixed export ordering plus plan/photo/cleanup regressions"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/package.json",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual inherited CommonJS query-string7 decoder API mismatch; local compatibility export of official fixed0.5.1, no node_modules edit",
+      "invariant": "Use canonical upstream patched implementation; existing Expo/Node20.20.2/22.21 platform; no provider SDK or policy change",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved actual query-string RED, real Expo Router/consumer decode and malformed input bounded checks; normal ci/hooks/lockgraph, type/lint/native/exports"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/index.cjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual inherited CommonJS query-string7 decoder API mismatch; local compatibility export of official fixed0.5.1, no node_modules edit",
+      "invariant": "Use canonical upstream patched implementation; existing Expo/Node20.20.2/22.21 platform; no provider SDK or policy change",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved actual query-string RED, real Expo Router/consumer decode and malformed input bounded checks; normal ci/hooks/lockgraph, type/lint/native/exports"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/index.d.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Actual inherited CommonJS query-string7 decoder API mismatch; local compatibility export of official fixed0.5.1, no node_modules edit",
+      "invariant": "Use canonical upstream patched implementation; existing Expo/Node20.20.2/22.21 platform; no provider SDK or policy change",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Preserved actual query-string RED, real Expo Router/consumer decode and malformed input bounded checks; normal ci/hooks/lockgraph, type/lint/native/exports"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.ts",
+      "preimage_sha256": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
+      "checkout_preimage_sha256": "f9e77cc5fa9819e350ded5b0772226f409253b0842005772b926145f6c112bd1",
+      "bytes": 43736,
+      "need": "Genuine RED real export returns unconfirmed optional note before native rejected write compensation; reserve exact export keys through existing sorted key queues",
+      "invariant": "Export only settled owner facts, no global lock/key/policy; preserve genuine plan-history recovery/read authority and deletion priority",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Native held encrypted write -> export waits -> exact rollback, success/retry and owner/cleanup cancellation; all C44/C45 private/crypto/photo regressions and forced root"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "C46-01",
+      "decision": "Historical C25/C27 symptoms already repaired. Current compact Ingredients omission and Shelf gate missing exit require preserved genuine REDs. Existing entitlement gates unchanged; browser denial respected."
+    },
+    {
+      "id": "C46-02",
+      "decision": "Record canonical pinned Git preimage plus initial checkout CRLF hash separately; never relabel working bytes as Git blob. Frozen plan normalized to its committed LF bytes. No source semantics changed by normalization."
+    },
+    {
+      "id": "C46-03",
+      "decision": "Reproduced unconfirmed note export with genuine crypto/authority/native barrier. Original RED preserved separately from test import-order timeout. Authorize causal privateKV shared export queue fix; investigate failed compensation separately before candidate eligibility."
+    }
+  ]
+}
