@@ -12,7 +12,7 @@ import { auditIosPrivacySource, canonicalAuditJson, proveCurrentNativeSource46,
 import { nativeTree23 } from './ios-privacy-lock-succession23.mjs';
 import { IOS_PRIVACY_LOCK_SUCCESSION46_PATH, LOCK_SUCCESSION46_SHA256,
   checkedNativeRoot46, checkCurrentAuditSnapshot46, nativeSourceIdentity46,
-  readNativeFile46, verifyNativeCandidate46, assertCurrentNativeHead46 } from './ios-privacy-lock-succession46.mjs';
+  readNativeFile46, verifyNativeCandidate46, assertCurrentNativeHead46, checkWindowsReparse } from './ios-privacy-lock-succession46.mjs';
 import { validateIosExtensionConfig } from '../phase5/ios-extension-contract.mjs';
 import { validateIosExtensionConfig46 } from '../release/full-app-j01/native_current46.mjs';
 
@@ -82,7 +82,7 @@ test('current46 actual checkout proves complete current audit, finite transition
 test('current46 bounded fixture proves exact transition and refuses using it as complete installed receipt', t => {
   const root = fixture(t);
   const report = auditIosPrivacySource({ root });
-  assert.equal(report.status, 'archive_required');
+  assert.equal(report.status, 'archive_required', JSON.stringify(report.errors));
   assert.deepEqual(report.errors, []);
   assert.ok(report.inputs.lockSuccession46);
   assert.equal(report.inputs.lockSuccession23, undefined);
@@ -179,6 +179,9 @@ test('current46 retains the original actual enumeration ceiling before child con
     reject: message => { throw new Error(message); },
   }), /exceeds its bounds/u);
   assert.equal(paths, 1); assert.equal(reads, 0);
+  if (process.platform === 'win32') {
+    assert.throws(() => checkWindowsReparse([tree], [tree]), /WINDOWS_REPARSE_BOUND/u);
+  }
 });
 
 test('current46 refuses actual unrelated HEAD and ancestor junction rather than trusting source booleans', t => {
@@ -319,14 +322,14 @@ test('current46 real concurrent native-file mutation is detected before acceptin
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const file = join(root, 'Native.swift'); writeFileSync(file, Buffer.alloc(8 * 1024 * 1024, 65));
   const port = new Int32Array(new SharedArrayBuffer(8));
-  const worker = new Worker(`const {workerData}=require('node:worker_threads');const fs=require('node:fs');const port=new Int32Array(workerData.port);const data=Buffer.alloc(8*1024*1024,66);while(!Atomics.load(port,1)){fs.writeFileSync(workerData.file,data);Atomics.store(port,0,1);Atomics.notify(port,0);}`, { eval: true, workerData: { file, port: port.buffer } });
+  const worker = new Worker(`const {workerData}=require('node:worker_threads');const fs=require('node:fs');const port=new Int32Array(workerData.port);const data=Buffer.alloc(8*1024*1024,66);const fd=fs.openSync(workerData.file,'r+');try{while(!Atomics.load(port,1)){fs.writeSync(fd,data,0,data.length,0);Atomics.store(port,0,1);Atomics.notify(port,0);}}finally{fs.closeSync(fd);}`, { eval: true, workerData: { file, port: port.buffer } });
   try {
     for (let attempt = 0; attempt < 30 && !Atomics.load(port, 0); attempt += 1) Atomics.wait(port, 0, 0, 1000);
     assert.equal(Atomics.load(port, 0), 1, 'The real filesystem race worker must start within its finite bound.');
     const checked = checkedNativeRoot46(root); let refusals = 0;
     for (let attempt = 0; attempt < 100 && refusals === 0; attempt += 1) {
       try { readNativeFile46(checked, 'Native.swift'); }
-      catch (error) { assert.match(String(error), /RACE|FILE/u); refusals += 1; }
+      catch (error) { assert.match(String(error), /RACE/u); refusals += 1; }
     }
     assert.ok(refusals > 0, 'A real overlapping write must never be accepted as a stable native input.');
   } finally { Atomics.store(port, 1, 1); await worker.terminate(); }

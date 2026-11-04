@@ -166,3 +166,49 @@ jobs:
             ${{ runner.temp }}/c46-tools/official-wheel-install.json
           if-no-files-found: warn
           retention-days: 30
+
+  native-windows:
+    name: Current native46 source candidate (Windows; no admission)
+    runs-on: windows-2025
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    env:
+      C46_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.21.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Normal install and exact current source/native controls
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/c46-native-windows"
+          mkdir -p "$evidence"
+          npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+          npm ci --no-audit --no-fund 2>&1 | tee "$evidence/normal-install.log"
+          npm run postinstall:check 2>&1 | tee "$evidence/hooks.log"
+          python -I -B scripts/release/full-app-j01/source_completion46.test.py 2>&1 | tee "$evidence/source-controls.log"
+          python -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN 2>&1 | tee "$evidence/source-frozen.log"
+          node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs 2>&1 | tee "$evidence/current-native-tests.tap"
+          node scripts/release/full-app-j01/native_current46.mjs > "$evidence/current-native.json"
+          npm run phase9:ios-privacy-source-audit:test 2>&1 | tee "$evidence/original-source-controls.tap"
+          npm run phase9:ios-privacy-source-audit:check 2>&1 | tee "$evidence/current-audit.log"
+          npm run phase9:store-build-inspect:check 2>&1 | tee "$evidence/current-inspector.log"
+          node --test scripts/phase9/release-install-wiring46.test.mjs 2>&1 | tee "$evidence/install-wiring.tap"
+      - name: Preserve Windows current-source evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: campaign46-current-native-windows-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/c46-native-windows/
+          if-no-files-found: warn
+          retention-days: 30

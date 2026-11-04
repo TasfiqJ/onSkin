@@ -1,15 +1,39 @@
 """Negative controls for C46 technical source checker, never admission evidence."""
 import copy
+from contextlib import contextmanager
 import importlib.util
 import json
+import os
+import stat
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 spec = importlib.util.spec_from_file_location('source46', Path(__file__).with_name('source_completion46.py'))
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
+
+
+@contextmanager
+def real_source_fixture():
+    with tempfile.TemporaryDirectory(prefix='c46-source-working-') as name:
+        root = Path(name) / 'source'
+        root.mkdir()
+        g = lambda *args: m.git(*args, root=root)
+        g('init', '-q')
+        g('config', 'user.email', 'synthetic46@example.invalid')
+        g('config', 'user.name', 'Synthetic working-source control')
+        g('config', 'core.autocrlf', 'false')
+        files = {'main.txt': b'canonical source\n', 'nested/leaf.txt': b'canonical nested\n', 'empty.txt': b''}
+        for path, raw in files.items():
+            target = root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw)
+        g('add', '.')
+        g('commit', '-qm', 'synthetic exact source')
+        yield root, g, g('rev-parse', 'HEAD').decode().strip(), files
 
 
 class Controls(unittest.TestCase):
@@ -249,6 +273,187 @@ class Controls(unittest.TestCase):
                                              changed, parent, tree, [row(seal0), row(seal1)])
             finally:
                 m.SUBMITTED, m.SUBMITTED_TREE, m.ORIGINAL_COMMITS = old
+
+
+class WorkingSourceControls(unittest.TestCase):
+    def test_git_environment_is_stripped_and_reported_worktree_is_bound(self):
+        with real_source_fixture() as (root, g, head, _), real_source_fixture() as (decoy, decoy_g, _, _):
+            decoy_g('commit', '--allow-empty', '-qm', 'distinct synthetic alternate Git view')
+            actual_call = subprocess.check_output
+            observed = []
+            def real_call(*args, **kwargs):
+                observed.append(kwargs['env'])
+                self.assertEqual({k: v for k, v in kwargs['env'].items()
+                                  if k.upper().startswith('GIT_')}, {'GIT_OPTIONAL_LOCKS': '0'})
+                return actual_call(*args, **kwargs)
+            with patch.dict(os.environ, {'GIT_DIR': str(decoy / '.git'), 'GIT_WORK_TREE': str(decoy),
+                                        'GIT_INDEX_FILE': str(decoy / '.git/index'),
+                                        'GiT_SYNTHETIC_SOURCE46': 'must not reach Git'}), \
+                    patch.object(m.subprocess, 'check_output', side_effect=real_call):
+                self.assertEqual(g('rev-parse', 'HEAD').decode().strip(), head)
+                m.check_git_metadata(g, root)
+                with self.assertRaisesRegex(ValueError, 'GIT_WORKTREE_ROOT'):
+                    m.check_git_metadata(g, decoy)
+            self.assertTrue(observed)
+
+    def test_hidden_index_flags_refuse_even_when_real_git_status_is_empty(self):
+        with real_source_fixture() as (root, g, head, files):
+            target = root / 'main.txt'
+            for enable, disable in [('--assume-unchanged', '--no-assume-unchanged'),
+                                    ('--skip-worktree', '--no-skip-worktree')]:
+                g('update-index', enable, '--', 'main.txt')
+                target.write_bytes(b'hidden uncommitted source\n')
+                self.assertEqual(g('status', '--porcelain'), b'')
+                with self.assertRaisesRegex(ValueError, 'HIDDEN_INDEX_FLAGS'):
+                    m.verify_tracked_source(root, head, g)
+                target.write_bytes(files['main.txt'])
+                g('update-index', disable, '--', 'main.txt')
+            self.assertEqual(m.verify_tracked_source(root, head, g)['files'], len(files))
+
+    def test_full_actual_bytes_missing_files_and_staged_index_drift_refuse(self):
+        with real_source_fixture() as (root, g, head, files):
+            target = root / 'main.txt'
+            positive = m.verify_tracked_source(root, head, g)
+            self.assertEqual(positive['files'], len(files))
+            self.assertEqual(positive['bytes'], sum(map(len, files.values())))
+            target.write_bytes(b'noncanonical body\n')
+            with self.assertRaisesRegex(ValueError, 'SOURCE_BLOB_DRIFT'):
+                m.verify_tracked_source(root, head, g)
+            target.unlink()
+            with self.assertRaises(FileNotFoundError):
+                m.verify_tracked_source(root, head, g)
+            target.write_bytes(files['main.txt'])
+            (root / 'extra.txt').write_bytes(b'extra staged source\n')
+            g('add', 'extra.txt')
+            with self.assertRaisesRegex(ValueError, 'SOURCE_INDEX_DRIFT'):
+                m.verify_tracked_source(root, head, g)
+            g('reset', '-q', 'HEAD', '--', 'extra.txt')
+            (root / 'extra.txt').unlink()
+            self.assertEqual(m.verify_tracked_source(root, head, g), positive)
+
+    def test_streaming_zero_byte_files_and_count_byte_bounds(self):
+        with real_source_fixture() as (root, g, head, files):
+            with patch.object(m, 'SOURCE_CHUNK_BYTES', 2):
+                result = m.verify_tracked_source(root, head, g)
+            self.assertEqual(result['bytes'], sum(map(len, files.values())))
+            with patch.object(m, 'MAX_SOURCE_FILES', 1):
+                with self.assertRaisesRegex(ValueError, 'SOURCE_FILE_COUNT'):
+                    m.verify_tracked_source(root, head, g)
+            with patch.object(m, 'MAX_SOURCE_BYTES', 1):
+                with self.assertRaisesRegex(ValueError, 'SOURCE_REGULAR_FILE'):
+                    m.verify_tracked_source(root, head, g)
+
+    def test_real_hardlinked_source_refuses(self):
+        with real_source_fixture() as (root, g, head, _):
+            linked = root.parent / 'linked-source.txt'
+            os.link(root / 'main.txt', linked)
+            with self.assertRaisesRegex(ValueError, 'SOURCE_REGULAR_FILE'):
+                m.verify_tracked_source(root, head, g)
+            linked.unlink()
+            self.assertEqual(m.verify_tracked_source(root, head, g)['files'], 3)
+
+    def test_real_directory_link_and_lexical_root_alias_refuse(self):
+        with real_source_fixture() as (root, g, head, files):
+            actual = root / 'nested'
+            saved = root / 'nested-original'
+            outside = root.parent / 'redirected'
+            outside.mkdir()
+            (outside / 'leaf.txt').write_bytes(files['nested/leaf.txt'])
+            def link(target, alias):
+                if os.name == 'nt':
+                    result = subprocess.run(['cmd', '/c', 'mklink', '/J', str(alias), str(target)],
+                                            capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                else:
+                    os.symlink(target, alias, target_is_directory=True)
+            def unlink(alias):
+                os.rmdir(alias) if os.name == 'nt' else alias.unlink()
+            actual.rename(saved)
+            link(outside, actual)
+            try:
+                with self.assertRaisesRegex(ValueError, 'SOURCE_DIRECTORY'):
+                    m.verify_tracked_source(root, head, g)
+            finally:
+                unlink(actual)
+                saved.rename(actual)
+            alias = root.parent / 'root-alias'
+            link(root, alias)
+            try:
+                with self.assertRaisesRegex(ValueError, 'SOURCE_DIRECTORY'):
+                    m.check_git_metadata(g, alias)
+            finally:
+                unlink(alias)
+
+    def test_real_directory_substitution_between_lstat_and_open_refuses(self):
+        with real_source_fixture() as (root, g, head, files):
+            original_open = os.open
+            changed = False
+            def substitute(path, flags, *args, **kwargs):
+                nonlocal changed
+                if Path(path) == root / 'nested/leaf.txt' and not changed:
+                    changed = True
+                    (root / 'nested').rename(root / 'nested-before-swap')
+                    (root / 'nested').mkdir()
+                    (root / 'nested/leaf.txt').write_bytes(files['nested/leaf.txt'])
+                return original_open(path, flags, *args, **kwargs)
+            with patch.object(m.os, 'open', side_effect=substitute):
+                with self.assertRaisesRegex(ValueError, 'SOURCE_OPEN_RACE'):
+                    m.verify_tracked_source(root, head, g)
+            self.assertTrue(changed)
+
+    def test_unrelated_ancestor_sibling_churn_is_not_a_source_race(self):
+        with real_source_fixture() as (root, g, head, _):
+            original_open = os.open
+            changed = False
+            def sibling(path, flags, *args, **kwargs):
+                nonlocal changed
+                if Path(path) == root / 'main.txt' and not changed:
+                    changed = True
+                    (root.parent / 'unrelated-sibling').mkdir()
+                return original_open(path, flags, *args, **kwargs)
+            with patch.object(m.os, 'open', side_effect=sibling):
+                self.assertEqual(m.verify_tracked_source(root, head, g)['files'], 3)
+            self.assertTrue(changed)
+
+    def test_real_file_mutation_during_stream_and_head_change_refuse(self):
+        for change_head in [False, True]:
+            with real_source_fixture() as (root, g, head, _):
+                target = root / 'main.txt'
+                inode = target.stat().st_ino
+                original_read = os.read
+                changed = False
+                def mutate(descriptor, size):
+                    nonlocal changed
+                    chunk = original_read(descriptor, size)
+                    info = os.fstat(descriptor)
+                    if stat.S_ISREG(info.st_mode) and info.st_ino == inode and not changed:
+                        changed = True
+                        if change_head:
+                            g('commit', '--allow-empty', '-qm', 'synthetic concurrent head change')
+                        else:
+                            target.write_bytes(target.read_bytes() + b'growth')
+                    return chunk
+                with patch.object(m.os, 'read', side_effect=mutate):
+                    with self.assertRaisesRegex(ValueError, 'SOURCE_HEAD_RACE' if change_head else 'SOURCE_READ_'):
+                        m.verify_tracked_source(root, head, g)
+                self.assertTrue(changed)
+
+    def test_every_original_ledger_field_and_row_is_preserved(self):
+        original = m.document(m.git('show', m.SUBMITTED + ':' + m.DOC + 'CHANGE_LEDGER.json', root=m.ROOT))
+        current = copy.deepcopy(original)
+        current['closure02'] = {'authorization': m.CLOSURE_AUTH}
+        m.check_original_ledger(current, original)
+        for key in original:
+            changed = copy.deepcopy(current)
+            changed[key] = None
+            with self.assertRaisesRegex(ValueError, 'ORIGINAL_LEDGER_DRIFT'):
+                m.check_original_ledger(changed, original)
+        for mutate in [lambda v: v['paths'][0].update(invariant='Different nonempty invariant'),
+                       lambda v: v['paths'].reverse(), lambda v: v.update(undeclared_top_level=True)]:
+            changed = copy.deepcopy(current)
+            mutate(changed)
+            with self.assertRaisesRegex(ValueError, 'ORIGINAL_LEDGER_DRIFT'):
+                m.check_original_ledger(changed, original)
 
 
 if __name__ == '__main__':

@@ -2,6 +2,8 @@
 import argparse
 import hashlib
 import json
+import os
+import stat
 import subprocess
 from pathlib import Path
 
@@ -50,7 +52,10 @@ PATHS = {
     '.github/workflows/quality.yml', '.github/workflows/campaign46-technical.yml', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt',
     'package.json', 'package-lock.json',
 }
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).absolute().parents[3]
+MAX_SOURCE_FILES = 40000
+MAX_SOURCE_BYTES = 2 * 1024 * 1024 * 1024
+SOURCE_CHUNK_BYTES = 1024 * 1024
 CLOSURE_AUTH = 'BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02'
 SUBMITTED = 'deafce53190f8437867a4c969cb85b0ec8e183d5'
 SUBMITTED_TREE = '832a196ca7b6dda4a9888ade5680e8ba211c6020'
@@ -105,8 +110,17 @@ def require(value, code):
         raise ValueError('C46_' + code)
 
 
+def git_environment():
+    env = {key: value for key, value in os.environ.items()
+           if not key.upper().startswith('GIT_')}
+    env['GIT_OPTIONAL_LOCKS'] = '0'
+    return env
+
+
 def git(*args, root=ROOT):
-    return subprocess.check_output(['git', '--no-replace-objects', *args], cwd=root)
+    return subprocess.check_output(['git', '--no-replace-objects', '-c', 'core.fsmonitor=false',
+                                    '-c', 'core.untrackedCache=false', *args],
+                                   cwd=root, env=git_environment(), timeout=60)
 
 
 def sha(raw):
@@ -121,6 +135,126 @@ def document(raw):
             result[key] = value
         return result
     return json.loads(raw, object_pairs_hook=unique)
+
+
+def directory_chain(path):
+    """Check lexical ancestors before resolving any possible link target."""
+    path = Path(path).absolute()
+    result = []
+    for current in [*reversed(path.parents), path]:
+        info = current.lstat()
+        require(stat.S_ISDIR(info.st_mode) and
+                not getattr(info, 'st_file_attributes', 0) & 1024, 'SOURCE_DIRECTORY:' + str(current))
+        identity = (info.st_dev, info.st_ino, stat.S_IFMT(info.st_mode))
+        canonical = os.path.normcase(os.path.realpath(current))
+        result.append((current, identity, canonical))
+    return result
+
+
+def recheck_directories(entries):
+    # A sibling or unrelated temporary file can change directory mtime/nlink.
+    # Only identity/type/canonical-path changes are directory substitution races.
+    for path, identity, canonical in entries:
+        info = path.lstat()
+        require(not getattr(info, 'st_file_attributes', 0) & 1024 and
+                (info.st_dev, info.st_ino, stat.S_IFMT(info.st_mode)) == identity and
+                os.path.normcase(os.path.realpath(path)) == canonical, 'SOURCE_DIRECTORY_RACE:' + str(path))
+
+
+def file_stamp(info):
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_size,
+            info.st_mtime_ns, info.st_ctime_ns)
+
+
+def tracked_inventory(raw):
+    require(raw.endswith(b'\0') and raw.count(b'\0') <= MAX_SOURCE_FILES, 'SOURCE_FILE_COUNT')
+    rows = []
+    for entry in raw.split(b'\0')[:-1]:
+        header, name = entry.split(b'\t', 1)
+        mode, kind, oid = header.decode('ascii').split()
+        name = name.decode('utf-8')
+        require(mode in ['100644', '100755'] and kind == 'blob' and
+                len(oid) == 40 and all(c in '0123456789abcdef' for c in oid), 'SOURCE_TREE_ENTRY')
+        require(name and not name.startswith('/') and not any(c in name for c in '\\:') and
+                not any(ord(c) < 32 or ord(c) == 127 for c in name) and
+                all(part and part not in ['.', '..'] and not part.endswith(('.', ' '))
+                    for part in name.split('/')), 'SOURCE_TREE_PATH')
+        rows.append((mode, oid, name))
+    require(rows and len({name for _, _, name in rows}) == len(rows), 'SOURCE_TREE_DUPLICATE')
+    return rows
+
+
+def verify_tracked_source(root, head, g):
+    """Stream every actual tracked file against HEAD; Git status is not a byte proof.
+
+    SHA1 here reconstructs Git blob identities only. SHA256 fingerprints the
+    complete measured inventory; neither changes application cryptography.
+    """
+    root = Path(root).absolute()
+    ancestors = directory_chain(root)
+    checkout = g('rev-parse', 'HEAD')
+    rows = tracked_inventory(g('ls-tree', '-r', '-z', '--full-tree', head))
+    flags = g('ls-files', '-v', '-z').split(b'\0')[:-1]
+    require(all(row[:1] != b'S' and not row[:1].islower() for row in flags), 'HIDDEN_INDEX_FLAGS')
+    index = []
+    for row in g('ls-files', '--stage', '-z').split(b'\0')[:-1]:
+        header, name = row.split(b'\t', 1)
+        mode, oid, stage = header.decode('ascii').split()
+        require(stage == '0', 'SOURCE_INDEX_STAGE')
+        index.append((mode, oid, name.decode('utf-8')))
+    require(index == rows, 'SOURCE_INDEX_DRIFT')
+    fingerprint = hashlib.sha256()
+    total = 0
+    leaves = []
+    directories = {}
+    for mode, oid, name in rows:
+        path = root.joinpath(*name.split('/'))
+        parents = directory_chain(path.parent)
+        for entry in parents:
+            directories.setdefault(entry[0], entry)
+        before = path.lstat()
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+                not getattr(before, 'st_file_attributes', 0) & 1024 and
+                0 <= before.st_size <= MAX_SOURCE_BYTES - total, 'SOURCE_REGULAR_FILE:' + name)
+        if os.name != 'nt':
+            require(bool(before.st_mode & 0o111) == (mode == '100755'), 'SOURCE_EXECUTABLE_MODE:' + name)
+        descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0))
+        try:
+            require(file_stamp(os.fstat(descriptor)) == file_stamp(before), 'SOURCE_OPEN_RACE:' + name)
+            git_blob = hashlib.sha1()
+            git_blob.update(b'blob ' + str(before.st_size).encode('ascii') + b'\0')
+            content = hashlib.sha256()
+            count = 0
+            while True:
+                chunk = os.read(descriptor, min(SOURCE_CHUNK_BYTES, before.st_size - count + 1))
+                if not chunk:
+                    break
+                count += len(chunk)
+                require(count <= before.st_size, 'SOURCE_READ_SIZE:' + name)
+                git_blob.update(chunk)
+                content.update(chunk)
+            require(count == before.st_size and file_stamp(os.fstat(descriptor)) == file_stamp(before),
+                    'SOURCE_READ_RACE:' + name)
+        finally:
+            os.close(descriptor)
+        after = path.lstat()
+        require(not getattr(after, 'st_file_attributes', 0) & 1024 and
+                file_stamp(after) == file_stamp(before), 'SOURCE_PATH_RACE:' + name)
+        recheck_directories(parents)
+        require(git_blob.hexdigest() == oid, 'SOURCE_BLOB_DRIFT:' + name)
+        total += count
+        leaves.append((path, file_stamp(before)))
+        fingerprint.update(json.dumps([name, mode, oid, count, content.hexdigest()],
+                                      ensure_ascii=True, separators=(',', ':')).encode('ascii') + b'\n')
+    for path, expected in leaves:
+        after = path.lstat()
+        require(not getattr(after, 'st_file_attributes', 0) & 1024 and
+                file_stamp(after) == expected, 'SOURCE_FINAL_FILE_RACE:' + str(path))
+    recheck_directories(directories.values())
+    recheck_directories(ancestors)
+    require(g('rev-parse', 'HEAD') == checkout, 'SOURCE_HEAD_RACE')
+    return {'files': len(rows), 'bytes': total, 'inventory_sha256': fingerprint.hexdigest(),
+            'method': 'ALL_HEAD_TRACKED_REGULAR_SINGLE_LINK_FILES_STREAMED_GIT_BLOB_AND_SHA256'}
 
 
 def check_map(value, baseline, contract):
@@ -152,6 +286,11 @@ def check_ledger(value, preimage):
         require(row['authority'] == 'BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01', 'AUTHORITY')
 
 
+def check_original_ledger(value, original):
+    require({key: item for key, item in value.items() if key != 'closure02'} == original,
+            'ORIGINAL_LEDGER_DRIFT')
+
+
 def source_head(g):
     # Hosted pull_request checkout may be GitHub's synthetic merge. Inspect the
     # actual source second parent only if the first is the exact accepted base.
@@ -167,6 +306,11 @@ def source_head(g):
 def check_git_metadata(g, root):
     # Git's ordinary ancestry views must not be changed by local graft/replace
     # metadata. Historical and current objects still receive exact hash checks.
+    root = Path(root).absolute()
+    directory_chain(root)
+    require(g('rev-parse', '--is-inside-work-tree').decode().strip() == 'true', 'GIT_WORKTREE_REQUIRED')
+    reported = Path(g('rev-parse', '--show-toplevel').decode().strip()).absolute()
+    require(os.path.normcase(str(reported)) == os.path.normcase(str(root)), 'GIT_WORKTREE_ROOT')
     require(g('rev-parse', '--is-shallow-repository').decode().strip() == 'false',
             'SHALLOW_SOURCE')
     for name in ['info/grafts', 'objects/info/alternates']:
@@ -226,10 +370,12 @@ def check_seal_lineage(phase, commits, changed, parent, tree, records):
 
 
 def validate(phase, root=ROOT):
+    root = Path(root).absolute()
     g = lambda *args: git(*args, root=root)
     check_git_metadata(g, root)
     require(g('rev-parse', BASE + '^{tree}').decode().strip() == TREE, 'BASE_TREE')
     head = source_head(g)
+    checkout = g('rev-parse', 'HEAD')
     require(not g('status', '--porcelain', '--untracked-files=normal').strip(), 'DIRTY_SOURCE')
     require(g('merge-base', BASE, head).decode().strip() == BASE, 'ANCESTRY')
     commits = g('rev-list', '--reverse', BASE + '..' + head).decode().split()
@@ -237,7 +383,12 @@ def validate(phase, root=ROOT):
     plan_commit = commits[0]
     changed = lambda a, b: set(g('diff', '--name-only', a, b).decode().splitlines())
     require(changed(BASE, plan_commit) == {PLAN}, 'FIRST_PLAN_ONLY')
-    ledger = document((root / (DOC + 'CHANGE_LEDGER.json')).read_bytes())
+    source_inventory = verify_tracked_source(root, head, g)
+    # Parse the immutable HEAD bytes whose working copies were just verified,
+    # rather than reopening mutable documents after their snapshot check.
+    ledger = document(g('show', head + ':' + DOC + 'CHANGE_LEDGER.json'))
+    original_ledger = document(g('show', SUBMITTED + ':' + DOC + 'CHANGE_LEDGER.json'))
+    check_original_ledger(ledger, original_ledger)
     require(ledger['plan_commit'] == plan_commit, 'PLAN_COMMIT')
     plan_bytes = g('show', plan_commit + ':' + PLAN)
     require(sha(plan_bytes) == ledger['plan_sha256'] and (root / PLAN).read_bytes() == plan_bytes, 'PLAN_FROZEN')
@@ -249,7 +400,7 @@ def validate(phase, root=ROOT):
         previous = commit
     def preimage(path):
         spec = BASE + ':' + path
-        if subprocess.run(['git', 'cat-file', '-e', spec], cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+        if not g('ls-tree', '-z', BASE, '--', path):
             return None
         return g('show', spec)
     check_ledger(ledger, preimage)
@@ -262,8 +413,7 @@ def validate(phase, root=ROOT):
                 'SUBMITTED_TREE')
         def closure_preimage(path):
             spec = SUBMITTED + ':' + path
-            if subprocess.run(['git', 'cat-file', '-e', spec], cwd=root,
-                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+            if not g('ls-tree', '-z', SUBMITTED, '--', path):
                 return None
             return g('show', spec)
         check_closure_ledger(closure, closure_preimage)
@@ -286,20 +436,23 @@ def validate(phase, root=ROOT):
     require(route_names(BASE) == route_names(head), 'ROUTE_PATH_DRIFT')
     baseline = document(g('show', BASE + ':docs/release/full-app-j01/matrix.v2.json'))
     contract = document(g('show', BASE + ':docs/release/full-app-j01/contract.v2.json'))
-    check_map(document((root / (DOC + 'COMPLETION_MATRIX.json')).read_bytes()), baseline, contract)
+    check_map(document(g('show', head + ':' + DOC + 'COMPLETION_MATRIX.json')), baseline, contract)
     if phase == 'SOURCE_FROZEN':
         parent = g('rev-parse', head + '^').decode().strip()
         require(changed(parent, head) == WORKLISTS, 'LAST_SEAL_ONLY')
         # This proves a two-file-only source delta, not execution of tests.
         # The return packet separately binds actual run logs to this parent.
-        subprocess.run(['node', 'scripts/phase4/build-source-worklist.mjs', '--strict', '--check'], cwd=root, check=True)
+        subprocess.run(['node', 'scripts/phase4/build-source-worklist.mjs', '--strict', '--check'],
+                       cwd=root, env=git_environment(), check=True)
     elif closure is None:
         require(not (union & WORKLISTS), 'PREMATURE_SEAL')
+    require(g('rev-parse', 'HEAD') == checkout, 'VALIDATION_HEAD_RACE')
     return {'status': phase, 'head': head, 'tree': g('rev-parse', head + '^{tree}').decode().strip(),
             'base': BASE, 'plan': plan_commit, 'commits': len(commits), 'finite_paths': len(allowed),
             'closure_authority': CLOSURE_AUTH if closure is not None else None,
             'preserved_submission': SUBMITTED if closure is not None else None,
             'tested_source_parent': g('rev-parse', head + '^').decode().strip() if phase == 'SOURCE_FROZEN' else None,
+            'source_inventory': source_inventory,
             'qualification': 'TECHNICAL_SOURCE_ONLY_NOT_TEST_EXECUTION', 'acceptanceGranted': False, 'release': 'NO_GO'}
 
 

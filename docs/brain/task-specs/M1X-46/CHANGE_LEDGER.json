@@ -503,7 +503,7 @@
     "brain_decision": "CAMPAIGN46_PARTIAL_BLOCKED_NO_GO",
     "predecessor_source": "deafce53190f8437867a4c969cb85b0ec8e183d5",
     "predecessor_tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020",
-    "inventory_frozen": false,
+    "inventory_frozen": true,
     "packet_zip_sha256": "fb21895db480e7f73ea55e8c47f9d004c51893079364de005318fe20ea678425",
     "prompt_sha256": "e1d8a720069020b7a7d765f1343f85be09f668bd283d16857e86e3d4a0521f8d",
     "historical_seals": [
@@ -937,6 +937,18 @@
       {
         "id": "C46-C02-03",
         "decision": "Add exact-source current native46 descriptor/reader/full original-purpose audit dispatch and complete90obligation parity, after actualcurrent installed proof. Original C23 witness/readers/baselines and deaf narrowhelper unchanged historical; owner/native/deviceflagsfalse. Preserve currentstore inspector itself, its sharedaudit dispatch checksactualcurrentgraph."
+      },
+      {
+        "id": "C46-C02-04",
+        "decision": "Actual current native suite checkpoint4eab ran14cases:10pass4restored-positive failures. Pinpointed unrelated Windows Temp ancestor mtime/ctime churn; retain directoryidentity/reparse/canonicalpath and strictleaf fdmetadata/content/fullscope guards. Real leafrace and20k enumeration controls preserved; subsequent source/audit snapshots remain review-required."
+      },
+      {
+        "id": "C46-C02-05",
+        "decision": "Independent actual sourcechecker counterfeit fixture showed falsePENDING with4of23713files via GIT view overrides/skipworktree andforgedfrozenflag. Added sanitized allGit/preimage views, actualalltracked regular boundedstream Gitblob/SHA256 verification, index/HEAD/identity/race guards and exact originalledgerdata preservation; original6tests unchanged plus10real controls. Oldfalseacceptance andfixedrefusal retained."
+      },
+      {
+        "id": "C46-C02-06",
+        "decision": "Active installwiring releaseSmoke requires2exactcanonical compositehook literals, with EVERYotherbyte original and21adversarialcontrols. Restoredoriginal9nativecommands onCURRENTsource; completecurrent inspector explicitlyrequiresfresh completeproof/snapshot. Windows hostednative/current-source technicaljob supplements LinuxQuality and localWindows; source-only, no independentnative/owneradmission."
       }
     ]
   }

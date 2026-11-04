@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto';
-import { closeSync, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
+import { closeSync, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { lockSuccession23, nativeTree23, LOCK_SUCCESSION23_SHA256 } from './ios-privacy-lock-succession23.mjs';
 
 export const IOS_PRIVACY_LOCK_SUCCESSION46_PATH = 'docs/phase-9/ios-sdk-lock-succession46.v1.json';
-export const LOCK_SUCCESSION46_SHA256 = '154c76e50357c1197a232392027722cb353e35f863ca8d9bcbeef4a309889cca';
+export const LOCK_SUCCESSION46_SHA256 = '44c5901a3e244d572836134ef5295a82377d5afd3f11a404ba47190bb981e5f3';
 export const CURRENT_LOCK46_SHA256 = '71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa';
 const BASE = '20c761fa5e3fbf427fb33ab319218bd0c1d022bd';
 const BASE_TREE = '23563c36af990df5fc74d6a79507cfc24a1ff8ac';
@@ -42,8 +42,15 @@ function checkedChain(path) {
 function recheckChain(before) {
   for (const entry of before) {
     const after = lstatSync(entry.absolute, { bigint: true });
-    if (after.isSymbolicLink() || !sameStat(entry.stat, after) ||
-        (entry.real !== undefined && realpathSync(entry.absolute) !== entry.real)) reject('PATH_RACE');
+    // Directory timestamps/link counts also change for unrelated siblings.
+    // Identity/type/canonical path remain authoritative for ancestors; file
+    // leaves retain every before/open/after timestamp, size and link check.
+    const keys = entry.stat.isDirectory() ? ['dev', 'ino'] : identityKeys;
+    if (after.isSymbolicLink() || entry.stat.isDirectory() !== after.isDirectory() ||
+        keys.some(key => entry.stat[key] !== after[key]) ||
+        (entry.real !== undefined && realpathSync(entry.absolute) !== entry.real)) {
+      reject(`PATH_RACE:${entry.absolute}:${keys.filter(key => entry.stat[key] !== after[key]).join(',')}`);
+    }
   }
 }
 
@@ -90,12 +97,13 @@ foreach ($tree in $spec.trees) {
 [Console]::Out.Write('{"checked":' + $checked.Count + '}')
 `;
 
-function checkWindowsReparse(paths, trees = []) {
+export function checkWindowsReparse(paths, trees = []) {
   if (process.platform !== 'win32') return;
   const result = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', WINDOWS_REPARSE_CHECK], {
     input: JSON.stringify({ paths, trees }), encoding: 'utf8', windowsHide: true,
     timeout: 30_000, maxBuffer: 1024 * 1024,
   });
+  if (result.status !== 0 && result.stderr?.includes('NATIVE46_REPARSE_INVENTORY_BOUND')) reject('WINDOWS_REPARSE_BOUND');
   if (result.status !== 0 || !Number.isSafeInteger(JSON.parse(result.stdout || '{}').checked)) reject('WINDOWS_REPARSE');
 }
 
@@ -133,7 +141,16 @@ export function readNativeFile46(root, name, maximum = 16 * 1024 * 1024) {
   try {
     const opened = fstatSync(descriptor, { bigint: true });
     if (!opened.isFile() || !sameStat(before, opened)) reject('OPEN_RACE');
-    const bytes = readFileSync(descriptor);
+    // Allocate only the already validated size. readFileSync(fd) performs its
+    // own later stat and can allocate an attacker-grown size before refusal.
+    const bytes = Buffer.alloc(Number(before.size));
+    let position = 0;
+    while (position < bytes.length) {
+      const count = readSync(descriptor, bytes, position, bytes.length - position, null);
+      if (count === 0) reject('READ_RACE');
+      position += count;
+    }
+    if (readSync(descriptor, Buffer.alloc(1), 0, 1, null) !== 0) reject('READ_RACE');
     if (!sameStat(before, fstatSync(descriptor, { bigint: true })) || BigInt(bytes.length) !== before.size) reject('READ_RACE');
     recheckChain(entry.ancestors);
     return { absolute: entry.absolute, relative: name, bytes, sha256: hash(bytes), identity: stamp(before) };

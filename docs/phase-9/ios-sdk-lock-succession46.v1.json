@@ -1492,13 +1492,13 @@
     },
     {
       "path": "scripts/phase9/ios-privacy-contract.mjs",
-      "bytes": 85321,
-      "sha256": "c1887f7fca2f5dd5defb5c0af6d10d76fde623afeacad01bc3ea80983c7559ca"
+      "bytes": 85758,
+      "sha256": "5bcf5a0c5d80f098d73db5bd634497b7ad28b4f9ed9ce95cd78f971006ecdf67"
     },
     {
       "path": "scripts/phase9/ios-privacy-lock-succession46.test.mjs",
-      "bytes": 23077,
-      "sha256": "2b6f354af23456b5b609b188cab107c51d6086886778f58d96be0301fedab9f7"
+      "bytes": 23327,
+      "sha256": "88836a7f07feba776e488c119160a1dcbd2076a146dce49b20bdb838900fd6a3"
     },
     {
       "path": "scripts/phase9/ios-privacy-source-audit.mjs",

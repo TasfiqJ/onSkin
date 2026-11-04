@@ -6,7 +6,6 @@ import {
   fstatSync,
   lstatSync,
   openSync,
-  readFileSync,
   readdirSync,
   readSync,
   realpathSync,
@@ -349,7 +348,16 @@ function readBoundedFile(root, relativePath, maximumBytes, { allowEmpty = false 
     ) {
       fail('PATH_RACE', 'The file identity changed before it was read.', relativePath);
     }
-    const bytes = readFileSync(descriptor);
+    const bytes = Buffer.alloc(Number(file.identity.size));
+    let position = 0;
+    while (position < bytes.length) {
+      const count = readSync(descriptor, bytes, position, bytes.length - position, null);
+      if (count === 0) fail('PATH_RACE', 'The bounded file shrank while being read.', relativePath);
+      position += count;
+    }
+    if (readSync(descriptor, Buffer.alloc(1), 0, 1, null) !== 0) {
+      fail('PATH_RACE', 'The bounded file grew while being read.', relativePath);
+    }
     const finished = fstatSync(descriptor, { bigint: true });
     if (
       !sameIdentity(opened, finished) ||
