@@ -201,6 +201,9 @@ jobs:
           if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
             python -I -B scripts/release/full-app-j01/source_completion47.test.py 2>&1 | tee "$evidence/source47-controls.log"
             python -I -B scripts/release/full-app-j01/source_completion47.py --phase SOURCE_FROZEN 2>&1 | tee "$evidence/source-frozen.log"
+            python -I -B scripts/release/full-app-j01/pods_compat47.test.py 2>&1 | tee "$evidence/generated47-properties-controls.log"
+            node --test scripts/release/full-app-j01/native_generated47.test.mjs 2>&1 | tee "$evidence/generated47-controls.tap"
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE 2>&1 | tee "$evidence/generated47-current-source.json"
           else
             python -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN 2>&1 | tee "$evidence/source-frozen.log"
           fi

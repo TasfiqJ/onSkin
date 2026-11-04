@@ -158,5 +158,27 @@ class Runtime47Tests(unittest.TestCase):
                          ['App/AppDelegate.swift', 'App.xcodeproj/project.pbxproj'])
 
 
+    def test_installed_pod_inventory_binds_full_bytes_and_refuses_lock_drift(self):
+        ios = self.root / 'ios'
+        pods = ios / 'Pods'
+        pods.mkdir(parents=True)
+        lock = b'PODS:\n  - Example (1.0)\nSPEC CHECKSUMS:\n  Example: abc\n'
+        (ios / 'Podfile.lock').write_bytes(lock)
+        (pods / 'Manifest.lock').write_bytes(lock)
+        (pods / 'Example').mkdir()
+        source = pods / 'Example/actual.m'
+        source.write_bytes(b'actual generated dependency source')
+        output = self.root / 'evidence'
+        output.mkdir()
+        n.retain_pod_inventory(ios, output)
+        value = json.loads((output / 'generated-native/installed-pod-inventory.json').read_bytes())
+        self.assertEqual(next(row for row in value['files'] if row['path'] == 'Example/actual.m')['sha256'], n.sha(source))
+        self.assertTrue(value['manifest_lock_matches'])
+        self.assertFalse(value['links_followed'])
+        (pods / 'Manifest.lock').write_bytes(lock + b'drift')
+        with self.assertRaisesRegex(ValueError, 'POD_LOCK_MANIFEST_DRIFT'):
+            n.retain_pod_inventory(ios, output)
+
+
 if __name__ == '__main__':
     unittest.main()

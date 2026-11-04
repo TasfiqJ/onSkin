@@ -199,18 +199,25 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify Campaign46 current-source technical candidate
+      - name: Verify current campaign source identity
         env:
           CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           set -euo pipefail
-          python3 -I -B scripts/release/full-app-j01/source_completion46.test.py
           if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
             python3 -I -B scripts/release/full-app-j01/source_completion47.test.py
             python3 -I -B scripts/release/full-app-j01/source_completion47.py --phase SOURCE_FROZEN
+            python3 -I -B scripts/release/full-app-j01/pods_compat47.test.py
+            node --test scripts/release/full-app-j01/native_generated47.test.mjs
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE
           else
             python3 -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN
           fi
+
+      - name: Verify Campaign46 current-source technical candidate
+        run: |
+          set -euo pipefail
+          python3 -I -B scripts/release/full-app-j01/source_completion46.test.py
           node --test scripts/release/full-app-j01/security_completion46.test.mjs
           npm --workspace apps/mobile run test -- --passWithNoTests=false src/features/shelf/compactManual46.test.ts src/features/routine/connectedJourney46.test.ts src/features/settings/exportConfirmation46.test.ts src/features/routine/planHistory45Encrypted.test.ts src/features/settings/localPrivateDataFence44.test.ts src/lib/storage/privateKVSourceFence44.test.ts src/features/routine/planSourceFence44.test.ts src/features/shelf/manualDraftRecovery.campaign26.test.ts src/features/shelf/detailActionSheet.campaign26.test.ts
           node --test scripts/launch/formula-route-inventory39.test.mjs

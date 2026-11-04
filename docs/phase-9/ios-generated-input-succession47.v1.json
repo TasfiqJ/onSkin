@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "kind": "ios_generated_input_succession47_source_candidate",
+  "authority": "BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01",
+  "repository": "TasfiqJ/onSkin",
+  "acceptedParent": {
+    "commit": "02aa4ba879fb844f3ca0aa929591203ee45f4163",
+    "tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e"
+  },
+  "predecessor46": {
+    "path": "docs/phase-9/ios-sdk-lock-succession46.v1.json",
+    "sha256": "a29190ab7022381d759d2d38b6198784ed7e393ed78f15c368ce259e94942d2a"
+  },
+  "sourceBinding": {
+    "method": "Actual current C47 committed descriptor/readers/mapping and current202 native proof before generation; rehash all202 and installed native trees with only already-declared package-script projection after generation. No parent receipt substitution.",
+    "selfHashExclusions": [
+      "docs/phase-9/ios-generated-input-succession47.v1.json"
+    ],
+    "externalCurrentSource47SealRequired": true
+  },
+  "sourcePins": [
+    {
+      "path": "scripts/phase9/ios-native-obligations47.json",
+      "bytes": 122326,
+      "sha256": "67f9236fbdc49077df0d51f5b85fb34895416a18c4dd9b9fb85fa02218c2470e"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.mjs",
+      "bytes": 17731,
+      "sha256": "9e386290e4ecfe95510fedf85ab87223ea7f5bd2db6dd1d191f7af13beb68e16"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+      "bytes": 5713,
+      "sha256": "e38628be2042d2d8cb63fe5851e02c814e57c25a9e4215527caf4d442448997a"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.py",
+      "bytes": 38608,
+      "sha256": "5a73e88a740edfc80f43d8e76a88ddb391524d4782091357f282476cdde84c10"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+      "bytes": 10414,
+      "sha256": "cfbdd5d759d815e24b448a7265336fd1cdee315ac1c43088c5b447e2fd7bc4fe"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.py",
+      "bytes": 9103,
+      "sha256": "d6c2ab9a2a52c0e0b914117fe22256b5621c6215beeca14bc593083a1e2fe5d2"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+      "bytes": 5585,
+      "sha256": "c73f813c4d52ba03bcd22f2bab53cc0279b451201b4e9d57c099bbf34d7dfce5"
+    }
+  ],
+  "registry": [
+    {
+      "path": "node_modules/expo",
+      "version": "57.0.31",
+      "resolved": "https://registry.npmjs.org/expo/-/expo-57.0.31.tgz",
+      "integrity": "sha512-+9AJvHZMLIY/Tv6r5Tpu84vWfI75FBTnineYqjjlHAU138IPg2gYQKn9FQFetCB9YScwyc7STk7WGHSCHAdTiQ=="
+    },
+    {
+      "path": "node_modules/expo-build-properties",
+      "version": "57.0.22",
+      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-57.0.22.tgz",
+      "integrity": "sha512-A5oRf2I02XDRu2NnqKo7Au5kUu244unvyoRMUsB+xvg/BOlsR+G/oyDFGkjbda1cJbeKm9eqposIXbA2ri5UrQ=="
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking",
+      "version": "57.0.16",
+      "resolved": "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-57.0.16.tgz",
+      "integrity": "sha512-OJh6rMMIIZ/dfwOk2FufJjjsUSw5Boy1Y5Tl+zbBmua/FcD03eEg097dkYIf3iBHVkQ6q9eR08qT88qxvnelow=="
+    }
+  ],
+  "installedConsumers": [
+    {
+      "path": "node_modules/expo-build-properties/build/ios.js",
+      "bytes": 4482,
+      "sha256": "ae6869c8583b453c36c99a810ac4f5024d041f65e6230d9020173fdd77232e8e"
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking/build/platforms/apple/apple.js",
+      "bytes": 11280,
+      "sha256": "618cbf356b1f86fc0c22f48a3417e4784cc75dde7ecf1d88984affbe7785cd47"
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking/scripts/ios/autolinking_manager.rb",
+      "bytes": 12163,
+      "sha256": "8a0cf708c5462ef4e563cbfb68955593e50d1956e41f1e9c061829813385ddfc"
+    }
+  ],
+  "generatedTransition": {
+    "property": "apple.extraPods",
+    "beforeState": "ABSENT",
+    "pods": [
+      {
+        "name": "GoogleUtilities/Environment",
+        "modular_headers": true
+      },
+      {
+        "name": "RecaptchaInterop",
+        "modular_headers": true
+      }
+    ],
+    "representation": "JSON_STRING_OF_EXACT_ORDERED_POD_TUPLES",
+    "propertiesPreimage": {
+      "path": "apps/mobile/ios/Podfile.properties.json",
+      "bytes": 389,
+      "sha256": "d567f4eabc3292cdc055c7badc0cbade7a8e68cea1dc261f5c521e403a2bc723"
+    },
+    "podfilePreimage": {
+      "path": "apps/mobile/ios/Podfile",
+      "bytes": 2904,
+      "sha256": "6273e7170daaef35e4b8cac0d3168d5687d782ce61ce58e0193f931169bbbab6"
+    },
+    "scope": "GENERATED_UNSIGNED_STAGING_SIMULATOR_ONLY_NO_APP_CONFIG_OR_DEPENDENCY_CHANGE",
+    "primarySources": [
+      {
+        "url": "https://raw.githubusercontent.com/CocoaPods/Core/1.17.0/lib/cocoapods-core/podfile/target_definition.rb",
+        "bytes": 40937,
+        "sha256": "cd734a2d77537bbfaccb392ae7d34374a70fa6090ad7907cc8df73db46c25ef7",
+        "purpose": "modular_headers normalization uses Specification.root_name(name); RESOLVED verifies actual installed1.17.0 source bytes."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/google/GoogleUtilities/CocoaPods-8.1.5/GoogleUtilities.podspec",
+        "bytes": 5658,
+        "sha256": "d6eb83b4abd8229b809a298b0d7d033f31be308e6cce2ca3d022ee8466b1a471",
+        "purpose": "No default_subspecs: root pod would expand subspecs; use the already-transitive Environment subspec only."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/google/app-check/CocoaPods-11.3.2/AppCheckCore.podspec",
+        "bytes": 2980,
+        "sha256": "0c82d50eb9fee7ad1e6cfb2b01b8b44f1130a5e0bd4c1709a3a474d1fd005272",
+        "purpose": "AppCheckCore already depends on GoogleUtilities/Environment and UserDefaults plus RecaptchaInterop."
+      }
+    ]
+  },
+  "obligations": {
+    "path": "scripts/phase9/ios-native-obligations47.json",
+    "sha256": "67f9236fbdc49077df0d51f5b85fb34895416a18c4dd9b9fb85fa02218c2470e",
+    "originalTests": 90,
+    "predecessorSHA256": "eb3c1c1aabc5637cdb9185534656c84fabdbd0eb25e383314ec9378bc66c23bc"
+  },
+  "claims": {
+    "sourceOnly": true,
+    "archiveInspected": false,
+    "binarySignaturesVerified": false,
+    "nativeAccepted": false,
+    "physicalDeviceQualified": false,
+    "appStoreAcceptanceProven": false,
+    "publicReleaseAuthorized": false
+  },
+  "admissions": {
+    "security": false,
+    "db_custody": false,
+    "M1_03": false,
+    "M2": false,
+    "J01": false,
+    "paid": false,
+    "native": false,
+    "apple": false,
+    "public_release": false
+  },
+  "release": "NO_GO"
+}

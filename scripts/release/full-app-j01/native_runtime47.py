@@ -229,6 +229,46 @@ def retain_generated_native(ios, output):
                'qualification': 'ACTUAL_GENERATED_FIRST_PARTY_NATIVE_CONFIGURATION_NOT_POD_SOURCE'})
 
 
+def retain_pod_inventory(ios, output):
+    """Hash actually installed Pod source without following dependency links."""
+    pods = ios / 'Pods'
+    require(pods.is_dir() and not pods.is_symlink(), 'INSTALLED_PODS_REQUIRED')
+    lock = (ios / 'Podfile.lock').read_bytes()
+    require(lock and (pods / 'Manifest.lock').read_bytes() == lock, 'POD_LOCK_MANIFEST_DRIFT')
+    native = output / 'generated-native'
+    native.mkdir(exist_ok=True)
+    shutil.copy2(pods / 'Manifest.lock', native / 'Manifest.lock')
+    rows, total = [], 0
+    for directory, directories, names in os.walk(pods, followlinks=False):
+        parent = Path(directory)
+        directories.sort()
+        for name in sorted(directories + names):
+            path = parent / name
+            info = path.lstat()
+            row = {'path': path.relative_to(pods).as_posix(), 'mode': oct(stat.S_IMODE(info.st_mode))}
+            if stat.S_ISLNK(info.st_mode):
+                target = os.readlink(path)
+                row.update(type='symlink', target=target, sha256=hashlib.sha256(os.fsencode(target)).hexdigest())
+            elif stat.S_ISDIR(info.st_mode):
+                row.update(type='directory')
+            else:
+                require(stat.S_ISREG(info.st_mode), 'POD_SPECIAL_FILE')
+                total += info.st_size
+                row.update(type='file', bytes=info.st_size, sha256=sha(path))
+            rows.append(row)
+            require(len(rows) <= 100000 and total <= 8 * 1024 * MIB, 'POD_SOURCE_INVENTORY_BOUND')
+    local_specs = pods / 'Local Podspecs'
+    if local_specs.is_dir():
+        destination = native / 'local-podspecs'
+        destination.mkdir(exist_ok=True)
+        for spec in sorted(local_specs.glob('*.podspec.json')):
+            require(spec.is_file() and not spec.is_symlink() and spec.stat().st_size <= 2 * MIB, 'LOCAL_PODSPEC_FILE')
+            shutil.copy2(spec, destination / spec.name)
+    write_json(native / 'installed-pod-inventory.json', {'podfile_lock_sha256': hashlib.sha256(lock).hexdigest(),
+               'manifest_lock_matches': True, 'files': rows, 'regular_bytes': total,
+               'links_followed': False, 'qualification': 'ACTUAL_INSTALLED_POD_INPUT_INVENTORY_NOT_COMPILE_OR_RUNTIME_PROOF'})
+
+
 class Runner:
     def __init__(self, root, output, seconds=84 * 60):
         self.root = root
@@ -410,6 +450,11 @@ def execute(r):
     r.run('ocr-source-contract', ['npm', 'run', 'cat05:native-ocr-source-contract:test'], timeout=240)
     r.run('existing-workflow-contract', ['npm', 'run', 'phase5:ios-simulator-compile-workflow:test'], timeout=120)
     r.run('current-native46', ['node', 'scripts/release/full-app-j01/native_current46.mjs'], timeout=600)
+    r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=120)
+    r.run('generated47-properties-controls', ['python3', '-I', '-B', 'scripts/release/full-app-j01/pods_compat47.test.py'], timeout=120)
+    source47 = r.output / 'current-generated47-source.json'
+    r.run('current-generated47-source', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
+                                       '--phase', 'SOURCE', '--output', source47], timeout=600)
     r.run('dependency-graph', ['npm', 'ls', '--all', '--json', '--long'], timeout=180)
     r.source_proof('source-after-install', head)
     r.passed('installation', {'normal_hooks_executed': True, 'reviewed_native_source': 'CURRENT_SOURCE46_TECHNICAL_ONLY'})
@@ -423,7 +468,20 @@ def execute(r):
     r.source_proof('source-after-prebuild', head, allow_generation=True)
     ios = mobile / 'ios'
     require(ios.is_dir(), 'NATIVE_PROJECT_MISSING')
+    compatibility47 = r.output / 'generated-compat47'
+    r.run('generated47-exact-properties', ['python3', '-I', '-B',
+          'scripts/release/full-app-j01/pods_compat47.py', '--ios-directory', ios,
+          '--source-proof', source47, '--output', compatibility47], timeout=120)
+    r.run('current-generated47-native', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
+          '--phase', 'GENERATED', '--source-proof', source47, '--receipt', compatibility47 / 'receipt.json',
+          '--output', r.output / 'current-generated47.json'], timeout=600)
+    r.source_proof('source-after-generated47', head, allow_generation=True)
     r.run('pods', ['pod', 'install', '--project-directory=ios'], cwd=mobile, timeout=1200)
+    retain_pod_inventory(ios, r.output)
+    r.run('current-generated47-resolved', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
+          '--phase', 'RESOLVED', '--source-proof', source47, '--receipt', compatibility47 / 'receipt.json',
+          '--output', r.output / 'current-generated47-resolved.json'], timeout=600)
+    r.source_proof('source-after-pods', head, allow_generation=True)
     retain_generated_native(ios, r.output)
     require(re.search(r'^  - NativeLabelOcr \(1\.0\.0\)', (ios / 'Podfile.lock').read_text(), re.M),
             'NATIVE_OCR_NOT_AUTOLINKED')
@@ -439,7 +497,7 @@ def execute(r):
     r.run('native-build-settings', ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
                                    '-configuration', 'Release', '-sdk', 'iphonesimulator', '-showBuildSettings'], timeout=120)
     r.passed('native-generation', {'workspace': str(workspace), 'scheme': scheme,
-                                   'inputs': {p.name: sha(p) for p in native.iterdir()}})
+                                   'inputs': {p.name: sha(p) for p in native.iterdir() if p.is_file()}})
     products = Path(os.environ['RUNNER_TEMP']) / 'c47-native-products'
     products.mkdir(exist_ok=False)
     derived = products / 'derived'
@@ -449,6 +507,7 @@ def execute(r):
                           '-configuration', 'Release', '-sdk', 'iphonesimulator',
                           '-destination', 'generic/platform=iOS Simulator', '-derivedDataPath', derived,
                           '-resultBundlePath', products / 'build.xcresult', *unsigned, 'build'], timeout=3000)
+    r.source_proof('source-after-build', head, allow_generation=True)
     apps = list((derived / 'Build/Products/Release-iphonesimulator').glob('*.app'))
     require(len(apps) == 1, 'PRODUCT_COUNT')
     app = apps[0]

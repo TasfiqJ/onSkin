@@ -171,6 +171,60 @@
       "causal_need": "Use existing producer for separate final source seal",
       "invariant": "Only the two existing worklists may differ from tested source",
       "validation": "Strict producer check and source/seal equivalence"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Apply exact generated-only two-pod modular-header transition after preserved preimages",
+      "invariant": "Unchanged Podfile and all other generated properties; no dependencies or module removal",
+      "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Exercise negative generated-transition and receipt controls",
+      "invariant": "Reject unknown/root pods, stale proof, forged receipts and unrelated changes",
+      "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.mjs",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Add exact current-head native generated-input successor retaining current202-input proof",
+      "invariant": "All original90 obligations remain mandatory and parent pass cannot substitute",
+      "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Test finite current47 descriptor and all90 mappings",
+      "invariant": "Reject expanded scope, admission and historical assertion substitution",
+      "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
+    },
+    {
+      "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Pin actual Expo consumers and generated transition against native attempt3 failure",
+      "invariant": "No app configuration, SDK, lock, authority or production change",
+      "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
+    },
+    {
+      "path": "scripts/phase9/ios-native-obligations47.json",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Preserve all90 predecessor cases with explicit current47 checks",
+      "invariant": "Original assertions, executable invocations and controls unchanged",
+      "validation": "New adversarial tests, current SOURCE/GENERATED checks and actual hosted native build"
     }
   ],
   "amendments": [
@@ -185,8 +239,20 @@
         "docs/phase-4/generated/source-worklist.md"
       ],
       "reason": "Current C47 source needs its own interval/seal verification; historical C46 scope cannot admit new campaign. No acceptance or production change."
+    },
+    {
+      "recorded_utc": "2026-11-04T19:02:18.260390+00:00",
+      "paths": [
+        "scripts/release/full-app-j01/pods_compat47.py",
+        "scripts/release/full-app-j01/pods_compat47.test.py",
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "scripts/release/full-app-j01/native_generated47.test.mjs",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "scripts/phase9/ios-native-obligations47.json"
+      ],
+      "reason": "Actual attempt3 CocoaPods static integration error requires narrow supported generated-only modular-header policy; preserve frozen plan, prior RED and all original native controls. Recorded before implementation."
     }
   ],
-  "frozen_utc": "2026-11-04T18:16:18.599991+00:00",
-  "freeze_note": "Finite cumulative exercised inventory18, including the two imminent producer-generated seal files. Restored USER_FLOW_TREE remains historically exercised, although its final bytes equal accepted base. Any later causal amendment requires new recorded preimages and revalidation/reseal."
+  "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
+  "freeze_note": "Finite cumulative exercised inventory24 after attempt3 generated-only repair. Original frozen plan bytes unchanged. Any later causal amendment requires preimages and fresh verification/reseal."
 }
