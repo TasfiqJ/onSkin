@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
+  "inventory_state": "FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -117,6 +117,76 @@
       "causal_need": "Provide resumable current campaign root handoff",
       "invariant": "Preserve prior custody and precise NO_GO boundaries",
       "validation": "Append-only content and source identity review"
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_completion47.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Verify current C47 finite source and seal without reinterpreting C46 scope",
+      "invariant": "Whole current source, exact preimages, frozen plan and last two-worklist seal",
+      "validation": "New adversarial controls and actual SOURCE_PENDING/SOURCE_FROZEN checks"
+    },
+    {
+      "path": "scripts/release/full-app-j01/source_completion47.test.py",
+      "preimage_state": "ABSENT",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "causal_need": "Prove source guard refuses forged scope, preimages, plan and seal",
+      "invariant": "No wildcard or parent-only source pass",
+      "validation": "Seven adversarial controls plus original20 preserved source controls"
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "c453e9f345ae9321f3ae06557b2eb96b57c67b19fffae8e54179c8705a75f1d7",
+      "preimage_bytes": 15985,
+      "causal_need": "Select actual C47 source interval while retaining every meaningful downstream Quality check",
+      "invariant": "Original C46 guard/tests remain unchanged; complete current C47 source is checked",
+      "validation": "Branch-safe conditional selection, existing full Quality and current-native checks"
+    },
+    {
+      "path": ".github/workflows/campaign46-technical.yml",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "972d14ad75db46e7d071237291f97e087f798fd76efe84b3bafc02716b2f3a25",
+      "preimage_bytes": 13997,
+      "causal_need": "Select current C47 source guard in Windows technical source job",
+      "invariant": "No scanner policy, original20 tests or native checks removed",
+      "validation": "Current Windows source/native technical job and exact pipeline comparison"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "863882458005d4867de27588859014d66131598e3563ae298804c3e0f4077e18",
+      "preimage_bytes": 142269,
+      "causal_need": "Use existing producer for separate final source seal",
+      "invariant": "Only the two existing worklists may differ from tested source",
+      "validation": "Strict producer check and source/seal equivalence"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "preimage_state": "PRESENT",
+      "preimage_sha256": "e8a32e81f06c613df78f59a92026efa798e71f2ed8b745e36bb45d62f61bd2ed",
+      "preimage_bytes": 84921,
+      "causal_need": "Use existing producer for separate final source seal",
+      "invariant": "Only the two existing worklists may differ from tested source",
+      "validation": "Strict producer check and source/seal equivalence"
     }
-  ]
+  ],
+  "amendments": [
+    {
+      "recorded_utc": "2026-11-04T18:15:04.573358+00:00",
+      "paths": [
+        "scripts/release/full-app-j01/source_completion47.py",
+        "scripts/release/full-app-j01/source_completion47.test.py",
+        ".github/workflows/quality.yml",
+        ".github/workflows/campaign46-technical.yml",
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "reason": "Current C47 source needs its own interval/seal verification; historical C46 scope cannot admit new campaign. No acceptance or production change."
+    }
+  ],
+  "frozen_utc": "2026-11-04T18:16:18.599991+00:00",
+  "freeze_note": "Finite cumulative exercised inventory18, including the two imminent producer-generated seal files. Restored USER_FLOW_TREE remains historically exercised, although its final bytes equal accepted base. Any later causal amendment requires new recorded preimages and revalidation/reseal."
 }
