@@ -12,3 +12,10 @@ See docs/brain/task-specs/M1X-46 and authenticated external FINAL_REPORT/return 
 
 CAMPAIGN46 CLOSURE02 CONTINUATION (BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02)
 Preserve originaldeafce53 submission/sixcommits and frozenplan. Independent review was PARTIAL_BLOCKED/NO_GO. Current additive native candidate and complete current audit/obligation parity are source-only, not owner/native admission. Exact official Expo output bounds and restored current Quality/CAT08/packet/source controls are integrated. See docs/brain/task-specs/M1X-46/CLOSURE02_REPORT.md; final exact-head report/CI/authenticated return delivered separately after source seal. Same draftPR47 only; no Campaign47, merge, deployment or release. All38requirements/18gates remainunaccepted.
+
+
+CAMPAIGN47 NATIVE RUNTIME - INCOMPLETE_NATIVE_VALIDATION / NO_GO
+Authority BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01; exact accepted parent02aa4ba879fb844f3ca0aa929591203ee45f4163/tree02f4b093d399631c4e36b32bf163fa543b61fc3e preserved.
+Only new stage/m1-native-runtime47 may change; parentPR47/main/prior refs unchanged. Frozen first plan a5b3edb572bf92310c555933f8c0db6300e1aecc.
+Additive bounded standard public macOS native build/install/launch/XCTest path prepared; actual runtime outcomes and consumed attempts must be read from exact source-bound C47 execution receipts and TASK.md. No app source/dependency/admission change in initial experiment.
+Normal staging and existing strictly development synthetic-owner fixture remain separate. No positive native Pro fixture. Original Security/candidate29/G97/core04/core06 remain open. All38requirements/18owner gates unaccepted. No merge/release/deploy/Campaign48.

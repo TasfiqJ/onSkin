@@ -2,6 +2,15 @@
 
 This file maps human-simulated E2E branches for Layerwell. Update it before testing a UI feature. Cover Critical branches first, then Important, then Nice.
 
+## Campaign47: actual unsigned iOS Simulator runtime
+
+- Normal staging (Critical): fresh Release/staging app installed on a controlled supported iPhone Simulator. Observe welcome before tapping Begin; exercise the real age gate, unavailable account/private-session refusal, Back and retry. A refusal is not completed onboarding. Capture native screenshot/accessibility hierarchy and process survival, including same-Simulator process restart.
+- Internal supported owner (Critical, separate evidence lane): only existing fully guarded development anonymous-owner fixture with unconfigured providers and real durable ownership; no paid entitlement. Follow visible age/consent/questionnaire/product/reveal/free-continuation controls. Normal staging and production must reject this fixture. Until an actual Debug/development native build and UI execution exist this lane is NOT_RUN.
+- Connected core (Critical when admitted): manual Opened/Add through Shelf, duplicate submit, edit/finish/archive/remove and unavailable recovery; ordered Plan explicit Save, dated immutable history/retry/reload; Today completion and optional factual correction/local continuity. Use native taps and real encrypted storage; never direct store calls as journey evidence.
+- Privacy branches (Critical when admitted): supported diary permission denied/cancel and synthetic local media only when a legitimate internal native input exists; owner-selected export, consent withdrawal and explicit local deletion/recovery. Retain confirmed/unconfirmed distinctions and nondestructive recovery. Capture only synthetic UI content and content-free diagnostics.
+- Persistence/layout (Important): same Simulator terminate/relaunch with supported persistence readback, compact phone and larger Dynamic Type. Native two-owner isolation requires an actual admitted native test mechanism; existing web-only owner fixtures and source adversarial tests cannot establish it.
+- Qualification: actual compile, install, launch, refusal, and each journey are independent results. Widget extension remains excluded by the existing Simulator profile. No physical iPhone, camera/OCR accuracy, power-loss, signed archive, provider, clinical/J01, owner acceptance or public release claim.
+
 ## Campaign41: optional owner-local Today changes
 
 - Entry (Critical): genuine adult/current-consent free first session -> existing Today -> **Record a change (optional)**. This inline section is independent of check-offs. A successful empty read says **Nothing recorded**; silence never means no changes, adherence or a positive assessment.

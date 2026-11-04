@@ -8379,3 +8379,10 @@ Authorization BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01; NO_GO, independent revie
 ## Campaign46 closure02 continuation
 
 Authenticated BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02 continues existing draftPR47 after independent PARTIAL_BLOCKED review. Implemented additive exact-current native candidate/full parity and active dispatch; restored current Quality/CAT08/packet coverage; repaired actual Expo developer-output OOM through exact-source additive installation hook and improved scanner context/parse coverage. See docs/brain/task-specs/M1X-46/CLOSURE02_REPORT.md and finite closure ledger. Stable integration/final CI and independent Brain review remain required; all38/18 unaccepted, releaseNO_GO.
+
+
+## Campaign47 unsigned native runtime experiment (2026-11-04)
+
+Authenticated complete mandate BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01 and exact accepted C46 parent. Frozen first plan a5b3edb572bf92310c555933f8c0db6300e1aecc; finite preimage/decision ledger under docs/brain/task-specs/M1X-47. Additive single-job/90-minute standard public macOS execution path preserves the original manual workflow, normal install hooks, reviewed native inputs, production admission and all94routes. Native XCTest uses existing CocoaPods tooling, actual accessibility controls and bounded waits. Four evidence-driven hosted attempts maximum, no extra charges or provider/signing/account changes.
+
+Initial local normal install/postinstall and original/new workflow controls pass; existing first-session fixture separation12/12 passes. These are source evidence only. Actual compile/install/launch/UI outcomes remain INCOMPLETE_NATIVE_VALIDATION until source-bound hosted receipts exist. Internal supported-owner native journeys are NOT_RUN at this checkpoint. C46 inherited residual security and protected literal failures remain distinct and unwaived; no requirement/owner/release gate is accepted. See C47 TASK.md for actual attempt history, failures and resumable source. NO_GO; no Campaign48.

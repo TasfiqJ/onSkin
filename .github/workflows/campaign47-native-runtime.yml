@@ -1,0 +1,78 @@
+name: Campaign47 unsigned native runtime
+
+on:
+  pull_request:
+    branches:
+      - stage/m1-app-completion46
+
+permissions:
+  contents: read
+
+concurrency:
+  group: campaign47-native-runtime
+  cancel-in-progress: false
+
+env:
+  APP_VARIANT: staging
+  CI: 'true'
+  DEVELOPER_DIR: /Applications/Xcode_26.4.app/Contents/Developer
+  EXPO_NO_GIT_STATUS: '1'
+  EXPO_NO_TELEMETRY: '1'
+  EXPO_PUBLIC_APP_ENV: staging
+  EXPO_PUBLIC_CAMERA_STACK: expo-camera
+  EXPO_PUBLIC_NATIVE_CAMERA_ENABLED: 'true'
+  EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true'
+  EXPO_USE_PRECOMPILED_MODULES: '1'
+  IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'false'
+  SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+
+jobs:
+  native-runtime:
+    name: Actual unsigned Simulator build install launch and UI
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup supported Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.22.2
+      - name: Use reviewed npm
+        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+      - name: Build install launch and exercise ordinary staging
+        env:
+          C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          C47_UI_PHASE: normal-staging
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --output "$RUNNER_TEMP/c47-evidence"
+      - name: Enforce bounded evidence upload
+        id: evidence-budget
+        if: always()
+        run: |
+          python3 -I -B - <<'PY'
+          import os, pathlib, stat
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c47-evidence'
+          assert root.is_dir() and not root.is_symlink()
+          total = 0
+          for path in root.rglob('*'):
+              mode = path.lstat().st_mode
+              assert stat.S_ISDIR(mode) or stat.S_ISREG(mode), 'EVIDENCE_LINK_OR_SPECIAL_FILE'
+              if stat.S_ISREG(mode):
+                  total += path.stat().st_size
+          assert 0 < total <= 500 * 1024 * 1024, 'EVIDENCE_BUDGET_EXCEEDED'
+          print('C47_EVIDENCE_BYTES=' + str(total))
+          PY
+      - name: Preserve actual app and raw failure evidence
+        if: always() && steps.evidence-budget.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: c47-native-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/c47-evidence
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0

@@ -1,0 +1,35 @@
+# Campaign47 execution ledger
+
+Authorization: BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01. Status INCOMPLETE_NATIVE_VALIDATION / NO_GO. Independent Brain approval absent. No requirement or owner gate accepted.
+
+## Intake and exact source
+
+Authenticated packet and complete separate prompt passed their external raw anchors and C47_CONTEXT_VERIFIED. Live PR47 parent, Git HEAD/tree and main match the frozen plan. No C47 branch/PR conflict; fresh HTTPS independent-object checkout. First plan commit a5b3edb572bf92310c555933f8c0db6300e1aecc; plan SHA256 fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd is frozen. The original manual Simulator workflow and contract tests remain unchanged.
+
+The local host is Windows, Node22.21.0/npm11.20.0/Python3.9. The only Desktop Commander device is offline, so it supplies no macOS execution. Public repository metadata and existing access support standard hosted macOS execution; current official runner inventory and Expo docs support the existing Xcode26.4/SDK57/RN0.86/React19.2.3 versions, subject to actual runner discovery. No speculative platform upgrade is authorized by this observation.
+
+## Decisions before native execution
+
+Use additive PR-only C47 workflow, exact head checkout with independent full history, read-only permission, no stored credentials/secrets, one fixed concurrency group, one standard macos-26 job and90-minute timeout. Four evidence-driven attempts maximum; no automatic retry. No new cache. Bounded app/raw-evidence upload uses the existing pinned artifact action and3-day retention in this verified public repository. Current GitHub billing documentation scopes plan compute/storage allowances to private repositories; GitHub support explicitly confirms public build artifacts are exempt (historical support clarification). No billing/credential/account mutation or larger runner.
+
+Official references: https://docs.github.com/en/billing/concepts/product-billing/github-actions ; https://github.com/orgs/community/discussions/26438 ; https://raw.githubusercontent.com/actions/runner-images/main/images/macos/macos-26-arm64-Readme.md ; https://docs.expo.dev/versions/latest/ . Documentation is a selection aid; actual toolchain/build evidence is still required.
+
+Ordinary Release/staging first. Existing firstSessionE2E fixture requires all of development JS, development environment, unconfigured Supabase and explicit anonymous_owner switch, and claims genuine durable local ownership before publication. Existing production-negative tests remain mandatory. Native paid entitlement fixture always returns null. Do not relax guards or represent supported-owner synthetic data as real onboarding. Debug/development with local Metro is a possible second lane only after ordinary native launch; its execution remains NOT_RUN now. Existing web-only two-owner/deletion fixtures are not native proof. No native harness previously existed; C47 uses Apple XCTest and the already installed CocoaPods xcodeproj library in an isolated generated test project.
+
+Root is the only checkout writer. Internal agents inspect/review and propose files outside source for root review/application. This is internal engineering review, never independent Brain acceptance. Exact changed-path preimages are in CHANGE_LEDGER.json before implementation. Inventory remains explicit and open to causally justified amendments before final finite freeze.
+
+## Actual results so far
+
+Local normal npm ci completed with original postinstall/security patches; install warning records unapproved optional Sentry CLI/unrs-resolver scripts under existing allowScripts, unchanged. postinstall:check passed. Existing original Simulator workflow contract passed2/2. These are source/install evidence only, never native compilation. Hosted attempts consumed0/4; actual app compile/install/launch/UI NOT_RUN.
+
+## Inherited residual security and qualification
+
+Accepted C46 audit SHA25691fda3f9e04100937a45b68256e2f97bc02c766661f57337a91ec2f94a1b3a1b and external C46 return/receipt anchors are in the authenticated orientation packet. C46 current-native90-obligation mapping and restored Quality reconciliation are accepted-scoped source validation. Original Security/candidate29/G97, actual scanner findings/advisories, core04/core06 literal failures and36 policy-denied browser DOM cases remain unwaived. Historical final-head accounting:8successful,7failed,1skipped jobs. No fresh clean-security claim is made. Qualified database/device/iPhone/power-loss/camera/OCR/signing/provider/clinical/J01/Apple/public-release evidence and all38requirements/18owner gates remain open. No Campaign48.
+
+## Initial hosted experiment checkpoint
+
+Prepared real native coordinator and isolated XCTest runner; local orchestration9/9 and C47 workflow2/2 pass. Only source/orchestration/documentation paths change; production mobile/runtime/config/dependency bytes remain accepted-parent exact. Source safety includes original workflow2/2, normal hooks and fixture-separation12/12. Existing full dependency graph returns0. This permits the narrow draft-CI access exception, not completed submission. First hosted attempt is reserved1/4 when the one new draft is created; no macOS work has yet executed at this source checkpoint.
+
+Expo's inspected installed prebuild code necessarily rewrites the existing ios/android package command strings to expo run commands. The build coordinator retains original/generated raw package bytes and admits only those exact documented scripts-only rewrites in the isolated runner workspace. Every other package field, dependency/lock input, index entry and tracked source blob is reverified; no source restoration or historical-validator monkeypatch. Actual generated native configuration/lock bytes and inventories are retained. This generation projection is not a dependency compatibility transition.
+
+Inherited final C46 hosted scanner artifact13340847494 freshly downloaded and authenticated against Brain digest9fd55f4889be7c3cb135f7adf53b94a94b9e9a2b96f81b5649a92ea4e96adf24 (2,498,651bytes). Content-free residual ledger: Semgrep122 (109warning/13error) plus protected candidate22 PartialParsing30-31,18,106scanned/17skipped; Gitleaks1,158 (not earlier1,157); npm22propagated nodes (3high/14moderate/5low); OSV6instances/5coordinates. Zod GHSA-mrhx-c7xc-m3w5, deepmerge GHSA-gcqx-w48m-w2h4, minimatch3.1.5 GHSA-g3hv-75wg-m249, frozen OpenTelemetry API1.37.0 GHSA-xcq7-p3pf-p88h and MCP1.29.0 four advisories remain unwaived. Original expected OWASP5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1 is unavailable; current technical0be8cbb823baae205bf86be0f274f412a659b5132cf1de3e902f03da19a25dbc is not equivalent. G97 original expiry2026-10-21T00:00:00Z remains unchanged. Checkpoint protected-core diagnostic remains24/26 with exact literal failures, no new acceptance. Raw historic companion and source-bound checkpoint RED are external C47 evidence, not final-source test counts.

@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "campaign": 47,
+  "authorization": "BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01",
+  "base": "02aa4ba879fb844f3ca0aa929591203ee45f4163",
+  "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
+  "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
+  "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
+  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
+  "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
+  "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
+  "paths": [
+    {
+      "path": "docs/brain/task-specs/M1X-47/SCOPE_PLAN.md",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Freeze the expressly required first implementation plan",
+      "invariant": "Original plan bytes and accepted ancestry",
+      "validation": "Compare to first plan commit and hash"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Record the finite exercised inventory before implementation",
+      "invariant": "No wildcard scope or hidden preimage drift",
+      "validation": "Compare changed path union and Git base preimages"
+    },
+    {
+      "path": "docs/brain/task-specs/M1X-47/TASK.md",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Append decisions, actual attempts and boundaries",
+      "invariant": "Truthful attempt budget and no self acceptance",
+      "validation": "Match raw execution/source receipts"
+    },
+    {
+      "path": ".github/workflows/campaign47-native-runtime.yml",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Obtain authorized actual hosted native execution while preserving manual historical workflow",
+      "invariant": "Read-only, unsigned, single job, no secrets, bounded standard runner",
+      "validation": "YAML and adverse workflow controls plus actual hosted run"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.py",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Capture real toolchain/build/app/install/launch evidence",
+      "invariant": "Normal hooks/dependencies and source-bound genuine Mach-O",
+      "validation": "Portable orchestration tests plus actual macOS execution"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Check fail-closed runtime evidence orchestration",
+      "invariant": "No false stage completion or source drift",
+      "validation": "Run unittest controls"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_ui47.swift",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Drive real native application UI with deterministic XCTest assertions",
+      "invariant": "No direct store seeding or simulated taps",
+      "validation": "Actual XCTest results/screenshots/hierarchy"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_ui47.rb",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Create isolated XCTest runner using existing CocoaPods xcodeproj",
+      "invariant": "No production target or signing mutation",
+      "validation": "Generate and execute isolated unsigned native test bundle"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "Validate narrow C47 workflow privilege/budget/source constraints",
+      "invariant": "No paid runner, secrets, signing or credential persistence",
+      "validation": "Positive and mutation controls using existing yaml"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "preimage_sha256": "1525743f161ec725f2fe1a812b1e619c1f4ac12dbd60a8a2a089c1c5429cdedf",
+      "preimage_bytes": 540330,
+      "preimage_state": "PRESENT",
+      "causal_need": "Map C47 native branches before UI execution",
+      "invariant": "No invented unsupported product flows",
+      "validation": "Review mapping against visible source and actual outcomes"
+    },
+    {
+      "path": "PROGRESS.md",
+      "preimage_sha256": "ab7559254b3b4a8cc015d710039c5b4b101c6d7ee1714e64e4eef1e3cbfe8af9",
+      "preimage_bytes": 585460,
+      "preimage_state": "PRESENT",
+      "causal_need": "Record actual C47 achieved stages and remaining gates",
+      "invariant": "No source or Simulator proof overclaim",
+      "validation": "Review against raw evidence"
+    },
+    {
+      "path": "ONSKIN_BRAIN_HANDOFF.txt",
+      "preimage_sha256": "bd8ff2adf47d2e16a285b8cec21c842c5e6dec8f55b1488f09217c1e6e51a758",
+      "preimage_bytes": 1617,
+      "preimage_state": "PRESENT",
+      "causal_need": "Provide resumable current campaign root handoff",
+      "invariant": "Preserve prior custody and precise NO_GO boundaries",
+      "validation": "Append-only content and source identity review"
+    }
+  ]
+}
