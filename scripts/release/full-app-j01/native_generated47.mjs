@@ -9,7 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { parseDocument } from 'yaml';
 import { auditIosPrivacySource as legacyAuditIosPrivacySource, canonicalAuditJson } from '../../phase9/ios-privacy-contract.mjs';
-import { nativeTree23 } from '../../phase9/ios-privacy-lock-succession23.mjs';
+import { nativeTree23, lockSuccession23 } from '../../phase9/ios-privacy-lock-succession23.mjs';
 import { validateIosExtensionConfig, validateIosExtensionVariantIsolation, IOS_WIDGET_EXTENSION_CONTRACT } from '../../phase5/ios-extension-contract.mjs';
 import { checkedNativeRoot46, nativeSourceIdentity46, readNativeFile46, verifyNativeTree46,
   LOCK_SUCCESSION46_SHA256, checkedNativePath46, assertCurrentNativeHead46, checkCurrentAuditSnapshot46, checkWindowsReparse } from '../../phase9/ios-privacy-lock-succession46.mjs';
@@ -323,7 +323,8 @@ function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneratio
     if (pin.status === 'ABSENT') { absentInput47(root, pin.path); continue; }
     const actual = readNativeFile46(root, pin.path);
     stamps[pin.path] = actual.identity;
-    const changed = descriptor.swiftSourceSuccession.sourceInputs.find(row => row.path === pin.path);
+    const changed = [...descriptor.swiftSourceSuccession.sourceInputs,
+      ...descriptor.swiftSourceSuccession.installedFiles].find(row => row.path === pin.path);
     if (changed) {
       same({ bytes: pin.bytes, sha256: pin.sha256 }, changed.before);
       same({ bytes: actual.bytes.length, sha256: actual.sha256 }, changed.after);
@@ -446,12 +447,105 @@ function verifyLockAndPackage47(root, witness, lockFile) {
   return { changedLockNodes: changed, historicalLockSHA256: hash(baseBytes) };
 }
 
+
+function verifyHistorical23And13Assertions47(root, witness, history, succession) {
+  // Current actual identities have already passed. Only five byte-exact inverse
+  // identities are exposed to the unchanged C23 historical predicate.
+  const changes = [...succession.sourceInputs, ...succession.installedFiles];
+  const originals = new Map(changes.map(change => {
+    const bytes = git47(root, 'show', succession.checkpointHead + ':' + (change.sourcePath ?? change.path));
+    same({ bytes: bytes.length, sha256: hash(bytes) }, change.before);
+    return [change.path, { change, bytes }];
+  }));
+  const readBoundedFile = (current, path, maximum) => {
+    const actual = readNativeFile46(current, path, maximum);
+    if (!originals.has(path)) return actual;
+    const { change, bytes } = originals.get(path);
+    same({ bytes: actual.bytes.length, sha256: actual.sha256 }, change.after);
+    return { ...actual, bytes, sha256: change.before.sha256 };
+  };
+  const readJson = (current, path, maximum) => {
+    const file = readBoundedFile(current, path, maximum);
+    return { ...file, relative: path, value: strictJson47(file.bytes) };
+  };
+  const fail = (code, message, path) => assert.fail(code + ':' + path + ':' + message);
+  const decodeUtf8 = bytes => new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  const sha256 = hash, MAX_MAPPING_BYTES = 4 * 1024 * 1024;
+  const IOS_PRIVACY_LOCK_SUCCESSION13_PATH = 'docs/phase-9/ios-sdk-lock-succession13.v1.json';
+  const IOS_PRIVACY_LOCKFILE_PATH = 'package-lock.json';
+  const LOCK_SUCCESSION13_SHA256 = '824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409';
+  const ORIGINAL_LOCK13_SHA256 = '99aa497f2d0cc2ca237167403fbbb9d9aee0a4e42fa991ea44f9661487ecf568';
+function lockSuccession13({ mapping, mappingFile, lock, lockFile, root }) {
+  const file = readJson(root, IOS_PRIVACY_LOCK_SUCCESSION13_PATH, MAX_MAPPING_BYTES);
+  const successor = file.value;
+  const reject = (message) => fail('LOCK_SUCCESSION13_IDENTITY', message, file.relative);
+  // This is one independently anchored source version, never a mutable hash alias.
+  if (file.sha256 !== LOCK_SUCCESSION13_SHA256) reject('Successor bytes are not exact v1.');
+  if (
+    successor.schemaVersion !== 1 ||
+    successor.base.commit !== 'bbbd59073b7add22ac350bced0d9a34124c12ffb' ||
+    mappingFile.sha256 !== successor.originalMapping.sha256 ||
+    lockFile.sha256 !== successor.candidateLock.sha256 ||
+    successor.originalLock.sha256 !== ORIGINAL_LOCK13_SHA256 ||
+    JSON.stringify(mapping.mappings) !== JSON.stringify(successor.unchangedNativeMappings)
+  ) reject('Original mapping, source version or complete lock identity drifted.');
+  const original = JSON.parse(decodeUtf8(lockFile.bytes, IOS_PRIVACY_LOCKFILE_PATH));
+  if (successor.changedNodes.length !== 8) reject('Exactly eight reviewed nodes are required.');
+  for (const path of successor.changedNodes) {
+    if (JSON.stringify(lock.packages[path]) !== JSON.stringify(successor.candidateNodes[path])) {
+      reject(`Reviewed testing-tool node drifted: ${path}`);
+    }
+    original.packages[path] = successor.originalNodes[path];
+  }
+  if (sha256(Buffer.from(canonicalAuditJson(original))) !== ORIGINAL_LOCK13_SHA256) {
+    reject('All other lock bytes, records and ordering must reproduce the original lock.');
+  }
+  for (const [path, node] of Object.entries(successor.unchangedNativeNodes)) {
+    if (JSON.stringify(lock.packages[path]) !== JSON.stringify(node)) {
+      reject(`Mapped native lock record drifted: ${path}`);
+    }
+  }
+  for (const pin of [successor.dependencyWitness, successor.provenance,
+    ...successor.registry.flatMap((row) => [row.metadata, row.attestations])]) {
+    if (readBoundedFile(root, pin.path, MAX_MAPPING_BYTES).sha256 !== pin.sha256) {
+      reject(`Authenticated dependency provenance drifted: ${pin.path}`);
+    }
+  }
+  // The original mappingErrors loop still checks every installed native source pin,
+  // SDK classification and absent/archive-required claim with its original errors.
+  return file;
+}
+  // The private predicate is deliberately copied verbatim, not reimplemented or
+  // evaluated dynamically. Bind its complete definition to immutable source.
+  const source = readNativeFile46(root, 'scripts/phase9/ios-privacy-contract.mjs');
+  assert.ok(source.bytes.includes(Buffer.from(lockSuccession13.toString())), 'CURRENT47_ORIGINAL_C13_ASSERTION_BODY');
+  const historicalBytes = git47(root, 'show', witness.acceptedBase.commit + ':package-lock.json');
+  same(hash(historicalBytes), history.historicalLockSHA256);
+  const mappingFile = readJson(root, 'docs/phase-9/ios-sdk-package-mapping.json', MAX_MAPPING_BYTES);
+  const result = lockSuccession23({
+    mapping: mappingFile.value, mappingFile,
+    lock: strictJson47(historicalBytes),
+    lockFile: { ...readNativeFile46(root, 'package-lock.json'), bytes: historicalBytes, sha256: hash(historicalBytes) },
+    root, readJson, readBoundedFile, checkedPath: checkedNativePath46,
+    historicalCheck: lockSuccession13, fail,
+  });
+  return { qualification: 'UNCHANGED_C23_AND_VERBATIM_C13_ASSERTIONS_AFTER_EXACT_CURRENT_FIVE_FILE_IDENTITY_PROOF',
+    c23WitnessSHA256: result.sha256, c13PredicateSHA256: hash(Buffer.from(lockSuccession13.toString())),
+    currentFilesRewritten: false, inverseSourceInputs: 3, inverseInstalledFiles: 2 };
+}
+
 export function currentPrivacyProjection47(legacy, witnessBytes, requireSnapshot = true) {
   same(legacy.status, 'source_invalid');
-  same(legacy.errors, [{ code: 'UNEXPECTED_AUDIT_ERROR', path: 'docs/phase-9/ios-sdk-lock-succession46.v1.json',
-    message: 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:scripts/phase5/expo-widgets-57.0.26/AppIntent.swift' }]);
+  same(legacy.errors, [
+    ...['@react-native-google-signin/google-signin', 'expo-image', 'react-native'].map(name => ({
+      code: 'MAPPING_LOCK_DRIFT', path: 'docs/phase-9/ios-sdk-package-mapping.json#' + name,
+      message: 'Mapping package-lock path/hash do not match current bytes.',
+    })),
+    { code: 'UNEXPECTED_AUDIT_ERROR', path: 'docs/phase-9/ios-sdk-lock-succession46.v1.json',
+      message: 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift' },
+  ]);
   const report = structuredClone(legacy);
-  same(report.summary.errorCount, 1);
+  same(report.summary.errorCount, 4);
   report.status = 'archive_required'; report.errors = []; report.summary.errorCount = 0;
   report.inputs.lockSuccession46 = { path: 'docs/phase-9/ios-sdk-lock-succession46.v1.json',
     bytes: witnessBytes.length, sha256: hash(witnessBytes) };
@@ -475,6 +569,7 @@ export function verifyCurrentNative47(rootValue = ROOT, { audit = true, evidence
   const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead, current.descriptor, false);
   const lockFile = readNativeFile46(current.root, 'package-lock.json');
   const history = verifyLockAndPackage47(current.root, current.witness, lockFile);
+  const historicalAssertions = verifyHistorical23And13Assertions47(current.root, current.witness, history, current.descriptor.swiftSourceSuccession);
   const legacy46File = readNativeFile46(current.root, current.descriptor.predecessor46.path);
   let legacyAudit, privacyInventory;
   if (audit) {
@@ -491,7 +586,7 @@ export function verifyCurrentNative47(rootValue = ROOT, { audit = true, evidence
     stamps: verification.stamps, installedNativeTrees: verification.installedNativeTrees, trees: verification.installedNativeTrees, sourceSuccessors: 3, installedFileSuccessors: 2,
     historical46Identity: 'EXPECTED_SOURCE_PIN_RED_NOT_CURRENT_PASS',
     legacy46File, witness: current.witness, file: current.file, root: current.root,
-    lockHistory: history, legacyAudit, privacyInventory,
+    lockHistory: history, historicalAssertions, legacyAudit, privacyInventory,
     claims: current.witness.claims, admissions: current.witness.admissions,
     sourceOnly: true, acceptanceGranted: false, nativeAccepted: false, release: 'NO_GO' };
 }

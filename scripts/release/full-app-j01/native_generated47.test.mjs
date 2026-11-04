@@ -201,6 +201,9 @@ function fixture(t) {
     'scripts/phase9/ios-privacy-lock-succession46.mjs',
     ...WITNESS.unchangedInputs.filter(pin => pin.status !== 'ABSENT').map(pin => pin.path),
     ...WITNESS.currentSourceInputs.map(pin => pin.path), WITNESS.rootPackage.path]);
+  const currentDescriptor = descriptor();
+  for (const pin of currentDescriptor.registry) paths.add(pin.path + '/package.json');
+  for (const pin of currentDescriptor.installedConsumers) paths.add(pin.path);
   const old = JSON.parse(readFileSync(join(ROOT, 'docs/phase-9/ios-sdk-lock-succession13.v1.json')));
   for (const pin of [old.dependencyWitness, old.provenance,
     ...old.registry.flatMap(row => [row.metadata, row.attestations])]) paths.add(pin.path);

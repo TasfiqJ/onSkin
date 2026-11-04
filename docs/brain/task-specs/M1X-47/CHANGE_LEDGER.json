@@ -560,6 +560,36 @@
           "preimage_sha256": "9b3a4409e515aae506e5699a0fa7277ed2fd4c3ee9185882c3793547c2fa1ebf"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-04T22:39:25.926870+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "scripts/release/full-app-j01/native_generated47.test.mjs",
+        "docs/phase-9/ios-generated-input-succession47.v1.json"
+      ],
+      "reason": "Candidate01 local group54PASS/9FAIL/0skip631688ms: installed Store is itself one202pin, so finite successor must validate declared installed-file rows there too. Temporary fixture also lacks newly pinned registry/consumer inputs. Legacy audit must preserve exact four expected identity/lock-mapping errors and independently reconstruct historical semantics. No native job consumed; no production/historical program changes.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "a814d56e55a2cd17dc4551d09f36648e527acff5",
+          "preimage_bytes": 41493,
+          "preimage_sha256": "f31fbed9edbf53c8b9992c3ea6925e167c38190f4ea736dd2e75ad13b74f1a59"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "a814d56e55a2cd17dc4551d09f36648e527acff5",
+          "preimage_bytes": 36046,
+          "preimage_sha256": "38e140cd997b0dd83a987516ee7576e16dc78b667301f05b27f0ca423e31a073"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "a814d56e55a2cd17dc4551d09f36648e527acff5",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "b731c93c3e6efa3e02dcd576890f878231fa03f3d66003007d39f30516b0ff7f"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
