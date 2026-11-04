@@ -10,7 +10,7 @@ import {
   lstatSync,
   mkdirSync,
   openSync,
-  readFileSync,
+  readSync,
   renameSync,
   unlinkSync,
   writeSync,
@@ -22,6 +22,7 @@ import {
   IOS_PRIVACY_AUDIT_JSON_PATH,
   IOS_PRIVACY_AUDIT_MARKDOWN_PATH,
   auditIosPrivacySource,
+  proveCurrentNativeSource46,
   canonicalAuditJson,
   renderIosPrivacySourceAuditMarkdown,
 } from './ios-privacy-contract.mjs';
@@ -164,7 +165,16 @@ function readCheckedOutput(root, output) {
     ) {
       throw new Error(`Generated output identity changed before it was read: ${output.relative}`);
     }
-    const bytes = readFileSync(descriptor);
+    const bytes = Buffer.alloc(Number(before.size));
+    let position = 0;
+    while (position < bytes.length) {
+      const count = readSync(descriptor, bytes, position, bytes.length - position, null);
+      if (count === 0) throw new Error(`Generated output shrank while being read: ${output.relative}`);
+      position += count;
+    }
+    if (readSync(descriptor, Buffer.alloc(1), 0, 1, null) !== 0) {
+      throw new Error(`Generated output grew while being read: ${output.relative}`);
+    }
     const after = fstatSync(descriptor, { bigint: true });
     if (
       opened.dev !== after.dev ||
@@ -274,7 +284,15 @@ export function runIosPrivacySourceAudit(argv = process.argv.slice(2), io = cons
   if (outputPathsCollide(jsonOutput, markdownOutput)) {
     throw new Error('--json and --markdown must name different files.');
   }
-  const report = auditIosPrivacySource({ root: options.root });
+  const currentRepository = resolve(options.root) === resolve(dirname(fileURLToPath(import.meta.url)), '../..') ||
+    existsSync(resolve(options.root, '.git')) ||
+    existsSync(resolve(options.root, IOS_PRIVACY_LOCK_SUCCESSION46_PATH));
+  if (currentRepository && options.write &&
+      (options.jsonPath === IOS_PRIVACY_AUDIT_JSON_PATH || options.markdownPath === IOS_PRIVACY_AUDIT_MARKDOWN_PATH)) {
+    throw new Error('CURRENT_NATIVE_SOURCE46_HISTORICAL_OUTPUTS_READ_ONLY');
+  }
+  if (currentRepository) assertCurrentNativeHead46(options.root);
+  const report = currentRepository ? proveCurrentNativeSource46(options.root).report : auditIosPrivacySource({ root: options.root });
   const json = canonicalAuditJson(report);
   const markdown = renderIosPrivacySourceAuditMarkdown(report);
   if (options.strict && report.status === 'source_invalid') {

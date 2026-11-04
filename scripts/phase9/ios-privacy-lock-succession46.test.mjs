@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, linkSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync,
+import { cpSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync,
   statSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -9,7 +9,7 @@ import { Worker } from 'node:worker_threads';
 import test from 'node:test';
 import { auditIosPrivacySource, canonicalAuditJson, proveCurrentNativeSource46,
   validateIosPrivacyAuditClaims } from './ios-privacy-contract.mjs';
-import { nativeTree23 } from './ios-privacy-lock-succession23.mjs';
+import { nativeTree23, checkCurrentAuditSnapshot23 } from './ios-privacy-lock-succession23.mjs';
 import { IOS_PRIVACY_LOCK_SUCCESSION46_PATH, LOCK_SUCCESSION46_SHA256,
   checkedNativeRoot46, checkCurrentAuditSnapshot46, nativeSourceIdentity46,
   readNativeFile46, verifyNativeCandidate46, assertCurrentNativeHead46, checkWindowsReparse } from './ios-privacy-lock-succession46.mjs';
@@ -264,6 +264,14 @@ test('current46 actual non-strict tampered and missing descriptor writes preserv
   t.after(() => { assert.match(relative(parent, directory), /^layerwell-native46-write-[^\\/]+$/); rmSync(directory, { recursive: true, force: true }); });
   assert.equal(statSync(directory, { bigint: true }).dev, before.dev);
   const backup = join(directory, 'original.json');
+  const oldInputs = ['package-lock.json', 'package.json'].map(name => {
+    const path = join(ROOT, name);
+    const old = spawnSync('git', ['--no-replace-objects', 'show', `${WITNESS.acceptedBase.commit}:${name}`],
+      { cwd: ROOT, windowsHide: true, maxBuffer: 4 * 1024 * 1024 });
+    assert.equal(old.status, 0);
+    assert.equal(hash(old.stdout), name === 'package-lock.json' ? WITNESS.acceptedBase.lockSHA256 : WITNESS.acceptedBase.rootPackageSHA256);
+    return { name, path, old: old.stdout, bytes: readFileSync(path), stat: statSync(path, { bigint: true }), backup: join(directory, name) };
+  });
   const historical = ['docs/phase-9/generated/ios-privacy-source-audit.json', 'docs/phase-9/generated/ios-privacy-source-audit.md']
     .map(path => ({ path: join(ROOT, path), bytes: readFileSync(join(ROOT, path)), stat: statSync(join(ROOT, path), { bigint: true }) }));
   const cli = args => spawnSync(process.execPath, ['scripts/phase9/ios-privacy-source-audit.mjs', ...args],
@@ -275,13 +283,40 @@ test('current46 actual non-strict tampered and missing descriptor writes preserv
   };
   const baselineStatus = status();
   positive();
-  for (const state of ['tampered', 'missing']) {
+  for (const state of ['tampered', 'missing', 'old-profile']) {
     renameSync(witness, backup);
+    const moved = [];
     try {
       if (state === 'tampered') writeFileSync(witness, '{"schemaVersion":false}\n');
+      if (state === 'old-profile') {
+        for (const item of oldInputs) {
+          renameSync(item.path, item.backup); moved.push(item);
+          assert.equal(hash(readFileSync(item.backup)), hash(item.bytes));
+          writeFileSync(item.path, item.old);
+        }
+        const oldReport = auditIosPrivacySource({ root: ROOT });
+        assert.equal(oldReport.status, 'archive_required', JSON.stringify(oldReport.errors));
+        assert.deepEqual(oldReport.errors, []);
+        assert.equal(checkCurrentAuditSnapshot23(oldReport,
+          readFileSync(join(ROOT, 'docs/phase-9/ios-sdk-lock-succession23.v1.json'))), true,
+        'This is a genuine old-profile positive, so a current-head metadata fallback would be unsafe.');
+        assert.equal(cli(['--strict', '--check']).status, 1);
+        const store = spawnSync(process.execPath, ['scripts/phase9/store-build-inspect.mjs', '--check'],
+          { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
+        assert.equal(store.status, 1);
+        assert.match(store.stdout + store.stderr, /Installed iOS privacy source audit/u);
+      }
       const result = cli(['--write']); assert.equal(result.status, 1); assert.equal(result.stdout, '');
       assert.equal(result.stderr.trim(), 'CURRENT_NATIVE_SOURCE46_HISTORICAL_OUTPUTS_READ_ONLY');
-    } finally { if (state === 'tampered') rmSync(witness); renameSync(backup, witness); }
+    } finally {
+      for (const item of moved.reverse()) {
+        assert.equal(hash(readFileSync(item.backup)), hash(item.bytes));
+        if (existsSync(item.path)) rmSync(item.path);
+        renameSync(item.backup, item.path);
+      }
+      if (state === 'tampered') rmSync(witness);
+      renameSync(backup, witness);
+    }
     assert.deepEqual(readFileSync(witness), WITNESS_BYTES);
     const restored = statSync(witness, { bigint: true });
     for (const key of ['dev', 'ino', 'mode', 'size', 'mtimeNs']) assert.equal(restored[key], before[key]);
@@ -289,6 +324,11 @@ test('current46 actual non-strict tampered and missing descriptor writes preserv
       assert.deepEqual(readFileSync(record.path), record.bytes);
       const now = statSync(record.path, { bigint: true });
       for (const key of ['dev', 'ino', 'mode', 'size', 'mtimeNs']) assert.equal(now[key], record.stat[key]);
+    }
+    for (const item of oldInputs) {
+      assert.deepEqual(readFileSync(item.path), item.bytes);
+      const restored = statSync(item.path, { bigint: true });
+      for (const key of ['dev', 'ino', 'mode', 'size', 'mtimeNs']) assert.equal(restored[key], item.stat[key]);
     }
     positive();
     assert.equal(status(), baselineStatus);

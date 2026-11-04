@@ -1497,13 +1497,13 @@
     },
     {
       "path": "scripts/phase9/ios-privacy-lock-succession46.test.mjs",
-      "bytes": 23327,
-      "sha256": "88836a7f07feba776e488c119160a1dcbd2076a146dce49b20bdb838900fd6a3"
+      "bytes": 25678,
+      "sha256": "6aac7262a873bb9a053eda9c8c3e9c9d8e8aeaad47d1fd4031733e59e772adf5"
     },
     {
       "path": "scripts/phase9/ios-privacy-source-audit.mjs",
-      "bytes": 13262,
-      "sha256": "e10a174dc6bc039c88e3c316eaaf13ca4fa14ec99aa38cd2791d646196ad42cd"
+      "bytes": 14360,
+      "sha256": "79464cc66277a290522c1735a25a10a2ab5b0e3ed6762772fce0e0ad5331d637"
     },
     {
       "path": "scripts/phase9/release-install-wiring46.test.mjs",
@@ -1517,8 +1517,8 @@
     },
     {
       "path": "scripts/phase9/store-build-inspect.mjs",
-      "bytes": 20723,
-      "sha256": "7c53c1a4ab8f4f6dbb972efdce8aaa10d1cb8af7e2b0cb2939ef519d8babdee9"
+      "bytes": 20459,
+      "sha256": "255641b2f6899b5fa69a659e14202343863b0051c00618e2fbffbb71dffdaad0"
     },
     {
       "path": "scripts/release/full-app-j01/native_current46.mjs",

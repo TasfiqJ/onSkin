@@ -26,8 +26,8 @@ import {
 } from './ios-archive-privacy-evidence.mjs';
 import { auditIosReleaseCandidateCrossBinding } from './ios-release-candidate-cross-binding.mjs';
 import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
-import { IosPrivacyContractError, auditIosPrivacySource, proveCurrentNativeSource46 } from './ios-privacy-contract.mjs';
-import { CURRENT_LOCK46_SHA256, IOS_PRIVACY_LOCK_SUCCESSION46_PATH, assertCurrentNativeHead46 } from './ios-privacy-lock-succession46.mjs';
+import { IosPrivacyContractError, proveCurrentNativeSource46 } from './ios-privacy-contract.mjs';
+import { assertCurrentNativeHead46 } from './ios-privacy-lock-succession46.mjs';
 import {
   auditStoreOnlyResolvedApp,
   auditStoreOnlyRelease,
@@ -92,10 +92,8 @@ try {
 
 let iosPrivacySourceAudit = null;
 try {
-  const current46 = hash(read('package-lock.json')) === CURRENT_LOCK46_SHA256 ||
-    exists(IOS_PRIVACY_LOCK_SUCCESSION46_PATH);
-  if (current46) assertCurrentNativeHead46(process.cwd());
-  iosPrivacySourceAudit = current46 ? proveCurrentNativeSource46(process.cwd()).report : auditIosPrivacySource();
+  assertCurrentNativeHead46(process.cwd());
+  iosPrivacySourceAudit = proveCurrentNativeSource46(process.cwd()).report;
   block(
     errors,
     iosPrivacySourceAudit.status !== 'source_invalid',

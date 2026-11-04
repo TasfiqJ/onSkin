@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { lockSuccession23, nativeTree23, LOCK_SUCCESSION23_SHA256 } from './ios-privacy-lock-succession23.mjs';
 
 export const IOS_PRIVACY_LOCK_SUCCESSION46_PATH = 'docs/phase-9/ios-sdk-lock-succession46.v1.json';
-export const LOCK_SUCCESSION46_SHA256 = '44c5901a3e244d572836134ef5295a82377d5afd3f11a404ba47190bb981e5f3';
+export const LOCK_SUCCESSION46_SHA256 = 'b312b6366da1113d9d807cd4f31dd98f66b6f52ca8803b2aa0737e5f58bc2df3';
 export const CURRENT_LOCK46_SHA256 = '71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa';
 const BASE = '20c761fa5e3fbf427fb33ab319218bd0c1d022bd';
 const BASE_TREE = '23563c36af990df5fc74d6a79507cfc24a1ff8ac';
