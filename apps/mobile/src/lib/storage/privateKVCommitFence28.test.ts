@@ -15,9 +15,11 @@ import {
 import { getPrivateItem, updatePrivateItem } from './privateKV';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 
+type ChachaModule46 = typeof import('@noble/ciphers/chacha.js');
+
 const crypto28 = vi.hoisted(() => ({ failEncrypt: false }));
 vi.mock('@noble/ciphers/chacha.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@noble/ciphers/chacha.js')>();
+  const actual = await importOriginal<ChachaModule46>();
   return {
     ...actual,
     xchacha20poly1305: (key: Uint8Array, nonce: Uint8Array, aad?: Uint8Array) => {

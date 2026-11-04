@@ -49,6 +49,8 @@ import { LOCAL_PRIVATE_DATA_KEYS } from './localPrivateDataKeys';
 // privateKV, content-key adapter, domain order store and authority are real.
 // Only synthetic native storage/files/widget/notification and vendor ports are
 // supplied. No user data, device, telemetry service or remote transport is used.
+type EnvModule46 = typeof import('@/lib/env');
+
 const native = vi.hoisted(() => ({
   bytes: new Map<string, string>(),
   secure: new Map<string, string>(),
@@ -706,7 +708,7 @@ vi.mock('@/lib/storage/plaintextStaging', () => ({ scavengePlaintextStaging: asy
 } }));
 vi.mock('@/features/photos/photoDeleteRemoteCleanup', () => ({ erasePhotoDeleteRemoteCleanupForOwner: async () => undefined }));
 vi.mock('@/lib/env', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@/lib/env')>()),
+  ...(await importOriginal<EnvModule46>()),
   get isSupabaseConfigured() { return native.configuredForSelective; },
 }));
 

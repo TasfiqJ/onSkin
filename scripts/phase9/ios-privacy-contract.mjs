@@ -18,6 +18,7 @@ import plistModule from '@expo/plist';
 import xmldomModule from '@xmldom/xmldom';
 
 import { IOS_PRIVACY_LOCK_SUCCESSION23_PATH, CURRENT_LOCK23_SHA256, lockSuccession23, checkCurrentAuditSnapshot23 } from './ios-privacy-lock-succession23.mjs';
+import { IOS_PRIVACY_LOCK_SUCCESSION46_PATH, CURRENT_LOCK46_SHA256, lockSuccession46, checkCurrentAuditSnapshot46 } from './ios-privacy-lock-succession46.mjs';
 
 const plist = plistModule?.default ?? plistModule;
 const DOMParser = xmldomModule?.DOMParser ?? xmldomModule?.default?.DOMParser;
@@ -1567,11 +1568,20 @@ function lockSuccession13({ mapping, mappingFile, lock, lockFile, root }) {
 function mappingErrors({ mapping, mappingFile, baseline, lock, lockFile, root }) {
   const errors = [];
   let successor = null;
+  const current46 = lockFile.sha256 === CURRENT_LOCK46_SHA256 ||
+    existsSync(join(root.absolute, IOS_PRIVACY_LOCK_SUCCESSION46_PATH));
   const current23 = lockFile.sha256 === CURRENT_LOCK23_SHA256 ||
     (lockFile.sha256 !== ORIGINAL_LOCK13_SHA256 &&
      lockFile.sha256 !== '7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb' &&
      existsSync(join(root.absolute, IOS_PRIVACY_LOCK_SUCCESSION23_PATH)));
-  if (current23) {
+  if (current46) {
+    try {
+      successor = lockSuccession46({ mapping, mappingFile, lockFile, root,
+        readJson, historicalCheck: lockSuccession13, fail });
+    } catch (error) {
+      errors.push(issueFromError(error, IOS_PRIVACY_LOCK_SUCCESSION46_PATH));
+    }
+  } else if (current23) {
     try {
       successor = lockSuccession23({ mapping, mappingFile, lock, lockFile, root,
         readJson, readBoundedFile, checkedPath, historicalCheck: lockSuccession13, fail });
@@ -2211,8 +2221,8 @@ export function auditIosPrivacySource(options = {}) {
       packageLock: lockFile
         ? { path: IOS_PRIVACY_LOCKFILE_PATH, bytes: lockFile.bytes.length, sha256: lockFile.sha256 }
         : { path: IOS_PRIVACY_LOCKFILE_PATH, bytes: null, sha256: null },
-      ...(lockSuccessor ? { [lockSuccessor.kind === 'succession23' ? 'lockSuccession23' : 'lockSuccession13']: {
-        path: lockSuccessor.kind === 'succession23' ? IOS_PRIVACY_LOCK_SUCCESSION23_PATH : IOS_PRIVACY_LOCK_SUCCESSION13_PATH,
+      ...(lockSuccessor ? { [lockSuccessor.kind === 'succession46' ? 'lockSuccession46' : lockSuccessor.kind === 'succession23' ? 'lockSuccession23' : 'lockSuccession13']: {
+        path: lockSuccessor.kind === 'succession46' ? IOS_PRIVACY_LOCK_SUCCESSION46_PATH : lockSuccessor.kind === 'succession23' ? IOS_PRIVACY_LOCK_SUCCESSION23_PATH : IOS_PRIVACY_LOCK_SUCCESSION13_PATH,
         bytes: lockSuccessor.bytes.length,
         sha256: lockSuccessor.sha256,
       } } : {}),
@@ -2265,6 +2275,14 @@ export function proveCurrentNativeSource23(rootValue) {
   const report = auditIosPrivacySource({ root: root.absolute });
   const file = readJson(root, IOS_PRIVACY_LOCK_SUCCESSION23_PATH, MAX_MAPPING_BYTES);
   checkCurrentAuditSnapshot23(report, file.bytes);
+  return deepFreeze({ report, witness: file.value });
+}
+
+export function proveCurrentNativeSource46(rootValue) {
+  const root = checkedRoot(rootValue);
+  const report = auditIosPrivacySource({ root: root.absolute });
+  const file = readJson(root, IOS_PRIVACY_LOCK_SUCCESSION46_PATH, MAX_MAPPING_BYTES);
+  checkCurrentAuditSnapshot46(report, file.bytes);
   return deepFreeze({ report, witness: file.value });
 }
 
@@ -2330,6 +2348,9 @@ export function renderIosPrivacySourceAuditMarkdown(report) {
     `- Baseline: \`${report.inputs.baseline.path}\` - \`${report.inputs.baseline.sha256 ?? 'unavailable'}\``,
     `- Mapping: \`${report.inputs.mapping.path}\` - \`${report.inputs.mapping.sha256 ?? 'unavailable'}\``,
     `- Package lock: \`${report.inputs.packageLock.path}\` - \`${report.inputs.packageLock.sha256 ?? 'unavailable'}\``,
+    ...(report.inputs.lockSuccession46 ? [
+      `- Current source-only lock successor46 candidate (independent review required): \`${report.inputs.lockSuccession46.path}\` - \`${report.inputs.lockSuccession46.sha256}\``,
+    ] : []),
     ...(report.inputs.lockSuccession23 ? [
       `- Current source-only lock successor23: \`${report.inputs.lockSuccession23.path}\` - \`${report.inputs.lockSuccession23.sha256}\``,
     ] : []),

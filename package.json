@@ -8,8 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "node scripts/postinstall.mjs",
-    "postinstall:check": "node scripts/postinstall.mjs --check",
+    "postinstall": "node scripts/postinstall.mjs && node scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs",
+    "postinstall:check": "node scripts/postinstall.mjs --check && node scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs --check",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "test": "turbo run test",

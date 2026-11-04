@@ -207,29 +207,12 @@ jobs:
           node --test scripts/release/full-app-j01/security_completion46.test.mjs
           npm --workspace apps/mobile run test -- --passWithNoTests=false src/features/shelf/compactManual46.test.ts src/features/routine/connectedJourney46.test.ts src/features/settings/exportConfirmation46.test.ts src/features/routine/planHistory45Encrypted.test.ts src/features/settings/localPrivateDataFence44.test.ts src/lib/storage/privateKVSourceFence44.test.ts src/features/routine/planSourceFence44.test.ts src/features/shelf/manualDraftRecovery.campaign26.test.ts src/features/shelf/detailActionSheet.campaign26.test.ts
           node --test scripts/launch/formula-route-inventory39.test.mjs
-          node --input-type=module <<'C41_UI_TEST'
-          import { mkdtempSync, writeFileSync, unlinkSync, rmdirSync } from 'node:fs';
-          import { tmpdir } from 'node:os';
-          import { join, resolve } from 'node:path';
-          import { spawnSync } from 'node:child_process';
-          const directory = mkdtempSync(join(tmpdir(), 'optional-change41-vitest-'));
-          const config = join(directory, 'ui.config.mjs');
-          try {
-            const root = resolve('apps/mobile');
-            writeFileSync(config, 'export default ' + JSON.stringify({ root,
-              resolve: { alias: { '@': join(root, 'src') } },
-              test: { environment: 'node', include: ['src/features/today/OptionalChangePanel41.test.tsx', 'src/features/routine/PlanHistoryPanel45.test.tsx'] }
-            }) + ';\n');
-            const result = spawnSync(process.execPath, [resolve('node_modules/vitest/vitest.mjs'),
-              'run', '--config', config, '--passWithNoTests=false', '--reporter=verbose'],
-              { stdio: 'inherit', timeout: 120000 });
-            if (result.error) throw result.error;
-            process.exitCode = result.status ?? 1;
-          } finally {
-            unlinkSync(config);
-            rmdirSync(directory);
-          }
-          C41_UI_TEST
+          node scripts/release/full-app-j01/mounted_journey46.mjs
+          node --test scripts/release/full-app-j01/mounted_journey46.test.mjs
+          node --test scripts/e2e/formula-driver-coverage46.test.mjs
+          node --test scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs
+          node scripts/phase2/catalog-operator-cat08-cleanup40.test.mjs --behavioral
+          node scripts/docs/source-packet-supersession09.test.mjs
           node --test scripts/e2e/optional-change41.test.mjs
           node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs
           node scripts/launch/check-contract.mjs
@@ -240,28 +223,28 @@ jobs:
       - name: Verify tooling security backports
         run: npm run phase9:tooling-security:test
 
-      - name: Verify C46 installed native source compatibility and pinned historical reader
+      - name: Verify installed iOS native sources
         run: |
           npm run postinstall:check
           npm run phase5:expo-widgets-lifecycle:test
           npm run phase9:view-shot-privacy:test
-          node --test scripts/release/full-app-j01/native_completion46.test.mjs
-          node scripts/release/full-app-j01/native_completion46.mjs
-          # The original whole-lock C23 reader remains unchanged. Its own
-          # exact accepted fixture receives a normal install and full invocation.
-          c46_native_fixture="$(mktemp -d "$RUNNER_TEMP/c46-native-parent-XXXXXX")"
-          git clone --no-hardlinks --no-checkout "$GITHUB_WORKSPACE" "$c46_native_fixture"
-          git -C "$c46_native_fixture" checkout --detach 20c761fa5e3fbf427fb33ab319218bd0c1d022bd
-          (
-            cd "$c46_native_fixture"
-            npm ci --no-audit --no-fund
-            npm run phase9:ios-privacy-source-audit:test
-            npm run phase9:ios-privacy-source-audit:check
-            npm run phase9:store-build-inspect:check
-          )
+          npm run phase9:ios-privacy-source-audit:test
+          npm run phase9:ios-privacy-source-audit:check
           npm run phase9:ios-archive-privacy-evidence:test
           npm run phase9:release-candidate-git-contract:test
           npm run phase9:verification-wiring:test
+          npm run phase9:store-build-inspect:check
+
+
+      - name: Verify current native46 candidate parity and security output bounds
+        env:
+          C46_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs
+          node scripts/release/full-app-j01/native_current46.mjs
+          node --test scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs
+          node --test scripts/phase9/release-install-wiring46.test.mjs
+          python3 -I -B scripts/release/full-app-j01/workflow_context46.test.py
 
       - name: Verify store-only client delivery
         run: node scripts/optimization/store-only-release-audit-smoke.mjs

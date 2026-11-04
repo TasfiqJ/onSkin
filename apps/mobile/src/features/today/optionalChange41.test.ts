@@ -8,8 +8,10 @@ import {
 } from './optionalChange41';
 import { appendOptionalChangeEnvelope41, decodeOptionalChangeEnvelope41 } from './optionalChangeJournal41';
 
+type DigestModule46 = typeof import('@noble/hashes/sha256');
+
 vi.mock('@noble/hashes/sha256', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@noble/hashes/sha256')>();
+  const original = await importOriginal<DigestModule46>();
   return { ...original, sha256: Object.assign(vi.fn(original.sha256), original.sha256) };
 });
 

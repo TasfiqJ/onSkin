@@ -98,9 +98,23 @@ jobs:
           assert set(original_explicit).issubset(explicit_sql), 'ORIGINAL_SQL_COVERAGE_OMISSION'
           (out / 'explicit-sql-targets.json').write_text(json.dumps({'originalForced': original_explicit, 'currentForced': explicit_sql}, indent=2))
           run('semgrep', [sys.executable, '-I', '-S', '-B', '-c', SEMGREP_ENTRY, tools['semgrep'],
-              'scan', '--error', '--strict', '--oss-only', '--metrics=off', '--jobs=1', '--max-memory=768',
-              '--timeout=30', '--max-target-bytes=4194304', '--no-git-ignore', '--verbose',
+              'scan', '--error', '--strict', '--oss-only', '--metrics=off', '--jobs=1', '--max-memory=1536',
+              '--timeout=120', '--max-target-bytes=4194304', '--no-git-ignore', '--verbose',
               '--json', '--output=' + str(out / 'semgrep.json'), *configs, '.', *explicit_sql], snapshot, 2400)
+          run('workflow-context-controls', [sys.executable, '-I', '-B',
+              'scripts/release/full-app-j01/workflow_context46.test.py'], root)
+          context = out / 'candidate22-context'
+          run('workflow-context-materialization', [sys.executable, '-I', '-B',
+              'scripts/release/full-app-j01/workflow_context46.py', '--root', root,
+              '--output-directory', context, '--head', head, '--pr', '47'], root)
+          if results['workflow-context-materialization']['exit'] == 0:
+              # Additional, reversible context analysis of the complete frozen
+              # workflow. The original full-source scan/errors stay above.
+              run('semgrep-candidate22-context', [sys.executable, '-I', '-S', '-B', '-c', SEMGREP_ENTRY, tools['semgrep'],
+                  'scan', '--error', '--strict', '--oss-only', '--metrics=off', '--jobs=1', '--max-memory=1536',
+                  '--timeout=120', '--max-target-bytes=4194304', '--no-git-ignore', '--verbose',
+                  '--json', '--output=' + str(out / 'semgrep-candidate22-context.json'),
+                  *configs, context / 'candidate22-context.yml'], root, 1200)
           run('gitleaks', [tools['gitleaks'], 'detect', '--no-git', '--source=' + str(snapshot),
               '--config=' + str(root / 'scripts/phase9/security_acceptance/gitleaks.toml'), '--redact=100',
               '--exit-code=2', '--report-format=json', '--report-path=' + str(out / 'gitleaks-redacted.json')], snapshot)
@@ -109,13 +123,31 @@ jobs:
           run('npm-audit', ['node', tools['npm'], 'audit', '--audit-level=high', '--json'], root)
           run('npm-graph', ['node', tools['npm'], 'ls', '--all', '--json', '--long'], root)
           run('semantic-security', ['node', '--test', 'scripts/release/full-app-j01/security_completion46.test.mjs'], root)
-          run('historical-native-current-refusal', ['node', tools['npm'], 'run', 'phase5:check-native-config'], root)
-          run('historical-store-inspection-current-refusal', ['node', tools['npm'], 'run', 'phase9:store-build-inspect:check'], root)
-          run('current-native-technical', ['node', 'scripts/release/full-app-j01/native_completion46.mjs'], root)
+          run('bounded-expo-output', ['node', '--test', 'scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs'], root)
+          run('current-install-wiring', ['node', '--test', 'scripts/phase9/release-install-wiring46.test.mjs'], root)
+          historical_commit = '2cffa9e92be101af4e3b371f1815ec9f458d8da4'
+          historical_lock = subprocess.check_output(['git', '--no-replace-objects', 'show',
+              historical_commit + ':package-lock.json'], cwd=root)
+          historical_sha = hashlib.sha256(historical_lock).hexdigest()
+          assert historical_sha == '7656c2e6bf482df5a9bc94c9789816a40c5f2b5cfb30e2f10748411229c136cb'
+          (out / 'exact-history-object.json').write_text(json.dumps({
+              'commit': historical_commit, 'path': 'package-lock.json', 'sha256': historical_sha,
+              'qualification': 'AUTHENTICATED_HISTORICAL_INPUT_CURRENT_UNCHANGED_TESTS_NOT_OWNER_ADMISSION'}, indent=2))
+          run('exact-history-source-controls', ['node', '--test', '--test-concurrency=1',
+              'scripts/phase9/ios-privacy-source-audit.test.mjs'], root)
+          run('current-native-complete-config', ['node', tools['npm'], 'run', 'phase5:check-native-config'], root)
+          run('current-complete-store-inspection', ['node', tools['npm'], 'run', 'phase9:store-build-inspect:check'], root)
+          run('current-native-successor-tests', ['node', '--test', 'scripts/phase9/ios-privacy-lock-succession46.test.mjs'], root)
+          run('current-native-successor', ['node', 'scripts/release/full-app-j01/native_current46.mjs'], root)
           summary = {'head': head, 'qualification': 'CURRENT_SOURCE_TECHNICAL_ONLY_NOT_G97',
               'completeSnapshotFiles': len(rows), 'completeSnapshotBytes': sum(row['bytes'] for row in rows),
               'archiveContentSecurity': 'NOT_QUALIFIED: scanner format/rule/size limits remain; no source removed',
               'originalProtectedRulesAndToolsModified': False,
+              'coverageContinuation': {
+                  'originalSourceScanRetained': True, 'perRuleTimeoutSeconds': 120,
+                  'maxMemoryMiB': 1536, 'rulesDisabled': False,
+                  'contextAnalysis': 'SUPPLEMENTAL_REVERSIBLE_LITERAL_CONTEXT_NOT_ORIGINAL_WORKFLOW_EXECUTION',
+                  'nativeSuccessor': 'SOURCE_CANDIDATE_REVIEW_REQUIRED_NOT_OWNER_ADMISSION'},
               'originalOWASP': {'sha256': original_owasp, 'state': 'BLOCKED_RULE_CUSTODY', 'equivalenceGranted': False},
               'currentTechnicalOWASP': {'sha256': current_owasp, 'source': 'https://semgrep.dev/c/p/owasp-top-ten',
                   'capturedUTC': '2026-11-04', 'qualification': 'SEPARATE_C46_CURRENT_RULE_SNAPSHOT_NOT_ORIGINAL_G97'},

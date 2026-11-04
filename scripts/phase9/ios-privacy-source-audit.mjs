@@ -27,6 +27,7 @@ import {
 } from './ios-privacy-contract.mjs';
 
 import { IOS_PRIVACY_LOCK_SUCCESSION23_PATH, CURRENT_LOCK23_SHA256, checkCurrentAuditSnapshot23 } from './ios-privacy-lock-succession23.mjs';
+import { IOS_PRIVACY_LOCK_SUCCESSION46_PATH, CURRENT_LOCK46_SHA256, checkCurrentAuditSnapshot46, assertCurrentNativeHead46 } from './ios-privacy-lock-succession46.mjs';
 
 const SCRIPT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const MAX_GENERATED_OUTPUT_BYTES = 64 * 1024 * 1024;
@@ -284,6 +285,13 @@ export function runIosPrivacySourceAudit(argv = process.argv.slice(2), io = cons
   }
   const defaultOutputs = options.jsonPath === IOS_PRIVACY_AUDIT_JSON_PATH &&
     options.markdownPath === IOS_PRIVACY_AUDIT_MARKDOWN_PATH;
+  const current46Inputs = report.inputs.lockSuccession46 ||
+    report.inputs.packageLock.sha256 === CURRENT_LOCK46_SHA256 ||
+    existsSync(resolve(options.root, IOS_PRIVACY_LOCK_SUCCESSION46_PATH));
+  if (options.write && current46Inputs &&
+      (options.jsonPath === IOS_PRIVACY_AUDIT_JSON_PATH || options.markdownPath === IOS_PRIVACY_AUDIT_MARKDOWN_PATH)) {
+    throw new Error('CURRENT_NATIVE_SOURCE46_HISTORICAL_OUTPUTS_READ_ONLY');
+  }
   const current23Inputs = report.inputs.lockSuccession23 ||
     report.inputs.packageLock.sha256 === CURRENT_LOCK23_SHA256 ||
     existsSync(resolve(options.root, IOS_PRIVACY_LOCK_SUCCESSION23_PATH));
@@ -291,7 +299,12 @@ export function runIosPrivacySourceAudit(argv = process.argv.slice(2), io = cons
       (options.jsonPath === IOS_PRIVACY_AUDIT_JSON_PATH || options.markdownPath === IOS_PRIVACY_AUDIT_MARKDOWN_PATH)) {
     throw new Error('CURRENT_NATIVE_SOURCE23_HISTORICAL_OUTPUTS_READ_ONLY');
   }
-  if (options.check && defaultOutputs && report.inputs.lockSuccession23) {
+  if (options.check && defaultOutputs && report.inputs.lockSuccession46) {
+    assertCurrentNativeHead46(options.root);
+    const witnessOutput = normalizedOutputPath(options.root, IOS_PRIVACY_LOCK_SUCCESSION46_PATH);
+    checkCurrentAuditSnapshot46(report, readCheckedOutput(options.root, witnessOutput));
+    io.log('Current source-only native successor46 candidate snapshot is exact (archive_required; review required).');
+  } else if (options.check && defaultOutputs && report.inputs.lockSuccession23) {
     // Separate current snapshot; historical generated reports remain immutable.
     // The complete actual audit ran above, including all installed-source reads.
     const witnessOutput = normalizedOutputPath(options.root, IOS_PRIVACY_LOCK_SUCCESSION23_PATH);

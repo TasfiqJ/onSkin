@@ -1,0 +1,1600 @@
+{
+  "schemaVersion": 1,
+  "kind": "ios_privacy_lock_succession46_source_candidate",
+  "status": "NATIVE_LOCK_SUCCESSOR_SOURCE_CANDIDATE_REVIEW_REQUIRED",
+  "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+  "repository": "TasfiqJ/onSkin",
+  "acceptedBase": {
+    "commit": "20c761fa5e3fbf427fb33ab319218bd0c1d022bd",
+    "tree": "23563c36af990df5fc74d6a79507cfc24a1ff8ac",
+    "lockSHA256": "1485297ffa6cc20367a5f2fda35bc33e12dc11ef422c813f5f28a4e339cb3b95",
+    "rootPackageSHA256": "1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9"
+  },
+  "predecessor": {
+    "commit": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+    "tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020",
+    "lockSHA256": "71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa",
+    "rootPackageSHA256": "cc37998ca18d43326f11e47cc78f2b3aa62231b0381d1948578804190ec2269b"
+  },
+  "originalC23Profile": {
+    "witnessPath": "docs/phase-9/ios-sdk-lock-succession23.v1.json",
+    "witnessSHA256": "47392eb02fbb42e981020c30efb253f1df2f2ad7601cbdaf072f0f2e1003244b",
+    "completeLockSHA256": "1485297ffa6cc20367a5f2fda35bc33e12dc11ef422c813f5f28a4e339cb3b95",
+    "qualification": "The unchanged original C23 witness covers the accepted20c complete lock. It does not describe the actual deaf predecessor lock."
+  },
+  "sourceBinding": {
+    "method": "Authenticated immutable predecessor objects plus actual append-only HEAD/service-test-merge identity and finite exact current input hashes. Final whole-source tree/reader bytes are bound externally by the new separate C46 source seal.",
+    "selfHashExclusions": [
+      "scripts/phase9/ios-privacy-lock-succession46.mjs",
+      "docs/phase-9/ios-sdk-lock-succession46.v1.json"
+    ],
+    "excludedReadersRequireExternalFinalSourceSeal": true,
+    "independentAdmission": false
+  },
+  "candidateLock": {
+    "path": "package-lock.json",
+    "bytes": 574016,
+    "sha256": "71aef9b618c23b3d15c94251f5d9548d4a3c6a1a88af42471ed03ad3d0b062aa"
+  },
+  "rootPackage": {
+    "path": "package.json",
+    "bytes": 47431,
+    "sha256": "863a3b92e2d3cb1122b13efc2220d5311706d0d0ea6ab20b039cbbbf000735b9"
+  },
+  "mobilePackage": {
+    "path": "apps/mobile/package.json",
+    "bytes": 3007,
+    "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f"
+  },
+  "rootPackageTransition": {
+    "acceptedParent": {
+      "bytes": 47029,
+      "sha256": "1b5f3780b49cd4801aa5bebaeeed2ce16759ac8a2fd22e5946024e1c4b6f30b9"
+    },
+    "predecessor": {
+      "bytes": 47279,
+      "sha256": "cc37998ca18d43326f11e47cc78f2b3aa62231b0381d1948578804190ec2269b"
+    },
+    "closureChangedScripts": [
+      "postinstall",
+      "postinstall:check"
+    ],
+    "appendedHook": "node scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs"
+  },
+  "changedNodes": [
+    "",
+    "node_modules/@expo/fingerprint/node_modules/minimatch",
+    "node_modules/@isaacs/nonrecursive-glob-match",
+    "node_modules/@onskin/decode-uri-component-compat",
+    "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch",
+    "node_modules/decode-uri-component",
+    "node_modules/glob",
+    "node_modules/glob/node_modules/minimatch",
+    "node_modules/path-scurry",
+    "node_modules/path-scurry/node_modules/lru-cache",
+    "packages/decode-uri-component-compat",
+    "packages/decode-uri-component-compat/node_modules/decode-uri-component"
+  ],
+  "originalNodes": {
+    "": {
+      "name": "layerwell",
+      "version": "0.1.0",
+      "hasInstallScript": true,
+      "workspaces": [
+        "apps/*",
+        "packages/*"
+      ],
+      "devDependencies": {
+        "@expo/plist": "0.7.0",
+        "@xmldom/xmldom": "0.8.15",
+        "bplist-parser": "0.3.2",
+        "node-forge": "1.4.2",
+        "pngjs": "3.4.0",
+        "prettier": "^3.4.2",
+        "react-native": "0.86.3",
+        "react-native-reanimated": "4.5.1",
+        "react-native-worklets": "0.10.1",
+        "supabase": "2.117.0",
+        "turbo": "2.9.18",
+        "typescript": "~6.0.3",
+        "yaml": "2.9.0"
+      },
+      "engines": {
+        "node": ">=20"
+      }
+    },
+    "node_modules/@expo/fingerprint/node_modules/minimatch": {
+      "version": "10.2.5",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.5.tgz",
+      "integrity": "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "brace-expansion": "^5.0.5"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/@isaacs/nonrecursive-glob-match": null,
+    "node_modules/@onskin/decode-uri-component-compat": null,
+    "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch": {
+      "version": "10.2.5",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.5.tgz",
+      "integrity": "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==",
+      "dev": true,
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "brace-expansion": "^5.0.5"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/decode-uri-component": {
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.5.0.tgz",
+      "integrity": "sha512-1BiQVoK8C9gUbQU6NzAtO/tkz2qOFpEObMWpcFvhx4fYnj4Oc5yzaJN/LD36ihkVUdXyh5ZekzX+yM+ty/SrPg==",
+      "license": "MIT",
+      "engines": {
+        "node": ">=14.16"
+      }
+    },
+    "node_modules/glob": {
+      "version": "13.0.6",
+      "resolved": "https://registry.npmjs.org/glob/-/glob-13.0.6.tgz",
+      "integrity": "sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "minimatch": "^10.2.2",
+        "minipass": "^7.1.3",
+        "path-scurry": "^2.0.2"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/glob/node_modules/minimatch": {
+      "version": "10.2.5",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-10.2.5.tgz",
+      "integrity": "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "brace-expansion": "^5.0.5"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/path-scurry": {
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/path-scurry/-/path-scurry-2.0.2.tgz",
+      "integrity": "sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "lru-cache": "^11.0.0",
+        "minipass": "^7.1.2"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/path-scurry/node_modules/lru-cache": {
+      "version": "11.5.2",
+      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.2.tgz",
+      "integrity": "sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g==",
+      "license": "BlueOak-1.0.0",
+      "engines": {
+        "node": "20 || >=22"
+      }
+    },
+    "packages/decode-uri-component-compat": null,
+    "packages/decode-uri-component-compat/node_modules/decode-uri-component": null
+  },
+  "candidateNodes": {
+    "": {
+      "name": "layerwell",
+      "version": "0.1.0",
+      "hasInstallScript": true,
+      "workspaces": [
+        "apps/*",
+        "packages/*"
+      ],
+      "dependencies": {
+        "decode-uri-component": "file:packages/decode-uri-component-compat"
+      },
+      "devDependencies": {
+        "@expo/plist": "0.7.0",
+        "@xmldom/xmldom": "0.8.15",
+        "bplist-parser": "0.3.2",
+        "node-forge": "1.4.2",
+        "pngjs": "3.4.0",
+        "prettier": "^3.4.2",
+        "query-string": "7.1.3",
+        "react-native": "0.86.3",
+        "react-native-reanimated": "4.5.1",
+        "react-native-worklets": "0.10.1",
+        "supabase": "2.117.0",
+        "turbo": "2.9.18",
+        "typescript": "~6.0.3",
+        "yaml": "2.9.0"
+      },
+      "engines": {
+        "node": ">=20"
+      }
+    },
+    "node_modules/@expo/fingerprint/node_modules/minimatch": {
+      "version": "11.0.1",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-11.0.1.tgz",
+      "integrity": "sha512-t+Vn6DX4wPCxS23y03C0uhF7S1jpi1GfqPrnlEipCJaA2ykiNbMkVlDutZtmvLfRcUN6R8AYVlzTsQrT4RZoLQ==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "@isaacs/nonrecursive-glob-match": "^1.0.1",
+        "brace-expansion": "^5.0.12"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/@isaacs/nonrecursive-glob-match": {
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/@isaacs/nonrecursive-glob-match/-/nonrecursive-glob-match-1.0.3.tgz",
+      "integrity": "sha512-SI7kyKHq4XXDRozw+r9GlRZkia1ZkFrpLW98r2IC2Bpr8YkFGE3fvjzmxCG0x78A++69HmDNrDvSMYBZmHGpKA==",
+      "license": "BlueOak-1.0.0"
+    },
+    "node_modules/@onskin/decode-uri-component-compat": {
+      "resolved": "packages/decode-uri-component-compat",
+      "link": true
+    },
+    "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch": {
+      "version": "11.0.1",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-11.0.1.tgz",
+      "integrity": "sha512-t+Vn6DX4wPCxS23y03C0uhF7S1jpi1GfqPrnlEipCJaA2ykiNbMkVlDutZtmvLfRcUN6R8AYVlzTsQrT4RZoLQ==",
+      "dev": true,
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "@isaacs/nonrecursive-glob-match": "^1.0.1",
+        "brace-expansion": "^5.0.12"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/decode-uri-component": {
+      "resolved": "packages/decode-uri-component-compat",
+      "link": true
+    },
+    "node_modules/glob": {
+      "version": "14.0.2",
+      "resolved": "https://registry.npmjs.org/glob/-/glob-14.0.2.tgz",
+      "integrity": "sha512-vfMgTR2djMHPUchsJMLpZlYQvtjVL+mHpEr5wPpoCbQs2vr/FBNK+3Gnl9Ara1DSs4Aeg4eG9HiADb5/rkY/ZA==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "minimatch": "^11.0.0",
+        "minipass": "^7.1.3",
+        "path-scurry": "^3.0.0"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/glob/node_modules/minimatch": {
+      "version": "11.0.4",
+      "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-11.0.4.tgz",
+      "integrity": "sha512-/UJ1dEoVQTjPNDh6SGlUo+ueLMmoHTas4q+8yaAR/5t6nLAIiBDJtoYUh20IYleix7ehiQkgczb84PE3uzHkxg==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "@isaacs/nonrecursive-glob-match": "^1.0.3",
+        "brace-expansion": "^5.0.12"
+      },
+      "engines": {
+        "node": "20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/path-scurry": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/path-scurry/-/path-scurry-3.0.0.tgz",
+      "integrity": "sha512-1pTbQqH1wIwMi/eleQ5leFTTCkzFsPcgXNjwOA8YGGW/W4/kHT3dssE7Z6NH+zuqNLOzOB0uaD61yl7cAcVhgg==",
+      "license": "BlueOak-1.0.0",
+      "dependencies": {
+        "lru-cache": "^11.0.0",
+        "minipass": "^7.1.2"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/isaacs"
+      }
+    },
+    "node_modules/path-scurry/node_modules/lru-cache": {
+      "version": "11.5.3",
+      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.3.tgz",
+      "integrity": "sha512-U4N8FgzmWxc8k1VH8Kr6lQg18U7Fjvby6wXHVRX/ZZ7IwWbRMgrRbP0Wrb5q5NVinryp4SQampHKdvtecItxUg==",
+      "license": "BlueOak-1.0.0",
+      "engines": {
+        "node": "20 || >=22"
+      }
+    },
+    "packages/decode-uri-component-compat": {
+      "name": "@onskin/decode-uri-component-compat",
+      "version": "0.1.0",
+      "dependencies": {
+        "decode-uri-component": "0.5.1"
+      },
+      "engines": {
+        "node": ">=20.19.4"
+      }
+    },
+    "packages/decode-uri-component-compat/node_modules/decode-uri-component": {
+      "version": "0.5.1",
+      "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.5.1.tgz",
+      "integrity": "sha512-vWHQkXgg2cE3BB4rR0c+PYw9BCQzLoNIRMI7AunIkZst74tw/vpPp7VLoYtsR/cy1f55g3XDWUslfeCZjiZJyA==",
+      "license": "MIT",
+      "engines": {
+        "node": ">=14.16"
+      }
+    }
+  },
+  "unchangedNativeNodes": {
+    "node_modules/@react-native-google-signin/google-signin": {
+      "version": "16.1.2",
+      "resolved": "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-16.1.2.tgz",
+      "integrity": "sha512-1hf4pRmpnS5t0dHtqU72Q1FmWzsCZR2Sm3uVQbbfMKeNPl5TKjpAsP6F8QTZ9L+Q6Cnn9tL9BXpDCb1nyutdCQ==",
+      "license": "MIT",
+      "funding": {
+        "url": "https://universal-sign-in.com"
+      },
+      "peerDependencies": {
+        "expo": ">=52.0.40",
+        "react": "*",
+        "react-native": "*"
+      },
+      "peerDependenciesMeta": {
+        "expo": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/expo-image": {
+      "version": "57.0.5",
+      "resolved": "https://registry.npmjs.org/expo-image/-/expo-image-57.0.5.tgz",
+      "integrity": "sha512-jOm5lofaIKXhQ7i0Hz3I5JuNULw/aghmpIPZXddwQcEtw8+wUhlozq3M7LbsOrcsBEapcG4jFs85DsfuFoz1tQ==",
+      "license": "MIT",
+      "dependencies": {
+        "sf-symbols-typescript": "^2.2.0"
+      },
+      "peerDependencies": {
+        "expo": "*",
+        "react": "*",
+        "react-native": "*",
+        "react-native-web": "*"
+      },
+      "peerDependenciesMeta": {
+        "react-native-web": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/hermes-compiler": {
+      "version": "250829098.0.17",
+      "resolved": "https://registry.npmjs.org/hermes-compiler/-/hermes-compiler-250829098.0.17.tgz",
+      "integrity": "sha512-qG1PXzTEtriF6oQLZF3vyHhSMxOdW5h2TqqLri0rdpstPustd2fSvRZQMVAPdlhgFwBfYnj3OUZtiO6LjYsEFw==",
+      "license": "MIT"
+    },
+    "node_modules/react-native": {
+      "version": "0.86.3",
+      "resolved": "https://registry.npmjs.org/react-native/-/react-native-0.86.3.tgz",
+      "integrity": "sha512-JR5s3bM9ezud+Mw24GlNXNfthqPIKwrQgPPJcam+L97t2sKjjEavhCzBn+fyqZZRcM5+XlhYxpTxVkK7e1n38Q==",
+      "license": "MIT",
+      "dependencies": {
+        "@react-native/assets-registry": "0.86.3",
+        "@react-native/codegen": "0.86.3",
+        "@react-native/community-cli-plugin": "0.86.3",
+        "@react-native/gradle-plugin": "0.86.3",
+        "@react-native/js-polyfills": "0.86.3",
+        "@react-native/normalize-colors": "0.86.3",
+        "@react-native/virtualized-lists": "0.86.3",
+        "abort-controller": "^3.0.0",
+        "anser": "^1.4.9",
+        "ansi-regex": "^5.0.0",
+        "babel-plugin-syntax-hermes-parser": "0.36.0",
+        "base64-js": "^1.5.1",
+        "commander": "^12.0.0",
+        "flow-enums-runtime": "^0.0.6",
+        "hermes-compiler": "250829098.0.17",
+        "invariant": "^2.2.4",
+        "memoize-one": "^5.0.0",
+        "metro-runtime": "^0.84.3",
+        "metro-source-map": "^0.84.3",
+        "nullthrows": "^1.1.1",
+        "pretty-format": "^29.7.0",
+        "promise": "^8.3.0",
+        "react-devtools-core": "^6.1.5",
+        "react-refresh": "^0.14.0",
+        "regenerator-runtime": "^0.13.2",
+        "scheduler": "0.27.0",
+        "semver": "^7.1.3",
+        "stacktrace-parser": "^0.1.10",
+        "tinyglobby": "^0.2.15",
+        "whatwg-fetch": "^3.0.0",
+        "ws": "^7.5.10",
+        "yargs": "^17.6.2"
+      },
+      "bin": {
+        "react-native": "cli.js"
+      },
+      "engines": {
+        "node": "^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0"
+      },
+      "peerDependencies": {
+        "@react-native/jest-preset": "0.86.3",
+        "@types/react": "^19.1.1",
+        "react": "^19.2.3"
+      },
+      "peerDependenciesMeta": {
+        "@react-native/jest-preset": {
+          "optional": true
+        },
+        "@types/react": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@expo/ui": {
+      "version": "57.0.26",
+      "resolved": "https://registry.npmjs.org/@expo/ui/-/ui-57.0.26.tgz",
+      "integrity": "sha512-sEvRjKK08nCq4sXo5PjDckA9OBpxFokCXs5MakWlI1wT1gQNvyliWn/Dwic8XC6YPTN/TbnEp2X/SEduD9+I3Q==",
+      "license": "MIT",
+      "dependencies": {
+        "sf-symbols-typescript": "^2.1.0",
+        "vaul": "^1.1.2"
+      },
+      "peerDependencies": {
+        "@babel/core": "*",
+        "expo": "*",
+        "react": "*",
+        "react-dom": "*",
+        "react-native": "*",
+        "react-native-worklets": "*"
+      },
+      "peerDependenciesMeta": {
+        "@babel/core": {
+          "optional": true
+        },
+        "react-dom": {
+          "optional": true
+        },
+        "react-native-worklets": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/expo-widgets": {
+      "version": "57.0.27",
+      "resolved": "https://registry.npmjs.org/expo-widgets/-/expo-widgets-57.0.27.tgz",
+      "integrity": "sha512-TPISoZYKWb5+l3NcpM8r9OS3+0CydL1jA+pIinFX+/sCQ2BkbQuqS8xE17w1DzqYhC71CUpwM12hCxkhkqIfiQ==",
+      "license": "MIT",
+      "dependencies": {
+        "@expo/plist": "^0.8.1",
+        "@expo/ui": "~57.0.26"
+      },
+      "peerDependencies": {
+        "expo": "*",
+        "react": "*",
+        "react-native": "*"
+      }
+    },
+    "node_modules/react-native-view-shot": {
+      "version": "5.1.0",
+      "resolved": "https://registry.npmjs.org/react-native-view-shot/-/react-native-view-shot-5.1.0.tgz",
+      "integrity": "sha512-JZgElCD82aO+hejIF/leUzI7JufL9mgJ6ChzGWIcdZ2ajpaEvvSnvIcw0qD32XWkrbId8wfSbyz/4u/ulTQzQA==",
+      "license": "MIT",
+      "dependencies": {
+        "html2canvas": "^1.4.1"
+      },
+      "engines": {
+        "node": ">=20",
+        "npm": ">=10"
+      },
+      "peerDependencies": {
+        "react": ">=18.0.0",
+        "react-native": ">=0.76.0"
+      }
+    }
+  },
+  "unchangedInputs": [
+    {
+      "path": "apps/mobile/app.base.json",
+      "bytes": 4417,
+      "sha256": "4f4e9fc7aaf195f304add492dcdd0d43e2bea427874a9eff965aaef09ff3b5d9"
+    },
+    {
+      "path": "apps/mobile/app.config.js",
+      "bytes": 20198,
+      "sha256": "43d3617924bb46196a378ab85fb268a18c3ad8e39ebc485e17b4704703248a90"
+    },
+    {
+      "path": "apps/mobile/eas.json",
+      "bytes": 1545,
+      "sha256": "2ecf00304f5afb1ce6479bad83a0f9ce7b70600e7644680aa40a973e0751f6f3"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "bytes": 3007,
+      "sha256": "f2d3a5e838570cebbbbe2256148a9f13b667db8dc862971c9770f5cf7a48014f"
+    },
+    {
+      "path": "apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js",
+      "bytes": 11727,
+      "sha256": "97bdd94c58767d1ecfbe8754016ef29d1760732d9315dd543dd67628ae127915"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/progress.tsx",
+      "bytes": 33774,
+      "sha256": "84cd06022b5097d2681daaf78c386f1e1174a2a3310cf76090dbb034c0ad4ef9"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 37030,
+      "sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23"
+    },
+    {
+      "path": "apps/mobile/src/app/_layout.tsx",
+      "bytes": 5076,
+      "sha256": "439cc6d16d5d13c28a4cd2d334f75bb9d343abebed092c66c8c8545e64a603e4"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts",
+      "bytes": 6015,
+      "sha256": "959dc00e71eaf0053908c2ad3095177b9dab19d535ea21e3549f9d76ec1bd8b7"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx",
+      "bytes": 3261,
+      "sha256": "aef498d084e3233bba3ed43315193e52a3b308e5a6d0f37108cb66ea3c114611"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "bytes": 8740,
+      "sha256": "a23b04419c4e31c3327943eac96cb0176cacceb6730927e60269de5f12a0967b"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "bytes": 33702,
+      "sha256": "95ae7915a0cc2793f8697ba1e6bda72e20d66f64b3f20e6b2cc89f58ac968a83"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
+      "bytes": 14540,
+      "sha256": "15413517f6a7f19968125c688f594a3d70ed55daa734cc4b3651fc3406621e73"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+      "bytes": 10337,
+      "sha256": "3e147e5a80534d025dee08d6c64a04fde50207844ad8b4c32bbcc233e08597b8"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+      "bytes": 6863,
+      "sha256": "66efcd27ef8176127e85df249ae5b0427b7b37b99f6a62574ac3a7915e334f8d"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/barcode.ts",
+      "bytes": 7501,
+      "sha256": "6d30151a0e7c01cde010c77dcf26d91080c3ac93109d538e6a752cfadffec911"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/guidedSignals.ts",
+      "status": "ABSENT"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/CaptureAnalysisProvider.native.tsx",
+      "bytes": 555,
+      "sha256": "e49e3ef014e2b1951307675230d2eba6d017832e91ed4b96734ab2ed09b92b7f"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/CaptureAnalysisProvider.tsx",
+      "bytes": 143,
+      "sha256": "823f4c048bf116898be86925d5d6a4b2209dd9b615e6fee7110fce18a4642dbd"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/analyzePhotoLighting.ts",
+      "bytes": 5357,
+      "sha256": "baa4f7c5a295e50020c8271189d79d1571e737bc49c05f2a880397b77ce70a38"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/captureAnalysis.ts",
+      "bytes": 10467,
+      "sha256": "152e91e95c356d290549ca12769405f347a0c4512bec4c3ff7e83480e17b3b03"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/consent.ts",
+      "bytes": 1270,
+      "sha256": "a45ef22356ec2352568bd4ed847c88d96a4565357233054021d0a5d9c3422042"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "bytes": 44671,
+      "sha256": "e7183c615e31e5b84bed589e0d6c6c20d5139ac1e67abaff8e17cf781493dab7"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/mockSignals.ts",
+      "status": "ABSENT"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "bytes": 35592,
+      "sha256": "88d4720aa16d34161574e8138fa79244af78ef2432aa5286c479ad78d41f94e2"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/useCaptureAnalysis.ts",
+      "bytes": 5828,
+      "sha256": "c27361d4fbb6badd3e8daa7b7f9a02f28ae4f4cc4e223f9534786e8e5c0f0af5"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/useDetectedFaces.native.ts",
+      "bytes": 1278,
+      "sha256": "200d4cc580cd0813752003d21265b0f2a673bce13876d50bb1d6bd80359d98df"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/useDetectedFaces.ts",
+      "bytes": 543,
+      "sha256": "54e0bba85ba38a7a4b70b7fdeb75608d0606f283621f136b26a1a3995b32734c"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/accountDeletionRecovery.test.ts",
+      "bytes": 48840,
+      "sha256": "f73d5577d7c360307d494bded229ecbf757b182ac018f11db7afd5c7b9840a13"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/accountDeletionRecovery.ts",
+      "bytes": 28103,
+      "sha256": "bb301d3990e44f92f406b95f03c8846678ecdb5a805b846629247146e3ca1899"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateData.test.ts",
+      "bytes": 13878,
+      "sha256": "32c17ed335d912a04942de3e8ee8e27a9f71ad4c9c2501f072f662a4a081cd3d"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateData.ts",
+      "bytes": 8004,
+      "sha256": "82b7e2ce6f315e9e14cff5f3bc6f8f7ef2162c3e3635040bd8ace37daf9715be"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateDataKeys.ts",
+      "bytes": 4573,
+      "sha256": "b0a6f1f8cb776af0549f44dc44d5c7e6cfa2828e5c0d2f201ec48a983c695d8f"
+    },
+    {
+      "path": "apps/mobile/src/features/today/completionsStore.test.ts",
+      "bytes": 31521,
+      "sha256": "26f5616f33bb413563e9e25ba9957cae0178ffc803dc8ec6dfeb268ee56e166d"
+    },
+    {
+      "path": "apps/mobile/src/features/today/completionsStore.ts",
+      "bytes": 41398,
+      "sha256": "37dcac72b66838fefd05a3a783410e2705d990dc3a7212554a473f725348f9b4"
+    },
+    {
+      "path": "apps/mobile/src/features/today/routineProjection.test.ts",
+      "bytes": 7637,
+      "sha256": "c89b88c5a960fc77fec7508528b5d0f10699600a17bc917a7b4371f0d1f761ed"
+    },
+    {
+      "path": "apps/mobile/src/features/today/routineProjection.ts",
+      "bytes": 7275,
+      "sha256": "6fd3051255557caeaa3e92bb4c3ca29713c3dc2c620aad7fc4beaf17b0d998c0"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts",
+      "bytes": 11866,
+      "sha256": "fe83b689aab10197e2182dd7a1739889c4e5b3278a2ae51e25589c03945bcbc9"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx",
+      "bytes": 7497,
+      "sha256": "6bff134c0afb37c1c9eb5ea7bef662e24fae3ebfa28955dd45ad7e11f70b4efc"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/TodayWidget.ios.tsx",
+      "bytes": 10961,
+      "sha256": "1dd66b8d929b85d78c580462c7b468fe3d4fbf8245a31005274c6d2a66eee9e5"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/TonightActivity.ios.tsx",
+      "bytes": 6019,
+      "sha256": "9b0a990044c36aed513c1ce22503fee1c2a0b9906341f4cfdfc45a04eff75146"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/actionRegistry.test.ts",
+      "bytes": 14263,
+      "sha256": "7cd8e9de008e4a7689bcdb4856e3bc54dc77ed8d1c6c4a99c32eaaeafa2480b9"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/actionRegistry.ts",
+      "bytes": 21797,
+      "sha256": "82d83333eec9b2fe4e2108da2efb6c44247962fee7df743c9aca1c11ceb36755"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/contract.test.ts",
+      "bytes": 11167,
+      "sha256": "b075df444c5a818a54fc17a5ef862ac847b31db36fadeb23f00cdf2505aafeba"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/contract.ts",
+      "bytes": 14777,
+      "sha256": "30b301c08a56dc2ba830a7ebd1b4d506fb5704f30efb6bc26fc7a4d908fa2283"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/controllerCore.test.ts",
+      "bytes": 14670,
+      "sha256": "468d73e40a10bdbe2d07d7e7a03004800511baf200eb117b3e3a124978dd4aca"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/controllerCore.ts",
+      "bytes": 15274,
+      "sha256": "86765f983473dcaa6934f166450e08caec0f889fdd4cc7bb8099390f861c8171"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts",
+      "bytes": 9735,
+      "sha256": "529860dd43fe49b64a9db8d317b95f9758cfb7f1e0567792520eb6528059e9c6"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleCoordinator.ts",
+      "bytes": 7164,
+      "sha256": "ab1c66830cda9363df3d65cb35da475fc28d5f70c24c31b48b928032be7e011f"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts",
+      "bytes": 23536,
+      "sha256": "138c3b432e773e0a501938edae8ed6a956aa3b5aba796a06b2465448aa641184"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.test.ts",
+      "bytes": 28407,
+      "sha256": "22d7775932d0c278a9c51536dd48b588e0710513bff7307476df33db1df23dfd"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.ts",
+      "bytes": 709,
+      "sha256": "f9ed010986a993bb429a30a234d2bcc8aefe5f8bce3f9a580dcb0a62443f33a4"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycle.ios.ts",
+      "bytes": 7206,
+      "sha256": "d0946321228ee5247083fdea3749f0a310cbed0cc3adf08889bd3443dcfa78ef"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycle.ts",
+      "bytes": 2570,
+      "sha256": "0ecc49ad825975855551a777221e656e7fa102e10c63373c4994d4e3a6f77a96"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts",
+      "bytes": 8073,
+      "sha256": "ec0f23430d14c6c669513db771a5d7aed626839535bb27872eb0134d6dfdec29"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts",
+      "bytes": 10173,
+      "sha256": "2ec44850621de46c3d9281fe83c813ab50b858b7270aa06acd4a1db8ecaa8429"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.ts",
+      "bytes": 13864,
+      "sha256": "1aaa8a94df26295c8a481a45f3a7cc0ed63667e548cb4525e86a59a88b852c43"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeOutboxModel.test.ts",
+      "bytes": 9995,
+      "sha256": "ba15ba05b87b92465a6db1aecdb85619f195b51588960cef6ffcfa860d431da3"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeOutboxModel.ts",
+      "bytes": 14365,
+      "sha256": "2db73d4539a00dafde867f44867a1cb7a5fefa8886532b613a6ffaf366e38606"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/ownerAuthority.test.ts",
+      "bytes": 5295,
+      "sha256": "a360db685b2e7e62d74c35328ddd4af48d4541908da32a69fe47139b000c534c"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/ownerAuthority.ts",
+      "bytes": 6311,
+      "sha256": "604a4f1948d955d051991962946b779575c4281a6f1b6b284627176f8c42eebb"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/runtimeGate.test.ts",
+      "bytes": 2749,
+      "sha256": "ab36b67f279f124cd5e7bc617e9c8c0130e65443923992414788ada0c43f88ba"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/runtimeGate.ts",
+      "bytes": 1822,
+      "sha256": "942a2d9d0814b66a81c88f7efd3fa6f42728e04668710cd96c3ff19f9be1de62"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/widgetViews.test.ts",
+      "bytes": 15996,
+      "sha256": "b4a2a8b9057d0ed171b5dc583198241a05d33f5f97e2cc2d8d82a49fcec444b5"
+    },
+    {
+      "path": "apps/mobile/src/lib/appConfig.test.ts",
+      "bytes": 46205,
+      "sha256": "2a664f84bf126407fc530f495bdf7a79ec2814dcb25b26ee5fb6d2c203261ef9"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
+      "bytes": 107004,
+      "sha256": "3dfb67099781d19f53a767c54e9b3c963454338dd0129833989da3a258a39960"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts",
+      "bytes": 3206,
+      "sha256": "f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts",
+      "bytes": 4294,
+      "sha256": "84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.ts",
+      "bytes": 2303,
+      "sha256": "6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c"
+    },
+    {
+      "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
+      "bytes": 6734,
+      "sha256": "4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6"
+    },
+    {
+      "path": "apps/mobile/src/lib/iap/revenuecat.ts",
+      "bytes": 41621,
+      "sha256": "7c330b4fc03ca8b9f52d03e31e20f84013d3a5da85758aebcb89e3c22e595319"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "bytes": 10218,
+      "sha256": "0230dc291dbd3546de017a812e1444a5f4a131f36fec045c7a9a0347e89e2e13"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "bytes": 4739,
+      "sha256": "585ace58669c5d3a07dc275a2ebb85707ca70820f8fa1d608b271b335bab9bf2"
+    },
+    {
+      "path": "apps/mobile/src/lib/supabase/client.ts",
+      "bytes": 7619,
+      "sha256": "c200f014b9edf07064523fe97da18d4020e5404f0ad364d01cb3aa6fb33322c5"
+    },
+    {
+      "path": "docs/DEVICE_SUPPORT_POLICY.md",
+      "bytes": 4075,
+      "sha256": "5c1baa8e38fd346cae314f78b09b61d3db6d2994bea7eef438ccef6083a0eb45"
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "bytes": 10688,
+      "sha256": "8e0bbeab7bc031fa0def02f3dd79f30ceb73d588d873c0870369abb72f7debaa"
+    },
+    {
+      "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+      "bytes": 10413,
+      "sha256": "109f35402903500e5bc61054e52bf8f0dbe090d3ade395d96303ea008bb7bc50"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 540330,
+      "sha256": "1525743f161ec725f2fe1a812b1e619c1f4ac12dbd60a8a2a089c1c5429cdedf"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/provenance12.json",
+      "bytes": 23489,
+      "sha256": "746d086a72edd7b71094c5ecbf4cc98af24162b46a40df6e9a9bcb1f3ddf66b8"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest.attestations.json",
+      "bytes": 14629,
+      "sha256": "f4056213b45c9eae8979d444cd28f611acb68f5dda890ca6ad19e8750a0862ed"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest.registry.json",
+      "bytes": 5800,
+      "sha256": "6f6dd06b4b6f0611d655c76981a318a5f2ddf6e5ec032056876751c754fdbcc0"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_expect.attestations.json",
+      "bytes": 14442,
+      "sha256": "131db9f0486fef0aced7222f14fbd68cff41b5de268cae4caa25af93f79b2e2c"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_expect.registry.json",
+      "bytes": 2267,
+      "sha256": "0528bfe881bab6121b389e1ab88a26bf43208027e80016c43a5971b391f4f199"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_mocker.attestations.json",
+      "bytes": 14332,
+      "sha256": "f1fec34a180263b3d25b48cddafe624f554a2a9328f54a8ee6550477911007c3"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_mocker.registry.json",
+      "bytes": 3095,
+      "sha256": "8db5c03250edf5280c4ba695058beaa9daa2b6ebd2e115de5c4c615889effb58"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_pretty-format.attestations.json",
+      "bytes": 14470,
+      "sha256": "ad9b2480c01dc6280c58352ee203f5725ad891803a09899804f3f1e87b1d835a"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_pretty-format.registry.json",
+      "bytes": 2305,
+      "sha256": "351069ed91e3ef52bc958fa7da8da7326b09865cda981aa37ee8c29c8b6f14f4"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_runner.attestations.json",
+      "bytes": 14289,
+      "sha256": "81e17a33fc8574f58986bfb2fd61eae2f2666c24cef4780263ea95bb6eab9b0d"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_runner.registry.json",
+      "bytes": 2240,
+      "sha256": "ce975479304c71711463b4a47545256fb37eec3f466f8191aa8a5983726c4385"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_snapshot.attestations.json",
+      "bytes": 14297,
+      "sha256": "df462c7a2a8160c75f6915ffb8adc513a32947b261d5bfa71927fc7301bdc5e4"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_snapshot.registry.json",
+      "bytes": 2415,
+      "sha256": "e1224551dfdd89b4dee9ff0a57117bb29a75b9f6e64e3a94be06feb4aaca44c6"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_spy.attestations.json",
+      "bytes": 14473,
+      "sha256": "3afab11c4c373d1a4db01733491e50cc9449679fa9dae86643920ac41988fe57"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_spy.registry.json",
+      "bytes": 2108,
+      "sha256": "f05eb9a7f06b3c45f150c2735e48feaa79a65a217f247f29fa9e2373c1f2ebe9"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_utils.attestations.json",
+      "bytes": 14379,
+      "sha256": "7f65885d98983b866ce73ddf5908e64a09cd6d5cad0d19c790640ec40efe6a4e"
+    },
+    {
+      "path": "docs/brain/contracts/SECURITY-12/registry/vitest_utils.registry.json",
+      "bytes": 3249,
+      "sha256": "5ff2d396f4bd7c27566d00dfdaae96f8d29a6a410d09443db3263c7e0002afb8"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.json",
+      "bytes": 299477,
+      "sha256": "d6780e5d700152200cdc68759b9358403b6304dc5ebd230f44cce321788200c0"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.md",
+      "bytes": 2244721,
+      "sha256": "a83cb0e8cfbfb3aae9ab087c17b77844a9ea32ee9bf465fcfb85dc1008f4c3dd"
+    },
+    {
+      "path": "docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md",
+      "bytes": 17600,
+      "sha256": "bf252ea4d74dc02eaf5308ed7438afb4a7c1bbaee0dfd9d0f34e4c1696a86fa1"
+    },
+    {
+      "path": "docs/hugeToDo/launch-contract.json",
+      "bytes": 7437,
+      "sha256": "eafd19f08106f9f62e9cb8b21252fdad1eaa9671e1faf394060577dc8115048f"
+    },
+    {
+      "path": "docs/phase-5/camera-lifecycle-evidence-runbook.md",
+      "bytes": 16625,
+      "sha256": "4abf089430be0a499d10d81e6d177bc80cf4ab375674a298eee26919c1125544"
+    },
+    {
+      "path": "docs/phase-5/device-qa-checklist.md",
+      "bytes": 22056,
+      "sha256": "72c44416b2798df57be519c2c0f803f647fb10370e89e33ce0e57a67c0998b9f"
+    },
+    {
+      "path": "docs/phase-5/native-build-runbook.md",
+      "bytes": 18426,
+      "sha256": "c8a906aafeb5a8c1b56ab4af8b7df71a6ac96854f38fcb1b6a13a4ed279f5fa4"
+    },
+    {
+      "path": "docs/phase-5/performance-evidence-runbook.md",
+      "bytes": 5098,
+      "sha256": "1b780916e7a7c713a92daac27c5f02f779331595e03a13e010ae330238f31512"
+    },
+    {
+      "path": "docs/phase-5/performance-evidence.template.json",
+      "bytes": 6663,
+      "sha256": "003585197223ec35920d0d54f822f93e1eb2db68f745e4248cb8c0055395f2df"
+    },
+    {
+      "path": "docs/phase-5/phase-5-exit-review.md",
+      "bytes": 12055,
+      "sha256": "f14790bb6441647e0a4ab6b1aecaf8a8b1e05406ee0d90f56352b92d9283b792"
+    },
+    {
+      "path": "docs/phase-5/widget-lifecycle-evidence.template.json",
+      "bytes": 1817,
+      "sha256": "3fc18b04333f85bcdc1344dd9553b97d55818692de0046ba96e9f98435cc2936"
+    },
+    {
+      "path": "docs/phase-9/apple-ios-privacy-baseline.json",
+      "bytes": 5479,
+      "sha256": "fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-lock-succession13.v1.json",
+      "bytes": 35108,
+      "sha256": "824d99e0f57bee122af6b89f640c1bfe401b367b8f7211b1c0abf61b5a249409"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-lock-succession23.v1.json",
+      "bytes": 17026,
+      "sha256": "47392eb02fbb42e981020c30efb253f1df2f2ad7601cbdaf072f0f2e1003244b"
+    },
+    {
+      "path": "docs/phase-9/ios-sdk-package-mapping.json",
+      "bytes": 8350,
+      "sha256": "9821f06f2ae17b76b3f633eee24ef95dd36f39f13ca6770235e3f9d8bd2de246"
+    },
+    {
+      "path": "docs/release/full-app-j01/dependency-succession12.v1.json",
+      "bytes": 19025,
+      "sha256": "5f3ac49ea52a6e4b955bb31495324f157d2d5a85d0d55ca1b66216e7faa565a2"
+    },
+    {
+      "path": "node_modules/@expo/ui/expo-module.config.json",
+      "bytes": 391,
+      "sha256": "0d218a854842b89de32c27c1deb026d7af198fb0d706975d2c21a80d7bc905c9"
+    },
+    {
+      "path": "node_modules/@expo/ui/ios/ExpoUI.podspec",
+      "bytes": 833,
+      "sha256": "40ccef94d3947a4b8c181459637f205c556f36ef028fa1cd6629b387f89aca6d"
+    },
+    {
+      "path": "node_modules/@expo/ui/package.json",
+      "bytes": 3735,
+      "sha256": "61207a43cdfbb1d3f727cd2018f483bcd8b947767614d511c4eaf02adfd64e84"
+    },
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin/RNGoogleSignin.podspec",
+      "bytes": 791,
+      "sha256": "50e4c8ec91bb448f4cb5d7dd291b0baea940607a5d3cb6230a96958cb9bb6493"
+    },
+    {
+      "path": "node_modules/@react-native-google-signin/google-signin/package.json",
+      "bytes": 4397,
+      "sha256": "550ee99143b8098cd2ba673a8487fc8b5eca79880f64541d3ddb5393cfd5f2b3"
+    },
+    {
+      "path": "node_modules/expo-image/ios/ExpoImage.podspec",
+      "bytes": 1561,
+      "sha256": "de1c67fa42920094c4175f04a3900f6cdc9f260c49a35b7e3e33106c2e5963af"
+    },
+    {
+      "path": "node_modules/expo-image/package.json",
+      "bytes": 1431,
+      "sha256": "49a7b898a180ab27ef94ebd9510db681c09a7a40f6cb9830632c8e9749038bdc"
+    },
+    {
+      "path": "node_modules/expo-image/spm.config.json",
+      "bytes": 2044,
+      "sha256": "51afff0024dd49640df1bc9f3d800c64cc11570ab3ee13c8b39c1f28f78ab6f0"
+    },
+    {
+      "path": "node_modules/expo-widgets/expo-module.config.json",
+      "bytes": 165,
+      "sha256": "c3cc1eede8dfb77c352b5d7452d8338cf999f37a9d9d63510290ae13183dd0e5"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/ExpoWidgets.podspec",
+      "bytes": 1933,
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift",
+      "bytes": 75303,
+      "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LiveActivity.swift",
+      "bytes": 4673,
+      "sha256": "14edb955c8f0ad15f72d9770298d9bdfb9a036f8d92f88c3b51d7f2e3cbd540e"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/LiveActivityFactory.swift",
+      "bytes": 3588,
+      "sha256": "f888fc22dd8b805b5ce2ade067479afcd6e894860e5cdffdf8ebce07b6658999"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/WidgetObject.swift",
+      "bytes": 1324,
+      "sha256": "2ccab1755d4889c93def15e2fa2715672d6f578fb982f81824496c749e5bf83d"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/AppIntent.swift",
+      "bytes": 5224,
+      "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/EntryView.swift",
+      "bytes": 1562,
+      "sha256": "67df36562fd9d2d64069ae9ad7b300f88717599ce492febdb5ba61fda38f0450"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/TimelineProvider.swift",
+      "bytes": 1538,
+      "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/Utils.swift",
+      "bytes": 4881,
+      "sha256": "76887d9a3f1e076785d330dfdd6f2069df439c592b74b7e89812b0383205bd56"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/Widgets/WidgetLiveActivity.swift",
+      "bytes": 3954,
+      "sha256": "5f1817d220a63b9a64faf2d7cc06803458655dcf34de160cff279e241e451f89"
+    },
+    {
+      "path": "node_modules/expo-widgets/ios/WidgetsModule.swift",
+      "bytes": 7675,
+      "sha256": "3213cc92fff7922bdc60a8e1b94ecc84a0b3729a323629ca9b25fd964b92421c"
+    },
+    {
+      "path": "node_modules/expo-widgets/package.json",
+      "bytes": 1429,
+      "sha256": "c8f031b0a73590726722b16cdcbbffa23348a875b998b92734402e49a2100cfe"
+    },
+    {
+      "path": "node_modules/hermes-compiler/package.json",
+      "bytes": 312,
+      "sha256": "a03d51044c32ad7fd4486453e56c8b9f53a9b8a6a1d9958f81fdb5f39d69fc1c"
+    },
+    {
+      "path": "node_modules/react-native-view-shot/ios/PrivacyInfo.xcprivacy",
+      "bytes": 325,
+      "sha256": "7a411ba0c8b0c43834b84b23b3959aa98df450c52db9e0a4efb4ba1b2786f0c9"
+    },
+    {
+      "path": "node_modules/react-native-view-shot/package.json",
+      "bytes": 1981,
+      "sha256": "8a855362fff9875b808c98e103d6e5f0115aa6746cbd1c4dbbb6f0ae7435dd55"
+    },
+    {
+      "path": "node_modules/react-native/package.json",
+      "bytes": 6334,
+      "sha256": "416224a4e7caf2ee1f8f9bead8508d0b608feed745371ce0a8f0e2cafa16d144"
+    },
+    {
+      "path": "node_modules/react-native/sdks/.hermesversion",
+      "bytes": 14,
+      "sha256": "5bdde0c2a3bf8b9a6df20ed87130fdff5945f8f32d8152165b8af8b14ff0ebab"
+    },
+    {
+      "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
+      "bytes": 8851,
+      "sha256": "ddfe34594624ed40a6299fd00a7105bdef0967ed73aad256ae596963b439dbc0"
+    },
+    {
+      "path": "node_modules/react-native/sdks/hermes-engine/version.properties",
+      "bytes": 65,
+      "sha256": "3b83e21d08ae2c2c1e77e747545f89f381020d5cb11d8496b215cbffa900a750"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/index.cjs",
+      "bytes": 199,
+      "sha256": "3253ddb31776c192ca81885e8d0e0ed003ce5d6de199f14670cdf93b2ccd0265"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/index.d.ts",
+      "bytes": 94,
+      "sha256": "5575ace05dad79d9b054a0c5575bb9b31e9a72d191f76c8a0927fbb36bba896e"
+    },
+    {
+      "path": "packages/decode-uri-component-compat/package.json",
+      "bytes": 312,
+      "sha256": "016eb07ee88994e7214270c9bc09e9c8b503cdfa2254096a9979995e54773bfe"
+    },
+    {
+      "path": "packages/types/package.json",
+      "bytes": 398,
+      "sha256": "ef2fb4ad105532c389467886cc2035de955078f4ae1a8b08db122241592b62c2"
+    },
+    {
+      "path": "packages/types/src/client-database.types.contract.ts",
+      "bytes": 5303,
+      "sha256": "7244362b2f003790a82c729f28ccea857d72b11945e164d8f70d8f798fbc3e90"
+    },
+    {
+      "path": "packages/types/src/client-database.types.ts",
+      "bytes": 3935,
+      "sha256": "14c621f2dcb7e897cc7571c4efe1b049434a2d2e1d1e296bf589984177997ded"
+    },
+    {
+      "path": "packages/types/src/database.types.ts",
+      "bytes": 232240,
+      "sha256": "2b475803f0ea143681de2912637e61b1cf26e271043a84a1692e7d1d6b87a795"
+    },
+    {
+      "path": "packages/types/src/index.ts",
+      "bytes": 19452,
+      "sha256": "03fbf4e84f93a35a8ea72da9c69f184f06ce0b3a9e5bef0fc4569859d2f22c91"
+    },
+    {
+      "path": "scripts/e2e/human-e2e-manifest.mjs",
+      "bytes": 367085,
+      "sha256": "d133c138a15f2b6a3318def243e940640855a912deeb3cac2f8ec002e74ea6fc"
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "bytes": 16053,
+      "sha256": "d7feed5a24c5605c2ff62400a856197e99d5b957fa95a50699ea967306df74c5"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract-lib.mjs",
+      "bytes": 2716,
+      "sha256": "36e1cbd27f095781538429fcf22db56395564dceb94117fc012f8bc3426ad78d"
+    },
+    {
+      "path": "scripts/phase2/database-types-contract.test.mjs",
+      "bytes": 6480,
+      "sha256": "7331c22fb462e89a5241ac417687b05ba47d707eecaf244f3ffa0f6b0b122e61"
+    },
+    {
+      "path": "scripts/phase2/supabase-rls-smoke.mjs",
+      "bytes": 18269,
+      "sha256": "03e2c7ecffa214c030de4f168f3600a7b149354a17ceec76db16ee563420fcc9"
+    },
+    {
+      "path": "scripts/phase5/build-device-qa-packet.mjs",
+      "bytes": 73071,
+      "sha256": "1332172977272d47d0868242d91df7d7d19d3d0b8804344948553fd3131d6df3"
+    },
+    {
+      "path": "scripts/phase5/camera-lifecycle-evidence-contract.mjs",
+      "bytes": 80984,
+      "sha256": "c9d71aefaafbdcebd0ed75ed27d1124abf09407996e412c57f2f9dce9d27887c"
+    },
+    {
+      "path": "scripts/phase5/check-camera-lifecycle-evidence.mjs",
+      "bytes": 10286,
+      "sha256": "7c2fc6522c9dcfd8b94a84d2e09f513a79ea358fed3b9c8b998564674c3c123e"
+    },
+    {
+      "path": "scripts/phase5/check-performance-evidence.mjs",
+      "bytes": 6448,
+      "sha256": "326dfec8c3a2806bda81140b7d367e6a0f3efc03d4e405df52edd65b24969c0f"
+    },
+    {
+      "path": "scripts/phase5/check-widget-lifecycle-evidence.mjs",
+      "bytes": 7250,
+      "sha256": "0a798ae02d8b418d9f880f9ba847278c2f39e75d0d7fc3ae482afadf65d0d4a9"
+    },
+    {
+      "path": "scripts/phase5/device-qa-packet-smoke.mjs",
+      "bytes": 100396,
+      "sha256": "78a15d417b026abd68cb7944e111d6192ed0864ed2735ddae50ceb9f1ef67ba6"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "bytes": 5224,
+      "sha256": "4ecf0709fb2c62982cc7c52b375c160a2a9f45916ef9e40e3914f0579fcecb29"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/EntryView.swift",
+      "bytes": 1562,
+      "sha256": "67df36562fd9d2d64069ae9ad7b300f88717599ce492febdb5ba61fda38f0450"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/ExpoWidgets.podspec",
+      "bytes": 1933,
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "bytes": 75303,
+      "sha256": "b49a743650facb13f2d1d3ae583d02f3e60f38feec11937accbbd03be9e34f30"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LiveActivity.swift",
+      "bytes": 4673,
+      "sha256": "14edb955c8f0ad15f72d9770298d9bdfb9a036f8d92f88c3b51d7f2e3cbd540e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LiveActivityFactory.swift",
+      "bytes": 3588,
+      "sha256": "f888fc22dd8b805b5ce2ade067479afcd6e894860e5cdffdf8ebce07b6658999"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/TimelineProvider.swift",
+      "bytes": 1538,
+      "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/Utils.swift",
+      "bytes": 4881,
+      "sha256": "76887d9a3f1e076785d330dfdd6f2069df439c592b74b7e89812b0383205bd56"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/WidgetLiveActivity.swift",
+      "bytes": 3954,
+      "sha256": "5f1817d220a63b9a64faf2d7cc06803458655dcf34de160cff279e241e451f89"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/WidgetObject.swift",
+      "bytes": 1324,
+      "sha256": "2ccab1755d4889c93def15e2fa2715672d6f578fb982f81824496c749e5bf83d"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/WidgetsModule.swift",
+      "bytes": 7675,
+      "sha256": "3213cc92fff7922bdc60a8e1b94ecc84a0b3729a323629ca9b25fd964b92421c"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
+      "bytes": 22589,
+      "sha256": "e120caae4c8b367bb1e2bdb69f652ed355a7e25ade21fe8e67ad743723a5149f"
+    },
+    {
+      "path": "scripts/phase5/ios-extension-contract.mjs",
+      "bytes": 10601,
+      "sha256": "c844fc47265a7e20f4c68bf6f0f824e9855049b50fc3095cf119dd3b7d4436e3"
+    },
+    {
+      "path": "scripts/phase5/ios-extension-contract.test.mjs",
+      "bytes": 5480,
+      "sha256": "b490a8dfdcf085a7b886b9e8861ae49c36fe0b604e9d76a9d67b3415aabf94d9"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "bytes": 16969,
+      "sha256": "6367427b96fe641d376ba9c6742cfb5b60b5ac1988bd4fce8831dbd90b94e83c"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
+      "bytes": 10192,
+      "sha256": "764d4e1ae88747600b3e35b3ed1bced181465052a0a6c4ff8889a3ca3b572c1c"
+    },
+    {
+      "path": "scripts/phase5/performance-evidence-contract.mjs",
+      "bytes": 16263,
+      "sha256": "4f66af8bf2df062235913435c4fe31dbbcced88d8c24c5cb014c8dd204c16bc4"
+    },
+    {
+      "path": "scripts/phase5/performance-evidence-smoke.mjs",
+      "bytes": 12065,
+      "sha256": "cd5e4aa13ed5438ea856d5e8599215954224a5616818b0b3cbf17a2857c3e8a1"
+    },
+    {
+      "path": "scripts/phase5/resolve-ios-extension-config.mjs",
+      "bytes": 1012,
+      "sha256": "4e5cc6f1ef16034e8fa3ee2d42abc85725bcd498b571fc46efa92378999d571d"
+    },
+    {
+      "path": "scripts/phase5/widget-lifecycle-evidence-contract.mjs",
+      "bytes": 34280,
+      "sha256": "b5cd96596c331b63d47f841dbd08cdfeb649c63a6254ff2667f78b8965955a25"
+    },
+    {
+      "path": "scripts/phase5/widget-lifecycle-evidence-smoke.mjs",
+      "bytes": 28474,
+      "sha256": "d68ac46e94fe828f391b0d032cce8d2134b3a3bb9ce03333939e872ee1190096"
+    },
+    {
+      "path": "scripts/phase5/widget-privacy-manifest.test.mjs",
+      "bytes": 9641,
+      "sha256": "d0b497873405ee539e1bb4a257b43f0480998d846b9c6d7f481be827abd06fdc"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-lock-succession23.mjs",
+      "bytes": 7443,
+      "sha256": "31889e151a231617eafd6bcf3ce8bce3330c542b9807c83ec39974cb47621d60"
+    },
+    {
+      "path": "scripts/phase9/lib.mjs",
+      "bytes": 23708,
+      "sha256": "af7a0654a42e43678ee3eb44311d780dafa28710f92580017396347f259929e7"
+    },
+    {
+      "path": "scripts/phase9/live-supabase-adversarial.mjs",
+      "bytes": 105033,
+      "sha256": "44418ee563f473d4e134acc5d02bc1829150ea51f7f0a55e3f00d1fe4bb20ff6"
+    },
+    {
+      "path": "scripts/phase9/patch-react-native-view-shot-privacy.mjs",
+      "bytes": 16707,
+      "sha256": "45f4e5fe7ac3b6e29cc0ac8f45db8d2d143a8f866843faa487b2ac9db9a6624e"
+    },
+    {
+      "path": "scripts/phase9/rls-adversarial-smoke.mjs",
+      "bytes": 13370,
+      "sha256": "0e2de7f2cfe81bbc3721c7e5faca3226ab9e9fd6b65b4f35c3cfc3059df2bd4e"
+    },
+    {
+      "path": "scripts/phase9/rls-adversarial.mjs",
+      "bytes": 32658,
+      "sha256": "d844c287b1d9290118a48ec8f31ec18dc682c19444ddab8a63b499e48ac5a16c"
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "bytes": 1382,
+      "sha256": "e5bba48cf23a56df1722f9e7abd70ecfefc222df9677094667b5794868e77d7b"
+    }
+  ],
+  "currentSourceInputs": [
+    {
+      "path": "node_modules/@expo/cli/build/src/start/server/DevToolsPlugin.schema.js",
+      "bytes": 2399,
+      "sha256": "51fe90ef5a41227d330f047326a646172e787693edf27f5c3e0ad6d0f956c28b"
+    },
+    {
+      "path": "node_modules/@expo/cli/build/src/start/server/DevToolsPluginCliExtensionResults.js",
+      "bytes": 3618,
+      "sha256": "17d132616071ed41057ffdba8444f3f932b916b4ac5198d602ff3f924954a230"
+    },
+    {
+      "path": "node_modules/@expo/cli/package.json",
+      "bytes": 4949,
+      "sha256": "62186cebf9699c0f2bd8ddccdcf863c5e8aba6a2f177696200112edc88b52f67"
+    },
+    {
+      "path": "scripts/phase5/check-native-config.mjs",
+      "bytes": 38023,
+      "sha256": "cef02478bf9a2610d26aadca4de44e4498d9b045b19e75f1553530e9efe9764a"
+    },
+    {
+      "path": "scripts/phase9/ios-native-obligations46.json",
+      "bytes": 64943,
+      "sha256": "eb3c1c1aabc5637cdb9185534656c84fabdbd0eb25e383314ec9378bc66c23bc"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-contract.mjs",
+      "bytes": 85321,
+      "sha256": "c1887f7fca2f5dd5defb5c0af6d10d76fde623afeacad01bc3ea80983c7559ca"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+      "bytes": 23077,
+      "sha256": "2b6f354af23456b5b609b188cab107c51d6086886778f58d96be0301fedab9f7"
+    },
+    {
+      "path": "scripts/phase9/ios-privacy-source-audit.mjs",
+      "bytes": 13262,
+      "sha256": "e10a174dc6bc039c88e3c316eaaf13ca4fa14ec99aa38cd2791d646196ad42cd"
+    },
+    {
+      "path": "scripts/phase9/release-install-wiring46.test.mjs",
+      "bytes": 6917,
+      "sha256": "5d24ab2fe9ba22d2dff084598f80b81d44e39dc0fa7523c32c1bce655cb05810"
+    },
+    {
+      "path": "scripts/phase9/release-smoke.mjs",
+      "bytes": 76822,
+      "sha256": "10561cc30238a71c1d4ca8b0a1d9b877d9cc85455ba149120c0c27cc92c1edcb"
+    },
+    {
+      "path": "scripts/phase9/store-build-inspect.mjs",
+      "bytes": 20723,
+      "sha256": "7c53c1a4ab8f4f6dbb972efdce8aaa10d1cb8af7e2b0cb2939ef519d8babdee9"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_current46.mjs",
+      "bytes": 5810,
+      "sha256": "26c2c644393a1d37e69021de9df9a782ae69160aea98bb091e29bfa6d19ab40a"
+    },
+    {
+      "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs",
+      "bytes": 8257,
+      "sha256": "a19203b0e5f2d4c98f14cf6ea988416ef6c4af1c57420a25869daa960067eebf"
+    },
+    {
+      "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs",
+      "bytes": 8781,
+      "sha256": "7b38c70ca9ab5088859cc2255e7620da7488c60f0102923735444013a105eeee"
+    }
+  ],
+  "mandatoryPatchPaths": [
+    "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+    "scripts/phase9/patch-react-native-view-shot-privacy.mjs",
+    "apps/mobile/plugins/withLayerwellWidgetPrivacyManifest.js",
+    "node_modules/@expo/ui/expo-module.config.json",
+    "node_modules/expo-widgets/expo-module.config.json"
+  ],
+  "installedNativeTrees": [
+    {
+      "path": "node_modules/@expo/ui",
+      "files": 1269,
+      "directories": 339,
+      "bytes": 4731294,
+      "sha256": "d46f0d6dd7e7701cd88a00185313cfec95d539aa5b1b6b2bf157d024732a7356"
+    },
+    {
+      "path": "node_modules/expo-widgets",
+      "files": 166,
+      "directories": 29,
+      "bytes": 390562,
+      "sha256": "767947d5a1b320d1ffe78f51f22e2b457759e34893eeb3600357e651fae4acdc"
+    },
+    {
+      "path": "node_modules/react-native-view-shot",
+      "files": 124,
+      "directories": 40,
+      "bytes": 2915873,
+      "sha256": "69a4c5039ac8a7b5cf21849e6b823fd4099530006c4827b3761ef498f6e0e6fc"
+    }
+  ],
+  "currentAuditSnapshot": {
+    "hashDomain": "canonicalAuditJson(report) with only inputs.lockSuccession46 omitted",
+    "sha256": "20cd0f90ea2fc2ea015c3192bf236bb2fccbe44bc2b75a010c53825f82bb3229"
+  },
+  "claims": {
+    "sourceOnly": true,
+    "archiveRequired": true,
+    "nativeAccepted": false,
+    "archiveInspected": false,
+    "binarySignaturesVerified": false,
+    "appStoreAcceptanceProven": false,
+    "publicReleaseAuthorized": false
+  },
+  "admissions": {
+    "security": false,
+    "db_custody": false,
+    "M1_03": false,
+    "M2": false,
+    "J01": false,
+    "paid": false,
+    "native": false,
+    "apple": false,
+    "public_release": false
+  },
+  "gates": {
+    "G97": "FAIL/NO_GO",
+    "M1_03": "BLOCKED_EXTERNAL_CUSTODY/NOT_ACCEPTED",
+    "M2": "NOT_AUTHORIZED"
+  },
+  "spendUsd": 0,
+  "release": "NO_GO"
+}

@@ -198,3 +198,10 @@ The current full_routine and photo_timeline Pro gates remain. The future V2-C10 
 - Physical-device QA: verify actual installed supported iPhone, VoiceOver, native storage/process-death/power-loss, offline return, camera/photos/OS reminders/widgets and privacy interruption behavior at the exact signed build. Source/native-port tests cannot perform this act.
 
 Local ambiguous-write recovery is an app data-rights action, not independent acceptance: retry after a live operation settles; if durable uncertainty persists, explicit exact-key or full local cleanup must confirm absence before releasing the marker. Ordinary save never authorizes deletion; confirmed/photo keys remain untouched until explicit cleanup.
+
+
+## Closure02 source successor review
+
+The new limited grant permits implementing current-native validation; it does not admit it. Independent Brain must audit the exact final source/native46 descriptor, current complete installed audit, every original obligation/current successor mapping, filesystem and stale-proof refusals, real Windows/Linux results and preserved historical refusals. Candidate status remains NATIVE_LOCK_SUCCESSOR_SOURCE_CANDIDATE_REVIEW_REQUIRED; every native/device/owner/release admission staysfalse. Original C23 witness/mappings and policy signatures remainunchanged.
+
+The exact Expo developer-output consumer is now bounded through normal reproducible installation. Remaining upstream Zod/deepmerge/minimatch and frozen Python-tool version findings require specific supported repair or independently reviewed applicability/custody; this local consumer repair does not grant a global advisory waiver. Original full-source findings, protected workflow parse/policy/history/archive refusals and supplemental contextual scan remain separately named. Browser/physical-device/production/provider/clinical and all18owner acts above remain required.

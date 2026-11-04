@@ -18,6 +18,8 @@ import {
   clearActiveHealthProcessingEpoch,
 } from '@/lib/consent/healthProcessingEpoch';
 
+type EnvModule46 = typeof import('@/lib/env');
+
 const ports = vi.hoisted(() => ({
   owner: 'owner-a' as string | null,
   configured: false,
@@ -82,7 +84,7 @@ vi.mock('@/features/healthConsent/lifecycle', () => ({
   LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER: 'local-device-unclaimed',
 }));
 vi.mock('@/lib/env', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@/lib/env')>()),
+  ...(await importOriginal<EnvModule46>()),
   get isSupabaseConfigured() {
     return ports.configured;
   },

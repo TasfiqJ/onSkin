@@ -535,6 +535,26 @@
         "planned_validation": "Coverage obligation table, workflow source contracts, all6actual finalhead jobs"
       },
       {
+        "path": "ONSKIN_BRAIN_HANDOFF.txt",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "33cf070383b6ee244bb43487ce1fe2eaa4e11614a882d0b4482a730d1da69465",
+        "bytes": 940,
+        "need": "Update bounded currentcandidate review handoff without changing independent approvals",
+        "invariant": "No owner/releaseacceptance or historicalfailureerasure",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Exactfinalhead/tree/report/return identity andopenfinding crosscheck"
+      },
+      {
+        "path": "PROGRESS.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "e72cac0cd9fcd20e3b759dffe01a656f000e895f63070afb4561ff6689424602",
+        "bytes": 584833,
+        "need": "Append closure02 implementation/checkpoint outcomes",
+        "invariant": "Historicalrecord retained; source-only limits explicit",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Finalsource/hash/test/CIreceipt reconciliation"
+      },
+      {
         "path": "apps/mobile/src/features/onboarding/AgeReverificationRights.integration.test.ts",
         "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
         "preimage_sha256": "e729c3416322b1c3d6a05460ec4ab719f96c3ad791402e93c46356c80bf9ae65",
@@ -605,6 +625,46 @@
         "planned_validation": "Strict original+closure finite sets, preimage hashes and append-only ancestry controls"
       },
       {
+        "path": "docs/brain/task-specs/M1X-46/CLOSURE02_QUALITY_COVERAGE.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Exact displaced Quality obligation/current/historical/browser boundary table",
+        "invariant": "No silently reduceddenominator or DOMreplacement claim; CAT08actualbehavior andpacket09actualcurrentproducer execute",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "CurrentNode/hostedPG15receipts and exactoldsource identity/historical limits"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CLOSURE02_REPORT.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Truthful closure source handoff with exact current native/coverage/security outcomes and limits",
+        "invariant": "Preserve priorreport/REDs; no source/owner/release acceptance manufacture",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Rawreceipt/hash/currenthead reconciliation and independent internal evidence review"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CLOSURE02_SECURITY_REPORT.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Beforeafter finding/coverage/caller reachability/repair/openaction table",
+        "invariant": "Redactedrawfindings, officialsourceverification and genuineexits; unchangednotproofharmless; no waiver or pin/rulechanges",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actualcurrent boundedconsumer tests, fullsource scanners andcoverage/error accounting"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/EXTERNAL_ACTIONS.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "0376d96e95d1c553647d18743bf7a621396560ac940b1f53c49478468a1dc87e",
+        "bytes": 13981,
+        "need": "Append currentclosure exact successor-review/tool/coverage boundaries without granting any18gate",
+        "invariant": "Originalowneracts retained; sourcecandidatedescriptor notindependentadmission",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "All38/18remainfalse and exactscope/prerequisites/verification bindfinalcandidate"
+      },
+      {
         "path": "docs/brain/task-specs/M1X-46/TASK.md",
         "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
         "preimage_sha256": "a24d825e72c6abe9fce51c0cb072ea9baf6588f66fc5ceea9e2e54266d99bb7b",
@@ -613,6 +673,36 @@
         "invariant": "Keep existing checkpoint history and Brain PARTIAL_BLOCKED status explicit",
         "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
         "planned_validation": "ExactplanSHA, sixancestor identities, task/source audit"
+      },
+      {
+        "path": "docs/phase-4/generated/source-worklist.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "6a605a39148ebf7137407028e4ca23684fa31b95421aa703bc31827cf274ec01",
+        "bytes": 142269,
+        "need": "New separate two-worklist-only finalseal for tested append-only closure candidate",
+        "invariant": "Only strictgenerator output after mandatorysourcechecks; preserve deafhistoricalseal andtested/final equivalence",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "PENDINGbeforegenerator, exact2pathseal, strict--check SOURCE_FROZEN andcommit/treeequivalence"
+      },
+      {
+        "path": "docs/phase-4/generated/source-worklist.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "baebf001f8c704a6cfc8f296f2fdee624ae15ca649416122dbdf0226c52afb41",
+        "bytes": 84921,
+        "need": "New separate two-worklist-only finalseal for tested append-only closure candidate",
+        "invariant": "Only strictgenerator output after mandatorysourcechecks; preserve deafhistoricalseal andtested/final equivalence",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "PENDINGbeforegenerator, exact2pathseal, strict--check SOURCE_FROZEN andcommit/treeequivalence"
+      },
+      {
+        "path": "docs/phase-9/ios-sdk-lock-succession46.v1.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
       },
       {
         "path": "package.json",
@@ -633,6 +723,146 @@
         "invariant": "No DOM/geometry qualification; keep original37/38 source and refused browser boundary explicit",
         "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
         "planned_validation": "Real selector/message/touch exports against adversarial route/identity/disabled/occlusion/snapshot/guard/event state"
+      },
+      {
+        "path": "scripts/phase5/check-native-config.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "acc0cab86dafd5c0dc4f2869fa4782c60b8e15999dedadea089b1dc74450f5bd",
+        "bytes": 37808,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-native-obligations46.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-contract.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "eb575e71a39eda38caa495c4d2f0d4db27e44fcbeed8347c8f26e32d264856c0",
+        "bytes": 84017,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-lock-succession46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-lock-succession46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/ios-privacy-source-audit.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "6bf73a2c1c34310cc48a2d2f1102c8440fe7ff274b6e151d126ec4453a9b08a9",
+        "bytes": 12216,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
+      },
+      {
+        "path": "scripts/phase9/release-install-wiring46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Execute currentactual releaseinstall wiringinvariants ratherthanweaken oldliteral test orassume genericfixturePASS",
+        "invariant": "Extract real map/predicate; actualauditorandpatchcheck usecanonicalpackage/nativecandidate; allunsafehookvariantsrefuse; no realproviders orreleaseapproval",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Realcurrentcanonical0 thenmutantcommanddefinitions/conditionalQuality/head/package/patch failures; originalgenericwiringtestsretained"
+      },
+      {
+        "path": "scripts/phase9/release-smoke.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "3d315fe3154350fdbd46fd18eb75298372f782171af7d353c2bf3a7a93523727",
+        "bytes": 76670,
+        "need": "Two actualexact installation-wiring assertions must recognize finite newcanonical security compositehooks; realcurrentRED preserved",
+        "invariant": "Only2exact expectedcommandliteralchanges; EVERYotherstatement/assertionunchanged; existinghook module byteidentical andnewmodule+rootpackage exactcandidatepins; no broadwildcard",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actualexportedaudit/predicate RED/fixed fromrealrelease-smoke, exactdiff plus adversarialomission/reorder/duplicate/shortcircuit/echo/refusal controls and currentnative descriptor"
+      },
+      {
+        "path": "scripts/phase9/store-build-inspect.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "0bc92afcbb1f530277fe0f4c80a83a13b4dc7be2cb7e7833a9e7dfee5f17150b",
+        "bytes": 20304,
+        "need": "Active current46 inspector must require complete actual installed native proof/snapshot, notgenericpartialfixture audit",
+        "invariant": "Only boundedimport/call dispatch; everyoriginalinspector/archive/config/source assertion retained; historicalpath unchangedatimmutablecommit; no build/deviceacceptance",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "ActualcurrentinspectorCLI and originalinspectornegativecontrols, fabricated/omitted/stalereceipt refusals, nativeparitytable"
+      },
+      {
+        "path": "scripts/release/full-app-j01/fixtures46/expo-cli57.0.32/DevToolsPlugin.schema.cjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Retain byte-identical authenticated official prepatch schema for reproducible actualconsumer RED/fixed and safe patch tests after normalinstallation",
+        "invariant": "Exactofficialsourcehash4da5edad8daa6eda49fecc646934d372008952004b2c19abc03e27bcffc904a5, no fake schema or productionAPI change",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Officialregistry/tgzSRI/sourceidentity then boundedsyntheticchild realZod consumer and patchpre/postimage verification"
+      },
+      {
+        "path": "scripts/release/full-app-j01/fixtures46/expo-cli57.0.32/DevToolsPluginCliExtensionResults.cjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Retain byte-identical authenticated official prepatch outputcollector for reproducible realconsumer RED/fixed and atomic patch tests",
+        "invariant": "Exactofficialsourcehashab531966e34f5009d65fab4a00204cc999580d21b921f58ef58e00c568801c02, no usable secrets or protocolassertion reduction",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Officialregistry/tgzSRI/sourceidentity, 200k malformedoutputOOM before and finitebounds after, genuine normalcollector/executor behavior"
+      },
+      {
+        "path": "scripts/release/full-app-j01/mounted_journey46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Move exact existing mounted33test invocation out of mixed Bash/Node Quality heredoc so authenticated Semgrep can parse active workflow without dropping coverage",
+        "invariant": "Same actual2UItestfiles, aliases/environment, childarguments/timeout/failurepropagation andcleanup; no browser/native qualification or assertion reduction",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Exact beforeafter block behavior/sourcecomparison, actualmounted33testexecution and currentworkflowunchanged4packSemgrep coverage"
+      },
+      {
+        "path": "scripts/release/full-app-j01/mounted_journey46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Prove actual moved mountedtest runner cannot silently drop a failingchild or reduce twofilescope and activeworkflowinvocation",
+        "invariant": "SyntheticVitestchildport tests onlytooling; actual33mountedcasesstillseparate; preserveexistingC41/node/domain tests",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actualhelpersubprocess success/nonzerofailure/cleanup/configscope and parsedcurrentQuality activecall withoutconditional/echo bypass; realhelperexecutesreal33cases"
+      },
+      {
+        "path": "scripts/release/full-app-j01/native_current46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bounded versioned current-native exactlock/package/source/install proof and full executable obligation parity",
+        "invariant": "Exact12node reversal, native/config/mobile/requiredpatch/hook integrity, complete installed denominators, source/ref/head+filesystemrefusals; originalhistoricalinputsunchanged; SOURCE_CANDIDATE_REVIEW_REQUIRED alladmissionfalse",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Full90obligation mapping/current audit+config+inspector and adversarial identity/integrity/13thnode/native/missingextra/patch/link/hardlink/reparse/race/TOCTOU controls; Windowsactual andhostedLinux"
       },
       {
         "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs",
@@ -673,6 +903,26 @@
         "invariant": "Preserve all existing map/gate/selfacceptance/duplicate/path tests; add realGit refusals",
         "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
         "planned_validation": "Actual Pythonisolated test suite and pending/frozen full invocations"
+      },
+      {
+        "path": "scripts/release/full-app-j01/workflow_context46.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Supplement frozencandidate22 Semgrep partialparse with exact-source authenticatedGitHubexpression materialization, retainingoriginalwarning andfullsourceoriginalscan",
+        "invariant": "Nevereditfrozenworkflow/rules/pins; onlyfiniteheadSHA/PR47 literalsubstitutions overentireauthenticatedsource; offsets/beforeafterhashes/analysis-onlyscope explicit; no shell/networkexecution orcleanoriginalclaim",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Wrongsource/unsafehead/wrongPR/template/extra omission refuse; wholefilebytecomparison and hostedunchanged4config contextscan withallrawerrors"
+      },
+      {
+        "path": "scripts/release/full-app-j01/workflow_context46.test.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Prove contextualstaticcoveragecannothide/drop frozenworkflowlines orintroduceunsafe substitutions",
+        "invariant": "Exactfrozeninput digest andfiniteonly replacements; sourceandcontextbothretained; no fakeworkflowexecution",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Real sourcecopy plus exactdiff/scope and adversarial source/head/PR/pathrefusals"
       }
     ],
     "decisions": [
@@ -683,6 +933,10 @@
       {
         "id": "C46-C02-02",
         "decision": "Actual installed Expo CLI schema and append collector abort134/OOM with200k malformed plugin output under96MB. Add finite schema/output budgets via exact-source reproducible first-party installation patch; preserve immutable existing postinstall module/patches, real normal consumer protocol and normal npm installation. Root package scripts append new module after original command; lock graph expected unchanged. This is development-tool input hardening, not Zod/platform migration or advisory waiver."
+      },
+      {
+        "id": "C46-C02-03",
+        "decision": "Add exact-source current native46 descriptor/reader/full original-purpose audit dispatch and complete90obligation parity, after actualcurrent installed proof. Original C23 witness/readers/baselines and deaf narrowhelper unchanged historical; owner/native/deviceflagsfalse. Preserve currentstore inspector itself, its sharedaudit dispatch checksactualcurrentgraph."
       }
     ]
   }
