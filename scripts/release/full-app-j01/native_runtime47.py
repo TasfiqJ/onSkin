@@ -476,7 +476,7 @@ def execute(r):
           '--phase', 'GENERATED', '--source-proof', source47, '--receipt', compatibility47 / 'receipt.json',
           '--output', r.output / 'current-generated47.json'], timeout=600)
     r.source_proof('source-after-generated47', head, allow_generation=True)
-    r.run('pods', ['pod', 'install', '--project-directory=ios'], cwd=mobile, timeout=1200)
+    r.run('pods', ['pod', 'install'], cwd=ios, timeout=1200)
     retain_pod_inventory(ios, r.output)
     r.run('current-generated47-resolved', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
           '--phase', 'RESOLVED', '--source-proof', source47, '--receipt', compatibility47 / 'receipt.json',

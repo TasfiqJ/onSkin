@@ -59,6 +59,7 @@ export function validateDescriptor47(value) {
   same(value.installedConsumers.map(pin => pin.path).sort(), [
     'node_modules/expo-build-properties/build/ios.js',
     'node_modules/expo-modules-autolinking/build/platforms/apple/apple.js',
+    'node_modules/expo-modules-autolinking/build/autolinking/resolveModules.js',
     'node_modules/expo-modules-autolinking/scripts/ios/autolinking_manager.rb'].sort());
   for (const pin of [...value.sourcePins, ...value.installedConsumers]) {
     same(Object.keys(pin).sort(), ['bytes', 'path', 'sha256']);

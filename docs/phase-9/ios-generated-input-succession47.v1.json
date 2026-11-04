@@ -26,18 +26,18 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 17731,
-      "sha256": "9e386290e4ecfe95510fedf85ab87223ea7f5bd2db6dd1d191f7af13beb68e16"
+      "bytes": 17812,
+      "sha256": "94011a6b00eb2f55f6d708972c69efc5d84af201c683d1bad1017fc12edd958e"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 5776,
-      "sha256": "a817b604f91bde00e40c08df89314e867f89628edded0b978463e4a52a74664c"
+      "bytes": 7206,
+      "sha256": "691d8ccd9a8e39f7a67dedd6ebc8b6272bd3b3f92026baa6f6b77b98a809d2ef"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 37932,
-      "sha256": "08e4b980e7c3a4e176be1ed673870bc52456accd150bd101cfc4a168ba682986"
+      "bytes": 37902,
+      "sha256": "583397cbe4716fcb9005f2a925ef4ae2dbf12a0978b93f1dc69885485a9b3a0d"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
@@ -90,6 +90,11 @@
       "path": "node_modules/expo-modules-autolinking/scripts/ios/autolinking_manager.rb",
       "bytes": 12163,
       "sha256": "8a0cf708c5462ef4e563cbfb68955593e50d1956e41f1e9c061829813385ddfc"
+    },
+    {
+      "path": "node_modules/expo-modules-autolinking/build/autolinking/resolveModules.js",
+      "bytes": 2017,
+      "sha256": "85ddb290232fba5c9c185dd4a261191136d994fd570e3d67620a9e2490ad0684"
     }
   ],
   "generatedTransition": {

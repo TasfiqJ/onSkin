@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
-import { linkSync, mkdtempSync, readFileSync, realpathSync, rmSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
+import { linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { join, relative, resolve } from 'node:path';
 import test from 'node:test';
 import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMapping47,
@@ -106,4 +107,29 @@ test('source proof reader refuses oversized files before allocation and actual h
   assert.throws(() => readSourceProof47(path));
   unlinkSync(join(directory, 'second-link'));
   assert.equal(readSourceProof47(path).toString(), '{}');
+});
+
+
+test('installed Expo extra-pod consumer requires native command cwd rather than the app directory', t => {
+  const temporaryRoot = realpathSync(tmpdir());
+  const directory = mkdtempSync(join(temporaryRoot, 'c47-pod-cwd-'));
+  t.after(() => {
+    assert.match(relative(temporaryRoot, directory), /^c47-pod-cwd-[^\\/]+$/);
+    rmSync(directory, { recursive: true });
+  });
+  const native = join(directory, 'ios');
+  mkdirSync(native);
+  const pods = [{ name: 'GoogleUtilities/Environment', modular_headers: true },
+    { name: 'RecaptchaInterop', modular_headers: true }];
+  writeFileSync(join(native, 'Podfile.properties.json'), JSON.stringify({ 'apple.extraPods': JSON.stringify(pods) }));
+  const consumer = resolve(ROOT, 'node_modules/expo-modules-autolinking/build/autolinking/resolveModules.js');
+  const code = "require(process.argv[1]).resolveExtraBuildDependenciesAsync({commandRoot:process.cwd(),platform:'apple'}).then(v=>console.log(JSON.stringify(v))).catch(e=>{console.error(e);process.exit(1)})";
+  const run = cwd => {
+    const result = spawnSync(process.execPath, ['-e', code, consumer], { cwd, windowsHide: true,
+      encoding: 'utf8', timeout: 30000, maxBuffer: 65536 });
+    assert.equal(result.status, 0, result.stderr);
+    return JSON.parse(result.stdout);
+  };
+  assert.deepEqual(run(directory), []);
+  assert.deepEqual(run(native), pods);
 });
