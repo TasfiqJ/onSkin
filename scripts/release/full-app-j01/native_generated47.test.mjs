@@ -13,7 +13,8 @@ import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMappin
   verifyCurrentNative47 as verifyNativeCandidate46, validateIosExtensionConfig47 as validateIosExtensionConfig46 } from './native_generated47.mjs';
 
 
-import { canonicalAuditJson, validateIosPrivacyAuditClaims } from '../../phase9/ios-privacy-contract.mjs';
+import { canonicalAuditJson, validateIosPrivacyAuditClaims,
+  auditIosPrivacySource as legacyAuditIosPrivacySource } from '../../phase9/ios-privacy-contract.mjs';
 import { nativeTree23 } from '../../phase9/ios-privacy-lock-succession23.mjs';
 import { IOS_PRIVACY_LOCK_SUCCESSION46_PATH, LOCK_SUCCESSION46_SHA256,
   checkedNativeRoot46, checkCurrentAuditSnapshot46, nativeSourceIdentity46,
@@ -463,7 +464,7 @@ test('current47 continuation02 actual non-strict tampered and missing descriptor
           writeFileSync(item.path, item.old);
         }
         assert.equal(lstatSync(join(ROOT, 'node_modules/decode-uri-component')).isSymbolicLink(), true);
-        assert.throws(() => auditIosPrivacySource({ root: ROOT }), error =>
+        assert.throws(() => legacyAuditIosPrivacySource({ root: ROOT }), error =>
           error.code === 'PATH_SYMLINK' && error.path === 'node_modules/decode-uri-component',
         'The genuine current workspace link also prevents calling this an old-profile positive.');
         const sourceCheck = cli(['--strict', '--check']);
@@ -521,6 +522,11 @@ test('current47 continuation02 final entrypoint authenticates expected HEAD and 
     { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30_000,
       env: { ...process.env, C46_EXPECTED_HEAD: '0'.repeat(40) } });
   assert.equal(wrongExpected.status, 1); assert.match(wrongExpected.stderr, /EXPECTED_HEAD/u);
+  const wrongCurrent = spawnSync(process.execPath, ['scripts/release/full-app-j01/native_generated47.mjs', '--phase', 'SOURCE'],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30_000,
+      env: { ...process.env, C47_EXPECTED_HEAD: '0'.repeat(40) } });
+  assert.equal(wrongCurrent.status, 1);
+  assert.match(wrongCurrent.stderr, /0{40}/u);
   const root = fixture(t);
   assert.equal(assertCurrentNativeHead46(root, identity.sourceHead).sourceHead, identity.sourceHead);
   // Reader itself is excluded from the descriptor's self-hash domain, but the

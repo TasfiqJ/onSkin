@@ -31,8 +31,8 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 36254,
-      "sha256": "f34c93979421dd5f8454a9d61dca2b2ef727c03b310a7db997ae2b415d763d1a"
+      "bytes": 36672,
+      "sha256": "30097b9ee8e1d3c295bfd20bea2b66725f8a68febd710bc32d26d3582801c462"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
