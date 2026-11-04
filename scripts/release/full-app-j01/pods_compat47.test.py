@@ -16,8 +16,7 @@ spec.loader.exec_module(p)
 
 class PodsCompat47Tests(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(prefix='c47-generated-pods-',
-                                                dir=Path(tempfile.gettempdir()).resolve())
+        self.temp = tempfile.TemporaryDirectory(prefix='c47-generated-pods-', dir=Path(tempfile.gettempdir()).resolve())
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.ios = self.root / 'ios'
@@ -102,6 +101,25 @@ class PodsCompat47Tests(unittest.TestCase):
         (self.ios / 'Podfile').write_bytes(self.podfile + b'use_modular_headers!\n')
         with self.assertRaisesRegex(ValueError, 'PODFILE_DRIFT'):
             p.verify_receipt(output / 'receipt.json', self.ios, self.binding)
+
+    def test_development_is_only_declared_target_projection_and_production_refuses(self):
+        descriptor = Path(__file__).absolute().parents[3] / 'docs/phase-9/ios-generated-input-succession47.v1.json'
+        transition = p.document(descriptor.read_bytes())['generatedTransition']
+        self.assertEqual(p.profile_preimages(transition, 'staging'),
+                         (transition['propertiesPreimage']['sha256'], transition['podfilePreimage']['sha256']))
+        expected = transition['developmentProjection']
+        self.assertEqual(p.profile_preimages(transition, 'development'),
+                         (expected['propertiesPreimage']['sha256'], expected['podfilePreimage']['sha256']))
+        with self.assertRaises(ValueError):
+            p.profile_preimages(transition, 'production')
+        invalid = copy.deepcopy(transition)
+        invalid['developmentProjection']['stagingPodfileUTF8'] += '\nuse_modular_headers!\n'
+        with self.assertRaises(ValueError):
+            p.profile_preimages(invalid, 'development')
+        invalid = copy.deepcopy(transition)
+        invalid['developmentProjection']['propertiesPreimage']['sha256'] = '0' * 64
+        with self.assertRaises(ValueError):
+            p.profile_preimages(invalid, 'development')
 
 
 if __name__ == '__main__':

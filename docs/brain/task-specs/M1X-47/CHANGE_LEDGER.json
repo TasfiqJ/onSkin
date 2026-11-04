@@ -261,6 +261,86 @@
       "additional_jobs": 2,
       "one_concurrent_job": true,
       "job_timeout_minutes": 90
+    },
+    {
+      "recorded_utc": "2026-11-04T20:10:10.305955+00:00",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "scripts/release/full-app-j01/pods_compat47.py",
+        "scripts/release/full-app-j01/pods_compat47.test.py",
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "scripts/release/full-app-j01/native_generated47.test.mjs",
+        "scripts/release/full-app-j01/native_ui47.swift",
+        "scripts/release/full-app-j01/native_ui47.rb",
+        "docs/phase-9/ios-generated-input-succession47.v1.json"
+      ],
+      "reason": "Within existing24-path scope, integrate structurally gated internal test tools before finaljob6; normalexecution remains first, frozen normal Swift only compiled in normal lane; no app source/guard/paid/production change. Fresh current validation and separate reseal required.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 37902,
+          "preimage_sha256": "583397cbe4716fcb9005f2a925ef4ae2dbf12a0978b93f1dc69885485a9b3a0d",
+          "proposal_sha256": "a5730cc7a22cb1b6d1ded3a36cfa2bdd9c8577ad94ce77cd26df46f09cde73e3"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 10230,
+          "preimage_sha256": "c2f6a85e8a3eb055a2e64b5fcd0180652ecbd9cd70b7d74fb0ac5b4eb283e691",
+          "proposal_sha256": "018fd17c0f05eb4f4b8f10efd8a5d747dca72a29f2097754a08a35fe5afea8dc"
+        },
+        {
+          "path": "scripts/release/full-app-j01/pods_compat47.py",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 9103,
+          "preimage_sha256": "d6c2ab9a2a52c0e0b914117fe22256b5621c6215beeca14bc593083a1e2fe5d2",
+          "proposal_sha256": "553140c63c7e4e7ccc03fa68960b8f980bc649acd6e276d7632a220a4a337541"
+        },
+        {
+          "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 5676,
+          "preimage_sha256": "0648c002662404c434ddbffe6d4827e1039e589e457695725c678ac1e26f3d07",
+          "proposal_sha256": "096225117e0acc1adcdce67badd02dee63adb6416e6990c8c7004d3df60a948d"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 17812,
+          "preimage_sha256": "94011a6b00eb2f55f6d708972c69efc5d84af201c683d1bad1017fc12edd958e",
+          "proposal_sha256": "1ba21c6bb09471d9c21cc8e342a84e6f2aac47731efb0e8d50744796518e2b8b"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 7206,
+          "preimage_sha256": "691d8ccd9a8e39f7a67dedd6ebc8b6272bd3b3f92026baa6f6b77b98a809d2ef",
+          "proposal_sha256": "ba3d71691479c0e0e3772ea6dad5a9b973c940fd25fb6198601720d270199903"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 8736,
+          "preimage_sha256": "b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44",
+          "proposal_sha256": "bf06b73eca05d0f00d818dc78d3f392b45b59dbda57e6305f8f5edda693b65b6"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 4120,
+          "preimage_sha256": "644be63f7b3d634ac5c242cd23eb24172769299c0df8bae1584848c94617b203",
+          "proposal_sha256": "aae5b7f8bff923d6de06c4cf2f9b2ab64b1454b70049f14cdfaa4f08e168b49c"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "a381a71b3742aca8aa7993f67b4dd17510abfde7",
+          "preimage_bytes": 6746,
+          "preimage_sha256": "5538b984926d047ef1174f6a56908b2cfa6158889ef4859b66ae0dbb732a9414",
+          "proposal_sha256": "985eca3cf45d21c882601e32050eccc11936d9357cf797078585439370150a8c"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

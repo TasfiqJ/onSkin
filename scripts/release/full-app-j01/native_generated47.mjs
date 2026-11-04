@@ -67,12 +67,15 @@ export function validateDescriptor47(value) {
   }
   const transition = value.generatedTransition;
   same(Object.keys(transition).sort(), ['property', 'beforeState', 'pods', 'representation',
-    'propertiesPreimage', 'podfilePreimage', 'scope', 'primarySources'].sort());
+    'propertiesPreimage', 'podfilePreimage', 'scope', 'primarySources', 'allowedProfiles',
+    'developmentProjection'].sort());
   same(transition.property, 'apple.extraPods');
   same(transition.beforeState, 'ABSENT');
   same(transition.pods, PODS47);
   same(transition.representation, 'JSON_STRING_OF_EXACT_ORDERED_POD_TUPLES');
-  same(transition.scope, 'GENERATED_UNSIGNED_STAGING_SIMULATOR_ONLY_NO_APP_CONFIG_OR_DEPENDENCY_CHANGE');
+  same(transition.scope, 'GENERATED_UNSIGNED_SIMULATOR_STAGING_AND_INTERNAL_DEVELOPMENT_ONLY');
+  same(transition.allowedProfiles, ['staging', 'development']);
+  validateDevelopmentProjection47(transition);
   same(value.obligations.path, MAP47);
   same(value.obligations.originalTests, 90);
   same(value.claims, { sourceOnly: true, archiveInspected: false, binarySignaturesVerified: false,
@@ -81,6 +84,27 @@ export function validateDescriptor47(value) {
   same(value.admissions, { security: false, db_custody: false, M1_03: false, M2: false, J01: false,
     paid: false, native: false, apple: false, public_release: false });
   same(value.release, 'NO_GO');
+  return true;
+}
+
+export function validateDevelopmentProjection47(transition) {
+  const declared = transition.developmentProjection;
+  same(declared.provenance, 'DECLARED_TARGET_NAME_PROJECTION_NOT_OBSERVED_MACOS_GENERATION');
+  const properties = Buffer.from(declared.stagingPropertiesUTF8), podfile = Buffer.from(declared.stagingPodfileUTF8);
+  same(hash(properties), transition.propertiesPreimage.sha256);
+  same(hash(podfile), transition.podfilePreimage.sha256);
+  const value = strictJson47(properties);
+  const key = 'expo.inlineModules.xcodeProjectTargets';
+  same(strictJson47(Buffer.from(value[key])), { mainTarget: 'LayerwellStaging', targets: [] });
+  value[key] = JSON.stringify({ mainTarget: 'LayerwellDev', targets: [] });
+  const generated = Buffer.from(JSON.stringify(value, null, 2) + '\n');
+  const needle = "target 'LayerwellStaging' do";
+  same(declared.stagingPodfileUTF8.split(needle).length, 2);
+  const devPodfile = Buffer.from(declared.stagingPodfileUTF8.replace(needle, "target 'LayerwellDev' do"));
+  same(hash(generated), declared.propertiesPreimage.sha256);
+  same(generated.length, declared.propertiesPreimage.bytes);
+  same(hash(devPodfile), declared.podfilePreimage.sha256);
+  same(devPodfile.length, declared.podfilePreimage.bytes);
   return true;
 }
 
@@ -224,19 +248,22 @@ function projectedInputs47(root, witness, sourceHead) {
     qualification: 'ACTUAL_CURRENT_INPUTS_WITH_ONLY_DECLARED_ISOLATED_PREBUILD_PACKAGE_SCRIPT_PROJECTION' };
 }
 
-export function runGenerated47({ root = ROOT, phase, receipt, sourceProof }) {
+export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profile = 'staging' }) {
   assert.ok(['SOURCE', 'GENERATED', 'RESOLVED'].includes(phase));
+  assert.ok(['staging', 'development'].includes(profile));
   const current = inputs47(root);
   let details;
   if (phase === 'SOURCE') {
     details = { currentNative46: runNativeCurrent46(root) };
     same(details.currentNative46.source.sourceHead, current.source.sourceHead);
     same(details.currentNative46.verifiedInputCount, 202);
+    same(details.currentNative46.identities.map(value => value.variant).sort(), ['development', 'staging']);
   } else {
     assert.ok(isAbsolute(receipt) && isAbsolute(sourceProof));
     const proofBytes = readSourceProof47(sourceProof);
     const proof = strictJson47(proofBytes);
     same(proof.phase, 'SOURCE');
+    same(proof.profiles, ['development', 'staging']);
     same(proof.sourceHead, current.source.sourceHead);
     same(proof.descriptorSHA256, current.file.sha256);
     same(proof.currentNative46.verifiedInputCount, 202);
@@ -244,7 +271,8 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof }) {
     const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead);
     const helper = resolve(root, 'scripts/release/full-app-j01/pods_compat47.py');
     const processResult = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['-I', '-B', helper,
-      '--ios-directory', resolve(root, 'apps/mobile/ios'), '--source-proof', sourceProof, '--verify-receipt', receipt],
+      '--ios-directory', resolve(root, 'apps/mobile/ios'), '--source-proof', sourceProof, '--verify-receipt', receipt,
+      '--profile', profile],
       { cwd: root, env: { ...process.env, C47_EXPECTED_HEAD: current.source.sourceHead },
         windowsHide: true, encoding: 'utf8', timeout: 60000, maxBuffer: 4 * 1024 * 1024 });
     assert.equal(processResult.status, 0, processResult.stderr || processResult.stdout);
@@ -290,7 +318,8 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof }) {
     }
   }
   same(nativeSourceIdentity46(current.root), current.source);
-  return { schema: 1, phase, status: 'CURRENT_GENERATED47_' + phase + '_VERIFIED_NO_ADMISSION',
+  return { schema: 1, phase, profile, profiles: ['development', 'staging'],
+    status: 'CURRENT_GENERATED47_' + phase + '_VERIFIED_NO_ADMISSION',
     sourceHead: current.source.sourceHead, sourceTree: current.source.sourceTree,
     descriptorSHA256: current.file.sha256, originalNativeObligations: 90,
     mappingSHA256: current.descriptor.obligations.sha256, ...details,
@@ -299,8 +328,9 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof }) {
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const { values } = parseArgs({ options: { phase: { type: 'string' }, receipt: { type: 'string' },
-    'source-proof': { type: 'string' }, output: { type: 'string' } } });
-  const result = runGenerated47({ phase: values.phase, receipt: values.receipt, sourceProof: values['source-proof'] });
+    'source-proof': { type: 'string' }, output: { type: 'string' }, profile: { type: 'string', default: 'staging' } } });
+  const result = runGenerated47({ phase: values.phase, receipt: values.receipt,
+    sourceProof: values['source-proof'], profile: values.profile });
   const raw = JSON.stringify(result, null, 2) + '\n';
   if (values.output) {
     const destination = resolve(values.output);

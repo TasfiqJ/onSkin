@@ -84,6 +84,30 @@ def verify_delta(before, after):
     return True
 
 
+def profile_preimages(transition, profile):
+    require(profile in ['staging', 'development'], 'PROFILE_NOT_AUTHORIZED')
+    require(transition['allowedProfiles'] == ['staging', 'development'], 'FINITE_PROFILE_INVENTORY')
+    if profile == 'staging':
+        return transition['propertiesPreimage']['sha256'], transition['podfilePreimage']['sha256']
+    declared = transition['developmentProjection']
+    require(declared['provenance'] == 'DECLARED_TARGET_NAME_PROJECTION_NOT_OBSERVED_MACOS_GENERATION',
+            'DEVELOPMENT_PROJECTION_PROVENANCE')
+    stage_properties, stage_podfile = declared['stagingPropertiesUTF8'].encode(), declared['stagingPodfileUTF8'].encode()
+    require(digest(stage_properties) == transition['propertiesPreimage']['sha256'] and
+            digest(stage_podfile) == transition['podfilePreimage']['sha256'], 'STAGING_TEMPLATE_BINDING')
+    properties = document(stage_properties)
+    key = 'expo.inlineModules.xcodeProjectTargets'
+    require(document(properties[key]) == {'mainTarget': 'LayerwellStaging', 'targets': []}, 'EXACT_STAGING_TARGET')
+    properties[key] = json.dumps({'mainTarget': 'LayerwellDev', 'targets': []}, separators=(',', ':'))
+    dev_properties = (json.dumps(properties, indent=2, ensure_ascii=False) + '\n').encode()
+    needle, replacement = b"target 'LayerwellStaging' do", b"target 'LayerwellDev' do"
+    require(stage_podfile.count(needle) == 1, 'EXACT_STAGING_POD_TARGET')
+    dev_podfile = stage_podfile.replace(needle, replacement)
+    require(digest(dev_properties) == declared['propertiesPreimage']['sha256'] and
+            digest(dev_podfile) == declared['podfilePreimage']['sha256'], 'DECLARED_DEVELOPMENT_PREIMAGE')
+    return digest(dev_properties), digest(dev_podfile)
+
+
 def apply(ios, output, binding):
     ios, output = Path(ios).absolute(), Path(output).absolute()
     require(ios.is_dir() and not output.exists() and not output.is_relative_to(ios), 'NEW_OUTPUT_REQUIRED')
@@ -107,6 +131,7 @@ def apply(ios, output, binding):
     (output / 'Podfile.properties.after.json').write_bytes(actual)
     (output / 'Podfile.after').write_bytes(podfile_before)
     receipt = {'schema': 1, 'status': 'GENERATED_TWO_POD_PROPERTIES_VERIFIED_NO_ADMISSION',
+               'profile': binding.get('profile', 'staging'),
                'sourceHead': binding['sourceHead'], 'descriptorSHA256': binding['descriptorSHA256'],
                'sourceProofSHA256': binding['sourceProofSHA256'], 'helperSHA256': digest(regular(Path(__file__))),
                'iosDirectory': str(ios), 'propertiesPreimageSHA256': digest(before),
@@ -125,6 +150,7 @@ def verify_receipt(path, ios, binding):
             receipt.get('release') == 'NO_GO', 'RECEIPT_CLAIMS')
     for key in ['sourceHead', 'descriptorSHA256', 'sourceProofSHA256', 'propertiesPreimageSHA256', 'podfilePreimageSHA256']:
         require(receipt.get(key) == binding[key], 'STALE_OR_FORGED_RECEIPT_BINDING')
+    require(receipt.get('profile') == binding.get('profile', 'staging'), 'RECEIPT_PROFILE')
     require(receipt.get('helperSHA256') == digest(regular(Path(__file__))) and
             receipt.get('iosDirectory') == str(ios) and receipt.get('property') == PROPERTY and
             receipt.get('pods') == PODS, 'RECEIPT_HELPER_OR_SCOPE')
@@ -144,6 +170,7 @@ def main():
     parser.add_argument('--source-proof', required=True, type=Path)
     parser.add_argument('--output', type=Path)
     parser.add_argument('--verify-receipt', type=Path)
+    parser.add_argument('--profile', choices=['staging', 'development'], default='staging')
     args = parser.parse_args()
     env = {key: value for key, value in os.environ.items() if not key.upper().startswith('GIT_')}
     git = lambda *values: subprocess.check_output(['git', '--no-replace-objects', *values], cwd=ROOT, env=env, timeout=30)
@@ -157,13 +184,16 @@ def main():
     proof = document(proof_raw)
     require(proof.get('phase') == 'SOURCE' and proof.get('sourceHead') == head and
             proof.get('descriptorSHA256') == digest(descriptor_raw) and
+            proof.get('profiles') == ['development', 'staging'] and
             proof.get('currentNative46', {}).get('verifiedInputCount') == 202 and
             proof['currentNative46']['source']['sourceHead'] == head, 'FRESH_CURRENT_SOURCE_PROOF')
     require(args.ios_directory.absolute() == ROOT / 'apps/mobile/ios', 'GENERATED_IOS_ROOT')
+    require(os.environ.get('APP_VARIANT') == args.profile and os.environ.get('EXPO_PUBLIC_APP_ENV') == args.profile,
+            'ACTUAL_ENVIRONMENT_PROFILE')
     transition = descriptor['generatedTransition']
+    properties_hash, podfile_hash = profile_preimages(transition, args.profile)
     binding = {'sourceHead': head, 'descriptorSHA256': digest(descriptor_raw), 'sourceProofSHA256': digest(proof_raw),
-               'propertiesPreimageSHA256': transition['propertiesPreimage']['sha256'],
-               'podfilePreimageSHA256': transition['podfilePreimage']['sha256']}
+               'profile': args.profile, 'propertiesPreimageSHA256': properties_hash, 'podfilePreimageSHA256': podfile_hash}
     if args.verify_receipt:
         result = verify_receipt(args.verify_receipt, args.ios_directory, binding)
     else:

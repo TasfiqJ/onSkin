@@ -5,7 +5,8 @@ import { spawnSync } from 'node:child_process';
 import { join, relative, resolve } from 'node:path';
 import test from 'node:test';
 import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMapping47,
-  validateAutolinking47, validateResolvedLock47, readSourceProof47 } from './native_generated47.mjs';
+  validateAutolinking47, validateResolvedLock47, readSourceProof47,
+  validateDevelopmentProjection47 } from './native_generated47.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../../..');
 const descriptor = () => strictJson47(readFileSync(resolve(ROOT, DESCRIPTOR47)));
@@ -91,10 +92,9 @@ test('resolved native gate retains existing transitive pods and rejects root def
 });
 
 test('source proof reader refuses oversized files before allocation and actual hardlinked evidence', t => {
-  const temporaryRoot = realpathSync(tmpdir());
-  const directory = mkdtempSync(join(temporaryRoot, 'c47-proof-bound-'));
+  const directory = mkdtempSync(join(realpathSync(tmpdir()), 'c47-proof-bound-'));
   t.after(() => {
-    assert.match(relative(temporaryRoot, directory), /^c47-proof-bound-[^\\/]+$/);
+    assert.match(relative(realpathSync(tmpdir()), directory), /^c47-proof-bound-[^\\/]+$/);
     rmSync(directory, { recursive: true });
   });
   const path = join(directory, 'source.json');
@@ -109,6 +109,18 @@ test('source proof reader refuses oversized files before allocation and actual h
   assert.equal(readSourceProof47(path).toString(), '{}');
 });
 
+test('two explicit profiles retain source-bound declared target projection and refuse production or forged development input', () => {
+  const transition = descriptor().generatedTransition;
+  assert.equal(validateDevelopmentProjection47(transition), true);
+  for (const change of [value => value.generatedTransition.allowedProfiles.push('production'),
+    value => value.generatedTransition.developmentProjection.stagingPropertiesUTF8 += '\n',
+    value => value.generatedTransition.developmentProjection.podfilePreimage.sha256 = '0'.repeat(64),
+    value => value.generatedTransition.developmentProjection.provenance = 'OBSERVED_MACOS_BUILD']) {
+    const value = descriptor();
+    change(value);
+    assert.throws(() => validateDescriptor47(value));
+  }
+});
 
 test('installed Expo extra-pod consumer requires native command cwd rather than the app directory', t => {
   const temporaryRoot = realpathSync(tmpdir());

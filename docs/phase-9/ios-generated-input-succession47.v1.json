@@ -26,33 +26,33 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 17812,
-      "sha256": "94011a6b00eb2f55f6d708972c69efc5d84af201c683d1bad1017fc12edd958e"
+      "bytes": 19627,
+      "sha256": "1ba21c6bb09471d9c21cc8e342a84e6f2aac47731efb0e8d50744796518e2b8b"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 7206,
-      "sha256": "691d8ccd9a8e39f7a67dedd6ebc8b6272bd3b3f92026baa6f6b77b98a809d2ef"
+      "bytes": 7971,
+      "sha256": "ba3d71691479c0e0e3772ea6dad5a9b973c940fd25fb6198601720d270199903"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 37902,
-      "sha256": "583397cbe4716fcb9005f2a925ef4ae2dbf12a0978b93f1dc69885485a9b3a0d"
+      "bytes": 93545,
+      "sha256": "a5730cc7a22cb1b6d1ded3a36cfa2bdd9c8577ad94ce77cd26df46f09cde73e3"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 10230,
-      "sha256": "c2f6a85e8a3eb055a2e64b5fcd0180652ecbd9cd70b7d74fb0ac5b4eb283e691"
+      "bytes": 24289,
+      "sha256": "018fd17c0f05eb4f4b8f10efd8a5d747dca72a29f2097754a08a35fe5afea8dc"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
-      "bytes": 9103,
-      "sha256": "d6c2ab9a2a52c0e0b914117fe22256b5621c6215beeca14bc593083a1e2fe5d2"
+      "bytes": 11354,
+      "sha256": "553140c63c7e4e7ccc03fa68960b8f980bc649acd6e276d7632a220a4a337541"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.test.py",
-      "bytes": 5676,
-      "sha256": "0648c002662404c434ddbffe6d4827e1039e589e457695725c678ac1e26f3d07"
+      "bytes": 6899,
+      "sha256": "096225117e0acc1adcdce67badd02dee63adb6416e6990c8c7004d3df60a948d"
     }
   ],
   "registry": [
@@ -121,7 +121,7 @@
       "bytes": 2904,
       "sha256": "6273e7170daaef35e4b8cac0d3168d5687d782ce61ce58e0193f931169bbbab6"
     },
-    "scope": "GENERATED_UNSIGNED_STAGING_SIMULATOR_ONLY_NO_APP_CONFIG_OR_DEPENDENCY_CHANGE",
+    "scope": "GENERATED_UNSIGNED_SIMULATOR_STAGING_AND_INTERNAL_DEVELOPMENT_ONLY",
     "primarySources": [
       {
         "url": "https://raw.githubusercontent.com/CocoaPods/Core/1.17.0/lib/cocoapods-core/podfile/target_definition.rb",
@@ -141,7 +141,26 @@
         "sha256": "0c82d50eb9fee7ad1e6cfb2b01b8b44f1130a5e0bd4c1709a3a474d1fd005272",
         "purpose": "AppCheckCore already depends on GoogleUtilities/Environment and UserDefaults plus RecaptchaInterop."
       }
-    ]
+    ],
+    "allowedProfiles": [
+      "staging",
+      "development"
+    ],
+    "developmentProjection": {
+      "provenance": "DECLARED_TARGET_NAME_PROJECTION_NOT_OBSERVED_MACOS_GENERATION",
+      "stagingPropertiesUTF8": "{\n  \"expo.jsEngine\": \"hermes\",\n  \"EX_DEV_CLIENT_NETWORK_INSPECTOR\": \"true\",\n  \"ios.deploymentTarget\": \"17.0\",\n  \"expo.inlineModules.watchedDirectories\": \"[]\",\n  \"expo.inlineModules.xcodeProjectTargets\": \"{\\\"mainTarget\\\":\\\"LayerwellStaging\\\",\\\"targets\\\":[]}\",\n  \"ios.forceStaticLinking\": \"[]\",\n  \"apple.privacyManifestAggregationEnabled\": \"true\",\n  \"EXPO_USE_PRECOMPILED_MODULES\": \"true\"\n}\n",
+      "stagingPodfileUTF8": "# Set by expo-router. This enables Fabric-only features from react-native-screens\nENV['RNS_GAMMA_ENABLED'] ||= '1'\nrequire File.join(File.dirname(`node --print \"require.resolve('expo/package.json')\"`), \"scripts/autolinking\")\nrequire File.join(File.dirname(`node --print \"require.resolve('react-native/package.json')\"`), \"scripts/react_native_pods\")\n\nrequire 'json'\npodfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json'))) rescue {}\n\ndef ccache_enabled?(podfile_properties)\n  # Environment variable takes precedence\n  return ENV['USE_CCACHE'] == '1' if ENV['USE_CCACHE']\n\n  # Fall back to Podfile properties\n  podfile_properties['apple.ccacheEnabled'] == 'true'\nend\n\nENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] ||= podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']\nENV['RCT_USE_RN_DEP'] ||= podfile_properties['ios.buildReactNativeFromSource'] == 'true' ? '0' : '1'\nENV['RCT_USE_PREBUILT_RNCORE'] ||= podfile_properties['ios.buildReactNativeFromSource'] == 'true' ? '0' : '1'\nENV['RCT_HERMES_V1_ENABLED'] ||= '0' if podfile_properties['expo.useHermesV1'] == 'false'\n# An explicit `ios.usePrecompiledModules: false` must win even when the env var is already set\n# (e.g. EXPO_USE_PRECOMPILED_MODULES exported by EAS Build), so force-disable here before the default.\nENV['EXPO_USE_PRECOMPILED_MODULES'] = '0' if podfile_properties['EXPO_USE_PRECOMPILED_MODULES'] == 'false'\nENV['EXPO_USE_PRECOMPILED_MODULES'] ||= '1'\nplatform :ios, podfile_properties['ios.deploymentTarget'] || '16.4'\n\nprepare_react_native_project!\n\ntarget 'LayerwellStaging' do\n  use_expo_modules!\n\n  if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'\n    config_command = ['node', '-e', \"process.argv=['', '', 'config'];require('@react-native-community/cli').run()\"];\n  else\n    config_command = [\n      'node',\n      '--no-warnings',\n      '--eval',\n      'require(\\'expo/bin/autolinking\\')',\n      'expo-modules-autolinking',\n      'react-native-config',\n      '--json',\n      '--platform',\n      'ios'\n    ]\n  end\n\n  config = use_native_modules!(config_command)\n\n  use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']\n  use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']\n\n  use_react_native!(\n    :path => config[:reactNativePath],\n    :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',\n    # An absolute path to your application root.\n    :app_path => \"#{Pod::Config.instance.installation_root}/..\",\n    :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',\n  )\n\n  post_install do |installer|\n    react_native_post_install(\n      installer,\n      config[:reactNativePath],\n      :mac_catalyst_enabled => false,\n      :ccache_enabled => ccache_enabled?(podfile_properties),\n    )\n  end\nend\n",
+      "propertiesPreimage": {
+        "path": "apps/mobile/ios/Podfile.properties.json",
+        "bytes": 385,
+        "sha256": "f9bfc8664ca3a79cef55b8942d34efca8aad25c31a32ddd7a4e156b69e808a2e"
+      },
+      "podfilePreimage": {
+        "path": "apps/mobile/ios/Podfile",
+        "bytes": 2900,
+        "sha256": "48ef0d322432bcf713754e0e98db9fc2e94336dfd590acf69d87e45d1d6aaa74"
+      }
+    }
   },
   "obligations": {
     "path": "scripts/phase9/ios-native-obligations47.json",
