@@ -189,3 +189,12 @@ If the earlier browser/URL-policy restriction is intentionally lifted by its own
 ## Commercial continuity boundary
 
 The current full_routine and photo_timeline Pro gates remain. The future V2-C10 free ordinary routine/history/photos/brief promise requires a separately issued commercial-policy decision and finite implementation mandate; C46 does not permit silently removing existing paywalls. A test-only Pro bootstrap cannot qualify a production free journey.
+
+## Source-specific custody and tooling actions (no new gate or admission)
+
+- G97 custodian: recover/authenticate original OWASP raw5878942e... rule bytes or issue a separately reviewed exact-source successor through authentic custody. Current official0be8... is separately labeled C46 technical evidence, never original-rule equivalence. Original expiry unchanged.
+- Native source custodian/Brain: independently review the exact C46 nonnative lock delta and unchanged installed native/config proof. Original C23 complete-lock reader refuses this security-patched lock and remains unchanged; parent fixture PASS and C46 technical proof cannot grant signed-device/owner acceptance.
+- Dependency maintainers/engineering reviewer: supply or qualify a supported upstream migration for remaining Zod3/unbounded output, unfixed deepmerge version finding and legacy minimatch3 version finding. No blanket severity downgrade or renewal. Existing mitigations and actual consumer applicability are qualified in SECURITY_DIAGNOSIS.json.
+- Physical-device QA: verify actual installed supported iPhone, VoiceOver, native storage/process-death/power-loss, offline return, camera/photos/OS reminders/widgets and privacy interruption behavior at the exact signed build. Source/native-port tests cannot perform this act.
+
+Local ambiguous-write recovery is an app data-rights action, not independent acceptance: retry after a live operation settles; if durable uncertainty persists, explicit exact-key or full local cleanup must confirm absence before releasing the marker. Ordinary save never authorizes deletion; confirmed/photo keys remain untouched until explicit cleanup.

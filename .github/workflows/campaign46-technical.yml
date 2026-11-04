@@ -40,7 +40,7 @@ jobs:
           tools_root = out.parent / 'c46-tools'
           sys.path.insert(0, str(root / 'scripts/phase9/security_acceptance'))
           from collect import verify_tool_sources
-          from contract import SEMGREP_ENTRY
+          from contract import SEMGREP_ENTRY, scan_coverage
           policy = json.loads((root / 'scripts/phase9/security_acceptance/proposal.json').read_bytes())
           tools = json.loads((tools_root / 'tools.json').read_bytes())
           verify_tool_sources(tools, policy)
@@ -92,10 +92,14 @@ jobs:
               path = out / (name + '.yaml')
               path.write_bytes(raw)
               configs += ['--config', path]
+          explicit_sql = sorted(row['path'] for row in rows if row['path'].startswith('supabase/tests/') and row['path'].endswith('.sql'))
+          original_explicit = scan_coverage(policy)['explicitTargets']
+          assert set(original_explicit).issubset(explicit_sql), 'ORIGINAL_SQL_COVERAGE_OMISSION'
+          (out / 'explicit-sql-targets.json').write_text(json.dumps({'originalForced': original_explicit, 'currentForced': explicit_sql}, indent=2))
           run('semgrep', [sys.executable, '-I', '-S', '-B', '-c', SEMGREP_ENTRY, tools['semgrep'],
               'scan', '--error', '--strict', '--oss-only', '--metrics=off', '--jobs=1', '--max-memory=768',
               '--timeout=30', '--max-target-bytes=4194304', '--no-git-ignore', '--verbose',
-              '--json', '--output=' + str(out / 'semgrep.json'), *configs, '.'], snapshot, 2400)
+              '--json', '--output=' + str(out / 'semgrep.json'), *configs, '.', *explicit_sql], snapshot, 2400)
           run('gitleaks', [tools['gitleaks'], 'detect', '--no-git', '--source=' + str(snapshot),
               '--config=' + str(root / 'scripts/phase9/security_acceptance/gitleaks.toml'), '--redact=100',
               '--exit-code=2', '--report-format=json', '--report-path=' + str(out / 'gitleaks-redacted.json')], snapshot)
@@ -104,6 +108,8 @@ jobs:
           run('npm-audit', ['node', tools['npm'], 'audit', '--audit-level=high', '--json'], root)
           run('npm-graph', ['node', tools['npm'], 'ls', '--all', '--json', '--long'], root)
           run('semantic-security', ['node', '--test', 'scripts/release/full-app-j01/security_completion46.test.mjs'], root)
+          run('historical-native-current-refusal', ['node', tools['npm'], 'run', 'phase5:check-native-config'], root)
+          run('current-native-technical', ['node', 'scripts/release/full-app-j01/native_completion46.mjs'], root)
           summary = {'head': head, 'qualification': 'CURRENT_SOURCE_TECHNICAL_ONLY_NOT_G97',
               'completeSnapshotFiles': len(rows), 'completeSnapshotBytes': sum(row['bytes'] for row in rows),
               'archiveContentSecurity': 'NOT_QUALIFIED: scanner format/rule/size limits remain; no source removed',

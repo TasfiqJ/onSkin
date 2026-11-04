@@ -44,6 +44,8 @@ PATHS = {
     'scripts/release/full-app-j01/source_completion46.py',
     'scripts/release/full-app-j01/source_completion46.test.py',
     'scripts/release/full-app-j01/security_completion46.test.mjs',
+    'scripts/release/full-app-j01/native_completion46.mjs',
+    'scripts/release/full-app-j01/native_completion46.test.mjs',
     'scripts/release/full-app-j01/c46-rules/owasp-top-ten-current.yaml',
     '.github/workflows/quality.yml', '.github/workflows/campaign46-technical.yml', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt',
     'package.json', 'package-lock.json',

@@ -5,7 +5,7 @@
   "base_tree": "23563c36af990df5fc74d6a79507cfc24a1ff8ac",
   "plan_commit": "5b635c9d822f862b50c03f923c441e9b22161ff7",
   "plan_sha256": "06a5d45db892bd64a72c8010ec23a5b6fa27901e32c35b4b29c1f746fb9b37f6",
-  "inventory_frozen": false,
+  "inventory_frozen": true,
   "paths": [
     {
       "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
@@ -419,6 +419,24 @@
       "invariant": "Original587894... custodyrefusal remainsOPEN; currentpack separatelyhashed/attributed, no originalGateequivalence/no allowlist/severitywaiver; allactualfindings retained",
       "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
       "planned_validation": "ExactofficialHTTPbytes/currentSHA+unchangedother3packs, explicitoriginaldriftreceipt; actualfinalheadSemgreprawresultsandcoverage"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_completion46.mjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Authorizedsecurity12node nonnativepatch changescomplete lockhash; oldNative23 historicalreader correctlyrefuses newlock. Prove actualcurrentnativeidentity/config invariants independently without historicalreader/custody edits",
+      "invariant": "Exactbase-lock reversal/native node+source+installedtree equality; all originalpureconfig/lifecycle assertions preserved; technicalsource only NO native/owner/releaseadmission; originalcurrentrefusal retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real complete nativeinventory, exact12node deltas, actualvariantconfig, tamperrefusals and oldpinnedparent nativecommand unchangedPASS; actualcurrentoldguardrefusalretained; exports/type/root/finaltechnicalCI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_completion46.test.mjs",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Authorizedsecurity12node nonnativepatch changescomplete lockhash; oldNative23 historicalreader correctlyrefuses newlock. Prove actualcurrentnativeidentity/config invariants independently without historicalreader/custody edits",
+      "invariant": "Exactbase-lock reversal/native node+source+installedtree equality; all originalpureconfig/lifecycle assertions preserved; technicalsource only NO native/owner/releaseadmission; originalcurrentrefusal retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real complete nativeinventory, exact12node deltas, actualvariantconfig, tamperrefusals and oldpinnedparent nativecommand unchangedPASS; actualcurrentoldguardrefusalretained; exports/type/root/finaltechnicalCI"
     }
   ],
   "decisions": [
@@ -453,6 +471,14 @@
     {
       "id": "C46-08",
       "decision": "OriginalOWASP expected587894... liveendpoint returnsdifferent0be8...;21trackedarchives36candidatebodiessearchedwithout authenticoldbytes. Originalprotectedrule/pin remains unchanged and BLOCKED_RULE_CUSTODY. C46 uses distinctlynamed officialcurrentOWASP technicalcopy with its own exactretrievedhash plus3unchangedpacks, explicitnonequivalence and no originalSecurity/G97admission. This is authorized current-source technicalanalysis, not renewal/replacement oforiginalgate. Never-written oldcopyauthority retained separately."
+    },
+    {
+      "id": "C46-09",
+      "decision": "CurrentNative23 complete-lock hardpin fails on authorizedsecuritypatch; acceptedparent exactsame nativeconfigcommandPASS0, newheadFAIL3. No fakeexternalidentity or modifiedhistoricalreader/witness. Add C46 technicalnative compatibility proof over exactchangednonnativegraph and unchangednativeinstalledtrees/config; preserve oldguardactual refusal asOPEN and invoke oldpinnedreaders only at their pinnedsource. New sourcecompatibility is not native/signing/owneradmission."
+    },
+    {
+      "id": "C46-10",
+      "decision": "Final runtime/native/test/source-tool inventory46paths frozen. Canonical independent finalcheckout cloned with core.autocrlf=false beforecheckout; full normalnpmci hooks passed. Native technical proof170observations/1559files/12exactnodes and3tampertests PASS; originalcurrentNative23refusal staysOPEN, originalparentfullcommandPASS0. Final exact-head checks must measure canonicalbytes after this sourcecommit; only two existing generatedworklists may form finalseallast."
     }
   ],
   "unused_authority": [
@@ -466,5 +492,6 @@
       "planned_validation": "Hash frozenproposal anchor beforecopy/use, actualSemgrep finalheadrawresults+coverage; untouchedoriginalrules/pins verified",
       "state": "NEVER_WRITTEN_OR_SHIPPED; exact original bytes unavailable"
     }
-  ]
+  ],
+  "final_inventory_note": "Exact46 potentially exercised paths, plus separately frozen first plan. No directory wildcard. Never-written old OWASP copy is retained only under unused_authority, not shipped."
 }

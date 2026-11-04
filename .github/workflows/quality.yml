@@ -240,13 +240,24 @@ jobs:
       - name: Verify tooling security backports
         run: npm run phase9:tooling-security:test
 
-      - name: Verify installed iOS native sources
+      - name: Verify C46 installed native source compatibility and pinned historical reader
         run: |
           npm run postinstall:check
           npm run phase5:expo-widgets-lifecycle:test
           npm run phase9:view-shot-privacy:test
-          npm run phase9:ios-privacy-source-audit:test
-          npm run phase9:ios-privacy-source-audit:check
+          node --test scripts/release/full-app-j01/native_completion46.test.mjs
+          node scripts/release/full-app-j01/native_completion46.mjs
+          # The original whole-lock C23 reader remains unchanged. Its own
+          # exact accepted fixture receives a normal install and full invocation.
+          c46_native_fixture="$(mktemp -d "$RUNNER_TEMP/c46-native-parent-XXXXXX")"
+          git clone --no-hardlinks --no-checkout "$GITHUB_WORKSPACE" "$c46_native_fixture"
+          git -C "$c46_native_fixture" checkout --detach 20c761fa5e3fbf427fb33ab319218bd0c1d022bd
+          (
+            cd "$c46_native_fixture"
+            npm ci --no-audit --no-fund
+            npm run phase9:ios-privacy-source-audit:test
+            npm run phase9:ios-privacy-source-audit:check
+          )
           npm run phase9:ios-archive-privacy-evidence:test
           npm run phase9:release-candidate-git-contract:test
           npm run phase9:verification-wiring:test
