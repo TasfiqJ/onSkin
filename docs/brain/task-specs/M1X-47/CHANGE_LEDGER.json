@@ -251,6 +251,16 @@
         "scripts/phase9/ios-native-obligations47.json"
       ],
       "reason": "Actual attempt3 CocoaPods static integration error requires narrow supported generated-only modular-header policy; preserve frozen plan, prior RED and all original native controls. Recorded before implementation."
+    },
+    {
+      "recorded_utc": "2026-11-04T19:35:27.694815+00:00",
+      "paths": [],
+      "reason": "Explicit finite hosted budget4->6 for actual new-test Mac temporary-directory alias failure; original plan bytes unchanged, no source scope expansion or guard/test weakening.",
+      "previous_hosted_budget": 4,
+      "amended_total_hosted_budget": 6,
+      "additional_jobs": 2,
+      "one_concurrent_job": true,
+      "job_timeout_minutes": 90
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

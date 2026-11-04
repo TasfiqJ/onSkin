@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { linkSync, mkdtempSync, readFileSync, rmSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
+import { linkSync, mkdtempSync, readFileSync, realpathSync, rmSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, resolve } from 'node:path';
 import test from 'node:test';
@@ -90,9 +90,10 @@ test('resolved native gate retains existing transitive pods and rejects root def
 });
 
 test('source proof reader refuses oversized files before allocation and actual hardlinked evidence', t => {
-  const directory = mkdtempSync(join(tmpdir(), 'c47-proof-bound-'));
+  const temporaryRoot = realpathSync(tmpdir());
+  const directory = mkdtempSync(join(temporaryRoot, 'c47-proof-bound-'));
   t.after(() => {
-    assert.match(relative(resolve(tmpdir()), directory), /^c47-proof-bound-[^\\/]+$/);
+    assert.match(relative(temporaryRoot, directory), /^c47-proof-bound-[^\\/]+$/);
     rmSync(directory, { recursive: true });
   });
   const path = join(directory, 'source.json');

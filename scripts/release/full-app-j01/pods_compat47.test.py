@@ -16,7 +16,8 @@ spec.loader.exec_module(p)
 
 class PodsCompat47Tests(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(prefix='c47-generated-pods-')
+        self.temp = tempfile.TemporaryDirectory(prefix='c47-generated-pods-',
+                                                dir=Path(tempfile.gettempdir()).resolve())
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.ios = self.root / 'ios'
