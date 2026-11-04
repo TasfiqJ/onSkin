@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { clearPrivateMutationAfterRemoval46 } from '@/lib/auth/localAccountIsolation';
+import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteAdmission';
 import {
   clearRoutineWidgetActions,
   ROUTINE_WIDGET_ACTION_REGISTRY_KEY,
@@ -20,6 +22,7 @@ import {
 
 import {
   assertPrivateKVReadable,
+  clearPrivateKVContentKey,
   beginPrivateKVAccountBoundary,
   endPrivateKVAccountBoundary,
   getPrivateItem,
@@ -45,7 +48,7 @@ import {
   waitForPrivateKVWritesToSettle,
 } from './privateKV';
 
-vi.mock('expo-crypto', () => ({ randomUUID: vi.fn() }));
+vi.mock('expo-crypto', async () => ({ randomUUID: vi.fn((await import('node:crypto')).randomUUID) }));
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
@@ -96,15 +99,19 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
       );
     }),
     setItem: vi.fn(async (key: string, value: string) => {
-      mocks.setItemStarted?.();
-      if (mocks.setItemGate) await mocks.setItemGate;
+      // Faults in these original cases target the data mutation, never the
+      // new content-free recovery registry's own native write.
+      if (key !== 'layerwell.localDataCleanupRequired.v1') {
+        mocks.setItemStarted?.();
+        if (mocks.setItemGate) await mocks.setItemGate;
+      }
       const outcome =
         mocks.setItemOutcomeKey === key ? (mocks.setItemOutcomes.shift() ?? 'resolve') : 'resolve';
       if (outcome === 'reject-before') {
         throw new Error('ASYNC_STORAGE_SET_REJECTED_BEFORE_COMMIT');
       }
       mocks.asyncStorage.set(key, value);
-      mocks.setItemCommitted?.(key, value);
+      if (key !== 'layerwell.localDataCleanupRequired.v1') mocks.setItemCommitted?.(key, value);
       if (outcome === 'reject-after') {
         throw new Error('ASYNC_STORAGE_SET_REJECTED_AFTER_COMMIT');
       }
@@ -191,8 +198,13 @@ describe('private KV encrypted storage', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.useRealTimers();
+    // The fixture's device is discarded between cases. Retire the new durable
+    // recovery capabilities only after its exact native record absence.
+    mocks.asyncStorage.clear();
+    await clearPrivateMutationAfterRemoval46(HEALTH_PURPOSE_PRIVATE_DATA_KEYS);
+    await clearPrivateKVContentKey();
   });
 
   it('keeps legacy plaintext values readable', async () => {

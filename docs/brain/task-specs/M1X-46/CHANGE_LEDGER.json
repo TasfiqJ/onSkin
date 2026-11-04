@@ -232,6 +232,193 @@
       "invariant": "Export only settled owner facts, no global lock/key/policy; preserve genuine plan-history recovery/read authority and deletion priority",
       "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
       "planned_validation": "Native held encrypted write -> export waits -> exact rollback, success/retry and owner/cleanup cancellation; all C44/C45 private/crypto/photo regressions and forced root"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
+      "preimage_sha256": "7f02e125f82f5a2fdc576645ae1abd94513ee6fdc6132009a94e965a6609a265",
+      "checkout_preimage_sha256": "7f02e125f82f5a2fdc576645ae1abd94513ee6fdc6132009a94e965a6609a265",
+      "bytes": 22201,
+      "need": "Proven failed-compensation history exposure requires durable prearmed nondestructive recovery at existing marker/owner boundary",
+      "invariant": "Never ordinary-save-as-deletion consent, no lost confirmed/photos/owner proof, fail-closed across module reset, preserve legacy1/C45v1, no global private mutex",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real native blocked export/read/rewrite/restart, marker write/read/clear failures, deletion priority and full C44/C45/owner regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+      "preimage_sha256": "5f892775afaa04cdd2b5d655d12dee5314de3bc77dae57fa304b99e86dc15485",
+      "checkout_preimage_sha256": "5f892775afaa04cdd2b5d655d12dee5314de3bc77dae57fa304b99e86dc15485",
+      "bytes": 9856,
+      "need": "Proven failed-compensation history exposure requires durable prearmed nondestructive recovery at existing marker/owner boundary",
+      "invariant": "Never ordinary-save-as-deletion consent, no lost confirmed/photos/owner proof, fail-closed across module reset, preserve legacy1/C45v1, no global private mutex",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Real native blocked export/read/rewrite/restart, marker write/read/clear failures, deletion priority and full C44/C45/owner regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Genuine native marker/owner/concurrency/restart/generation and destructive-priority controls for durable recovery",
+      "invariant": "Existing v1/legacy1 and owner proofs preserved; no ownership/deletion grant from unclaimed v2; no mocked critical store/lease",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Controlled native marker commit/reject/omission/ABA, concurrentcapabilities/ownerchanges/fullcleanup; forcedroot/type/lint"
+    },
+    {
+      "path": ".github/workflows/campaign46-technical.yml",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Exact-current-head supported Linux static scanner run unavailable locally; explicit C46 technical diagnostics only",
+      "invariant": "Original Security/candidate/G97 workflows/rules/pins/custody unchanged; full scope/coverage/raw exits/artifacts, no admission or exceptions",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Official pinned tool provenance, scope/diff audit, actual final-head run/jobs/logs/artifacts retained on failures"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteJournal.c08b2.test.ts",
+      "preimage_sha256": "311f57789bfa97303ce2d7a04c0c278cca67d9e7afc001e72b6ef14c7789b0c2",
+      "checkout_preimage_sha256": "311f57789bfa97303ce2d7a04c0c278cca67d9e7afc001e72b6ef14c7789b0c2",
+      "bytes": 5175,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+      "preimage_sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c",
+      "checkout_preimage_sha256": "7be08c43980eb9048d52837dea69db6bf25b87b3f72cd3830b14513558d8299c",
+      "bytes": 42863,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/photoDeleteWithdrawal.c08b2.test.ts",
+      "preimage_sha256": "c0bfbfa1717b6737b3b4e05e39ca14894ca0b419e8a716a94826a22bd5fda135",
+      "checkout_preimage_sha256": "c0bfbfa1717b6737b3b4e05e39ca14894ca0b419e8a716a94826a22bd5fda135",
+      "bytes": 21408,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/routine/planSourceFence44.test.ts",
+      "preimage_sha256": "1ec61b14e6d73cbc66223e996e12fd010108b692e0607cfa82c87a6dbe159659",
+      "checkout_preimage_sha256": "1ec61b14e6d73cbc66223e996e12fd010108b692e0607cfa82c87a6dbe159659",
+      "bytes": 17677,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts",
+      "preimage_sha256": "8209900541d9426287675b2797c0cb5fd1eec9350e35db9620026fff066db501",
+      "checkout_preimage_sha256": "8209900541d9426287675b2797c0cb5fd1eec9350e35db9620026fff066db501",
+      "bytes": 136828,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/detailActionSheet.campaign26.test.ts",
+      "preimage_sha256": "d631698efa7a182c192ea035d9abcc8cc933f3af256c47454e4ad4f3b07d9154",
+      "checkout_preimage_sha256": "d631698efa7a182c192ea035d9abcc8cc933f3af256c47454e4ad4f3b07d9154",
+      "bytes": 13031,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/intakeRecovery.campaign25.test.ts",
+      "preimage_sha256": "b8695bf0def6ebf0107f59a0492c64fd40ab7096b4f1c2e541660dcc089f7fc7",
+      "checkout_preimage_sha256": "b8695bf0def6ebf0107f59a0492c64fd40ab7096b4f1c2e541660dcc089f7fc7",
+      "bytes": 18915,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts",
+      "preimage_sha256": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
+      "checkout_preimage_sha256": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56",
+      "bytes": 17440,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/postDispatchCommit28.test.ts",
+      "preimage_sha256": "f4ed27d371a05404095243b68bc20fe4c753e4e33b37c32d9d12957229d690cf",
+      "checkout_preimage_sha256": "f4ed27d371a05404095243b68bc20fe4c753e4e33b37c32d9d12957229d690cf",
+      "bytes": 9185,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
+      "preimage_sha256": "0c0dafea3afb414972004d4160b723384cb42fe23a93e9631d7c84cd9c190b7c",
+      "checkout_preimage_sha256": "0c0dafea3afb414972004d4160b723384cb42fe23a93e9631d7c84cd9c190b7c",
+      "bytes": 77787,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/features/today/optionalChangeJournal41.test.ts",
+      "preimage_sha256": "d45de01454611cdd0128a2289d57bfb83930547a60f74f49c48739c26ba9792e",
+      "checkout_preimage_sha256": "d45de01454611cdd0128a2289d57bfb83930547a60f74f49c48739c26ba9792e",
+      "bytes": 18227,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
+      "preimage_sha256": "a498442cce32e2a330a416793883528ef2a58234c1f2f0100a5b8f8f1ff8b969",
+      "checkout_preimage_sha256": "a498442cce32e2a330a416793883528ef2a58234c1f2f0100a5b8f8f1ff8b969",
+      "bytes": 51654,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVCommitFence28.test.ts",
+      "preimage_sha256": "c7162d6d966ba84847a49ff08855900bbb92825ad60d338fe37685be2084181a",
+      "checkout_preimage_sha256": "c7162d6d966ba84847a49ff08855900bbb92825ad60d338fe37685be2084181a",
+      "bytes": 9095,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVSourceFence44.test.ts",
+      "preimage_sha256": "b6d68f5bf5cb97edf1dc94031d6ace694e1d9f42c12ac040a651e66bffad82ef",
+      "checkout_preimage_sha256": "b6d68f5bf5cb97edf1dc94031d6ace694e1d9f42c12ac040a651e66bffad82ef",
+      "bytes": 13628,
+      "need": "Actual fullroot RED133fail14files: diagnose nativeports/precise data-vs-marker fault injection and equallystrong new durable-confirmation semantics; runtime regressions repaired before touching assertions",
+      "invariant": "Preserve original security/owner/cleanup/confirmation assertions; no skip/xfail/reduced discovery/friendly store/lease mocks; originalfailedsource and rawlog retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Exact original RED rawd294f6fc..., file preimage; stronger focused successors then full forcedroot and C44/C45/photo regressions"
+    },
+    {
+      "path": "scripts/release/full-app-j01/c46-rules/owasp-top-ten-current.yaml",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Genuine supported currentSAST despite originalOWASP remotehashdrift; distinctC46 technicalpack copied from actualofficialendpoint, no originalrule/pin edits",
+      "invariant": "Original587894... custodyrefusal remainsOPEN; currentpack separatelyhashed/attributed, no originalGateequivalence/no allowlist/severitywaiver; allactualfindings retained",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "ExactofficialHTTPbytes/currentSHA+unchangedother3packs, explicitoriginaldriftreceipt; actualfinalheadSemgreprawresultsandcoverage"
     }
   ],
   "decisions": [
@@ -246,6 +433,38 @@
     {
       "id": "C46-03",
       "decision": "Reproduced unconfirmed note export with genuine crypto/authority/native barrier. Original RED preserved separately from test import-order timeout. Authorize causal privateKV shared export queue fix; investigate failed compensation separately before candidate eligibility."
+    },
+    {
+      "id": "C46-04",
+      "decision": "Additional genuine shared ordinary-writer failed-compensation defect remains candidate blocker. Implement durable prearm/recovery, not memory-only quarantine; preserve actual unclaimed bootstrap provenance without manufacturing owner proof. Any related recovery key would require explicit ledger amendment before edit (mandate excludes unrelated keys, not causally necessary control state). No unsafe seal/push."
+    },
+    {
+      "id": "C46-05",
+      "decision": "Durable shared health-write recovery uses existing content-free marker protocol; private plaintext reads refuse while v2 mutation registry pending to prevent relabel of old nonAAD ciphertext. No new encryption format or global private mutex. Disjoint writes whose preparation reads private data may require retry; preserve ordinary confirmed facts/photo keys and explicit cleanup priority. Actual owner proof remains genuine; unclaimed test bootstrap provenance cannot grant ownership. Completion/journey agents own disjoint auth/privateKV paths."
+    },
+    {
+      "id": "C46-06",
+      "decision": "Actual forcedroot development133fail/6817pass of6950mobile plus24operator; all14 failing fixturepaths prelogged before any changes. Nativecrypto adapter omissions, broad-fault injection and pending-plaintext expectations require precise native fixture/semantic corrections; introduced post-dispatch removal cancellation is runtime bug to repair. Preserve rawRED and original assertions/intent, no retroactive inherited exception."
+    },
+    {
+      "id": "C46-07",
+      "decision": "Before execution, source review found historical compact37/bottle38 Node controls spawn headless Chrome. C46 preflight does not invoke these browser programs under inherited browser/URL denial. Original programs unchanged; accepted prior exact-source evidence remains attributed, current browser/DOM/native NOT_RUN. Retain permitted pure driver-decision controls, actual mounted components, real domain/crypto tests and exact route inventory. No alternate browser route or test pass manufactured."
+    },
+    {
+      "id": "C46-08",
+      "decision": "OriginalOWASP expected587894... liveendpoint returnsdifferent0be8...;21trackedarchives36candidatebodiessearchedwithout authenticoldbytes. Originalprotectedrule/pin remains unchanged and BLOCKED_RULE_CUSTODY. C46 uses distinctlynamed officialcurrentOWASP technicalcopy with its own exactretrievedhash plus3unchangedpacks, explicitnonequivalence and no originalSecurity/G97admission. This is authorized current-source technicalanalysis, not renewal/replacement oforiginalgate. Never-written oldcopyauthority retained separately."
+    }
+  ],
+  "unused_authority": [
+    {
+      "path": "scripts/release/full-app-j01/c46-rules/owasp-top-ten.yaml",
+      "preimage_sha256": null,
+      "bytes": null,
+      "need": "Current remoteOWASP rules drift from originalfrozenSHA; preserve exact authenticated frozenbytes as C46 technical copy so genuine scan canexecute without changing originalpins/rules",
+      "invariant": "Byte-identical5878942efc5da41d2124bbf32a627db594cc63c29c524737c36e54ba677270d1 only; no newrules/allowlists/exceptions/owneradmission",
+      "authority": "BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01",
+      "planned_validation": "Hash frozenproposal anchor beforecopy/use, actualSemgrep finalheadrawresults+coverage; untouchedoriginalrules/pins verified",
+      "state": "NEVER_WRITTEN_OR_SHIPPED; exact original bytes unavailable"
     }
   ]
 }

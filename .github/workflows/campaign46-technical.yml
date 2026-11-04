@@ -1,0 +1,128 @@
+name: Campaign46 current source diagnostics (technical only)
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scanners:
+    name: Current source scanners; no G97 admission
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.21.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Prepare authenticated tools and normal application installation
+        run: |
+          set -o pipefail
+          mkdir "$RUNNER_TEMP/c46-scanner-evidence"
+          python -B scripts/phase9/security_acceptance/bootstrap_tools.py "$RUNNER_TEMP/c46-tools" 2>&1 | tee "$RUNNER_TEMP/c46-scanner-evidence/bootstrap.log"
+          node "$RUNNER_TEMP/c46-tools/npm/node_modules/npm/bin/npm-cli.js" ci --no-audit --no-fund 2>&1 | tee "$RUNNER_TEMP/c46-scanner-evidence/normal-install.log"
+      - name: Execute current source scans and preserve every raw result
+        env:
+          C46_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python -I -B - <<'PY'
+          import hashlib, json, os, pathlib, subprocess, sys, tarfile, urllib.request
+          root = pathlib.Path.cwd()
+          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c46-scanner-evidence'
+          assert out.is_dir()
+          tools_root = out.parent / 'c46-tools'
+          sys.path.insert(0, str(root / 'scripts/phase9/security_acceptance'))
+          from collect import verify_tool_sources
+          from contract import SEMGREP_ENTRY
+          policy = json.loads((root / 'scripts/phase9/security_acceptance/proposal.json').read_bytes())
+          tools = json.loads((tools_root / 'tools.json').read_bytes())
+          verify_tool_sources(tools, policy)
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
+          assert head == os.environ['C46_EXPECTED_HEAD']
+          snapshot = out.parent / 'c46-exact-source'
+          snapshot.mkdir()
+          rows = []
+          process = subprocess.Popen(['git', 'archive', '--format=tar', head], stdout=subprocess.PIPE)
+          with tarfile.open(fileobj=process.stdout, mode='r|') as archive:
+              for member in archive:
+                  path = pathlib.PurePosixPath(member.name)
+                  assert not path.is_absolute() and '..' not in path.parts and '\\' not in member.name and ':' not in member.name
+                  destination = snapshot.joinpath(*path.parts)
+                  if member.isdir():
+                      destination.mkdir(parents=True, exist_ok=True)
+                      continue
+                  assert member.isfile() and member.size <= 500_000_000
+                  raw = archive.extractfile(member).read()
+                  assert len(raw) == member.size
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  destination.write_bytes(raw)
+                  rows.append({'path': member.name, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
+          assert process.wait() == 0
+          (out / 'source-manifest.json').write_text(json.dumps({'head': head, 'files': rows}, sort_keys=True))
+          results = {}
+          def run(name, argv, cwd, timeout=1200):
+              with (out / (name + '.stdout')).open('wb') as stdout, (out / (name + '.stderr')).open('wb') as stderr:
+                  try:
+                      result = subprocess.run(list(map(str, argv)), cwd=cwd, stdout=stdout, stderr=stderr, timeout=timeout)
+                      code = result.returncode
+                  except subprocess.TimeoutExpired:
+                      code = 124
+              results[name] = {'argv': list(map(str, argv)), 'exit': code}
+              (out / 'process-results.json').write_text(json.dumps(results, indent=2))
+          configs = []
+          original_owasp = policy['rules']['owasp-top-ten']
+          current_owasp = '0be8cbb823baae205bf86be0f274f412a659b5132cf1de3e902f03da19a25dbc'
+          for name, expected in policy['rules'].items():
+              if name == 'owasp-top-ten':
+                  # The original immutable hash is retained as an open custody
+                  # boundary. This separate C46 snapshot is never equivalent.
+                  raw = (root / 'scripts/release/full-app-j01/c46-rules/owasp-top-ten-current.yaml').read_bytes()
+                  assert hashlib.sha256(raw).hexdigest() == current_owasp
+              else:
+                  request = urllib.request.Request('https://semgrep.dev/c/p/' + name, headers={'User-Agent': 'Semgrep/1.181.0'})
+                  raw = urllib.request.urlopen(request, timeout=60).read()
+                  assert hashlib.sha256(raw).hexdigest() == expected, 'UNCHANGED_RULE_HASH_REQUIRED:' + name
+              path = out / (name + '.yaml')
+              path.write_bytes(raw)
+              configs += ['--config', path]
+          run('semgrep', [sys.executable, '-I', '-S', '-B', '-c', SEMGREP_ENTRY, tools['semgrep'],
+              'scan', '--error', '--strict', '--oss-only', '--metrics=off', '--jobs=1', '--max-memory=768',
+              '--timeout=30', '--max-target-bytes=4194304', '--no-git-ignore', '--verbose',
+              '--json', '--output=' + str(out / 'semgrep.json'), *configs, '.'], snapshot, 2400)
+          run('gitleaks', [tools['gitleaks'], 'detect', '--no-git', '--source=' + str(snapshot),
+              '--config=' + str(root / 'scripts/phase9/security_acceptance/gitleaks.toml'), '--redact=100',
+              '--exit-code=2', '--report-format=json', '--report-path=' + str(out / 'gitleaks-redacted.json')], snapshot)
+          run('osv', [tools['osv'], 'scan', 'source', '--recursive', '--format=json',
+              '--output=' + str(out / 'osv.json'), '.'], snapshot)
+          run('npm-audit', ['node', tools['npm'], 'audit', '--audit-level=high', '--json'], root)
+          run('npm-graph', ['node', tools['npm'], 'ls', '--all', '--json', '--long'], root)
+          run('semantic-security', ['node', '--test', 'scripts/release/full-app-j01/security_completion46.test.mjs'], root)
+          summary = {'head': head, 'qualification': 'CURRENT_SOURCE_TECHNICAL_ONLY_NOT_G97',
+              'completeSnapshotFiles': len(rows), 'completeSnapshotBytes': sum(row['bytes'] for row in rows),
+              'archiveContentSecurity': 'NOT_QUALIFIED: scanner format/rule/size limits remain; no source removed',
+              'originalProtectedRulesAndToolsModified': False,
+              'originalOWASP': {'sha256': original_owasp, 'state': 'BLOCKED_RULE_CUSTODY', 'equivalenceGranted': False},
+              'currentTechnicalOWASP': {'sha256': current_owasp, 'source': 'https://semgrep.dev/c/p/owasp-top-ten',
+                  'capturedUTC': '2026-11-04', 'qualification': 'SEPARATE_C46_CURRENT_RULE_SNAPSHOT_NOT_ORIGINAL_G97'},
+              'acceptanceGranted': False, 'release': 'NO_GO', 'results': results}
+          (out / 'summary.json').write_text(json.dumps(summary, indent=2))
+          raise SystemExit(0 if all(row['exit'] == 0 for row in results.values()) else 1)
+          PY
+      - name: Preserve technical evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: campaign46-current-scanners-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/c46-scanner-evidence/
+            ${{ runner.temp }}/c46-tools/release-receipts.json
+            ${{ runner.temp }}/c46-tools/official-wheel-install.json
+          if-no-files-found: warn
+          retention-days: 30

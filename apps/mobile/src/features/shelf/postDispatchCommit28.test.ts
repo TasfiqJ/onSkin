@@ -21,9 +21,10 @@ import {
   waitEntered28,
 } from './destructiveCommit28TestPorts';
 import { subscribeShelfMirrorOutboxChanges } from './store';
+import { removePrivateItem } from '@/lib/storage/privateKV';
 
 beforeEach(setup28);
-afterEach(cleanup28);
+afterEach(async () => { await cleanup28(); await removePrivateItem(KEY28); });
 
 async function assertCommitted28(label: string, originalOutbox: unknown[]) {
   const state = await state28();
@@ -96,7 +97,7 @@ for (const label of ['Remove completely', 'Mark discarded']) {
       const originalOutbox = (await state28()).mirrorOutbox;
       await mount28();
       await press28('More options');
-      const gate = holdRead28(KEY28, 3);
+      const gate = holdRead28(KEY28, 4);
       const writes = vi.spyOn(AsyncStorage, 'setItem');
       await act(async () => {
         button28(label).props.onPress();
@@ -117,7 +118,7 @@ for (const label of ['Remove completely', 'Mark discarded']) {
     const originalOutbox = (await state28()).mirrorOutbox;
     await mount28();
     await press28('More options');
-    const gate = holdRead28(KEY28, 3);
+    const gate = holdRead28(KEY28, 4);
     await act(async () => {
       button28(label).props.onPress();
     });
@@ -229,9 +230,23 @@ for (const label of ['Remove completely', 'Mark discarded']) {
     await mount28();
     await press28('More options');
     const original = AsyncStorage.setItem;
+    const nativeGet = AsyncStorage.getItem;
+    let committed = false;
+    let readsAfterCommit = 0;
+    let faulted = false;
     const writes = vi.spyOn(AsyncStorage, 'setItem').mockImplementation(async (key, raw) => {
       await original(key, raw);
-      if (key === KEY28) ports26.failRead = KEY28;
+      if (key === KEY28) committed = true;
+    });
+    vi.spyOn(AsyncStorage, 'getItem').mockImplementation(async key => {
+      if (key === KEY28 && committed && !faulted && ++readsAfterCommit === 2) {
+        // The first read is the private writer's exact confirmation; fail the
+        // following real Query read, preserving the original UI invariant.
+        faulted = true;
+        ports26.failRead = KEY28;
+        throw new Error('SYNTHETIC_POSTCOMMIT_QUERY_READ_REFUSED');
+      }
+      return nativeGet(key);
     });
     await press28(label);
     await settle28();

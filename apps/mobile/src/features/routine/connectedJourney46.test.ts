@@ -40,7 +40,7 @@ it('connects encrypted manual Shelf, explicit ordered history, offline Today fac
   // never evidence of production onboarding, a paid entitlement or a device.
   const cleanser = await addProduct({ operationId: randomUUID(), name: 'Synthetic46 cleanser',
     category: 'cleanser', ingredients: ['Aqua', 'Glycerin'], addedVia: 'manual' });
-  const balm = await addProduct({ operationId: randomUUID(), name: 'Synthetic46 balm',
+  const balm = await addProduct({ operationId: randomUUID(), name: 'Synthetic46 moisturiser',
     category: 'moisturiser', addedVia: 'manual' });
   const lease = captureHealthDataWriteLease();
   const initial = await capturePlanSource44(lease);

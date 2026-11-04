@@ -137,7 +137,9 @@ it('does not retroactively cancel an already fulfilled write', async () => {
   current = false;
   await settle28();
   expect(ports26.bytes.get(KEY28)).toBe(committed);
-  expect(writes).toHaveBeenCalledTimes(1);
+  expect(writes.mock.calls.filter(([key]) => key === KEY28)).toHaveLength(1);
+  expect(writes.mock.calls.filter(([key]) => key === 'layerwell.localDataCleanupRequired.v1')).toHaveLength(1);
+  expect(ports26.bytes.has('layerwell.localDataCleanupRequired.v1')).toBe(false);
 });
 
 it('preserves the original post-native additional guard and exact compensation semantics', async () => {

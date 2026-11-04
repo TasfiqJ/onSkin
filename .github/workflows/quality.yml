@@ -207,6 +207,31 @@ jobs:
           node --test scripts/release/full-app-j01/security_completion46.test.mjs
           npm --workspace apps/mobile run test -- --passWithNoTests=false src/features/shelf/compactManual46.test.ts src/features/routine/connectedJourney46.test.ts src/features/settings/exportConfirmation46.test.ts src/features/routine/planHistory45Encrypted.test.ts src/features/settings/localPrivateDataFence44.test.ts src/lib/storage/privateKVSourceFence44.test.ts src/features/routine/planSourceFence44.test.ts src/features/shelf/manualDraftRecovery.campaign26.test.ts src/features/shelf/detailActionSheet.campaign26.test.ts
           node --test scripts/launch/formula-route-inventory39.test.mjs
+          node --input-type=module <<'C41_UI_TEST'
+          import { mkdtempSync, writeFileSync, unlinkSync, rmdirSync } from 'node:fs';
+          import { tmpdir } from 'node:os';
+          import { join, resolve } from 'node:path';
+          import { spawnSync } from 'node:child_process';
+          const directory = mkdtempSync(join(tmpdir(), 'optional-change41-vitest-'));
+          const config = join(directory, 'ui.config.mjs');
+          try {
+            const root = resolve('apps/mobile');
+            writeFileSync(config, 'export default ' + JSON.stringify({ root,
+              resolve: { alias: { '@': join(root, 'src') } },
+              test: { environment: 'node', include: ['src/features/today/OptionalChangePanel41.test.tsx', 'src/features/routine/PlanHistoryPanel45.test.tsx'] }
+            }) + ';\n');
+            const result = spawnSync(process.execPath, [resolve('node_modules/vitest/vitest.mjs'),
+              'run', '--config', config, '--passWithNoTests=false', '--reporter=verbose'],
+              { stdio: 'inherit', timeout: 120000 });
+            if (result.error) throw result.error;
+            process.exitCode = result.status ?? 1;
+          } finally {
+            unlinkSync(config);
+            rmdirSync(directory);
+          }
+          C41_UI_TEST
+          node --test scripts/e2e/optional-change41.test.mjs
+          node --test scripts/e2e/onboarding-first-session35.test.mjs scripts/e2e/retained-safety-assertions.test.mjs
           node scripts/launch/check-contract.mjs
         # Technical evidence only. Original Security/candidate/G97 workflows and
         # pinned historical programs remain unchanged. Accepted exact-parent C45

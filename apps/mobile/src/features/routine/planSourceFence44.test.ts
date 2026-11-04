@@ -185,11 +185,16 @@ describe('Campaign44 actual local plan-source adapter', () => {
     const events: string[] = [];
     const saved = savePlanOrderWithSource44(snapshot, nextOrder()).then(() => { events.push('snapshot'); });
     await gate.entered;
-    expect(JSON.parse((await getPrivateItem(ORDER))!)).toEqual(nextOrder());
+    // Native bytes are still tentative while the final readback is held.
+    // Public plaintext now refuses rather than publishing this unconfirmed plan.
+    await expect(getPrivateItem(ORDER)).rejects.toThrow('LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED');
+    expect(events).toEqual([]);
     const mutation = removeProduct(productId).then(() => { events.push('source'); });
     gate.release();
     await Promise.all([saved, mutation]);
     expect(events).toEqual(['snapshot', 'source']);
+    expect(JSON.parse((await getPrivateItem(ORDER))!)).toEqual(nextOrder());
+    expect((await loadShelf()).some((product) => product.id === productId)).toBe(false);
   });
 
   it('keeps conflict admission closed, and invalidates on real dormant-choice removal and unrelated whole-Shelf metadata', async () => {

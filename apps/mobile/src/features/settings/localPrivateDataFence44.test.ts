@@ -215,7 +215,20 @@ async function grant() {
   setActiveHealthProcessingEpoch(44, { ownerUserId: OWNER, accountGeneration, serverVerifiedAt: null });
 }
 
-function holdOrderConflictRead() {
+async function admittedWriter46() {
+  // The cleanup-only default deliberately contains opaque invalid proofs and
+  // a pending legacy cleanup marker. Enter a genuine supported owner context
+  // before exercising a live writer; cleanup establishes its own marker later.
+  native.bytes.delete('layerwell.localDataCleanupRequired.v1');
+  native.bytes.set(PROOFS[0], createHash('sha256')
+    .update(`layerwell:local-data-owner:v1:${OWNER}`).digest('hex'));
+  native.bytes.delete(PROOFS[1]);
+  native.bytes.delete(PROOFS[2]);
+  await expect(readLocalDataOwnership(OWNER)).resolves.toBe('match');
+}
+
+async function holdOrderConflictRead() {
+  await admittedWriter46();
   const entered = deferred();
   const release = deferred();
   let reads = 0;
@@ -284,7 +297,7 @@ afterEach(async () => {
 
 describe('Campaign44 full-path direct reset ordering with actual encrypted storage', () => {
   it('CONTROL: queued private multi-remove still follows an entered writer', async () => {
-    const gate = holdOrderConflictRead();
+    const gate = await holdOrderConflictRead();
     const writing = observe(updatePrivateItem(ORDER_KEY, () => NEXT));
     await gate.entered;
     const deleting = observe(multiRemovePrivateItems([ORDER_KEY]));
@@ -299,7 +312,7 @@ describe('Campaign44 full-path direct reset ordering with actual encrypted stora
   });
 
   it('CONTROL: existing account/private/photo closure stays closed through nested cleanup', async () => {
-    const gate = holdOrderConflictRead();
+    const gate = await holdOrderConflictRead();
     const writing = observe(updatePrivateItem(ORDER_KEY, () => NEXT));
     await gate.entered;
     beginAccountGenerationBoundary();
@@ -325,7 +338,7 @@ describe('Campaign44 full-path direct reset ordering with actual encrypted stora
 
   it.each(['ordinary', 'source-fenced'] as const)(
     '%s writer: closes direct cleanup before a held final conflict read and drains before key destruction', async (writer) => {
-    const gate = holdOrderConflictRead();
+    const gate = await holdOrderConflictRead();
     const writing = observe(writer === 'ordinary' ? updatePrivateItem(ORDER_KEY, () => NEXT) : fencedWrite());
     await gate.entered;
     const keyEntered = deferred();
@@ -356,6 +369,7 @@ describe('Campaign44 full-path direct reset ordering with actual encrypted stora
 
   it.each(['ordinary', 'source-fenced'] as const)(
     '%s writer: drains a held native commit and its exact rollback before direct purge', async (writer) => {
+    await admittedWriter46();
     const entered = deferred();
     const release = deferred();
     const priorCiphertext = native.bytes.get(ORDER_KEY);
@@ -384,6 +398,7 @@ describe('Campaign44 full-path direct reset ordering with actual encrypted stora
 
   it.each([PRIVATE_KV_CONTENT_KEY_NAME, PHOTO_KEY])(
     'drains in-flight native creation of %s before destroying the key', async (key) => {
+      await admittedWriter46();
       // A missing content key and empty destination are valid creation inputs.
       if (key === PRIVATE_KV_CONTENT_KEY_NAME) {
         native.bytes.delete(ORDER_KEY);
@@ -416,6 +431,7 @@ describe('Campaign44 full-path direct reset ordering with actual encrypted stora
   );
 
   it('drains source-fenced authenticated readback and rollback before native purge', async () => {
+    await admittedWriter46();
     const entered = deferred();
     const release = deferred();
     let reads = 0;

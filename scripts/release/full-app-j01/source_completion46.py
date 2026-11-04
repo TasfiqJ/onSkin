@@ -21,13 +21,31 @@ PATHS = {
     'apps/mobile/src/features/routine/connectedJourney46.test.ts',
     'apps/mobile/src/features/settings/exportConfirmation46.test.ts',
     'apps/mobile/src/lib/storage/privateKV.ts',
+    'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+    'apps/mobile/src/lib/auth/sessionOwner.ts',
+    'apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts',
+    'apps/mobile/src/features/photos/photoDeleteJournal.c08b2.test.ts',
+    'apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts',
+    'apps/mobile/src/features/photos/photoDeleteWithdrawal.c08b2.test.ts',
+    'apps/mobile/src/features/routine/planSourceFence44.test.ts',
+    'apps/mobile/src/features/settings/localPrivateDataFence44.test.ts',
+    'apps/mobile/src/features/shelf/detailActionSheet.campaign26.test.ts',
+    'apps/mobile/src/features/shelf/intakeRecovery.campaign25.test.ts',
+    'apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts',
+    'apps/mobile/src/features/shelf/postDispatchCommit28.test.ts',
+    'apps/mobile/src/features/shelf/shelfRoutes.test.ts',
+    'apps/mobile/src/features/today/optionalChangeJournal41.test.ts',
+    'apps/mobile/src/lib/storage/privateKV.test.ts',
+    'apps/mobile/src/lib/storage/privateKVCommitFence28.test.ts',
+    'apps/mobile/src/lib/storage/privateKVSourceFence44.test.ts',
     'packages/decode-uri-component-compat/package.json',
     'packages/decode-uri-component-compat/index.cjs',
     'packages/decode-uri-component-compat/index.d.ts',
     'scripts/release/full-app-j01/source_completion46.py',
     'scripts/release/full-app-j01/source_completion46.test.py',
     'scripts/release/full-app-j01/security_completion46.test.mjs',
-    '.github/workflows/quality.yml', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt',
+    'scripts/release/full-app-j01/c46-rules/owasp-top-ten-current.yaml',
+    '.github/workflows/quality.yml', '.github/workflows/campaign46-technical.yml', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt',
     'package.json', 'package-lock.json',
 }
 ROOT = Path(__file__).resolve().parents[3]
@@ -85,9 +103,7 @@ def check_ledger(value, preimage):
         require(row['authority'] == 'BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01', 'AUTHORITY')
 
 
-def validate(phase, root=ROOT):
-    g = lambda *args: git(*args, root=root)
-    require(g('rev-parse', BASE + '^{tree}').decode().strip() == TREE, 'BASE_TREE')
+def source_head(g):
     # Hosted pull_request checkout may be GitHub's synthetic merge. Inspect the
     # actual source second parent only if the first is the exact accepted base.
     head = g('rev-parse', 'HEAD').decode().strip()
@@ -96,6 +112,13 @@ def validate(phase, root=ROOT):
         require(parents[0] == BASE, 'MERGE_BASE_DRIFT')
         require(g('rev-parse', head + '^{tree}') == g('rev-parse', parents[1] + '^{tree}'), 'MERGE_TREE_DRIFT')
         head = parents[1]
+    return head
+
+
+def validate(phase, root=ROOT):
+    g = lambda *args: git(*args, root=root)
+    require(g('rev-parse', BASE + '^{tree}').decode().strip() == TREE, 'BASE_TREE')
+    head = source_head(g)
     require(not g('status', '--porcelain', '--untracked-files=normal').strip(), 'DIRTY_SOURCE')
     require(g('merge-base', BASE, head).decode().strip() == BASE, 'ANCESTRY')
     commits = g('rev-list', '--reverse', BASE + '..' + head).decode().split()

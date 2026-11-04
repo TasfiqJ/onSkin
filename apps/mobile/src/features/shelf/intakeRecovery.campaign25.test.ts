@@ -25,6 +25,7 @@ const native = vi.hoisted(() => ({
   bytes: new Map<string, string>(),
   failShelfReads: false,
   failAfterCommit: false,
+  failAfterConfirmedCommitRead: false,
   holdReadAfterCommit: false,
   holdNextRead: false,
   releaseReadback: null as (() => void) | null,
@@ -91,6 +92,12 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
       if (native.failShelfReads && key === 'layerwell.shelf.v1')
         throw new Error('SYNTHETIC_NATIVE_SHELF_READ_FAILURE');
       const snapshot = native.bytes.get(key) ?? null;
+      if (key === 'layerwell.shelf.v1' && native.failAfterConfirmedCommitRead) {
+        // Confirm the shared native mutation first; this fixture targets the
+        // later canonical domain/Query readback rather than failed compensation.
+        native.failAfterConfirmedCommitRead = false;
+        native.failShelfReads = true;
+      }
       if (key === 'layerwell.shelf.v1' && native.holdNextRead) {
         native.holdNextRead = false;
         await new Promise<void>((release) => {
@@ -101,7 +108,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
     },
     setItem: async (key: string, raw: string) => {
       native.bytes.set(key, raw);
-      if (native.failAfterCommit && key === 'layerwell.shelf.v1') native.failShelfReads = true;
+      if (native.failAfterCommit && key === 'layerwell.shelf.v1') native.failAfterConfirmedCommitRead = true;
       if (native.holdReadAfterCommit && key === 'layerwell.shelf.v1') native.holdNextRead = true;
       if (native.holdWrite && key === 'layerwell.shelf.v1') await native.holdWrite;
     },
@@ -204,6 +211,7 @@ beforeEach(async () => {
   native.intakeId = null;
   native.failShelfReads = false;
   native.failAfterCommit = false;
+  native.failAfterConfirmedCommitRead = false;
   native.holdReadAfterCommit = false;
   native.holdNextRead = false;
   native.releaseReadback = null;
@@ -249,6 +257,7 @@ afterEach(async () => {
   native.holdWrite = null;
   native.failShelfReads = false;
   native.failAfterCommit = false;
+  native.failAfterConfirmedCommitRead = false;
   await act(async () => {
     screen?.unmount();
   });

@@ -53,6 +53,24 @@ class Controls(unittest.TestCase):
             git('add', path)
             git('commit', '-qm', 'synthetic base')
             base = git('rev-parse', 'HEAD').decode().strip()
+            old_base = m.BASE
+            try:
+                m.BASE = base
+                base_tree = git('rev-parse', 'HEAD^{tree}').decode().strip()
+                target.write_bytes(b'synthetic source successor\n')
+                git('add', path)
+                git('commit', '-qm', 'synthetic source')
+                child = git('rev-parse', 'HEAD').decode().strip()
+                tree = git('rev-parse', 'HEAD^{tree}').decode().strip()
+                merge = git('commit-tree', tree, '-p', base, '-p', child, '-m', 'synthetic provider merge').decode().strip()
+                git('checkout', '--detach', merge)
+                self.assertEqual(m.source_head(git), child)
+                wrong_tree = git('commit-tree', base_tree, '-p', base, '-p', child, '-m', 'unrelated merge bytes').decode().strip()
+                git('checkout', '--detach', wrong_tree)
+                with self.assertRaisesRegex(ValueError, 'MERGE_TREE_DRIFT'):
+                    m.source_head(git)
+            finally:
+                m.BASE = old_base
             def preimage(p):
                 try:
                     return git('show', base + ':' + p)

@@ -217,7 +217,8 @@ vi.mock('@/features/photos/sensitiveImageMemory', () => ({
 vi.mock('@/features/photos/photoThumbnail', () => ({ createEncryptedPhotoThumbnail: vi.fn() }));
 vi.mock('@/lib/analytics/track', () => ({ resetAnalyticsIdentity: async () => undefined }));
 vi.mock('@/lib/iap/revenuecat', () => ({ resetRevenueCatIdentity: async () => undefined }));
-vi.mock('@/lib/auth/sessionOwner', () => ({
+vi.mock('@/lib/auth/sessionOwner', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@/lib/auth/sessionOwner')>(),
   readLocalDataOwnership: async (owner: string) => (owner === mocks.owner ? 'match' : 'mismatch'),
   localDataOwnerBinding: async (owner: string) =>
     createHash('sha256')
