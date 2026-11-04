@@ -4,6 +4,7 @@ import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 
 import {
   assertHealthDataWriteLease,
+  assertOriginalHealthDataWriteLease,
   assertHealthDataWriteAllowed,
   assertHealthPurposePrivateDataWriteAllowed,
   captureHealthDataWriteLease,
@@ -86,6 +87,35 @@ describe('local health-data write admission', () => {
     });
 
     expect(() => assertHealthDataWriteLease(lease)).toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+  });
+
+  it('requires an original captured history lease and refuses an exact copied capability', () => {
+    setActiveHealthProcessingEpoch(45, {
+      ownerUserId: 'owner-a', accountGeneration: 1, serverVerifiedAt: null,
+    });
+    const original = captureHealthDataWriteLease('owner-a');
+    const copied = Object.freeze({ ...original });
+    expect(() => assertOriginalHealthDataWriteLease(original)).not.toThrow();
+    expect(() => assertOriginalHealthDataWriteLease(copied)).toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    // Existing multi-await operation callers still use their established field contract.
+    expect(() => assertHealthDataWriteLease(copied)).not.toThrow();
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(45, {
+      ownerUserId: 'owner-a', accountGeneration: 1, serverVerifiedAt: null,
+    });
+    expect(() => assertOriginalHealthDataWriteLease(original)).toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+  });
+
+  it('classifies owner-saved routine history as health-purpose private data', () => {
+    expect(() => captureHealthPurposePrivateDataWriteLease('layerwell.routinePlanHistory.v1')).toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    setActiveHealthProcessingEpoch(45, {
+      ownerUserId: 'owner-a', accountGeneration: 1, serverVerifiedAt: null,
+    });
+    expect(captureHealthPurposePrivateDataWriteLease('layerwell.routinePlanHistory.v1')).toMatchObject({
+      ownerUserId: 'owner-a', epoch: 45,
+    });
   });
 
   it('invalidates captured work across a same-owner same-epoch status renewal', () => {

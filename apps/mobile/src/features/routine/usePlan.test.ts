@@ -4,6 +4,10 @@ import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 
 import { routineGenerationProfileForRealShelf } from './planProfileAdmission';
 
+// The existing runner discovers .test.ts only. Keep the granted React suite in
+// its named .test.tsx file while including it in every forced root test run.
+import './PlanHistoryPanel45.test';
+
 describe('routine plan profile label', () => {
   it('labels the empty-shelf fallback as an example', () => {
     expect(routinePlanProfileLabel(null, true)).toBe('EXAMPLE ROUTINE');

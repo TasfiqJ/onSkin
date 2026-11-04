@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-03T00:47:11.247Z",
+  "generatedAt": "2026-11-03T23:54:48.368Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "3802dd386928a966226e0fd3ec5fa678c561b6a6",
+  "gitSha": "1bc7e7349d3502fe6ca2d3d73a45106dd09dbdc9",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1192,8 +1192,8 @@
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 16985,
-          "sha256": "0ea1bbe82006df100ec489d49c575fd61ee5cb9858772584419a5c2933675ec5"
+          "bytes": 17963,
+          "sha256": "cb37e42589b0040ba23606bd601a32891212dda57a98d1ddc24b4dd401f7fc93"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
@@ -1776,8 +1776,8 @@
         {
           "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.test.ts",
           "exists": true,
-          "bytes": 16416,
-          "sha256": "f550a350ea02c2a313b599aae81d7d8a4b95eb9f35798baccc238054e21809a9"
+          "bytes": 17440,
+          "sha256": "138d9a8c1c26a27211bc159fe94bac6e160b609aeaf962d2974073b843cb3f56"
         },
         {
           "path": "apps/mobile/src/features/shelf/ownedBottleVersion38.ts",

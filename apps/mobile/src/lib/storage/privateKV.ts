@@ -26,6 +26,13 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
+import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+import {
+  armPlanHistoryMutation45,
+  assertPlanHistoryReadable45,
+  finishPlanHistoryMutation45,
+  type PlanHistoryMutationIntent45,
+} from '@/lib/auth/localAccountIsolation';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
@@ -41,6 +48,7 @@ export const PRIVATE_KV_ENVELOPE_UNSUPPORTED = 'PRIVATE_KV_ENVELOPE_UNSUPPORTED'
 export const PRIVATE_KV_ENVELOPE_FOREIGN = 'PRIVATE_KV_ENVELOPE_FOREIGN';
 export const PRIVATE_KV_RESERVED_KEY = 'PRIVATE_KV_RESERVED_KEY';
 export const PRIVATE_KV_WRITE_CONFLICT = 'PRIVATE_KV_WRITE_CONFLICT';
+export const PRIVATE_KV_RECOVERY_REQUIRED = 'PRIVATE_KV_RECOVERY_REQUIRED';
 export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
 export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
@@ -61,6 +69,7 @@ type EnvelopeClassification =
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const failedReadSnapshots = new Map<string, string>();
+const quarantinedMutationKeys = new Set<string>();
 const inFlightOperations = new Set<Promise<unknown>>();
 const privateMutationTails = new Map<string, Promise<void>>();
 let accountBoundaryWriteBlocked = false;
@@ -219,6 +228,36 @@ function assertPrivateDataKey(key: string): void {
   if (isKnownForeignStorageKey(key)) throw new Error(PRIVATE_KV_ENVELOPE_FOREIGN);
 }
 
+function assertPrivateReadAllowed(key: string): void {
+  assertPrivateDataKey(key);
+  if (quarantinedMutationKeys.has(key)) throw new Error(PRIVATE_KV_RECOVERY_REQUIRED);
+}
+
+async function assertHistoryKeysReadable45(keys: readonly string[]): Promise<void> {
+  if (keys.includes('layerwell.routinePlanHistory.v1')) await assertPlanHistoryReadable45();
+}
+
+function rejectLegacyHistoryRaw45(key: string, raw: string | null): void {
+  // This new key has no plaintext legacy format. In particular, native '' is
+  // invalid data, never the null absence used by the strict history decoder.
+  if (key === 'layerwell.routinePlanHistory.v1' && raw !== null &&
+      classifyEnvelope(key, raw).kind === 'legacy') {
+    rememberFailedRead(key, raw);
+    throw new Error(PRIVATE_KV_SOURCE_UNAUTHENTICATED);
+  }
+}
+
+function assertHistoryBatchShape45(keys: readonly string[], entries: unknown): void {
+  const historyKey = 'layerwell.routinePlanHistory.v1';
+  const requested = keys.filter((key) => key === historyKey).length;
+  if (!Array.isArray(entries)) throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+  const rows = entries.filter((entry: unknown): entry is unknown[] => Array.isArray(entry) && entry[0] === historyKey);
+  if (rows.length !== requested || rows.some((row) => row.length !== 2 ||
+      (row[1] !== null && typeof row[1] !== 'string') || row[1] !== rows[0]?.[1])) {
+    throw new Error(PRIVATE_KV_ENVELOPE_INVALID);
+  }
+}
+
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
   const appOwned = isPrivateKVOwnedKey(key);
   let parsed: unknown;
@@ -277,14 +316,22 @@ function envelopeClassificationError(kind: 'malformed' | 'unsupported'): Error {
   return new Error(PRIVATE_KV_ENVELOPE_INVALID);
 }
 
-function decryptEnvelopeBytes(envelope: PrivateEnvelope, contentKey: Uint8Array): Uint8Array {
-  return xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
+function cipherForPrivateKey45(key: string, contentKey: Uint8Array, nonce: Uint8Array) {
+  // Bind history to its fixed storage purpose. Native ciphertext copied under a
+  // non-health key must not bypass history admission or recovery quarantine.
+  // Other existing keys retain their original no-AAD encrypted format.
+  const associatedData = key === 'layerwell.routinePlanHistory.v1' ? utf8ToBytes(key) : undefined;
+  return xchacha20poly1305(contentKey, nonce, associatedData);
+}
+
+function decryptEnvelopeBytes(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): Uint8Array {
+  return cipherForPrivateKey45(key, contentKey, hexToBytes(envelope.nonceHex)).decrypt(
     hexToBytes(envelope.ciphertextHex),
   );
 }
 
-function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): string {
-  const plaintext = decryptEnvelopeBytes(envelope, contentKey);
+function decryptEnvelope(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): string {
+  const plaintext = decryptEnvelopeBytes(key, envelope, contentKey);
   try {
     return bytesToUtf8(plaintext);
   } finally {
@@ -293,8 +340,8 @@ function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): str
 }
 
 /** Authenticate one envelope without materializing a JavaScript string. */
-function validateEnvelopeAuthentication(envelope: PrivateEnvelope, contentKey: Uint8Array): void {
-  const plaintext = decryptEnvelopeBytes(envelope, contentKey);
+function validateEnvelopeAuthentication(key: string, envelope: PrivateEnvelope, contentKey: Uint8Array): void {
+  const plaintext = decryptEnvelopeBytes(key, envelope, contentKey);
   plaintext.fill(0);
 }
 
@@ -379,14 +426,18 @@ export async function getPrivateItem(key: string): Promise<string | null> {
   // returned only to the exact processing lease that began the read.
   const healthReadLease = captureHealthPurposePrivateDataWriteLease(key);
   const assertHealthReadCurrent = () => {
+    assertPrivateReadAllowed(key);
     if (healthReadLease !== null) assertHealthDataWriteLease(healthReadLease);
   };
   return withOperationTiming('private_kv_read', () =>
     runAccountScopedPrivateOperation(async (generation) => {
-      assertPrivateDataKey(key);
+      await assertHistoryKeysReadable45([key]);
+      assertPrivateReadAllowed(key);
       const raw = await AsyncStorage.getItem(key);
+      await assertHistoryKeysReadable45([key]);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadCurrent();
+      rejectLegacyHistoryRaw45(key, raw);
       if (!raw) {
         failedReadSnapshots.delete(key);
         return null;
@@ -418,12 +469,13 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       }
       let value: string;
       try {
-        value = decryptEnvelope(classification.envelope, contentKey);
+        value = decryptEnvelope(key, classification.envelope, contentKey);
       } catch {
         rememberFailedRead(key, raw);
         throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
       }
       failedReadSnapshots.delete(key);
+      await assertHistoryKeysReadable45([key]);
       assertHealthReadCurrent();
       return value;
     }),
@@ -442,20 +494,25 @@ async function readPrivateItems(
     : [];
   const assertHealthReadsCurrent = () => {
     assertPurposeCurrent();
+    for (const key of keys) assertPrivateReadAllowed(key);
     for (const lease of healthReadLeases) assertHealthDataWriteLease(lease);
   };
   assertHealthReadsCurrent();
   return withOperationTiming('private_kv_batch_read', () =>
     runAccountScopedPrivateOperation(async (generation) => {
+      await assertHistoryKeysReadable45(keys);
       assertHealthReadsCurrent();
-      for (const key of keys) assertPrivateDataKey(key);
+      for (const key of keys) assertPrivateReadAllowed(key);
       const entries = await AsyncStorage.multiGet([...keys]);
+      await assertHistoryKeysReadable45(keys);
       assertAccountScopedPrivateOperationAllowed(generation);
       assertHealthReadsCurrent();
+      assertHistoryBatchShape45(keys, entries);
       const result = new Map<string, string | null>();
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
       for (const [key, raw] of entries) {
+        rejectLegacyHistoryRaw45(key, raw);
         if (!raw) {
           failedReadSnapshots.delete(key);
           result.set(key, null);
@@ -492,13 +549,14 @@ async function readPrivateItems(
       }
       for (const [key, envelope, raw] of encryptedEntries) {
         try {
-          result.set(key, decryptEnvelope(envelope, contentKey));
+          result.set(key, decryptEnvelope(key, envelope, contentKey));
           failedReadSnapshots.delete(key);
         } catch {
           rememberFailedRead(key, raw);
           throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
         }
       }
+      await assertHistoryKeysReadable45(keys);
       assertHealthReadsCurrent();
       return result;
     }),
@@ -521,6 +579,14 @@ export function getPrivateItemsForPurposeLimitedExport(
   accountLease: AccountGenerationLease,
 ): Promise<Map<string, string | null>> {
   accountLease.assertCurrent();
+  const historyKey = 'layerwell.routinePlanHistory.v1';
+  // An owner export may run without processing consent, but must never read a
+  // tentative history append while native confirmation/compensation is pending.
+  // Hold only this existing destination slot; unrelated private keys progress.
+  if (keys.includes(historyKey)) {
+    return runSerializedPrivateMutations([historyKey], () =>
+      readPrivateItems(keys, false, accountLease.assertCurrent));
+  }
   return readPrivateItems(keys, false, accountLease.assertCurrent);
 }
 
@@ -528,17 +594,20 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
   keys: readonly string[],
   assertCurrent: () => void,
 ): Promise<void> {
+  await assertHistoryKeysReadable45(keys);
   assertCurrent();
   await withOperationTiming('private_kv_batch_read', () =>
     runAccountScopedPrivateOperation(async () => {
       assertCurrent();
-      for (const key of keys) assertPrivateDataKey(key);
+      for (const key of keys) assertPrivateReadAllowed(key);
       const entries = await AsyncStorage.multiGet([...keys]);
       assertCurrent();
+      assertHistoryBatchShape45(keys, entries);
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
       for (const [key, raw] of entries) {
         assertCurrent();
+        rejectLegacyHistoryRaw45(key, raw);
         if (!raw) {
           failedReadSnapshots.delete(key);
           continue;
@@ -574,7 +643,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
         for (const [key, envelope, raw] of encryptedEntries) {
           assertCurrent();
           try {
-            validateEnvelopeAuthentication(envelope, contentKey);
+            validateEnvelopeAuthentication(key, envelope, contentKey);
             failedReadSnapshots.delete(key);
           } catch {
             rememberFailedRead(key, raw);
@@ -585,6 +654,7 @@ async function validatePrivateItemsWithoutRetainingPlaintext(
       } finally {
         contentKey.fill(0);
       }
+      await assertHistoryKeysReadable45(keys);
     }),
   );
   assertCurrent();
@@ -637,7 +707,8 @@ async function updatePrivateItemWithGuard(
   return withOperationTiming('private_kv_write', () =>
     runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
-        assertPrivateDataKey(key);
+        await assertHistoryKeysReadable45([key]);
+        assertPrivateReadAllowed(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         assertBeforeNativeWrite?.();
         const existingRaw = await assertNoFailedReadRewrite(key);
@@ -667,7 +738,7 @@ async function updatePrivateItemWithGuard(
             throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
           }
           try {
-            currentValue = decryptEnvelope(existingClassification.envelope, contentKey);
+            currentValue = decryptEnvelope(key, existingClassification.envelope, contentKey);
           } catch {
             rememberFailedRead(key, existingRaw);
             throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
@@ -716,7 +787,7 @@ async function updatePrivateItemWithGuard(
         contentKey ??= await getOrCreateContentKey();
         assertPreparationCurrent();
         const nonce = randomBytes(NONCE_BYTES);
-        const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
+        const ciphertext = cipherForPrivateKey45(key, contentKey, nonce).encrypt(utf8ToBytes(nextValue));
         const envelope: PrivateEnvelope = {
           version: ENCRYPTION_VERSION,
           nonceHex: bytesToHex(nonce),
@@ -759,6 +830,8 @@ export async function updatePrivateItem(
   assertAdditionalMutationCurrent?: () => void,
   assertBeforeNativeWrite?: () => void,
 ): Promise<void> {
+  // Historical facts may be appended only through the source-fenced lane.
+  if (key === 'layerwell.routinePlanHistory.v1') throw new Error(PRIVATE_KV_SOURCE_TRANSFORM_INVALID);
   // Generic read/transform/update may expose plaintext to its callback, so a
   // classified key requires exact health authority up front even if the
   // callback later returns null. Privacy-reducing callers use the explicit
@@ -800,7 +873,7 @@ export async function updatePrivateItemWithSources(
   prepareSources?: (values: ReadonlyMap<string, string | null>) => Promise<void>,
 ): Promise<void> {
   const keys = [...new Set([...sourceKeys, key])].sort();
-  for (const sourceKey of keys) assertPrivateDataKey(sourceKey);
+  for (const sourceKey of keys) assertPrivateReadAllowed(sourceKey);
   // Capture synchronously, before queuing. A stale callback cannot inherit a
   // lease granted while it waited for a source reservation.
   const healthLeases = keys.map(captureHealthPurposePrivateDataWriteLease);
@@ -821,6 +894,7 @@ export async function updatePrivateItemWithSources(
         const rawSources = new Map<string, string | null>();
         const values = new Map<string, string | null>();
         let contentKey: Uint8Array | null = null;
+        await assertHistoryKeysReadable45(keys);
         assertAllowed();
         for (const sourceKey of keys) {
           const raw = await assertNoFailedReadRewrite(sourceKey);
@@ -847,7 +921,7 @@ export async function updatePrivateItemWithSources(
             throw error;
           }
           try {
-            values.set(sourceKey, decryptEnvelope(classification.envelope, contentKey));
+            values.set(sourceKey, decryptEnvelope(sourceKey, classification.envelope, contentKey));
           } catch {
             rememberFailedRead(sourceKey, raw);
             throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
@@ -876,6 +950,10 @@ export async function updatePrivateItemWithSources(
         };
         await assertExactSources(existingRaw);
         if (nextValue === currentValue) return;
+        if (key === 'layerwell.routinePlanHistory.v1' && [...new Set(sourceKeys)].sort().join('|') !== [
+          'layerwell.shelf.v1', 'layerwell.skinprofile.v1', 'layerwell.conflict.overrides',
+          'layerwell.healthDataCollectionConsent.v1', 'layerwell.routineOrder.v1',
+        ].sort().join('|')) throw new Error(PRIVATE_KV_SOURCE_TRANSFORM_INVALID);
 
         let committedRaw: string | null = null;
         if (nextValue !== null) {
@@ -886,11 +964,23 @@ export async function updatePrivateItemWithSources(
             version: ENCRYPTION_VERSION,
             nonceHex: bytesToHex(nonce),
             ciphertextHex: bytesToHex(
-              xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue)),
+              cipherForPrivateKey45(key, contentKey, nonce).encrypt(utf8ToBytes(nextValue)),
             ),
           } satisfies PrivateEnvelope);
         }
         await maybeRejectConflictChoiceWrite(key);
+        // History also closes the asynchronous content-key/preparation window.
+        // Ordinary source writers cannot enter while this union is reserved.
+        let historyIntent: PlanHistoryMutationIntent45 | undefined;
+        if (key === 'layerwell.routinePlanHistory.v1') {
+          historyIntent = await armPlanHistoryMutation45(healthLeases[keys.indexOf(key)]!);
+          try {
+            await assertExactSources(existingRaw);
+          } catch (error) {
+            await finishPlanHistoryMutation45(historyIntent);
+            throw error;
+          }
+        }
         assertAllowed();
         try {
           // No await separates admission from the actual native invocation.
@@ -903,15 +993,30 @@ export async function updatePrivateItemWithSources(
           if (committedRaw !== null) {
             const classification = classifyEnvelope(key, committedRaw);
             if (classification.kind !== 'current' || !contentKey ||
-                decryptEnvelope(classification.envelope, contentKey) !== nextValue) {
+                decryptEnvelope(key, classification.envelope, contentKey) !== nextValue) {
               throw new Error(PRIVATE_KV_WRITE_CONFLICT);
             }
           }
           assertAllowed();
         } catch (error) {
-          await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          try {
+            await restoreExactRawAfterAmbiguousMutation(key, committedRaw, existingRaw);
+          } catch (rollbackError) {
+            if (key === 'layerwell.routinePlanHistory.v1') {
+              // A tentative version is never readable or appendable after failed
+              // compensation. Close processing before releasing this reservation.
+              // The content-free intent was durably confirmed BEFORE dispatch.
+              // Retain it across restart; no fallible post-failure marker write
+              // is required, and ordinary recovery cannot authorize deletion.
+              quarantinedMutationKeys.add(key);
+              clearActiveHealthProcessingEpoch();
+            }
+            throw rollbackError;
+          }
+          if (historyIntent) await finishPlanHistoryMutation45(historyIntent);
           throw error;
         }
+        if (historyIntent) await finishPlanHistoryMutation45(historyIntent);
         for (const sourceKey of keys) failedReadSnapshots.delete(sourceKey);
       }),
     ),
@@ -962,6 +1067,7 @@ export async function removePrivateItem(key: string): Promise<void> {
         assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         await AsyncStorage.removeItem(key);
+        quarantinedMutationKeys.delete(key);
         failedReadSnapshots.delete(key);
       }),
     ),
@@ -974,7 +1080,10 @@ export async function multiRemovePrivateItems(keys: readonly string[]): Promise<
       for (const key of keys) assertPrivateDataKey(key);
       assertAccountScopedPrivateOperationAllowed(generation);
       await AsyncStorage.multiRemove([...keys]);
-      for (const key of keys) failedReadSnapshots.delete(key);
+      for (const key of keys) {
+        failedReadSnapshots.delete(key);
+        quarantinedMutationKeys.delete(key);
+      }
     }),
   );
 }
@@ -1008,6 +1117,7 @@ export async function clearRoutineWidgetActionPrivateItems(): Promise<void> {
 export async function clearPrivateKVContentKey(): Promise<void> {
   await clearStoredPrivateKVContentKey();
   failedReadSnapshots.clear();
+  quarantinedMutationKeys.clear();
 }
 
 export const privateKVEncryptionInfo = {
