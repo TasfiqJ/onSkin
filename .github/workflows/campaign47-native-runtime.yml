@@ -43,8 +43,7 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version: 22.22.2
-      - name: Use reviewed npm
-        run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
+          package-manager-cache: false
       - name: Build install launch and exercise ordinary staging
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}

@@ -372,6 +372,24 @@ def execute(r):
     r.env['C46_EXPECTED_HEAD'] = head
     r.receipt['source'] = r.source_proof('source-before', head)
     r.passed('source', r.receipt['source'])
+    # The first actual hosted run reproduced a broken global npm self-upgrade
+    # (MODULE_NOT_FOUND: promise-retry). Reuse the existing reviewed bootstrap
+    # pattern: install npm beside the runner tool, without replacing that tool.
+    tools_directory = Path(os.environ['RUNNER_TEMP']) / 'c47-reviewed-npm'
+    require(not tools_directory.exists(), 'NEW_NPM_TOOL_DIRECTORY_REQUIRED')
+    r.text('bootstrap-npm-version', ['npm', '--version'], timeout=30)
+    r.run('bootstrap-reviewed-npm', ['npm', 'install', '--prefix', tools_directory,
+          'npm@11.20.0', '--ignore-scripts', '--no-audit', '--no-fund'], timeout=180)
+    npm_lock = tools_directory / 'package-lock.json'
+    lock = json.loads(npm_lock.read_bytes())
+    npm_input = lock['packages']['node_modules/npm']
+    require(npm_input['version'] == '11.20.0' and
+            npm_input['resolved'] == 'https://registry.npmjs.org/npm/-/npm-11.20.0.tgz' and
+            npm_input.get('integrity', '').startswith('sha512-'), 'NPM_TOOL_REGISTRY_INPUT')
+    require((tools_directory / 'node_modules/.bin/npm').is_file(), 'NPM_TOOL_LAUNCHER')
+    r.env['PATH'] = str(tools_directory / 'node_modules/.bin') + os.pathsep + r.env['PATH']
+    shutil.copy2(npm_lock, r.output / 'reviewed-npm-package-lock.json')
+    write_json(r.output / 'reviewed-npm-input.json', npm_input)
     tools = {}
     for name, argv in [
         ('os', ['sw_vers']), ('architecture', ['uname', '-m']),
