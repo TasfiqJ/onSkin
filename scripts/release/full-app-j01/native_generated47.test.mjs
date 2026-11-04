@@ -205,6 +205,10 @@ function fixture(t) {
   const currentDescriptor = descriptor();
   for (const pin of currentDescriptor.registry) paths.add(pin.path + '/package.json');
   for (const pin of currentDescriptor.installedConsumers) paths.add(pin.path);
+  const originalMap = predecessor();
+  for (const pin of [...originalMap.originalPrograms, ...Object.values(originalMap.archiveAndConfig)]) {
+    if (pin?.path && pin?.sha256) paths.add(pin.path);
+  }
   const old = JSON.parse(readFileSync(join(ROOT, 'docs/phase-9/ios-sdk-lock-succession13.v1.json')));
   for (const pin of [old.dependencyWitness, old.provenance,
     ...old.registry.flatMap(row => [row.metadata, row.attestations])]) paths.add(pin.path);
@@ -326,8 +330,8 @@ test('current47 continuation02 refuses changed missing extra native files, omitt
   renameSync(directory, `${directory}.missing`); refused(root); renameSync(`${directory}.missing`, directory);
   const base = join(root, 'node_modules/@expo/ui');
   const extra = join(base, 'Native46.swift'); writeFileSync(extra, 'extra native input'); refused(root); unlinkSync(extra);
-  mkdirSync(join(base, 'K46')); mkdirSync(join(base, 'ÃƒÂ¯Ã‚Â¼Ã‚Â«46')); refused(root);
-  rmSync(join(base, 'K46'), { recursive: true }); rmSync(join(base, 'ÃƒÂ¯Ã‚Â¼Ã‚Â«46'), { recursive: true });
+  mkdirSync(join(base, 'K46')); mkdirSync(join(base, '\uFF2B46')); refused(root);
+  rmSync(join(base, 'K46'), { recursive: true }); rmSync(join(base, '\uFF2B46'), { recursive: true });
   const linked = join(base, 'linked-native46');
   symlinkSync(directory, linked, process.platform === 'win32' ? 'junction' : 'dir'); refused(root); unlinkSync(linked);
   const hardlink = join(base, 'hardlinked-native46'); linkSync(path, hardlink); refused(root); unlinkSync(hardlink);
