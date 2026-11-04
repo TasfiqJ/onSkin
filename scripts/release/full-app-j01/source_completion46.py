@@ -163,7 +163,19 @@ def recheck_directories(entries):
 
 def file_stamp(info):
     return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_size,
-            info.st_mtime_ns, info.st_ctime_ns)
+            info.st_mtime_ns, info.st_ctime_ns, getattr(info, 'st_birthtime_ns', None),
+            getattr(info, 'st_file_attributes', None))
+
+
+def opened_file_stamp(info):
+    # CPython 3.12 Windows lstat reports creation in ctime, while fstat reports
+    # ChangeTime. Compare birthtime across APIs and retain each API's complete
+    # stamp for its own before/after checks, including the FD's ChangeTime.
+    timestamp = (('birthtime', info.st_birthtime_ns)
+                 if os.name == 'nt' and hasattr(info, 'st_birthtime_ns')
+                 else ('ctime', info.st_ctime_ns))
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_size,
+            info.st_mtime_ns, timestamp, getattr(info, 'st_file_attributes', None))
 
 
 def tracked_inventory(raw):
@@ -220,7 +232,8 @@ def verify_tracked_source(root, head, g):
             require(bool(before.st_mode & 0o111) == (mode == '100755'), 'SOURCE_EXECUTABLE_MODE:' + name)
         descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0))
         try:
-            require(file_stamp(os.fstat(descriptor)) == file_stamp(before), 'SOURCE_OPEN_RACE:' + name)
+            opened = os.fstat(descriptor)
+            require(opened_file_stamp(opened) == opened_file_stamp(before), 'SOURCE_OPEN_RACE:' + name)
             git_blob = hashlib.sha1()
             git_blob.update(b'blob ' + str(before.st_size).encode('ascii') + b'\0')
             content = hashlib.sha256()
@@ -233,7 +246,7 @@ def verify_tracked_source(root, head, g):
                 require(count <= before.st_size, 'SOURCE_READ_SIZE:' + name)
                 git_blob.update(chunk)
                 content.update(chunk)
-            require(count == before.st_size and file_stamp(os.fstat(descriptor)) == file_stamp(before),
+            require(count == before.st_size and file_stamp(os.fstat(descriptor)) == file_stamp(opened),
                     'SOURCE_READ_RACE:' + name)
         finally:
             os.close(descriptor)
@@ -307,10 +320,13 @@ def check_git_metadata(g, root):
     # Git's ordinary ancestry views must not be changed by local graft/replace
     # metadata. Historical and current objects still receive exact hash checks.
     root = Path(root).absolute()
-    directory_chain(root)
+    ancestors = directory_chain(root)
     require(g('rev-parse', '--is-inside-work-tree').decode().strip() == 'true', 'GIT_WORKTREE_REQUIRED')
     reported = Path(g('rev-parse', '--show-toplevel').decode().strip()).absolute()
-    require(os.path.normcase(str(reported)) == os.path.normcase(str(root)), 'GIT_WORKTREE_ROOT')
+    reported_ancestors = directory_chain(reported)
+    # Git expands real Windows 8.3 names. Both lexical ancestor chains must be
+    # regular directories before comparing canonical paths and file identities.
+    require(ancestors[-1][1:] == reported_ancestors[-1][1:], 'GIT_WORKTREE_ROOT')
     require(g('rev-parse', '--is-shallow-repository').decode().strip() == 'false',
             'SHALLOW_SOURCE')
     for name in ['info/grafts', 'objects/info/alternates']:
@@ -320,6 +336,8 @@ def check_git_metadata(g, root):
         require(not path.exists() and not path.is_symlink(), 'GIT_METADATA:' + name)
     require(not g('for-each-ref', '--format=%(refname)', 'refs/replace').strip(),
             'REPLACE_REFS')
+    recheck_directories(ancestors)
+    recheck_directories(reported_ancestors)
 
 
 def check_closure_ledger(value, preimage):

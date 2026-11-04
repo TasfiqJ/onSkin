@@ -7,6 +7,7 @@ import os
 import stat
 import subprocess
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 from pathlib import Path
@@ -276,6 +277,97 @@ class Controls(unittest.TestCase):
 
 
 class WorkingSourceControls(unittest.TestCase):
+    def test_real_path_and_descriptor_timestamp_channels_preserve_exact_source(self):
+        with real_source_fixture() as (root, g, head, files):
+            target = root / 'main.txt'
+            # Ensure creation and the later write cannot share a clock tick.
+            time.sleep(0.02)
+            target.write_bytes(files['main.txt'])
+            before = target.lstat()
+            descriptor = os.open(target, os.O_RDONLY | getattr(os, 'O_BINARY', 0))
+            try:
+                opened = os.fstat(descriptor)
+                self.assertEqual(m.opened_file_stamp(before), m.opened_file_stamp(opened))
+                if os.name == 'nt' and hasattr(before, 'st_birthtime_ns'):
+                    self.assertEqual(before.st_ctime_ns, before.st_birthtime_ns)
+                    self.assertNotEqual(opened.st_ctime_ns, before.st_ctime_ns)
+                    self.assertEqual(opened.st_birthtime_ns, before.st_birthtime_ns)
+                    self.assertNotEqual(m.file_stamp(before), m.file_stamp(opened))
+                else:
+                    self.assertEqual(m.file_stamp(before), m.file_stamp(opened))
+            finally:
+                os.close(descriptor)
+            self.assertEqual(m.verify_tracked_source(root, head, g)['files'], len(files))
+
+    def test_real_descriptor_metadata_change_is_still_refused(self):
+        with real_source_fixture() as (root, g, head, _):
+            target = root / 'main.txt'
+            before = target.lstat()
+            original_read = os.read
+            changed = False
+            def metadata_change(descriptor, size):
+                nonlocal changed
+                chunk = original_read(descriptor, size)
+                opened = os.fstat(descriptor)
+                if opened.st_ino == before.st_ino and not changed:
+                    changed = True
+                    time.sleep(0.02)
+                    if os.name != 'nt' or hasattr(opened, 'st_birthtime_ns'):
+                        # Restore content mtime while real ChangeTime advances.
+                        os.utime(target, ns=(before.st_atime_ns, before.st_mtime_ns))
+                        after = os.fstat(descriptor)
+                        self.assertEqual((opened.st_dev, opened.st_ino, opened.st_mode, opened.st_nlink,
+                                          opened.st_size, opened.st_mtime_ns),
+                                         (after.st_dev, after.st_ino, after.st_mode, after.st_nlink,
+                                          after.st_size, after.st_mtime_ns))
+                        if os.name == 'nt':
+                            self.assertEqual(m.opened_file_stamp(opened), m.opened_file_stamp(after))
+                        self.assertNotEqual(opened.st_ctime_ns, after.st_ctime_ns)
+                    else:
+                        # Older Windows exposes creation time in both APIs.
+                        os.utime(target, ns=(before.st_atime_ns, before.st_mtime_ns + 1000000000))
+                    self.assertNotEqual(m.file_stamp(opened), m.file_stamp(os.fstat(descriptor)))
+                return chunk
+            with patch.object(m.os, 'read', side_effect=metadata_change):
+                with self.assertRaisesRegex(ValueError, 'SOURCE_READ_RACE'):
+                    m.verify_tracked_source(root, head, g)
+            self.assertTrue(changed)
+
+    def test_real_git_canonical_root_identity_accepts_windows_short_names(self):
+        with real_source_fixture() as (root, _, _, _), real_source_fixture() as (decoy, _, _, _):
+            alias = root
+            if os.name == 'nt':
+                import ctypes
+                short_name = ctypes.WinDLL('kernel32', use_last_error=True).GetShortPathNameW
+                short_name.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32]
+                short_name.restype = ctypes.c_uint32
+                buffer = ctypes.create_unicode_buffer(32768)
+                count = short_name(str(root), buffer, len(buffer))
+                self.assertTrue(0 < count < len(buffer))
+                alias = Path(buffer.value)
+                self.assertNotEqual(os.path.normcase(str(alias)), os.path.normcase(str(root)))
+            g = lambda *args: m.git(*args, root=alias)
+            reported = Path(g('rev-parse', '--show-toplevel').decode().strip())
+            self.assertTrue(os.path.samefile(alias, reported))
+            m.check_git_metadata(g, alias)
+            with self.assertRaisesRegex(ValueError, 'GIT_WORKTREE_ROOT'):
+                m.check_git_metadata(g, decoy)
+
+    def test_real_root_substitution_after_git_report_is_refused(self):
+        with real_source_fixture() as (root, g, _, _):
+            changed = False
+            def replace_after_report(*args):
+                nonlocal changed
+                result = g(*args)
+                if args == ('rev-parse', '--show-toplevel') and not changed:
+                    changed = True
+                    root.rename(root.parent / 'source-before-swap')
+                    root.mkdir()
+                return result
+            with self.assertRaisesRegex(ValueError, 'GIT_WORKTREE_ROOT'):
+                m.check_git_metadata(replace_after_report, root)
+            self.assertTrue(changed)
+
     def test_git_environment_is_stripped_and_reported_worktree_is_bound(self):
         with real_source_fixture() as (root, g, head, _), real_source_fixture() as (decoy, decoy_g, _, _):
             decoy_g('commit', '--allow-empty', '-qm', 'distinct synthetic alternate Git view')

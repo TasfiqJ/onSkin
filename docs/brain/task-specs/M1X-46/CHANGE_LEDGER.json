@@ -511,6 +511,11 @@
         "commit": "deafce53190f8437867a4c969cb85b0ec8e183d5",
         "tested_source": "a8b305b186e2beff20065e05b27f23b8fd1d637c",
         "tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020"
+      },
+      {
+        "commit": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+        "tested_source": "9af711340129a364fd70464d806d0ac89181aa9b",
+        "tree": "ef2fcae820c5391861fe5f8c8397126b7eacd7ce"
       }
     ],
     "paths": [
@@ -949,6 +954,38 @@
       {
         "id": "C46-C02-06",
         "decision": "Active installwiring releaseSmoke requires2exactcanonical compositehook literals, with EVERYotherbyte original and21adversarialcontrols. Restoredoriginal9nativecommands onCURRENTsource; completecurrent inspector explicitlyrequiresfresh completeproof/snapshot. Windows hostednative/current-source technicaljob supplements LinuxQuality and localWindows; source-only, no independentnative/owneradmission."
+      },
+      {
+        "id": "C46-C02-07",
+        "decision": "Actual hosted Windows job126669075689 on finalf5 failed new sourceguard controls: C46_GIT_WORKTREE_ROOT / C46_SOURCE_OPEN_RACE:main.txt. Current-source portability defect, not inherited waiver. Preserve this seal as historical; append the bounded portability repair and reseal after real current checks. No original Security/candidate/native refusal or safety assertion is waived.",
+        "preimages": [
+          {
+            "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 76112,
+            "sha256": "147044a5232b700bc09acaf1e5b6dda37f120161ee1a823f1a72f98243a99ad5"
+          },
+          {
+            "path": "docs/brain/task-specs/M1X-46/TASK.md",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 5059,
+            "sha256": "afba14de97ed6de30d25c43010bfe80f5abcf9d82cbfa9244a1d7669f305973e"
+          },
+          {
+            "path": "scripts/release/full-app-j01/source_completion46.py",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 23948,
+            "sha256": "b3ec8ec4caff3b3860e6542bda29db36b3336089cc9b94cbb19538b115a129b9"
+          },
+          {
+            "path": "scripts/release/full-app-j01/source_completion46.test.py",
+            "preimage_ref": "f5c64a80f64cee53304c2a75884b57b37e29d5b1",
+            "bytes": 25490,
+            "sha256": "8ebd779f3daa844861bd59b3bfe279c9ce8882640204d1361e1538f90e5ae0ec"
+          }
+        ],
+        "invariants": "Same finite41-path inventory; no new paths. Repair directory/root and opened-file identity portability only; preserve every original assertion, all tracked-file/content/denominator/index/Git-view/reparse/hardlink/race checks.",
+        "validation": "Authenticate/reproduce WindowsPython3.12 identities and exact short/long path semantics; complete sourceguard controls on supported runtimes, real negative controls, full actual working-tree PENDING/FROZEN proof, required stable-source repeats and final-headCI. Preservef5seal and all actual failures; append source checkpoint then a fresh separate two-worklist-only seal."
       }
     ]
   }
