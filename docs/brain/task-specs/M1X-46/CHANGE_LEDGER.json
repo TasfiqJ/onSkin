@@ -497,5 +497,193 @@
       "state": "NEVER_WRITTEN_OR_SHIPPED; exact original bytes unavailable"
     }
   ],
-  "final_inventory_note": "Exact46 potentially exercised paths, plus separately frozen first plan. No directory wildcard. Never-written old OWASP copy is retained only under unused_authority, not shipped."
+  "final_inventory_note": "Exact46 potentially exercised paths, plus separately frozen first plan. No directory wildcard. Never-written old OWASP copy is retained only under unused_authority, not shipped.",
+  "closure02": {
+    "authorization": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+    "brain_decision": "CAMPAIGN46_PARTIAL_BLOCKED_NO_GO",
+    "predecessor_source": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+    "predecessor_tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020",
+    "inventory_frozen": false,
+    "packet_zip_sha256": "fb21895db480e7f73ea55e8c47f9d004c51893079364de005318fe20ea678425",
+    "prompt_sha256": "e1d8a720069020b7a7d765f1343f85be09f668bd283d16857e86e3d4a0521f8d",
+    "historical_seals": [
+      {
+        "commit": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "tested_source": "a8b305b186e2beff20065e05b27f23b8fd1d637c",
+        "tree": "832a196ca7b6dda4a9888ade5680e8ba211c6020"
+      }
+    ],
+    "paths": [
+      {
+        "path": ".github/workflows/campaign46-technical.yml",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "ad80aa682259a50d11eba9bca7c7a8ef96df4612796c92b1897237520b522c07",
+        "bytes": 8762,
+        "need": "Improve exact-current security coverage and full-history/current-native execution with raw results",
+        "invariant": "ProtectedSecurity/candidate/rules/pins unchanged; findings notsilenced; actual errors preserved",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Authenticated tools, beforeafter coverage+finding table, finalhead hosted scanner/native receipts"
+      },
+      {
+        "path": ".github/workflows/quality.yml",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "a0b310fec68039521b42b3df1ef08acb5405d659420ae2bf090c0ae530b88f20",
+        "bytes": 16943,
+        "need": "Restore applicable current regression and current-native active successor execution",
+        "invariant": "CanonicalDB/CAT08/PG15/17,exports,iOS/provenance preserved; no browser bypass or parent-only currentproof",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Coverage obligation table, workflow source contracts, all6actual finalhead jobs"
+      },
+      {
+        "path": "apps/mobile/src/features/onboarding/AgeReverificationRights.integration.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "e729c3416322b1c3d6a05460ec4ab719f96c3ad791402e93c46356c80bf9ae65",
+        "bytes": 8441,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/photos/photoDeleteR3.integration.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "74881a7f169bffa450dc3ee41291268b96d416f8ea425e463792c7387ec007a8",
+        "bytes": 42954,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/photos/photoDeleteWithdrawal.c08b2.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "15eca57bbc7e6eb43359da7dcaf18beed9da406f33bf61298b76a253550b2554",
+        "bytes": 21670,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/settings/localPrivateDataFence44.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "4cee6dbed43cafa74bd69c2d6db7d97d4c47b84eeb5a4ac637dfd1e56ed9d500",
+        "bytes": 137570,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/features/today/optionalChange41.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "6bbc96f5998df412fd947d8fc2c3582cfb5d0abba2388cfde91b417ab2126aad",
+        "bytes": 5881,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "apps/mobile/src/lib/storage/privateKVCommitFence28.test.ts",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "387adf7b2d8c3cd8fbd18a5cbad8b68c40d86882f2d5add1902d3546540fb0b4",
+        "bytes": 9324,
+        "need": "Type-only alias removes pinnedSemgrep unsupported typeof-import generic parse while retaining exact module type",
+        "invariant": "Actual importOriginal, realdomain/crypto/authority ports and every assertion unchanged",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Six genuine fixture suites, full typecheck/root and unchanged hostedSemgrep rules"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/CHANGE_LEDGER.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "a14320ac344080071b664184d38487a16481d4789cd14078d21e48bb6afc6a5e",
+        "bytes": 41683,
+        "need": "Append closure02 authority and finite preimages without rewriting original46path records",
+        "invariant": "Original preimages/plan unchanged; new records exactdeaf; no admission",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Strict original+closure finite sets, preimage hashes and append-only ancestry controls"
+      },
+      {
+        "path": "docs/brain/task-specs/M1X-46/TASK.md",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "a24d825e72c6abe9fce51c0cb072ea9baf6588f66fc5ceea9e2e54266d99bb7b",
+        "bytes": 1996,
+        "need": "Record authenticated amendment and subsequent decisions without changing original plan",
+        "invariant": "Keep existing checkpoint history and Brain PARTIAL_BLOCKED status explicit",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "ExactplanSHA, sixancestor identities, task/source audit"
+      },
+      {
+        "path": "package.json",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "cc37998ca18d43326f11e47cc78f2b3aa62231b0381d1948578804190ec2269b",
+        "bytes": 47279,
+        "need": "Run new exact-source Expo output bound module after existing unchanged normal postinstall andcheck commands",
+        "invariant": "No existing hookremoved/reordered; dependencies/workspaces/platform/lockgraph retained; rootpackage newbyteidentity explicitlybound in native successor",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Normalnpmci thenpostinstall:check, npmgraph accounting, realconsumersecurity tests, exactpackage delta, native successor, forcedroot/type/lint,exports"
+      },
+      {
+        "path": "scripts/e2e/formula-driver-coverage46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Execute actual current formula authority/dispatch logic within permitted browser-free ports",
+        "invariant": "No DOM/geometry qualification; keep original37/38 source and refused browser boundary explicit",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Real selector/message/touch exports against adversarial route/identity/disabled/occlusion/snapshot/guard/event state"
+      },
+      {
+        "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Bound actual reachable Expo plugin schema and output collector before unbounded Zod issue accumulation",
+        "invariant": "Exact official package/SRI/pre/postimages; finite1024lines/1MiBbudget; normal protocol/types/error/kill behavior retained; idempotent safe stage/rollback; no manual installed-source shippedrepair",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Real Expo schema+append boundedchild RED/fixed, executorports+normaloutputs, drift/link/hardlink/race/partialwrite refusals, normalnpmci/hooks andWindows/Linux CI"
+      },
+      {
+        "path": "scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": null,
+        "bytes": null,
+        "need": "Adversarial consumer and installation repair tests for reproduced high-severity tool output DoS",
+        "invariant": "Use actual installed Expo consumers; preserve existing patches and readerassertions; no severitydowngrade or advisorywaiver",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actual normal/adversarialschema, collector, childexecutor, idempotence/drift/link/rollback/control cases onstable finalsource"
+      },
+      {
+        "path": "scripts/release/full-app-j01/source_completion46.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "07b3513fb3e1f2aaa17cab7e36c0659a89b209b0cf52c84fa29ad6658222e02d",
+        "bytes": 9298,
+        "need": "Recognize explicit append-only closure source/reseal lineage and exact finite amendment paths",
+        "invariant": "No wildcard; original46preimages/sixcommits/seal preserved; final tested-source delta exactly2worklists",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "RealGit negative tests for ancestry/preimages/inventory/intermediate seals/merge trees/worklist generation"
+      },
+      {
+        "path": "scripts/release/full-app-j01/source_completion46.test.py",
+        "preimage_ref": "deafce53190f8437867a4c969cb85b0ec8e183d5",
+        "preimage_sha256": "fce3a9653fb9bf65690e393fd4924674332f3ded908a509b5ec8d750d7fc62d1",
+        "bytes": 5507,
+        "need": "Adversarial controls for append-only reseal and amendment preimages",
+        "invariant": "Preserve all existing map/gate/selfacceptance/duplicate/path tests; add realGit refusals",
+        "authority": "BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02",
+        "planned_validation": "Actual Pythonisolated test suite and pending/frozen full invocations"
+      }
+    ],
+    "decisions": [
+      {
+        "id": "C46-C02-01",
+        "decision": "Authenticated closure02 authorizes exact current native successor and bounded active validation wiring, coverage restoration and actionable security work. Preserve first six commits, original plan/seal/REDs, old witnesses/rules/pins and unaccepted owner gates. All edits prelogged at exactdeaf preimages; inventory freezes after integration. No browser/Docker bypass."
+      },
+      {
+        "id": "C46-C02-02",
+        "decision": "Actual installed Expo CLI schema and append collector abort134/OOM with200k malformed plugin output under96MB. Add finite schema/output budgets via exact-source reproducible first-party installation patch; preserve immutable existing postinstall module/patches, real normal consumer protocol and normal npm installation. Root package scripts append new module after original command; lock graph expected unchanged. This is development-tool input hardening, not Zod/platform migration or advisory waiver."
+      }
+    ]
+  }
 }
