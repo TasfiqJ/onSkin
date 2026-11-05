@@ -1068,6 +1068,44 @@ class SimulatorProposalTests(unittest.TestCase):
 
 
 class StageDriver47Tests(unittest.TestCase):
+
+    def test_inherited_output_pipe_failure_freezes_actual_bytes_and_never_passes(self):
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as temporary:
+            root = Path(temporary)
+            runner = n.Runner(root, root / 'evidence')
+            # The real parent exits0; its real child holds both output pipes,
+            # then emits data after the bounded close observation has failed.
+            child = "import time;time.sleep(0.8);print('late-child-output',flush=True)"
+            parent = "import subprocess,sys;subprocess.Popen([sys.executable,'-I','-c'," + repr(child) + "]);print('parent-output',flush=True)"
+            join = n.threading.Thread.join
+            with patch.object(n.threading.Thread, 'join', lambda thread, timeout=None: join(thread, 0.05)):
+                with self.assertRaisesRegex(ValueError, 'COMMAND_FAILED:inherited-pipe'):
+                    runner.run('inherited-pipe', [sys.executable, '-I', '-c', parent], timeout=3)
+            row = runner.receipt['commands'][0]
+            self.assertEqual((row['state'], row['exit_code'], row['process_exit_code']), ('FAIL', 125, 0))
+            self.assertFalse(row['capture_complete'])
+            self.assertEqual(row['error_type'], 'LOG_STREAM_DID_NOT_CLOSE')
+            before = [(runner.output / row[s]).read_bytes() for s in ('stdout', 'stderr')]
+            time.sleep(1)
+            self.assertEqual(before, [(runner.output / row[s]).read_bytes() for s in ('stdout', 'stderr')])
+            for stream in ('stdout', 'stderr'):
+                raw = (runner.output / row[stream]).read_bytes()
+                self.assertEqual(row[stream + '_bytes'], len(raw))
+                self.assertEqual(row[stream + '_sha256'], hashlib.sha256(raw).hexdigest())
+            self.assertEqual(runner.receipt['stages'], {})
+            self.assertFalse(runner.receipt['acceptance_granted'])
+
+    def test_slow_registry_read_keeps_real_parse_and_absence_before_single_install(self):
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as temporary:
+            runner = FakeRunner(Path(temporary), simulator_unit_inventory())
+            device = n.prepare_simulator(runner, 'normal')
+            n.install_simulator_app(runner, device, Path(temporary) / 'App.app', 'com.layerwell.app.staging')
+            names = [row[0] for row in runner.calls]
+            registry = next(row for row in runner.calls if row[0] == 'simulator-registry-ready')
+            self.assertEqual(registry[2]['timeout'], 600)
+            self.assertEqual(names.count('simulator-registry-ready'), 1)
+            self.assertLess(names.index('simulator-registry-json'), names.index('simulator-install'))
+            self.assertEqual(names.count('simulator-install'), 1)
     """Portable receipt boundaries, never a native execution claim."""
     def test_source_control_summary_without_thirty_current_named_cases_cannot_pass(self):
         source = Path(n.__file__).with_name('native_generated47.test.mjs').read_text(encoding='utf-8')

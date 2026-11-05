@@ -850,7 +850,7 @@ def install_simulator_app(r, device, app, bundle):
     require(re.fullmatch(r'[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+', bundle), 'PRODUCT_BUNDLE_ID')
     simulator_resources(r, 'simulator-before-install')
     try:
-        paths = r.run('simulator-registry-ready', ['xcrun', 'simctl', 'listapps', device], timeout=90)
+        paths = r.run('simulator-registry-ready', ['xcrun', 'simctl', 'listapps', device], timeout=600)
         # listapps can emit an OpenStep property list. Use the installed system
         # converter rather than assuming XML, JSON, or inventing a plist parser.
         raw = read_native_file(paths[0])
@@ -1087,16 +1087,29 @@ class Runner:
         self.receipt['commands'].append(row)
         self.persist()
         process = None
+        capture_lock = threading.Lock()
+        capture_frozen = False
+        stdout.touch()
+        stderr.touch()
         try:
             process = subprocess.Popen(list(map(str, argv)), cwd=cwd or self.root,
                                        env=env or self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        start_new_session=(os.name != 'nt'))
             stream_failures = []
             def copy(pipe, destination, display):
-                with destination.open('wb') as target:
+                # A descendant can retain its pipe after the command exits.
+                # Only this lock may admit writes to the retained evidence.
+                with capture_lock:
+                    if capture_frozen:
+                        return
+                    target = destination.open('wb', buffering=0)
+                with target:
                     try:
                         for chunk in iter(lambda: pipe.read(65536), b''):
-                            target.write(chunk)
+                            with capture_lock:
+                                if capture_frozen:
+                                    break
+                                require(target.write(chunk) == len(chunk), 'SHORT_LOG_WRITE')
                             if hasattr(display, 'buffer'):
                                 display.buffer.write(chunk)
                                 display.buffer.flush()
@@ -1105,6 +1118,8 @@ class Runner:
                                 display.flush()
                     except Exception as error:
                         stream_failures.append(type(error).__name__)
+                    finally:
+                        pipe.close()
             threads = [threading.Thread(target=copy, args=(process.stdout, stdout, sys.stdout), daemon=True),
                        threading.Thread(target=copy, args=(process.stderr, stderr, sys.stderr), daemon=True)]
             for thread in threads:
@@ -1121,16 +1136,32 @@ class Runner:
                 code = 124
             for thread in threads:
                 thread.join(timeout=30)
-            require(not any(thread.is_alive() for thread in threads), 'LOG_STREAM_DID_NOT_CLOSE')
-            require(not stream_failures, 'LOG_STREAM_FAILURE')
-            process.stdout.close()
-            process.stderr.close()
+            closed = not any(thread.is_alive() for thread in threads)
+            row['capture_complete'] = closed and not stream_failures
+            if not row['capture_complete']:
+                row.update(process_exit_code=code,
+                           error_type='LOG_STREAM_DID_NOT_CLOSE' if not closed else 'LOG_STREAM_FAILURE',
+                           stream_error_types=list(stream_failures),
+                           output_scope='PARTIAL_BYTES_FROZEN_BEFORE_RECEIPT_HASHING')
+                code = code if code != 0 else 125
+            if closed:
+                process.stdout.close()
+                process.stderr.close()
             row.update(exit_code=code, state='PASS' if code == 0 else 'FAIL')
         except OSError as error:
             stdout.touch(exist_ok=True)
             stderr.write_text(str(error), encoding='utf-8')
             row.update(exit_code=127, state='FAIL', error_type=type(error).__name__)
+        except Exception as error:
+            row.update(exit_code=124 if row.get('timed_out') else 125, state='FAIL',
+                       error_type=type(error).__name__, capture_complete=False,
+                       output_scope='PARTIAL_BYTES_FROZEN_BEFORE_RECEIPT_HASHING')
+            raise
         finally:
+            # Late pipe data must never mutate a hashed log or final manifest.
+            # Unbuffered writes and the shared gate make the partial bytes final.
+            with capture_lock:
+                capture_frozen = True
             row['finished_utc'] = utc()
             for label, path in [('stdout', stdout), ('stderr', stderr)]:
                 if path.exists():

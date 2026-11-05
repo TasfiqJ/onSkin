@@ -942,6 +942,47 @@
           "preimage_sha256": "634f3c452217e341c2afdff4cccb47655e8154081779f70a0b51a8c8dfd1a9e3"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T12:00:34.645268+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Native12 compiled/linked exact d9f app; native13 real first inventory/create/iOS26.4 boot passed, then registry listapps90sec timed out before installation. New diagnostics show heavy system startup; underlying resource/service cause remains unproven. Retained raw artifact13412541513/11735881B SHA cf75d3e65fb752301276bf97163dbc4d68048c9705ac3bb419920e71be0029b3 has three partial command stream receipt mismatches and one final manifest stream mismatch because background output copier threads continued after log-close failure. Freeze all log-file writes under one lock before hashing, mark incomplete capture as FAIL with a separate real process exit, preserve exact observed partial bytes, never admit it as success. Add real subprocess inherited-pipe closure/frozen-bytes regression and optional failure refusal. Give the required one real registry read600sec after demonstrated90sec timeout; preserve actual parsed nonempty registry, target absence, singleinstall600, container, authenticated executable, launch/survival, actual normal-before-internal and all authority checks. No runtime/service reset, daemon disable, device erase, retry, module/package/SDK change. Current original21 test bodies remain unchanged. Scope29 unchanged; new head requires complete local validation, two-worklist seal and new exact app build. Actual jobs7through13 consumed7of12; next14 max18, oneMac/90job/84coordinator/500MiB. Internal skipped notattempt14. All38requirements/18gates unaccepted; Security/candidate29/G97unwaived; NO_GO.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "d9f27e3bb75c729c9dca141ebc2f4168919dc144",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 155427,
+          "preimage_sha256": "580914bb13ffcc99ad0595b4512938e3933665b3fad7c8f212d4d00420dc8e44"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "d9f27e3bb75c729c9dca141ebc2f4168919dc144",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 74649,
+          "preimage_sha256": "190f7dac34b829e24546df982e9398dd697c04ba8b4767e38d9ca469a488f5d5"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "d9f27e3bb75c729c9dca141ebc2f4168919dc144",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14138,
+          "preimage_sha256": "891f772c9f2a58fd1382af53a529916a7db7997639254cc78206651ab1f84fd5"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "d9f27e3bb75c729c9dca141ebc2f4168919dc144",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 46792,
+          "preimage_sha256": "57e3604cf4491511c20e252d4702c5e1bd0a92525419a936b18f623aa8fa77f7"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
