@@ -786,16 +786,18 @@ def simulator_resources(r, label, diagnostic=False):
         _simulator_optional(r, label + '-' + suffix, argv, 10, diagnostic)
 
 
-def simulator_install_diagnostics(r, device):
-    """At most 80 command seconds, for this controlled device and host only."""
-    simulator_resources(r, 'simulator-install-failure', diagnostic=True)
+def simulator_install_diagnostics(r, device=None, phase='install'):
+    """At most 80 command seconds; 55 before a controlled device exists."""
+    require(phase in ('install', 'startup'), 'SIMULATOR_DIAGNOSTIC_PHASE')
+    simulator_resources(r, 'simulator-' + phase + '-failure', diagnostic=True)
     guest = ('process == "installd" OR process == "containermanagerd" OR '
              'process == "lsd" OR process == "SpringBoard" OR process == "runningboardd"')
     host = ('process == "CoreSimulatorService" OR process == "simdiskimaged" OR '
             'subsystem BEGINSWITH "com.apple.CoreSimulator"')
-    _simulator_optional(r, 'simulator-installer-log',
-                        ['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '15m',
-                         '--style', 'json', '--predicate', guest], 25, diagnostic=True)
+    if device is not None:
+        _simulator_optional(r, 'simulator-installer-log',
+                            ['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '15m',
+                             '--style', 'json', '--predicate', guest], 25, diagnostic=True)
     _simulator_optional(r, 'simulator-host-service-log',
                         ['/usr/bin/log', 'show', '--last', '15m', '--style', 'json',
                          '--predicate', host], 25, diagnostic=True)
@@ -808,29 +810,31 @@ def prepare_simulator(r, label):
     sdk, architecture = tools['simulator-sdk'], tools['architecture']
     head = r.receipt['source']['head']
     require(re.fullmatch(r'[0-9a-f]{40}', head), 'SIMULATOR_SOURCE_HEAD')
-    for command in ('listapps', 'get_app_container'):
-        r.run('simulator-help-' + command.replace('_', '-'),
-              ['xcrun', 'simctl', 'help', command], timeout=30)
-    document = json.loads(r.text('simulator-inventory', ['xcrun', 'simctl', 'list', '--json'], timeout=90))
-    runtime, template = available_iphone(document, sdk, architecture)
-    device = r.text('simulator-create', ['xcrun', 'simctl', 'create', 'C47-' + label + '-' + head[:12],
-                                       template['deviceTypeIdentifier'], runtime['identifier']], timeout=60)
-    require(str(uuid.UUID(device)).lower() == device.lower(), 'SIMULATOR_UDID')
-    r.receipt['simulator'] = {
-        'udid': device, 'runtime': runtime, 'template': template,
-        'selection': {'policy': 'Actual SDK major/minor first, then existing compact preference',
-                      'sdk_version': sdk, 'host_architecture': architecture,
-                      'sdk_major_minor_match': runtime['version'].split('.')[:2] == sdk.split('.')[:2],
-                      'logical_width_qualified': False},
-    }
-    r.persist()
-    simulator_resources(r, 'simulator-before-boot')
+    device = None
+    simulator_resources(r, 'simulator-before-inventory')
     try:
+        # The first real inventory call may initialize the cold host service.
+        # Required registry/container commands below establish actual support.
+        document = json.loads(r.text('simulator-inventory', ['xcrun', 'simctl', 'list', '--json'], timeout=300))
+        runtime, template = available_iphone(document, sdk, architecture)
+        created = r.text('simulator-create', ['xcrun', 'simctl', 'create', 'C47-' + label + '-' + head[:12],
+                                           template['deviceTypeIdentifier'], runtime['identifier']], timeout=60)
+        require(str(uuid.UUID(created)).lower() == created.lower(), 'SIMULATOR_UDID')
+        device = created
+        r.receipt['simulator'] = {
+            'udid': device, 'runtime': runtime, 'template': template,
+            'selection': {'policy': 'Actual SDK major/minor first, then existing compact preference',
+                          'sdk_version': sdk, 'host_architecture': architecture,
+                          'sdk_major_minor_match': runtime['version'].split('.')[:2] == sdk.split('.')[:2],
+                          'logical_width_qualified': False},
+        }
+        r.persist()
+        simulator_resources(r, 'simulator-before-boot')
         r.run('simulator-boot', ['xcrun', 'simctl', 'boot', device], timeout=60)
         r.run('simulator-bootstatus', ['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=600)
         return device
     except Exception:
-        simulator_install_diagnostics(r, device)
+        simulator_install_diagnostics(r, device, phase='startup')
         raise
 
 

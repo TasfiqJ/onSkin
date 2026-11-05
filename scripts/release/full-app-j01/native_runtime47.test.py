@@ -958,6 +958,45 @@ class SimulatorProposalTests(unittest.TestCase):
         row = next(row for row in self.r.calls if row[0] == 'simulator-bootstatus')
         self.assertEqual(row[2]['timeout'], 600)
         self.assertEqual(self.names().count('simulator-create'), 1)
+        self.assertEqual(self.names().count('simulator-inventory'), 1)
+        inventory = next(row for row in self.r.calls if row[0] == 'simulator-inventory')
+        self.assertEqual(inventory[2]['timeout'], 300)
+        self.assertLess(self.names().index('simulator-before-inventory-processes'),
+                        self.names().index('simulator-inventory'))
+        self.assertFalse(any(name.startswith('simulator-help-') for name in self.names()))
+        self.assertNotIn('stages', self.r.receipt)
+
+    def test_inventory_failure_before_uuid_preserves_primary_and_host_diagnostics_without_retry(self):
+        primary = RuntimeError('actual first service command timeout fixture')
+        self.r.failures = {'simulator-inventory': primary, 'simulator-host-service-log': OSError('diagnostic fixture')}
+        with self.assertRaises(RuntimeError) as raised:
+            self.ready()
+        self.assertIs(raised.exception, primary)
+        self.assertEqual(self.names().count('simulator-inventory'), 1)
+        self.assertNotIn('simulator-create', self.names())
+        self.assertNotIn('simulator-boot', self.names())
+        self.assertNotIn('simulator-installer-log', self.names())
+        self.assertIn('simulator-host-service-log', self.names())
+        diagnostic = [row for row in self.r.calls if row[0].startswith('simulator-startup-failure-') or
+                      row[0] == 'simulator-host-service-log']
+        self.assertEqual(sum(row[2]['timeout'] for row in diagnostic), 55)
+        self.assertTrue(all(row[2]['diagnostic'] and not row[2]['required'] for row in diagnostic))
+        self.assertNotIn('simulator', self.r.receipt)
+        self.assertNotIn('stages', self.r.receipt)
+
+    def test_boot_failure_after_fresh_uuid_preserves_primary_and_scoped_guest_host_diagnostics(self):
+        primary = RuntimeError('actual boot timeout fixture')
+        self.r.failures = {'simulator-boot': primary}
+        with self.assertRaises(RuntimeError) as raised:
+            self.ready()
+        self.assertIs(raised.exception, primary)
+        self.assertEqual(self.r.receipt['simulator']['udid'], SIM_UNIT_UUID)
+        self.assertEqual(self.names().count('simulator-create'), 1)
+        self.assertEqual(self.names().count('simulator-boot'), 1)
+        self.assertNotIn('simulator-bootstatus', self.names())
+        self.assertIn('simulator-installer-log', self.names())
+        self.assertIn('simulator-host-service-log', self.names())
+        self.assertFalse(any('erase' in row[1] or 'uninstall' in row[1] for row in self.r.calls))
         self.assertNotIn('stages', self.r.receipt)
 
     def test_available_fallback_is_recorded_as_non_matching(self):

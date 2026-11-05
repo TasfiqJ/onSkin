@@ -901,6 +901,47 @@
           "preimage_sha256": "088f428f5c91d6a85f0a2357bab5aa8264335e593b752833956cb1513c171fd1"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T10:20:31.961204+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Native10 actualbuild/link PASS at94ff with35commands/70streams, actual app43470608B SHA413a468d6ad202479355839a1d3975e0fd64532658f3e91eaa713f6e75b86904. Native11 raw13405992415/11645158B SHA0bf8f9263faad45ee0ba5947afa5244be5968d53f6ca04c126130225fe5504dd proves26PASS then first simctl help listapps timeout124 at30sec with empty streams before device inventory/create/boot/install. All actualA transfer/SDK/source/native202/172/profiles/app inventory/currenthostMachO controls PASS. Remove redundant preparatory help invocations; actual listapps/get_app_container still mandatory with parsed real registry/container/executable proof. First actual inventory/service command gets bounded300seconds and resource snapshot; catch all startup failures including before UUID and capture bounded host service/resource diagnostics while preserving primary failure. No blind retry/reset/erase/kill. Source behavior/authority/installation assertions unchanged. Add actual inventory-timeout and boot-failure refusal controls, preserve original21 tests and all existing semantic assertions. C skipped notattempt12; actualnext12 max18,5of12renewedconsumed,oneMac/90job/84coordinator/500MiB bounds unchanged. Scope29 unchanged. Newsource requiresfreshfullchecks/seal/appbuild, never reuse94ffartifact. All38requirements18gatesunaccepted/securitycandidate29G97unwaived/NO_GO.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "94ff02c9137cad0ec3b2dfdb62a9f1d7ce48d37f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 155134,
+          "preimage_sha256": "e6d527cc9b1bde00607e4399f0f61d6e9d98e2c8c8594a227bdfa741264d5156"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "94ff02c9137cad0ec3b2dfdb62a9f1d7ce48d37f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 72093,
+          "preimage_sha256": "8ff1e588248b3c9e4c8f148c0e70b3d3e638d7b7a2052185070a292c14e076e8"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "94ff02c9137cad0ec3b2dfdb62a9f1d7ce48d37f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14138,
+          "preimage_sha256": "070f7205a71fde884d5c87fa1843b0d21d9af024d8afc421cd7a5b38249f17e7"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "94ff02c9137cad0ec3b2dfdb62a9f1d7ce48d37f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 44117,
+          "preimage_sha256": "634f3c452217e341c2afdff4cccb47655e8154081779f70a0b51a8c8dfd1a9e3"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
