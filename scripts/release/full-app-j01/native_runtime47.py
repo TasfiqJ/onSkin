@@ -55,11 +55,16 @@ PROVIDER_KEYS = (
 
 UNSIGNED = ['CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_IDENTITY=',
             'COMPILER_INDEX_STORE_ENABLE=NO']
+SIMULATOR_BUILD_FLAGS = [*UNSIGNED, 'ARCHS=x86_64']
 
 
 def require(value, code):
     if not value:
         raise ValueError('C47_' + code)
+
+
+def require_simulator_host(architecture):
+    require(architecture == 'x86_64', 'INTEL_SIMULATOR_HOST_REQUIRED')
 
 
 def sha(path):
@@ -538,6 +543,8 @@ def execute(r):
         tools[name] = r.text('tool-' + name, argv, timeout=60)
     require(tools['node'] == 'v22.22.2' and tools['npm'] == '11.20.0', 'NODE_NPM_VERSION')
     require(tools['xcode'].startswith('Xcode 26.4'), 'XCODE_VERSION')
+    require_simulator_host(tools['architecture'])
+    tools['simulator_build_flags'] = SIMULATOR_BUILD_FLAGS
     tools['runner_image'] = {key: os.environ.get(key) for key in ('ImageOS', 'ImageVersion', 'RUNNER_OS', 'RUNNER_ARCH')}
     tools['build_environment'] = ENVIRONMENT
     write_json(r.output / 'toolchain.json', tools)
@@ -548,7 +555,7 @@ def execute(r):
           'scripts/release/full-app-j01/swift_behavior47.py', '--output', r.output / 'swift-behavior47'], timeout=120)
     r.run('ocr-source-contract', ['npm', 'run', 'cat05:native-ocr-source-contract:test'], timeout=240)
     r.run('existing-workflow-contract', ['npm', 'run', 'phase5:ios-simulator-compile-workflow:test'], timeout=120)
-    r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=600)
+    r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=900)
     r.run('generated47-properties-controls', ['python3', '-I', '-B', 'scripts/release/full-app-j01/pods_compat47.test.py'], timeout=120)
     source47 = r.output / 'current-generated47-source.json'
     r.run('current-generated47-source', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
@@ -593,18 +600,16 @@ def execute(r):
     workspace = workspaces[0]
     scheme = workspace.stem
     r.run('native-build-settings', ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
-                                   '-configuration', 'Release', '-sdk', 'iphonesimulator', '-showBuildSettings'], timeout=120)
+                                   '-configuration', 'Release', '-sdk', 'iphonesimulator', *SIMULATOR_BUILD_FLAGS, '-showBuildSettings'], timeout=120)
     r.passed('native-generation', {'workspace': str(workspace), 'scheme': scheme,
                                    'inputs': {p.name: sha(p) for p in native.iterdir() if p.is_file()}})
     products = Path(os.environ['RUNNER_TEMP']) / 'c47-native-products'
     products.mkdir(exist_ok=False)
     derived = products / 'derived'
-    unsigned = ['CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_IDENTITY=',
-                'COMPILER_INDEX_STORE_ENABLE=NO']
     r.run('native-build', ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
                           '-configuration', 'Release', '-sdk', 'iphonesimulator',
                           '-destination', 'generic/platform=iOS Simulator', '-derivedDataPath', derived,
-                          '-resultBundlePath', products / 'build.xcresult', *unsigned, 'build'], timeout=3000)
+                          '-resultBundlePath', products / 'build.xcresult', *SIMULATOR_BUILD_FLAGS, 'build'], timeout=3000)
     r.source_proof('source-after-build', head, allow_generation=True)
     apps = list((derived / 'Build/Products/Release-iphonesimulator').glob('*.app'))
     require(len(apps) == 1, 'PRODUCT_COUNT')
@@ -677,7 +682,7 @@ def execute(r):
                                      '-test-timeouts-enabled', 'YES',
                                      '-default-test-execution-time-allowance', '300',
                                      '-maximum-test-execution-time-allowance', '300',
-                                     '-resultBundlePath', products / 'ui.xcresult', *unsigned],
+                                     '-resultBundlePath', products / 'ui.xcresult', *SIMULATOR_BUILD_FLAGS],
           env=ui_env, timeout=900)
     positive_xctest = normal_ui_log_proof(r, ui_paths)
     r.passed('normal-staging-ui', {'tests': ui_receipt['tests'], 'lane': 'normal-staging',
@@ -794,7 +799,7 @@ def native_ui(r, ios, products, device, bundle, lane, initial_url=None, method=N
           '-only-testing:' + selected, '-parallel-testing-enabled', 'NO',
           '-maximum-concurrent-test-simulator-destinations', '1', '-test-timeouts-enabled', 'YES',
           '-default-test-execution-time-allowance', allowance, '-maximum-test-execution-time-allowance', allowance,
-          '-resultBundlePath', products / ('ui' + suffix + '.xcresult'), *UNSIGNED], env=ui_env, timeout=1200)
+          '-resultBundlePath', products / ('ui' + suffix + '.xcresult'), *SIMULATOR_BUILD_FLAGS], env=ui_env, timeout=1200)
     r.passed(lane + '-ui' + suffix, {'tests': [selected] if method else receipt['tests'], 'lane': lane,
                            'qualification': 'Only the actually executed selected XCTest class'})
 
@@ -1404,10 +1409,10 @@ def execute_internal(parent):
         workspace = workspaces[0]
         derived = products / 'derived'
         child.run('internal-native-build-settings', ['xcodebuild', '-workspace', workspace, '-scheme', workspace.stem,
-            '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-showBuildSettings'], timeout=120)
+            '-configuration', 'Debug', '-sdk', 'iphonesimulator', *SIMULATOR_BUILD_FLAGS, '-showBuildSettings'], timeout=120)
         child.run('internal-native-build', ['xcodebuild', '-workspace', workspace, '-scheme', workspace.stem,
             '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-destination', 'generic/platform=iOS Simulator',
-            '-derivedDataPath', derived, '-resultBundlePath', products / 'build.xcresult', *UNSIGNED, 'build'], timeout=2400)
+            '-derivedDataPath', derived, '-resultBundlePath', products / 'build.xcresult', *SIMULATOR_BUILD_FLAGS, 'build'], timeout=2400)
         child.source_proof('source-after-internal-build', head, allow_generation=True)
         apps = list((derived / 'Build/Products/Debug-iphonesimulator').glob('*.app'))
         require(len(apps) == 1, 'INTERNAL_PRODUCT_COUNT')

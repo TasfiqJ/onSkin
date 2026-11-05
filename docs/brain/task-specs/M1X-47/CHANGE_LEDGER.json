@@ -713,6 +713,47 @@
           "preimage_sha256": "0663924824345e223846a48e76569149a198f480f25bb87a2e68fb0d4715284c"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T04:29:10.475984+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Native8 run41948357061/artifact13384025054 authenticated45725113B SHAac64455b13da0b619f67e841e72fe13ae83009bc90a77ae66961eb481023daa8:32commands31PASS thennative-build124 at3000seconds, no linkedretainedapp/runtime. Actualcompile tasks898arm64/900x86_64C,55/61Swift,68/68Libtool duplicate68Podstargets despite x86-onlyapp/verifiedIntelhost. Useexistingnativebuild feature ARCHS=x86_64 for all C47Simulator build/settings/XCTest commands; verifyactualhostx86 beforeadmission; retainallmodules/vendorarm64exclusions/unchangedsigning andproduct guards. No walltimesavingpromise. Source30controlsPASS592.3of600sec; raiseonlythatboundedsubcommandto900, still84minute coordinator/90minutejob/maxoneMac. JSONdiagnosticrecursstdout74558; producer/causeunproven,notattributedtotimeoutorSwiftrepair. Scope29unchanged; nextnativeattempt9 requiresfreshfinalsourcebuildthroughruntime.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "ec7c600ba0eb12aa6202135992dccdaa81b733ad",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 93788,
+          "preimage_sha256": "6b1780a7e25288dff61915fdf321c209decf4f70ab462e7a4826a7f9afad7816"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "ec7c600ba0eb12aa6202135992dccdaa81b733ad",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 24499,
+          "preimage_sha256": "7101ab96b4c0fcac4da046f31dcf43f4e4ef198d0e05fb8a90a508f31d989789"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "ec7c600ba0eb12aa6202135992dccdaa81b733ad",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "4d8a7054a7fc2f9b013a4173f80e411ab9b8fb11d9304b6970ed7001f4d83eca"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "ec7c600ba0eb12aa6202135992dccdaa81b733ad",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 35468,
+          "preimage_sha256": "47fcd66cc62198249f4d9f575e8e6631d9fcd049e605a5a0a171780577b847d9"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

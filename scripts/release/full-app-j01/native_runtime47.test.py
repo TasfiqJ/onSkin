@@ -79,6 +79,16 @@ class Runtime47Tests(unittest.TestCase):
             with self.subTest(index=index, value=value), self.assertRaises(ValueError):
                 n.validate_product(*args)
 
+    def test_host_only_simulator_build_refuses_an_unmatched_toolchain(self):
+        n.require_simulator_host('x86_64')
+        for architecture in ['arm64', 'AMD64', 'x86_64\n', '', None]:
+            with self.subTest(architecture=architecture), self.assertRaisesRegex(
+                    ValueError, 'INTEL_SIMULATOR_HOST_REQUIRED'):
+                n.require_simulator_host(architecture)
+        self.assertEqual(dict(value.split('=', 1) for value in n.SIMULATOR_BUILD_FLAGS), {
+            'CODE_SIGNING_ALLOWED': 'NO', 'CODE_SIGNING_REQUIRED': 'NO',
+            'CODE_SIGN_IDENTITY': '', 'COMPILER_INDEX_STORE_ENABLE': 'NO', 'ARCHS': 'x86_64'})
+
     def test_bundle_inventory_hashes_actual_bytes_and_records_modes(self):
         app = self.root / 'Example.app'
         app.mkdir()
