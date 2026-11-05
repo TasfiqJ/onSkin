@@ -27,11 +27,18 @@ env:
   SENTRY_DISABLE_AUTO_UPLOAD: 'true'
 
 jobs:
-  native-runtime:
-    name: Actual unsigned Simulator build install launch and UI
+
+  native-build:
+    name: C47 build
     if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
     runs-on: macos-26-intel
     timeout-minutes: 90
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+      payload_bytes: ${{ steps.evidence-budget.outputs.payload_bytes }}
+      run_id: ${{ github.run_id }}
+      run_attempt: ${{ github.run_attempt }}
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
@@ -44,17 +51,17 @@ jobs:
         with:
           node-version: 22.22.2
           package-manager-cache: false
-      - name: Build install launch and exercise ordinary staging
+      - name: Execute build stage
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
-        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --output "$RUNNER_TEMP/c47-evidence"
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage build --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
         run: |
           python3 -I -B - <<'PY'
-          import os, pathlib, stat
+          import json, os, pathlib, stat
           root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c47-evidence'
           assert root.is_dir() and not root.is_symlink()
           total = 0
@@ -63,14 +70,170 @@ jobs:
               assert stat.S_ISDIR(mode) or stat.S_ISREG(mode), 'EVIDENCE_LINK_OR_SPECIAL_FILE'
               if stat.S_ISREG(mode):
                   total += path.stat().st_size
-          assert 0 < total <= 500 * 1024 * 1024, 'EVIDENCE_BUDGET_EXCEEDED'
+          receipt = json.loads((root / 'execution.json').read_bytes())
+          reserved = receipt.get('upstream_payload_bytes', 0)
+          assert type(reserved) is int and reserved >= 0
+          assert 0 < total and total + reserved <= 500 * 1024 * 1024, 'EVIDENCE_BUDGET_EXCEEDED'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write('payload_bytes=' + str(total) + '\n')
           print('C47_EVIDENCE_BYTES=' + str(total))
+          print('C47_UPSTREAM_EVIDENCE_BYTES=' + str(reserved))
           PY
-      - name: Preserve actual app and raw failure evidence
+      - name: Preserve current stage evidence
+        id: upload
         if: always() && steps.evidence-budget.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: c47-native-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: campaign47-native-build-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/c47-evidence
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+
+  native-normal:
+    name: C47 normal
+    needs: [native-build]
+    permissions:
+      contents: read
+      actions: read
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    runs-on: macos-26-intel
+    timeout-minutes: 90
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+      payload_bytes: ${{ steps.evidence-budget.outputs.payload_bytes }}
+      run_id: ${{ github.run_id }}
+      run_attempt: ${{ github.run_attempt }}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup supported Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.22.2
+          package-manager-cache: false
+      - name: Execute normal stage
+        env:
+          C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          C47_UI_PHASE: normal-staging
+          C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
+          C47_BUILD_ARTIFACT_ID: ${{ needs['native-build'].outputs.artifact_id }}
+          C47_BUILD_ARTIFACT_DIGEST: ${{ needs['native-build'].outputs.artifact_digest }}
+          C47_BUILD_RUN_ID: ${{ needs['native-build'].outputs.run_id }}
+          C47_BUILD_RUN_ATTEMPT: ${{ needs['native-build'].outputs.run_attempt }}
+          C47_BUILD_PAYLOAD_BYTES: ${{ needs['native-build'].outputs.payload_bytes }}
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage normal --output "$RUNNER_TEMP/c47-evidence"
+      - name: Enforce bounded evidence upload
+        id: evidence-budget
+        if: always()
+        run: |
+          python3 -I -B - <<'PY'
+          import json, os, pathlib, stat
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c47-evidence'
+          assert root.is_dir() and not root.is_symlink()
+          total = 0
+          for path in root.rglob('*'):
+              mode = path.lstat().st_mode
+              assert stat.S_ISDIR(mode) or stat.S_ISREG(mode), 'EVIDENCE_LINK_OR_SPECIAL_FILE'
+              if stat.S_ISREG(mode):
+                  total += path.stat().st_size
+          receipt = json.loads((root / 'execution.json').read_bytes())
+          reserved = receipt.get('upstream_payload_bytes', 0)
+          assert type(reserved) is int and reserved >= 0
+          assert 0 < total and total + reserved <= 500 * 1024 * 1024, 'EVIDENCE_BUDGET_EXCEEDED'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write('payload_bytes=' + str(total) + '\n')
+          print('C47_EVIDENCE_BYTES=' + str(total))
+          print('C47_UPSTREAM_EVIDENCE_BYTES=' + str(reserved))
+          PY
+      - name: Preserve current stage evidence
+        id: upload
+        if: always() && steps.evidence-budget.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: campaign47-native-normal-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/c47-evidence
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+
+  native-internal:
+    name: C47 internal
+    needs: [native-build, native-normal]
+    permissions:
+      contents: read
+      actions: read
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    runs-on: macos-26-intel
+    timeout-minutes: 90
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+      payload_bytes: ${{ steps.evidence-budget.outputs.payload_bytes }}
+      run_id: ${{ github.run_id }}
+      run_attempt: ${{ github.run_attempt }}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup supported Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 22.22.2
+          package-manager-cache: false
+      - name: Execute internal stage
+        env:
+          C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          C47_UI_PHASE: normal-staging
+          C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
+          C47_BUILD_ARTIFACT_ID: ${{ needs['native-build'].outputs.artifact_id }}
+          C47_BUILD_ARTIFACT_DIGEST: ${{ needs['native-build'].outputs.artifact_digest }}
+          C47_BUILD_RUN_ID: ${{ needs['native-build'].outputs.run_id }}
+          C47_BUILD_RUN_ATTEMPT: ${{ needs['native-build'].outputs.run_attempt }}
+          C47_BUILD_PAYLOAD_BYTES: ${{ needs['native-build'].outputs.payload_bytes }}
+          C47_NORMAL_ARTIFACT_ID: ${{ needs['native-normal'].outputs.artifact_id }}
+          C47_NORMAL_ARTIFACT_DIGEST: ${{ needs['native-normal'].outputs.artifact_digest }}
+          C47_NORMAL_RUN_ID: ${{ needs['native-normal'].outputs.run_id }}
+          C47_NORMAL_RUN_ATTEMPT: ${{ needs['native-normal'].outputs.run_attempt }}
+          C47_NORMAL_PAYLOAD_BYTES: ${{ needs['native-normal'].outputs.payload_bytes }}
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage internal --output "$RUNNER_TEMP/c47-evidence"
+      - name: Enforce bounded evidence upload
+        id: evidence-budget
+        if: always()
+        run: |
+          python3 -I -B - <<'PY'
+          import json, os, pathlib, stat
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c47-evidence'
+          assert root.is_dir() and not root.is_symlink()
+          total = 0
+          for path in root.rglob('*'):
+              mode = path.lstat().st_mode
+              assert stat.S_ISDIR(mode) or stat.S_ISREG(mode), 'EVIDENCE_LINK_OR_SPECIAL_FILE'
+              if stat.S_ISREG(mode):
+                  total += path.stat().st_size
+          receipt = json.loads((root / 'execution.json').read_bytes())
+          reserved = receipt.get('upstream_payload_bytes', 0)
+          assert type(reserved) is int and reserved >= 0
+          assert 0 < total and total + reserved <= 500 * 1024 * 1024, 'EVIDENCE_BUDGET_EXCEEDED'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write('payload_bytes=' + str(total) + '\n')
+          print('C47_EVIDENCE_BYTES=' + str(total))
+          print('C47_UPSTREAM_EVIDENCE_BYTES=' + str(reserved))
+          PY
+      - name: Preserve current stage evidence
+        id: upload
+        if: always() && steps.evidence-budget.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: campaign47-native-internal-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/c47-evidence
           if-no-files-found: error
           retention-days: 3

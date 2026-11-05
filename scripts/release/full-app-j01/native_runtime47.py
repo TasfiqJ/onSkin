@@ -1,15 +1,16 @@
 """Bounded unsigned Simulator execution; every PASS requires an executed command.
 
-This helper qualifies only the normal-staging lane. It never admits an owner,
-enables a provider, signs a release, or treats source checks as native execution.
+The finite build, ordinary-runtime and internal-runtime stages preserve source
+and artifact custody. They never admit an owner, enable a provider, sign a
+release, or treat imported receipts/source checks as current native execution.
 """
 import argparse
 from contextlib import contextmanager
 import gzip
 import socket
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
-from urllib.request import build_opener, ProxyHandler, Request
+from urllib.request import build_opener, ProxyHandler, Request, HTTPRedirectHandler
 import hashlib
 import importlib.util
 import json
@@ -27,6 +28,9 @@ import tarfile
 import threading
 import time
 import uuid
+import unicodedata
+import zipfile
+from types import SimpleNamespace
 from datetime import datetime, timezone
 
 BASE = '02aa4ba879fb844f3ca0aa929591203ee45f4163'
@@ -136,13 +140,20 @@ def normal_ui_log_proof(r, paths):
     return selected_ui_log_proof(r, paths, 'C47NativeUI', NORMAL_UI_CASE)
 
 
-def available_iphone(document):
-    """Select only a declared available iOS17+ iPhone, preferring compact models."""
+def available_iphone(document, sdk_version=None, host_arch=None):
+    """Keep legacy one-argument behavior; actual lanes supply both toolchain facts."""
+    require((sdk_version is None) == (host_arch is None), 'SIMULATOR_TOOLCHAIN_PAIR')
+    if sdk_version is not None:
+        require(isinstance(sdk_version, str) and re.fullmatch(r'\d+\.\d+(?:\.\d+)*', sdk_version),
+                'SIMULATOR_SDK_VERSION')
+        require(host_arch in ('x86_64', 'arm64'), 'SIMULATOR_HOST_ARCH')
+        sdk_pair = tuple(map(int, sdk_version.split('.')[:2]))
     runtime_by_id = {row['identifier']: row for row in document['runtimes']
                      if row.get('isAvailable') is True and
                      row.get('identifier', '').startswith('com.apple.CoreSimulator.SimRuntime.iOS-') and
                      re.fullmatch(r'\d+(?:\.\d+)*', row.get('version', '')) and
-                     int(row['version'].split('.')[0]) >= 17}
+                     int(row['version'].split('.')[0]) >= 17 and
+                     (host_arch is None or host_arch in row.get('supportedArchitectures', []))}
     compact = ['iPhone SE (3rd generation)', 'iPhone 16e', 'iPhone 17e',
                'iPhone 16', 'iPhone 17', 'iPhone Air', 'iPhone 17 Pro']
     choices = []
@@ -153,12 +164,12 @@ def available_iphone(document):
         for device in devices:
             if device.get('isAvailable') is not True or not device.get('name', '').startswith('iPhone '):
                 continue
-            kind = device.get('deviceTypeIdentifier', '')
-            if not kind.startswith('com.apple.CoreSimulator.SimDeviceType.iPhone-'):
+            if not device.get('deviceTypeIdentifier', '').startswith('com.apple.CoreSimulator.SimDeviceType.iPhone-'):
                 continue
             rank = compact.index(device['name']) if device['name'] in compact else len(compact)
-            version = tuple(-int(part) for part in runtime['version'].split('.'))
-            choices.append(((rank, version, device['name']), runtime, device))
+            parts = tuple(map(int, runtime['version'].split('.')))
+            sdk_rank = 0 if sdk_version is None or parts[:2] == sdk_pair else 1
+            choices.append(((sdk_rank, rank, tuple(-part for part in parts), device['name']), runtime, device))
     require(choices, 'NO_AVAILABLE_SUPPORTED_IPHONE_RUNTIME')
     _, runtime, device = min(choices, key=lambda row: row[0])
     return runtime, device
@@ -227,7 +238,7 @@ def generated_package_projection(original, generated):
             'qualification': 'ONLY_EXPO_PREBUILD_SCRIPT_REWRITE_WITH_RAW_PREIMAGE_RETAINED'}
 
 
-def projected_source_inventory(verifier, root, head, g, generated_raw):
+def projected_source_inventory(verifier, root, head, g, generated_raw, authenticated_original=None):
     """Rehash every actual file; allow only the separately authenticated package projection."""
     rows = verifier.tracked_inventory(g('ls-tree', '-r', '-z', '--full-tree', head))
     flags = g('ls-files', '-v', '-z').split(b'\0')[:-1]
@@ -257,12 +268,17 @@ def projected_source_inventory(verifier, root, head, g, generated_raw):
                 content.update(chunk)
         require(verifier.file_stamp(path.lstat()) == verifier.file_stamp(before), 'SOURCE_FILE_RACE:' + name)
         verifier.recheck_directories(parents)
+        size, digest = before.st_size, content.hexdigest()
         if name == 'apps/mobile/package.json':
-            require(content.hexdigest() == hashlib.sha256(generated_raw).hexdigest(), 'GENERATED_PACKAGE_RACE')
+            expected = generated_raw if authenticated_original is None else authenticated_original
+            require(digest == hashlib.sha256(expected).hexdigest(), 'GENERATED_PACKAGE_RACE')
+            if authenticated_original is not None:
+                require(blob.hexdigest() == oid, 'SOURCE_BLOB_DRIFT:' + name)
+                size, digest = len(generated_raw), hashlib.sha256(generated_raw).hexdigest()
         else:
             require(blob.hexdigest() == oid, 'SOURCE_BLOB_DRIFT:' + name)
-        total += before.st_size
-        fingerprint.update(json.dumps([name, mode, oid, before.st_size, content.hexdigest()],
+        total += size
+        fingerprint.update(json.dumps([name, mode, oid, size, digest],
                                       separators=(',', ':')).encode() + b'\n')
     require(g('rev-parse', 'HEAD').decode().strip() == head, 'SOURCE_HEAD_RACE')
     return {'files': len(rows), 'bytes': total, 'actual_inventory_sha256': fingerprint.hexdigest(),
@@ -339,6 +355,691 @@ def retain_pod_inventory(ios, output):
                'links_followed': False, 'qualification': 'ACTUAL_INSTALLED_POD_INPUT_INVENTORY_NOT_COMPILE_OR_RUNTIME_PROOF'})
 
 
+STAGE_REPOSITORY = 'TasfiqJ/onSkin'
+
+
+STAGE_BRANCH = 'stage/m1-native-runtime47'
+
+
+STAGE_WORKFLOW = '.github/workflows/campaign47-native-runtime.yml'
+
+
+STAGE_JOB_NAMES = {'build': 'C47 build', 'normal': 'C47 normal', 'internal': 'C47 internal'}
+
+
+STAGE_DEPENDENCIES = {'build': (), 'normal': ('build',), 'internal': ('build', 'normal')}
+
+
+STAGE_MANIFEST = 'stage-provenance.json'
+
+
+STAGE_MAX_FILES = 50000
+
+
+STAGE_MAX_PAYLOAD = 500 * MIB
+
+
+STAGE_MAX_WIRE = 550 * MIB
+
+
+STAGE_MAX_FILE = 360 * MIB
+
+
+STAGE_MAX_JSON = 8 * MIB
+
+
+def stage_integer(value):
+    require(type(value) is int or isinstance(value, str) and
+            re.fullmatch(r'[1-9][0-9]{0,18}', value), 'STAGE_INTEGER')
+    number = int(value)
+    require(0 < number < 2 ** 63, 'STAGE_INTEGER')
+    return number
+
+
+def stage_json(raw):
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            require(key not in result, 'STAGE_JSON_DUPLICATE')
+            result[key] = value
+        return result
+    require(len(raw) <= STAGE_MAX_JSON, 'STAGE_JSON_BOUND')
+    try:
+        return json.loads(raw, object_pairs_hook=pairs)
+    except (ValueError, RecursionError, UnicodeError):
+        raise ValueError('C47_STAGE_JSON_INVALID') from None
+
+
+def stage_name(name):
+    require(isinstance(name, str) and 0 < len(name) <= 512 and name.isascii() and
+            not re.search(r'[\x00-\x1f\x7f<>:"\\|?*]', name) and not name.startswith('/'),
+            'STAGE_MEMBER_NAME')
+    parts = name.split('/')
+    require(len(parts) <= 24 and all(part and part not in ('.', '..') and
+            not part.endswith(('.', ' ')) and not re.match(
+                r'(?i)^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)', part) for part in parts),
+            'STAGE_MEMBER_NAME')
+    return parts
+
+
+def stage_file_digest(path, maximum=STAGE_MAX_FILE):
+    for parent in [*reversed(path.parent.parents), path.parent]:
+        require(stat.S_ISDIR(parent.lstat().st_mode), 'STAGE_DIRECTORY_LINK')
+    before = path.lstat()
+    stamp = lambda info: (info.st_dev, info.st_ino, info.st_mode, info.st_nlink,
+                          info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+    require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+            0 <= before.st_size <= maximum, 'STAGE_REGULAR_FILE_BOUND')
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
+    digest, size = hashlib.sha256(), 0
+    try:
+        require(stamp(os.fstat(descriptor)) == stamp(before), 'STAGE_FILE_RACE')
+        with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+            while True:
+                chunk = stream.read(MIB)
+                if not chunk:
+                    break
+                size += len(chunk)
+                require(size <= maximum, 'STAGE_REGULAR_FILE_BOUND')
+                digest.update(chunk)
+        require(stamp(os.fstat(descriptor)) == stamp(before) and
+                stamp(path.lstat()) == stamp(before) and size == before.st_size, 'STAGE_FILE_RACE')
+    finally:
+        os.close(descriptor)
+    return {'bytes': size, 'sha256': digest.hexdigest()}
+
+
+def stage_expected(role, needs, context):
+    require(role in STAGE_JOB_NAMES and isinstance(context, dict) and
+            context.get('repository') == STAGE_REPOSITORY and
+            isinstance(context.get('head'), str) and re.fullmatch(r'[a-f0-9]{40}', context['head']) and
+            isinstance(context.get('tree'), str) and re.fullmatch(r'[a-f0-9]{40}', context['tree']), 'STAGE_CONTEXT')
+    run_id, attempt = stage_integer(context['run_id']), stage_integer(context['run_attempt'])
+    require(isinstance(needs, dict) and
+            set(needs) == {'artifact_id', 'digest', 'run_id', 'producer_run_attempt', 'payload_bytes'} and
+            stage_integer(needs['run_id']) == run_id and
+            stage_integer(needs['producer_run_attempt']) == attempt and
+            isinstance(needs.get('digest'), str) and re.fullmatch(r'[a-f0-9]{64}', needs['digest']),
+            'STAGE_TRUSTED_NEEDS')
+    payload = stage_integer(needs['payload_bytes'])
+    require(payload <= STAGE_MAX_PAYLOAD, 'STAGE_PAYLOAD_BOUND')
+    return {'stage': role, 'repository': STAGE_REPOSITORY, 'run_id': run_id,
+            'run_attempt': attempt, 'job_name': STAGE_JOB_NAMES[role],
+            'head': context['head'], 'tree': context['tree'],
+            'artifact_id': stage_integer(needs['artifact_id']), 'digest': needs['digest'],
+            'payload_bytes': payload,
+            'artifact_name': f"campaign47-native-{role}-{context['head']}-{run_id}-{attempt}"}
+
+
+def stage_dependencies(consumer_stage, needs):
+    require(consumer_stage in STAGE_DEPENDENCIES and isinstance(needs, dict) and
+            set(needs) == set(STAGE_DEPENDENCIES[consumer_stage]), 'STAGE_DEPENDENCIES')
+    return STAGE_DEPENDENCIES[consumer_stage]
+
+
+def stage_service_proof(expected, run, jobs, artifact):
+    require(isinstance(run, dict) and isinstance(jobs, dict) and isinstance(artifact, dict),
+            'STAGE_API_DOCUMENT_SHAPE')
+    require(type(run.get('id')) is int and type(run.get('run_attempt')) is int and
+            run.get('id') == expected['run_id'] and run.get('run_attempt') == expected['run_attempt'] and
+            run.get('head_sha') == expected['head'] and run.get('head_branch') == STAGE_BRANCH and
+            run.get('event') == 'pull_request' and run.get('path') == STAGE_WORKFLOW and
+            run.get('repository', {}).get('full_name') == STAGE_REPOSITORY and
+            run.get('repository', {}).get('private') is False and
+            run.get('head_repository', {}).get('full_name') == STAGE_REPOSITORY, 'STAGE_RUN_METADATA')
+    values = jobs.get('jobs')
+    require(isinstance(values, list) and all(isinstance(job, dict) for job in values) and
+            len(values) <= 100 and type(jobs.get('total_count')) is int and
+            jobs.get('total_count') == len(values),
+            'STAGE_JOB_PAGE_BOUND')
+    selected = [job for job in values if job.get('name') == expected['job_name']]
+    require(len(selected) == 1, 'STAGE_PRODUCER_JOB_UNIQUE')
+    job = selected[0]
+    require(type(job.get('id')) is int and type(job.get('run_id')) is int and
+            job.get('run_id') == expected['run_id'] and job.get('head_sha') == expected['head'] and
+            job.get('status') == 'completed' and job.get('conclusion') == 'success' and
+            ('run_attempt' not in job or type(job['run_attempt']) is int and
+             job['run_attempt'] == expected['run_attempt']), 'STAGE_PRODUCER_JOB_SUCCESS')
+    owner = artifact.get('workflow_run')
+    require(isinstance(owner, dict) and type(owner.get('id')) is int and
+            type(artifact.get('id')) is int and owner.get('id') == expected['run_id'] and
+            owner.get('head_sha') == expected['head'] and owner.get('head_branch') == STAGE_BRANCH and
+            artifact.get('id') == expected['artifact_id'] and artifact.get('name') == expected['artifact_name'] and
+            artifact.get('expired') is False and artifact.get('digest') == 'sha256:' + expected['digest'],
+            'STAGE_ARTIFACT_METADATA')
+    size = artifact.get('size_in_bytes')
+    require(type(size) is int and 0 < size <= STAGE_MAX_WIRE, 'STAGE_WIRE_BOUND')
+    return {'repository': STAGE_REPOSITORY, 'run_id': expected['run_id'],
+            'producer_run_attempt': expected['run_attempt'], 'producer_job_id': stage_integer(job['id']),
+            'producer_job_name': expected['job_name'], 'artifact_id': expected['artifact_id'],
+            'artifact_name': expected['artifact_name'], 'wire_bytes': size,
+            'wire_sha256': expected['digest'], 'service_digest': artifact['digest'],
+            'source_head': expected['head'], 'source_tree': expected['tree']}
+
+
+class _StageNoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, message, headers, newurl):
+        return None
+
+
+def _stage_api(path, token, redirect=False):
+    require(isinstance(token, str) and 0 < len(token) <= 1024 and
+            not re.search(r'[\r\n]', token), 'STAGE_EPHEMERAL_TOKEN_REQUIRED')
+    request = Request('https://api.github.com/repos/' + STAGE_REPOSITORY + path, headers={
+        'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'C47-stage-artifact-loader'})
+    opener = build_opener(ProxyHandler({}), _StageNoRedirect())
+    try:
+        with opener.open(request, timeout=30) as response:
+            require(not redirect and response.status == 200, 'STAGE_API_RESPONSE')
+            raw = response.read(STAGE_MAX_JSON + 1)
+            return stage_json(raw), hashlib.sha256(raw).hexdigest()
+    except HTTPError as error:
+        location = error.headers.get('Location') if redirect and error.code == 302 else None
+        error.close()
+        require(location is not None, 'STAGE_API_RESPONSE')
+        return location
+    except (URLError, OSError):
+        raise ValueError('C47_STAGE_API_UNAVAILABLE') from None
+
+
+def stage_blob_location(location):
+    require(isinstance(location, str) and len(location) <= 16384 and location.isascii() and
+            not re.search(r'[\x00-\x20\x7f]', location), 'STAGE_BLOB_LOCATION')
+    try:
+        parsed = urlsplit(location)
+        require(parsed.scheme == 'https' and parsed.hostname and
+                parsed.hostname.endswith('.blob.core.windows.net') and parsed.port in (None, 443) and
+                not parsed.username and not parsed.password and not parsed.fragment, 'STAGE_BLOB_LOCATION')
+    except ValueError:
+        raise ValueError('C47_STAGE_BLOB_LOCATION') from None
+    return location
+
+
+def _stage_download(expected, proof, token, target):
+    location = stage_blob_location(_stage_api('/actions/artifacts/' + str(expected['artifact_id']) + '/zip',
+                                               token, redirect=True))
+    # A separate opener and Request prevent Authorization from reaching the blob.
+    opener = build_opener(ProxyHandler({}), _StageNoRedirect())
+    request = Request(location, headers={'User-Agent': 'C47-stage-artifact-loader'})
+    descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_NOFOLLOW', 0), 0o600)
+    digest, size, deadline = hashlib.sha256(), 0, time.monotonic() + 300
+    try:
+        with os.fdopen(descriptor, 'wb', closefd=False) as stream, opener.open(request, timeout=20) as response:
+            require(response.status == 200 and (response.headers.get('Content-Length') is None or
+                    response.headers['Content-Length'] == str(proof['wire_bytes'])), 'STAGE_BLOB_RESPONSE')
+            while True:
+                require(time.monotonic() < deadline, 'STAGE_DOWNLOAD_DEADLINE')
+                chunk = response.read(MIB)
+                if not chunk:
+                    break
+                size += len(chunk)
+                require(size <= proof['wire_bytes'] <= STAGE_MAX_WIRE, 'STAGE_WIRE_BOUND')
+                stream.write(chunk)
+                digest.update(chunk)
+            stream.flush()
+            os.fsync(descriptor)
+    except (HTTPError, URLError, OSError):
+        raise ValueError('C47_STAGE_BLOB_DOWNLOAD_FAILED') from None
+    finally:
+        os.close(descriptor)
+    require(size == proof['wire_bytes'] and digest.hexdigest() == expected['digest'] and
+            proof['service_digest'] == 'sha256:' + digest.hexdigest(), 'STAGE_WIRE_IDENTITY')
+
+
+def _stage_manifest_identity(value, expected):
+    require(isinstance(value, dict) and type(value.get('schema')) is int and
+            value.get('schema') == 1 and value.get('stage') == expected['stage'] and
+            value.get('repository') == expected['repository'] and type(value.get('run_id')) is int and
+            type(value.get('run_attempt')) is int and value.get('run_id') == expected['run_id'] and
+            value.get('run_attempt') == expected['run_attempt'] and value.get('job_name') == expected['job_name'] and
+            value.get('source') == {'head': expected['head'], 'tree': expected['tree']}, 'STAGE_MANIFEST_IDENTITY')
+
+
+def stage_execution_identity(value, expected):
+    require(isinstance(value, dict) and isinstance(value.get('job_context'), dict) and
+            isinstance(value.get('source'), dict), 'STAGE_EXECUTION_SHAPE')
+    context = value.get('job_context', {})
+    require(value.get('stage') == expected['stage'] and value.get('stage_complete') is True and
+            not value.get('failure') and not value.get('collection_failure') and
+            value.get('source', {}).get('head') == expected['head'] and
+            value.get('source', {}).get('tree') == expected['tree'] and
+            context.get('repository') == expected['repository'] and type(context.get('run_id')) is int and
+            type(context.get('run_attempt')) is int and context.get('run_id') == expected['run_id'] and
+            context.get('run_attempt') == expected['run_attempt'] and context.get('job_name') == expected['job_name'] and
+            ('job_id' not in context or context['job_id'] == 'native-' + expected['stage']) and
+            value.get('acceptance_granted') is False and value.get('campaign_candidate_complete') is False and
+            value.get('release') == 'NO_GO', 'STAGE_EXECUTION_IDENTITY_OR_INCOMPLETE')
+
+
+def verify_stage_zip(archive, expected, proof, output):
+    require(proof['wire_sha256'] == expected['digest'] and
+            proof['service_digest'] == 'sha256:' + expected['digest'], 'STAGE_DUAL_WIRE_ANCHOR')
+    require(stage_file_digest(archive, STAGE_MAX_WIRE) ==
+            {'bytes': proof['wire_bytes'], 'sha256': expected['digest']}, 'STAGE_WIRE_IDENTITY')
+    require(not output.exists(), 'STAGE_NEW_IMPORT_DIRECTORY')
+    with zipfile.ZipFile(archive) as bundle:
+        members = bundle.infolist()
+        require(0 < len(members) <= STAGE_MAX_FILES, 'STAGE_MEMBER_BOUND')
+        names, aliases, total = set(), {}, 0
+        for member in members:
+            parts = stage_name(member.filename)
+            require(member.filename not in names and not member.is_dir() and not member.flag_bits & 1 and
+                    stat.S_IFMT(member.external_attr >> 16) in (0, stat.S_IFREG) and
+                    member.compress_type in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED), 'STAGE_MEMBER_TYPE')
+            for count in range(1, len(parts) + 1):
+                prefix = '/'.join(parts[:count])
+                require(aliases.get(prefix.casefold(), prefix) == prefix, 'STAGE_MEMBER_ALIAS')
+                aliases[prefix.casefold()] = prefix
+            names.add(member.filename)
+            total += member.file_size
+            require(member.file_size <= STAGE_MAX_FILE and total <= STAGE_MAX_PAYLOAD and
+                    member.file_size <= max(1, member.compress_size) * 2000, 'STAGE_EXPANDED_BOUND')
+        require(total == expected['payload_bytes'] and STAGE_MANIFEST in names and 'execution.json' in names and
+                not any('/'.join(name.split('/')[:n]) in names for name in names
+                        for n in range(1, len(name.split('/')))), 'STAGE_EXACT_PAYLOAD_INVENTORY')
+        require(bundle.getinfo(STAGE_MANIFEST).file_size <= STAGE_MAX_JSON, 'STAGE_MANIFEST_BOUND')
+        manifest_raw = bundle.read(STAGE_MANIFEST)
+        manifest = stage_json(manifest_raw)
+        _stage_manifest_identity(manifest, expected)
+        entries = manifest.get('files')
+        require(isinstance(entries, list) and all(isinstance(row, dict) and set(row) ==
+                {'path', 'bytes', 'sha256'} for row in entries), 'STAGE_MANIFEST_INVENTORY')
+        inventory = {}
+        for row in entries:
+            stage_name(row['path'])
+            require(row['path'] not in inventory and type(row['bytes']) is int and
+                    0 <= row['bytes'] <= STAGE_MAX_FILE and isinstance(row['sha256'], str) and
+                    re.fullmatch(r'[a-f0-9]{64}', row['sha256']),
+                    'STAGE_MANIFEST_INVENTORY')
+            inventory[row['path']] = row
+        require(set(inventory) == names - {STAGE_MANIFEST}, 'STAGE_EXACT_PAYLOAD_INVENTORY')
+        output.mkdir(mode=0o700)
+        for member in members:
+            target = output.joinpath(*stage_name(member.filename))
+            target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            for parent in [target.parent, *target.parent.parents]:
+                if parent == output.parent:
+                    break
+                require(stat.S_ISDIR(parent.lstat().st_mode), 'STAGE_DIRECTORY_LINK')
+            descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL |
+                                 getattr(os, 'O_NOFOLLOW', 0), 0o600)
+            digest, size = hashlib.sha256(), 0
+            try:
+                with os.fdopen(descriptor, 'wb', closefd=False) as stream, bundle.open(member) as source:
+                    while True:
+                        chunk = source.read(MIB)
+                        if not chunk:
+                            break
+                        size += len(chunk)
+                        require(size <= member.file_size, 'STAGE_MEMBER_SIZE')
+                        digest.update(chunk)
+                        stream.write(chunk)
+                require(size == member.file_size, 'STAGE_MEMBER_SIZE')
+            finally:
+                os.close(descriptor)
+            actual = stage_file_digest(target)
+            require(actual == {'bytes': size, 'sha256': digest.hexdigest()} and
+                    (member.filename == STAGE_MANIFEST or actual ==
+                     {key: inventory[member.filename][key] for key in ('bytes', 'sha256')}), 'STAGE_MEMBER_HASH')
+    require(stage_file_digest(archive, STAGE_MAX_WIRE) ==
+            {'bytes': proof['wire_bytes'], 'sha256': expected['digest']}, 'STAGE_WIRE_REREAD')
+    execution = stage_json(read_native_file(output / 'execution.json'))
+    stage_execution_identity(execution, expected)
+    return {'producer': proof, 'stage': expected['stage'], 'payload_directory': str(output),
+            'manifest_sha256': hashlib.sha256(manifest_raw).hexdigest(), 'files': len(members),
+            'payload_bytes': total, 'all_file_hashes_and_crc_verified': True,
+            'current_runner_commands_imported': False,
+            'driver_app_or_named_xctest_admission_still_required': True}
+
+
+def write_stage_provenance(directory, role, context):
+    require(role in STAGE_JOB_NAMES and context.get('repository') == STAGE_REPOSITORY and
+            isinstance(context.get('head'), str) and re.fullmatch(r'[a-f0-9]{40}', context['head']) and
+            isinstance(context.get('tree'), str) and re.fullmatch(r'[a-f0-9]{40}', context['tree']) and
+            directory.is_absolute() and stat.S_ISDIR(directory.lstat().st_mode) and
+            not (directory / STAGE_MANIFEST).exists(), 'STAGE_PRODUCER_MANIFEST')
+    files, total = [], 0
+    for parent, directories, names in os.walk(directory, followlinks=False):
+        require(all(stat.S_ISDIR((Path(parent) / name).lstat().st_mode) for name in directories),
+                'STAGE_DIRECTORY_LINK')
+        for name in sorted(names):
+            path = Path(parent) / name
+            relative = path.relative_to(directory).as_posix()
+            stage_name(relative)
+            files.append({'path': relative, **stage_file_digest(path)})
+            total += files[-1]['bytes']
+            require(len(files) < STAGE_MAX_FILES and total <= STAGE_MAX_PAYLOAD,
+                    'STAGE_PRODUCER_PAYLOAD_BOUND')
+    value = {'schema': 1, 'stage': role, 'repository': STAGE_REPOSITORY,
+             'run_id': stage_integer(context['run_id']), 'run_attempt': stage_integer(context['run_attempt']),
+             'job_name': STAGE_JOB_NAMES[role], 'source': {'head': context['head'], 'tree': context['tree']},
+             'files': sorted(files, key=lambda row: row['path'])}
+    raw = (json.dumps(value, indent=2, sort_keys=True) + '\n').encode()
+    require(len(raw) <= STAGE_MAX_JSON and total + len(raw) <= STAGE_MAX_PAYLOAD,
+            'STAGE_PRODUCER_PAYLOAD_BOUND')
+    for row in files:
+        require(stage_file_digest(directory.joinpath(*stage_name(row['path']))) ==
+                {key: row[key] for key in ('bytes', 'sha256')}, 'STAGE_PRODUCER_REREAD')
+    with (directory / STAGE_MANIFEST).open('xb') as stream:
+        stream.write(raw)
+    return {'payload_bytes': total + len(raw),
+            'manifest_sha256': hashlib.sha256(raw).hexdigest()}
+
+
+def load_authenticated_stage_inputs(consumer_stage, trusted_needs, context, token, import_root):
+    dependencies = stage_dependencies(consumer_stage, trusted_needs)
+    require(dependencies, 'STAGE_BUILD_HAS_NO_IMPORTED_INPUTS')
+    temporary = Path(context['runner_temp']).resolve(strict=True)
+    workspace = Path(context['workspace']).resolve(strict=True)
+    evidence = Path(context['evidence_root']).resolve(strict=True)
+    import_root = Path(import_root)
+    require(import_root.is_absolute() and '..' not in import_root.parts and not import_root.exists() and
+            import_root.is_relative_to(temporary) and not import_root.is_relative_to(workspace) and
+            not import_root.is_relative_to(evidence) and not evidence.is_relative_to(import_root),
+            'STAGE_IMPORT_OUTSIDE_CURRENT_SOURCE')
+    for parent in [*reversed(import_root.parent.parents), import_root.parent]:
+        require(stat.S_ISDIR(parent.lstat().st_mode), 'STAGE_DIRECTORY_LINK')
+    expected = {role: stage_expected(role, trusted_needs[role], context) for role in dependencies}
+    proofs = {}
+    for role, wanted in expected.items():
+        path = '/actions/runs/' + str(wanted['run_id']) + '/attempts/' + str(wanted['run_attempt'])
+        run, run_sha = _stage_api(path, token)
+        jobs, jobs_sha = _stage_api(path + '/jobs?per_page=100&page=1', token)
+        artifact, artifact_sha = _stage_api('/actions/artifacts/' + str(wanted['artifact_id']), token)
+        proof = stage_service_proof(wanted, run, jobs, artifact)
+        proof['authenticated_api_response_sha256'] = {'run_attempt': run_sha, 'jobs': jobs_sha,
+                                                       'artifact': artifact_sha}
+        proofs[role] = proof
+    import_root.mkdir(mode=0o700)
+    imported = {}
+    for role, wanted in expected.items():
+        directory = import_root / role
+        directory.mkdir(mode=0o700)
+        archive = directory / 'artifact.zip'
+        _stage_download(wanted, proofs[role], token, archive)
+        imported[role] = verify_stage_zip(archive, wanted, proofs[role], directory / 'payload')
+    return {'imported_provenance': imported, 'current_runner_commands_imported': False,
+            'signed_urls_or_credentials_retained': False}
+
+
+def _simulator_optional(r, name, argv, timeout, diagnostic=False):
+    """A failed diagnostic is retained, and cannot replace the primary failure."""
+    try:
+        r.run(name, argv, timeout=timeout, required=False, diagnostic=diagnostic)
+    except Exception as error:
+        r.receipt.setdefault('simulator_diagnostic_exceptions', []).append(
+            {'command': name, 'error_type': type(error).__name__})
+        try:
+            r.persist()
+        except Exception:
+            pass
+
+
+def simulator_resources(r, label, diagnostic=False):
+    """No command arguments/environment dumps; every snapshot is bounded."""
+    for suffix, argv in [
+        ('memory', ['/usr/bin/vm_stat']),
+        ('disk', ['/bin/df', '-k', '/System/Volumes/Data']),
+        ('processes', ['/bin/ps', '-axo', 'pid,ppid,%cpu,%mem,state,etime,comm']),
+    ]:
+        _simulator_optional(r, label + '-' + suffix, argv, 10, diagnostic)
+
+
+def simulator_install_diagnostics(r, device):
+    """At most 80 command seconds, for this controlled device and host only."""
+    simulator_resources(r, 'simulator-install-failure', diagnostic=True)
+    guest = ('process == "installd" OR process == "containermanagerd" OR '
+             'process == "lsd" OR process == "SpringBoard" OR process == "runningboardd"')
+    host = ('process == "CoreSimulatorService" OR process == "simdiskimaged" OR '
+            'subsystem BEGINSWITH "com.apple.CoreSimulator"')
+    _simulator_optional(r, 'simulator-installer-log',
+                        ['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '15m',
+                         '--style', 'json', '--predicate', guest], 25, diagnostic=True)
+    _simulator_optional(r, 'simulator-host-service-log',
+                        ['/usr/bin/log', 'show', '--last', '15m', '--style', 'json',
+                         '--predicate', host], 25, diagnostic=True)
+
+
+def prepare_simulator(r, label):
+    """Actual toolchain + actual available inventory -> one fresh controlled UUID."""
+    require(label in ('normal', 'internal'), 'SIMULATOR_LANE_LABEL')
+    tools = json.loads(read_native_file(r.output / 'toolchain.json'))
+    sdk, architecture = tools['simulator-sdk'], tools['architecture']
+    head = r.receipt['source']['head']
+    require(re.fullmatch(r'[0-9a-f]{40}', head), 'SIMULATOR_SOURCE_HEAD')
+    for command in ('listapps', 'get_app_container'):
+        r.run('simulator-help-' + command.replace('_', '-'),
+              ['xcrun', 'simctl', 'help', command], timeout=30)
+    document = json.loads(r.text('simulator-inventory', ['xcrun', 'simctl', 'list', '--json'], timeout=90))
+    runtime, template = available_iphone(document, sdk, architecture)
+    device = r.text('simulator-create', ['xcrun', 'simctl', 'create', 'C47-' + label + '-' + head[:12],
+                                       template['deviceTypeIdentifier'], runtime['identifier']], timeout=60)
+    require(str(uuid.UUID(device)).lower() == device.lower(), 'SIMULATOR_UDID')
+    r.receipt['simulator'] = {
+        'udid': device, 'runtime': runtime, 'template': template,
+        'selection': {'policy': 'Actual SDK major/minor first, then existing compact preference',
+                      'sdk_version': sdk, 'host_architecture': architecture,
+                      'sdk_major_minor_match': runtime['version'].split('.')[:2] == sdk.split('.')[:2],
+                      'logical_width_qualified': False},
+    }
+    r.persist()
+    simulator_resources(r, 'simulator-before-boot')
+    try:
+        r.run('simulator-boot', ['xcrun', 'simctl', 'boot', device], timeout=60)
+        r.run('simulator-bootstatus', ['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=600)
+        return device
+    except Exception:
+        simulator_install_diagnostics(r, device)
+        raise
+
+
+def install_simulator_app(r, device, app, bundle):
+    """One parsed readiness/absence observation, one install, actual lookup.
+
+    Call only for the UUID just returned by prepare_simulator. The consuming
+    lane must first authenticate the same-new-HEAD product and complete app
+    inventory. No installed/UI/acceptance stage is marked here.
+    """
+    require(isinstance(device, str) and str(uuid.UUID(device)).lower() == device.lower() and
+            r.receipt.get('simulator', {}).get('udid') == device, 'SIMULATOR_UDID')
+    require(re.fullmatch(r'[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+', bundle), 'PRODUCT_BUNDLE_ID')
+    simulator_resources(r, 'simulator-before-install')
+    try:
+        paths = r.run('simulator-registry-ready', ['xcrun', 'simctl', 'listapps', device], timeout=90)
+        # listapps can emit an OpenStep property list. Use the installed system
+        # converter rather than assuming XML, JSON, or inventing a plist parser.
+        raw = read_native_file(paths[0])
+        require(0 < len(raw) <= 4 * 1024 * 1024, 'SIMULATOR_REGISTRY_SIZE')
+        registry = json.loads(r.text('simulator-registry-json',
+                                    ['/usr/bin/plutil', '-convert', 'json', '-o', '-', paths[0]], timeout=15))
+        require(isinstance(registry, dict) and bool(registry) and
+                all(isinstance(row, dict) for row in registry.values()), 'SIMULATOR_REGISTRY_SHAPE')
+        require(bundle not in registry and not any(row.get('CFBundleIdentifier') == bundle
+                                                   for row in registry.values()),
+                'SIMULATOR_TARGET_ALREADY_INSTALLED')
+        r.run('simulator-install', ['xcrun', 'simctl', 'install', device, app], timeout=600)
+        container = r.text('simulator-installed-container',
+                           ['xcrun', 'simctl', 'get_app_container', device, bundle, 'app'], timeout=60)
+        require(Path(container).is_absolute() and Path(container).is_dir() and
+                Path(container).suffix == '.app', 'SIMULATOR_INSTALLED_APP_CONTAINER')
+        return container
+    except Exception:
+        simulator_install_diagnostics(r, device)
+        raise
+
+
+def _produced_app_name(name):
+    require(isinstance(name, str) and 0 < len(name.encode('utf-8')) <= 1024 and
+            unicodedata.normalize('NFC', name) == name and
+            not re.search(r'[\\:\x00-\x1f\x7f]', name) and
+            all(part and part not in ('.', '..') and not part.endswith(('.', ' '))
+                for part in name.split('/')), 'IMPORTED_APP_PATH')
+    return name
+
+
+def _produced_app_tar_pass(stream, files, destination=None):
+    """One closed normal-app format; first pass verifies every byte before any extraction."""
+    require(isinstance(files, list) and 0 < len(files) < 10000, 'IMPORTED_APP_INVENTORY_BOUND')
+    expected = {'LayerwellStaging.app': {'type': 'directory', 'mode': '0o755'}}
+    aliases, total = {'layerwellstaging.app'}, 0
+    for row in files:
+        require(isinstance(row, dict) and row.get('type') in ('file', 'directory'), 'IMPORTED_APP_INVENTORY_TYPE')
+        name = 'LayerwellStaging.app/' + _produced_app_name(row.get('path'))
+        require(name.casefold() not in aliases, 'IMPORTED_APP_PATH_ALIAS')
+        aliases.add(name.casefold())
+        required = {'path', 'type', 'mode'} | ({'bytes', 'sha256'} if row['type'] == 'file' else set())
+        require(set(row) == required and row['mode'] in
+                (('0o644', '0o755') if row['type'] == 'file' else ('0o755',)), 'IMPORTED_APP_INVENTORY_MODE')
+        if row['type'] == 'file':
+            require(type(row['bytes']) is int and 0 <= row['bytes'] <= MAX_APP and
+                    isinstance(row['sha256'], str) and re.fullmatch(r'[a-f0-9]{64}', row['sha256']),
+                    'IMPORTED_APP_INVENTORY_FILE')
+            total += row['bytes']
+            require(total <= 2 * 1024 * MIB, 'IMPORTED_APP_EXPANDED_BOUND')
+        expected[name] = {key: value for key, value in row.items() if key != 'path'}
+    for name in expected:
+        if '/' in name:
+            require(expected.get(name.rsplit('/', 1)[0], {}).get('type') == 'directory',
+                    'IMPORTED_APP_PARENT_DIRECTORY')
+    seen = set()
+    stream.seek(0)
+    class BoundedTar:
+        def __init__(self, raw):
+            self.raw, self.observed = raw, 0
+
+        def read(self, count):
+            require(type(count) is int and 0 <= count <= MIB, 'IMPORTED_APP_TAR_READ_BOUND')
+            chunk = self.raw.read(count)
+            self.observed += len(chunk)
+            require(self.observed <= total + 16 * MIB, 'IMPORTED_APP_TAR_EXPANSION_BOUND')
+            return chunk
+
+    with gzip.GzipFile(fileobj=stream, mode='rb') as raw:
+        with tarfile.open(fileobj=BoundedTar(raw), mode='r|') as archive:
+            for member in archive:
+                name = _produced_app_name(member.name)
+                require(len(seen) < 10000 and name in expected and name not in seen,
+                        'IMPORTED_APP_MEMBER_INVENTORY')
+                seen.add(name)
+                require(member.type in (tarfile.DIRTYPE, tarfile.REGTYPE, tarfile.AREGTYPE) and
+                        not member.sparse and not member.linkname and
+                        set(member.pax_headers) <= {'path', 'mtime'} and
+                        all(isinstance(value, str) and len(value) <= 1024 for value in member.pax_headers.values()) and
+                        member.pax_headers.get('path', name) in ([name, name + '/'] if member.isdir() else [name]),
+                        'IMPORTED_APP_MEMBER_TYPE')
+                row = expected[name]
+                kind = 'directory' if member.isdir() else 'file'
+                require(row['type'] == kind and oct(member.mode) == row['mode'] and
+                        member.size == (row['bytes'] if kind == 'file' else 0), 'IMPORTED_APP_MEMBER_METADATA')
+                target = destination.joinpath(*name.split('/')) if destination is not None else None
+                if kind == 'directory':
+                    if target is not None:
+                        target.mkdir(mode=0o755)
+                        target.chmod(0o755)
+                    continue
+                digest, size = hashlib.sha256(), 0
+                descriptor = None
+                if target is not None:
+                    require(all(stat.S_ISDIR(parent.lstat().st_mode)
+                                for parent in [target.parent, *target.parent.parents]), 'IMPORTED_APP_TARGET_DIRECTORY')
+                    descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_NOFOLLOW', 0), 0o600)
+                try:
+                    with archive.extractfile(member) as source:
+                        while True:
+                            chunk = source.read(MIB)
+                            if not chunk:
+                                break
+                            size += len(chunk)
+                            require(size <= row['bytes'], 'IMPORTED_APP_FILE_BOUND')
+                            digest.update(chunk)
+                            if descriptor is not None:
+                                with memoryview(chunk) as pending:
+                                    while pending:
+                                        written = os.write(descriptor, pending)
+                                        require(written > 0, 'IMPORTED_APP_WRITE')
+                                        pending = pending[written:]
+                    require(size == row['bytes'] and digest.hexdigest() == row['sha256'], 'IMPORTED_APP_FILE_HASH')
+                finally:
+                    if descriptor is not None:
+                        os.close(descriptor)
+                if target is not None:
+                    target.chmod(int(row['mode'], 8))
+    require(seen == set(expected), 'IMPORTED_APP_INVENTORY_COMPLETE')
+    return {'members': len(seen), 'regular_bytes': total,
+            'qualification': 'ARCHIVE_BYTES_AND_SHAPE_ONLY_NOT_MACH_O_OR_RUNTIME_PROOF'}
+
+
+def consume_produced_app(r, producer, expected_head, architecture, destination):
+    """Consume the authenticated same-source build; never represent this as a current-job compile."""
+    require_simulator_host(architecture)
+    require(re.fullmatch(r'[a-f0-9]{40}', expected_head) and
+            r.receipt['source']['head'] == expected_head, 'IMPORTED_APP_CURRENT_SOURCE')
+    producer, destination = Path(producer), Path(destination).absolute()
+    temporary = Path(os.environ['RUNNER_TEMP']).resolve(strict=True)
+    require(destination.parent == temporary and not os.path.lexists(destination) and
+            all(stat.S_ISDIR(parent.lstat().st_mode) for parent in [temporary, *temporary.parents]),
+            'IMPORTED_APP_FRESH_RUNNER_TEMP')
+    receipt_raw = read_native_file(producer / 'app-artifact.json')
+    inventory_raw = read_native_file(producer / 'app-inventory.json')
+    receipt, inventory = stage_json(receipt_raw), stage_json(inventory_raw)
+    require(receipt.get('file') == 'unsigned-simulator-app.tar.gz' and
+            receipt.get('source_head') == expected_head and
+            receipt.get('configuration') == 'Release' and receipt.get('lane') == 'normal-staging' and
+            receipt.get('standalone_embedded_javascript') is True and
+            receipt.get('not_an_iphone_or_testflight_release') is True and
+            receipt.get('platform') == 'iOS Simulator' and receipt.get('architectures') == [architecture] and
+            receipt.get('bundle_id') == 'com.layerwell.app.staging' and
+            receipt.get('executable') == 'LayerwellStaging', 'IMPORTED_APP_PRODUCER_IDENTITY')
+    require(inventory.get('source', {}).get('head') == expected_head and
+            inventory['source'].get('tree') == r.receipt['source']['tree'] and
+            inventory.get('configuration') == 'Release' and inventory.get('lane') == 'normal-staging' and
+            hashlib.sha256(inventory_raw).hexdigest() == receipt.get('inventory_sha256'),
+            'IMPORTED_APP_INVENTORY_IDENTITY')
+    files = inventory.get('files')
+    require(isinstance(files, list) and all(any(row.get('path') == name and row.get('type') == 'file' and
+            type(row.get('bytes')) is int and row['bytes'] > 0 for row in files if isinstance(row, dict))
+            for name in ['Info.plist', 'LayerwellStaging', 'main.jsbundle']), 'IMPORTED_APP_REQUIRED_FILES')
+    archive_path = producer / receipt['file']
+    before = archive_path.lstat()
+    stamp = lambda value: (value.st_dev, value.st_ino, value.st_mode, value.st_nlink, value.st_size,
+                           value.st_mtime_ns, value.st_ctime_ns)
+    require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and type(receipt.get('bytes')) is int and
+            0 < before.st_size == receipt['bytes'] <= MAX_APP and
+            isinstance(receipt.get('sha256'), str) and re.fullmatch(r'[a-f0-9]{64}', receipt['sha256']),
+            'IMPORTED_APP_ARCHIVE_BOUND')
+    descriptor = os.open(archive_path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
+    with os.fdopen(descriptor, 'rb') as stream:
+        require(stamp(os.fstat(stream.fileno())) == stamp(before), 'IMPORTED_APP_ARCHIVE_OPEN_RACE')
+        digest = hashlib.sha256()
+        for chunk in iter(lambda: stream.read(MIB), b''):
+            digest.update(chunk)
+        require(digest.hexdigest() == receipt['sha256'], 'IMPORTED_APP_ARCHIVE_HASH')
+        shape = _produced_app_tar_pass(stream, files)
+        destination.mkdir(mode=0o700)
+        require(_produced_app_tar_pass(stream, files, destination) == shape, 'IMPORTED_APP_EXTRACTION_DRIFT')
+        require(stamp(os.fstat(stream.fileno())) == stamp(before) and
+                stamp(archive_path.lstat()) == stamp(before), 'IMPORTED_APP_ARCHIVE_RACE')
+    app = destination / 'LayerwellStaging.app'
+    require(bundle_inventory(app) == files, 'IMPORTED_APP_EXTRACTED_INVENTORY')
+    info = plistlib.loads(read_native_file(app / 'Info.plist'))
+    binary = app / receipt['executable']
+    bundle, executable, archs = validate_product(info,
+        r.text('imported-product-file', ['file', binary]),
+        r.text('imported-product-architectures', ['lipo', '-archs', binary]),
+        r.text('imported-product-build-version', ['xcrun', 'vtool', '-show-build', binary]), architecture)
+    require((bundle, executable, archs) == (receipt['bundle_id'], receipt['executable'], receipt['architectures']),
+            'IMPORTED_APP_CURRENT_PRODUCT_IDENTITY')
+    provenance = {'origin': 'AUTHENTICATED_PRODUCER_APP_NOT_COMPILED_IN_THIS_JOB',
+        'source_head': expected_head, 'source_tree': inventory['source']['tree'],
+        'producer_app_receipt_sha256': hashlib.sha256(receipt_raw).hexdigest(),
+        'producer_app_archive_sha256': receipt['sha256'], 'producer_app_archive_bytes': receipt['bytes'],
+        'producer_app_inventory_sha256': receipt['inventory_sha256'],
+        'configuration': 'Release', 'lane': 'normal-staging', 'bundle_id': bundle,
+        'current_host_architecture': architecture, 'current_job_product_probes': True,
+        'archive_shape': shape, 'acceptance_granted': False, 'release': 'NO_GO'}
+    return app, bundle, provenance
+
 class Runner:
     def __init__(self, root, output, seconds=84 * 60):
         self.root = root
@@ -351,7 +1052,7 @@ class Runner:
         self.env['GIT_OPTIONAL_LOCKS'] = '0'
         self.receipt = {
             'schema': 1, 'campaign': 47, 'started_utc': utc(),
-            'status': 'RUNNING', 'commands': [], 'stages': {},
+            'status': 'RUNNING', 'stage_complete': False, 'upstream_payload_bytes': 0, 'commands': [], 'stages': {},
             'lane': 'normal-staging', 'internal_supported_owner': 'NOT_RUN',
             'widget_extension': 'EXCLUDED_BY_EXISTING_SIMULATOR_PROFILE',
             'campaign_candidate_complete': False, 'acceptance_granted': False, 'release': 'NO_GO',
@@ -516,7 +1217,7 @@ class Runner:
         return receipt
 
 
-def execute(r):
+def prepare(r, source_controls=True):
     require(platform.system() == 'Darwin', 'MACOS_REQUIRED')
     head = os.environ.get('C47_EXPECTED_HEAD', '')
     require(re.fullmatch(r'[a-f0-9]{40}', head), 'EXPECTED_HEAD_REQUIRED')
@@ -567,18 +1268,24 @@ def execute(r):
     r.passed('toolchain', tools)
     r.run('normal-install', ['npm', 'ci', '--no-audit', '--no-fund'], timeout=1000)
     r.run('postinstall-check', ['npm', 'run', 'postinstall:check'], timeout=180)
-    r.run('swift-behavior47', ['python3', '-I', '-B',
-          'scripts/release/full-app-j01/swift_behavior47.py', '--output', r.output / 'swift-behavior47'], timeout=120)
-    r.run('ocr-source-contract', ['npm', 'run', 'cat05:native-ocr-source-contract:test'], timeout=240)
-    r.run('existing-workflow-contract', ['npm', 'run', 'phase5:ios-simulator-compile-workflow:test'], timeout=120)
-    r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=900)
-    r.run('generated47-properties-controls', ['python3', '-I', '-B', 'scripts/release/full-app-j01/pods_compat47.test.py'], timeout=120)
+    if source_controls:
+        r.run('swift-behavior47', ['python3', '-I', '-B',
+              'scripts/release/full-app-j01/swift_behavior47.py', '--output', r.output / 'swift-behavior47'], timeout=120)
+        r.run('ocr-source-contract', ['npm', 'run', 'cat05:native-ocr-source-contract:test'], timeout=240)
+        r.run('existing-workflow-contract', ['npm', 'run', 'phase5:ios-simulator-compile-workflow:test'], timeout=120)
+        r.run('generated47-controls', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], timeout=1200)
+        r.run('generated47-properties-controls', ['python3', '-I', '-B', 'scripts/release/full-app-j01/pods_compat47.test.py'], timeout=120)
     source47 = r.output / 'current-generated47-source.json'
     r.run('current-generated47-source', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
                                        '--phase', 'SOURCE', '--output', source47], timeout=600)
     r.run('dependency-graph', ['npm', 'ls', '--all', '--json', '--long'], timeout=180)
     r.source_proof('source-after-install', head)
     r.passed('installation', {'normal_hooks_executed': True, 'reviewed_native_source': 'CURRENT_SOURCE47_TECHNICAL_ONLY'})
+    return head, tools, source47
+
+
+def execute(r, compile_only=False):
+    head, tools, source47 = prepare(r)
     mobile = r.root / 'apps/mobile'
     r.run('resolved-expo-config', ['npx', '--no-install', 'expo', 'config', '--json'], cwd=mobile, timeout=120)
     r.run('prebuild', ['npx', '--no-install', 'expo', 'prebuild', '--platform', 'ios', '--clean',
@@ -630,41 +1337,20 @@ def execute(r):
     apps = list((derived / 'Build/Products/Release-iphonesimulator').glob('*.app'))
     require(len(apps) == 1, 'PRODUCT_COUNT')
     app = apps[0]
-    with (app / 'Info.plist').open('rb') as stream:
-        info = plistlib.load(stream)
-    executable_name = info.get('CFBundleExecutable', '')
-    require(re.fullmatch(r'[A-Za-z0-9._ -]+', executable_name) and executable_name not in ('.', '..'), 'PRODUCT_EXECUTABLE_NAME')
-    binary = app / executable_name
-    description = r.text('product-file', ['file', binary])
-    architectures = r.text('product-architectures', ['lipo', '-archs', binary])
-    build_version = r.text('product-build-version', ['xcrun', 'vtool', '-show-build', binary])
-    bundle, executable_name, archs = validate_product(info, description, architectures, build_version, tools['architecture'])
-    inventory = bundle_inventory(app)
-    write_json(r.output / 'app-inventory.json', {'source': r.receipt['source'], 'files': inventory})
-    shutil.copy2(app / 'Info.plist', native / 'app-Info.plist')
-    archive = products / 'unsigned-simulator-app.tar.gz'
-    with tarfile.open(archive, 'w:gz', dereference=False) as target:
-        target.add(app, arcname=app.name)
-    archive_receipt = {'file': archive.name, 'bytes': archive.stat().st_size, 'sha256': sha(archive),
-                       'inventory_sha256': sha(r.output / 'app-inventory.json'), 'source_head': head,
-                       'bundle_id': bundle, 'executable': executable_name, 'architectures': archs,
-                       'platform': 'iOS Simulator', 'not_an_iphone_or_testflight_release': True}
-    write_json(r.output / 'app-artifact.json', archive_receipt)
-    require(archive.stat().st_size <= MAX_APP, 'APP_ARTIFACT_SIZE_BOUND')
-    shutil.copy2(archive, r.output / archive.name)
+    bundle, _, archive_receipt = retain_app(r, app, products, head, tools['architecture'],
+                                           'Release', 'normal-staging')
     r.passed('compiled', archive_receipt)
-    simulator_document = json.loads(r.text('simulator-inventory', ['xcrun', 'simctl', 'list', '--json']))
-    runtime, template = available_iphone(simulator_document)
-    device = r.text('simulator-create', ['xcrun', 'simctl', 'create', 'C47-' + head[:12],
-                                       template['deviceTypeIdentifier'], runtime['identifier']])
-    require(re.fullmatch(r'[0-9A-Fa-f-]{36}', device), 'SIMULATOR_UDID')
-    r.receipt['simulator'] = {'udid': device, 'runtime': runtime, 'template': template,
-                              'selection': 'Compact-first among actually available iPhone/runtime pairs; fresh controlled device'}
-    r.persist()
-    r.run('simulator-boot', ['xcrun', 'simctl', 'boot', device], timeout=60)
-    r.run('simulator-bootstatus', ['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=240)
-    r.run('simulator-install', ['xcrun', 'simctl', 'install', device, app], timeout=120)
-    r.passed('installed', {'udid': device, 'bundle_id': bundle})
+    if compile_only:
+        r.receipt.update(status='BUILD_NATIVE_COMPILED_RUNTIME_NOT_RUN', finished_utc=utc())
+        r.persist()
+        return
+    run_normal(r, ios, products, app, bundle, head)
+
+
+def run_normal(r, ios, products, app, bundle, head):
+    device = prepare_simulator(r, 'normal')
+    installed = install_simulator_app(r, device, app, bundle)
+    verify_installed_app(r, installed, app, bundle)
     launch = r.text('simulator-launch', ['xcrun', 'simctl', 'launch', device, bundle], timeout=60)
     match = re.fullmatch(re.escape(bundle) + r': ([1-9][0-9]*)', launch)
     require(match, 'LAUNCH_PID')
@@ -729,6 +1415,28 @@ def localhost_url(url):
     return url
 
 
+def evidence_total(r, root=None):
+    reserved = r.receipt.get('upstream_payload_bytes', 0)
+    require(type(reserved) is int and 0 <= reserved <= MAX_EVIDENCE, 'UPSTREAM_EVIDENCE_BOUND')
+    return evidence_size(root or getattr(r, 'evidence_root', r.output)) + reserved
+
+
+def verify_installed_app(r, container, app, bundle):
+    installed = Path(container).resolve(strict=True)
+    info = plistlib.loads(read_native_file(app / 'Info.plist'))
+    current = plistlib.loads(read_native_file(installed / 'Info.plist'))
+    executable = info['CFBundleExecutable']
+    require(current.get('CFBundleIdentifier') == bundle == info['CFBundleIdentifier'] and
+            current.get('CFBundleExecutable') == executable, 'INSTALLED_PRODUCT_IDENTITY')
+    expected = stage_file_digest(app / executable, MAX_APP)
+    observed = stage_file_digest(installed / executable, MAX_APP)
+    require(observed == expected, 'INSTALLED_EXECUTABLE_BYTES')
+    r.passed('installed', {'udid': r.receipt['simulator']['udid'], 'bundle_id': bundle,
+        'source_head': r.receipt['source']['head'], 'installed_executable_sha256': observed['sha256'],
+        'expected_executable_sha256': expected['sha256'],
+        'qualification': 'ACTUAL_INSTALL_ZERO_AND_CONTAINER_LOOKUP_WITH_EXACT_EXECUTABLE_BYTES'})
+
+
 def retain_app(r, app, products, head, architecture, configuration, lane):
     with (app / 'Info.plist').open('rb') as stream:
         info = plistlib.load(stream)
@@ -758,7 +1466,7 @@ def retain_app(r, app, products, head, architecture, configuration, lane):
     write_json(r.output / 'app-artifact.json', receipt)
     require(archive.stat().st_size <= MAX_APP, 'APP_ARTIFACT_SIZE_BOUND')
     limit_root = getattr(r, 'evidence_root', r.output)
-    require(evidence_size(limit_root) + archive.stat().st_size <= MAX_EVIDENCE - 48 * MIB,
+    require(evidence_total(r, limit_root) + archive.stat().st_size <= MAX_EVIDENCE - 48 * MIB,
             'COMBINED_APP_EVIDENCE_SIZE_BOUND')
     shutil.copy2(archive, r.output / name)
     return bundle, executable_name, receipt
@@ -834,7 +1542,7 @@ def retain_result_bundles(r):
         destination = r.output / name
         if source.is_dir() and not destination.exists():
             size = evidence_size(source)
-            if size + evidence_size(getattr(r, 'evidence_root', r.output)) <= MAX_EVIDENCE - 10 * MIB:
+            if size + evidence_total(r) <= MAX_EVIDENCE - 10 * MIB:
                 shutil.copytree(source, destination)
             else:
                 r.receipt.setdefault('diagnostic_limits', []).append(
@@ -1341,8 +2049,120 @@ def set_dynamic_type(r, device, value, restoring=False):
     return detail
 
 
-def execute_internal(parent):
-    # This lane is structurally unreachable until ordinary app UI completed.
+def executed_producer_command(receipt, directory, name, read_output=False):
+    commands = [row for row in receipt.get('commands', []) if row.get('name') == name]
+    require(len(commands) == 1 and commands[0].get('state') == 'PASS' and
+            type(commands[0].get('exit_code')) is int and commands[0]['exit_code'] == 0,
+            'PRODUCER_ACTUAL_COMMAND:' + name)
+    row, raw = commands[0], []
+    for stream in ('stdout', 'stderr'):
+        relative = row.get(stream)
+        require(isinstance(relative, str) and len(stage_name(relative)) == 2 and
+                stage_name(relative)[0] == 'logs', 'PRODUCER_CURRENT_LOG_PATH')
+        path = directory.joinpath(*stage_name(relative))
+        observed = stage_file_digest(path)
+        require(type(row.get(stream + '_bytes')) is int and observed ==
+                {'bytes': row[stream + '_bytes'], 'sha256': row.get(stream + '_sha256')},
+                'PRODUCER_RAW_LOG_IDENTITY')
+        if read_output:
+            raw.append(read_native_file(path))
+    return row, tuple(raw)
+
+
+def producer_source_matches(r, receipt, directory):
+    source = receipt.get('source')
+    require(isinstance(source, dict) and source == r.receipt['source'], 'PRODUCER_SAME_WHOLE_SOURCE')
+    proof = stage_json(read_native_file(directory / 'current-generated47-source.json'))
+    require(proof.get('phase') == 'SOURCE' and proof.get('sourceHead') == source['head'] and
+            proof.get('sourceTree') == source['tree'] and proof.get('profiles') == ['development', 'staging'] and
+            proof.get('descriptorSHA256') == sha(r.root / 'docs/phase-9/ios-generated-input-succession47.v1.json') and
+            proof.get('currentNative47', {}).get('verifiedInputCount') == 202 and
+            proof['currentNative47'].get('committedCriticalInputs') == 172, 'PRODUCER_CURRENT_NATIVE_INPUTS')
+    require(all(row.get('state') == 'PASS' and row.get('exit_code') == 0
+                for row in receipt.get('commands', []) if row.get('required')), 'PRODUCER_REQUIRED_COMMAND_FAILURE')
+
+
+def producer_final_source_matches(r, receipt, directory, name):
+    before = receipt['source']
+    after = stage_json(read_native_file(directory / name))
+    require(set(after) == set(before) and all(after.get(key) == before.get(key)
+            for key in ('head', 'tree', 'base', 'base_tree', 'helper', 'helper_sha256')),
+            'PRODUCER_FINAL_WHOLE_SOURCE_IDENTITY')
+    if after['inventory'] == before['inventory']:
+        return
+    projection = directory / 'generation-projection'
+    original = read_native_file(projection / 'original-package.json')
+    generated = read_native_file(projection / 'generated-package.json')
+    require(original == read_native_file(r.root / 'apps/mobile/package.json') and
+            generated_package_projection(original, generated) == stage_json(read_native_file(projection / 'projection.json')),
+            'PRODUCER_EXACT_GENERATED_PACKAGE_PROJECTION')
+    inventory = after['inventory']
+    require(set(inventory) == {'files', 'bytes', 'actual_inventory_sha256', 'qualification'} and
+            inventory['files'] == before['inventory']['files'] and
+            inventory['bytes'] == before['inventory']['bytes'] - len(original) + len(generated) and
+            re.fullmatch(r'[a-f0-9]{64}', inventory['actual_inventory_sha256']) and
+            inventory['qualification'] == 'ALL_SOURCE_BYTES_EXACT_EXCEPT_DECLARED_GENERATED_PACKAGE_SCRIPT_PROJECTION',
+            'PRODUCER_VERIFIED_PROJECTION_FINGERPRINT')
+    verifier_path = r.root / 'scripts/release/full-app-j01/source_completion46.py'
+    spec = importlib.util.spec_from_file_location('c47_import_source_verifier', verifier_path)
+    verifier = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(verifier)
+    g = lambda *args: verifier.git(*args, root=r.root)
+    require(g('rev-parse', 'HEAD').decode().strip() == before['head'], 'PRODUCER_CURRENT_SOURCE_HEAD')
+    expected_inventory = projected_source_inventory(verifier, r.root, before['head'], g, generated,
+                                                    authenticated_original=original)
+    require(inventory == expected_inventory, 'PRODUCER_EXACT_PROJECTED_SOURCE_INVENTORY')
+
+
+def full_generated_control_proof(argv, raw, source):
+    require(argv == ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'],
+            'BUILD_PRODUCER_FULL_SOURCE_CONTROL_COMMAND')
+    names = re.findall(r"^test\('([^'\n]+)',", source, re.M)
+    require(len(names) == 30 and len(set(names)) == 30, 'BUILD_PRODUCER_CURRENT_SOURCE_CONTROL_NAMES')
+    tap = raw.decode('utf-8')
+    for key, expected in [('tests', 30), ('pass', 30), ('fail', 0), ('skipped', 0), ('cancelled', 0), ('todo', 0)]:
+        require(re.findall(r'^# ' + key + r' (\d+)\s*$', tap, re.M) == [str(expected)],
+                'BUILD_PRODUCER_FULL_SOURCE_CONTROLS')
+    cases = re.findall(r'^ok (\d+) - (.+)$', tap, re.M)
+    require(cases == [(str(index), name) for index, name in enumerate(names, 1)] and
+            re.findall(r'^1\.\.(\d+)\s*$', tap, re.M) == ['30'] and
+            not re.search(r'^not ok |^ok .*#\s*(?:SKIP|TODO)\b', tap, re.M | re.I),
+            'BUILD_PRODUCER_THIRTY_ACTUAL_NAMED_SOURCE_CONTROLS')
+
+
+def verify_build_producer(r, provenance):
+    directory = Path(provenance['payload_directory'])
+    receipt = stage_json(read_native_file(directory / 'execution.json'))
+    producer_source_matches(r, receipt, directory)
+    require(receipt.get('stage') == 'build' and receipt.get('status') == 'BUILD_NATIVE_COMPILED_RUNTIME_NOT_RUN' and
+            receipt.get('stages', {}).get('compiled', {}).get('status') == 'PASS' and
+            not any(stage in receipt['stages'] for stage in ('installed', 'launched', 'normal-staging-ui')),
+            'BUILD_PRODUCER_STAGE')
+    tools = stage_json(read_native_file(directory / 'toolchain.json'))
+    require(tools.get('build_environment') == ENVIRONMENT and tools.get('architecture') == 'x86_64' and
+            tools.get('node') == 'v22.22.2' and tools.get('npm') == '11.20.0' and
+            tools.get('xcode', '').startswith('Xcode 26.4') and
+            tools.get('simulator_build_flags') == SIMULATOR_BUILD_FLAGS, 'BUILD_PRODUCER_LANE')
+    for name in ('normal-install', 'postinstall-check', 'swift-behavior47', 'generated47-controls',
+                 'current-generated47-source', 'current-generated47-native', 'current-generated47-resolved',
+                 'pods', 'product-file', 'product-architectures', 'product-build-version'):
+        executed_producer_command(receipt, directory, name)
+    control, logs = executed_producer_command(receipt, directory, 'generated47-controls', read_output=True)
+    full_generated_control_proof(control.get('argv'), b'\n'.join(logs),
+        read_native_file(r.root / 'scripts/release/full-app-j01/native_generated47.test.mjs').decode('utf-8'))
+    build, _ = executed_producer_command(receipt, directory, 'native-build')
+    argv = build.get('argv', [])
+    require(argv and argv[0] == 'xcodebuild' and argv[-1] == 'build' and
+            all(flag in argv for flag in SIMULATOR_BUILD_FLAGS) and
+            argv[argv.index('-configuration') + 1] == 'Release' and
+            argv[argv.index('-sdk') + 1] == 'iphonesimulator', 'BUILD_PRODUCER_REAL_RELEASE_BUILD')
+    producer_final_source_matches(r, receipt, directory, 'source-after-build.json')
+    app = stage_json(read_native_file(directory / 'app-artifact.json'))
+    require(app == receipt['stages']['compiled']['details'], 'BUILD_PRODUCER_APP_STAGE_BINDING')
+    return SimpleNamespace(receipt=receipt, output=directory, provenance=provenance)
+
+
+def normal_xctest_gate(parent):
     require(parent.receipt['stages'].get('normal-staging-ui', {}).get('status') == 'PASS',
             'NORMAL_STAGING_UI_REQUIRED_BEFORE_INTERNAL')
     commands = [row for row in parent.receipt.get('commands', []) if row['name'] == 'native-normal-staging-ui']
@@ -1355,6 +2175,118 @@ def execute_internal(parent):
     require(proof == parent.receipt['stages']['normal-staging-ui']['details'].get('positive_xctest') and
             all(proof[key + '_sha256'] == command.get(key + '_sha256') for key in ['stdout', 'stderr']),
             'NORMAL_XCTEST_CURRENT_LOG_PROOF_REQUIRED_BEFORE_INTERNAL')
+    return proof
+
+
+def verify_normal_producer(r, provenance, build_provenance):
+    directory = Path(provenance['payload_directory'])
+    receipt = stage_json(read_native_file(directory / 'execution.json'))
+    producer_source_matches(r, receipt, directory)
+    require(receipt.get('stage') == 'normal' and
+            receipt.get('status') == 'NORMAL_STAGING_NATIVE_EXECUTED_SUPPORTED_OWNER_NOT_RUN' and
+            receipt.get('lane') == 'normal-staging', 'NORMAL_PRODUCER_STAGE')
+    upstream = receipt.get('imported_provenance', {}).get('build', {}).get('producer')
+    identity = ('repository', 'run_id', 'producer_run_attempt', 'producer_job_id', 'producer_job_name',
+                'artifact_id', 'artifact_name', 'wire_bytes', 'wire_sha256', 'service_digest', 'source_head', 'source_tree')
+    require(isinstance(upstream, dict) and all(upstream.get(key) == build_provenance['producer'].get(key)
+                for key in identity), 'NORMAL_PRODUCER_SAME_BUILD_ARTIFACT')
+    for name in ('normal-install', 'postinstall-check', 'current-generated47-source',
+                 'simulator-registry-ready', 'simulator-registry-json', 'simulator-install',
+                 'simulator-installed-container', 'simulator-launch', 'native-normal-staging-ui',
+                 'imported-product-file', 'imported-product-architectures', 'imported-product-build-version'):
+        executed_producer_command(receipt, directory, name)
+    for index in range(5):
+        executed_producer_command(receipt, directory, 'process-survival-' + str(index))
+    stages = receipt['stages']
+    require(all(stages.get(name, {}).get('status') == 'PASS' for name in
+                ('verified-produced-app', 'installed', 'launched', 'normal-staging-ui')), 'NORMAL_PRODUCER_REAL_STAGES')
+    app = stages['verified-produced-app']['details']
+    require(app.get('source_head') == r.receipt['source']['head'] and
+            app.get('source_tree') == r.receipt['source']['tree'] and
+            app.get('configuration') == 'Release' and app.get('lane') == 'normal-staging' and
+            app.get('bundle_id') == 'com.layerwell.app.staging' and app.get('current_job_product_probes') is True,
+            'NORMAL_PRODUCER_APP_IDENTITY')
+    installed, launched = stages['installed']['details'], stages['launched']['details']
+    require(installed.get('bundle_id') == app['bundle_id'] and
+            installed.get('installed_executable_sha256') == installed.get('expected_executable_sha256') and
+            isinstance(installed.get('installed_executable_sha256'), str) and
+            re.fullmatch(r'[a-f0-9]{64}', installed['installed_executable_sha256']) and
+            launched.get('bundle_id') == app['bundle_id'] and type(launched.get('pid')) is int and launched['pid'] > 0 and
+            type(launched.get('survival_seconds')) is int and launched['survival_seconds'] == 30,
+            'NORMAL_PRODUCER_INSTALL_AND_SURVIVAL')
+    producer_final_source_matches(r, receipt, directory, 'source-after-runtime.json')
+    parent = SimpleNamespace(receipt=receipt, output=directory, provenance=provenance)
+    normal_xctest_gate(parent)
+    return parent
+
+
+def stage_imports(r, role, context, token):
+    needed = {}
+    for producer in STAGE_DEPENDENCIES[role]:
+        prefix = 'C47_' + producer.upper() + '_'
+        needed[producer] = {key: os.environ.get(prefix + name, '') for key, name in
+                           [('artifact_id', 'ARTIFACT_ID'), ('digest', 'ARTIFACT_DIGEST'), ('run_id', 'RUN_ID'),
+                            ('producer_run_attempt', 'RUN_ATTEMPT'), ('payload_bytes', 'PAYLOAD_BYTES')]}
+    imported = load_authenticated_stage_inputs(role, needed, context, token,
+                  Path(context['runner_temp']) / 'c47-authenticated-producers')
+    r.receipt['imported_provenance'] = imported['imported_provenance']
+    reserved = sum(value['payload_bytes'] for value in imported['imported_provenance'].values())
+    require(0 < reserved < MAX_EVIDENCE, 'STAGE_COMBINED_EVIDENCE_BOUND')
+    r.receipt['upstream_payload_bytes'] = reserved
+    r.persist()
+    return imported['imported_provenance']
+
+
+def execute_consumer(r, role, context, token):
+    head, tools, source47 = prepare(r, source_controls=False)
+    require((head, r.receipt['source']['tree']) == (context['head'], context['tree']), 'STAGE_CURRENT_SOURCE_CONTEXT')
+    imported = stage_imports(r, role, context, token)
+    verify_build_producer(r, imported['build'])
+    app, bundle, app_proof = consume_produced_app(r, imported['build']['payload_directory'], head,
+        tools['architecture'], Path(context['runner_temp']) / 'c47-verified-build-app')
+    r.passed('verified-produced-app', app_proof)
+    if role == 'internal':
+        normal = verify_normal_producer(r, imported['normal'], imported['build'])
+        r.receipt['lane'] = 'internal-stage-supervisor'
+        r.persist()
+        execute_internal(r, normal_evidence=normal)
+        return
+    require(role == 'normal', 'STAGE_CONSUMER_ROLE')
+    mobile = r.root / 'apps/mobile'
+    r.run('normal-ui-resolved-expo-config', ['npx', '--no-install', 'expo', 'config', '--json'], cwd=mobile, timeout=120)
+    r.run('normal-ui-prebuild', ['npx', '--no-install', 'expo', 'prebuild', '--platform', 'ios', '--clean',
+          '--no-install', '--template', '../../node_modules/expo/template.tgz'], cwd=mobile, timeout=300)
+    r.run('normal-ui-generated-source-diff', ['git', '--no-replace-objects', 'diff', '--binary', 'HEAD'])
+    r.source_proof('source-after-normal-ui-prebuild', head, allow_generation=True)
+    ios = mobile / 'ios'
+    compatibility = r.output / 'generated-compat47'
+    r.run('normal-ui-generated47-exact-properties', ['python3', '-I', '-B',
+          'scripts/release/full-app-j01/pods_compat47.py', '--ios-directory', ios,
+          '--source-proof', source47, '--output', compatibility], timeout=120)
+    r.run('normal-ui-generated47-native', ['node', 'scripts/release/full-app-j01/native_generated47.mjs',
+          '--phase', 'GENERATED', '--source-proof', source47, '--receipt', compatibility / 'receipt.json',
+          '--output', r.output / 'current-generated47.json'], timeout=600)
+    r.source_proof('source-after-normal-ui-generated47', head, allow_generation=True)
+    products = Path(context['runner_temp']) / 'c47-native-products'
+    products.mkdir(exist_ok=False)
+    r.receipt['products_directory'] = str(products)
+    r.persist()
+    run_normal(r, ios, products, app, bundle, head)
+
+
+def execute_internal(parent, normal_evidence=None):
+    normal = parent if normal_evidence is None else normal_evidence
+    positive_normal = normal_xctest_gate(normal)
+    if normal_evidence is None:
+        normal_bundle = parent.receipt['stages']['compiled']['details']['bundle_id']
+    else:
+        require(normal.receipt['source'] == parent.receipt['source'], 'INTERNAL_SAME_HEAD_NORMAL_SOURCE')
+        normal_bundle = normal.receipt['stages']['verified-produced-app']['details']['bundle_id']
+        parent.receipt['authenticated_normal_qualification'] = {
+            'producer': normal.provenance['producer'], 'positive_xctest': positive_normal,
+            'performed_in_current_job': False,
+            'qualification': 'ACTUAL_UPSTREAM_NAMED_NORMAL_PASS_AUTHENTICATED_AT_SAME_HEAD_AND_ATTEMPT'}
+        parent.persist()
     environment = internal_environment(parent.env)
     head = parent.receipt['source']['head']
     output = parent.output / 'internal-supported-owner'
@@ -1362,6 +2294,13 @@ def execute_internal(parent):
     child.deadline = parent.deadline
     child.env = environment
     child.evidence_root = parent.output
+    child.receipt['upstream_payload_bytes'] = parent.receipt.get('upstream_payload_bytes', 0)
+    if parent.receipt.get('job_context'):
+        child.receipt.update(stage='internal', job_context=parent.receipt['job_context'])
+    inherited_tools = stage_json(read_native_file(parent.output / 'toolchain.json'))
+    inherited_tools['inherited_from_same_job_supervisor'] = True
+    inherited_tools['build_environment'] = {key: child.env.get(key) for key in ENVIRONMENT}
+    write_json(output / 'toolchain.json', inherited_tools)
     child.receipt.update(lane='internal-supported-owner', internal_supported_owner='IN_PROGRESS',
         source=parent.receipt['source'], fixture='EXISTING_DEBUG_DEVELOPMENT_ANONYMOUS_OWNER_NO_PRO',
         qualification='METRO_DEPENDENT_DEBUG_NOT_STANDALONE_OFFLINE_OR_CUSTOMER_ONBOARDING',
@@ -1371,10 +2310,13 @@ def execute_internal(parent):
     child.env['C47_EXPORT_FOLDER'] = 'C47 Synthetic Export ' + uuid.uuid4().hex[:16]
     parent.receipt['internal_supported_owner'] = {'status': 'IN_PROGRESS',
                                                  'evidence': 'internal-supported-owner/execution.json'}
-    # The normal native config must not be overwritten by the second generation.
-    retain_generated_native(parent.root / 'apps/mobile/ios', parent.output)
-    retain_result_bundles(parent)
-    parent.receipt['native_configuration_final_retained'] = True
+    if normal_evidence is None:
+        # Preserve the actual same-host normal inputs in legacy combined execution.
+        retain_generated_native(parent.root / 'apps/mobile/ios', parent.output)
+        retain_result_bundles(parent)
+        parent.receipt['native_configuration_final_retained'] = True
+    else:
+        parent.receipt['normal_configuration_location'] = 'AUTHENTICATED_UPSTREAM_NORMAL_ARTIFACT'
     parent.persist()
     products = Path(os.environ['RUNNER_TEMP']) / 'c47-internal-native-products'
     products.mkdir(exist_ok=False)
@@ -1390,9 +2332,11 @@ def execute_internal(parent):
                 source_proof['descriptorSHA256'] == sha(child.root / 'docs/phase-9/ios-generated-input-succession47.v1.json'),
                 'SAME_HEAD_UNPROJECTED_BOTH_PROFILE_SOURCE_PROOF_REQUIRED')
         source47.write_bytes(source_raw)
-        child.receipt['source_gate_reuse'] = {'same_job_before_either_generation': True, 'same_head': head,
+        child.receipt['source_gate_reuse'] = {'same_job_before_either_generation': normal_evidence is None,
+            'current_job_before_internal_generation': True, 'same_head': head,
             'raw_source_proof_sha256': sha(source47), 'profiles': source_proof['profiles'],
-            'qualification': 'Actual original SOURCE gate validated both profiles before normal prebuild; no reset or parent-source substitution'}
+            'qualification': ('Actual same-job SOURCE before either generation' if normal_evidence is None else
+                'Fresh current-job both-profile SOURCE before internal generation; ordinary qualification is authenticated upstream')}
         child.persist()
         child.run('existing-fixture-separation-tests', ['npm', '--workspace', 'apps/mobile', 'exec', '--',
             'vitest', 'run', 'src/lib/auth/firstSessionE2E.test.ts',
@@ -1438,24 +2382,15 @@ def execute_internal(parent):
         architecture = json.loads((parent.output / 'toolchain.json').read_text())['architecture']
         bundle, _, app_receipt = retain_app(child, app, products, head, architecture,
                                            'Debug', 'internal-supported-owner')
-        normal_bundle = parent.receipt['stages']['compiled']['details']['bundle_id']
         require(bundle != normal_bundle and bundle.endswith('.development'), 'INTERNAL_BUNDLE_SEPARATION')
         child.passed('compiled', app_receipt)
-        # Only one controlled Simulator is booted during each lane.
-        parent.run('normal-simulator-shutdown-before-internal', ['xcrun', 'simctl', 'shutdown',
-                   parent.receipt['simulator']['udid']], timeout=30)
-        template = parent.receipt['simulator']['template']
-        runtime = parent.receipt['simulator']['runtime']
-        device = child.text('simulator-create', ['xcrun', 'simctl', 'create', 'C47-internal-' + head[:12],
-                            template['deviceTypeIdentifier'], runtime['identifier']])
-        require(re.fullmatch(r'[0-9A-Fa-f-]{36}', device), 'INTERNAL_SIMULATOR_UDID')
-        child.receipt['simulator'] = {'udid': device, 'runtime': runtime, 'template': template,
-                                      'selection': 'Fresh same-profile controlled internal-lane Simulator'}
-        child.persist()
-        child.run('simulator-boot', ['xcrun', 'simctl', 'boot', device], timeout=60)
-        child.run('simulator-bootstatus', ['xcrun', 'simctl', 'bootstatus', device, '-b'], timeout=240)
-        child.run('simulator-install', ['xcrun', 'simctl', 'install', device, app], timeout=120)
-        child.passed('installed', {'udid': device, 'bundle_id': bundle})
+        # Imported producer UUIDs belong to another host and are never reused.
+        if normal_evidence is None:
+            parent.run('normal-simulator-shutdown-before-internal', ['xcrun', 'simctl', 'shutdown',
+                       parent.receipt['simulator']['udid']], timeout=30)
+        device = prepare_simulator(child, 'internal')
+        installed = install_simulator_app(child, device, app, bundle)
+        verify_installed_app(child, installed, app, bundle)
         with socket.socket() as port_probe:
             port_probe.bind(('127.0.0.1', 8081))
         initial_url = localhost_url('http://127.0.0.1:8081?disableOnboarding=1&disableFab=1&disableAutoLaunch=1')
@@ -1499,7 +2434,8 @@ def execute_internal(parent):
         parent.receipt['internal_supported_owner'] = {'status': child.receipt['status'],
             'evidence': 'internal-supported-owner/execution.json', 'stages': list(child.receipt['stages'])}
         parent.persist()
-    parent.receipt.update(status='NORMAL_AND_INTERNAL_SYNTHETIC_NATIVE_EXECUTED_SCOPE_REVIEW_REQUIRED',
+    parent.receipt.update(status=('NORMAL_AND_INTERNAL_SYNTHETIC_NATIVE_EXECUTED_SCOPE_REVIEW_REQUIRED' if normal_evidence is None else
+                                  'INTERNAL_NATIVE_EXECUTED_WITH_AUTHENTICATED_UPSTREAM_NORMAL'),
                           finished_utc=utc())
     parent.persist()
 
@@ -1521,12 +2457,13 @@ def collect(r):
               timeout=30, required=False, diagnostic=True)
     retain_result_bundles(r)
     ios = r.root / 'apps/mobile/ios'
-    if not r.receipt.get('native_configuration_final_retained'):
+    retain_current = not r.receipt.get('native_configuration_final_retained') and r.receipt.get('lane') != 'internal-stage-supervisor'
+    if retain_current:
         retain_generated_native(ios, r.output)
     generated = r.output / 'generated-native'
     for name in ['Podfile', 'Podfile.lock', 'Podfile.properties.json']:
         path = ios / name
-        if not r.receipt.get('native_configuration_final_retained') and path.is_file() and path.stat().st_size <= 10 * MIB:
+        if retain_current and path.is_file() and path.stat().st_size <= 10 * MIB:
             generated.mkdir(exist_ok=True)
             shutil.copy2(path, generated / name)
     reports = Path.home() / 'Library/Logs/DiagnosticReports'
@@ -1536,32 +2473,65 @@ def collect(r):
             if path.is_file() and path.name.startswith(('Layerwell', 'C47NativeUI')) and path.stat().st_size <= 10 * MIB:
                 crashes.mkdir(exist_ok=True)
                 shutil.copy2(path, crashes / path.name)
-    size = evidence_size(getattr(r, 'evidence_root', r.output))
+    size = evidence_total(r)
     policy = {'maximum_bytes': MAX_EVIDENCE, 'observed_bytes_before_policy': size,
-              'upload_within_limit': size <= MAX_EVIDENCE - MIB, 'app_archive_maximum_bytes': MAX_APP}
+              'upload_within_limit': size <= MAX_EVIDENCE - STAGE_MAX_JSON - MIB,
+              'stage_manifest_reserve_bytes': STAGE_MAX_JSON, 'app_archive_maximum_bytes': MAX_APP}
     r.receipt['artifact_policy'] = policy
     r.persist()
     write_json(r.output / 'artifact-policy.json', policy)
 
 
+def hosted_stage_context(r, role):
+    require(platform.system() == 'Darwin', 'MACOS_REQUIRED')
+    require(role in STAGE_JOB_NAMES and os.environ.get('GITHUB_REPOSITORY') == STAGE_REPOSITORY and
+            os.environ.get('GITHUB_JOB') == 'native-' + role, 'HOSTED_STAGE_IDENTITY')
+    head = os.environ.get('C47_EXPECTED_HEAD', '')
+    require(re.fullmatch(r'[a-f0-9]{40}', head), 'EXPECTED_HEAD_REQUIRED')
+    actual = subprocess.check_output(['git', '--no-replace-objects', 'rev-parse', 'HEAD'], cwd=r.root, env=r.env).decode().strip()
+    source_tree = subprocess.check_output(['git', '--no-replace-objects', 'rev-parse', head + '^{tree}'], cwd=r.root, env=r.env).decode().strip()
+    require(actual == head and re.fullmatch(r'[a-f0-9]{40}', source_tree), 'STAGE_ACTUAL_SOURCE_CONTEXT')
+    context = {'repository': STAGE_REPOSITORY, 'head': head, 'tree': source_tree,
+               'run_id': stage_integer(os.environ.get('GITHUB_RUN_ID', '')),
+               'run_attempt': stage_integer(os.environ.get('GITHUB_RUN_ATTEMPT', '')),
+               'runner_temp': str(Path(os.environ['RUNNER_TEMP']).resolve(strict=True)),
+               'workspace': str(r.root.resolve(strict=True)), 'evidence_root': str(r.output.resolve(strict=True))}
+    r.receipt['job_context'] = {key: context[key] for key in ('repository', 'run_id', 'run_attempt')}
+    r.receipt['job_context'].update(job_name=STAGE_JOB_NAMES[role], job_id='native-' + role)
+    r.persist()
+    return context
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--stage', required=True, choices=('build', 'normal', 'internal'))
     args = parser.parse_args()
+    # The existing ephemeral read token never reaches hooks, Expo, subprocess arguments or receipts.
+    token = os.environ.pop('C47_ARTIFACT_READ_TOKEN', '')
     root = Path(__file__).resolve().parents[3]
     output = args.output.absolute()
     require(not output.resolve().is_relative_to(root), 'OUTPUT_IN_SOURCE')
     require(not output.exists() or output.is_dir() and not any(output.iterdir()), 'OUTPUT_NOT_EMPTY')
     output.mkdir(parents=True, exist_ok=True)
     runner = Runner(root, output)
-    code = 0
+    runner.receipt['stage'] = args.stage
+    runner.persist()
+    code, context = 0, None
     try:
-        execute(runner)
-        execute_internal(runner)
+        context = hosted_stage_context(runner, args.stage)
+        if args.stage == 'build':
+            require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
+            execute(runner, compile_only=True)
+        else:
+            execute_consumer(runner, args.stage, context, token)
+        require(runner.receipt['source']['head'] == context['head'] and
+                runner.receipt['source']['tree'] == context['tree'], 'STAGE_FINAL_SOURCE_CONTEXT')
+        runner.receipt['stage_complete'] = True
     except Exception as error:
         code = 1
-        runner.receipt.update(status='PARTIAL_BLOCKED', failure={'type': type(error).__name__, 'detail': str(error)},
-                              finished_utc=utc())
+        runner.receipt.update(status='PARTIAL_BLOCKED', stage_complete=False,
+            failure={'type': type(error).__name__, 'detail': str(error)}, finished_utc=utc())
         runner.persist()
         print('C47_EXECUTION_FAILED: ' + str(error), file=sys.stderr)
     finally:
@@ -1570,12 +2540,26 @@ def main():
         except Exception as error:
             code = 1
             runner.receipt['collection_failure'] = {'type': type(error).__name__, 'detail': str(error)}
-            runner.persist()
-    if not runner.receipt.get('artifact_policy', {}).get('upload_within_limit'):
+        if not runner.receipt.get('artifact_policy', {}).get('upload_within_limit'):
+            code = 1
+        runner.receipt['stage_complete'] = code == 0 and runner.receipt['stage_complete'] is True
+        runner.receipt['finished_utc'] = utc()
+        runner.persist()
+    manifest = None
+    if context is not None:
+        try:
+            # This is the final evidence-file write; uploaded bytes must remain closed afterwards.
+            manifest = write_stage_provenance(output, args.stage, context)
+        except Exception as error:
+            code = 1
+            print('C47_STAGE_MANIFEST_FAILED: ' + type(error).__name__ + ': ' + str(error), file=sys.stderr)
+    else:
         code = 1
-    print(json.dumps({'status': runner.receipt['status'], 'stages': list(runner.receipt['stages']),
-                      'campaign_candidate_complete': False, 'release': 'NO_GO'}))
+    print(json.dumps({'status': runner.receipt['status'], 'stage': args.stage,
+        'stage_complete': code == 0 and runner.receipt['stage_complete'], 'manifest': manifest,
+        'stages': list(runner.receipt['stages']), 'campaign_candidate_complete': False, 'release': 'NO_GO'}))
     return code
+
 
 
 if __name__ == '__main__':

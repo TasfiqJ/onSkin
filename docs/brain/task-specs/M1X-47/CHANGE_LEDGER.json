@@ -803,6 +803,63 @@
           "preimage_sha256": "df9f7bcb39dc41a1677ed9351406fca37d15e34c7a218545a2cf762440c5973a"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T07:36:56.735954+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        ".github/workflows/campaign47-native-runtime.yml",
+        "scripts/release/full-app-j01/native_workflow47.test.mjs",
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Native9 run41977666738/job127080205683 rawartifact13395878188 authenticated83518476B SHA72df0196bdcdaada20a6ba3d91b95e98da3ae7f6a05614d5ec79d6d6e6d735a4; all88streams/appTARinventory verified. Actual31m58.635buildexit0, MachOx86_64/IOSSIMULATOR/min17/sdk26.4 onIntel; retainedapp43470653B SHA161a20a4770f6371489016ea4424e2c0e2666bb452aaeb4e1231966f927aa2f7. Source30PASS0skip871.973of900sec, actual16SwiftPASS. No originalcorruptedJSONrecurrence; originalcauseUNPROVEN. Bootstatus221of240sec finished, install120cap timedout124/emptyoutputs; subsequentdeviceslist30timeout, screenshotSpringboard/shutdownsuccess. Installationcompletionunproven, no launch/XCTest/internal. Service/CPUcauseUNPROVEN; addbounded readiness/install600 andtargetedservice/CPUdiagnostics, preferactuallyavailable SDKmatchinghostcompatibleiPhone/runtimes andpreservecompact/min17 requirements. Compiledstage65m26sec of84leavesinsufficient fullnormal+internal; use explicit3sequentialstandardIntel Macjobs build/normal/internal atoneNEWfrozenHEAD,90/84each/maxoneconcurrent, countactualstartedjobs10through18. SameHEAD/Gitwholeinventory/native202 proof +normalhooks eachconsumer; full30preservedactualbuildproducer cap1200 (near900observed) andsameHEADcurrent95+allCI, no omittedtestspassed. Read-onlyexistingephemeralActions artifact token onlyconsumers (contentsread/actionsread), officialRESTprovider/run/attempt/job success/HEAD/stage/artifactid/digest/payloadbytes pinnedfromtrustedneeds, rawZIPwireSHAverifiedbeforefinitefilemanifest/CRC/extraction; no receipt-only/stale/parentproof. B verifiesactualbuildappinventory/MachO andrunsordinarynamedXCTest1PASS0fail0skip; C verifiesactualA+B source/build/lane/app/normalrawtestproof beforefreshinternalbuild/5namedjourneys. Importedprovenance separatefromcurrentcommands/PASS; neverreuseproducerUDID/dataorclaimsamehost. Preserve cumulative500MiBevidence/350MiBapp/3dayretention, no producerpayloadreupload. No production/module/owner/health/encryption/deletion/Pro/explicit-save/signing/account/billing change. Finite29unchanged. All38requirements/18owner gatesunaccepted; originalSecurity/candidate29/G97unwaived; NO_GO. Predeclareall6existingrelatedpaths plusledgerbeforeedits.",
+      "current_preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "ae3d33b57e3597f815c561823b20d4e713d7416c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 2977,
+          "preimage_sha256": "f42195ece9778803f57ac29cd2d9281246575dd3776241ac974986d83c93f8fd"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "ae3d33b57e3597f815c561823b20d4e713d7416c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 4208,
+          "preimage_sha256": "6e5854578fa2ed96ff37f1f42230f173c933dc9dfec5859db0195f812c94309d"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "ae3d33b57e3597f815c561823b20d4e713d7416c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 94861,
+          "preimage_sha256": "e28c96cafc7b5db4e98ebaf53fc36c86c0389b01049c5d595a71cf9110c76aab"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "ae3d33b57e3597f815c561823b20d4e713d7416c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 28266,
+          "preimage_sha256": "4aa2d61fa1834e5ca712b2ac1521c8b90bbb42bb03946a6c489a243799de64c9"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "ae3d33b57e3597f815c561823b20d4e713d7416c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "cea3132907048480c57f634ce904330f02f9a50885b53e8c92a359bab81af15b"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "ae3d33b57e3597f815c561823b20d4e713d7416c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 38297,
+          "preimage_sha256": "948b245193cc7903603a3d7829118516efdfee74aaf830b56a95d3d467bcda8b"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
