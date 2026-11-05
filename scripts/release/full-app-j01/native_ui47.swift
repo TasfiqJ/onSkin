@@ -309,12 +309,17 @@ final class C47InternalOwnerUI: XCTestCase {
         XCTAssertEqual(field.value as? String, value)
     }
 
+    private func shelfAddButton(_ app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "label == %@ OR label == %@",
+            "Add a product", "Add a product to your shelf")).firstMatch
+    }
+
     private func product(_ name: String, _ app: XCUIApplication) -> XCUIElement {
         prefixedControl(name + ",", app)
     }
 
     private func addProduct(_ name: String, _ category: String, _ app: XCUIApplication) {
-        tap("Add a product to your shelf", app)
+        tapElement(shelfAddButton(app), "Add a product", app)
         fill("Product name", name, app)
         fill("Brand", "C47 synthetic", app)
         tap("Category", app)
@@ -367,7 +372,8 @@ final class C47InternalOwnerUI: XCTestCase {
         tap("Continue", app)
         tap("Not now", app)
         tap("Continue with the free plan", app)
-        reveal(control("Add a product to your shelf", app).exists ? control("Add a product to your shelf", app)
+        let shelfAdd = shelfAddButton(app)
+        reveal(shelfAdd.exists ? shelfAdd
             : app.buttons.matching(NSPredicate(format: "label == %@ OR label BEGINSWITH %@", "Shelf", "Shelf,")).firstMatch,
             "Free-plan native app", app)
         capture("free-plan-no-pro-grant", app)
@@ -647,7 +653,7 @@ final class C47InternalOwnerUI: XCTestCase {
         tab("Shelf", app)
         tapElement(product(cleanser, app), "Open edited cleanser before finishing", app)
         tap("Mark finished", app)
-        XCTAssertTrue(control("Add a product to your shelf", app).waitForExistence(timeout: deadline))
+        XCTAssertTrue(shelfAddButton(app).waitForExistence(timeout: deadline))
         XCTAssertFalse(product(cleanser, app).exists)
         tapElement(prefixedControl("View archive,", app), "View finished product archive", app)
         reveal(product(cleanser, app), "Finished synthetic product retained in archive", app)
@@ -656,7 +662,7 @@ final class C47InternalOwnerUI: XCTestCase {
         tapElement(product(moisturiser, app), "Open synthetic moisturiser", app)
         tap("Remove or discard", app)
         tap("Remove completely", app)
-        XCTAssertTrue(control("Add a product to your shelf", app).waitForExistence(timeout: deadline))
+        XCTAssertTrue(shelfAddButton(app).waitForExistence(timeout: deadline))
         XCTAssertFalse(product(moisturiser, app).exists)
         capture("explicit-local-shelf-removal-readback", app)
 
@@ -687,7 +693,7 @@ final class C47InternalOwnerUI: XCTestCase {
         if begin.exists { tap("Begin", app) }
         reveal(shelfTab, "Existing synthetic owner larger-text reentry", app)
         tab("Shelf", app)
-        tap("Add a product to your shelf", app)
+        tapElement(shelfAddButton(app), "Add a product", app)
         let unconfirmedName = "C47 unconfirmed larger text cleanser"
         fill("Product name", unconfirmedName, app)
         fill("Brand", "C47 synthetic", app)
@@ -731,7 +737,7 @@ final class C47InternalOwnerUI: XCTestCase {
         add(frameEvidence)
         // Cancel the real intake draft. Continue and Add are never dispatched.
         tap("Cancel", app)
-        reveal(control("Add a product to your shelf", app), "Shelf after cancelling large-text draft", app)
+        reveal(shelfAddButton(app), "Shelf after cancelling large-text draft", app)
         XCTAssertFalse(product(unconfirmedName, app).exists,
             "Unconfirmed larger-text input must not create a Shelf product")
         capture("largest-text-draft-cancelled-without-save", app)

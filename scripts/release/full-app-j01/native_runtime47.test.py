@@ -317,6 +317,47 @@ class Runtime47Tests(unittest.TestCase):
             n.execute_internal(SimpleNamespace(receipt={'stages': {'normal-staging-ui': {'status': 'PASS'}},
                                                        'commands': []}))
 
+    def test_internal_native_gate_requires_selected_named_case_before_success(self):
+        summary = 'Executed 1 test, with 0 failures (0 unexpected) in 1.234 seconds\n'
+        for case in n.INTERNAL_UI_CASES:
+            legacy = "Test Case '-[C47NativeUI.C47InternalOwnerUI " + case + "]' passed (1.234 seconds).\n"
+            modern = "Test case 'C47InternalOwnerUI." + case + "()' passed on 'actual controlled Simulator' (1.234 seconds).\n"
+            for events in [legacy, modern, legacy + modern]:
+                with self.subTest(case=case, events=events):
+                    proof = n.selected_xctest_summary(events + summary, 'C47InternalOwnerUI', case)
+                    self.assertEqual(proof['expected_case'], 'C47InternalOwnerUI/' + case)
+                    self.assertEqual((proof['executed'], proof['failed'], proof['skipped']), (1, 0, 0))
+            for invalid in [summary, '** TEST SUCCEEDED **', legacy,
+                            legacy + summary.replace('Executed 1', 'Executed 0'),
+                            legacy + summary.replace('0 failures', '1 failure'),
+                            legacy.replace(case, 'testUnrelated') + summary,
+                            legacy.replace('passed', 'skipped') + summary,
+                            legacy.replace('passed', 'failed') + summary,
+                            legacy + summary + '1 test skipped\n',
+                            legacy + summary + "Test Suite 'C47InternalOwnerUI' failed\n"]:
+                with self.subTest(case=case, invalid=invalid), self.assertRaises(ValueError):
+                    n.selected_xctest_summary(invalid, 'C47InternalOwnerUI', case)
+        for method in [None, 'testUnrelated']:
+            with self.subTest(method=method), self.assertRaisesRegex(ValueError, 'INTERNAL_TEST_SELECTION'):
+                n.native_ui(SimpleNamespace(), self.root, self.root, 'unused', 'unused',
+                            'internal-supported-owner', method=method)
+        with self.assertRaisesRegex(ValueError, 'XCTEST_SELECTED_CASE_REQUIRED'):
+            n.selected_xctest_summary(legacy + summary, 'C47UnrelatedUI', case)
+        stdout, stderr = self.root / 'selected.stdout', self.root / 'selected.stderr'
+        stdout_raw, stderr_raw = (legacy + summary).encode(), b''
+        stdout.write_bytes(stdout_raw)
+        stderr.write_bytes(stderr_raw)
+        runner = SimpleNamespace(receipt={'source': {'head': 'a' * 40}})
+        proof = n.selected_ui_log_proof(runner, (stdout, stderr), 'C47InternalOwnerUI', case)
+        self.assertEqual(proof['stdout_sha256'], hashlib.sha256(stdout_raw).hexdigest())
+        self.assertEqual(proof['stderr_sha256'], hashlib.sha256(stderr_raw).hexdigest())
+        self.assertEqual(proof['source_head'], 'a' * 40)
+        stderr.write_bytes(b'actual extra diagnostics\n')
+        runner.receipt['source']['head'] = 'b' * 40
+        changed = n.selected_ui_log_proof(runner, (stdout, stderr), 'C47InternalOwnerUI', case)
+        self.assertNotEqual(changed['stderr_sha256'], proof['stderr_sha256'])
+        self.assertEqual(changed['source_head'], 'b' * 40)
+
     def test_frozen_normal_swift_prefix_contains_only_the_original_normal_class(self):
         source = Path(__file__).with_name('native_ui47.swift').read_bytes()
         prefix = source[:8736]

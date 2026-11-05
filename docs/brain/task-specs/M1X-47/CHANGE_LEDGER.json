@@ -754,6 +754,55 @@
           "preimage_sha256": "47fcd66cc62198249f4d9f575e8e6631d9fcd049e605a5a0a171780577b847d9"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T05:37:34.280589+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_ui47.swift",
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Pre-native9 review found demonstrated internal-harness mismatch: real emptyShelf Add a product vs existing populatedShelf Add a product to your shelf. Correct only testselectors at sixinternal sites; frozenordinary8736byteprefix unchanged. Also internal native_ui PASS currently trusts xcodebuildexit0 only; reuse existing strict named/Executed1/failed0/skipped0 parser for finitefive selectedinternalcases and bindrawlogs/source beforePASS, preservingordinary gate. Add one meaningful refusal unit, refresh only actualruntime/test descriptorpins. No production/authority/save/encryption/provider/Pro/module change, no newframework, finite29 unchanged. Local65a4 fourteen groups allPASS including forceduncached6979 after maxWorkers2 resource-recovery; two defaultparallel60sec unchangedchildtimeouts+isolated2PASS36.84sec rawRED retained. These are source-review repairs, not observednativeUI outcomes; attempts7and8 consumed2of12, native9notdispatched. Fullactualnewsourcebuild/runtime stillrequired; NO_GO/all38and18unaccepted.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "65a4fb090f0026f08a3c549be05664e2fbbe61e2",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 44248,
+          "preimage_sha256": "463118e76b124e13019eb412de3a8835572f741727048bebfbcd81aaa8c38354"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "65a4fb090f0026f08a3c549be05664e2fbbe61e2",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 94020,
+          "preimage_sha256": "013912ebd22806d4d506c405de65738406e49c07fb0576b0f90510f68c3cf8de"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "65a4fb090f0026f08a3c549be05664e2fbbe61e2",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 25152,
+          "preimage_sha256": "7865475f1c1d92149f636698a9ae38d7358acb647aee38e70ca47e54d3c423d7"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "65a4fb090f0026f08a3c549be05664e2fbbe61e2",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "7ca268ed7b53142d524e679a4cf25f353e0b88ade8f3d4a8f8a875dc9cbb0f66"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "65a4fb090f0026f08a3c549be05664e2fbbe61e2",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 36624,
+          "preimage_sha256": "df9f7bcb39dc41a1677ed9351406fca37d15e34c7a218545a2cf762440c5973a"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

@@ -91,33 +91,49 @@ def output_text(paths, limit=8 * MIB):
 
 
 NORMAL_UI_CASE = 'testNormalStagingAgeConsentAndUnavailableAccount'
+INTERNAL_UI_CASES = (
+    'test01CoreRetainedNativeJourney', 'test02LocalExport', 'test05ConsentWithdrawal',
+    'test03LargerTextManualInput', 'test04RemoveSyntheticLocalExport',
+)
 
 
-def normal_xctest_summary(text):
-    """An exit code or suite-only count cannot establish the expected XCTest."""
-    accepted = {'-[C47NativeUI ' + NORMAL_UI_CASE + ']',
-                '-[C47NativeUI.C47NativeUI ' + NORMAL_UI_CASE + ']'}
-    accepted.update(prefix + NORMAL_UI_CASE + '()' for prefix in
-                    ['C47NativeUI.', 'C47NativeUI/', 'C47NativeUI.C47NativeUI.',
-                     'C47NativeUI.C47NativeUI/', 'C47NativeUI/C47NativeUI/'])
+def selected_xctest_summary(text, test_class, method):
+    """An exit code or suite-only count cannot establish the selected XCTest."""
+    normal = test_class == 'C47NativeUI' and method == NORMAL_UI_CASE
+    require(normal or (test_class == 'C47InternalOwnerUI' and method in INTERNAL_UI_CASES),
+            'XCTEST_SELECTED_CASE_REQUIRED')
+    scope = 'NORMAL' if normal else 'INTERNAL'
+    accepted = {'-[' + test_class + ' ' + method + ']',
+                '-[C47NativeUI.' + test_class + ' ' + method + ']'}
+    accepted.update(prefix + method + '()' for prefix in
+                    [test_class + '.', test_class + '/', 'C47NativeUI.' + test_class + '.',
+                     'C47NativeUI.' + test_class + '/', 'C47NativeUI/' + test_class + '/'])
     events = re.findall(r"\bTest\s*case\s+['\"]([^'\"]+)['\"]\s+(passed|failed|skipped)\b", text, re.I)
     require(events and all(name in accepted and state.lower() == 'passed' for name, state in events),
-            'NORMAL_XCTEST_NAMED_PASS_REQUIRED_NO_FAILURE_SKIP_OR_UNKNOWN_CASE')
+            scope + '_XCTEST_NAMED_PASS_REQUIRED_NO_FAILURE_SKIP_OR_UNKNOWN_CASE')
     counts = re.findall(r'\bExecuted\s+(\d+)\s+tests?,\s+with\s+(\d+)\s+failures?', text, re.I)
     require(counts and all(int(executed) == 1 and int(failed) == 0 for executed, failed in counts) and
             not re.search(r'\b[1-9]\d*\s+(?:tests?\s+)?skipped\b|\bTest\s+Suite[^\n]*\bfailed\b', text, re.I),
-            'NORMAL_XCTEST_EXECUTED_ONE_FAILED_ZERO_SKIPPED_ZERO_REQUIRED')
-    return {'expected_case': 'C47NativeUI/' + NORMAL_UI_CASE, 'executed': 1, 'failed': 0, 'skipped': 0,
+            scope + '_XCTEST_EXECUTED_ONE_FAILED_ZERO_SKIPPED_ZERO_REQUIRED')
+    return {'expected_case': test_class + '/' + method, 'executed': 1, 'failed': 0, 'skipped': 0,
             'named_pass_event_count': len(events), 'summary_count': len(counts),
             'qualification': 'ACTUAL_NAMED_XCTEST_PASS_AND_CLEAN_EXECUTION_SUMMARY; ZERO_TESTS_REFUSED'}
 
 
-def normal_ui_log_proof(r, paths):
+def normal_xctest_summary(text):
+    return selected_xctest_summary(text, 'C47NativeUI', NORMAL_UI_CASE)
+
+
+def selected_ui_log_proof(r, paths, test_class, method):
     raw = [read_native_file(path) for path in paths]
-    result = normal_xctest_summary(b'\n'.join(raw).decode('utf-8'))
+    result = selected_xctest_summary(b'\n'.join(raw).decode('utf-8'), test_class, method)
     result.update(stdout_sha256=hashlib.sha256(raw[0]).hexdigest(),
                   stderr_sha256=hashlib.sha256(raw[1]).hexdigest(), source_head=r.receipt['source']['head'])
     return result
+
+
+def normal_ui_log_proof(r, paths):
+    return selected_ui_log_proof(r, paths, 'C47NativeUI', NORMAL_UI_CASE)
 
 
 def available_iphone(document):
@@ -764,6 +780,8 @@ def launch_and_verify(r, device, bundle, arguments=()):
 
 
 def native_ui(r, ios, products, device, bundle, lane, initial_url=None, method=None):
+    if lane == 'internal-supported-owner':
+        require(method in INTERNAL_UI_CASES, 'INTERNAL_TEST_SELECTION')
     ui = r.output / 'ui'
     ui_env = dict(r.env, C47_BUNDLE_ID=bundle, C47_RUNTIME_LANE=lane, C47_UI_PHASE=lane)
     if initial_url:
@@ -785,23 +803,23 @@ def native_ui(r, ios, products, device, bundle, lane, initial_url=None, method=N
     selected = 'C47NativeUI/' + test_class
     suffix = ''
     if method:
-        require(lane == 'internal-supported-owner' and method in
-                ['test01CoreRetainedNativeJourney', 'test02LocalExport', 'test05ConsentWithdrawal',
-                 'test03LargerTextManualInput', 'test04RemoveSyntheticLocalExport'], 'INTERNAL_TEST_SELECTION')
+        require(lane == 'internal-supported-owner' and method in INTERNAL_UI_CASES, 'INTERNAL_TEST_SELECTION')
         selected += '/' + method
         require(selected in receipt['tests'], 'INTERNAL_TEST_RECEIPT')
         suffix = {'test01CoreRetainedNativeJourney': '-core', 'test02LocalExport': '-export',
                   'test05ConsentWithdrawal': '-rights', 'test04RemoveSyntheticLocalExport': '-export-cleanup',
                   'test03LargerTextManualInput': '-larger-text'}[method]
     allowance = '300' if lane == 'normal-staging' else '900'
-    r.run('native-' + lane + '-ui' + suffix, ['xcodebuild', 'test', '-project', project,
+    paths = r.run('native-' + lane + '-ui' + suffix, ['xcodebuild', 'test', '-project', project,
           '-scheme', receipt['scheme'], '-destination', 'id=' + device,
           '-only-testing:' + selected, '-parallel-testing-enabled', 'NO',
           '-maximum-concurrent-test-simulator-destinations', '1', '-test-timeouts-enabled', 'YES',
           '-default-test-execution-time-allowance', allowance, '-maximum-test-execution-time-allowance', allowance,
           '-resultBundlePath', products / ('ui' + suffix + '.xcresult'), *SIMULATOR_BUILD_FLAGS], env=ui_env, timeout=1200)
+    positive_xctest = selected_ui_log_proof(r, paths, test_class, method or NORMAL_UI_CASE)
     r.passed(lane + '-ui' + suffix, {'tests': [selected] if method else receipt['tests'], 'lane': lane,
-                           'qualification': 'Only the actually executed selected XCTest class'})
+                           'positive_xctest': positive_xctest,
+                           'qualification': 'Only the actually executed named XCTest case'})
 
 
 def retain_result_bundles(r):
