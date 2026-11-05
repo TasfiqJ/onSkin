@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-05T05:58:17.703Z",
+  "generatedAt": "2026-11-05T09:15:15.559Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "669943b478357575470375331d3a4ad4eccdae44",
+  "gitSha": "b6562c7b10c702c6bce1a826e626832a0d6ad275",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
