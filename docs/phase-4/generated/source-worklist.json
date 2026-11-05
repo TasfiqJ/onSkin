@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-04T20:29:46.358Z",
+  "generatedAt": "2026-11-05T00:17:29.626Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": true,
-  "gitSha": "5f52bdd31486627911f3e23be67bf0fb395091db",
+  "gitSha": "8fb7732ed05ae71c6ccc16b926fadbb0fe29eaba",
   "gitStatus": "",
   "summary": {
     "itemCount": 14,
@@ -1192,8 +1192,8 @@
         {
           "path": ".github/workflows/quality.yml",
           "exists": true,
-          "bytes": 16702,
-          "sha256": "47d00a47f3abc05904aaae58b61c0db6a76280f162ebe13edfe14c080fcae7f5"
+          "bytes": 17671,
+          "sha256": "403e72ec729d50e358045d982d7f2c0a1f496626be8ad7b802568cca077a98b2"
         },
         {
           "path": "docs/phase-4/catalog-curation-release-runbook.md",
