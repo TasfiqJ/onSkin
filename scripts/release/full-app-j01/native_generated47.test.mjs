@@ -568,3 +568,108 @@ test('current47 continuation02 parity inventory retains every original ninety ex
   assert.equal(parity.cases.filter(row => row.execution === 'CURRENT46_SUCCESSOR').length, 9);
   for (const program of parity.originalPrograms) assert.equal(hash(readFileSync(join(ROOT, program.path))), program.sha256);
 });
+
+
+import vm from 'node:vm';
+import { auditVerificationWiring as originalReleaseWiringAudit47 } from '../../phase9/verification-wiring-contract.mjs';
+import { projectReleaseInstallWorkflow47, auditReleaseInstallWiring47,
+  RELEASE_INSTALL_STEP47_TEXT } from './native_generated47.mjs';
+
+function releaseWiringFixture47() {
+  const smoke = readFileSync(resolve(ROOT, 'scripts/phase9/release-smoke.mjs'), 'utf8');
+  const literal = smoke.match(/const iosPrivacyVerifierDefinitions = (\{[\s\S]*?\n\});/u)?.[1];
+  assert.ok(literal);
+  return { packageJson: JSON.parse(readFileSync(resolve(ROOT, 'package.json'))),
+    workflowText: readFileSync(resolve(ROOT, '.github/workflows/quality.yml'), 'utf8').replace(/\r\n/gu, '\n'),
+    verifierDefinitions: JSON.parse(JSON.stringify(vm.runInNewContext('(' + literal + ')'))) };
+}
+
+test('current47 release wiring projects only the exact step and retains original direct refusal', () => {
+  const options = releaseWiringFixture47();
+  assert.equal(originalReleaseWiringAudit47(options).status, 'invalid');
+  const projected = projectReleaseInstallWorkflow47(options.workflowText);
+  assert.equal(originalReleaseWiringAudit47({ ...options, workflowText: projected }).status, 'pass');
+  assert.equal(auditReleaseInstallWiring47(options, originalReleaseWiringAudit47).status, 'pass');
+  const [before, after] = options.workflowText.split(RELEASE_INSTALL_STEP47_TEXT);
+  assert.ok(projected.startsWith(before) && projected.endsWith(after));
+  assert.throws(() => projectReleaseInstallWorkflow47(projected));
+  assert.equal(auditReleaseInstallWiring47({ ...options, workflowText: projected },
+    originalReleaseWiringAudit47).status, 'invalid');
+});
+
+test('current47 release wiring refuses every unreviewed step branch flag alias duplicate or omission', () => {
+  const options = releaseWiringFixture47();
+  const variants = [
+    step => step.replace('stage/m1-native-runtime47', 'main'),
+    step => step.replace('--native-audit47 --strict --check', '--native-audit47 --strict'),
+    step => step.replace('--native-store47 --check', '--native-store47'),
+    step => step.replace('npm run postinstall:check', 'npm run postinstall:check || true'),
+    step => step.replace('        env:\n', '        if: false\n        env:\n'),
+    step => step.replace('        env:\n', '        shell: bash\n        env:\n'),
+    step => step.replace('        env:\n', '        env:\n          EXTRA: value\n'),
+    step => step.replace('        env:\n', '        env:\n          CURRENT_SOURCE_BRANCH: other\n'),
+    step => step.replace('        run: |\n', '        run: *unreviewed\n        ignored: |\n'),
+    step => step + step,
+    () => '',
+    step => step.replace('Verify installed iOS native sources', 'Unreviewed substitute'),
+  ];
+  for (const change of variants) {
+    const workflowText = options.workflowText.replace(RELEASE_INSTALL_STEP47_TEXT,
+      change(RELEASE_INSTALL_STEP47_TEXT));
+    assert.notEqual(workflowText, options.workflowText);
+    assert.throws(() => projectReleaseInstallWorkflow47(workflowText));
+    assert.equal(auditReleaseInstallWiring47({ ...options, workflowText },
+      originalReleaseWiringAudit47).status, 'invalid');
+  }
+});
+
+test('current47 release wiring retains all sixteen hook mutation error predicates', () => {
+  const options = releaseWiringFixture47();
+  const native = 'node scripts/postinstall.mjs';
+  const security = 'node scripts/release/full-app-j01/patch-expo-collection-bounds46.mjs';
+  for (const script of ['postinstall', 'postinstall:check']) {
+    const suffix = script.endsWith(':check') ? ' --check' : '';
+    const first = native + suffix, second = security + suffix;
+    const complete = first + ' && ' + second;
+    for (const replacement of [first, second, second + ' && ' + first,
+      complete + ' && ' + second, complete + ' && node unreviewed.mjs',
+      complete + ' || true', 'echo "' + complete + '"', undefined]) {
+      const packageJson = structuredClone(options.packageJson);
+      packageJson.scripts[script] = replacement;
+      const expected = originalReleaseWiringAudit47({ ...options, packageJson,
+        workflowText: projectReleaseInstallWorkflow47(options.workflowText) });
+      assert.deepEqual(auditReleaseInstallWiring47({ ...options, packageJson },
+        originalReleaseWiringAudit47), expected);
+      if (script === 'postinstall') assert.equal(expected.status, 'pass');
+      else assert.deepEqual(expected.errors,
+        ['postinstall:check does not have the exact reviewed command definition.']);
+    }
+  }
+});
+
+test('current47 release bridge runs all twenty-one untouched original tests with zero skips', () => {
+  const identity = spawnSync('git', ['--no-replace-objects', 'rev-parse', 'HEAD'],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 10000 });
+  assert.equal(identity.status, 0, identity.stderr);
+  const childEnvironment = { ...process.env, C47_EXPECTED_HEAD: identity.stdout.trim() };
+  delete childEnvironment.NODE_TEST_CONTEXT;
+  const result = spawnSync(process.execPath, [resolve(ROOT,
+    'scripts/release/full-app-j01/native_generated47.mjs'), '--release-install-wiring47-test'],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30000,
+      maxBuffer: 2 * 1024 * 1024,
+      env: childEnvironment });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  for (const line of ['# tests 21', '# pass 21', '# fail 0', '# skipped 0'])
+    assert.ok(result.stdout.split(/\r?\n/u).includes(line), line + '\n' + result.stdout);
+});
+
+test('current47 release bridge refuses extra arguments before original test admission', () => {
+  const childEnvironment = { ...process.env };
+  delete childEnvironment.NODE_TEST_CONTEXT;
+  const result = spawnSync(process.execPath, [resolve(ROOT,
+    'scripts/release/full-app-j01/native_generated47.mjs'), '--release-install-wiring47-test', '--unreviewed'],
+    { cwd: ROOT, encoding: 'utf8', windowsHide: true, timeout: 30000,
+      maxBuffer: 2 * 1024 * 1024, env: childEnvironment });
+  assert.notEqual(result.status, 0);
+  assert.ok(!result.stdout.includes('# tests 21'));
+});

@@ -590,6 +590,55 @@
           "preimage_sha256": "b731c93c3e6efa3e02dcd576890f878231fa03f3d66003007d39f30516b0ff7f"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T00:30:28.558190+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "scripts/release/full-app-j01/native_generated47.test.mjs",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        ".github/workflows/quality.yml",
+        ".github/workflows/campaign46-technical.yml"
+      ],
+      "reason": "Hosted Quality run41940518911/job126959836100 at5053056 demonstrates original immutable release-install-wiring46 test21:4PASS/17FAIL after current47 explicit workflow selection. Historical auditor requires a flat name/run9-command step and correctly refuses added current47 exact branch/env shape. Preserve original test/auditor/release-smoke byte-identical as202 inputs and preserve raw RED. Add a fourth explicit same-source bridge that authenticates exact current47 step and projects only that node to original9 commands before unchanged hook assertions; unknown/conditioned/oldflat/omitted/reordered/ignored-failure steps refuse. Update only exactC47 callsites, same29scope; no production/hook/policy relaxation.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "5053056c0f0731b87801236ef207400f5389d2b9",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 47391,
+          "preimage_sha256": "854fdf7fae389ab1265c17b99a23f852f913b7148661abfe4340aacbc1f4b910"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "5053056c0f0731b87801236ef207400f5389d2b9",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 36833,
+          "preimage_sha256": "6ce3daf730b1e8a491a46b75818d92c8ce3ae2ec134266a8be7d6967483629e2"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "5053056c0f0731b87801236ef207400f5389d2b9",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "90cba9ed81c68f8d165d3cfc9f52bd557f2a48e35df6a97dd5297532df892357"
+        },
+        {
+          "path": ".github/workflows/quality.yml",
+          "preimage_head": "5053056c0f0731b87801236ef207400f5389d2b9",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17671,
+          "preimage_sha256": "403e72ec729d50e358045d982d7f2c0a1f496626be8ad7b802568cca077a98b2"
+        },
+        {
+          "path": ".github/workflows/campaign46-technical.yml",
+          "preimage_head": "5053056c0f0731b87801236ef207400f5389d2b9",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 16174,
+          "preimage_sha256": "4709d72b82c762372efb4527ee3af562754e75f0e08e537edc16ba38580beee4"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

@@ -274,7 +274,11 @@ jobs:
             node scripts/release/full-app-j01/native_current46.mjs
           fi
           node --test scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs
-          node --test scripts/phase9/release-install-wiring46.test.mjs
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --release-install-wiring47-test
+          else
+            node --test scripts/phase9/release-install-wiring46.test.mjs
+          fi
           python3 -I -B scripts/release/full-app-j01/workflow_context46.test.py
 
       - name: Verify store-only client delivery

@@ -638,9 +638,53 @@ export { IOS_PRIVACY_AUDIT_JSON_PATH, IOS_PRIVACY_AUDIT_MARKDOWN_PATH, IosPrivac
   canonicalAuditJson, renderIosPrivacySourceAuditMarkdown, validateIosPrivacyAuditClaims }
   from '../../phase9/ios-privacy-contract.mjs';
 
+
+// The explicit fourth bridge preserves the frozen release-install tests and
+// original auditor. Only this exactly verified current47 step is inverted.
+export const RELEASE_INSTALL_STEP47_TEXT = "      - name: Verify installed iOS native sources\n        env:\n          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}\n          C47_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}\n        run: |\n          npm run postinstall:check\n          npm run phase5:expo-widgets-lifecycle:test\n          npm run phase9:view-shot-privacy:test\n          npm run phase9:ios-privacy-source-audit:test\n          if [ \"$CURRENT_SOURCE_BRANCH\" = stage/m1-native-runtime47 ]; then\n            node scripts/release/full-app-j01/native_generated47.mjs --native-audit47 --strict --check\n          else\n            npm run phase9:ios-privacy-source-audit:check\n          fi\n          npm run phase9:ios-archive-privacy-evidence:test\n          npm run phase9:release-candidate-git-contract:test\n          npm run phase9:verification-wiring:test\n          if [ \"$CURRENT_SOURCE_BRANCH\" = stage/m1-native-runtime47 ]; then\n            node scripts/release/full-app-j01/native_generated47.mjs --native-store47 --check\n          else\n            npm run phase9:store-build-inspect:check\n          fi\n\n\n";
+const RELEASE_INSTALL_STEP46_TEXT = "      - name: Verify installed iOS native sources\n        run: |\n          npm run postinstall:check\n          npm run phase5:expo-widgets-lifecycle:test\n          npm run phase9:view-shot-privacy:test\n          npm run phase9:ios-privacy-source-audit:test\n          npm run phase9:ios-privacy-source-audit:check\n          npm run phase9:ios-archive-privacy-evidence:test\n          npm run phase9:release-candidate-git-contract:test\n          npm run phase9:verification-wiring:test\n          npm run phase9:store-build-inspect:check\n\n\n";
+const RELEASE_INSTALL_STEP47_DOCUMENT = parseDocument(RELEASE_INSTALL_STEP47_TEXT,
+  { uniqueKeys: true, merge: false, strict: true });
+same(RELEASE_INSTALL_STEP47_DOCUMENT.errors, []); same(RELEASE_INSTALL_STEP47_DOCUMENT.warnings, []);
+const RELEASE_INSTALL_STEP47_NODES = RELEASE_INSTALL_STEP47_DOCUMENT.toJS({ maxAliasCount: 0 });
+same(RELEASE_INSTALL_STEP47_NODES.length, 1);
+const RELEASE_INSTALL_STEP47_VALUE = RELEASE_INSTALL_STEP47_NODES[0];
+export function projectReleaseInstallWorkflow47(workflowText) {
+  assert.ok(typeof workflowText === 'string' && Buffer.byteLength(workflowText) <= 1024 * 1024);
+  const document = parseDocument(workflowText, { uniqueKeys: true, merge: false, strict: true });
+  same(document.errors, []); same(document.warnings, []);
+  const workflow = document.toJS({ maxAliasCount: 0 });
+  const steps = workflow?.jobs?.checks?.steps;
+  assert.ok(Array.isArray(steps));
+  const candidates = steps.filter(step => step?.name === 'Verify installed iOS native sources');
+  same(candidates.length, 1);
+  same(candidates[0], RELEASE_INSTALL_STEP47_VALUE);
+  same(workflowText.split(RELEASE_INSTALL_STEP47_TEXT).length, 2);
+  return workflowText.replace(RELEASE_INSTALL_STEP47_TEXT, RELEASE_INSTALL_STEP46_TEXT);
+}
+export function auditReleaseInstallWiring47(options, originalAudit) {
+  assert.equal(typeof originalAudit, 'function');
+  let workflowText;
+  try { workflowText = projectReleaseInstallWorkflow47(options.workflowText); }
+  catch {
+    const original = originalAudit(options);
+    // Preserve original refusal errors; an unknown old-flat fixture also refuses.
+    return original.status === 'invalid' ? original : Object.freeze({ ...original,
+      status: 'invalid', errors: Object.freeze([...original.errors,
+        'Current47 native install step is not the exact reviewed successor.']) });
+  }
+  return originalAudit({ ...options, workflowText });
+}
+let releaseInstallOriginalAuditor47;
+export function auditVerificationWiring(options) {
+  return auditReleaseInstallWiring47(options, releaseInstallOriginalAuditor47);
+}
+
 async function originalProgramBridge47(mode, arguments47) {
   const root = checkedNativeRoot46(ROOT), source = nativeSourceIdentity46(root);
-  same(process.env.C47_EXPECTED_HEAD ?? source.sourceHead, source.sourceHead);
+  const expectedHead = process.env.C47_EXPECTED_HEAD ??
+    (mode === 'releaseInstall' ? process.env.C46_EXPECTED_HEAD : undefined) ?? source.sourceHead;
+  same(expectedHead, source.sourceHead);
   // Pin from actual Git, so tampered/missing-witness WRITE refusal controls can
   // still execute the immutable original refusal before any current positive.
   same(git47(root, 'show', source.sourceHead + ':scripts/release/full-app-j01/native_generated47.mjs'),
@@ -652,6 +696,7 @@ async function originalProgramBridge47(mode, arguments47) {
     config: ['scripts/phase5/check-native-config.mjs', '../release/full-app-j01/native_current46.mjs'],
     audit: ['scripts/phase9/ios-privacy-source-audit.mjs', './ios-privacy-contract.mjs'],
     store: ['scripts/phase9/store-build-inspect.mjs', './ios-privacy-contract.mjs'],
+    releaseInstall: ['scripts/phase9/release-install-wiring46.test.mjs', './verification-wiring-contract.mjs'],
   };
   const [path, specifier47] = profiles[mode];
   const pin = [...witness.unchangedInputs, ...witness.currentSourceInputs].find(row => row.path === path);
@@ -659,6 +704,21 @@ async function originalProgramBridge47(mode, arguments47) {
   const checker = readNativeFile46(root, path);
   same({ bytes: checker.bytes.length, sha256: checker.sha256 }, { bytes: pin.bytes, sha256: pin.sha256 });
   same(checker.bytes, git47(root, 'show', source.sourceHead + ':' + path));
+  if (mode === 'releaseInstall') {
+    same(arguments47, []);
+    assertCurrentNativeHead46(root.absolute, source.sourceHead);
+    const qualityPath = '.github/workflows/quality.yml';
+    same(readNativeFile46(root, qualityPath).bytes,
+      git47(root, 'show', source.sourceHead + ':' + qualityPath));
+    same(checker.bytes, git47(root, 'show', BASE + ':' + path));
+    const auditorPath = 'scripts/phase9/verification-wiring-contract.mjs';
+    const auditor = readNativeFile46(root, auditorPath);
+    same(auditor.bytes, git47(root, 'show', BASE + ':' + auditorPath));
+    same(auditor.bytes, git47(root, 'show', source.sourceHead + ':' + auditorPath));
+    releaseInstallOriginalAuditor47 = (await import(pathToFileURL(resolve(root, auditorPath)).href))
+      .auditVerificationWiring;
+    assert.equal(typeof releaseInstallOriginalAuditor47, 'function');
+  }
   const filename = resolve(ROOT, path), parent = pathToFileURL(filename).href;
   let redirected = 0;
   const hooks = registerHooks({ resolve(specifier, context, nextResolve) {
@@ -781,7 +841,8 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profi
     acceptanceGranted: false, nativeAccepted: false, release: 'NO_GO' };
 }
 
-const bridge47 = { '--native-config47': 'config', '--native-audit47': 'audit', '--native-store47': 'store' };
+const bridge47 = { '--native-config47': 'config', '--native-audit47': 'audit', '--native-store47': 'store',
+  '--release-install-wiring47-test': 'releaseInstall' };
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url) && bridge47[process.argv[2]]) {
   setImmediate(() => originalProgramBridge47(bridge47[process.argv[2]], process.argv.slice(3))
     .catch(error => { console.error(error.message); process.exitCode = 1; }));

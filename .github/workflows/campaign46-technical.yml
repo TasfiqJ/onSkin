@@ -125,7 +125,10 @@ jobs:
           run('npm-graph', ['node', tools['npm'], 'ls', '--all', '--json', '--long'], root)
           run('semantic-security', ['node', '--test', 'scripts/release/full-app-j01/security_completion46.test.mjs'], root)
           run('bounded-expo-output', ['node', '--test', 'scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs'], root)
-          run('current-install-wiring', ['node', '--test', 'scripts/phase9/release-install-wiring46.test.mjs'], root)
+          if os.environ.get('CURRENT_SOURCE_BRANCH') == 'stage/m1-native-runtime47':
+              run('current-install-wiring', ['node', 'scripts/release/full-app-j01/native_generated47.mjs', '--release-install-wiring47-test'], root)
+          else:
+              run('current-install-wiring', ['node', '--test', 'scripts/phase9/release-install-wiring46.test.mjs'], root)
           historical_commit = '2cffa9e92be101af4e3b371f1815ec9f458d8da4'
           historical_lock = subprocess.check_output(['git', '--no-replace-objects', 'show',
               historical_commit + ':package-lock.json'], cwd=root)
@@ -229,7 +232,11 @@ jobs:
             npm run phase9:ios-privacy-source-audit:check 2>&1 | tee "$evidence/current-audit.log"
             npm run phase9:store-build-inspect:check 2>&1 | tee "$evidence/current-inspector.log"
           fi
-          node --test scripts/phase9/release-install-wiring46.test.mjs 2>&1 | tee "$evidence/install-wiring.tap"
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --release-install-wiring47-test 2>&1 | tee "$evidence/install-wiring.tap"
+          else
+            node --test scripts/phase9/release-install-wiring46.test.mjs 2>&1 | tee "$evidence/install-wiring.tap"
+          fi
       - name: Preserve Windows current-source evidence including failures
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
