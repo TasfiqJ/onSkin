@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
+  "inventory_state": "FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -1235,7 +1235,8 @@
       "job_timeout_minutes": 90,
       "coordinator_minutes": 84,
       "simulator_local_ad_hoc_signing_authorized": true,
-      "device_distribution_account_certificate_provisioning_or_paid_changes_authorized": false
+      "device_distribution_account_certificate_provisioning_or_paid_changes_authorized": false,
+      "finite_cumulative_paths": 31
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

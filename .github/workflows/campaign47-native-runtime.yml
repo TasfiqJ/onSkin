@@ -1,4 +1,4 @@
-name: Campaign47 unsigned native runtime
+name: Campaign47 Simulator native runtime
 
 on:
   pull_request:
@@ -55,7 +55,7 @@ jobs:
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
-        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage build --output "$RUNNER_TEMP/c47-evidence"
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage build --simulator-probe --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -90,13 +90,14 @@ jobs:
           retention-days: 3
           compression-level: 0
 
+  # Probe-only checkpoint: tooling evidence cannot start app consumers.
   native-normal:
     name: C47 normal
     needs: [native-build]
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && false
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -168,7 +169,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && false
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:

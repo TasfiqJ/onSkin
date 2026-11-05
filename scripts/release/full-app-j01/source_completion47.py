@@ -44,6 +44,8 @@ PATHS = {
     'scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift',
     'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
     'scripts/release/full-app-j01/swift_behavior47.py',
+    'scripts/release/full-app-j01/simulator_signing47.py',
+    'scripts/release/full-app-j01/simulator_signing47.test.py',
     'docs/USER_FLOW_TREE.md', 'PROGRESS.md', 'ONSKIN_BRAIN_HANDOFF.txt',
 } | WORKLISTS
 

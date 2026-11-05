@@ -11,6 +11,17 @@ spec.loader.exec_module(c)
 
 
 class Source47Tests(unittest.TestCase):
+    def test_continuation03_adds_only_two_finite_simulator_helpers(self):
+        helpers={'scripts/release/full-app-j01/simulator_signing47.py',
+                 'scripts/release/full-app-j01/simulator_signing47.test.py'}
+        self.assertTrue(helpers <= c.PATHS)
+        self.assertEqual(len(c.PATHS),31)
+        for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
+                     'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',
+                     'apps/mobile/app.config.ts','scripts/release/full-app-j01/production.entitlements']:
+            with self.subTest(path=path),self.assertRaisesRegex(ValueError,'UNDECLARED_CHANGED_PATH'):
+                c.check_scope({path},c.PATHS|{path})
+
     def test_continuation02_scope_is_exact_and_historical_swift_stays_protected(self):
         repair = {'scripts/phase5/expo-widgets-57.0.26/AppIntent.swift',
                   'scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift',

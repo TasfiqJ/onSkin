@@ -2572,6 +2572,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('build', 'normal', 'internal'))
+    parser.add_argument('--simulator-probe', action='store_true',
+                        help='Isolated C47 Xcode/Keychain tooling diagnostic; never an app producer')
     args = parser.parse_args()
     # The existing ephemeral read token never reaches hooks, Expo, subprocess arguments or receipts.
     token = os.environ.pop('C47_ARTIFACT_READ_TOKEN', '')
@@ -2586,9 +2588,17 @@ def main():
     code, context = 0, None
     try:
         context = hosted_stage_context(runner, args.stage)
+        require(not args.simulator_probe or args.stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
         if args.stage == 'build':
             require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
-            execute(runner, compile_only=True)
+            if args.simulator_probe:
+                path = root / 'scripts/release/full-app-j01/simulator_signing47.py'
+                spec = importlib.util.spec_from_file_location('c47_simulator_signing', path)
+                signing = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(signing)
+                signing.run_probe(runner, sys.modules[__name__])
+            else:
+                execute(runner, compile_only=True)
         else:
             execute_consumer(runner, args.stage, context, token)
         require(runner.receipt['source']['head'] == context['head'] and

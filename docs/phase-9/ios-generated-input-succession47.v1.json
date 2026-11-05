@@ -20,41 +20,6 @@
   },
   "sourcePins": [
     {
-      "path": "scripts/phase9/ios-native-obligations47.json",
-      "bytes": 129559,
-      "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 52589,
-      "sha256": "20c2253d56d0078daec60ea36094727d2c56c1acd0732fe3916ce8cb090b887e"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 42934,
-      "sha256": "648da185ea57f223f1b863595829f281acba137fc3af9e79f10f36e7c59168f7"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 157276,
-      "sha256": "f8e783d6d5fad33a0fdc812c91bb38e1d90b94235af777b222443396a0b7c82a"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 80051,
-      "sha256": "be7bb1056fe1f2a921ec94a5962991c8be4e6fc505f0cc3b501649a5f5c8cef7"
-    },
-    {
-      "path": "scripts/release/full-app-j01/pods_compat47.py",
-      "bytes": 11688,
-      "sha256": "d6f606d958b1b28bbd753687ba3c5bde1c6dcb71f02fcc60586c594069e72b98"
-    },
-    {
-      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
-      "bytes": 8054,
-      "sha256": "0d5390eb51e1634dbb6799583b99badf34c96bbd5fbda64ad1de3e1d128e10ff"
-    },
-    {
       "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
       "bytes": 5325,
       "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
@@ -68,6 +33,51 @@
       "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
       "bytes": 16969,
       "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+    },
+    {
+      "path": "scripts/phase9/ios-native-obligations47.json",
+      "bytes": 129559,
+      "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.mjs",
+      "bytes": 52708,
+      "sha256": "5075b3c5839833bdc55763fac90681a96b5096a8e283315ef38dcd5582095262"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+      "bytes": 42934,
+      "sha256": "648da185ea57f223f1b863595829f281acba137fc3af9e79f10f36e7c59168f7"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.py",
+      "bytes": 157951,
+      "sha256": "aca2dd5db6f26a207cedd88d8a3a566504c63f8f36b764bfc25d4756de9697f2"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+      "bytes": 80833,
+      "sha256": "90158751415feeef40d921548a18ae2b5a148e685d1e3189a74dd9e7af09c7df"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.py",
+      "bytes": 11688,
+      "sha256": "d6f606d958b1b28bbd753687ba3c5bde1c6dcb71f02fcc60586c594069e72b98"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+      "bytes": 8054,
+      "sha256": "0d5390eb51e1634dbb6799583b99badf34c96bbd5fbda64ad1de3e1d128e10ff"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.py",
+      "bytes": 18421,
+      "sha256": "400e1080f558e1f25bef7b9edd8a10e23202b85e240a55ea0dbaded06ae0fab9"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+      "bytes": 5702,
+      "sha256": "e0117aa3b95700238b920ba629909f96563b3b7eab2d57bc9609a0a144dfe9f6"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

@@ -1288,5 +1288,17 @@ class SurvivalQuery47Tests(unittest.TestCase):
                         self.assertEqual(kwargs, {'timeout': 120})
 
 
+class SimulatorProbeAdmissionTests(unittest.TestCase):
+    def test_successful_toolchain_probe_cannot_become_an_app_build_producer(self):
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            root = Path(directory)
+            proof = {'stage':'build','status':'SIMULATOR_TOOLCHAIN_KEYCHAIN_PROBE_ONLY',
+                     'stages':{'probe-compiled':{'status':'PASS'},'probe-keychain':{'status':'PASS'}}}
+            (root/'execution.json').write_text(json.dumps(proof),encoding='utf8')
+            with patch.object(n,'producer_source_matches'):
+                with self.assertRaisesRegex(ValueError,'BUILD_PRODUCER_STAGE'):
+                    n.verify_build_producer(SimpleNamespace(),{'payload_directory':str(root)})
+
+
 if __name__ == '__main__':
     unittest.main()

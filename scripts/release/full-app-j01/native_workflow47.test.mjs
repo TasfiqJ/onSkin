@@ -6,6 +6,7 @@ import { parseDocument } from 'yaml';
 const source = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
 const scope = "github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'";
 const expression = value => '${{ ' + value + ' }}';
+const probeOnly = source.includes('--stage build --simulator-probe');
 const dependencies = { build: [], normal: ['build'], internal: ['build', 'normal'] };
 
 function validate(text) {
@@ -27,7 +28,7 @@ function validate(text) {
     assert.deepEqual(job.permissions, parents.length ? { contents: 'read', actions: 'read' } : undefined);
     assert.equal(job['runs-on'], 'macos-26-intel');
     assert.equal(job['timeout-minutes'], 90);
-    assert.equal(job.if, scope);
+    assert.equal(job.if, scope + (probeOnly && role !== 'build' ? ' && false' : ''));
     assert.equal(job.steps.length, 5);
     assert.deepEqual(job.outputs, {
       artifact_id: expression('steps.upload.outputs.artifact-id'),
@@ -50,7 +51,7 @@ function validate(text) {
       }
     }
     assert.deepEqual(job.steps[2].env, env);
-    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + ' --output "$RUNNER_TEMP/c47-evidence"');
+    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (probeOnly && role === 'build' ? ' --simulator-probe' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
     const budget = job.steps[3];
     assert.equal(budget.id, 'evidence-budget');
     assert.equal(budget.if, 'always()');
@@ -74,7 +75,16 @@ function validate(text) {
   assert.doesNotMatch(text, /pull_request_target|secrets\.|CODE_SIGNING_ALLOWED=YES|eas (?:build|submit)|\n\s+cache:/);
 }
 
-test('C47 hosted stages stay exact-source, unsigned, finite and sequential on one Mac', () => validate(source));
+test('C47 hosted stages stay exact-source, Simulator-local, finite and sequential on one Mac', () => validate(source));
+test('C47 isolated tooling probe cannot start either application consumer', () => {
+  if (probeOnly) {
+    assert.equal((source.match(/&& false/gu) ?? []).length, 2);
+    assert.throws(() => validate(source.replace(' && false', '')));
+    assert.throws(() => validate(source.replace(' --simulator-probe', '')));
+  } else {
+    assert.doesNotMatch(source, /--simulator-probe|&& false/);
+  }
+});
 test('C47 rejects privilege, source substitution, paid runner and ignored failures', () => {
   for (const [before, after] of [
     ['contents: read', 'contents: write'], ['macos-26-intel', 'macos-26-large'],
