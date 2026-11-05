@@ -18,7 +18,7 @@ class Source47Tests(unittest.TestCase):
         self.assertEqual(len(c.PATHS),31)
         for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
                      'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',
-                     'apps/mobile/app.config.ts','scripts/release/full-app-j01/production.entitlements']:
+                     'apps/mobile/app.config.js','scripts/release/full-app-j01/production.entitlements']:
             with self.subTest(path=path),self.assertRaisesRegex(ValueError,'UNDECLARED_CHANGED_PATH'):
                 c.check_scope({path},c.PATHS|{path})
 
