@@ -30,7 +30,7 @@ jobs:
   native-runtime:
     name: Actual unsigned Simulator build install launch and UI
     if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
-    runs-on: macos-26
+    runs-on: macos-26-intel
     timeout-minutes: 90
     steps:
       - name: Checkout exact candidate

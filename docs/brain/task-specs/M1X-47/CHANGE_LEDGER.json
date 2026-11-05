@@ -664,6 +664,55 @@
           "preimage_sha256": "da186b85b5fce86f13f180f73a0523bd1513a739c61d4d0fef2128fb51ba6bed"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T01:07:16.797139+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        ".github/workflows/campaign47-native-runtime.yml",
+        "scripts/release/full-app-j01/native_workflow47.test.mjs",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Native7 run41940518849/artifact13378860043 authenticated raw47778848B SHAd91397e63c43506212080f01c998c0b437451fa84152061dd041c225db5cd5ba: all35commandsPASS including actualbuild/link, then PRODUCT_ARCHITECTURE correctly refused x86_64-only Simulator executable on arm64 host. Exact selected4 MLKit podspec rawSHA1 match actualPodfile.lock and explicitly exclude arm64Simulator. Preserve vendor exclusions and product guard; switch only existing standard public compute lane to macos-26-intel. Official GitHub standard-public table confirms this label free,4CPU/14GB/14GB standard class, not paid larger; currentIntel image lists sameXcode26.4.1/SDK26.4/Simulators. No signing/account/billing/cache/provider/module changes. Update exactrunner refusal test and add matchingIntel product positive beside unchanged mismatchedhost refusal. Finite29 unchanged; attempts8..18 remain, oneMac/90min/84min coordinator unchanged.",
+      "current_preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "d86c73963b8ec7064f9df71786b1c71376f40738",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 2971,
+          "preimage_sha256": "c279d3f7f910f3521297eda7d22935fd0d1cdb00e196353b6a33ca16471f7795"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "d86c73963b8ec7064f9df71786b1c71376f40738",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 4118,
+          "preimage_sha256": "5ae838f5eaafe678fa77ec7b5343ad26412d67c23f297c4726ae8e46bc654c32"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "d86c73963b8ec7064f9df71786b1c71376f40738",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 24289,
+          "preimage_sha256": "018fd17c0f05eb4f4b8f10efd8a5d747dca72a29f2097754a08a35fe5afea8dc"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "d86c73963b8ec7064f9df71786b1c71376f40738",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "24aec92559d45dc0484be2592cd1b6473e58ebc47f3cae7fcb84cc7cec946733"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "d86c73963b8ec7064f9df71786b1c71376f40738",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 33046,
+          "preimage_sha256": "0663924824345e223846a48e76569149a198f480f25bb87a2e68fb0d4715284c"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

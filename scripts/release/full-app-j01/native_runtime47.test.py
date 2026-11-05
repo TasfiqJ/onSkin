@@ -61,6 +61,9 @@ class Runtime47Tests(unittest.TestCase):
         valid = (self.product(), 'Mach-O 64-bit executable arm64', 'arm64 x86_64',
                  'platform IOSSIMULATOR\nminos 17.0', 'arm64')
         self.assertEqual(n.validate_product(*valid)[0], 'com.layerwell.app.staging')
+        intel = (self.product(), 'Mach-O 64-bit executable x86_64', 'x86_64',
+                 'platform IOSSIMULATOR\nminos 17.0', 'x86_64')
+        self.assertEqual(n.validate_product(*intel)[2], ['x86_64'])
         mutations = [
             (0, dict(self.product(), DTPlatformName='iphoneos')),
             (0, dict(self.product(), CFBundleSupportedPlatforms=['iPhoneOS'])),

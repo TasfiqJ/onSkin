@@ -18,7 +18,7 @@ function validate(text) {
   assert.equal(w.env.IOS_WIDGET_EXTENSION_BUILD_ENABLED, 'false');
   assert.deepEqual(Object.keys(w.jobs), ['native-runtime']);
   const job = w.jobs['native-runtime'];
-  assert.equal(job['runs-on'], 'macos-26');
+  assert.equal(job['runs-on'], 'macos-26-intel');
   assert.equal(job['timeout-minutes'], 90);
   assert.equal(job.if, "github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'");
   assert.equal(job.steps.length, 5);
@@ -54,7 +54,9 @@ test('C47 hosted execution stays exact-source, unsigned, finite and single-job',
 test('C47 rejects privilege, source substitution, paid runner and ignored failures', () => {
   for (const [before, after] of [
     ['contents: read', 'contents: write'],
-    ['macos-26', 'macos-26-xlarge'],
+    ['macos-26-intel', 'macos-26-large'],
+    ['macos-26-intel', 'macos-26-xlarge'],
+    ['macos-26-intel', 'macos-26'],
     ['timeout-minutes: 90', 'timeout-minutes: 0'],
     ['cancel-in-progress: false', 'cancel-in-progress: true'],
     ["head.ref == 'stage/m1-native-runtime47'", "head.ref != ''"],
