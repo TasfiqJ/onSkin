@@ -41,23 +41,23 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 52708,
-      "sha256": "5075b3c5839833bdc55763fac90681a96b5096a8e283315ef38dcd5582095262"
+      "bytes": 53292,
+      "sha256": "9c86e714fd4e8d3804dcd51bfca2b7ceb98981fb3cc87beb3399bafaebdd2f26"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 42934,
-      "sha256": "648da185ea57f223f1b863595829f281acba137fc3af9e79f10f36e7c59168f7"
+      "bytes": 43481,
+      "sha256": "1bdc5b55790d94d40aec895bc68ffe0b7b1b6ececae7cc36de56fc352f1fb951"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 157951,
-      "sha256": "aca2dd5db6f26a207cedd88d8a3a566504c63f8f36b764bfc25d4756de9697f2"
+      "bytes": 161067,
+      "sha256": "c9f23b67a6f50967eaa76ec2b5cf94cef24f88f1af573364c6494888f2d093b0"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 80833,
-      "sha256": "90158751415feeef40d921548a18ae2b5a148e685d1e3189a74dd9e7af09c7df"
+      "bytes": 80829,
+      "sha256": "126495b4da279eba0578671999836274a740264cafb16c7dda36a1d27705903a"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -71,13 +71,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.py",
-      "bytes": 18429,
-      "sha256": "54b961b373a48124164ec9496271823f830072885e7cf4fdd3fc50247b200e57"
+      "bytes": 37440,
+      "sha256": "aaf5f0b27dd24c5d9793781b5933525ae848d4fccd8360e681e1a13a640ead58"
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
-      "bytes": 5702,
-      "sha256": "e0117aa3b95700238b920ba629909f96563b3b7eab2d57bc9609a0a144dfe9f6"
+      "bytes": 12548,
+      "sha256": "eb35ba844e2bc50747c5a940804e57d554a01142b7907ca02aa10215bbc8d8b3"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",
@@ -287,5 +287,22 @@
     "projection": "VERIFY_CURRENT_POSTIMAGES_THEN_INVERT_ONLY_TWO_FILES_FOR_IMMUTABLE_TREE_COMPARISON",
     "legacy46": "EXPECTED_IDENTITY_REFUSAL_RETAINED_NOT_RELABELLED_PASS",
     "admissions": false
+  },
+  "simulatorSigning03": {
+    "authority": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+    "sdk": "iphonesimulator",
+    "mechanism": "XCODE_APP_TARGET_SDK_CONDITIONAL_LINKED_SIMULATED_ENTITLEMENTS",
+    "prefix": "C47SIMTEST.",
+    "bundles": [
+      "com.layerwell.app.staging",
+      "com.layerwell.app.development"
+    ],
+    "appleTeam": false,
+    "profiles": false,
+    "deviceSigning": false,
+    "sharing": false,
+    "appEntitlementsOnFrameworksOrTestHost": false,
+    "appProcessSecureStoreRequired": true,
+    "ordinaryWithoutDiagnosticRebuildRequired": true
   }
 }

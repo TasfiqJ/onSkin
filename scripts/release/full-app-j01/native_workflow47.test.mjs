@@ -112,3 +112,22 @@ test('C47 refuses parallel stages, missing wire digest or authority outside the 
     assert.throws(() => validate(source.replaceAll(before, after)), before);
   }
 });
+
+test('Quality retains its real online failure while independent checks and exports execute', () => {
+  const doc = parseDocument(readFileSync(new URL('../../../.github/workflows/quality.yml', import.meta.url), 'utf8'));
+  assert.deepEqual(doc.errors, []);
+  const quality = doc.toJS({ maxAliasCount: 0 });
+  const checks = quality.jobs.checks.steps;
+  const online = checks.findIndex(step => step.name === 'Check Expo dependency compatibility');
+  assert.ok(online > 0);
+  assert.equal(checks[online].run, 'npx expo install --check');
+  assert.equal(checks[online].if, undefined);
+  assert.equal(checks.find(step => step.name === 'Install from lockfile').id, 'install');
+  for (const step of checks.slice(online + 1)) {
+    assert.equal(step.if, expression("!cancelled() && steps.install.outcome == 'success'"));
+  }
+  for (const step of checks) assert.equal(Object.hasOwn(step, 'continue-on-error'), false);
+  assert.equal(quality.jobs['expo-export'].needs, 'checks');
+  assert.equal(quality.jobs['expo-export'].if, expression('!cancelled()'));
+  assert.equal(Object.hasOwn(quality.jobs.checks, 'continue-on-error'), false);
+});

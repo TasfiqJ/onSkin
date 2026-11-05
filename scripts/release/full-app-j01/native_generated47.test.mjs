@@ -46,6 +46,14 @@ test('current47 rejects root default-subspec expansion, extra pod options, globa
     value => value.sourcePins.push(structuredClone(value.sourcePins[0])),
     value => value.sourceBinding.externalCurrentSource47SealRequired = false,
     value => value.predecessor46.sha256 = '0'.repeat(64),
+    value => value.simulatorSigning03.sdk = 'iphoneos',
+    value => value.simulatorSigning03.prefix = 'REALTEAM00.',
+    value => value.simulatorSigning03.bundles.push('com.foreign.app'),
+    value => value.simulatorSigning03.profiles = true,
+    value => value.simulatorSigning03.sharing = true,
+    value => value.simulatorSigning03.appEntitlementsOnFrameworksOrTestHost = true,
+    value => value.simulatorSigning03.appProcessSecureStoreRequired = false,
+    value => value.simulatorSigning03.ordinaryWithoutDiagnosticRebuildRequired = false,
   ];
   for (const change of changes) {
     const value = descriptor();

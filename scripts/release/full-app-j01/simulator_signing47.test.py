@@ -4,6 +4,9 @@ import importlib.util
 from pathlib import Path
 import plistlib
 import struct
+import tempfile
+import os
+from types import SimpleNamespace
 import unittest
 
 spec=importlib.util.spec_from_file_location('signing47',Path(__file__).with_name('simulator_signing47.py'))
@@ -80,5 +83,97 @@ class SimulatorSigning47(unittest.TestCase):
         self.assertEqual(len(value['code_signatures']),1)
         for bad in [b'not MachO',raw[:32],raw[:data_start],raw[:20]+struct.pack('<I',0x7fffffff)+raw[24:]]:
             with self.assertRaises(ValueError):s.macho_entitlements(bad)
+
+    def test_empty_normal_xcent_needs_exact_linked_simulator_identity(self):
+        facts={'code_signatures':[{'offset':256,'bytes':4}],
+               'simulated_entitlement_sections':[{'plist':s.app_entitlements(s.PROBE_BUNDLE)}]}
+        s.validate_applied_entitlements(facts,[{}],s.PROBE_BUNDLE)
+        for change in [lambda x:x.update(code_signatures=[]),
+                       lambda x:x.update(simulated_entitlement_sections=[]),
+                       lambda x:x['simulated_entitlement_sections'][0].update(plist={}),
+                       lambda x:x['simulated_entitlement_sections'][0]['plist'].update(**{'keychain-access-groups':['*']})]:
+            wrong=copy.deepcopy(facts);change(wrong)
+            with self.assertRaises(ValueError):s.validate_applied_entitlements(wrong,[{}],s.PROBE_BUNDLE)
+        with self.assertRaises(ValueError):
+            s.validate_applied_entitlements(facts,[{'aps-environment':'development'}],s.PROBE_BUNDLE)
+
+    def native(self):
+        spec=importlib.util.spec_from_file_location('c47_native_reader_test',Path(__file__).with_name('native_runtime47.py'))
+        native=importlib.util.module_from_spec(spec);spec.loader.exec_module(native)
+        return native
+
+    def test_large_binary_has_separate_bounded_reader_without_relaxing_documents(self):
+        n=self.native()
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            root=Path(directory);path=root/'large-app';path.write_bytes(
+                struct.pack('<8I',0xfeedfacf,0x01000007,3,2,1,16,0,0)+
+                struct.pack('<4I',0x1d,16,48,4)+b'fake'+b'\0'*(11*1024*1024))
+            with self.assertRaises(ValueError):n.read_native_file(path)
+            self.assertEqual(len(s.inspect_binary(n,path)['code_signatures']),1)
+            hard=root/'hardlink';os.link(path,hard)
+            with self.assertRaises(ValueError):s.inspect_binary(n,path)
+            hard.unlink()
+            receipt=root/'receipt.json';receipt.write_bytes(b'{}')
+            strict=SimpleNamespace(read_native_file=lambda path:n.read_native_file(path))
+            self.assertEqual(s.read_receipt(strict,receipt),b'{}')
+            receipt.write_bytes(b'x'*65537)
+            with self.assertRaises(ValueError):s.read_receipt(strict,receipt)
+
+    def test_only_application_simulator_conditional_settings_may_change(self):
+        bundle='com.layerwell.app.staging';ent=Path.cwd()/'C47Simulator.entitlements'
+        before={'project':[{'name':'Release','settings':{'CODE_SIGNING_ALLOWED':'NO'}}],
+                'targets':[{'name':'LayerwellStaging','product_type':'com.apple.product-type.application',
+                    'configurations':[{'name':name,'settings':{'PRODUCT_BUNDLE_IDENTIFIER':bundle,
+                        'CODE_SIGN_ENTITLEMENTS':'LayerwellStaging/LayerwellStaging.entitlements'}} for name in ['Debug','Release']]},
+                    {'name':'OtherFramework','product_type':'com.apple.product-type.framework','configurations':[]}]}
+        after=copy.deepcopy(before)
+        for config in after['targets'][0]['configurations']:
+            config['settings'].update({key+'[sdk=iphonesimulator*]':value for key,value in {
+                'CODE_SIGNING_ALLOWED':'YES','CODE_SIGNING_REQUIRED':'NO','CODE_SIGN_IDENTITY':'-',
+                'CODE_SIGN_ENTITLEMENTS':str(ent),'DEVELOPMENT_TEAM':'','PROVISIONING_PROFILE':'',
+                'PROVISIONING_PROFILE_SPECIFIER':''}.items()})
+        proof={'before':before,'after':after};s.validate_project_edit(proof,bundle,ent)
+        for change in [lambda x:x['project'][0]['settings'].update(CODE_SIGNING_ALLOWED='YES'),
+            lambda x:x['targets'][1].update(configurations=[{'settings':{'CODE_SIGN_ENTITLEMENTS':str(ent)}}]),
+            lambda x:x['targets'][0]['configurations'][0]['settings'].update(CODE_SIGN_ENTITLEMENTS=str(ent)),
+            lambda x:x['targets'][0]['configurations'][0]['settings'].update(**{'DEVELOPMENT_TEAM[sdk=iphoneos*]':'TEAM'})]:
+            bad=copy.deepcopy(proof);change(bad['after'])
+            with self.assertRaises(ValueError):s.validate_project_edit(bad,bundle,ent)
+
+    def test_securestore_result_binds_actual_process_source_and_every_operation(self):
+        head='a'*40;bundle='com.layerwell.app.staging';pid=123
+        for phase in s.PHASE_OPERATIONS:
+            operations={**s.PHASE_OPERATIONS,'delete':['read-before-delete','delete-test-item','absent-after-delete']}[phase]
+            valid={'schema':1,'head':head,'bundle':bundle,'pid':pid,'phase':phase,'marker':'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03',
+                   'passed':True,'operations':[{'operation':op,'passed':True,'result':'EXPECTED_RESULT'} for op in operations]}
+            s.validate_app_keychain(valid,phase,head,bundle,pid)
+            for mutate in [lambda x:x.update(pid=124),lambda x:x.update(head='b'*40),
+                lambda x:x.update(operations=[]),lambda x:x.update(passed=False),
+                lambda x:x['operations'][0].update(result='API_ERROR',code='-34018'),
+                lambda x:x['operations'][0].update(passed=False)]:
+                bad=copy.deepcopy(valid);mutate(bad)
+                with self.assertRaises(ValueError):s.validate_app_keychain(bad,phase,head,bundle,pid)
+
+    def test_ordinary_bundle_cannot_contain_separate_diagnostic(self):
+        n=self.native()
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            app=Path(directory);(app/'main.jsbundle').write_bytes(b'actual ordinary bundle fixture')
+            s.check_diagnostic_bundle(n,app,False)
+            (app/'main.jsbundle').write_bytes(b'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03')
+            s.check_diagnostic_bundle(n,app,True)
+            with self.assertRaises(ValueError):s.check_diagnostic_bundle(n,app,False)
+
+    def test_app_command_refuses_device_account_distribution_or_global_entitlement_input(self):
+        argv=['xcodebuild','-sdk','iphonesimulator','-scheme','LayerwellStaging','build']
+        bundle='com.layerwell.app.staging';s.validate_app_command(argv,bundle)
+        for wrong in [argv+['-allowProvisioningUpdates'],argv+['archive'],argv+['-exportArchive'],
+            argv+['CODE_SIGN_ENTITLEMENTS=/tmp/app.entitlements'],
+            [item.replace('iphonesimulator','iphoneos') for item in argv],
+            [item.replace('LayerwellStaging','OtherTarget') for item in argv]]:
+            with self.assertRaises(ValueError):s.validate_app_command(wrong,bundle)
+        n=self.native()
+        self.assertIn('CODE_SIGNING_ALLOWED=YES',n.APP_SIMULATOR_BUILD_FLAGS)
+        self.assertIn('CODE_SIGNING_ALLOWED=NO',n.SIMULATOR_BUILD_FLAGS)
+        self.assertFalse(any(x.startswith('CODE_SIGN_ENTITLEMENTS=') for x in n.APP_SIMULATOR_BUILD_FLAGS))
 
 if __name__=='__main__':unittest.main()

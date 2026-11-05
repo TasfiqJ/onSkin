@@ -35,7 +35,7 @@ jobs:
           CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           python -I -B - <<'PY'
-          import hashlib, json, os, pathlib, subprocess, sys, tarfile, urllib.request
+          import datetime, hashlib, json, os, pathlib, subprocess, sys, tarfile, urllib.request
           root = pathlib.Path.cwd()
           out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c46-scanner-evidence'
           assert out.is_dir()
@@ -89,7 +89,20 @@ jobs:
                   assert hashlib.sha256(raw).hexdigest() == current_owasp
               else:
                   request = urllib.request.Request('https://semgrep.dev/c/p/' + name, headers={'User-Agent': 'Semgrep/1.181.0'})
-                  raw = urllib.request.urlopen(request, timeout=60).read()
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      raw = response.read(32 * 1024 * 1024 + 1)
+                      metadata = {'fetched_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                          'url': request.full_url, 'status': response.status,
+                          'response_headers': {key: response.headers.get(key) for key in
+                              ('Date', 'Content-Type', 'Content-Length', 'ETag', 'Last-Modified')},
+                          'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(),
+                          'expected_protected_sha256': expected,
+                          'qualification': 'CAPTURED_BEFORE_PROTECTED_HASH_CHECK_NOT_ENGINE_EXECUTION'}
+                  # Retain the exact offending bytes before a hash refusal.
+                  # No unverified rules reach an engine and no pin is changed.
+                  (out / (name + '.download.yaml')).write_bytes(raw)
+                  (out / (name + '.download.json')).write_text(json.dumps(metadata, indent=2))
+                  assert len(raw) <= 32 * 1024 * 1024, 'RULE_DOWNLOAD_SIZE_BOUND:' + name
                   assert hashlib.sha256(raw).hexdigest() == expected, 'UNCHANGED_RULE_HASH_REQUIRED:' + name
               path = out / (name + '.yaml')
               path.write_bytes(raw)

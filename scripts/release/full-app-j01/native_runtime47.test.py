@@ -514,12 +514,12 @@ class Runtime47Tests(unittest.TestCase):
         head, tree = 'a' * 40, 'b' * 40
         producer = self.root / 'producer'
         producer.mkdir()
-        (producer / 'unsigned-simulator-app.tar.gz').write_bytes(valid)
+        (producer / 'signed-simulator-app.tar.gz').write_bytes(valid)
         inventory = {'source': {'head': head, 'tree': tree}, 'lane': 'normal-staging',
                      'configuration': 'Release', 'files': rows}
         inventory_raw = json.dumps(inventory).encode()
         (producer / 'app-inventory.json').write_bytes(inventory_raw)
-        receipt = {'file': 'unsigned-simulator-app.tar.gz', 'bytes': len(valid),
+        receipt = {'file': 'signed-simulator-app.tar.gz', 'bytes': len(valid),
             'sha256': hashlib.sha256(valid).hexdigest(), 'source_head': head,
             'inventory_sha256': hashlib.sha256(inventory_raw).hexdigest(),
             'lane': 'normal-staging', 'configuration': 'Release', 'standalone_embedded_javascript': True,

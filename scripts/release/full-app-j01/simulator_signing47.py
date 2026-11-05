@@ -1,12 +1,15 @@
 """C47-only Xcode Simulator signing; no Apple team, profile, device or distribution."""
 import hashlib
 import json
+import mmap
 import os
 from pathlib import Path
 import plistlib
 import re
 import shutil
 import struct
+import stat
+import sys
 import tarfile
 import time
 
@@ -108,6 +111,50 @@ def macho_entitlements(raw):
     return {'code_signatures': signatures, 'simulated_entitlement_sections': sections}
 
 
+def inspect_binary(n, path):
+    """App binary only: retain the existing 10MiB native-document reader unchanged."""
+    identity = n.stage_file_digest(path, n.MAX_APP)
+    stamp = lambda s: (s.st_dev, s.st_ino, s.st_mode, s.st_nlink, s.st_size,
+                       s.st_mtime_ns, s.st_ctime_ns)
+    before = path.lstat()
+    need(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+         0 < before.st_size == identity['bytes'] <= n.MAX_APP, 'APP_BINARY_BOUND')
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
+    try:
+        need(stamp(os.fstat(descriptor)) == stamp(before), 'APP_BINARY_OPEN_RACE')
+        with mmap.mmap(descriptor, 0, access=mmap.ACCESS_READ) as data:
+            need(hashlib.sha256(data).hexdigest() == identity['sha256'], 'APP_BINARY_HASH')
+            facts = macho_entitlements(data)
+        need(stamp(os.fstat(descriptor)) == stamp(before) and
+             stamp(path.lstat()) == stamp(before), 'APP_BINARY_READ_RACE')
+    finally:
+        os.close(descriptor)
+    need(n.stage_file_digest(path, n.MAX_APP) == identity, 'APP_BINARY_CHANGED')
+    facts['binary_identity'] = identity
+    return facts
+
+
+def validate_applied_entitlements(facts, signed, bundle):
+    need(len(facts['code_signatures']) == 1, 'ACTUAL_LOCAL_SIGNATURE_REQUIRED')
+    linked = [s['plist'] for s in facts['simulated_entitlement_sections'] if 'plist' in s]
+    need(len(linked) == 1, 'APPLIED_SIMULATED_ENTITLEMENTS_REQUIRED')
+    validate_entitlements(linked[0], bundle)
+    # Xcode26.4 emits an empty normal .xcent and the identity in the linked
+    # Simulator section. Nonempty signature entitlements must also be app-owned.
+    need(len(signed) <= 1, 'SIGNATURE_ENTITLEMENT_COUNT')
+    for value in signed:
+        need(isinstance(value, dict), 'SIGNATURE_ENTITLEMENT_DICTIONARY')
+        if value:
+            validate_entitlements(value, bundle)
+
+
+def read_receipt(n, path):
+    need(0 < path.lstat().st_size <= 65536, 'APP_RECEIPT_BOUND')
+    raw = n.read_native_file(path)
+    need(0 < len(raw) <= 65536, 'APP_RECEIPT_BOUND')
+    return raw
+
+
 def inspect_product(r, n, app, bundle, prefix):
     info = plistlib.loads(n.read_native_file(app / 'Info.plist'))
     need(info.get('CFBundleIdentifier') == bundle and info.get('CFBundleExecutable') == PRODUCTS[bundle],
@@ -116,7 +163,7 @@ def inspect_product(r, n, app, bundle, prefix):
     n.validate_product(info, r.text(prefix+'-file', ['file',binary]),
         r.text(prefix+'-architectures',['lipo','-archs',binary]),
         r.text(prefix+'-platform',['xcrun','vtool','-show-build',binary]), 'x86_64')
-    facts = macho_entitlements(n.read_native_file(binary, n.MAX_APP))
+    facts = inspect_binary(n, binary)
     # Preserve actual outputs before interpreting the mechanism.
     r.run(prefix+'-signature',['codesign','-d','--verbose=4',app], required=False)
     paths = r.run(prefix+'-signature-entitlements',['codesign','-d','--entitlements',':-',app],required=False)
@@ -129,13 +176,10 @@ def inspect_product(r, n, app, bundle, prefix):
     facts['signature_entitlements'] = signed
     n.write_json(r.output/(prefix+'-effective-entitlements.json'), facts)
     r.run(prefix+'-verify-signature',['codesign','--verify','--strict','--verbose=4',app])
-    need(len(facts['code_signatures']) == 1, 'ACTUAL_LOCAL_SIGNATURE_REQUIRED')
-    applied = signed + [s['plist'] for s in facts['simulated_entitlement_sections'] if 'plist' in s]
-    need(applied, 'APPLIED_ENTITLEMENTS_REQUIRED')
-    for value in applied:
-        validate_entitlements(value,bundle)
+    validate_applied_entitlements(facts, signed, bundle)
+    need(n.stage_file_digest(binary,n.MAX_APP) == facts['binary_identity'],'SIGNED_BINARY_CHANGED')
     return {'bundle':bundle,'executable':info['CFBundleExecutable'],
-            'bytes':binary.stat().st_size,'sha256':n.sha(binary),'effective':facts,
+            **facts['binary_identity'],'effective':facts,
             'local_test_identity':'SYNTHETIC_C47SIMTEST_NOT_APPLE_TEAM','authorization':AUTH}
 
 
@@ -290,7 +334,7 @@ def run_probe(r,n):
         receipt=data/'Documents'/('C47KeychainProbe-'+phase+'.json');deadline=time.monotonic()+30
         while not receipt.is_file() and time.monotonic()<deadline:time.sleep(.2)
         need(receipt.is_file(),'APP_PROCESS_RECEIPT_MISSING')
-        raw=n.read_native_file(receipt,65536);(evidence/receipt.name).write_bytes(raw)
+        raw=read_receipt(n,receipt);(evidence/receipt.name).write_bytes(raw)
         value=validate_probe_result(json.loads(raw),phase)
         need(value['pid'] == int(match.group(1)),'APP_PROCESS_PID_BINDING');results.append(value)
         r.run('probe-terminate-'+phase,['xcrun','simctl','terminate',device,PROBE_BUNDLE],timeout=60)
@@ -302,3 +346,281 @@ def run_probe(r,n):
         'qualification':'ISOLATED_TOOLCHAIN_APP_NOT_LAYERWELL_SECURESTORE_OR_NORMAL_XCTEST'})
     r.receipt.update(status='SIMULATOR_TOOLCHAIN_KEYCHAIN_PROBE_ONLY',finished_utc=n.utc())
     r.persist()
+
+
+# This project mutation is confined to the application target's Simulator SDK.
+# The original device settings and entitlement file remain byte-for-byte intact.
+APP_PROJECT = r'''require 'xcodeproj'
+require 'json'
+project_path, target_name, bundle, entitlements, output = ARGV
+abort 'exact Simulator application only' unless {
+  'LayerwellStaging'=>'com.layerwell.app.staging',
+  'LayerwellDev'=>'com.layerwell.app.development'
+}[target_name] == bundle && ENV['C47_SIGNING_SDK'] == 'iphonesimulator'
+project = Xcodeproj::Project.open(project_path)
+snapshot = lambda do
+  {'project'=>project.build_configurations.map { |c| {'name'=>c.name,'settings'=>Marshal.load(Marshal.dump(c.build_settings))} },
+   'targets'=>project.targets.map { |t| {'name'=>t.name,'product_type'=>t.product_type,
+     'configurations'=>t.build_configurations.map { |c| {'name'=>c.name,'settings'=>Marshal.load(Marshal.dump(c.build_settings))} }} }}
+end
+before = snapshot.call
+selected = project.targets.select { |t| t.name == target_name && t.product_type == 'com.apple.product-type.application' }
+abort 'expected exactly one application target' unless selected.length == 1
+selected[0].build_configurations.each do |c|
+  abort 'unexpected original bundle' unless c.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] == bundle
+  {'CODE_SIGNING_ALLOWED'=>'YES','CODE_SIGNING_REQUIRED'=>'NO','CODE_SIGN_IDENTITY'=>'-',
+   'CODE_SIGN_ENTITLEMENTS'=>entitlements,'DEVELOPMENT_TEAM'=>'','PROVISIONING_PROFILE'=>'',
+   'PROVISIONING_PROFILE_SPECIFIER'=>''}.each do |key,value|
+    scoped = key + '[sdk=iphonesimulator*]'
+    abort 'refuse existing scoped override' if c.build_settings.key?(scoped)
+    c.build_settings[scoped] = value
+  end
+end
+after = snapshot.call
+project.save
+File.write(output,JSON.pretty_generate({'before'=>before,'after'=>after})+"\n",mode:'wx')
+'''
+
+
+def validate_project_edit(value, bundle, entitlement):
+    import copy
+    need(bundle in PRODUCTS and bundle != PROBE_BUNDLE, 'ACTUAL_APP_REQUIRED')
+    expected = copy.deepcopy(value['before'])
+    rows = [t for t in expected['targets'] if t['name'] == PRODUCTS[bundle] and
+            t['product_type'] == 'com.apple.product-type.application']
+    need(len(rows) == 1 and {c['name'] for c in rows[0]['configurations']} == {'Debug','Release'},
+         'GENERATED_APPLICATION_CONFIGURATIONS')
+    for config in rows[0]['configurations']:
+        need(config['settings'].get('PRODUCT_BUNDLE_IDENTIFIER') == bundle, 'ORIGINAL_APP_BUNDLE')
+        for key, setting in {'CODE_SIGNING_ALLOWED':'YES','CODE_SIGNING_REQUIRED':'NO',
+            'CODE_SIGN_IDENTITY':'-','CODE_SIGN_ENTITLEMENTS':str(entitlement),'DEVELOPMENT_TEAM':'',
+            'PROVISIONING_PROFILE':'','PROVISIONING_PROFILE_SPECIFIER':''}.items():
+            scoped = key + '[sdk=iphonesimulator*]'
+            need(scoped not in config['settings'], 'UNDECLARED_PRIOR_OVERRIDE')
+            config['settings'][scoped] = setting
+    need(expected == value['after'], 'DEVICE_OR_UNRELATED_TARGET_CHANGED')
+
+
+def configure_app(r,n,ios,bundle):
+    need(bundle in PRODUCTS and bundle != PROBE_BUNDLE and
+         ios.resolve() == (r.root/'apps/mobile/ios').resolve(), 'GENERATED_APP_WORKSPACE')
+    need((bundle == 'com.layerwell.app.staging' and r.env['APP_VARIANT'] == 'staging') or
+         (bundle == 'com.layerwell.app.development' and r.env['APP_VARIANT'] == 'development'),
+         'EXACT_APP_LANE')
+    projects=list(ios.glob('*.xcodeproj'))
+    need(len(projects) == 1 and projects[0].stem == PRODUCTS[bundle], 'EXACT_APPLICATION_PROJECT')
+    target=PRODUCTS[bundle]; project=projects[0]/'project.pbxproj'
+    evidence=r.output/'simulator-signing'; evidence.mkdir()
+    original_ent=ios/target/(target+'.entitlements')
+    original=n.read_native_file(original_ent)
+    (evidence/'original-device.entitlements').write_bytes(original)
+    (evidence/'project.before.pbxproj').write_bytes(n.read_native_file(project))
+    ent=ios/'C47Simulator.entitlements'
+    need(not ent.exists(),'FRESH_APP_ENTITLEMENT_INPUT')
+    ent.write_bytes(plistlib.dumps(app_entitlements(bundle)))
+    (evidence/ent.name).write_bytes(n.read_native_file(ent))
+    script=evidence/'configure-generated-simulator.rb';script.write_text(APP_PROJECT,encoding='utf8')
+    changes=evidence/'project-settings-change.json'
+    env={**r.env,'C47_SIGNING_SDK':'iphonesimulator'}
+    r.run('configure-simulator-app-target',['ruby',script,projects[0],target,bundle,ent,changes],env=env,timeout=60)
+    validate_project_edit(json.loads(n.read_native_file(changes)),bundle,ent)
+    need(n.read_native_file(original_ent) == original,'ORIGINAL_DEVICE_ENTITLEMENTS_CHANGED')
+    (evidence/'project.after.pbxproj').write_bytes(n.read_native_file(project))
+    n.write_json(evidence/'scope.json',{'authorization':AUTH,'bundle':bundle,'target':target,
+        'sdk':'iphonesimulator','synthetic_identity':PREFIX+bundle,
+        'entitlement_input_sha256':n.sha(ent),'original_device_entitlement_sha256':n.sha(original_ent),
+        'project_before_sha256':n.sha(evidence/'project.before.pbxproj'),
+        'project_after_sha256':n.sha(project),'device_and_other_target_settings_unchanged':True})
+    return ent
+
+
+def check_effective_app(r,n,argv,bundle,ent,name):
+    validate_app_command(argv,bundle)
+    paths=r.run(name,argv+['-showBuildSettings','-json'],timeout=180)
+    document=json.loads(n.read_native_file(paths[0]))
+    value=validate_build_settings(document,bundle,PRODUCTS[bundle])
+    need(value['CODE_SIGN_ENTITLEMENTS'] == str(ent),'EFFECTIVE_APP_ENTITLEMENT_INPUT')
+    for row in document:
+        if row.get('target') != PRODUCTS[bundle]:
+            need(row.get('buildSettings',{}).get('CODE_SIGN_ENTITLEMENTS') != str(ent),
+                 'APP_ENTITLEMENTS_LEAKED_TO_ANOTHER_TARGET')
+    n.write_json(r.output/'simulator-signing/effective-settings.json',value)
+
+
+def validate_app_command(argv,bundle):
+    argv=list(map(str,argv))
+    need(bundle in PRODUCTS and bundle != PROBE_BUNDLE and argv[0] == 'xcodebuild', 'APP_BUILD_TOOL')
+    for option,expected in [('-sdk','iphonesimulator'),('-scheme',PRODUCTS[bundle])]:
+        need(argv.count(option) == 1 and argv.index(option)+1 < len(argv) and
+             argv[argv.index(option)+1] == expected,'SIMULATOR_APP_COMMAND_SCOPE')
+    need(not any(arg in {'archive','-exportArchive','-archivePath','-exportPath','-exportOptionsPlist',
+                        '-allowProvisioningUpdates','-allowProvisioningDeviceRegistration'} for arg in argv),
+         'DISTRIBUTION_OR_ACCOUNT_COMMAND_FORBIDDEN')
+    need(not any(arg.startswith('CODE_SIGN_ENTITLEMENTS=') for arg in argv),'GLOBAL_APP_ENTITLEMENTS_FORBIDDEN')
+
+
+# Separate Release diagnostic: use the installed Expo API with its real default
+# query/options. Never modify recovery state or intercept the application's API.
+APP_KEYCHAIN_JS = r'''import * as SecureStore from 'expo-secure-store';
+import * as FileSystem from 'expo-file-system/legacy';
+import 'expo-router/entry';
+const diagnosticMarker = 'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03';
+void (async () => {
+  const directory = FileSystem.documentDirectory;
+  const launch = JSON.parse(await FileSystem.readAsStringAsync(directory + 'C47AppKeychainLaunch.json'));
+  const key = 'C47SimulatorTransient03_' + launch.head.slice(0, 16);
+  const operations = [];
+  const first = 'C47_SYNTHETIC_FIRST', updated = 'C47_SYNTHETIC_UPDATED';
+  async function check(operation, fn, expected) {
+    try {
+      const value = await fn();
+      const passed = value === expected;
+      operations.push({operation, passed, result: passed ? 'EXPECTED_RESULT' : 'UNEXPECTED_RESULT'});
+      if (!passed) throw new Error('C47_EXPECTATION');
+    } catch (error) {
+      if (!operations.some(row => row.operation === operation))
+        operations.push({operation, passed:false, result:'API_ERROR', code:String(error.code ?? 'UNCLASSIFIED')});
+      throw new Error('C47_DIAGNOSTIC_STOP');
+    }
+  }
+  let passed = false;
+  try {
+    if (launch.phase === 'first') {
+      await check('absent', () => SecureStore.getItemAsync(key), null);
+      await check('write', () => SecureStore.setItemAsync(key, first), undefined);
+      await check('read', () => SecureStore.getItemAsync(key), first);
+      await check('update', () => SecureStore.setItemAsync(key, updated), undefined);
+      await check('read-updated', () => SecureStore.getItemAsync(key), updated);
+    } else if (launch.phase === 'relaunch') {
+      await check('read-after-relaunch', () => SecureStore.getItemAsync(key), updated);
+    } else if (launch.phase === 'delete') {
+      // Confirm the exact authorized test item before deleting only that item.
+      await check('read-before-delete', () => SecureStore.getItemAsync(key), updated);
+      await check('delete-test-item', () => SecureStore.deleteItemAsync(key), undefined);
+      await check('absent-after-delete', () => SecureStore.getItemAsync(key), null);
+    } else throw new Error('C47_PHASE');
+    passed = operations.length > 0 && operations.every(row => row.passed);
+  } catch { /* Failure is preserved, never returned as absent or success. */ }
+  await FileSystem.writeAsStringAsync(directory + 'C47AppKeychain-' + launch.phase + '.json',
+    JSON.stringify({schema:1, marker:diagnosticMarker, ...launch, operations, passed}));
+})();
+'''
+
+APP_KEYCHAIN_SWIFT = r'''
+    // Separate C47 diagnostic build only; restored before the ordinary build.
+    let c47Launch: [String: Any] = ["schema": 1, "head": "HEAD47", "bundle": Bundle.main.bundleIdentifier ?? "", "pid": Int(ProcessInfo.processInfo.processIdentifier), "phase": ProcessInfo.processInfo.arguments.last ?? "invalid"]
+    let c47Documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    do {
+      let c47Data = try JSONSerialization.data(withJSONObject: c47Launch, options: [.sortedKeys])
+      try c47Data.write(to: c47Documents.appendingPathComponent("C47AppKeychainLaunch.json"), options: .atomic)
+    } catch { fatalError("C47 diagnostic launch receipt unavailable") }
+'''
+
+
+def validate_app_keychain(value,phase,head,bundle,pid):
+    operations={**PHASE_OPERATIONS,'delete':['read-before-delete','delete-test-item','absent-after-delete']}
+    need(isinstance(value,dict) and value.get('schema') == 1 and value.get('head') == head and
+         value.get('bundle') == bundle and value.get('pid') == pid and
+         value.get('phase') == phase and value.get('marker') == 'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03',
+         'REAL_APP_SECURESTORE_RECEIPT_IDENTITY')
+    rows=value.get('operations',[])
+    need(value.get('passed') is True and [row.get('operation') for row in rows] == operations[phase] and
+         all(row.get('passed') is True and row.get('result') == 'EXPECTED_RESULT' and 'code' not in row for row in rows),
+         'REAL_APP_SECURESTORE_OPERATIONS')
+
+
+def run_app_diagnostic(r,n,ios,argv,products,bundle,head):
+    validate_app_command(argv,bundle)
+    need(bundle == 'com.layerwell.app.staging','ORDINARY_APP_DIAGNOSTIC_ONLY')
+    mobile=r.root/'apps/mobile';entry=mobile/'.expo/C47KeychainDiagnostic03.js'
+    need(not entry.exists() and 'ENTRY_FILE' not in r.env,'NO_EXISTING_ENTRY_OVERRIDE')
+    delegate=ios/PRODUCTS[bundle]/'AppDelegate.swift'
+    original=n.read_native_file(delegate)
+    anchor=b'    let delegate = ReactNativeDelegate()'
+    need(original.count(anchor) == 1 and b'C47' not in original,'EXACT_DIAGNOSTIC_INSERTION')
+    evidence=r.output/'app-keychain-diagnostic';evidence.mkdir()
+    (evidence/'AppDelegate.original.swift').write_bytes(original)
+    entry.parent.mkdir(exist_ok=True);entry.write_text(APP_KEYCHAIN_JS,encoding='utf8')
+    (evidence/'diagnostic-entry.js').write_bytes(n.read_native_file(entry))
+    delegate.write_bytes(original.replace(anchor,APP_KEYCHAIN_SWIFT.replace('HEAD47',head).encode()+anchor))
+    (evidence/'AppDelegate.diagnostic.swift').write_bytes(n.read_native_file(delegate))
+    try:
+        r.run('app-keychain-diagnostic-build',argv+['-resultBundlePath',products/'keychain-build.xcresult','build'],
+              env={**r.env,'ENTRY_FILE':str(entry)},timeout=3000)
+        app=products/'derived/Build/Products/Release-iphonesimulator/LayerwellStaging.app'
+        check_diagnostic_bundle(n,app,True)
+        product=inspect_product(r,n,app,bundle,'app-keychain-diagnostic')
+        n.write_json(evidence/'app-inventory.json',{'source':r.receipt['source'],
+            'configuration':'Release','lane':'SEPARATE_APP_SECURESTORE_DIAGNOSTIC',
+            'product':product,'files':n.bundle_inventory(app)})
+        archive=evidence/'signed-app-securestore-diagnostic.tar.gz'
+        with tarfile.open(archive,'w:gz') as out:out.add(app,arcname=app.name)
+        n.write_json(evidence/'app-artifact.json',{'file':archive.name,'bytes':archive.stat().st_size,
+            'sha256':n.sha(archive),'inventory_sha256':n.sha(evidence/'app-inventory.json'),
+            'product':product,'head':head,'qualification':'DIAGNOSTIC_NOT_ORDINARY_XCTEST_PRODUCT'})
+        device=n.prepare_simulator(r,'normal')
+        installed=Path(n.install_simulator_app(r,device,app,bundle))
+        need(n.stage_file_digest(installed/PRODUCTS[bundle],n.MAX_APP) ==
+             n.stage_file_digest(app/PRODUCTS[bundle],n.MAX_APP),'DIAGNOSTIC_INSTALLED_BYTES')
+        data=Path(r.text('app-keychain-data-container',['xcrun','simctl','get_app_container',device,bundle,'data'],timeout=120))
+        pids=[]
+        for phase in PHASE_OPERATIONS:
+            path=data/'Documents'/('C47AppKeychain-'+phase+'.json')
+            need(not path.exists(),'NO_STALE_DIAGNOSTIC_RECEIPT')
+            output=r.text('app-keychain-launch-'+phase,['xcrun','simctl','launch',device,bundle,phase],timeout=120)
+            match=re.fullmatch(re.escape(bundle)+r': ([1-9][0-9]*)',output)
+            need(match,'APP_DIAGNOSTIC_LAUNCH_PID');pid=int(match.group(1));pids.append(pid)
+            deadline=min(time.monotonic()+90,r.deadline-30)
+            while not path.is_file() and time.monotonic()<deadline:time.sleep(.5)
+            need(path.is_file(),'APP_SECURESTORE_RECEIPT_MISSING')
+            raw=read_receipt(n,path);(evidence/path.name).write_bytes(raw)
+            validate_app_keychain(json.loads(raw),phase,head,bundle,pid)
+            r.run('app-keychain-terminate-'+phase,['xcrun','simctl','terminate',device,bundle],timeout=120)
+        need(len(set(pids)) == 3,'REAL_APP_PROCESS_RESTARTS')
+        r.passed('app-process-keychain',{'bundle':bundle,'head':head,'same_simulator':device,
+            'same_data_container':str(data),'pids':pids,'product':product,
+            'api':'ACTUAL_EXPO_SECURE_STORE_DEFAULT_OPTIONS','no_values_or_recovery_data_logged':True,
+            'only_transient_test_item_deleted':True,'ordinary_product_rebuild_required':True})
+    finally:
+        delegate.write_bytes(original)
+        entry.unlink()
+        need(n.read_native_file(delegate) == original and not entry.exists(),'DIAGNOSTIC_SOURCE_NOT_RESTORED')
+        n.write_json(evidence/'RESTORED.json',{'delegate_sha256':n.sha(delegate),
+            'original_delegate_sha256':hashlib.sha256(original).hexdigest(),'entry_removed':True,
+            'ordinary_rebuild_not_yet_proven':True})
+
+
+def check_diagnostic_bundle(n,app,expected):
+    path=app/'main.jsbundle';identity=n.stage_file_digest(path,n.MAX_APP)
+    before=path.lstat()
+    stamp=lambda s:(s.st_dev,s.st_ino,s.st_mode,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)
+    descriptor=os.open(path,os.O_RDONLY|getattr(os,'O_NOFOLLOW',0))
+    try:
+        with mmap.mmap(descriptor,0,access=mmap.ACCESS_READ) as data:
+            need(hashlib.sha256(data).hexdigest() == identity['sha256'],'JAVASCRIPT_BUNDLE_HASH')
+            observed=data.find(b'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03') >= 0
+        need(stamp(os.fstat(descriptor)) == stamp(before) and stamp(path.lstat()) == stamp(before),
+             'JAVASCRIPT_BUNDLE_CHANGED')
+    finally:os.close(descriptor)
+    need(n.stage_file_digest(path,n.MAX_APP) == identity,'JAVASCRIPT_BUNDLE_CHANGED')
+    need(observed is expected,'DIAGNOSTIC_BUNDLE_ISOLATION')
+    return {'diagnostic_marker_present':observed,**identity}
+
+
+def retain_applied_outputs(n,derived,evidence):
+    evidence.mkdir()
+    rows=[]
+    for index,path in enumerate(sorted(derived.rglob('*.xcent*'))):
+        identity=n.stage_file_digest(path,65536)
+        destination=evidence/(str(index)+'-'+path.name)
+        destination.write_bytes(n.read_native_file(path))
+        if path.suffix == '.xcent':
+            value=plistlib.loads(n.read_native_file(path))
+            if value.get('application-identifier','').startswith(PREFIX):
+                bundle=value['application-identifier'][len(PREFIX):]
+                validate_entitlements(value,bundle)
+                need(path.name in {PRODUCTS[bundle]+'.app-Simulated.xcent',PRODUCTS[bundle]+'.app.xcent'},
+                     'APP_ENTITLEMENTS_ON_NESTED_PRODUCT')
+        rows.append({'generated_path':str(path.relative_to(derived)),'evidence':destination.name,**identity})
+    need(rows,'GENERATED_XCENT_OUTPUT_REQUIRED')
+    n.write_json(evidence/'INDEX.json',rows)

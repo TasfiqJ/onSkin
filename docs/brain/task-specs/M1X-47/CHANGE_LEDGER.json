@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "FROZEN",
+  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -1237,6 +1237,123 @@
       "simulator_local_ad_hoc_signing_authorized": true,
       "device_distribution_account_certificate_provisioning_or_paid_changes_authorized": false,
       "finite_cumulative_paths": 31
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "recorded_utc": "2026-11-05T23:20:44.467566+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 18429,
+          "preimage_sha256": "54b961b373a48124164ec9496271823f830072885e7cf4fdd3fc50247b200e57"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 5702,
+          "preimage_sha256": "e0117aa3b95700238b920ba629909f96563b3b7eab2d57bc9609a0a144dfe9f6"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 157951,
+          "preimage_sha256": "aca2dd5db6f26a207cedd88d8a3a566504c63f8f36b764bfc25d4756de9697f2"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 80833,
+          "preimage_sha256": "90158751415feeef40d921548a18ae2b5a148e685d1e3189a74dd9e7af09c7df"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7039,
+          "preimage_sha256": "aae5b7f8bff923d6de06c4cf2f9b2ab64b1454b70049f14cdfaa4f08e168b49c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7287,
+          "preimage_sha256": "1c4ffa0ccb137906bbf12c6da892bccd9c371443927747020b7a4b9691e7de7c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 52708,
+          "preimage_sha256": "5075b3c5839833bdc55763fac90681a96b5096a8e283315ef38dcd5582095262"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 42934,
+          "preimage_sha256": "648da185ea57f223f1b863595829f281acba137fc3af9e79f10f36e7c59168f7"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14516,
+          "preimage_sha256": "eac9f9e1334afd3c18c494b9899a9d6f412b474cfa52ccf51b8b8c56d0ba8fa1"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11314,
+          "preimage_sha256": "8a526038ef45bf17f213e3df13f2db6aa969804744ad8d3d88ef1343b89a85b8"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 54344,
+          "preimage_sha256": "400082e8ca6a76582cf115a6df36298158b24937da250317b8327c9f2816ce80"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "602ee00bed53f65dfc362beda19ffa6624904932",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 75156,
+          "preimage_sha256": "a2f14f7c1a8adb0bb344f6b0492c235491e98029f81e24cf988b7a2af76ee329"
+        }
+      ],
+      "causal_need": "Preserved attempt18 actual Xcode success then strict-reader API TypeError; integrate actual app-target-only Simulator signing, app-process SecureStore diagnostic and restored ordinary product",
+      "invariant": "No global file-reader relaxation, app entitlement leakage, production/device signing change, recovery bypass, or tiny-probe runtime admission",
+      "validation": [
+        "large actual Mach-O bounded read",
+        "empty signature versus exact linked simulated entitlement",
+        "target SDK isolation",
+        "real SecureStore absent/write/read/update/restart/delete followed by ordinary without diagnostics",
+        "strict signed producer/consumer identity"
+      ],
+      "native_attempt18": {
+        "run": 42126002838,
+        "job": 127590255721,
+        "head": "602ee00bed53f65dfc362beda19ffa6624904932",
+        "result": "FAILED_BEFORE_KEYCHAIN",
+        "material_cause": "inspect_product called one-argument read_native_file with two positional arguments",
+        "xcode_compile_link_local_sign": "PASS",
+        "install_launch_keychain": "NOT_RUN"
+      },
+      "remaining_attempts": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

@@ -1,4 +1,4 @@
-"""Bounded unsigned Simulator execution; every PASS requires an executed command.
+"""Bounded Simulator execution; every PASS requires an executed command.
 
 The finite build, ordinary-runtime and internal-runtime stages preserve source
 and artifact custody. They never admit an owner, enable a provider, sign a
@@ -59,7 +59,21 @@ PROVIDER_KEYS = (
 
 UNSIGNED = ['CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_IDENTITY=',
             'COMPILER_INDEX_STORE_ENABLE=NO']
+# Historical UNSIGNED flags above remain the pre-C03 witness. These command-line
+# flags apply only to asserted iphonesimulator builds; app entitlements are a
+# generated app-target SDK-conditional setting, never a global Pod/framework flag.
 SIMULATOR_BUILD_FLAGS = [*UNSIGNED, 'ARCHS=x86_64']
+APP_SIMULATOR_BUILD_FLAGS = ['CODE_SIGNING_ALLOWED=YES', 'CODE_SIGNING_REQUIRED=NO',
+    'CODE_SIGN_IDENTITY=-', 'DEVELOPMENT_TEAM=', 'PROVISIONING_PROFILE=',
+    'PROVISIONING_PROFILE_SPECIFIER=', 'COMPILER_INDEX_STORE_ENABLE=NO', 'ARCHS=x86_64']
+
+
+def simulator_signing():
+    spec = importlib.util.spec_from_file_location('c47_simulator_signing',
+        Path(__file__).with_name('simulator_signing47.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def require(value, code):
@@ -987,7 +1001,7 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     receipt_raw = read_native_file(producer / 'app-artifact.json')
     inventory_raw = read_native_file(producer / 'app-inventory.json')
     receipt, inventory = stage_json(receipt_raw), stage_json(inventory_raw)
-    require(receipt.get('file') == 'unsigned-simulator-app.tar.gz' and
+    require(receipt.get('file') == 'signed-simulator-app.tar.gz' and
             receipt.get('source_head') == expected_head and
             receipt.get('configuration') == 'Release' and receipt.get('lane') == 'normal-staging' and
             receipt.get('standalone_embedded_javascript') is True and
@@ -1034,6 +1048,10 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
         r.text('imported-product-build-version', ['xcrun', 'vtool', '-show-build', binary]), architecture)
     require((bundle, executable, archs) == (receipt['bundle_id'], receipt['executable'], receipt['architectures']),
             'IMPORTED_APP_CURRENT_PRODUCT_IDENTITY')
+    signing = simulator_signing().inspect_product(r, sys.modules[__name__], app, bundle, 'imported-signed-product')
+    require(signing == receipt.get('simulator_signing'), 'IMPORTED_POST_SIGNING_IDENTITY')
+    require(simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) ==
+            receipt.get('ordinary_javascript'), 'IMPORTED_ORDINARY_WITHOUT_DIAGNOSTICS')
     provenance = {'origin': 'AUTHENTICATED_PRODUCER_APP_NOT_COMPILED_IN_THIS_JOB',
         'source_head': expected_head, 'source_tree': inventory['source']['tree'],
         'producer_app_receipt_sha256': hashlib.sha256(receipt_raw).hexdigest(),
@@ -1061,7 +1079,7 @@ class Runner:
             'lane': 'normal-staging', 'internal_supported_owner': 'NOT_RUN',
             'widget_extension': 'EXCLUDED_BY_EXISTING_SIMULATOR_PROFILE',
             'campaign_candidate_complete': False, 'acceptance_granted': False, 'release': 'NO_GO',
-            'limitations': ['Simulator only; no physical iPhone, power-loss, signing, camera/OCR accuracy, provider, clinical, or owner admission'],
+            'limitations': ['Simulator only; no physical iPhone, power-loss, device/distribution signing, camera/OCR accuracy, provider, clinical, or owner admission'],
         }
         self.persist()
 
@@ -1298,6 +1316,7 @@ def prepare(r, source_controls=True):
     require(tools['xcode'].startswith('Xcode 26.4'), 'XCODE_VERSION')
     require_simulator_host(tools['architecture'])
     tools['simulator_build_flags'] = SIMULATOR_BUILD_FLAGS
+    tools['app_simulator_build_flags'] = APP_SIMULATOR_BUILD_FLAGS
     tools['runner_image'] = {key: os.environ.get(key) for key in ('ImageOS', 'ImageVersion', 'RUNNER_OS', 'RUNNER_ARCH')}
     tools['build_environment'] = ENVIRONMENT
     write_json(r.output / 'toolchain.json', tools)
@@ -1358,17 +1377,24 @@ def execute(r, compile_only=False):
     require(len(workspaces) == 1, 'WORKSPACE_COUNT')
     workspace = workspaces[0]
     scheme = workspace.stem
-    r.run('native-build-settings', ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
-                                   '-configuration', 'Release', '-sdk', 'iphonesimulator', *SIMULATOR_BUILD_FLAGS, '-showBuildSettings'], timeout=120)
+    signing = simulator_signing()
+    bundle_id = 'com.layerwell.app.staging'
+    ent = signing.configure_app(r, sys.modules[__name__], ios, bundle_id)
+    signing.check_effective_app(r, sys.modules[__name__], ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
+        '-configuration', 'Release', '-sdk', 'iphonesimulator', *APP_SIMULATOR_BUILD_FLAGS],
+        bundle_id, ent, 'native-build-settings')
     r.passed('native-generation', {'workspace': str(workspace), 'scheme': scheme,
                                    'inputs': {p.name: sha(p) for p in native.iterdir() if p.is_file()}})
     products = Path(os.environ['RUNNER_TEMP']) / 'c47-native-products'
     products.mkdir(exist_ok=False)
     derived = products / 'derived'
-    r.run('native-build', ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
+    build_argv = ['xcodebuild', '-workspace', workspace, '-scheme', scheme,
                           '-configuration', 'Release', '-sdk', 'iphonesimulator',
                           '-destination', 'generic/platform=iOS Simulator', '-derivedDataPath', derived,
-                          '-resultBundlePath', products / 'build.xcresult', *SIMULATOR_BUILD_FLAGS, 'build'], timeout=3000)
+                          *APP_SIMULATOR_BUILD_FLAGS]
+    signing.run_app_diagnostic(r, sys.modules[__name__], ios, build_argv, products, bundle_id, head)
+    r.run('native-build', build_argv + ['-resultBundlePath', products / 'build.xcresult', 'build'], timeout=3000)
+    signing.retain_applied_outputs(sys.modules[__name__], derived, r.output/'simulator-signing/applied-xcent')
     r.source_proof('source-after-build', head, allow_generation=True)
     apps = list((derived / 'Build/Products/Release-iphonesimulator').glob('*.app'))
     require(len(apps) == 1, 'PRODUCT_COUNT')
@@ -1508,12 +1534,15 @@ def retain_app(r, app, products, head, architecture, configuration, lane):
         r.text('product-file', ['file', binary]),
         r.text('product-architectures', ['lipo', '-archs', binary]),
         r.text('product-build-version', ['xcrun', 'vtool', '-show-build', binary]), architecture)
+    signing = simulator_signing().inspect_product(r, sys.modules[__name__], app, bundle, 'signed-product')
+    ordinary_js = simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) if configuration == 'Release' else None
     write_json(r.output / 'app-inventory.json', {'source': r.receipt['source'], 'lane': lane,
+                                               'simulator_signing': signing, 'ordinary_javascript': ordinary_js,
                                                'configuration': configuration, 'files': bundle_inventory(app)})
     native = r.output / 'generated-native'
     native.mkdir(exist_ok=True)
     shutil.copy2(app / 'Info.plist', native / 'app-Info.plist')
-    name = 'unsigned-simulator-app.tar.gz' if lane == 'normal-staging' else 'internal-debug-simulator-app.tar.gz'
+    name = 'signed-simulator-app.tar.gz' if lane == 'normal-staging' else 'signed-internal-debug-simulator-app.tar.gz'
     archive = products / name
     with tarfile.open(archive, 'w:gz', dereference=False) as target:
         target.add(app, arcname=app.name)
@@ -1521,6 +1550,7 @@ def retain_app(r, app, products, head, architecture, configuration, lane):
                'inventory_sha256': sha(r.output / 'app-inventory.json'), 'source_head': head,
                'bundle_id': bundle, 'executable': executable_name, 'architectures': archs,
                'platform': 'iOS Simulator', 'lane': lane, 'configuration': configuration,
+               'simulator_signing': signing, 'ordinary_javascript': ordinary_js,
                'standalone_embedded_javascript': configuration == 'Release',
                'not_an_iphone_or_testflight_release': True}
     write_json(r.output / 'app-artifact.json', receipt)
@@ -1595,7 +1625,7 @@ def retain_result_bundles(r):
     if not temporary:
         return
     products = Path(r.receipt.get('products_directory', str(Path(temporary) / 'c47-native-products')))
-    for name in ['build.xcresult', 'ui.xcresult', 'ui-core.xcresult', 'ui-rights.xcresult',
+    for name in ['build.xcresult', 'keychain-build.xcresult', 'ui.xcresult', 'ui-core.xcresult', 'ui-rights.xcresult',
                  'ui-export.xcresult', 'ui-export-cleanup.xcresult',
                  'ui-larger-text.xcresult']:
         source = products / name
@@ -2198,14 +2228,22 @@ def verify_build_producer(r, provenance):
             receipt.get('stages', {}).get('compiled', {}).get('status') == 'PASS' and
             not any(stage in receipt['stages'] for stage in ('installed', 'launched', 'normal-staging-ui')),
             'BUILD_PRODUCER_STAGE')
+    require(receipt['stages'].get('app-process-keychain', {}).get('status') == 'PASS',
+            'BUILD_PRODUCER_REAL_APP_KEYCHAIN_REQUIRED')
     tools = stage_json(read_native_file(directory / 'toolchain.json'))
     require(tools.get('build_environment') == ENVIRONMENT and tools.get('architecture') == 'x86_64' and
             tools.get('node') == 'v22.22.2' and tools.get('npm') == '11.20.0' and
             tools.get('xcode', '').startswith('Xcode 26.4') and
-            tools.get('simulator_build_flags') == SIMULATOR_BUILD_FLAGS, 'BUILD_PRODUCER_LANE')
+            tools.get('simulator_build_flags') == SIMULATOR_BUILD_FLAGS and
+            tools.get('app_simulator_build_flags') == APP_SIMULATOR_BUILD_FLAGS, 'BUILD_PRODUCER_LANE')
     for name in ('normal-install', 'postinstall-check', 'swift-behavior47', 'generated47-controls',
                  'current-generated47-source', 'current-generated47-native', 'current-generated47-resolved',
                  'pods', 'product-file', 'product-architectures', 'product-build-version'):
+        executed_producer_command(receipt, directory, name)
+    for name in ('configure-simulator-app-target','native-build-settings','app-keychain-diagnostic-build',
+                 'app-keychain-diagnostic-verify-signature','signed-product-verify-signature',
+                 *('app-keychain-launch-'+phase for phase in ('first','relaunch','delete')),
+                 *('app-keychain-terminate-'+phase for phase in ('first','relaunch','delete'))):
         executed_producer_command(receipt, directory, name)
     control, logs = executed_producer_command(receipt, directory, 'generated47-controls', read_output=True)
     full_generated_control_proof(control.get('argv'), b'\n'.join(logs),
@@ -2213,7 +2251,7 @@ def verify_build_producer(r, provenance):
     build, _ = executed_producer_command(receipt, directory, 'native-build')
     argv = build.get('argv', [])
     require(argv and argv[0] == 'xcodebuild' and argv[-1] == 'build' and
-            all(flag in argv for flag in SIMULATOR_BUILD_FLAGS) and
+            all(flag in argv for flag in APP_SIMULATOR_BUILD_FLAGS) and
             argv[argv.index('-configuration') + 1] == 'Release' and
             argv[argv.index('-sdk') + 1] == 'iphonesimulator', 'BUILD_PRODUCER_REAL_RELEASE_BUILD')
     producer_final_source_matches(r, receipt, directory, 'source-after-build.json')
@@ -2434,11 +2472,15 @@ def execute_internal(parent, normal_evidence=None):
         require(len(workspaces) == 1, 'INTERNAL_WORKSPACE_COUNT')
         workspace = workspaces[0]
         derived = products / 'derived'
-        child.run('internal-native-build-settings', ['xcodebuild', '-workspace', workspace, '-scheme', workspace.stem,
-            '-configuration', 'Debug', '-sdk', 'iphonesimulator', *SIMULATOR_BUILD_FLAGS, '-showBuildSettings'], timeout=120)
+        signing = simulator_signing()
+        ent = signing.configure_app(child, sys.modules[__name__], ios, 'com.layerwell.app.development')
+        signing.check_effective_app(child, sys.modules[__name__], ['xcodebuild', '-workspace', workspace,
+            '-scheme', workspace.stem, '-configuration', 'Debug', '-sdk', 'iphonesimulator', *APP_SIMULATOR_BUILD_FLAGS],
+            'com.layerwell.app.development', ent, 'internal-native-build-settings')
         child.run('internal-native-build', ['xcodebuild', '-workspace', workspace, '-scheme', workspace.stem,
             '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-destination', 'generic/platform=iOS Simulator',
-            '-derivedDataPath', derived, '-resultBundlePath', products / 'build.xcresult', *SIMULATOR_BUILD_FLAGS, 'build'], timeout=2400)
+            '-derivedDataPath', derived, '-resultBundlePath', products / 'build.xcresult', *APP_SIMULATOR_BUILD_FLAGS, 'build'], timeout=2400)
+        signing.retain_applied_outputs(sys.modules[__name__], derived, output/'simulator-signing/applied-xcent')
         child.source_proof('source-after-internal-build', head, allow_generation=True)
         apps = list((derived / 'Build/Products/Debug-iphonesimulator').glob('*.app'))
         require(len(apps) == 1, 'INTERNAL_PRODUCT_COUNT')

@@ -32,6 +32,14 @@ export const SOURCE_PATHS47 = [
 ].sort();
 export const PODS47 = [{ name: 'GoogleUtilities/Environment', modular_headers: true },
   { name: 'RecaptchaInterop', modular_headers: true }];
+export const SIMULATOR_SIGNING03 = {
+  authority: 'BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03',
+  sdk: 'iphonesimulator', mechanism: 'XCODE_APP_TARGET_SDK_CONDITIONAL_LINKED_SIMULATED_ENTITLEMENTS',
+  prefix: 'C47SIMTEST.', bundles: ['com.layerwell.app.staging', 'com.layerwell.app.development'],
+  appleTeam: false, profiles: false, deviceSigning: false, sharing: false,
+  appEntitlementsOnFrameworksOrTestHost: false,
+  appProcessSecureStoreRequired: true, ordinaryWithoutDiagnosticRebuildRequired: true,
+};
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const BASE = '02aa4ba879fb844f3ca0aa929591203ee45f4163';
 const BASE_TREE = '02f4b093d399631c4e36b32bf163fa543b61fc3e';
@@ -123,7 +131,7 @@ export function strictJson47(raw) {
 export function validateDescriptor47(value) {
   same(Object.keys(value).sort(), ['schemaVersion', 'kind', 'authority', 'repository', 'acceptedParent',
     'predecessor46', 'sourceBinding', 'sourcePins', 'registry', 'installedConsumers', 'generatedTransition',
-    'obligations', 'claims', 'admissions', 'release', 'swiftSourceSuccession'].sort());
+    'obligations', 'claims', 'admissions', 'release', 'swiftSourceSuccession', 'simulatorSigning03'].sort());
   same(value.schemaVersion, 1);
   same(value.kind, 'ios_generated_input_succession47_source_candidate');
   same(value.authority, 'BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01');
@@ -146,6 +154,7 @@ export function validateDescriptor47(value) {
     assert.ok(Number.isSafeInteger(pin.bytes) && pin.bytes > 0 && /^[a-f0-9]{64}$/.test(pin.sha256));
   }
   validateSwiftSuccession47(value.swiftSourceSuccession);
+  same(value.simulatorSigning03, SIMULATOR_SIGNING03);
   const transition = value.generatedTransition;
   same(Object.keys(transition).sort(), ['property', 'beforeState', 'pods', 'representation',
     'propertiesPreimage', 'podfilePreimage', 'scope', 'primarySources', 'allowedProfiles',
