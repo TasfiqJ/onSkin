@@ -51,8 +51,8 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 161067,
-      "sha256": "c9f23b67a6f50967eaa76ec2b5cf94cef24f88f1af573364c6494888f2d093b0"
+      "bytes": 161174,
+      "sha256": "a5160aa653c34c98ae79ed971928b58bb116527386e9d7621d396b0ab8ee6cb7"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
@@ -71,13 +71,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.py",
-      "bytes": 37440,
-      "sha256": "aaf5f0b27dd24c5d9793781b5933525ae848d4fccd8360e681e1a13a640ead58"
+      "bytes": 38357,
+      "sha256": "97492283cc236631d3a46246349c9648a7e2f4b80012701ae5e97946afafa6d1"
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
-      "bytes": 12548,
-      "sha256": "eb35ba844e2bc50747c5a940804e57d554a01142b7907ca02aa10215bbc8d8b3"
+      "bytes": 13765,
+      "sha256": "a0cd1f5a816158b7800fd7082e183eef4944cd734cb98a77f3cf7c97a523d376"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

@@ -63,9 +63,9 @@ UNSIGNED = ['CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_ID
 # flags apply only to asserted iphonesimulator builds; app entitlements are a
 # generated app-target SDK-conditional setting, never a global Pod/framework flag.
 SIMULATOR_BUILD_FLAGS = [*UNSIGNED, 'ARCHS=x86_64']
-APP_SIMULATOR_BUILD_FLAGS = ['CODE_SIGNING_ALLOWED=YES', 'CODE_SIGNING_REQUIRED=NO',
-    'CODE_SIGN_IDENTITY=-', 'DEVELOPMENT_TEAM=', 'PROVISIONING_PROFILE=',
-    'PROVISIONING_PROFILE_SPECIFIER=', 'COMPILER_INDEX_STORE_ENABLE=NO', 'ARCHS=x86_64']
+# Leave every Pod/framework's original settings intact. The app's seven local
+# signing values exist exclusively in its generated Simulator-conditional keys.
+APP_SIMULATOR_BUILD_FLAGS = ['COMPILER_INDEX_STORE_ENABLE=NO', 'ARCHS=x86_64']
 
 
 def simulator_signing():
@@ -1049,6 +1049,7 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     require((bundle, executable, archs) == (receipt['bundle_id'], receipt['executable'], receipt['architectures']),
             'IMPORTED_APP_CURRENT_PRODUCT_IDENTITY')
     signing = simulator_signing().inspect_product(r, sys.modules[__name__], app, bundle, 'imported-signed-product')
+    simulator_signing().validate_ordinary_product(signing)
     require(signing == receipt.get('simulator_signing'), 'IMPORTED_POST_SIGNING_IDENTITY')
     require(simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) ==
             receipt.get('ordinary_javascript'), 'IMPORTED_ORDINARY_WITHOUT_DIAGNOSTICS')
@@ -1535,6 +1536,7 @@ def retain_app(r, app, products, head, architecture, configuration, lane):
         r.text('product-architectures', ['lipo', '-archs', binary]),
         r.text('product-build-version', ['xcrun', 'vtool', '-show-build', binary]), architecture)
     signing = simulator_signing().inspect_product(r, sys.modules[__name__], app, bundle, 'signed-product')
+    simulator_signing().validate_ordinary_product(signing)
     ordinary_js = simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) if configuration == 'Release' else None
     write_json(r.output / 'app-inventory.json', {'source': r.receipt['source'], 'lane': lane,
                                                'simulator_signing': signing, 'ordinary_javascript': ordinary_js,

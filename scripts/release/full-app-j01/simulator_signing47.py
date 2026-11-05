@@ -125,6 +125,7 @@ def inspect_binary(n, path):
         with mmap.mmap(descriptor, 0, access=mmap.ACCESS_READ) as data:
             need(hashlib.sha256(data).hexdigest() == identity['sha256'], 'APP_BINARY_HASH')
             facts = macho_entitlements(data)
+            facts['diagnostic_native_hook_present'] = data.find(b'C47AppKeychainLaunch.json') >= 0
         need(stamp(os.fstat(descriptor)) == stamp(before) and
              stamp(path.lstat()) == stamp(before), 'APP_BINARY_READ_RACE')
     finally:
@@ -153,6 +154,11 @@ def read_receipt(n, path):
     raw = n.read_native_file(path)
     need(0 < len(raw) <= 65536, 'APP_RECEIPT_BOUND')
     return raw
+
+
+def validate_ordinary_product(product):
+    need(product.get('effective',{}).get('diagnostic_native_hook_present') is False,
+         'NATIVE_DIAGNOSTIC_IN_ORDINARY_PRODUCT')
 
 
 def inspect_product(r, n, app, bundle, prefix):
@@ -457,6 +463,8 @@ def validate_app_command(argv,bundle):
                         '-allowProvisioningUpdates','-allowProvisioningDeviceRegistration'} for arg in argv),
          'DISTRIBUTION_OR_ACCOUNT_COMMAND_FORBIDDEN')
     need(not any(arg.startswith('CODE_SIGN_ENTITLEMENTS=') for arg in argv),'GLOBAL_APP_ENTITLEMENTS_FORBIDDEN')
+    need(not any(arg.startswith(('CODE_SIGN','DEVELOPMENT_TEAM=','PROVISIONING_PROFILE')) for arg in argv),
+         'GLOBAL_SIGNING_OVERRIDE_FORBIDDEN')
 
 
 # Separate Release diagnostic: use the installed Expo API with its real default
@@ -508,7 +516,11 @@ void (async () => {
 
 APP_KEYCHAIN_SWIFT = r'''
     // Separate C47 diagnostic build only; restored before the ordinary build.
-    let c47Launch: [String: Any] = ["schema": 1, "head": "HEAD47", "bundle": Bundle.main.bundleIdentifier ?? "", "pid": Int(ProcessInfo.processInfo.processIdentifier), "phase": ProcessInfo.processInfo.arguments.last ?? "invalid"]
+    let c47Arguments = ProcessInfo.processInfo.arguments
+    guard let c47Index = c47Arguments.firstIndex(of: "--c47-keychain-phase"), c47Index + 1 < c47Arguments.count,
+          c47Arguments.filter({ $0 == "--c47-keychain-phase" }).count == 1,
+          ["first", "relaunch", "delete"].contains(c47Arguments[c47Index + 1]) else { fatalError("C47 diagnostic phase required") }
+    let c47Launch: [String: Any] = ["schema": 1, "head": "HEAD47", "bundle": Bundle.main.bundleIdentifier ?? "", "pid": Int(ProcessInfo.processInfo.processIdentifier), "phase": c47Arguments[c47Index + 1]]
     let c47Documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     do {
       let c47Data = try JSONSerialization.data(withJSONObject: c47Launch, options: [.sortedKeys])
@@ -550,6 +562,7 @@ def run_app_diagnostic(r,n,ios,argv,products,bundle,head):
         app=products/'derived/Build/Products/Release-iphonesimulator/LayerwellStaging.app'
         check_diagnostic_bundle(n,app,True)
         product=inspect_product(r,n,app,bundle,'app-keychain-diagnostic')
+        need(product['effective']['diagnostic_native_hook_present'] is True,'ACTUAL_DIAGNOSTIC_HOOK_REQUIRED')
         n.write_json(evidence/'app-inventory.json',{'source':r.receipt['source'],
             'configuration':'Release','lane':'SEPARATE_APP_SECURESTORE_DIAGNOSTIC',
             'product':product,'files':n.bundle_inventory(app)})
@@ -567,7 +580,7 @@ def run_app_diagnostic(r,n,ios,argv,products,bundle,head):
         for phase in PHASE_OPERATIONS:
             path=data/'Documents'/('C47AppKeychain-'+phase+'.json')
             need(not path.exists(),'NO_STALE_DIAGNOSTIC_RECEIPT')
-            output=r.text('app-keychain-launch-'+phase,['xcrun','simctl','launch',device,bundle,phase],timeout=120)
+            output=r.text('app-keychain-launch-'+phase,['xcrun','simctl','launch',device,bundle,'--c47-keychain-phase',phase],timeout=120)
             match=re.fullmatch(re.escape(bundle)+r': ([1-9][0-9]*)',output)
             need(match,'APP_DIAGNOSTIC_LAUNCH_PID');pid=int(match.group(1));pids.append(pid)
             deadline=min(time.monotonic()+90,r.deadline-30)

@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
+  "inventory_state": "FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -1354,8 +1354,72 @@
         24,
         25
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "recorded_utc": "2026-11-05T23:48:03.474821+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "preimage_head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+          "preimage_bytes": 37440,
+          "preimage_sha256": "aaf5f0b27dd24c5d9793781b5933525ae848d4fccd8360e681e1a13a640ead58"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+          "preimage_head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+          "preimage_bytes": 12548,
+          "preimage_sha256": "eb35ba844e2bc50747c5a940804e57d554a01142b7907ca02aa10215bbc8d8b3"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+          "preimage_bytes": 161067,
+          "preimage_sha256": "c9f23b67a6f50967eaa76ec2b5cf94cef24f88f1af573364c6494888f2d093b0"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+          "preimage_bytes": 15092,
+          "preimage_sha256": "b4bc351ec1f6bd84538aacd0fe1ec15f2d02b048698740358aab2ca4b136f15d"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+          "preimage_bytes": 80596,
+          "preimage_sha256": "c0a4c4dd9bafb1fa3e016070c725b2080da5f4dff1f174410d1961da7e3aa946"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+          "preimage_bytes": 57099,
+          "preimage_sha256": "b17fca8a9ceecabc7ee344b3496d55d007f99ea7fdb1c49cd0f15c58fc9f3683"
+        }
+      ],
+      "causal_need": "Pre-dispatch isolation review: leave Pod/framework signing settings intact, place all signing overrides exclusively on application-target Simulator SDK settings; explicit diagnostic phase argument and ordinary native-hook absence in actual binary",
+      "invariant": "No production/device or other-target override; actual Keychain phase PID binding; neither diagnostic native hook nor diagnostic JavaScript admitted as ordinary app",
+      "validation": "New ordinary-binary marker refusal, existing SDK/target/account/sharing and actual app receipt controls; current source pins/SOURCE and whole-scope recheck, actual Xcode required",
+      "finite_cumulative_paths": 31,
+      "validation_before_this_additive_isolation": {
+        "head": "af95f71a76fc1e67f4f9bd771747993b507cd841",
+        "groups": 15,
+        "all_passed": true,
+        "uncached_root_passes": 6979,
+        "typecheck_tasks": 3,
+        "lint_tasks": 3,
+        "types_lint_note": "Existing package has no lint configured; no lint claim for it"
+      },
+      "remaining_attempts": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
     }
   ],
-  "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
-  "freeze_note": "Finite cumulative exercised inventory24 after attempt3 generated-only repair. Original frozen plan bytes unchanged. Any later causal amendment requires preimages and fresh verification/reseal."
+  "frozen_utc": "2026-11-05T23:48:03.474821+00:00",
+  "freeze_note": "Finite31 cumulative paths; all existing preimages preserved. Current C03 app-target-only Simulator/diagnostic correction; no source or owner acceptance."
 }

@@ -168,12 +168,28 @@ class SimulatorSigning47(unittest.TestCase):
         bundle='com.layerwell.app.staging';s.validate_app_command(argv,bundle)
         for wrong in [argv+['-allowProvisioningUpdates'],argv+['archive'],argv+['-exportArchive'],
             argv+['CODE_SIGN_ENTITLEMENTS=/tmp/app.entitlements'],
+            argv+['CODE_SIGN_IDENTITY=Apple Distribution'],argv+['DEVELOPMENT_TEAM=REALTEAM00'],
+            argv+['PROVISIONING_PROFILE=some-profile'],argv+['CODE_SIGNING_ALLOWED=YES'],
             [item.replace('iphonesimulator','iphoneos') for item in argv],
             [item.replace('LayerwellStaging','OtherTarget') for item in argv]]:
             with self.assertRaises(ValueError):s.validate_app_command(wrong,bundle)
         n=self.native()
-        self.assertIn('CODE_SIGNING_ALLOWED=YES',n.APP_SIMULATOR_BUILD_FLAGS)
+        self.assertEqual(n.APP_SIMULATOR_BUILD_FLAGS,['COMPILER_INDEX_STORE_ENABLE=NO','ARCHS=x86_64'])
         self.assertIn('CODE_SIGNING_ALLOWED=NO',n.SIMULATOR_BUILD_FLAGS)
         self.assertFalse(any(x.startswith('CODE_SIGN_ENTITLEMENTS=') for x in n.APP_SIMULATOR_BUILD_FLAGS))
+
+    def test_ordinary_product_refuses_the_actual_native_diagnostic_hook_or_missing_check(self):
+        s.validate_ordinary_product({'effective':{'diagnostic_native_hook_present':False}})
+        for wrong in [{},{'effective':{}},{'effective':{'diagnostic_native_hook_present':True}},
+                      {'effective':{'diagnostic_native_hook_present':0}}]:
+            with self.assertRaises(ValueError):s.validate_ordinary_product(wrong)
+        n=self.native()
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            path=Path(directory)/'actual-byte-fixture'
+            raw=struct.pack('<8I',0xfeedfacf,0x01000007,3,2,1,16,0,0)+struct.pack('<4I',0x1d,16,48,4)+b'fake'
+            path.write_bytes(raw)
+            self.assertFalse(s.inspect_binary(n,path)['diagnostic_native_hook_present'])
+            path.write_bytes(raw+b'C47AppKeychainLaunch.json')
+            self.assertTrue(s.inspect_binary(n,path)['diagnostic_native_hook_present'])
 
 if __name__=='__main__':unittest.main()
