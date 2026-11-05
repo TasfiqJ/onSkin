@@ -639,6 +639,31 @@
           "preimage_sha256": "4709d72b82c762372efb4527ee3af562754e75f0e08e537edc16ba38580beee4"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T00:47:57.141718+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "docs/phase-9/ios-generated-input-succession47.v1.json"
+      ],
+      "reason": "Actual committed release-install bridge at01f14437 exit1 before tests: Node paths[0] object error. Preserved raw local RED shows remaining resolve(root,auditorPath) receives checked-root object. Correct only release-mode dynamic import to root.absolute; existing actual21 child admission control catches it. No production/historical native inputs changed; no native attempt consumed.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "01f14437e7640e422e0bc7e882420a895aa507eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 52580,
+          "preimage_sha256": "f99530e295ba0682f82f10118a35b4264d1f88bb1c59e97231a42d49ccac553b"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "01f14437e7640e422e0bc7e882420a895aa507eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14137,
+          "preimage_sha256": "da186b85b5fce86f13f180f73a0523bd1513a739c61d4d0fef2128fb51ba6bed"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

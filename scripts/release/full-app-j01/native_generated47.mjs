@@ -715,7 +715,7 @@ async function originalProgramBridge47(mode, arguments47) {
     const auditor = readNativeFile46(root, auditorPath);
     same(auditor.bytes, git47(root, 'show', BASE + ':' + auditorPath));
     same(auditor.bytes, git47(root, 'show', source.sourceHead + ':' + auditorPath));
-    releaseInstallOriginalAuditor47 = (await import(pathToFileURL(resolve(root, auditorPath)).href))
+    releaseInstallOriginalAuditor47 = (await import(pathToFileURL(resolve(root.absolute, auditorPath)).href))
       .auditVerificationWiring;
     assert.equal(typeof releaseInstallOriginalAuditor47, 'function');
   }
