@@ -2510,7 +2510,9 @@ def collect(r):
     if device:
         r.run('simulator-diagnostics', ['xcrun', 'simctl', 'spawn', device, 'log', 'show',
                                       '--last', '15m', '--style', 'json', '--predicate',
-                                      'process CONTAINS "Layerwell" OR process CONTAINS "C47NativeUI"'],
+                                      'process CONTAINS "Layerwell" OR process CONTAINS "C47NativeUI" OR '
+                                      '(process == "securityd" AND eventMessage CONTAINS "Layerwell" AND '
+                                      '(eventMessage CONTAINS[c] "entitlement" OR eventMessage CONTAINS "copy_matching"))'],
               timeout=60, required=False, diagnostic=True)
         r.run('simulator-final-devices', ['xcrun', 'simctl', 'list', 'devices', '--json'],
               timeout=30, required=False, diagnostic=True)

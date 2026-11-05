@@ -1024,6 +1024,39 @@
           "preimage_sha256": "425221fafaf61827df444154055f50aa98d96f23bb32f6bc0123176c3337a75d"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T14:01:16.351057+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Before native16 dispatch, inspect actual native15 finalPNG: deletion-recovery-unavailable. Partial app log has SecTaskLoadEntitlements error22 at actual53943 PID; exact underlying SecureStore OSStatus/cause unproven. App remains correctly fail-closed. Extend existing optional60second guest diagnostic predicate to include only securityd entitlement/copy_matching failures mentioning Layerwell, alongside existing app/UI logs. No new command, wait, retry, data mutation, signing/account/entitlement or production behavior change; diagnostic cannot admit a stage. This discriminating diagnostic and bounded120sec required survival queries justify next candidate without blind rerun. All14 groups at preceding0eb708 source passed, raw6979uncached root/3type/3lint/60runtime/current202172/29scope verified; these are not new-head or native claims. Fresh final-source validation/seal/build/ordinary/internal remain necessary. Scope29 unchanged, next16/max18/remaining3, no Mac active, all38/18unaccepted/NO_GO.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "0eb708000b83c2a6d3aa87190367f7c88070151f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 157042,
+          "preimage_sha256": "e8fb6c7b3f607e5043c21f8dda5921a28b88a1922e6a6c70e14814e949e30387"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "0eb708000b83c2a6d3aa87190367f7c88070151f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14138,
+          "preimage_sha256": "f5ffa52c3befc7dd4d1e422d7657790b13f639e0fec1854c9bf1e1b6ddbf6b05"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "0eb708000b83c2a6d3aa87190367f7c88070151f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 51153,
+          "preimage_sha256": "da3dc28c26677a7d761ae28e0c7700c071421b8f750f6f0901d51dc46f3cb673"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
