@@ -1397,7 +1397,7 @@ def run_normal(r, ios, products, app, bundle, head):
         if remaining > 0:
             time.sleep(remaining)
         table = r.text('process-survival-' + str(index), ['xcrun', 'simctl', 'spawn', device,
-                                                         'launchctl', 'list'], timeout=20)
+                                                         'launchctl', 'list'], timeout=120)
         require(any(line.split() and line.split()[0] == str(pid) and bundle in line
                     for line in table.splitlines()), 'APP_PROCESS_DID_NOT_SURVIVE')
     r.run('normal-launch-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
@@ -1541,7 +1541,7 @@ def launch_and_verify(r, device, bundle, arguments=()):
     for index, delay in enumerate([1, 3, 8, 15, 30]):
         time.sleep(max(0, launched_at + delay - time.monotonic()))
         table = r.text('process-survival-' + str(index), ['xcrun', 'simctl', 'spawn', device,
-                                                         'launchctl', 'list'], timeout=20)
+                                                         'launchctl', 'list'], timeout=120)
         require(any(line.split() and line.split()[0] == str(pid) and bundle in line
                     for line in table.splitlines()), 'APP_PROCESS_DID_NOT_SURVIVE')
     return pid

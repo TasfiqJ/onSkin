@@ -1247,5 +1247,46 @@ class StageDriver47Tests(unittest.TestCase):
                     n.producer_final_source_matches(runner, {'source': before}, artifact, 'after.json')
 
 
+class SurvivalQuery47Tests(unittest.TestCase):
+    def test_both_lanes_require_five_completed_same_pid_queries_with_bounded_service_time(self):
+        bundle, device, pid = 'com.layerwell.app.staging', 'fresh-device', 53943
+        for lane in ('normal', 'internal'):
+            for table in (str(pid) + '\t0\tUIKitApplication:' + bundle, '53944\t0\t' + bundle):
+                calls, waits = [], []
+                def text(name, argv, **kwargs):
+                    calls.append((name, argv, kwargs))
+                    return bundle + ': ' + str(pid) if name == 'simulator-launch' else table
+                def stop_after_survival(*args, **kwargs):
+                    raise RuntimeError('survival-complete-before-ui')
+                runner = SimpleNamespace(text=text, run=stop_after_survival,
+                                         output=Path('unused-evidence'))
+                with self.subTest(lane=lane, table=table), \
+                     patch.object(n.time, 'monotonic', return_value=100), \
+                     patch.object(n.time, 'sleep', side_effect=waits.append), \
+                     patch.object(n, 'prepare_simulator', return_value=device), \
+                     patch.object(n, 'install_simulator_app', return_value=Path('installed.app')), \
+                     patch.object(n, 'verify_installed_app'):
+                    def execute():
+                        if lane == 'normal':
+                            n.run_normal(runner, Path('ios'), Path('products'), Path('app'), bundle, 'a' * 40)
+                        else:
+                            return n.launch_and_verify(runner, device, bundle)
+                    if table.startswith(str(pid) + '\t'):
+                        if lane == 'normal':
+                            with self.assertRaisesRegex(RuntimeError, 'survival-complete-before-ui'):
+                                execute()
+                        else:
+                            self.assertEqual(execute(), pid)
+                        self.assertEqual(waits, [1, 3, 8, 15, 30])
+                        self.assertEqual([x[0] for x in calls[1:]], ['process-survival-' + str(i) for i in range(5)])
+                    else:
+                        with self.assertRaisesRegex(ValueError, 'APP_PROCESS_DID_NOT_SURVIVE'):
+                            execute()
+                        self.assertEqual(len(calls), 2)
+                    for _, argv, kwargs in calls[1:]:
+                        self.assertEqual(argv, ['xcrun', 'simctl', 'spawn', device, 'launchctl', 'list'])
+                        self.assertEqual(kwargs, {'timeout': 120})
+
+
 if __name__ == '__main__':
     unittest.main()

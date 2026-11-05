@@ -983,6 +983,47 @@
           "preimage_sha256": "57e3604cf4491511c20e252d4702c5e1bd0a92525419a936b18f623aa8fa77f7"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T13:47:18.625818+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Native14 actual fresh Release compile/link/current source all passed. Native15 raw13419756297/12565177B SHA3073514672956bf33272c98d582fa80fefb505e893414a922ad6a560d09ef4f4 has126ZIPmembers/closed125files and49commands/98streams all exact. Three incomplete optional captures explicitlyFAIL with frozen bytes, no old manifest race. Actual fresh iOS26.4/iPhone17e registry parse, single install191.725sec, real container and authenticated executable69989928B/SHA861ec4a3311a846d55f82592dada0938d01fe07c0a08081e4dedf8ca8e3228d4 passed. Launch returned53943. First launchctl list20second timeout124, despite retained exact53943 target row, so survival/XCTest/internal remain unqualified. Give both existing real survival queries120seconds, retaining five samples over at least30seconds, exact same PID/bundle, mandatory exit0/full capture, no retry/relaunch/erase/reset/daemon changes. Add pure ordinary/internal query timeout/order/PID refusal coverage without changing existing methods or production payload. No assertion weakened or failed output admitted. Current-source changes require fresh complete validation/seal/build then normal then internal, potentially consuming remaining3jobs16through18; oneMac/90job/84coordinator bounds. All38requirements/18gates unaccepted, Security/candidate29/G97unwaived, NO_GO. Scope29 unchanged.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "c472e667f8c436e3d3497fe774f47c8e2e58ce93",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 157040,
+          "preimage_sha256": "4070491f6db8ffbb95cdd839d784e31d66d0f94ad7de032b6a6b4bfca6d768d4"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "c472e667f8c436e3d3497fe774f47c8e2e58ce93",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 77444,
+          "preimage_sha256": "83e84398980ac6386a185b7e9cb8b7ab91e77d7bdd52a9a35c8f16bdcb8254da"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "c472e667f8c436e3d3497fe774f47c8e2e58ce93",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14138,
+          "preimage_sha256": "058f7fecef52dbeb033cdb10644d65304756d7aab3fde1e19d9b63c6e5616ea2"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "c472e667f8c436e3d3497fe774f47c8e2e58ce93",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 49132,
+          "preimage_sha256": "425221fafaf61827df444154055f50aa98d96f23bb32f6bc0123176c3337a75d"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
