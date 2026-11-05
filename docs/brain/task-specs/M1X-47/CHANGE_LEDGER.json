@@ -860,6 +860,47 @@
           "preimage_sha256": "948b245193cc7903603a3d7829118516efdfee74aaf830b56a95d3d467bcda8b"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T08:59:10.907484+00:00",
+      "authorization": "BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02",
+      "paths": [
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        "docs/brain/task-specs/M1X-47/TASK.md"
+      ],
+      "reason": "Pre-dispatch independent review identified installed proof only compared current expected and installed digests; both could drift after prior app inventory. Anchor both bytes/SHA to authenticated producer app inventory (B) or own retained compiled app inventory (C), bind B proof to same A inventory in C, add real file tamper refusal. Preserve production/authority/signing behavior and original21 tests. No native job dispatched. Source b217 partial local checks interrupted before wholeSOURCE; not counted all14PASS. Scope29 unchanged.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "b217d5630bff0947374768f7365411cb6b5b9cee",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 153037,
+          "preimage_sha256": "115289de3004dc36c720efb37562be0ad6b08c4b2554a3e0f62d784f3cf0d04c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "b217d5630bff0947374768f7365411cb6b5b9cee",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 69272,
+          "preimage_sha256": "656334f66a051fd709c89aa4bcce7c240d74ef9353d27e1a7ebe379e1d19413e"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "b217d5630bff0947374768f7365411cb6b5b9cee",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14138,
+          "preimage_sha256": "06ce05e246e0ae012cb8e3c243eedbc43c008734304b4ba687d71f9124101741"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "b217d5630bff0947374768f7365411cb6b5b9cee",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 43315,
+          "preimage_sha256": "088f428f5c91d6a85f0a2357bab5aa8264335e593b752833956cb1513c171fd1"
+        }
+      ]
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",

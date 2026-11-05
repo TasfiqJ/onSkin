@@ -1035,7 +1035,8 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
         'producer_app_receipt_sha256': hashlib.sha256(receipt_raw).hexdigest(),
         'producer_app_archive_sha256': receipt['sha256'], 'producer_app_archive_bytes': receipt['bytes'],
         'producer_app_inventory_sha256': receipt['inventory_sha256'],
-        'configuration': 'Release', 'lane': 'normal-staging', 'bundle_id': bundle,
+        'configuration': 'Release', 'lane': 'normal-staging', 'bundle_id': bundle, 'executable': executable,
+        'authenticated_executable': app_executable_identity(files, executable),
         'current_host_architecture': architecture, 'current_job_product_probes': True,
         'archive_shape': shape, 'acceptance_granted': False, 'release': 'NO_GO'}
     return app, bundle, provenance
@@ -1421,6 +1422,15 @@ def evidence_total(r, root=None):
     return evidence_size(root or getattr(r, 'evidence_root', r.output)) + reserved
 
 
+def app_executable_identity(files, executable):
+    rows = [row for row in files if row.get('path') == executable]
+    require(len(rows) == 1 and rows[0].get('type') == 'file' and
+            type(rows[0].get('bytes')) is int and rows[0]['bytes'] > 0 and
+            isinstance(rows[0].get('sha256'), str) and re.fullmatch(r'[a-f0-9]{64}', rows[0]['sha256']),
+            'AUTHENTICATED_APP_EXECUTABLE_ROW')
+    return {key: rows[0][key] for key in ('bytes', 'sha256')}
+
+
 def verify_installed_app(r, container, app, bundle):
     installed = Path(container).resolve(strict=True)
     info = plistlib.loads(read_native_file(app / 'Info.plist'))
@@ -1428,12 +1438,27 @@ def verify_installed_app(r, container, app, bundle):
     executable = info['CFBundleExecutable']
     require(current.get('CFBundleIdentifier') == bundle == info['CFBundleIdentifier'] and
             current.get('CFBundleExecutable') == executable, 'INSTALLED_PRODUCT_IDENTITY')
+    imported = r.receipt['stages'].get('verified-produced-app', {}).get('details')
+    if imported is not None:
+        require(imported.get('bundle_id') == bundle and imported.get('executable') == executable,
+                'INSTALLED_AUTHENTICATED_PRODUCT_IDENTITY')
+        authenticated = imported['authenticated_executable']
+        inventory_sha256 = imported['producer_app_inventory_sha256']
+    else:
+        compiled = r.receipt['stages']['compiled']['details']
+        raw = read_native_file(r.output / 'app-inventory.json')
+        require(hashlib.sha256(raw).hexdigest() == compiled['inventory_sha256'] and
+                compiled.get('bundle_id') == bundle and compiled.get('executable') == executable,
+                'INSTALLED_RETAINED_COMPILED_INVENTORY')
+        authenticated = app_executable_identity(stage_json(raw)['files'], executable)
+        inventory_sha256 = compiled['inventory_sha256']
     expected = stage_file_digest(app / executable, MAX_APP)
     observed = stage_file_digest(installed / executable, MAX_APP)
-    require(observed == expected, 'INSTALLED_EXECUTABLE_BYTES')
+    require(observed == expected == authenticated, 'INSTALLED_EXECUTABLE_BYTES')
     r.passed('installed', {'udid': r.receipt['simulator']['udid'], 'bundle_id': bundle,
         'source_head': r.receipt['source']['head'], 'installed_executable_sha256': observed['sha256'],
-        'expected_executable_sha256': expected['sha256'],
+        'expected_executable_sha256': expected['sha256'], 'executable_bytes': observed['bytes'],
+        'authenticated_inventory_sha256': inventory_sha256,
         'qualification': 'ACTUAL_INSTALL_ZERO_AND_CONTAINER_LOOKUP_WITH_EXACT_EXECUTABLE_BYTES'})
 
 
@@ -2204,13 +2229,17 @@ def verify_normal_producer(r, provenance, build_provenance):
     require(app.get('source_head') == r.receipt['source']['head'] and
             app.get('source_tree') == r.receipt['source']['tree'] and
             app.get('configuration') == 'Release' and app.get('lane') == 'normal-staging' and
-            app.get('bundle_id') == 'com.layerwell.app.staging' and app.get('current_job_product_probes') is True,
+            app.get('bundle_id') == 'com.layerwell.app.staging' and app.get('executable') == 'LayerwellStaging' and
+            app.get('current_job_product_probes') is True and
+            app.get('authenticated_executable') == r.receipt['stages']['verified-produced-app']['details']['authenticated_executable'] and
+            app.get('producer_app_inventory_sha256') == r.receipt['stages']['verified-produced-app']['details']['producer_app_inventory_sha256'],
             'NORMAL_PRODUCER_APP_IDENTITY')
     installed, launched = stages['installed']['details'], stages['launched']['details']
     require(installed.get('bundle_id') == app['bundle_id'] and
             installed.get('installed_executable_sha256') == installed.get('expected_executable_sha256') and
-            isinstance(installed.get('installed_executable_sha256'), str) and
-            re.fullmatch(r'[a-f0-9]{64}', installed['installed_executable_sha256']) and
+            installed.get('installed_executable_sha256') == app['authenticated_executable']['sha256'] and
+            installed.get('executable_bytes') == app['authenticated_executable']['bytes'] and
+            installed.get('authenticated_inventory_sha256') == app['producer_app_inventory_sha256'] and
             launched.get('bundle_id') == app['bundle_id'] and type(launched.get('pid')) is int and launched['pid'] > 0 and
             type(launched.get('survival_seconds')) is int and launched['survival_seconds'] == 30,
             'NORMAL_PRODUCER_INSTALL_AND_SURVIVAL')

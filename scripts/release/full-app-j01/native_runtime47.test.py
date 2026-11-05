@@ -1048,6 +1048,45 @@ class StageDriver47Tests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'CONTROL_COMMAND'):
                 n.full_generated_control_proof(command, valid, source)
 
+    def test_installed_executable_is_bound_to_previously_authenticated_inventory_in_both_lanes(self):
+        import plistlib
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            app, installed, output = root / 'expected.app', root / 'installed.app', root / 'evidence'
+            for directory in (app, installed, output):
+                directory.mkdir()
+            binary = b'fixture original executable'
+            info = plistlib.dumps({'CFBundleIdentifier': 'com.layerwell.app.staging',
+                                   'CFBundleExecutable': 'LayerwellStaging'})
+            for directory in (app, installed):
+                (directory / 'Info.plist').write_bytes(info)
+                (directory / 'LayerwellStaging').write_bytes(binary)
+            identity = {'bytes': len(binary), 'sha256': hashlib.sha256(binary).hexdigest()}
+            inventory = {'files': [{'path': 'LayerwellStaging', 'type': 'file', **identity}]}
+            n.write_json(output / 'app-inventory.json', inventory)
+            inventory_sha = n.sha(output / 'app-inventory.json')
+            base = {'source': {'head': 'a' * 40}, 'simulator': {'udid': 'current-device'}, 'stages': {}}
+            compiled = {'bundle_id': 'com.layerwell.app.staging', 'executable': 'LayerwellStaging',
+                        'inventory_sha256': inventory_sha}
+            imported = {'bundle_id': compiled['bundle_id'], 'executable': compiled['executable'],
+                        'authenticated_executable': identity, 'producer_app_inventory_sha256': inventory_sha}
+            for lane, details in [('compiled', compiled), ('verified-produced-app', imported)]:
+                receipt = copy.deepcopy(base)
+                receipt['stages'][lane] = {'status': 'PASS', 'details': details}
+                passed = []
+                runner = SimpleNamespace(receipt=receipt, output=output,
+                                         passed=lambda name, proof: passed.append((name, proof)))
+                with patch.object(n, 'read_native_file', side_effect=lambda path: Path(path).read_bytes()):
+                    n.verify_installed_app(runner, installed, app, compiled['bundle_id'])
+                    self.assertEqual(passed[0][1]['authenticated_inventory_sha256'], inventory_sha)
+                    for directory in (app, installed):
+                        (directory / 'LayerwellStaging').write_bytes(b'changed matching executable')
+                    with self.assertRaisesRegex(ValueError, 'INSTALLED_EXECUTABLE_BYTES'):
+                        n.verify_installed_app(runner, installed, app, compiled['bundle_id'])
+                    self.assertEqual(len(passed), 1)
+                for directory in (app, installed):
+                    (directory / 'LayerwellStaging').write_bytes(binary)
+
     def test_large_compiler_stream_is_hashed_and_tampering_or_duplicate_command_refuses(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
