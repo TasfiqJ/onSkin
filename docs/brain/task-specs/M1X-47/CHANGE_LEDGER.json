@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "FROZEN",
+  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -270,6 +270,24 @@
       "causal_need": "Exact CI wiring assertion must cover the authorized current-native47 replacement of two historical identity tools",
       "invariant": "All nine effective checks remain unconditional per branch; original nine retained for non-C47; all other mounted/native/privacy assertions and frozen native witnesses unchanged",
       "validation": "Exact original/C47 workflow branch assertions and unchanged remaining mounted controls; current-source native and full CI"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.py",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": null,
+      "preimage_sha256": null,
+      "causal_need": "Authenticated Continuation03 authorizes only Xcode-supported Simulator-local ad-hoc identity and app-owned minimal entitlement availability. First run one small isolated toolchain probe, then actual current-source staging app/SecureStore/ordinary XCTest/internal journeys. No recovery/gate/storage replacement, foreign or wildcard groups, device/distribution signing, Apple account/certificate/provisioning/keychain inspection, paid runner, host-security bypass or billing changes. Exact current native/input validation, immutable command capture and cross-job app/entitlement identities must remain strict. Separately capture current Expo compatibility inputs and scanner-bootstrap rule bytes before judging causal fixes; do not blindly upgrade or repin.",
+      "invariant": "Original frozen plan and38 ancestors/14prefix preserved; original unsigned RED immutable; normal app behavior, encryption, owner/health authority, explicit save, deletion priority and nondestructive recovery unchanged. All38/18 unaccepted, Security/candidate29/G97 unwaived, NO_GO.",
+      "validation": "Focused signing SDK/product/access-group/production-leakage and forged-artifact refusals; existing native/source/wiring/90-obligation controls; real effective settings, emitted entitlements/signature/MachO, app-owned content-free Keychain CRUD/restart, unchanged named ordinary XCTest before internal; final forced root/type/lint and final-head CI; authenticated fresh return."
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": null,
+      "preimage_sha256": null,
+      "causal_need": "Authenticated Continuation03 authorizes only Xcode-supported Simulator-local ad-hoc identity and app-owned minimal entitlement availability. First run one small isolated toolchain probe, then actual current-source staging app/SecureStore/ordinary XCTest/internal journeys. No recovery/gate/storage replacement, foreign or wildcard groups, device/distribution signing, Apple account/certificate/provisioning/keychain inspection, paid runner, host-security bypass or billing changes. Exact current native/input validation, immutable command capture and cross-job app/entitlement identities must remain strict. Separately capture current Expo compatibility inputs and scanner-bootstrap rule bytes before judging causal fixes; do not blindly upgrade or repin.",
+      "invariant": "Original frozen plan and38 ancestors/14prefix preserved; original unsigned RED immutable; normal app behavior, encryption, owner/health authority, explicit save, deletion priority and nondestructive recovery unchanged. All38/18 unaccepted, Security/candidate29/G97 unwaived, NO_GO.",
+      "validation": "Focused signing SDK/product/access-group/production-leakage and forged-artifact refusals; existing native/source/wiring/90-obligation controls; real effective settings, emitted entitlements/signature/MachO, app-owned content-free Keychain CRUD/restart, unchanged named ordinary XCTest before internal; final forced root/type/lint and final-head CI; authenticated fresh return."
     }
   ],
   "amendments": [
@@ -1057,6 +1075,167 @@
           "preimage_sha256": "da3dc28c26677a7d761ae28e0c7700c071421b8f750f6f0901d51dc46f3cb673"
         }
       ]
+    },
+    {
+      "recorded_utc": "2026-11-05T22:29:06.085174+00:00",
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "intake_bytes": 25066,
+      "intake_sha256": "81ab5c3033594730a50afa072ab7358437535691d31dae943f37856b93971c0d",
+      "paths": [
+        "scripts/release/full-app-j01/simulator_signing47.py",
+        "scripts/release/full-app-j01/simulator_signing47.test.py",
+        "scripts/release/full-app-j01/native_runtime47.py",
+        "scripts/release/full-app-j01/native_runtime47.test.py",
+        "scripts/release/full-app-j01/native_workflow47.test.mjs",
+        "scripts/release/full-app-j01/native_ui47.rb",
+        "scripts/release/full-app-j01/source_completion47.py",
+        "scripts/release/full-app-j01/source_completion47.test.py",
+        "scripts/release/full-app-j01/native_generated47.mjs",
+        "scripts/release/full-app-j01/native_generated47.test.mjs",
+        "docs/phase-9/ios-generated-input-succession47.v1.json",
+        ".github/workflows/campaign47-native-runtime.yml",
+        ".github/workflows/campaign46-technical.yml",
+        ".github/workflows/quality.yml",
+        "docs/brain/task-specs/M1X-47/TASK.md",
+        "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json"
+      ],
+      "reason": "Authenticated Continuation03 authorizes only Xcode-supported Simulator-local ad-hoc identity and app-owned minimal entitlement availability. First run one small isolated toolchain probe, then actual current-source staging app/SecureStore/ordinary XCTest/internal journeys. No recovery/gate/storage replacement, foreign or wildcard groups, device/distribution signing, Apple account/certificate/provisioning/keychain inspection, paid runner, host-security bypass or billing changes. Exact current native/input validation, immutable command capture and cross-job app/entitlement identities must remain strict. Separately capture current Expo compatibility inputs and scanner-bootstrap rule bytes before judging causal fixes; do not blindly upgrade or repin.",
+      "invariant": "Original frozen plan and38 ancestors/14prefix preserved; original unsigned RED immutable; normal app behavior, encryption, owner/health authority, explicit save, deletion priority and nondestructive recovery unchanged. All38/18 unaccepted, Security/candidate29/G97 unwaived, NO_GO.",
+      "validation": "Focused signing SDK/product/access-group/production-leakage and forged-artifact refusals; existing native/source/wiring/90-obligation controls; real effective settings, emitted entitlements/signature/MachO, app-owned content-free Keychain CRUD/restart, unchanged named ordinary XCTest before internal; final forced root/type/lint and final-head CI; authenticated fresh return.",
+      "current_preimages": [
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 157276,
+          "preimage_sha256": "f8e783d6d5fad33a0fdc812c91bb38e1d90b94235af777b222443396a0b7c82a"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 80051,
+          "preimage_sha256": "be7bb1056fe1f2a921ec94a5962991c8be4e6fc505f0cc3b501649a5f5c8cef7"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 6701,
+          "preimage_sha256": "e67d8f3ac0fc4134782c9051139e5f847ee2460974b5f691cae5a2acda8940e6"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7039,
+          "preimage_sha256": "aae5b7f8bff923d6de06c4cf2f9b2ab64b1454b70049f14cdfaa4f08e168b49c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8804,
+          "preimage_sha256": "0c4cee44f68ea4458ad2edba1def992e2e1297d16a216861b7aa8a8df9f8deff"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7434,
+          "preimage_sha256": "f59bb2a9e404b3f34478d989cdecf53191b976a400b754ebbbf9ba244d453ee8"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 52589,
+          "preimage_sha256": "20c2253d56d0078daec60ea36094727d2c56c1acd0732fe3916ce8cb090b887e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 42934,
+          "preimage_sha256": "648da185ea57f223f1b863595829f281acba137fc3af9e79f10f36e7c59168f7"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14138,
+          "preimage_sha256": "ac950fea6099b092c0317a287043b8e1770f4f2250360cebabc82691cc685c3a"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11205,
+          "preimage_sha256": "b25efd9589466d587e6a809e93dfc52d5de7d07259cb614be1328249cf730b7b"
+        },
+        {
+          "path": ".github/workflows/campaign46-technical.yml",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 16678,
+          "preimage_sha256": "6557c10e36589798b0c4b1eeb0725a07247f3cb0708b6b816a74e6035704dfe3"
+        },
+        {
+          "path": ".github/workflows/quality.yml",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17878,
+          "preimage_sha256": "8e10b0a9aaf83c93f89cbe4109dbbe6d9eb42ce79526f3f8eda1ca86aad177c1"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 52292,
+          "preimage_sha256": "d8b470c04743821a06ceb419408425e7658ca696b67474bb9fe6d88e254cee05"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "6d40cb65d5462be21c158b79affdd27acc680c2b",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 63294,
+          "preimage_sha256": "62ec55bba4ba2c86d45dd19f271d8dd88770edddfe408841fc0df83ed01633a6"
+        }
+      ],
+      "previous_ceiling": 18,
+      "amended_total_hosted_budget": 25,
+      "previous_consumed": 17,
+      "remaining_attempts": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "remaining_jobs": 8,
+      "attempt18_included": true,
+      "one_concurrent_job": true,
+      "job_timeout_minutes": 90,
+      "coordinator_minutes": 84,
+      "simulator_local_ad_hoc_signing_authorized": true,
+      "device_distribution_account_certificate_provisioning_or_paid_changes_authorized": false
     }
   ],
   "frozen_utc": "2026-11-04T19:07:34.536603+00:00",
