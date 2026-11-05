@@ -71,8 +71,8 @@
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.py",
-      "bytes": 18421,
-      "sha256": "400e1080f558e1f25bef7b9edd8a10e23202b85e240a55ea0dbaded06ae0fab9"
+      "bytes": 18429,
+      "sha256": "54b961b373a48124164ec9496271823f830072885e7cf4fdd3fc50247b200e57"
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.test.py",

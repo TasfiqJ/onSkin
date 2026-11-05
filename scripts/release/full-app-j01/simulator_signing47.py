@@ -14,7 +14,7 @@ AUTH = 'BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03'
 # Synthetic local test prefix, never an Apple-issued developer/team identity.
 PREFIX = 'C47SIMTEST.'
 PRODUCTS = {'com.layerwell.app.staging': 'LayerwellStaging',
-            'com.layerwell.app.dev': 'LayerwellDev',
+            'com.layerwell.app.development': 'LayerwellDev',
             'com.layerwell.campaign47.keychainprobe': 'C47KeychainProbe'}
 PROBE_BUNDLE = 'com.layerwell.campaign47.keychainprobe'
 
