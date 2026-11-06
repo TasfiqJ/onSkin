@@ -30,7 +30,7 @@ jobs:
 
   native-build:
     name: C47 build
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && false
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -90,10 +90,10 @@ jobs:
           retention-days: 3
           compression-level: 0
 
-  # Sequential current signed-app build, genuine ordinary PASS, then internal.
+  # Sole remaining Mac25: authenticated unchanged Release product from23,
+  # current ordinary XCTest, then internal in this same job only after PASS.
   native-normal:
     name: C47 normal
-    needs: [native-build]
     permissions:
       contents: read
       actions: read
@@ -123,12 +123,7 @@ jobs:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
           C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
-          C47_BUILD_ARTIFACT_ID: ${{ needs['native-build'].outputs.artifact_id }}
-          C47_BUILD_ARTIFACT_DIGEST: ${{ needs['native-build'].outputs.artifact_digest }}
-          C47_BUILD_RUN_ID: ${{ needs['native-build'].outputs.run_id }}
-          C47_BUILD_RUN_ATTEMPT: ${{ needs['native-build'].outputs.run_attempt }}
-          C47_BUILD_PAYLOAD_BYTES: ${{ needs['native-build'].outputs.payload_bytes }}
-        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage normal --output "$RUNNER_TEMP/c47-evidence"
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage normal --resume25 --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -169,7 +164,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && false
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:

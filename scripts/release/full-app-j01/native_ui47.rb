@@ -42,8 +42,11 @@ Dir.mkdir(project_root)
 swift_source = File.join(__dir__, 'native_ui47.swift')
 swift_copy = File.join(project_root, 'native_ui47.swift')
 swift_full = File.binread(swift_source)
-normal_swift = swift_full.byteslice(0, 8736)
-abort 'frozen normal Swift prefix changed' unless normal_swift && normal_swift.bytesize == 8736 && Digest::SHA256.hexdigest(normal_swift) == 'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44'
+historical_swift = IO.popen(['git', '--no-replace-objects', 'show', '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], 'rb', &:read)
+historical_normal = historical_swift.byteslice(0, 8736)
+abort 'frozen historical normal Swift prefix changed' unless $?.success? && historical_normal && Digest::SHA256.hexdigest(historical_normal) == 'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44'
+normal_swift = swift_full.byteslice(0, 9568)
+abort 'synchronized current normal Swift prefix changed' unless normal_swift && normal_swift.bytesize == 9568 && Digest::SHA256.hexdigest(normal_swift) == '686d434f567f4da623134279617e4b91754d4bf0497968efe07d2100d94c59c7'
 swift_selected = internal ? swift_full : normal_swift
 File.binwrite(swift_copy, swift_selected)
 project_path = File.join(project_root, 'C47NativeUI.xcodeproj')

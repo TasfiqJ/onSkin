@@ -1741,8 +1741,86 @@
         24,
         25
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "recorded_utc": "2026-11-06T06:54:36.120196+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 44408,
+          "preimage_sha256": "b2dfa584e187402b48636c92c40cf9b8d2bd932c73cfe040e1f3d45cb56e2251"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 161178,
+          "preimage_sha256": "ca74f2f4bb19d43aeae93947d48a88830b9eea35aab919e3dbf4ee0b49fbbecb"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 81881,
+          "preimage_sha256": "d7e5292d77a15414b6f7cdad3a57dd49693f0965210882e1f7a4471883c3becb"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8418,
+          "preimage_sha256": "57cd1b95fd7c34a3800f3a6ec38a82181581d3d5042bca46ec58fa5a31acfde8"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11285,
+          "preimage_sha256": "33a7a4fecf07d7793ae5135bdce4a530be71ba96d7a43a5749167073e732f7ba"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15481,
+          "preimage_sha256": "e9a205d5f4d971f6a07f8c13fe724965b948e5a4fe64c1e4378bead742d508cc"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 102971,
+          "preimage_sha256": "cee0ce520ee7b67de74e2bf4f0d78a042bb177e1c435d4818a0fadef6626eaf7"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 64408,
+          "preimage_sha256": "509e80b754a9f8256d9af4ca79e6970019fc2313313008d95199dbfd25df2571"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7039,
+          "preimage_sha256": "aae5b7f8bff923d6de06c4cf2f9b2ab64b1454b70049f14cdfaa4f08e168b49c",
+          "causal_need": "Native runner selects frozen8736-byte prefix; select pinned synchronized successor normal class and separately preserve authenticated historical prefix before actual XCTest",
+          "invariant": "All target signing, bundle selection and substantive test body remain unchanged",
+          "validation": "Historical b575prefix, exact successor prefix and normal/internal source selection"
+        }
+      ],
+      "causal_need": "Native24 actual ordinary case failed when native typeText(31) produced only3; raw artifact13483725230 SHA3c55d7af568ce48f744dee532078e8da940f131ebdb2e1b561ee7033c1a59289. Synchronize each actual key/value prefix and align Swift600 allowance with CLI600. Exactly one Mac25 remains: authenticate producer23 and prove all product inputs byte-identical while current ordinary XCTest then internal execute sequentially in one90minutejob.",
+      "invariant": "All substantive ordinary/internal expectations and app/SDK/installer/signing/owner/health/deletion/recovery behavior preserved. No stale retag: reused Release app retains445 source/run/job identity; current XCTest/candidate identity separate. Exact finite non-product path delta and unchanged app-build coordinator AST required; closed producer API/digest/manifest/probes/signature/install checks retained. Unknown drift refuses. Internal only after current actual positive ordinary. No job26, no charge, finite33 unchanged.",
+      "validation": "Historical Swift prefix and normal case against Git445; current keystroke assertions; source-reuse negative controls including product/signing drift; workflow exactly one enabled Mac; all native/runtime/signing/scope/current source controls; forced uncached root/type/lint; actual last native25 plus final-head CI and private fresh evidence.",
+      "remaining_attempts": [
+        25
+      ]
     }
   ],
-  "frozen_utc": "2026-11-06T04:38:16.433152+00:00",
-  "freeze_note": "Finite33; native22failedactualhealthtransitionpreserved; badgepostcondition plus bounded ordinary timing/full-event compact diagnostic representation. No acceptance, NO_GO."
+  "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
+  "freeze_note": "Finite33; native24 partial keyboard input preserved; bounded native key synchronization and authenticated exact product-input reuse for sole remaining job25; NO_GO."
 }

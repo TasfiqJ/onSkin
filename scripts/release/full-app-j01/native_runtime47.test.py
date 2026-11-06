@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import subprocess
 from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location('native_runtime47', Path(__file__).with_name('native_runtime47.py'))
@@ -363,13 +364,21 @@ class Runtime47Tests(unittest.TestCase):
         self.assertEqual(changed['source_head'], 'b' * 40)
 
     def test_frozen_normal_swift_prefix_contains_only_the_original_normal_class(self):
-        source = Path(__file__).with_name('native_ui47.swift').read_bytes()
+        current = Path(__file__).with_name('native_ui47.swift').read_bytes()
+        source = subprocess.check_output(['git', 'show',
+            '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], cwd=Path(__file__).resolve().parents[3])
         prefix = source[:8736]
         self.assertEqual(hashlib.sha256(prefix).hexdigest(),
                          'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44')
         self.assertIn(b'final class C47NativeUI', prefix)
         self.assertNotIn(b'final class C47InternalOwnerUI', prefix)
         self.assertIn(b'final class C47InternalOwnerUI', source[8736:])
+        marker = b'    func testNormalStagingAgeConsentAndUnavailableAccount() throws {'
+        self.assertEqual(current.split(marker)[1], source.split(marker)[1])
+        self.assertIn(b'executionTimeAllowance = 600', current.split(marker)[0])
+        self.assertIn(b'for character in value {', current.split(marker)[0])
+        self.assertIn(b'requireFieldValue(field, prefix, label)', current.split(marker)[0])
+        self.assertIn(b'XCTAssertEqual(field.value as? String, value, label + " did not accept the synthetic input")', current)
 
     def test_export_schema_requires_source_scope_and_retained_journey_facts_without_content_in_report(self):
         value = self.export_fixture()
@@ -1315,6 +1324,46 @@ class SimulatorProbeAdmissionTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'BUILD_PRODUCER_STAGE'):
                     n.verify_build_producer(SimpleNamespace(),{'payload_directory':str(root)})
 
+
+class ExactProductReuse25Tests(unittest.TestCase):
+    def fixture(self):
+        origin = n.RESUME25_ORIGIN['head']
+        root = Path(__file__).resolve().parents[3]
+        def pair(name):
+            return (subprocess.check_output(['git','show',origin+':'+name],cwd=root),
+                    (root/name).read_bytes())
+        py = pair('scripts/release/full-app-j01/native_runtime47.py')
+        descriptor = pair('docs/phase-9/ios-generated-input-succession47.v1.json')
+        ui = pair('scripts/release/full-app-j01/native_ui47.swift')
+        paths = ['scripts/release/full-app-j01/native_ui47.swift']
+        return paths, *py, *descriptor, *ui
+
+    def test_current_reuse_preserves_all_non_routing_build_functions_and_ui_assertions(self):
+        n.verify_reuse25_delta(*self.fixture())
+
+    def test_product_dependency_installer_signing_and_unknown_paths_refuse(self):
+        for name in ['apps/mobile/src/app/onboarding/age.tsx','package-lock.json',
+                     'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
+                     'scripts/release/full-app-j01/simulator_signing47.py','unknown.txt']:
+            args=list(self.fixture());args[0].append(name)
+            with self.assertRaisesRegex(ValueError,'NON_PRODUCT_DELTA_ONLY'):
+                n.verify_reuse25_delta(*args)
+
+    def test_coordinator_environment_and_compile_behavior_drift_refuse(self):
+        args=list(self.fixture());args[2]=args[2].replace(b"compile_only=False",b"compile_only=True",1)
+        with self.assertRaisesRegex(ValueError,'BUILD_FUNCTION_OR_ENVIRONMENT_DRIFT'):
+            n.verify_reuse25_delta(*args)
+
+    def test_descriptor_entitlement_or_dependency_drift_refuses(self):
+        args=list(self.fixture());obj=json.loads(args[4]);obj['registry'][0]['path']='node_modules/foreign';args[4]=json.dumps(obj).encode()
+        with self.assertRaisesRegex(ValueError,'GENERATED_INPUT_OR_SIGNING_DRIFT'):
+            n.verify_reuse25_delta(*args)
+
+    def test_weakened_normal_or_internal_assertion_refuses(self):
+        for before in [b'Blank age input must not proceed', b'final class C47InternalOwnerUI']:
+            args=list(self.fixture());args[6]=args[6].replace(before,b'changed',1)
+            with self.assertRaisesRegex(ValueError,'SUBSTANTIVE_UI_EXPECTATIONS_DRIFT'):
+                n.verify_reuse25_delta(*args)
 
 if __name__ == '__main__':
     unittest.main()

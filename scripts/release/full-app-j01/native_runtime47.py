@@ -5,6 +5,7 @@ and artifact custody. They never admit an owner, enable a provider, sign a
 release, or treat imported receipts/source checks as current native execution.
 """
 import argparse
+import ast
 from contextlib import contextmanager
 import gzip
 import socket
@@ -993,6 +994,9 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     require_simulator_host(architecture)
     require(re.fullmatch(r'[a-f0-9]{40}', expected_head) and
             r.receipt['source']['head'] == expected_head, 'IMPORTED_APP_CURRENT_SOURCE')
+    reuse = r.receipt.get('authenticated_app_build_reuse25')
+    product_source = reuse['producer_source'] if reuse else r.receipt['source']
+    product_head = product_source['head']
     producer, destination = Path(producer), Path(destination).absolute()
     temporary = Path(os.environ['RUNNER_TEMP']).resolve(strict=True)
     require(destination.parent == temporary and not os.path.lexists(destination) and
@@ -1002,15 +1006,15 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     inventory_raw = read_native_file(producer / 'app-inventory.json')
     receipt, inventory = stage_json(receipt_raw), stage_json(inventory_raw)
     require(receipt.get('file') == 'signed-simulator-app.tar.gz' and
-            receipt.get('source_head') == expected_head and
+            receipt.get('source_head') == product_head and
             receipt.get('configuration') == 'Release' and receipt.get('lane') == 'normal-staging' and
             receipt.get('standalone_embedded_javascript') is True and
             receipt.get('not_an_iphone_or_testflight_release') is True and
             receipt.get('platform') == 'iOS Simulator' and receipt.get('architectures') == [architecture] and
             receipt.get('bundle_id') == 'com.layerwell.app.staging' and
             receipt.get('executable') == 'LayerwellStaging', 'IMPORTED_APP_PRODUCER_IDENTITY')
-    require(inventory.get('source', {}).get('head') == expected_head and
-            inventory['source'].get('tree') == r.receipt['source']['tree'] and
+    require(inventory.get('source', {}).get('head') == product_head and
+            inventory['source'].get('tree') == product_source['tree'] and
             inventory.get('configuration') == 'Release' and inventory.get('lane') == 'normal-staging' and
             hashlib.sha256(inventory_raw).hexdigest() == receipt.get('inventory_sha256'),
             'IMPORTED_APP_INVENTORY_IDENTITY')
@@ -1054,7 +1058,8 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     require(simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) ==
             receipt.get('ordinary_javascript'), 'IMPORTED_ORDINARY_WITHOUT_DIAGNOSTICS')
     provenance = {'origin': 'AUTHENTICATED_PRODUCER_APP_NOT_COMPILED_IN_THIS_JOB',
-        'source_head': expected_head, 'source_tree': inventory['source']['tree'],
+        'source_head': product_head, 'source_tree': inventory['source']['tree'],
+        'runtime_candidate_source': r.receipt['source'],
         'producer_app_receipt_sha256': hashlib.sha256(receipt_raw).hexdigest(),
         'producer_app_archive_sha256': receipt['sha256'], 'producer_app_archive_bytes': receipt['bytes'],
         'producer_app_inventory_sha256': receipt['inventory_sha256'],
@@ -2163,11 +2168,14 @@ def executed_producer_command(receipt, directory, name, read_output=False):
 
 def producer_source_matches(r, receipt, directory):
     source = receipt.get('source')
-    require(isinstance(source, dict) and source == r.receipt['source'], 'PRODUCER_SAME_WHOLE_SOURCE')
+    reuse = r.receipt.get('authenticated_app_build_reuse25')
+    expected_source = reuse['producer_source'] if reuse else r.receipt['source']
+    require(isinstance(source, dict) and source == expected_source, 'PRODUCER_SAME_WHOLE_SOURCE')
     proof = stage_json(read_native_file(directory / 'current-generated47-source.json'))
     require(proof.get('phase') == 'SOURCE' and proof.get('sourceHead') == source['head'] and
             proof.get('sourceTree') == source['tree'] and proof.get('profiles') == ['development', 'staging'] and
-            proof.get('descriptorSHA256') == sha(r.root / 'docs/phase-9/ios-generated-input-succession47.v1.json') and
+            proof.get('descriptorSHA256') == (reuse['producer_descriptor_sha256'] if reuse else
+                sha(r.root / 'docs/phase-9/ios-generated-input-succession47.v1.json')) and
             proof.get('currentNative47', {}).get('verifiedInputCount') == 202 and
             proof['currentNative47'].get('committedCriticalInputs') == 172, 'PRODUCER_CURRENT_NATIVE_INPUTS')
     require(all(row.get('state') == 'PASS' and row.get('exit_code') == 0
@@ -2175,6 +2183,12 @@ def producer_source_matches(r, receipt, directory):
 
 
 def producer_final_source_matches(r, receipt, directory, name):
+    if getattr(r, 'receipt', {}).get('authenticated_app_build_reuse25'):
+        # The exact closed historical proof is retained, never relabeled current.
+        require(name == 'source-after-build.json' and sha(directory / name) ==
+                '713bc30b0dc1f33135aec191c9414264843c277e5739104b7229094862145e8b',
+                'REUSE25_CLOSED_ORIGIN_FINAL_SOURCE')
+        return
     before = receipt['source']
     after = stage_json(read_native_file(directory / name))
     require(set(after) == set(before) and all(after.get(key) == before.get(key)
@@ -2324,6 +2338,92 @@ def verify_normal_producer(r, provenance, build_provenance):
     return parent
 
 
+RESUME25_ORIGIN = {'head': '445472ce057b90f08b5a51d5a49167c757d34b79',
+    'tree': 'd90509f86079761e74d40c410004bb40ddfc671e', 'run_id': 42165447734,
+    'run_attempt': 1, 'artifact_id': 13482270376,
+    'digest': '58e6f56f589f5cc25f0efaffb03e2e775a09d10064d8be2de1d63bb9bca7410e',
+    'payload_bytes': 130829447}
+
+
+def verify_reuse25_delta(paths, old_python, new_python, old_descriptor, new_descriptor, old_ui, new_ui):
+    """One pinned reuse, with every product/build input outside this finite delta identical."""
+    allowed = {'scripts/release/full-app-j01/native_runtime47.py',
+        'scripts/release/full-app-j01/native_runtime47.test.py',
+        'scripts/release/full-app-j01/native_ui47.swift',
+        'scripts/release/full-app-j01/native_ui47.rb',
+        'scripts/release/full-app-j01/native_workflow47.test.mjs',
+        '.github/workflows/campaign47-native-runtime.yml',
+        'docs/phase-9/ios-generated-input-succession47.v1.json',
+        'docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json', 'docs/brain/task-specs/M1X-47/TASK.md',
+        'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
+    require(paths and set(paths) <= allowed, 'REUSE25_NON_PRODUCT_DELTA_ONLY')
+    changed_functions = {'producer_source_matches', 'producer_final_source_matches',
+        'consume_produced_app', 'execute_consumer', 'execute_internal', 'main'}
+    added_functions = {'verify_reuse25_delta', 'resume25_import'}
+    def protected(raw):
+        body = ast.parse(raw).body
+        result = []
+        for item in body:
+            if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)) and item.name in changed_functions | added_functions:
+                continue
+            if isinstance(item, ast.Import) and len(item.names) == 1 and item.names[0].name == 'ast':
+                continue
+            if isinstance(item, ast.Assign) and len(item.targets) == 1 and isinstance(item.targets[0], ast.Name) and item.targets[0].id == 'RESUME25_ORIGIN':
+                continue
+            result.append(ast.dump(item, include_attributes=False))
+        return result
+    require(protected(old_python) == protected(new_python), 'REUSE25_BUILD_FUNCTION_OR_ENVIRONMENT_DRIFT')
+    old, new = stage_json(old_descriptor), stage_json(new_descriptor)
+    mutable_pins = {'scripts/release/full-app-j01/native_runtime47.py',
+                    'scripts/release/full-app-j01/native_runtime47.test.py'}
+    for descriptor in (old, new):
+        descriptor['sourcePins'] = [pin for pin in descriptor['sourcePins'] if pin['path'] not in mutable_pins]
+    require(old == new, 'REUSE25_GENERATED_INPUT_OR_SIGNING_DRIFT')
+    marker = b'    func testNormalStagingAgeConsentAndUnavailableAccount() throws {'
+    require(old_ui.count(marker) == new_ui.count(marker) == 1 and
+            old_ui.split(marker)[1] == new_ui.split(marker)[1], 'REUSE25_SUBSTANTIVE_UI_EXPECTATIONS_DRIFT')
+
+
+def resume25_import(r, context, token):
+    origin = RESUME25_ORIGIN
+    g = lambda *args: subprocess.check_output(['git', '--no-replace-objects', *args], cwd=r.root, env=r.env)
+    require(context['head'] == r.receipt['source']['head'] and context['head'] != origin['head'] and
+            g('merge-base', '--is-ancestor', origin['head'], context['head']) == b'' and
+            g('rev-parse', origin['head'] + '^{tree}').decode().strip() == origin['tree'],
+            'REUSE25_ORIGIN_ANCESTRY')
+    paths = g('diff', '--name-only', origin['head'], context['head']).decode().splitlines()
+    old = lambda name: g('show', origin['head'] + ':' + name)
+    current = lambda name: read_native_file(r.root / name)
+    py = 'scripts/release/full-app-j01/native_runtime47.py'
+    desc = 'docs/phase-9/ios-generated-input-succession47.v1.json'
+    ui = 'scripts/release/full-app-j01/native_ui47.swift'
+    verify_reuse25_delta(paths, old(py), current(py), old(desc), current(desc), old(ui), current(ui))
+    origin_context = {**context, **{key: origin[key] for key in ('head', 'tree', 'run_id', 'run_attempt')}}
+    needs = {'build': {key: origin[key] for key in ('artifact_id', 'digest', 'run_id', 'payload_bytes')}}
+    needs['build']['producer_run_attempt'] = origin['run_attempt']
+    imported = load_authenticated_stage_inputs('normal', needs, origin_context, token,
+                    Path(context['runner_temp']) / 'c47-authenticated-producers')
+    build = imported['imported_provenance']['build']
+    require(build['producer']['producer_job_id'] == 127720729358, 'REUSE25_EXACT_BUILD_JOB')
+    directory = Path(build['payload_directory'])
+    require(sha(directory / 'source-before.json') ==
+            'c62b6b95dd60eb0f230c951fd842534018561bdf735abfaa34fba5675e97082c',
+            'REUSE25_CLOSED_ORIGIN_SOURCE')
+    source = stage_json(read_native_file(directory / 'source-before.json'))
+    require((source['head'], source['tree']) == (origin['head'], origin['tree']), 'REUSE25_SOURCE_IDENTITY')
+    r.receipt['authenticated_app_build_reuse25'] = {'producer_source': source,
+        'producer_descriptor_sha256': hashlib.sha256(old(desc)).hexdigest(),
+        'runtime_candidate_source': r.receipt['source'], 'producer': build['producer'],
+        'exact_non_product_changed_paths': paths, 'all_other_tracked_product_inputs_identical': True,
+        'protected_coordinator_build_functions_and_environment_identical': True,
+        'qualification': 'APP_ORIGIN_RETAINED; CURRENT_XCTEST_AND_INTERNAL_REQUIRED; NO_PARENT_RUNTIME_PASS'}
+    r.receipt['imported_provenance'] = imported['imported_provenance']
+    r.receipt['upstream_payload_bytes'] = build['payload_bytes']
+    require(0 < build['payload_bytes'] < MAX_EVIDENCE, 'STAGE_COMBINED_EVIDENCE_BOUND')
+    r.persist()
+    return imported['imported_provenance']
+
+
 def stage_imports(r, role, context, token):
     needed = {}
     for producer in STAGE_DEPENDENCIES[role]:
@@ -2341,10 +2441,14 @@ def stage_imports(r, role, context, token):
     return imported['imported_provenance']
 
 
-def execute_consumer(r, role, context, token):
+def execute_consumer(r, role, context, token, resume25=False):
     head, tools, source47 = prepare(r, source_controls=False)
     require((head, r.receipt['source']['tree']) == (context['head'], context['tree']), 'STAGE_CURRENT_SOURCE_CONTEXT')
-    imported = stage_imports(r, role, context, token)
+    if resume25:
+        require(role == 'normal', 'REUSE25_NORMAL_ONLY')
+        imported = resume25_import(r, context, token)
+    else:
+        imported = stage_imports(r, role, context, token)
     verify_build_producer(r, imported['build'])
     app, bundle, app_proof = consume_produced_app(r, imported['build']['payload_directory'], head,
         tools['architecture'], Path(context['runner_temp']) / 'c47-verified-build-app')
@@ -2376,13 +2480,16 @@ def execute_consumer(r, role, context, token):
     r.receipt['products_directory'] = str(products)
     r.persist()
     run_normal(r, ios, products, app, bundle, head)
+    if resume25:
+        execute_internal(r)
 
 
 def execute_internal(parent, normal_evidence=None):
     normal = parent if normal_evidence is None else normal_evidence
     positive_normal = normal_xctest_gate(normal)
     if normal_evidence is None:
-        normal_bundle = parent.receipt['stages']['compiled']['details']['bundle_id']
+        normal_bundle = parent.receipt['stages'].get('compiled',
+            parent.receipt['stages'].get('verified-produced-app', {}))['details']['bundle_id']
     else:
         require(normal.receipt['source'] == parent.receipt['source'], 'INTERNAL_SAME_HEAD_NORMAL_SOURCE')
         normal_bundle = normal.receipt['stages']['verified-produced-app']['details']['bundle_id']
@@ -2616,6 +2723,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('build', 'normal', 'internal'))
+    parser.add_argument('--resume25', action='store_true')
     parser.add_argument('--simulator-probe', action='store_true',
                         help='Isolated C47 Xcode/Keychain tooling diagnostic; never an app producer')
     args = parser.parse_args()
@@ -2632,6 +2740,7 @@ def main():
     code, context = 0, None
     try:
         context = hosted_stage_context(runner, args.stage)
+        require(not args.resume25 or args.stage == 'normal', 'REUSE25_NORMAL_ONLY')
         require(not args.simulator_probe or args.stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
         if args.stage == 'build':
             require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
@@ -2644,7 +2753,7 @@ def main():
             else:
                 execute(runner, compile_only=True)
         else:
-            execute_consumer(runner, args.stage, context, token)
+            execute_consumer(runner, args.stage, context, token, resume25=args.resume25)
         require(runner.receipt['source']['head'] == context['head'] and
                 runner.receipt['source']['tree'] == context['tree'], 'STAGE_FINAL_SOURCE_CONTEXT')
         runner.receipt['stage_complete'] = True

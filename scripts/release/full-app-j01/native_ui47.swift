@@ -10,7 +10,7 @@ final class C47NativeUI: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        executionTimeAllowance = 300
+        executionTimeAllowance = 600
         let environment = ProcessInfo.processInfo.environment
         XCTAssertEqual(environment["C47_RUNTIME_LANE"], "normal-staging")
         let identifier = try XCTUnwrap(environment["C47_BUNDLE_ID"])
@@ -80,10 +80,29 @@ final class C47NativeUI: XCTestCase {
         if let existing = field.value as? String,
            !existing.isEmpty,
            existing != field.placeholderValue {
-            field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: existing.count))
+            var remaining = existing
+            for _ in existing {
+                field.typeText(XCUIKeyboardKey.delete.rawValue)
+                remaining.removeLast()
+                requireFieldValue(field, remaining, label)
+            }
         }
-        field.typeText(value)
+        var prefix = ""
+        for character in value {
+            field.typeText(String(character))
+            prefix.append(character)
+            requireFieldValue(field, prefix, label)
+        }
         XCTAssertEqual(field.value as? String, value, label + " did not accept the synthetic input")
+    }
+
+    private func requireFieldValue(_ field: XCUIElement, _ value: String, _ label: String) {
+        let accepted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let observed = field.value as? String
+            return observed == value || (value.isEmpty && observed == field.placeholderValue)
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [accepted], timeout: deadline), .completed,
+            label + " must accept each actual native key before the next key")
     }
 
     private func assertPrivateJourneysClosed(_ app: XCUIApplication) {

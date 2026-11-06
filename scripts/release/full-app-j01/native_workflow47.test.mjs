@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
+import { execFileSync } from 'node:child_process';
 import { parseDocument } from 'yaml';
 
 const source = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
@@ -10,6 +11,7 @@ const probeOnly = source.includes('--stage build --simulator-probe');
 const dependencies = { build: [], normal: ['build'], internal: ['build', 'normal'] };
 
 function validate(text) {
+  const resume25 = text.includes('--stage normal --resume25');
   const doc = parseDocument(text, { strict: true, uniqueKeys: true, merge: false });
   assert.deepEqual(doc.errors, []);
   assert.deepEqual(doc.warnings, []);
@@ -24,11 +26,11 @@ function validate(text) {
   for (const [role, parents] of Object.entries(dependencies)) {
     const job = w.jobs['native-' + role];
     assert.equal(job.name, 'C47 ' + role);
-    assert.deepEqual(job.needs, parents.length ? parents.map(parent => 'native-' + parent) : undefined);
+    assert.deepEqual(job.needs, resume25 && role === 'normal' ? undefined : parents.length ? parents.map(parent => 'native-' + parent) : undefined);
     assert.deepEqual(job.permissions, parents.length ? { contents: 'read', actions: 'read' } : undefined);
     assert.equal(job['runs-on'], 'macos-26-intel');
     assert.equal(job['timeout-minutes'], 90);
-    assert.equal(job.if, scope + (probeOnly && role !== 'build' ? ' && false' : ''));
+    assert.equal(job.if, scope + ((resume25 ? role !== 'normal' : probeOnly && role !== 'build') ? ' && false' : ''));
     assert.equal(job.steps.length, 5);
     assert.deepEqual(job.outputs, {
       artifact_id: expression('steps.upload.outputs.artifact-id'),
@@ -45,13 +47,13 @@ function validate(text) {
     assert.deepEqual(job.steps[1].with, { 'node-version': '22.22.2', 'package-manager-cache': false });
     const env = { C47_EXPECTED_HEAD: expression('github.event.pull_request.head.sha'), C47_UI_PHASE: 'normal-staging' };
     if (parents.length) env.C47_ARTIFACT_READ_TOKEN = expression('github.token');
-    for (const parent of parents) {
+    for (const parent of resume25 && role === 'normal' ? [] : parents) {
       for (const [key, output] of [['ARTIFACT_ID', 'artifact_id'], ['ARTIFACT_DIGEST', 'artifact_digest'], ['RUN_ID', 'run_id'], ['RUN_ATTEMPT', 'run_attempt'], ['PAYLOAD_BYTES', 'payload_bytes']]) {
         env['C47_' + parent.toUpperCase() + '_' + key] = expression("needs['native-" + parent + "'].outputs." + output);
       }
     }
     assert.deepEqual(job.steps[2].env, env);
-    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (probeOnly && role === 'build' ? ' --simulator-probe' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
+    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
     const budget = job.steps[3];
     assert.equal(budget.id, 'evidence-budget');
     assert.equal(budget.if, 'always()');
@@ -82,7 +84,11 @@ test('C47 isolated tooling probe cannot start either application consumer', () =
     assert.throws(() => validate(source.replace(' && false', '')));
     assert.throws(() => validate(source.replace(' --simulator-probe', '')));
   } else {
-    assert.doesNotMatch(source, /--simulator-probe|&& false/);
+    assert.doesNotMatch(source, /--simulator-probe/);
+    if (source.includes('--resume25')) {
+      assert.equal((source.match(/&& false/gu) ?? []).length, 2);
+      assert.throws(() => validate(source.replace(' && false', '')));
+    } else assert.doesNotMatch(source, /&& false/);
   }
 });
 test('C47 rejects privilege, source substitution, paid runner and ignored failures', () => {
@@ -102,7 +108,8 @@ test('C47 rejects privilege, source substitution, paid runner and ignored failur
 });
 test('C47 refuses parallel stages, missing wire digest or authority outside the producing jobs', () => {
   for (const [before, after] of [
-    ['needs: [native-build]', 'needs: []'], ['needs: [native-build, native-normal]', 'needs: [native-build]'],
+    ...(source.includes('--resume25') ? [[' && false', '']] : [['needs: [native-build]', 'needs: []']]),
+    ['needs: [native-build, native-normal]', 'needs: [native-build]'],
     ['actions: read', 'actions: write'], ['steps.upload.outputs.artifact-digest', 'steps.upload.outputs.artifact-id'],
     ["needs['native-build'].outputs.artifact_digest", "github.sha"],
     ['--stage normal', '--stage build'], ['upstream_payload_bytes', 'ignored_upstream_bytes'],
@@ -111,6 +118,14 @@ test('C47 refuses parallel stages, missing wire digest or authority outside the 
     assert.ok(source.includes(before));
     assert.throws(() => validate(source.replaceAll(before, after)), before);
   }
+});
+
+test('C47 preserves the authenticated three-job historical workflow and admits only one successor Mac', () => {
+  validate(execFileSync('git', ['show', '445472ce057b90f08b5a51d5a49167c757d34b79:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
+  const w = parseDocument(source).toJS();
+  assert.deepEqual(Object.entries(w.jobs).filter(([, job]) => !job.if.endsWith(' && false')).map(([name]) => name), ['native-normal']);
+  assert.equal(w.jobs['native-normal'].needs, undefined);
+  assert.match(w.jobs['native-normal'].steps[2].run, /--stage normal --resume25 /);
 });
 
 test('Quality retains its real online failure while independent checks and exports execute', () => {
