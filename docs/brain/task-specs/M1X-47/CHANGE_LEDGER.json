@@ -3180,8 +3180,78 @@
       "exact_transform": "EE normal: requireDisclosure preserves its original existence assertion and calls existing bounded native requireVisible for each WHAT/WHY/NEVER label; all other Swift bytes remain exact.",
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T19:04:05.211797+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.py",
+          "preimage_head": "5f04bc2a183f40272216572c91dff22c6609def8",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 45570,
+          "preimage_sha256": "1ef5de786dd084a4a84b4b9065e8825b2a9976531397dcdd944fd14a0d636736",
+          "preimage_blob": "f661f7f5c0ec2bafca985da6cce8543fef3438bd"
+        },
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.test.py",
+          "preimage_head": "5f04bc2a183f40272216572c91dff22c6609def8",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15159,
+          "preimage_sha256": "6b087f15dbdfedc68b1ba66cc4bb5b07c419a6b9a0dc231f1d3bf89aba922a96",
+          "preimage_blob": "bf7d0c6e1cbd3182a3dd0da3211b90c1615e5cb0"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "5f04bc2a183f40272216572c91dff22c6609def8",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 188228,
+          "preimage_sha256": "08b081dc7e65a1140d852b6e31259594f8edf87b4d627c178455db6645659e33",
+          "preimage_blob": "bba041c7d5e359a4a1fe2ea65dcd394efd901987"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "5f04bc2a183f40272216572c91dff22c6609def8",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 80400,
+          "preimage_sha256": "eb6efb50f4ef7c0599f0f6f3737dd0c84d54ffca52ec72c168d2c086035976f8",
+          "preimage_blob": "0a7c13a524ff767ef71f69166f9129c4f6d8acef"
+        }
+      ],
+      "causal_need": "Actual29 all33commands/66streams completed PASS after raw-console repair; installation0 and appcontainer0, then inline full source/installed inventory equality failed. No changedrows were retained, so causeUNKNOWN; collecttripleinventories+exactdiff beforeanyguard. Strict byte identity mustbe distinguishedfrom filesystem permissionmetadata without inventingmode-onlycause or acceptingunknownchangedbytes.",
+      "invariant": "Fixed historical27 diagnostic ONLY. Producer/extracted/installed musthaveidenticalclosedpaths/types and everyregularsize/SHA includingInfo/JS/CodeResources/frameworks/exe. Rejectadded/removed/renamedmembers, links/unknownmetadata and allbytechanges. Separatemodes mayONLYnarrowproducerpermissions withno special/worldwrite, ownerread, directorysearch, allproducerownerexec preserved. StrictinstalledMachO/IOSSIMULATOR/signature/app-ownedentitlements mandatory. Neverchmod,resign,mutatebundle,alterKeychain/owner/consent/deletion orrelaxgenericcurrentbuild/ordinaryvalidators. Readfailure recordedandreraised, neveremptyinventory. Preserveactual29FAILandunknowncause. Actualearlytoolhelp/schema captured beforeSim, nottestadmission.",
+      "validation": "Rootfull17consenthelper/79runtime/10scope/14signing/6workflow/two sourcecontrols plusactual27closedrawsmoke thenSourceFrozenonlytwoWorklists. Externalv1strict14QA andv2safe-narrow17QA remainattributed. Boundactualafter0/narrow positive vsbyte/type/path/member/expanded/special/worldwrite/ownerread-exec/unknownmetadata/readerfailure/signatureordering negatives. Historicaloldapp/driver/currentcandidate remainseparate; no currentapp/nativeordinary/internalpass fromthisdiagnostic.",
+      "remaining_attempts": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "next_native_attempt": 30,
+      "actual29": {
+        "run": 42272201589,
+        "job": 128079325355,
+        "artifact": 13531393275,
+        "wire_bytes": 3320274,
+        "wire_sha256": "a4aca1a0dc3bd0da9ea37331cf09ea399ed3d8e95cae694e7a9e695b71c1248e",
+        "closed_members": 81,
+        "closed_payloads": 80,
+        "commands": 33,
+        "streams": 66,
+        "all_command_captures_complete": true,
+        "app_installed": true,
+        "all_installed_bytes_verified": false,
+        "launched": false,
+        "cause": "UNATTRIBUTED_NO_INSTALLED_DIFF_RETAINED"
+      },
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43; capture isolation repair for historicaldiagnostic29; source4stage plan preserved at3EF but no currentordinary/internal admission before actualschema integration."
+  "freeze_note": "Finite43; historicaldiagnostic30 recordsfullinstalledidentity beforebyte/permissionguards andearlyprovider schema; genericcurrentordinary/internaladmissionstilldisabled."
 }

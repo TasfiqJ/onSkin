@@ -532,18 +532,144 @@ def retained27_inventory(n, directory):
     return inventory, artifact
 
 
+def retained27_inventory_diff(expected, observed):
+    before = {row['path']:row for row in expected}
+    after = {row['path']:row for row in observed}
+    need(len(before) == len(expected) and len(after) == len(observed) and
+         max(len(before),len(after)) <= 20000, 'RETAINED27_OBSERVED_INVENTORY_BOUND')
+    changed = []
+    for path in sorted(set(before) | set(after)):
+        left,right = before.get(path),after.get(path)
+        if left != right:
+            fields = sorted(key for key in set(left or {}) | set(right or {})
+                            if (left or {}).get(key) != (right or {}).get(key))
+            changed.append({'path':path,'expected':left,'observed':right,'different_fields':fields})
+    return changed
+
+
+def retained27_early_xcresult(r, n, evidence):
+    """Observe installed tool support before Simulator work; no case-result admission."""
+    rows = []
+    for kind in ('summary','tests'):
+        for label,args in [('help',['help','get','test-results',kind]),
+                           ('schema',['get','test-results',kind,'--schema'])]:
+            name = 'retained27-early-xcresult-' + label + '-' + kind
+            paths = r.run(name,['xcrun','xcresulttool',*args],timeout=30,required=False,diagnostic=True)
+            command = next(row for row in r.receipt['commands'] if row['name'] == name)
+            row = {key:command.get(key) for key in ('name','state','exit_code','capture_complete',
+                    'timed_out','error_type','stdout_bytes','stdout_sha256','stderr_bytes','stderr_sha256')}
+            if label == 'schema' and row['state'] == 'PASS' and row['capture_complete'] is True:
+                try:
+                    value = n.stage_json(n.read_native_file(paths[0]))
+                    row['json_type'] = type(value).__name__
+                    row['top_level_keys'] = sorted(value) if isinstance(value,dict) else None
+                except (ValueError,UnicodeError) as error:
+                    row['parse_error_type'] = type(error).__name__
+            rows.append(row)
+    document(evidence/'EARLY_XCRESULT_TOOL_SUPPORT.json',{'consumer_source':r.receipt['source'],
+        'producer_head':RETAINED27['head'],'commands':rows,
+        'qualification':'ACTUAL_INSTALLED_TOOL_CAPABILITY_ONLY; NO_RESULT_BUNDLE_OR_TEST_CASE_ADMISSION',
+        'ordinary_admitted':False,'internal_admitted':False})
+
+
+def retained27_inventory_guard(expected, observed):
+    """Historical diagnostic only: exact closed file bytes plus safe permission narrowing."""
+    need(isinstance(expected,list) and isinstance(observed,list) and 0 < len(expected) == len(observed) <= 20000,
+         'RETAINED27_ALL_INSTALLED_BYTES')
+    for rows in (expected,observed):
+        need(all(isinstance(row,dict) and isinstance(row.get('path'),str) and row['path'] and
+                 row.get('type') in ('file','directory') for row in rows), 'RETAINED27_ALL_INSTALLED_BYTES')
+        need(len({row['path'] for row in rows}) == len(rows), 'RETAINED27_ALL_INSTALLED_BYTES')
+    before,after = ({row['path']:row for row in rows} for rows in (expected,observed))
+    need(set(before) == set(after), 'RETAINED27_ALL_INSTALLED_BYTES')
+    changed, regular = [], 0
+    for path in sorted(before):
+        left,right = before[path],after[path]
+        fields = {'path','type','mode'} | ({'bytes','sha256'} if left['type'] == 'file' else set())
+        need(set(left) == set(right) == fields and left['type'] == right['type'],
+             'RETAINED27_ALL_INSTALLED_BYTES')
+        if left['type'] == 'file':
+            need(type(left['bytes']) is int and type(right['bytes']) is int and
+                 0 <= left['bytes'] == right['bytes'] and
+                 isinstance(left['sha256'],str) and re.fullmatch('[a-f0-9]{64}',left['sha256']) and
+                 left['sha256'] == right['sha256'], 'RETAINED27_ALL_INSTALLED_BYTES')
+            regular += 1
+        modes = []
+        for row in (left,right):
+            value = row.get('mode')
+            need(isinstance(value,str) and re.fullmatch('0o[0-7]{1,4}',value),
+                 'RETAINED27_PERMISSION_NARROWING_REQUIRED')
+            mode = int(value,8)
+            need(oct(mode) == value and mode & ~0o777 == 0 and not mode & 0o002,
+                 'RETAINED27_PERMISSION_NARROWING_REQUIRED')
+            modes.append(mode)
+        producer,current = modes
+        need(current & ~producer == 0 and current & 0o400 and
+             (left['type'] != 'directory' or current & 0o100) and
+             (left['type'] != 'file' or not producer & 0o100 or current & 0o100),
+             'RETAINED27_PERMISSION_NARROWING_REQUIRED')
+        if producer != current:
+            changed.append({'path':path,'producer_mode':left['mode'],'observed_mode':right['mode']})
+    return {'classification':'EXACT_BYTES_WITH_SAFE_PERMISSION_NARROWING' if changed else 'EXACT_BYTES_AND_MODES',
+            'closed_paths':len(before),'regular_files_byte_identical':regular,'mode_changes':changed,
+            'scope':'HISTORICAL_RETAINED27_DIAGNOSTIC_ONLY','ordinary_admitted':False,'internal_admitted':False}
+
+
 def retained27_installed(r, n, installed, app, inventory):
     p = RETAINED27
     need(inventory['source']['head'] == p['head'] and inventory['source']['tree'] == p['tree'],
          'RETAINED27_INSTALLED_PRODUCER_SOURCE')
-    need(n.bundle_inventory(app) == inventory['files'] == n.bundle_inventory(Path(installed)),
-         'RETAINED27_ALL_INSTALLED_BYTES')
-    info = plistlib.loads(n.read_native_file(Path(installed) / 'Info.plist'))
+    evidence = r.output/'retained-consent27/installed-observation'
+    evidence.mkdir(parents=True,exist_ok=False)
+    document(evidence/'expected-producer-inventory.json',inventory)
+    acquired = {}
+    for label,path in [('extracted',app),('installed',Path(installed))]:
+        try:
+            acquired[label] = n.bundle_inventory(path)
+            document(evidence/('observed-' + label + '-inventory.json'),acquired[label])
+        except Exception as error:
+            document(evidence/'inventory-acquisition-failure.json',{'inventory':label,
+                'type':type(error).__name__,'detail':str(error),'ordinary_admitted':False,'internal_admitted':False})
+            raise
+    extracted,observed = acquired['extracted'],acquired['installed']
+    differences = {'producer_to_extracted':retained27_inventory_diff(inventory['files'],extracted),
+                   'producer_to_installed':retained27_inventory_diff(inventory['files'],observed)}
+    document(evidence/'exact-inventory-differences.json',differences)
+    observation = {**retained27_sources(r.receipt['source'],inventory['source']),
+        'expected_rows':len(inventory['files']),'extracted_rows':len(extracted),'installed_rows':len(observed),
+        'expected_equals_extracted':inventory['files'] == extracted,
+        'expected_equals_installed':inventory['files'] == observed,
+        'different_extracted_rows':len(differences['producer_to_extracted']),
+        'different_installed_rows':len(differences['producer_to_installed']),
+        'files':{name:digest(n.read_native_file(evidence/name)) for name in
+            ('expected-producer-inventory.json','observed-extracted-inventory.json',
+             'observed-installed-inventory.json','exact-inventory-differences.json')},
+        'qualification':'RAW_OBSERVATIONS_BEFORE_BYTE_OR_PERMISSION_GUARDS; NO_BUNDLE_MUTATION'}
+    document(evidence/'OBSERVATION.json',observation)
+    r.receipt['retained27_installed_observation'] = observation
+    r.persist()
+    try:
+        product = n.simulator_signing().inspect_product(r,n,Path(installed),
+            'com.layerwell.app.staging','retained27-installed-product')
+        document(evidence/'installed-product-inspection.json',product)
+    except Exception as error:
+        document(evidence/'installed-product-inspection-failure.json',
+            {'type':type(error).__name__,'detail':str(error),'ordinary_admitted':False,'internal_admitted':False})
+        raise
+    try:
+        verification = {'producer_to_extracted':retained27_inventory_guard(inventory['files'],extracted),
+                        'producer_to_installed':retained27_inventory_guard(inventory['files'],observed)}
+        document(evidence/'identity-validation.json',verification)
+    except Exception as error:
+        document(evidence/'identity-validation-refusal.json',{'type':type(error).__name__,'detail':str(error),
+            'ordinary_admitted':False,'internal_admitted':False})
+        raise
+    info = plistlib.loads(n.read_native_file(Path(installed)/'Info.plist'))
     need(info.get('CFBundleIdentifier') == 'com.layerwell.app.staging' and
          info.get('CFBundleExecutable') == 'LayerwellStaging', 'RETAINED27_INSTALLED_BUNDLE')
-    detail = retained27_sources(r.receipt['source'], inventory['source'])
+    detail = retained27_sources(r.receipt['source'],inventory['source'])
     detail['all_installed_inventory_rows'] = len(inventory['files'])
-    r.passed('retained27-diagnostic-installed', detail)
+    r.passed('retained27-diagnostic-installed',detail)
     return detail
 
 
@@ -589,6 +715,7 @@ def run_retained_runtime27(r, n, token):
     need(tools['architecture'] == 'x86_64' and tools['xcode'].startswith('Xcode 26.4') and
          tools['simulator-sdk'] == '26.4' and tools['ruby'] and tools['xcodeproj'], 'RETAINED27_TOOLCHAIN')
     document(r.output / 'toolchain.json', tools)
+    retained27_early_xcresult(r,n,evidence)
     product_root = imported_root / 'app'
     product_root.mkdir()
     app_archive = directory / 'consent-trace04' / artifact['file']

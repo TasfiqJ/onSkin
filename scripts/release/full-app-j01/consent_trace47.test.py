@@ -228,14 +228,185 @@ class RetainedDiagnostic27Tests(unittest.TestCase):
             producer={'head':c.RETAINED27['head'],'tree':c.RETAINED27['tree']}
             manifest={'source':producer,'files':inventory(app)}
             receipt={'source':{'head':'a'*40,'tree':'b'*40},'stages':{}}
-            runner=SimpleNamespace(receipt=receipt,passed=lambda key,value:receipt['stages'].update({key:value}))
-            native=SimpleNamespace(bundle_inventory=inventory,read_native_file=lambda path:path.read_bytes())
+            runner=SimpleNamespace(output=root/'positive',receipt=receipt,persist=lambda:None,
+                passed=lambda key,value:receipt['stages'].update({key:value}))
+            native=SimpleNamespace(bundle_inventory=inventory,read_native_file=lambda path:path.read_bytes(),
+                simulator_signing=lambda:SimpleNamespace(inspect_product=lambda *args:{'synthetic_fixture_only':True}))
             result=c.retained27_installed(runner,native,installed,app,manifest)
             self.assertFalse(result['ordinary_admitted'])
             self.assertEqual(receipt['source']['head'],'a'*40)
+            runner.output=root/'negative-byte-drift'
             (installed/'LayerwellStaging').write_bytes(b'drift')
             with self.assertRaisesRegex(ValueError,'ALL_INSTALLED_BYTES'):
                 c.retained27_installed(runner,native,installed,app,manifest)
+
+
+class InstalledObservation30Controls(unittest.TestCase):
+    """Synthetic observation coverage; original exact comparison stays mandatory."""
+    def fixture(self,root,installed_mode='0o755',probe_error=None):
+        app,installed = root/'app',root/'installed'
+        app.mkdir();installed.mkdir()
+        info = plistlib.dumps({'CFBundleIdentifier':'com.layerwell.app.staging',
+                              'CFBundleExecutable':'LayerwellStaging'})
+        for folder in (app,installed):
+            (folder/'Info.plist').write_bytes(info)
+            (folder/'LayerwellStaging').write_bytes(b'synthetic-only')
+        expected = [{'path':'Info.plist','type':'file','mode':'0o644','bytes':len(info),'sha256':c.digest(info)},
+                    {'path':'LayerwellStaging','type':'file','mode':'0o755','bytes':14,'sha256':c.digest(b'synthetic-only')}]
+        observed = [dict(row) for row in expected]
+        observed[1]['mode'] = installed_mode
+        producer = {'head':c.RETAINED27['head'],'tree':c.RETAINED27['tree']}
+        receipt = {'source':{'head':'a'*40,'tree':'b'*40},'stages':{}}
+        runner = SimpleNamespace(output=root/'evidence',receipt=receipt,persist=lambda:None,
+            passed=lambda key,value:receipt['stages'].update({key:value}))
+        evidence = runner.output/'retained-consent27/installed-observation'
+        seen = []
+        def inspect(*args):
+            # All expected/extracted/installed identities and exact differences
+            # must already be retained before the first installed-product probe.
+            for name in ['expected-producer-inventory.json','observed-extracted-inventory.json',
+                         'observed-installed-inventory.json','exact-inventory-differences.json','OBSERVATION.json']:
+                self.assertTrue((evidence/name).is_file())
+            seen.append('installed-signature-probe')
+            if probe_error:
+                raise probe_error
+            return {'qualification':'SYNTHETIC_PRODUCT_PROBE_ONLY'}
+        native = SimpleNamespace(bundle_inventory=lambda folder:expected if Path(folder) == app else observed,
+            read_native_file=lambda path:Path(path).read_bytes(),
+            simulator_signing=lambda:SimpleNamespace(inspect_product=inspect))
+        return runner,native,app,installed,{'source':producer,'files':expected},observed,evidence,seen
+
+    def test_expanded_mode_difference_is_retained_exactly_and_still_refuses_before_installed_pass(self):
+        with tempfile.TemporaryDirectory(prefix='installed30-mode-') as temporary:
+            runner,native,app,installed,inventory,observed,evidence,seen = self.fixture(Path(temporary),'0o775')
+            with self.assertRaisesRegex(ValueError,'RETAINED27_PERMISSION_NARROWING_REQUIRED'):
+                c.retained27_installed(runner,native,installed,app,inventory)
+            diff = json.loads((evidence/'exact-inventory-differences.json').read_bytes())
+            self.assertEqual(diff['producer_to_extracted'],[])
+            self.assertEqual(diff['producer_to_installed'][0]['different_fields'],['mode'])
+            self.assertEqual(json.loads((evidence/'observed-installed-inventory.json').read_bytes()),observed)
+            self.assertEqual(seen,['installed-signature-probe'])
+            self.assertEqual(runner.receipt['stages'],{})
+            self.assertFalse(runner.receipt['retained27_installed_observation']['ordinary_admitted'])
+            self.assertFalse(runner.receipt['retained27_installed_observation']['internal_admitted'])
+
+    def test_probe_failure_preserves_all_three_inventories_diff_and_actual_failure_without_admission(self):
+        with tempfile.TemporaryDirectory(prefix='installed30-signature-') as temporary:
+            fixture = self.fixture(Path(temporary),probe_error=ValueError('ACTUAL_SYNTHETIC_SIGNATURE_REFUSAL'))
+            runner,native,app,installed,inventory,observed,evidence,seen = fixture
+            with self.assertRaisesRegex(ValueError,'ACTUAL_SYNTHETIC_SIGNATURE_REFUSAL'):
+                c.retained27_installed(runner,native,installed,app,inventory)
+            failure = json.loads((evidence/'installed-product-inspection-failure.json').read_bytes())
+            self.assertEqual(failure['detail'],'ACTUAL_SYNTHETIC_SIGNATURE_REFUSAL')
+            self.assertFalse(failure['ordinary_admitted'])
+            self.assertEqual(runner.receipt['stages'],{})
+
+    def test_early_actual_tool_support_retains_unsupported_schema_and_never_claims_test_results(self):
+        with tempfile.TemporaryDirectory(prefix='installed30-tools-') as temporary:
+            root = Path(temporary)
+            receipt = {'source':{'head':'a'*40,'tree':'b'*40},'commands':[]}
+            def run(name,argv,**kwargs):
+                self.assertFalse(kwargs['required'])
+                self.assertTrue(kwargs['diagnostic'])
+                self.assertEqual(kwargs['timeout'],30)
+                unsupported = name.endswith('schema-tests')
+                raw = b'unsupported schema flag' if unsupported else b'{"syntheticSchemaOnly":true}'
+                out,err = root/(name+'.stdout'),root/(name+'.stderr')
+                out.write_bytes(raw);err.write_bytes(b'')
+                receipt['commands'].append({'name':name,'state':'FAIL' if unsupported else 'PASS',
+                    'exit_code':64 if unsupported else 0,'capture_complete':True,'stdout_bytes':len(raw),
+                    'stdout_sha256':c.digest(raw),'stderr_bytes':0,'stderr_sha256':c.digest(b'')})
+                return out,err
+            runner = SimpleNamespace(receipt=receipt,run=run)
+            native = SimpleNamespace(stage_json=json.loads,read_native_file=lambda path:Path(path).read_bytes())
+            c.retained27_early_xcresult(runner,native,root)
+            support = json.loads((root/'EARLY_XCRESULT_TOOL_SUPPORT.json').read_bytes())
+            self.assertEqual(len(support['commands']),4)
+            self.assertEqual(support['commands'][-1]['state'],'FAIL')
+            self.assertEqual(support['commands'][-1]['exit_code'],64)
+            self.assertNotIn('json_type',support['commands'][-1])
+            self.assertFalse(support['ordinary_admitted'])
+            self.assertFalse(support['internal_admitted'])
+            self.assertIn('NO_RESULT_BUNDLE_OR_TEST_CASE_ADMISSION',support['qualification'])
+
+
+
+class InstalledPermission30V2Controls(unittest.TestCase):
+    """Byte identity is absolute; only safe historical-diagnostic modes may narrow."""
+    def rows(self):
+        return [{'path':'Resources','type':'directory','mode':'0o755'},
+                {'path':'LayerwellStaging','type':'file','mode':'0o755','bytes':9,'sha256':'a'*64},
+                {'path':'Resources/Info.plist','type':'file','mode':'0o644','bytes':2,'sha256':'b'*64}]
+
+    def test_exact_and_safe_narrowing_preserve_closed_byte_identity_and_refuse_every_other_delta(self):
+        expected = self.rows()
+        exact = c.retained27_inventory_guard(expected,[dict(row) for row in expected])
+        self.assertEqual(exact['classification'],'EXACT_BYTES_AND_MODES')
+        narrowed = [dict(row) for row in expected]
+        for row,mode in zip(narrowed,['0o500','0o500','0o400']):
+            row['mode'] = mode
+        result = c.retained27_inventory_guard(expected,narrowed)
+        self.assertEqual(result['regular_files_byte_identical'],2)
+        self.assertEqual(result['closed_paths'],3)
+        self.assertEqual(len(result['mode_changes']),3)
+        self.assertFalse(result['ordinary_admitted'])
+        self.assertFalse(result['internal_admitted'])
+        mutations = []
+        for index,key,value in [(1,'mode','0o775'),(1,'mode','0o777'),(1,'mode','0o4755'),
+                                (1,'mode','0o355'),(1,'mode','0o644'),(0,'mode','0o400'),
+                                (2,'mode','0o0'),(1,'mode','0o0755'),(1,'mode',493),
+                                (1,'bytes',8),(1,'bytes',True),(1,'sha256','c'*64),
+                                (1,'type','symlink'),(1,'uid',501),(1,'path','UnknownMember')]:
+            rows = [dict(row) for row in expected]
+            rows[index][key] = value
+            mutations.append(rows)
+        mutations += [expected[:-1],expected+[{'path':'added','type':'directory','mode':'0o755'}],
+                      [expected[0],expected[1],expected[1]]]
+        for rows in mutations:
+            with self.subTest(observed=rows),self.assertRaises(ValueError):
+                c.retained27_inventory_guard(expected,rows)
+
+    def test_narrowed_mode_pass_still_requires_installed_signature_before_qualified_stage(self):
+        with tempfile.TemporaryDirectory(prefix='installed30-narrow-') as temporary:
+            fixture = InstalledObservation30Controls.fixture(self,Path(temporary),'0o500')
+            runner,native,app,installed,inventory,observed,evidence,seen = fixture
+            original = runner.passed
+            def passed(key,value):
+                seen.append('installed-stage')
+                original(key,value)
+            runner.passed = passed
+            detail = c.retained27_installed(runner,native,installed,app,inventory)
+            self.assertEqual(seen,['installed-signature-probe','installed-stage'])
+            verification = json.loads((evidence/'identity-validation.json').read_bytes())
+            self.assertEqual(verification['producer_to_installed']['classification'],
+                             'EXACT_BYTES_WITH_SAFE_PERMISSION_NARROWING')
+            self.assertEqual(verification['producer_to_installed']['mode_changes'],
+                             [{'path':'LayerwellStaging','producer_mode':'0o755','observed_mode':'0o500'}])
+            self.assertFalse(detail['ordinary_admitted'])
+            self.assertFalse(detail['internal_admitted'])
+            self.assertEqual(set(runner.receipt['stages']),{'retained27-diagnostic-installed'})
+
+    def test_inventory_reader_error_is_retained_and_never_becomes_empty_or_absent_recovery_data(self):
+        with tempfile.TemporaryDirectory(prefix='installed30-reader-') as temporary:
+            fixture = InstalledObservation30Controls.fixture(self,Path(temporary))
+            runner,native,app,installed,inventory,observed,evidence,seen = fixture
+            original = native.bundle_inventory
+            def read(folder):
+                if Path(folder) == installed:
+                    raise OSError('SYNTHETIC_INSTALLED_INVENTORY_READER_FAILURE')
+                return original(folder)
+            native.bundle_inventory = read
+            with self.assertRaisesRegex(OSError,'SYNTHETIC_INSTALLED_INVENTORY_READER_FAILURE'):
+                c.retained27_installed(runner,native,installed,app,inventory)
+            self.assertTrue((evidence/'expected-producer-inventory.json').is_file())
+            self.assertTrue((evidence/'observed-extracted-inventory.json').is_file())
+            self.assertFalse((evidence/'observed-installed-inventory.json').exists())
+            failure = json.loads((evidence/'inventory-acquisition-failure.json').read_bytes())
+            self.assertEqual(failure['inventory'],'installed')
+            self.assertEqual(failure['type'],'OSError')
+            self.assertEqual(seen,[])
+            self.assertEqual(runner.receipt['stages'],{})
+
 
 
 if __name__ == '__main__':
