@@ -2775,6 +2775,113 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T17:48:35.229991+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.py",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 22351,
+          "preimage_sha256": "63d328b41a67b8a79c33584453ab21ceb5d7f89b81994995dca8d66b9d8819c4",
+          "preimage_blob": "79327a73bef3b7f7c47e4baf59dc6d64f39ea106"
+        },
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.test.py",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9131,
+          "preimage_sha256": "bbd27ff4be53631a0a88836685049a97f2683bb98e4e702c96ab92ecda17103e",
+          "preimage_blob": "f4a1994f1f4c69ca5f17592b25f48c5c1b00611e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 170840,
+          "preimage_sha256": "5360270971b1a84bf2f914c8f2204a979cdeb6967e372afeb1999050eeb9f99c",
+          "preimage_blob": "5ad18d1922d8efecbd5acb08fa361a39527f1bf8"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 86740,
+          "preimage_sha256": "e1d70c8fc9ce477d735f25414dee88d088f2405ce483f92cabd230a90c003dff",
+          "preimage_blob": "90521151bfe04b20f6682d8d75ee6fbe862e4749"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11311,
+          "preimage_sha256": "fe4f9521f8c9028b20b1c88a238000d7e5f5e0216be256e827722c62537f92bb",
+          "preimage_blob": "b0ef04635f78a00facd9c98bf015434feef3dfb6"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 10203,
+          "preimage_sha256": "8321bc73b6cde7e9bc408556c97d09ad442eb489b362a5191362f7eaadb3e796",
+          "preimage_blob": "90c889badb11f292306772156efcba08804c703d"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17190,
+          "preimage_sha256": "caf83bf21a4731278dd8baf5d436780f2b7be2fde3549c54d3ce9bd9b38a7854",
+          "preimage_blob": "b54df28e5b394e530f7a46caca02c95c3b80fbf5"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 162920,
+          "preimage_sha256": "28f3a39d54f6482299082ee0aa994b2c86c3ff4dae876ac97a053aa66de9a007",
+          "preimage_blob": "66296e158f7be09cd754120613ee18d7e00ad63e"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "d9f3070f6074e2f1b4dce107f8d74cdfdd1e659c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 74135,
+          "preimage_sha256": "879cf868b525b106291e5e461359a73b83fef1487234cf8bb15bdefdbcde1ac3",
+          "preimage_blob": "b40b408856c2908d884e90e91e4310de45207dc4"
+        }
+      ],
+      "causal_need": "Actual27 compiled/signed/archived diagnostic, then84minute work budget left31.371seconds of configured300containerquery. Continue actualruntime economically by authenticating exact known27 partial artifact; no repeated app build. Only fixedhistoricaldiagnostic may consume this failed producer, never ordinary/build/internal successful gates. Collectactualage/lifecycle/lease/PID/source trace and installedXcode result schema tofinishcurrent3case coordinator.",
+      "invariant": "One pinned artifact/run/job/head/tree/digest andknown failureboundary,335members/334payloads/130streams/source/restoration/app347TARheaders+346inventoryrows verified. ProducerEB/503d staysdistinct fromcurrentdriver; no relabel ascurrentrepairedapp. Generic successfulproducer validators unchanged. Realcodesign/SDK/entitlements/allinstalledbytes/launch/survival mandatory. OldF218UI onecase onlyforDIAG, noordinary/internaladmission evenifpass; nofixtureflags, forcedroutes, dataerasure, keychain/signing/account/dependency/timeout change. Token popped beforeRunner andneverchildenv; minimalread-onlyactions permission.",
+      "validation": "Actualrepo11helper/73runtime/6workflow/10scope/14signing controls plus actual27rawsmoke; same30source names andfirstpartycurrent24pins/202172 requirements. Historical445->F218programwitness retained; currentnormal18684/SHA7ea and3methods protected; fullinternalF218suffix onlyone explicitlocalheadingline substitution. Uncached7030/type3/lint3/117focus/252privacy atC36 remainactualapp-source proof, notruntime. CurrentSOURCEbothprofiles andonly2worklist seal beforejob28. SourceFrozenwholetrackedidentity; exactread-onlyimport mode owns noNode/npm/Pods/prebuild/appcompile; isolatedhistoricalUIrunneronly.",
+      "producer": {
+        "attempt": 27,
+        "run": 42246927646,
+        "job": 127991461922,
+        "artifact": 13524318049,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+        "tree": "503d21a76f89831f3b7b03afa86947a030d9b760",
+        "wire_bytes": 85192778,
+        "wire_sha256": "75b115d8da0730ba431698f013444c34576c729d2b99ee6f649ca9bfdbad7119",
+        "app_bytes": 44035986,
+        "app_sha256": "ab2cc04c3d06be484160a2e57ad3ec4a01052a30004518f59b3d29938c6c52db",
+        "upstream_payload_bytes": 85129338
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "native_attempt_to_follow": 28
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",

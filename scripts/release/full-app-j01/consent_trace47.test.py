@@ -148,5 +148,95 @@ class ConsentTrace47Tests(unittest.TestCase):
                                             'com.layerwell.app.staging', inventory)
 
 
+
+class RetainedDiagnostic27Tests(unittest.TestCase):
+    def metadata(self):
+        p = c.RETAINED27
+        run = {'id':p['run_id'],'run_attempt':1,'head_sha':p['head'],'head_branch':'stage/m1-native-runtime47',
+            'event':'pull_request','path':'.github/workflows/campaign47-native-runtime.yml',
+            'status':'completed','conclusion':'failure','repository':{'full_name':'TasfiqJ/onSkin','private':False},
+            'head_repository':{'full_name':'TasfiqJ/onSkin'}}
+        job = {'id':p['job_id'],'run_id':p['run_id'],'run_attempt':1,'head_sha':p['head'],
+            'name':'C47 build','status':'completed','conclusion':'failure','labels':['macos-26-intel']}
+        artifact = {'id':p['artifact_id'],
+            'name':'campaign47-native-build-' + p['head'] + '-' + str(p['run_id']) + '-1',
+            'expired':False,'size_in_bytes':p['wire_bytes'],'digest':'sha256:' + p['digest'],
+            'workflow_run':{'id':p['run_id'],'head_sha':p['head'],'head_branch':'stage/m1-native-runtime47'}}
+        return run,job,artifact
+
+    def test_pinned_partial_producer_metadata_refuses_wrong_job_head_digest_expiry_and_types(self):
+        run,job,artifact = self.metadata()
+        self.assertEqual(c.retained27_metadata(run,job,artifact)['wire_bytes'],85192778)
+        for index,key,value in [(0,'head_sha','0'*40),(0,'run_attempt',True),(1,'id',1),
+                                (1,'conclusion','success'),(1,'labels',['larger-paid-runner']),
+                                (2,'digest','sha256:'+'0'*64),(2,'expired',True),(2,'size_in_bytes',1)]:
+            rows = [dict(row) for row in self.metadata()]
+            rows[index][key] = value
+            with self.subTest(key=key,value=value),self.assertRaisesRegex(ValueError,'RETAINED27_'):
+                c.retained27_metadata(*rows)
+
+    def test_historical_source_and_current_consumer_are_separate_and_never_admit(self):
+        producer = {'head':c.RETAINED27['head'],'tree':c.RETAINED27['tree']}
+        consumer = {'head':'a'*40,'tree':'b'*40}
+        result = c.retained27_sources(consumer,producer)
+        self.assertEqual(result['producer_source'],producer)
+        self.assertEqual(result['consumer_source'],consumer)
+        self.assertFalse(result['ordinary_admitted'])
+        self.assertFalse(result['internal_admitted'])
+        with self.assertRaisesRegex(ValueError,'PRODUCER_SOURCE'):
+            c.retained27_sources(consumer,{**producer,'tree':'0'*40})
+        with self.assertRaisesRegex(ValueError,'DISTINCT_CONSUMER'):
+            c.retained27_sources(producer,producer)
+
+    def test_wrong_wire_and_wrong_closed_product_inventory_are_not_imported(self):
+        with tempfile.TemporaryDirectory(prefix='c47-retained27-refuse-') as temporary:
+            root = Path(temporary)
+            native = SimpleNamespace(STAGE_MAX_WIRE=100000000,
+                stage_file_digest=lambda *args:{'bytes':85192778,'sha256':'0'*64})
+            with self.assertRaisesRegex(ValueError,'RETAINED27_WIRE'):
+                c.retained27_zip(native,root/'wire.zip',root/'payload')
+            self.assertFalse((root/'payload').exists())
+            native = SimpleNamespace(read_native_file=lambda path:b'{}')
+            with self.assertRaisesRegex(ValueError,'APP_INVENTORY_DIGEST'):
+                c.retained27_inventory(native,root)
+
+    def test_claimed_ordinary_pass_cannot_enter_the_pinned_partial_diagnostic(self):
+        p=c.RETAINED27
+        value={'source':{'head':p['head'],'tree':p['tree']},
+               'job_context':{'repository':'TasfiqJ/onSkin','run_id':p['run_id'],'run_attempt':1,
+                              'job_id':'native-build','job_name':'C47 build'},
+               'status':'PARTIAL_BLOCKED','stage':'build','stage_complete':False,
+               'ordinary_admitted':True,'internal_supported_owner':'NOT_RUN',
+               'acceptance_granted':False,'campaign_candidate_complete':False,'release':'NO_GO',
+               'failure':{'detail':'C47_COMMAND_FAILED:simulator-installed-container','type':'ValueError'}}
+        native=SimpleNamespace(read_native_file=lambda path:json.dumps(value).encode(),stage_json=json.loads)
+        with self.assertRaisesRegex(ValueError,'KNOWN_PARTIAL_ONLY'):
+            c.retained27_execution(native,Path('.'))
+
+    def test_retained_install_uses_full_producer_inventory_and_refuses_installed_byte_drift(self):
+        with tempfile.TemporaryDirectory(prefix='c47-retained27-installed-') as temporary:
+            root=Path(temporary)
+            app,installed=root/'app',root/'installed'
+            app.mkdir();installed.mkdir()
+            for folder in (app,installed):
+                (folder/'Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier':'com.layerwell.app.staging',
+                                                               'CFBundleExecutable':'LayerwellStaging'}))
+                (folder/'LayerwellStaging').write_bytes(b'diagnostic')
+            def inventory(folder):
+                return [{'path':path.name,'type':'file','mode':'0o644','bytes':len(path.read_bytes()),
+                         'sha256':c.digest(path.read_bytes())} for path in sorted(folder.iterdir())]
+            producer={'head':c.RETAINED27['head'],'tree':c.RETAINED27['tree']}
+            manifest={'source':producer,'files':inventory(app)}
+            receipt={'source':{'head':'a'*40,'tree':'b'*40},'stages':{}}
+            runner=SimpleNamespace(receipt=receipt,passed=lambda key,value:receipt['stages'].update({key:value}))
+            native=SimpleNamespace(bundle_inventory=inventory,read_native_file=lambda path:path.read_bytes())
+            result=c.retained27_installed(runner,native,installed,app,manifest)
+            self.assertFalse(result['ordinary_admitted'])
+            self.assertEqual(receipt['source']['head'],'a'*40)
+            (installed/'LayerwellStaging').write_bytes(b'drift')
+            with self.assertRaisesRegex(ValueError,'ALL_INSTALLED_BYTES'):
+                c.retained27_installed(runner,native,installed,app,manifest)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -14,6 +14,7 @@ function validate(text) {
   const resume25 = text.includes('--stage normal --resume25');
   const probeOnly = text.includes('--stage build --simulator-probe');
   const traceOnly = text.includes('--stage build --consent-trace04');
+  const retainedOnly = text.includes('--stage build --consent-runtime27');
   const doc = parseDocument(text, { strict: true, uniqueKeys: true, merge: false });
   assert.deepEqual(doc.errors, []);
   assert.deepEqual(doc.warnings, []);
@@ -29,11 +30,12 @@ function validate(text) {
     const job = w.jobs['native-' + role];
     assert.equal(job.name, 'C47 ' + role);
     assert.deepEqual(job.needs, resume25 && role === 'normal' ? undefined : parents.length ? parents.map(parent => 'native-' + parent) : undefined);
-    assert.deepEqual(job.permissions, parents.length ? { contents: 'read', actions: 'read' } : undefined);
+    const retainedBuild = retainedOnly && role === 'build';
+    assert.deepEqual(job.permissions, parents.length || retainedBuild ? { contents: 'read', actions: 'read' } : undefined);
     assert.equal(job['runs-on'], 'macos-26-intel');
     assert.equal(job['timeout-minutes'], 90);
-    assert.equal(job.if, scope + ((resume25 ? role !== 'normal' : (probeOnly || traceOnly) && role !== 'build') ? ' && false' : ''));
-    assert.equal(job.steps.length, 5);
+    assert.equal(job.if, scope + ((resume25 ? role !== 'normal' : (probeOnly || traceOnly || retainedOnly) && role !== 'build') ? ' && false' : ''));
+    assert.equal(job.steps.length, retainedBuild ? 4 : 5);
     assert.deepEqual(job.outputs, {
       artifact_id: expression('steps.upload.outputs.artifact-id'),
       artifact_digest: expression('steps.upload.outputs.artifact-digest'),
@@ -42,28 +44,29 @@ function validate(text) {
     });
     assert.deepEqual(job.steps.filter(s => s.uses).map(s => s.uses), [
       'actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0',
-      'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e',
+      ...(retainedBuild ? [] : ['actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e']),
       'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',
     ]);
     assert.deepEqual(job.steps[0].with, { ref: expression('github.event.pull_request.head.sha'), 'fetch-depth': 0, 'persist-credentials': false });
-    assert.deepEqual(job.steps[1].with, { 'node-version': '22.22.2', 'package-manager-cache': false });
+    if (!retainedBuild) assert.deepEqual(job.steps[1].with, { 'node-version': '22.22.2', 'package-manager-cache': false });
+    const execute = job.steps[retainedBuild ? 1 : 2];
     const env = { C47_EXPECTED_HEAD: expression('github.event.pull_request.head.sha'), C47_UI_PHASE: 'normal-staging' };
-    if (parents.length) env.C47_ARTIFACT_READ_TOKEN = expression('github.token');
+    if (parents.length || retainedBuild) env.C47_ARTIFACT_READ_TOKEN = expression('github.token');
     for (const parent of resume25 && role === 'normal' ? [] : parents) {
       for (const [key, output] of [['ARTIFACT_ID', 'artifact_id'], ['ARTIFACT_DIGEST', 'artifact_digest'], ['RUN_ID', 'run_id'], ['RUN_ATTEMPT', 'run_attempt'], ['PAYLOAD_BYTES', 'payload_bytes']]) {
         env['C47_' + parent.toUpperCase() + '_' + key] = expression("needs['native-" + parent + "'].outputs." + output);
       }
     }
-    assert.deepEqual(job.steps[2].env, env);
-    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
-    const budget = job.steps[3];
+    assert.deepEqual(execute.env, env);
+    assert.equal(execute.run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : retainedBuild ? ' --consent-runtime27' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
+    const budget = job.steps[retainedBuild ? 2 : 3];
     assert.equal(budget.id, 'evidence-budget');
     assert.equal(budget.if, 'always()');
     assert.match(budget.run, /total \+ reserved <= 500 \* 1024 \* 1024/);
     assert.match(budget.run, /EVIDENCE_LINK_OR_SPECIAL_FILE/);
     assert.match(budget.run, /upstream_payload_bytes/);
     assert.match(budget.run, /GITHUB_OUTPUT/);
-    const upload = job.steps[4];
+    const upload = job.steps[retainedBuild ? 3 : 4];
     assert.equal(upload.id, 'upload');
     assert.equal(upload.if, "always() && steps.evidence-budget.outcome == 'success'");
     assert.equal(upload.with['retention-days'], 3);
@@ -90,6 +93,10 @@ test('C47 isolated tooling probe cannot start either application consumer', () =
     if (source.includes('--resume25')) {
       assert.equal((source.match(/&& false/gu) ?? []).length, 2);
       assert.throws(() => validate(source.replace(' && false', '')));
+    } else if (source.includes('--consent-runtime27')) {
+      assert.equal((source.match(/&& false/gu) ?? []).length, 2);
+      assert.throws(() => validate(source.replace(' && false', '')));
+      assert.throws(() => validate(source.replace(' --consent-runtime27', '')));
     } else if (source.includes('--consent-trace04')) {
       assert.equal((source.match(/&& false/gu) ?? []).length, 2);
       assert.throws(() => validate(source.replace(' && false', '')));
@@ -126,13 +133,20 @@ test('C47 refuses parallel stages, missing wire digest or authority outside the 
   }
 });
 
-test('C47 preserves authenticated historical workflows and admits only the diagnostic Mac26', () => {
+test('C47 preserves authenticated historical workflows and admits only the current diagnostic Mac', () => {
   validate(execFileSync('git', ['show', '445472ce057b90f08b5a51d5a49167c757d34b79:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
   const w = parseDocument(source).toJS();
   validate(execFileSync('git', ['show', 'f21831f5731be928c8e323c509fb62b3d12a654e:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
   assert.deepEqual(Object.entries(w.jobs).filter(([, job]) => !job.if.endsWith(' && false')).map(([name]) => name), ['native-build']);
   assert.equal(w.jobs['native-build'].needs, undefined);
-  assert.match(w.jobs['native-build'].steps[2].run, /--stage build --consent-trace04 /);
+  assert.match(w.jobs['native-build'].steps[1].run, /--stage build --consent-runtime27 /);
+  assert.deepEqual(w.jobs['native-build'].permissions, { contents: 'read', actions: 'read' });
+  assert.deepEqual(w.jobs['native-build'].steps[1].env, {
+    C47_EXPECTED_HEAD: expression('github.event.pull_request.head.sha'), C47_UI_PHASE: 'normal-staging',
+    C47_ARTIFACT_READ_TOKEN: expression('github.token'),
+  });
+  assert.throws(() => validate(source.replace('      actions: read\n', '')));
+  assert.throws(() => validate(source.replace(expression('github.token'), expression('github.actor'))));
 });
 
 test('Quality retains its real online failure while independent checks and exports execute', () => {

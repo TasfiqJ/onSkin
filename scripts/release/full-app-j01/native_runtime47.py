@@ -1350,13 +1350,45 @@ def prepare(r, source_controls=True):
     return head, tools, source47
 
 
-def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False):
+def execute_retained_consent_runtime27(r, token):
+    """Runtime-only continuation of its authenticated diagnostic; no app producer."""
+    require(platform.system() == 'Darwin', 'MACOS_REQUIRED')
+    head = os.environ.get('C47_EXPECTED_HEAD', '')
+    require(re.fullmatch(r'[a-f0-9]{40}', head), 'EXPECTED_HEAD_REQUIRED')
+    require(os.environ.get('C47_UI_PHASE') == 'normal-staging', 'NORMAL_STAGING_PHASE_REQUIRED')
+    for key, value in ENVIRONMENT.items():
+        require(r.env.get(key) == value, 'BUILD_ENVIRONMENT:' + key)
+    require(Path(r.env['DEVELOPER_DIR']).is_dir(), 'PINNED_XCODE_UNAVAILABLE')
+    require(bool(token), 'CONSENT_RUNTIME27_ARTIFACT_TOKEN_REQUIRED')
+    require('C47_ARTIFACT_READ_TOKEN' not in r.env and
+            'C47_ARTIFACT_READ_TOKEN' not in os.environ, 'ARTIFACT_TOKEN_CHILD_ENV_FORBIDDEN')
+    r.env['C46_EXPECTED_HEAD'] = head
+    r.receipt['source'] = r.source_proof('source-before-consent-runtime27', head)
+    r.passed('source', r.receipt['source'])
+    path = r.root / 'scripts/release/full-app-j01/consent_trace47.py'
+    spec = importlib.util.spec_from_file_location('c47_retained_consent_runtime27', path)
+    diagnostic = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(diagnostic)
+    try:
+        diagnostic.run_retained_runtime27(r, sys.modules[__name__], token)
+    finally:
+        try:
+            r.source_proof('source-after-consent-runtime27', head)
+        finally:
+            retain_result_bundles(r)
+    r.receipt.update(status='CONSENT_RETAINED_RUNTIME_DIAGNOSTIC_ONLY_27', ordinary_admitted=False,
+                     internal_supported_owner='NOT_RUN', finished_utc=utc())
+    r.persist()
+
+
+def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False):
     require(stage in ('build', 'normal', 'internal'), 'EXECUTION_STAGE')
-    require(sum(map(bool, (probe, resume25, consent_trace04))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
+    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
     require(not probe or stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
     require(not resume25 or stage == 'normal', 'REUSE25_NORMAL_ONLY')
     require(not consent_trace04 or stage == 'build', 'CONSENT_TRACE_BUILD_STAGE_ONLY')
-    return 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
+    require(not consent_runtime27 or stage == 'build', 'CONSENT_RUNTIME27_BUILD_STAGE_ONLY')
+    return 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
 
 
 def execute(r, compile_only=False, consent_trace04=False):
@@ -2760,6 +2792,7 @@ def main():
     parser.add_argument('--stage', required=True, choices=('build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
     parser.add_argument('--consent-trace04', action='store_true', help='Separate read-only consent diagnostic; never ordinary or internal admission')
+    parser.add_argument('--consent-runtime27', action='store_true', help='Authenticated retained diagnostic runtime only; never an app producer')
     parser.add_argument('--simulator-probe', action='store_true',
                         help='Isolated C47 Xcode/Keychain tooling diagnostic; never an app producer')
     args = parser.parse_args()
@@ -2776,8 +2809,11 @@ def main():
     code, context = 0, None
     try:
         context = hosted_stage_context(runner, args.stage)
-        execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25, consent_trace04=args.consent_trace04)
-        if args.stage == 'build':
+        execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25,
+                       consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27)
+        if args.consent_runtime27:
+            execute_retained_consent_runtime27(runner, token)
+        elif args.stage == 'build':
             require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
             if args.simulator_probe:
                 path = root / 'scripts/release/full-app-j01/simulator_signing47.py'

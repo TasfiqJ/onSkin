@@ -30,6 +30,9 @@ jobs:
 
   native-build:
     name: C47 build
+    permissions:
+      contents: read
+      actions: read
     if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
     runs-on: macos-26-intel
     timeout-minutes: 90
@@ -46,16 +49,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Setup supported Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
-        with:
-          node-version: 22.22.2
-          package-manager-cache: false
       - name: Execute build stage
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
-        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage build --consent-trace04 --output "$RUNNER_TEMP/c47-evidence"
+          C47_ARTIFACT_READ_TOKEN: ${{ github.token }}
+        run: python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage build --consent-runtime27 --output "$RUNNER_TEMP/c47-evidence"
       - name: Enforce bounded evidence upload
         id: evidence-budget
         if: always()
@@ -90,7 +89,7 @@ jobs:
           retention-days: 3
           compression-level: 0
 
-  # Native26 separate consent trace. No ordinary/internal admission.
+  # Authenticated retained native27 diagnostic only. No ordinary/internal admission.
   native-normal:
     name: C47 normal
     needs: [native-build]

@@ -365,8 +365,11 @@ class Runtime47Tests(unittest.TestCase):
 
     def test_frozen_normal_swift_prefix_contains_only_the_original_normal_class(self):
         current = Path(__file__).with_name('native_ui47.swift').read_bytes()
+        root = Path(__file__).resolve().parents[3]
         source = subprocess.check_output(['git', 'show',
-            '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], cwd=Path(__file__).resolve().parents[3])
+            '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], cwd=root)
+        preserved = subprocess.check_output(['git', 'show',
+            'f21831f5731be928c8e323c509fb62b3d12a654e:scripts/release/full-app-j01/native_ui47.swift'], cwd=root)
         prefix = source[:8736]
         self.assertEqual(hashlib.sha256(prefix).hexdigest(),
                          'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44')
@@ -374,11 +377,43 @@ class Runtime47Tests(unittest.TestCase):
         self.assertNotIn(b'final class C47InternalOwnerUI', prefix)
         self.assertIn(b'final class C47InternalOwnerUI', source[8736:])
         marker = b'    func testNormalStagingAgeConsentAndUnavailableAccount() throws {'
-        self.assertEqual(current.split(marker)[1], source.split(marker)[1])
-        self.assertIn(b'executionTimeAllowance = 600', current.split(marker)[0])
-        self.assertIn(b'for character in value {', current.split(marker)[0])
-        self.assertIn(b'requireFieldValue(field, prefix, label)', current.split(marker)[0])
-        self.assertIn(b'XCTAssertEqual(field.value as? String, value, label + " did not accept the synthetic input")', current)
+        self.assertEqual(source.count(marker), 1)
+        self.assertEqual(preserved.count(marker), 1)
+        # The entire old test body and internal suffix remain a real Git witness.
+        self.assertEqual(preserved.split(marker)[1], source.split(marker)[1])
+        self.assertIn(b'executionTimeAllowance = 600', preserved.split(marker)[0])
+        self.assertIn(b'for character in value {', preserved.split(marker)[0])
+        self.assertIn(b'requireFieldValue(field, prefix, label)', preserved.split(marker)[0])
+        self.assertIn(b'XCTAssertEqual(field.value as? String, value, label + " did not accept the synthetic input")', preserved)
+        separator = b'\nimport UIKit\n'
+        self.assertEqual(current.count(separator), 1)
+        self.assertEqual(preserved.count(separator), 1)
+        normal = current.split(separator)[0]
+        self.assertEqual(len(normal), 18684)
+        self.assertEqual(hashlib.sha256(normal).hexdigest(),
+                         '7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20')
+        self.assertIn(b'final class C47NativeUI', normal)
+        self.assertNotIn(b'final class C47InternalOwnerUI', normal)
+        self.assertNotIn(b'import UIKit', normal)
+        self.assertEqual([line.strip().split(b'func ')[1].split(b'(')[0]
+                          for line in normal.splitlines() if line.strip().startswith(b'func test')],
+                         [b'testV04FreshConsentRefusalAndUnavailableAccount',
+                          b'testV04UnderageRestartRequiresExplicitInitialConsent',
+                          b'testV04ExplicitWithdrawalReviewCancelAndFreshReconsent'])
+        for helper in [b'executionTimeAllowance = 600', b'for character in value {',
+                       b'requireFieldValue(field, prefix, label)',
+                       b'XCTAssertEqual(field.value as? String, value, label + " did not accept the synthetic input")']:
+            self.assertIn(helper, normal)
+        old_internal = preserved[preserved.index(b'import UIKit\n'):]
+        current_internal = current[current.index(b'import UIKit\n'):]
+        before_heading = b'        XCTAssertTrue(text("Your account is still here.", app).waitForExistence(timeout: deadline))'
+        after_heading = b'        XCTAssertTrue(text("Health features are paused on this device.", app).waitForExistence(timeout: deadline))'
+        self.assertEqual(old_internal.count(before_heading), 1)
+        self.assertEqual(current_internal, old_internal.replace(before_heading, after_heading, 1))
+        self.assertEqual([line.strip().split(b'func ')[1].split(b'(')[0]
+                          for line in current_internal.splitlines() if line.strip().startswith(b'func test')],
+                         [b'test01CoreRetainedNativeJourney', b'test03LargerTextManualInput',
+                          b'test02LocalExport', b'test04RemoveSyntheticLocalExport', b'test05ConsentWithdrawal'])
 
     def test_export_schema_requires_source_scope_and_retained_journey_facts_without_content_in_report(self):
         value = self.export_fixture()
@@ -1389,6 +1424,73 @@ class ConsentDiagnostic04AdmissionTests(unittest.TestCase):
         fixture[2] = Path(n.__file__).read_bytes()
         with self.assertRaisesRegex(ValueError, 'BUILD_FUNCTION_OR_ENVIRONMENT_DRIFT'):
             n.verify_reuse25_delta(*fixture)
+
+
+class RetainedConsentRuntime27AdmissionTests(unittest.TestCase):
+    def test_retained_mode_is_build_only_and_exclusive_with_every_old_mode(self):
+        self.assertEqual(n.execution_mode('build', consent_runtime27=True), 'consent-runtime27')
+        self.assertEqual(n.execution_mode('build', consent_trace04=True), 'consent-trace04')
+        self.assertEqual(n.execution_mode('build', probe=True), 'probe')
+        self.assertEqual(n.execution_mode('normal', resume25=True), 'reuse25')
+        for stage in ('normal', 'internal'):
+            with self.subTest(stage=stage), self.assertRaisesRegex(ValueError, 'CONSENT_RUNTIME27_BUILD_STAGE_ONLY'):
+                n.execution_mode(stage, consent_runtime27=True)
+        for old in ('probe', 'resume25', 'consent_trace04'):
+            with self.subTest(old=old), self.assertRaisesRegex(ValueError, 'EXCLUSIVE_EXECUTION_MODE'):
+                n.execution_mode('build', consent_runtime27=True, **{old: True})
+
+    def test_completed_retained_diagnostic_never_qualifies_as_a_build_producer(self):
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            root = Path(directory)
+            (root/'execution.json').write_text(json.dumps({'stage': 'build', 'stage_complete': True,
+                'status': 'CONSENT_RETAINED_RUNTIME_DIAGNOSTIC_ONLY_27',
+                'ordinary_admitted': False,
+                'stages': {'compiled': {'status': 'PASS'}, 'app-process-keychain': {'status': 'PASS'}}}), encoding='utf8')
+            with patch.object(n, 'producer_source_matches'):
+                with self.assertRaisesRegex(ValueError, 'BUILD_PRODUCER_STAGE'):
+                    n.verify_build_producer(SimpleNamespace(), {'payload_directory': str(root)})
+
+    def test_dispatch_binds_current_source_restores_checks_on_failure_and_never_prepares_build_tools(self):
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            root = Path(directory)
+            helper = root/'scripts/release/full-app-j01/consent_trace47.py'
+            helper.parent.mkdir(parents=True)
+            head = 'a'*40
+            current = {'head': head, 'tree': 'b'*40}
+            for fail in (False, True):
+                helper.write_text("def run_retained_runtime27(r,n,token):\n"
+                    "    assert token == 'synthetic-ephemeral-token27'\n"
+                    "    assert 'C47_ARTIFACT_READ_TOKEN' not in r.env\n"
+                    "    r.receipt['observed_current_head'] = r.receipt['source']['head']\n" +
+                    ("    raise RuntimeError('retained-observation-failed')\n" if fail else ''), encoding='utf8')
+                calls = []
+                receipt = {}
+                def source(name, observed):
+                    calls.append((name, observed))
+                    return current.copy()
+                runner = SimpleNamespace(root=root, env=dict(n.ENVIRONMENT), receipt=receipt,
+                    source_proof=source, persist=lambda:None, passed=lambda *args:None)
+                with patch.object(n.platform, 'system', return_value='Darwin'), \
+                     patch.object(Path, 'is_dir', return_value=True), \
+                     patch.dict(n.os.environ, {'C47_EXPECTED_HEAD':head, 'C47_UI_PHASE':'normal-staging'}), \
+                     patch.dict(sys.modules, {n.__name__: n}), \
+                     patch.object(n, 'prepare', side_effect=AssertionError('build preparation forbidden')) as prepare, \
+                     patch.object(n, 'retain_result_bundles') as retain:
+                    n.os.environ.pop('C47_ARTIFACT_READ_TOKEN', None)
+                    if fail:
+                        with self.assertRaisesRegex(RuntimeError, 'retained-observation-failed'):
+                            n.execute_retained_consent_runtime27(runner, 'synthetic-ephemeral-token27')
+                    else:
+                        n.execute_retained_consent_runtime27(runner, 'synthetic-ephemeral-token27')
+                        self.assertEqual(receipt['status'], 'CONSENT_RETAINED_RUNTIME_DIAGNOSTIC_ONLY_27')
+                        self.assertFalse(receipt['ordinary_admitted'])
+                    prepare.assert_not_called()
+                    retain.assert_called_once_with(runner)
+                self.assertEqual(calls, [('source-before-consent-runtime27',head),('source-after-consent-runtime27',head)])
+                self.assertEqual(receipt['source'], current)
+                self.assertEqual(receipt['observed_current_head'], head)
+                self.assertNotIn('synthetic-ephemeral-token27', json.dumps(receipt))
+                self.assertNotIn('C47_ARTIFACT_READ_TOKEN', runner.env)
 
 
 if __name__ == '__main__':
