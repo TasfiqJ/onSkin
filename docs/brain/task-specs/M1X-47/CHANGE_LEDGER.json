@@ -2720,6 +2720,61 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T17:05:17.163460+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "a209b890a4b62dc9d776ae316e6ffde945960f3c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 170436,
+          "preimage_sha256": "a14ad42d87a02f5434ddf388004cce98b90771f1b69c40e25b3da480ebb2ce18"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "a209b890a4b62dc9d776ae316e6ffde945960f3c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17190,
+          "preimage_sha256": "5972e910b6e41093b5645d5b30a6b45bb89b9b3dda98506e5f66a605c4eb9822"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "a209b890a4b62dc9d776ae316e6ffde945960f3c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 160049,
+          "preimage_sha256": "9da45c1e50e168b13f0c16e6579ec431863df2f14c57a13ba0cf05ee33a66c43"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "a209b890a4b62dc9d776ae316e6ffde945960f3c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 73628,
+          "preimage_sha256": "2f691fd9b3ccad57193aaadf3051d53b0eee7f04ec2ccec050ca4a9e53ee0aae"
+        }
+      ],
+      "causal_need": "Actualnative27 GitHub UI reached its display limit inside >64000lines of dependency inventory, obscuring later native progress. Keep entire dependency stdout/required command/exit/hash in retained evidence but omit only its duplicate console display and print one explicit capture summary; stderr remains visible.",
+      "invariant": "No immutable command output changed or omitted from artifact, no diagnostic/error/admission relaxation, no timeout/budget/build/app/authority change. Same raw target.write occurs before console decision; required nonzero exit still fails. Only console display for exact dependency-graph stdout is bounded, all other streams unchanged. Native27 remains immutableEB9375; this affects nextpreparedcurrent source only.",
+      "validation": "Existing capture/raw-log/runtime controls plus direct meaningful full retained dependency-output/failed-command preservation check, fresh actual native artifact. Exact one source pin refresh; all source/ordinary/internal proof requirements unchanged.",
+      "running_native": {
+        "attempt": 27,
+        "run_id": 42246927646,
+        "job_id": 127991461922,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12"
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",

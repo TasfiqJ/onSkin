@@ -249,3 +249,6 @@ C04 current ordinarySwift/Ruby successor prepared: exact3fresh/refusal,underage-
 
 
 C04 internalcopy assertion successor: case5 provider-unconfiguredDebug expectedoldaccountheading, nowexactsource-proven local heading Healthfeaturespausedonthisdevice. Singleliteral replacement only; allotherF218internalbytes/fivecases/statecleanup/cancelretaineddata/restartassertions unchanged, historicalbody retained. Ordinarynormal18684/SHA7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20 unchanged. InternalRowhelperalreadyexact/hintprefix-aware, no selectorrewrite needed. Exact3preimages andone-substitutionproof retained; currentruntimeunitmustverifythis exactfinite transform, not dropold protection. Not nativeexecution/admission; ordinaryall3PASS beforeinternal, NO_GO.
+
+
+C04 console-only dependency display bound: native27 liveGitHub log reached>64000dependencyJSONlines, hidinglaterprogress. Nextsource keepsfullrawdependency stdout inexactretainedfilewithsameSHA/size/exit/requiredstatus, butskipsonlyduplicatingthatexactstdouttoconsole; stderr/allotherstreams untouched, onecapturestate/hash/bytes summaryprinted. No command/check/timeout/admission omitted. Native27EB9375notchanged; actualstageverificationstillrequiresclosedartifact. Finite43/runtimepinrefreshed, NO_GO.

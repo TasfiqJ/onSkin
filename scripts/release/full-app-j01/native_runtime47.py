@@ -1134,6 +1134,8 @@ class Runner:
                                 if capture_frozen:
                                     break
                                 require(target.write(chunk) == len(chunk), 'SHORT_LOG_WRITE')
+                            if name == 'dependency-graph' and destination == stdout:
+                                continue  # Full immutable JSON remains in the retained raw stdout.
                             if hasattr(display, 'buffer'):
                                 display.buffer.write(chunk)
                                 display.buffer.flush()
@@ -1192,6 +1194,9 @@ class Runner:
                     row[label + '_bytes'] = path.stat().st_size
                     row[label + '_sha256'] = sha(path)
             self.persist()
+        if name == 'dependency-graph':
+            print('C47_DEPENDENCY_GRAPH_RAW_CAPTURE ' + json.dumps({key: row[key] for key in
+                ('state', 'exit_code', 'stdout_bytes', 'stdout_sha256')}), flush=True)
         require(not required or row.get('exit_code') == 0, 'COMMAND_FAILED:' + name)
         return stdout, stderr
 
