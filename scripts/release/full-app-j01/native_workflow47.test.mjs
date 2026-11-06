@@ -12,6 +12,8 @@ const dependencies = { build: [], normal: ['build'], internal: ['build', 'normal
 
 function validate(text) {
   const resume25 = text.includes('--stage normal --resume25');
+  const probeOnly = text.includes('--stage build --simulator-probe');
+  const traceOnly = text.includes('--stage build --consent-trace04');
   const doc = parseDocument(text, { strict: true, uniqueKeys: true, merge: false });
   assert.deepEqual(doc.errors, []);
   assert.deepEqual(doc.warnings, []);
@@ -30,7 +32,7 @@ function validate(text) {
     assert.deepEqual(job.permissions, parents.length ? { contents: 'read', actions: 'read' } : undefined);
     assert.equal(job['runs-on'], 'macos-26-intel');
     assert.equal(job['timeout-minutes'], 90);
-    assert.equal(job.if, scope + ((resume25 ? role !== 'normal' : probeOnly && role !== 'build') ? ' && false' : ''));
+    assert.equal(job.if, scope + ((resume25 ? role !== 'normal' : (probeOnly || traceOnly) && role !== 'build') ? ' && false' : ''));
     assert.equal(job.steps.length, 5);
     assert.deepEqual(job.outputs, {
       artifact_id: expression('steps.upload.outputs.artifact-id'),
@@ -53,7 +55,7 @@ function validate(text) {
       }
     }
     assert.deepEqual(job.steps[2].env, env);
-    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
+    assert.equal(job.steps[2].run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
     const budget = job.steps[3];
     assert.equal(budget.id, 'evidence-budget');
     assert.equal(budget.if, 'always()');
@@ -88,6 +90,10 @@ test('C47 isolated tooling probe cannot start either application consumer', () =
     if (source.includes('--resume25')) {
       assert.equal((source.match(/&& false/gu) ?? []).length, 2);
       assert.throws(() => validate(source.replace(' && false', '')));
+    } else if (source.includes('--consent-trace04')) {
+      assert.equal((source.match(/&& false/gu) ?? []).length, 2);
+      assert.throws(() => validate(source.replace(' && false', '')));
+      assert.throws(() => validate(source.replace(' --consent-trace04', '')));
     } else assert.doesNotMatch(source, /&& false/);
   }
 });
@@ -120,12 +126,13 @@ test('C47 refuses parallel stages, missing wire digest or authority outside the 
   }
 });
 
-test('C47 preserves the authenticated three-job historical workflow and admits only one successor Mac', () => {
+test('C47 preserves authenticated historical workflows and admits only the diagnostic Mac26', () => {
   validate(execFileSync('git', ['show', '445472ce057b90f08b5a51d5a49167c757d34b79:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
   const w = parseDocument(source).toJS();
-  assert.deepEqual(Object.entries(w.jobs).filter(([, job]) => !job.if.endsWith(' && false')).map(([name]) => name), ['native-normal']);
-  assert.equal(w.jobs['native-normal'].needs, undefined);
-  assert.match(w.jobs['native-normal'].steps[2].run, /--stage normal --resume25 /);
+  validate(execFileSync('git', ['show', 'f21831f5731be928c8e323c509fb62b3d12a654e:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
+  assert.deepEqual(Object.entries(w.jobs).filter(([, job]) => !job.if.endsWith(' && false')).map(([name]) => name), ['native-build']);
+  assert.equal(w.jobs['native-build'].needs, undefined);
+  assert.match(w.jobs['native-build'].steps[2].run, /--stage build --consent-trace04 /);
 });
 
 test('Quality retains its real online failure while independent checks and exports execute', () => {

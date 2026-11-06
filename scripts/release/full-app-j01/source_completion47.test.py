@@ -15,7 +15,11 @@ class Source47Tests(unittest.TestCase):
         helpers={'scripts/release/full-app-j01/simulator_signing47.py',
                  'scripts/release/full-app-j01/simulator_signing47.test.py'}
         self.assertTrue(helpers <= c.PATHS)
-        self.assertEqual(len(c.PATHS),33)
+        diagnostic={'scripts/release/full-app-j01/consent_trace47.py',
+                    'scripts/release/full-app-j01/consent_trace47.test.py'}
+        self.assertEqual(len(c.PATHS - diagnostic),33)
+        self.assertEqual(len(c.PATHS),35)
+        c.check_scope(diagnostic,c.PATHS)
         for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
                      'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',
                      'apps/mobile/app.config.js','scripts/release/full-app-j01/production.entitlements']:

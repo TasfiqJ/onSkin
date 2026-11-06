@@ -1331,7 +1331,7 @@ class ExactProductReuse25Tests(unittest.TestCase):
         root = Path(__file__).resolve().parents[3]
         def pair(name):
             return (subprocess.check_output(['git','show',origin+':'+name],cwd=root),
-                    (root/name).read_bytes())
+                    subprocess.check_output(['git','show','f21831f5731be928c8e323c509fb62b3d12a654e:'+name],cwd=root))
         py = pair('scripts/release/full-app-j01/native_runtime47.py')
         descriptor = pair('docs/phase-9/ios-generated-input-succession47.v1.json')
         ui = pair('scripts/release/full-app-j01/native_ui47.swift')
@@ -1364,6 +1364,32 @@ class ExactProductReuse25Tests(unittest.TestCase):
             args=list(self.fixture());args[6]=args[6].replace(before,b'changed',1)
             with self.assertRaisesRegex(ValueError,'SUBSTANTIVE_UI_EXPECTATIONS_DRIFT'):
                 n.verify_reuse25_delta(*args)
+
+class ConsentDiagnostic04AdmissionTests(unittest.TestCase):
+    def test_diagnostic_is_explicit_build_only_and_excludes_all_other_modes(self):
+        self.assertEqual(n.execution_mode('build', consent_trace04=True), 'consent-trace04')
+        for stage, flags in [('normal', {'consent_trace04': True}), ('internal', {'consent_trace04': True}),
+                             ('build', {'consent_trace04': True, 'probe': True}),
+                             ('build', {'consent_trace04': True, 'resume25': True})]:
+            with self.subTest(stage=stage, flags=flags), self.assertRaises(ValueError):
+                n.execution_mode(stage, **flags)
+
+    def test_completed_consent_trace_cannot_admit_a_build_producer(self):
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            root = Path(directory)
+            (root/'execution.json').write_text(json.dumps({'stage': 'build', 'stage_complete': True,
+                'status': 'CONSENT_LIFECYCLE_DIAGNOSTIC_ONLY_04',
+                'stages': {'consent-trace04': {'status': 'PASS'}}}), encoding='utf8')
+            with patch.object(n, 'producer_source_matches'):
+                with self.assertRaisesRegex(ValueError, 'BUILD_PRODUCER_STAGE'):
+                    n.verify_build_producer(SimpleNamespace(), {'payload_directory': str(root)})
+
+    def test_c04_compile_change_is_rejected_by_historical_reuse25_policy(self):
+        fixture = list(ExactProductReuse25Tests().fixture())
+        fixture[2] = Path(n.__file__).read_bytes()
+        with self.assertRaisesRegex(ValueError, 'BUILD_FUNCTION_OR_ENVIRONMENT_DRIFT'):
+            n.verify_reuse25_delta(*fixture)
+
 
 if __name__ == '__main__':
     unittest.main()

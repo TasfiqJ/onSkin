@@ -215,3 +215,8 @@ Native22 retention/timing follow-up before finaldispatch: exact4preimagesrecorde
 
 
 Continuation03 native24 causal successor: actual1test/1failure106.450sec, day31 observed3; all prior failures preserved. Record exact445 preimages before bounded native one-key/prefix synchronization, Swift600 allowance, sole job25 ordinary then internal. Authenticate native23 successful signed Release producer/run/job/digest and strictly prove every app/dependency/installer/signing/generated input unchanged; retain445 origin and separate candidate/test identity. Full current SOURCE and final CI required. Internal cannot run before current ordinary genuine PASS. No26, oneMac90min/84min coordinator/500MiB family/3day retention unchanged, finite33. All38/18 unaccepted; NO_GO.
+
+
+## Continuation04: consent lifecycle actual-runtime closure
+
+BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04 authenticated26088bytes/SHA455d85ef3125cc767fd408ddd6f5e78f3d64dd47b4b23bd6a26dc4a15aab821c and read in full. PreserveF218/treeAD8 and all55ancestors. Native18-25 exhausted; twelve additional jobs26-37, oneMac90minjob/84mincoordinator/500MiBfamily/3dayretention, no additional charges. First26 is a discriminating separate consent diagnostic: actual underage/restart sequence and bounded read-only enum observations. No diagnostic can admit ordinary/internal. Product/test repair follows demonstrated cause; a versioned complete ordinary suite may preserve obligations across independently isolated scenarios. Same draftPR48, auto-merge and maintainer editsOFF; no Campaign48. All38whole requirements/18owner gates unaccepted; original Security/candidate29/G97 unwaived; PARTIAL_BLOCKED / NO_GO.

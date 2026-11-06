@@ -1345,7 +1345,16 @@ def prepare(r, source_controls=True):
     return head, tools, source47
 
 
-def execute(r, compile_only=False):
+def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False):
+    require(stage in ('build', 'normal', 'internal'), 'EXECUTION_STAGE')
+    require(sum(map(bool, (probe, resume25, consent_trace04))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
+    require(not probe or stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
+    require(not resume25 or stage == 'normal', 'REUSE25_NORMAL_ONLY')
+    require(not consent_trace04 or stage == 'build', 'CONSENT_TRACE_BUILD_STAGE_ONLY')
+    return 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
+
+
+def execute(r, compile_only=False, consent_trace04=False):
     head, tools, source47 = prepare(r)
     mobile = r.root / 'apps/mobile'
     r.run('resolved-expo-config', ['npx', '--no-install', 'expo', 'config', '--json'], cwd=mobile, timeout=120)
@@ -1398,6 +1407,16 @@ def execute(r, compile_only=False):
                           '-configuration', 'Release', '-sdk', 'iphonesimulator',
                           '-destination', 'generic/platform=iOS Simulator', '-derivedDataPath', derived,
                           *APP_SIMULATOR_BUILD_FLAGS]
+    if consent_trace04:
+        path = r.root / 'scripts/release/full-app-j01/consent_trace47.py'
+        spec = importlib.util.spec_from_file_location('c47_consent_trace04', path)
+        diagnostic = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(diagnostic)
+        diagnostic.run_trace(r, sys.modules[__name__], ios, build_argv, products, bundle_id, head)
+        r.source_proof('source-after-consent-diagnostic-restoration', head, allow_generation=True)
+        r.receipt.update(status='CONSENT_LIFECYCLE_DIAGNOSTIC_ONLY_04', finished_utc=utc())
+        r.persist()
+        return
     signing.run_app_diagnostic(r, sys.modules[__name__], ios, build_argv, products, bundle_id, head)
     r.run('native-build', build_argv + ['-resultBundlePath', products / 'build.xcresult', 'build'], timeout=3000)
     signing.retain_applied_outputs(sys.modules[__name__], derived, r.output/'simulator-signing/applied-xcent')
@@ -1543,6 +1562,9 @@ def retain_app(r, app, products, head, architecture, configuration, lane):
     signing = simulator_signing().inspect_product(r, sys.modules[__name__], app, bundle, 'signed-product')
     simulator_signing().validate_ordinary_product(signing)
     ordinary_js = simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) if configuration == 'Release' else None
+    if configuration == 'Release':
+        require(b'C47_SEPARATE_CONSENT_DIAGNOSTIC_04' not in read_native_file(app / 'main.jsbundle'),
+                'CONSENT_DIAGNOSTIC_IN_ORDINARY_PRODUCT')
     write_json(r.output / 'app-inventory.json', {'source': r.receipt['source'], 'lane': lane,
                                                'simulator_signing': signing, 'ordinary_javascript': ordinary_js,
                                                'configuration': configuration, 'files': bundle_inventory(app)})
@@ -1632,7 +1654,7 @@ def retain_result_bundles(r):
     if not temporary:
         return
     products = Path(r.receipt.get('products_directory', str(Path(temporary) / 'c47-native-products')))
-    for name in ['build.xcresult', 'keychain-build.xcresult', 'ui.xcresult', 'ui-core.xcresult', 'ui-rights.xcresult',
+    for name in ['build.xcresult', 'keychain-build.xcresult', 'consent-trace-build.xcresult', 'ui.xcresult', 'ui-core.xcresult', 'ui-rights.xcresult',
                  'ui-export.xcresult', 'ui-export-cleanup.xcresult',
                  'ui-larger-text.xcresult']:
         source = products / name
@@ -2724,6 +2746,7 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
+    parser.add_argument('--consent-trace04', action='store_true', help='Separate read-only consent diagnostic; never ordinary or internal admission')
     parser.add_argument('--simulator-probe', action='store_true',
                         help='Isolated C47 Xcode/Keychain tooling diagnostic; never an app producer')
     args = parser.parse_args()
@@ -2740,8 +2763,7 @@ def main():
     code, context = 0, None
     try:
         context = hosted_stage_context(runner, args.stage)
-        require(not args.resume25 or args.stage == 'normal', 'REUSE25_NORMAL_ONLY')
-        require(not args.simulator_probe or args.stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
+        execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25, consent_trace04=args.consent_trace04)
         if args.stage == 'build':
             require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
             if args.simulator_probe:
@@ -2751,7 +2773,7 @@ def main():
                 spec.loader.exec_module(signing)
                 signing.run_probe(runner, sys.modules[__name__])
             else:
-                execute(runner, compile_only=True)
+                execute(runner, compile_only=True, consent_trace04=args.consent_trace04)
         else:
             execute_consumer(runner, args.stage, context, token, resume25=args.resume25)
         require(runner.receipt['source']['head'] == context['head'] and

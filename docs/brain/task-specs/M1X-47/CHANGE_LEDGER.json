@@ -306,6 +306,24 @@
       "causal_need": "Native22 health-consent transition stays closed because unrequested badge setter returns false; implement/test exact successful native zero postcondition without bypassing cleanup.",
       "invariant": "Errors/nonzero/unknown badge and all other cleanup or owner failures remain closed; no permission request or health/consent/recovery mutation.",
       "validation": "Preserved original assertions plus real false/zero/read-error controls and actual signed native diagnostic/ordinary/internal gates."
+    },
+    {
+      "path": "scripts/release/full-app-j01/consent_trace47.py",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": null,
+      "preimage_sha256": null,
+      "causal_need": "Separate content-free actual app consent diagnostic; no authority mutations",
+      "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+      "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+    },
+    {
+      "path": "scripts/release/full-app-j01/consent_trace47.test.py",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": null,
+      "preimage_sha256": null,
+      "causal_need": "Bounded sanitization and restoration negative controls",
+      "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+      "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
     }
   ],
   "amendments": [
@@ -1819,8 +1837,180 @@
       "remaining_attempts": [
         25
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "raw_prompt_bytes": 26088,
+      "raw_prompt_sha256": "455d85ef3125cc767fd408ddd6f5e78f3d64dd47b4b23bd6a26dc4a15aab821c",
+      "recorded_utc": "2026-11-06T14:03:43.206770+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.py",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "causal_need": "Separate content-free actual app consent diagnostic; no authority mutations",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.test.py",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "causal_need": "Bounded sanitization and restoration negative controls",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 168207,
+          "preimage_sha256": "f7c5a83fac919e1cc5615303cbe23e31f2883ffe8fab97a78a2f9fff04934676",
+          "causal_need": "Explicit diagnostic-only stage preserving normal/internal admission",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 84989,
+          "preimage_sha256": "6d2d5a195e16c2f72910fb6a1e5d74984a480f24cb6ee427063c6ee27d767707",
+          "causal_need": "Diagnostic selection cannot admit ordinary or internal runtime",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9060,
+          "preimage_sha256": "b0c47349b38c85933f8ab3d9e13567d50758a6bb7160a5c180574ce16bfe0b74",
+          "causal_need": "Finite exact C04 diagnostic source paths",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8865,
+          "preimage_sha256": "cd4d30724d3b324eb4848803e2e7ceabacc80d34567e33269c2a64b3ed8e7100",
+          "causal_need": "Preserve scope refusal with current finite inventory",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9573,
+          "preimage_sha256": "b99ba735955431c5820ed453a4a1fe191660439e96087befbb8c45c6ab8e2aaa",
+          "causal_need": "One explicit trace job, unchanged budgets and privileges",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 10948,
+          "preimage_sha256": "0c843299f1e28b436f8a5edd10ebd1ff21efc698fa85794d735010bdbccf29f1",
+          "causal_need": "Native26 discriminating diagnostic; no normal/internal admission",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15481,
+          "preimage_sha256": "3a17dc9d81b489e66800344cbdce07dcd0ecd0bb0f1480ae1ec85a995582b806",
+          "causal_need": "Exact current causal source pins, preserving historical native witnesses",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 107948,
+          "preimage_sha256": "5bd4dfb16607d9b4fa035ceb27f76dd27b4ab0e0a4ff78df383037260f04a704",
+          "causal_need": "Authenticate C04 and predeclare each exact diagnostic edit",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 65093,
+          "preimage_sha256": "8154fafbcaaa9d09abcc5febb114300cbfe5619760996a60ebd80d38bb11f2d1",
+          "causal_need": "Record26-37 finite budget and genuine diagnostic-only objective",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "docs/USER_FLOW_TREE.md",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 540330,
+          "preimage_sha256": "1525743f161ec725f2fe1a812b1e619c1f4ac12dbd60a8a2a089c1c5429cdedf",
+          "causal_need": "Explicit native diagnostic reproduction of actual underage/restart boundary",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 588382,
+          "preimage_sha256": "94e996271cf3357ab88ebf93f565516097cc22a0a8a5ef1f263995a9930b4060",
+          "causal_need": "Current authenticated resumption and honest incomplete status",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 4174,
+          "preimage_sha256": "3060d0f5699e154de05265d04a1b8774f2e84b59eede5070b83f1b430425460f",
+          "causal_need": "Same-branch resumable custody and renewed finite budget",
+          "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
+          "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+        }
+      ],
+      "remaining_attempts": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "causal_need": "Trace originating lifecycle enum/reason/resume-state and actual mounted age/storage foreground events before repairing native25 boundary. Separate diagnostic app cannot admit ordinary/internal execution.",
+      "invariant": "Preserve55ancestors/plan/Keychain/signing; oneMac90minjob84mincoordinator500MiB3dayretention; no added charge; same draftPR48; all38/18unaccepted; NO_GO",
+      "validation": "Pure diagnostic privacy/restoration controls plus real native26 logs/artifact. Subsequent current ordinary suite must genuinely pass before internal.",
+      "diagnostic_generated_transform": {
+        "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+        "original_head": "f21831f5731be928c8e323c509fb62b3d12a654e",
+        "original_sha256": "54a3bb1fa58de8d6efc029407da8841fe3974d0a4d0679efa59141fd360a4186",
+        "need": "Observe exact reconciliation entry and allowlisted actual error category in separate diagnostic; no authority calls or await added; archive both preimage and transformed bytes before mutation; exact restoration before ordinary. This is not a declared product-source change or ordinary admission.",
+        "validation": "Pinned preimage/refusal, unchanged authority/await call counts, exact restoration even build exception; actual PID-bound trace and own diagnostic product identity"
+      }
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite33; native24 partial keyboard input preserved; bounded native key synchronization and authenticated exact product-input reuse for sole remaining job25; NO_GO."
+  "freeze_note": "Finite35 original33 plus only two separate consent diagnostic helpers; no product-source change. C04 native26-37 renewed; no acceptance."
 }
