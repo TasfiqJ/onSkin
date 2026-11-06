@@ -409,5 +409,39 @@ class InstalledPermission30V2Controls(unittest.TestCase):
 
 
 
+class Native30NonEntryMode31Controls(unittest.TestCase):
+    """Measured-policy fixtures only, never native execution evidence."""
+    def row(self,path,mode='0o755',identity=None):
+        identity = identity or {'bytes':1,'sha256':'a'*64}
+        return {'path':path,'type':'file','mode':mode,**identity}
+
+    def test_exact_measured23_non_entry_removals_preserve_every_file_hash_and_no_admission(self):
+        self.assertEqual(len(c.RETAINED27_NON_ENTRY_MODE31),23)
+        self.assertNotIn('LayerwellStaging',c.RETAINED27_NON_ENTRY_MODE31)
+        expected = [self.row('LayerwellStaging')]
+        expected += [self.row(path,identity=identity) for path,identity in c.RETAINED27_NON_ENTRY_MODE31.items()]
+        observed = [dict(row,mode='0o644') if row['path']!='LayerwellStaging' else dict(row) for row in expected]
+        result = c.retained27_inventory_guard(expected,observed)
+        self.assertEqual(result['closed_paths'],24)
+        self.assertEqual(result['regular_files_byte_identical'],24)
+        self.assertEqual(len(result['mode_changes']),23)
+        self.assertFalse(result['ordinary_admitted'])
+        self.assertFalse(result['internal_admitted'])
+
+    def test_main_or_unknown_executable_permission_loss_still_refuses(self):
+        for path in ['LayerwellStaging','Frameworks/Unknown.framework/Unknown']:
+            with self.subTest(path=path),self.assertRaisesRegex(ValueError,'PERMISSION_NARROWING_REQUIRED'):
+                c.retained27_inventory_guard([self.row(path)],[self.row(path,'0o644')])
+
+    def test_known_path_requires_its_exact_measured_bytes_and_mode(self):
+        path,identity = next(iter(c.RETAINED27_NON_ENTRY_MODE31.items()))
+        expected = self.row(path,identity=identity)
+        with self.assertRaisesRegex(ValueError,'PERMISSION_NARROWING_REQUIRED'):
+            c.retained27_inventory_guard([expected],[self.row(path,'0o600',identity)])
+        altered = dict(identity,sha256='0'*64)
+        with self.assertRaisesRegex(ValueError,'PERMISSION_NARROWING_REQUIRED'):
+            c.retained27_inventory_guard([self.row(path,identity=altered)],[self.row(path,'0o644',altered)])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -572,6 +572,103 @@ def retained27_early_xcresult(r, n, evidence):
         'ordinary_admitted':False,'internal_admitted':False})
 
 
+# Fixed non-entry files measured in native30; producer archive and every file hash remain pinned.
+RETAINED27_NON_ENTRY_MODE31 = {
+  "Frameworks/ExpoCamera.framework/ExpoCamera": {
+    "bytes": 874864,
+    "sha256": "24547c6be47bb895027c18e526955d4066c5840e49a3871f262574efb17b157e"
+  },
+  "Frameworks/ExpoCameraBarcodeScanning.framework/ExpoCameraBarcodeScanning": {
+    "bytes": 73536,
+    "sha256": "d0a0e6dfd67f3f313979c4d404a7bf305c32f1fa44f19ae3f00ab561927170bf"
+  },
+  "Frameworks/ExpoFileSystem.framework/ExpoFileSystem": {
+    "bytes": 1124352,
+    "sha256": "d14e43dc6112554f63992f1ada6600c424f4f1ec7d1e4ab55f822a8d2012cf37"
+  },
+  "Frameworks/ExpoFont.framework/ExpoFont": {
+    "bytes": 197552,
+    "sha256": "d2fcafc470677dbc6fa7543c01c942b4ae6f8c60084c64a5b517c82477a7170d"
+  },
+  "Frameworks/ExpoImage.framework/ExpoImage": {
+    "bytes": 715936,
+    "sha256": "2a18beeb1d74089f658021a61e9fccf1f64a02269490b6699e7ba44a4976e55e"
+  },
+  "Frameworks/ExpoImageManipulator.framework/ExpoImageManipulator": {
+    "bytes": 307216,
+    "sha256": "e97e841a05909ee6d2cca74bda799fad480091092cc52c80b2f1069fa20cc11c"
+  },
+  "Frameworks/ExpoModulesCore.framework/ExpoModulesCore": {
+    "bytes": 3803488,
+    "sha256": "8816781c7d8b0e6cd945a5c0f19b95792db61a8cca4d2d1d5582ca6ff8d1580b"
+  },
+  "Frameworks/ExpoModulesJSI.framework/ExpoModulesJSI": {
+    "bytes": 894848,
+    "sha256": "a743feb644371f28b5c1e74464451f4be5fafbbfe5dad9456b54387fe217a34f"
+  },
+  "Frameworks/ExpoModulesWorklets.framework/ExpoModulesWorklets": {
+    "bytes": 135888,
+    "sha256": "5a9e08e111eb0a1530a421f69399d66905b35608419ea100addd4741e303492c"
+  },
+  "Frameworks/hermesvm.framework/hermesvm": {
+    "bytes": 5085176,
+    "sha256": "0b7368b3a87610458a9a3afe185d3c651c78acdf753394e379dc9d2229199171"
+  },
+  "GoogleMVFaceDetectorResources.bundle/BCLjoy_200.emd": {
+    "bytes": 17916,
+    "sha256": "f00f25644a628e738c155f493d072af143f253cbf99f08bf4829cbe5d4f4351c"
+  },
+  "GoogleMVFaceDetectorResources.bundle/BCLlefteyeclosed_200.emd": {
+    "bytes": 8630,
+    "sha256": "d31213e4f25ff8b21781e786fd89cede5917ef9b3fbe50bdf55d483af136eded"
+  },
+  "GoogleMVFaceDetectorResources.bundle/BCLrighteyeclosed_200.emd": {
+    "bytes": 8655,
+    "sha256": "63ca0bd838e51977489adadb80a0be016c5aa0b7b690fbc389a0645aaccfe4ff"
+  },
+  "GoogleMVFaceDetectorResources.bundle/LMprec_600.emd": {
+    "bytes": 1078354,
+    "sha256": "0ed5c85282f940d14a5723a6c0af05f9c2abd4e930c3c4f0be5a07236d374111"
+  },
+  "GoogleMVFaceDetectorResources.bundle/MFT_fssd_accgray.pb": {
+    "bytes": 793,
+    "sha256": "f0adb04d7b21b4d9889932a62f0eff127eedb27d2f85342a90144153ca0b81b1"
+  },
+  "GoogleMVFaceDetectorResources.bundle/MFT_fssd_fastgray.pb": {
+    "bytes": 792,
+    "sha256": "0943425df1b350e0c58a7be668be1f942eac338c198e1a4f16859ca3e1227f45"
+  },
+  "GoogleMVFaceDetectorResources.bundle/blazeface.tfl": {
+    "bytes": 347928,
+    "sha256": "4f25cc142e96b5f21b3236d2166c2e662920681f1d23942d2510e98c8af6ecdc"
+  },
+  "GoogleMVFaceDetectorResources.bundle/contours.tfl": {
+    "bytes": 1124144,
+    "sha256": "84160bc0c4a749517e62f93cb2c68ab8ff49de571f70eb6d160254ca9a0789c0"
+  },
+  "GoogleMVFaceDetectorResources.bundle/fssd_100_8bit_gray_v1.tflite": {
+    "bytes": 3341632,
+    "sha256": "7a4cf09c6ae4a758144d42bf35b9a26a95987e3c5841d0dc391095698299d9ab"
+  },
+  "GoogleMVFaceDetectorResources.bundle/fssd_100_8bit_v1.tflite": {
+    "bytes": 3342192,
+    "sha256": "3afb930eedc8d1d40434480281d3b5e8cec4c304e52d34fdfc8a9508340bb719"
+  },
+  "GoogleMVFaceDetectorResources.bundle/fssd_25_8bit_gray_v1.tflite": {
+    "bytes": 389648,
+    "sha256": "21511bbed271a0a92b8b93918e0f88f6efbbd115a36d1555f061cee131f6ab3c"
+  },
+  "GoogleMVFaceDetectorResources.bundle/fssd_25_8bit_v1.tflite": {
+    "bytes": 389928,
+    "sha256": "da90252f49b3bb942e5f880180a14561f669296e7fb3edecdeabaa8b6bb7822a"
+  },
+  "GoogleSignIn.bundle/Roboto-Bold.ttf": {
+    "bytes": 127744,
+    "sha256": "594d74a49e307be7cc9e1ee5f1023684e6820cf11bcc968bee590391e1ad5a5a"
+  }
+}
+
+
 def retained27_inventory_guard(expected, observed):
     """Historical diagnostic only: exact closed file bytes plus safe permission narrowing."""
     need(isinstance(expected,list) and isinstance(observed,list) and 0 < len(expected) == len(observed) <= 20000,
@@ -604,9 +701,13 @@ def retained27_inventory_guard(expected, observed):
                  'RETAINED27_PERMISSION_NARROWING_REQUIRED')
             modes.append(mode)
         producer,current = modes
+        known = RETAINED27_NON_ENTRY_MODE31.get(path)
+        observed_non_entry = (known is not None and left['type'] == 'file' and
+            left.get('bytes') == known['bytes'] and left.get('sha256') == known['sha256'] and
+            producer == 0o755 and current == 0o644)
         need(current & ~producer == 0 and current & 0o400 and
              (left['type'] != 'directory' or current & 0o100) and
-             (left['type'] != 'file' or not producer & 0o100 or current & 0o100),
+             (left['type'] != 'file' or not producer & 0o100 or current & 0o100 or observed_non_entry),
              'RETAINED27_PERMISSION_NARROWING_REQUIRED')
         if producer != current:
             changed.append({'path':path,'producer_mode':left['mode'],'observed_mode':right['mode']})
