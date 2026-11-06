@@ -136,23 +136,108 @@ final class C47NativeUI: XCTestCase {
         requireVisible(age, "Age confirmation after process restart")
     }
 
-    func testNormalStagingAgeConsentAndUnavailableAccount() throws {
-        let app = try XCTUnwrap(application)
+    private func launchFreshOrdinary(_ app: XCUIApplication) {
         app.launch()
-        requireVisible(button("Begin", app), "Fresh ordinary staging Welcome")
+        requireVisible(button("Begin", app), "Declared fresh ordinary staging Welcome")
         requireVisible(button("I already have an account", app), "Existing account entry")
         surviveInForeground(app)
-        capture("fresh-welcome", app)
+        capture("v04-fresh-welcome", app)
         assertPrivateJourneysClosed(app)
+    }
 
-        // The normal existing-account route is also protected by the age gate.
+    private func enterAdultDate(_ app: XCUIApplication) {
+        fill("Day of birth", "01", app)
+        fill("Month of birth", "01", app)
+        fill("Year of birth", "1990", app)
+        tap("Continue", app)
+    }
+
+    private func requireInitialConsent(_ app: XCUIApplication) {
+        requireVisible(button("I agree. Continue", app), "Separate initial health consent")
+        requireVisible(button("I don't agree", app), "Separate initial consent refusal")
+        XCTAssertFalse(button("I agree. Start a new profile", app).exists,
+            "Initial onboarding must not inherit an unrelated recovery disclosure")
+        assertPrivateJourneysClosed(app)
+    }
+
+    private func requireDisclosure(_ app: XCUIApplication) {
+        for label in ["WHAT", "WHY", "NEVER"] {
+            XCTAssertTrue(text(label, app).waitForExistence(timeout: deadline),
+                "The actual explicit disclosure must include " + label)
+        }
+    }
+
+    private func buttonBeginning(_ label: String, _ app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label)).firstMatch
+    }
+
+    private func withdrawalRow(_ app: XCUIApplication) -> XCUIElement {
+        // You's Row appends its actual hint to the accessibility label.
+        app.buttons.matching(NSPredicate(format: "label == %@ OR label BEGINSWITH %@",
+            "Withdraw health-data consent", "Withdraw health-data consent. ")).firstMatch
+    }
+
+    private func requireWithdrawalRow(_ app: XCUIApplication) -> XCUIElement {
+        let row = withdrawalRow(app)
+        XCTAssertTrue(row.waitForExistence(timeout: deadline), "Actual You withdrawal row")
+        if !row.isHittable {
+            let scroll = app.scrollViews.firstMatch
+            XCTAssertTrue(scroll.exists, "You settings must expose its real scroll surface")
+            // This source-defined row follows several account/settings sections.
+            // Preserve native scrolling and capture each bounded observation.
+            for upward in [true, true, true, true, true, false, false, false, false, false] {
+                if row.isHittable { break }
+                if upward { scroll.swipeUp() } else { scroll.swipeDown() }
+                scrollAttempt += 1
+                capture("v04-withdrawal-row-scroll-\(scrollAttempt)", app)
+            }
+        }
+        XCTAssertTrue(row.isHittable, "Withdrawal row must be reached through native scrolling")
+        return row
+    }
+
+    private func tapElement(_ element: XCUIElement, _ description: String, _ app: XCUIApplication) {
+        requireVisible(element, description)
+        XCTAssertTrue(element.isEnabled, description + " must be enabled")
+        element.tap()
+    }
+
+    private func requireFreshGoals(_ app: XCUIApplication) {
+        XCTAssertTrue(text("What brings you here?", app).waitForExistence(timeout: deadline))
+        XCTAssertTrue(text("Choose at least one", app).exists,
+            "A new activation must not restore old selected goals")
+        requireVisible(button("Continue", app), "Goals Continue")
+        XCTAssertFalse(button("Continue", app).isEnabled,
+            "No stale goal or completed profile may advance the new epoch")
+        XCTAssertFalse(withdrawalRow(app).exists)
+        XCTAssertFalse(button("Save this plan", app).exists)
+        capture("v04-fresh-activation-goals-empty", app)
+    }
+
+    private func requireWithdrawn(_ app: XCUIApplication) {
+        let status = app.staticTexts.matching(NSPredicate(format:
+            "label CONTAINS %@ AND label CONTAINS %@", "withdrawn", "Local cleanup complete.")).firstMatch
+        XCTAssertTrue(status.waitForExistence(timeout: deadline),
+            "Confirmed local withdrawal must reach durable cleanup-complete status")
+        requireVisible(button("Review fresh consent", app), "Supported terminal consent review")
+        XCTAssertFalse(button("I agree. Continue", app).exists)
+        XCTAssertFalse(button("I agree. Start a new profile", app).exists,
+            "A disclosure choice must not appear before the explicit review action")
+        assertPrivateJourneysClosed(app)
+    }
+
+    // A new Simulator/container is supplied for each named v04 case. This
+    // case remains on its one container through refusal and process restart.
+    func testV04FreshConsentRefusalAndUnavailableAccount() throws {
+        let app = try XCTUnwrap(application)
+        launchFreshOrdinary(app)
         tap("I already have an account", app)
-        requireVisible(app.textFields["Day of birth"], "Account entry must first confirm age")
+        requireVisible(app.textFields["Day of birth"], "Account entry first confirms age")
         XCTAssertFalse(app.textFields["Email address"].exists)
         let next = button("Continue", app)
         requireVisible(next, "Age Continue")
         XCTAssertFalse(next.isEnabled, "Blank age input must not proceed")
-        capture("age-empty-guard", app)
+        capture("v04-age-empty-guard", app)
 
         fill("Day of birth", "31", app)
         fill("Month of birth", "02", app)
@@ -160,8 +245,40 @@ final class C47NativeUI: XCTestCase {
         XCTAssertTrue(text("Enter a real birth date that is not in the future.", app)
             .waitForExistence(timeout: deadline))
         XCTAssertFalse(next.isEnabled, "An impossible date must not proceed")
-        capture("age-invalid-date", app)
+        capture("v04-age-invalid-date", app)
 
+        enterAdultDate(app)
+        requireInitialConsent(app)
+        requireDisclosure(app)
+        capture("v04-initial-consent-before-choice", app)
+        tap("I don't agree", app)
+        XCTAssertTrue(text("No consent recorded", app).waitForExistence(timeout: deadline))
+        capture("v04-initial-consent-declined", app)
+        assertPrivateJourneysClosed(app)
+
+        app.terminate()
+        XCTAssertEqual(app.state, .notRunning)
+        app.launch()
+        requireVisible(button("Begin", app), "Welcome after unconsented process restart")
+        assertPrivateJourneysClosed(app)
+        tap("I already have an account", app)
+        XCTAssertTrue(text("Account sign-in is not available right now. You can continue without an account.", app)
+            .waitForExistence(timeout: deadline), "Unconfigured auth must report its actual boundary")
+        XCTAssertFalse(app.textFields["Email address"].exists)
+        XCTAssertFalse(button("Email me a code", app).exists)
+        capture("v04-account-provider-unavailable", app)
+        tap("Not now", app)
+        requireInitialConsent(app)
+        requireDisclosure(app)
+        capture("v04-account-deferral-consent-still-required", app)
+    }
+
+    // This expected initial-bootstrap result requires the C04 diagnosed repair
+    // to be proved first. It deliberately does not accept a recovery label.
+    func testV04UnderageRestartRequiresExplicitInitialConsent() throws {
+        let app = try XCTUnwrap(application)
+        launchFreshOrdinary(app)
+        tap("Begin", app)
         fill("Day of birth", "01", app)
         fill("Month of birth", "01", app)
         let underageYear = Calendar(identifier: .gregorian).component(.year, from: Date()) - 10
@@ -171,38 +288,103 @@ final class C47NativeUI: XCTestCase {
             NSPredicate(format: "label BEGINSWITH %@", "You need to be at least 18 to use ")
         ).firstMatch
         XCTAssertTrue(refused.waitForExistence(timeout: deadline), "Under-threshold input must be refused")
-        capture("underage-refused", app)
+        capture("v04-underage-refused", app)
         assertPrivateJourneysClosed(app)
+        XCTAssertFalse(button("I agree. Continue", app).exists)
 
         reopenAgeAfterProcessRestart(app)
-        fill("Day of birth", "01", app)
-        fill("Month of birth", "01", app)
-        fill("Year of birth", "1990", app)
-        tap("Continue", app)
-        requireVisible(button("I agree. Continue", app), "Separate health consent")
-        requireVisible(button("I don't agree", app), "Separate consent refusal")
-        capture("consent-before-choice", app)
-        assertPrivateJourneysClosed(app)
-        tap("I don't agree", app)
-        XCTAssertTrue(text("No consent recorded", app).waitForExistence(timeout: deadline))
-        capture("consent-declined", app)
-        assertPrivateJourneysClosed(app)
+        enterAdultDate(app)
+        requireInitialConsent(app)
+        requireDisclosure(app)
+        capture("v04-adult-reverification-still-needs-health-consent", app)
 
-        // This is a same-Simulator process restart, not physical durability.
+        // No consent was given. Another process restart cannot turn the
+        // durable age receipt into health-processing or profile authority.
         app.terminate()
+        XCTAssertEqual(app.state, .notRunning)
         app.launch()
-        requireVisible(button("Begin", app), "Welcome after unconsented process restart")
+        requireVisible(button("Begin", app), "Welcome after age-only process restart")
         assertPrivateJourneysClosed(app)
-        tap("I already have an account", app)
-        XCTAssertTrue(text("Account sign-in is not available right now. You can continue without an account.", app)
-            .waitForExistence(timeout: deadline), "Unconfigured auth must report its actual boundary")
-        XCTAssertFalse(app.textFields["Email address"].exists)
-        XCTAssertFalse(button("Email me a code", app).exists)
-        capture("account-provider-unavailable", app)
+        tap("Begin", app)
+        requireInitialConsent(app)
+        capture("v04-age-only-restart-consent-remains-required", app)
+    }
+
+    // Recovery is reached through actual ordinary staging UI, never a seeded
+    // lifecycle record, synthetic Auth fixture, deep link or forced route.
+    func testV04ExplicitWithdrawalReviewCancelAndFreshReconsent() throws {
+        let app = try XCTUnwrap(application)
+        launchFreshOrdinary(app)
+        tap("Begin", app)
+        enterAdultDate(app)
+        requireInitialConsent(app)
+        requireDisclosure(app)
+        tap("I agree. Continue", app)
+        requireFreshGoals(app)
+        tapElement(buttonBeginning("Clear skin", app), "Synthetic clear-skin goal", app)
+        tapElement(buttonBeginning("Barrier repair", app), "Synthetic barrier-repair goal", app)
+        tap("Continue", app)
+        let answers = ["Shiny in places", "Rarely", "Often stings, burns, or reddens", "Frequently",
+            "Yes, noticeably", "Weeks or longer", "Fine lines or firmness changes are visible",
+            "A lot over time", "Sometimes burns", "Tone 4", "None that I know of", "No"]
+        for (index, answer) in answers.enumerated() {
+            tap(answer, app)
+            tap(index == answers.count - 1 ? "See my profile" : "Next", app)
+        }
+        tap("Skip for now", app)
+        let profile = app.staticTexts.matching(NSPredicate(format:
+            "label CONTAINS %@", "YOUR SKIN PROFILE")).firstMatch
+        XCTAssertTrue(profile.waitForExistence(timeout: deadline))
+        capture("v04-real-local-profile-before-withdrawal", app)
+        tap("Continue", app)
         tap("Not now", app)
-        requireVisible(button("I agree. Continue", app), "Consent remains required after account deferral")
-        capture("account-deferral-consent-guard", app)
+        XCTAssertTrue(text("Reminders are off. Your choice was saved.", app)
+            .waitForExistence(timeout: deadline), "The actual off choice must be durably confirmed")
+        tap("Continue", app)
+        XCTAssertTrue(text("Account sign-in is not available right now. You can continue without an account.", app)
+            .waitForExistence(timeout: deadline))
+        tap("Not now", app)
+        tap("Continue with the free plan", app)
+        tapElement(app.buttons.matching(NSPredicate(format:
+            "label == %@ OR label BEGINSWITH %@", "You", "You,")).firstMatch, "You tab", app)
+        tapElement(requireWithdrawalRow(app), "Withdraw health-data consent row", app)
+        requireVisible(button("Withdraw health consent", app), "Explicit withdrawal confirmation")
+        capture("v04-withdrawal-not-yet-confirmed", app)
+        tap("Cancel", app)
+        XCTAssertFalse(button("Withdraw health consent", app).exists)
+        requireVisible(requireWithdrawalRow(app), "Withdrawal cancellation retains current UI")
+        capture("v04-withdrawal-cancel-keeps-current-state", app)
+        tapElement(requireWithdrawalRow(app), "Withdraw health-data consent row", app)
+        tap("Withdraw health consent", app)
+        requireWithdrawn(app)
+        capture("v04-confirmed-withdrawal-cleanup-complete", app)
+
+        app.terminate()
+        XCTAssertEqual(app.state, .notRunning)
+        app.launch()
+        requireWithdrawn(app)
+        capture("v04-withdrawal-survives-process-restart", app)
+        tap("Review fresh consent", app)
+        requireDisclosure(app)
+        requireVisible(button("I agree. Start a new profile", app), "Explicit fresh recovery consent")
+        requireVisible(button("Not now", app), "Recovery consent cancellation")
         assertPrivateJourneysClosed(app)
+        capture("v04-recovery-disclosure-before-choice", app)
+        tap("Not now", app)
+        requireWithdrawn(app)
+        capture("v04-recovery-cancel-remains-paused", app)
+
+        app.terminate()
+        XCTAssertEqual(app.state, .notRunning)
+        app.launch()
+        requireWithdrawn(app)
+        capture("v04-recovery-cancel-restart-still-paused", app)
+        tap("Review fresh consent", app)
+        requireDisclosure(app)
+        tap("I agree. Start a new profile", app)
+        requireFreshGoals(app)
+        XCTAssertFalse(profile.exists, "The old profile must not be resurrected after fresh consent")
+        capture("v04-explicit-reconsent-routes-to-empty-new-profile", app)
     }
 }
 

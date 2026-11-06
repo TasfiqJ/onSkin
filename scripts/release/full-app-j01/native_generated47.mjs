@@ -64,8 +64,8 @@ export const CONSENT_DOC04 = {
   checkpointHead: 'f21831f5731be928c8e323c509fb62b3d12a654e',
   path: 'docs/USER_FLOW_TREE.md',
   before: { bytes: 540330, sha256: '1525743f161ec725f2fe1a812b1e619c1f4ac12dbd60a8a2a089c1c5429cdedf' },
-  after: { bytes: 540807, sha256: 'b42d288fe27d187b2665771036652c0e12a31b8128c68b9e1e387206de68acd7' },
-  append: { bytes: 477, sha256: 'c78b144360006df907cc5ec7370c9feb225ba87b3520fa26e1afaa7cd0d8eaf1' },
+  after: { bytes: 543738, sha256: 'e192ec9df7352b9ea9c778a1a5fbc984fb7e7b1b3b02c6fa46c73a64d18cae06' },
+  append: { bytes: 3408, sha256: 'c06a5f77e9b51874d893cf4b04e342ad92776ce36a8e2a45ba556a78e524a93b' },
 };
 export function validateConsentDoc04(pin, original, actual) {
   same(pin.path, CONSENT_DOC04.path);
@@ -75,6 +75,8 @@ export function validateConsentDoc04(pin, original, actual) {
   same({ bytes: actual.length, sha256: hash(actual) }, CONSENT_DOC04.after);
   same(actual.subarray(0, original.length), original);
   const append = actual.subarray(original.length);
+  same({ bytes: append.subarray(0, 477).length, sha256: hash(append.subarray(0, 477)) },
+    { bytes: 477, sha256: 'c78b144360006df907cc5ec7370c9feb225ba87b3520fa26e1afaa7cd0d8eaf1' });
   same({ bytes: append.length, sha256: hash(append) }, CONSENT_DOC04.append);
   return true;
 }

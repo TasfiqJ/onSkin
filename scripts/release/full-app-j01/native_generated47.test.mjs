@@ -43,8 +43,10 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.equal(validateConsentDoc04(pin, original, actual), true);
   const alteredPrefix = Buffer.from(original); alteredPrefix[0] ^= 1;
   const alteredAppend = Buffer.from(actual); alteredAppend[alteredAppend.length - 2] ^= 1;
+  const alteredFirst04 = Buffer.from(actual); alteredFirst04[original.length + 10] ^= 1;
   for (const [declared, before, after] of [
     [pin, alteredPrefix, actual], [pin, original, alteredAppend],
+    [pin, original, alteredFirst04],
     [pin, original, original], [{ ...pin, path: 'docs/OTHER.md' }, original, actual],
   ]) assert.throws(() => validateConsentDoc04(declared, before, after));
   // Historical and current legacy REDs are distinct; neither grants the other.

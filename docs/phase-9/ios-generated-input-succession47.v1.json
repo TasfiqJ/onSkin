@@ -41,13 +41,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 60600,
-      "sha256": "596a23998278d31d43e9241eb8d93fc5014ce0246dc94b3521659a69156f2066"
+      "bytes": 60787,
+      "sha256": "a86244e9dcca2a266be98119f1de68c4e76878f1704934071a4f6ae8011ed85f"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 48013,
-      "sha256": "4f6ceecccf57737a50e63ad2a65c30e85398bb5448297edeb01fe98b69269118"
+      "bytes": 48139,
+      "sha256": "3a09d42caab41e92d1b57960cc4dcdd395bdf204c09a2836b07caf58dcc1543f"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -96,8 +96,8 @@
     },
     {
       "path": "docs/USER_FLOW_TREE.md",
-      "bytes": 540807,
-      "sha256": "b42d288fe27d187b2665771036652c0e12a31b8128c68b9e1e387206de68acd7"
+      "bytes": 543738,
+      "sha256": "e192ec9df7352b9ea9c778a1a5fbc984fb7e7b1b3b02c6fa46c73a64d18cae06"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",

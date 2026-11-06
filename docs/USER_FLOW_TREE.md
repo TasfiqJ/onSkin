@@ -2967,3 +2967,24 @@ Source-only candidate; synthetic Expo web evidence does not establish native iPh
 
 
 C47 Continuation04 diagnostic reproduction: new campaign Simulator, fresh Welcome -> existing-account age guard -> invalid date -> underage refusal -> SAME-container process restart -> permitted adult reverification -> capture actual lifecycle enums and consent boundary. No seed/reset/reinstall mid-case. Separate instrumented Release is diagnostic-only; old native25 expectation/failure preserved. Ordinary and internal remain unqualified pending complete successor suite.
+
+
+### C04 consent lifecycle and current ordinary successor (source-qualified; native pending)
+
+Local initial cleanup now records explicit unconsented provenance. Only a strictly readable false consent, the exact owner, epoch zero, authoritative-unconsented reason, explicit unconsented resume, null operation/idempotency/server fields, no activation-route flag, no pending withdrawal and durably complete purpose cleanup can return to initial consent. This returns no processing grant. Unknown/null provenance remains paused; safe review is still an explicit user action. Unreadable consent is preserved and locked, not treated as absence or erased. Configured authority and deletion/withdrawal priority remain unchanged.
+
+Local recovery and withdrawal messages describe this device without claiming an account, live-service deletion or active billing. Configured wording and consent constants/hash/version/release blocks remain unchanged.
+
+| Prior obligation | Current explicitly named case / proof |
+| --- | --- |
+| Welcome, account-entry age guard, blank/impossible DOB, private access closed | testV04FreshConsentRefusalAndUnavailableAccount |
+| Exact initial disclosure/refusal, no grant after refusal or same-container restart | testV04FreshConsentRefusalAndUnavailableAccount |
+| Truthful unavailable account; deferral still requires explicit health consent | testV04FreshConsentRefusalAndUnavailableAccount |
+| Underage refusal, durable same-device termination/relaunch and legitimate age re-verification | testV04UnderageRestartRequiresExplicitInitialConsent |
+| Changing age never grants health consent; another restart stays explicitly unconsented | testV04UnderageRestartRequiresExplicitInitialConsent |
+| Genuine local onboarding, visible withdrawal cancellation and confirmed terminal cleanup | testV04ExplicitWithdrawalReviewCancelAndFreshReconsent |
+| Review, Not-now, still paused, same-container restart, then explicit fresh consent | testV04ExplicitWithdrawalReviewCancelAndFreshReconsent |
+| New activation routes to empty goals; no old profile through UI | testV04ExplicitWithdrawalReviewCancelAndFreshReconsent |
+| Exact epoch/erasure/stale-capability/owner isolation and unreadable/incomplete/configured-unavailable negatives | persisted lifecycle/store/mounted controls plus separately qualified internal supported-owner journeys |
+
+Each ordinary case requires its own declared fresh campaign Simulator and one genuine ordinary staging installation. No reset, erase or reinstall occurs within a persistence case. Ordinary has no synthetic fixture or provider/Pro grant. All three exact named cases must execute with zero failure/unexpected/skip and bound app/source/stream/result-bundle evidence before any internal admission. The original native25 source/log/screenshot remain historical; this map is not native execution or owner acceptance. All38 requirements and18 owner gates remain unaccepted, NO_GO.

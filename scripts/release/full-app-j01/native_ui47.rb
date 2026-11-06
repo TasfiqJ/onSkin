@@ -20,7 +20,7 @@ lane = ENV.fetch('C47_UI_PHASE', 'normal-staging')
 abort 'unsupported UI lane' unless ['normal-staging', 'internal-supported-owner'].include?(lane)
 internal = lane == 'internal-supported-owner'
 test_class = internal ? 'C47InternalOwnerUI' : 'C47NativeUI'
-test_methods = internal ? ['test01CoreRetainedNativeJourney', 'test03LargerTextManualInput', 'test02LocalExport', 'test04RemoveSyntheticLocalExport', 'test05ConsentWithdrawal'] : ['testNormalStagingAgeConsentAndUnavailableAccount']
+test_methods = internal ? ['test01CoreRetainedNativeJourney', 'test03LargerTextManualInput', 'test02LocalExport', 'test04RemoveSyntheticLocalExport', 'test05ConsentWithdrawal'] : ['testV04FreshConsentRefusalAndUnavailableAccount', 'testV04UnderageRestartRequiresExplicitInitialConsent', 'testV04ExplicitWithdrawalReviewCancelAndFreshReconsent']
 if internal
   abort 'internal fixture requires the development build profile' unless ENV['APP_VARIANT'] == 'development' && ENV['EXPO_PUBLIC_APP_ENV'] == 'development'
   abort 'internal fixture must be the existing anonymous owner' unless ENV['EXPO_PUBLIC_E2E_FIRST_SESSION_AUTH'] == 'anonymous_owner'
@@ -45,8 +45,10 @@ swift_full = File.binread(swift_source)
 historical_swift = IO.popen(['git', '--no-replace-objects', 'show', '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], 'rb', &:read)
 historical_normal = historical_swift.byteslice(0, 8736)
 abort 'frozen historical normal Swift prefix changed' unless $?.success? && historical_normal && Digest::SHA256.hexdigest(historical_normal) == 'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44'
-normal_swift = swift_full.byteslice(0, 9568)
-abort 'synchronized current normal Swift prefix changed' unless normal_swift && normal_swift.bytesize == 9568 && Digest::SHA256.hexdigest(normal_swift) == '686d434f567f4da623134279617e4b91754d4bf0497968efe07d2100d94c59c7'
+historical25 = IO.popen(['git', '--no-replace-objects', 'show', 'f21831f5731be928c8e323c509fb62b3d12a654e:scripts/release/full-app-j01/native_ui47.swift'], 'rb', &:read).byteslice(0, 9568)
+abort 'frozen historical native25 prefix changed' unless $?.success? && historical25 && Digest::SHA256.hexdigest(historical25) == '686d434f567f4da623134279617e4b91754d4bf0497968efe07d2100d94c59c7'
+normal_swift = swift_full.split("\nimport UIKit", 2).first
+abort 'current versioned ordinary suite04 source changed' unless normal_swift.bytesize == 18684 && Digest::SHA256.hexdigest(normal_swift) == '7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20'
 swift_selected = internal ? swift_full : normal_swift
 File.binwrite(swift_copy, swift_selected)
 project_path = File.join(project_root, 'C47NativeUI.xcodeproj')
@@ -119,7 +121,9 @@ receipt = {
   fixture: internal ? 'existing_debug_development_anonymous_owner_no_pro' : nil,
   initial_url: internal ? initial_url : nil,
   export_folder: internal ? export_folder : nil,
-  copied_source_scope: internal ? 'FULL_INTERNAL_TEST_SOURCE' : 'FROZEN_NORMAL_PREFIX_ONLY',
+  ordinary_suite_version: internal ? nil : 4,
+  source_head: internal ? nil : ENV.fetch('C47_SOURCE_HEAD'),
+  copied_source_scope: internal ? 'FULL_INTERNAL_TEST_SOURCE' : 'VERSIONED_NORMAL_SUITE04_ONLY',
   copied_source_bytes: swift_selected.bytesize,
   normal_prefix_sha256: Digest::SHA256.hexdigest(normal_swift),
   source_sha256: {

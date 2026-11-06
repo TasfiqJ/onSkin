@@ -2584,8 +2584,96 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T16:53:30.322393+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 45239,
+          "preimage_sha256": "01a6948a2fb1ce456f4bac19d7d009969c12edc079b0ba332698af4c0490701e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7494,
+          "preimage_sha256": "c76797b0c7d1f0d7b25e77831b5c21925cb5bc889c6b9e4db0d751aa0e9fb95f"
+        },
+        {
+          "path": "docs/USER_FLOW_TREE.md",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 540807,
+          "preimage_sha256": "b42d288fe27d187b2665771036652c0e12a31b8128c68b9e1e387206de68acd7"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 60600,
+          "preimage_sha256": "596a23998278d31d43e9241eb8d93fc5014ce0246dc94b3521659a69156f2066"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 48013,
+          "preimage_sha256": "4f6ceecccf57737a50e63ad2a65c30e85398bb5448297edeb01fe98b69269118"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17190,
+          "preimage_sha256": "44dd9c3f75c07cf14868e89da2efbdb6e5f3cb7a20fb453ea146bd0332da35bb"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 152714,
+          "preimage_sha256": "9eaefe9fc926172c1995ed75b3079f5f86dea09049d418ba6082fbc3deb9269a"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "16bdbdf7a1c5900438da8b19f8768d5710340d71",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 72058,
+          "preimage_sha256": "cc52f489781d78fb7342de824bb121823adb9da15321a56cf405b2105e36e83f"
+        }
+      ],
+      "causal_need": "Versioned invariant-preserving ordinary Swift/Ruby successor for separately isolated fresh/refusal, underage/restart, and real local withdrawal/review/cancel/restart/reconsent after bounded source repair. Replace only old monolithic normal method, preserve per-key synchronization/helpers/internal5case body and old program/failure historical custody. Document exact old-obligation mapping append-only.",
+      "invariant": "No either-screen success, skip/xfail, fake grant/provider/Pro, fixture flag in ordinary, timeout inflation, reset/reinstall midcase or relaxed owner/age/cleanup/consent rule. Each freshcase declaredseparateSimulator; intra-case persistence sameUUID/bundle/container. CurrentRuby enumeratesexact3 and sourcehead; coordinator/result parser integration remains pending actualnative27schema before next launch. Entire originalF218Doc and first477B C04paragraph remain immutable.",
+      "validation": "ActualSwift compilation/XCTest mandatory onnew ordinaryapp; exact3suite results with zero failures/unexpected/skips and realboundresultbundles beforeinternal. Currentdescriptor/doc/prefix controls, all70runtime/historical controls updated onlywith proved successor, full30/currentSOURCE, frozen source and finalCI. Currentapp7030uncached/type3/lint3/117focus/252privacy already actualPASS atC36; not nativeadmission.",
+      "prepared_ordinary_cases": [
+        "testV04FreshConsentRefusalAndUnavailableAccount",
+        "testV04UnderageRestartRequiresExplicitInitialConsent",
+        "testV04ExplicitWithdrawalReviewCancelAndFreshReconsent"
+      ],
+      "running_native": {
+        "attempt": 27,
+        "run_id": 42246927646,
+        "job_id": 127991461922,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12"
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43 exercised; actual8app/testrepair plus exact3witness/5current native-input successor. Ordinary/runtime harness successor and real current native qualification still pending."
+  "freeze_note": "Finite43; exact ordinarySwift/Ruby3case successor and append-only map. Coordinator actualresultschema/admission integration still pending before native launch."
 }
