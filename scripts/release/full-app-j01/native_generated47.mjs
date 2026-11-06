@@ -671,7 +671,7 @@ export function auditCurrentNative47({ root = ROOT } = {}) {
   try {
     const proof = verifyCurrentNative47(root, { audit: false });
     const legacy = legacyAuditIosPrivacySource({ root });
-    return currentPrivacyProjection47(legacy, proof.legacy46File.bytes, false);
+    return currentPrivacyProjection47(legacy, proof.legacy46File.bytes, false, proof.consentDoc04);
   } catch (error) {
     return { status: 'source_invalid', errors: [{ code: 'CURRENT_NATIVE_SOURCE47_REFUSAL', path: null,
       message: String(error.message ?? error) }], claims: { appStoreAcceptanceProven: false, appStorePrivacyLabelsVerified: false,

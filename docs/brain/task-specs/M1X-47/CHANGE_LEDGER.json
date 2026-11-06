@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
+  "inventory_state": "FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -2211,8 +2211,69 @@
         "job_id": 127970733966,
         "head": "f833284ce1b16846b7d12f88d680665f5f1eb968"
       }
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T15:35:31.727816+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "97b4bc67cd46f313410273b486f7f72ff982b154",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 55507,
+          "preimage_sha256": "165a7334fa14e02a119a1fbdb036c7c04873ff9f22894c80b8116a1756e31f9d"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "97b4bc67cd46f313410273b486f7f72ff982b154",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15640,
+          "preimage_sha256": "e23ce3b396f61c4e17e26cabf2fb93c0661d55b5ea45ab695033057630af349d"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "97b4bc67cd46f313410273b486f7f72ff982b154",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 130985,
+          "preimage_sha256": "3ce9b0fb3ab35c67f5f7d65f1c0e903066820bff52487e1ad6881cf82491ad71"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "97b4bc67cd46f313410273b486f7f72ff982b154",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 68291,
+          "preimage_sha256": "5403bcf2b7cc4a78e52ac1ead05f1a3f3afa74b1c037d9860a377d955dfa3205"
+        }
+      ],
+      "causal_need": "Actualnative26 full30 completed26PASS4FAIL beforeappgeneration. auditCurrentNative47 omitted the alreadyverified consentDoc04 proof when calling currentPrivacyProjection47; boundedfixture positiveexpectedoldWidgetStoreRED despiteexactcurrentDoc. Forward only verified proof from existing whole-input verification. Preserveall30 cases/assertions and rawfailures; no timeout/skip/rule/authority relaxation.",
+      "invariant": "No appimplementation/Keychain/signing/owner/consent/deletion change. Existing exact202/172/docpreimage/postimage/prefix/suffix and falseadmission checks remain; unknown or forged docstillrefuses. One-line causal adapter repair only, finite36.",
+      "validation": "Actualpreviousfailing boundedfixture case plusdirectdoc/refusal case atnewcommittedsource;70runtime/6diagnostic/10scope controls; finalcurrentSOURCE_FROZEN and actualnextMacfull30 mandatory beforeappcompile. Localfull30timeout remainsunwaived, notrelabeledPASS.",
+      "remaining_attempts": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "failed_native": {
+        "attempt": 26,
+        "run": 42240937889,
+        "job": 127970733966,
+        "artifact": 13515947838,
+        "wire_bytes": 387993,
+        "sha256": "885968eeab57f4ef0f2eafdecbf7c2f39d8196005f7819bb0121119efa1480cb",
+        "stage": "generated47-controls",
+        "app_compiled": false,
+        "simulator_runtime": false
+      }
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite35 original33 plus only two separate consent diagnostic helpers; no product-source change. C04 native26-37 renewed; no acceptance."
+  "freeze_note": "Finite36 original35 plus actual exercised lifecycle-model test. Native26 sourceadapter failure preserved; exactone-line proof forwarding for useful diagnostic27, no acceptance."
 }
