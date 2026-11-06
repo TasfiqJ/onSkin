@@ -15,10 +15,20 @@ class Source47Tests(unittest.TestCase):
         helpers={'scripts/release/full-app-j01/simulator_signing47.py',
                  'scripts/release/full-app-j01/simulator_signing47.test.py'}
         self.assertTrue(helpers <= c.PATHS)
-        self.assertEqual(len(c.PATHS),31)
+        self.assertEqual(len(c.PATHS),33)
         for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
                      'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',
                      'apps/mobile/app.config.js','scripts/release/full-app-j01/production.entitlements']:
+            with self.subTest(path=path),self.assertRaisesRegex(ValueError,'UNDECLARED_CHANGED_PATH'):
+                c.check_scope({path},c.PATHS|{path})
+
+    def test_native22_badge_cleanup_scope_is_only_two_exact_related_app_paths(self):
+        repair={'apps/mobile/src/features/notifications/nativeMutation.ts',
+                'apps/mobile/src/features/notifications/nativeMutation.test.ts'}
+        c.check_scope(repair,c.PATHS)
+        for path in ['apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+                     'apps/mobile/src/features/healthConsent/lifecycle.ts',
+                     'apps/mobile/src/features/notifications/unrelated.ts']:
             with self.subTest(path=path),self.assertRaisesRegex(ValueError,'UNDECLARED_CHANGED_PATH'):
                 c.check_scope({path},c.PATHS|{path})
 

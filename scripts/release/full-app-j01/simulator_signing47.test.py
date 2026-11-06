@@ -146,6 +146,8 @@ class SimulatorSigning47(unittest.TestCase):
             operations={**s.PHASE_OPERATIONS,'delete':['read-before-delete','delete-test-item','absent-after-delete']}[phase]
             valid={'schema':1,'head':head,'bundle':bundle,'pid':pid,'phase':phase,'marker':'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03',
                    'passed':True,'operations':[{'operation':op,'passed':True,'result':'EXPECTED_RESULT'} for op in operations]}
+            if phase == 'first':valid['notificationBadge']={'api':'EXPO_NOTIFICATIONS_NATIVE_NO_PERMISSION_REQUEST',
+                'before':0,'setter_result':False,'after':0,'badge_permission':False,'cleanup_passed':True}
             s.validate_app_keychain(valid,phase,head,bundle,pid)
             for mutate in [lambda x:x.update(pid=124),lambda x:x.update(head='b'*40),
                 lambda x:x.update(operations=[]),lambda x:x.update(passed=False),
@@ -153,6 +155,24 @@ class SimulatorSigning47(unittest.TestCase):
                 lambda x:x['operations'][0].update(passed=False)]:
                 bad=copy.deepcopy(valid);mutate(bad)
                 with self.assertRaises(ValueError):s.validate_app_keychain(bad,phase,head,bundle,pid)
+
+    def test_notification_badge_proof_requires_real_zero_and_successful_cleanup(self):
+        head='a'*40;bundle='com.layerwell.app.staging';pid=123
+        valid={'schema':1,'head':head,'bundle':bundle,'pid':pid,'phase':'first',
+            'marker':'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03','passed':True,
+            'operations':[{'operation':op,'passed':True,'result':'EXPECTED_RESULT'} for op in s.PHASE_OPERATIONS['first']],
+            'notificationBadge':{'api':'EXPO_NOTIFICATIONS_NATIVE_NO_PERMISSION_REQUEST','before':0,
+                'setter_result':False,'after':0,'badge_permission':False,'cleanup_passed':True}}
+        s.validate_app_keychain(valid,'first',head,bundle,pid)
+        for patch in [{'after':1},{'after':None},{'after':False},{'before':False},
+                      {'setter_result':'false'},{'cleanup_passed':False},{'error_code':'NATIVE_ERROR'}]:
+            wrong=copy.deepcopy(valid);wrong['notificationBadge'].update(patch)
+            with self.subTest(patch=patch),self.assertRaises(ValueError):
+                s.validate_app_keychain(wrong,'first',head,bundle,pid)
+        wrong=copy.deepcopy(valid);del wrong['notificationBadge']
+        with self.assertRaises(ValueError):s.validate_app_keychain(wrong,'first',head,bundle,pid)
+        self.assertIn('await clearNativeNotificationsForAccountIsolation()',s.APP_KEYCHAIN_JS)
+        self.assertNotIn('requestPermissionsAsync',s.APP_KEYCHAIN_JS)
 
     def test_ordinary_bundle_cannot_contain_separate_diagnostic(self):
         n=self.native()

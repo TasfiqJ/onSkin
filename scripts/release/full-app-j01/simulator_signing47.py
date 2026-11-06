@@ -471,6 +471,8 @@ def validate_app_command(argv,bundle):
 # query/options. Never modify recovery state or intercept the application's API.
 APP_KEYCHAIN_JS = r'''import * as SecureStore from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system/legacy';
+import * as Notifications from 'expo-notifications';
+import { clearNativeNotificationsForAccountIsolation } from '../src/features/notifications/nativeMutation';
 import 'expo-router/entry';
 const diagnosticMarker = 'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03';
 void (async () => {
@@ -478,6 +480,7 @@ void (async () => {
   const launch = JSON.parse(await FileSystem.readAsStringAsync(directory + 'C47AppKeychainLaunch.json'));
   const key = 'C47SimulatorTransient03_' + launch.head.slice(0, 16);
   const operations = [];
+  let notificationBadge = null;
   const first = 'C47_SYNTHETIC_FIRST', updated = 'C47_SYNTHETIC_UPDATED';
   async function check(operation, fn, expected) {
     try {
@@ -499,6 +502,14 @@ void (async () => {
       await check('read', () => SecureStore.getItemAsync(key), first);
       await check('update', () => SecureStore.setItemAsync(key, updated), undefined);
       await check('read-updated', () => SecureStore.getItemAsync(key), updated);
+      notificationBadge = {api:'EXPO_NOTIFICATIONS_NATIVE_NO_PERMISSION_REQUEST', cleanup_passed:false};
+      const permission = await Notifications.getPermissionsAsync();
+      notificationBadge.badge_permission = permission.ios?.allowsBadge ?? null;
+      notificationBadge.before = await Notifications.getBadgeCountAsync();
+      notificationBadge.setter_result = await Notifications.setBadgeCountAsync(0);
+      notificationBadge.after = await Notifications.getBadgeCountAsync();
+      await clearNativeNotificationsForAccountIsolation();
+      notificationBadge.cleanup_passed = true;
     } else if (launch.phase === 'relaunch') {
       await check('read-after-relaunch', () => SecureStore.getItemAsync(key), updated);
     } else if (launch.phase === 'delete') {
@@ -510,7 +521,7 @@ void (async () => {
     passed = operations.length > 0 && operations.every(row => row.passed);
   } catch { /* Failure is preserved, never returned as absent or success. */ }
   await FileSystem.writeAsStringAsync(directory + 'C47AppKeychain-' + launch.phase + '.json',
-    JSON.stringify({schema:1, marker:diagnosticMarker, ...launch, operations, passed}));
+    JSON.stringify({schema:1, marker:diagnosticMarker, ...launch, operations, notificationBadge, passed}));
 })();
 '''
 
@@ -539,6 +550,16 @@ def validate_app_keychain(value,phase,head,bundle,pid):
     need(value.get('passed') is True and [row.get('operation') for row in rows] == operations[phase] and
          all(row.get('passed') is True and row.get('result') == 'EXPECTED_RESULT' and 'code' not in row for row in rows),
          'REAL_APP_SECURESTORE_OPERATIONS')
+    if phase == 'first':
+        badge=value.get('notificationBadge')
+        need(isinstance(badge,dict) and set(badge) ==
+             {'api','badge_permission','before','setter_result','after','cleanup_passed'} and
+             badge['api'] == 'EXPO_NOTIFICATIONS_NATIVE_NO_PERMISSION_REQUEST' and
+             (badge['badge_permission'] is None or type(badge['badge_permission']) is bool) and
+             type(badge['before']) is int and badge['before'] >= 0 and
+             type(badge['setter_result']) is bool and type(badge['after']) is int and
+             badge['after'] == 0 and badge['cleanup_passed'] is True,
+             'REAL_APP_NOTIFICATION_BADGE_CLEANUP')
 
 
 def run_app_diagnostic(r,n,ios,argv,products,bundle,head):
@@ -576,7 +597,7 @@ def run_app_diagnostic(r,n,ios,argv,products,bundle,head):
         need(n.stage_file_digest(installed/PRODUCTS[bundle],n.MAX_APP) ==
              n.stage_file_digest(app/PRODUCTS[bundle],n.MAX_APP),'DIAGNOSTIC_INSTALLED_BYTES')
         data=Path(r.text('app-keychain-data-container',['xcrun','simctl','get_app_container',device,bundle,'data'],timeout=120))
-        pids=[]
+        pids=[];notification_badge=None
         for phase in PHASE_OPERATIONS:
             path=data/'Documents'/('C47AppKeychain-'+phase+'.json')
             need(not path.exists(),'NO_STALE_DIAGNOSTIC_RECEIPT')
@@ -587,11 +608,13 @@ def run_app_diagnostic(r,n,ios,argv,products,bundle,head):
             while not path.is_file() and time.monotonic()<deadline:time.sleep(.5)
             need(path.is_file(),'APP_SECURESTORE_RECEIPT_MISSING')
             raw=read_receipt(n,path);(evidence/path.name).write_bytes(raw)
-            validate_app_keychain(json.loads(raw),phase,head,bundle,pid)
+            value=json.loads(raw);validate_app_keychain(value,phase,head,bundle,pid)
+            if phase == 'first':notification_badge=value['notificationBadge']
             r.run('app-keychain-terminate-'+phase,['xcrun','simctl','terminate',device,bundle],timeout=120)
         need(len(set(pids)) == 3,'REAL_APP_PROCESS_RESTARTS')
         r.passed('app-process-keychain',{'bundle':bundle,'head':head,'same_simulator':device,
             'same_data_container':str(data),'pids':pids,'product':product,
+            'notification_badge':notification_badge,
             'api':'ACTUAL_EXPO_SECURE_STORE_DEFAULT_OPTIONS','no_values_or_recovery_data_logged':True,
             'only_transient_test_item_deleted':True,'ordinary_product_rebuild_required':True})
     finally:

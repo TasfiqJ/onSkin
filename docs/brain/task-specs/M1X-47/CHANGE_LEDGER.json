@@ -288,6 +288,24 @@
       "causal_need": "Authenticated Continuation03 authorizes only Xcode-supported Simulator-local ad-hoc identity and app-owned minimal entitlement availability. First run one small isolated toolchain probe, then actual current-source staging app/SecureStore/ordinary XCTest/internal journeys. No recovery/gate/storage replacement, foreign or wildcard groups, device/distribution signing, Apple account/certificate/provisioning/keychain inspection, paid runner, host-security bypass or billing changes. Exact current native/input validation, immutable command capture and cross-job app/entitlement identities must remain strict. Separately capture current Expo compatibility inputs and scanner-bootstrap rule bytes before judging causal fixes; do not blindly upgrade or repin.",
       "invariant": "Original frozen plan and38 ancestors/14prefix preserved; original unsigned RED immutable; normal app behavior, encryption, owner/health authority, explicit save, deletion priority and nondestructive recovery unchanged. All38/18 unaccepted, Security/candidate29/G97 unwaived, NO_GO.",
       "validation": "Focused signing SDK/product/access-group/production-leakage and forged-artifact refusals; existing native/source/wiring/90-obligation controls; real effective settings, emitted entitlements/signature/MachO, app-owned content-free Keychain CRUD/restart, unchanged named ordinary XCTest before internal; final forced root/type/lint and final-head CI; authenticated fresh return."
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/nativeMutation.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 13377,
+      "preimage_sha256": "711e8798d3b9ff690680dff191ac150eda44dbf3804aa94b3763a8356725dc62",
+      "causal_need": "Native22 health-consent transition stays closed because unrequested badge setter returns false; implement/test exact successful native zero postcondition without bypassing cleanup.",
+      "invariant": "Errors/nonzero/unknown badge and all other cleanup or owner failures remain closed; no permission request or health/consent/recovery mutation.",
+      "validation": "Preserved original assertions plus real false/zero/read-error controls and actual signed native diagnostic/ordinary/internal gates."
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 13908,
+      "preimage_sha256": "2f67d6cc16e2bdfe0d99e2a36b1a0e7186d057d88e2b697c74d9ea510e69a2c3",
+      "causal_need": "Native22 health-consent transition stays closed because unrequested badge setter returns false; implement/test exact successful native zero postcondition without bypassing cleanup.",
+      "invariant": "Errors/nonzero/unknown badge and all other cleanup or owner failures remain closed; no permission request or health/consent/recovery mutation.",
+      "validation": "Preserved original assertions plus real false/zero/read-error controls and actual signed native diagnostic/ordinary/internal gates."
     }
   ],
   "amendments": [
@@ -1555,8 +1573,134 @@
         25
       ],
       "finite_cumulative_paths": 31
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "utc": "2026-11-06T04:13:17.413958+00:00",
+      "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+      "preimage_tree": "b908888ae48141193642d0849284cc3a885f1c89",
+      "preimages": [
+        {
+          "path": "apps/mobile/src/features/notifications/nativeMutation.ts",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 13377,
+          "preimage_sha256": "711e8798d3b9ff690680dff191ac150eda44dbf3804aa94b3763a8356725dc62",
+          "working_bytes": 13377,
+          "working_sha256": "711e8798d3b9ff690680dff191ac150eda44dbf3804aa94b3763a8356725dc62"
+        },
+        {
+          "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 13908,
+          "preimage_sha256": "2f67d6cc16e2bdfe0d99e2a36b1a0e7186d057d88e2b697c74d9ea510e69a2c3",
+          "working_bytes": 13908,
+          "working_sha256": "2f67d6cc16e2bdfe0d99e2a36b1a0e7186d057d88e2b697c74d9ea510e69a2c3"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8927,
+          "preimage_sha256": "3be1a3ca70973c0e311656488aa75f42bf3a1b9c364de4f20b33b58cfd3563ab",
+          "working_bytes": 8927,
+          "working_sha256": "3be1a3ca70973c0e311656488aa75f42bf3a1b9c364de4f20b33b58cfd3563ab"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8184,
+          "preimage_sha256": "5769851475d97e114d05662f27990c510d23cef069ca4494636cf4c63905fa88",
+          "working_bytes": 8184,
+          "working_sha256": "5769851475d97e114d05662f27990c510d23cef069ca4494636cf4c63905fa88"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 53292,
+          "preimage_sha256": "9c86e714fd4e8d3804dcd51bfca2b7ceb98981fb3cc87beb3399bafaebdd2f26",
+          "working_bytes": 53292,
+          "working_sha256": "9c86e714fd4e8d3804dcd51bfca2b7ceb98981fb3cc87beb3399bafaebdd2f26"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 38357,
+          "preimage_sha256": "97492283cc236631d3a46246349c9648a7e2f4b80012701ae5e97946afafa6d1",
+          "working_bytes": 38357,
+          "working_sha256": "97492283cc236631d3a46246349c9648a7e2f4b80012701ae5e97946afafa6d1"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 13765,
+          "preimage_sha256": "a0cd1f5a816158b7800fd7082e183eef4944cd734cb98a77f3cf7c97a523d376",
+          "working_bytes": 13765,
+          "working_sha256": "a0cd1f5a816158b7800fd7082e183eef4944cd734cb98a77f3cf7c97a523d376"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15092,
+          "preimage_sha256": "463fe9ced1a38af5129619ad5b8327973fdf464c09860a2c3c4d191ad599bb86",
+          "working_bytes": 15092,
+          "working_sha256": "463fe9ced1a38af5129619ad5b8327973fdf464c09860a2c3c4d191ad599bb86"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 90703,
+          "preimage_sha256": "a9f6402211c7e5d0915bc6c46237153e08b030e0b51b6ffe80f1e3e1c1d2f3c5",
+          "working_bytes": 90703,
+          "working_sha256": "a9f6402211c7e5d0915bc6c46237153e08b030e0b51b6ffe80f1e3e1c1d2f3c5"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "c08fa96908fcddfe8f918031f1365557049b14db",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 60906,
+          "preimage_sha256": "124c04c0644c61a70dbd4ba325254e6467c139c01dc5a794ba84ab43a59a0ab7",
+          "working_bytes": 60906,
+          "working_sha256": "124c04c0644c61a70dbd4ba325254e6467c139c01dc5a794ba84ab43a59a0ab7"
+        }
+      ],
+      "causal_need": "Actual native22 same-source signed app installed/exactbytes/launch/fivePIDsurvival PASS, ordinary named1test1failure at Separate health consent after real Welcome/invalidDOB/underage/refusal/restart/adult entry. Actual xcresult final PNG/hierarchy shows health verification_required/local cleanup pending. Concrete native API contract fault: Expo57.0.24 setBadgeCountAsync(0) returns false unless badge authorization enabled even when actual badge is zero; current first-party cleanup equates false with failed cleanup. Add strict successful-native-zero readback on explicit false only, keep unknown/nonzero/read-error/other-cleanup/stale-owner failures closed. Add discriminating separate actual-app badge diagnostic before ordinary rebuild. Exact sole causal attribution remains to be confirmed by next actual execution.",
+      "invariant": "No health/owner/consent/deletion guard relaxation, no permission request, no fake grant, no error-as-absence, no recovery erasure, no package/installer/node_modules changes. Only two exact related first-party app paths are added to previous finite31=>33; preserve all prior paths/38ancestors/plan and substantive ordinary XCTest unchanged. All30current native source assertion bodies retained.",
+      "validation": "New meaningful permission-false+verified-zero positive RED before repair; nonzero/rejected/malformed/missing/hanging read and stale-actor guards remain closed; existing notification/privacy/health lifecycle tests and forced root/type/lint. Signing controls plus actual first-phase native badge observation/real notification cleanup in separate app diagnostic; Keychain9operations preserved; exact AppDelegate restore/rebuild; new candidate producer23 -> ordinary24 -> internal25. Current-source scope33/sourcePins15, same202/172/bothprofiles/3trees; finaltwo-worklist-onlyseal.",
+      "installed_native_contract": {
+        "path": "node_modules\\expo-notifications\\ios\\ExpoNotifications\\Badge\\BadgeModule.swift",
+        "bytes": 911,
+        "sha256": "a4f7f380225fb5feaf332ec37ad9166a756db7c06380757ab587656525aac351",
+        "read_only": true,
+        "package_version": "57.0.24"
+      },
+      "primary_reference": "https://docs.expo.dev/versions/latest/sdk/notifications/#setbadgecountasyncbadgecount-options",
+      "native22": {
+        "run": 42148901455,
+        "job": 127694706900,
+        "artifact": 13475849106,
+        "bytes": 244626650,
+        "sha256": "374ec7bd1f8068a6eaf62718b23028a1f5b789b4350e17967bbf980db6b8d8ae",
+        "all_members_verified": 1393,
+        "streams_verified": 124,
+        "XCTest": "1executed1failure0unexpected223.875sec",
+        "internal": "SKIPPED0attempt"
+      },
+      "remaining_attempts": [
+        23,
+        24,
+        25
+      ],
+      "finite_cumulative_paths": 33
     }
   ],
-  "frozen_utc": "2026-11-06T01:55:13.995994+00:00",
-  "freeze_note": "Finite31; Native20 preserved, bounded case diagnostics and full30 allowance; no acceptance, NO_GO."
+  "frozen_utc": "2026-11-06T04:13:17.413958+00:00",
+  "freeze_note": "Finite33: previous31 plus exact notification cleanup implementation/test. Native21 realKeychainPASS/native22 normalhealthtransitionFAIL preserved. SOURCE_PENDING; no acceptance, NO_GO."
 }

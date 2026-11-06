@@ -17,6 +17,8 @@ import { checkedNativeRoot46, nativeSourceIdentity46, readNativeFile46, verifyNa
 export const DESCRIPTOR47 = 'docs/phase-9/ios-generated-input-succession47.v1.json';
 export const MAP47 = 'scripts/phase9/ios-native-obligations47.json';
 export const SOURCE_PATHS47 = [
+  'apps/mobile/src/features/notifications/nativeMutation.ts',
+  'apps/mobile/src/features/notifications/nativeMutation.test.ts',
   'scripts/release/full-app-j01/pods_compat47.py',
   'scripts/release/full-app-j01/pods_compat47.test.py',
   'scripts/release/full-app-j01/native_generated47.mjs',
