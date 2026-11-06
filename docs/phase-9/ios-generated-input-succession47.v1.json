@@ -41,13 +41,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 60787,
-      "sha256": "a86244e9dcca2a266be98119f1de68c4e76878f1704934071a4f6ae8011ed85f"
+      "bytes": 60990,
+      "sha256": "3d2d0d1da696f8aa633ec7956aa47b1a4f74f0f43420bf2315fc0ab0e8999925"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 48139,
-      "sha256": "3a09d42caab41e92d1b57960cc4dcdd395bdf204c09a2836b07caf58dcc1543f"
+      "bytes": 48903,
+      "sha256": "472dc85c0a5064fb00d6b4ba609b9c05755a495458ad57774366c9d7a1955034"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -106,8 +106,8 @@
     },
     {
       "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
-      "bytes": 22489,
-      "sha256": "00bd1de21061fbdf8e7081a38c116e1a8c925856889c59e8fdcefcfc96f8c308"
+      "bytes": 24849,
+      "sha256": "0a9b3584c7a5b79c06a6df024949e9b8697da64b4402cf2023ec9e2486b50874"
     },
     {
       "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",

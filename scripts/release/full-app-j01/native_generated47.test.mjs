@@ -69,6 +69,16 @@ test('current47 descriptor is finite generated-only successor with every admissi
     const prior = found.stdout, current = readFileSync(resolve(ROOT, row.path));
     const declared = { path: row.path, ...row.before };
     assert.equal(validateConsentApp04(declared, prior, current), true);
+    if (row.previousAfter) {
+      assert.equal(row.path, 'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts');
+      assert.equal(row.previousAfter.head, 'c36fecd16c605a49e06b599d89dae8a988a42939');
+      const previous = spawnSync('git', ['--no-replace-objects', 'show', row.previousAfter.head + ':' + row.path],
+        { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+      assert.equal(previous.status, 0);
+      assert.deepEqual({ bytes: previous.stdout.length, sha256: createHash('sha256').update(previous.stdout).digest('hex') },
+        { bytes: row.previousAfter.bytes, sha256: row.previousAfter.sha256 });
+      assert.throws(() => validateConsentApp04(declared, prior, previous.stdout));
+    }
     const changed = Buffer.from(current); changed[0] ^= 1;
     const wrongPrior = Buffer.from(prior); wrongPrior[0] ^= 1;
     for (const args of [[declared, prior, prior], [declared, prior, changed],

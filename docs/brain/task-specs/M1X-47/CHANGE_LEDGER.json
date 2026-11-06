@@ -3250,8 +3250,77 @@
       },
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T19:21:18.485775+00:00",
+      "preimages": [
+        {
+          "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+          "preimage_head": "334855ca9f265f428dfa17e45464341186683459",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 22489,
+          "preimage_sha256": "00bd1de21061fbdf8e7081a38c116e1a8c925856889c59e8fdcefcfc96f8c308",
+          "preimage_blob": "3413f0f5361180e2e6a524e373bb7bdc28b4ea5f"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "334855ca9f265f428dfa17e45464341186683459",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 60787,
+          "preimage_sha256": "a86244e9dcca2a266be98119f1de68c4e76878f1704934071a4f6ae8011ed85f",
+          "preimage_blob": "122fca8618b157aa735c3155768a2403fd2dc22e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "334855ca9f265f428dfa17e45464341186683459",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 48139,
+          "preimage_sha256": "3a09d42caab41e92d1b57960cc4dcdd395bdf204c09a2836b07caf58dcc1543f",
+          "preimage_blob": "74cf2ace839b6b33ae8283c00b2cdb15181e93f6"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "334855ca9f265f428dfa17e45464341186683459",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "eb6d8be635c23fc955ad4d517add11d215a24c4748f18edd70a21f916d3c7d2d",
+          "preimage_blob": "a86be35adbe1c4f0a7fbad91257b4d318aadeec9"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "334855ca9f265f428dfa17e45464341186683459",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 192466,
+          "preimage_sha256": "c874f978b14488f338ac0a1514cf0ec86a3b5ee0eae993f7993abdde73f04dbe",
+          "preimage_blob": "c385b87726482ea0f87bf594cde8bbdc37881b57"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "334855ca9f265f428dfa17e45464341186683459",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 81736,
+          "preimage_sha256": "bed707dd2724327ecfdf7a20a0edbfb2249e63660994cf4f35825b64b4eb73cc",
+          "preimage_blob": "ef9c7f5d3dbadd8b27a20fcea870168543e406a5"
+        }
+      ],
+      "causal_need": "Distinct verification-required Reviewcurrent Agree-positive mounted coverage was absent; terminalwithdrawn nativecase3 cannotstandin. Addoneindependent productioncomponent interaction case usingexisting renderer/service mocks. Preserveall23oldcasesbyteforbyte, no new nativecase4 or appimplementation change.",
+      "invariant": "RealC36PausedHealthDataShell unchanged. Reviewalonegrantsnothing; exactcanonicaldisclosure/Notnow; explicitAgree delegatesexactowner/epoch; pendingbuttonsdisabled/noprematurepublication; mocksuccesspublishedonce/no shellnavigation. Mockepoch3 isONLYcomponentdelegation evidence, notactualgrant/erasure/nativeproof. Epoch/owner/erasure remainseparateproductiondomain+nativepostconditions. Sourceauditor/witness202/172 unchanged; exactlyonecurrentGateNavpostimage changes, literalC36previousAfter retainedandchecked; all30names/meaningfulassertions/noProofREDpreserved. Finite43/24pins.",
+      "validation": "Rootactualmounted24/focusedcontrols/currentselectedNodeproof. Finalstableforcedroot/type/lint and properfocusedprivacy requiredaftercoordinator. Newtestcount+1 versusC36; historical7030/117/252 remainatC36, notnewheadpasses. Source/currentordinary/internal nativeclosurestillpending; original25cause notinferredfrommountedmock.",
+      "preimage": {
+        "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+        "bytes": 22489,
+        "sha256": "00bd1de21061fbdf8e7081a38c116e1a8c925856889c59e8fdcefcfc96f8c308"
+      },
+      "postimage": {
+        "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+        "bytes": 24849,
+        "sha256": "0a9b3584c7a5b79c06a6df024949e9b8697da64b4402cf2023ec9e2486b50874"
+      },
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43; historicaldiagnostic30 recordsfullinstalledidentity beforebyte/permissionguards andearlyprovider schema; genericcurrentordinary/internaladmissionstilldisabled."
+  "freeze_note": "Finite43; mountedverificationAgreepositive adds1test, no productionappbehaviorchange; exactsingleC36testpostimage successor/nativeinputpins updated; finalcoordinator/schema/nativeclosurestillpending."
 }

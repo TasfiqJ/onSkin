@@ -228,6 +228,65 @@ describe('paused health-data shell navigation ownership', () => {
     expect(mocks.replace).not.toHaveBeenCalled();
   });
 
+  it('publishes explicit local verification reconsent once and leaves activation routing to the gate', async () => {
+    const onRecord = vi.fn();
+    const verification = lifecycleRecord({
+      state: 'verification_required',
+      processingEpoch: 2,
+      verificationReason: 'local_consent_unavailable',
+      verificationResumeState: 'active',
+    });
+    const activated = lifecycleRecord({
+      state: 'active',
+      processingEpoch: 3,
+      activationRoutePending: true,
+    });
+    let release!: (record: HealthDataLifecycleRecord) => void;
+    mocks.grant.mockReturnValueOnce(
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+    );
+    await act(async () => {
+      renderer = create(createElement(PausedHealthDataShell, { record: verification, onRecord }));
+    });
+    expect(renderer!.root.findAllByProps({ label: 'Review fresh consent' })).toHaveLength(0);
+    expect(renderer!.root.findAllByProps({ label: 'I agree. Start a new profile' })).toHaveLength(
+      0,
+    );
+    expect(mocks.grant).not.toHaveBeenCalled();
+    await act(async () =>
+      renderer!.root.findByProps({ label: 'Review current consent' }).props.onPress(),
+    );
+    const disclosure = JSON.stringify(renderer!.toJSON());
+    for (const text of [
+      HEALTH_DATA_CONSENT.what,
+      HEALTH_DATA_CONSENT.why,
+      HEALTH_DATA_CONSENT.never,
+    ]) {
+      expect(disclosure).toContain(text);
+    }
+    expect(renderer!.root.findAllByProps({ label: 'Not now' })).toHaveLength(1);
+    expect(mocks.grant).not.toHaveBeenCalled();
+    expect(onRecord).not.toHaveBeenCalled();
+    expect(mocks.replace).not.toHaveBeenCalled();
+    await act(async () =>
+      renderer!.root.findByProps({ label: 'I agree. Start a new profile' }).props.onPress(),
+    );
+    expect(mocks.grant).toHaveBeenCalledExactlyOnceWith({
+      ownerUserId: 'owner-a',
+      expectedProcessingEpoch: 2,
+    });
+    expect(renderer!.root.findByProps({ label: 'Saving...' }).props.disabled).toBe(true);
+    expect(renderer!.root.findByProps({ label: 'Not now' }).props.disabled).toBe(true);
+    expect(onRecord).not.toHaveBeenCalled();
+    await act(async () => release(activated));
+    await flush();
+    expect(onRecord).toHaveBeenCalledExactlyOnceWith(activated);
+    expect(mocks.replace).not.toHaveBeenCalled();
+    expect(mocks.reconcile).not.toHaveBeenCalled();
+  });
+
   it('publishes a fresh-epoch verification retry once and leaves routing to the gate', async () => {
     const onRecord = vi.fn();
     const verification = lifecycleRecord({
