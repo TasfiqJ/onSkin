@@ -14,6 +14,7 @@ import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMappin
   validateAutolinking47, validateResolvedLock47, readSourceProof47,
   validateDevelopmentProjection47, validateOutput47, SOURCE_PATHS47, SWIFT_SUCCESSION47, validateSwiftSuccession47,
   CONSENT_DOC04, validateConsentDoc04, currentPrivacyProjection47,
+  CONSENT_APP04, validateConsentApp04, firstLegacySourcePin04,
   auditCurrentNative47 as auditIosPrivacySource, proveCurrentNativeSource47 as proveCurrentNativeSource46,
   verifyCurrentNative47 as verifyNativeCandidate46, validateIosExtensionConfig47 as validateIosExtensionConfig46 } from './native_generated47.mjs';
 
@@ -59,6 +60,29 @@ test('current47 descriptor is finite generated-only successor with every admissi
   legacy.errors[3].message = 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:' + CONSENT_DOC04.path;
   assert.throws(() => currentPrivacyProjection47(legacy, Buffer.from('{}'), false));
   assert.equal(currentPrivacyProjection47(legacy, Buffer.from('{}'), false, CONSENT_DOC04).status, 'archive_required');
+  for (const row of CONSENT_APP04.sourceInputs) {
+    const found = spawnSync('git', ['--no-replace-objects', 'show', CONSENT_APP04.checkpointHead + ':' + row.path],
+      { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+    assert.equal(found.status, 0);
+    const prior = found.stdout, current = readFileSync(resolve(ROOT, row.path));
+    const declared = { path: row.path, ...row.before };
+    assert.equal(validateConsentApp04(declared, prior, current), true);
+    const changed = Buffer.from(current); changed[0] ^= 1;
+    const wrongPrior = Buffer.from(prior); wrongPrior[0] ^= 1;
+    for (const args of [[declared, prior, prior], [declared, prior, changed],
+      [declared, wrongPrior, current], [{ ...declared, path: 'apps/mobile/src/unrelated.ts' }, prior, current]]) {
+      assert.throws(() => validateConsentApp04(...args));
+    }
+  }
+  const immutable = readFileSync(resolve(ROOT, 'docs/phase-9/ios-sdk-lock-succession46.v1.json'));
+  const expectedPin = firstLegacySourcePin04(strictJson47(immutable));
+  assert.equal(expectedPin, 'apps/mobile/src/app/(tabs)/you.tsx');
+  const currentLegacy = structuredClone(legacy);
+  currentLegacy.errors[3].message = 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:' + expectedPin;
+  assert.throws(() => currentPrivacyProjection47(currentLegacy, immutable, false, CONSENT_DOC04));
+  assert.throws(() => currentPrivacyProjection47(legacy, immutable, false, CONSENT_DOC04, CONSENT_APP04));
+  assert.throws(() => currentPrivacyProjection47(currentLegacy, immutable, false, null, CONSENT_APP04));
+  assert.equal(currentPrivacyProjection47(currentLegacy, immutable, false, CONSENT_DOC04, CONSENT_APP04).status, 'archive_required');
 });
 
 test('current47 rejects root default-subspec expansion, extra pod options, global scope and admission claims', () => {
@@ -74,6 +98,8 @@ test('current47 rejects root default-subspec expansion, extra pod options, globa
     value => value.claims.physicalDeviceQualified = true,
     value => value.authorization = 'extra unreviewed authority',
     value => value.sourcePins.pop(),
+    value => value.sourcePins.find(pin => pin.path === CONSENT_APP04.currentInputs[0].path).sha256 = '0'.repeat(64),
+    value => value.sourcePins.find(pin => pin.path === CONSENT_APP04.sourceInputs[0].path).sha256 = '0'.repeat(64),
     value => value.sourcePins.push(structuredClone(value.sourcePins[0])),
     value => value.sourceBinding.externalCurrentSource47SealRequired = false,
     value => value.predecessor46.sha256 = '0'.repeat(64),

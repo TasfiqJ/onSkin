@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
+  "inventory_state": "FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -2521,8 +2521,71 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T16:29:36.549766+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "c36fecd16c605a49e06b599d89dae8a988a42939",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 55527,
+          "preimage_sha256": "a33b4649c57bc000d1f86973cd3003caf50a93d3fd20d43408d19160ea8b60b6"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "c36fecd16c605a49e06b599d89dae8a988a42939",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 46023,
+          "preimage_sha256": "958217b62092582f554b774b51103a56cf9e8da4b99965fbb68eac6326e2c501"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "c36fecd16c605a49e06b599d89dae8a988a42939",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15640,
+          "preimage_sha256": "fffd1a3e92a1f7b783a4150abac4051e5d400e11042ba1af42335bfb52da6751"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "c36fecd16c605a49e06b599d89dae8a988a42939",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 149292,
+          "preimage_sha256": "1a6dadd71bd1bf1cfc4d5e8453dc90cb408b17aa87bfb0dfa8b33ac3627ad497"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "c36fecd16c605a49e06b599d89dae8a988a42939",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 71172,
+          "preimage_sha256": "4dececf5963c5d765146b622cc063ba72a246fcd460f429b71eebba14e5f4e73"
+        }
+      ],
+      "causal_need": "Exact current-source validation for8 actual app/test repairs. Immutable202/172 include onlyYou/Gate/navigationtest; prove their literal F218before and measured currentafter. Other5actualapp/testpaths receive finite separate literal currentpins. Compute first raw legacy RED only from verified known successors in immutablewitness order, forward both doc/app proofs through all actual/fixture adapters.",
+      "invariant": "No immutable46witness/auditor/output rewriting, wildcard, whole-lock projection, dropped test/assertion, relaxed authority or invented predecessor row. Original202/172/all installedtrees/falseadmissions and historical no-proof/doc-only RED predicates retained. Finite43 unchanged; app SourcePASS is never native qualification.",
+      "validation": "All30existing names/assertions preserved; direct3postimage stale/current/altered/wrongprior/wrongpath and descriptor/proof/history negativecontrols inside existing cases, meaningful currentSOURCE forbothprofiles and full30 before next native compile. Currentapp117focus+7030forcedroot+type3/lint3 actuallyPASS at C36, currentprivacyfocusedPASS; actualnative27origin pending.",
+      "app_postimages_sha256": "d11a92b354e4f0636218dfbeb71e526c4839176b28fd143fad5106420c7d8188",
+      "running_native": {
+        "attempt": 27,
+        "run_id": 42246927646,
+        "job_id": 127991461922,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12"
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43: original36 plus7 exact causally exercised app/test paths, predeclared before edits. No parent/main/native27 source mutation; actual native origin pending."
+  "freeze_note": "Finite43 exercised; actual8app/testrepair plus exact3witness/5current native-input successor. Ordinary/runtime harness successor and real current native qualification still pending."
 }

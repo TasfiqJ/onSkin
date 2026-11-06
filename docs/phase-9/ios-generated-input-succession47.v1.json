@@ -41,13 +41,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 55527,
-      "sha256": "a33b4649c57bc000d1f86973cd3003caf50a93d3fd20d43408d19160ea8b60b6"
+      "bytes": 60600,
+      "sha256": "596a23998278d31d43e9241eb8d93fc5014ce0246dc94b3521659a69156f2066"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 46023,
-      "sha256": "958217b62092582f554b774b51103a56cf9e8da4b99965fbb68eac6326e2c501"
+      "bytes": 48013,
+      "sha256": "4f6ceecccf57737a50e63ad2a65c30e85398bb5448297edeb01fe98b69269118"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -98,6 +98,46 @@
       "path": "docs/USER_FLOW_TREE.md",
       "bytes": 540807,
       "sha256": "b42d288fe27d187b2665771036652c0e12a31b8128c68b9e1e387206de68acd7"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "bytes": 37704,
+      "sha256": "3cf0bd5d363ca18ca133f749d917a4afd4c8bfcda629e1ef81a98b96c20e53d4"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "bytes": 22489,
+      "sha256": "00bd1de21061fbdf8e7081a38c116e1a8c925856889c59e8fdcefcfc96f8c308"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "bytes": 36277,
+      "sha256": "0fc3cfe1cb14606ae3396892d942c568fd858f9e36f147233ba03d24463d3117"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+      "bytes": 53859,
+      "sha256": "8db7b566311e5634058ebc38aa0522b1747280f70ef89c4e98f8ef371197ba4a"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+      "bytes": 52276,
+      "sha256": "aa526292eee5164d13d5238ecd9e92f8493a231b308e63c21a376c234c453d00"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
+      "bytes": 13103,
+      "sha256": "bda08282da2f98cbb5c75ead51207707b81c1aca0667efc65f1c53f2fb7451ca"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
+      "bytes": 8373,
+      "sha256": "089f705454098c108c03628738a6640cf497791369148f82e03248040b4a9a8f"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
+      "bytes": 39901,
+      "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
     }
   ],
   "registry": [

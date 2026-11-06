@@ -17,6 +17,14 @@ import { checkedNativeRoot46, nativeSourceIdentity46, readNativeFile46, verifyNa
 export const DESCRIPTOR47 = 'docs/phase-9/ios-generated-input-succession47.v1.json';
 export const MAP47 = 'scripts/phase9/ios-native-obligations47.json';
 export const SOURCE_PATHS47 = [
+  'apps/mobile/src/app/(tabs)/you.tsx',
+  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
+  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+  'apps/mobile/src/features/healthConsent/lifecycle.test.ts',
+  'apps/mobile/src/features/healthConsent/lifecycle.ts',
+  'apps/mobile/src/features/onboarding/healthConsentStore.test.ts',
+  'apps/mobile/src/features/onboarding/healthConsentStore.ts',
+  'apps/mobile/src/features/settings/settingsRoutes.test.ts',
   'docs/USER_FLOW_TREE.md',
   'apps/mobile/src/features/notifications/nativeMutation.ts',
   'apps/mobile/src/features/notifications/nativeMutation.test.ts',
@@ -69,6 +77,91 @@ export function validateConsentDoc04(pin, original, actual) {
   const append = actual.subarray(original.length);
   same({ bytes: append.length, sha256: hash(append) }, CONSENT_DOC04.append);
   return true;
+}
+
+export const CONSENT_APP04 = {
+  "authority": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+  "checkpointHead": "f21831f5731be928c8e323c509fb62b3d12a654e",
+  "sourceInputs": [
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "before": {
+        "bytes": 37030,
+        "sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23"
+      },
+      "after": {
+        "bytes": 37704,
+        "sha256": "3cf0bd5d363ca18ca133f749d917a4afd4c8bfcda629e1ef81a98b96c20e53d4"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "before": {
+        "bytes": 8740,
+        "sha256": "a23b04419c4e31c3327943eac96cb0176cacceb6730927e60269de5f12a0967b"
+      },
+      "after": {
+        "bytes": 22489,
+        "sha256": "00bd1de21061fbdf8e7081a38c116e1a8c925856889c59e8fdcefcfc96f8c308"
+      }
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "before": {
+        "bytes": 33702,
+        "sha256": "95ae7915a0cc2793f8697ba1e6bda72e20d66f64b3f20e6b2cc89f58ac968a83"
+      },
+      "after": {
+        "bytes": 36277,
+        "sha256": "0fc3cfe1cb14606ae3396892d942c568fd858f9e36f147233ba03d24463d3117"
+      }
+    }
+  ],
+  "currentInputs": [
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+      "bytes": 53859,
+      "sha256": "8db7b566311e5634058ebc38aa0522b1747280f70ef89c4e98f8ef371197ba4a"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+      "bytes": 52276,
+      "sha256": "aa526292eee5164d13d5238ecd9e92f8493a231b308e63c21a376c234c453d00"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
+      "bytes": 13103,
+      "sha256": "bda08282da2f98cbb5c75ead51207707b81c1aca0667efc65f1c53f2fb7451ca"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
+      "bytes": 8373,
+      "sha256": "089f705454098c108c03628738a6640cf497791369148f82e03248040b4a9a8f"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
+      "bytes": 39901,
+      "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
+    }
+  ]
+};
+export function validateConsentApp04(pin, original, actual) {
+  const row = CONSENT_APP04.sourceInputs.find(row => row.path === pin.path);
+  assert.ok(row, 'CURRENT47_EXACT_APP04_WITNESS_PATH_REQUIRED');
+  same({ bytes: pin.bytes, sha256: pin.sha256 }, row.before);
+  assert.ok(Buffer.isBuffer(original) && Buffer.isBuffer(actual));
+  same({ bytes: original.length, sha256: hash(original) }, row.before);
+  same({ bytes: actual.length, sha256: hash(actual) }, row.after);
+  return true;
+}
+export function firstLegacySourcePin04(witness) {
+  const known = [...SWIFT_SUCCESSION47.sourceInputs, ...SWIFT_SUCCESSION47.installedFiles,
+    CONSENT_DOC04, ...CONSENT_APP04.sourceInputs];
+  const pins = [...witness.unchangedInputs, ...witness.currentSourceInputs, witness.rootPackage];
+  const first = pins.find(pin => known.some(row => row.path === pin.path &&
+    (row.after.bytes !== pin.bytes || row.after.sha256 !== pin.sha256)));
+  assert.ok(first, 'CURRENT47_VERIFIED_KNOWN_LEGACY_RED_REQUIRED');
+  return first.path;
 }
 
 export const SWIFT_SUCCESSION47 = {
@@ -167,6 +260,11 @@ export function validateDescriptor47(value) {
   same(value.sourcePins.map(pin => pin.path).sort(), SOURCE_PATHS47);
   const doc04 = value.sourcePins.find(pin => pin.path === CONSENT_DOC04.path);
   same({ bytes: doc04.bytes, sha256: doc04.sha256 }, CONSENT_DOC04.after);
+  for (const expected of [...CONSENT_APP04.sourceInputs.map(row => ({ path: row.path, ...row.after })),
+    ...CONSENT_APP04.currentInputs]) {
+    const pin = value.sourcePins.find(pin => pin.path === expected.path);
+    same(pin, expected);
+  }
   same(value.registry.map(pin => pin.path).sort(), ['node_modules/expo', 'node_modules/expo-build-properties',
     'node_modules/expo-modules-autolinking'].sort());
   same(value.installedConsumers.map(pin => pin.path).sort(), [
@@ -355,6 +453,7 @@ function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneratio
   const pins = [...witness.unchangedInputs, ...witness.currentSourceInputs, witness.rootPackage];
   const stamps = {};
   let consentDoc04 = null;
+  const app04Seen = [];
   same(pins.length, 202);
   for (const pin of pins) {
     if (pin.status === 'ABSENT') { absentInput47(root, pin.path); continue; }
@@ -371,6 +470,12 @@ function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneratio
       const original = git47(root, 'show', CONSENT_DOC04.checkpointHead + ':' + pin.path);
       validateConsentDoc04(pin, original, actual.bytes);
       consentDoc04 = CONSENT_DOC04;
+      continue;
+    }
+    if (CONSENT_APP04.sourceInputs.some(row => row.path === pin.path)) {
+      const original = git47(root, 'show', CONSENT_APP04.checkpointHead + ':' + pin.path);
+      validateConsentApp04(pin, original, actual.bytes);
+      app04Seen.push(pin.path);
       continue;
     }
     assert.ok(allowGeneration || actual.sha256 === pin.sha256, 'CURRENT47_UNPROJECTED_SOURCE_REQUIRED:' + pin.path);
@@ -393,7 +498,9 @@ function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneratio
     same(projected, after);
   }
   same(consentDoc04, CONSENT_DOC04);
-  return { verifiedInputCount: pins.length, stamps, consentDoc04,
+  same(app04Seen.sort(), CONSENT_APP04.sourceInputs.map(row => row.path).sort());
+  return { verifiedInputCount: pins.length, stamps, consentDoc04, consentApp04: CONSENT_APP04,
+    legacyFirstSourcePin04: firstLegacySourcePin04(witness),
     installedNativeTrees: witness.installedNativeTrees.map(expected => currentTree47(root, expected, descriptor.swiftSourceSuccession, stamps)),
     qualification: 'ACTUAL_CURRENT_INPUTS_WITH_ONLY_DECLARED_ISOLATED_PREBUILD_PACKAGE_SCRIPT_PROJECTION' };
 }
@@ -578,12 +685,18 @@ function lockSuccession13({ mapping, mappingFile, lock, lockFile, root }) {
     currentFilesRewritten: false, inverseSourceInputs: 3, inverseInstalledFiles: 2 };
 }
 
-export function currentPrivacyProjection47(legacy, witnessBytes, requireSnapshot = true, verifiedDoc04 = null) {
-  // Only the already-verified exact C04 append changes the first legacy RED.
-  // No C04 proof retains the historical WidgetStore error predicate unchanged.
+export function currentPrivacyProjection47(legacy, witnessBytes, requireSnapshot = true, verifiedDoc04 = null, verifiedApp04 = null) {
+  // Historical no-proof and doc-only predicates remain distinct. Current app
+  // adapters supply both exact proofs after the complete 202-input validation.
   if (verifiedDoc04 !== null) same(verifiedDoc04, CONSENT_DOC04);
-  const expectedSourcePin = verifiedDoc04 === null
+  let expectedSourcePin = verifiedDoc04 === null
     ? 'node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift' : CONSENT_DOC04.path;
+  if (verifiedApp04 !== null) {
+    same(verifiedDoc04, CONSENT_DOC04);
+    same(verifiedApp04, CONSENT_APP04);
+    same(hash(witnessBytes), LOCK_SUCCESSION46_SHA256);
+    expectedSourcePin = firstLegacySourcePin04(strictJson47(witnessBytes));
+  }
   same(legacy.status, 'source_invalid');
   same(legacy.errors, [
     ...['@react-native-google-signin/google-signin', 'expo-image', 'react-native'].map(name => ({
@@ -625,14 +738,15 @@ export function verifyCurrentNative47(rootValue = ROOT, { audit = true, evidence
     legacyAudit = legacyAuditIosPrivacySource({ root: current.root.absolute });
     if (evidenceDirectory) writeFileSync(resolve(evidenceDirectory, 'legacy46-audit-current47.json'),
       canonicalAuditJson(legacyAudit), { flag: 'wx' });
-    privacyInventory = currentPrivacyProjection47(legacyAudit, legacy46File.bytes, true, verification.consentDoc04);
+    privacyInventory = currentPrivacyProjection47(legacyAudit, legacy46File.bytes, true, verification.consentDoc04, verification.consentApp04);
   }
   checkWindowsReparse(regular, trees);
   same(nativeSourceIdentity46(current.root), current.source);
   return { status: 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED', source: current.source,
     descriptorSHA256: current.file.sha256, committedSourceProof: committed,
     verifiedInputCount: verification.verifiedInputCount, committedCriticalInputs: committed.committedCriticalInputs,
-    consentDoc04: verification.consentDoc04, stamps: verification.stamps, installedNativeTrees: verification.installedNativeTrees, trees: verification.installedNativeTrees, sourceSuccessors: 3, installedFileSuccessors: 2,
+    consentDoc04: verification.consentDoc04, consentApp04: verification.consentApp04,
+    legacyFirstSourcePin04: verification.legacyFirstSourcePin04, stamps: verification.stamps, installedNativeTrees: verification.installedNativeTrees, trees: verification.installedNativeTrees, sourceSuccessors: 3, installedFileSuccessors: 2,
     historical46Identity: 'EXPECTED_SOURCE_PIN_RED_NOT_CURRENT_PASS',
     legacy46File, witness: current.witness, file: current.file, root: current.root,
     lockHistory: history, historicalAssertions, legacyAudit, privacyInventory,
@@ -671,7 +785,7 @@ export function auditCurrentNative47({ root = ROOT } = {}) {
   try {
     const proof = verifyCurrentNative47(root, { audit: false });
     const legacy = legacyAuditIosPrivacySource({ root });
-    return currentPrivacyProjection47(legacy, proof.legacy46File.bytes, false, proof.consentDoc04);
+    return currentPrivacyProjection47(legacy, proof.legacy46File.bytes, false, proof.consentDoc04, proof.consentApp04);
   } catch (error) {
     return { status: 'source_invalid', errors: [{ code: 'CURRENT_NATIVE_SOURCE47_REFUSAL', path: null,
       message: String(error.message ?? error) }], claims: { appStoreAcceptanceProven: false, appStorePrivacyLabelsVerified: false,
@@ -832,6 +946,8 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profi
     same(proof.currentNative47.status, 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED');
     same(proof.currentNative47.verifiedInputCount, 202);
     same(proof.currentNative47.consentDoc04, CONSENT_DOC04);
+    same(proof.currentNative47.consentApp04, CONSENT_APP04);
+    same(proof.currentNative47.legacyFirstSourcePin04, firstLegacySourcePin04(current.witness));
     same(proof.currentNative47.source.sourceHead, current.source.sourceHead);
     const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead, current.descriptor);
     const helper = resolve(root, 'scripts/release/full-app-j01/pods_compat47.py');
