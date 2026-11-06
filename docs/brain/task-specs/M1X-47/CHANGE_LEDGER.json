@@ -2672,6 +2672,54 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T17:00:55.908225+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "79efb7b7febe80a215ad4753a3327e77c835fc89",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 54356,
+          "preimage_sha256": "6c646ab14f66bf6b9d348edbcf797dd15bf29d67cbff908a9b20dc1cfbd10bbb"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "79efb7b7febe80a215ad4753a3327e77c835fc89",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 157415,
+          "preimage_sha256": "9cca2a559f46d2de1d9cd51729fbb3d2d4a37d2d10f0b6e7cef6d498366c7229"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "79efb7b7febe80a215ad4753a3327e77c835fc89",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 72928,
+          "preimage_sha256": "eadd0a8d86d684f13f5f67fbb41df56c4bda277212b45172c80f20cdf71b16a0"
+        }
+      ],
+      "causal_need": "C04 correctly changed unconfigured paused-shell heading. Existing internal development lane is explicitly provider-unconfigured but case5 still expects old account-asserting heading. Update exactly that one assertion literal to the source-proven local heading before spending native capacity; all withdrawal/state/cleanup/cancel/retained-data/restart checks unchanged.",
+      "invariant": "Five exact internal cases remain, ordinaryprefix unchanged, no label alternatives or skipped assertions. Existing internal Row helper already matches source-defined hint prefix and needs no change. Compare complete F218 internal suffix after exactly one declared heading substitution; historical F218 body retained unchanged in Git/raw25. No app behavior, fixture authority, signing, provider or deadline change.",
+      "validation": "Exact one-line before/after/suffix proof, unchanged five method names and normal18684B prefix, actual internal XCTest still mandatory only after genuine complete ordinary PASS. Current runtime control successor must encode the exact declared one-line transform rather than dropping suffix protection.",
+      "running_native": {
+        "attempt": 27,
+        "run_id": 42246927646,
+        "job_id": 127991461922,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12"
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",

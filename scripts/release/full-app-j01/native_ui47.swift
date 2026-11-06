@@ -1038,7 +1038,7 @@ final class C47InternalOwnerUI: XCTestCase {
         tab("You", app)
         tap("Withdraw health-data consent", app)
         tap("Withdraw health consent", app)
-        XCTAssertTrue(text("Your account is still here.", app).waitForExistence(timeout: deadline))
+        XCTAssertTrue(text("Health features are paused on this device.", app).waitForExistence(timeout: deadline))
         let localCleanup = app.staticTexts.matching(NSPredicate(format:
             "label CONTAINS %@ AND label CONTAINS %@", "withdrawn", "Local cleanup complete.")).firstMatch
         XCTAssertTrue(localCleanup.waitForExistence(timeout: deadline))
