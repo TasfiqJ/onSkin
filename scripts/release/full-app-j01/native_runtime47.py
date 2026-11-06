@@ -1445,8 +1445,8 @@ def run_normal(r, ios, products, app, bundle, head):
                                      '-parallel-testing-enabled', 'NO',
                                      '-maximum-concurrent-test-simulator-destinations', '1',
                                      '-test-timeouts-enabled', 'YES',
-                                     '-default-test-execution-time-allowance', '300',
-                                     '-maximum-test-execution-time-allowance', '300',
+                                     '-default-test-execution-time-allowance', '600',
+                                     '-maximum-test-execution-time-allowance', '600',
                                      '-resultBundlePath', products / 'ui.xcresult', *SIMULATOR_BUILD_FLAGS],
           env=ui_env, timeout=900)
     positive_xctest = normal_ui_log_proof(r, ui_paths)
@@ -1609,7 +1609,7 @@ def native_ui(r, ios, products, device, bundle, lane, initial_url=None, method=N
         suffix = {'test01CoreRetainedNativeJourney': '-core', 'test02LocalExport': '-export',
                   'test05ConsentWithdrawal': '-rights', 'test04RemoveSyntheticLocalExport': '-export-cleanup',
                   'test03LargerTextManualInput': '-larger-text'}[method]
-    allowance = '300' if lane == 'normal-staging' else '900'
+    allowance = '600' if lane == 'normal-staging' else '900'
     paths = r.run('native-' + lane + '-ui' + suffix, ['xcodebuild', 'test', '-project', project,
           '-scheme', receipt['scheme'], '-destination', 'id=' + device,
           '-only-testing:' + selected, '-parallel-testing-enabled', 'NO',
@@ -2553,7 +2553,7 @@ def collect(r):
     device = r.receipt.get('simulator', {}).get('udid')
     if device:
         r.run('simulator-diagnostics', ['xcrun', 'simctl', 'spawn', device, 'log', 'show',
-                                      '--last', '15m', '--style', 'json', '--predicate',
+                                      '--last', '15m', '--style', 'compact', '--predicate',
                                       'process CONTAINS "Layerwell" OR process CONTAINS "C47NativeUI" OR '
                                       '(process == "securityd" AND eventMessage CONTAINS "Layerwell" AND '
                                       '(eventMessage CONTAINS[c] "entitlement" OR eventMessage CONTAINS "copy_matching"))'],

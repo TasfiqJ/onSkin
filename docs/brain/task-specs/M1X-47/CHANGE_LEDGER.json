@@ -1699,8 +1699,50 @@
         25
       ],
       "finite_cumulative_paths": 33
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "recorded_utc": "2026-11-06T04:38:16.433152+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "718812315b20d571b5c0a4c37911526558444291",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 161175,
+          "preimage_sha256": "2c8dabb1871c9a1660f4e27d3e63857bb5ecd4cb1f1b961e1266335e1bcc186f"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "718812315b20d571b5c0a4c37911526558444291",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15481,
+          "preimage_sha256": "4eeb3561f736efba9d70387ee24ff0847bdcc9b8fb90287b89f67d9905fd5faf"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "718812315b20d571b5c0a4c37911526558444291",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 100099,
+          "preimage_sha256": "ed0a62228b77b3a0a533fae38fb56dddf769aca10fc4af2dbcc5c1cd898dc5e5"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "718812315b20d571b5c0a4c37911526558444291",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 63668,
+          "preimage_sha256": "9aed0cedd8f4cd6c83ebd48a82351f98e5b775ef2f828c39b65d2596d6cc9001"
+        }
+      ],
+      "causal_need": "Native22 optional15-minute JSON app/security log is141294969bytes of243879960bytepayload; preserve matching event text/PID/time in supported compact log output to leave bounded500MiBcombined family room for actual XCTest/app evidence. Native22 substantive ordinary case already needed223.875sec before its first consent assertion, leaving further refusal/restart/account/deferral assertions; set bounded ordinary case allowance600sec inside existing900seccommand/84mincoordinator/90minjob rather than predictable300sec ceiling. This changes no UI assertion or application behavior.",
+      "invariant": "Same15-minute/fullsame-event predicate, optional diagnostics cannot grantPASS, originalJSONraw22retainedunchanged. Same ordinary method/assertion bytes and oneSimulator/nonparallel. Internal900case unchanged, required command900/1200 unchanged, global84/90 and500MiBunchanged. No assertion skip, authority change or expanded finite33scope.",
+      "validation": "OriginalRuntime62controls plus actual upcoming exact-source diagnostic/ordinary/internal; bytecomparison of native_ui47.swift and allappsource unchanged from718. Re-run current focused native source/guard/runtime/signing after checkpoint, final two-worklist-only seal; completed stable718root/type/lint remains honestly attributed.",
+      "remaining_attempts": [
+        23,
+        24,
+        25
+      ]
     }
   ],
-  "frozen_utc": "2026-11-06T04:13:17.413958+00:00",
-  "freeze_note": "Finite33: previous31 plus exact notification cleanup implementation/test. Native21 realKeychainPASS/native22 normalhealthtransitionFAIL preserved. SOURCE_PENDING; no acceptance, NO_GO."
+  "frozen_utc": "2026-11-06T04:38:16.433152+00:00",
+  "freeze_note": "Finite33; native22failedactualhealthtransitionpreserved; badgepostcondition plus bounded ordinary timing/full-event compact diagnostic representation. No acceptance, NO_GO."
 }
