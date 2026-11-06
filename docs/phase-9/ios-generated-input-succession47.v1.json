@@ -46,13 +46,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 43481,
-      "sha256": "1bdc5b55790d94d40aec895bc68ffe0b7b1b6ececae7cc36de56fc352f1fb951"
+      "bytes": 43875,
+      "sha256": "a21550ddc52880fbc232930030b09003f273b2040cd87f49c1279ff846440c18"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
       "bytes": 161175,
-      "sha256": "2866bc7ee15d72a4d2bc088453fa11dc0414d56fb3d5bf03f2507845d15be448"
+      "sha256": "2c8dabb1871c9a1660f4e27d3e63857bb5ecd4cb1f1b961e1266335e1bcc186f"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",

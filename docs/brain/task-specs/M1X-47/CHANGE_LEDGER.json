@@ -1488,8 +1488,75 @@
         25
       ],
       "finite_cumulative_paths": 31
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "recorded_utc": "2026-11-06T01:55:13.995994+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "e0ae62bc4e17bcb631d7919a2bbdb557db8e7d78",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 161175,
+          "preimage_sha256": "2866bc7ee15d72a4d2bc088453fa11dc0414d56fb3d5bf03f2507845d15be448"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "e0ae62bc4e17bcb631d7919a2bbdb557db8e7d78",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 43481,
+          "preimage_sha256": "1bdc5b55790d94d40aec895bc68ffe0b7b1b6ececae7cc36de56fc352f1fb951"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "e0ae62bc4e17bcb631d7919a2bbdb557db8e7d78",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15092,
+          "preimage_sha256": "d5720984758784a4784e88b85035a510d70e8203f73d26610390b47c27f0b0f5"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "e0ae62bc4e17bcb631d7919a2bbdb557db8e7d78",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 87105,
+          "preimage_sha256": "f32144dae55752d71496a8dcf189d6fa67535ed0c715543131bbd3294559a9f9"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "e0ae62bc4e17bcb631d7919a2bbdb557db8e7d78",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 59256,
+          "preimage_sha256": "06ae9918a8700ee4b77b2cb901f7ce9868d3249f3ab34831b52d08d0fbeadf12"
+        }
+      ],
+      "causal_need": "Native20 exact e0 suite hit1200second cap after only TAP header; no individual case completion captured, underlying stall cause UNPROVEN. Native19 full30 passed862.7sec and currente0 Linux technicalfull30passed. Add synchronous fixed per-case BEGIN/END name/UTC diagnostics using documented Node beforeEach/afterEach, retain all30 names/assertion bodies unchanged, allow1800sec child inside unchanged84min coordinator/90min job. A further timeout will identify active case; no blind rerun.",
+      "invariant": "No skipped/deleted/renamed/weakened assertions, no false PASS from END marker, no product/dependency/signing/recovery/owner/consent/deletion change, same finite31 paths and oneMac/noadditionalcharge/max25.",
+      "validation": "Mechanical exact assertion-body equivalence after removing only imports+hooks; focused current7 controls plus paired traces; runtime62/signing13/source9/wiring/current202critical172bothprofiles/whole-source and final2worklist seal. Actual nativefull30 remains mandatory before app build.",
+      "native_attempt20": {
+        "run": 42143415270,
+        "job": 127649008834,
+        "head": "e0ae62bc4e17bcb631d7919a2bbdb557db8e7d78",
+        "raw_artifact": 13470730833,
+        "raw_bytes": 359768,
+        "raw_sha256": "147fbefe77ad7ba5ade4dfbf491d9257186d614eeeb83e2fd9f103ffa755b4c7",
+        "members": 55,
+        "streams": 40,
+        "command": "generated47-controls",
+        "exit": 124,
+        "timeout_seconds": 1200,
+        "captured_stdout": "TAP version13 only; no case completion",
+        "native_generation_compile_keychain_ordinary_internal": "NOT_RUN"
+      },
+      "remaining_attempts": [
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "finite_cumulative_paths": 31
     }
   ],
-  "frozen_utc": "2026-11-06T01:08:06.878349+00:00",
-  "freeze_note": "Finite31 paths. Native19 preserved; bounded required container lookup successor. All38/18unaccepted and NO_GO."
+  "frozen_utc": "2026-11-06T01:55:13.995994+00:00",
+  "freeze_note": "Finite31; Native20 preserved, bounded case diagnostics and full30 allowance; no acceptance, NO_GO."
 }

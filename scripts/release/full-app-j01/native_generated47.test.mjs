@@ -1,11 +1,15 @@
 import assert from 'node:assert/strict';
-import { cpSync, existsSync, lstatSync, renameSync, statSync, symlinkSync, linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, lstatSync, renameSync, statSync, symlinkSync, linkSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, truncateSync, unlinkSync, writeFileSync, writeSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { Worker } from 'node:worker_threads';
 import { dirname, join, relative, resolve } from 'node:path';
-import test from 'node:test';
+import test, { beforeEach, afterEach } from 'node:test';
+
+// END records hook completion, never a test PASS; TAP remains authoritative.
+beforeEach(t => { writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CASE_BEGIN', name: t.name, utc: new Date().toISOString() }) + '\n'); });
+afterEach(t => { writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CASE_END', name: t.name, utc: new Date().toISOString() }) + '\n'); });
 import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMapping47,
   validateAutolinking47, validateResolvedLock47, readSourceProof47,
   validateDevelopmentProjection47, validateOutput47, SOURCE_PATHS47, SWIFT_SUCCESSION47, validateSwiftSuccession47,
