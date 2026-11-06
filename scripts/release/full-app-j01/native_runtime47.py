@@ -109,7 +109,13 @@ def output_text(paths, limit=8 * MIB):
     return paths[0].read_text(encoding='utf-8', errors='strict')
 
 
+# Historical singleton remains available only as an immutable Git witness.
 NORMAL_UI_CASE = 'testNormalStagingAgeConsentAndUnavailableAccount'
+NORMAL_UI_CASES04 = (
+    'testV04FreshConsentRefusalAndUnavailableAccount',
+    'testV04UnderageRestartRequiresExplicitInitialConsent',
+    'testV04ExplicitWithdrawalReviewCancelAndFreshReconsent',
+)
 INTERNAL_UI_CASES = (
     'test01CoreRetainedNativeJourney', 'test02LocalExport', 'test05ConsentWithdrawal',
     'test03LargerTextManualInput', 'test04RemoveSyntheticLocalExport',
@@ -118,7 +124,7 @@ INTERNAL_UI_CASES = (
 
 def selected_xctest_summary(text, test_class, method):
     """An exit code or suite-only count cannot establish the selected XCTest."""
-    normal = test_class == 'C47NativeUI' and method == NORMAL_UI_CASE
+    normal = test_class == 'C47NativeUI' and method in NORMAL_UI_CASES04
     require(normal or (test_class == 'C47InternalOwnerUI' and method in INTERNAL_UI_CASES),
             'XCTEST_SELECTED_CASE_REQUIRED')
     scope = 'NORMAL' if normal else 'INTERNAL'
@@ -130,11 +136,11 @@ def selected_xctest_summary(text, test_class, method):
     events = re.findall(r"\bTest\s*case\s+['\"]([^'\"]+)['\"]\s+(passed|failed|skipped)\b", text, re.I)
     require(events and all(name in accepted and state.lower() == 'passed' for name, state in events),
             scope + '_XCTEST_NAMED_PASS_REQUIRED_NO_FAILURE_SKIP_OR_UNKNOWN_CASE')
-    counts = re.findall(r'\bExecuted\s+(\d+)\s+tests?,\s+with\s+(\d+)\s+failures?', text, re.I)
-    require(counts and all(int(executed) == 1 and int(failed) == 0 for executed, failed in counts) and
+    counts = re.findall(r'\bExecuted\s+(\d+)\s+tests?,\s+with\s+(\d+)\s+failures?\s+\((\d+)\s+unexpected\)', text, re.I)
+    require(counts and all(int(executed) == 1 and int(failed) == 0 and int(unexpected) == 0 for executed, failed, unexpected in counts) and
             not re.search(r'\b[1-9]\d*\s+(?:tests?\s+)?skipped\b|\bTest\s+Suite[^\n]*\bfailed\b', text, re.I),
             scope + '_XCTEST_EXECUTED_ONE_FAILED_ZERO_SKIPPED_ZERO_REQUIRED')
-    return {'expected_case': test_class + '/' + method, 'executed': 1, 'failed': 0, 'skipped': 0,
+    return {'expected_case': test_class + '/' + method, 'executed': 1, 'failed': 0, 'unexpected': 0, 'skipped': 0,
             'named_pass_event_count': len(events), 'summary_count': len(counts),
             'qualification': 'ACTUAL_NAMED_XCTEST_PASS_AND_CLEAN_EXECUTION_SUMMARY; ZERO_TESTS_REFUSED'}
 
@@ -1058,6 +1064,11 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     require(signing == receipt.get('simulator_signing'), 'IMPORTED_POST_SIGNING_IDENTITY')
     require(simulator_signing().check_diagnostic_bundle(sys.modules[__name__], app, False) ==
             receipt.get('ordinary_javascript'), 'IMPORTED_ORDINARY_WITHOUT_DIAGNOSTICS')
+    local_inventory = r.output/'app-inventory.json'
+    require(not os.path.lexists(local_inventory), 'IMPORTED_APP_LOCAL_INVENTORY_EXISTS')
+    with local_inventory.open('xb') as retained:
+        require(retained.write(inventory_raw) == len(inventory_raw), 'IMPORTED_APP_LOCAL_INVENTORY_WRITE')
+    require(read_native_file(local_inventory) == inventory_raw, 'IMPORTED_APP_LOCAL_INVENTORY_IDENTITY')
     provenance = {'origin': 'AUTHENTICATED_PRODUCER_APP_NOT_COMPILED_IN_THIS_JOB',
         'source_head': product_head, 'source_tree': inventory['source']['tree'],
         'runtime_candidate_source': r.receipt['source'],
@@ -1475,52 +1486,407 @@ def execute(r, compile_only=False, consent_trace04=False, source_provenance=None
     run_normal(r, ios, products, app, bundle, head)
 
 
+def normal_runner04(r):
+    directory = r.output / 'ui'
+    value = stage_json(read_native_file(directory / 'runner.json'))
+    selected = ['C47NativeUI/C47NativeUI/' + case for case in NORMAL_UI_CASES04]
+    swift = read_native_file(r.root / 'scripts/release/full-app-j01/native_ui47.swift')
+    normal = swift.split(b'\nimport UIKit', 1)[0]
+    require(value.get('ordinary_suite_version') == 4 and value.get('tests') == selected and
+            value.get('source_head') == r.receipt['source']['head'] and
+            value.get('lane') == 'normal-staging' and value.get('bundle_id') == 'com.layerwell.app.staging' and
+            value.get('fixture') is None and value.get('initial_url') is None and value.get('export_folder') is None and
+            value.get('scheme') == value.get('selected_test_class') == 'C47NativeUI' and
+            value.get('copied_source_scope') == 'VERSIONED_NORMAL_SUITE04_ONLY' and
+            value.get('copied_source_bytes') == len(normal) and
+            value.get('source_sha256') == {
+                'swift': hashlib.sha256(swift).hexdigest(),
+                'copied_swift': hashlib.sha256(normal).hexdigest(),
+                'ruby': sha(r.root / 'scripts/release/full-app-j01/native_ui47.rb')},
+            'NORMAL04_CURRENT_RUNNER_REQUIRED')
+    require(read_native_file(directory / 'runner/native_ui47.swift') == normal,
+            'NORMAL04_COPIED_SOURCE_REQUIRED')
+    require(isinstance(value.get('project'), str) and
+            Path(value['project']).parts[-3:] == ('ui', 'runner', 'C47NativeUI.xcodeproj'), 'NORMAL04_GENERATED_PROJECT')
+    generated, streams = executed_producer_command(r.receipt, r.output, 'generate-native-ui-runner', read_output=True)
+    require(generated.get('capture_complete') is True and not generated.get('timed_out') and
+            generated['argv'][0] == 'ruby' and
+            generated['argv'][1].endswith('/scripts/release/full-app-j01/native_ui47.rb') and
+            stage_json(streams[0]) == value, 'NORMAL04_ACTUAL_RUNNER_GENERATION')
+    return {'version': 4, 'tests': selected, 'source_head': value['source_head'],
+            'source_sha256': value['source_sha256'], 'runner_receipt_sha256': sha(directory / 'runner.json'),
+            'project': value['project'], 'project_files': {
+                name: stage_file_digest(directory / 'runner/C47NativeUI.xcodeproj' / name)
+                for name in ('project.pbxproj', 'xcshareddata/xcschemes/C47NativeUI.xcscheme')}}
+
+def normal_result_inventory04(directory):
+    require(directory.is_dir() and not directory.is_symlink(), 'NORMAL04_RESULT_BUNDLE_REQUIRED')
+    rows, total = [], 0
+    for parent, directories, names in os.walk(directory, followlinks=False):
+        directories.sort()
+        for name in sorted(directories + names):
+            path = Path(parent) / name
+            info = path.lstat()
+            require(stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode), 'NORMAL04_RESULT_SPECIAL_FILE')
+            if stat.S_ISREG(info.st_mode):
+                identity = stage_file_digest(path, MAX_EVIDENCE)
+                rows.append({'path': path.relative_to(directory).as_posix(), **identity})
+                total += identity['bytes']
+                require(len(rows) <= 20000 and total <= MAX_EVIDENCE, 'NORMAL04_RESULT_BOUND')
+    require(total > 0 and any(row['path'] == 'Info.plist' and row['bytes'] > 0 for row in rows) and
+            len(rows) > 1, 'NORMAL04_NONEMPTY_CLOSED_RESULT_REQUIRED')
+    require(isinstance(plistlib.loads(read_native_file(directory / 'Info.plist')), dict),
+            'NORMAL04_RESULT_INFO_REQUIRED')
+    canonical = json.dumps(rows, sort_keys=True, separators=(',', ':')).encode()
+    return {'files': rows, 'bytes': total, 'inventory_sha256': hashlib.sha256(canonical).hexdigest()}
+
+def normal_result_schema04(schema, kind):
+    # Semantic identities of the two actual Xcode26.4/SDK26.4 schemas retained
+    # by native30. Formatting does not become a substitute for field semantics.
+    expected = {'summary':'de64f404b2cc7dd43e1adee4db1cf5b6af6b44f8d6fa9073cb6a0f85f318d39f',
+                'tests':'a1cd1c23c7c356f4afce5c4ae965ccf721bbed7c0c8ef4f648136e38387bb07a'}
+    require(kind in expected and isinstance(schema,dict), 'NORMAL04_ACTUAL_RESULT_SCHEMA_REQUIRED')
+    canonical = json.dumps(schema,sort_keys=True,separators=(',',':')).encode()
+    require(hashlib.sha256(canonical).hexdigest() == expected[kind], 'NORMAL04_ACTUAL_RESULT_SCHEMA_IDENTITY')
+    return {'schema_version':'0.1.0','canonical_schema_sha256':expected[kind]}
+
+def normal_result_summary_collections04(summary):
+    # Actual native31 establishes arrays at these SDK schema direct refs.
+    rows = summary.get('devicesAndConfigurations')
+    require(isinstance(rows,list) and len(rows) == 1 and isinstance(rows[0],dict),
+            'NORMAL04_RESULT_ONE_DEVICE_CONFIGURATION')
+    row = rows[0]
+    require(isinstance(row.get('device'),dict) and isinstance(row.get('testPlanConfiguration'),dict) and
+            all(type(row.get(key)) is int for key in ('passedTests','failedTests','skippedTests','expectedFailures')),
+            'NORMAL04_RESULT_DEVICE_CONFIGURATION_COUNTS')
+    if 'testFailures' in summary:
+        failures = summary['testFailures']
+        require(isinstance(failures,list), 'NORMAL04_RESULT_FAILURE_COLLECTION')
+    else:
+        # A missing optional failure collection is never a missing-count default.
+        # It can represent empty only alongside every explicit PASS count; the
+        # named Passed node, actual device and clean raw XCTest are separate gates.
+        require(summary.get('result') == 'Passed' and all(type(summary.get(key)) is int and summary[key] == value
+            for key,value in [('totalTestCount',1),('passedTests',1),('failedTests',0),('skippedTests',0),('expectedFailures',0)]),
+            'NORMAL04_AMBIGUOUS_MISSING_FAILURE_OUTPUT')
+        failures = []
+    return {'device':row['device'],'configuration':row['testPlanConfiguration'],'failures':failures,
+            'counts':{key:row[key] for key in ('passedTests','failedTests','skippedTests','expectedFailures')}}
+
+def normal_result_case04(summary, tests, method, device, outcome):
+    require(method in NORMAL_UI_CASES04 and outcome in ('Passed','Failed'), 'NORMAL04_CURRENT_RESULT_CASE')
+    failed = int(outcome == 'Failed')
+    counts = {'totalTestCount':1,'passedTests':1-failed,'failedTests':failed,'skippedTests':0,'expectedFailures':0}
+    require(isinstance(summary,dict) and summary.get('result') == outcome and
+            all(type(summary.get(key)) is int and summary[key] == value for key,value in counts.items()),
+            'NORMAL04_RESULT_EXPLICIT_COUNTS')
+    require(isinstance(summary.get('title'),str) and isinstance(summary.get('environmentDescription'),str) and
+            isinstance(summary.get('topInsights'),list) and isinstance(summary.get('statistics'),list),
+            'NORMAL04_RESULT_SUMMARY_SHAPE')
+    require(isinstance(tests,dict) and isinstance(tests.get('devices'),list) and len(tests['devices']) == 1 and
+            isinstance(tests.get('testPlanConfigurations'),list) and len(tests['testPlanConfigurations']) == 1 and
+            isinstance(tests.get('testNodes'),list), 'NORMAL04_RESULT_TESTS_SHAPE')
+    actual_device,configuration = tests['devices'][0],tests['testPlanConfigurations'][0]
+    require(isinstance(actual_device,dict) and
+            all(isinstance(actual_device.get(key),str) and actual_device[key]
+                for key in ('deviceId','deviceName','architecture','modelName','osVersion')) and
+            actual_device['deviceId'].lower() == device.lower() and actual_device['architecture'] == 'x86_64',
+            'NORMAL04_RESULT_ACTUAL_DEVICE_REQUIRED')
+    require(isinstance(configuration,dict) and all(isinstance(configuration.get(key),str) and configuration[key]
+            for key in ('configurationId','configurationName')), 'NORMAL04_RESULT_CONFIGURATION')
+    accepted = {'C47NativeUI/'+method,'C47NativeUI/'+method+'()',
+                'C47NativeUI.C47NativeUI/'+method,'C47NativeUI.C47NativeUI/'+method+'()'}
+    node_types = {'Test Plan','Unit test bundle','UI test bundle','Test Suite','Test Case','Device',
+                  'Test Plan Configuration','Arguments','Repetition','Test Case Run','Failure Message',
+                  'Source Code Reference','Attachment','Expression','Test Value','Runtime Warning'}
+    pending = [(node,0) for node in tests['testNodes']]
+    cases,runs,messages = [],[],[]
+    visited = 0
+    while pending:
+        node,depth = pending.pop()
+        visited += 1
+        require(visited <= 10000 and depth <= 32 and isinstance(node,dict) and
+                node.get('nodeType') in node_types and isinstance(node.get('name'),str),
+                'NORMAL04_RESULT_CLOSED_TEST_TREE')
+        kind = node['nodeType']
+        if kind == 'Test Case':
+            cases.append(node)
+        elif kind == 'Test Case Run':
+            runs.append(node)
+        elif kind == 'Failure Message':
+            messages.append(node)
+        if 'children' in node:
+            require(isinstance(node['children'],list), 'NORMAL04_RESULT_CHILDREN')
+            pending.extend((child,depth+1) for child in node['children'])
+    require(len(cases) == 1 and cases[0].get('nodeIdentifier') in accepted and
+            cases[0].get('result') == outcome and len(runs) <= 1 and
+            all(node.get('result') == outcome for node in runs), 'NORMAL04_RESULT_EXACT_NAMED_CASE')
+    if not failed:
+        require(not messages, 'NORMAL04_RESULT_UNEXPECTED_FAILURE_MESSAGE')
+    collections = normal_result_summary_collections04(summary)
+    require(collections['device'] == actual_device and collections['configuration'] == configuration and
+            all(type(collections['counts'].get(key)) is int and collections['counts'][key] == value
+                for key,value in counts.items() if key != 'totalTestCount'),
+            'NORMAL04_RESULT_DEVICE_CONFIGURATION_COUNTS')
+    require(isinstance(collections['failures'],list) and len(collections['failures']) == failed,
+            'NORMAL04_RESULT_FAILURE_COLLECTION')
+    return {'parsed':{'expected_case':'C47NativeUI/'+method,'executed':1,'failed':failed,
+                     'unexpected':0,'skipped':0,'udid':device},
+            'failures':collections['failures'],'failure_nodes':messages,'accepted_case_identifiers':accepted}
+
+def normal_assertion_classification04(failure, failure_nodes, method):
+    # Native31's real failure binds this XCTest macro text to one source node.
+    # These are the only assertion families in the current ordinary Swift prefix.
+    text = failure.get('failureText')
+    match = re.fullmatch(r'(XCTAssertTrue|XCTAssertFalse|XCTAssertEqual) failed(?: - [^\r\n]+|: [^\r\n]+)?',text or '')
+    require(match is not None and isinstance(failure_nodes,list) and len(failure_nodes) == 1 and
+            failure_nodes[0].get('nodeType') == 'Failure Message', 'NORMAL04_ASSERTION_KIND_REQUIRED')
+    require(not any(marker in text.lower() for marker in ('app crashed','application crashed','test crashed',
+        'test runner','lost connection','terminated due to','unable to launch','failed to launch',
+        'early unexpected exit','unexpectedly exited','internal error','failed to bootstrap','error domain=')),
+        'NORMAL04_CRASH_OR_INFRASTRUCTURE_NOT_ASSERTION')
+    source = re.fullmatch(r'native_ui47\.swift:([1-9][0-9]*): ([^\r\n]+)',failure_nodes[0].get('name',''))
+    require(source is not None and source.group(2) == text, 'NORMAL04_ASSERTION_SOURCE_NODE_REQUIRED')
+    return {'family':match.group(1),'source_file':'native_ui47.swift','source_line':int(source.group(1)),
+            'failure_text_sha256':hashlib.sha256(text.encode()).hexdigest()}
+
+def normal_assertion_raw04(raw, method, observation):
+    text = b'\n'.join(raw).decode('utf8')
+    lines = re.findall(r'^.+/native_ui47\.swift:([1-9][0-9]*): error: -\[C47NativeUI\.C47NativeUI '+
+                       re.escape(method)+r'\] : ([^\r\n]+)$',text,re.M)
+    require(len(lines) == 1 and observation.get('source_file') == 'native_ui47.swift' and
+            int(lines[0][0]) == observation.get('source_line') and
+            hashlib.sha256(lines[0][1].encode()).hexdigest() == observation.get('failure_text_sha256'),
+            'NORMAL04_RAW_AND_PROVIDER_ASSERTION_MUST_MATCH')
+    return observation
+
+
+def normal_result_documents04(summary, tests, method, device):
+    return normal_result_case04(summary,tests,method,device,'Passed')['parsed']
+
+def normal_assertion_failure_documents04(summary, tests, method, device):
+    result = normal_result_case04(summary,tests,method,device,'Failed')
+    failure = result['failures'][0]
+    require(isinstance(failure,dict) and
+            all(isinstance(failure.get(key),str) and failure[key]
+                for key in ('testName','targetName','failureText','testIdentifierString')) and
+            type(failure.get('testIdentifier')) is int and failure['targetName'] == 'C47NativeUI' and
+            failure['testIdentifierString'] in result['accepted_case_identifiers'],
+            'NORMAL04_RESULT_SELECTED_FAILURE_RECORD')
+    normal_assertion_classification04(failure,result['failure_nodes'],method)
+    return {**result['parsed'],'classification':'XCTEST_ASSERTION_FAILURE_ONLY'}
+
+def collect_normal_result04(r, products, method, device, outcome='PASS'):
+    source = products / 'ui.xcresult'
+    # Actual installed help/schema and commands are retained as ordinary raw
+    # command streams. Unsupported schema fails closed before any admission.
+    documents, support = {}, {}
+    for command in ('summary', 'tests'):
+        help_paths = r.run('xcresult-' + command + '-actual-help',
+            ['xcrun', 'xcresulttool', 'help', 'get', 'test-results', command], timeout=30)
+        help_text = b'\n'.join(read_native_file(path) for path in help_paths).decode('utf-8')
+        require('--path' in help_text and '--schema' in help_text, 'NORMAL04_RESULT_COMMAND_SUPPORTED')
+        schema_paths = r.run('xcresult-' + command + '-actual-schema',
+            ['xcrun', 'xcresulttool', 'get', 'test-results', command, '--schema'], timeout=30)
+        schema = stage_json(read_native_file(schema_paths[0]))
+        require(isinstance(schema, dict) and schema, 'NORMAL04_RESULT_SCHEMA_REQUIRED')
+        support[command] = {'help': [sha(path) for path in help_paths],
+                            'schema': [sha(path) for path in schema_paths],
+                            **normal_result_schema04(schema,command)}
+        paths = r.run('xcresult-' + command, ['xcrun', 'xcresulttool', 'get', 'test-results', command,
+            '--path', source], timeout=60)
+        documents[command] = stage_json(read_native_file(paths[0]))
+    require(outcome in ('PASS','ASSERTION_FAILED'), 'NORMAL04_DECLARED_RESULT_OUTCOME')
+    parser = normal_result_documents04 if outcome == 'PASS' else normal_assertion_failure_documents04
+    parsed = parser(documents['summary'], documents['tests'], method, device)
+    assertion_observation = None
+    if outcome == 'ASSERTION_FAILED':
+        failed = normal_result_case04(documents['summary'],documents['tests'],method,device,'Failed')
+        assertion_observation = normal_assertion_classification04(failed['failures'][0],failed['failure_nodes'],method)
+    before = normal_result_inventory04(source)
+    require(before['bytes'] + evidence_total(r) <= MAX_EVIDENCE - 10 * MIB,
+            'NORMAL04_REQUIRED_RESULT_RETENTION_BOUND')
+    target = r.output / 'ui.xcresult'
+    shutil.copytree(source, target)
+    require(normal_result_inventory04(target) == before, 'NORMAL04_RESULT_COPY_IDENTITY')
+    return {'parsed': parsed, 'inventory': before, 'actual_tool_support': support,
+            **({'assertion_observation':assertion_observation} if assertion_observation is not None else {})}
+
+def normal_assertion_command04(receipt, directory, error):
+    # A failed test is the only permitted continuation boundary. Revalidate all
+    # original bytes; the ordinary producer PASS reader is never weakened.
+    require(type(error) is ValueError and str(error) == 'C47_COMMAND_FAILED:native-normal-staging-ui',
+            'NORMAL04_ONLY_SELECTED_XCTEST_ASSERTION_MAY_CONTINUE')
+    commands = [row for row in receipt.get('commands', []) if row.get('name') == 'native-normal-staging-ui']
+    require(len(commands) == 1, 'NORMAL04_FAILED_COMMAND_REQUIRED')
+    row = commands[0]
+    require(row.get('required') is True and row.get('state') == 'FAIL' and
+            type(row.get('exit_code')) is int and row['exit_code'] == 65 and
+            row.get('capture_complete') is True and not row.get('timed_out') and
+            not row.get('error_type') and row.get('process_exit_code',65) == 65,
+            'NORMAL04_COMPLETE_EXIT65_REQUIRED')
+    raw = []
+    for stream in ('stdout','stderr'):
+        relative = row.get(stream)
+        require(isinstance(relative,str) and len(stage_name(relative)) == 2 and
+                stage_name(relative)[0] == 'logs', 'NORMAL04_FAILED_CURRENT_LOG_PATH')
+        path = directory.joinpath(*stage_name(relative))
+        require(stage_file_digest(path) == {'bytes':row.get(stream + '_bytes'),
+                'sha256':row.get(stream + '_sha256')}, 'NORMAL04_FAILED_RAW_LOG_IDENTITY')
+        raw.append(read_native_file(path))
+    return row, tuple(raw)
+
+def normal_assertion_log04(raw, method, source):
+    require(method in NORMAL_UI_CASES04, 'NORMAL04_CURRENT_FAILED_CASE_REQUIRED')
+    text = b'\n'.join(raw).decode('utf8')
+    accepted = {'-[C47NativeUI ' + method + ']', '-[C47NativeUI.C47NativeUI ' + method + ']'}
+    accepted.update(prefix + method + '()' for prefix in ('C47NativeUI.', 'C47NativeUI/',
+        'C47NativeUI.C47NativeUI.', 'C47NativeUI.C47NativeUI/', 'C47NativeUI/C47NativeUI/'))
+    events = re.findall(r"\bTest\s*case\s+['\"]([^'\"]+)['\"]\s+(passed|failed|skipped)\b",text,re.I)
+    counts = re.findall(r'\bExecuted\s+(\d+)\s+tests?,\s+with\s+(\d+)\s+failures?\s+\((\d+)\s+unexpected\)',text,re.I)
+    require(events and all(name in accepted and state.lower() == 'failed' for name,state in events) and
+            counts and all(tuple(map(int,row)) == (1,1,0) for row in counts) and
+            not re.search(r'\b[1-9]\d*\s+(?:tests?\s+)?skipped\b',text,re.I),
+            'NORMAL04_EXACT_ONE_FAILED_ZERO_UNEXPECTED_ZERO_SKIPPED_LOG')
+    return {'expected_case':'C47NativeUI/' + method,'executed':1,'failed':1,'unexpected':0,'skipped':0,
+            'stdout_sha256':hashlib.sha256(raw[0]).hexdigest(),
+            'stderr_sha256':hashlib.sha256(raw[1]).hexdigest(),'source_head':source['head'],
+            'qualification':'RAW_NAMED_FAILURE_ONLY; ACTUAL_PROVIDER_ASSERTION_CLASSIFICATION_SEPARATELY_REQUIRED'}
+
+def normal_case_execution04(child, project, products, method, device, environment):
+    argv = ['xcodebuild','test','-project',project,'-scheme','C47NativeUI','-destination','id=' + device,
+        '-only-testing:C47NativeUI/C47NativeUI/' + method,'-parallel-testing-enabled','NO',
+        '-maximum-concurrent-test-simulator-destinations','1','-test-timeouts-enabled','YES',
+        '-default-test-execution-time-allowance','600','-maximum-test-execution-time-allowance','600',
+        '-resultBundlePath',products/'ui.xcresult',*SIMULATOR_BUILD_FLAGS]
+    try:
+        paths = child.run('native-normal-staging-ui',argv,env=environment,timeout=900)
+    except ValueError as error:
+        command, raw = normal_assertion_command04(child.receipt,child.output,error)
+        require(command.get('argv') == list(map(str,argv)), 'NORMAL04_FAILED_EXACT_SELECTED_COMMAND')
+        proof = normal_assertion_log04(raw,method,child.receipt['source'])
+        result = collect_normal_result04(child,products,method,device,outcome='ASSERTION_FAILED')
+        require(result['parsed'] == {'expected_case':'C47NativeUI/' + method,'executed':1,'failed':1,
+            'unexpected':0,'skipped':0,'udid':device,'classification':'XCTEST_ASSERTION_FAILURE_ONLY'},
+            'NORMAL04_ACTUAL_ASSERTION_ONLY_REQUIRED')
+        normal_assertion_raw04(raw,method,result.get('assertion_observation',{}))
+        return {'outcome':'ASSERTION_FAILED','assertion_failure_xctest':proof,'result_bundle':result,
+                'failure':{'type':type(error).__name__,'detail':str(error)}}
+    proof = selected_ui_log_proof(child,paths,'C47NativeUI',method)
+    result = collect_normal_result04(child,products,method,device)
+    return {'outcome':'PASS','positive_xctest':proof,'result_bundle':result}
+
+def normal_suite_aggregate04(cases, source, runner):
+    require([case.get('method') for case in cases] == list(NORMAL_UI_CASES04), 'NORMAL04_EXACT_COMPLETE_CASES')
+    require(len({case.get('udid') for case in cases}) == len(cases) and
+            len({case.get('data_container') for case in cases}) == len(cases),
+            'NORMAL04_SEPARATELY_DECLARED_FRESH_CONTAINERS')
+    failed = 0
+    for case in cases:
+        require(case.get('source') == source and case.get('runner') == runner and
+                case.get('lane') == 'normal-staging' and type(case.get('suite_version')) is int and
+                case['suite_version'] == 4 and case.get('outcome') in ('PASS','ASSERTION_FAILED'),
+                'NORMAL04_CURRENT_SOURCE_RUNNER_AND_OUTCOME')
+        assertion_failed = case['outcome'] == 'ASSERTION_FAILED'
+        count = int(assertion_failed)
+        proof = case.get('assertion_failure_xctest' if assertion_failed else 'positive_xctest',{})
+        require(all(type(proof.get(key)) is int and proof[key] == value for key,value in
+                    [('executed',1),('failed',count),('unexpected',0),('skipped',0)]),
+                'NORMAL04_CASE_COUNTS_REQUIRED')
+        parsed = {'expected_case':'C47NativeUI/' + case['method'],'executed':1,'failed':count,
+                  'unexpected':0,'skipped':0,'udid':case['udid']}
+        if assertion_failed:
+            parsed['classification'] = 'XCTEST_ASSERTION_FAILURE_ONLY'
+        require(case.get('result_bundle',{}).get('parsed') == parsed, 'NORMAL04_EXACT_CURRENT_CASE_RESULT')
+        failed += count
+    return {'suite_version':4,'cases':cases,'executed':len(cases),'failed':failed,
+            'unexpected':0,'skipped':0,'source':source,'runner':runner}
+
+
 def run_normal(r, ios, products, app, bundle, head):
-    device = prepare_simulator(r, 'normal')
-    installed = install_simulator_app(r, device, app, bundle)
-    verify_installed_app(r, installed, app, bundle)
-    launch = r.text('simulator-launch', ['xcrun', 'simctl', 'launch', device, bundle], timeout=60)
-    match = re.fullmatch(re.escape(bundle) + r': ([1-9][0-9]*)', launch)
-    require(match, 'LAUNCH_PID')
-    pid = int(match.group(1))
-    launched_at = time.monotonic()
-    for index, delay in enumerate([1, 3, 8, 15, 30]):
-        remaining = launched_at + delay - time.monotonic()
-        if remaining > 0:
-            time.sleep(remaining)
-        table = r.text('process-survival-' + str(index), ['xcrun', 'simctl', 'spawn', device,
-                                                         'launchctl', 'list'], timeout=120)
-        require(any(line.split() and line.split()[0] == str(pid) and bundle in line
-                    for line in table.splitlines()), 'APP_PROCESS_DID_NOT_SURVIVE')
-    r.run('normal-launch-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
-                                     r.output / 'normal-launch.png'], timeout=30)
-    r.passed('launched', {'pid': pid, 'survival_seconds': 30, 'bundle_id': bundle})
+    require(bundle == 'com.layerwell.app.staging', 'NORMAL04_ORDINARY_BUNDLE')
+    require(all(not value for key, value in r.env.items() if key.startswith('EXPO_PUBLIC_E2E_')),
+            'NORMAL04_NO_SYNTHETIC_OWNER_FIXTURE')
     ui = r.output / 'ui'
     ui.mkdir()
-    ui_env = dict(r.env, C47_BUNDLE_ID=bundle, C47_RUNTIME_LANE='normal-staging')
+    ui_env = dict(r.env, C47_BUNDLE_ID=bundle, C47_RUNTIME_LANE='normal-staging',
+                  C47_UI_PHASE='normal-staging', C47_SOURCE_HEAD=head)
     r.run('generate-native-ui-runner', ['ruby', r.root / 'scripts/release/full-app-j01/native_ui47.rb', ios, ui],
           env=ui_env, timeout=120)
-    ui_receipt = json.loads((ui / 'runner.json').read_text())
-    project = Path(ui_receipt['project'])
-    require(ui_receipt.get('lane') == 'normal-staging' and ui_receipt.get('bundle_id') == bundle and
-            ui_receipt.get('scheme') == 'C47NativeUI' and project.is_dir() and
-            project.resolve().is_relative_to(ui.resolve()), 'UI_RUNNER_IDENTITY')
-    ui_paths = r.run('native-normal-staging-ui', ['xcodebuild', 'test', '-project', project,
-                                     '-scheme', ui_receipt['scheme'], '-destination', 'id=' + device,
-                                     '-parallel-testing-enabled', 'NO',
-                                     '-maximum-concurrent-test-simulator-destinations', '1',
-                                     '-test-timeouts-enabled', 'YES',
-                                     '-default-test-execution-time-allowance', '600',
-                                     '-maximum-test-execution-time-allowance', '600',
-                                     '-resultBundlePath', products / 'ui.xcresult', *SIMULATOR_BUILD_FLAGS],
-          env=ui_env, timeout=900)
-    positive_xctest = normal_ui_log_proof(r, ui_paths)
-    r.passed('normal-staging-ui', {'tests': ui_receipt['tests'], 'lane': 'normal-staging',
-                                  'positive_xctest': positive_xctest,
-                                  'qualification': 'Only the actually executed named XCTest cases'})
-    r.source_proof('source-after-runtime', head, allow_generation=True)
-    r.receipt['status'] = 'NORMAL_STAGING_NATIVE_EXECUTED_SUPPORTED_OWNER_NOT_RUN'
-    r.receipt['finished_utc'] = utc()
+    runner_proof = normal_runner04(r)
+    generated = stage_json(read_native_file(ui / 'runner.json'))
+    project = Path(generated['project'])
+    require(project == ui / 'runner/C47NativeUI.xcodeproj' and project.is_dir(), 'UI_RUNNER_IDENTITY')
+    cases = []
+    for index, method in enumerate(NORMAL_UI_CASES04, 1):
+        slug = '%02d' % index
+        output = r.output / 'ordinary-v04' / slug
+        child = Runner(r.root, output, seconds=max(1, r.deadline - time.monotonic()))
+        child.deadline, child.env, child.evidence_root = r.deadline, ui_env, r.output
+        child.receipt.update(source=r.receipt['source'], ordinary_suite_version=4, method=method,
+            upstream_payload_bytes=r.receipt.get('upstream_payload_bytes', 0), job_context=r.receipt.get('job_context'))
+        for stage in ('compiled', 'verified-produced-app'):
+            if stage in r.receipt['stages']:
+                child.receipt['stages'][stage] = r.receipt['stages'][stage]
+        for name in ('toolchain.json', 'app-inventory.json'):
+            if (r.output / name).is_file():
+                shutil.copy2(r.output / name, output / name)
+        case_products = products / ('ordinary-v04-' + slug)
+        case_products.mkdir()
+        child.receipt['products_directory'] = str(case_products)
+        child.persist()
+        device, passed = None, False
+        try:
+            device = prepare_simulator(child, 'normal')
+            r.receipt['simulator'] = child.receipt['simulator']
+            r.persist()
+            installed = install_simulator_app(child, device, app, bundle)
+            verify_installed_app(child, installed, app, bundle)
+            data = child.text('simulator-data-container',
+                ['xcrun', 'simctl', 'get_app_container', device, bundle, 'data'], timeout=300)
+            data_path = Path(data)
+            expected = Path.home() / 'Library/Developer/CoreSimulator/Devices' / device / 'data/Containers/Data/Application'
+            require(data_path.parent == expected and str(uuid.UUID(data_path.name)).lower() == data_path.name.lower(),
+                    'NORMAL04_ACTUAL_DATA_CONTAINER')
+            pid = launch_and_verify(child, device, bundle)
+            child.passed('launched', {'pid': pid, 'survival_seconds': 30, 'bundle_id': bundle})
+            execution = normal_case_execution04(child,project,case_products,method,device,ui_env)
+            detail = {'suite_version': 4, 'method': method, 'udid': device, 'data_container': data,
+                'lane': 'normal-staging', 'source': r.receipt['source'], 'runner': runner_proof,
+                **execution, 'evidence': 'ordinary-v04/' + slug,
+                'installed': child.receipt['stages']['installed']['details'],
+                'launched': child.receipt['stages']['launched']['details']}
+            child.receipt['ordinary_case04'] = detail
+            if execution['outcome'] == 'PASS':
+                child.passed('normal-staging-ui-case',detail)
+                child.receipt.update(status='NORMAL_V04_CASE_EXECUTED_PASS',finished_utc=utc())
+                passed = True
+            else:
+                child.receipt.update(status='NORMAL_V04_CASE_ASSERTION_FAILED',
+                    failure=execution['failure'],finished_utc=utc())
+            cases.append(detail)
+        except Exception as error:
+            child.receipt.update(status='PARTIAL_BLOCKED', failure={'type': type(error).__name__, 'detail': str(error)})
+            raise
+        finally:
+            if device:
+                child.run('simulator-final-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
+                    child.output / 'final-simulator.png'], timeout=30, required=False, diagnostic=True)
+                if not passed or index < len(NORMAL_UI_CASES04):
+                    child.run('simulator-shutdown', ['xcrun', 'simctl', 'shutdown', device], timeout=30,
+                        required=False, diagnostic=True)
+            retain_result_bundles(child)
+            child.persist()
+    aggregate = normal_suite_aggregate04(cases, r.receipt['source'], runner_proof)
+    r.receipt['ordinary_suite_summary04'] = aggregate
+    r.source_proof('source-after-runtime',head,allow_generation=True)
+    r.persist()
+    require(aggregate['failed'] == 0,'NORMAL04_COMPLETE_SUITE_FAILED_INTERNAL_NOT_ADMITTED')
+    r.passed('installed', {'cases': [case['installed'] for case in cases]})
+    r.passed('launched', {'cases': [case['launched'] for case in cases]})
+    r.passed('normal-staging-ui', {'tests': runner_proof['tests'], 'lane': 'normal-staging', 'positive_xctest': aggregate})
+    normal_xctest_gate(r)
+    r.receipt.update(status='NORMAL_STAGING_NATIVE_EXECUTED_SUPPORTED_OWNER_NOT_RUN', finished_utc=utc())
     r.persist()
 
 
@@ -1558,35 +1924,163 @@ def app_executable_identity(files, executable):
     return {key: rows[0][key] for key in ('bytes', 'sha256')}
 
 
+def installed_app_inventory_proof(expected, observed, executable):
+    """All application bytes are exact; POSIX permissions may only safely narrow."""
+    require(isinstance(expected,list) and isinstance(observed,list) and
+            0 < len(expected) == len(observed) <= 20000, 'INSTALLED_CLOSED_APP_BYTES')
+    for rows in (expected,observed):
+        require(all(isinstance(row,dict) and isinstance(row.get('path'),str) and row['path'] and
+                    row.get('type') in ('file','directory') for row in rows) and
+                len({row['path'] for row in rows}) == len(rows), 'INSTALLED_CLOSED_APP_BYTES')
+    require(executable in ('LayerwellStaging','LayerwellDev'), 'INSTALLED_AUTHENTICATED_EXECUTABLE_NAME')
+    before,after = ({row['path']:row for row in rows} for rows in (expected,observed))
+    require(set(before) == set(after), 'INSTALLED_CLOSED_APP_BYTES')
+    # Finite0755-to0644 metadata effect observed for these23 non-main resource paths.
+    # Every file byte and strict installed signature remain independently mandatory.
+    observed_nonexecuted_resources = frozenset((
+        'Frameworks/ExpoCamera.framework/ExpoCamera',
+        'Frameworks/ExpoCameraBarcodeScanning.framework/ExpoCameraBarcodeScanning',
+        'Frameworks/ExpoFileSystem.framework/ExpoFileSystem',
+        'Frameworks/ExpoFont.framework/ExpoFont',
+        'Frameworks/ExpoImage.framework/ExpoImage',
+        'Frameworks/ExpoImageManipulator.framework/ExpoImageManipulator',
+        'Frameworks/ExpoModulesCore.framework/ExpoModulesCore',
+        'Frameworks/ExpoModulesJSI.framework/ExpoModulesJSI',
+        'Frameworks/ExpoModulesWorklets.framework/ExpoModulesWorklets',
+        'Frameworks/hermesvm.framework/hermesvm',
+        'GoogleMVFaceDetectorResources.bundle/BCLjoy_200.emd',
+        'GoogleMVFaceDetectorResources.bundle/BCLlefteyeclosed_200.emd',
+        'GoogleMVFaceDetectorResources.bundle/BCLrighteyeclosed_200.emd',
+        'GoogleMVFaceDetectorResources.bundle/LMprec_600.emd',
+        'GoogleMVFaceDetectorResources.bundle/MFT_fssd_accgray.pb',
+        'GoogleMVFaceDetectorResources.bundle/MFT_fssd_fastgray.pb',
+        'GoogleMVFaceDetectorResources.bundle/blazeface.tfl',
+        'GoogleMVFaceDetectorResources.bundle/contours.tfl',
+        'GoogleMVFaceDetectorResources.bundle/fssd_100_8bit_gray_v1.tflite',
+        'GoogleMVFaceDetectorResources.bundle/fssd_100_8bit_v1.tflite',
+        'GoogleMVFaceDetectorResources.bundle/fssd_25_8bit_gray_v1.tflite',
+        'GoogleMVFaceDetectorResources.bundle/fssd_25_8bit_v1.tflite',
+        'GoogleSignIn.bundle/Roboto-Bold.ttf',
+    ))
+    main_before,main_after = before.get(executable),after.get(executable)
+    require(main_before is not None and main_after is not None and main_before.get('type') == main_after.get('type') == 'file' and
+            all(isinstance(row.get('mode'),str) and re.fullmatch('0o[0-7]{1,4}',row['mode']) for row in (main_before,main_after)) and
+            int(main_before['mode'],8) & 0o100 and int(main_after['mode'],8) & 0o100,
+            'INSTALLED_MAIN_EXECUTABLE_PERMISSION')
+    changed,regular = [],0
+    for path in sorted(before):
+        left,right = before[path],after[path]
+        fields = {'path','type','mode'} | ({'bytes','sha256'} if left['type'] == 'file' else set())
+        require(set(left) == set(right) == fields and left['type'] == right['type'], 'INSTALLED_CLOSED_APP_BYTES')
+        if left['type'] == 'file':
+            require(type(left['bytes']) is int and type(right['bytes']) is int and
+                    0 <= left['bytes'] == right['bytes'] and isinstance(left['sha256'],str) and
+                    re.fullmatch('[a-f0-9]{64}',left['sha256']) and left['sha256'] == right['sha256'],
+                    'INSTALLED_CLOSED_APP_BYTES')
+            regular += 1
+        modes = []
+        for row in (left,right):
+            value = row.get('mode')
+            require(isinstance(value,str) and re.fullmatch('0o[0-7]{1,4}',value), 'INSTALLED_SAFE_PERMISSION_NARROWING')
+            mode = int(value,8)
+            require(oct(mode) == value and mode & ~0o777 == 0 and not mode & 0o002,
+                    'INSTALLED_SAFE_PERMISSION_NARROWING')
+            modes.append(mode)
+        producer,current = modes
+        require(current & ~producer == 0 and current & 0o400 and
+                (left['type'] != 'directory' or current & 0o100) and
+                (left['type'] != 'file' or not producer & 0o100 or current & 0o100 or
+                 (path in observed_nonexecuted_resources and producer == 0o755 and current == 0o644)),
+                'INSTALLED_SAFE_PERMISSION_NARROWING')
+        if producer != current:
+            changed.append({'path':path,'producer_mode':left['mode'],'observed_mode':right['mode']})
+    return {'executable':executable,'closed_paths':len(before),'regular_files_byte_identical':regular,'mode_changes':changed,
+            'qualification':'EVERY_FILE_BYTE_AND_PATH_TYPE_EXACT; SAFE_PERMISSION_NARROWING_WITH23_OBSERVED_NONEXECUTED_RESOURCE_PATHS'}
+
+def installed_app_inventory_diff(expected, observed):
+    before,after = ({row['path']:row for row in rows} for rows in (expected,observed))
+    return [{'path':path,'expected':before.get(path),'observed':after.get(path),
+             'different_fields':sorted(key for key in set(before.get(path) or {}) | set(after.get(path) or {})
+                 if (before.get(path) or {}).get(key) != (after.get(path) or {}).get(key))}
+            for path in sorted(set(before) | set(after)) if before.get(path) != after.get(path)]
+
+
 def verify_installed_app(r, container, app, bundle):
     installed = Path(container).resolve(strict=True)
-    info = plistlib.loads(read_native_file(app / 'Info.plist'))
-    current = plistlib.loads(read_native_file(installed / 'Info.plist'))
+    info = plistlib.loads(read_native_file(app/'Info.plist'))
+    current = plistlib.loads(read_native_file(installed/'Info.plist'))
     executable = info['CFBundleExecutable']
     require(current.get('CFBundleIdentifier') == bundle == info['CFBundleIdentifier'] and
             current.get('CFBundleExecutable') == executable, 'INSTALLED_PRODUCT_IDENTITY')
-    imported = r.receipt['stages'].get('verified-produced-app', {}).get('details')
+    imported = r.receipt['stages'].get('verified-produced-app',{}).get('details')
+    compiled = r.receipt['stages'].get('compiled',{}).get('details')
+    authority = imported if imported is not None else compiled
+    require(isinstance(authority,dict), 'INSTALLED_AUTHENTICATED_PRODUCT_IDENTITY')
+    raw = read_native_file(r.output/'app-inventory.json')
+    inventory = stage_json(raw)
+    evidence = r.output/('installed-product-verification-' + ('imported' if imported is not None else 'compiled'))
+    evidence.mkdir(exist_ok=False)
+    (evidence/'authenticated-inventory.raw.json').write_bytes(raw)
+    acquired = {}
+    for label,path in [('source',app),('installed',installed)]:
+        try:
+            acquired[label] = bundle_inventory(path)
+            write_json(evidence/('observed-' + label + '-inventory.json'),acquired[label])
+        except Exception as error:
+            write_json(evidence/'inventory-acquisition-failure.json',{'inventory':label,
+                'type':type(error).__name__,'detail':str(error)})
+            raise
+    differences = {'producer_to_source':installed_app_inventory_diff(inventory['files'],acquired['source']),
+                   'producer_to_installed':installed_app_inventory_diff(inventory['files'],acquired['installed'])}
+    write_json(evidence/'exact-inventory-differences.json',differences)
+    require(set(inventory) == {'source','configuration','lane','files','simulator_signing','ordinary_javascript'},
+            'INSTALLED_AUTHENTICATED_INVENTORY_SHAPE')
     if imported is not None:
         require(imported.get('bundle_id') == bundle and imported.get('executable') == executable,
                 'INSTALLED_AUTHENTICATED_PRODUCT_IDENTITY')
         authenticated = imported['authenticated_executable']
         inventory_sha256 = imported['producer_app_inventory_sha256']
+        require(imported.get('source_head') == inventory['source']['head'] and
+                imported.get('source_tree') == inventory['source']['tree'], 'INSTALLED_INVENTORY_SOURCE')
     else:
-        compiled = r.receipt['stages']['compiled']['details']
-        raw = read_native_file(r.output / 'app-inventory.json')
-        require(hashlib.sha256(raw).hexdigest() == compiled['inventory_sha256'] and
-                compiled.get('bundle_id') == bundle and compiled.get('executable') == executable,
+        require(compiled.get('bundle_id') == bundle and compiled.get('executable') == executable,
                 'INSTALLED_RETAINED_COMPILED_INVENTORY')
-        authenticated = app_executable_identity(stage_json(raw)['files'], executable)
         inventory_sha256 = compiled['inventory_sha256']
-    expected = stage_file_digest(app / executable, MAX_APP)
-    observed = stage_file_digest(installed / executable, MAX_APP)
+        authenticated = app_executable_identity(inventory['files'],executable)
+    require(hashlib.sha256(raw).hexdigest() == inventory_sha256, 'INSTALLED_AUTHENTICATED_FULL_INVENTORY_HASH')
+    product_source = r.receipt.get('authenticated_app_build_reuse25',{}).get('producer_source',r.receipt['source'])
+    require(inventory.get('source') == product_source and
+            authority.get('source_head') == product_source['head'], 'INSTALLED_INVENTORY_SOURCE')
+    configuration,lane = inventory.get('configuration'),inventory.get('lane')
+    require(configuration == authority.get('configuration') and lane == authority.get('lane') and
+            ((configuration == 'Release' and lane == 'normal-staging' and bundle == 'com.layerwell.app.staging' and executable == 'LayerwellStaging') or
+             (configuration == 'Debug' and lane == 'internal-supported-owner' and bundle == 'com.layerwell.app.development' and executable == 'LayerwellDev')),
+            'INSTALLED_INVENTORY_PROFILE')
+    if configuration == 'Release':
+        require(any(row.get('path') == 'main.jsbundle' and row.get('type') == 'file' and
+                    type(row.get('bytes')) is int and row['bytes'] > 0 for row in inventory['files']),
+                'INSTALLED_RELEASE_JAVASCRIPT_REQUIRED')
+    expected = stage_file_digest(app/executable,MAX_APP)
+    observed = stage_file_digest(installed/executable,MAX_APP)
     require(observed == expected == authenticated, 'INSTALLED_EXECUTABLE_BYTES')
-    r.passed('installed', {'udid': r.receipt['simulator']['udid'], 'bundle_id': bundle,
-        'source_head': r.receipt['source']['head'], 'installed_executable_sha256': observed['sha256'],
-        'expected_executable_sha256': expected['sha256'], 'executable_bytes': observed['bytes'],
-        'authenticated_inventory_sha256': inventory_sha256,
-        'qualification': 'ACTUAL_INSTALL_ZERO_AND_CONTAINER_LOOKUP_WITH_EXACT_EXECUTABLE_BYTES'})
+    signing = simulator_signing()
+    product = signing.inspect_product(r,sys.modules[__name__],installed,bundle,'installed-signed-product')
+    signing.validate_ordinary_product(product)
+    require(product == inventory.get('simulator_signing'), 'INSTALLED_FULL_SIGNING_IDENTITY')
+    if configuration == 'Release':
+        require(signing.check_diagnostic_bundle(sys.modules[__name__],installed,False) ==
+                inventory.get('ordinary_javascript'), 'INSTALLED_ORDINARY_JAVASCRIPT_IDENTITY')
+    proof = {'producer_to_source':installed_app_inventory_proof(inventory['files'],acquired['source'],executable),
+             'producer_to_installed':installed_app_inventory_proof(inventory['files'],acquired['installed'],executable)}
+    write_json(evidence/'identity-validation.json',proof)
+    r.passed('installed',{'udid':r.receipt['simulator']['udid'],'bundle_id':bundle,'executable':executable,
+        'source_head':r.receipt['source']['head'],'installed_executable_sha256':observed['sha256'],
+        'expected_executable_sha256':expected['sha256'],'executable_bytes':observed['bytes'],
+        'authenticated_inventory_sha256':inventory_sha256,
+        'qualification':'ACTUAL_INSTALL_ZERO_AND_CONTAINER_LOOKUP_WITH_EXACT_EXECUTABLE_BYTES',
+        'full_inventory':proof,'full_inventory_evidence':evidence.name,
+        'javascript_qualification':('STANDALONE_RELEASE_EXACT_AUTHENTICATED_JAVASCRIPT' if configuration == 'Release'
+                                  else 'METRO_DEVELOPMENT; NOT_STANDALONE_OR_OFFLINE')})
 
 
 def retain_app(r, app, products, head, architecture, configuration, lane):
@@ -2433,18 +2927,134 @@ def verify_build_producer(r, provenance, source_provenance=None):
 
 
 def normal_xctest_gate(parent):
-    require(parent.receipt['stages'].get('normal-staging-ui', {}).get('status') == 'PASS',
-            'NORMAL_STAGING_UI_REQUIRED_BEFORE_INTERNAL')
-    commands = [row for row in parent.receipt.get('commands', []) if row['name'] == 'native-normal-staging-ui']
-    require(len(commands) == 1 and commands[0].get('state') == 'PASS' and commands[0].get('exit_code') == 0,
-            'NORMAL_XCTEST_ACTUAL_COMMAND_REQUIRED_BEFORE_INTERNAL')
-    command = commands[0]
-    paths = tuple(parent.output / command[key] for key in ['stdout', 'stderr'])
-    require(all(path.parent == parent.output / 'logs' for path in paths), 'NORMAL_XCTEST_CURRENT_JOB_LOGS_REQUIRED')
-    proof = normal_ui_log_proof(parent, paths)
-    require(proof == parent.receipt['stages']['normal-staging-ui']['details'].get('positive_xctest') and
-            all(proof[key + '_sha256'] == command.get(key + '_sha256') for key in ['stdout', 'stderr']),
-            'NORMAL_XCTEST_CURRENT_LOG_PROOF_REQUIRED_BEFORE_INTERNAL')
+    stage = parent.receipt['stages'].get('normal-staging-ui', {})
+    require(stage.get('status') == 'PASS', 'NORMAL_STAGING_UI_REQUIRED_BEFORE_INTERNAL')
+    aggregate = stage.get('details',{}).get('positive_xctest',{})
+    require(aggregate.get('suite_version') == 4 and aggregate.get('executed') == 3 and
+            aggregate.get('failed') == aggregate.get('unexpected') == aggregate.get('skipped') == 0,
+            'NORMAL04_COMPLETE_PASS_REQUIRED_BEFORE_INTERNAL')
+    runner = normal_runner04(parent)
+    imported = parent.receipt['stages'].get('verified-produced-app', {}).get('details')
+    if imported is not None:
+        app = {'bundle_id': imported['bundle_id'], 'executable': imported['authenticated_executable'],'executable_name':imported['executable'],
+               'inventory_sha256': imported['producer_app_inventory_sha256']}
+    else:
+        compiled = parent.receipt['stages']['compiled']['details']
+        inventory = read_native_file(parent.output / 'app-inventory.json')
+        require(hashlib.sha256(inventory).hexdigest() == compiled['inventory_sha256'], 'NORMAL04_COMPILED_INVENTORY')
+        app = {'bundle_id': compiled['bundle_id'], 'inventory_sha256': compiled['inventory_sha256'],'executable_name':compiled['executable'],
+               'executable': app_executable_identity(stage_json(inventory)['files'], compiled['executable'])}
+    authenticated_raw = read_native_file(parent.output/'app-inventory.json')
+    authenticated_inventory = stage_json(authenticated_raw)
+    require(hashlib.sha256(authenticated_raw).hexdigest() == app['inventory_sha256'] and
+            authenticated_inventory.get('source') == parent.receipt['source'] and
+            authenticated_inventory.get('configuration') == 'Release' and
+            authenticated_inventory.get('lane') == 'normal-staging', 'NORMAL04_AUTHENTICATED_FULL_INVENTORY')
+    cases = []
+    for index, method in enumerate(NORMAL_UI_CASES04, 1):
+        directory = parent.output / 'ordinary-v04' / ('%02d' % index)
+        receipt = stage_json(read_native_file(directory / 'execution.json'))
+        require(receipt.get('source') == parent.receipt['source'] and receipt.get('lane') == 'normal-staging' and
+                receipt.get('method') == method and receipt.get('ordinary_suite_version') == 4 and
+                receipt.get('status') == 'NORMAL_V04_CASE_EXECUTED_PASS', 'NORMAL04_CURRENT_CASE_RECEIPT')
+        detail = receipt.get('stages', {}).get('normal-staging-ui-case', {}).get('details')
+        require(isinstance(detail,dict) and detail.get('outcome') == 'PASS' and
+                receipt.get('ordinary_case04') == detail and not receipt.get('failure'),
+                'NORMAL04_CASE_PROOF_REQUIRED')
+        require(all(row.get('state') == 'PASS' and row.get('exit_code') == 0 and
+                row.get('capture_complete') is True and not row.get('timed_out')
+                for row in receipt.get('commands',[]) if row.get('required')),
+                'NORMAL04_COMPLETE_REQUIRED_CASE_COMMANDS')
+        require(receipt.get('job_context') == parent.receipt.get('job_context') and
+                read_native_file(directory / 'toolchain.json') == read_native_file(parent.output / 'toolchain.json'),
+                'NORMAL04_CURRENT_JOB_TOOLCHAIN')
+        for name in ('simulator-create', 'simulator-boot', 'simulator-bootstatus', 'simulator-registry-ready',
+                     'simulator-registry-json', 'simulator-install', 'simulator-installed-container',
+                     'simulator-data-container', 'simulator-launch',
+                     *('process-survival-' + str(number) for number in range(5))):
+            executed_producer_command(receipt, directory, name)
+        _, created = executed_producer_command(receipt, directory, 'simulator-create', read_output=True)
+        _, data = executed_producer_command(receipt, directory, 'simulator-data-container', read_output=True)
+        require(created[0].decode('utf-8').strip() == detail['udid'] and
+                str(uuid.UUID(detail['udid'])).lower() == detail['udid'].lower() and
+                data[0].decode('utf-8').strip() == detail['data_container'], 'NORMAL04_CREATED_FRESH_DEVICE_AND_CONTAINER')
+        command, raw = executed_producer_command(receipt, directory, 'native-normal-staging-ui', read_output=True)
+        argv = command['argv']
+        require(argv[0:2] == ['xcodebuild', 'test'] and
+                argv.count('-only-testing:C47NativeUI/C47NativeUI/' + method) == 1 and
+                argv[argv.index('-project') + 1] == runner['project'] and
+                argv[argv.index('-destination') + 1] == 'id=' + detail['udid'] and
+                argv[argv.index('-scheme') + 1] == 'C47NativeUI' and
+                argv[argv.index('-parallel-testing-enabled') + 1] == 'NO', 'NORMAL04_EXACT_TEST_COMMAND')
+        child = SimpleNamespace(receipt=receipt, output=directory)
+        paths = tuple(directory / command[key] for key in ('stdout', 'stderr'))
+        proof = selected_ui_log_proof(child, paths, 'C47NativeUI', method)
+        require(proof == detail['positive_xctest'] and
+                all(proof[key + '_sha256'] == command[key + '_sha256'] for key in ('stdout', 'stderr')),
+                'NORMAL04_CURRENT_STREAM_PROOF')
+        documents = {}
+        support = {}
+        for kind in ('summary', 'tests'):
+            help_row, help_streams = executed_producer_command(receipt, directory, 'xcresult-' + kind + '-actual-help', read_output=True)
+            schema_row, schema_streams = executed_producer_command(receipt, directory, 'xcresult-' + kind + '-actual-schema', read_output=True)
+            require(help_row['argv'] == ['xcrun', 'xcresulttool', 'help', 'get', 'test-results', kind] and
+                    schema_row['argv'] == ['xcrun', 'xcresulttool', 'get', 'test-results', kind, '--schema'] and
+                    '--path' in b'\n'.join(help_streams).decode('utf-8') and
+                    '--schema' in b'\n'.join(help_streams).decode('utf-8') and
+                    isinstance(stage_json(schema_streams[0]), dict) and stage_json(schema_streams[0]),
+                    'NORMAL04_ACTUAL_RESULT_TOOL_SUPPORT')
+            support[kind] = {'help': [hashlib.sha256(raw).hexdigest() for raw in help_streams],
+                             'schema': [hashlib.sha256(raw).hexdigest() for raw in schema_streams],
+                             **normal_result_schema04(stage_json(schema_streams[0]),kind)}
+            row, output = executed_producer_command(receipt, directory, 'xcresult-' + kind, read_output=True)
+            require(row['argv'] == ['xcrun', 'xcresulttool', 'get', 'test-results', kind,
+                        '--path', argv[argv.index('-resultBundlePath') + 1]], 'NORMAL04_RESULT_COMMAND_BINDING')
+            documents[kind] = stage_json(output[0])
+        require(normal_result_documents04(documents['summary'], documents['tests'], method, detail['udid']) ==
+                detail['result_bundle']['parsed'] and normal_result_inventory04(directory / 'ui.xcresult') ==
+                detail['result_bundle']['inventory'] and support == detail['result_bundle']['actual_tool_support'],
+                'NORMAL04_BOUND_RESULT_BUNDLE')
+        require(detail['udid'] == receipt['simulator']['udid'] == detail['installed']['udid'] and
+                receipt['stages']['installed']['status'] == receipt['stages']['launched']['status'] == 'PASS' and
+                detail['installed'] == receipt['stages']['installed']['details'] and
+                detail['launched'] == receipt['stages']['launched']['details'], 'NORMAL04_ACTUAL_INSTALLED_CASE')
+        installed = detail['installed']
+        require(read_native_file(directory/'app-inventory.json') == authenticated_raw and
+                installed.get('full_inventory_evidence') == ('installed-product-verification-imported' if imported is not None else 'installed-product-verification-compiled'),
+                'NORMAL04_CURRENT_AUTHENTICATED_APP_INVENTORY')
+        require(installed.get('executable') == app['executable_name'], 'NORMAL04_AUTHENTICATED_EXECUTABLE_NAME')
+        identity_directory = directory/installed['full_inventory_evidence']
+        require(read_native_file(identity_directory/'authenticated-inventory.raw.json') == authenticated_raw,
+                'NORMAL04_RETAINED_AUTHENTICATED_INVENTORY')
+        source_rows = stage_json(read_native_file(identity_directory/'observed-source-inventory.json'))
+        installed_rows = stage_json(read_native_file(identity_directory/'observed-installed-inventory.json'))
+        full_identity = {'producer_to_source':installed_app_inventory_proof(authenticated_inventory['files'],source_rows,installed['executable']),
+            'producer_to_installed':installed_app_inventory_proof(authenticated_inventory['files'],installed_rows,installed['executable'])}
+        require(full_identity == installed.get('full_inventory') ==
+                stage_json(read_native_file(identity_directory/'identity-validation.json')) and
+                stage_json(read_native_file(identity_directory/'exact-inventory-differences.json')) ==
+                {'producer_to_source':installed_app_inventory_diff(authenticated_inventory['files'],source_rows),
+                 'producer_to_installed':installed_app_inventory_diff(authenticated_inventory['files'],installed_rows)},
+                'NORMAL04_EVERY_INSTALLED_APP_FILE_REPLAY_REQUIRED')
+        for name in ('installed-signed-product-file','installed-signed-product-architectures',
+                     'installed-signed-product-platform','installed-signed-product-verify-signature'):
+            executed_producer_command(receipt,directory,name)
+        require(stage_json(read_native_file(directory/'installed-signed-product-effective-entitlements.json')) ==
+                authenticated_inventory['simulator_signing']['effective'], 'NORMAL04_INSTALLED_SIGNING_REPLAY')
+        require(installed.get('bundle_id') == app['bundle_id'] == 'com.layerwell.app.staging' and
+                installed.get('source_head') == parent.receipt['source']['head'] and
+                installed.get('installed_executable_sha256') == installed.get('expected_executable_sha256') ==
+                    app['executable']['sha256'] and installed.get('executable_bytes') == app['executable']['bytes'] and
+                installed.get('authenticated_inventory_sha256') == app['inventory_sha256'] and
+                detail['launched'].get('bundle_id') == app['bundle_id'] and
+                type(detail['launched'].get('pid')) is int and detail['launched']['pid'] > 0 and
+                detail['launched'].get('survival_seconds') == 30,
+                'NORMAL04_CURRENT_APP_BYTES_AND_SURVIVAL')
+        cases.append(detail)
+    proof = normal_suite_aggregate04(cases, parent.receipt['source'], runner)
+    require(proof['failed'] == 0 and stage.get('details', {}).get('positive_xctest') == proof and
+            stage['details'].get('tests') == runner['tests'] and stage['details'].get('lane') == 'normal-staging',
+            'NORMAL04_COMPLETE_CURRENT_SUITE_REQUIRED_BEFORE_INTERNAL')
     return proof
 
 
@@ -2461,12 +3071,8 @@ def verify_normal_producer(r, provenance, build_provenance):
     require(isinstance(upstream, dict) and all(upstream.get(key) == build_provenance['producer'].get(key)
                 for key in identity), 'NORMAL_PRODUCER_SAME_BUILD_ARTIFACT')
     for name in ('normal-install', 'postinstall-check', 'current-generated47-source',
-                 'simulator-registry-ready', 'simulator-registry-json', 'simulator-install',
-                 'simulator-installed-container', 'simulator-launch', 'native-normal-staging-ui',
                  'imported-product-file', 'imported-product-architectures', 'imported-product-build-version'):
         executed_producer_command(receipt, directory, name)
-    for index in range(5):
-        executed_producer_command(receipt, directory, 'process-survival-' + str(index))
     stages = receipt['stages']
     require(all(stages.get(name, {}).get('status') == 'PASS' for name in
                 ('verified-produced-app', 'installed', 'launched', 'normal-staging-ui')), 'NORMAL_PRODUCER_REAL_STAGES')
@@ -2479,17 +3085,8 @@ def verify_normal_producer(r, provenance, build_provenance):
             app.get('authenticated_executable') == r.receipt['stages']['verified-produced-app']['details']['authenticated_executable'] and
             app.get('producer_app_inventory_sha256') == r.receipt['stages']['verified-produced-app']['details']['producer_app_inventory_sha256'],
             'NORMAL_PRODUCER_APP_IDENTITY')
-    installed, launched = stages['installed']['details'], stages['launched']['details']
-    require(installed.get('bundle_id') == app['bundle_id'] and
-            installed.get('installed_executable_sha256') == installed.get('expected_executable_sha256') and
-            installed.get('installed_executable_sha256') == app['authenticated_executable']['sha256'] and
-            installed.get('executable_bytes') == app['authenticated_executable']['bytes'] and
-            installed.get('authenticated_inventory_sha256') == app['producer_app_inventory_sha256'] and
-            launched.get('bundle_id') == app['bundle_id'] and type(launched.get('pid')) is int and launched['pid'] > 0 and
-            type(launched.get('survival_seconds')) is int and launched['survival_seconds'] == 30,
-            'NORMAL_PRODUCER_INSTALL_AND_SURVIVAL')
     producer_final_source_matches(r, receipt, directory, 'source-after-runtime.json')
-    parent = SimpleNamespace(receipt=receipt, output=directory, provenance=provenance)
+    parent = SimpleNamespace(root=r.root, receipt=receipt, output=directory, provenance=provenance)
     normal_xctest_gate(parent)
     return parent
 
@@ -2645,6 +3242,57 @@ def execute_consumer(r, role, context, token, resume25=False):
         execute_internal(r)
 
 
+def internal_journey_completion04(child):
+    expected = (('core','test01CoreRetainedNativeJourney'),('larger-text','test03LargerTextManualInput'),
+                ('export','test02LocalExport'),('export-cleanup','test04RemoveSyntheticLocalExport'),
+                ('rights','test05ConsentWithdrawal'))
+    completed,unresolved = [],[]
+    actual = [row for row in child.receipt.get('commands',[]) if
+              row.get('name','').startswith('native-internal-supported-owner-ui')]
+    if len(actual) != 5 or {row['name'] for row in actual} != {
+            'native-internal-supported-owner-ui-'+suffix for suffix,_ in expected}:
+        unresolved.append('EXACT_FIVE_INTERNAL_CASE_COMMANDS_NOT_PRESENT')
+    for suffix,method in expected:
+        stage_name = 'internal-supported-owner-ui-' + suffix
+        command_name = 'native-' + stage_name
+        try:
+            row,raw = executed_producer_command(child.receipt,child.output,command_name,read_output=True)
+            argv = row.get('argv',[])
+            require(row.get('required') is True and row.get('capture_complete') is True and
+                    not row.get('timed_out') and argv[:2] == ['xcodebuild','test'] and
+                    [arg for arg in argv if arg.startswith('-only-testing:')] ==
+                    ['-only-testing:C47NativeUI/C47InternalOwnerUI/'+method],
+                    'INTERNAL_COMPLETE_SELECTED_COMMAND')
+            proof = selected_xctest_summary(b'\n'.join(raw).decode('utf8'),'C47InternalOwnerUI',method)
+            proof.update(stdout_sha256=hashlib.sha256(raw[0]).hexdigest(),
+                         stderr_sha256=hashlib.sha256(raw[1]).hexdigest(),source_head=child.receipt['source']['head'])
+            stage = child.receipt['stages'].get(stage_name,{})
+            require(stage.get('status') == 'PASS' and stage.get('details',{}).get('positive_xctest') == proof and
+                    stage['details'].get('tests') == ['C47NativeUI/C47InternalOwnerUI/'+method] and
+                    stage['details'].get('lane') == 'internal-supported-owner', 'INTERNAL_COMPLETE_SELECTED_STAGE')
+            completed.append(method)
+        except (OSError,ValueError,KeyError,UnicodeError):
+            unresolved.append('NAMED_CASE_NOT_VERIFIED:' + method)
+    export = child.receipt.get('export_destination_verification',{})
+    destination = child.receipt['stages'].get('native-export-local-destination',{})
+    destination_detail = {key:value for key,value in export.items() if key not in ('state','cleanup')}
+    if not (export.get('state') == 'PASS' and export.get('export_outcome') == 'local_saved' and
+            export.get('destination_exists') is True and export.get('selected_folder_absent_before_export') is True and
+            export.get('destination_observed_after_actual_save_dispatch') is True and
+            export.get('source_cache_is_destination') is False and destination.get('status') == 'PASS' and
+            destination.get('details') == destination_detail):
+        unresolved.append('ACTUAL_EXPORT_DESTINATION_NOT_VERIFIED')
+    cleanup = export.get('cleanup',{})
+    cleanup_stage = child.receipt['stages'].get('native-export-original-destination-removed-via-files-ui',{})
+    if not (cleanup.get('state') == 'PASS' and cleanup.get('original_destination_absent') is True and
+            cleanup_stage.get('status') == 'PASS' and cleanup_stage.get('details') == cleanup):
+        unresolved.append('ACTUAL_EXPORT_CLEANUP_NOT_VERIFIED')
+    return {'whole_scope_complete':not unresolved,'expected_case_count':5,'completed_case_count':len(completed),
+            'completed_methods':completed,'unresolved':unresolved,
+            'qualification':'FIVE_ACTUAL_NAMED_XCTESTS_PLUS_EXPLICIT_SAVE_DESTINATION_AND_CLEANUP_REQUIRED; SYNTHETIC_DEBUG_ONLY',
+            'owner_admitted':False,'release':'NO_GO'}
+
+
 def execute_internal(parent, normal_evidence=None):
     normal = parent if normal_evidence is None else normal_evidence
     positive_normal = normal_xctest_gate(normal)
@@ -2798,6 +3446,10 @@ def execute_internal(parent, normal_evidence=None):
                       'test05ConsentWithdrawal')
             observe_native_storage(child, device, bundle, 'withdrawn')
         child.source_proof('source-after-internal-runtime', head, allow_generation=True)
+        completion = internal_journey_completion04(child)
+        child.receipt['internal_journey_completion04'] = completion
+        child.persist()
+        require(completion['whole_scope_complete'], 'INTERNAL_COMPLETE_FIVE_CASES_EXPORT_AND_CLEANUP_REQUIRED')
         child.receipt.update(status='INTERNAL_SYNTHETIC_DEBUG_NATIVE_EXECUTED_SCOPED_GUARDS_RETAINED',
                              internal_supported_owner='EXECUTED_SYNTHETIC_DEBUG_ONLY', finished_utc=utc())
     except Exception as error:

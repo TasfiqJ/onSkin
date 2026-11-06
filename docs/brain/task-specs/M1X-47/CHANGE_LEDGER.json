@@ -3468,8 +3468,73 @@
       ],
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T20:01:56.756537+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "fdf757ffb85e06b9a4aef0bfd9c5c17529b824eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 179596,
+          "preimage_sha256": "bd82898bbd07470ad32454ee1a4eae504807edd405f90b652aedc99ff88354a8",
+          "preimage_blob": "5916f969a987205814486ea3df42d9b6d5c5f2d0"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "fdf757ffb85e06b9a4aef0bfd9c5c17529b824eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 108618,
+          "preimage_sha256": "ff674bf31a0752a19b71b84f8d54df2dd79dea52e3f6b138f41e7a47f54bae8c",
+          "preimage_blob": "24b81b167f5bd842c4a273117dcc334b0ca289b4"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "fdf757ffb85e06b9a4aef0bfd9c5c17529b824eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11248,
+          "preimage_sha256": "90a1d32cd3be11d121f2d4d3d0aec6ffd27c9a99a941abec8c7a4bd516324ab4",
+          "preimage_blob": "5fa495f17b7fd7d510808cb154031d44bb76cdf8"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "fdf757ffb85e06b9a4aef0bfd9c5c17529b824eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "c0ebf72f9ccd8eeee44cc46f38b28f3942180b1368120ca19c6f21e0d11a3540",
+          "preimage_blob": "23483963c8265fdf752fee03cc07d0582db407c6"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "fdf757ffb85e06b9a4aef0bfd9c5c17529b824eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 205073,
+          "preimage_sha256": "41549b22cfcdd1115bb5f917febeb3348332162862fa02eab8ecfe67e1ee8765",
+          "preimage_blob": "f24195ab03b6b060a22495f46d596a0d9067608d"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "fdf757ffb85e06b9a4aef0bfd9c5c17529b824eb",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 83959,
+          "preimage_sha256": "6e8f17a944cb197d922c8ea9080a11a0d7f06d03d2202c74f2a418da6578d372",
+          "preimage_blob": "9f55a6a3d58d4c38de569963d8d67fe2e11a5c6a"
+        }
+      ],
+      "causal_need": "The current Swift ordinary successor contains three isolated cases but the coordinator still admits only the historical singleton. Bind actual installed Xcode schemas and observed native31 document shapes to exact named current cases, zero explicit failures/unexpected/skips, closed result bundles, complete raw captures and actual app/JavaScript identity. Native30 measured exact installed bytes plus23 non-entry mode changes; current ordinary checks need full closed inventory rather than executable-only identity. Internal coordinator must not claim allfive journeys when export destination or cleanup remains unexecuted/unverified. Restore already authorized samecandidate source/build/normal/internal jobs after diagnostic31 closes.",
+      "invariant": "No app behavior, signing/account configuration, Keychain/encryption/owner/consent/deletion changes, nativecase body changes, source witness relaxation, hooks bypass, skips or deadline inflation. Preserve all historical singleton/current3/internal5 witnesses and meaningful assertions. Three ordinary fresh UUIDs/containers, samewithin each persistence/recovery case. Genuine PASS aggregate before internal. Only fully captured corroborated selected assertion failure may continue other ordinary cases; compile/transport/crash/capture/source/identity/schema ambiguity refuses. Internal unavailable export remains partial, still preserve later withdrawal results, exact5+destinationPASS+cleanupPASS required for complete status. Exact expected closed installedpaths/types/allfilebytes including JS and strictsignature/entitlements; finite23 known non-entry755to644 effect only, main/unknown helpers protected. Production C36 app and C805 mounted24 target remain exact;24 nativeinputpins/43 finitepaths/55 originalcommits remain.",
+      "validation": "After actual31 result/trace analysis, integrate exact finite4path coordinator proposal and append this amendment in ledger/task. Run committed runtime/helper/scope/signing/workflow/sourcepin controls, four actual app regression groups, fresh forced uncached root/typecheck/lint and focused privacy. Native32 actual full30/current202172/bothprofiles SOURCE,33 actual current compile/link/Keychain9ops/restoredordinary app,34 complete exact3 ordinary XCTest,35 exact5 internal journeys. Final onlytwoWorklists seal precedes pipeline; no bookkeepingpush after results. Each real started Mac counts toward26to37; oneMac/90min/84min/500MiB/3days/no additionalcharges. All38/18 unaccepted, NO_GO.",
+      "native_execution": false,
+      "release": "NO_GO",
+      "actual31_custody_sha256": "8d524fe75d66622e4c2c0aa9394cac5f69b289621640aba25004e981f74e26c8",
+      "actual31_boundary_sha256": "ab8f3c08eb002d97b691f6dfa6a593e76d679517c31eec123c60d8fb87f49d8d",
+      "proposal_bytes": 132306,
+      "proposal_sha256": "883b8f114b1246f6f84a0e36368b0c965f8c25bc5b335a88019a89b090482332",
+      "post31_boundary": "OldEB diagnostic genuinely launched/survived and oldcase failed Separatehealthconsent. Trace firstreadLocal ErrorUNCLASSIFIED thenstatus_unavailable/nullresume beforelocal_consent_unavailable/cleanupcomplete. C36explicitinitialcleanup hypothesis was NOTobserved; further appcause investigation remains. Coordinator is necessary independent repair, not that appcause fix. Candidate fourstage ordinals are planning only until causal investigation closes; all6jobs32to37 remain.",
+      "external_controls": 102
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43; exactnative30observed23non-entrymodecorrection forhistoricaldiagnostic31, allcontent/main/unknownexecute/signatureguards retained; currentordinary/internalnotadmitted."
+  "freeze_note": "Finite43 currentordinary3/completeinternal5 coordinator and fullinstalled identity integrated; actual31firstreadLocal UNCLASSIFIED origin requires further causal work before candidate pipeline. No currentordinary/internal admission."
 }

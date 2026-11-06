@@ -20,6 +20,18 @@ n = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(n)
 
 
+def historical_runtime25():
+    root = Path(__file__).resolve().parents[3]
+    path = root/'scripts/release/full-app-j01/native_runtime47.py'
+    raw = subprocess.check_output(['git','--no-replace-objects','show',
+        'f21831f5731be928c8e323c509fb62b3d12a654e:scripts/release/full-app-j01/native_runtime47.py'],cwd=root)
+    module = type(sys)('historical_native_runtime25')
+    module.__file__ = str(path)
+    sys.modules[module.__name__] = module
+    exec(compile(raw,str(path),'exec'),module.__dict__)
+    return module
+
+
 class Runtime47Tests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='c47-orchestration-', dir=Path(tempfile.gettempdir()).resolve())
@@ -301,12 +313,13 @@ class Runtime47Tests(unittest.TestCase):
                     'exclusions': [{'data_class': 'fixture', 'reason': 'fixture'} for _ in range(6)]}}
 
     def test_normal_native_gate_requires_actual_expected_xctest_and_clean_executed_summary(self):
-        case = n.NORMAL_UI_CASE
+        historical = historical_runtime25()
+        case = historical.NORMAL_UI_CASE
         legacy = "Test Case '-[C47NativeUI.C47NativeUI " + case + "]' passed (1.234 seconds).\n"
         modern = "Test case 'C47NativeUI." + case + "()' passed on 'actual controlled Simulator' (1.234 seconds).\n"
         summary = 'Executed 1 test, with 0 failures (0 unexpected) in 1.234 seconds\n'
         for events in [legacy, modern, legacy + modern]:
-            proof = n.normal_xctest_summary(events + summary)
+            proof = historical.normal_xctest_summary(events + summary)
             self.assertEqual((proof['executed'], proof['failed'], proof['skipped']), (1, 0, 0))
         for invalid in [summary, '** TEST SUCCEEDED **', legacy,
                         legacy + summary.replace('Executed 1', 'Executed 0'),
@@ -317,10 +330,11 @@ class Runtime47Tests(unittest.TestCase):
                         legacy + summary + '1 test skipped\n',
                         legacy + summary + "Test Suite 'C47NativeUI' failed\n"]:
             with self.subTest(invalid=invalid), self.assertRaises(ValueError):
-                n.normal_xctest_summary(invalid)
+                historical.normal_xctest_summary(invalid)
         with self.assertRaisesRegex(ValueError, 'ACTUAL_COMMAND_REQUIRED'):
-            n.execute_internal(SimpleNamespace(receipt={'stages': {'normal-staging-ui': {'status': 'PASS'}},
+            historical.execute_internal(SimpleNamespace(receipt={'stages': {'normal-staging-ui': {'status': 'PASS'}},
                                                        'commands': []}))
+
 
     def test_internal_native_gate_requires_selected_named_case_before_success(self):
         summary = 'Executed 1 test, with 0 failures (0 unexpected) in 1.234 seconds\n'
@@ -1274,40 +1288,63 @@ class StageDriver47Tests(unittest.TestCase):
         import plistlib
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            app, installed, output = root / 'expected.app', root / 'installed.app', root / 'evidence'
-            for directory in (app, installed, output):
+            app, installed, output = root/'expected.app',root/'installed.app',root/'evidence'
+            for directory in (app,installed,output):
                 directory.mkdir()
-            binary = b'fixture original executable'
-            info = plistlib.dumps({'CFBundleIdentifier': 'com.layerwell.app.staging',
-                                   'CFBundleExecutable': 'LayerwellStaging'})
-            for directory in (app, installed):
-                (directory / 'Info.plist').write_bytes(info)
-                (directory / 'LayerwellStaging').write_bytes(binary)
-            identity = {'bytes': len(binary), 'sha256': hashlib.sha256(binary).hexdigest()}
-            inventory = {'files': [{'path': 'LayerwellStaging', 'type': 'file', **identity}]}
-            n.write_json(output / 'app-inventory.json', inventory)
-            inventory_sha = n.sha(output / 'app-inventory.json')
-            base = {'source': {'head': 'a' * 40}, 'simulator': {'udid': 'current-device'}, 'stages': {}}
-            compiled = {'bundle_id': 'com.layerwell.app.staging', 'executable': 'LayerwellStaging',
-                        'inventory_sha256': inventory_sha}
-            imported = {'bundle_id': compiled['bundle_id'], 'executable': compiled['executable'],
-                        'authenticated_executable': identity, 'producer_app_inventory_sha256': inventory_sha}
-            for lane, details in [('compiled', compiled), ('verified-produced-app', imported)]:
+            binary,javascript = b'fixture original executable',b'fixture current javascript'
+            info = plistlib.dumps({'CFBundleIdentifier':'com.layerwell.app.staging',
+                                   'CFBundleExecutable':'LayerwellStaging'})
+            for directory in (app,installed):
+                (directory/'Info.plist').write_bytes(info)
+                (directory/'LayerwellStaging').write_bytes(binary)
+                (directory/'main.jsbundle').write_bytes(javascript)
+            def rows(directory):
+                return [{'path':path.name,'type':'file','mode':'0o755' if path.name == 'LayerwellStaging' else '0o644',
+                         'bytes':len(path.read_bytes()),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+                        for path in sorted(Path(directory).iterdir())]
+            identity = {'bytes':len(binary),'sha256':hashlib.sha256(binary).hexdigest()}
+            source = {'head':'a'*40,'tree':'b'*40}
+            signed = {'synthetic_product_only':True}
+            js = {'diagnostic_marker_present':False,'bytes':len(javascript),
+                  'sha256':hashlib.sha256(javascript).hexdigest()}
+            inventory = {'source':source,'configuration':'Release','lane':'normal-staging','files':rows(app),
+                         'simulator_signing':signed,'ordinary_javascript':js}
+            n.write_json(output/'app-inventory.json',inventory)
+            inventory_sha = n.sha(output/'app-inventory.json')
+            base = {'source':source,'simulator':{'udid':'current-device'},'stages':{}}
+            compiled = {'bundle_id':'com.layerwell.app.staging','executable':'LayerwellStaging',
+                        'inventory_sha256':inventory_sha,'source_head':source['head'],
+                        'configuration':'Release','lane':'normal-staging'}
+            imported = {'bundle_id':compiled['bundle_id'],'executable':compiled['executable'],
+                        'authenticated_executable':identity,'producer_app_inventory_sha256':inventory_sha,
+                        'source_head':source['head'],'source_tree':source['tree'],
+                        'configuration':'Release','lane':'normal-staging'}
+            signing = SimpleNamespace(inspect_product=lambda *args:signed,validate_ordinary_product=lambda *args:None,
+                                      check_diagnostic_bundle=lambda *args:js)
+            for lane,details in [('compiled',compiled),('verified-produced-app',imported)]:
                 receipt = copy.deepcopy(base)
-                receipt['stages'][lane] = {'status': 'PASS', 'details': details}
+                receipt['stages'][lane] = {'status':'PASS','details':details}
                 passed = []
-                runner = SimpleNamespace(receipt=receipt, output=output,
-                                         passed=lambda name, proof: passed.append((name, proof)))
-                with patch.object(n, 'read_native_file', side_effect=lambda path: Path(path).read_bytes()):
-                    n.verify_installed_app(runner, installed, app, compiled['bundle_id'])
-                    self.assertEqual(passed[0][1]['authenticated_inventory_sha256'], inventory_sha)
-                    for directory in (app, installed):
-                        (directory / 'LayerwellStaging').write_bytes(b'changed matching executable')
-                    with self.assertRaisesRegex(ValueError, 'INSTALLED_EXECUTABLE_BYTES'):
-                        n.verify_installed_app(runner, installed, app, compiled['bundle_id'])
-                    self.assertEqual(len(passed), 1)
-                for directory in (app, installed):
-                    (directory / 'LayerwellStaging').write_bytes(binary)
+                case_output = root/(lane+'-positive')
+                case_output.mkdir()
+                n.shutil.copy2(output/'app-inventory.json',case_output/'app-inventory.json')
+                runner = SimpleNamespace(receipt=receipt,output=case_output,
+                    passed=lambda name,proof:passed.append((name,proof)))
+                with patch.object(n,'read_native_file',side_effect=lambda path:Path(path).read_bytes()),\
+                     patch.object(n,'bundle_inventory',side_effect=rows),patch.object(n,'simulator_signing',return_value=signing):
+                    n.verify_installed_app(runner,installed,app,compiled['bundle_id'])
+                    self.assertEqual(passed[0][1]['authenticated_inventory_sha256'],inventory_sha)
+                    for directory in (app,installed):
+                        (directory/'LayerwellStaging').write_bytes(b'changed matching executable')
+                    runner.output = root/(lane+'-negative')
+                    runner.output.mkdir()
+                    n.shutil.copy2(output/'app-inventory.json',runner.output/'app-inventory.json')
+                    with self.assertRaisesRegex(ValueError,'INSTALLED_EXECUTABLE_BYTES'):
+                        n.verify_installed_app(runner,installed,app,compiled['bundle_id'])
+                    self.assertEqual(len(passed),1)
+                for directory in (app,installed):
+                    (directory/'LayerwellStaging').write_bytes(binary)
+
 
     def test_large_compiler_stream_is_hashed_and_tampering_or_duplicate_command_refuses(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -1394,6 +1431,7 @@ class StageDriver47Tests(unittest.TestCase):
 
 class SurvivalQuery47Tests(unittest.TestCase):
     def test_both_lanes_require_five_completed_same_pid_queries_with_bounded_service_time(self):
+        historical = historical_runtime25()
         bundle, device, pid = 'com.layerwell.app.staging', 'fresh-device', 53943
         for lane in ('normal', 'internal'):
             for table in (str(pid) + '\t0\tUIKitApplication:' + bundle, '53944\t0\t' + bundle):
@@ -1408,12 +1446,12 @@ class SurvivalQuery47Tests(unittest.TestCase):
                 with self.subTest(lane=lane, table=table), \
                      patch.object(n.time, 'monotonic', return_value=100), \
                      patch.object(n.time, 'sleep', side_effect=waits.append), \
-                     patch.object(n, 'prepare_simulator', return_value=device), \
-                     patch.object(n, 'install_simulator_app', return_value=Path('installed.app')), \
-                     patch.object(n, 'verify_installed_app'):
+                     patch.object(historical, 'prepare_simulator', return_value=device), \
+                     patch.object(historical, 'install_simulator_app', return_value=Path('installed.app')), \
+                     patch.object(historical, 'verify_installed_app'):
                     def execute():
                         if lane == 'normal':
-                            n.run_normal(runner, Path('ios'), Path('products'), Path('app'), bundle, 'a' * 40)
+                            historical.run_normal(runner, Path('ios'), Path('products'), Path('app'), bundle, 'a' * 40)
                         else:
                             return n.launch_and_verify(runner, device, bundle)
                     if table.startswith(str(pid) + '\t'):
@@ -1431,6 +1469,7 @@ class SurvivalQuery47Tests(unittest.TestCase):
                     for _, argv, kwargs in calls[1:]:
                         self.assertEqual(argv, ['xcrun', 'simctl', 'spawn', device, 'launchctl', 'list'])
                         self.assertEqual(kwargs, {'timeout': 120})
+
 
 
 class SimulatorProbeAdmissionTests(unittest.TestCase):
@@ -1747,6 +1786,624 @@ class RawConsoleIsolation04Tests(unittest.TestCase):
             self.assertFalse(console.entered.is_set())
             self.assertEqual(runner.receipt['stages'], {})
             self.assertFalse(runner.receipt['acceptance_granted'])
+
+
+class Ordinary04EEControls(unittest.TestCase):
+    """Synthetic architecture controls; provider/native admission stays pending."""
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix='ordinary04-ee-')
+        self.addCleanup(self.temp.cleanup)
+        self.directory = Path(self.temp.name)
+        observation = patch.object(n,'read_native_file',side_effect=lambda path:Path(path).read_bytes())
+        observation.start()
+        self.addCleanup(observation.stop)
+
+    def failed_command(self):
+        method = n.NORMAL_UI_CASES04[0]
+        raw = ("/synthetic/native_ui47.swift:52: error: -[C47NativeUI.C47NativeUI " + method + "] : XCTAssertTrue failed - synthetic assertion\n" +
+               "Test Case '-[C47NativeUI.C47NativeUI " + method + "]' failed (1 second).\n" +
+               'Executed 1 test, with 1 failure (0 unexpected) in 1 second.\n').encode()
+        row = {'name':'native-normal-staging-ui','required':True,'state':'FAIL','exit_code':65,
+               'capture_complete':True,'timeout_seconds':900}
+        (self.directory/'logs').mkdir(exist_ok=True)
+        for kind,data in [('stdout',raw),('stderr',b'')]:
+            path = 'logs/001-native-normal-staging-ui.'+kind
+            (self.directory/path).write_bytes(data)
+            row.update({kind:path,kind+'_bytes':len(data),kind+'_sha256':hashlib.sha256(data).hexdigest()})
+        return method,row,(raw,b'')
+
+    def case(self,index,outcome='PASS'):
+        method = n.NORMAL_UI_CASES04[index]
+        device = 'device-'+str(index)
+        failed = int(outcome == 'ASSERTION_FAILED')
+        parsed = {'expected_case':'C47NativeUI/'+method,'executed':1,'failed':failed,
+                  'unexpected':0,'skipped':0,'udid':device}
+        if failed:
+            parsed['classification'] = 'XCTEST_ASSERTION_FAILURE_ONLY'
+        return {'suite_version':4,'method':method,'udid':device,'data_container':'container-'+str(index),
+            'source':{'head':'a'*40,'tree':'b'*40},'runner':{'version':4},'lane':'normal-staging',
+            'outcome':outcome,'assertion_failure_xctest' if failed else 'positive_xctest':
+                {'executed':1,'failed':failed,'unexpected':0,'skipped':0},
+            'result_bundle':{'parsed':parsed}}
+
+    def test_fabricated_provider_documents_without_named_case_cannot_admit(self):
+        # Previous guessed key names must never establish either outcome.
+        fabricated = {'totalTestCount':1,'passedTests':1,'failedTests':0,'skippedTests':0,
+                      'expectedFailures':0,'testFailures':[]}
+        with self.assertRaises(ValueError):
+            n.normal_result_documents04(fabricated,{},n.NORMAL_UI_CASES04[0],'synthetic-device')
+        with self.assertRaises(ValueError):
+            n.normal_assertion_failure_documents04(fabricated,{},n.NORMAL_UI_CASES04[0],'synthetic-device')
+
+    def test_each_current_named_pass_requires_explicit_zero_unexpected_and_refuses_historical_singleton(self):
+        for method in n.NORMAL_UI_CASES04:
+            raw = ("Test Case '-[C47NativeUI.C47NativeUI " + method + "]' passed.\n"+
+                   'Executed 1 test, with 0 failures (0 unexpected) in 1 second.\n')
+            self.assertEqual(n.selected_xctest_summary(raw,'C47NativeUI',method)['unexpected'],0)
+            for bad in [raw.replace('0 unexpected','1 unexpected'),raw.replace('(0 unexpected)',''),
+                        raw.replace('passed','skipped'),raw+'1 test skipped\n']:
+                with self.subTest(method=method,bad=bad),self.assertRaises(ValueError):
+                    n.selected_xctest_summary(bad,'C47NativeUI',method)
+        with self.assertRaisesRegex(ValueError,'SELECTED_CASE_REQUIRED'):
+            n.selected_xctest_summary('', 'C47NativeUI',n.NORMAL_UI_CASE)
+
+    def test_only_complete_required_exit65_and_exact_failed_command_bytes_reach_assertion_classifier(self):
+        method,row,raw = self.failed_command()
+        error = ValueError('C47_COMMAND_FAILED:native-normal-staging-ui')
+        actual,streams = n.normal_assertion_command04({'commands':[row]},self.directory,error)
+        self.assertEqual(streams,raw)
+        self.assertEqual(n.normal_assertion_log04(streams,method,{'head':'a'*40})['failed'],1)
+        for key,value in [('state','PASS'),('required',False),('exit_code',70),('exit_code',True),
+                          ('capture_complete',False),('timed_out',True),('process_exit_code',-9),
+                          ('error_type','LOG_STREAM_DID_NOT_CLOSE')]:
+            bad = {**row,key:value}
+            with self.subTest(key=key,value=value),self.assertRaises(ValueError):
+                n.normal_assertion_command04({'commands':[bad]},self.directory,error)
+        for error in [RuntimeError(str(error)),ValueError('C47_COMMAND_FAILED:simulator-install'),
+                      ValueError('C47_APP_PROCESS_DID_NOT_SURVIVE')]:
+            with self.assertRaises(ValueError):
+                n.normal_assertion_command04({'commands':[row]},self.directory,error)
+        (self.directory/row['stdout']).write_bytes(raw[0]+b'late changed bytes')
+        with self.assertRaisesRegex(ValueError,'RAW_LOG_IDENTITY'):
+            n.normal_assertion_command04({'commands':[row]},self.directory,
+                ValueError('C47_COMMAND_FAILED:native-normal-staging-ui'))
+
+    def test_failed_log_requires_exact_one_case_zero_unexpected_zero_skips(self):
+        method,row,raw = self.failed_command()
+        for bad in [raw[0].replace(b'0 unexpected',b'1 unexpected'),
+                    raw[0].replace(b'(0 unexpected)',b''),raw[0]+b'1 test skipped\n',
+                    raw[0].replace(method.encode(),n.NORMAL_UI_CASE.encode()),
+                    raw[0].replace(b'failed',b'passed'),raw[0].replace(b'Executed 1',b'Executed 0')]:
+            with self.assertRaises(ValueError):
+                n.normal_assertion_log04((bad,b''),method,{'head':'a'*40})
+
+    def test_case_execution_requires_exact_selected_argv_and_actual_assertion_only_classification(self):
+        method,row,raw = self.failed_command()
+        source = {'head':'a'*40,'tree':'b'*40}
+        device = 'synthetic-device'
+        child = SimpleNamespace(output=self.directory,receipt={'source':source,'commands':[row]})
+        def run(name,argv,**kwargs):
+            self.assertEqual(name,'native-normal-staging-ui')
+            row['argv'] = list(map(str,argv))
+            raise ValueError('C47_COMMAND_FAILED:native-normal-staging-ui')
+        child.run = run
+        parsed = {'expected_case':'C47NativeUI/'+method,'executed':1,'failed':1,'unexpected':0,
+                  'skipped':0,'udid':device,'classification':'XCTEST_ASSERTION_FAILURE_ONLY'}
+        with patch.object(n,'collect_normal_result04',return_value={'parsed':parsed,'assertion_observation':{
+            'source_file':'native_ui47.swift','source_line':52,
+            'failure_text_sha256':hashlib.sha256(b'XCTAssertTrue failed - synthetic assertion').hexdigest()}}) as collect:
+            proof = n.normal_case_execution04(child,Path('project'),Path('products'),method,device,{})
+            self.assertEqual(proof['outcome'],'ASSERTION_FAILED')
+            self.assertEqual(collect.call_args.kwargs,{'outcome':'ASSERTION_FAILED'})
+        for classification in ['CRASH','COMPILE_ERROR','UNEXPECTED_FAILURE',None]:
+            bad = {**parsed,'classification':classification}
+            with patch.object(n,'collect_normal_result04',return_value={'parsed':bad}),\
+                 self.subTest(classification=classification),self.assertRaisesRegex(ValueError,'ACTUAL_ASSERTION_ONLY_REQUIRED'):
+                n.normal_case_execution04(child,Path('project'),Path('products'),method,device,{})
+        def wrong_command(name,argv,**kwargs):
+            row['argv'] = list(map(str,argv))+['-only-testing:Unrelated/test']
+            raise ValueError('C47_COMMAND_FAILED:native-normal-staging-ui')
+        child.run = wrong_command
+        with patch.object(n,'collect_normal_result04') as collect,self.assertRaisesRegex(ValueError,'EXACT_SELECTED_COMMAND'):
+            n.normal_case_execution04(child,Path('project'),Path('products'),method,device,{})
+        collect.assert_not_called()
+
+    def test_aggregate_retains_all_three_outcomes_and_refuses_omission_or_reused_identity(self):
+        cases = [self.case(i) for i in range(3)]
+        source,runner = cases[0]['source'],cases[0]['runner']
+        self.assertEqual(n.normal_suite_aggregate04(cases,source,runner)['failed'],0)
+        cases[0] = self.case(0,'ASSERTION_FAILED')
+        aggregate = n.normal_suite_aggregate04(cases,source,runner)
+        self.assertEqual((aggregate['executed'],aggregate['failed'],aggregate['unexpected'],aggregate['skipped']),
+                         (3,1,0,0))
+        for bad in [cases[:-1],list(reversed(cases))]:
+            with self.assertRaisesRegex(ValueError,'EXACT_COMPLETE_CASES'):
+                n.normal_suite_aggregate04(bad,source,runner)
+        for key,value in [('source',{'head':'c'*40}),('lane','internal-supported-owner'),
+                          ('udid',cases[0]['udid']),('data_container',cases[0]['data_container'])]:
+            bad = copy.deepcopy(cases)
+            bad[1][key] = value
+            with self.subTest(key=key),self.assertRaises(ValueError):
+                n.normal_suite_aggregate04(bad,source,runner)
+        bad = copy.deepcopy(cases)
+        bad[0]['result_bundle']['parsed']['classification'] = 'CRASH_OR_UNEXPECTED_FAILURE'
+        with self.assertRaises(ValueError):
+            n.normal_suite_aggregate04(bad,source,runner)
+        with self.assertRaisesRegex(ValueError,'COMPLETE_PASS_REQUIRED'):
+            n.normal_xctest_gate(SimpleNamespace(receipt={'stages':{'normal-staging-ui':{
+                'status':'PASS','details':{'positive_xctest':aggregate}}}}))
+
+    def loop_fixture(self,failure):
+        original_runner = n.Runner
+        parent = original_runner(self.directory,self.directory/'parent')
+        parent.receipt['source'] = {'head':'a'*40,'tree':'b'*40}
+        parent.receipt['job_context'] = {'run_id':1}
+        calls,children = [],[]
+        def generate(name,argv,**kwargs):
+            self.assertEqual(name,'generate-native-ui-runner')
+            project = parent.output/'ui/runner/C47NativeUI.xcodeproj'
+            project.mkdir(parents=True)
+            (parent.output/'ui/runner.json').write_text(json.dumps({'project':str(project)}))
+            return ()
+        parent.run = generate
+        parent.source_proof = lambda *args,**kwargs:calls.append(('source-after',args,kwargs))
+        def child_factory(root,output,**kwargs):
+            child = original_runner(root,output,**kwargs)
+            child.run = lambda *args,**kwargs:None
+            def text(name,argv,**kwargs):
+                self.assertEqual(name,'simulator-data-container')
+                return str(Path.home()/'Library/Developer/CoreSimulator/Devices'/child.receipt['simulator']['udid']/
+                           'data/Containers/Data/Application'/('00000000-0000-0000-0000-'+str(len(children)).zfill(12)))
+            child.text = text
+            children.append(child)
+            return child
+        def prepare(child,label):
+            device = '00000000-0000-0000-0000-'+str(len(children)).zfill(12)
+            child.receipt['simulator'] = {'udid':device}
+            return device
+        def installed(child,*args):
+            child.passed('installed',{'udid':child.receipt['simulator']['udid']})
+        def execute(child,project,products,method,device,environment):
+            index = len(calls)
+            calls.append(method)
+            if failure == 'infrastructure':
+                raise ValueError('C47_COMMAND_FAILED:simulator-install')
+            failed = failure == 'assertion' and len(calls) == 1
+            outcome = 'ASSERTION_FAILED' if failed else 'PASS'
+            parsed = {'expected_case':'C47NativeUI/'+method,'executed':1,'failed':int(failed),
+                      'unexpected':0,'skipped':0,'udid':device}
+            if failed:
+                parsed['classification'] = 'XCTEST_ASSERTION_FAILURE_ONLY'
+            return {'outcome':outcome,'result_bundle':{'parsed':parsed},
+                'assertion_failure_xctest' if failed else 'positive_xctest':
+                    {'executed':1,'failed':int(failed),'unexpected':0,'skipped':0},
+                **({'failure':{'type':'ValueError','detail':'C47_COMMAND_FAILED:native-normal-staging-ui'}} if failed else {})}
+        return parent,calls,children,[(n,'Runner',child_factory),(n,'normal_runner04',lambda r:{'version':4}),
+            (n,'prepare_simulator',prepare),(n,'install_simulator_app',lambda *args:Path('installed.app')),
+            (n,'verify_installed_app',installed),(n,'launch_and_verify',lambda *args:12345),
+            (n,'normal_case_execution04',execute),(n,'retain_result_bundles',lambda *args:None)]
+
+    def test_three_independent_cases_collect_after_qualified_assertion_and_internal_remains_blocked(self):
+        parent,calls,children,replacements = self.loop_fixture('assertion')
+        from contextlib import ExitStack
+        with ExitStack() as stack:
+            for module,name,value in replacements:
+                stack.enter_context(patch.object(module,name,value))
+            with self.assertRaisesRegex(ValueError,'COMPLETE_SUITE_FAILED_INTERNAL_NOT_ADMITTED'):
+                n.run_normal(parent,Path('ios'),self.directory,Path('app'),'com.layerwell.app.staging','a'*40)
+        self.assertEqual(calls[:3],list(n.NORMAL_UI_CASES04))
+        self.assertEqual(len(children),3)
+        self.assertEqual(parent.receipt['ordinary_suite_summary04']['failed'],1)
+        self.assertNotIn('normal-staging-ui',parent.receipt['stages'])
+        self.assertEqual(children[0].receipt['status'],'NORMAL_V04_CASE_ASSERTION_FAILED')
+        self.assertTrue(all(child.receipt['status'] == 'NORMAL_V04_CASE_EXECUTED_PASS' for child in children[1:]))
+
+    def test_infrastructure_failure_aborts_before_second_independent_case(self):
+        parent,calls,children,replacements = self.loop_fixture('infrastructure')
+        from contextlib import ExitStack
+        with ExitStack() as stack:
+            for module,name,value in replacements:
+                stack.enter_context(patch.object(module,name,value))
+            with self.assertRaisesRegex(ValueError,'COMMAND_FAILED:simulator-install'):
+                n.run_normal(parent,Path('ios'),self.directory,Path('app'),'com.layerwell.app.staging','a'*40)
+        self.assertEqual(calls,[n.NORMAL_UI_CASES04[0]])
+        self.assertEqual(len(children),1)
+        self.assertNotIn('ordinary_suite_summary04',parent.receipt)
+
+
+
+class InstalledAppIdentity04Controls(unittest.TestCase):
+    """Synthetic full-app controls; matching Mach-O alone cannot admit changed JS."""
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix='installed-app04-')
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        observation = patch.object(n,'read_native_file',side_effect=lambda path:Path(path).read_bytes())
+        observation.start();self.addCleanup(observation.stop)
+
+    def fixture(self,label='case',debug=False):
+        root = self.root/label
+        root.mkdir()
+        app,installed,output = root/'source.app',root/'installed.app',root/'evidence'
+        bundle = 'com.layerwell.app.development' if debug else 'com.layerwell.app.staging'
+        executable = 'LayerwellDev' if debug else 'LayerwellStaging'
+        source = {'head':'a'*40,'tree':'b'*40}
+        for directory in (app,installed,output):
+            directory.mkdir()
+        for directory in (app,installed):
+            (directory/'Info.plist').write_bytes(n.plistlib.dumps({'CFBundleIdentifier':bundle,
+                'CFBundleExecutable':executable}))
+            (directory/executable).write_bytes(b'synthetic matching executable')
+            (directory/'_CodeSignature').mkdir()
+            (directory/'_CodeSignature/CodeResources').write_bytes(b'synthetic all resources')
+            if not debug:
+                (directory/'main.jsbundle').write_bytes(b'synthetic current javascript')
+        def rows(directory):
+            result = []
+            for path in sorted(Path(directory).rglob('*')):
+                row = {'path':path.relative_to(directory).as_posix(),
+                       'type':'directory' if path.is_dir() else 'file',
+                       'mode':'0o755' if path.is_dir() or path.name == executable else '0o644'}
+                if path.is_file():
+                    row.update(bytes=len(path.read_bytes()),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+                result.append(row)
+            return result
+        product = {'qualification':'SYNTHETIC_PRODUCT_ONLY'}
+        javascript = None if debug else {'diagnostic_marker_present':False,
+            'bytes':len((app/'main.jsbundle').read_bytes()),'sha256':n.sha(app/'main.jsbundle')}
+        inventory = {'source':source,'configuration':'Debug' if debug else 'Release',
+            'lane':'internal-supported-owner' if debug else 'normal-staging','files':rows(app),
+            'simulator_signing':product,'ordinary_javascript':javascript}
+        n.write_json(output/'app-inventory.json',inventory)
+        authority = {'source_head':source['head'],'source_tree':source['tree'],'bundle_id':bundle,
+            'executable':executable,'configuration':inventory['configuration'],'lane':inventory['lane'],
+            'inventory_sha256':n.sha(output/'app-inventory.json')}
+        receipt = {'source':source,'simulator':{'udid':'synthetic-device'},
+                   'stages':{'compiled':{'status':'PASS','details':authority}}}
+        calls = []
+        runner = SimpleNamespace(receipt=receipt,output=output,
+            passed=lambda stage,proof:receipt['stages'].update({stage:{'status':'PASS','details':proof}}))
+        signing = SimpleNamespace(inspect_product=lambda *args:(calls.append('strict-installed-product') or product),
+            validate_ordinary_product=lambda *args:None,
+            check_diagnostic_bundle=lambda *args:javascript)
+        return root,app,installed,runner,inventory,authority,rows,signing,calls,bundle
+
+    def test_complete_release_and_debug_inventories_pass_with_honest_javascript_qualifications(self):
+        for debug in (False,True):
+            root,app,installed,runner,inventory,authority,rows,signing,calls,bundle = self.fixture(str(debug),debug)
+            with patch.object(n,'bundle_inventory',side_effect=rows),patch.object(n,'simulator_signing',return_value=signing):
+                n.verify_installed_app(runner,installed,app,bundle)
+            proof = runner.receipt['stages']['installed']['details']
+            self.assertEqual(proof['full_inventory']['producer_to_installed']['regular_files_byte_identical'],3 if debug else 4)
+            self.assertEqual(calls,['strict-installed-product'])
+            self.assertEqual(proof['executable'],'LayerwellDev' if debug else 'LayerwellStaging')
+            self.assertIn('METRO_DEVELOPMENT' if debug else 'EXACT_AUTHENTICATED_JAVASCRIPT',proof['javascript_qualification'])
+
+    def test_changed_javascript_with_identical_executable_and_source_is_retained_and_refused(self):
+        root,app,installed,runner,inventory,authority,rows,signing,calls,bundle = self.fixture()
+        (installed/'main.jsbundle').write_bytes(b'synthetic other javascript')
+        self.assertEqual(n.sha(installed/'LayerwellStaging'),n.sha(app/'LayerwellStaging'))
+        with patch.object(n,'bundle_inventory',side_effect=rows),patch.object(n,'simulator_signing',return_value=signing),\
+             self.assertRaisesRegex(ValueError,'INSTALLED_CLOSED_APP_BYTES'):
+            n.verify_installed_app(runner,installed,app,bundle)
+        evidence = runner.output/'installed-product-verification-compiled'
+        diff = json.loads((evidence/'exact-inventory-differences.json').read_bytes())
+        self.assertEqual([row['path'] for row in diff['producer_to_installed']],['main.jsbundle'])
+        self.assertNotIn('installed',runner.receipt['stages'])
+
+    def test_source_profile_and_stale_inventory_hash_cannot_be_forgiven_by_matching_files(self):
+        for label,mutation,refresh in [('source',lambda v:v['source'].update(head='c'*40),True),
+            ('profile',lambda v:v.update(configuration='Debug'),True),
+            ('lane',lambda v:v.update(lane='internal-supported-owner'),True),
+            ('stale-hash',lambda v:v.update(unexpected_metadata=True),False)]:
+            root,app,installed,runner,inventory,authority,rows,signing,calls,bundle = self.fixture(label)
+            mutation(inventory)
+            n.write_json(runner.output/'app-inventory.json',inventory)
+            if refresh:
+                authority['inventory_sha256'] = n.sha(runner.output/'app-inventory.json')
+            with patch.object(n,'bundle_inventory',side_effect=rows),patch.object(n,'simulator_signing',return_value=signing),\
+                 self.subTest(label=label),self.assertRaises(ValueError):
+                n.verify_installed_app(runner,installed,app,bundle)
+            self.assertEqual(calls,[])
+            self.assertNotIn('installed',runner.receipt['stages'])
+
+    def test_unknown_member_and_expanded_permission_refuse_but_safe_narrowing_keeps_every_byte(self):
+        for label in ('unknown-member','expanded','narrow'):
+            root,app,installed,runner,inventory,authority,rows,signing,calls,bundle = self.fixture(label)
+            if label == 'unknown-member':
+                (installed/'unrecorded-resource').write_bytes(b'extra')
+            def observed(path):
+                result = rows(path)
+                if Path(path) == installed and label != 'unknown-member':
+                    next(row for row in result if row['path'] == 'LayerwellStaging')['mode'] = '0o775' if label == 'expanded' else '0o500'
+                return result
+            with patch.object(n,'bundle_inventory',side_effect=observed),patch.object(n,'simulator_signing',return_value=signing):
+                if label == 'narrow':
+                    n.verify_installed_app(runner,installed,app,bundle)
+                    proof = runner.receipt['stages']['installed']['details']['full_inventory']
+                    self.assertEqual(proof['producer_to_installed']['mode_changes'],
+                        [{'path':'LayerwellStaging','producer_mode':'0o755','observed_mode':'0o500'}])
+                else:
+                    with self.assertRaises(ValueError):
+                        n.verify_installed_app(runner,installed,app,bundle)
+                    self.assertNotIn('installed',runner.receipt['stages'])
+
+    def test_consumer_retains_authenticated_inventory_exact_raw_bytes_and_hash(self):
+        root,app,installed,runner,inventory,authority,rows,signing,calls,bundle = self.fixture()
+        producer = root/'producer'
+        producer.mkdir()
+        raw = json.dumps(inventory,indent=3,separators=(',',': ')).encode()+b'\n'
+        (producer/'app-inventory.json').write_bytes(raw)
+        archive = producer/'signed-simulator-app.tar.gz'
+        with n.tarfile.open(archive,'w:gz') as target:
+            member = n.tarfile.TarInfo('LayerwellStaging.app');member.type=n.tarfile.DIRTYPE;member.mode=0o755
+            target.addfile(member)
+            for row in inventory['files']:
+                member = n.tarfile.TarInfo('LayerwellStaging.app/'+row['path']);member.mode=int(row['mode'],8)
+                if row['type'] == 'directory':
+                    member.type=n.tarfile.DIRTYPE;target.addfile(member)
+                else:
+                    data = (app/row['path']).read_bytes();member.size=len(data);target.addfile(member,io.BytesIO(data))
+        receipt = {'file':archive.name,'bytes':archive.stat().st_size,'sha256':n.sha(archive),
+            'source_head':inventory['source']['head'],'inventory_sha256':hashlib.sha256(raw).hexdigest(),
+            'lane':'normal-staging','configuration':'Release','standalone_embedded_javascript':True,
+            'not_an_iphone_or_testflight_release':True,'platform':'iOS Simulator','architectures':['x86_64'],
+            'bundle_id':bundle,'executable':'LayerwellStaging','simulator_signing':inventory['simulator_signing'],
+            'ordinary_javascript':inventory['ordinary_javascript']}
+        n.write_json(producer/'app-artifact.json',receipt)
+        (runner.output/'app-inventory.json').unlink()
+        runner.text = lambda *args:''
+        # This function executes on Darwin. Windows' default os.open text mode
+        # would translate LF bytes while this synthetic control extracts its
+        # plist; emulate Darwin's byte writes without changing production code.
+        original_open = n.os.open
+        def darwin_byte_open(path,flags,*args):
+            return original_open(path,flags | getattr(n.os,'O_BINARY',0),*args)
+        with patch.dict(n.os.environ,{'RUNNER_TEMP':str(root)}),patch.object(n,'bundle_inventory',side_effect=rows),\
+             patch.object(n,'simulator_signing',return_value=signing),\
+             patch.object(n.os,'open',side_effect=darwin_byte_open),\
+             patch.object(n,'validate_product',return_value=(bundle,'LayerwellStaging',['x86_64'])):
+            result = n.consume_produced_app(runner,producer,inventory['source']['head'],'x86_64',root/'consumed')
+        self.assertEqual((runner.output/'app-inventory.json').read_bytes(),raw)
+        self.assertEqual(result[2]['producer_app_inventory_sha256'],hashlib.sha256(raw).hexdigest())
+
+
+
+
+class InstalledResourceExec04Controls(unittest.TestCase):
+    def test_observed_nonexecuted_resource_mode_narrows_without_allowing_main_or_unknown_helper_loss(self):
+        paths = ('Frameworks/ExpoCamera.framework/ExpoCamera',
+                 'GoogleMVFaceDetectorResources.bundle/BCLjoy_200.emd',
+                 'GoogleSignIn.bundle/Roboto-Bold.ttf')
+        expected = [{'path':path,'type':'file','mode':'0o755','bytes':2,'sha256':'a'*64}
+                    for path in ('LayerwellStaging',*paths)]
+        observed = [dict(row) for row in expected]
+        for row in observed[1:]:
+            row['mode'] = '0o644'
+        proof = n.installed_app_inventory_proof(expected,observed,'LayerwellStaging')
+        self.assertEqual(proof['regular_files_byte_identical'],4)
+        self.assertEqual(len(proof['mode_changes']),3)
+        for label in ('main','unknown-helper','wrong-resource-bytes','unobserved-mode-pair'):
+            left,right = [dict(row) for row in expected],[dict(row) for row in observed]
+            if label == 'main':
+                right[0]['mode'] = '0o644'
+            elif label == 'unknown-helper':
+                left[1]['path'] = right[1]['path'] = 'Frameworks/UnrecognizedHelper.framework/UnrecognizedHelper'
+            elif label == 'wrong-resource-bytes':
+                right[1]['sha256'] = 'b'*64
+            else:
+                left[1]['mode'],right[1]['mode'] = '0o750','0o640'
+            with self.subTest(label=label),self.assertRaises(ValueError):
+                n.installed_app_inventory_proof(left,right,'LayerwellStaging')
+
+
+
+class SchemaBackedResult04Controls(unittest.TestCase):
+    """Source-level schema/selection controls; actual31 cardinality remains required."""
+    def documents(self,failed=False):
+        method = n.NORMAL_UI_CASES04[0]
+        device = {'deviceId':'00000000-0000-0000-0000-000000000001','deviceName':'synthetic',
+                  'architecture':'x86_64','modelName':'synthetic','osVersion':'26.4'}
+        config = {'configurationId':'synthetic-id','configurationName':'synthetic'}
+        summary = {'title':'SYNTHETIC_SCHEMA_FIELD_CONTROL_ONLY','environmentDescription':'synthetic',
+            'topInsights':[],'statistics':[],'result':'Failed' if failed else 'Passed',
+            'totalTestCount':1,'passedTests':int(not failed),'failedTests':int(failed),'skippedTests':0,'expectedFailures':0}
+        tests = {'devices':[device],'testPlanConfigurations':[config],'testNodes':[{
+            'nodeType':'Test Case','name':method+'()','nodeIdentifier':'C47NativeUI/'+method+'()',
+            'result':summary['result']}]}
+        failures = [{'testName':method,'targetName':'C47NativeUI','failureText':'XCTAssertTrue failed - synthetic',
+                     'testIdentifier':1,'testIdentifierString':'C47NativeUI/'+method+'()'}] if failed else []
+        summary['devicesAndConfigurations'] = [{'device':device,'testPlanConfiguration':config,
+            **{key:summary[key] for key in ('passedTests','failedTests','skippedTests','expectedFailures')}}]
+        summary['testFailures'] = failures
+        if failed:
+            tests['testNodes'][0]['children'] = [{'nodeType':'Failure Message',
+                'name':'native_ui47.swift:52: '+failures[0]['failureText']}]
+        normalized = {'device':device,'configuration':config,'failures':failures,
+            'counts':{key:summary[key] for key in ('passedTests','failedTests','skippedTests','expectedFailures')}}
+        return summary,tests,method,device['deviceId'],normalized
+
+    def test_schema_identity_refuses_unknown_or_modified_provider_shapes(self):
+        for kind in ('summary','tests','unknown'):
+            with self.subTest(kind=kind),self.assertRaises(ValueError):
+                n.normal_result_schema04({'schemas':{'fabricated':{'type':'object'}}},kind)
+
+    def test_explicit_counts_are_typed_and_all_ordinary_pass_obligations_are_required(self):
+        summary,tests,method,device,normalized = self.documents()
+        with patch.object(n,'normal_result_summary_collections04',return_value=normalized):
+            self.assertEqual(n.normal_result_documents04(summary,tests,method,device),{
+                'expected_case':'C47NativeUI/'+method,'executed':1,'failed':0,'unexpected':0,'skipped':0,'udid':device})
+            for key,value in [('totalTestCount',0),('passedTests',0),('failedTests',1),('skippedTests',1),
+                              ('expectedFailures',1),('totalTestCount',True),('result','Failed')]:
+                bad = {**summary,key:value}
+                with self.subTest(key=key),self.assertRaises(ValueError):
+                    n.normal_result_documents04(bad,tests,method,device)
+            for key in ('totalTestCount','passedTests','failedTests','skippedTests','expectedFailures'):
+                bad = dict(summary);del bad[key]
+                with self.subTest(missing=key),self.assertRaises(ValueError):
+                    n.normal_result_documents04(bad,tests,method,device)
+
+    def test_named_tree_exact_device_configuration_and_no_repetition_or_failure_message_are_required(self):
+        summary,tests,method,device,normalized = self.documents()
+        mutations = []
+        for mutate in [lambda v:v['devices'][0].update(deviceId='another-device'),
+                       lambda v:v['devices'][0].update(architecture='arm64'),
+                       lambda v:v['testPlanConfigurations'].append(v['testPlanConfigurations'][0]),
+                       lambda v:v['testNodes'].append(v['testNodes'][0]),
+                       lambda v:v['testNodes'][0].update(nodeIdentifier='C47NativeUI/'+n.NORMAL_UI_CASE),
+                       lambda v:v['testNodes'][0].update(result='Skipped'),
+                       lambda v:v['testNodes'][0].update(children='not-array'),
+                       lambda v:v['testNodes'][0].update(children=[{'nodeType':'Failure Message','name':'failure'}]),
+                       lambda v:v['testNodes'][0].update(children=[{'nodeType':'Test Case Run','name':'1','result':'Passed'},
+                                                                {'nodeType':'Test Case Run','name':'2','result':'Passed'}])]:
+            bad = copy.deepcopy(tests);mutate(bad);mutations.append(bad)
+        with patch.object(n,'normal_result_summary_collections04',return_value=normalized):
+            for bad in mutations:
+                with self.subTest(tests=bad),self.assertRaises(ValueError):
+                    n.normal_result_documents04(summary,bad,method,device)
+
+    def test_failed_result_record_cannot_skip_source_case_or_assertion_classification(self):
+        summary,tests,method,device,normalized = self.documents(True)
+        with patch.object(n,'normal_result_summary_collections04',return_value=normalized):
+            self.assertEqual(n.normal_assertion_failure_documents04(summary,tests,method,device)['classification'],
+                             'XCTEST_ASSERTION_FAILURE_ONLY')
+            with patch.object(n,'normal_assertion_classification04') as classifier:
+                self.assertEqual(n.normal_assertion_failure_documents04(summary,tests,method,device)['classification'],
+                                 'XCTEST_ASSERTION_FAILURE_ONLY')
+                self.assertEqual(classifier.call_count,1)
+            for key,value in [('targetName','Unrelated'),('testIdentifierString','C47NativeUI/'+n.NORMAL_UI_CASE),
+                              ('testIdentifier',True),('failureText','')]:
+                bad = copy.deepcopy(normalized);bad['failures'][0][key] = value
+                with patch.object(n,'normal_result_summary_collections04',return_value=bad),\
+                     patch.object(n,'normal_assertion_classification04') as classifier,self.assertRaises(ValueError):
+                    n.normal_assertion_failure_documents04(summary,tests,method,device)
+                classifier.assert_not_called()
+
+    def test_actual_summary_arrays_and_explicit_pass_only_omission_refuse_ambiguous_failures(self):
+        summary,tests,method,device,normalized = self.documents()
+        self.assertEqual(n.normal_result_documents04(summary,tests,method,device)['executed'],1)
+        omitted = copy.deepcopy(summary);del omitted['testFailures']
+        self.assertEqual(n.normal_result_documents04(omitted,tests,method,device)['failed'],0)
+        for value in (None,{},'unavailable'):
+            bad = {**summary,'testFailures':value}
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                n.normal_result_documents04(bad,tests,method,device)
+        failed,failed_tests,method,device,normalized = self.documents(True)
+        del failed['testFailures']
+        with self.assertRaisesRegex(ValueError,'AMBIGUOUS_MISSING_FAILURE_OUTPUT'):
+            n.normal_assertion_failure_documents04(failed,failed_tests,method,device)
+        for key in ('totalTestCount','passedTests','failedTests','skippedTests','expectedFailures'):
+            bad = dict(omitted);del bad[key]
+            with self.subTest(missing_count=key),self.assertRaises(ValueError):
+                n.normal_result_documents04(bad,tests,method,device)
+
+    def test_assertion_family_source_node_and_raw_error_line_all_must_correspond(self):
+        summary,tests,method,device,normalized = self.documents(True)
+        failure = normalized['failures'][0]
+        nodes = tests['testNodes'][0]['children']
+        observation = n.normal_assertion_classification04(failure,nodes,method)
+        raw = ('/synthetic/native_ui47.swift:52: error: -[C47NativeUI.C47NativeUI '+method+
+               '] : '+failure['failureText']+'\n').encode()
+        self.assertEqual(n.normal_assertion_raw04((raw,b''),method,observation),observation)
+        for text in ('Application crashed','XCTAssertTrue failed - app crashed',
+                     'XCTAssertTrue failed - Error Domain=infra','test runner exited','XCTFail - unsupported'):
+            bad = {**failure,'failureText':text}
+            with self.subTest(text=text),self.assertRaises(ValueError):
+                n.normal_assertion_classification04(bad,[{'nodeType':'Failure Message',
+                    'name':'native_ui47.swift:52: '+text}],method)
+        for bad in (raw.replace(b':52:',b':53:'),raw.replace(b'failed - synthetic',b'failed - other'),raw+raw):
+            with self.assertRaisesRegex(ValueError,'RAW_AND_PROVIDER_ASSERTION_MUST_MATCH'):
+                n.normal_assertion_raw04((bad,b''),method,observation)
+
+
+class InternalCompletion04Controls(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix='internal-completion04-')
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        (self.root/'logs').mkdir()
+        self.receipt = {'source':{'head':'a'*40},'commands':[],'stages':{}}
+        methods = [('core','test01CoreRetainedNativeJourney'),('larger-text','test03LargerTextManualInput'),
+                   ('export','test02LocalExport'),('export-cleanup','test04RemoveSyntheticLocalExport'),
+                   ('rights','test05ConsentWithdrawal')]
+        for index,(suffix,method) in enumerate(methods,1):
+            name = 'native-internal-supported-owner-ui-'+suffix
+            raw = ("Test Case '-[C47NativeUI.C47InternalOwnerUI "+method+"]' passed.\n"+
+                   'Executed 1 test, with 0 failures (0 unexpected) in 1 second.\n').encode()
+            row = {'name':name,'required':True,'state':'PASS','exit_code':0,'capture_complete':True,
+                   'argv':['xcodebuild','test','-only-testing:C47NativeUI/C47InternalOwnerUI/'+method]}
+            for kind,data in [('stdout',raw),('stderr',b'')]:
+                path = 'logs/'+str(index)+'.'+kind
+                (self.root/path).write_bytes(data)
+                row.update({kind:path,kind+'_bytes':len(data),kind+'_sha256':hashlib.sha256(data).hexdigest()})
+            proof = n.selected_xctest_summary(raw.decode(),'C47InternalOwnerUI',method)
+            proof.update(stdout_sha256=hashlib.sha256(raw).hexdigest(),stderr_sha256=hashlib.sha256(b'').hexdigest(),source_head='a'*40)
+            self.receipt['commands'].append(row)
+            self.receipt['stages']['internal-supported-owner-ui-'+suffix] = {'status':'PASS','details':{
+                'tests':['C47NativeUI/C47InternalOwnerUI/'+method],'lane':'internal-supported-owner','positive_xctest':proof}}
+        destination = {'export_outcome':'local_saved','destination_exists':True,'selected_folder_absent_before_export':True,
+            'destination_observed_after_actual_save_dispatch':True,'source_cache_is_destination':False}
+        cleanup = {'state':'PASS','original_destination_absent':True}
+        self.receipt['export_destination_verification'] = {**destination,'state':'PASS','cleanup':cleanup}
+        self.receipt['stages']['native-export-local-destination'] = {'status':'PASS','details':destination}
+        self.receipt['stages']['native-export-original-destination-removed-via-files-ui'] = {'status':'PASS','details':cleanup}
+        observation = patch.object(n,'read_native_file',side_effect=lambda path:Path(path).read_bytes())
+        observation.start();self.addCleanup(observation.stop)
+
+    def completion(self,receipt=None):
+        return n.internal_journey_completion04(SimpleNamespace(receipt=receipt or self.receipt,output=self.root))
+
+    def test_only_five_actual_cases_and_actual_export_and_cleanup_pass_complete_the_scope(self):
+        proof = self.completion()
+        self.assertTrue(proof['whole_scope_complete'])
+        self.assertEqual(proof['completed_case_count'],5)
+        for state in ('NOT_RUN','NOT_VERIFIED'):
+            bad = copy.deepcopy(self.receipt)
+            bad['export_destination_verification']['state'] = state
+            result = self.completion(bad)
+            self.assertFalse(result['whole_scope_complete'])
+            self.assertEqual(result['completed_case_count'],5)
+        bad = copy.deepcopy(self.receipt)
+        bad['export_destination_verification']['cleanup']['state'] = 'NOT_VERIFIED'
+        self.assertFalse(self.completion(bad)['whole_scope_complete'])
+        bad = copy.deepcopy(self.receipt)
+        bad['commands'] = [row for row in bad['commands'] if not row['name'].endswith('export-cleanup')]
+        result = self.completion(bad)
+        self.assertFalse(result['whole_scope_complete'])
+        self.assertEqual(result['completed_case_count'],4)
+
+    def test_changed_case_stream_extra_case_or_false_capture_cannot_complete_internal(self):
+        for mutation in [lambda v:v['commands'][0].update(capture_complete=False),
+                         lambda v:v['commands'].append({**v['commands'][0],'name':'native-internal-supported-owner-ui-unknown'}),
+                         lambda v:v['commands'][0]['argv'].append('-only-testing:Unrelated/test')]:
+            bad = copy.deepcopy(self.receipt);mutation(bad)
+            self.assertFalse(self.completion(bad)['whole_scope_complete'])
+        path = self.root/self.receipt['commands'][0]['stdout']
+        path.write_bytes(path.read_bytes()+b'changed stream')
+        self.assertFalse(self.completion()['whole_scope_complete'])
+
+
+class AuthenticatedDevExecutable04Controls(unittest.TestCase):
+    def test_development_main_permission_loss_refuses_without_expanding_resource_exceptions(self):
+        fixture_test = InstalledAppIdentity04Controls('test_complete_release_and_debug_inventories_pass_with_honest_javascript_qualifications')
+        fixture_test.setUp()
+        self.addCleanup(fixture_test.doCleanups)
+        root,app,installed,runner,inventory,authority,rows,signing,calls,bundle = fixture_test.fixture('development-main-loss',True)
+        self.assertEqual(authority['executable'],'LayerwellDev')
+        def observed(path):
+            result = rows(path)
+            if Path(path) == installed:
+                next(row for row in result if row['path'] == 'LayerwellDev')['mode'] = '0o644'
+            return result
+        with patch.object(n,'bundle_inventory',side_effect=observed),patch.object(n,'simulator_signing',return_value=signing),\
+             self.assertRaisesRegex(ValueError,'INSTALLED_MAIN_EXECUTABLE_PERMISSION'):
+            n.verify_installed_app(runner,installed,app,bundle)
+        self.assertNotIn('installed',runner.receipt['stages'])
+        diff = json.loads((runner.output/'installed-product-verification-compiled/exact-inventory-differences.json').read_bytes())
+        self.assertEqual(diff['producer_to_installed'][0]['path'],'LayerwellDev')
+        self.assertEqual(diff['producer_to_installed'][0]['different_fields'],['mode'])
+        with self.assertRaisesRegex(ValueError,'AUTHENTICATED_EXECUTABLE_NAME'):
+            n.installed_app_inventory_proof(inventory['files'],inventory['files'],'UnrecognizedExecutable')
 
 
 if __name__ == '__main__':
