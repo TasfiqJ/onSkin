@@ -691,8 +691,11 @@ class StageControls(unittest.TestCase):
                         self.assertTrue(stat.S_ISREG(path.lstat().st_mode))
 
     def test_02_finite_dependencies_and_same_attempt(self):
-        self.assertEqual(n.stage_dependencies('normal', {'build': {}}), ('build',))
-        self.assertEqual(n.stage_dependencies('internal', {'build': {}, 'normal': {}}), ('build', 'normal'))
+        self.assertEqual(n.stage_dependencies('legacy25-normal', {'build': {}}), ('build',))
+        self.assertEqual(n.stage_dependencies('source', {}), ())
+        self.assertEqual(n.stage_dependencies('build', {'source': {}}), ('source',))
+        self.assertEqual(n.stage_dependencies('normal', {'source': {}, 'build': {}}), ('source', 'build'))
+        self.assertEqual(n.stage_dependencies('internal', {'source': {}, 'build': {}, 'normal': {}}), ('source', 'build', 'normal'))
         for role, needs in [('normal', {}), ('normal', {'normal': {}}),
                             ('internal', {'build': {}}), ('internal', {'build': {}, 'normal': {}, 'other': {}})]:
             with self.subTest(role=role, needs=list(needs)), self.assertRaises(ValueError):
@@ -869,10 +872,12 @@ class StageControls(unittest.TestCase):
         n._stage_api = forbidden_api
         try:
             for output in [workspace / 'new', evidence / 'new', self.root.parent / 'outside-new']:
-                with self.subTest(output=output.name), self.assertRaises(ValueError):
-                    n.load_authenticated_stage_inputs('normal', {'build': {}}, context, 'unused', output)
-            with self.assertRaises(ValueError):
+                with self.subTest(output=output.name), self.assertRaisesRegex(ValueError, 'STAGE_IMPORT_OUTSIDE_CURRENT_SOURCE'):
+                    n.load_authenticated_stage_inputs('normal', {'source': {}, 'build': {}}, context, 'unused', output)
+            with self.assertRaisesRegex(ValueError, 'STAGE_DEPENDENCIES'):
                 n.load_authenticated_stage_inputs('build', {}, context, 'unused', self.root / 'new')
+            with self.assertRaisesRegex(ValueError, 'STAGE_BUILD_HAS_NO_IMPORTED_INPUTS'):
+                n.load_authenticated_stage_inputs('source', {}, context, 'unused', self.root / 'new')
         finally:
             n._stage_api = original_api
 
@@ -1491,6 +1496,113 @@ class RetainedConsentRuntime27AdmissionTests(unittest.TestCase):
                 self.assertEqual(receipt['observed_current_head'], head)
                 self.assertNotIn('synthetic-ephemeral-token27', json.dumps(receipt))
                 self.assertNotIn('C47_ARTIFACT_READ_TOKEN', runner.env)
+
+
+
+class SourceStage04Tests(unittest.TestCase):
+    """Synthetic custody controls, never native/source execution evidence."""
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve())
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.output = self.root / 'producer'
+        self.output.mkdir()
+        self.source = {'head':'a' * 40, 'tree':'b' * 40}
+        self.runner = SimpleNamespace(root=self.root, receipt={'source':self.source})
+        descriptor = self.root / 'docs/phase-9/ios-generated-input-succession47.v1.json'
+        descriptor.parent.mkdir(parents=True)
+        descriptor.write_bytes(b'{}')
+        testfile = self.root / 'scripts/release/full-app-j01/native_generated47.test.mjs'
+        testfile.parent.mkdir(parents=True)
+        names = ['synthetic-source-case-' + str(i) for i in range(30)]
+        testfile.write_bytes(''.join("test('" + name + "', () => {});\n" for name in names).encode())
+        raw = ''.join('ok ' + str(i) + ' - ' + name + '\n' for i,name in enumerate(names,1))
+        raw += '1..30\n# tests 30\n# pass 30\n# fail 0\n# skipped 0\n# cancelled 0\n# todo 0\n'
+        for event in ('BEGIN','END'):
+            raw += ''.join('# ' + json.dumps({'event':'C47_SOURCE_CASE_' + event,'name':name},separators=(',',':')) + '\n' for name in names)
+        self.commands = []
+        (self.output / 'logs').mkdir()
+        for index,name in enumerate(n.SOURCE_COMMANDS04):
+            command = {'name':name,'state':'PASS','exit_code':0,'required':True,'capture_complete':True,
+                       'argv':['node','--test','scripts/release/full-app-j01/native_generated47.test.mjs']}
+            for stream in ('stdout','stderr'):
+                content = raw.encode() if name == 'generated47-controls' and stream == 'stdout' else b''
+                path = 'logs/' + str(index) + '.' + stream
+                (self.output / path).write_bytes(content)
+                command.update({stream:path,stream + '_bytes':len(content),stream + '_sha256':hashlib.sha256(content).hexdigest()})
+            self.commands.append(command)
+        self.receipt = {'stage':'source','stage_complete':True,'status':'SOURCE_CONTROLS_PASSED_APPLICATION_NOT_BUILT','ordinary_admitted':False,
+            'source':self.source,'stages':{'source':{},'toolchain':{},'installation':{}},'commands':self.commands,
+            'internal_supported_owner':'NOT_RUN','acceptance_granted':False,'campaign_candidate_complete':False,'release':'NO_GO'}
+        producer = {key:1 for key in n.SOURCE_IDENTITY_FIELDS04}
+        producer.update(producer_job_name='C47 source',source_head=self.source['head'],source_tree=self.source['tree'])
+        self.provenance = {'payload_directory':str(self.output),'payload_bytes':1234,'producer':producer}
+        self.write('source-before.json',self.source)
+        self.write('source-after-controls.json',self.source)
+        self.write('toolchain.json',{'build_environment':n.ENVIRONMENT,'architecture':'x86_64',
+            'node':'v22.22.2','npm':'11.20.0','xcode':'Xcode 26.4.1',
+            'simulator_build_flags':n.SIMULATOR_BUILD_FLAGS,'app_simulator_build_flags':n.APP_SIMULATOR_BUILD_FLAGS})
+        self.write('current-generated47-source.json',{'phase':'SOURCE','sourceHead':self.source['head'],
+            'sourceTree':self.source['tree'],'profiles':['development','staging'],
+            'descriptorSHA256':hashlib.sha256(b'{}').hexdigest(),
+            'currentNative47':{'verifiedInputCount':202,'committedCriticalInputs':172}})
+
+    def write(self,name,value):
+        (self.output / name).write_text(json.dumps(value))
+
+    def verify(self):
+        self.write('execution.json',self.receipt)
+        return n.verify_source_producer04(self.runner,self.provenance)
+
+    def test_same_source_full_thirty_streams_and_no_app_are_qualified(self):
+        result = self.verify()
+        self.assertFalse(result['current_runner_commands_imported'])
+        self.assertEqual(result['payload_bytes'],1234)
+
+    def test_wrong_source_and_app_stage_cannot_substitute_source_receipt(self):
+        self.receipt['source'] = dict(self.source,head='c' * 40)
+        with self.assertRaisesRegex(ValueError,'PRODUCER_SAME_WHOLE_SOURCE'):
+            self.verify()
+        self.receipt['source'] = self.source
+        self.receipt['stages']['compiled'] = {'status':'PASS'}
+        with self.assertRaisesRegex(ValueError,'ONLY_COMPLETE_SOURCE_STAGE'):
+            self.verify()
+        self.receipt['stages'].pop('compiled')
+        self.receipt['ordinary_admitted'] = True
+        with self.assertRaisesRegex(ValueError,'ONLY_COMPLETE_SOURCE_STAGE'):
+            self.verify()
+
+    def test_changed_stream_and_claimed_pass_with_failed_tap_refuse(self):
+        command = next(c for c in self.commands if c['name'] == 'generated47-controls')
+        path = self.output / command['stdout']
+        original = path.read_bytes()
+        path.write_bytes(original + b'changed')
+        with self.assertRaisesRegex(ValueError,'RAW_LOG_IDENTITY'):
+            self.verify()
+        invalid = original.replace(b'# pass 30',b'# pass 29')
+        path.write_bytes(invalid)
+        command.update(stdout_bytes=len(invalid),stdout_sha256=hashlib.sha256(invalid).hexdigest())
+        with self.assertRaisesRegex(ValueError,'FULL_SOURCE_CONTROLS'):
+            self.verify()
+
+    def test_final_source_drift_and_incomplete_capture_refuse(self):
+        self.write('source-after-controls.json',dict(self.source,tree='c' * 40))
+        with self.assertRaisesRegex(ValueError,'UNPROJECTED_FINAL_SOURCE'):
+            self.verify()
+        self.write('source-after-controls.json',self.source)
+        self.commands[0]['capture_complete'] = False
+        with self.assertRaisesRegex(ValueError,'COMPLETE_REQUIRED_COMMANDS'):
+            self.verify()
+
+    def test_unique_family_uses_each_own_payload_once_not_nested_totals(self):
+        values = {role:{'producer':{'artifact_id':i},'payload_bytes':i,'upstream_payload_bytes':999999}
+                  for i,role in enumerate(('source','build','normal'),1)}
+        self.assertEqual(n.family_payload_bytes04(values,('source','build','normal')),6)
+        with self.assertRaisesRegex(ValueError,'EXACT_UPSTREAM_ROLES'):
+            n.family_payload_bytes04({'build':values['build']},('source','build'))
+        values['normal']['producer']['artifact_id'] = values['source']['producer']['artifact_id']
+        with self.assertRaisesRegex(ValueError,'UNIQUE_FAMILY_BUDGET'):
+            n.family_payload_bytes04(values,('source','build','normal'))
 
 
 if __name__ == '__main__':

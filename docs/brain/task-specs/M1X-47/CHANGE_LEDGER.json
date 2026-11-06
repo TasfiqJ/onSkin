@@ -2882,8 +2882,87 @@
         37
       ],
       "native_attempt_to_follow": 28
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T18:12:48.831776+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 173009,
+          "preimage_sha256": "ab118a101d32308e697df797eef9904326196e47162c812398f49d582aa2df01",
+          "preimage_blob": "811f5a4868c134b3cb1cd09c8ef9408111c1a823"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 94105,
+          "preimage_sha256": "3573fb018c3abf7fcc51a1d46bffdf11fd4558e9beb671bc3f3e06c4bf5abe71",
+          "preimage_blob": "abba4b49568ef35923eb25e2f3945846929e3239"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11248,
+          "preimage_sha256": "90a1d32cd3be11d121f2d4d3d0aec6ffd27c9a99a941abec8c7a4bd516324ab4",
+          "preimage_blob": "5fa495f17b7fd7d510808cb154031d44bb76cdf8"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11367,
+          "preimage_sha256": "20e40116c8b5fece04ffa9e2753734c00ef50b793eff419050e65827ada48a34",
+          "preimage_blob": "2dd59937d63386217bea94278a6adf3b4c0d9076"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17190,
+          "preimage_sha256": "694d9abe3fc635b870fdafe9726905a54490e221ab74aca4b3b61a669f6815ab",
+          "preimage_blob": "f15a2829fb9f36a92ee27d4766185d1ec868c169"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 169217,
+          "preimage_sha256": "e02029d19354d33b459021145911f8074f4143094528575a55211b30cd6ae570",
+          "preimage_blob": "22c3658f26c9b9d3717ee727dc837f43b58f2934"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "a692ea848c195c8f3a4a56ee7c146540a45ca6ab",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 75709,
+          "preimage_sha256": "118edd98aba4097eaa459f77bce2fbd118dda7a568c4886f86580f12a96ad616",
+          "preimage_blob": "554889e73f49917724fcea38a9930a4dcf081e78"
+        }
+      ],
+      "causal_need": "Native27 source controls consumed16m21s and diagnostic compilation36m38s; complete84min work budget expired before installed-container identification. Put full source controls in their own authenticated job, preserving actual candidate identity and fresh local installation/currentSOURCE before compilation. No repeated unchanged failed native attempt.",
+      "invariant": "Exact sequential source/build/normal/internal sameHEAD/tree/run/attempt with actual successful service job+artifact dual digest+closed inventory+all streams. Source-only producer must prove all30 named TAP passes, exact60BEGIN/END events and same whole source before/after, no app/runtime/ordinary/internal admission. Build fresh normal install/hooks/current202172/bothprofiles before generation; actual app Keychain/signing/rebuild retained. Never transfer source controls across changed candidate or label upstream commands local. Unique source/build/normal own payloads count once in500MiB family; same90min/84min/3day/oneMac/publicstandard/noadditionalcharge. All old paths/plan/history/source witnesses preserved.",
+      "validation": "Actual full runtime/helper/workflow/scope/signing controls and selected source cases after commit. Strengthen source-only explicit ordinary_admitted=false and reject invented admission. CurrentfullSOURCE remains mandatory; Windows null child result preserved, no deadline inflation. Do not push/launch this workflow until actual28 schema and exact complete3case ordinary coordinator are integrated and validated.",
+      "native_execution": false,
+      "push_authorized_only_after_current_ordinary_integration": true,
+      "remaining_attempts": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "attempt28": "RUNNING_HISTORICAL_DIAGNOSTIC_ONLY"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43; exact ordinarySwift/Ruby3case successor and append-only map. Coordinator actualresultschema/admission integration still pending before native launch."
+  "freeze_note": "Finite43; local source-stage split prepared. No push until actual28 provider schema and current three-case ordinary coordinator integration; no current native/ordinary/internal pass."
 }

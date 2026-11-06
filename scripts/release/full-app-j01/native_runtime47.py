@@ -379,10 +379,11 @@ STAGE_BRANCH = 'stage/m1-native-runtime47'
 STAGE_WORKFLOW = '.github/workflows/campaign47-native-runtime.yml'
 
 
-STAGE_JOB_NAMES = {'build': 'C47 build', 'normal': 'C47 normal', 'internal': 'C47 internal'}
+STAGE_JOB_NAMES = {'source': 'C47 source', 'build': 'C47 build', 'normal': 'C47 normal', 'internal': 'C47 internal'}
 
 
-STAGE_DEPENDENCIES = {'build': (), 'normal': ('build',), 'internal': ('build', 'normal')}
+STAGE_DEPENDENCIES = {'source': (), 'build': ('source',), 'normal': ('source', 'build'),
+                      'internal': ('source', 'build', 'normal'), 'legacy25-normal': ('build',)}
 
 
 STAGE_MANIFEST = 'stage-provenance.json'
@@ -1382,7 +1383,7 @@ def execute_retained_consent_runtime27(r, token):
 
 
 def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False):
-    require(stage in ('build', 'normal', 'internal'), 'EXECUTION_STAGE')
+    require(stage in ('source', 'build', 'normal', 'internal'), 'EXECUTION_STAGE')
     require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
     require(not probe or stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
     require(not resume25 or stage == 'normal', 'REUSE25_NORMAL_ONLY')
@@ -1391,8 +1392,11 @@ def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False,
     return 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
 
 
-def execute(r, compile_only=False, consent_trace04=False):
-    head, tools, source47 = prepare(r)
+def execute(r, compile_only=False, consent_trace04=False, source_provenance=None):
+    head, tools, source47 = prepare(r, source_controls=source_provenance is None)
+    if source_provenance is not None:
+        r.receipt['authenticated_source_controls04'] = verify_source_producer04(r, source_provenance)
+        r.persist()
     mobile = r.root / 'apps/mobile'
     r.run('resolved-expo-config', ['npx', '--no-install', 'expo', 'config', '--json'], cwd=mobile, timeout=120)
     r.run('prebuild', ['npx', '--no-install', 'expo', 'prebuild', '--platform', 'ios', '--clean',
@@ -2303,7 +2307,88 @@ def full_generated_control_proof(argv, raw, source):
             'BUILD_PRODUCER_THIRTY_ACTUAL_NAMED_SOURCE_CONTROLS')
 
 
-def verify_build_producer(r, provenance):
+SOURCE_COMMANDS04 = (
+    'normal-install', 'postinstall-check', 'swift-behavior47', 'ocr-source-contract',
+    'existing-workflow-contract', 'generated47-controls', 'generated47-properties-controls',
+    'current-generated47-source', 'dependency-graph',
+)
+SOURCE_IDENTITY_FIELDS04 = ('repository', 'run_id', 'producer_run_attempt', 'producer_job_id',
+    'producer_job_name', 'artifact_id', 'artifact_name', 'wire_bytes', 'wire_sha256',
+    'service_digest', 'source_head', 'source_tree')
+
+
+def verify_source_producer04(r, provenance):
+    directory = Path(provenance['payload_directory'])
+    receipt = stage_json(read_native_file(directory / 'execution.json'))
+    producer_source_matches(r, receipt, directory)
+    require(receipt.get('stage') == 'source' and receipt.get('stage_complete') is True and
+            receipt.get('status') == 'SOURCE_CONTROLS_PASSED_APPLICATION_NOT_BUILT' and
+            receipt.get('ordinary_admitted') is False and
+            not receipt.get('failure') and not receipt.get('collection_failure') and
+            set(receipt.get('stages', {})) == {'source', 'toolchain', 'installation'} and
+            receipt.get('internal_supported_owner') == 'NOT_RUN' and
+            receipt.get('acceptance_granted') is False and receipt.get('campaign_candidate_complete') is False and
+            receipt.get('release') == 'NO_GO',
+            'SOURCE04_ONLY_COMPLETE_SOURCE_STAGE')
+    require(provenance['producer'].get('producer_job_name') == 'C47 source' and
+            provenance['producer'].get('source_head') == r.receipt['source']['head'] and
+            provenance['producer'].get('source_tree') == r.receipt['source']['tree'], 'SOURCE04_PRODUCER_IDENTITY')
+    require(stage_json(read_native_file(directory / 'source-before.json')) == receipt['source'] ==
+            stage_json(read_native_file(directory / 'source-after-controls.json')), 'SOURCE04_UNPROJECTED_FINAL_SOURCE')
+    require(all(c.get('capture_complete') is True and c.get('state') == 'PASS' and c.get('exit_code') == 0
+                for c in receipt.get('commands', []) if c.get('required')), 'SOURCE04_COMPLETE_REQUIRED_COMMANDS')
+    for name in SOURCE_COMMANDS04:
+        executed_producer_command(receipt, directory, name)
+    control, streams = executed_producer_command(receipt, directory, 'generated47-controls', read_output=True)
+    raw = b'\n'.join(streams)
+    current = read_native_file(r.root / 'scripts/release/full-app-j01/native_generated47.test.mjs').decode('utf8')
+    full_generated_control_proof(control['argv'], raw, current)
+    names = re.findall(r"^test\('([^'\n]+)'", current, re.M)
+    events = re.findall(r'^(?:#\s*)?(\{"event":"C47_SOURCE_CASE_(?:BEGIN|END)"[^\n]+\})$', raw.decode('utf8'), re.M)
+    events = [stage_json(event.encode()) for event in events]
+    for state in ('BEGIN', 'END'):
+        require([row.get('name') for row in events if row.get('event') == 'C47_SOURCE_CASE_' + state] == names,
+                'SOURCE04_ALL_THIRTY_CASE_EVENTS')
+    require(len(events) == 60, 'SOURCE04_EXACT_CASE_EVENT_COUNT')
+    tools = stage_json(read_native_file(directory / 'toolchain.json'))
+    require(tools.get('build_environment') == ENVIRONMENT and tools.get('architecture') == 'x86_64' and
+            tools.get('node') == 'v22.22.2' and tools.get('npm') == '11.20.0' and
+            tools.get('xcode', '').startswith('Xcode 26.4') and
+            tools.get('simulator_build_flags') == SIMULATOR_BUILD_FLAGS and
+            tools.get('app_simulator_build_flags') == APP_SIMULATOR_BUILD_FLAGS, 'SOURCE04_TOOLCHAIN')
+    return {'producer': {key: provenance['producer'][key] for key in SOURCE_IDENTITY_FIELDS04},
+            'payload_bytes': provenance['payload_bytes'],
+            'source_before_sha256': sha(directory / 'source-before.json'),
+            'source_after_sha256': sha(directory / 'source-after-controls.json'),
+            'full_thirty_stdout_sha256': control['stdout_sha256'],
+            'full_thirty_stderr_sha256': control['stderr_sha256'],
+            'current_runner_commands_imported': False,
+            'qualification': 'AUTHENTICATED_SAME_HEAD_SOURCE_STAGE; ACTUAL_LOCAL_INSTALL_AND_SOURCE_PROOF_STILL_REQUIRED'}
+
+
+def family_payload_bytes04(imported, roles):
+    require(set(imported) == set(roles), 'SOURCE04_EXACT_UPSTREAM_ROLES')
+    ids, total = [], 0
+    for role in roles:
+        row = imported[role]
+        artifact = row.get('producer', {}).get('artifact_id')
+        size = row.get('payload_bytes')
+        require(type(artifact) is int and artifact > 0 and type(size) is int and size > 0,
+                'SOURCE04_OWN_PAYLOAD_AND_ARTIFACT_REQUIRED')
+        ids.append(artifact)
+        total += size
+    require(len(ids) == len(set(ids)) and 0 < total < MAX_EVIDENCE, 'SOURCE04_UNIQUE_FAMILY_BUDGET')
+    return total
+
+
+def execute_source04(r):
+    head, _, _ = prepare(r)
+    r.source_proof('source-after-controls', head)
+    r.receipt.update(status='SOURCE_CONTROLS_PASSED_APPLICATION_NOT_BUILT', ordinary_admitted=False, finished_utc=utc())
+    r.persist()
+
+
+def verify_build_producer(r, provenance, source_provenance=None):
     directory = Path(provenance['payload_directory'])
     receipt = stage_json(read_native_file(directory / 'execution.json'))
     producer_source_matches(r, receipt, directory)
@@ -2319,7 +2404,18 @@ def verify_build_producer(r, provenance):
             tools.get('xcode', '').startswith('Xcode 26.4') and
             tools.get('simulator_build_flags') == SIMULATOR_BUILD_FLAGS and
             tools.get('app_simulator_build_flags') == APP_SIMULATOR_BUILD_FLAGS, 'BUILD_PRODUCER_LANE')
-    for name in ('normal-install', 'postinstall-check', 'swift-behavior47', 'generated47-controls',
+    qualified_source = receipt.get('authenticated_source_controls04')
+    if qualified_source is not None:
+        require(source_provenance is not None and qualified_source == verify_source_producer04(r, source_provenance),
+                'SOURCE04_BUILD_REQUIRES_ITS_EXACT_SOURCE_PRODUCER')
+        upstream = receipt.get('imported_provenance', {}).get('source', {})
+        require(upstream.get('payload_bytes') == source_provenance['payload_bytes'] and
+                all(upstream.get('producer', {}).get(key) == source_provenance['producer'].get(key)
+                    for key in SOURCE_IDENTITY_FIELDS04), 'SOURCE04_BUILD_SOURCE_CHAIN')
+    else:
+        require(source_provenance is None, 'SOURCE04_CURRENT_BUILD_CANNOT_SUBSTITUTE_LEGACY_DIRECT_CONTROLS')
+    local_controls = () if qualified_source is not None else ('swift-behavior47', 'generated47-controls')
+    for name in ('normal-install', 'postinstall-check', *local_controls,
                  'current-generated47-source', 'current-generated47-native', 'current-generated47-resolved',
                  'pods', 'product-file', 'product-architectures', 'product-build-version'):
         executed_producer_command(receipt, directory, name)
@@ -2328,9 +2424,10 @@ def verify_build_producer(r, provenance):
                  *('app-keychain-launch-'+phase for phase in ('first','relaunch','delete')),
                  *('app-keychain-terminate-'+phase for phase in ('first','relaunch','delete'))):
         executed_producer_command(receipt, directory, name)
-    control, logs = executed_producer_command(receipt, directory, 'generated47-controls', read_output=True)
-    full_generated_control_proof(control.get('argv'), b'\n'.join(logs),
-        read_native_file(r.root / 'scripts/release/full-app-j01/native_generated47.test.mjs').decode('utf-8'))
+    if qualified_source is None:
+        control, logs = executed_producer_command(receipt, directory, 'generated47-controls', read_output=True)
+        full_generated_control_proof(control.get('argv'), b'\n'.join(logs),
+            read_native_file(r.root / 'scripts/release/full-app-j01/native_generated47.test.mjs').decode('utf-8'))
     build, _ = executed_producer_command(receipt, directory, 'native-build')
     argv = build.get('argv', [])
     require(argv and argv[0] == 'xcodebuild' and argv[-1] == 'build' and
@@ -2468,7 +2565,7 @@ def resume25_import(r, context, token):
     origin_context = {**context, **{key: origin[key] for key in ('head', 'tree', 'run_id', 'run_attempt')}}
     needs = {'build': {key: origin[key] for key in ('artifact_id', 'digest', 'run_id', 'payload_bytes')}}
     needs['build']['producer_run_attempt'] = origin['run_attempt']
-    imported = load_authenticated_stage_inputs('normal', needs, origin_context, token,
+    imported = load_authenticated_stage_inputs('legacy25-normal', needs, origin_context, token,
                     Path(context['runner_temp']) / 'c47-authenticated-producers')
     build = imported['imported_provenance']['build']
     require(build['producer']['producer_job_id'] == 127720729358, 'REUSE25_EXACT_BUILD_JOB')
@@ -2501,7 +2598,7 @@ def stage_imports(r, role, context, token):
     imported = load_authenticated_stage_inputs(role, needed, context, token,
                   Path(context['runner_temp']) / 'c47-authenticated-producers')
     r.receipt['imported_provenance'] = imported['imported_provenance']
-    reserved = sum(value['payload_bytes'] for value in imported['imported_provenance'].values())
+    reserved = family_payload_bytes04(imported['imported_provenance'], STAGE_DEPENDENCIES[role])
     require(0 < reserved < MAX_EVIDENCE, 'STAGE_COMBINED_EVIDENCE_BOUND')
     r.receipt['upstream_payload_bytes'] = reserved
     r.persist()
@@ -2516,7 +2613,12 @@ def execute_consumer(r, role, context, token, resume25=False):
         imported = resume25_import(r, context, token)
     else:
         imported = stage_imports(r, role, context, token)
-    verify_build_producer(r, imported['build'])
+    source_provenance = imported.get('source')
+    if source_provenance is not None:
+        verify_source_producer04(r, source_provenance)
+    else:
+        require(resume25, 'SOURCE04_CURRENT_CONSUMER_REQUIRES_SOURCE_STAGE')
+    verify_build_producer(r, imported['build'], source_provenance=source_provenance)
     app, bundle, app_proof = consume_produced_app(r, imported['build']['payload_directory'], head,
         tools['architecture'], Path(context['runner_temp']) / 'c47-verified-build-app')
     r.passed('verified-produced-app', app_proof)
@@ -2789,7 +2891,7 @@ def hosted_stage_context(r, role):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--stage', required=True, choices=('build', 'normal', 'internal'))
+    parser.add_argument('--stage', required=True, choices=('source', 'build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
     parser.add_argument('--consent-trace04', action='store_true', help='Separate read-only consent diagnostic; never ordinary or internal admission')
     parser.add_argument('--consent-runtime27', action='store_true', help='Authenticated retained diagnostic runtime only; never an app producer')
@@ -2813,15 +2915,23 @@ def main():
                        consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27)
         if args.consent_runtime27:
             execute_retained_consent_runtime27(runner, token)
+        elif args.stage == 'source':
+            require(not token, 'SOURCE04_NO_ARTIFACT_TOKEN')
+            execute_source04(runner)
         elif args.stage == 'build':
-            require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
-            if args.simulator_probe:
+            if not args.simulator_probe and not args.consent_trace04:
+                require(bool(token), 'SOURCE04_BUILD_IMPORT_TOKEN_REQUIRED')
+                imported = stage_imports(runner, 'build', context, token)
+                execute(runner, compile_only=True, source_provenance=imported['source'])
+            elif args.simulator_probe:
+                require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
                 path = root / 'scripts/release/full-app-j01/simulator_signing47.py'
                 spec = importlib.util.spec_from_file_location('c47_simulator_signing', path)
                 signing = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(signing)
                 signing.run_probe(runner, sys.modules[__name__])
             else:
+                require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
                 execute(runner, compile_only=True, consent_trace04=args.consent_trace04)
         else:
             execute_consumer(runner, args.stage, context, token, resume25=args.resume25)

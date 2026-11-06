@@ -25,7 +25,11 @@ function validate(text) {
   assert.equal(w.env.APP_VARIANT, 'staging');
   assert.equal(w.env.EXPO_PUBLIC_APP_ENV, 'staging');
   assert.equal(w.env.IOS_WIDGET_EXTENSION_BUILD_ENABLED, 'false');
-  assert.deepEqual(Object.keys(w.jobs), ['native-build', 'native-normal', 'native-internal']);
+  const source04 = Object.hasOwn(w.jobs, 'native-source');
+  const dependencies = source04 ? { source: [], build: ['source'], normal: ['source', 'build'], internal: ['source', 'build', 'normal'] }
+    : { build: [], normal: ['build'], internal: ['build', 'normal'] };
+  if (source04) assert.equal(resume25 || probeOnly || traceOnly || retainedOnly, false);
+  assert.deepEqual(Object.keys(w.jobs), Object.keys(dependencies).map(role => 'native-' + role));
   for (const [role, parents] of Object.entries(dependencies)) {
     const job = w.jobs['native-' + role];
     assert.equal(job.name, 'C47 ' + role);
@@ -121,8 +125,14 @@ test('C47 rejects privilege, source substitution, paid runner and ignored failur
 });
 test('C47 refuses parallel stages, missing wire digest or authority outside the producing jobs', () => {
   for (const [before, after] of [
-    ...(source.includes('--resume25') ? [[' && false', '']] : [['needs: [native-build]', 'needs: []']]),
-    ['needs: [native-build, native-normal]', 'needs: [native-build]'],
+    ...(source.includes('  native-source:') ? [
+      ['needs: [native-source]', 'needs: []'],
+      ['needs: [native-source, native-build]', 'needs: [native-build]'],
+      ['needs: [native-source, native-build, native-normal]', 'needs: [native-build, native-normal]'],
+    ] : [
+      ...(source.includes('--resume25') ? [[' && false', '']] : [['needs: [native-build]', 'needs: []']]),
+      ['needs: [native-build, native-normal]', 'needs: [native-build]'],
+    ]),
     ['actions: read', 'actions: write'], ['steps.upload.outputs.artifact-digest', 'steps.upload.outputs.artifact-id'],
     ["needs['native-build'].outputs.artifact_digest", "github.sha"],
     ['--stage normal', '--stage build'], ['upstream_payload_bytes', 'ignored_upstream_bytes'],
@@ -135,7 +145,9 @@ test('C47 refuses parallel stages, missing wire digest or authority outside the 
 
 test('C47 preserves authenticated historical workflows and admits only the current diagnostic Mac', () => {
   validate(execFileSync('git', ['show', '445472ce057b90f08b5a51d5a49167c757d34b79:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
-  const w = parseDocument(source).toJS();
+  const diagnostic = execFileSync('git', ['show', '93f314459299dbca8ec8511d744280e6bcad66c3:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
+  validate(diagnostic);
+  const w = parseDocument(diagnostic).toJS();
   validate(execFileSync('git', ['show', 'f21831f5731be928c8e323c509fb62b3d12a654e:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
   assert.deepEqual(Object.entries(w.jobs).filter(([, job]) => !job.if.endsWith(' && false')).map(([name]) => name), ['native-build']);
   assert.equal(w.jobs['native-build'].needs, undefined);
@@ -145,8 +157,8 @@ test('C47 preserves authenticated historical workflows and admits only the curre
     C47_EXPECTED_HEAD: expression('github.event.pull_request.head.sha'), C47_UI_PHASE: 'normal-staging',
     C47_ARTIFACT_READ_TOKEN: expression('github.token'),
   });
-  assert.throws(() => validate(source.replace('      actions: read\n', '')));
-  assert.throws(() => validate(source.replace(expression('github.token'), expression('github.actor'))));
+  assert.throws(() => validate(diagnostic.replace('      actions: read\n', '')));
+  assert.throws(() => validate(diagnostic.replace(expression('github.token'), expression('github.actor'))));
 });
 
 test('Quality retains its real online failure while independent checks and exports execute', () => {
