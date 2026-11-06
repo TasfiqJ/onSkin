@@ -1418,8 +1418,78 @@
         24,
         25
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-SIMULATOR-KEYCHAIN-RUNTIME-03",
+      "recorded_utc": "2026-11-06T01:08:06.878349+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "44c24159901c0b6ff1fd57abff504fff4cda7118",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 161174,
+          "preimage_sha256": "a5160aa653c34c98ae79ed971928b58bb116527386e9d7621d396b0ab8ee6cb7"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "44c24159901c0b6ff1fd57abff504fff4cda7118",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 80829,
+          "preimage_sha256": "126495b4da279eba0578671999836274a740264cafb16c7dda36a1d27705903a"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "44c24159901c0b6ff1fd57abff504fff4cda7118",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15092,
+          "preimage_sha256": "4ffb6d73e1c536da25cdce6440cd61106a3ba0be56dc59418f2dcaa5536c2ff2"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "44c24159901c0b6ff1fd57abff504fff4cda7118",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 83626,
+          "preimage_sha256": "3e68610f8ad76136cc4fd9fcfee3a1fbe8e14fc111ce8b6d68a5ca99a1d64862"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "44c24159901c0b6ff1fd57abff504fff4cda7118",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 58061,
+          "preimage_sha256": "259d90321902ffb9d13c6b00576f7b8187ef1e117a529d789f5b33526ab8714d"
+        }
+      ],
+      "causal_need": "Native19 actual app diagnostic compiled, linked, locally signed and verified; simctl install succeeded, but the immediately following required get_app_container timed out at60 seconds with no output. Preserve failure and allow one bounded300-second lookup, without retry/reinstall or weakening installed-byte/path validation. Host service delay cause remains unproven.",
+      "invariant": "Same fresh campaign-owned Simulator; one install and one lookup; actual container and exact executable required; timeout/nonzero/partial remains failure; no erase, data deletion, signing, dependency, product or recovery change.",
+      "validation": "Existing61 runtime and13 signing controls preserved; new container-timeout fail-closed control and single successful lookup300 assertion; current202 input/172critical/bothprofiles/trees and source seal; actual native successor must establish launch/Keychain/ordinary/internal.",
+      "native_attempt19": {
+        "run": 42133625358,
+        "job": 127616136194,
+        "head": "44c24159901c0b6ff1fd57abff504fff4cda7118",
+        "raw_artifact": 13467977922,
+        "raw_bytes": 87416012,
+        "raw_sha256": "738e2ea70e9abbbf699a1f5762ad85817d681dbadfa4cd2f3ec663adb2d06e9d",
+        "members": 332,
+        "streams": 130,
+        "failure": "C47_COMMAND_FAILED:simulator-installed-container",
+        "install_exit": 0,
+        "lookup_exit": 124,
+        "lookup_timeout": 60,
+        "keychain": "NOT_RUN",
+        "ordinary": "SKIPPED",
+        "internal": "SKIPPED"
+      },
+      "remaining_attempts": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "finite_cumulative_paths": 31
     }
   ],
-  "frozen_utc": "2026-11-05T23:48:03.474821+00:00",
-  "freeze_note": "Finite31 cumulative paths; all existing preimages preserved. Current C03 app-target-only Simulator/diagnostic correction; no source or owner acceptance."
+  "frozen_utc": "2026-11-06T01:08:06.878349+00:00",
+  "freeze_note": "Finite31 paths. Native19 preserved; bounded required container lookup successor. All38/18unaccepted and NO_GO."
 }

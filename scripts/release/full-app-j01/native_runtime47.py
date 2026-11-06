@@ -878,7 +878,7 @@ def install_simulator_app(r, device, app, bundle):
                 'SIMULATOR_TARGET_ALREADY_INSTALLED')
         r.run('simulator-install', ['xcrun', 'simctl', 'install', device, app], timeout=600)
         container = r.text('simulator-installed-container',
-                           ['xcrun', 'simctl', 'get_app_container', device, bundle, 'app'], timeout=60)
+                           ['xcrun', 'simctl', 'get_app_container', device, bundle, 'app'], timeout=300)
         require(Path(container).is_absolute() and Path(container).is_dir() and
                 Path(container).suffix == '.app', 'SIMULATOR_INSTALLED_APP_CONTAINER')
         return container

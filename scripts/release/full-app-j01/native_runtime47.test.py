@@ -1015,6 +1015,9 @@ class SimulatorProposalTests(unittest.TestCase):
         self.assertEqual(self.names().count('simulator-install'), 1)
         self.assertLess(self.names().index('simulator-registry-json'), self.names().index('simulator-install'))
         self.assertLess(self.names().index('simulator-install'), self.names().index('simulator-installed-container'))
+        lookup = next(row for row in self.r.calls if row[0] == 'simulator-installed-container')
+        self.assertEqual(lookup[2]['timeout'], 300)
+        self.assertEqual(self.names().count('simulator-installed-container'), 1)
         self.assertNotIn('stages', self.r.receipt)
         self.assertFalse(any('erase' in row[1] or 'uninstall' in row[1] for row in self.r.calls))
 
@@ -1057,6 +1060,19 @@ class SimulatorProposalTests(unittest.TestCase):
             n.install_simulator_app(self.r, device, 'Authenticated.app', SIM_UNIT_BUNDLE)
         self.assertEqual(self.names().count('simulator-install'), 1)
         self.assertNotIn('stages', self.r.receipt)
+
+    def test_container_lookup_timeout_after_install_never_admits_or_reinstalls(self):
+        device = self.ready()
+        primary = TimeoutError('retained native19 container lookup timeout')
+        self.r.failures = {'simulator-installed-container': primary}
+        with self.assertRaises(TimeoutError) as raised:
+            n.install_simulator_app(self.r, device, 'Authenticated.app', SIM_UNIT_BUNDLE)
+        self.assertIs(raised.exception, primary)
+        self.assertEqual(self.names().count('simulator-install'), 1)
+        self.assertEqual(self.names().count('simulator-installed-container'), 1)
+        self.assertIn('simulator-host-service-log', self.names())
+        self.assertNotIn('stages', self.r.receipt)
+        self.assertFalse(any('erase' in row[1] or 'uninstall' in row[1] for row in self.r.calls))
 
     def test_mismatched_device_is_rejected_before_install(self):
         self.ready()
