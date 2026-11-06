@@ -409,7 +409,62 @@ class Runtime47Tests(unittest.TestCase):
         before_heading = b'        XCTAssertTrue(text("Your account is still here.", app).waitForExistence(timeout: deadline))'
         after_heading = b'        XCTAssertTrue(text("Health features are paused on this device.", app).waitForExistence(timeout: deadline))'
         self.assertEqual(old_internal.count(before_heading), 1)
-        self.assertEqual(current_internal, old_internal.replace(before_heading, after_heading, 1))
+        before_fill = b'''    private func fill(_ label: String, _ value: String, _ app: XCUIApplication) {
+        let single = app.textFields.matching(identifier: label).firstMatch
+        let multiple = app.textViews.matching(identifier: label).firstMatch
+        let appeared = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in single.exists || multiple.exists }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [appeared], timeout: deadline), .completed, label)
+        let field = single.exists ? single : multiple
+        reveal(field, label, app)
+        field.tap()
+        if let existing = field.value as? String, !existing.isEmpty, existing != field.placeholderValue {
+            field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: existing.count))
+        }
+        field.typeText(value)
+        XCTAssertEqual(field.value as? String, value)
+    }
+
+'''
+        after_fill = b'''    private func fill(_ label: String, _ value: String, _ app: XCUIApplication) {
+        let single = app.textFields.matching(identifier: label).firstMatch
+        let multiple = app.textViews.matching(identifier: label).firstMatch
+        let appeared = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in single.exists || multiple.exists }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [appeared], timeout: deadline), .completed, label)
+        let field = single.exists ? single : multiple
+        reveal(field, label, app)
+        field.tap()
+        if let existing = field.value as? String, !existing.isEmpty, existing != field.placeholderValue {
+            var remaining = existing
+            for _ in existing {
+                field.typeText(XCUIKeyboardKey.delete.rawValue)
+                remaining.removeLast()
+                requireFieldValue(field, remaining, label)
+            }
+        }
+        var prefix = ""
+        for character in value {
+            field.typeText(String(character))
+            prefix.append(character)
+            requireFieldValue(field, prefix, label)
+        }
+        XCTAssertEqual(field.value as? String, value)
+    }
+
+    private func requireFieldValue(_ field: XCUIElement, _ value: String, _ label: String) {
+        let accepted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let observed = field.value as? String
+            return observed == value || (value.isEmpty && observed == field.placeholderValue)
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [accepted], timeout: deadline), .completed,
+            label + " must accept each actual native key before the next key")
+    }
+
+'''
+        self.assertEqual(old_internal.count(before_fill), 1)
+        expected_internal = old_internal.replace(before_heading, after_heading, 1).replace(before_fill, after_fill, 1)
+        self.assertEqual(current_internal, expected_internal)
         self.assertEqual([line.strip().split(b'func ')[1].split(b'(')[0]
                           for line in current_internal.splitlines() if line.strip().startswith(b'func test')],
                          [b'test01CoreRetainedNativeJourney', b'test03LargerTextManualInput',

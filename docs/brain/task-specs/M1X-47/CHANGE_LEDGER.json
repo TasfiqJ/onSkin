@@ -2961,6 +2961,78 @@
         37
       ],
       "attempt28": "RUNNING_HISTORICAL_DIAGNOSTIC_ONLY"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T18:20:17.782506+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "3ef74bd61a69ca76702421cddcb7bda1912cb120",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 54371,
+          "preimage_sha256": "226b99623d491ee0debdd016456f9589fa77325d49a55fd5af2b6459d8f37fbc",
+          "preimage_blob": "a1c011fff73d226291a0ece774c0b05ddae4380f"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "3ef74bd61a69ca76702421cddcb7bda1912cb120",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 101310,
+          "preimage_sha256": "ffebb07cabb99239dd467cb32b275a87f82d546eef075ec736c9d1fa83c083c9",
+          "preimage_blob": "3601799e646e385f9ce55eaa25883c9bb24491d2"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "3ef74bd61a69ca76702421cddcb7bda1912cb120",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "6b1e4ba628240f3f036fc8e4f33a854b65e66b78deda62b3cc725a7467d0227b",
+          "preimage_blob": "b520828b3ef2f007b9f37721ce8794aec75ce069"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "3ef74bd61a69ca76702421cddcb7bda1912cb120",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 174089,
+          "preimage_sha256": "caaba9d7054fb99430cafe960b65054d668700f8170c52683775a1af1d722bb0",
+          "preimage_blob": "fac67eb811190bd565577feb26c81688670f491a"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "3ef74bd61a69ca76702421cddcb7bda1912cb120",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 77120,
+          "preimage_sha256": "3d606e2819024de9f755f7b1e1b192b852ebf63dcf45042e381e310fb5994574",
+          "preimage_blob": "9c2d60e581e46914435266871b68593b143f16b3"
+        }
+      ],
+      "causal_need": "Authenticated native24 ordinary input requested31 but controlled Dayofbirth actually3. Ordinary helper already uses actual per-key synchronization; internal helper retained the same bulk entry pattern. Apply the already exercised synchronization strategy before internal journeys, without inventing an internal failure or asserting the exact event-loss mechanism.",
+      "invariant": "Normal18684/SHA7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20 remains byteexact. Internal F218 suffix permits only existing one local-heading literal and one exact fill helper replacement plus per-key predicate. All five internal business test bodies/assertions/inputvalues/reveal/textfield-textview selection/final value equality/deadlines remain unchanged. No app, owner, Keychain, authority, encryption, deletion, fixture admission or test-result relaxation.",
+      "validation": "Root committed full runtime/helper/workflow/scope/signing/current two source controls; exact F218 program transform plus independent normal-byte/business-assertion/key-sync mutation refusals. Actual Swift compilation and five internal journeys still mandatory after current complete ordinary PASS. No native or internal pass from this helper change.",
+      "historical_native24": {
+        "run": 42165447734,
+        "job": 127745502814,
+        "attempt": 24,
+        "source_head": "445472ce057b90f08b5a51d5a49167c757d34b79",
+        "raw_bytes": 77837459,
+        "raw_sha256": "3c55d7af568ce48f744dee532078e8da940f131ebdb2e1b561ee7033c1a59289",
+        "log": {
+          "bytes": 84516,
+          "path": "logs/058-native-normal-staging-ui.stdout",
+          "sha256": "335a65039542269bd9ed3c252bc88b8ee0cdb6979099f513e8efdb391cd79a1b"
+        },
+        "failure_line": 527,
+        "copied_swift_bytes": 8736,
+        "copied_swift_sha256": "b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44",
+        "motivation": "Bulk native entry requested31; actual controlled Day of birth value3. The precise event-loss mechanism remains unproven.",
+        "qualification": "This historical ordinary observation motivates applying already-used per-key synchronization to the internal input helper; it is not internal runtime failure or a current runtime pass."
+      },
+      "exact_successor": "F218 internal suffix: one previouslyauthorized local heading literal + one fill helper replacement + one new per-key predicate helper.",
+      "normal_prefix_bytes": 18684,
+      "normal_prefix_sha256": "7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20",
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
