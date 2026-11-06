@@ -59,7 +59,7 @@ class ConsentTrace47Tests(unittest.TestCase):
                 self.validate(wrong)
 
     def test_pid_source_bound_overflow_duplicate_and_missing_events_refuse(self):
-        for key, value in [('pid',124), ('head','b' * 40), ('overflow',True), ('events',[])]:
+        for key, value in [('schema',True), ('pid',124), ('head','b' * 40), ('overflow',True), ('events',[])]:
             wrong = self.trace()
             wrong[key] = value
             with self.subTest(key=key), self.assertRaises(ValueError):

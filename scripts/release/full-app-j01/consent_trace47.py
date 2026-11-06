@@ -229,7 +229,7 @@ def validate_trace(raw, head, bundle, pid):
         return result
     value = json.loads(raw, object_pairs_hook=unique)
     need(set(value) == {'schema','marker','head','bundle','pid','overflow','events'} and
-         value['schema'] == 1 and value['marker'] == MARKER and value['head'] == head and
+         type(value['schema']) is int and value['schema'] == 1 and value['marker'] == MARKER and value['head'] == head and
          value['bundle'] == bundle and type(value['pid']) is int and value['pid'] == pid and pid > 0 and
          value['overflow'] is False, 'IDENTITY_OR_OVERFLOW')
     rows = value['events']
