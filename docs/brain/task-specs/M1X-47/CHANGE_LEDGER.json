@@ -3533,6 +3533,50 @@
       "proposal_sha256": "883b8f114b1246f6f84a0e36368b0c965f8c25bc5b335a88019a89b090482332",
       "post31_boundary": "OldEB diagnostic genuinely launched/survived and oldcase failed Separatehealthconsent. Trace firstreadLocal ErrorUNCLASSIFIED thenstatus_unavailable/nullresume beforelocal_consent_unavailable/cleanupcomplete. C36explicitinitialcleanup hypothesis was NOTobserved; further appcause investigation remains. Coordinator is necessary independent repair, not that appcause fix. Candidate fourstage ordinals are planning only until causal investigation closes; all6jobs32to37 remain.",
       "external_controls": 102
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T20:26:58.260911+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "9832ee710b3b52c85ef4fd78bff506d5f077c39c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 153247,
+          "preimage_sha256": "5eceec383b5fc28add53910f1eb5b8a34973908ac17b3e86108b42b9649b825c",
+          "preimage_blob": "d9a0e8254ec3d4962436d06a4ad8894e5c7a9cb1"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "9832ee710b3b52c85ef4fd78bff506d5f077c39c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "4af18be97f23dc733ad179da99aa1ad27ce9947aa59e57897db7d352655a18f5",
+          "preimage_blob": "afb9bcf61e51888959de4fa23231be2cc2d41de6"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "9832ee710b3b52c85ef4fd78bff506d5f077c39c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 211155,
+          "preimage_sha256": "256ee8396a4f381c4cbf8cd795fc528e938a2afd5414d9e9886de4228d1f071c",
+          "preimage_blob": "871b03e967ac6e8492c2033c2647194a543a6c3c"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "9832ee710b3b52c85ef4fd78bff506d5f077c39c",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 85523,
+          "preimage_sha256": "7b2f0d7a7df415cef6fe42b605a7e23d15ac662780d2bb4953101e63dfc33685",
+          "preimage_blob": "87a590c12cc2340b0e1738c2df06f1b882c09fe4"
+        }
+      ],
+      "causal_need": "Actual committed102controls fail6 due test-only importlib loader omitting sys.modules registration. New genuine installed-signature calls correctly require actual module namespace; external proposal runner registered its module and masked this loader difference.",
+      "invariant": "Register spec.name before exec_module per normal Python module loading. No production/app/native behavior, assertions, cases, skips, deadlines or acceptance changes. Keep actual9832 RED separately; external102pass remains explicitly overlay-only.",
+      "validation": "Rerun actual committed full102 runtime and helper/scope/signing/workflow/currentpin groups; later final stable uncached app suites and actual native full30 remain required.",
+      "actual_red_stderr_sha256": "a3fe659ac6f59b22d69cecb301606f826c4f2d5a8089813a7e45ce3eea4b271b",
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",

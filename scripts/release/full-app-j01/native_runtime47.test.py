@@ -17,6 +17,7 @@ from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location('native_runtime47', Path(__file__).with_name('native_runtime47.py'))
 n = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = n
 spec.loader.exec_module(n)
 
 
