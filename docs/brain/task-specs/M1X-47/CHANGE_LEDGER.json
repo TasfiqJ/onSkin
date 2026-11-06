@@ -2009,6 +2009,85 @@
         "need": "Observe exact reconciliation entry and allowlisted actual error category in separate diagnostic; no authority calls or await added; archive both preimage and transformed bytes before mutation; exact restoration before ordinary. This is not a declared product-source change or ordinary admission.",
         "validation": "Pinned preimage/refusal, unchanged authority/await call counts, exact restoration even build exception; actual PID-bound trace and own diagnostic product identity"
       }
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T14:24:17.034038+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 53421,
+          "preimage_sha256": "b8fc9d50cfaa7812792b797f304d74de15e64c4beb9355279a37073fba6d491b"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 43875,
+          "preimage_sha256": "a21550ddc52880fbc232930030b09003f273b2040cd87f49c1279ff846440c18"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15481,
+          "preimage_sha256": "ec50c1c78b680c11691eaa4c413edbc286c223aa733d2737396e8c029729f23b"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 169790,
+          "preimage_sha256": "56fd4cc197d00e4d362559710ecd09ff2258367f10db1b1afc4489027b40afb0"
+        },
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.py",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 22410,
+          "preimage_sha256": "0a023aeb32d83cebe1652c897d4c70866adaf3212a4bb2c32463bc4780071711"
+        },
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.test.py",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8653,
+          "preimage_sha256": "dad17dc60de95c1971682059d801d5911f2bdd676056729d134e0d7ff1cf8da2"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 120746,
+          "preimage_sha256": "87b48e96f6bdf109dfc1bfe32a639f2ff5d1c6040a9e33ca865ed5a8b2100132"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "c78ea75f08298336d75b8d41caa44e04b9817ac6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 65989,
+          "preimage_sha256": "5aa8c94e0ec5fb14b670cc84bf2774cd5561f7041edae75990b3146a4b5c4bd1"
+        }
+      ],
+      "causal_need": "Current SOURCE correctly refused authorized477-byte append to docs/USER_FLOW_TREE.md. Add exactly pinned before/after/prefix/suffix transition and preserve raw historical RED,202/172/all30names. Also collect actual Xcode resulttool help/schema/results after separate diagnostic to bind next ordinary suite to actual format, and allow only three known content-free cleanup error codes.",
+      "invariant": "No oldwitness overwrite, broad lock/file projection, authority weakening, case removal, account/signingchange or admission. Finite35 unchanged.",
+      "validation": "Preserved initial16of17PASS and exact sourcefailure; exactappend/path/prefix/suffix negatives plus wronglegacyRED negatives, all30 source controls, current202/172/bothprofiles,70runtime/6diagnostic controls, sourcepending/frozen. Initialforced6990/type3/lint3uncachedPASS; productappsourceunchanged.",
+      "remaining_attempts": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",

@@ -13,6 +13,7 @@ afterEach(t => { writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CASE_END', nam
 import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMapping47,
   validateAutolinking47, validateResolvedLock47, readSourceProof47,
   validateDevelopmentProjection47, validateOutput47, SOURCE_PATHS47, SWIFT_SUCCESSION47, validateSwiftSuccession47,
+  CONSENT_DOC04, validateConsentDoc04, currentPrivacyProjection47,
   auditCurrentNative47 as auditIosPrivacySource, proveCurrentNativeSource47 as proveCurrentNativeSource46,
   verifyCurrentNative47 as verifyNativeCandidate46, validateIosExtensionConfig47 as validateIosExtensionConfig46 } from './native_generated47.mjs';
 
@@ -32,6 +33,32 @@ const predecessor = () => strictJson47(readFileSync(resolve(ROOT, 'scripts/phase
 
 test('current47 descriptor is finite generated-only successor with every admission false', () => {
   assert.equal(validateDescriptor47(descriptor()), true);
+  const historical = spawnSync('git', ['--no-replace-objects', 'show',
+    CONSENT_DOC04.checkpointHead + ':' + CONSENT_DOC04.path],
+    { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+  assert.equal(historical.status, 0);
+  const original = historical.stdout, actual = readFileSync(resolve(ROOT, CONSENT_DOC04.path));
+  const pin = { path: CONSENT_DOC04.path, ...CONSENT_DOC04.before };
+  assert.equal(validateConsentDoc04(pin, original, actual), true);
+  const alteredPrefix = Buffer.from(original); alteredPrefix[0] ^= 1;
+  const alteredAppend = Buffer.from(actual); alteredAppend[alteredAppend.length - 2] ^= 1;
+  for (const [declared, before, after] of [
+    [pin, alteredPrefix, actual], [pin, original, alteredAppend],
+    [pin, original, original], [{ ...pin, path: 'docs/OTHER.md' }, original, actual],
+  ]) assert.throws(() => validateConsentDoc04(declared, before, after));
+  // Historical and current legacy REDs are distinct; neither grants the other.
+  const legacy = { status: 'source_invalid', summary: { errorCount: 4 }, inputs: {}, errors: [
+    ...['@react-native-google-signin/google-signin', 'expo-image', 'react-native'].map(name => ({
+      code: 'MAPPING_LOCK_DRIFT', path: 'docs/phase-9/ios-sdk-package-mapping.json#' + name,
+      message: 'Mapping package-lock path/hash do not match current bytes.',
+    })), { code: 'UNEXPECTED_AUDIT_ERROR', path: 'docs/phase-9/ios-sdk-lock-succession46.v1.json',
+      message: 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:node_modules/expo-widgets/ios/LayerwellWidgetLifecycleStore.swift' },
+  ] };
+  assert.equal(currentPrivacyProjection47(legacy, Buffer.from('{}'), false).status, 'archive_required');
+  assert.throws(() => currentPrivacyProjection47(legacy, Buffer.from('{}'), false, CONSENT_DOC04));
+  legacy.errors[3].message = 'CURRENT_NATIVE_SOURCE46_SOURCE_PIN:' + CONSENT_DOC04.path;
+  assert.throws(() => currentPrivacyProjection47(legacy, Buffer.from('{}'), false));
+  assert.equal(currentPrivacyProjection47(legacy, Buffer.from('{}'), false, CONSENT_DOC04).status, 'archive_required');
 });
 
 test('current47 rejects root default-subspec expansion, extra pod options, global scope and admission claims', () => {

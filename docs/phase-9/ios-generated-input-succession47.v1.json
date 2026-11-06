@@ -41,18 +41,18 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 53421,
-      "sha256": "b8fc9d50cfaa7812792b797f304d74de15e64c4beb9355279a37073fba6d491b"
+      "bytes": 55507,
+      "sha256": "165a7334fa14e02a119a1fbdb036c7c04873ff9f22894c80b8116a1756e31f9d"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 43875,
-      "sha256": "a21550ddc52880fbc232930030b09003f273b2040cd87f49c1279ff846440c18"
+      "bytes": 46023,
+      "sha256": "958217b62092582f554b774b51103a56cf9e8da4b99965fbb68eac6326e2c501"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 169790,
-      "sha256": "56fd4cc197d00e4d362559710ecd09ff2258367f10db1b1afc4489027b40afb0"
+      "bytes": 170436,
+      "sha256": "a14ad42d87a02f5434ddf388004cce98b90771f1b69c40e25b3da480ebb2ce18"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
@@ -93,6 +93,11 @@
       "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
       "bytes": 18134,
       "sha256": "8384a6c4b668c8c4cddfdec3fde2b3ba8153164c7fe321ec801729612c5c5598"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 540807,
+      "sha256": "b42d288fe27d187b2665771036652c0e12a31b8128c68b9e1e387206de68acd7"
     }
   ],
   "registry": [

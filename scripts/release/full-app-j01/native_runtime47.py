@@ -1413,6 +1413,14 @@ def execute(r, compile_only=False, consent_trace04=False):
         diagnostic = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(diagnostic)
         diagnostic.run_trace(r, sys.modules[__name__], ios, build_argv, products, bundle_id, head)
+        # Actual installed Xcode help/schema/output; diagnostic reads never admit a test.
+        for kind in ('summary', 'tests'):
+            r.run('xcresult04-help-' + kind, ['xcrun', 'xcresulttool', 'help', 'get', 'test-results', kind],
+                  timeout=30, required=False)
+            r.run('xcresult04-schema-' + kind, ['xcrun', 'xcresulttool', 'get', 'test-results', kind, '--schema'],
+                  timeout=30, required=False)
+            r.run('xcresult04-actual-' + kind, ['xcrun', 'xcresulttool', 'get', 'test-results', kind,
+                  '--path', products / 'ui.xcresult', '--compact'], timeout=30, required=False)
         r.source_proof('source-after-consent-diagnostic-restoration', head, allow_generation=True)
         r.receipt.update(status='CONSENT_LIFECYCLE_DIAGNOSTIC_ONLY_04', finished_utc=utc())
         r.persist()

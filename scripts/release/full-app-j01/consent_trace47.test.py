@@ -46,6 +46,11 @@ class ConsentTrace47Tests(unittest.TestCase):
 
     def test_closed_schema_accepts_only_content_free_enum_and_boolean_data(self):
         self.assertEqual(self.validate(self.trace())['events'][0]['reason'], 'authoritative_unconsented')
+        for code in ['HEALTH_PURPOSE_LOCAL_CLEAR_FAILED', 'HEALTH_PURPOSE_LOCAL_CLEAR_OWNER_INVALID',
+                     'HEALTH_PURPOSE_LOCAL_CLEAR_OWNER_MISMATCH']:
+            actual = self.trace()
+            actual['events'][0].update(errorClass='Error', errorCode=code)
+            self.assertEqual(self.validate(actual)['events'][0]['errorCode'], code)
         for key, value in [('ownerUserId','secret-owner'), ('birthDate','1990-01-01'),
                            ('processingEpoch',42), ('message','private text'), ('rawRecord',{})]:
             wrong = self.trace()
