@@ -16,6 +16,11 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
+import {
+  LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED,
+  privateMutationReadGeneration46,
+  waitForPrivateMutationReadWindow46,
+} from '@/lib/auth/localAccountIsolation';
 import { localDataOwnerBinding, readLocalDataOwnership } from '@/lib/auth/sessionOwner';
 import {
   activeHealthProcessingLeaseSnapshot,
@@ -179,7 +184,32 @@ async function runOwnerBoundLocalOperation<T>(
 }
 
 const readLocal = (fence: OwnerWorkflowFence) =>
-  runOwnerBoundLocalOperation(fence, () => readHealthDataLifecycle(fence.ownerUserId));
+  runOwnerBoundLocalOperation(fence, async (lease) => {
+    const assertCurrent = () => {
+      lease.assertCurrent();
+      assertOwnerWorkflowFence(fence);
+    };
+    // Preparation may wait only for this process's known live raw-only writers.
+    // Failed/orphan markers and every original account/workflow fence still refuse.
+    await waitForPrivateMutationReadWindow46(assertCurrent);
+    const readGeneration = privateMutationReadGeneration46();
+    try {
+      return await readHealthDataLifecycle(fence.ownerUserId);
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        error.message !== LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED
+      ) {
+        throw error;
+      }
+      await waitForPrivateMutationReadWindow46(assertCurrent);
+      // A stable refusal cannot become absence. Retry the read at most once,
+      // only after a completed live mutation retired its original generation.
+      if (privateMutationReadGeneration46() === readGeneration) throw error;
+      assertCurrent();
+      return readHealthDataLifecycle(fence.ownerUserId);
+    }
+  });
 
 function applyProcessingEpochWithinLease(
   fence: OwnerWorkflowFence,

@@ -31,6 +31,7 @@ PATHS = {
     'apps/mobile/src/features/onboarding/healthConsentStore.ts',
     'apps/mobile/src/features/settings/settingsRoutes.test.ts',
     'apps/mobile/src/features/healthConsent/lifecycle.test.ts',
+    'apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts',
     'scripts/release/full-app-j01/consent_trace47.py',
     'scripts/release/full-app-j01/consent_trace47.test.py',
     'apps/mobile/src/features/notifications/nativeMutation.ts',

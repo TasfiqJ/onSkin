@@ -21,6 +21,7 @@ export const SOURCE_PATHS47 = [
   'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
   'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
   'apps/mobile/src/features/healthConsent/lifecycle.test.ts',
+  'apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts',
   'apps/mobile/src/features/healthConsent/lifecycle.ts',
   'apps/mobile/src/features/onboarding/healthConsentStore.test.ts',
   'apps/mobile/src/features/onboarding/healthConsentStore.ts',
@@ -127,13 +128,13 @@ export const CONSENT_APP04 = {
   "currentInputs": [
     {
       "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
-      "bytes": 53859,
-      "sha256": "8db7b566311e5634058ebc38aa0522b1747280f70ef89c4e98f8ef371197ba4a"
+      "bytes": 54151,
+      "sha256": "a18f325558a383a76f78bc70744395fdfe532000b3038c2e6893d43e140c3021"
     },
     {
       "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
-      "bytes": 52276,
-      "sha256": "aa526292eee5164d13d5238ecd9e92f8493a231b308e63c21a376c234c453d00"
+      "bytes": 53459,
+      "sha256": "8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b"
     },
     {
       "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
@@ -149,6 +150,11 @@ export const CONSENT_APP04 = {
       "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
       "bytes": 39901,
       "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "bytes": 24461,
+      "sha256": "d7732158e808f4d038f0ae998e9f25e00c1faab86db5e5df28f35080fbb2e012"
     }
   ]
 };

@@ -41,13 +41,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 60990,
-      "sha256": "3d2d0d1da696f8aa633ec7956aa47b1a4f74f0f43420bf2315fc0ab0e8999925"
+      "bytes": 61248,
+      "sha256": "c6094edc65bb5356ff99a13eae0bd483f7e253778d5eed9e1603ff128b4c1f95"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 48903,
-      "sha256": "472dc85c0a5064fb00d6b4ba609b9c05755a495458ad57774366c9d7a1955034"
+      "bytes": 50394,
+      "sha256": "ceb2f50fe07a541add6d62a649245aac74c490480d38461908154bcb6600cdc9"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -116,13 +116,13 @@
     },
     {
       "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
-      "bytes": 53859,
-      "sha256": "8db7b566311e5634058ebc38aa0522b1747280f70ef89c4e98f8ef371197ba4a"
+      "bytes": 54151,
+      "sha256": "a18f325558a383a76f78bc70744395fdfe532000b3038c2e6893d43e140c3021"
     },
     {
       "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
-      "bytes": 52276,
-      "sha256": "aa526292eee5164d13d5238ecd9e92f8493a231b308e63c21a376c234c453d00"
+      "bytes": 53459,
+      "sha256": "8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b"
     },
     {
       "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
@@ -138,6 +138,11 @@
       "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
       "bytes": 39901,
       "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "bytes": 24461,
+      "sha256": "d7732158e808f4d038f0ae998e9f25e00c1faab86db5e5df28f35080fbb2e012"
     }
   ],
   "registry": [

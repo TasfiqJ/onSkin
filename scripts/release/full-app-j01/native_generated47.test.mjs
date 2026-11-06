@@ -86,6 +86,20 @@ test('current47 descriptor is finite generated-only successor with every admissi
       assert.throws(() => validateConsentApp04(...args));
     }
   }
+  // Exact pre-readwindow witnesses remain historical, never current targets.
+  for (const old of [{"path": "apps/mobile/src/features/healthConsent/lifecycle.ts", "head": "c36fecd16c605a49e06b599d89dae8a988a42939", "bytes": 52276, "sha256": "aa526292eee5164d13d5238ecd9e92f8493a231b308e63c21a376c234c453d00"}, {"path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts", "head": "c36fecd16c605a49e06b599d89dae8a988a42939", "bytes": 53859, "sha256": "8db7b566311e5634058ebc38aa0522b1747280f70ef89c4e98f8ef371197ba4a"}, {"path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts", "head": "02aa4ba879fb844f3ca0aa929591203ee45f4163", "bytes": 17708, "sha256": "9d00f6586c1bb2e7f13c2197e8f8b8de6eeacd4b8d6fb95e31ad694bfab01f75"}]) {
+    const before = spawnSync('git', ['--no-replace-objects', 'show', old.head + ':' + old.path],
+      { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+    assert.equal(before.status, 0);
+    assert.deepEqual({ bytes: before.stdout.length, sha256: createHash('sha256').update(before.stdout).digest('hex') },
+      { bytes: old.bytes, sha256: old.sha256 });
+    const current = CONSENT_APP04.currentInputs.find(pin => pin.path === old.path);
+    assert.ok(current);
+    assert.notEqual(current.sha256, old.sha256);
+    const stale = descriptor();
+    Object.assign(stale.sourcePins.find(pin => pin.path === old.path), { bytes: old.bytes, sha256: old.sha256 });
+    assert.throws(() => validateDescriptor47(stale));
+  }
   const immutable = readFileSync(resolve(ROOT, 'docs/phase-9/ios-sdk-lock-succession46.v1.json'));
   const expectedPin = firstLegacySourcePin04(strictJson47(immutable));
   assert.equal(expectedPin, 'apps/mobile/src/app/(tabs)/you.tsx');

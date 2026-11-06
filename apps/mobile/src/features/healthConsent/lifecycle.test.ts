@@ -91,6 +91,11 @@ vi.mock('@/lib/auth/accountGeneration', () => ({
     error.code === 'ACCOUNT_GENERATION_CHANGED',
   runAccountGenerationOperation: mocks.runAccountGenerationOperation,
 }));
+vi.mock('@/lib/auth/localAccountIsolation', () => ({
+  LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED: 'LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED',
+  privateMutationReadGeneration46: () => 0,
+  waitForPrivateMutationReadWindow46: async (assertCurrent: () => void) => assertCurrent(),
+}));
 vi.mock('@/lib/auth/sessionOwner', () => ({
   localDataOwnerBinding: vi.fn(async () => OWNER_BINDING),
   readLocalDataOwnership: vi.fn(async () => mocks.ownership),

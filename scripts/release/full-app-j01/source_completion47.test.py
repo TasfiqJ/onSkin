@@ -27,14 +27,16 @@ class Source47Tests(unittest.TestCase):
             'apps/mobile/src/features/onboarding/healthConsentStore.ts',
             'apps/mobile/src/features/settings/settingsRoutes.test.ts',
         }
-        self.assertEqual(len(c.PATHS - diagnostic - model04 - consent04),33)
-        self.assertEqual(len(c.PATHS),43)
+        readwindow04={'apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts'}
+        self.assertEqual(len(c.PATHS - diagnostic - model04 - consent04 - readwindow04),33)
+        c.check_scope(readwindow04,c.PATHS)
+        self.assertEqual(len(c.PATHS),44)
         c.check_scope(consent04,c.PATHS)
         c.check_scope(model04,c.PATHS)
         c.check_scope(diagnostic,c.PATHS)
         for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
                      'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',
-                     'apps/mobile/app.config.js','scripts/release/full-app-j01/production.entitlements']:
+                     'apps/mobile/app.config.js','apps/mobile/src/lib/auth/privateMutationRecovery47.test.ts','scripts/release/full-app-j01/production.entitlements']:
             with self.subTest(path=path),self.assertRaisesRegex(ValueError,'UNDECLARED_CHANGED_PATH'):
                 c.check_scope({path},c.PATHS|{path})
 

@@ -396,6 +396,15 @@
       "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
       "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
       "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 17708,
+      "preimage_sha256": "9d00f6586c1bb2e7f13c2197e8f8b8de6eeacd4b8d6fb95e31ad694bfab01f75",
+      "causal_need": "C04 actualproduction readwindow/ABA/startupcallback integration, old17C46casebodies retained",
+      "invariant": "Real C46/owner/account/epoch/storage code; native ports only. Failed/orphan/unknown errors stayclosed. No timing sleeps, grants or erasure.",
+      "validation": "ActualsourceRED3/77 andfixed80; rootuncached suite andnativecandidate required"
     }
   ],
   "amendments": [
@@ -3577,8 +3586,108 @@
       "actual_red_stderr_sha256": "a3fe659ac6f59b22d69cecb301606f826c4f2d5a8089813a7e45ce3eea4b271b",
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T20:33:14.741245+00:00",
+      "preimages": [
+        {
+          "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 52276,
+          "preimage_sha256": "aa526292eee5164d13d5238ecd9e92f8493a231b308e63c21a376c234c453d00",
+          "preimage_blob": "818a694ee2c5d9ce54c6e2f1d086e4abbc40cae6"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 53859,
+          "preimage_sha256": "8db7b566311e5634058ebc38aa0522b1747280f70ef89c4e98f8ef371197ba4a",
+          "preimage_blob": "699e465f4dc140221ddb72e13585f49662afc972"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17708,
+          "preimage_sha256": "9d00f6586c1bb2e7f13c2197e8f8b8de6eeacd4b8d6fb95e31ad694bfab01f75",
+          "preimage_blob": "0bbdb5878bc2a113a646f8e87df6f6c73c655ba2"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9702,
+          "preimage_sha256": "c980c6769970f6a97d53a3d57a3e9d439eeb58f7c28c44e9d96dc0736d72f42c",
+          "preimage_blob": "6fdad02086cdb0e13f6ee2e1e5df15ea481a83a9"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9837,
+          "preimage_sha256": "581768bdcd8e16aff46aca21e1ae9376383c3b4d6dedc8f966a4dc97a0dd0298",
+          "preimage_blob": "fc626c2d2da08d09c8bebee2cb889866c14d09a9"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 60990,
+          "preimage_sha256": "3d2d0d1da696f8aa633ec7956aa47b1a4f74f0f43420bf2315fc0ab0e8999925",
+          "preimage_blob": "b6a44077ff58aefaa10e4a821f7a0f23ba27c93f"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 48903,
+          "preimage_sha256": "472dc85c0a5064fb00d6b4ba609b9c05755a495458ad57774366c9d7a1955034",
+          "preimage_blob": "6a004861c7106adb97ef1c5ce926572b288504f8"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "f3a0af97e9c9e054c89d0325f66fe4e4a3153078d16d6b949f5fce37fe92932a",
+          "preimage_blob": "fcf2fe9b418340895c31e0ebf45bf034def22ca1"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 213841,
+          "preimage_sha256": "040554a7c9b00b61a02216046b408904443c0856a14778fc29266e39d7740ae2",
+          "preimage_blob": "77fb2064aff3ca5e93603eb5aee1dc32f951b9c9"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "e5b831cdd17a2079b8e318de3dbc80d2d55c6ae6",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 86065,
+          "preimage_sha256": "d3f357ca4c90766b09e90f651bc870e650b27c36d687d58b812306cc635e37a1",
+          "preimage_blob": "1d0c34c9cb1ce47ba553182c4eec121ab0835a6c"
+        }
+      ],
+      "new_finite_path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
+      "new_finite_path_base": {
+        "head": "02aa4ba879fb844f3ca0aa929591203ee45f4163",
+        "bytes": 17708,
+        "sha256": "9d00f6586c1bb2e7f13c2197e8f8b8de6eeacd4b8d6fb95e31ad694bfab01f75",
+        "blob": "0bbdb5878bc2a113a646f8e87df6f6c73c655ba2"
+      },
+      "causal_need": "Actual31 proves initial readLocal ErrorUNCLASSIFIED thenstatus_unavailable/nullresume followedbylocal_consent_unavailable/cleanupcomplete, nottheearlierinitialcleanup hypothesis. Realproduction lifecycle/store/privateKV/C46/account/owner integration demonstrates livewrite, completedABA andactualstartupclearUnavailableCloudBackupPreference absent-key removal can retire that read and persist a matching closedstate. C36 sourceRED3/77PASS; readpreparation successor80PASS. Native31 specific underlyingerror andcloud-removaloverlap remain UNPROVEN; sourcecausalrepair is independently demonstrated, notretroattribution.",
+      "invariant": "Wait only existing knownlive raw writers via unchangedC46preparation API; assert account/workflow current; retry once only exactmutationrecovery error after changedgeneration andsafe readwindow. Stable refusal, failed/orphanjournals, unknownnativeerror, owner/account/deletion fences remainclosed; no errorsasabsence, record erasure, authoritygrant, unknownstate downgrade or timerinflation. All57 lifecycle testcase/assertion bodies and17originalC46 cases retained; idlewindowfixture callsassertCurrent, actualC46 behavior tested separately. NewONE existing integrationtestpath makesfinite44, no wildcard; original43/55commits/frozenplan and202/172witness unchanged. Exactly25 currentnativepins; C36old lifecycle/test targets remainexplicit historical hashes withstale-currentrefusal.",
+      "validation": "Root actual committed80production-port/model controls thenfull focused age/consent/lifecycle/privacy/notification/recovery, runtime102/scope10/signing14/helper20/workflow6/currentNode2; forceduncached root/type/lint. SourceFrozen finalseal onlytwoWorklists44finitepaths. Actual fourstage samecandidate SOURCE/build/normal3/internal5 remainsrequired,6Macjobs32to37availablebeforepipeline. Everynewproduct requiresownKeychain/signature/app/JS inventory andnativebindings; no ordinary/internaladmissionfromhistorical31.",
+      "source_red_green_receipt_sha256": "b1cd2a1a19e83d5a48a8d9918965be87d98222751ddee8771db9697d0715424f",
+      "native31_analysis_sha256": "eeddb45b2ca713f2995111ab1d6cca92693656686613ee00de70c09a17ac8eb5",
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43 currentordinary3/completeinternal5 coordinator and fullinstalled identity integrated; actual31firstreadLocal UNCLASSIFIED origin requires further causal work before candidate pipeline. No currentordinary/internal admission."
+  "freeze_note": "Finite44: oneexistingC46integrationtest added withbase preimage; currentreadLocalpreparation repair,25exactnativepins. Native31origin operation/state proved; underlyingUNCLASSIFIED code/cloud-overlap unproven. Final source seal/currentruntime stillpending."
 }
