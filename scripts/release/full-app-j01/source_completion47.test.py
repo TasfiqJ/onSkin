@@ -17,8 +17,10 @@ class Source47Tests(unittest.TestCase):
         self.assertTrue(helpers <= c.PATHS)
         diagnostic={'scripts/release/full-app-j01/consent_trace47.py',
                     'scripts/release/full-app-j01/consent_trace47.test.py'}
-        self.assertEqual(len(c.PATHS - diagnostic),33)
-        self.assertEqual(len(c.PATHS),35)
+        model04={'apps/mobile/src/features/healthConsent/lifecycle.test.ts'}
+        self.assertEqual(len(c.PATHS - diagnostic - model04),33)
+        self.assertEqual(len(c.PATHS),36)
+        c.check_scope(model04,c.PATHS)
         c.check_scope(diagnostic,c.PATHS)
         for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
                      'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',

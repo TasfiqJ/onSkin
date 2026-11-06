@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "FROZEN",
+  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -324,6 +324,15 @@
       "causal_need": "Bounded sanitization and restoration negative controls",
       "invariant": "No age/owner/health/encryption/deletion authority relaxation; diagnostics separate from ordinary product; historical evidence immutable",
       "validation": "Meaningful local controls, exact current source, actual named diagnostic and restored ordinary qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 42147,
+      "preimage_sha256": "1b5d7306da617d41e666560f5a3cb414b1df3f2bbf953cb4f389dc6915a2f345",
+      "causal_need": "Prove interrupted initial cleanup and protected closed negative cases using real persisted lifecycle validation",
+      "invariant": "No grant/epoch/stale-owner resurrection, no erased error or discarded historical assertion",
+      "validation": "ExpectedRED then meaningful focused/source/root/native successors under C04"
     }
   ],
   "amendments": [
@@ -2139,6 +2148,69 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T15:25:31.517041+00:00",
+      "preimages": [
+        {
+          "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+          "preimage_head": "f833284ce1b16846b7d12f88d680665f5f1eb968",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 42147,
+          "preimage_sha256": "1b5d7306da617d41e666560f5a3cb414b1df3f2bbf953cb4f389dc6915a2f345"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "f833284ce1b16846b7d12f88d680665f5f1eb968",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9175,
+          "preimage_sha256": "a1b51333dbc5b31d25a1f0e91699ddbe73837c66b351c215c182b046dfbeb471"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "f833284ce1b16846b7d12f88d680665f5f1eb968",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9109,
+          "preimage_sha256": "6147f2be9881e666cac6dce0d0e1e7a830a01ad637b91859ca658f73b0a63757"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "f833284ce1b16846b7d12f88d680665f5f1eb968",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 127324,
+          "preimage_sha256": "9e4ff270f5a26614f003172cff5ca84dde4b6882e4c29421e85c4247bb42ff33"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "f833284ce1b16846b7d12f88d680665f5f1eb968",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 67152,
+          "preimage_sha256": "c846cac3f40204172b83ec1d95caf8acbeed08cfb09e1c79f11500437eb17f47"
+        }
+      ],
+      "causal_need": "Source-level interrupted initial cleanup regression using actual lifecycle parser/store/transition validator, preserving all previous tests. Establish expectedRED and closed cleanup/epoch/owner/configured negatives while separate native26 runs at immutableF833. This does not establish native25 origin or change app behavior.",
+      "invariant": "No implementation/authority/signing/fixture/state erasure change; all old tests retained; native26 remoteF833 unchanged; no secondMacjob. Exactly one new related test path, finite36 predeclared; app implementation remains separately protected until diagnosed.",
+      "validation": "Focused genuine persisted-state tests with complete stdout/stderr/selection and actual before/after source hashes; truthful REDs, no skipped/xfail/assertion weakening. Existing owner/privacy tests remain.",
+      "remaining_attempts": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "running_native": {
+        "attempt": 26,
+        "run_id": 42240937889,
+        "job_id": 127970733966,
+        "head": "f833284ce1b16846b7d12f88d680665f5f1eb968"
+      }
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
