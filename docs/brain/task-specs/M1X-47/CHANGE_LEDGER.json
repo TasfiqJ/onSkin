@@ -3033,8 +3033,87 @@
       "normal_prefix_sha256": "7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20",
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T18:29:33.063306+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 180133,
+          "preimage_sha256": "a41689fabcf64906e4b3dc79bcad40ea26d1b1e00cb8b0759674fa1026a92635",
+          "preimage_blob": "da452591ba13696c5e8390ed8e7699e3ce8b47dc"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 104119,
+          "preimage_sha256": "1eaeee5c1500e2d8b425d6497ee67c5f6404e0a6448ea62ec474249183b194df",
+          "preimage_blob": "b9cb0d6b3a40ae56a225fb74eacd85968fc36eee"
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15805,
+          "preimage_sha256": "e03b166954fc99ac136cca42f95fecbac3b53b151b58afd7c34e13333da688b2",
+          "preimage_blob": "ace0750808a7298587ce0527d16c623db1cdc0f1"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 12222,
+          "preimage_sha256": "6f63829cfc38c69f5b86a369865c43dfa15f128dfd2c02b6cad55984d20b5133",
+          "preimage_blob": "91029f1c963cbe70cb928a38cb3abe7e12562094"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "49fba182dd801281c64c727c17eb6f36cf072cc26fd26111a981939b22caa55d",
+          "preimage_blob": "95738942b485dc6c81885414ed988b405aa00e51"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 178915,
+          "preimage_sha256": "3587e16f37e127104f2076ced452bd1961751e619036841b588cadfa010b2537",
+          "preimage_blob": "76454e7a02c2ed610d3ff81c84b0ccd1dd32f8e7"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "13849b2838f254d42ff45451be078cf8cda1666a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 78079,
+          "preimage_sha256": "fbbae95ba7927af644fbbe26f50edd08bf43c1000b2a82c0e9cd8ff7e8d88c2e",
+          "preimage_blob": "1a538221ba1f14780fa551d4581e2faec761f3e5"
+        }
+      ],
+      "causal_need": "Actual28 requiredregistry command exited0 but readerdidnotclose, FAIL125/captureFalse in38.909s under600s allowance with4760s globalbudget left. Similar ps/vmstat/df exit0 failures. Exact originalRunner synthetic control reproduces same failure solelyby blocked console mirror after rawwrite, withoutdescendants; actualhostedcause remainsinference. Remove synchronous duplicate console writes from rawreader, then repeat retaineddiagnostic29 as a material causal repair.",
+      "invariant": "Keep every raw stdout/stderr byte, unbuffered filewrites, capture lock/freeze, 30s join, process/total timeouts, filehash/size, requiredzeroexit ANDcompletecapture, error codes and latewrite refusal unchanged. No partialcapture promoted. No new logger/queue/framework. Historical28 all85/84/70 fullyverified; sourcea692 before/after exact; originalFAIL125 and optionalfailures retained. No app/owner/Keychain/signing/authority/deletion behaviorchange. Diagnostic29 stillonlyhistorical27producerEB app andoldUI; nevercurrentordinary/internaladmission. Generic4stage authenticatedarchitecture stays in source and is preservedbyactual3EF historicalworkflow; currentworkflow activatesonlydiagnosticbuild andexplicitlydisablesnormal/internal untilactualschema integration.",
+      "validation": "Root committed full79runtime/11helper/10scope/14signing/6workflow/two selectedsourcecontrols; direct blockedconsole before125 afterPASS with raw30630+190, requiredsubprocessfailure/timeout/nonexistent/managedbackground/inheritedlatewrite/freeze/largecompilerhash controls preserved. SourceFrozenonlytwoWorklistseal afterwards, same43paths/24sourcepins. Exact current ordinary3 remains pendingactualprovider schema; future source/build/normal/internalplanned30-33 if29 suppliesneededruntime/trace/schema. NeverclaimWindowsSOURCE or current nativePASS.",
+      "remaining_attempts": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "next_native_attempt": 29,
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite43; local source-stage split prepared. No push until actual28 provider schema and current three-case ordinary coordinator integration; no current native/ordinary/internal pass."
+  "freeze_note": "Finite43; capture isolation repair for historicaldiagnostic29; source4stage plan preserved at3EF but no currentordinary/internal admission before actualschema integration."
 }

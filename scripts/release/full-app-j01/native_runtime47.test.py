@@ -1660,5 +1660,69 @@ class SourceStage04Tests(unittest.TestCase):
             n.family_payload_bytes04(values,('source','build','normal'))
 
 
+
+class RawConsoleIsolation04Tests(unittest.TestCase):
+    def test_blocked_live_console_cannot_block_or_truncate_retained_command_streams(self):
+        class BlockedConsole:
+            def __init__(self):
+                self.entered = n.threading.Event()
+                self.release = n.threading.Event()
+                self.calls = 0
+                self.buffer = self
+
+            def write(self, value):
+                self.calls += 1
+                self.entered.set()
+                self.release.wait(3)
+                return len(value)
+
+            def flush(self):
+                self.calls += 1
+                self.entered.set()
+                self.release.wait(3)
+
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as temporary:
+            runner = n.Runner(Path(temporary), Path(temporary) / 'evidence')
+            console = BlockedConsole()
+            joined = []
+            real_join = n.threading.Thread.join
+
+            def bounded_join(thread, timeout=None):
+                joined.append(thread)
+                return real_join(thread, 0.1)
+
+            try:
+                with patch.object(n.sys, 'stdout', console), patch.object(n.sys, 'stderr', console), \
+                     patch.object(n.threading.Thread, 'join', bounded_join):
+                    runner.run('blocked-console', [sys.executable, '-I', '-c',
+                        "import sys;sys.stdout.buffer.write(b'X'*30630);sys.stdout.flush();"
+                        "sys.stderr.buffer.write(b'E'*190);sys.stderr.flush()"], timeout=3)
+            finally:
+                # Releasing the synthetic sink prevents a deliberately blocked
+                # old reader from leaking into later controls. Production join
+                # bounds, freeze gates and partial-failure rules are unchanged.
+                console.release.set()
+                for thread in joined:
+                    real_join(thread, 2)
+                row = runner.receipt['commands'][0]
+                raw = {stream:(runner.output / row[stream]).read_bytes() for stream in ('stdout','stderr')}
+                self.blocked_console_observation = {
+                    'row':copy.deepcopy(row), 'console_calls':console.calls,
+                    'live_console_was_entered':console.entered.is_set(), 'raw':raw,
+                }
+            self.assertEqual(row['exit_code'], 0)
+            self.assertEqual(row['state'], 'PASS')
+            self.assertTrue(row['capture_complete'])
+            self.assertFalse(row.get('timed_out', False))
+            self.assertEqual(raw, {'stdout':b'X'*30630,'stderr':b'E'*190})
+            for stream in ('stdout','stderr'):
+                self.assertEqual(row[stream + '_bytes'],len(raw[stream]))
+                self.assertEqual(row[stream + '_sha256'],hashlib.sha256(raw[stream]).hexdigest())
+            self.assertEqual(console.calls, 0)
+            self.assertFalse(console.entered.is_set())
+            self.assertEqual(runner.receipt['stages'], {})
+            self.assertFalse(runner.receipt['acceptance_granted'])
+
+
 if __name__ == '__main__':
     unittest.main()

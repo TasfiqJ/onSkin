@@ -145,6 +145,7 @@ test('C47 refuses parallel stages, missing wire digest or authority outside the 
 
 test('C47 preserves authenticated historical workflows and admits only the current diagnostic Mac', () => {
   validate(execFileSync('git', ['show', '445472ce057b90f08b5a51d5a49167c757d34b79:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
+  validate(execFileSync('git', ['show', '3ef74bd61a69ca76702421cddcb7bda1912cb120:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' }));
   const diagnostic = execFileSync('git', ['show', '93f314459299dbca8ec8511d744280e6bcad66c3:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
   validate(diagnostic);
   const w = parseDocument(diagnostic).toJS();

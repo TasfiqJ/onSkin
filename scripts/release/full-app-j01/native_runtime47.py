@@ -1121,7 +1121,7 @@ class Runner:
                                        env=env or self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        start_new_session=(os.name != 'nt'))
             stream_failures = []
-            def copy(pipe, destination, display):
+            def copy(pipe, destination):
                 # A descendant can retain its pipe after the command exits.
                 # Only this lock may admit writes to the retained evidence.
                 with capture_lock:
@@ -1135,20 +1135,15 @@ class Runner:
                                 if capture_frozen:
                                     break
                                 require(target.write(chunk) == len(chunk), 'SHORT_LOG_WRITE')
-                            if name == 'dependency-graph' and destination == stdout:
-                                continue  # Full immutable JSON remains in the retained raw stdout.
-                            if hasattr(display, 'buffer'):
-                                display.buffer.write(chunk)
-                                display.buffer.flush()
-                            else:
-                                display.write(chunk.decode('utf-8', errors='replace'))
-                                display.flush()
+                            # Retain every raw byte independently of the host's
+                            # live console. Console backpressure cannot stall a
+                            # pipe reader or turn complete process output partial.
                     except Exception as error:
                         stream_failures.append(type(error).__name__)
                     finally:
                         pipe.close()
-            threads = [threading.Thread(target=copy, args=(process.stdout, stdout, sys.stdout), daemon=True),
-                       threading.Thread(target=copy, args=(process.stderr, stderr, sys.stderr), daemon=True)]
+            threads = [threading.Thread(target=copy, args=(process.stdout, stdout), daemon=True),
+                       threading.Thread(target=copy, args=(process.stderr, stderr), daemon=True)]
             for thread in threads:
                 thread.start()
             try:
@@ -1195,9 +1190,6 @@ class Runner:
                     row[label + '_bytes'] = path.stat().st_size
                     row[label + '_sha256'] = sha(path)
             self.persist()
-        if name == 'dependency-graph':
-            print('C47_DEPENDENCY_GRAPH_RAW_CAPTURE ' + json.dumps({key: row[key] for key in
-                ('state', 'exit_code', 'stdout_bytes', 'stdout_sha256')}), flush=True)
         require(not required or row.get('exit_code') == 0, 'COMMAND_FAILED:' + name)
         return stdout, stderr
 
