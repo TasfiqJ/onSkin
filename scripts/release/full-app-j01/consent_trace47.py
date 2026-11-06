@@ -112,7 +112,7 @@ ENTRY = r'''import * as FileSystem from 'expo-file-system/legacy';
 import { AppState } from 'react-native';
 import { subscribeToHealthDataLifecycle } from '../src/features/healthConsent/lifecycleStore';
 import { subscribeActiveHealthProcessingLeaseChanges, activeHealthProcessingLeaseSnapshot } from '../src/lib/consent/healthProcessingEpoch';
-import { AGE_POLICY_STATUS_QUERY_KEY, getAgePolicyReceiptStatus } from '../src/features/onboarding/ageGateStore';
+import { AGE_POLICY_STATUS_QUERY_KEY } from '../src/features/onboarding/ageGateStore';
 import { queryClient } from '../src/lib/query/queryClient';
 import { isSupabaseConfigured } from '../src/lib/env';
 const marker = 'C47_SEPARATE_CONSENT_DIAGNOSTIC_04';
@@ -155,13 +155,8 @@ queryClient.getQueryCache().subscribe(event => {
     emit({operation:'age-query'});
   } catch { console.error('C47_CONSENT_TRACE_OBSERVER_FAILED'); }
 });
-function readAge() {
-  void getAgePolicyReceiptStatus().then(value => { ageStatus = value; emit({operation:'age-store-read'}); })
-    .catch(() => emit({operation:'age-store-read', errorClass:'OTHER_ERROR', errorCode:'UNCLASSIFIED'}));
-}
-AppState.addEventListener('change', state => { emit({operation:'app-state', appState:state}); if (state === 'active') readAge(); });
+AppState.addEventListener('change', state => { emit({operation:'app-state', appState:state}); });
 emit({operation:'startup', appState:AppState.currentState});
-readAge();
 // Observers above are registered before application mounting; no authority is changed.
 require('expo-router/entry');
 '''

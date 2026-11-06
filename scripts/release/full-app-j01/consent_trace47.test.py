@@ -106,6 +106,8 @@ class ConsentTrace47Tests(unittest.TestCase):
 
     def test_observers_register_before_mount_and_never_invoke_authority(self):
         self.assertLess(c.ENTRY.index('subscribeToHealthDataLifecycle(record'), c.ENTRY.index("require('expo-router/entry')"))
+        self.assertNotIn('getAgePolicyReceiptStatus', c.ENTRY)
+        self.assertNotIn('getPrivateItem(', c.ENTRY)
         for forbidden in ['setAgeVerified(', 'setActiveHealthProcessingEpoch(', 'writeHealthDataLifecycle(',
                           'grantAuthoritativeHealthDataConsent(', 'deleteItemAsync(', 'setItemAsync(']:
             self.assertNotIn(forbidden, c.ENTRY)

@@ -223,3 +223,6 @@ BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04 authenticated26088bytes/SHA455d85ef3125cc76
 
 
 C04 pre-native26 local17groups:16PASS, onlycurrent-generatedSOURCE refused exact477byteUSER_FLOW_TREEappend; rawREDpreserved. Forcedroot6990/type3/lint3uncachedPASS,217privacy/70runtime/6diagnosticcontrolsPASS. Record8preimages before exactcurrentdocsuccession (fullF218prefix and boundedappend pinned); preserve202/172/30names/oldwitness/rawlegacyRED. Diagnostic26 additionally captures actualxcresulttoolhelp/schema/results and allowlistedcleanupcodes. NoMacstarted, twelve26-37 remain. Finite35; NO_GO.
+
+
+C04 localfull30 timedout124 after1800seconds:20BEGIN/19END, nofinalTAPsummary; ENDneverPASS. Rawstdout7101B/SHA275ce5891982c3aa5ce56e39d91b55458b922e465053f8aad4236bdbfa47aa8f preserved. Changeddescriptorcase1PASS; currentSOURCE202/172/bothprofiles andwhole-sourcependingPASS atD592. Root6990/type3/lint3uncachedPASS atC78 withallworkspace/manifestsunchanged. Before26removeextra diagnostic age-store reads; listenonlyactualageGatequerypublications, preservinginitializationorder. No timeouts/skips/assertions weakened. FreshMacfull30/currentSOURCE remainmandatorybeforebuild; diagnosticcannotadmitordinary/internal. NoMacstarted,26-37allremain; NO_GO.

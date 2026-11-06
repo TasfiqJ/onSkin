@@ -2088,6 +2088,57 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T15:07:16.761763+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.py",
+          "preimage_head": "d59286dffeae020090d90a2a3530e34acd1257a5",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 22662,
+          "preimage_sha256": "c859cc3cf6675f824c4a3851f2863bc58b11cf6d2c5d4603a76f65d61cfae377"
+        },
+        {
+          "path": "scripts/release/full-app-j01/consent_trace47.test.py",
+          "preimage_head": "d59286dffeae020090d90a2a3530e34acd1257a5",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9015,
+          "preimage_sha256": "b60253289b73eeb807c9f2d4f9d66c451c90d65eb63bb34331d68f363cb539f4"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "d59286dffeae020090d90a2a3530e34acd1257a5",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 124651,
+          "preimage_sha256": "f2eb5491f0a8cb5f30212645d9146d36d049678caac6f3ad822de77085cd4cde"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "d59286dffeae020090d90a2a3530e34acd1257a5",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 66497,
+          "preimage_sha256": "19fb2ef6b7a057d7db192f6174896add345f2c9aeaa6711da8a9dd2912f0c403"
+        }
+      ],
+      "causal_need": "Remove independent diagnostic age-store reads before mount/foreground: observe only actual age-gate query publications, preventing extra private-store initialization IO from perturbing the reproduced boundary. Preserve local30-case timeout with20BEGIN/19END/noTAPsummary; direct changed-descriptor test passes, current202/172/bothprofiles and whole-source pending pass. Fresh permitted Mac must pass unchanged full30 and fresh source proof before compilation.",
+      "invariant": "No new authority/read calls, no epoch/grant/clear/route/timing-authority changes; no timeout inflation, skip or local30PASS claim. Finite35, original55prefix and allfailedoutputs preserved.",
+      "validation": "Six diagnostic controls plus explicit no-independent-private-read assertion; compare every native descriptor pin/workspace source to validatedD592; actual full SOURCE_FROZEN after two-worklist-only seal. Native26 remains a discriminating separate diagnostic, not ordinary/internal admission.",
+      "remaining_attempts": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
