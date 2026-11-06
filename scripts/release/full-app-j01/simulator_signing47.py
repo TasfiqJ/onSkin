@@ -125,7 +125,9 @@ def inspect_binary(n, path):
         with mmap.mmap(descriptor, 0, access=mmap.ACCESS_READ) as data:
             need(hashlib.sha256(data).hexdigest() == identity['sha256'], 'APP_BINARY_HASH')
             facts = macho_entitlements(data)
-            facts['diagnostic_native_hook_present'] = data.find(b'C47AppKeychainLaunch.json') >= 0
+            # Preserve the existing receipt field; either separate native hook is diagnostic.
+            facts['diagnostic_native_hook_present'] = any(data.find(marker) >= 0 for marker in
+                (b'C47AppKeychainLaunch.json', b'C47ConsentLaunch04.json'))
         need(stamp(os.fstat(descriptor)) == stamp(before) and
              stamp(path.lstat()) == stamp(before), 'APP_BINARY_READ_RACE')
     finally:
@@ -635,6 +637,8 @@ def check_diagnostic_bundle(n,app,expected):
         with mmap.mmap(descriptor,0,access=mmap.ACCESS_READ) as data:
             need(hashlib.sha256(data).hexdigest() == identity['sha256'],'JAVASCRIPT_BUNDLE_HASH')
             observed=data.find(b'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03') >= 0
+            need(data.find(b'C47_SEPARATE_CONSENT_DIAGNOSTIC_04') < 0,
+                 'CONSENT_DIAGNOSTIC_IN_KEYCHAIN_OR_ORDINARY_BUNDLE')
         need(stamp(os.fstat(descriptor)) == stamp(before) and stamp(path.lstat()) == stamp(before),
              'JAVASCRIPT_BUNDLE_CHANGED')
     finally:os.close(descriptor)

@@ -71,13 +71,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.py",
-      "bytes": 40003,
-      "sha256": "b937c5d0a5d2bb179139bc3b9b833d9486884d1445693bfb791a9c0e4d9eba9e"
+      "bytes": 40310,
+      "sha256": "bccb8fd83076f31f5b15de79f072fcf408249056d554aace309afed362e5950b"
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
-      "bytes": 15425,
-      "sha256": "9e0fa304c8c7aa6cb2d93772b68c571366dba289d586e4b9ceb098deb4136b15"
+      "bytes": 16255,
+      "sha256": "6a4b56a83d6f4ebc358a938b38846b35275a4d5f789f6d7b6f7a7907ed88ce38"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

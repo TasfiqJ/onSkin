@@ -182,6 +182,12 @@ class SimulatorSigning47(unittest.TestCase):
             (app/'main.jsbundle').write_bytes(b'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03')
             s.check_diagnostic_bundle(n,app,True)
             with self.assertRaises(ValueError):s.check_diagnostic_bundle(n,app,False)
+            for raw in [b'C47_SEPARATE_CONSENT_DIAGNOSTIC_04',
+                        b'C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03 C47_SEPARATE_CONSENT_DIAGNOSTIC_04']:
+                (app/'main.jsbundle').write_bytes(raw)
+                for expected in (False, True):
+                    with self.subTest(raw=raw,expected=expected), self.assertRaisesRegex(ValueError,'CONSENT_DIAGNOSTIC'):
+                        s.check_diagnostic_bundle(n,app,expected)
 
     def test_app_command_refuses_device_account_distribution_or_global_entitlement_input(self):
         argv=['xcodebuild','-sdk','iphonesimulator','-scheme','LayerwellStaging','build']
@@ -209,7 +215,13 @@ class SimulatorSigning47(unittest.TestCase):
             raw=struct.pack('<8I',0xfeedfacf,0x01000007,3,2,1,16,0,0)+struct.pack('<4I',0x1d,16,48,4)+b'fake'
             path.write_bytes(raw)
             self.assertFalse(s.inspect_binary(n,path)['diagnostic_native_hook_present'])
-            path.write_bytes(raw+b'C47AppKeychainLaunch.json')
-            self.assertTrue(s.inspect_binary(n,path)['diagnostic_native_hook_present'])
+            clean=s.inspect_binary(n,path)
+            for marker in (b'C47AppKeychainLaunch.json',b'C47ConsentLaunch04.json'):
+                path.write_bytes(raw+marker)
+                facts=s.inspect_binary(n,path)
+                self.assertEqual(set(facts),set(clean))
+                self.assertTrue(facts['diagnostic_native_hook_present'])
+                with self.subTest(marker=marker), self.assertRaisesRegex(ValueError,'NATIVE_DIAGNOSTIC'):
+                    s.validate_ordinary_product({'effective':facts})
 
 if __name__=='__main__':unittest.main()

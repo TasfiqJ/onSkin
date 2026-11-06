@@ -2272,8 +2272,70 @@
         "app_compiled": false,
         "simulator_runtime": false
       }
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T15:54:31.574898+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "preimage_head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 40003,
+          "preimage_sha256": "b937c5d0a5d2bb179139bc3b9b833d9486884d1445693bfb791a9c0e4d9eba9e"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+          "preimage_head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15425,
+          "preimage_sha256": "9e0fa304c8c7aa6cb2d93772b68c571366dba289d586e4b9ceb098deb4136b15"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15640,
+          "preimage_sha256": "f97b5488cfa283a66cc94be186d70f3be28da2617966763da880d0c89a9e25a6"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 133999,
+          "preimage_sha256": "0417afac9b36abeb1229c12d1b9d45a8b9582d00bf19c288efc1ff32feed0fa9"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 69107,
+          "preimage_sha256": "1a7edcb6f42d0c23d44afd66484acd7fd5b465a994432c6470d4431e95b448a0"
+        }
+      ],
+      "causal_need": "Future ordinary native product must prove separate C04 consent-observer native and JS hooks absent. Current signing binary scanner recognizes only historical C03 hook. Extend existing finite boolean scanner and JS ordinary/C03 isolation guard; preserve receipt shape and historical meaning.",
+      "invariant": "No signing flag, entitlement, app-owned group, identity, consent, owner, cleanup or runtime behavior change. Existing ordinary False field must now prove both diagnostic native hooks absent. Producer23 exact historical False remains historical; native27 uses old C03-only scan plus its explicit C04 marker proof, not retagged as new scanner output.",
+      "validation": "Existing14 signing-isolation controls retain all names/assertions with direct C04 native-positive/ordinary-refusal and cross-JS-diagnostic negatives. Six diagnostic,70runtime,ten scope controls. Exact changed source pins and future current SOURCE/full30 native proof.",
+      "running_native": {
+        "attempt": 27,
+        "run_id": 42246927646,
+        "job_id": 127991461922,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12"
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite36 original35 plus actual exercised lifecycle-model test. Native26 sourceadapter failure preserved; exactone-line proof forwarding for useful diagnostic27, no acceptance."
+  "freeze_note": "Finite36 unchanged; native/JS diagnostic-isolation scanner includes C04 hooks; actual native27 remains immutableEB9375 separate diagnostic."
 }
