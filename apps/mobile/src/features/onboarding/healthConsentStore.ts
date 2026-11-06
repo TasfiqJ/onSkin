@@ -206,6 +206,21 @@ export async function hasCurrentHealthDataCollectionConsent(): Promise<boolean> 
 }
 
 /**
+ * Lifecycle recovery must distinguish a genuinely absent/declined grant from
+ * an unreadable consent proof. Preserve the tolerant observer API above, but
+ * let storage and decode errors close reconciliation without purpose erasure.
+ */
+export async function hasCurrentHealthDataCollectionConsentStrict(): Promise<boolean> {
+  const raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
+  const consent = raw === null ? null : decodeConsent(raw);
+  if (consent?.granted !== true || consent.version !== HEALTH_DATA_CONSENT.version) {
+    return false;
+  }
+
+  return consent.consentTextHash === CURRENT_GRANT_HASH;
+}
+
+/**
  * Mirror an already-authoritative server ledger grant into the encrypted local
  * cache consumed by onboarding persistence. This accepts only the exact current
  * disclosure contract; it never upgrades or invents consent from local state.

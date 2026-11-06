@@ -573,7 +573,14 @@ describe('Settings route contracts', () => {
     );
     expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
     expect(source).toMatch(
-      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Pauses health use; starts active-data deletion; keeps billing\.'/,
+      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*!isSupabaseConfigured\s*\?\s*compactPhone\s*\?\s*'Pauses health use; starts clearing health data on this device\.'\s*:\s*'Pauses personalization and starts clearing health-purpose data from this device\. This build cannot confirm remote deletion\.'\s*:\s*compactPhone\s*\?\s*'Pauses health use; starts active-data deletion; keeps billing\.'\s*:\s*'Pauses personalization and starts deleting health-purpose data from this device and the live service\. Protected backups follow disclosed retention and stay out of personalization\.'/,
+    );
+    expect(source).toContain('const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE = isSupabaseConfigured');
+    expect(source).toContain(
+      "? 'This immediately pauses personalized skin features and starts deleting health-purpose data from this device and the live service. Protected backups, if any, follow the disclosed retention period and are not used for personalization. Your account, App Lock, subscription, billing, and purchase-safety records stay in place. You can start again only with fresh consent and an empty profile.'",
+    );
+    expect(source).toContain(
+      ": 'This immediately pauses personalized skin features and starts clearing health-purpose data from this device. App Lock and purchase-safety records stay in place. This build cannot confirm remote deletion. App Store purchases, if any, are managed separately. You can start again only with fresh consent and an empty profile.'",
     );
     expect(source).toContain(
       'starts deleting health-purpose data from this device and the live service',

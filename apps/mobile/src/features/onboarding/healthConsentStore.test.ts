@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { getPrivateItem } from '@/lib/storage/privateKV';
+
 import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from './consentCopy';
 import {
   clearHealthDataCollectionConsentLocal,
   getHealthDataCollectionConsentLocal,
   hasCurrentHealthDataCollectionConsent,
+  hasCurrentHealthDataCollectionConsentStrict,
   HEALTH_CONSENT_INVALID,
   HEALTH_CONSENT_MUTATION_SUPERSEDED,
   HEALTH_CONSENT_UNSUPPORTED_VERSION,
@@ -307,5 +310,42 @@ describe('health-data local consent store', () => {
 
     await expect(staleSet).rejects.toThrow(HEALTH_CONSENT_MUTATION_SUPERSEDED);
     expect(mocks.privateStore.has(HEALTH_DATA_CONSENT_KEY)).toBe(false);
+  });
+
+  it('strict lifecycle consent reads distinguish actual absence, explicit choices and current contract', async () => {
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).resolves.toBe(false);
+    seedConsent();
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).resolves.toBe(true);
+    seedConsent({ granted: false });
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).resolves.toBe(false);
+    seedConsent({ version: 'stale-version' });
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).resolves.toBe(false);
+    seedConsent({ consentTextHash: 'stale-hash' });
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).resolves.toBe(false);
+  });
+
+  it('strict lifecycle consent read errors preserve the proof and never become absent consent', async () => {
+    seedConsent();
+    const original = mocks.privateStore.get(HEALTH_DATA_CONSENT_KEY);
+    const error = new Error('PRIVATE_KV_UNAVAILABLE');
+    vi.mocked(getPrivateItem).mockRejectedValueOnce(error);
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).rejects.toBe(error);
+    expect(mocks.privateStore.get(HEALTH_DATA_CONSENT_KEY)).toBe(original);
+    // Historical tolerant observer behavior remains intentionally unchanged.
+    vi.mocked(getPrivateItem).mockRejectedValueOnce(error);
+    await expect(getHealthDataCollectionConsentLocal()).resolves.toBeNull();
+    expect(mocks.privateStore.get(HEALTH_DATA_CONSENT_KEY)).toBe(original);
+  });
+
+  it.each([
+    ['{not-json', HEALTH_CONSENT_INVALID],
+    [JSON.stringify({ granted: true }), HEALTH_CONSENT_INVALID],
+    [JSON.stringify({ schemaVersion: 2, consent: {} }), HEALTH_CONSENT_UNSUPPORTED_VERSION],
+  ])('strict lifecycle consent decoding rejects and preserves unreadable bytes: %s', async (raw, code) => {
+    mocks.privateStore.set(HEALTH_DATA_CONSENT_KEY, raw);
+    await expect(hasCurrentHealthDataCollectionConsentStrict()).rejects.toThrow(code);
+    expect(mocks.privateStore.get(HEALTH_DATA_CONSENT_KEY)).toBe(raw);
+    await expect(getHealthDataCollectionConsentLocal()).resolves.toBeNull();
+    expect(mocks.privateStore.get(HEALTH_DATA_CONSENT_KEY)).toBe(raw);
   });
 });

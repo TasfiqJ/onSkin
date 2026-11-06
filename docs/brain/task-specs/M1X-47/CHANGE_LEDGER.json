@@ -6,7 +6,7 @@
   "base_tree": "02f4b093d399631c4e36b32bf163fa543b61fc3e",
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
-  "inventory_state": "FROZEN",
+  "inventory_state": "EXPLICIT_PREDECLARED_NOT_FINAL_FROZEN",
   "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
@@ -333,6 +333,69 @@
       "causal_need": "Prove interrupted initial cleanup and protected closed negative cases using real persisted lifecycle validation",
       "invariant": "No grant/epoch/stale-owner resurrection, no erased error or discarded historical assertion",
       "validation": "ExpectedRED then meaningful focused/source/root/native successors under C04"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 37030,
+      "preimage_sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 8740,
+      "preimage_sha256": "a23b04419c4e31c3327943eac96cb0176cacceb6730927e60269de5f12a0967b",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 33702,
+      "preimage_sha256": "95ae7915a0cc2793f8697ba1e6bda72e20d66f64b3f20e6b2cc89f58ac968a83",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 51164,
+      "preimage_sha256": "54a3bb1fa58de8d6efc029407da8841fe3974d0a4d0679efa59141fd360a4186",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 10822,
+      "preimage_sha256": "5f8d6b3403b6b59883b27a54accfe530e04002214fac018ab2dda89529938836",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 7752,
+      "preimage_sha256": "dd9a44efb1724c5bbff924a1108f7367cdc64fe19536ad5e47502c2f9a7de111",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 38545,
+      "preimage_sha256": "5ad4abe1aee5270f5c2c0fa35e62345905bff0b28825f2fe8bac0fe8a0a57de4",
+      "causal_need": "C04 bounded initial-bootstrap/strict-read/recovery-copy implementation or its exact relevant regression",
+      "invariant": "Explicit current consent, exact owner and durable cleanup remain required; no stale authority/data resurrection; truthful local/configured distinction",
+      "validation": "Actual focused source/component controls, uncached root/type/lint, exact current source pins, new native ordinary/internal qualification"
     }
   ],
   "amendments": [
@@ -2334,8 +2397,132 @@
         36,
         37
       ]
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T16:18:03.434897+00:00",
+      "preimages": [
+        {
+          "path": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7752,
+          "preimage_sha256": "dd9a44efb1724c5bbff924a1108f7367cdc64fe19536ad5e47502c2f9a7de111",
+          "preimage_blob": "4544ca1f207704eb4076ff72248aae4409c81b30"
+        },
+        {
+          "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 10822,
+          "preimage_sha256": "5f8d6b3403b6b59883b27a54accfe530e04002214fac018ab2dda89529938836",
+          "preimage_blob": "77c0ab3f371f5927f9096ceed28fb224dbe34191"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 51164,
+          "preimage_sha256": "54a3bb1fa58de8d6efc029407da8841fe3974d0a4d0679efa59141fd360a4186",
+          "preimage_blob": "0f739ebf5dd98c207062530027dd7538c399d284"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 51480,
+          "preimage_sha256": "97cd35d6267e677df1d1a58f3939ad9d91c76861bb41e134a3043cd119ea3353",
+          "preimage_blob": "77c15cdabb8723f3eb809c256f6c0543fe98908b"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 33702,
+          "preimage_sha256": "95ae7915a0cc2793f8697ba1e6bda72e20d66f64b3f20e6b2cc89f58ac968a83",
+          "preimage_blob": "98fbc46570994f4343232c9ed9f43ac2b952590a"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8740,
+          "preimage_sha256": "a23b04419c4e31c3327943eac96cb0176cacceb6730927e60269de5f12a0967b",
+          "preimage_blob": "4b87cb4fec5e601f21bdf8bd2374510590350274"
+        },
+        {
+          "path": "apps/mobile/src/app/(tabs)/you.tsx",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 37030,
+          "preimage_sha256": "1ac5a527ba8f0ded50374d0d542abd6d12825e3f34de9b3fd566e6e93888ab23",
+          "preimage_blob": "4364793dbcd1468873b22963c60dca6f28cff586"
+        },
+        {
+          "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 38545,
+          "preimage_sha256": "5ad4abe1aee5270f5c2c0fa35e62345905bff0b28825f2fe8bac0fe8a0a57de4",
+          "preimage_blob": "4d80bb403c8000f73d6cbe364a72fe1486457ac3"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.py",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9239,
+          "preimage_sha256": "ef75460f8d62a3d5860c7baf96a39c070752861e01071dad3586bbe3780c1f32",
+          "preimage_blob": "9a5f1faa6015f87dd08742faca115771359b39a4"
+        },
+        {
+          "path": "scripts/release/full-app-j01/source_completion47.test.py",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9235,
+          "preimage_sha256": "df3fde6fe8eaa4b57ee051f18fa77c4d832451f85b5db35a9c59beea92e74550",
+          "preimage_blob": "93bcacdcf27ca4bfbc5b1c0a689b4528b7e00d39"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 137103,
+          "preimage_sha256": "5225c0566c22e6fc7c9133bba897f916ea091b8dc2e66c1b63424581c9dfddf9",
+          "preimage_blob": "69cfcbc3f18d8ee9ba9d26f545146bc25e0eca73"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "1be3e25b5226c682c3a2728cab4500df28715f68",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 69790,
+          "preimage_sha256": "b3a43c78642639a6e01d89380376288c1fd92caaca7205657c259cfee1202e5d",
+          "preimage_blob": "b82497af011f43f9a1ff57dc1c1321f5b993e46e"
+        }
+      ],
+      "causal_need": "Actual persisted-state model reproduced interrupted initial cleanup retaining verification pause. Existing null provenance is ambiguous, so new local bootstrap records explicit unconsented provenance and recovers only after strict readable false consent, exact epoch-zero bounded tuple and durable cleanup. Existing tolerant read contract currently converts decode/storage errors to absence at lifecycle; add strict lifecycle-only reader. Correct independently reproduced local recovery/withdrawal copy and one causally related structural settings test.",
+      "invariant": "No automatic health grant, owner/epoch resurrection, deletion priority relaxation, recovery erasure, signing/dependency/configured behavior change. Unknown/null/operation/server/nonzero/prioractive/withdrawn/configured/error states remain closed. Preserve41 historical model bodies, historical2RED source/streams, existing9negative protections, initial/refusal/cancel and current consent contract/hash/version/releaseblock. Source/domain repair is provisional with respect to native25 origin, which remains unproven pending actual native27 trace. App changes require entirely new ordinary product; no resume25 reuse.",
+      "validation": "Actual committed checkout lifecycle/store/navigation/settings focus plus age/privacy/cleanup/notification/owner/recovery controls, forced uncached root/type/lint, current native source/route/wiring/signing controls. Narrow exact current app source pins and 3copy-row immutable202 successor, never rewrite old witness. Actual current ordinary suite then internal journeys only after genuine complete admission.",
+      "running_native": {
+        "attempt": 27,
+        "run_id": 42246927646,
+        "job_id": 127991461922,
+        "head": "eb9375b68ea90ef7d0be487e311b95d52e11bf12",
+        "source30_live_observation": "30PASS0FAIL0SKIP at2026-11-06T16:10:47Z; closed artifact verification pending"
+      },
+      "remaining_attempts": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ]
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite36 unchanged; native/JS diagnostic-isolation scanner includes C04 hooks; actual native27 remains immutableEB9375 separate diagnostic."
+  "freeze_note": "Finite43: original36 plus7 exact causally exercised app/test paths, predeclared before edits. No parent/main/native27 source mutation; actual native origin pending."
 }

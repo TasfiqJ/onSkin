@@ -105,6 +105,7 @@ vi.mock('@/lib/consent/dependentConsentLocal', () => ({
 }));
 vi.mock('@/features/onboarding/healthConsentStore', () => ({
   hasCurrentHealthDataCollectionConsent: mocks.hasCurrentConsent,
+  hasCurrentHealthDataCollectionConsentStrict: mocks.hasCurrentConsent,
   setHealthDataCollectionConsentLocal: mocks.setLocalConsent,
   synchronizeAuthoritativeHealthDataCollectionConsent: mocks.syncLocalConsent,
 }));
@@ -220,7 +221,7 @@ function interruptedInitialBootstrap(overrides: Partial<HealthDataLifecycleRecor
     processingEpoch: 0,
     localCleanupComplete: false,
     verificationReason: 'authoritative_unconsented',
-    verificationResumeState: null,
+    verificationResumeState: 'unconsented',
     serverVerifiedAt: null,
     ...overrides,
   });
@@ -1202,7 +1203,7 @@ describe('health consent lifecycle orchestration', () => {
     expect(interrupted).toMatchObject({
       state: 'verification_required', processingEpoch: 0,
       verificationReason: 'authoritative_unconsented',
-      verificationResumeState: null, localCleanupComplete: false,
+      verificationResumeState: 'unconsented', localCleanupComplete: false,
     });
     expect(await store.readHealthDataLifecycle(OWNER)).toEqual(interrupted);
     expectNoHealthGrant();
@@ -1227,7 +1228,7 @@ describe('health consent lifecycle orchestration', () => {
         state: 'verification_required',
         processingEpoch: 0,
         verificationReason: 'authoritative_unconsented',
-        verificationResumeState: null,
+        verificationResumeState: 'unconsented',
         localCleanupComplete: false,
       });
       expectNoHealthGrant();
@@ -1263,7 +1264,7 @@ describe('health consent lifecycle orchestration', () => {
         processingEpoch: 0,
         localCleanupComplete: false,
         verificationReason: 'authoritative_unconsented',
-        verificationResumeState: null,
+        verificationResumeState: 'unconsented',
       });
       expect(await store.readHealthDataLifecycle(OWNER)).toEqual(initial);
       expectNoHealthGrant();
@@ -1350,6 +1351,53 @@ describe('health consent lifecycle orchestration', () => {
     const initial = await reconcileHealthDataLifecycle(OWNER);
     expect(initial).toMatchObject({ state: 'unconsented', processingEpoch: 0, localCleanupComplete: true });
     expect(await store.readHealthDataLifecycle(OWNER)).toEqual(initial);
+    expect(mocks.cleanup).toHaveBeenCalledExactlyOnceWith(OWNER);
+    expectNoHealthGrant();
+  });
+
+  it.each(['HEALTH_CONSENT_INVALID', 'HEALTH_CONSENT_UNSUPPORTED_VERSION'])(
+    'does not clean a persisted local profile when strict consent decoding rejects: %s',
+    async (code) => {
+      mocks.configured = false;
+      const store = await usePersistedLifecycle(localRecord('active', { processingEpoch: 2 }));
+      mocks.hasCurrentConsent.mockRejectedValueOnce(new Error(code));
+      const paused = await reconcileHealthDataLifecycle(OWNER);
+      expect(paused).toMatchObject({
+        state: 'verification_required',
+        processingEpoch: 2,
+        verificationReason: 'status_unavailable',
+        verificationResumeState: 'active',
+        localCleanupComplete: false,
+      });
+      expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+      expect(mocks.cleanup).not.toHaveBeenCalled();
+      expectNoHealthGrant();
+    },
+  );
+
+  it.each([
+    { name: 'unknown null provenance', overrides: { verificationResumeState: null } },
+    { name: 'an operation-bound record', overrides: { operationId: 'retained-operation' } },
+    { name: 'a server-verified record', overrides: { serverVerifiedAt: NOW } },
+  ])('keeps $name paused and reviewable instead of inventing initial onboarding', async ({ overrides }) => {
+    mocks.configured = false;
+    mocks.hasCurrentConsent.mockResolvedValue(false);
+    const initial = interruptedInitialBootstrap(overrides);
+    const store = await usePersistedLifecycle(initial);
+    const paused = await reconcileHealthDataLifecycle(OWNER);
+    expect(paused).toMatchObject({
+      state: 'verification_required',
+      processingEpoch: initial.processingEpoch,
+      verificationReason: initial.verificationReason,
+      verificationResumeState: initial.verificationResumeState,
+      operationId: initial.operationId,
+      serverVerifiedAt: initial.serverVerifiedAt,
+      localCleanupComplete: true,
+    });
+    expect(await store.readHealthDataLifecycle(OWNER)).toEqual(paused);
+    // These are the genuine local shell's cleanup-complete review conditions;
+    // review remains an explicit user action and no grant occurs here.
+    expect(store.verificationRequiresLocalCleanup(paused)).toBe(true);
     expect(mocks.cleanup).toHaveBeenCalledExactlyOnceWith(OWNER);
     expectNoHealthGrant();
   });

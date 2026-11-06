@@ -23,6 +23,13 @@ PLAN_SHA256 = 'fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd'
 WORKLISTS = {'docs/phase-4/generated/source-worklist.json', 'docs/phase-4/generated/source-worklist.md'}
 # Finite independently enumerated scope; a ledger never grants its own paths.
 PATHS = {
+    'apps/mobile/src/app/(tabs)/you.tsx',
+    'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
+    'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+    'apps/mobile/src/features/healthConsent/lifecycle.ts',
+    'apps/mobile/src/features/onboarding/healthConsentStore.test.ts',
+    'apps/mobile/src/features/onboarding/healthConsentStore.ts',
+    'apps/mobile/src/features/settings/settingsRoutes.test.ts',
     'apps/mobile/src/features/healthConsent/lifecycle.test.ts',
     'scripts/release/full-app-j01/consent_trace47.py',
     'scripts/release/full-app-j01/consent_trace47.test.py',

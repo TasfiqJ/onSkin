@@ -18,8 +18,18 @@ class Source47Tests(unittest.TestCase):
         diagnostic={'scripts/release/full-app-j01/consent_trace47.py',
                     'scripts/release/full-app-j01/consent_trace47.test.py'}
         model04={'apps/mobile/src/features/healthConsent/lifecycle.test.ts'}
-        self.assertEqual(len(c.PATHS - diagnostic - model04),33)
-        self.assertEqual(len(c.PATHS),36)
+        consent04={
+            'apps/mobile/src/app/(tabs)/you.tsx',
+            'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
+            'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+            'apps/mobile/src/features/healthConsent/lifecycle.ts',
+            'apps/mobile/src/features/onboarding/healthConsentStore.test.ts',
+            'apps/mobile/src/features/onboarding/healthConsentStore.ts',
+            'apps/mobile/src/features/settings/settingsRoutes.test.ts',
+        }
+        self.assertEqual(len(c.PATHS - diagnostic - model04 - consent04),33)
+        self.assertEqual(len(c.PATHS),43)
+        c.check_scope(consent04,c.PATHS)
         c.check_scope(model04,c.PATHS)
         c.check_scope(diagnostic,c.PATHS)
         for path in ['apps/mobile/src/features/settings/accountDeletionClientState.ts',
@@ -32,8 +42,8 @@ class Source47Tests(unittest.TestCase):
         repair={'apps/mobile/src/features/notifications/nativeMutation.ts',
                 'apps/mobile/src/features/notifications/nativeMutation.test.ts'}
         c.check_scope(repair,c.PATHS)
-        for path in ['apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
-                     'apps/mobile/src/features/healthConsent/lifecycle.ts',
+        for path in ['apps/mobile/src/features/healthConsent/lifecycleStore.ts',
+                     'apps/mobile/src/features/healthConsent/lifecycleStore.test.ts',
                      'apps/mobile/src/features/notifications/unrelated.ts']:
             with self.subTest(path=path),self.assertRaisesRegex(ValueError,'UNDECLARED_CHANGED_PATH'):
                 c.check_scope({path},c.PATHS|{path})
