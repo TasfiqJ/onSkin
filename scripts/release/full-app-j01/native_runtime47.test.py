@@ -370,6 +370,8 @@ class Runtime47Tests(unittest.TestCase):
             '445472ce057b90f08b5a51d5a49167c757d34b79:scripts/release/full-app-j01/native_ui47.swift'], cwd=root)
         preserved = subprocess.check_output(['git', 'show',
             'f21831f5731be928c8e323c509fb62b3d12a654e:scripts/release/full-app-j01/native_ui47.swift'], cwd=root)
+        pre_disclosure = subprocess.check_output(['git', 'show',
+            'ee4f91945ffd816accc17dce1374e7c5d3483818:scripts/release/full-app-j01/native_ui47.swift'], cwd=root)
         prefix = source[:8736]
         self.assertEqual(hashlib.sha256(prefix).hexdigest(),
                          'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44')
@@ -389,9 +391,32 @@ class Runtime47Tests(unittest.TestCase):
         self.assertEqual(current.count(separator), 1)
         self.assertEqual(preserved.count(separator), 1)
         normal = current.split(separator)[0]
-        self.assertEqual(len(normal), 18684)
-        self.assertEqual(hashlib.sha256(normal).hexdigest(),
+        self.assertEqual(pre_disclosure.count(separator), 1)
+        historical04 = pre_disclosure.split(separator)[0]
+        self.assertEqual(len(historical04), 18684)
+        self.assertEqual(hashlib.sha256(historical04).hexdigest(),
                          '7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20')
+        before_disclosure = b'''    private func requireDisclosure(_ app: XCUIApplication) {
+        for label in ["WHAT", "WHY", "NEVER"] {
+            XCTAssertTrue(text(label, app).waitForExistence(timeout: deadline),
+                "The actual explicit disclosure must include " + label)
+        }
+    }
+'''
+        after_disclosure = b'''    private func requireDisclosure(_ app: XCUIApplication) {
+        for label in ["WHAT", "WHY", "NEVER"] {
+            XCTAssertTrue(text(label, app).waitForExistence(timeout: deadline),
+                "The actual explicit disclosure must include " + label)
+            requireVisible(text(label, app),
+                "The actual explicit disclosure must make " + label + " reachable")
+        }
+    }
+'''
+        self.assertEqual(historical04.count(before_disclosure), 1)
+        self.assertEqual(normal, historical04.replace(before_disclosure, after_disclosure, 1))
+        self.assertEqual(len(normal), 18813)
+        self.assertEqual(hashlib.sha256(normal).hexdigest(),
+                         '3f3d5c65b093f08af85b29c9baa3e578f5615f8bd42762e94b8e1b314bc4e0db')
         self.assertIn(b'final class C47NativeUI', normal)
         self.assertNotIn(b'final class C47InternalOwnerUI', normal)
         self.assertNotIn(b'import UIKit', normal)

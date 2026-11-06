@@ -47,8 +47,10 @@ historical_normal = historical_swift.byteslice(0, 8736)
 abort 'frozen historical normal Swift prefix changed' unless $?.success? && historical_normal && Digest::SHA256.hexdigest(historical_normal) == 'b57511fd34c67d0a39e9acb712d86d6ea19d90213b468bce7c1a528612487c44'
 historical25 = IO.popen(['git', '--no-replace-objects', 'show', 'f21831f5731be928c8e323c509fb62b3d12a654e:scripts/release/full-app-j01/native_ui47.swift'], 'rb', &:read).byteslice(0, 9568)
 abort 'frozen historical native25 prefix changed' unless $?.success? && historical25 && Digest::SHA256.hexdigest(historical25) == '686d434f567f4da623134279617e4b91754d4bf0497968efe07d2100d94c59c7'
+historical04 = IO.popen(['git', '--no-replace-objects', 'show', 'ee4f91945ffd816accc17dce1374e7c5d3483818:scripts/release/full-app-j01/native_ui47.swift'], 'rb', &:read).split("\nimport UIKit", 2).first
+abort 'frozen pre-reachability ordinary suite04 prefix changed' unless $?.success? && historical04 && historical04.bytesize == 18684 && Digest::SHA256.hexdigest(historical04) == '7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20'
 normal_swift = swift_full.split("\nimport UIKit", 2).first
-abort 'current versioned ordinary suite04 source changed' unless normal_swift.bytesize == 18684 && Digest::SHA256.hexdigest(normal_swift) == '7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20'
+abort 'current versioned ordinary suite04 source changed' unless normal_swift.bytesize == 18813 && Digest::SHA256.hexdigest(normal_swift) == '3f3d5c65b093f08af85b29c9baa3e578f5615f8bd42762e94b8e1b314bc4e0db'
 swift_selected = internal ? swift_full : normal_swift
 File.binwrite(swift_copy, swift_selected)
 project_path = File.join(project_root, 'C47NativeUI.xcodeproj')

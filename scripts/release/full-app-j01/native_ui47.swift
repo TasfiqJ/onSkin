@@ -164,6 +164,8 @@ final class C47NativeUI: XCTestCase {
         for label in ["WHAT", "WHY", "NEVER"] {
             XCTAssertTrue(text(label, app).waitForExistence(timeout: deadline),
                 "The actual explicit disclosure must include " + label)
+            requireVisible(text(label, app),
+                "The actual explicit disclosure must make " + label + " reachable")
         }
     }
 

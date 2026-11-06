@@ -3112,6 +3112,74 @@
       "next_native_attempt": 29,
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-CONSENT-RUNTIME-CLOSURE-04",
+      "recorded_utc": "2026-11-06T18:59:55.035221+00:00",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "ee4f91945ffd816accc17dce1374e7c5d3483818",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 55202,
+          "preimage_sha256": "aeea64f5fb0d2a021f7008030c5e550c9d63aeae2e4d5e7f0c1a1bb67bb6a536",
+          "preimage_blob": "21d9cebe943ee6570f7d4a242147afa34b4e6d76"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "ee4f91945ffd816accc17dce1374e7c5d3483818",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8105,
+          "preimage_sha256": "09ff42f3a6d92ef9a699d7e892100b6b797265ed018ead1a1d422af0b4b272f4",
+          "preimage_blob": "72c24ec55221f88791fc7ee33d1b079eac582f0c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "ee4f91945ffd816accc17dce1374e7c5d3483818",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 107193,
+          "preimage_sha256": "50ddbc079738ecbfb5de94178c3cb7b5991c387ae9c3f0448e687e91983b993d",
+          "preimage_blob": "0b192aaebcbe6eacfb0f40be71f44e18f2bdfcdd"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "ee4f91945ffd816accc17dce1374e7c5d3483818",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17191,
+          "preimage_sha256": "8d201723bb88638b0ba310d0bed1077b2710c822e5b6eaa550ca7d6c7fc90200",
+          "preimage_blob": "38ca81941c12fcf2a0f65285aab384ad4087d6c3"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "ee4f91945ffd816accc17dce1374e7c5d3483818",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 183990,
+          "preimage_sha256": "c0d5a50e1795536ec912b65bfb221f8bedf542222e4051116b4b8d0f4eb4a7ee",
+          "preimage_blob": "1377e1f4a4f1c2feb9f720008f574bd99aaa8e20"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "ee4f91945ffd816accc17dce1374e7c5d3483818",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 79354,
+          "preimage_sha256": "09ed2e620b0aae3734f4478ebf21bcf50626262dd76c2bd4cb82018d8340e5de",
+          "preimage_blob": "188e043b1c3233b4869b88ceb6aa9781faddf2c6"
+        }
+      ],
+      "causal_need": "Mandate requires actual explicit disclosure reachable. Existing current helper asserts WHAT/WHY/NEVER existence only, which may include offscreen text. Add existing bounded actual-native requireVisible for each label, preserving every original existence assertion and all scenario bodies.",
+      "invariant": "All three ordinary methods and every internal byte remain unchanged. Only requireDisclosure gains two lines invoking existing bounded native scroll/reachability helper. No timing/deadline/age/authority/consent copy/application behaviorchange. Preserve frozen445/F218 witnesses and EE18684/SHA7ea priornormal, exact successor18813/SHA3f3normal. No native disclosure/recovery or ordinary/internal pass from static guards.",
+      "validation": "Current full79 runtime/11helper/10scope/14signing/6workflow/two source controls after commit. Exact historical-normal-to-currenthelper transform and four direct mutation refusals. Actual native visibility/currentcomplete3ordinary remains mandatory; terminalwithdrawalcase cannot be relabeled verification-required UI proof.",
+      "normal_history": {
+        "bytes": 18684,
+        "sha256": "7ea34e6bab248fecf0557261186548ba2b5300407f25f6bc41d55261f723ce20"
+      },
+      "normal_successor": {
+        "bytes": 18813,
+        "sha256": "3f3d5c65b093f08af85b29c9baa3e578f5615f8bd42762e94b8e1b314bc4e0db"
+      },
+      "exact_transform": "EE normal: requireDisclosure preserves its original existence assertion and calls existing bounded native requireVisible for each WHAT/WHY/NEVER label; all other Swift bytes remain exact.",
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
