@@ -2407,5 +2407,168 @@ class AuthenticatedDevExecutable04Controls(unittest.TestCase):
             n.installed_app_inventory_proof(inventory['files'],inventory['files'],'UnrecognizedExecutable')
 
 
+class FixedBuild35Recovery36Tests(unittest.TestCase):
+    """Pure harness/authentication controls; these never execute or admit native UI."""
+    def delta_fixture(self):
+        repo=Path(__file__).resolve().parents[3]
+        current_root=Path(n.__file__).resolve().parents[3]
+        names=['scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py',
+               'docs/phase-9/ios-generated-input-succession47.v1.json']
+        old={name:subprocess.check_output(['git','--no-replace-objects','show',n.RESUME36_ORIGIN['head']+':'+name],cwd=repo) for name in names}
+        current={name:(current_root/name).read_bytes() for name in names}
+        return names,old,current
+
+    def test_fixed36_accepts_only_reviewed_harness_delta(self):
+        args=self.delta_fixture();self.assertEqual(n.verify_reuse36_delta(*args),sorted(args[0]))
+
+    def test_fixed36_rejects_product_lock_installer_signing_and_ui_changes(self):
+        for name in ('apps/mobile/src/features/healthConsent/lifecycle.ts','package-lock.json','apps/mobile/app.config.js',
+                     'scripts/phase5/patch-expo-widgets-lifecycle.mjs','scripts/release/full-app-j01/simulator_signing47.py',
+                     'scripts/release/full-app-j01/native_ui47.swift','scripts/release/full-app-j01/native_ui47.rb'):
+            names,old,current=self.delta_fixture()
+            with self.subTest(name=name),self.assertRaisesRegex(ValueError,'RESUME36_EXACT_NON_PRODUCT_DELTA'):
+                n.verify_reuse36_delta(names+[name],old,current)
+
+    def test_fixed36_rejects_changed_build_environment_or_generated_authority(self):
+        names,old,current=self.delta_fixture();py=names[0]
+        current[py]=current[py].replace(b"'IOS_WIDGET_EXTENSION_BUILD_ENABLED': 'false'",b"'IOS_WIDGET_EXTENSION_BUILD_ENABLED': 'true'",1)
+        with self.assertRaisesRegex(ValueError,'RESUME36_PROTECTED_BUILD_DEPENDENCY_SIGNING_OR_ENVIRONMENT_DRIFT'):
+            n.verify_reuse36_delta(names,old,current)
+        names,old,current=self.delta_fixture();value=json.loads(current[names[2]]);value['registry'][0]['path']='node_modules/foreign'
+        current[names[2]]=json.dumps(value).encode()
+        with self.assertRaisesRegex(ValueError,'RESUME36_GENERATED_INPUT_OR_AUTHORITY_DRIFT'):
+            n.verify_reuse36_delta(names,old,current)
+
+    def test_fixed36_requires_exact_self_pins_and_unchanged_target60(self):
+        names,old,current=self.delta_fixture();value=json.loads(current[names[2]])
+        next(row for row in value['sourcePins'] if row['path']==names[0])['sha256']='0'*64
+        current[names[2]]=json.dumps(value).encode()
+        with self.assertRaisesRegex(ValueError,'RESUME36_EXACT_CURRENT_SELF_PIN'):n.verify_reuse36_delta(names,old,current)
+        names,old,current=self.delta_fixture();current[names[0]]=current[names[0]].replace(
+            b"bundle, *arguments], timeout=60)",b"bundle, *arguments], timeout=300)",1)
+        with self.assertRaisesRegex(ValueError,'RESUME36_.*DRIFT'):n.verify_reuse36_delta(names,old,current)
+
+    def test_fixed36_removing_required_three_case_gate_is_rejected(self):
+        names,old,current=self.delta_fixture()
+        current[names[0]]=current[names[0]].replace(b"aggregate.get('executed') == 3",b"aggregate.get('executed') == 2",1)
+        with self.assertRaisesRegex(ValueError,'RESUME36_EXACT_REVIEWED_FUNCTION_BODY'):
+            n.verify_reuse36_delta(names,old,current)
+
+    def test_fixed36_mode_is_normal_only_and_exclusive(self):
+        self.assertEqual(n.execution_mode('normal',resume36=True),'resume36')
+        for stage in ('source','build','internal'):
+            with self.assertRaisesRegex(ValueError,'RESUME36_NORMAL_ONLY'):n.execution_mode(stage,resume36=True)
+        for other in ('resume25','probe','consent_trace04','consent_runtime27'):
+            with self.assertRaisesRegex(ValueError,'EXCLUSIVE_EXECUTION_MODE'):n.execution_mode('normal',resume36=True,**{other:True})
+
+    def synthetic_partial_fixture(self,directory):
+        source={'head':n.RESUME36_ORIGIN['head'],'tree':n.RESUME36_ORIGIN['tree']}
+        parent={'stage':'normal','stage_complete':False,'status':'PARTIAL_BLOCKED','source':source,
+            'failure':{'detail':'C47_COMMAND_FAILED:simulator-launch'},'release':'NO_GO','acceptance_granted':False,
+            'stages':{},'commands':[],'qualification':'SYNTHETIC_STRUCTURE_FIXTURE_NOT_NATIVE_EVIDENCE'}
+        child={'source':source,'method':n.NORMAL_UI_CASES04[0],'ordinary_suite_version':4,'status':'PARTIAL_BLOCKED',
+            'commands':[],'qualification':'SYNTHETIC_STRUCTURE_FIXTURE_NOT_NATIVE_EVIDENCE'}
+        for receipt,root,count in ((parent,directory,37),(child,directory/'ordinary-v04/01',27)):
+            (root/'logs').mkdir(parents=True)
+            for index in range(1,count+1):
+                launch=receipt is child and index==25
+                name='simulator-launch' if launch else 'fixture-command-'+str(index)
+                row={'name':name,'capture_complete':True,'state':'FAIL' if launch else 'PASS','required':True,
+                     'exit_code':124 if launch else 0,'timed_out':launch,'timeout_seconds':60}
+                for kind in ('stdout','stderr'):
+                    path='logs/'+str(index).zfill(3)+'-'+name+'.'+kind;(root/path).write_bytes(b'')
+                    row[kind]=path;row[kind+'_bytes']=0;row[kind+'_sha256']=hashlib.sha256(b'').hexdigest()
+                receipt['commands'].append(row)
+            (root/'execution.json').write_text(json.dumps(receipt))
+        return parent
+
+    def test_fixed36_synthetic_partial_is_failure_and_never_a_normal_pass(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory=Path(temporary);receipt=self.synthetic_partial_fixture(directory)
+            proof=n.verify_partial36_execution(receipt,directory)
+            self.assertFalse(proof['normal_admitted']);self.assertFalse(proof['actual_normal_xctest_executed'])
+            receipt['stage_complete']=True
+            with self.assertRaisesRegex(ValueError,'RESUME36_EXACT_FAILED_NORMAL'):n.verify_partial36_execution(receipt,directory)
+
+    def test_fixed36_partial_provider_wrong_head_artifact_or_job_refuse_before_download(self):
+        origin=n.RESUME36_ORIGIN;pin=origin['partial']
+        run={'id':origin['run_id'],'run_attempt':2,'head_sha':origin['head'],'head_branch':n.STAGE_BRANCH,
+             'event':'pull_request','path':n.STAGE_WORKFLOW,'repository':{'full_name':n.STAGE_REPOSITORY,'private':False},
+             'head_repository':{'full_name':n.STAGE_REPOSITORY},'qualification':'SYNTHETIC_METADATA_FIXTURE'}
+        jobs={'total_count':4,'jobs':[{'name':'C47 '+role,'id':pin['job_id'] if role=='normal' else index,
+             'run_id':origin['run_id'],'head_sha':origin['head'],'status':'completed','conclusion':'failure'}
+             for index,role in enumerate(('source','build','normal','internal'),1)]}
+        artifact={'id':pin['artifact_id'],'name':'campaign47-native-normal-'+origin['head']+'-'+str(origin['run_id'])+'-2',
+             'expired':False,'digest':'sha256:'+pin['digest'],'size_in_bytes':pin['wire_bytes'],
+             'workflow_run':{'id':origin['run_id'],'head_sha':origin['head']}}
+        context={'repository':n.STAGE_REPOSITORY,**{key:origin[key] for key in ('head','tree','run_id','run_attempt')}}
+        for kind in ('head','artifact','job'):
+            r,j,a=copy.deepcopy((run,jobs,artifact))
+            if kind=='head':r['head_sha']='0'*40
+            elif kind=='artifact':a['id']+=1
+            else:next(row for row in j['jobs'] if row['name']=='C47 normal')['id']+=1
+            with self.subTest(kind=kind),tempfile.TemporaryDirectory() as temporary,patch.object(n,'_stage_api',side_effect=[(r,'a'*64),(j,'b'*64),(a,'c'*64)]),patch.object(n,'_stage_download') as download:
+                with self.assertRaisesRegex(ValueError,'RESUME36_'):n.resume36_partial_import(context,'fixture-token',Path(temporary)/'new')
+                download.assert_not_called()
+
+    def test_fixed36_missing_partial_evidence_cannot_enable_reuse(self):
+        names,old,current=self.delta_fixture()
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            for name,data in current.items():(root/name).parent.mkdir(parents=True,exist_ok=True);(root/name).write_bytes(data)
+            source={'head':'a'*40,'tree':'b'*40};runner=SimpleNamespace(root=root,env={},receipt={'source':source})
+            context={**source,'repository':n.STAGE_REPOSITORY,'runner_temp':str(root),'run_id':999,'run_attempt':1}
+            def git(argv,**kwargs):
+                args=argv[2:]
+                if args[:2]==['merge-base','--is-ancestor']:return b''
+                if args[0]=='rev-parse':return n.RESUME36_ORIGIN['tree'].encode()+b'\n'
+                if args[:2]==['diff','--name-only']:return ('\n'.join(names)+'\n').encode()
+                if args[:2]==['diff','--name-status']:return ''.join('M\t'+name+'\n' for name in names).encode()
+                if args[:2]==['diff','--summary']:return b''
+                if args[0]=='show':return old[args[1].split(':',1)[1]]
+                raise AssertionError(args)
+            imported={role:{'producer':{'producer_job_id':n.RESUME36_ORIGIN[role]['job_id']},'payload_directory':str(root)} for role in ('source','build')}
+            with patch.object(n.subprocess,'check_output',side_effect=git),patch.object(n,'load_authenticated_stage_inputs',return_value={'imported_provenance':imported}),patch.object(n,'verify_producer_streams36'),patch.object(n,'resume36_partial_import',side_effect=ValueError('MISSING_PARTIAL_PROOF')):
+                with self.assertRaisesRegex(ValueError,'MISSING_PARTIAL_PROOF'):n.resume36_import(runner,context,'fixture-token')
+            self.assertNotIn('authenticated_app_build_reuse36',runner.receipt)
+
+    def test_fixed36_settings_probe_uses_system_identity_exact_pid_and_no_target_launch(self):
+        runtime_root='/Library/Developer/CoreSimulator/Volumes/fixture/Contents/Resources/RuntimeRoot'
+        registry={'com.apple.Preferences':{'CFBundleIdentifier':'com.apple.Preferences','CFBundleExecutable':'Preferences',
+            'CFBundleName':'Settings','CFBundleDisplayName':'Settings','ApplicationType':'System',
+            'Path':runtime_root+'/Applications/Preferences.app','Bundle':'file://'+runtime_root+'/Applications/Preferences.app/'}}
+        runner=SimpleNamespace(receipt={'simulator':{'runtime':{'runtimeRoot':runtime_root}}},output=Path('unused'),text=unittest.mock.Mock(side_effect=['com.apple.Preferences: 91','91\t0\tcom.apple.Preferences']),run=unittest.mock.Mock(),passed=unittest.mock.Mock())
+        with patch.object(n,'executed_producer_command',return_value=({},(json.dumps(registry).encode(),b''))):
+            n.platform_bootstrap36(runner,'device')
+        self.assertEqual(runner.text.call_args_list[0].kwargs,{'timeout':60})
+        self.assertTrue(all('com.layerwell.app.staging' not in str(call) for call in runner.text.call_args_list))
+        runner.text=unittest.mock.Mock(side_effect=['com.apple.Preferences: 91','92\t0\tcom.apple.Preferences'])
+        with patch.object(n,'executed_producer_command',return_value=({},(json.dumps(registry).encode(),b''))):
+            with self.assertRaisesRegex(ValueError,'PLATFORM36_SAME_SETTINGS_PID'):n.platform_bootstrap36(runner,'device')
+
+    def test_fixed36_diagnostic_exception_preserves_primary_probe_failure(self):
+        fixture=Ordinary04EEControls();fixture.setUp();self.addCleanup(fixture.doCleanups)
+        parent,calls,children,replacements=fixture.loop_fixture('none')
+        parent.receipt['authenticated_app_build_reuse36']={'fixture_only':True}
+        from contextlib import ExitStack
+        with ExitStack() as stack:
+            for module,name,value in replacements:stack.enter_context(patch.object(module,name,value))
+            stack.enter_context(patch.object(n,'platform_bootstrap36',side_effect=ValueError('PRIMARY_PLATFORM_FAILURE')))
+            stack.enter_context(patch.object(n,'launch_failure_diagnostics36',side_effect=OSError('SECONDARY_DIAGNOSTIC_IO')))
+            with self.assertRaisesRegex(ValueError,'PRIMARY_PLATFORM_FAILURE'):
+                n.run_normal(parent,Path('ios'),fixture.directory,Path('app'),'com.layerwell.app.staging','a'*40)
+        self.assertEqual(len(children),1)
+        self.assertEqual(children[0].receipt['failure']['detail'],'PRIMARY_PLATFORM_FAILURE')
+        self.assertEqual(children[0].receipt['launch36_diagnostic_error_type'],'OSError')
+        self.assertNotIn('normal-staging-ui',parent.receipt['stages'])
+
+    def test_fixed36_named_normal_suite_gate_stays_required_before_internal(self):
+        with self.assertRaisesRegex(ValueError,'NORMAL_STAGING_UI_REQUIRED_BEFORE_INTERNAL'):
+            n.normal_xctest_gate(SimpleNamespace(receipt={'stages':{}},root=Path('unused'),output=Path('unused')))
+        partial={'stages':{'normal-staging-ui':{'status':'PASS','details':{'positive_xctest':{'suite_version':4,'executed':2,'failed':0,'unexpected':0,'skipped':0}}}}}
+        with self.assertRaisesRegex(ValueError,'NORMAL04_COMPLETE_PASS_REQUIRED_BEFORE_INTERNAL'):
+            n.normal_xctest_gate(SimpleNamespace(receipt=partial,root=Path('unused'),output=Path('unused')))
+
+
 if __name__ == '__main__':
     unittest.main()

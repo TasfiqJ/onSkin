@@ -634,7 +634,7 @@ def stage_execution_identity(value, expected):
             value.get('release') == 'NO_GO', 'STAGE_EXECUTION_IDENTITY_OR_INCOMPLETE')
 
 
-def verify_stage_zip(archive, expected, proof, output):
+def verify_stage_zip(archive, expected, proof, output, known_failed36=False):
     require(proof['wire_sha256'] == expected['digest'] and
             proof['service_digest'] == 'sha256:' + expected['digest'], 'STAGE_DUAL_WIRE_ANCHOR')
     require(stage_file_digest(archive, STAGE_MAX_WIRE) ==
@@ -707,7 +707,15 @@ def verify_stage_zip(archive, expected, proof, output):
     require(stage_file_digest(archive, STAGE_MAX_WIRE) ==
             {'bytes': proof['wire_bytes'], 'sha256': expected['digest']}, 'STAGE_WIRE_REREAD')
     execution = stage_json(read_native_file(output / 'execution.json'))
-    stage_execution_identity(execution, expected)
+    if known_failed36:
+        pin=RESUME36_ORIGIN['partial']
+        require(expected['artifact_id']==pin['artifact_id'] and expected['digest']==pin['digest'] and
+            expected['head']==RESUME36_ORIGIN['head'] and expected['tree']==RESUME36_ORIGIN['tree'] and
+            expected['run_id']==RESUME36_ORIGIN['run_id'] and expected['run_attempt']==2 and expected['stage']=='normal',
+            'RESUME36_ONLY_EXACT_FAILED_ARCHIVE')
+        verify_partial36_execution(execution,output)
+    else:
+        stage_execution_identity(execution, expected)
     return {'producer': proof, 'stage': expected['stage'], 'payload_directory': str(output),
             'manifest_sha256': hashlib.sha256(manifest_raw).hexdigest(), 'files': len(members),
             'payload_bytes': total, 'all_file_hashes_and_crc_verified': True,
@@ -1001,7 +1009,7 @@ def consume_produced_app(r, producer, expected_head, architecture, destination):
     require_simulator_host(architecture)
     require(re.fullmatch(r'[a-f0-9]{40}', expected_head) and
             r.receipt['source']['head'] == expected_head, 'IMPORTED_APP_CURRENT_SOURCE')
-    reuse = r.receipt.get('authenticated_app_build_reuse25')
+    reuse = r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25')
     product_source = reuse['producer_source'] if reuse else r.receipt['source']
     product_head = product_source['head']
     producer, destination = Path(producer), Path(destination).absolute()
@@ -1385,14 +1393,15 @@ def execute_retained_consent_runtime27(r, token):
     r.persist()
 
 
-def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False):
+def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False, resume36=False):
     require(stage in ('source', 'build', 'normal', 'internal'), 'EXECUTION_STAGE')
-    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
+    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27, resume36))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
     require(not probe or stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
     require(not resume25 or stage == 'normal', 'REUSE25_NORMAL_ONLY')
+    require(not resume36 or stage == 'normal','RESUME36_NORMAL_ONLY')
     require(not consent_trace04 or stage == 'build', 'CONSENT_TRACE_BUILD_STAGE_ONLY')
     require(not consent_runtime27 or stage == 'build', 'CONSENT_RUNTIME27_BUILD_STAGE_ONLY')
-    return 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
+    return 'resume36' if resume36 else 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
 
 
 def execute(r, compile_only=False, consent_trace04=False, source_provenance=None):
@@ -1823,6 +1832,8 @@ def run_normal(r, ios, products, app, bundle, head):
         output = r.output / 'ordinary-v04' / slug
         child = Runner(r.root, output, seconds=max(1, r.deadline - time.monotonic()))
         child.deadline, child.env, child.evidence_root = r.deadline, ui_env, r.output
+        if r.receipt.get('authenticated_app_build_reuse36'):
+            child.receipt['authenticated_app_build_reuse36']=r.receipt['authenticated_app_build_reuse36']
         child.receipt.update(source=r.receipt['source'], ordinary_suite_version=4, method=method,
             upstream_payload_bytes=r.receipt.get('upstream_payload_bytes', 0), job_context=r.receipt.get('job_context'))
         for stage in ('compiled', 'verified-produced-app'):
@@ -1848,7 +1859,18 @@ def run_normal(r, ios, products, app, bundle, head):
             expected = Path.home() / 'Library/Developer/CoreSimulator/Devices' / device / 'data/Containers/Data/Application'
             require(data_path.parent == expected and str(uuid.UUID(data_path.name)).lower() == data_path.name.lower(),
                     'NORMAL04_ACTUAL_DATA_CONTAINER')
-            pid = launch_and_verify(child, device, bundle)
+            try:
+                if r.receipt.get('authenticated_app_build_reuse36'):
+                    child.receipt['launch36_stage']='PLATFORM_BOOTSTRAP'
+                    platform_bootstrap36(child,device)
+                    child.receipt['launch36_stage']='TARGET_APP_LAUNCH'
+                pid = launch_and_verify(child, device, bundle)
+            except Exception:
+                if r.receipt.get('authenticated_app_build_reuse36'):
+                    try:launch_failure_diagnostics36(child,device)
+                    except Exception as diagnostic_error:
+                        child.receipt['launch36_diagnostic_error_type']=type(diagnostic_error).__name__
+                raise
             child.passed('launched', {'pid': pid, 'survival_seconds': 30, 'bundle_id': bundle})
             execution = normal_case_execution04(child,project,case_products,method,device,ui_env)
             detail = {'suite_version': 4, 'method': method, 'udid': device, 'data_container': data,
@@ -2048,7 +2070,7 @@ def verify_installed_app(r, container, app, bundle):
         inventory_sha256 = compiled['inventory_sha256']
         authenticated = app_executable_identity(inventory['files'],executable)
     require(hashlib.sha256(raw).hexdigest() == inventory_sha256, 'INSTALLED_AUTHENTICATED_FULL_INVENTORY_HASH')
-    product_source = r.receipt.get('authenticated_app_build_reuse25',{}).get('producer_source',r.receipt['source'])
+    product_source = (r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25') or {}).get('producer_source',r.receipt['source'])
     require(inventory.get('source') == product_source and
             authority.get('source_head') == product_source['head'], 'INSTALLED_INVENTORY_SOURCE')
     configuration,lane = inventory.get('configuration'),inventory.get('lane')
@@ -2074,7 +2096,7 @@ def verify_installed_app(r, container, app, bundle):
              'producer_to_installed':installed_app_inventory_proof(inventory['files'],acquired['installed'],executable)}
     write_json(evidence/'identity-validation.json',proof)
     r.passed('installed',{'udid':r.receipt['simulator']['udid'],'bundle_id':bundle,'executable':executable,
-        'source_head':r.receipt['source']['head'],'installed_executable_sha256':observed['sha256'],
+        'source_head':(product_source['head'] if r.receipt.get('authenticated_app_build_reuse36') else r.receipt['source']['head']),'installed_executable_sha256':observed['sha256'],
         'expected_executable_sha256':expected['sha256'],'executable_bytes':observed['bytes'],
         'authenticated_inventory_sha256':inventory_sha256,
         'qualification':'ACTUAL_INSTALL_ZERO_AND_CONTAINER_LOOKUP_WITH_EXACT_EXECUTABLE_BYTES',
@@ -2725,7 +2747,7 @@ def executed_producer_command(receipt, directory, name, read_output=False):
 
 def producer_source_matches(r, receipt, directory):
     source = receipt.get('source')
-    reuse = r.receipt.get('authenticated_app_build_reuse25')
+    reuse = r.receipt.get('authenticated_app_build_reuse36') or r.receipt.get('authenticated_app_build_reuse25')
     expected_source = reuse['producer_source'] if reuse else r.receipt['source']
     require(isinstance(source, dict) and source == expected_source, 'PRODUCER_SAME_WHOLE_SOURCE')
     proof = stage_json(read_native_file(directory / 'current-generated47-source.json'))
@@ -2740,6 +2762,10 @@ def producer_source_matches(r, receipt, directory):
 
 
 def producer_final_source_matches(r, receipt, directory, name):
+    if getattr(r,'receipt',{}).get('authenticated_app_build_reuse36'):
+        require(name=='source-after-build.json' and sha(directory/name)=='eaff4e4380bb9446dedc419079a9790acb9e881efe4eb501548e419b296625a9',
+            'RESUME36_EXACT_CLOSED_BUILD35_FINAL_SOURCE')
+        return
     if getattr(r, 'receipt', {}).get('authenticated_app_build_reuse25'):
         # The exact closed historical proof is retained, never relabeled current.
         require(name == 'source-after-build.json' and sha(directory / name) ==
@@ -2816,9 +2842,10 @@ def verify_source_producer04(r, provenance):
             receipt.get('acceptance_granted') is False and receipt.get('campaign_candidate_complete') is False and
             receipt.get('release') == 'NO_GO',
             'SOURCE04_ONLY_COMPLETE_SOURCE_STAGE')
+    producer_source=r.receipt.get('authenticated_app_build_reuse36',{}).get('producer_source',r.receipt['source'])
     require(provenance['producer'].get('producer_job_name') == 'C47 source' and
-            provenance['producer'].get('source_head') == r.receipt['source']['head'] and
-            provenance['producer'].get('source_tree') == r.receipt['source']['tree'], 'SOURCE04_PRODUCER_IDENTITY')
+            provenance['producer'].get('source_head') == producer_source['head'] and
+            provenance['producer'].get('source_tree') == producer_source['tree'], 'SOURCE04_PRODUCER_IDENTITY')
     require(stage_json(read_native_file(directory / 'source-before.json')) == receipt['source'] ==
             stage_json(read_native_file(directory / 'source-after-controls.json')), 'SOURCE04_UNPROJECTED_FINAL_SOURCE')
     require(all(c.get('capture_complete') is True and c.get('state') == 'PASS' and c.get('exit_code') == 0
@@ -2946,8 +2973,9 @@ def normal_xctest_gate(parent):
                'executable': app_executable_identity(stage_json(inventory)['files'], compiled['executable'])}
     authenticated_raw = read_native_file(parent.output/'app-inventory.json')
     authenticated_inventory = stage_json(authenticated_raw)
+    product_source=parent.receipt.get('authenticated_app_build_reuse36',{}).get('producer_source',parent.receipt['source'])
     require(hashlib.sha256(authenticated_raw).hexdigest() == app['inventory_sha256'] and
-            authenticated_inventory.get('source') == parent.receipt['source'] and
+            authenticated_inventory.get('source') == product_source and
             authenticated_inventory.get('configuration') == 'Release' and
             authenticated_inventory.get('lane') == 'normal-staging', 'NORMAL04_AUTHENTICATED_FULL_INVENTORY')
     cases = []
@@ -3042,7 +3070,7 @@ def normal_xctest_gate(parent):
         require(stage_json(read_native_file(directory/'installed-signed-product-effective-entitlements.json')) ==
                 authenticated_inventory['simulator_signing']['effective'], 'NORMAL04_INSTALLED_SIGNING_REPLAY')
         require(installed.get('bundle_id') == app['bundle_id'] == 'com.layerwell.app.staging' and
-                installed.get('source_head') == parent.receipt['source']['head'] and
+                installed.get('source_head') == product_source['head'] and
                 installed.get('installed_executable_sha256') == installed.get('expected_executable_sha256') ==
                     app['executable']['sha256'] and installed.get('executable_bytes') == app['executable']['bytes'] and
                 installed.get('authenticated_inventory_sha256') == app['inventory_sha256'] and
@@ -3089,6 +3117,222 @@ def verify_normal_producer(r, provenance, build_provenance):
     parent = SimpleNamespace(root=r.root, receipt=receipt, output=directory, provenance=provenance)
     normal_xctest_gate(parent)
     return parent
+
+
+RESUME36_ORIGIN = {'head':'04cf508436c3d56959ecc492bf223fcb77e26121',
+    'tree':'948c2eab5057eac12d9e86e0035f71ce1c1728a2','run_id':42290749275,'run_attempt':2,
+    'source':{'artifact_id':13547772065,'job_id':128193324115,'digest':'1889cf78903a55dfca5ab17ddb55555b74ed52f62609c2fef3d629c10ffedcea','payload_bytes':10147177},
+    'build':{'artifact_id':13551452384,'job_id':128205761177,'digest':'bd785f01039a189775b3c823b76f6387f907c13785f5b4287d8daf89507b30ff','payload_bytes':130430265},
+    'partial':{'artifact_id':13552209392,'job_id':128236571795,'digest':'747f19be50ede248809107f944d016c148772d6a685aae2e1359ed42fee03de5','payload_bytes':12869994,'wire_bytes':12901290}}
+
+
+def verify_reuse36_delta(paths, old, current):
+    allowed={'scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py',
+        'scripts/release/full-app-j01/native_workflow47.test.mjs','.github/workflows/campaign47-native-runtime.yml',
+        'docs/phase-9/ios-generated-input-succession47.v1.json','docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json',
+        'docs/brain/task-specs/M1X-47/TASK.md','docs/phase-4/generated/source-worklist.json','docs/phase-4/generated/source-worklist.md'}
+    require(paths and set(paths)<=allowed,'RESUME36_EXACT_NON_PRODUCT_DELTA')
+    changed={'consume_produced_app','producer_source_matches','producer_final_source_matches','verify_installed_app',
+             'normal_xctest_gate','run_normal','execute_consumer','execute_internal','execution_mode','main','verify_stage_zip','verify_source_producer04'}
+    added={'verify_reuse36_delta','resume36_import','resume36_partial_import','verify_partial36_execution',
+           'verify_producer_streams36','verify_keychain35_receipts36','platform_bootstrap36','launch_failure_diagnostics36'}
+    afterimages={'verify_stage_zip': 'b1225a799abe74970685ceb63d7c53779670fdfc104b2c9a97764ced686ffb35', 'consume_produced_app': '4b6d2a3860aba3d9bbbf0be601a052cb6959729ff04a8b4c85fe87566e2bad88', 'execution_mode': '67c1c7b2e3435e8476abddd0df762b6aef2f2ca06dcf9596177112d2b7eedc76', 'run_normal': '10b00b007f237f7fe49446bf4486bfc1d9e955f67a67dc4ca0bb20d6fe1527eb', 'verify_installed_app': '38cb51b58dcd3571ec9f339f2a1fd8671995f93fe08ace14569c819e2f4cebf0', 'producer_source_matches': '512109e058496214652e5beeb43cdb5ee993586c8fe69483022c71d3d1a9307d', 'producer_final_source_matches': '4db95a6034f40b2c6a41247550b2fd70c7b661664e185f8cb566699da6f06e4d', 'verify_source_producer04': '14ff7b5abaeb3c44c05ddc66d9001dc2c15cb4f4a45ac77de0d9a01b4cc1ea30', 'normal_xctest_gate': 'a7ca344d877a26c9d234216f2c6d75659d868ff1220950849e5ef49482678920', 'verify_producer_streams36': '89fafd16d6438e845855ff96cb847f36ecf9f1d6b7ac2d59ac9626d4b5b0e054', 'verify_partial36_execution': '7c51b6eac2b5ca77b3d210a727e44b1d78242152e69f59dd2acef94f94cfbd91', 'resume36_partial_import': 'bfebd722fb1c891d1bdd5e029f92d85a90c748a650911ae8d1b722ba75b9a2f3', 'verify_keychain35_receipts36': '7d904795a3df539f29de4db31f51d308fdf481512dcc73e439f75fe4c4cca637', 'resume36_import': '9026f9e92403be0959330e39edddf3634f65a355045e53305c58dfc48fe709e3', 'platform_bootstrap36': '14182cbd0841d1c31067beeddd1af7f80e13d958789c3e698eb8a91909e07b21', 'launch_failure_diagnostics36': '6bff2f23ac3dbe8d9d8a05ede7d2fec7f3ef92ea61cb0c497990b1bb30142c04', 'execute_consumer': '2f7a23be7607f33cae6f638cc312341575c1c688b646b66fba68738011febef5', 'execute_internal': '4014299eeb26df1a8b4eebae918b8441d950375b77c67d28a39c0d59c9edbb4f', 'main': '72cba68dda00a3ab82980eeb017797bb3b159126fa1a9cecbd8dd6fcd059a15d'}
+    current_functions={item.name:item for item in ast.parse(current['scripts/release/full-app-j01/native_runtime47.py']).body if isinstance(item,ast.FunctionDef)}
+    for name,expected in afterimages.items():
+        require(name in current_functions and hashlib.sha256(ast.get_source_segment(current['scripts/release/full-app-j01/native_runtime47.py'].decode(),current_functions[name]).encode()).hexdigest()==expected,'RESUME36_EXACT_REVIEWED_FUNCTION_BODY:'+name)
+    def protected(raw):
+        result=[]
+        for item in ast.parse(raw).body:
+            if isinstance(item,(ast.FunctionDef,ast.AsyncFunctionDef)) and item.name in changed|added:continue
+            if isinstance(item,ast.Assign) and len(item.targets)==1 and isinstance(item.targets[0],ast.Name) and item.targets[0].id=='RESUME36_ORIGIN':continue
+            result.append(ast.dump(item,include_attributes=False))
+        return result
+    py='scripts/release/full-app-j01/native_runtime47.py'
+    require(protected(old[py])==protected(current[py]),'RESUME36_PROTECTED_BUILD_DEPENDENCY_SIGNING_OR_ENVIRONMENT_DRIFT')
+    for name in ('verify_reuse25_delta','resume25_import','launch_and_verify'):
+        def body(raw):
+            node=next(x for x in ast.parse(raw).body if isinstance(x,ast.FunctionDef) and x.name==name)
+            return ast.get_source_segment(raw.decode(),node)
+        require(body(old[py])==body(current[py]),'RESUME36_HISTORICAL_OR_LAUNCH60_BODY_DRIFT')
+    descriptor='docs/phase-9/ios-generated-input-succession47.v1.json'
+    before,after=stage_json(old[descriptor]),stage_json(current[descriptor])
+    pins={'scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py'}
+    for path in pins:
+        original=[row for row in before['sourcePins'] if row['path']==path]
+        actual=[row for row in after['sourcePins'] if row['path']==path]
+        require(len(original)==len(actual)==1 and actual[0]=={'path':path,'bytes':len(current[path]),
+            'sha256':hashlib.sha256(current[path]).hexdigest()},'RESUME36_EXACT_CURRENT_SELF_PIN')
+        after['sourcePins'][after['sourcePins'].index(actual[0])]=original[0]
+    require(before==after,'RESUME36_GENERATED_INPUT_OR_AUTHORITY_DRIFT')
+    return sorted(paths)
+
+
+def verify_producer_streams36(directory):
+    count=0
+    for path in directory.rglob('execution.json'):
+        receipt=stage_json(read_native_file(path));names=[]
+        for index,row in enumerate(receipt.get('commands',[]),1):
+            require(row.get('name') not in names and row.get('capture_complete') is True,'RESUME36_COMPLETE_UNIQUE_RAW_COMMANDS')
+            names.append(row['name'])
+            for kind in ('stdout','stderr'):
+                require(row.get(kind)==f'logs/{index:03d}-{row["name"]}.{kind}' and
+                    stage_file_digest(path.parent/row[kind])=={'bytes':row[kind+'_bytes'],'sha256':row[kind+'_sha256']},
+                    'RESUME36_ALL_RAW_STREAM_BYTES')
+                count+=1
+    return count
+
+
+def verify_partial36_execution(receipt, directory):
+    origin=RESUME36_ORIGIN
+    require(receipt.get('stage')=='normal' and receipt.get('stage_complete') is False and
+        receipt.get('status')=='PARTIAL_BLOCKED' and receipt.get('source',{}).get('head')==origin['head'] and
+        receipt['source'].get('tree')==origin['tree'] and receipt.get('failure',{}).get('detail')=='C47_COMMAND_FAILED:simulator-launch' and
+        receipt.get('release')=='NO_GO' and receipt.get('acceptance_granted') is False,'RESUME36_EXACT_FAILED_NORMAL')
+    child=stage_json(read_native_file(directory/'ordinary-v04/01/execution.json'))
+    require(child.get('source')==receipt['source'] and child.get('method')==NORMAL_UI_CASES04[0] and
+        child.get('ordinary_suite_version')==4 and child.get('status')=='PARTIAL_BLOCKED' and
+        not any(path.exists() for path in (directory/'ordinary-v04/02',directory/'ordinary-v04/03')) and
+        'normal-staging-ui' not in receipt.get('stages',{}),'RESUME36_NO_NORMAL_PASS_OR_UI_SUBSTITUTION')
+    rows=[row for row in child['commands'] if row['name']=='simulator-launch']
+    require(len(rows)==1 and rows[0].get('exit_code')==124 and rows[0].get('timed_out') is True and
+        rows[0].get('capture_complete') is True and rows[0].get('timeout_seconds')==60 and
+        rows[0].get('stdout_bytes')==rows[0].get('stderr_bytes')==0 and
+        not any(row['name'].startswith(('process-survival-','native-normal-staging-ui')) for row in child['commands']),
+        'RESUME36_KNOWN_PRE_XCTEST_LAUNCH_TIMEOUT')
+    require(verify_producer_streams36(directory)==128,'RESUME36_EXACT_PARTIAL_RAW_STREAM_COUNT')
+    return {'failed_producer_source':receipt['source'],'observed_failure':'UNCHANGED60_SECOND_TARGET_LAUNCH_TIMEOUT_EMPTY_COMPLETE_STREAMS',
+        'actual_normal_xctest_executed':False,'normal_admitted':False,'underlying_cause':'UNKNOWN',
+        'qualification':'FIXED_FAILED36_EVIDENCE_ONLY; NEVER_A_NORMAL_PASS'}
+
+
+def resume36_partial_import(context, token, root):
+    origin=RESUME36_ORIGIN;pin=origin['partial']
+    needs={key:pin[key] for key in ('artifact_id','digest','payload_bytes')}
+    needs.update(run_id=origin['run_id'],producer_run_attempt=origin['run_attempt'])
+    expected=stage_expected('normal',needs,context)
+    base='/actions/runs/'+str(origin['run_id'])+'/attempts/2'
+    run,run_sha=_stage_api(base,token);jobs,jobs_sha=_stage_api(base+'/jobs?per_page=100&page=1',token)
+    artifact,artifact_sha=_stage_api('/actions/artifacts/'+str(pin['artifact_id']),token)
+    require(run.get('id')==origin['run_id'] and run.get('run_attempt')==2 and run.get('head_sha')==origin['head'] and
+        run.get('head_branch')==STAGE_BRANCH and run.get('event')=='pull_request' and run.get('path')==STAGE_WORKFLOW and
+        run.get('repository',{}).get('full_name')==STAGE_REPOSITORY and run['repository'].get('private') is False and
+        run.get('head_repository',{}).get('full_name')==STAGE_REPOSITORY,'RESUME36_FAILED_RUN_SERVICE_IDENTITY')
+    values=jobs.get('jobs',[]);selected=[row for row in values if row.get('name')=='C47 normal']
+    require(jobs.get('total_count')==len(values)==4 and len(selected)==1 and selected[0].get('id')==pin['job_id'] and
+        selected[0].get('run_id')==origin['run_id'] and selected[0].get('head_sha')==origin['head'] and
+        selected[0].get('status')=='completed' and selected[0].get('conclusion')=='failure' and
+        artifact.get('id')==pin['artifact_id'] and artifact.get('name')==expected['artifact_name'] and artifact.get('expired') is False and
+        artifact.get('digest')=='sha256:'+pin['digest'] and artifact.get('size_in_bytes')==pin['wire_bytes'] and
+        artifact.get('workflow_run',{}).get('id')==origin['run_id'] and artifact['workflow_run'].get('head_sha')==origin['head'],
+        'RESUME36_EXACT_FAILED_JOB_AND_ARTIFACT')
+    proof={'repository':STAGE_REPOSITORY,'run_id':origin['run_id'],'producer_run_attempt':2,'producer_job_id':pin['job_id'],
+        'producer_job_name':'C47 normal','artifact_id':pin['artifact_id'],'artifact_name':expected['artifact_name'],
+        'wire_bytes':pin['wire_bytes'],'wire_sha256':pin['digest'],'service_digest':'sha256:'+pin['digest'],
+        'source_head':origin['head'],'source_tree':origin['tree'],'producer_conclusion':'failure',
+        'authenticated_api_response_sha256':{'run_attempt':run_sha,'jobs':jobs_sha,'artifact':artifact_sha}}
+    root.mkdir(mode=0o700);archive=root/'artifact.zip';_stage_download(expected,proof,token,archive)
+    result=verify_stage_zip(archive,expected,proof,root/'payload',known_failed36=True)
+    result['failed_normal_evidence']=verify_partial36_execution(stage_json(read_native_file(root/'payload/execution.json')),root/'payload')
+    return result
+
+
+def verify_keychain35_receipts36(directory):
+    signing=simulator_signing();receipt=stage_json(read_native_file(directory/'execution.json'));stage=receipt['stages']['app-process-keychain']
+    pids=[];results=[]
+    for phase in ('first','relaunch','delete'):
+        command,logs=executed_producer_command(receipt,directory,'app-keychain-launch-'+phase,read_output=True)
+        device=receipt['simulator']['udid'];bundle='com.layerwell.app.staging'
+        require(command['argv']==['xcrun','simctl','launch',device,bundle,'--c47-keychain-phase',phase],'RESUME36_REAL_KEYCHAIN_LAUNCH')
+        match=re.fullmatch(re.escape(bundle)+r': ([1-9][0-9]*)',logs[0].decode().strip());require(match,'RESUME36_KEYCHAIN_PID')
+        pid=int(match.group(1));pids.append(pid)
+        value=stage_json(read_native_file(directory/'app-keychain-diagnostic'/('C47AppKeychain-'+phase+'.json')))
+        signing.validate_app_keychain(value,phase,RESUME36_ORIGIN['head'],bundle,pid)
+        executed_producer_command(receipt,directory,'app-keychain-terminate-'+phase)
+        results.append({'phase':phase,'pid':pid,'operations':len(value['operations'])})
+    require(len(set(pids))==3 and sum(row['operations'] for row in results)==9 and stage['details']['pids']==pids,
+        'RESUME36_GENUINE_NINE_KEYCHAIN_OPERATIONS')
+    return {'producer_head':RESUME36_ORIGIN['head'],'phases':results,'performed_in_current_job':False,
+        'qualification':'AUTHENTICATED_BUILD35_APP_DIAGNOSTIC_ONLY; CURRENT_ORDINARY_SUITE_STILL_REQUIRED'}
+
+
+def resume36_import(r, context, token):
+    origin=RESUME36_ORIGIN
+    g=lambda *args:subprocess.check_output(['git','--no-replace-objects',*args],cwd=r.root,env=r.env)
+    require(context['head']==r.receipt['source']['head'] and context['head']!=origin['head'] and
+        g('merge-base','--is-ancestor',origin['head'],context['head'])==b'' and
+        g('rev-parse',origin['head']+'^{tree}').decode().strip()==origin['tree'],'RESUME36_FIXED_PRODUCER_ANCESTRY')
+    paths=g('diff','--name-only',origin['head'],context['head']).decode().splitlines()
+    protected=['scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py',
+        'docs/phase-9/ios-generated-input-succession47.v1.json']
+    old={name:g('show',origin['head']+':'+name) for name in protected};current={name:read_native_file(r.root/name) for name in protected}
+    changed=verify_reuse36_delta(paths,old,current)
+    require(all(line.startswith('M\t') for line in g('diff','--name-status',origin['head'],context['head']).decode().splitlines()) and
+        not g('diff','--summary',origin['head'],context['head']),'RESUME36_NO_NEW_DELETED_OR_MODE_CHANGED_INPUT')
+    old_context={**context,**{key:origin[key] for key in ('head','tree','run_id','run_attempt')}}
+    needs={role:{'artifact_id':origin[role]['artifact_id'],'digest':origin[role]['digest'],
+        'payload_bytes':origin[role]['payload_bytes'],'run_id':origin['run_id'],'producer_run_attempt':2} for role in ('source','build')}
+    imported=load_authenticated_stage_inputs('normal',needs,old_context,token,Path(context['runner_temp'])/'c47-fixed35-producers')['imported_provenance']
+    for role in ('source','build'):
+        require(imported[role]['producer']['producer_job_id']==origin[role]['job_id'],'RESUME36_EXACT_SOURCE_BUILD_JOBS')
+        verify_producer_streams36(Path(imported[role]['payload_directory']))
+    partial=resume36_partial_import(old_context,token,Path(context['runner_temp'])/'c47-fixed36-failure')
+    source=stage_json(read_native_file(Path(imported['build']['payload_directory'])/'source-before.json'))
+    r.receipt['authenticated_app_build_reuse36']={'producer_source':source,'producer_descriptor_sha256':hashlib.sha256(old[protected[2]]).hexdigest(),
+        'runtime_candidate_source':r.receipt['source'],'exact_non_product_changed_paths':changed,'producer':imported['build']['producer'],
+        'all_other_tracked_production_inputs_identical':True,'qualification':'FIXED_BUILD35_PRODUCT_SOURCE_RETAINED; NEW_DRIVER_SOURCE_IS_SEPARATE'}
+    r.receipt['imported_provenance']=imported;r.receipt['partial_normal36_provenance']=partial
+    r.receipt['upstream_payload_bytes']=family_payload_bytes04({**imported,'partial36':partial},('source','build','partial36'))
+    verify_source_producer04(r,imported['source']);verify_build_producer(r,imported['build'],imported['source'])
+    r.receipt['authenticated_keychain35_operations']=verify_keychain35_receipts36(Path(imported['build']['payload_directory']))
+    r.persist();return imported
+
+
+def platform_bootstrap36(r, device):
+    command,streams=executed_producer_command(r.receipt,r.output,'simulator-registry-json',read_output=True)
+    registry=stage_json(streams[0]);settings=registry.get('com.apple.Preferences',{})
+    from urllib.parse import unquote
+    runtime_root=r.receipt.get('simulator',{}).get('runtime',{}).get('runtimeRoot','')
+    expected_path=runtime_root+'/Applications/Preferences.app'
+    location=urlsplit(settings.get('Bundle',''))
+    require(runtime_root.startswith('/Library/Developer/CoreSimulator/Volumes/') and runtime_root.endswith('/Contents/Resources/RuntimeRoot') and
+        settings.get('CFBundleIdentifier')=='com.apple.Preferences' and settings.get('CFBundleExecutable')=='Preferences' and
+        settings.get('CFBundleName')==settings.get('CFBundleDisplayName')=='Settings' and settings.get('ApplicationType')=='System' and
+        settings.get('Path')==expected_path and location.scheme=='file' and not location.netloc and
+        unquote(location.path).rstrip('/')==expected_path,'PLATFORM36_ACTUAL_SYSTEM_SETTINGS_REQUIRED')
+    bundle='com.apple.Preferences'
+    raw=r.text('platform36-settings-launch',['xcrun','simctl','launch',device,bundle],timeout=60)
+    match=re.fullmatch(re.escape(bundle)+r': ([1-9][0-9]*)',raw);require(match,'PLATFORM36_ACTUAL_SETTINGS_PID')
+    pid=int(match.group(1))
+    table=r.text('platform36-settings-process',['xcrun','simctl','spawn',device,'launchctl','list'],timeout=60)
+    require(any(line.split() and line.split()[0]==str(pid) and bundle in line for line in table.splitlines()),'PLATFORM36_SAME_SETTINGS_PID')
+    r.run('platform36-settings-terminate',['xcrun','simctl','terminate',device,bundle],timeout=60)
+    r.passed('platform36-bootstrap',{'system_bundle':bundle,'actual_pid':pid,'target_app_not_launched_by_probe':True,
+        'settings_interaction':False,'target_data_mutation':False,'qualification':'PLATFORM_READINESS_ONLY_NOT_TARGET_APP_OR_XCTEST_PASS'})
+
+
+def launch_failure_diagnostics36(r, device):
+    simulator_resources(r,'launch36-failure')
+    commands=[('state',['xcrun','simctl','list','devices','--json'],30),
+        ('processes',['xcrun','simctl','spawn',device,'launchctl','list'],30),
+        ('help',['xcrun','simctl','help','launch'],15),
+        ('guest-log',['xcrun','simctl','spawn',device,'log','show','--last','5m','--style','compact','--predicate',
+            'process == "SpringBoard" OR process == "runningboardd" OR process CONTAINS "Layerwell" OR eventMessage CONTAINS "com.layerwell.app"'],25),
+        ('host-log',['/usr/bin/log','show','--last','5m','--style','compact','--predicate','process == "CoreSimulatorService" OR process == "simdiskimaged"'],25)]
+    for suffix,argv,cap in commands:
+        if time.monotonic()>=r.deadline:break
+        try:r.run('launch36-failure-'+suffix,argv,timeout=cap,required=False)
+        except Exception:pass  # Original launch/probe exception remains primary.
+    rows=[];total=0;destination=r.output/'crashes-before-shutdown36'
+    reports=Path.home()/'Library/Logs/DiagnosticReports'
+    for path in sorted(reports.glob('*')) if reports.is_dir() else []:
+        if time.monotonic()>=r.deadline or len(rows)>=10:break
+        if path.is_file() and not path.is_symlink() and path.name.startswith(('Layerwell','C47NativeUI')) and path.stat().st_size<=10*MIB:
+            size=path.stat().st_size
+            if total+size>20*MIB or evidence_total(r)+size>MAX_EVIDENCE-STAGE_MAX_JSON-MIB:continue
+            destination.mkdir(exist_ok=True);shutil.copy2(path,destination/path.name);total+=size
+            rows.append({'file':path.name,**stage_file_digest(destination/path.name)})
+    r.receipt['launch36_failure_diagnostics']={'phase':'BEFORE_CHILD_SHUTDOWN','crash_files':rows,
+        'crash_absence_or_app_cause_inferred':False,'ordinary_admitted':False};r.persist()
 
 
 RESUME25_ORIGIN = {'head': '445472ce057b90f08b5a51d5a49167c757d34b79',
@@ -3194,10 +3438,13 @@ def stage_imports(r, role, context, token):
     return imported['imported_provenance']
 
 
-def execute_consumer(r, role, context, token, resume25=False):
+def execute_consumer(r, role, context, token, resume25=False, resume36=False):
     head, tools, source47 = prepare(r, source_controls=False)
     require((head, r.receipt['source']['tree']) == (context['head'], context['tree']), 'STAGE_CURRENT_SOURCE_CONTEXT')
-    if resume25:
+    if resume36:
+        require(role=='normal','RESUME36_NORMAL_ONLY')
+        imported=resume36_import(r,context,token)
+    elif resume25:
         require(role == 'normal', 'REUSE25_NORMAL_ONLY')
         imported = resume25_import(r, context, token)
     else:
@@ -3238,7 +3485,7 @@ def execute_consumer(r, role, context, token, resume25=False):
     r.receipt['products_directory'] = str(products)
     r.persist()
     run_normal(r, ios, products, app, bundle, head)
-    if resume25:
+    if resume25 or resume36:
         execute_internal(r)
 
 
@@ -3421,7 +3668,18 @@ def execute_internal(parent, normal_evidence=None):
         with child.background('localhost-metro', ['npx', '--no-install', 'expo', 'start', '--dev-client',
                               '--localhost', '--offline', '--port', '8081'], mobile) as metro:
             metro_ready_and_bundle(child, metro, bundle)
-            pid = launch_and_verify(child, device, bundle, ['--initialUrl', initial_url])
+            try:
+                if parent.receipt.get('authenticated_app_build_reuse36'):
+                    child.receipt['launch36_stage']='PLATFORM_BOOTSTRAP'
+                    platform_bootstrap36(child,device)
+                    child.receipt['launch36_stage']='TARGET_APP_LAUNCH'
+                pid = launch_and_verify(child, device, bundle, ['--initialUrl', initial_url])
+            except Exception:
+                if parent.receipt.get('authenticated_app_build_reuse36'):
+                    try:launch_failure_diagnostics36(child,device)
+                    except Exception as diagnostic_error:
+                        child.receipt['launch36_diagnostic_error_type']=type(diagnostic_error).__name__
+                raise
             child.run('internal-launch-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
                        output / 'internal-debug-launch.png'], timeout=30)
             child.passed('launched', {'pid': pid, 'survival_seconds': 30, 'initial_url': initial_url,
@@ -3537,6 +3795,7 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('source', 'build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
+    parser.add_argument('--resume36',action='store_true',help='Fixed authenticated Build35 and failed36 recovery; current ordinary and internal remain required')
     parser.add_argument('--consent-trace04', action='store_true', help='Separate read-only consent diagnostic; never ordinary or internal admission')
     parser.add_argument('--consent-runtime27', action='store_true', help='Authenticated retained diagnostic runtime only; never an app producer')
     parser.add_argument('--simulator-probe', action='store_true',
@@ -3556,7 +3815,7 @@ def main():
     try:
         context = hosted_stage_context(runner, args.stage)
         execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25,
-                       consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27)
+                       consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27, resume36=args.resume36)
         if args.consent_runtime27:
             execute_retained_consent_runtime27(runner, token)
         elif args.stage == 'source':
@@ -3578,7 +3837,7 @@ def main():
                 require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
                 execute(runner, compile_only=True, consent_trace04=args.consent_trace04)
         else:
-            execute_consumer(runner, args.stage, context, token, resume25=args.resume25)
+            execute_consumer(runner, args.stage, context, token, resume25=args.resume25, resume36=args.resume36)
         require(runner.receipt['source']['head'] == context['head'] and
                 runner.receipt['source']['tree'] == context['tree'], 'STAGE_FINAL_SOURCE_CONTEXT')
         runner.receipt['stage_complete'] = True

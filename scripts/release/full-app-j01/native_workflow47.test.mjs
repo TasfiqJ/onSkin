@@ -12,6 +12,7 @@ const dependencies = { build: [], normal: ['build'], internal: ['build', 'normal
 
 function validate(text) {
   const resume25 = text.includes('--stage normal --resume25');
+  const resume36 = text.includes('--stage normal --resume36');
   const probeOnly = text.includes('--stage build --simulator-probe');
   const traceOnly = text.includes('--stage build --consent-trace04');
   const retainedOnly = text.includes('--stage build --consent-runtime27');
@@ -33,12 +34,12 @@ function validate(text) {
   for (const [role, parents] of Object.entries(dependencies)) {
     const job = w.jobs['native-' + role];
     assert.equal(job.name, 'C47 ' + role);
-    assert.deepEqual(job.needs, resume25 && role === 'normal' ? undefined : parents.length ? parents.map(parent => 'native-' + parent) : undefined);
+    assert.deepEqual(job.needs, (resume25 || resume36) && role === 'normal' ? undefined : parents.length ? parents.map(parent => 'native-' + parent) : undefined);
     const retainedBuild = retainedOnly && role === 'build';
     assert.deepEqual(job.permissions, parents.length || retainedBuild ? { contents: 'read', actions: 'read' } : undefined);
     assert.equal(job['runs-on'], 'macos-26-intel');
     assert.equal(job['timeout-minutes'], 90);
-    assert.equal(job.if, scope + ((resume25 ? role !== 'normal' : (probeOnly || traceOnly || retainedOnly) && role !== 'build') ? ' && false' : ''));
+    assert.equal(job.if, scope + (((resume25 || resume36) ? role !== 'normal' : (probeOnly || traceOnly || retainedOnly) && role !== 'build') ? ' && false' : ''));
     assert.equal(job.steps.length, retainedBuild ? 4 : 5);
     assert.deepEqual(job.outputs, {
       artifact_id: expression('steps.upload.outputs.artifact-id'),
@@ -56,13 +57,13 @@ function validate(text) {
     const execute = job.steps[retainedBuild ? 1 : 2];
     const env = { C47_EXPECTED_HEAD: expression('github.event.pull_request.head.sha'), C47_UI_PHASE: 'normal-staging' };
     if (parents.length || retainedBuild) env.C47_ARTIFACT_READ_TOKEN = expression('github.token');
-    for (const parent of resume25 && role === 'normal' ? [] : parents) {
+    for (const parent of (resume25 || resume36) && role === 'normal' ? [] : parents) {
       for (const [key, output] of [['ARTIFACT_ID', 'artifact_id'], ['ARTIFACT_DIGEST', 'artifact_digest'], ['RUN_ID', 'run_id'], ['RUN_ATTEMPT', 'run_attempt'], ['PAYLOAD_BYTES', 'payload_bytes']]) {
         env['C47_' + parent.toUpperCase() + '_' + key] = expression("needs['native-" + parent + "'].outputs." + output);
       }
     }
     assert.deepEqual(execute.env, env);
-    assert.equal(execute.run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : retainedBuild ? ' --consent-runtime27' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
+    assert.equal(execute.run, 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume36 && role === 'normal' ? ' --resume36' : resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : retainedBuild ? ' --consent-runtime27' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
     const budget = job.steps[retainedBuild ? 2 : 3];
     assert.equal(budget.id, 'evidence-budget');
     assert.equal(budget.if, 'always()');
@@ -94,7 +95,11 @@ test('C47 isolated tooling probe cannot start either application consumer', () =
     assert.throws(() => validate(source.replace(' --simulator-probe', '')));
   } else {
     assert.doesNotMatch(source, /--simulator-probe/);
-    if (source.includes('--resume25')) {
+    if (source.includes('--resume36')) {
+      assert.equal((source.match(/&& false/gu) ?? []).length, 3);
+      assert.throws(() => validate(source.replace(' && false', '')));
+      assert.throws(() => validate(source.replace(' --resume36', '')));
+    } else if (source.includes('--resume25')) {
       assert.equal((source.match(/&& false/gu) ?? []).length, 2);
       assert.throws(() => validate(source.replace(' && false', '')));
     } else if (source.includes('--consent-runtime27')) {
@@ -125,7 +130,11 @@ test('C47 rejects privilege, source substitution, paid runner and ignored failur
 });
 test('C47 refuses parallel stages, missing wire digest or authority outside the producing jobs', () => {
   for (const [before, after] of [
-    ...(source.includes('  native-source:') ? [
+    ...(source.includes('--resume36') ? [
+      [' && false', ''], [' --resume36', ''],
+      ['needs: [native-source]', 'needs: []'],
+      ['needs: [native-source, native-build, native-normal]', 'needs: [native-build, native-normal]'],
+    ] : source.includes('  native-source:') ? [
       ['needs: [native-source]', 'needs: []'],
       ['needs: [native-source, native-build]', 'needs: [native-build]'],
       ['needs: [native-source, native-build, native-normal]', 'needs: [native-build, native-normal]'],
