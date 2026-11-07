@@ -4176,8 +4176,82 @@
       "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T07:49:31.554Z",
+      "head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+      "tree": "28b35bf021e8a83ad3a979a99810c818fd5c69e0",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 69571,
+          "preimage_sha256": "52f6ff9b6636b5fc75c1201268df00423eecb03d331fc2624a7f0db529c119c2",
+          "preimage_blob": "067d4657b5826d52b8dfaf2a4e35c14235e065ec"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 44214,
+          "preimage_sha256": "833b8d5e638ad3273557cd6a942f0364728cfc90bf0e570315d8f5a0b0ee9214",
+          "preimage_blob": "8878068607556286a1dd5b1b261b3316d5d336ef"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 18794,
+          "preimage_sha256": "4c9019b6045726af052b192b243cb3ddf4fa2544aff8d5cd3ae6c92c89122f83",
+          "preimage_blob": "603872591ed81dfa9ffd2de7a0054a4e51b2ca0c"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 248566,
+          "preimage_sha256": "3bfe9d52507d179307fe5265a454c9a43f75ab60ead1274787f68eaa56b054a5",
+          "preimage_blob": "39853d75d8135ee933e1ba9b0c3e838b915f69eb"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 94900,
+          "preimage_sha256": "fa2603903a32f5bd725567ed8e3ea902bb5dd52a7db9b52d2dd46aaf1c5ef9f3",
+          "preimage_blob": "b3856c8c8008571866b86e8a12b82c1c7b13dc3e"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 590278,
+          "preimage_sha256": "71437264a51562e9f75cb3b7a2dafcdfa462e3d7dfb78e7f6b28f0eb4d0bcdb7",
+          "preimage_blob": "096014b1adaf802e40cfb055aaa412bf5358d774"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "5e6acffc9d8d06b163bc3f3d20b6895a6ad03707",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 6118,
+          "preimage_sha256": "2d4e7e9d3b75c05f56d0dd15c2ba139cd7d7fe2e2d45ed9b675a6e71c4f4f99e",
+          "preimage_blob": "9424dc80f7d29aa0961b2f7a922459c30c9b6770"
+        }
+      ],
+      "causal_need": "Actual38 primary age UI errorID3 atseq786 has PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY but origin predicate after512routinecap/405drops. Repair observation only with64failure records frozen at firstUI, retain original snapshots/prefix, exact source behavior and original app for diagnostic39. Earlier C46 lifecycle errors recover and do not explain ageID3.",
+      "invariant": "No new authority awaits, retries, storage/query/signing/account/owner/consent/deletion change. Original error object/control flow preserved; schema2 closed content-free window. Unknown/discontinuous native-wrap relation stays unqualified. Actual schema1 Native38 remains immutable/unqualified via authenticated5e6 validator.",
+      "validation": "Actual20 direct tests including old14 identical bodies +6v2 controls, current19Node/12AST controls, runtime115/signing14/workflow6/historicalscope10/currentSource controls, source seals and exact new diagnostic native sequence. No actual new native claim yet.",
+      "external_preedit_receipt_sha256": "131cc0a4b41396c4180ce534dbae55f4801b4758cfd2d1da7717b432c08c6f47",
+      "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
+      "native_execution": false,
+      "native38_actual_qualified_origin": false,
+      "independent_source54_afterimages_retained": true,
+      "release": "NO_GO",
+      "acceptance_granted": false
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "Finite44/25pins unchanged. Final37 pure-harness successor, exact unchanged04cf Build35 product and separate current consumer; Source34 and failed36 remain exact attributed evidence. Target60/90min/84min/500MiB unchanged. All3 ordinary cases genuinely gate all5 internal plus actual explicit-save/Files cleanup. New current runtime/CI still required; no acceptance."
+  "freeze_note": "C05 diagnostic39 observation-only successor: finite47/28pins unchanged. Original app10 inputs exactfa/5e6;512prefix and first-error snapshots unchanged; additional64failure-only window frozenfirstUI, closed schema2, historicalschema1validator preserved exact5e6. Native38 installed/signed/launched30s/selectedXCTest failed; age origin predicate lost405drops; recoveredC46 errors are not its cause. Independent54source repair passed7076/type3/lint3 then preserved/parked to retain original diagnostic sequence. No acceptance."
 }
