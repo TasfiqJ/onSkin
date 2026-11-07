@@ -4,7 +4,7 @@ import {
   HEALTH_DATA_WITHDRAWAL,
 } from '@/features/onboarding/consentCopy';
 import {
-  hasCurrentHealthDataCollectionConsent,
+  hasCurrentHealthDataCollectionConsentStrict,
   setHealthDataCollectionConsentLocal,
   synchronizeAuthoritativeHealthDataCollectionConsent,
 } from '@/features/onboarding/healthConsentStore';
@@ -16,6 +16,11 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
+import {
+  LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED,
+  privateMutationReadGeneration46,
+  waitForPrivateMutationReadWindow46,
+} from '@/lib/auth/localAccountIsolation';
 import { localDataOwnerBinding, readLocalDataOwnership } from '@/lib/auth/sessionOwner';
 import {
   activeHealthProcessingLeaseSnapshot,
@@ -179,7 +184,32 @@ async function runOwnerBoundLocalOperation<T>(
 }
 
 const readLocal = (fence: OwnerWorkflowFence) =>
-  runOwnerBoundLocalOperation(fence, () => readHealthDataLifecycle(fence.ownerUserId));
+  runOwnerBoundLocalOperation(fence, async (lease) => {
+    const assertCurrent = () => {
+      lease.assertCurrent();
+      assertOwnerWorkflowFence(fence);
+    };
+    // Preparation may wait only for this process's known live raw-only writers.
+    // Failed/orphan markers and every original account/workflow fence still refuse.
+    await waitForPrivateMutationReadWindow46(assertCurrent);
+    const readGeneration = privateMutationReadGeneration46();
+    try {
+      return await readHealthDataLifecycle(fence.ownerUserId);
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        error.message !== LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED
+      ) {
+        throw error;
+      }
+      await waitForPrivateMutationReadWindow46(assertCurrent);
+      // A stable refusal cannot become absence. Retry the read at most once,
+      // only after a completed live mutation retired its original generation.
+      if (privateMutationReadGeneration46() === readGeneration) throw error;
+      assertCurrent();
+      return readHealthDataLifecycle(fence.ownerUserId);
+    }
+  });
 
 function applyProcessingEpochWithinLease(
   fence: OwnerWorkflowFence,
@@ -535,7 +565,7 @@ async function reconcileUnconfigured(
   if (previous?.state === 'verification_required') {
     await applyProcessingEpoch(fence, previous);
     const consented = await runOwnerBoundLocalOperation(fence, () =>
-      hasCurrentHealthDataCollectionConsent(),
+      hasCurrentHealthDataCollectionConsentStrict(),
     );
     if (previous.verificationReason === 'status_unavailable') {
       if (
@@ -582,23 +612,52 @@ async function reconcileUnconfigured(
         localCleanupComplete: false,
       });
     }
-    if (!verificationRequiresLocalCleanup(previous) || previous.localCleanupComplete) {
-      return previous;
+    if (verificationRequiresLocalCleanup(previous) && !previous.localCleanupComplete) {
+      try {
+        await clearHealthPurposeLocalDataForFence(fence);
+        previous = await writeLocal(fence, {
+          ...verificationInput({ ownerUserId, previous }),
+          localCleanupComplete: true,
+        });
+      } catch (error) {
+        rethrowStaleWorkflow(error, fence);
+        return previous;
+      }
     }
-    try {
-      await clearHealthPurposeLocalDataForFence(fence);
-      return await writeLocal(fence, {
-        ...verificationInput({ ownerUserId, previous }),
+    // Only the explicit local initial-bootstrap marker can resume initial
+    // disclosure. Unknown/null provenance remains paused and reviewable.
+    // Exact-owner and pending-withdrawal reads precede this local branch.
+    if (
+      !isSupabaseConfigured &&
+      !consented &&
+      previous.ownerUserId === ownerUserId &&
+      previous.state === 'verification_required' &&
+      previous.processingEpoch === 0 &&
+      previous.verificationReason === 'authoritative_unconsented' &&
+      previous.verificationResumeState === 'unconsented' &&
+      previous.operationId === null &&
+      previous.idempotencyKey === null &&
+      previous.serverVerifiedAt === null &&
+      !previous.activationRoutePending &&
+      previous.localCleanupComplete
+    ) {
+      return writeLocal(fence, {
+        ownerUserId,
+        state: 'unconsented',
+        processingEpoch: 0,
+        operationId: null,
+        idempotencyKey: null,
         localCleanupComplete: true,
+        activationRoutePending: false,
+        ...NO_VERIFICATION,
+        serverVerifiedAt: null,
       });
-    } catch (error) {
-      rethrowStaleWorkflow(error, fence);
-      return previous;
     }
+    return previous;
   }
 
   const consented = await runOwnerBoundLocalOperation(fence, () =>
-    hasCurrentHealthDataCollectionConsent(),
+    hasCurrentHealthDataCollectionConsentStrict(),
   );
   if (previous?.state === 'active' && !consented) {
     // A missing/changed local grant cannot retain the prior health profile.
@@ -632,7 +691,7 @@ async function reconcileUnconfigured(
       processingEpoch: 0,
       localCleanupComplete: false,
       reason: 'authoritative_unconsented',
-      resumeState: previous?.state ?? null,
+      resumeState: 'unconsented',
     });
     try {
       await clearHealthPurposeLocalDataForFence(fence);

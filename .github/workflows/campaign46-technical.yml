@@ -32,9 +32,10 @@ jobs:
       - name: Execute current source scans and preserve every raw result
         env:
           C46_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           python -I -B - <<'PY'
-          import hashlib, json, os, pathlib, subprocess, sys, tarfile, urllib.request
+          import datetime, hashlib, json, os, pathlib, subprocess, sys, tarfile, urllib.request
           root = pathlib.Path.cwd()
           out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'c46-scanner-evidence'
           assert out.is_dir()
@@ -88,7 +89,20 @@ jobs:
                   assert hashlib.sha256(raw).hexdigest() == current_owasp
               else:
                   request = urllib.request.Request('https://semgrep.dev/c/p/' + name, headers={'User-Agent': 'Semgrep/1.181.0'})
-                  raw = urllib.request.urlopen(request, timeout=60).read()
+                  with urllib.request.urlopen(request, timeout=60) as response:
+                      raw = response.read(32 * 1024 * 1024 + 1)
+                      metadata = {'fetched_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                          'url': request.full_url, 'status': response.status,
+                          'response_headers': {key: response.headers.get(key) for key in
+                              ('Date', 'Content-Type', 'Content-Length', 'ETag', 'Last-Modified')},
+                          'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(),
+                          'expected_protected_sha256': expected,
+                          'qualification': 'CAPTURED_BEFORE_PROTECTED_HASH_CHECK_NOT_ENGINE_EXECUTION'}
+                  # Retain the exact offending bytes before a hash refusal.
+                  # No unverified rules reach an engine and no pin is changed.
+                  (out / (name + '.download.yaml')).write_bytes(raw)
+                  (out / (name + '.download.json')).write_text(json.dumps(metadata, indent=2))
+                  assert len(raw) <= 32 * 1024 * 1024, 'RULE_DOWNLOAD_SIZE_BOUND:' + name
                   assert hashlib.sha256(raw).hexdigest() == expected, 'UNCHANGED_RULE_HASH_REQUIRED:' + name
               path = out / (name + '.yaml')
               path.write_bytes(raw)
@@ -124,7 +138,10 @@ jobs:
           run('npm-graph', ['node', tools['npm'], 'ls', '--all', '--json', '--long'], root)
           run('semantic-security', ['node', '--test', 'scripts/release/full-app-j01/security_completion46.test.mjs'], root)
           run('bounded-expo-output', ['node', '--test', 'scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs'], root)
-          run('current-install-wiring', ['node', '--test', 'scripts/phase9/release-install-wiring46.test.mjs'], root)
+          if os.environ.get('CURRENT_SOURCE_BRANCH') == 'stage/m1-native-runtime47':
+              run('current-install-wiring', ['node', 'scripts/release/full-app-j01/native_generated47.mjs', '--release-install-wiring47-test'], root)
+          else:
+              run('current-install-wiring', ['node', '--test', 'scripts/phase9/release-install-wiring46.test.mjs'], root)
           historical_commit = '2cffa9e92be101af4e3b371f1815ec9f458d8da4'
           historical_lock = subprocess.check_output(['git', '--no-replace-objects', 'show',
               historical_commit + ':package-lock.json'], cwd=root)
@@ -135,10 +152,17 @@ jobs:
               'qualification': 'AUTHENTICATED_HISTORICAL_INPUT_CURRENT_UNCHANGED_TESTS_NOT_OWNER_ADMISSION'}, indent=2))
           run('exact-history-source-controls', ['node', '--test', '--test-concurrency=1',
               'scripts/phase9/ios-privacy-source-audit.test.mjs'], root)
-          run('current-native-complete-config', ['node', tools['npm'], 'run', 'phase5:check-native-config'], root)
-          run('current-complete-store-inspection', ['node', tools['npm'], 'run', 'phase9:store-build-inspect:check'], root)
-          run('current-native-successor-tests', ['node', '--test', 'scripts/phase9/ios-privacy-lock-succession46.test.mjs'], root)
-          run('current-native-successor', ['node', 'scripts/release/full-app-j01/native_current46.mjs'], root)
+          if os.environ['CURRENT_SOURCE_BRANCH'] == 'stage/m1-native-runtime47':
+              current47 = 'scripts/release/full-app-j01/native_generated47.mjs'
+              run('current-native-complete-config', ['node', current47, '--native-config47'], root)
+              run('current-complete-store-inspection', ['node', current47, '--native-store47', '--check'], root)
+              run('current-native-successor-tests', ['node', '--test', 'scripts/release/full-app-j01/native_generated47.test.mjs'], root)
+              run('current-native-successor', ['node', current47, '--phase', 'SOURCE'], root)
+          else:
+              run('current-native-complete-config', ['node', tools['npm'], 'run', 'phase5:check-native-config'], root)
+              run('current-complete-store-inspection', ['node', tools['npm'], 'run', 'phase9:store-build-inspect:check'], root)
+              run('current-native-successor-tests', ['node', '--test', 'scripts/phase9/ios-privacy-lock-succession46.test.mjs'], root)
+              run('current-native-successor', ['node', 'scripts/release/full-app-j01/native_current46.mjs'], root)
           summary = {'head': head, 'qualification': 'CURRENT_SOURCE_TECHNICAL_ONLY_NOT_G97',
               'completeSnapshotFiles': len(rows), 'completeSnapshotBytes': sum(row['bytes'] for row in rows),
               'archiveContentSecurity': 'NOT_QUALIFIED: scanner format/rule/size limits remain; no source removed',
@@ -176,6 +200,7 @@ jobs:
         shell: bash
     env:
       C46_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
         with:
@@ -197,13 +222,35 @@ jobs:
           npm ci --no-audit --no-fund 2>&1 | tee "$evidence/normal-install.log"
           npm run postinstall:check 2>&1 | tee "$evidence/hooks.log"
           python -I -B scripts/release/full-app-j01/source_completion46.test.py 2>&1 | tee "$evidence/source-controls.log"
-          python -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN 2>&1 | tee "$evidence/source-frozen.log"
-          node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs 2>&1 | tee "$evidence/current-native-tests.tap"
-          node scripts/release/full-app-j01/native_current46.mjs > "$evidence/current-native.json"
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            python -I -B scripts/release/full-app-j01/source_completion47.test.py 2>&1 | tee "$evidence/source47-controls.log"
+            python -I -B scripts/release/full-app-j01/storage_trace47.test.py 2>&1 | tee "$evidence/storage-origin05-controls.log"
+            python -I -B scripts/release/full-app-j01/storage_trace47.py --source-phase SOURCE_FROZEN 2>&1 | tee "$evidence/source-frozen.log"
+            python -I -B scripts/release/full-app-j01/pods_compat47.test.py 2>&1 | tee "$evidence/generated47-properties-controls.log"
+            node --test scripts/release/full-app-j01/native_generated47.test.mjs 2>&1 | tee "$evidence/generated47-controls.tap"
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE 2>&1 | tee "$evidence/generated47-current-source.json"
+          else
+            python -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN 2>&1 | tee "$evidence/source-frozen.log"
+          fi
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE > "$evidence/current-native.json"
+          else
+            node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs 2>&1 | tee "$evidence/current-native-tests.tap"
+            node scripts/release/full-app-j01/native_current46.mjs > "$evidence/current-native.json"
+          fi
           npm run phase9:ios-privacy-source-audit:test 2>&1 | tee "$evidence/original-source-controls.tap"
-          npm run phase9:ios-privacy-source-audit:check 2>&1 | tee "$evidence/current-audit.log"
-          npm run phase9:store-build-inspect:check 2>&1 | tee "$evidence/current-inspector.log"
-          node --test scripts/phase9/release-install-wiring46.test.mjs 2>&1 | tee "$evidence/install-wiring.tap"
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --native-audit47 --strict --check 2>&1 | tee "$evidence/current-audit.log"
+            node scripts/release/full-app-j01/native_generated47.mjs --native-store47 --check 2>&1 | tee "$evidence/current-inspector.log"
+          else
+            npm run phase9:ios-privacy-source-audit:check 2>&1 | tee "$evidence/current-audit.log"
+            npm run phase9:store-build-inspect:check 2>&1 | tee "$evidence/current-inspector.log"
+          fi
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --release-install-wiring47-test 2>&1 | tee "$evidence/install-wiring.tap"
+          else
+            node --test scripts/phase9/release-install-wiring46.test.mjs 2>&1 | tee "$evidence/install-wiring.tap"
+          fi
       - name: Preserve Windows current-source evidence including failures
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

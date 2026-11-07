@@ -197,13 +197,29 @@ jobs:
         run: npm install --global npm@11.20.0 --ignore-scripts --no-audit --no-fund
 
       - name: Install from lockfile
+        id: install
         run: npm ci
+
+      - name: Verify current campaign source identity
+        env:
+          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            python3 -I -B scripts/release/full-app-j01/source_completion47.test.py
+            python3 -I -B scripts/release/full-app-j01/storage_trace47.test.py
+            python3 -I -B scripts/release/full-app-j01/storage_trace47.py --source-phase SOURCE_FROZEN
+            python3 -I -B scripts/release/full-app-j01/pods_compat47.test.py
+            node --test scripts/release/full-app-j01/native_generated47.test.mjs
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE
+          else
+            python3 -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN
+          fi
 
       - name: Verify Campaign46 current-source technical candidate
         run: |
           set -euo pipefail
           python3 -I -B scripts/release/full-app-j01/source_completion46.test.py
-          python3 -I -B scripts/release/full-app-j01/source_completion46.py --phase SOURCE_FROZEN
           node --test scripts/release/full-app-j01/security_completion46.test.mjs
           npm --workspace apps/mobile run test -- --passWithNoTests=false src/features/shelf/compactManual46.test.ts src/features/routine/connectedJourney46.test.ts src/features/settings/exportConfirmation46.test.ts src/features/routine/planHistory45Encrypted.test.ts src/features/settings/localPrivateDataFence44.test.ts src/lib/storage/privateKVSourceFence44.test.ts src/features/routine/planSourceFence44.test.ts src/features/shelf/manualDraftRecovery.campaign26.test.ts src/features/shelf/detailActionSheet.campaign26.test.ts
           node --test scripts/launch/formula-route-inventory39.test.mjs
@@ -224,26 +240,47 @@ jobs:
         run: npm run phase9:tooling-security:test
 
       - name: Verify installed iOS native sources
+        env:
+          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+          C47_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
         run: |
           npm run postinstall:check
           npm run phase5:expo-widgets-lifecycle:test
           npm run phase9:view-shot-privacy:test
           npm run phase9:ios-privacy-source-audit:test
-          npm run phase9:ios-privacy-source-audit:check
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --native-audit47 --strict --check
+          else
+            npm run phase9:ios-privacy-source-audit:check
+          fi
           npm run phase9:ios-archive-privacy-evidence:test
           npm run phase9:release-candidate-git-contract:test
           npm run phase9:verification-wiring:test
-          npm run phase9:store-build-inspect:check
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --native-store47 --check
+          else
+            npm run phase9:store-build-inspect:check
+          fi
 
 
       - name: Verify current native46 candidate parity and security output bounds
         env:
           C46_EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          CURRENT_SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
-          node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs
-          node scripts/release/full-app-j01/native_current46.mjs
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node --test scripts/release/full-app-j01/native_generated47.test.mjs
+            node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE
+          else
+            node --test scripts/phase9/ios-privacy-lock-succession46.test.mjs
+            node scripts/release/full-app-j01/native_current46.mjs
+          fi
           node --test scripts/release/full-app-j01/patch-expo-collection-bounds46.test.mjs
-          node --test scripts/phase9/release-install-wiring46.test.mjs
+          if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
+            node scripts/release/full-app-j01/native_generated47.mjs --release-install-wiring47-test
+          else
+            node --test scripts/phase9/release-install-wiring46.test.mjs
+          fi
           python3 -I -B scripts/release/full-app-j01/workflow_context46.test.py
 
       - name: Verify store-only client delivery
@@ -266,17 +303,23 @@ jobs:
         working-directory: apps/mobile
         run: npx expo install --check
 
+      # Preserve a failed compatibility check while independently executing
+      # the remaining required checks. The job remains failed.
       - name: Run Expo Doctor
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: apps/mobile
         run: npx --yes expo-doctor@1.21.5
 
       - name: Check export statistics analyzer
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: node scripts/optimization/export-stats-smoke.mjs
 
       - name: Check deterministic optimization fixtures
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: node scripts/optimization/generate-fixtures-smoke.mjs
 
       - name: Check local Edge Function contracts
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           npm run phase2:check-env-smoke
           npm run phase9:edge-manifest-smoke
@@ -293,6 +336,7 @@ jobs:
           npm run phase9:revenuecat-webhook-atomic-smoke
 
       - name: Check catalog promotion, curation, and receipt contracts
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           npm run phase4:source-policy-smoke
           npm run phase4:qa-report-smoke
@@ -305,6 +349,7 @@ jobs:
           npm run phase4:catalog-report-privacy-smoke
 
       - name: Execute account service scrub migration rehearsal
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         env:
           PGPASSWORD: layerwell_rehearsal
         run: >-
@@ -312,28 +357,37 @@ jobs:
           -f scripts/phase9/account-service-scrub-postgres-rehearsal.sql
 
       - name: Typecheck
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run typecheck
 
       - name: Lint
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run lint
 
       - name: Test
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm test
 
       - name: Check performance readiness docs
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run docs:performance-readiness-audit:check
 
       - name: Check device support source contract
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           npm run docs:device-support-policy-audit:source
           npm run docs:device-support-policy-audit:test
 
       - name: Check source packet
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run docs:source-packet-audit:check
 
   expo-export:
     name: Expo export (${{ matrix.platform }})
     needs: checks
+    # Exports have their own exact installation; retain actual results even
+    # when an independent checks step failed. This does not green that job.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

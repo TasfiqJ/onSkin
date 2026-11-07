@@ -24,11 +24,15 @@ import {
 } from '@/lib/consent/healthDataWriteAdmission';
 import {
   runAccountGenerationOperation,
+  ACCOUNT_GENERATION_CHANGED,
+  captureAccountIdentityGeneration,
+  assertAccountIdentityGeneration,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import {
+  LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED,
   armPlanHistoryMutation45,
   armPrivateMutation46,
   abandonPrivateMutation46,
@@ -86,12 +90,28 @@ const privateMutationTails = new Map<string, Promise<void>>();
 let accountBoundaryWriteBlocked = false;
 let accountBoundaryWriteBlockDepth = 0;
 let accountBoundaryGeneration = 0;
+const privateGateGuardErrors39 = new WeakSet<Error>();
+function privateBoundaryRefusal39(): Error {
+  const error = new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  privateGateGuardErrors39.add(error);
+  return error;
+}
+type OwnedPrivateReadBoundary39 = {
+  generation: number;
+  identity: number;
+  completion: Promise<boolean>;
+  settle: (success: boolean) => void;
+  settled: boolean;
+  ambiguous: boolean;
+};
+let ownedPrivateReadBoundary39: OwnedPrivateReadBoundary39 | null = null;
+
 
 async function runAccountScopedPrivateOperation<T>(
   operation: (generation: number) => Promise<T>,
 ): Promise<T> {
   if (accountBoundaryWriteBlocked) {
-    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    throw privateBoundaryRefusal39();
   }
   const generation = accountBoundaryGeneration;
   const pending = operation(generation);
@@ -139,7 +159,7 @@ async function runSerializedPrivateMutations<T>(
 
 function assertAccountScopedPrivateOperationAllowed(generation: number): void {
   if (accountBoundaryWriteBlocked || generation !== accountBoundaryGeneration) {
-    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    throw privateBoundaryRefusal39();
   }
 }
 
@@ -444,6 +464,162 @@ function privateMutationReadGuard46(): () => Promise<void> {
   };
 }
 
+/** Gate admission may wait for known raw-only writers, under original authority.
+ * Raw getters and writer guards keep their established immediate refusal. */
+async function runPreparedPrivateRead46<T>(
+  assertCurrent: () => void,
+  read: () => Promise<T>,
+  canRetry: () => boolean = () => true,
+): Promise<T> {
+  await waitForPrivateMutationReadWindow46(assertCurrent);
+  assertCurrent();
+  const firstRevision = privateMutationReadGeneration46();
+  const attempt = async () => {
+    const revision = privateMutationReadGeneration46();
+    const value = await read();
+    assertPrivateMutationReadGeneration46(revision);
+    assertCurrent();
+    return value;
+  };
+  try {
+    return await attempt();
+  } catch (error) {
+    if (
+      !(error instanceof Error) ||
+      error.message !== LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED ||
+      privateMutationReadGeneration46() === firstRevision || !canRetry()
+    ) {
+      throw error;
+    }
+    // A failed/orphan marker or changed original account/health authority
+    // refuses here. Only one complete fresh read is permitted after settlement.
+    await waitForPrivateMutationReadWindow46(assertCurrent);
+    assertCurrent();
+    return attempt();
+  }
+}
+
+type PrivateReadBudget39 = { remaining: number };
+
+function assertPrivateGateAccountLease39(lease: AccountGenerationLease): void {
+  try {
+    lease.assertCurrent();
+  } catch (error) {
+    if (error instanceof Error) privateGateGuardErrors39.add(error);
+    throw error;
+  }
+}
+
+function getPrivateItemOnOriginalLease39(
+  key: string,
+  budget: PrivateReadBudget39,
+  assertOriginal: () => void,
+): Promise<string | null> {
+  return runAccountGenerationOperation((accountLease) =>
+    runAccountScopedPrivateOperation((generation) => {
+      const assertCurrent = () => {
+        assertOriginal();
+        assertPrivateGateAccountLease39(accountLease);
+        assertAccountScopedPrivateOperationAllowed(generation);
+      };
+      return runPreparedPrivateRead46(assertCurrent, () => {
+        assertCurrent();
+        budget.remaining -= 1;
+        return getPrivateItem(key);
+      }, () => budget.remaining > 0);
+    }),
+  );
+}
+
+function verifyPrivateKVOnOriginalLease39(
+  budget: PrivateReadBudget39,
+  assertOriginal: () => void,
+): Promise<void> {
+  return runAccountGenerationOperation((accountLease) =>
+    runAccountScopedPrivateOperation((generation) => {
+      const assertCurrent = () => {
+        assertOriginal();
+        assertPrivateGateAccountLease39(accountLease);
+        assertAccountScopedPrivateOperationAllowed(generation);
+      };
+      return runPreparedPrivateRead46(assertCurrent, () => {
+        assertCurrent();
+        budget.remaining -= 1;
+        return assertPrivateKVReadable();
+      }, () => budget.remaining > 0);
+    }),
+  );
+}
+
+/** One explicit owned cleanup may settle before either startup gate rereads.
+ * This scheduler never registers an operation that the cleanup must drain. */
+async function runOwnedPrivateGateRead39<T>(
+  assertPurpose: () => void,
+  read: (budget: PrivateReadBudget39, assertOriginal: () => void) => Promise<T>,
+): Promise<T> {
+  const originalIdentity = captureAccountIdentityGeneration();
+  const initialGeneration = accountBoundaryGeneration;
+  const budget = { remaining: 2 };
+  const assertOriginal = () => {
+    assertAccountIdentityGeneration(originalIdentity);
+    assertPurpose();
+  };
+  const join = async (boundary: OwnedPrivateReadBoundary39, refusal: Error) => {
+    assertOriginal();
+    const success = await boundary.completion;
+    assertOriginal();
+    if (
+      !success || boundary.ambiguous || ownedPrivateReadBoundary39 !== boundary ||
+      accountBoundaryWriteBlocked || accountBoundaryGeneration !== boundary.generation
+    ) throw refusal;
+  };
+  const atEntry = ownedPrivateReadBoundary39;
+  if (atEntry !== null && !atEntry.settled) {
+    if (
+      atEntry.ambiguous || atEntry.generation !== initialGeneration ||
+      atEntry.identity !== originalIdentity
+    ) throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    await join(atEntry, new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY));
+    const result = await read(budget, assertOriginal);
+    assertOriginal();
+    return result;
+  }
+  try {
+    const result = await read(budget, assertOriginal);
+    assertOriginal();
+    return result;
+  } catch (error) {
+    const boundary = ownedPrivateReadBoundary39;
+    if (
+      !(error instanceof Error) || !privateGateGuardErrors39.has(error) ||
+      (error.message !== PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY && error.message !== ACCOUNT_GENERATION_CHANGED) ||
+      budget.remaining < 1 || boundary === null || boundary.ambiguous ||
+      boundary.generation !== initialGeneration + 1 || boundary.generation !== accountBoundaryGeneration ||
+      boundary.identity !== originalIdentity
+    ) throw error;
+    // Both rejected operation registries are clear before this join begins.
+    await join(boundary, error);
+    const result = await read(budget, assertOriginal);
+    assertOriginal();
+    return result;
+  }
+}
+
+/** The applicable health lease is captured once, before any wait or reread. */
+export function getPrivateItemWhenReady(key: string): Promise<string | null> {
+  const originalHealthReadLease = captureHealthPurposePrivateDataWriteLease(key);
+  return runOwnedPrivateGateRead39(() => {
+    assertPrivateReadAllowed(key);
+    if (originalHealthReadLease !== null) assertHealthDataWriteLease(originalHealthReadLease);
+  }, (budget, assertOriginal) => getPrivateItemOnOriginalLease39(key, budget, assertOriginal));
+}
+
+/** Whole-envelope admission authenticates a fresh inventory, never plaintext. */
+export function verifyPrivateKVWhenReady(): Promise<void> {
+  return runOwnedPrivateGateRead39(() => {}, verifyPrivateKVOnOriginalLease39);
+}
+
+
 export async function getPrivateItem(key: string): Promise<string | null> {
   const mutationReadGeneration46 = privateMutationReadGeneration46();
   const assertMutationReadCurrent46 = privateMutationReadGuard46();
@@ -713,22 +889,23 @@ export function assertPrivateKVReadable(): Promise<void> {
   const mutationReadGeneration46 = privateMutationReadGeneration46();
   const assertMutationReadCurrent46 = privateMutationReadGuard46();
   return runAccountGenerationOperation(async (accountLease) => {
+    const assertCurrent = () => assertPrivateGateAccountLease39(accountLease);
     await assertMutationReadCurrent46();
-    accountLease.assertCurrent();
+    assertCurrent();
     const keys = (await AsyncStorage.getAllKeys()).filter(
       (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
     );
-    accountLease.assertCurrent();
+    assertCurrent();
     await assertMutationReadCurrent46();
     assertPrivateMutationReadGeneration46(mutationReadGeneration46);
-    accountLease.assertCurrent();
+    assertCurrent();
     if (keys.length === 0) return;
     // This purpose-limited bypass stays private to the availability gate. It
     // authenticates bytes before lifecycle reconciliation opens health reads,
     // never UTF-8 decodes them, and remains account-generation-bound.
-    await validatePrivateItemsWithoutRetainingPlaintext(keys, accountLease.assertCurrent);
+    await validatePrivateItemsWithoutRetainingPlaintext(keys, assertCurrent);
     assertPrivateMutationReadGeneration46(mutationReadGeneration46);
-    accountLease.assertCurrent();
+    assertCurrent();
   });
 }
 
@@ -1152,7 +1329,35 @@ export function updateCatalogLookupQueueForPurposeLimitedExport(
   );
 }
 
+/** Only the owner-proved selective cleanup may report complete successful
+ * settlement. Ordinary or nested boundaries never become read admission. */
+export function beginOwnedPrivateKVAccountBoundary39(): (success: boolean) => void {
+  const eligible = accountBoundaryWriteBlockDepth === 0 &&
+    (ownedPrivateReadBoundary39 === null || ownedPrivateReadBoundary39.settled);
+  beginPrivateKVAccountBoundary();
+  if (!eligible) return () => {};
+  let settle!: (success: boolean) => void;
+  const completion = new Promise<boolean>((resolve) => { settle = resolve; });
+  const boundary: OwnedPrivateReadBoundary39 = {
+    generation: accountBoundaryGeneration,
+    identity: captureAccountIdentityGeneration(),
+    completion, settle, settled: false, ambiguous: false,
+  };
+  ownedPrivateReadBoundary39 = boundary;
+  return (success) => {
+    if (boundary.settled) return;
+    boundary.settled = true;
+    boundary.settle(success === true && !boundary.ambiguous &&
+      ownedPrivateReadBoundary39 === boundary && !accountBoundaryWriteBlocked &&
+      accountBoundaryGeneration === boundary.generation &&
+      captureAccountIdentityGeneration() === boundary.identity);
+  };
+}
+
 export function beginPrivateKVAccountBoundary(): void {
+  if (ownedPrivateReadBoundary39 !== null && !ownedPrivateReadBoundary39.settled) {
+    ownedPrivateReadBoundary39.ambiguous = true;
+  }
   if (accountBoundaryWriteBlockDepth === 0) accountBoundaryGeneration += 1;
   accountBoundaryWriteBlockDepth += 1;
   accountBoundaryWriteBlocked = true;

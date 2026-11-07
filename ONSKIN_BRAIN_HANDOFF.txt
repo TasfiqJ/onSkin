@@ -1,14 +1,13 @@
-CAMPAIGN46 - source candidate / NO_GO / INDEPENDENT_REVIEW_REQUIRED
-Authority BRAIN-M1X-APP-COMPLETION46-AUTONOMOUS-01.
-Preserve parentPR46 HEAD20c761fa5e3fbf427fb33ab319218bd0c1d022bd and all earlier refs/main.
-Only branch stage/m1-app-completion46, draft base stage/m1-owner-plan-history45.
-Frozen first plan5b635c9d822f862b50c03f923c441e9b22161ff7.
-Current source fixes compactmanual/recovery, unconfirmedexport/failedcompensation/readABA and proven supported tooling dependencies.
-Runtime9404 actual root6979 PASS cached0; final canonical checks, seal and final-head CI are separately bound in authenticated delivery report.
-38 requirements/18 gates false; original Security/candidate/core failures retained.
-Browser/device/provider/clinical/paid/M2/release unaccepted; no merge/deploy/production accounts or Campaign47.
-See docs/brain/task-specs/M1X-46 and authenticated external FINAL_REPORT/return for exact final identities/status.
+# Campaign47 standing handoff — Continuation05
 
+Authorization: BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05. Same stage/m1-native-runtime47 and draft PR48; no new campaign/PR, merge, deployment, release, owner admission or signing/account/billing expansion.
 
-CAMPAIGN46 CLOSURE02 CONTINUATION (BRAIN-C46-CURRENT-NATIVE-SECURITY-CLOSURE-02)
-Preserve originaldeafce53 submission/sixcommits and frozenplan. Independent review was PARTIAL_BLOCKED/NO_GO. Current additive native candidate and complete current audit/obligation parity are source-only, not owner/native admission. Exact official Expo output bounds and restored current Quality/CAT08/packet/source controls are integrated. See docs/brain/task-specs/M1X-46/CLOSURE02_REPORT.md; final exact-head report/CI/authenticated return delivered separately after source seal. Same draftPR47 only; no Campaign47, merge, deployment or release. All38requirements/18gates remainunaccepted.
+This tracked handoff records the source repair cutoff, before the next exact-source native qualification. Obtain the actual final source/head from SourceFrozen and the live pushed stage branch, then use the separately authenticated C05 return and samePR48 for later native outcomes. Do not treat this pre-execution note as a runtime pass.
+
+Preserved predecessor f322d9704f394d1fc59f11bf988afb3a2ffff60f/tree7abcad88b258be8ce31a2bca39bbb1274b19864b: Source44 full30 PASS; Build45 actual ordinary signed Simulator app produced; Normal46 two real ordinary case positives then optional screenshot teardown TimeoutExpired prevented case03. Internal skipped/no allocated runner. Original diagnostic39 age account-fence rejection and unassigned holder, old failures, corrupted-JSON attribution limits and all raw evidence remain preserved.
+
+The narrow harness fix preserves failed/incomplete diagnostic bytes and every required test/authority guard. It reuses independent optional cleanup, with no timeout/wait/join or app/Swift/UI/signing/storage behavior change. All120 old runtime test bodies are exact; six controls added; Root126 local PASS. Finite59/current40 and historical44/202/172/Swift3 unchanged; all99 existing ancestors and frozen first plan remain.
+
+C05 actual jobs38–46 consumed9/16;7 remain47–53. Continue through exact-current Source, fresh ordinary Release, full ordinary3, then internal5/export/schema/hash/Files cleanup. Keep one Mac,90-minute job/5040-second coordinator,500MiB unique family/3-day retention, existing free infrastructure and Simulator-local signing only. Preserve every genuine failure; no blind reruns or error-as-null. Final status requires actual results and owner-private fresh verified delivery.
+
+NO_GO. All38 whole requirements and18 owner gates remain unaccepted. SDK/Security/candidate29/G97 failures remain unwaived. No clinical/J01/M2 enablement or Campaign48.
