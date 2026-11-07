@@ -4631,6 +4631,53 @@
       "native_execution": false,
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T10:57:07.817Z",
+      "head": "fed24baa9771c9a52c851e4935a727b57c21a0a1",
+      "tree": "8a7df447e54337dcb288103fa73adc89b79b1904",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "fed24baa9771c9a52c851e4935a727b57c21a0a1",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 174560,
+          "preimage_sha256": "ccface974f53a7b21a6ccabad51f05e0668336e9b9da11d25714e4df02549c3f",
+          "preimage_blob": "676cf14fb8b7ced786d79a31a0c4d3a0b3b60bf5",
+          "snapshot": "0.before.bin"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "fed24baa9771c9a52c851e4935a727b57c21a0a1",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 20734,
+          "preimage_sha256": "cd6f6d100edc21290924ae2b35036ffe4ea7b5f654b42381b712c4fd31495ec8",
+          "preimage_blob": "9751972b4eaca108e423894fcb3b612270971c23",
+          "snapshot": "1.before.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "fed24baa9771c9a52c851e4935a727b57c21a0a1",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 277460,
+          "preimage_sha256": "30bbaebb2c11ba2968e81f2b230459b5a1163acf416962f2be7014d5df5c061e",
+          "preimage_blob": "c288165c09a5113b2182eb59a73af3d6bc75322a",
+          "snapshot": "2.before.bin"
+        }
+      ],
+      "causal_need": "Actual runtime119/120 on fed: old Build35 reuse correctly refuses new ordinary05 execution_mode body before the historical generated-input expectation. Preserve SHA-authenticated frozen fa harness with actual generated inputs in an explicitly synthetic self-pin fixture, plus separate exact current-body refusal.",
+      "invariant": "One existing test method/name; original policy/self-pin assertions and exact historical/current rejection codes retained. Production runtime and application V4 bodies unchanged; no broad error OR or actual reuse grant.",
+      "validation": "Focused1PASS; preserve full120 RED, Windows full30 timed-out/incomplete with no final TAP verdict and current SourcePending57 PASS. Repeated stable root/type/lint/full120/current-source checks and actual hosted full30 remain required.",
+      "preedit_sha256": "40c07e4692eb5fa0c0b3a0a3869feeb917a843a05de79f3ec11a03435d3590bd",
+      "proposal_sha256": "8c1fcc89bc20a7980f82e41bef60d94a5be17ed1471491d7c390f604e77dbf3b",
+      "patch_sha256": "e17af54befaf48624fb7c4034e8621d8ab3277343cd90d0a78f1c54836ebb7ac",
+      "finite_paths": 57,
+      "current_source_pins": 38,
+      "production_runtime_unchanged": true,
+      "acceptance_granted": false,
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

@@ -2435,7 +2435,24 @@ class FixedBuild35Recovery36Tests(unittest.TestCase):
             pin=next(row for row in descriptor['sourcePins'] if row['path']==name)
             self.assertEqual(pin,{'path':name,'bytes':len(current[name]),'sha256':hashlib.sha256(current[name]).hexdigest()})
         self.assertNotEqual(current[names[2]],historical[names[2]])
+        # Frozen C04 harness bytes remain a historical witness, not a current reuse grant.
+        for path,expected in {
+            names[0]:{'bytes':250032,'sha256':'2ba9683a1a4eefe7a6a846fcb3c93a67c8e142389edc9df697ea6040f949f5b4'},
+            names[1]:{'bytes':166608,'sha256':'2be2a5d2356e44b09fb32728e1fc2b27396d3d9018bc779420f794fe35602537'},
+            names[2]:{'bytes':17385,'sha256':'c4e7b319e0b80d64f12351d0d3c3bef321f14ff5e992728e63d2a73e7c76032e'},
+        }.items():
+            self.assertEqual({'bytes':len(historical[path]),'sha256':hashlib.sha256(historical[path]).hexdigest()},expected)
+        # Synthetic fixture only: freeze the old reviewed harness, vary current generated inputs.
+        # Its two self-pins describe those fixture bytes; no actual descriptor is modified.
+        generated_descriptor=json.loads(current[names[2]])
+        for path in names[:2]:
+            pin=next(row for row in generated_descriptor['sourcePins'] if row['path']==path)
+            pin.update(bytes=len(historical[path]),sha256=hashlib.sha256(historical[path]).hexdigest())
+        frozen_harness_current_generated_fixture={**historical,names[2]:json.dumps(generated_descriptor).encode()}
         with self.assertRaisesRegex(ValueError,'RESUME36_GENERATED_INPUT_OR_AUTHORITY_DRIFT'):
+            n.verify_reuse36_delta(names,old,frozen_harness_current_generated_fixture)
+        # Actual current ordinary05 code must also refuse old Build35, at its earlier body guard.
+        with self.assertRaisesRegex(ValueError,'RESUME36_EXACT_REVIEWED_FUNCTION_BODY:execution_mode'):
             n.verify_reuse36_delta(names,old,current)
 
     def test_fixed36_accepts_only_reviewed_harness_delta(self):
