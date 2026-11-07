@@ -12,6 +12,7 @@ const dependencies = { build: [], normal: ['build'], internal: ['build', 'normal
 
 function validate(text) {
   const origin05 = text.includes('scripts/release/full-app-j01/storage_trace47.py --output');
+  const ordinary05 = text.includes('--stage build --ordinary-release05');
   const resume25 = text.includes('--stage normal --resume25');
   const resume36 = text.includes('--stage normal --resume36');
   const probeOnly = text.includes('--stage build --simulator-probe');
@@ -64,7 +65,7 @@ function validate(text) {
       }
     }
     assert.deepEqual(execute.env, env);
-    assert.equal(execute.run, origin05 && role === 'build' ? 'python3 -I -B scripts/release/full-app-j01/storage_trace47.py --output \"$RUNNER_TEMP/c47-evidence\"' : 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (resume36 && role === 'normal' ? ' --resume36' : resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : retainedBuild ? ' --consent-runtime27' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
+    assert.equal(execute.run, origin05 && role === 'build' ? 'python3 -I -B scripts/release/full-app-j01/storage_trace47.py --output \"$RUNNER_TEMP/c47-evidence\"' : 'python3 -I -B scripts/release/full-app-j01/native_runtime47.py --stage ' + role + (ordinary05 && role === 'build' ? ' --ordinary-release05' : resume36 && role === 'normal' ? ' --resume36' : resume25 && role === 'normal' ? ' --resume25' : probeOnly && role === 'build' ? ' --simulator-probe' : traceOnly && role === 'build' ? ' --consent-trace04' : retainedBuild ? ' --consent-runtime27' : '') + ' --output "$RUNNER_TEMP/c47-evidence"');
     const budget = job.steps[retainedBuild ? 2 : 3];
     assert.equal(budget.id, 'evidence-budget');
     assert.equal(budget.if, 'always()');
@@ -196,4 +197,23 @@ test('Quality retains its real online failure while independent checks and expor
   assert.equal(quality.jobs['expo-export'].needs, 'checks');
   assert.equal(quality.jobs['expo-export'].if, expression('!cancelled()'));
   assert.equal(Object.hasOwn(quality.jobs.checks, 'continue-on-error'), false);
+});
+
+test('C05 current ordinary producer is a new uninstrumented Release and cannot use a diagnostic or historical resume', () => {
+  const ordinary = text => {
+    validate(text);
+    assert.equal((text.match(/--ordinary-release05/gu) ?? []).length, 1);
+    assert.match(text, /native_runtime47.py --stage build --ordinary-release05 --output/);
+    assert.doesNotMatch(text, /storage_trace47.py --output|--resume25|--resume36|--simulator-probe|--consent-trace04|--consent-runtime27|&& false/);
+  };
+  ordinary(source);
+  for (const [before, after] of [
+    [' --ordinary-release05', ''], ['--stage build --ordinary-release05', '--stage normal --ordinary-release05'],
+    ['native_runtime47.py --stage build --ordinary-release05', 'storage_trace47.py'],
+    ['--stage build --ordinary-release05', '--stage build --consent-trace04'],
+    ['needs: [native-source]', 'needs: []'],
+  ]) {
+    assert.ok(source.includes(before));
+    assert.throws(() => ordinary(source.replace(before, after)));
+  }
 });

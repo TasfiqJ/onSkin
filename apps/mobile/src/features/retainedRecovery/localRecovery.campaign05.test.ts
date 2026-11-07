@@ -45,7 +45,8 @@ vi.mock('@react-native-async-storage/async-storage', () => ({ default: {
   removeItem: async (key: string) => { ports.write(); ports.vault.delete(key); },
 } }));
 vi.mock('expo-secure-store', () => ({ WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'when-unlocked-this-device-only' }));
-vi.mock('@/lib/storage/privateKV', () => ({
+vi.mock('@/lib/storage/privateKV', () => {
+  const storage = {
   getPrivateItem: async (key: string) => {
     ports.reads.set(key, (ports.reads.get(key) ?? 0) + 1);
     if (ports.failed.has(key)) throw new Error('SYNTHETIC_PRIVATE_KV_UNAVAILABLE');
@@ -62,7 +63,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
     ports.write(); const value = update(ports.bytes.get(key) ?? null);
     if (value === null) ports.bytes.delete(key); else ports.bytes.set(key, value);
   },
-}));
+  };
+  return { ...storage, getPrivateItemWhenReady: storage.getPrivateItem };
+});
 vi.mock('@/lib/supabase/client', () => ({ supabase: { from: ports.provider, rpc: ports.provider } }));
 vi.mock('@/features/photos/encryptedStorage', () => ({}));
 vi.mock('@/features/photos/photoThumbnail', () => ({}));

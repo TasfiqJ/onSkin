@@ -224,4 +224,30 @@ class SimulatorSigning47(unittest.TestCase):
                 with self.subTest(marker=marker), self.assertRaisesRegex(ValueError,'NATIVE_DIAGNOSTIC'):
                     s.validate_ordinary_product({'effective':facts})
 
+    def test_storage05_native_identity_and_javascript_hooks_refuse_ordinary_product(self):
+        n=self.native()
+        with tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve()) as directory:
+            app=Path(directory);binary=app/'actual-byte-fixture'
+            raw=struct.pack('<8I',0xfeedfacf,0x01000007,3,2,1,16,0,0)+struct.pack('<4I',0x1d,16,48,4)+b'fake'
+            binary.write_bytes(raw)
+            clean=s.inspect_binary(n,binary)
+            self.assertFalse(clean['diagnostic_native_hook_present'])
+            s.validate_ordinary_product({'effective':clean})
+            binary.write_bytes(raw+b'C47StorageOrigin05Identity.json')
+            facts=s.inspect_binary(n,binary)
+            self.assertEqual(set(facts),set(clean))
+            self.assertTrue(facts['diagnostic_native_hook_present'])
+            with self.assertRaisesRegex(ValueError,'NATIVE_DIAGNOSTIC'):
+                s.validate_ordinary_product({'effective':facts})
+            javascript=app/'main.jsbundle';javascript.write_bytes(b'ordinary synthetic byte fixture')
+            clean_js=s.check_diagnostic_bundle(n,app,False)
+            self.assertEqual(set(clean_js),{'diagnostic_marker_present','bytes','sha256'})
+            for marker in (b'C47_STORAGE_ORIGIN_DIAGNOSTIC_05', b'__C47_STORAGE_ORIGIN05__',
+                           b'C47StorageOrigin05Identity.json'):
+                for expected in (False,True):
+                    javascript.write_bytes(marker+(b' C47_SEPARATE_SECURESTORE_DIAGNOSTIC_03' if expected else b''))
+                    with self.subTest(marker=marker,expected=expected), self.assertRaisesRegex(
+                            ValueError,'STORAGE_ORIGIN_DIAGNOSTIC'):
+                        s.check_diagnostic_bundle(n,app,expected)
+
 if __name__=='__main__':unittest.main()

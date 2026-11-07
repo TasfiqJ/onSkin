@@ -37,6 +37,16 @@ export const STORAGE_ORIGIN05 = {
   "internalAdmission": false
 };
 export const SOURCE_PATHS47 = [
+  'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+  'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+  'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
+  'apps/mobile/src/lib/storage/privateKV.ts',
+  'apps/mobile/src/features/onboarding/ageGateStore.ts',
+  'apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx',
+  'apps/mobile/src/features/onboarding/ageGateStore.test.ts',
+  'apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts',
+  'apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts',
+  'apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts',
   'apps/mobile/src/app/(tabs)/you.tsx',
   'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
   'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
@@ -486,11 +496,49 @@ function inputs47(rootValue) {
   return { root, source, file, descriptor, witness };
 }
 
+export const SELECTIVE_CLEANUP05 = {
+  path: 'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+  checkpointHead: '0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a',
+  checkpointTree: '2fd127c4eaf558926117be5c227764e5324c26d3',
+  before: { bytes: 6863, sha256: '66efcd27ef8176127e85df249ae5b0427b7b37b99f6a62574ac3a7915e334f8d' },
+};
+
+export function validateSelectiveCleanup05(pin, original, current, currentPin) {
+  same(pin.path, SELECTIVE_CLEANUP05.path);
+  same({ bytes: pin.bytes, sha256: pin.sha256 }, SELECTIVE_CLEANUP05.before);
+  same({ bytes: original.length, sha256: hash(original) }, SELECTIVE_CLEANUP05.before);
+  same(Object.keys(currentPin).sort(), ['bytes', 'path', 'sha256']);
+  same(currentPin.path, SELECTIVE_CLEANUP05.path);
+  same({ bytes: current.length, sha256: hash(current) }, { bytes: currentPin.bytes, sha256: currentPin.sha256 });
+  return { ...SELECTIVE_CLEANUP05, after: { bytes: currentPin.bytes, sha256: currentPin.sha256 },
+    qualification: 'EXACT_0d1_HISTORICAL_INPUT_AND_AUTHENTICATED_CURRENT_DESCRIPTOR_PIN; NO_NATIVE_ADMISSION' };
+}
+
+export const SELECTIVE_CLEANUP_TEST05 = {
+  path: 'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+  checkpointHead: '0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a',
+  checkpointTree: '2fd127c4eaf558926117be5c227764e5324c26d3',
+  before: { bytes: 10337, sha256: '3e147e5a80534d025dee08d6c64a04fde50207844ad8b4c32bbcc233e08597b8' },
+};
+
+export function validateSelectiveCleanupTest05(pin, original, current, currentPin) {
+  same(pin.path, SELECTIVE_CLEANUP_TEST05.path);
+  same({ bytes: pin.bytes, sha256: pin.sha256 }, SELECTIVE_CLEANUP_TEST05.before);
+  same({ bytes: original.length, sha256: hash(original) }, SELECTIVE_CLEANUP_TEST05.before);
+  same(Object.keys(currentPin).sort(), ['bytes', 'path', 'sha256']);
+  same(currentPin.path, SELECTIVE_CLEANUP_TEST05.path);
+  same({ bytes: current.length, sha256: hash(current) }, { bytes: currentPin.bytes, sha256: currentPin.sha256 });
+  return { ...SELECTIVE_CLEANUP_TEST05, after: { bytes: currentPin.bytes, sha256: currentPin.sha256 },
+    qualification: 'EXACT_0d1_HISTORICAL_TEST_AND_AUTHENTICATED_CURRENT_DESCRIPTOR_PIN; NO_NATIVE_ADMISSION' };
+}
+
 function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneration = true) {
   const pins = [...witness.unchangedInputs, ...witness.currentSourceInputs, witness.rootPackage];
   const stamps = {};
   let consentDoc04 = null;
   const app04Seen = [];
+  let selectiveCleanup05 = null;
+  let selectiveCleanupTest05 = null;
   same(pins.length, 202);
   for (const pin of pins) {
     if (pin.status === 'ABSENT') { absentInput47(root, pin.path); continue; }
@@ -515,6 +563,18 @@ function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneratio
       app04Seen.push(pin.path);
       continue;
     }
+    if (pin.path === SELECTIVE_CLEANUP05.path) {
+      const original = git47(root, 'show', SELECTIVE_CLEANUP05.checkpointHead + ':' + pin.path);
+      const currentPin = descriptor.sourcePins.find(row => row.path === SELECTIVE_CLEANUP05.path);
+      selectiveCleanup05 = validateSelectiveCleanup05(pin, original, actual.bytes, currentPin);
+      continue;
+    }
+    if (pin.path === SELECTIVE_CLEANUP_TEST05.path) {
+      const original = git47(root, 'show', SELECTIVE_CLEANUP_TEST05.checkpointHead + ':' + pin.path);
+      const currentPin = descriptor.sourcePins.find(row => row.path === SELECTIVE_CLEANUP_TEST05.path);
+      selectiveCleanupTest05 = validateSelectiveCleanupTest05(pin, original, actual.bytes, currentPin);
+      continue;
+    }
     assert.ok(allowGeneration || actual.sha256 === pin.sha256, 'CURRENT47_UNPROJECTED_SOURCE_REQUIRED:' + pin.path);
     if (pin.path !== 'apps/mobile/package.json' || actual.sha256 === pin.sha256) {
       same(actual.sha256, pin.sha256);
@@ -536,10 +596,12 @@ function projectedInputs47(root, witness, sourceHead, descriptor, allowGeneratio
   }
   same(consentDoc04, CONSENT_DOC04);
   same(app04Seen.sort(), CONSENT_APP04.sourceInputs.map(row => row.path).sort());
-  return { verifiedInputCount: pins.length, stamps, consentDoc04, consentApp04: CONSENT_APP04,
+  same(selectiveCleanup05?.path, SELECTIVE_CLEANUP05.path);
+  same(selectiveCleanupTest05?.path, SELECTIVE_CLEANUP_TEST05.path);
+  return { verifiedInputCount: pins.length, stamps, consentDoc04, consentApp04: CONSENT_APP04, selectiveCleanup05, selectiveCleanupTest05,
     legacyFirstSourcePin04: firstLegacySourcePin04(witness),
     installedNativeTrees: witness.installedNativeTrees.map(expected => currentTree47(root, expected, descriptor.swiftSourceSuccession, stamps)),
-    qualification: 'ACTUAL_CURRENT_INPUTS_WITH_ONLY_DECLARED_ISOLATED_PREBUILD_PACKAGE_SCRIPT_PROJECTION' };
+    qualification: 'ACTUAL_CURRENT_INPUTS_WITH_DECLARED_C04_C05_SOURCE_SUCCESSORS_AND_ISOLATED_PREBUILD_PACKAGE_SCRIPT_PROJECTION' };
 }
 
 
@@ -782,7 +844,7 @@ export function verifyCurrentNative47(rootValue = ROOT, { audit = true, evidence
   return { status: 'CURRENT_NATIVE_SOURCE47_SWIFT_SUCCESSOR_REVIEW_REQUIRED', source: current.source,
     descriptorSHA256: current.file.sha256, committedSourceProof: committed,
     verifiedInputCount: verification.verifiedInputCount, committedCriticalInputs: committed.committedCriticalInputs,
-    consentDoc04: verification.consentDoc04, consentApp04: verification.consentApp04,
+    consentDoc04: verification.consentDoc04, consentApp04: verification.consentApp04, selectiveCleanup05: verification.selectiveCleanup05, selectiveCleanupTest05: verification.selectiveCleanupTest05,
     legacyFirstSourcePin04: verification.legacyFirstSourcePin04, stamps: verification.stamps, installedNativeTrees: verification.installedNativeTrees, trees: verification.installedNativeTrees, sourceSuccessors: 3, installedFileSuccessors: 2,
     historical46Identity: 'EXPECTED_SOURCE_PIN_RED_NOT_CURRENT_PASS',
     legacy46File, witness: current.witness, file: current.file, root: current.root,
@@ -987,6 +1049,8 @@ export function runGenerated47({ root = ROOT, phase, receipt, sourceProof, profi
     same(proof.currentNative47.legacyFirstSourcePin04, firstLegacySourcePin04(current.witness));
     same(proof.currentNative47.source.sourceHead, current.source.sourceHead);
     const verification = projectedInputs47(current.root, current.witness, current.source.sourceHead, current.descriptor);
+    same(proof.currentNative47.selectiveCleanup05, verification.selectiveCleanup05);
+    same(proof.currentNative47.selectiveCleanupTest05, verification.selectiveCleanupTest05);
     const helper = resolve(root, 'scripts/release/full-app-j01/pods_compat47.py');
     const processResult = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['-I', '-B', helper,
       '--ios-directory', resolve(root, 'apps/mobile/ios'), '--source-proof', sourceProof, '--verify-receipt', receipt,

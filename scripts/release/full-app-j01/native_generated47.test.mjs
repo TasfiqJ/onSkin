@@ -14,7 +14,7 @@ import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMappin
   validateAutolinking47, validateResolvedLock47, readSourceProof47,
   validateDevelopmentProjection47, validateOutput47, SOURCE_PATHS47, SWIFT_SUCCESSION47, validateSwiftSuccession47,
   CONSENT_DOC04, validateConsentDoc04, currentPrivacyProjection47, STORAGE_ORIGIN05,
-  CONSENT_APP04, validateConsentApp04, firstLegacySourcePin04,
+  CONSENT_APP04, validateConsentApp04, firstLegacySourcePin04, SELECTIVE_CLEANUP05, validateSelectiveCleanup05, SELECTIVE_CLEANUP_TEST05, validateSelectiveCleanupTest05,
   auditCurrentNative47 as auditIosPrivacySource, proveCurrentNativeSource47 as proveCurrentNativeSource46,
   verifyCurrentNative47 as verifyNativeCandidate46, validateIosExtensionConfig47 as validateIosExtensionConfig46 } from './native_generated47.mjs';
 
@@ -37,6 +37,48 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.equal(STORAGE_ORIGIN05.authority, 'BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05');
   assert.deepEqual(SOURCE_PATHS47.filter(path => STORAGE_ORIGIN05.sourcePaths.includes(path)), STORAGE_ORIGIN05.sourcePaths);
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
+  // New current source is independently pinned; the historical202 witness remains exact.
+  assert.equal(SOURCE_PATHS47.length, 38);
+  assert.ok(SOURCE_PATHS47.includes('apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts'));
+  const oldCleanup = spawnSync('git', ['--no-replace-objects', 'show',
+    SELECTIVE_CLEANUP05.checkpointHead + ':' + SELECTIVE_CLEANUP05.path],
+    { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+  assert.equal(oldCleanup.status, 0);
+  const currentCleanup = readFileSync(resolve(ROOT, SELECTIVE_CLEANUP05.path));
+  const currentCleanupPin = descriptor().sourcePins.find(row => row.path === SELECTIVE_CLEANUP05.path);
+  const cleanupBeforePin = { path: SELECTIVE_CLEANUP05.path, ...SELECTIVE_CLEANUP05.before };
+  const cleanupProof = validateSelectiveCleanup05(cleanupBeforePin, oldCleanup.stdout, currentCleanup, currentCleanupPin);
+  assert.deepEqual(cleanupProof.before, SELECTIVE_CLEANUP05.before);
+  assert.deepEqual(cleanupProof.after, { bytes: currentCleanupPin.bytes, sha256: currentCleanupPin.sha256 });
+  const wrongCleanupBefore = Buffer.from(oldCleanup.stdout); wrongCleanupBefore[0] ^= 1;
+  const wrongCleanupAfter = Buffer.from(currentCleanup); wrongCleanupAfter[0] ^= 1;
+  for (const args of [[cleanupBeforePin, wrongCleanupBefore, currentCleanup, currentCleanupPin],
+    [cleanupBeforePin, oldCleanup.stdout, wrongCleanupAfter, currentCleanupPin],
+    [{ ...cleanupBeforePin, path: 'apps/mobile/src/unrelated.ts' }, oldCleanup.stdout, currentCleanup, currentCleanupPin],
+    [cleanupBeforePin, oldCleanup.stdout, currentCleanup, { ...currentCleanupPin, sha256: '0'.repeat(64) }],
+    [cleanupBeforePin, oldCleanup.stdout, currentCleanup, { ...currentCleanupPin, path: 'apps/mobile/src/unrelated.ts' }]]) {
+    assert.throws(() => validateSelectiveCleanup05(...args));
+  }
+
+  // The owned mock-adapter successor is a separate existing202 test input.
+  const oldCleanupTest = spawnSync('git', ['--no-replace-objects', 'show',
+    SELECTIVE_CLEANUP_TEST05.checkpointHead + ':' + SELECTIVE_CLEANUP_TEST05.path],
+    { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+  assert.equal(oldCleanupTest.status, 0);
+  const currentCleanupTest = readFileSync(resolve(ROOT, SELECTIVE_CLEANUP_TEST05.path));
+  const currentCleanupTestPin = descriptor().sourcePins.find(row => row.path === SELECTIVE_CLEANUP_TEST05.path);
+  const cleanupTestBeforePin = { path: SELECTIVE_CLEANUP_TEST05.path, ...SELECTIVE_CLEANUP_TEST05.before };
+  const cleanupTestProof = validateSelectiveCleanupTest05(cleanupTestBeforePin, oldCleanupTest.stdout, currentCleanupTest, currentCleanupTestPin);
+  assert.deepEqual(cleanupTestProof.before, SELECTIVE_CLEANUP_TEST05.before);
+  assert.deepEqual(cleanupTestProof.after, { bytes: currentCleanupTestPin.bytes, sha256: currentCleanupTestPin.sha256 });
+  const wrongCleanupTestBefore = Buffer.from(oldCleanupTest.stdout); wrongCleanupTestBefore[0] ^= 1;
+  const wrongCleanupTestAfter = Buffer.from(currentCleanupTest); wrongCleanupTestAfter[0] ^= 1;
+  for (const args of [[cleanupTestBeforePin, wrongCleanupTestBefore, currentCleanupTest, currentCleanupTestPin],
+    [cleanupTestBeforePin, oldCleanupTest.stdout, wrongCleanupTestAfter, currentCleanupTestPin],
+    [{ ...cleanupTestBeforePin, path: 'apps/mobile/src/unrelated.test.ts' }, oldCleanupTest.stdout, currentCleanupTest, currentCleanupTestPin],
+    [cleanupTestBeforePin, oldCleanupTest.stdout, currentCleanupTest, { ...currentCleanupTestPin, sha256: '0'.repeat(64) }]]) {
+    assert.throws(() => validateSelectiveCleanupTest05(...args));
+  }
   const historical = spawnSync('git', ['--no-replace-objects', 'show',
     CONSENT_DOC04.checkpointHead + ':' + CONSENT_DOC04.path],
     { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });

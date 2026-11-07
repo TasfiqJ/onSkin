@@ -36,7 +36,7 @@ class StorageOrigin05Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='c47-origin05-restore-') as temporary:
             root=Path(temporary)/'source';root.mkdir();originals={}
             for relative in s.SOURCE_PREIMAGES:
-                original=(ROOT/relative).read_bytes();originals[relative]=original
+                original=historical_diagnostic_source05(relative);originals[relative]=original
                 target=root/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(original)
             script='scripts/release/full-app-j01/storage_origin47.mjs'
             target=root/script;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((ROOT/script).read_bytes())
@@ -65,7 +65,7 @@ class StorageOrigin05Tests(unittest.TestCase):
     def _context_fixture(self, temporary):
         root=Path(temporary)/'source';root.mkdir();originals={}
         for relative in s.SOURCE_PREIMAGES:
-            original=(ROOT/relative).read_bytes();originals[relative]=original
+            original=historical_diagnostic_source05(relative);originals[relative]=original
             target=root/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(original)
         script='scripts/release/full-app-j01/storage_origin47.mjs'
         target=root/script;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((ROOT/script).read_bytes())
@@ -401,5 +401,15 @@ class FailureWindowVersion2Tests(unittest.TestCase):
             changed = copy.deepcopy(original); change(changed)
             result = s.validate_trace05(v2_encode(changed), HEAD, BUNDLE, 321)
             self.assertIsNone(s.qualifying_origin05(result))
+
+def historical_diagnostic_source05(relative):
+    if relative not in s.SOURCE_PREIMAGES:
+        raise ValueError('C47_STORAGE05_HISTORICAL_FIXTURE_PATH')
+    result=subprocess.run(['git','--no-replace-objects','show',
+        '5e6acffc9d8d06b163bc3f3d20b6895a6ad03707:'+relative],
+        cwd=ROOT,capture_output=True,timeout=30)
+    if result.returncode != 0 or s.digest(result.stdout) != s.SOURCE_PREIMAGES[relative]:
+        raise ValueError('C47_STORAGE05_HISTORICAL_FIXTURE_BYTES')
+    return result.stdout
 
 if __name__=='__main__':unittest.main()

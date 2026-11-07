@@ -7,7 +7,7 @@
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
   "inventory_state": "FROZEN",
-  "recorded_utc": "2026-11-04T17:51:43.319488+00:00",
+  "recorded_utc": "2026-11-07T10:12:06.405Z",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
     {
@@ -432,6 +432,96 @@
       "causal_need": "C05 separately labeled minimal first-storage-error diagnostic; finite source transformer and direct privacy/noninterference controls.",
       "invariant": "No ordinary authority or behavior change. Exact diagnostic-only source/delegate changes restored; original error values preserved; secure storage/owner/consent/deletion remain fail-closed.",
       "validation": "Recognized storage/native errors, cause/getter/redaction, actual UI-adapter propagation, observer-failure noninterference, exact transforms/restoration and actual native first-error capture."
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 10337,
+      "preimage_sha256": "3e147e5a80534d025dee08d6c64a04fde50207844ad8b4c32bbcc233e08597b8",
+      "causal_need": "Necessary inert owned-export mock adapter using the old beginPrivate spy; all8 old test bodies/assertions exact.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 6863,
+      "preimage_sha256": "66efcd27ef8176127e85df249ae5b0427b7b37b99f6a62574ac3a7915e334f8d",
+      "causal_need": "Owner-proved whole-cleanup settlement, preserving widget-first closure, drains, purpose deletion, reopened-boundary reminder and firstFailure.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 8431,
+      "preimage_sha256": "c7df79cf96922a0c645ae1059d652faed3283c58f330788e51a906df0c166d2e",
+      "causal_need": "Retain real age contracts with prepared-store mock binding.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/ageGateStore.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 3943,
+      "preimage_sha256": "bd83d5dd65228d054778c9a919a0378313881cd467049f38bd91dcda49bad162",
+      "causal_need": "Prepared actual private-store read, preserving all age receipt classification and unavailable obligations.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 13627,
+      "preimage_sha256": "f76e23b55496484940f2f8b981dcc9ad823b4b1a32c8be4570ec4b3a06444b95",
+      "causal_need": "Necessary same-function prepared-getter mock alias; old callback/error/delay/count assertions exact.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 7397,
+      "preimage_sha256": "e29234f6af0b3be077a77aa18fd31a38a07943f50e192f4a79d2051c4889c457",
+      "causal_need": "Prepared fresh whole-envelope verification, preserving unavailable/retry/account/deletion isolation.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 2901,
+      "preimage_sha256": "7cf5ab692ed37b5e51866e71393d93b05f513458cc2455af6a724824d5b0018d",
+      "causal_need": "Retain availability contracts and bind the prepared verifier.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.ts",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 49630,
+      "preimage_sha256": "267de879f0a249c396fd6c43889a5117139d9d4e5dc44b6f548d104c4378e8c5",
+      "causal_need": "C05 Native39 post-read private account-fence rejection; explicit successful owned-cleanup preparation for age and whole-store gates plus demonstrated C46 preparation.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": null,
+      "preimage_sha256": null,
+      "causal_need": "Real-production Native39 predicate replay, owned-cleanup age/scan regressions, preserved review-red successors and fail-closed negatives.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts",
+      "preimage_state": "ABSENT",
+      "preimage_bytes": null,
+      "preimage_sha256": null,
+      "causal_need": "New real-production C46 consumer/ABA/readiness/authority/error tests; old witnesses preserved.",
+      "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
+      "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
     }
   ],
   "amendments": [
@@ -4250,8 +4340,299 @@
       "independent_source54_afterimages_retained": true,
       "release": "NO_GO",
       "acceptance_granted": false
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T10:12:06.405Z",
+      "head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+      "tree": "2fd127c4eaf558926117be5c227764e5324c26d3",
+      "preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 15313,
+          "preimage_sha256": "6a434edc1ec4c97ea3a7d17e53de901eb81fdeeec1bd23654ca129e90b6c3094",
+          "preimage_blob": "8a42b7468c5e02735d45656c10f49f31b06fbf3f",
+          "snapshot": "before/001.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 62308,
+          "preimage_sha256": "f3d6ea739558cd638238320bea4fd2bf4036decd6272c29aa629d1c725cf035b",
+          "preimage_blob": "3a67880cfbd8d3b3f86d6b8ddfa5a42ef401322c",
+          "snapshot": "before/039.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 51285,
+          "preimage_sha256": "1f7e3cd1f5fc6a9fbd732646eaa2d400f909fe261fd00222f5c497ea650bfe37",
+          "preimage_blob": "edaeec54219c30dba27002b072f8c3ab31cb82fc",
+          "snapshot": "before/040.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 250032,
+          "preimage_sha256": "2ba9683a1a4eefe7a6a846fcb3c93a67c8e142389edc9df697ea6040f949f5b4",
+          "preimage_blob": "3c581ed00c1c02b7a9bea3810e41b028e6c4b20d",
+          "snapshot": "before/041.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 167997,
+          "preimage_sha256": "76ab622479b256bb3df0e02ee69ba5c4f8743401ba388c32eb4c6b18129be7a0",
+          "preimage_blob": "db138a53c3e23c93ec118f2d140384d4f9ff2203",
+          "snapshot": "before/042.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 13894,
+          "preimage_sha256": "ba9e8eb017631f6d74769de1c14e9557b36fda9992501496664b5484123c6e05",
+          "preimage_blob": "3f8bacf59d082fe0ea5ee24270ff8102a6acb955",
+          "snapshot": "before/045.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.py",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 40310,
+          "preimage_sha256": "bccb8fd83076f31f5b15de79f072fcf408249056d554aace309afed362e5950b",
+          "preimage_blob": "9c9c870587cbe39009b55de44b6c7370ca329cc2",
+          "snapshot": "before/048.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 16255,
+          "preimage_sha256": "6a4b56a83d6f4ebc358a938b38846b35275a4d5f789f6d7b6f7a7907ed88ce38",
+          "preimage_blob": "982db89665d1990063d6db6abd6d94c1a99a1b80",
+          "snapshot": "before/049.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 73510,
+          "preimage_sha256": "33c6a4560f1eebd04efc39de35b85f18cbb74176e7cd46ad9521c24de5ab8dec",
+          "preimage_blob": "6af67ed3b550fb8ad9d4c9f6cc83fcb2de68a712",
+          "snapshot": "before/053.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 58595,
+          "preimage_sha256": "9bca2aa9750a68cb4d7051eb53ad8112451acc048a2dab7c80238b7086ceaad1",
+          "preimage_blob": "7e5366cd7bd4a03b9cb919d8a2527d99b43efe41",
+          "snapshot": "before/054.bin"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 10337,
+          "preimage_sha256": "3e147e5a80534d025dee08d6c64a04fde50207844ad8b4c32bbcc233e08597b8",
+          "preimage_blob": "1f97d0c2e9c944131545358a365463a6423922de"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 6863,
+          "preimage_sha256": "66efcd27ef8176127e85df249ae5b0427b7b37b99f6a62574ac3a7915e334f8d",
+          "preimage_blob": "7f14f209f7a42e15c965b28c20e404b6ea099713",
+          "snapshot": "before/010.bin"
+        },
+        {
+          "path": "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8431,
+          "preimage_sha256": "c7df79cf96922a0c645ae1059d652faed3283c58f330788e51a906df0c166d2e",
+          "preimage_blob": "054eda80293a3ef1e24c02559fbc7ee54736efb8",
+          "snapshot": "before/013.bin"
+        },
+        {
+          "path": "apps/mobile/src/features/onboarding/ageGateStore.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 3943,
+          "preimage_sha256": "bd83d5dd65228d054778c9a919a0378313881cd467049f38bd91dcda49bad162",
+          "preimage_blob": "c193b5c7dbd3417bfa274771782a0b6ca90d5bdf",
+          "snapshot": "before/014.bin"
+        },
+        {
+          "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 13627,
+          "preimage_sha256": "f76e23b55496484940f2f8b981dcc9ad823b4b1a32c8be4570ec4b3a06444b95",
+          "preimage_blob": "6b43ca42b8b3d559375b44dbe43273e0cc6c8250",
+          "snapshot": "before/017.bin"
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7397,
+          "preimage_sha256": "e29234f6af0b3be077a77aa18fd31a38a07943f50e192f4a79d2051c4889c457",
+          "preimage_blob": "b0032f7c6b8da56f440505aeffdae7df6d21f161",
+          "snapshot": "before/020.bin"
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 2901,
+          "preimage_sha256": "7cf5ab692ed37b5e51866e71393d93b05f513458cc2455af6a724824d5b0018d",
+          "preimage_blob": "6e6e337deff01cd5fd6f88688586222ba84efcb7",
+          "snapshot": "before/021.bin"
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/privateKV.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 49630,
+          "preimage_sha256": "267de879f0a249c396fd6c43889a5117139d9d4e5dc44b6f548d104c4378e8c5",
+          "preimage_blob": "7c6218431c783fc95b657a2359a5c5524881ebcc",
+          "snapshot": "before/022.bin"
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "preimage_blob": null
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "preimage_blob": null
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 18794,
+          "preimage_sha256": "47e7d88de219b6ab992585ab280e07a91ea21bb93e93af12c7e36cb1da07e625",
+          "preimage_blob": "fea20a3b02dce6ff9412d084ad63c934eea1bee7",
+          "snapshot": "before/031.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 253172,
+          "preimage_sha256": "cd61e8859c3f147b7e8b90ed49c1ed0efb7c5814cb076f1b82b944b67ee0214b",
+          "preimage_blob": "2a3f2c02353200f102daaba05a53fbba453e36a4",
+          "snapshot": "before/026.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 98512,
+          "preimage_sha256": "98281fa0d4b86d07e544b38b2593e3a3f789fd169927e565533640bb65670d58",
+          "preimage_blob": "ba0896c8881053ba6e4ba5666df490ca1d35759d",
+          "snapshot": "before/028.bin"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 593890,
+          "preimage_sha256": "2b35a3965a3e39d18bc101ec2be8df42822264381e9b22b815c28f27790204d2",
+          "preimage_blob": "f10ac90259029d0c614255e535f3a2bd27652354",
+          "snapshot": "before/004.bin"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 9730,
+          "preimage_sha256": "607f8c235a59de42610b462878671d1b6d3666f71ddfe731307e24a99a4ccdb7",
+          "preimage_blob": "a0994bfd6f20d1ad61fe114e4804b8a0960dbe70",
+          "snapshot": "before/003.bin"
+        }
+      ],
+      "causal_need": "Native39 PID99582 same ErrorID2 privateKV guard771 after age native read and age unavailable774 proves changed private-store generation plus active boundary. Actual selectiveCleanup replay reproduces matching source mechanism and whole-envelope counterpart. Native39 holder is unobserved; new candidate runtime remains pending.",
+      "invariant": "Only known successful same-identity owned cleanup; wait outside both operation registries; original applicable health lease captured once; real guard-error provenance; exact+1 generation retirement; shared two-raw-attempt ceiling; pending ambiguity refused before reads. Original crypto/query/deletion/widget-first/consent authority and all ancestors preserved. No blanket retry or timeout inflation.",
+      "validation": "External V4 actual164PASS/8files; original-source1RED/4PASS, same parkedC46-only RED, whole-verifier RED and preserved V1/V2/V3 review reds. Current forced root/type/lint and native stages are pending; no native candidate pass claimed.",
+      "preedit07_sha256": "0ebd76a03117dcaada9492dcd79472656b5540ebc0c470b67c9265a77315e406",
+      "preedit08_sha256": "e528dbcef080562a11e09b1eb812f3333ec46f35607a09eedadfdc6e9343823a",
+      "app10_manifest_sha256": "33f61f1dd9ad6a134223b985e49ba64e645eb40008f1049ca1f04d86d0ac0166",
+      "focused_review_sha256": "ae54de38ca14c981087da173e9c97f626b9d7744e4142a2e80aab7bb8fdb993a",
+      "native39_raw_sha256": "31a521a20c894714ec204290d705c9f0f830b37137efa8c7bf0e6c6f35fce64d",
+      "native39_origin_record_sha256": "06ad2ef0a68db3c61e7fb44455f2be8045f76e936ee133f9d0ac98720c05c7e9",
+      "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
+      "finite_paths": 57,
+      "current_source_pins": 38,
+      "historical_input_witness": 202,
+      "historical_committed_paths": 172,
+      "declared_path_union": 231,
+      "native39_actual_origin_captured": true,
+      "native39_holder_attributed": false,
+      "native_candidate_validation_pending": true,
+      "native_execution": false,
+      "release": "NO_GO",
+      "acceptance_granted": false
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T10:16:13.069Z",
+      "parent_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+      "preimages": [
+        {
+          "path": "apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts",
+          "preimage_state": "PRESENT_WORKING_SOURCE",
+          "parent_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_bytes": 33787,
+          "preimage_sha256": "ee62851ff02076985c818af7b8c26b4aa9ee9b52b042d4d342c7a89624b65b15",
+          "snapshot": "0.before.bin"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_state": "PRESENT_WORKING_SOURCE",
+          "parent_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_bytes": 20734,
+          "preimage_sha256": "4a251cc7ca112b3875456b496a8bc58aac14426a46f778fee85d8c0defbaba2e",
+          "snapshot": "1.before.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_state": "PRESENT_WORKING_SOURCE",
+          "parent_head": "0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a",
+          "preimage_bytes": 275334,
+          "preimage_sha256": "c96850c91fde084887c949aa828eac7c248301148825a4cdee3bac2b1d387d92",
+          "snapshot": "2.before.bin"
+        }
+      ],
+      "causal_need": "Actual forced local source test7104/type3 PASS; lint fails only unused RECOVERY declaration in new boundary fixture. Remove that unused line and rebind current test pin.",
+      "invariant": "All test bodies/assertions and all production app bytes remain exact V4; no warning suppression, runtime change or native result reinterpretation.",
+      "validation": "Retain local57-actual01 raw lint RED; rerun forced uncached root/type/lint on stable57 paths, current source controls/seals and native candidate still required.",
+      "finite_paths": 57,
+      "current_source_pins": 38,
+      "production_v4_unchanged": true,
+      "native_execution": false,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
-  "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
-  "freeze_note": "C05 diagnostic39 observation-only successor: finite47/28pins unchanged. Original app10 inputs exactfa/5e6;512prefix and first-error snapshots unchanged; additional64failure-only window frozenfirstUI, closed schema2, historicalschema1validator preserved exact5e6. Native38 installed/signed/launched30s/selectedXCTest failed; age origin predicate lost405drops; recoveredC46 errors are not its cause. Independent54source repair passed7076/type3/lint3 then preserved/parked to retain original diagnostic sequence. No acceptance."
+  "frozen_utc": "2026-11-07T10:12:06.405Z",
+  "freeze_note": "Finite57 paths and exact preimages frozen for C05 source checkpoint. This is not source-test, native, owner or release acceptance. SourcePending/Frozen and actual ordinary/internal qualification remain required."
 }

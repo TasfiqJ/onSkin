@@ -2590,5 +2590,92 @@ class FixedBuild35Recovery36Tests(unittest.TestCase):
             n.normal_xctest_gate(SimpleNamespace(receipt=partial,root=Path('unused'),output=Path('unused')))
 
 
+
+class OrdinaryRelease05BuildTests(unittest.TestCase):
+    """Synthetic producer contracts; never a real app, compiler or storage result."""
+    def fixture(self):
+        f=SourceStage04Tests('test_same_source_full_thirty_streams_and_no_app_are_qualified')
+        f.setUp();self.addCleanup(f.doCleanups)
+        f.source.update(base=n.BASE,base_tree=n.BASE_TREE,helper='synthetic-test-helper',
+            helper_sha256='c'*64,inventory={'qualification':'SYNTHETIC_NOT_GIT_SOURCE'})
+        for path in ('source-before.json','source-after-controls.json'):f.write(path,f.source)
+        proof=f.verify()
+        output=f.root/'build';output.mkdir();(output/'logs').mkdir()
+        names=('normal-install','postinstall-check','current-generated47-source','current-generated47-native',
+            'current-generated47-resolved','pods','product-file','product-architectures','product-build-version',
+            'configure-simulator-app-target','native-build-settings','signed-product-verify-signature','native-build')
+        commands=[]
+        for i,name in enumerate(names):
+            command={'name':name,'state':'PASS','exit_code':0,'capture_complete':True,'required':True,
+                'argv':['xcodebuild','-configuration','Release','-sdk','iphonesimulator',*n.APP_SIMULATOR_BUILD_FLAGS,'build']}
+            for stream in ('stdout','stderr'):
+                path=output/'logs'/(str(i)+'.'+stream);path.write_bytes(b'SYNTHETIC_NOT_COMPILER_OUTPUT')
+                command.update({stream:path.relative_to(output).as_posix(),stream+'_bytes':path.stat().st_size,stream+'_sha256':n.sha(path)})
+            commands.append(command)
+        app={'qualification':'SYNTHETIC_NOT_AN_APP'}
+        receipt={'stage':'build','status':'BUILD_NATIVE_COMPILED_RUNTIME_NOT_RUN','source':f.source,
+            'stages':{'compiled':{'status':'PASS','details':app}},'commands':commands,
+            'ordinary_release05':{**n.ORDINARY_RELEASE05,'source_head':f.source['head'],'source_tree':f.source['tree']},
+            'authenticated_source_controls04':proof,'imported_provenance':{'source':f.provenance}}
+        for path in ('toolchain.json','current-generated47-source.json'):(output/path).write_bytes((f.output/path).read_bytes())
+        (output/'source-after-build.json').write_bytes(json.dumps(f.source).encode());(output/'app-artifact.json').write_bytes(json.dumps(app).encode())
+        provenance={'payload_directory':str(output)}
+        def verify(source=True):
+            (output/'execution.json').write_bytes(json.dumps(receipt).encode())
+            return n.verify_build_producer(f.runner,provenance,f.provenance if source else None)
+        return f,output,receipt,verify
+
+    def test_build_only_mode_is_exclusive_and_keeps_all_legacy_modes(self):
+        self.assertEqual(n.execution_mode('build',ordinary_release05=True),'ordinary-release05')
+        self.assertEqual(n.execution_mode('build'),'build')
+        for stage in ('source','normal','internal'):
+            with self.subTest(stage=stage),self.assertRaisesRegex(ValueError,'BUILD_ONLY'):
+                n.execution_mode(stage,ordinary_release05=True)
+        for flag in ('probe','resume25','resume36','consent_trace04','consent_runtime27'):
+            with self.subTest(flag=flag),self.assertRaisesRegex(ValueError,'EXCLUSIVE'):
+                n.execution_mode('build',ordinary_release05=True,**{flag:True})
+
+    def test_new_ordinary_build_cannot_run_without_exact_source_stage_or_be_a_runtime_mode(self):
+        for kwargs in ({},{'compile_only':True},{'compile_only':True,'consent_trace04':True,'source_provenance':{}}):
+            with self.subTest(kwargs=kwargs),patch.object(n,'prepare') as prepare,self.assertRaisesRegex(ValueError,'AUTHENTICATED_SOURCE_BUILD_ONLY'):
+                n.execute(SimpleNamespace(),ordinary_release05=True,**kwargs)
+            prepare.assert_not_called()
+
+    def test_current_source_and_new_release_commands_qualify_without_claiming_smoke_or_runtime(self):
+        f,output,receipt,verify=self.fixture()
+        result=verify()
+        self.assertEqual(result.receipt['ordinary_release05']['role'],'NEW_UNINSTRUMENTED_RELEASE05_NOT_RUNTIME_PROOF')
+        self.assertFalse(result.receipt['ordinary_release05']['ordinary_admitted'])
+        self.assertNotIn('app-process-keychain',result.receipt['stages'])
+        del receipt['ordinary_release05']
+        with self.assertRaisesRegex(ValueError,'REAL_APP_KEYCHAIN_REQUIRED'):verify()
+
+    def test_profile_tampering_stale_source_or_diagnostic_stage_cannot_be_an_ordinary_producer(self):
+        f,output,receipt,verify=self.fixture();original=copy.deepcopy(receipt)
+        for mutate in (lambda x:x['ordinary_release05'].update(source_head='d'*40),
+                       lambda x:x['ordinary_release05'].update(ordinary_admitted=True),
+                       lambda x:x['ordinary_release05'].update(ordinary_admitted=0),
+                       lambda x:x['ordinary_release05'].update(new_current_source_build=1),
+                       lambda x:x['ordinary_release05'].update(separate_keychain_smoke_run=True),
+                       lambda x:x['stages'].update({'app-process-keychain':{'status':'PASS'}}),
+                       lambda x:x['commands'].append({'name':'app-keychain-diagnostic-build'})):
+            receipt.clear();receipt.update(copy.deepcopy(original));mutate(receipt)
+            with self.assertRaises(ValueError):verify()
+        receipt.clear();receipt.update(copy.deepcopy(original))
+        with self.assertRaises(ValueError):verify(False)
+        receipt['source']=dict(f.source,head='e'*40)
+        with self.assertRaisesRegex(ValueError,'SAME_WHOLE_SOURCE'):verify()
+
+    def test_missing_signed_build_wrong_configuration_or_changed_raw_stream_still_refuse(self):
+        f,output,receipt,verify=self.fixture();original=copy.deepcopy(receipt)
+        receipt['commands']=[row for row in receipt['commands'] if row['name']!='signed-product-verify-signature']
+        with self.assertRaisesRegex(ValueError,'ACTUAL_COMMAND'):verify()
+        receipt.clear();receipt.update(copy.deepcopy(original))
+        build=next(row for row in receipt['commands'] if row['name']=='native-build');build['argv'][2]='Debug'
+        with self.assertRaisesRegex(ValueError,'REAL_RELEASE_BUILD'):verify()
+        receipt.clear();receipt.update(copy.deepcopy(original))
+        build=next(row for row in receipt['commands'] if row['name']=='native-build');(output/build['stdout']).write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError,'RAW_LOG_IDENTITY'):verify()
+
 if __name__ == '__main__':
     unittest.main()

@@ -1393,18 +1393,27 @@ def execute_retained_consent_runtime27(r, token):
     r.persist()
 
 
-def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False, resume36=False):
+ORDINARY_RELEASE05 = {'authorization':'BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05',
+    'role':'NEW_UNINSTRUMENTED_RELEASE05_NOT_RUNTIME_PROOF',
+    'new_current_source_build':True,'separate_keychain_smoke_run':False,
+    'ordinary_runtime_required':True,'ordinary_admitted':False,'release':'NO_GO'}
+
+
+def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False, resume36=False, ordinary_release05=False):
     require(stage in ('source', 'build', 'normal', 'internal'), 'EXECUTION_STAGE')
-    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27, resume36))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
+    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27, resume36, ordinary_release05))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
     require(not probe or stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
     require(not resume25 or stage == 'normal', 'REUSE25_NORMAL_ONLY')
     require(not resume36 or stage == 'normal','RESUME36_NORMAL_ONLY')
+    require(not ordinary_release05 or stage == 'build','ORDINARY_RELEASE05_BUILD_ONLY')
     require(not consent_trace04 or stage == 'build', 'CONSENT_TRACE_BUILD_STAGE_ONLY')
     require(not consent_runtime27 or stage == 'build', 'CONSENT_RUNTIME27_BUILD_STAGE_ONLY')
-    return 'resume36' if resume36 else 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
+    return 'ordinary-release05' if ordinary_release05 else 'resume36' if resume36 else 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
 
 
-def execute(r, compile_only=False, consent_trace04=False, source_provenance=None):
+def execute(r, compile_only=False, consent_trace04=False, source_provenance=None, ordinary_release05=False):
+    require(not ordinary_release05 or compile_only and not consent_trace04 and source_provenance is not None,
+            'ORDINARY_RELEASE05_AUTHENTICATED_SOURCE_BUILD_ONLY')
     head, tools, source47 = prepare(r, source_controls=source_provenance is None)
     if source_provenance is not None:
         r.receipt['authenticated_source_controls04'] = verify_source_producer04(r, source_provenance)
@@ -1478,7 +1487,12 @@ def execute(r, compile_only=False, consent_trace04=False, source_provenance=None
         r.receipt.update(status='CONSENT_LIFECYCLE_DIAGNOSTIC_ONLY_04', finished_utc=utc())
         r.persist()
         return
-    signing.run_app_diagnostic(r, sys.modules[__name__], ios, build_argv, products, bundle_id, head)
+    if ordinary_release05:
+        r.receipt['ordinary_release05'] = {**ORDINARY_RELEASE05, 'source_head':head,
+            'source_tree':r.receipt['source']['tree']}
+        r.persist()
+    else:
+        signing.run_app_diagnostic(r, sys.modules[__name__], ios, build_argv, products, bundle_id, head)
     r.run('native-build', build_argv + ['-resultBundlePath', products / 'build.xcresult', 'build'], timeout=3000)
     signing.retain_applied_outputs(sys.modules[__name__], derived, r.output/'simulator-signing/applied-xcent')
     r.source_proof('source-after-build', head, allow_generation=True)
@@ -2909,8 +2923,18 @@ def verify_build_producer(r, provenance, source_provenance=None):
             receipt.get('stages', {}).get('compiled', {}).get('status') == 'PASS' and
             not any(stage in receipt['stages'] for stage in ('installed', 'launched', 'normal-staging-ui')),
             'BUILD_PRODUCER_STAGE')
-    require(receipt['stages'].get('app-process-keychain', {}).get('status') == 'PASS',
+    ordinary05=receipt.get('ordinary_release05')
+    if ordinary05 is None:
+        require(receipt['stages'].get('app-process-keychain', {}).get('status') == 'PASS',
             'BUILD_PRODUCER_REAL_APP_KEYCHAIN_REQUIRED')
+    else:
+        require(type(ordinary05) is dict and
+                all(type(ordinary05.get(key)) is type(value) for key,value in ORDINARY_RELEASE05.items()) and
+                ordinary05 == {**ORDINARY_RELEASE05,'source_head':receipt['source']['head'],
+                'source_tree':receipt['source']['tree']} and source_provenance is not None and
+                'app-process-keychain' not in receipt['stages'] and
+                not any(row.get('name','').startswith('app-keychain-') for row in receipt.get('commands',[])),
+                'ORDINARY_RELEASE05_FRESH_BUILD_NOT_DIAGNOSTIC')
     tools = stage_json(read_native_file(directory / 'toolchain.json'))
     require(tools.get('build_environment') == ENVIRONMENT and tools.get('architecture') == 'x86_64' and
             tools.get('node') == 'v22.22.2' and tools.get('npm') == '11.20.0' and
@@ -2932,10 +2956,12 @@ def verify_build_producer(r, provenance, source_provenance=None):
                  'current-generated47-source', 'current-generated47-native', 'current-generated47-resolved',
                  'pods', 'product-file', 'product-architectures', 'product-build-version'):
         executed_producer_command(receipt, directory, name)
-    for name in ('configure-simulator-app-target','native-build-settings','app-keychain-diagnostic-build',
+    signing_commands = ('configure-simulator-app-target','native-build-settings','signed-product-verify-signature') if ordinary05 is not None else (
+                 'configure-simulator-app-target','native-build-settings','app-keychain-diagnostic-build',
                  'app-keychain-diagnostic-verify-signature','signed-product-verify-signature',
                  *('app-keychain-launch-'+phase for phase in ('first','relaunch','delete')),
-                 *('app-keychain-terminate-'+phase for phase in ('first','relaunch','delete'))):
+                 *('app-keychain-terminate-'+phase for phase in ('first','relaunch','delete')))
+    for name in signing_commands:
         executed_producer_command(receipt, directory, name)
     if qualified_source is None:
         control, logs = executed_producer_command(receipt, directory, 'generated47-controls', read_output=True)
@@ -3795,6 +3821,8 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('source', 'build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
+    parser.add_argument('--ordinary-release05', action='store_true',
+        help='New uninstrumented current Release build; ordinary runtime and internal gates still required')
     parser.add_argument('--resume36',action='store_true',help='Fixed authenticated Build35 and failed36 recovery; current ordinary and internal remain required')
     parser.add_argument('--consent-trace04', action='store_true', help='Separate read-only consent diagnostic; never ordinary or internal admission')
     parser.add_argument('--consent-runtime27', action='store_true', help='Authenticated retained diagnostic runtime only; never an app producer')
@@ -3815,7 +3843,8 @@ def main():
     try:
         context = hosted_stage_context(runner, args.stage)
         execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25,
-                       consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27, resume36=args.resume36)
+                       consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27, resume36=args.resume36,
+                       ordinary_release05=args.ordinary_release05)
         if args.consent_runtime27:
             execute_retained_consent_runtime27(runner, token)
         elif args.stage == 'source':
@@ -3825,7 +3854,10 @@ def main():
             if not args.simulator_probe and not args.consent_trace04:
                 require(bool(token), 'SOURCE04_BUILD_IMPORT_TOKEN_REQUIRED')
                 imported = stage_imports(runner, 'build', context, token)
-                execute(runner, compile_only=True, source_provenance=imported['source'])
+                if args.ordinary_release05:
+                    execute(runner, compile_only=True, source_provenance=imported['source'], ordinary_release05=True)
+                else:
+                    execute(runner, compile_only=True, source_provenance=imported['source'])
             elif args.simulator_probe:
                 require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
                 path = root / 'scripts/release/full-app-j01/simulator_signing47.py'

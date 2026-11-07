@@ -45,6 +45,16 @@
       "sha256": "8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b"
     },
     {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+      "bytes": 10427,
+      "sha256": "a1b234b369f9fdafb67569fc384cffd38fa49b062717604d690e0a867b5098d4"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+      "bytes": 7179,
+      "sha256": "c75acc4ac39e37bbe43f5f5335b284f6e1d9f9cb5dfcdcad46f1c52d9ab792bf"
+    },
+    {
       "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
       "bytes": 18134,
       "sha256": "8384a6c4b668c8c4cddfdec3fde2b3ba8153164c7fe321ec801729612c5c5598"
@@ -53,6 +63,16 @@
       "path": "apps/mobile/src/features/notifications/nativeMutation.ts",
       "bytes": 13795,
       "sha256": "bbd813b495619c8d884914ada4cf2dcfb713678cb99d0a0eb0f67a7e142814da"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
+      "bytes": 8480,
+      "sha256": "b8f313c67bf1c181a5793abd2755cf244a1dfeb5bd5725654faec2b50bef1e3a"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/ageGateStore.ts",
+      "bytes": 3961,
+      "sha256": "bdf07605a9900170a30bd4ca77fb1e3d15833d489d8d79894a39cb336d8b7bc3"
     },
     {
       "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
@@ -65,6 +85,11 @@
       "sha256": "089f705454098c108c03628738a6640cf497791369148f82e03248040b4a9a8f"
     },
     {
+      "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
+      "bytes": 13724,
+      "sha256": "ad5592fb5608b617c53e62861f2c008f6e91ecc5d5f4dfe66a300f080b866866"
+    },
+    {
       "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
       "bytes": 39901,
       "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
@@ -73,6 +98,31 @@
       "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
       "bytes": 24461,
       "sha256": "d7732158e808f4d038f0ae998e9f25e00c1faab86db5e5df28f35080fbb2e012"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx",
+      "bytes": 7399,
+      "sha256": "d02af99a4442214e178968a4b6a2b6bbba08e6b99e658ba6478b251eaa195956"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts",
+      "bytes": 2902,
+      "sha256": "7de7652984c3bea2773a592ca637b11b7bfd4cd5e0ceb578bd23d4c0c780545d"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKV.ts",
+      "bytes": 57344,
+      "sha256": "8b5bf4b11c6e4682a3e7e7df914766890c3417ac4ae8d538fe9cdbeec2a292a5"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts",
+      "bytes": 33721,
+      "sha256": "d5d825e26a132c541fe8c9e57d3e7119b488beca893fbcb6a1082c9fc9e426ce"
+    },
+    {
+      "path": "apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts",
+      "bytes": 25719,
+      "sha256": "0245c460ef7622a90fb2cebb25bfc4feaf91a94572af03670a8714525da6281a"
     },
     {
       "path": "docs/USER_FLOW_TREE.md",
@@ -101,23 +151,23 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 62308,
-      "sha256": "f3d6ea739558cd638238320bea4fd2bf4036decd6272c29aa629d1c725cf035b"
+      "bytes": 66455,
+      "sha256": "ab7ce877d8af22dbc5e602246afb464963dddab810148fd0fe69de1222538bea"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 51285,
-      "sha256": "1f7e3cd1f5fc6a9fbd732646eaa2d400f909fe261fd00222f5c497ea650bfe37"
+      "bytes": 55006,
+      "sha256": "9602909b0e22854a2ab5a023685e504d1164d9918280a8fde0084db3d2328bd6"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 250032,
-      "sha256": "2ba9683a1a4eefe7a6a846fcb3c93a67c8e142389edc9df697ea6040f949f5b4"
+      "bytes": 252208,
+      "sha256": "299c7dd7c9ae6deb0595d4ffdfb06858d136025c6b87c1be6ffe767d0aea00aa"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 167997,
-      "sha256": "76ab622479b256bb3df0e02ee69ba5c4f8743401ba388c32eb4c6b18129be7a0"
+      "bytes": 174560,
+      "sha256": "ccface974f53a7b21a6ccabad51f05e0668336e9b9da11d25714e4df02549c3f"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -131,13 +181,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.py",
-      "bytes": 40310,
-      "sha256": "bccb8fd83076f31f5b15de79f072fcf408249056d554aace309afed362e5950b"
+      "bytes": 40645,
+      "sha256": "c660cd49020f19bb08a5b8ec8fa931966d9fc9b071c28cd8cc6a5f78e1a371af"
     },
     {
       "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
-      "bytes": 16255,
-      "sha256": "6a4b56a83d6f4ebc358a938b38846b35275a4d5f789f6d7b6f7a7907ed88ce38"
+      "bytes": 18035,
+      "sha256": "11b08a482992ec8147b810b707985979b5094600236b3f74a2db56c7f5f6a88c"
     },
     {
       "path": "scripts/release/full-app-j01/storage_origin47.mjs",
@@ -146,13 +196,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 73510,
-      "sha256": "33c6a4560f1eebd04efc39de35b85f18cbb74176e7cd46ad9521c24de5ab8dec"
+      "bytes": 75513,
+      "sha256": "2b6ef3ac3a56e1bcdf4ec890d66687334fd25ddf95703fb6f6cbf5d4190f41b8"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 58595,
-      "sha256": "9bca2aa9750a68cb4d7051eb53ad8112451acc048a2dab7c80238b7086ceaad1"
+      "bytes": 59133,
+      "sha256": "fe067d00315b2ad36f6b3f1ec33e99dd0da0e7f714bfa0f1cfbcc971f707fc4a"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

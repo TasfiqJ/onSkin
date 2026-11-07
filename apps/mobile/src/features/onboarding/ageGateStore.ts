@@ -1,4 +1,4 @@
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItemWhenReady, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { AGE_POLICY_RECEIPT_KEY, AGE_POLICY_SHA256 } from './ageGate';
 
@@ -86,7 +86,7 @@ export function classifyAgePolicyReceipt(raw: string | null): AgePolicyReceiptSt
 
 export async function getAgePolicyReceiptStatus(): Promise<AgePolicyReceiptStatus> {
   try {
-    return classifyAgePolicyReceipt(await getPrivateItem(AGE_POLICY_RECEIPT_KEY));
+    return classifyAgePolicyReceipt(await getPrivateItemWhenReady(AGE_POLICY_RECEIPT_KEY));
   } catch {
     return 'unavailable';
   }

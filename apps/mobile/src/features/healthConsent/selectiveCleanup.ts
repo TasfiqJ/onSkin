@@ -27,7 +27,7 @@ import { HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from '@/lib/consent/healthDataWriteA
 import { isSupabaseConfigured } from '@/lib/env';
 import { queryClient } from '@/lib/query/queryClient';
 import {
-  beginPrivateKVAccountBoundary,
+  beginOwnedPrivateKVAccountBoundary39,
   endPrivateKVAccountBoundary,
   waitForPrivateKVWritesToSettle,
 } from '@/lib/storage/privateKV';
@@ -74,72 +74,78 @@ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<
   // this exact promise so its queued purge is still observed in-order below.
   const routineWidgetPrivacyCleanup = clearRoutineWidgetLifecycleForPrivacy();
   void routineWidgetPrivacyCleanup.catch(() => undefined);
-  beginPrivateKVAccountBoundary();
-  beginEncryptedPhotoAccountBoundary();
+  const settleReadBoundary = beginOwnedPrivateKVAccountBoundary39();
+  let readSettlementComplete = false;
   try {
-    await attempt(waitForAccountGenerationOperationsToSettle);
-    await attempt(waitForPrivateKVWritesToSettle);
-    await attempt(waitForEncryptedPhotoWritesToSettle);
-    await attempt(waitForHealthNotificationOperationsToSettle);
-    // Admission is already synchronously closed. Observe the same queued purge
-    // before local records remove evidence needed to retry this boundary.
-    await attempt(() => routineWidgetPrivacyCleanup);
-    await attempt(() => queryClient.cancelQueries());
-    await attempt(() => purgeSensitiveImageMemory());
-    // Analytics identity and every legacy PostHog persistence key are part of
-    // the health-purpose teardown contract. Treat a failed purge exactly like
-    // a failed encrypted-store purge: cleanup remains durably incomplete.
-    await attempt(resetAnalyticsIdentity);
-    await attempt(scavengePlaintextStaging);
-    await attempt(clearGeneratedPrivateCacheFiles);
-    // Withdrawal's server operation independently erases the owner's photos.
-    // Retire only that owner's minimal sign-out-surviving cleanup obligations.
-    await attempt(async () => {
-      const { erasePhotoDeleteRemoteCleanupForOwner } = await import('@/features/photos/photoDeleteRemoteCleanup');
-      await erasePhotoDeleteRemoteCleanupForOwner(ownerUserId);
-    });
-    await attempt(() => AsyncStorage.multiRemove([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]));
-    await attempt(clearEncryptedPhotoStorage);
-    await attempt(() =>
-      Platform.OS === 'web'
-        ? Promise.resolve()
-        : clearNativeNotificationsForAccountIsolation(),
-    );
-    await attempt(() => queryClient.clear());
+    beginEncryptedPhotoAccountBoundary();
+    try {
+      await attempt(waitForAccountGenerationOperationsToSettle);
+      await attempt(waitForPrivateKVWritesToSettle);
+      await attempt(waitForEncryptedPhotoWritesToSettle);
+      await attempt(waitForHealthNotificationOperationsToSettle);
+      // Admission is already synchronously closed. Observe the same queued purge
+      // before local records remove evidence needed to retry this boundary.
+      await attempt(() => routineWidgetPrivacyCleanup);
+      await attempt(() => queryClient.cancelQueries());
+      await attempt(() => purgeSensitiveImageMemory());
+      // Analytics identity and every legacy PostHog persistence key are part of
+      // the health-purpose teardown contract. Treat a failed purge exactly like
+      // a failed encrypted-store purge: cleanup remains durably incomplete.
+      await attempt(resetAnalyticsIdentity);
+      await attempt(scavengePlaintextStaging);
+      await attempt(clearGeneratedPrivateCacheFiles);
+      // Withdrawal's server operation independently erases the owner's photos.
+      // Retire only that owner's minimal sign-out-surviving cleanup obligations.
+      await attempt(async () => {
+        const { erasePhotoDeleteRemoteCleanupForOwner } = await import('@/features/photos/photoDeleteRemoteCleanup');
+        await erasePhotoDeleteRemoteCleanupForOwner(ownerUserId);
+      });
+      await attempt(() => AsyncStorage.multiRemove([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]));
+      await attempt(clearEncryptedPhotoStorage);
+      await attempt(() =>
+        Platform.OS === 'web'
+          ? Promise.resolve()
+          : clearNativeNotificationsForAccountIsolation(),
+      );
+      await attempt(() => queryClient.clear());
 
-    // Abort-ignoring reads must not repopulate a just-cleared health cache.
-    await attempt(() => queryClient.cancelQueries());
-    await attempt(() => queryClient.clear());
-    // The boundary prevents new tracked schedules. Drain explicitly and make a
-    // final native cancellation after every abort/rollback continuation exits.
-    await attempt(waitForHealthNotificationOperationsToSettle);
-    await attempt(() =>
-      Platform.OS === 'web'
-        ? Promise.resolve()
-        : clearNativeNotificationsForAccountIsolation(),
-    );
+      // Abort-ignoring reads must not repopulate a just-cleared health cache.
+      await attempt(() => queryClient.cancelQueries());
+      await attempt(() => queryClient.clear());
+      // The boundary prevents new tracked schedules. Drain explicitly and make a
+      // final native cancellation after every abort/rollback continuation exits.
+      await attempt(waitForHealthNotificationOperationsToSettle);
+      await attempt(() =>
+        Platform.OS === 'web'
+          ? Promise.resolve()
+          : clearNativeNotificationsForAccountIsolation(),
+      );
+    } finally {
+      endEncryptedPhotoAccountBoundary();
+      endPrivateKVAccountBoundary();
+      releaseAccountBoundary();
+    }
+
+    // Routine/photo reminders are health-purpose data, but the promised
+    // pre-charge reminder is billing safety. Its entitlement read must happen
+    // only after private/account boundaries reopen; inside the boundary the read
+    // correctly fails closed and the reminder would silently never be restored.
+    try {
+      await runAccountGenerationOperation(async (lease) => {
+        if (Platform.OS !== 'web') await scheduleTrialReminder();
+        lease.assertCurrent();
+      });
+    } catch (error) {
+      // An Auth boundary during the post-cleanup await invalidates the caller's
+      // continuation. Never collapse that signal into a generic cleanup error,
+      // which lifecycle reconciliation might otherwise catch and write around.
+      if (isAccountGenerationLeaseError(error)) throw error;
+      firstFailure ??= error;
+    }
+
+    if (firstFailure) throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');
+    readSettlementComplete = true;
   } finally {
-    endEncryptedPhotoAccountBoundary();
-    endPrivateKVAccountBoundary();
-    releaseAccountBoundary();
+    settleReadBoundary(readSettlementComplete);
   }
-
-  // Routine/photo reminders are health-purpose data, but the promised
-  // pre-charge reminder is billing safety. Its entitlement read must happen
-  // only after private/account boundaries reopen; inside the boundary the read
-  // correctly fails closed and the reminder would silently never be restored.
-  try {
-    await runAccountGenerationOperation(async (lease) => {
-      if (Platform.OS !== 'web') await scheduleTrialReminder();
-      lease.assertCurrent();
-    });
-  } catch (error) {
-    // An Auth boundary during the post-cleanup await invalidates the caller's
-    // continuation. Never collapse that signal into a generic cleanup error,
-    // which lifecycle reconciliation might otherwise catch and write around.
-    if (isAccountGenerationLeaseError(error)) throw error;
-    firstFailure ??= error;
-  }
-
-  if (firstFailure) throw new Error('HEALTH_PURPOSE_LOCAL_CLEAR_FAILED');
 }

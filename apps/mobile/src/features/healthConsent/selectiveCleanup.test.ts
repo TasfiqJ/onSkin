@@ -73,6 +73,7 @@ vi.mock('@/lib/query/queryClient', () => ({
 }));
 vi.mock('@/lib/storage/privateKV', () => ({
   beginPrivateKVAccountBoundary: mocks.beginPrivate,
+  beginOwnedPrivateKVAccountBoundary39: () => { mocks.beginPrivate(); return () => {}; },
   endPrivateKVAccountBoundary: mocks.endPrivate,
   waitForPrivateKVWritesToSettle: mocks.waitPrivate,
 }));

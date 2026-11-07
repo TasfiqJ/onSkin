@@ -409,7 +409,17 @@ def source_scope05(phase, root):
         raise ValueError('C47_STORAGE05_EXACT_PREDECESSOR44')
     additions={'scripts/release/full-app-j01/storage_trace47.py',
                'scripts/release/full-app-j01/storage_trace47.test.py',
-               'scripts/release/full-app-j01/storage_origin47.mjs'}
+               'scripts/release/full-app-j01/storage_origin47.mjs',
+               'apps/mobile/src/lib/storage/privateKV.ts',
+               'apps/mobile/src/features/onboarding/ageGateStore.ts',
+               'apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx',
+               'apps/mobile/src/features/onboarding/ageGateStore.test.ts',
+               'apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts',
+               'apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts',
+               'apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts',
+               'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+               'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
+               'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts'}
     if verifier.PATHS & additions:
         raise ValueError('C47_STORAGE05_NEW_PATH_PREDECESSOR_COLLISION')
     verifier.PATHS=frozenset(verifier.PATHS)|additions
@@ -419,11 +429,24 @@ def source_scope05(phase, root):
     if g('rev-parse',checkpoint+'^{tree}')!='ce88d3d7b8a674e3fae2e9aa2ff3c594efe2ecbd' or g('merge-base',checkpoint,result['head'])!=checkpoint:
         raise ValueError('C47_STORAGE05_PRESERVED_FA_CHECKPOINT')
     prefix=g('rev-list','--reverse',verifier.BASE+'..'+checkpoint).splitlines()
-    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=47:
-        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE47')
+    diagnostic_checkpoint='5e6acffc9d8d06b163bc3f3d20b6895a6ad03707'
+    if g('rev-parse',diagnostic_checkpoint+'^{tree}')!='28b35bf021e8a83ad3a979a99810c818fd5c69e0' or g('merge-base',diagnostic_checkpoint,result['head'])!=diagnostic_checkpoint:
+        raise ValueError('C47_STORAGE05_PRESERVED_DIAGNOSTIC38_CHECKPOINT')
+    diagnostic_prefix=g('rev-list','--reverse',verifier.BASE+'..'+diagnostic_checkpoint).splitlines()
+    if len(diagnostic_prefix)!=92 or result['commits'][:92]!=diagnostic_prefix:
+        raise ValueError('C47_STORAGE05_EXACT92_DIAGNOSTIC_PREFIX')
+    capture_checkpoint='0d1e9dd7a5488c395ba51b88c796a2b6870a8f5a'
+    if g('rev-parse',capture_checkpoint+'^{tree}')!='2fd127c4eaf558926117be5c227764e5324c26d3' or g('merge-base',capture_checkpoint,result['head'])!=capture_checkpoint:
+        raise ValueError('C47_STORAGE05_PRESERVED_CAPTURE39_CHECKPOINT')
+    capture_prefix=g('rev-list','--reverse',verifier.BASE+'..'+capture_checkpoint).splitlines()
+    if len(capture_prefix)!=94 or result['commits'][:94]!=capture_prefix:
+        raise ValueError('C47_STORAGE05_EXACT94_CAPTURE_PREFIX')
+    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=57:
+        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE57')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
-        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':47,
-        'historical_validator_file_modified':False,'diagnostic_only':True}}
+        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':57,
+        'historical_validator_file_modified':False,'diagnostic_only':False,
+        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC57_NO_NATIVE_ADMISSION'}}
 
 
 def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=None):
