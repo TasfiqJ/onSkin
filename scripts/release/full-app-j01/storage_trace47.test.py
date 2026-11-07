@@ -412,4 +412,47 @@ def historical_diagnostic_source05(relative):
         raise ValueError('C47_STORAGE05_HISTORICAL_FIXTURE_BYTES')
     return result.stdout
 
+
+class SourceScope59Tests(unittest.TestCase):
+    def test_exact_photo07_successor_keeps_the_original44_and_admits_only_current59(self):
+        import ast, hashlib, inspect
+        helper = ROOT/'scripts/release/full-app-j01/source_completion47.py'
+        self.assertEqual(hashlib.sha256(helper.read_bytes()).hexdigest(),
+            '93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932')
+        spec = importlib.util.spec_from_file_location('c47_scope59_immutable44', helper)
+        original = importlib.util.module_from_spec(spec); spec.loader.exec_module(original)
+        self.assertEqual(len(original.PATHS), 44)
+        source = inspect.getsource(s.source_scope05)
+        assignment = next(node for node in ast.walk(ast.parse(source)) if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == 'additions' for target in node.targets))
+        additions = ast.literal_eval(assignment.value)
+        expected = {
+            'scripts/release/full-app-j01/storage_trace47.py',
+            'scripts/release/full-app-j01/storage_trace47.test.py',
+            'scripts/release/full-app-j01/storage_origin47.mjs',
+            'apps/mobile/src/lib/storage/privateKV.ts',
+            'apps/mobile/src/features/onboarding/ageGateStore.ts',
+            'apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx',
+            'apps/mobile/src/features/onboarding/ageGateStore.test.ts',
+            'apps/mobile/src/lib/storage/privateDataAvailabilityGate.test.ts',
+            'apps/mobile/src/lib/storage/privateKVReadPreparation05.test.ts',
+            'apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts',
+            'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+            'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
+            'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+            'scripts/photo07/photo07-source-contract.mjs',
+            'scripts/photo07/photo07-source-contract.test.mjs'}
+        self.assertEqual(additions, expected)
+        self.assertFalse(original.PATHS & additions)
+        current = frozenset(original.PATHS) | additions
+        self.assertEqual(len(current), 59)
+        self.assertIn("result['finite_declared_paths']!=59", source)
+        self.assertIn("'finite_paths':59", source)
+        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE59', source)
+        original.PATHS = current
+        original.check_scope(additions, current)
+        for path in ['scripts/photo07/**', 'scripts/photo07/unrelated.mjs', 'scripts/photo07/photo07-source-contract.extra.mjs']:
+            with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'UNDECLARED_CHANGED_PATH'):
+                original.check_scope({path}, current | {path})
+
 if __name__=='__main__':unittest.main()

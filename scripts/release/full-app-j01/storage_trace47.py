@@ -419,7 +419,9 @@ def source_scope05(phase, root):
                'apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts',
                'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
                'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
-               'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts'}
+               'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+               'scripts/photo07/photo07-source-contract.mjs',
+               'scripts/photo07/photo07-source-contract.test.mjs'}
     if verifier.PATHS & additions:
         raise ValueError('C47_STORAGE05_NEW_PATH_PREDECESSOR_COLLISION')
     verifier.PATHS=frozenset(verifier.PATHS)|additions
@@ -441,12 +443,12 @@ def source_scope05(phase, root):
     capture_prefix=g('rev-list','--reverse',verifier.BASE+'..'+capture_checkpoint).splitlines()
     if len(capture_prefix)!=94 or result['commits'][:94]!=capture_prefix:
         raise ValueError('C47_STORAGE05_EXACT94_CAPTURE_PREFIX')
-    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=57:
-        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE57')
+    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=59:
+        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE59')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
-        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':57,
+        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':59,
         'historical_validator_file_modified':False,'diagnostic_only':False,
-        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC57_NO_NATIVE_ADMISSION'}}
+        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC59_NO_NATIVE_ADMISSION'}}
 
 
 def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=None):

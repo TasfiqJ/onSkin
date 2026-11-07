@@ -38,7 +38,15 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.deepEqual(SOURCE_PATHS47.filter(path => STORAGE_ORIGIN05.sourcePaths.includes(path)), STORAGE_ORIGIN05.sourcePaths);
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   // New current source is independently pinned; the historical202 witness remains exact.
-  assert.equal(SOURCE_PATHS47.length, 38);
+  assert.equal(SOURCE_PATHS47.length, 40);
+  const photo07 = ['scripts/photo07/photo07-source-contract.mjs', 'scripts/photo07/photo07-source-contract.test.mjs'];
+  assert.deepEqual(SOURCE_PATHS47.filter(path => path.startsWith('scripts/photo07/')), photo07);
+  for (const path of photo07) {
+    const missing = descriptor(); missing.sourcePins = missing.sourcePins.filter(pin => pin.path !== path);
+    assert.throws(() => validateDescriptor47(missing));
+    const wildcard = descriptor(); wildcard.sourcePins.find(pin => pin.path === path).path = 'scripts/photo07/**';
+    assert.throws(() => validateDescriptor47(wildcard));
+  }
   assert.ok(SOURCE_PATHS47.includes('apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts'));
   const oldCleanup = spawnSync('git', ['--no-replace-objects', 'show',
     SELECTIVE_CLEANUP05.checkpointHead + ':' + SELECTIVE_CLEANUP05.path],

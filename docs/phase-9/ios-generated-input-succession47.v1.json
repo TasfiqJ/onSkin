@@ -150,14 +150,24 @@
       "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
     },
     {
+      "path": "scripts/photo07/photo07-source-contract.mjs",
+      "bytes": 9843,
+      "sha256": "a6a4fac9b6b36ca63e06dd79d908f067c28023fdc9530db996848fb4002f33e7"
+    },
+    {
+      "path": "scripts/photo07/photo07-source-contract.test.mjs",
+      "bytes": 6551,
+      "sha256": "344b87d21558f63db7e059490435cad8c4c4be624df9ebee2b6ab090292feb4b"
+    },
+    {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 66455,
-      "sha256": "ab7ce877d8af22dbc5e602246afb464963dddab810148fd0fe69de1222538bea"
+      "bytes": 66558,
+      "sha256": "86e5ae7dd3d8d4ec863a838178dbf998ac08750d23e0cb6282c835d2d7ad3bcb"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 55006,
-      "sha256": "9602909b0e22854a2ab5a023685e504d1164d9918280a8fde0084db3d2328bd6"
+      "bytes": 55594,
+      "sha256": "db125c62110a88875ad28f3640a61249ff81d2c448040d8d499191ce6ab75728"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -196,13 +206,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 75513,
-      "sha256": "2b6ef3ac3a56e1bcdf4ec890d66687334fd25ddf95703fb6f6cbf5d4190f41b8"
+      "bytes": 75642,
+      "sha256": "cca944e6552524d5848e8983e6f3c0b93d4030188bcc365db7575f9ad718c9c9"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 59133,
-      "sha256": "fe067d00315b2ad36f6b3f1ec33e99dd0da0e7f714bfa0f1cfbcc971f707fc4a"
+      "bytes": 61941,
+      "sha256": "e93e1a83e9a176b7d86b11ebf8e53805e9076dda84b3cf7e69561bb39f162feb"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",

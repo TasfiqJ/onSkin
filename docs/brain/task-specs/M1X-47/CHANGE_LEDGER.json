@@ -7,7 +7,7 @@
   "first_plan_commit": "a5b3edb572bf92310c555933f8c0db6300e1aecc",
   "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
   "inventory_state": "FROZEN",
-  "recorded_utc": "2026-11-07T10:12:06.405Z",
+  "recorded_utc": "2026-11-07T11:32:53.599Z",
   "note": "Plan was the required first and only path in first commit; its absence is independently checked from accepted base. All remaining listed paths are recorded before implementation. Worklist seal paths will be separately recorded before use. This inventory grants no independent acceptance.",
   "paths": [
     {
@@ -522,6 +522,24 @@
       "causal_need": "New real-production C46 consumer/ABA/readiness/authority/error tests; old witnesses preserved.",
       "invariant": "No error-as-null, native-store replacement, extra erasure, automatic consent/navigation, stale Auth/health lease renewal or weakened deletion/owner authority. Generic/failed/ambiguous pending boundaries and unknown native failures stay closed. Native holder attribution remains bounded.",
       "validation": "Actual original-source RED and versioned fixed164 production-code/legacy-adapter cases; old meaningful bodies retained; forced current root/type/lint, current source controls and new ordinary/internal native execution required."
+    },
+    {
+      "path": "scripts/photo07/photo07-source-contract.mjs",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 8028,
+      "preimage_sha256": "41e41906ea001af592f469843e4ed1a69fabea074516c1ecc839454378d5ed36",
+      "causal_need": "Actual16fde CI40 PHOTO07 checker rejects owned cleanup try/finally settlement; strict AST successor and7 additional controls retain legacy terminal-if and all13 original cases.",
+      "invariant": "Only exact successful owned settlement shape is recognized. Original photo encryption/deletion/memory/cache/export obligations and failure throw remain enforced; no production application or historical202/172 source witness changes.",
+      "validation": "Retained original13 RED(11PASS2FAIL), exact original13 prefix and fixed20 PASS plus historical0d1 cleanup source PASS; forced final source controls/native ordinary qualification still required."
+    },
+    {
+      "path": "scripts/photo07/photo07-source-contract.test.mjs",
+      "preimage_state": "PRESENT",
+      "preimage_bytes": 3884,
+      "preimage_sha256": "ff67eb0659f0c5873121fde783511c32ff6178a93b8c63ee8cda0420a5f9c040",
+      "causal_need": "Actual16fde CI40 PHOTO07 checker rejects owned cleanup try/finally settlement; strict AST successor and7 additional controls retain legacy terminal-if and all13 original cases.",
+      "invariant": "Only exact successful owned settlement shape is recognized. Original photo encryption/deletion/memory/cache/export obligations and failure throw remain enforced; no production application or historical202/172 source witness changes.",
+      "validation": "Retained original13 RED(11PASS2FAIL), exact original13 prefix and fixed20 PASS plus historical0d1 cleanup source PASS; forced final source controls/native ordinary qualification still required."
     }
   ],
   "amendments": [
@@ -4678,8 +4696,149 @@
       "acceptance_granted": false,
       "native_execution": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T11:32:53.599Z",
+      "head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+      "tree": "73d9792e5fa23156d4cc5bdd8af26d42db80e85f",
+      "preimages": [
+        {
+          "path": "scripts/photo07/photo07-source-contract.mjs",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8028,
+          "preimage_sha256": "41e41906ea001af592f469843e4ed1a69fabea074516c1ecc839454378d5ed36",
+          "preimage_blob": "193b979f8d19fa945b66be2ecef028e52056a75b",
+          "snapshot": "0.before.bin"
+        },
+        {
+          "path": "scripts/photo07/photo07-source-contract.test.mjs",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 3884,
+          "preimage_sha256": "ff67eb0659f0c5873121fde783511c32ff6178a93b8c63ee8cda0420a5f9c040",
+          "preimage_blob": "fe0db03ce2d93d138068a2166575bc5392b21978",
+          "snapshot": "1.before.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 66455,
+          "preimage_sha256": "ab7ce877d8af22dbc5e602246afb464963dddab810148fd0fe69de1222538bea",
+          "preimage_blob": "fa79fbbab6e0df6a37eb5f75023d80c5b7d17a2c",
+          "snapshot": "2.before.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 55006,
+          "preimage_sha256": "9602909b0e22854a2ab5a023685e504d1164d9918280a8fde0084db3d2328bd6",
+          "preimage_blob": "1b48968d3cea2aa378028d0a45b9bcc7fe83cf2d",
+          "snapshot": "3.before.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 75513,
+          "preimage_sha256": "2b6ef3ac3a56e1bcdf4ec890d66687334fd25ddf95703fb6f6cbf5d4190f41b8",
+          "preimage_blob": "0b73c966b8a5139439d2d8c72e0448783e9c5ed0",
+          "snapshot": "4.before.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 59133,
+          "preimage_sha256": "fe067d00315b2ad36f6b3f1ec33e99dd0da0e7f714bfa0f1cfbcc971f707fc4a",
+          "preimage_blob": "b9077f2561309b2e81884661748e4cd99540ba91",
+          "snapshot": "5.before.bin"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 20734,
+          "preimage_sha256": "94e47e9da780ef06650b366242d7564a8f0e0b31183591ec3e2ae0c664cad724",
+          "preimage_blob": "6ac708be05e304dbf5232be91ec02bf83200260f",
+          "snapshot": "6.before.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 280375,
+          "preimage_sha256": "8f1b41e106b0218b61ab038bb6753b444c8a9abb551400c21958060222b27c7b",
+          "preimage_blob": "3723136c8019ac4430f18a6e746adf8a46cf1931",
+          "snapshot": "7.before.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 100323,
+          "preimage_sha256": "482cd559f326d66736a48f98c1e708dec9db038566c8915329d6fd271f19d228",
+          "preimage_blob": "77fe29d66baed9add1d0833ea99a1016707cfdf7",
+          "snapshot": "8.before.bin"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 595701,
+          "preimage_sha256": "1d554aacbe2b09787a36f7a877c9c67fc34daad5a476357c90a59f9f8faaf40f",
+          "preimage_blob": "cc3b998fde210c56c8b153441399d552da85db5c",
+          "snapshot": "9.before.bin"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 2093,
+          "preimage_sha256": "4468d3f47971b1b448a3bf4d6aa8062947c3743a3022df3b348e2c7ba619699f",
+          "preimage_blob": "367b1b0a35f3d598740b6a5175fb0375c3d4da89",
+          "snapshot": "10.before.bin"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 142269,
+          "preimage_sha256": "a69f82fe7807d51299d0223b66f39e2440acdf5477add384597c73a4713ec69e",
+          "preimage_blob": "4d3ea14e3bf28c1a17770d78d233424cdb23a6b8",
+          "snapshot": "11.before.bin"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "16fde71b9d79825b48cc41c79301bc2ecb7fe993",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 84921,
+          "preimage_sha256": "6206230d0854b5d25839683ee5e00f9f86776496311625bfa12b34190900c107",
+          "preimage_blob": "ebbdb201d7ea6c6644c1256acb2716b84dd565d9",
+          "snapshot": "12.before.bin"
+        }
+      ],
+      "preedit_sha256": "2d64c6140b278395fc7d6873e3c4504ce80c17b3002d775829503e64d0200126",
+      "causal_need": "Actual current-source iOS launch contract CI40 fails PHOTO07 AST checker; Native40 was cancelled in source stage before any app build. Preserve app V4 and teach owned checker exactly its required failure-safe settlement shape.",
+      "invariant": "All prior57 rows/56 amendments, frozen plan, all ancestors, original13 photo test bodies, historical44/202/172 and Swift3 are preserved. Only2 literal related checker paths extend scope to59 and current pins40. No production app/native runtime/signing/timeout/security acceptance changes.",
+      "validation": "External photo20 PASS, source scope/helper afterimages and missing/wildcard negatives; Root exact current controls/source seals, standard CI, new ordinary Release/ordinary3 then internal5 remain required. Cancelled40 source full30 remains incomplete, not PASS.",
+      "proposal_sha256": "3b3c0a474da6d5816a7ee2a852a60c1f1414cbc1ed498a3ba8811820570d994b",
+      "photo_patch_sha256": "59c41381264aa689712aa396bdfe78023cf7a3a9534d52128ed2272b075866d3",
+      "scope_patch_sha256": "c10082f17315f8d47c4711e419f97a0cbf7e1ebbf2749e0e3ac1221573dd1575",
+      "finite_paths": 59,
+      "current_source_pins": 40,
+      "historical_witness_inputs": 202,
+      "committed_current_checks": 172,
+      "declared_unique_input_union": 233,
+      "production_app_v4_unchanged": true,
+      "native_execution": false,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
-  "freeze_note": "Finite57 paths and exact preimages frozen for C05 source checkpoint. This is not source-test, native, owner or release acceptance. SourcePending/Frozen and actual ordinary/internal qualification remain required."
+  "freeze_note": "Finite59 exact current-source inventory; the final two worklists must seal the tested source parent. Technical source only; native ordinary/internal qualification and all acceptance remain open."
 }

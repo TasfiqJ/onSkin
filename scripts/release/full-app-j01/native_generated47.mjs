@@ -37,6 +37,8 @@ export const STORAGE_ORIGIN05 = {
   "internalAdmission": false
 };
 export const SOURCE_PATHS47 = [
+  'scripts/photo07/photo07-source-contract.mjs',
+  'scripts/photo07/photo07-source-contract.test.mjs',
   'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
   'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
   'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
