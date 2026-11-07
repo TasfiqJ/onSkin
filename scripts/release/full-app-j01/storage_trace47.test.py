@@ -259,7 +259,8 @@ class TraceControls(unittest.TestCase):
 
 
 class AccountBoundaryOrigin05Tests(unittest.TestCase):
-    def case(self,site,operation,code,blocked):
+    def case(self,site,operation,code,blocked,stage=None):
+        stage=stage or ('entry' if site=='private-kv' else 'account_fence')
         value=fixture('c46')
         for row in value['events']+[value['firstFailure'],value['firstUIFailure']]:
             if row is None:continue
@@ -267,7 +268,7 @@ class AccountBoundaryOrigin05Tests(unittest.TestCase):
                 for node in row['error']['chain']:
                     node['recognizedCode']=code;node['recognizedCodeField']='message'
             if row['sequence']==2:
-                row.update(site=site,operation=operation,stage='account_fence',meta={'boundaryBlocked':blocked})
+                row.update(site=site,operation=operation,stage=stage,meta={'boundaryBlocked':blocked})
         return validator.qualifying_origin05(validate(value))
 
     def test_early_account_reject_and_local_private_boundary_need_actual_blocked_predicate(self):
@@ -276,5 +277,6 @@ class AccountBoundaryOrigin05Tests(unittest.TestCase):
             with self.subTest(op=op):
                 self.assertIsNotNone(self.case(site,op,code,True))
                 self.assertIsNone(self.case(site,op,code,False))
+                self.assertIsNone(self.case(site,op,code,True,stage='operation'))
 
 if __name__=='__main__':unittest.main()
