@@ -52,9 +52,12 @@ vi.mock('@tanstack/react-query', () => ({
 }));
 vi.mock('@/lib/supabase/client', () => ({ getPersistedSupabaseUser: vi.fn(), supabase: {} }));
 vi.mock('./skinProfileStore', () => ({ setStoredSkinProfileFromExplicitQuiz: vi.fn() }));
-vi.mock('./healthConsentStore', () => ({
+vi.mock('./healthConsentStore', () => {
+  const originalPort49 = {
   hasCurrentHealthDataCollectionConsent: async () => true,
-}));
+  };
+  return { ...originalPort49, hasCurrentHealthDataCollectionConsentForLease: originalPort49.hasCurrentHealthDataCollectionConsent };
+});
 vi.mock('@/lib/analytics/track', () => ({ track: vi.fn() }));
 
 let view: ReactTestRenderer | undefined;

@@ -31,7 +31,10 @@ import {
   type ScoredQuizProfileResult,
 } from './quiz';
 import { setStoredSkinProfileFromExplicitQuiz } from './skinProfileStore';
-import { hasCurrentHealthDataCollectionConsent } from './healthConsentStore';
+import {
+  hasCurrentHealthDataCollectionConsent,
+  hasCurrentHealthDataCollectionConsentForLease,
+} from './healthConsentStore';
 
 type PrivacyStatus = 'checking' | 'ready' | 'denied';
 type OnboardingContextValue = {
@@ -127,13 +130,13 @@ function createOnboardingSession(queryClient: ReturnType<typeof useQueryClient>)
     refresh();
     const check = (async () => {
       try {
-        const consent = await runHealthDataWriteOperation(lease.ownerUserId, async (operation) => {
+        // Complete the ordinary account/health preflight before preparation can
+        // join a cleanup that must drain either operation registry.
+        await runHealthDataWriteOperation(lease.ownerUserId, (operation) => {
           assertHealthDataWriteLease(lease);
-          const currentConsent = await hasCurrentHealthDataCollectionConsent();
           operation.assertCurrent();
-          assertHealthDataWriteLease(lease);
-          return currentConsent;
         });
+        const consent = await hasCurrentHealthDataCollectionConsentForLease(lease);
         if (!mounted || token !== checkToken || draft !== accepted) return null;
         assertHealthDataWriteLease(lease);
         if (!consent) throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');

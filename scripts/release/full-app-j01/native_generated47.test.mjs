@@ -15,6 +15,7 @@ import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMappin
   validateDevelopmentProjection47, validateOutput47, SOURCE_PATHS47, SWIFT_SUCCESSION47, validateSwiftSuccession47,
   CONSENT_DOC04, validateConsentDoc04, currentPrivacyProjection47, STORAGE_ORIGIN05,
   CONSENT_APP04, validateConsentApp04, firstLegacySourcePin04, SELECTIVE_CLEANUP05, validateSelectiveCleanup05, SELECTIVE_CLEANUP_TEST05, validateSelectiveCleanupTest05,
+  HEALTH_LIFECYCLE_ROUTES_TEST49, validateHealthLifecycleRoutesTest49,
   auditCurrentNative47 as auditIosPrivacySource, proveCurrentNativeSource47 as proveCurrentNativeSource46,
   verifyCurrentNative47 as verifyNativeCandidate46, validateIosExtensionConfig47 as validateIosExtensionConfig46 } from './native_generated47.mjs';
 
@@ -38,7 +39,7 @@ test('current47 descriptor is finite generated-only successor with every admissi
   assert.deepEqual(SOURCE_PATHS47.filter(path => STORAGE_ORIGIN05.sourcePaths.includes(path)), STORAGE_ORIGIN05.sourcePaths);
   assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   // New current source is independently pinned; the historical202 witness remains exact.
-  assert.equal(SOURCE_PATHS47.length, 40);
+  assert.equal(SOURCE_PATHS47.length, 51);
   const photo07 = ['scripts/photo07/photo07-source-contract.mjs', 'scripts/photo07/photo07-source-contract.test.mjs'];
   assert.deepEqual(SOURCE_PATHS47.filter(path => path.startsWith('scripts/photo07/')), photo07);
   for (const path of photo07) {
@@ -48,6 +49,27 @@ test('current47 descriptor is finite generated-only successor with every admissi
     assert.throws(() => validateDescriptor47(wildcard));
   }
   assert.ok(SOURCE_PATHS47.includes('apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts'));
+  const activation49 = [
+    'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+    'apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts',
+    'apps/mobile/src/features/onboarding/OnboardingContext.test.ts',
+    'apps/mobile/src/features/onboarding/OnboardingContext.tsx',
+    'apps/mobile/src/features/onboarding/onboardingOwner18.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts',
+    'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts',
+    'apps/mobile/src/features/onboarding/productsFooter16.test.ts',
+    'apps/mobile/src/features/onboarding/quizNavigation.test.ts',
+    'apps/mobile/src/features/onboarding/quizNavigation16.test.ts',
+    'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+  ];
+  assert.deepEqual(SOURCE_PATHS47.filter(path => activation49.includes(path)), activation49);
+  for (const path of activation49) {
+    const missing = descriptor(); missing.sourcePins = missing.sourcePins.filter(pin => pin.path !== path);
+    assert.throws(() => validateDescriptor47(missing));
+    const wildcard = descriptor(); wildcard.sourcePins.find(pin => pin.path === path).path =
+      'apps/mobile/src/features/onboarding/**';
+    assert.throws(() => validateDescriptor47(wildcard));
+  }
   const oldCleanup = spawnSync('git', ['--no-replace-objects', 'show',
     SELECTIVE_CLEANUP05.checkpointHead + ':' + SELECTIVE_CLEANUP05.path],
     { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
@@ -87,6 +109,26 @@ test('current47 descriptor is finite generated-only successor with every admissi
     [cleanupTestBeforePin, oldCleanupTest.stdout, currentCleanupTest, { ...currentCleanupTestPin, sha256: '0'.repeat(64) }]]) {
     assert.throws(() => validateSelectiveCleanupTest05(...args));
   }
+  const oldHealthRoutes = spawnSync('git', ['--no-replace-objects', 'show',
+    HEALTH_LIFECYCLE_ROUTES_TEST49.checkpointHead + ':' + HEALTH_LIFECYCLE_ROUTES_TEST49.path],
+    { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
+  assert.equal(oldHealthRoutes.status, 0);
+  const currentHealthRoutes = readFileSync(resolve(ROOT, HEALTH_LIFECYCLE_ROUTES_TEST49.path));
+  const currentHealthRoutesPin = descriptor().sourcePins.find(row => row.path === HEALTH_LIFECYCLE_ROUTES_TEST49.path);
+  const healthRoutesBeforePin = { path: HEALTH_LIFECYCLE_ROUTES_TEST49.path, ...HEALTH_LIFECYCLE_ROUTES_TEST49.before };
+  const healthRoutesProof = validateHealthLifecycleRoutesTest49(healthRoutesBeforePin,
+    oldHealthRoutes.stdout, currentHealthRoutes, currentHealthRoutesPin);
+  assert.deepEqual(healthRoutesProof.before, HEALTH_LIFECYCLE_ROUTES_TEST49.before);
+  assert.deepEqual(healthRoutesProof.after, { bytes: currentHealthRoutesPin.bytes, sha256: currentHealthRoutesPin.sha256 });
+  const wrongHealthRoutesBefore = Buffer.from(oldHealthRoutes.stdout); wrongHealthRoutesBefore[0] ^= 1;
+  const wrongHealthRoutesAfter = Buffer.from(currentHealthRoutes); wrongHealthRoutesAfter[0] ^= 1;
+  for (const args of [
+    [healthRoutesBeforePin, wrongHealthRoutesBefore, currentHealthRoutes, currentHealthRoutesPin],
+    [healthRoutesBeforePin, oldHealthRoutes.stdout, wrongHealthRoutesAfter, currentHealthRoutesPin],
+    [{ ...healthRoutesBeforePin, path: 'apps/mobile/src/unrelated.test.ts' }, oldHealthRoutes.stdout, currentHealthRoutes, currentHealthRoutesPin],
+    [healthRoutesBeforePin, oldHealthRoutes.stdout, currentHealthRoutes, { ...currentHealthRoutesPin, sha256: '0'.repeat(64) }],
+    [healthRoutesBeforePin, oldHealthRoutes.stdout, currentHealthRoutes, { ...currentHealthRoutesPin, path: 'apps/mobile/src/unrelated.test.ts' }],
+  ]) assert.throws(() => validateHealthLifecycleRoutesTest49(...args));
   const historical = spawnSync('git', ['--no-replace-objects', 'show',
     CONSENT_DOC04.checkpointHead + ':' + CONSENT_DOC04.path],
     { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });

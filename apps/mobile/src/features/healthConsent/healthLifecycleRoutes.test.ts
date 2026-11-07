@@ -6,6 +6,47 @@ import ts from 'typescript';
 const SRC = fileURLToPath(new URL('../../', import.meta.url));
 const read = (path: string) => readFileSync(`${SRC}/${path}`, 'utf8');
 
+// The prepared successor keeps admission outside draining registries, after
+// the same captured lease has completed a synchronous account/health preflight.
+function preparedConsentAfterPreflight49(node: ts.Node): boolean {
+  let found = false;
+  function exactCall(statement: ts.Statement | undefined, name: string, args: readonly string[]) {
+    if (!statement || !ts.isExpressionStatement(statement) || !ts.isCallExpression(statement.expression)) return false;
+    return statement.expression.expression.getText() === name &&
+      statement.expression.arguments.map((arg) => arg.getText()).join(',') === args.join(',');
+  }
+  function visit(n: ts.Node) {
+    if (ts.isVariableDeclaration(n) && n.name.getText() === 'consent' && n.initializer &&
+        ts.isAwaitExpression(n.initializer) && ts.isCallExpression(n.initializer.expression)) {
+      const call = n.initializer.expression;
+      const statement = n.parent.parent;
+      const block = statement.parent;
+      if (call.expression.getText() === 'hasCurrentHealthDataCollectionConsentForLease' &&
+          call.arguments.length === 1 && call.arguments[0]!.getText() === 'lease' &&
+          ts.isVariableStatement(statement) && ts.isBlock(block)) {
+        const index = block.statements.indexOf(statement);
+        found = block.statements.slice(0, index).some((previous) => {
+          if (!ts.isExpressionStatement(previous) || !ts.isAwaitExpression(previous.expression) ||
+              !ts.isCallExpression(previous.expression.expression)) return false;
+          const preflight = previous.expression.expression;
+          const callback = preflight.arguments[1];
+          return preflight.expression.getText() === 'runHealthDataWriteOperation' &&
+            preflight.arguments.length === 2 && preflight.arguments[0]!.getText() === 'lease.ownerUserId' &&
+            !!callback && ts.isArrowFunction(callback) && ts.isBlock(callback.body) &&
+            !callback.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword) &&
+            callback.parameters.length === 1 && callback.parameters[0]!.name.getText() === 'operation' &&
+            callback.body.statements.length === 2 &&
+            exactCall(callback.body.statements[0], 'assertHealthDataWriteLease', ['lease']) &&
+            exactCall(callback.body.statements[1], 'operation.assertCurrent', []);
+        });
+      }
+    }
+    ts.forEachChild(n, visit);
+  }
+  visit(node);
+  return found;
+}
+
 function preConsentClosed(source: string) {
   const root = ts.createSourceFile(
     'context.tsx',
@@ -31,7 +72,7 @@ function preConsentClosed(source: string) {
       n.catchClause.block.getText().includes('return Promise.resolve(null)'),
   );
   const consentRead = statements.findIndex((n) =>
-    n.getText().includes('hasCurrentHealthDataCollectionConsent()'),
+    n.getText().includes('hasCurrentHealthDataCollectionConsent()') || preparedConsentAfterPreflight49(n),
   );
   const initial = all.find((n) => ts.isVariableDeclaration(n) && n.name.getText() === 'draft');
   const getters = all
@@ -51,6 +92,22 @@ function preConsentClosed(source: string) {
 }
 
 describe('health lifecycle route contract', () => {
+  it('refuses prepared admission without its exact original-lease and account preflight', () => {
+    const onboarding = read('features/onboarding/OnboardingContext.tsx');
+    expect(preConsentClosed(onboarding)).toBe(true);
+    for (const [before, after] of [
+      ['hasCurrentHealthDataCollectionConsentForLease(lease)', 'hasCurrentHealthDataCollectionConsentForLease(forgedLease)'],
+      ['runHealthDataWriteOperation(lease.ownerUserId, (operation) => {', 'runHealthDataWriteOperation(otherOwner, (operation) => {'],
+      ['runHealthDataWriteOperation(lease.ownerUserId, (operation) => {', 'runHealthDataWriteOperation(lease.ownerUserId, async (operation) => {'],
+      ['assertHealthDataWriteLease(lease);', ''],
+      ['operation.assertCurrent();', ''],
+    ]) {
+      expect(onboarding).toContain(before);
+      expect(preConsentClosed(onboarding.replace(before!, after!))).toBe(false);
+    }
+  });
+
+
   it('mounts the lifecycle gate above every health provider and route', () => {
     const root = read('app/_layout.tsx');
     const protectedStack = root.lastIndexOf('<Stack screenOptions=');

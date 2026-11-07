@@ -89,7 +89,8 @@ vi.mock('@/lib/supabase/client', () => ({
   getPersistedSupabaseUser: async () => ({ data: { user: { id: ports.owner() } } }),
   supabase: { from: () => ({ insert: ports.insert }) },
 }));
-vi.mock('@/lib/storage/privateKV', () => ({
+vi.mock('@/lib/storage/privateKV', () => {
+  const originalPort49 = {
   getPrivateItem: async (key: string) => {
     const value = ports.storage.get(ports.owner() + ':' + key) ?? null;
     if (key.includes('Consent') && ports.readGate) await ports.readGate;
@@ -104,7 +105,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
     if (value === null) ports.storage.delete(owner + ':' + key);
     else ports.storage.set(owner + ':' + key, value);
   },
-}));
+  };
+  return { ...originalPort49, getPrivateItemWhenReady: originalPort49.getPrivateItem };
+});
 vi.mock('@/features/shelf/IntakeContext', () => ({
   useIntake: () => ({ reset: ports.resetIntake }),
 }));

@@ -421,7 +421,18 @@ def source_scope05(phase, root):
                'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
                'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
                'scripts/photo07/photo07-source-contract.mjs',
-               'scripts/photo07/photo07-source-contract.test.mjs'}
+               'scripts/photo07/photo07-source-contract.test.mjs',
+               'apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts',
+               'apps/mobile/src/features/onboarding/OnboardingContext.test.ts',
+               'apps/mobile/src/features/onboarding/OnboardingContext.tsx',
+               'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+               'apps/mobile/src/features/onboarding/productsFooter16.test.ts',
+               'apps/mobile/src/features/onboarding/quizNavigation.test.ts',
+               'apps/mobile/src/features/onboarding/quizNavigation16.test.ts',
+               'apps/mobile/src/features/onboarding/onboardingOwner18.test.ts',
+               'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts',
+               'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts',
+               'apps/mobile/src/lib/auth/localAccountIsolation.ts'}
     if verifier.PATHS & additions:
         raise ValueError('C47_STORAGE05_NEW_PATH_PREDECESSOR_COLLISION')
     verifier.PATHS=frozenset(verifier.PATHS)|additions
@@ -443,12 +454,18 @@ def source_scope05(phase, root):
     capture_prefix=g('rev-list','--reverse',verifier.BASE+'..'+capture_checkpoint).splitlines()
     if len(capture_prefix)!=94 or result['commits'][:94]!=capture_prefix:
         raise ValueError('C47_STORAGE05_EXACT94_CAPTURE_PREFIX')
-    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=59:
-        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE59')
+    ordinary49_checkpoint='705a552506e931154ebb173384cc90777e1e166d'
+    if g('rev-parse',ordinary49_checkpoint+'^{tree}')!='3950cb746e7bfcf8144663a3f50a7d1c652a4ea8' or g('merge-base',ordinary49_checkpoint,result['head'])!=ordinary49_checkpoint:
+        raise ValueError('C47_STORAGE05_PRESERVED_705A_CHECKPOINT')
+    ordinary49_prefix=g('rev-list','--reverse',verifier.BASE+'..'+ordinary49_checkpoint).splitlines()
+    if len(ordinary49_prefix)!=101 or result['commits'][:101]!=ordinary49_prefix:
+        raise ValueError('C47_STORAGE05_EXACT101_ORDINARY49_PREFIX')
+    if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=70:
+        raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE70')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',
-        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':59,
+        'preserved_predecessor_paths':44,'exact_added_paths':sorted(additions),'finite_paths':70,
         'historical_validator_file_modified':False,'diagnostic_only':False,
-        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC59_NO_NATIVE_ADMISSION'}}
+        'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC70_NO_NATIVE_ADMISSION'}}
 
 
 def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=None):

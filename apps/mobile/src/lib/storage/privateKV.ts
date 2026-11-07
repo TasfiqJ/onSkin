@@ -18,6 +18,8 @@ import {
 } from './privateKVContentKey';
 import {
   assertHealthDataWriteLease,
+  assertOriginalHealthDataWriteLease,
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
   captureHealthPurposePrivateDataWriteLease,
   isHealthPurposePrivateDataKey,
   type HealthDataWriteLease,
@@ -33,6 +35,7 @@ import { withOperationTiming } from '@/lib/observability/operationTiming';
 import { clearActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 import {
   LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED,
+  isPrivateMutationGuardError46,
   armPlanHistoryMutation45,
   armPrivateMutation46,
   abandonPrivateMutation46,
@@ -464,6 +467,17 @@ function privateMutationReadGuard46(): () => Promise<void> {
   };
 }
 
+// Both startup clear callers reserve the same two fixed keys at public entry.
+// These deletion-only promises never acquire account/private drains or new slots.
+const pendingWidgetCapabilityClears49 = new Set<Promise<void>>();
+async function waitForWidgetCapabilityClears49(assertCurrent: () => void): Promise<void> {
+  while (pendingWidgetCapabilityClears49.size > 0) {
+    assertCurrent();
+    await Promise.all([...pendingWidgetCapabilityClears49]);
+    assertCurrent();
+  }
+}
+
 /** Gate admission may wait for known raw-only writers, under original authority.
  * Raw getters and writer guards keep their established immediate refusal. */
 async function runPreparedPrivateRead46<T>(
@@ -471,6 +485,7 @@ async function runPreparedPrivateRead46<T>(
   read: () => Promise<T>,
   canRetry: () => boolean = () => true,
 ): Promise<T> {
+  await waitForWidgetCapabilityClears49(assertCurrent);
   await waitForPrivateMutationReadWindow46(assertCurrent);
   assertCurrent();
   const firstRevision = privateMutationReadGeneration46();
@@ -485,7 +500,7 @@ async function runPreparedPrivateRead46<T>(
     return await attempt();
   } catch (error) {
     if (
-      !(error instanceof Error) ||
+      !isPrivateMutationGuardError46(error) ||
       error.message !== LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED ||
       privateMutationReadGeneration46() === firstRevision || !canRetry()
     ) {
@@ -493,6 +508,7 @@ async function runPreparedPrivateRead46<T>(
     }
     // A failed/orphan marker or changed original account/health authority
     // refuses here. Only one complete fresh read is permitted after settlement.
+    await waitForWidgetCapabilityClears49(assertCurrent);
     await waitForPrivateMutationReadWindow46(assertCurrent);
     assertCurrent();
     return attempt();
@@ -514,12 +530,16 @@ function getPrivateItemOnOriginalLease39(
   key: string,
   budget: PrivateReadBudget39,
   assertOriginal: () => void,
+  originalAccountGeneration?: number,
 ): Promise<string | null> {
   return runAccountGenerationOperation((accountLease) =>
     runAccountScopedPrivateOperation((generation) => {
       const assertCurrent = () => {
         assertOriginal();
         assertPrivateGateAccountLease39(accountLease);
+        if (originalAccountGeneration !== undefined && originalAccountGeneration !== accountLease.generation) {
+          throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+        }
         assertAccountScopedPrivateOperationAllowed(generation);
       };
       return runPreparedPrivateRead46(assertCurrent, () => {
@@ -606,12 +626,19 @@ async function runOwnedPrivateGateRead39<T>(
 }
 
 /** The applicable health lease is captured once, before any wait or reread. */
-export function getPrivateItemWhenReady(key: string): Promise<string | null> {
+export function getPrivateItemWhenReady(
+  key: string,
+  originalPurposeLease?: HealthDataWriteLease,
+): Promise<string | null> {
+  if (originalPurposeLease !== undefined) assertOriginalHealthDataWriteLease(originalPurposeLease);
   const originalHealthReadLease = captureHealthPurposePrivateDataWriteLease(key);
   return runOwnedPrivateGateRead39(() => {
     assertPrivateReadAllowed(key);
+    if (originalPurposeLease !== undefined) assertOriginalHealthDataWriteLease(originalPurposeLease);
     if (originalHealthReadLease !== null) assertHealthDataWriteLease(originalHealthReadLease);
-  }, (budget, assertOriginal) => getPrivateItemOnOriginalLease39(key, budget, assertOriginal));
+  }, (budget, assertOriginal) => getPrivateItemOnOriginalLease39(
+    key, budget, assertOriginal, originalPurposeLease?.accountGeneration,
+  ));
 }
 
 /** Whole-envelope admission authenticates a fresh inventory, never plaintext. */
@@ -1423,10 +1450,12 @@ export async function clearRoutineWidgetActionPrivateItems(): Promise<void> {
     if (failure) throw failure.reason;
     await clearPrivateMutationAfterRemoval46(keys);
   });
+  pendingWidgetCapabilityClears49.add(pending);
   inFlightOperations.add(pending);
   try {
     await pending;
   } finally {
+    pendingWidgetCapabilityClears49.delete(pending);
     inFlightOperations.delete(pending);
   }
 }

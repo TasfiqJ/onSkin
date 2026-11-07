@@ -52,7 +52,8 @@ vi.mock('@/lib/supabase/client', () => ({
   getPersistedSupabaseUser: ports.user,
   supabase: { from: () => ({ insert: ports.insert }) },
 }));
-vi.mock('@/lib/storage/privateKV', () => ({
+vi.mock('@/lib/storage/privateKV', () => {
+  const originalPort49 = {
   getPrivateItem: async (key: string) => {
     const owner = ports.owner();
     if (key.includes('Consent') && ports.readGate) await ports.readGate;
@@ -76,7 +77,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
       if (health) ports.writes.push({ owner, value: next });
     }
   },
-}));
+  };
+  return { ...originalPort49, getPrivateItemWhenReady: originalPort49.getPrivateItem };
+});
 const ANSWERS = Object.fromEntries(
   ONBOARDING_QUIZ.map((q) => [q.id, q.multiSelect ? [q.options[0]!.id] : q.options[0]!.id]),
 ) as QuizAnswers;

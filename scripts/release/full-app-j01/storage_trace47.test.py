@@ -441,17 +441,35 @@ class SourceScope59Tests(unittest.TestCase):
             'apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts',
             'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
             'scripts/photo07/photo07-source-contract.mjs',
-            'scripts/photo07/photo07-source-contract.test.mjs'}
+            'scripts/photo07/photo07-source-contract.test.mjs',
+            'apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts',
+            'apps/mobile/src/features/onboarding/OnboardingContext.test.ts',
+            'apps/mobile/src/features/onboarding/OnboardingContext.tsx',
+            'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+            'apps/mobile/src/features/onboarding/productsFooter16.test.ts',
+            'apps/mobile/src/features/onboarding/quizNavigation.test.ts',
+            'apps/mobile/src/features/onboarding/quizNavigation16.test.ts',
+            'apps/mobile/src/features/onboarding/onboardingOwner18.test.ts',
+            'apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts',
+            'apps/mobile/src/features/onboarding/onboardingRoute18.test.ts',
+            'apps/mobile/src/lib/auth/localAccountIsolation.ts'}
         self.assertEqual(additions, expected)
         self.assertFalse(original.PATHS & additions)
         current = frozenset(original.PATHS) | additions
-        self.assertEqual(len(current), 59)
-        self.assertIn("result['finite_declared_paths']!=59", source)
-        self.assertIn("'finite_paths':59", source)
-        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE59', source)
+        self.assertEqual(len(current), 70)
+        self.assertIn("result['finite_declared_paths']!=70", source)
+        self.assertIn("'finite_paths':70", source)
+        self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE70', source)
+        self.assertIn('C47_STORAGE05_PRESERVED_705A_CHECKPOINT', source)
+        self.assertIn('C47_STORAGE05_EXACT101_ORDINARY49_PREFIX', source)
         original.PATHS = current
         original.check_scope(additions, current)
-        for path in ['scripts/photo07/**', 'scripts/photo07/unrelated.mjs', 'scripts/photo07/photo07-source-contract.extra.mjs']:
+        for path in ['scripts/photo07/**', 'scripts/photo07/unrelated.mjs', 'scripts/photo07/photo07-source-contract.extra.mjs',
+                     'apps/mobile/src/features/onboarding/**',
+                     'apps/mobile/src/features/onboarding/OnboardingContext.storage49.extra.test.ts',
+                     'apps/mobile/src/lib/auth/**', 'apps/mobile/src/lib/auth/localAccountIsolation.extra49.ts',
+                     'apps/mobile/src/features/onboarding/onboardingOwner18.extra.test.ts',
+                     'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.extra.test.ts']:
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'UNDECLARED_CHANGED_PATH'):
                 original.check_scope({path}, current | {path})
 

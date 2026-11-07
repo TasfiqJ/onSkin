@@ -35,6 +35,11 @@
       "sha256": "0fc3cfe1cb14606ae3396892d942c568fd858f9e36f147233ba03d24463d3117"
     },
     {
+      "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
+      "bytes": 17937,
+      "sha256": "f575b668bece974dc936664e88649f0c9b46f930b1879a7784d20e7fd368de2c"
+    },
+    {
       "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
       "bytes": 54151,
       "sha256": "a18f325558a383a76f78bc70744395fdfe532000b3038c2e6893d43e140c3021"
@@ -65,6 +70,21 @@
       "sha256": "bbd813b495619c8d884914ada4cf2dcfb713678cb99d0a0eb0f67a7e142814da"
     },
     {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.storage49.test.ts",
+      "bytes": 18320,
+      "sha256": "ff84fcb5d30dd57a94d726a6c3d664c05496bed06acce4870a4526ea62da1021"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.test.ts",
+      "bytes": 5969,
+      "sha256": "e657a7b5f146a78e32494b2c11738597e9cd21192ce81cb1955e184cde8ee250"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/OnboardingContext.tsx",
+      "bytes": 19094,
+      "sha256": "92dd830e2c37a5eda80ab376ec66a2c811e947a493a74be3d87800fbfab97074"
+    },
+    {
       "path": "apps/mobile/src/features/onboarding/ageGateStore.test.ts",
       "bytes": 8480,
       "sha256": "b8f313c67bf1c181a5793abd2755cf244a1dfeb5bd5725654faec2b50bef1e3a"
@@ -81,8 +101,38 @@
     },
     {
       "path": "apps/mobile/src/features/onboarding/healthConsentStore.ts",
-      "bytes": 8373,
-      "sha256": "089f705454098c108c03628738a6640cf497791369148f82e03248040b4a9a8f"
+      "bytes": 9060,
+      "sha256": "1b0dd6ccfc33bbe955ee1cedfd43040b24a230f2bc3a0a0cbdf1d35e4884c080"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingOwner18.test.ts",
+      "bytes": 17345,
+      "sha256": "a79cf1cd4058de7c068cb904b72a5aa553cd9fe3191796e8e383df10a2669e74"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingPrivacy17.test.ts",
+      "bytes": 4214,
+      "sha256": "7792c39289537fec334b3305cb67762b6f3e0576865903315f1c835923a94bc8"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingRoute18.test.ts",
+      "bytes": 17145,
+      "sha256": "4b5751f272eda249ae65b2c742ad8fae31ab54c7cc6dc0158c7adfac7d21edb7"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/productsFooter16.test.ts",
+      "bytes": 8102,
+      "sha256": "abd1f875528b79acaea768164d11fdc169b41215f540eb4db35b3feb3cb87c2a"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/quizNavigation.test.ts",
+      "bytes": 4319,
+      "sha256": "b3ab7d677a7b01d75333a470c1c04af5c71d284b5a607f981a0b1707b69076f0"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/quizNavigation16.test.ts",
+      "bytes": 6600,
+      "sha256": "23672b00323768b35535f3576430a1791d249644bb39e11a2b1bd156082cb1c7"
     },
     {
       "path": "apps/mobile/src/features/retainedRecovery/localRecovery.campaign05.test.ts",
@@ -93,6 +143,11 @@
       "path": "apps/mobile/src/features/settings/settingsRoutes.test.ts",
       "bytes": 39901,
       "sha256": "cc24ee27facd247ba9d3abbbe11b246b4021aa1c11ef76f16b1d61244ca6121b"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
+      "bytes": 38719,
+      "sha256": "d7f165e0a8e581264eb713b6b1d92486bfac1b16d81a7430f00b4bc660425139"
     },
     {
       "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
@@ -111,8 +166,8 @@
     },
     {
       "path": "apps/mobile/src/lib/storage/privateKV.ts",
-      "bytes": 57344,
-      "sha256": "8b5bf4b11c6e4682a3e7e7df914766890c3417ac4ae8d538fe9cdbeec2a292a5"
+      "bytes": 58689,
+      "sha256": "f21bfd6bd3830c48530643d88c359da9ecfd97654cc3dd8f21866059c40127ee"
     },
     {
       "path": "apps/mobile/src/lib/storage/privateKVBoundaryRead39.test.ts",
@@ -161,13 +216,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 66558,
-      "sha256": "86e5ae7dd3d8d4ec863a838178dbf998ac08750d23e0cb6282c835d2d7ad3bcb"
+      "bytes": 69195,
+      "sha256": "9afeb039f04bf3c57fdbfa834d8f971a6c2e127440e67ca68c338c45aa0419ac"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 55594,
-      "sha256": "db125c62110a88875ad28f3640a61249ff81d2c448040d8d499191ce6ab75728"
+      "bytes": 58874,
+      "sha256": "f360e6d22e6487ee9338e62cf3a9fd53134e4bcc931e4920c1d8534af68cf5bf"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
@@ -206,13 +261,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 75642,
-      "sha256": "cca944e6552524d5848e8983e6f3c0b93d4030188bcc365db7575f9ad718c9c9"
+      "bytes": 77088,
+      "sha256": "4547598e391631bc4f416f2fbe038b256a8178c25edbc1f3e5749339092769ce"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 61941,
-      "sha256": "e93e1a83e9a176b7d86b11ebf8e53805e9076dda84b3cf7e69561bb39f162feb"
+      "bytes": 63402,
+      "sha256": "db6b6aa272e1ed58828e260c6b98faa02f4d5e5442210aec9c6b9a258533c6b2"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",
