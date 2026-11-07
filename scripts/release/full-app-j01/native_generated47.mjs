@@ -464,6 +464,15 @@ function git47(root, ...args) {
 
 function inputs47(rootValue) {
   const root = checkedNativeRoot46(rootValue);
+  // Refuse the same immutable descriptor/witness/lock failures before costly
+  // ancestry work. Every original positive proof below still runs unchanged.
+  {
+    const earlyDescriptor = strictJson47(readNativeFile46(root, DESCRIPTOR47, 4 * 1024 * 1024).bytes);
+    validateDescriptor47(earlyDescriptor);
+    const earlyWitness = readNativeFile46(root, earlyDescriptor.predecessor46.path);
+    same(earlyWitness.sha256, LOCK_SUCCESSION46_SHA256);
+    same(readNativeFile46(root, 'package-lock.json').sha256, strictJson47(earlyWitness.bytes).candidateLock.sha256);
+  }
   const source = nativeSourceIdentity46(root);
   same(source.checkoutHead, source.sourceHead);
   same(process.env.C47_EXPECTED_HEAD ?? source.sourceHead, source.sourceHead);

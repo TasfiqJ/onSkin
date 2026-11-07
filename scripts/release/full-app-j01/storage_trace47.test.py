@@ -462,6 +462,8 @@ class SourceScope59Tests(unittest.TestCase):
         self.assertIn('C47_STORAGE05_EXACT87_PREFIX_FINITE70', source)
         self.assertIn('C47_STORAGE05_PRESERVED_705A_CHECKPOINT', source)
         self.assertIn('C47_STORAGE05_EXACT101_ORDINARY49_PREFIX', source)
+        self.assertIn('C47_STORAGE05_PRESERVED_DD21_CHECKPOINT', source)
+        self.assertIn('C47_STORAGE05_EXACT103_ORDINARY_SOURCE50_PREFIX', source)
         original.PATHS = current
         original.check_scope(additions, current)
         for path in ['scripts/photo07/**', 'scripts/photo07/unrelated.mjs', 'scripts/photo07/photo07-source-contract.extra.mjs',

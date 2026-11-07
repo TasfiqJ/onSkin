@@ -460,6 +460,12 @@ def source_scope05(phase, root):
     ordinary49_prefix=g('rev-list','--reverse',verifier.BASE+'..'+ordinary49_checkpoint).splitlines()
     if len(ordinary49_prefix)!=101 or result['commits'][:101]!=ordinary49_prefix:
         raise ValueError('C47_STORAGE05_EXACT101_ORDINARY49_PREFIX')
+    sealed_checkpoint='dd21cd52b108cb4e860db8b4d4a6c0112bd06d83'
+    if g('rev-parse',sealed_checkpoint+'^{tree}')!='a4004d3c538d26cae52fa42cc0bc79c46bfdc3fc' or g('merge-base',sealed_checkpoint,result['head'])!=sealed_checkpoint:
+        raise ValueError('C47_STORAGE05_PRESERVED_DD21_CHECKPOINT')
+    sealed_prefix=g('rev-list','--reverse',verifier.BASE+'..'+sealed_checkpoint).splitlines()
+    if len(sealed_prefix)!=103 or result['commits'][:103]!=sealed_prefix:
+        raise ValueError('C47_STORAGE05_EXACT103_ORDINARY_SOURCE50_PREFIX')
     if len(prefix)!=87 or result['commits'][:87]!=prefix or result['finite_declared_paths']!=70:
         raise ValueError('C47_STORAGE05_EXACT87_PREFIX_FINITE70')
     return {**result,'scope_successor05':{'predecessor_sha256':'93658c0e190387f474427e11b821248596350a61108087a8a9bb489ccf48f932',

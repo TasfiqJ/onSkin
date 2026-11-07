@@ -2871,5 +2871,164 @@ class OptionalCapture46Tests(unittest.TestCase):
         self.assertEqual(runner.receipt['stages'],{})
         self.assertFalse(runner.receipt['acceptance_granted'])
 
+
+
+class LocalSource05ProfileTests(unittest.TestCase):
+    """Synthetic producer/control fixtures only; no actual source/native/app result."""
+    def fixture(self):
+        old=OrdinaryRelease05BuildTests();f,output,receipt,_=old.fixture();self.addCleanup(old.doCleanups)
+        receipt.pop('authenticated_source_controls04');receipt.pop('imported_provenance')
+        receipt.update(local_source05=dict(n.LOCAL_SOURCE05),stage_complete=True,acceptance_granted=False,
+            campaign_candidate_complete=False,release='NO_GO',upstream_payload_bytes=0,
+            job_context={'repository':n.STAGE_REPOSITORY,'run_id':61,'run_attempt':1,'job_name':'C47 build','job_id':'native-build'})
+        f.runner.receipt.update(local_source05=dict(n.LOCAL_SOURCE05),job_context=dict(receipt['job_context']))
+        for name in ('source-before.json','source-after-local-controls05.json'):(output/name).write_text(json.dumps(f.source))
+        existing={r['name'] for r in receipt['commands']}
+        for row in f.commands:
+            if row['name'] in existing:continue
+            row=copy.deepcopy(row)
+            for stream in ('stdout','stderr'):
+                raw=(f.output/row[stream]).read_bytes();path=output/'logs'/('local-'+row['name']+'.'+stream);path.write_bytes(raw)
+                row.update({stream:path.relative_to(output).as_posix(),stream+'_bytes':len(raw),stream+'_sha256':n.sha(path)})
+            receipt['commands'].append(row)
+        producer=dict(f.provenance['producer'],producer_job_name='C47 build',run_id=61,producer_run_attempt=1)
+        provenance={'payload_directory':str(output),'producer':producer}
+        receipt['local_controls05']=n.verify_local_source05_controls(f.runner,receipt,output)
+        def verify(enabled=True,source=None):
+            (output/'execution.json').write_text(json.dumps(receipt))
+            return n.verify_build_producer(f.runner,provenance,source,local_source05=enabled)
+        return f,output,receipt,provenance,verify
+
+    def test_explicit_profile_keeps_default_dependencies_and_modes(self):
+        self.assertEqual(n.STAGE_DEPENDENCIES['normal'],('source','build'))
+        for role,parents in [('build',()),('normal',('build',)),('internal',('build','normal'))]:
+            self.assertEqual(n.stage_dependencies(role,{k:{} for k in parents},local_source05=True),parents)
+            self.assertEqual(n.execution_mode(role,ordinary_release05=role=='build',local_source05=True),'local-source05')
+        for role,flags in [('source',{}),('build',{}),('normal',{'ordinary_release05':True})]:
+            with self.subTest(role=role),self.assertRaises(ValueError):n.execution_mode(role,local_source05=True,**flags)
+        with self.assertRaisesRegex(ValueError,'EXCLUSIVE'):
+            n.execution_mode('build',ordinary_release05=True,local_source05=True,consent_trace04=True)
+        with self.assertRaisesRegex(ValueError,'STAGE_DEPENDENCIES'):
+            n.stage_dependencies('normal',{'source':{},'build':{}},local_source05=True)
+
+    def test_new_profile_uses_own_prepare_controls_and_old_ordinary_still_requires_source(self):
+        runner=SimpleNamespace(receipt={'local_source05':dict(n.LOCAL_SOURCE05)})
+        with patch.object(n,'prepare',side_effect=ValueError('STOP_BEFORE_NATIVE')) as prepare:
+            with self.assertRaisesRegex(ValueError,'STOP_BEFORE_NATIVE'):
+                n.execute(runner,compile_only=True,ordinary_release05=True,local_source05=True)
+        prepare.assert_called_once_with(runner,source_controls=True)
+        with patch.object(n,'prepare') as prepare:
+            with self.assertRaisesRegex(ValueError,'AUTHENTICATED_SOURCE_BUILD_ONLY'):
+                n.execute(runner,compile_only=True,ordinary_release05=True)
+        prepare.assert_not_called()
+
+    def test_full_local_thirty_and_sixty_events_qualify_only_new_build_profile(self):
+        f,output,receipt,provenance,verify=self.fixture();result=verify()
+        self.assertEqual(result.local_source05_proof['case_events'],60)
+        self.assertTrue(result.local_source05_proof['source_controls_performed_in_build_job'])
+        self.assertFalse(result.local_source05_proof['ordinary_admitted'])
+        self.assertNotIn('app-process-keychain',result.receipt['stages'])
+        with self.assertRaisesRegex(ValueError,'EXPLICIT_CONSUMER'):verify(False)
+        with self.assertRaisesRegex(ValueError,'NO_SOURCE_SUBSTITUTION'):verify(source=f.provenance)
+
+    def test_missing_partial_failed_or_mismatched_profile_never_becomes_local_build(self):
+        f,output,receipt,provenance,verify=self.fixture();original=copy.deepcopy(receipt)
+        for mutate in [lambda x:x.pop('local_source05'),lambda x:x['local_source05'].update(ordinary_admitted=0),
+            lambda x:x['local_source05'].update(profile='historical'),lambda x:x.update(stage_complete=False),
+            lambda x:x.update(failure={'type':'ValueError'}),lambda x:x.update(authenticated_source_controls04={'claimed':True}),
+            lambda x:x.update(imported_provenance={'source':f.provenance}),lambda x:x.update(upstream_payload_bytes=False),
+            lambda x:x['commands'].__setitem__(slice(None),[r for r in x['commands'] if r['name']!='generated47-controls']),
+            lambda x:next(r for r in x['commands'] if r['name']=='generated47-controls').update(capture_complete=False),
+            lambda x:next(r for r in x['commands'] if r['name']=='generated47-controls').update(state='FAIL',exit_code=124)]:
+            receipt.clear();receipt.update(copy.deepcopy(original));mutate(receipt)
+            with self.subTest(mutate=mutate),self.assertRaises(ValueError):verify()
+
+    def test_truncated_wrong_tap_or_missing_event_reject_even_with_rehashed_stream(self):
+        f,output,receipt,provenance,verify=self.fixture();row=next(r for r in receipt['commands'] if r['name']=='generated47-controls');path=output/row['stdout'];before=path.read_bytes()
+        changes=[before.replace(b'# pass 30',b'# pass 29'),b'\n'.join(before.splitlines()[:-1])+b'\n',before.replace(b'"event":"C47_SOURCE_CASE_END"',b'"event":"C47_SOURCE_CASE_BEGIN"',1)]
+        for raw in changes:
+            path.write_bytes(raw);row.update(stdout_bytes=len(raw),stdout_sha256=n.sha(path))
+            with self.assertRaises(ValueError):verify()
+
+    def test_source_context_toolchain_and_final_source_drift_remain_closed(self):
+        f,output,receipt,provenance,verify=self.fixture();original=copy.deepcopy(receipt);producer=copy.deepcopy(provenance)
+        for mutate in [lambda x:x['job_context'].update(run_id=62),lambda x:x['job_context'].update(run_attempt=2),lambda x:x['job_context'].update(run_id=True),lambda x:x.update(source=dict(f.source,head='e'*40))]:
+            receipt.clear();receipt.update(copy.deepcopy(original));mutate(receipt)
+            with self.assertRaises(ValueError):verify()
+        receipt.clear();receipt.update(copy.deepcopy(original))
+        for key,value in [('producer_run_attempt',2),('source_head','e'*40),('producer_job_name','C47 source')]:
+            provenance.clear();provenance.update(copy.deepcopy(producer));provenance['producer'][key]=value
+            with self.assertRaises(ValueError):verify()
+        provenance.clear();provenance.update(copy.deepcopy(producer))
+        (output/'source-after-local-controls05.json').write_text(json.dumps(dict(f.source,tree='e'*40)))
+        with self.assertRaisesRegex(ValueError,'UNPROJECTED_CONTROLS_SOURCE'):verify()
+
+    def test_local_imports_use_only_exact_build_then_build_normal_roles(self):
+        from unittest.mock import Mock
+        for role,parents in [('normal',('build',)),('internal',('build','normal'))]:
+            context={'runner_temp':tempfile.gettempdir()};runner=SimpleNamespace(receipt={},persist=Mock())
+            imports={parent:{'producer':{'artifact_id':i+1},'payload_bytes':5} for i,parent in enumerate(parents)}
+            with patch.object(n,'load_authenticated_stage_inputs',return_value={'imported_provenance':imports}) as load:
+                actual=n.stage_imports(runner,role,context,'TOKEN',local_source05=True)
+            self.assertEqual(set(load.call_args.args[1]),set(parents));self.assertEqual(load.call_args.kwargs,{'local_source05':True})
+            self.assertNotIn('source',actual);self.assertEqual(runner.receipt['upstream_payload_bytes'],5*len(parents))
+
+    def test_local_normal_profile_and_old_source_substitution_refuse_before_suite_gate(self):
+        f,output,receipt,provenance,verify=self.fixture()
+        normal=dict(receipt,stage='normal',imported_provenance={'source':f.provenance,'build':provenance})
+        (output/'execution.json').write_text(json.dumps(normal))
+        with patch.object(n,'producer_source_matches'):
+            with self.assertRaisesRegex(ValueError,'NORMAL_BUILD_ONLY'):
+                n.verify_normal_producer(f.runner,provenance,provenance,local_source05=True)
+        normal.pop('local_source05');(output/'execution.json').write_text(json.dumps(normal))
+        with patch.object(n,'producer_source_matches'):
+            with self.assertRaisesRegex(ValueError,'EXACT_PROFILE'):
+                n.verify_normal_producer(f.runner,provenance,provenance,local_source05=True)
+
+
+
+class LocalSource05PrebuildProofTests(unittest.TestCase):
+    fixture = LocalSource05ProfileTests.fixture
+    """Additional precompile sequencing controls; inherited fixtures are synthetic."""
+    def test_missing_or_exit0_incomplete_controls_refuse_before_any_prebuild_command(self):
+        from unittest.mock import Mock
+        for kind in ('missing','partial-tap','missing-event'):
+            f,output,receipt,provenance,verify=self.fixture()
+            if kind=='missing':receipt['commands']=[r for r in receipt['commands'] if r['name']!='generated47-controls']
+            else:
+                row=next(r for r in receipt['commands'] if r['name']=='generated47-controls');path=output/row['stdout'];raw=path.read_bytes()
+                raw=raw.replace(b'# pass 30',b'# pass 29') if kind=='partial-tap' else b'\n'.join(raw.splitlines()[:-1])+b'\n'
+                path.write_bytes(raw);row.update(stdout_bytes=len(raw),stdout_sha256=n.sha(path))
+            runner=SimpleNamespace(root=f.root,output=output,receipt=receipt,source_proof=Mock(),persist=Mock(),run=Mock())
+            with patch.object(n,'prepare',return_value=(f.source['head'],{},output/'current-generated47-source.json')):
+                with self.subTest(kind=kind),self.assertRaises(ValueError):
+                    n.execute(runner,compile_only=True,ordinary_release05=True,local_source05=True)
+            runner.run.assert_not_called()
+
+    def test_computed_proof_is_persisted_before_first_generation_command(self):
+        from unittest.mock import Mock
+        f,output,receipt,provenance,verify=self.fixture();receipt.pop('local_controls05')
+        runner=SimpleNamespace(root=f.root,output=output,receipt=receipt,source_proof=Mock(),persist=Mock(),run=Mock(side_effect=ValueError('STOP_FIRST_PREBUILD_COMMAND')))
+        with patch.object(n,'prepare',return_value=(f.source['head'],{},output/'current-generated47-source.json')):
+            with self.assertRaisesRegex(ValueError,'STOP_FIRST_PREBUILD_COMMAND'):
+                n.execute(runner,compile_only=True,ordinary_release05=True,local_source05=True)
+        self.assertEqual(runner.run.call_args.args[0],'resolved-expo-config')
+        self.assertEqual(receipt['local_controls05'],n.verify_local_source05_controls(runner,receipt,output))
+        self.assertEqual(receipt['local_controls05']['case_events'],60)
+
+    def test_consumer_recomputes_raw_controls_and_refuses_changed_or_missing_stored_proof(self):
+        f,output,receipt,provenance,verify=self.fixture();original=copy.deepcopy(receipt['local_controls05'])
+        for value in (None,dict(original,case_events=59),dict(original,source_controls_performed_in_build_job=1),dict(original,extra=True)):
+            receipt['local_controls05']=value
+            with self.subTest(value=value),self.assertRaisesRegex(ValueError,'EXACT_PREBUILD_CONTROL_PROOF'):verify()
+
+
+    def test_stored_control_profile_boolean_types_cannot_be_numeric_lookalikes(self):
+        for key,value in [('new_current_source_build',1),('ordinary_admitted',0)]:
+            f,output,receipt,provenance,verify=self.fixture()
+            receipt['local_controls05']['profile'][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(ValueError,'LOCAL_SOURCE05_EXACT_PROFILE'):verify()
+
+
 if __name__ == '__main__':
     unittest.main()

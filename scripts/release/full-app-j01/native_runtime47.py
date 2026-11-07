@@ -493,10 +493,33 @@ def stage_expected(role, needs, context):
             'artifact_name': f"campaign47-native-{role}-{context['head']}-{run_id}-{attempt}"}
 
 
-def stage_dependencies(consumer_stage, needs):
-    require(consumer_stage in STAGE_DEPENDENCIES and isinstance(needs, dict) and
-            set(needs) == set(STAGE_DEPENDENCIES[consumer_stage]), 'STAGE_DEPENDENCIES')
-    return STAGE_DEPENDENCIES[consumer_stage]
+LOCAL_SOURCE05 = {'authorization':'BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05',
+    'profile':'ORDINARY_RELEASE_WITH_OWN_FULL30_SOURCE05','source_controls':'SAME_BUILD_JOB_FULL30_AND60EVENTS',
+    'new_current_source_build':True,'ordinary_admitted':False,'release':'NO_GO'}
+LOCAL_SOURCE05_DEPENDENCIES = {'build':(), 'normal':('build',), 'internal':('build','normal')}
+
+
+def local_source05_dependencies(role, enabled=False):
+    require(type(enabled) is bool, 'LOCAL_SOURCE05_EXPLICIT_PROFILE')
+    if enabled:
+        require(role in LOCAL_SOURCE05_DEPENDENCIES, 'LOCAL_SOURCE05_ROLE')
+        return LOCAL_SOURCE05_DEPENDENCIES[role]
+    require(role in STAGE_DEPENDENCIES, 'STAGE_DEPENDENCIES')
+    return STAGE_DEPENDENCIES[role]
+
+
+def local_source05_receipt(receipt):
+    value=receipt.get('local_source05')
+    require(type(value) is dict and value==LOCAL_SOURCE05 and
+        all(type(value.get(key)) is type(expected) for key,expected in LOCAL_SOURCE05.items()),
+        'LOCAL_SOURCE05_EXACT_PROFILE')
+    return value
+
+
+def stage_dependencies(consumer_stage, needs, local_source05=False):
+    roles=local_source05_dependencies(consumer_stage,local_source05)
+    require(isinstance(needs, dict) and set(needs)==set(roles), 'STAGE_DEPENDENCIES')
+    return roles
 
 
 def stage_service_proof(expected, run, jobs, artifact):
@@ -757,8 +780,8 @@ def write_stage_provenance(directory, role, context):
             'manifest_sha256': hashlib.sha256(raw).hexdigest()}
 
 
-def load_authenticated_stage_inputs(consumer_stage, trusted_needs, context, token, import_root):
-    dependencies = stage_dependencies(consumer_stage, trusted_needs)
+def load_authenticated_stage_inputs(consumer_stage, trusted_needs, context, token, import_root, local_source05=False):
+    dependencies = stage_dependencies(consumer_stage, trusted_needs, local_source05)
     require(dependencies, 'STAGE_BUILD_HAS_NO_IMPORTED_INPUTS')
     temporary = Path(context['runner_temp']).resolve(strict=True)
     workspace = Path(context['workspace']).resolve(strict=True)
@@ -1405,22 +1428,33 @@ ORDINARY_RELEASE05 = {'authorization':'BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05',
     'ordinary_runtime_required':True,'ordinary_admitted':False,'release':'NO_GO'}
 
 
-def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False, resume36=False, ordinary_release05=False):
+def execution_mode(stage, *, probe=False, resume25=False, consent_trace04=False, consent_runtime27=False, resume36=False, ordinary_release05=False, local_source05=False):
     require(stage in ('source', 'build', 'normal', 'internal'), 'EXECUTION_STAGE')
-    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27, resume36, ordinary_release05))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
+    require(sum(map(bool, (probe, resume25, consent_trace04, consent_runtime27, resume36, ordinary_release05 and not local_source05, local_source05))) <= 1, 'EXCLUSIVE_EXECUTION_MODE')
+    require(not local_source05 or stage in LOCAL_SOURCE05_DEPENDENCIES and
+            ordinary_release05 is (stage=='build'), 'LOCAL_SOURCE05_BUILD_OR_CONSUMER')
     require(not probe or stage == 'build', 'PROBE_BUILD_STAGE_ONLY')
     require(not resume25 or stage == 'normal', 'REUSE25_NORMAL_ONLY')
     require(not resume36 or stage == 'normal','RESUME36_NORMAL_ONLY')
     require(not ordinary_release05 or stage == 'build','ORDINARY_RELEASE05_BUILD_ONLY')
     require(not consent_trace04 or stage == 'build', 'CONSENT_TRACE_BUILD_STAGE_ONLY')
     require(not consent_runtime27 or stage == 'build', 'CONSENT_RUNTIME27_BUILD_STAGE_ONLY')
-    return 'ordinary-release05' if ordinary_release05 else 'resume36' if resume36 else 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
+    return 'local-source05' if local_source05 else 'ordinary-release05' if ordinary_release05 else 'resume36' if resume36 else 'consent-runtime27' if consent_runtime27 else 'consent-trace04' if consent_trace04 else 'probe' if probe else 'reuse25' if resume25 else stage
 
 
-def execute(r, compile_only=False, consent_trace04=False, source_provenance=None, ordinary_release05=False):
-    require(not ordinary_release05 or compile_only and not consent_trace04 and source_provenance is not None,
+def execute(r, compile_only=False, consent_trace04=False, source_provenance=None, ordinary_release05=False, local_source05=False):
+    require(not local_source05 or ordinary_release05 and compile_only and not consent_trace04 and source_provenance is None,
+            'LOCAL_SOURCE05_NEW_BUILD_WITH_OWN_CONTROLS')
+    require(not ordinary_release05 or compile_only and not consent_trace04 and (source_provenance is not None or local_source05),
             'ORDINARY_RELEASE05_AUTHENTICATED_SOURCE_BUILD_ONLY')
     head, tools, source47 = prepare(r, source_controls=source_provenance is None)
+    if local_source05:
+        local_source05_receipt(r.receipt)
+        require(not r.receipt.get('imported_provenance') and not r.receipt.get('authenticated_source_controls04'),
+                'LOCAL_SOURCE05_NO_SOURCE_IMPORT')
+        r.source_proof('source-after-local-controls05',head)
+        r.receipt['local_controls05']=verify_local_source05_controls(r,r.receipt,r.output)
+        r.persist()
     if source_provenance is not None:
         r.receipt['authenticated_source_controls04'] = verify_source_producer04(r, source_provenance)
         r.persist()
@@ -2921,7 +2955,73 @@ def execute_source04(r):
     r.persist()
 
 
-def verify_build_producer(r, provenance, source_provenance=None):
+def verify_local_source05_controls(r, receipt, directory):
+    local_source05_receipt(r.receipt)
+    local_source05_receipt(receipt)
+    producer_source_matches(r,receipt,directory)
+    tools=stage_json(read_native_file(directory/'toolchain.json'))
+    require(tools.get('build_environment')==ENVIRONMENT and tools.get('architecture')=='x86_64' and
+        tools.get('node')=='v22.22.2' and tools.get('npm')=='11.20.0' and
+        tools.get('xcode','').startswith('Xcode 26.4') and
+        tools.get('simulator_build_flags')==SIMULATOR_BUILD_FLAGS and
+        tools.get('app_simulator_build_flags')==APP_SIMULATOR_BUILD_FLAGS,'LOCAL_SOURCE05_TOOLCHAIN')
+    require(stage_json(read_native_file(directory/'source-before.json'))==receipt['source']==
+        stage_json(read_native_file(directory/'source-after-local-controls05.json')),
+        'LOCAL_SOURCE05_UNPROJECTED_CONTROLS_SOURCE')
+    require(all(row.get('state')=='PASS' and row.get('exit_code')==0 and
+        row.get('capture_complete') is True and not row.get('timed_out')
+        for row in receipt.get('commands',[]) if row.get('required')),
+        'LOCAL_SOURCE05_ALL_REQUIRED_COMMANDS')
+    for name in SOURCE_COMMANDS04:
+        row,_=executed_producer_command(receipt,directory,name)
+        require(row.get('required') is True,'LOCAL_SOURCE05_REQUIRED_CONTROL')
+    control,streams=executed_producer_command(receipt,directory,'generated47-controls',read_output=True)
+    raw=b'\n'.join(streams)
+    current_tests=read_native_file(r.root/'scripts/release/full-app-j01/native_generated47.test.mjs').decode('utf8')
+    full_generated_control_proof(control['argv'],raw,current_tests)
+    names=re.findall(r"^test\('([^'\n]+)'",current_tests,re.M)
+    events=[stage_json(event.encode()) for event in re.findall(
+        r'^(?:#\s*)?(\{"event":"C47_SOURCE_CASE_(?:BEGIN|END)"[^\n]+\})$',raw.decode('utf8'),re.M)]
+    require(len(events)==60 and all([event.get('name') for event in events if
+        event.get('event')=='C47_SOURCE_CASE_'+phase]==names for phase in ('BEGIN','END')),
+        'LOCAL_SOURCE05_ALL_THIRTY_CASE_EVENTS')
+    return {'toolchain_sha256':sha(directory/'toolchain.json'),'current_source_sha256':sha(directory/'current-generated47-source.json'),
+        'profile':dict(LOCAL_SOURCE05),'source_before_sha256':sha(directory/'source-before.json'),
+        'source_after_sha256':sha(directory/'source-after-local-controls05.json'),
+        'full_thirty_stdout_sha256':control['stdout_sha256'],'full_thirty_stderr_sha256':control['stderr_sha256'],
+        'case_events':60,'source_controls_performed_in_build_job':True,'ordinary_admitted':False}
+
+
+def verify_local_source05_build(r, receipt, directory, provenance):
+    local_source05_receipt(r.receipt)
+    local_source05_receipt(receipt)
+    require(receipt.get('stage_complete') is True and not receipt.get('failure') and
+        not receipt.get('collection_failure') and not receipt.get('authenticated_source_controls04') and
+        not receipt.get('imported_provenance') and type(receipt.get('upstream_payload_bytes',0)) is int and receipt.get('upstream_payload_bytes',0)==0 and
+        receipt.get('acceptance_granted') is False and receipt.get('campaign_candidate_complete') is False and
+        receipt.get('release')=='NO_GO','LOCAL_SOURCE05_COMPLETE_OWN_BUILD')
+    context=receipt.get('job_context',{});current=r.receipt.get('job_context',{})
+    producer=provenance.get('producer',{})
+    require(context.get('repository')==STAGE_REPOSITORY and type(context.get('run_id')) is int and context['run_id']>0 and
+        type(context.get('run_attempt')) is int and context['run_attempt']>0 and
+        context.get('job_name')=='C47 build' and context.get('job_id')=='native-build' and
+        all(context.get(key)==current.get(key) for key in ('repository','run_id','run_attempt')) and
+        producer.get('producer_job_name')=='C47 build' and
+        producer.get('run_id')==context.get('run_id') and
+        producer.get('producer_run_attempt')==context.get('run_attempt') and
+        producer.get('source_head')==receipt['source']['head'] and
+        producer.get('source_tree')==receipt['source']['tree'], 'LOCAL_SOURCE05_SAME_CONTEXT_BUILD')
+    proof=verify_local_source05_controls(r,receipt,directory)
+    observed=receipt.get('local_controls05')
+    require(type(observed) is dict,'LOCAL_SOURCE05_EXACT_PREBUILD_CONTROL_PROOF')
+    local_source05_receipt({'local_source05':observed.get('profile')})
+    require(observed==proof and
+        all(type(observed.get(key)) is type(value) for key,value in proof.items()),
+        'LOCAL_SOURCE05_EXACT_PREBUILD_CONTROL_PROOF')
+    return proof
+
+
+def verify_build_producer(r, provenance, source_provenance=None, local_source05=False):
     directory = Path(provenance['payload_directory'])
     receipt = stage_json(read_native_file(directory / 'execution.json'))
     producer_source_matches(r, receipt, directory)
@@ -2929,7 +3029,13 @@ def verify_build_producer(r, provenance, source_provenance=None):
             receipt.get('stages', {}).get('compiled', {}).get('status') == 'PASS' and
             not any(stage in receipt['stages'] for stage in ('installed', 'launched', 'normal-staging-ui')),
             'BUILD_PRODUCER_STAGE')
+    require(local_source05 or 'local_source05' not in receipt, 'LOCAL_SOURCE05_EXPLICIT_CONSUMER_REQUIRED')
+    local_proof=None
+    if local_source05:
+        require(source_provenance is None, 'LOCAL_SOURCE05_NO_SOURCE_SUBSTITUTION')
+        local_proof=verify_local_source05_build(r,receipt,directory,provenance)
     ordinary05=receipt.get('ordinary_release05')
+    require(not local_source05 or ordinary05 is not None, 'LOCAL_SOURCE05_ORDINARY_RELEASE_REQUIRED')
     if ordinary05 is None:
         require(receipt['stages'].get('app-process-keychain', {}).get('status') == 'PASS',
             'BUILD_PRODUCER_REAL_APP_KEYCHAIN_REQUIRED')
@@ -2937,7 +3043,7 @@ def verify_build_producer(r, provenance, source_provenance=None):
         require(type(ordinary05) is dict and
                 all(type(ordinary05.get(key)) is type(value) for key,value in ORDINARY_RELEASE05.items()) and
                 ordinary05 == {**ORDINARY_RELEASE05,'source_head':receipt['source']['head'],
-                'source_tree':receipt['source']['tree']} and source_provenance is not None and
+                'source_tree':receipt['source']['tree']} and (source_provenance is not None or local_source05) and
                 'app-process-keychain' not in receipt['stages'] and
                 not any(row.get('name','').startswith('app-keychain-') for row in receipt.get('commands',[])),
                 'ORDINARY_RELEASE05_FRESH_BUILD_NOT_DIAGNOSTIC')
@@ -2982,7 +3088,7 @@ def verify_build_producer(r, provenance, source_provenance=None):
     producer_final_source_matches(r, receipt, directory, 'source-after-build.json')
     app = stage_json(read_native_file(directory / 'app-artifact.json'))
     require(app == receipt['stages']['compiled']['details'], 'BUILD_PRODUCER_APP_STAGE_BINDING')
-    return SimpleNamespace(receipt=receipt, output=directory, provenance=provenance)
+    return SimpleNamespace(receipt=receipt, output=directory, provenance=provenance, local_source05_proof=local_proof)
 
 
 def normal_xctest_gate(parent):
@@ -3118,10 +3224,15 @@ def normal_xctest_gate(parent):
     return proof
 
 
-def verify_normal_producer(r, provenance, build_provenance):
+def verify_normal_producer(r, provenance, build_provenance, local_source05=False):
     directory = Path(provenance['payload_directory'])
     receipt = stage_json(read_native_file(directory / 'execution.json'))
     producer_source_matches(r, receipt, directory)
+    require(local_source05 or 'local_source05' not in receipt, 'LOCAL_SOURCE05_EXPLICIT_NORMAL_REQUIRED')
+    if local_source05:
+        local_source05_receipt(r.receipt)
+        local_source05_receipt(receipt)
+        require(set(receipt.get('imported_provenance',{}))=={'build'}, 'LOCAL_SOURCE05_NORMAL_BUILD_ONLY')
     require(receipt.get('stage') == 'normal' and
             receipt.get('status') == 'NORMAL_STAGING_NATIVE_EXECUTED_SUPPORTED_OWNER_NOT_RUN' and
             receipt.get('lane') == 'normal-staging', 'NORMAL_PRODUCER_STAGE')
@@ -3453,26 +3564,30 @@ def resume25_import(r, context, token):
     return imported['imported_provenance']
 
 
-def stage_imports(r, role, context, token):
+def stage_imports(r, role, context, token, local_source05=False):
+    roles=local_source05_dependencies(role,local_source05)
     needed = {}
-    for producer in STAGE_DEPENDENCIES[role]:
+    for producer in roles:
         prefix = 'C47_' + producer.upper() + '_'
         needed[producer] = {key: os.environ.get(prefix + name, '') for key, name in
                            [('artifact_id', 'ARTIFACT_ID'), ('digest', 'ARTIFACT_DIGEST'), ('run_id', 'RUN_ID'),
                             ('producer_run_attempt', 'RUN_ATTEMPT'), ('payload_bytes', 'PAYLOAD_BYTES')]}
-    imported = load_authenticated_stage_inputs(role, needed, context, token,
-                  Path(context['runner_temp']) / 'c47-authenticated-producers')
+    arguments=(role,needed,context,token,Path(context['runner_temp'])/'c47-authenticated-producers')
+    imported=load_authenticated_stage_inputs(*arguments,local_source05=True) if local_source05 else load_authenticated_stage_inputs(*arguments)
     r.receipt['imported_provenance'] = imported['imported_provenance']
-    reserved = family_payload_bytes04(imported['imported_provenance'], STAGE_DEPENDENCIES[role])
+    reserved = family_payload_bytes04(imported['imported_provenance'], roles)
     require(0 < reserved < MAX_EVIDENCE, 'STAGE_COMBINED_EVIDENCE_BOUND')
     r.receipt['upstream_payload_bytes'] = reserved
     r.persist()
     return imported['imported_provenance']
 
 
-def execute_consumer(r, role, context, token, resume25=False, resume36=False):
+def execute_consumer(r, role, context, token, resume25=False, resume36=False, local_source05=False):
     head, tools, source47 = prepare(r, source_controls=False)
     require((head, r.receipt['source']['tree']) == (context['head'], context['tree']), 'STAGE_CURRENT_SOURCE_CONTEXT')
+    if local_source05:
+        local_source05_receipt(r.receipt)
+        require(not resume25 and not resume36, 'LOCAL_SOURCE05_NO_REUSE')
     if resume36:
         require(role=='normal','RESUME36_NORMAL_ONLY')
         imported=resume36_import(r,context,token)
@@ -3480,18 +3595,22 @@ def execute_consumer(r, role, context, token, resume25=False, resume36=False):
         require(role == 'normal', 'REUSE25_NORMAL_ONLY')
         imported = resume25_import(r, context, token)
     else:
-        imported = stage_imports(r, role, context, token)
+        imported = stage_imports(r,role,context,token,local_source05=True) if local_source05 else stage_imports(r,role,context,token)
     source_provenance = imported.get('source')
     if source_provenance is not None:
         verify_source_producer04(r, source_provenance)
     else:
-        require(resume25, 'SOURCE04_CURRENT_CONSUMER_REQUIRES_SOURCE_STAGE')
-    verify_build_producer(r, imported['build'], source_provenance=source_provenance)
+        require(resume25 or local_source05, 'SOURCE04_CURRENT_CONSUMER_REQUIRES_SOURCE_STAGE')
+    if local_source05:
+        require(set(imported)==set(LOCAL_SOURCE05_DEPENDENCIES[role]) and source_provenance is None, 'LOCAL_SOURCE05_EXACT_IMPORTS')
+        verify_build_producer(r,imported['build'],local_source05=True)
+    else:
+        verify_build_producer(r, imported['build'], source_provenance=source_provenance)
     app, bundle, app_proof = consume_produced_app(r, imported['build']['payload_directory'], head,
         tools['architecture'], Path(context['runner_temp']) / 'c47-verified-build-app')
     r.passed('verified-produced-app', app_proof)
     if role == 'internal':
-        normal = verify_normal_producer(r, imported['normal'], imported['build'])
+        normal = verify_normal_producer(r,imported['normal'],imported['build'],local_source05=True) if local_source05 else verify_normal_producer(r, imported['normal'], imported['build'])
         r.receipt['lane'] = 'internal-stage-supervisor'
         r.persist()
         execute_internal(r, normal_evidence=normal)
@@ -3827,6 +3946,8 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--stage', required=True, choices=('source', 'build', 'normal', 'internal'))
     parser.add_argument('--resume25', action='store_true')
+    parser.add_argument('--local-source05',action='store_true',
+        help='Explicit three-job profile; build performs own full30 controls before fresh ordinary Release')
     parser.add_argument('--ordinary-release05', action='store_true',
         help='New uninstrumented current Release build; ordinary runtime and internal gates still required')
     parser.add_argument('--resume36',action='store_true',help='Fixed authenticated Build35 and failed36 recovery; current ordinary and internal remain required')
@@ -3850,14 +3971,21 @@ def main():
         context = hosted_stage_context(runner, args.stage)
         execution_mode(args.stage, probe=args.simulator_probe, resume25=args.resume25,
                        consent_trace04=args.consent_trace04, consent_runtime27=args.consent_runtime27, resume36=args.resume36,
-                       ordinary_release05=args.ordinary_release05)
+                       ordinary_release05=args.ordinary_release05,local_source05=args.local_source05)
+        if args.local_source05:
+            runner.receipt['local_source05']=dict(LOCAL_SOURCE05)
+            runner.persist()
         if args.consent_runtime27:
             execute_retained_consent_runtime27(runner, token)
         elif args.stage == 'source':
             require(not token, 'SOURCE04_NO_ARTIFACT_TOKEN')
             execute_source04(runner)
         elif args.stage == 'build':
-            if not args.simulator_probe and not args.consent_trace04:
+            if args.local_source05:
+                require(not token, 'LOCAL_SOURCE05_BUILD_NO_ARTIFACT_TOKEN')
+                runner.receipt['upstream_payload_bytes']=0
+                execute(runner,compile_only=True,ordinary_release05=True,local_source05=True)
+            elif not args.simulator_probe and not args.consent_trace04:
                 require(bool(token), 'SOURCE04_BUILD_IMPORT_TOKEN_REQUIRED')
                 imported = stage_imports(runner, 'build', context, token)
                 if args.ordinary_release05:
@@ -3875,7 +4003,10 @@ def main():
                 require(not token, 'BUILD_STAGE_REQUIRES_NO_ARTIFACT_TOKEN')
                 execute(runner, compile_only=True, consent_trace04=args.consent_trace04)
         else:
-            execute_consumer(runner, args.stage, context, token, resume25=args.resume25, resume36=args.resume36)
+            if args.local_source05:
+                execute_consumer(runner,args.stage,context,token,local_source05=True)
+            else:
+                execute_consumer(runner, args.stage, context, token, resume25=args.resume25, resume36=args.resume36)
         require(runner.receipt['source']['head'] == context['head'] and
                 runner.receipt['source']['tree'] == context['tree'], 'STAGE_FINAL_SOURCE_CONTEXT')
         runner.receipt['stage_complete'] = True

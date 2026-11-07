@@ -216,23 +216,23 @@
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 69195,
-      "sha256": "9afeb039f04bf3c57fdbfa834d8f971a6c2e127440e67ca68c338c45aa0419ac"
+      "bytes": 69764,
+      "sha256": "52e2036d2a6bbb4b1bd2f2464096ece0512d3c0e1e040dcad8805ae0d12b3e3a"
     },
     {
       "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 58874,
-      "sha256": "f360e6d22e6487ee9338e62cf3a9fd53134e4bcc931e4920c1d8534af68cf5bf"
+      "bytes": 62545,
+      "sha256": "70bab33236a851d742c380e94fafb9659078e6f64991bc5d8fb9ae843453b43d"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 252681,
-      "sha256": "62f9bc67fc477f031cbfb0c6b209be50af629a06baa0ed2b1b37d73d83f7904c"
+      "bytes": 261567,
+      "sha256": "67980f9a3018f7e6bbac7524e576aee2731042e1d9d64c711339e3987d6fb8fd"
     },
     {
       "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 187100,
-      "sha256": "0eb00e891b3cb75ff5d4a455d2a6402b0498f9cfcc0c7e625f6d0baac6d5b90a"
+      "bytes": 199580,
+      "sha256": "718c852663c669e1f237a22d080de2192afca95b1f6749d87629e9e77a1f8515"
     },
     {
       "path": "scripts/release/full-app-j01/pods_compat47.py",
@@ -261,13 +261,13 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.py",
-      "bytes": 77088,
-      "sha256": "4547598e391631bc4f416f2fbe038b256a8178c25edbc1f3e5749339092769ce"
+      "bytes": 77631,
+      "sha256": "043960236bbb53f24f0342af97e08c5cbb5c4a5d472d540c715344b2498793a2"
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 63402,
-      "sha256": "db6b6aa272e1ed58828e260c6b98faa02f4d5e5442210aec9c6b9a258533c6b2"
+      "bytes": 63556,
+      "sha256": "66a017f24191bef543239c863dadece72b731c60849b92248febb7c5385d9493"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",
