@@ -2694,5 +2694,182 @@ class OrdinaryRelease05BuildTests(unittest.TestCase):
         build=next(row for row in receipt['commands'] if row['name']=='native-build');(output/build['stdout']).write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError,'RAW_LOG_IDENTITY'):verify()
 
+
+
+class OptionalCapture46Tests(unittest.TestCase):
+    """Host-command/cleanup fixtures only; never an iOS or suite PASS claim."""
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory(dir=Path(tempfile.gettempdir()).resolve())
+        self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name)
+
+    def double_wait_timeout(self):
+        # Closed actual in-memory streams isolate the second process wait;
+        # the OS/process outcome itself is deliberately unknown in this fixture.
+        class Pipe(io.BytesIO):
+            def __init__(self,raw):
+                super().__init__(raw)
+                self.done=n.threading.Event()
+            def close(self):
+                super().close()
+                self.done.set()
+        class Process:
+            def __init__(self):
+                self.stdout=Pipe(b'diagnostic raw stdout')
+                self.stderr=Pipe(b'diagnostic raw stderr')
+                self.pid=987654321
+                self.waits=[]
+                self.killed=False
+            def wait(self,timeout):
+                self.stdout.done.wait(1);self.stderr.done.wait(1)
+                self.waits.append(timeout)
+                raise subprocess.TimeoutExpired('SYNTHETIC_HOST_COMMAND',timeout)
+            def kill(self):self.killed=True
+        return Process()
+
+    def test_optional_diagnostic_second_wait_timeout_is_retained_not_promoted(self):
+        runner=n.Runner(self.root,self.root/'optional')
+        process=self.double_wait_timeout()
+        with patch.object(n.subprocess,'Popen',return_value=process),patch.object(n.os,'killpg',create=True):
+            paths=runner.run('optional-observation',['synthetic-observation'],timeout=30,
+                required=False,diagnostic=True)
+        row=runner.receipt['commands'][0]
+        self.assertEqual(process.waits,[30,30])
+        self.assertEqual((row['state'],row['exit_code'],row['error_type']),('FAIL',124,'TimeoutExpired'))
+        self.assertFalse(row['capture_complete'])
+        self.assertTrue(row['optional_diagnostic_timeout_retained'])
+        self.assertEqual(row['output_scope'],'PARTIAL_BYTES_FROZEN_BEFORE_RECEIPT_HASHING')
+        for key,path in zip(('stdout','stderr'),paths):
+            raw=path.read_bytes()
+            self.assertEqual(row[key+'_bytes'],len(raw))
+            self.assertEqual(row[key+'_sha256'],hashlib.sha256(raw).hexdigest())
+        self.assertEqual(runner.receipt['stages'],{})
+        self.assertFalse(runner.receipt['campaign_candidate_complete'])
+        self.assertFalse(runner.receipt['acceptance_granted'])
+
+    def test_required_or_substantive_second_wait_timeout_still_raises(self):
+        for index,(required,diagnostic) in enumerate(((True,False),(True,True),(False,False))):
+            with self.subTest(required=required,diagnostic=diagnostic):
+                runner=n.Runner(self.root,self.root/str(index))
+                process=self.double_wait_timeout()
+                with patch.object(n.subprocess,'Popen',return_value=process),patch.object(n.os,'killpg',create=True):
+                    with self.assertRaises(subprocess.TimeoutExpired):
+                        runner.run('substantive',['synthetic-command'],timeout=30,
+                            required=required,diagnostic=diagnostic)
+                row=runner.receipt['commands'][0]
+                self.assertEqual(row['exit_code'],124)
+                self.assertFalse(row['capture_complete'])
+                self.assertNotIn('optional_diagnostic_timeout_retained',row)
+                self.assertEqual(runner.receipt['stages'],{})
+
+    def test_unexpected_direct_runner_error_is_not_treated_as_optional_timeout(self):
+        runner=n.Runner(self.root,self.root/'unexpected')
+        process=SimpleNamespace(stdout=io.BytesIO(b''),stderr=io.BytesIO(b''),pid=987654321,
+            wait=lambda timeout: (_ for _ in ()).throw(RuntimeError('SYNTHETIC_UNEXPECTED')))
+        with patch.object(n.subprocess,'Popen',return_value=process):
+            with self.assertRaisesRegex(RuntimeError,'SYNTHETIC_UNEXPECTED'):
+                runner.run('observation',['synthetic-command'],required=False,diagnostic=True)
+        row=runner.receipt['commands'][0]
+        self.assertEqual((row['state'],row['exit_code'],row['error_type']),('FAIL',125,'RuntimeError'))
+        self.assertNotIn('optional_diagnostic_timeout_retained',row)
+
+    def normal_fixture(self,fail_selected=False):
+        runner=n.Runner(self.root,self.root/'normal')
+        runner.receipt['source']={'head':'a'*40,'tree':'b'*40}
+        ios=self.root/'ios';ios.mkdir()
+        products=self.root/'products';products.mkdir()
+        events=[]
+        def command(child,name,argv,**kwargs):
+            events.append((child.output.name,name))
+            if name=='generate-native-ui-runner':
+                ui=child.output/'ui';(ui/'runner/C47NativeUI.xcodeproj').mkdir(parents=True)
+                n.write_json(ui/'runner.json',{'project':str(ui/'runner/C47NativeUI.xcodeproj')})
+            if name=='simulator-final-screenshot' and child.output.name=='02':
+                raise subprocess.TimeoutExpired('SYNTHETIC_OPTIONAL_SCREENSHOT',30)
+            return child.logs/'synthetic.stdout',child.logs/'synthetic.stderr'
+        def simulator(child,lane):
+            events.append((child.output.name,'prepare'))
+            device='00000000-0000-4000-8000-'+str(int(child.output.name)).zfill(12)
+            child.receipt['simulator']={'udid':device}
+            return device
+        def text(child,name,argv,**kwargs):
+            device=child.receipt['simulator']['udid']
+            data='00000000-0000-4000-8000-'+str(int(child.output.name)+100).zfill(12)
+            return str(Path.home()/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'/data)
+        def installed(child,*args):child.passed('installed',{'fixture':'SYNTHETIC_INSTALLED_PRODUCT'})
+        def execute(child,project,case_products,method,device,environment):
+            events.append((child.output.name,'selected-case'))
+            if fail_selected and child.output.name=='02':raise ValueError('REQUIRED_SELECTED_UI_FAILURE')
+            counts={'executed':1,'failed':0,'unexpected':0,'skipped':0}
+            return {'outcome':'PASS','positive_xctest':counts,
+                'result_bundle':{'parsed':{'expected_case':'C47NativeUI/'+method,'udid':device,**counts}}}
+        def retain(child):events.append((child.output.name,'retain-results'))
+        def gate(parent):
+            events.append(('parent','strict-gate-called'))
+            value=parent.receipt['stages']['normal-staging-ui']['details']['positive_xctest']
+            self.assertEqual((value['executed'],value['failed'],value['unexpected'],value['skipped']),(3,0,0,0))
+        return runner,ios,products,events,dict(command=command,simulator=simulator,text=text,
+            installed=installed,execute=execute,retain=retain,gate=gate)
+
+    def exercise_normal(self,fail_selected=False):
+        runner,ios,products,events,f=self.normal_fixture(fail_selected)
+        with patch.object(n.Runner,'run',f['command']),patch.object(n.Runner,'text',f['text']),\
+             patch.object(n,'read_native_file',side_effect=lambda path:Path(path).read_bytes()),\
+             patch.object(n,'normal_runner04',return_value={'tests':['SYNTHETIC_THREE_CASE_RUNNER']}),\
+             patch.object(n,'prepare_simulator',f['simulator']),\
+             patch.object(n,'install_simulator_app',return_value=self.root/'Synthetic.app'),\
+             patch.object(n,'verify_installed_app',f['installed']),\
+             patch.object(n,'launch_and_verify',return_value=12345),\
+             patch.object(n,'normal_case_execution04',f['execute']),\
+             patch.object(n,'retain_result_bundles',f['retain']),\
+             patch.object(n,'normal_xctest_gate',f['gate']),\
+             patch.object(n.Runner,'source_proof',return_value={'fixture':'SYNTHETIC_SOURCE_PROOF'}):
+            if fail_selected:
+                with self.assertRaisesRegex(ValueError,'REQUIRED_SELECTED_UI_FAILURE'):
+                    n.run_normal(runner,ios,products,self.root/'Synthetic.app','com.layerwell.app.staging','a'*40)
+            else:n.run_normal(runner,ios,products,self.root/'Synthetic.app','com.layerwell.app.staging','a'*40)
+        return runner,events
+
+    def test_optional_capture_cannot_skip_second_shutdown_retention_or_third_fresh_case(self):
+        runner,events=self.exercise_normal()
+        self.assertEqual([x for x in events if x[1]=='selected-case'],
+            [('01','selected-case'),('02','selected-case'),('03','selected-case')])
+        self.assertLess(events.index(('02','simulator-final-screenshot')),events.index(('02','simulator-shutdown')))
+        self.assertLess(events.index(('02','simulator-shutdown')),events.index(('02','retain-results')))
+        self.assertLess(events.index(('02','retain-results')),events.index(('03','prepare')))
+        self.assertIn(('parent','strict-gate-called'),events)
+        second=json.loads((runner.output/'ordinary-v04/02/execution.json').read_text())
+        self.assertEqual(second['status'],'NORMAL_V04_CASE_EXECUTED_PASS')
+        self.assertEqual(second['simulator_diagnostic_exceptions'],
+            [{'command':'simulator-final-screenshot','error_type':'TimeoutExpired'}])
+        self.assertFalse(second['acceptance_granted'])
+
+    def test_primary_selected_failure_remains_primary_and_retains_second_case_results(self):
+        runner,events=self.exercise_normal(True)
+        self.assertIn(('02','simulator-shutdown'),events)
+        self.assertIn(('02','retain-results'),events)
+        self.assertNotIn(('03','prepare'),events)
+        second=json.loads((runner.output/'ordinary-v04/02/execution.json').read_text())
+        self.assertEqual(second['failure']['detail'],'REQUIRED_SELECTED_UI_FAILURE')
+        self.assertEqual(second['status'],'PARTIAL_BLOCKED')
+        self.assertNotIn('normal-staging-ui',runner.receipt['stages'])
+
+    def test_final_collector_keeps_independent_observations_shutdown_and_results(self):
+        runner=n.Runner(self.root,self.root/'collection')
+        runner.receipt['simulator']={'udid':'00000000-0000-4000-8000-000000000001'}
+        events=[]
+        def fail(child,name,argv,**kwargs):
+            events.append(name)
+            raise subprocess.TimeoutExpired('SYNTHETIC_OPTIONAL_OBSERVATION',kwargs['timeout'])
+        with patch.object(n.Runner,'run',fail),patch.object(n,'retain_result_bundles',
+                side_effect=lambda child:events.append('retain-results')):
+            n.collect(runner)
+        self.assertEqual(events,['simulator-diagnostics','simulator-final-devices',
+            'simulator-final-screenshot','simulator-shutdown','retain-results'])
+        self.assertEqual(len(runner.receipt['simulator_diagnostic_exceptions']),4)
+        self.assertTrue(runner.receipt['artifact_policy']['upload_within_limit'])
+        self.assertEqual(runner.receipt['stages'],{})
+        self.assertFalse(runner.receipt['acceptance_granted'])
+
 if __name__ == '__main__':
     unittest.main()

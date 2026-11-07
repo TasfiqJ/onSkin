@@ -4837,6 +4837,112 @@
       "native_execution": false,
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T16:24:03.184Z",
+      "head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+      "tree": "7abcad88b258be8ce31a2bca39bbb1274b19864b",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 252208,
+          "preimage_sha256": "299c7dd7c9ae6deb0595d4ffdfb06858d136025c6b87c1be6ffe767d0aea00aa",
+          "preimage_blob": "8d4d8ccb25f7ffe2d7c69c8d63d75b5139c5674c",
+          "snapshot": "0.before.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 176051,
+          "preimage_sha256": "feb82fb6992ed299449a4baf46033b475c3cde7395a8190e3031000238181401",
+          "preimage_blob": "9eccd333ea4a031a5667d31a51fb5896809349c5",
+          "snapshot": "1.before.bin"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 21095,
+          "preimage_sha256": "97e9f986380b36fe2c17661900e1087602f666b0069032a36474eb75b2c325c1",
+          "preimage_blob": "5bc5bc05cf3e3e518327fe7d86389c84f7ec0d97",
+          "snapshot": "2.before.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 289649,
+          "preimage_sha256": "f9d289590cab98eec03a0f750e000580ac06d9522851ae1933614c28c5855165",
+          "preimage_blob": "025b23a75e56a41a8cf2bac27a056d679936bda9",
+          "snapshot": "3.before.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 102360,
+          "preimage_sha256": "e0adfd2526034447cd5421ff54f55627abf92ff65a45c89f72227e0f11ae45c3",
+          "preimage_blob": "7b1ee8828480ec48a4d473406c7c0524dc00c6bc",
+          "snapshot": "4.before.bin"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 597738,
+          "preimage_sha256": "8ad0ba192f129a7a97e67122f87184cb2f8612581c1e80aa3598a8540ace88a5",
+          "preimage_blob": "6e5265547a44dc05884cfa041aff3bd489388bc2",
+          "snapshot": "5.before.bin"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 4130,
+          "preimage_sha256": "088c301c8f6ca400568d46a3155c67af411622431d4611c5e71b4c0db5c53b50",
+          "preimage_blob": "84e2e8b1e8d29171cf13a11ca8aaa0a545e21fac",
+          "snapshot": "6.before.bin"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 142269,
+          "preimage_sha256": "ae47bb8deeaa7f6009688815e77435d8f90cf07d6c89a1f1109c3fd34a74b7d0",
+          "preimage_blob": "3fadb6a70d079765ad4b1992e96f3916db7896f4",
+          "snapshot": "7.before.bin"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "f322d9704f394d1fc59f11bf988afb3a2ffff60f",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 84921,
+          "preimage_sha256": "d3e7c73e14ca205752311b511cb01a7cd503a749bd8753ac2207c20ddc117a7a",
+          "preimage_blob": "360003fe43fb89d86c01e228461a9235eba75e93",
+          "snapshot": "8.before.bin"
+        }
+      ],
+      "preedit_sha256": "c24403ea5257446a27aff486d8dffa397b80419003140122e9e88ae3ddef1401",
+      "causal_need": "Native46 two ordinary cases genuinely passed, then optional child02 final screenshot initial30-second timeout and second wait30 TimeoutExpired escaped Runner.run/finally, prevented shutdown/result retention continuation and third ordinary case. Current retained archive and exact actual XCTest outputs establish this harness defect.",
+      "invariant": "All prior59 rows/57 amendments, frozen first plan, all99 ancestors and historical44/202/172/Swift3 remain unchanged. Only explicit optional diagnostic TimeoutExpired is retained nonfatal; required/substantive errors still throw. FAIL124/capture_complete=false/partial output hashes remain honest. Existing optional helper makes final observations independent. No app/Swift/UI assertion/signing/owner/health/storage/consent/deletion/production changes, no timeout/wait/join/budget change.",
+      "validation": "Old f322 with same6controls RED4errors/2pass; successor6PASS plus6 preserved real runner controls. All120 old test method bodies retained. Root full126/current40/source59 checks, final-source CI, exact new Release, complete ordinary3 then internal5/export/schema/hash/Filescleanup remain mandatory.",
+      "proposal_sha256": "7a39c2c125ef6350b1a88545058a68858913e4c0d8dfe11031137e23590c67bd",
+      "patch_sha256": "04ae2ac99ba449f2423e22050e98f2340a3b5addb6e78872997b290153c82c52",
+      "actual_native46_archive_sha256": "3b41576bdc6d7e5b5386722255b04cfaa3bb6ee1f9947b2c80b289dd824331c3",
+      "actual_native46_independent_boundary_sha256": "75203e19a4452c4dad472dbe0245900a8f5d09ca5abe39d74a7fbc08ab5ae216",
+      "finite_paths": 59,
+      "current_source_pins": 40,
+      "historical_witness_inputs": 202,
+      "committed_current_checks": 172,
+      "declared_unique_input_union": 233,
+      "production_app_v4_unchanged": true,
+      "native_execution": false,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

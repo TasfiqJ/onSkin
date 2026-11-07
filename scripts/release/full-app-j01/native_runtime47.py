@@ -1197,7 +1197,13 @@ class Runner:
             row.update(exit_code=124 if row.get('timed_out') else 125, state='FAIL',
                        error_type=type(error).__name__, capture_complete=False,
                        output_scope='PARTIAL_BYTES_FROZEN_BEFORE_RECEIPT_HASHING')
-            raise
+            # The bounded post-kill wait can itself time out. This remains an
+            # incomplete failed command; only an explicit optional diagnostic
+            # may continue to the independent shutdown/result-retention steps.
+            if not (required is False and diagnostic is True and row.get('timed_out') is True and
+                    isinstance(error, subprocess.TimeoutExpired)):
+                raise
+            row['optional_diagnostic_timeout_retained'] = True
         finally:
             # Late pipe data must never mutate a hashed log or final manifest.
             # Unbuffered writes and the shared gate make the partial bytes final.
@@ -1906,11 +1912,11 @@ def run_normal(r, ios, products, app, bundle, head):
             raise
         finally:
             if device:
-                child.run('simulator-final-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
-                    child.output / 'final-simulator.png'], timeout=30, required=False, diagnostic=True)
+                _simulator_optional(child, 'simulator-final-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
+                    child.output / 'final-simulator.png'], timeout=30, diagnostic=True)
                 if not passed or index < len(NORMAL_UI_CASES04):
-                    child.run('simulator-shutdown', ['xcrun', 'simctl', 'shutdown', device], timeout=30,
-                        required=False, diagnostic=True)
+                    _simulator_optional(child, 'simulator-shutdown', ['xcrun', 'simctl', 'shutdown', device], timeout=30,
+                        diagnostic=True)
             retain_result_bundles(child)
             child.persist()
     aggregate = normal_suite_aggregate04(cases, r.receipt['source'], runner_proof)
@@ -3756,19 +3762,19 @@ def collect(r):
     """Best-effort diagnostics cannot manufacture a runtime stage PASS."""
     device = r.receipt.get('simulator', {}).get('udid')
     if device:
-        r.run('simulator-diagnostics', ['xcrun', 'simctl', 'spawn', device, 'log', 'show',
+        _simulator_optional(r, 'simulator-diagnostics', ['xcrun', 'simctl', 'spawn', device, 'log', 'show',
                                       '--last', '15m', '--style', 'compact', '--predicate',
                                       'process CONTAINS "Layerwell" OR process CONTAINS "C47NativeUI" OR '
                                       '(process == "securityd" AND eventMessage CONTAINS "Layerwell" AND '
                                       '(eventMessage CONTAINS[c] "entitlement" OR eventMessage CONTAINS "copy_matching"))'],
-              timeout=60, required=False, diagnostic=True)
-        r.run('simulator-final-devices', ['xcrun', 'simctl', 'list', 'devices', '--json'],
-              timeout=30, required=False, diagnostic=True)
-        r.run('simulator-final-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
+              timeout=60, diagnostic=True)
+        _simulator_optional(r, 'simulator-final-devices', ['xcrun', 'simctl', 'list', 'devices', '--json'],
+              timeout=30, diagnostic=True)
+        _simulator_optional(r, 'simulator-final-screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot',
                                             r.output / 'final-simulator.png'],
-              timeout=30, required=False, diagnostic=True)
-        r.run('simulator-shutdown', ['xcrun', 'simctl', 'shutdown', device],
-              timeout=30, required=False, diagnostic=True)
+              timeout=30, diagnostic=True)
+        _simulator_optional(r, 'simulator-shutdown', ['xcrun', 'simctl', 'shutdown', device],
+              timeout=30, diagnostic=True)
     retain_result_bundles(r)
     ios = r.root / 'apps/mobile/ios'
     retain_current = not r.receipt.get('native_configuration_final_retained') and r.receipt.get('lane') != 'internal-stage-supervisor'
