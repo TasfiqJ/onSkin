@@ -8394,3 +8394,6 @@ Campaign47 continuation02 (BRAIN-C47-SWIFT-BUILD-RUNTIME-CLOSURE-02): original n
 
 
 C47 C04 authenticated (26088bytes/SHA455d85ef3125cc767fd408ddd6f5e78f3d64dd47b4b23bd6a26dc4a15aab821c); native26 separate consent trace prepared after exact preimages. StartingF218/55ancestors preserved. Twelve jobs26-37 authorized, oneMac/no additionalcharge; no diagnostic is ordinary PASS. All38/18unaccepted, Security/candidate29/G97unwaived, NO_GO.
+
+
+C47 Continuation05 active: authenticated BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05 from fa427598/ce88, preserve87 commits and original plan. Diagnose original private/age/native storage rejection before UI catch conversion; no native root cause selected. AllC04 ordinary3 failed/internalNOT_RUN. New staged native38–53 total16, maximum4before actual origin+justified reproducer/repair; started0. Same draftPR48, no acceptance/merge/release. Exact preimages recorded before new diagnostic-only helper/source changes. Full context/evidence continuation05 external, no copied private payloads in source.

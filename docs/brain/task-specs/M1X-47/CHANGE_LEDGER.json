@@ -405,6 +405,33 @@
       "causal_need": "C04 actualproduction readwindow/ABA/startupcallback integration, old17C46casebodies retained",
       "invariant": "Real C46/owner/account/epoch/storage code; native ports only. Failed/orphan/unknown errors stayclosed. No timing sleeps, grants or erasure.",
       "validation": "ActualsourceRED3/77 andfixed80; rootuncached suite andnativecandidate required"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_trace47.py",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "C05 separately labeled minimal first-storage-error diagnostic; finite source transformer and direct privacy/noninterference controls.",
+      "invariant": "No ordinary authority or behavior change. Exact diagnostic-only source/delegate changes restored; original error values preserved; secure storage/owner/consent/deletion remain fail-closed.",
+      "validation": "Recognized storage/native errors, cause/getter/redaction, actual UI-adapter propagation, observer-failure noninterference, exact transforms/restoration and actual native first-error capture."
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "C05 separately labeled minimal first-storage-error diagnostic; finite source transformer and direct privacy/noninterference controls.",
+      "invariant": "No ordinary authority or behavior change. Exact diagnostic-only source/delegate changes restored; original error values preserved; secure storage/owner/consent/deletion remain fail-closed.",
+      "validation": "Recognized storage/native errors, cause/getter/redaction, actual UI-adapter propagation, observer-failure noninterference, exact transforms/restoration and actual native first-error capture."
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_origin47.mjs",
+      "preimage_sha256": null,
+      "preimage_bytes": null,
+      "preimage_state": "ABSENT",
+      "causal_need": "C05 separately labeled minimal first-storage-error diagnostic; finite source transformer and direct privacy/noninterference controls.",
+      "invariant": "No ordinary authority or behavior change. Exact diagnostic-only source/delegate changes restored; original error values preserved; secure storage/owner/consent/deletion remain fail-closed.",
+      "validation": "Recognized storage/native errors, cause/getter/redaction, actual UI-adapter propagation, observer-failure noninterference, exact transforms/restoration and actual native first-error capture."
     }
   ],
   "amendments": [
@@ -3889,6 +3916,211 @@
           "artifact": 13552209392
         }
       }
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T05:18:24.843Z",
+      "head": "fa4275986b727b3e6d855b059d5688210a09e440",
+      "tree": "ce88d3d7b8a674e3fae2e9aa2ff3c594efe2ecbd",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "preimage_blob": null
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "preimage_blob": null
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_origin47.mjs",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "ABSENT",
+          "preimage_bytes": null,
+          "preimage_sha256": null,
+          "preimage_blob": null
+        },
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 14968,
+          "preimage_sha256": "1a0ee4ca040d2af0d548afd0af41f343568e91efd1b57858ba96bd6f8dfab2f6",
+          "preimage_blob": "d852b3e2b4c2185f8be06a5b325005866236a1bd"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17385,
+          "preimage_sha256": "c4e7b319e0b80d64f12351d0d3c3bef321f14ff5e992728e63d2a73e7c76032e",
+          "preimage_blob": "4e2eceeedb1dd34b3188f7b866d8a8e5027caa8c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 61248,
+          "preimage_sha256": "c6094edc65bb5356ff99a13eae0bd483f7e253778d5eed9e1603ff128b4c1f95",
+          "preimage_blob": "9981387466a1754be50364841f4d9cb31ce7a99a"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 50394,
+          "preimage_sha256": "ceb2f50fe07a541add6d62a649245aac74c490480d38461908154bcb6600cdc9",
+          "preimage_blob": "ce4ec4587f0f5fea0b6e878fa779d6070247b45c"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 166608,
+          "preimage_sha256": "2be2a5d2356e44b09fb32728e1fc2b27396d3d9018bc779420f794fe35602537",
+          "preimage_blob": "15587c21e7013a04d248ad7d3d2d8e9054cbcbc0"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_workflow47.test.mjs",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 13026,
+          "preimage_sha256": "35819573949f317f8d946afcc80ad60bf3e07747235e6f83fed5c684dd15f45c",
+          "preimage_blob": "93be0e19b2d32096a530aa2ce8a1733440eac914"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 91208,
+          "preimage_sha256": "08325a5f6dc9e638065abe42ce40ff67498f312ff6b3e53111acc2841acdc3b3",
+          "preimage_blob": "ad7854f38a0aa9d762e31de42ec29ddbf43fe7b7"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 232366,
+          "preimage_sha256": "ef7f6da675c02c20ea61519ba351673c89bca2ffb244cab6604dc45275d03bfb",
+          "preimage_blob": "7d4781e9ab9c15eed3de816ce40393bd34856c32"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 588738,
+          "preimage_sha256": "f8ecda5dbe5a34459028a23570c3eb8b0d37466728c1366b5518604256e2e319",
+          "preimage_blob": "207242aa2aadbba436bda861400a584dd0dff47d"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 4578,
+          "preimage_sha256": "ec291417df2cc472ed6911aa3afb636fb2f64ba0f31cc5927e786ac3661f4899",
+          "preimage_blob": "23a140b4ee7c7352f207b6acf300b8584ac1dce7"
+        }
+      ],
+      "read_only_preimages": [
+        {
+          "path": "apps/mobile/src/lib/storage/PrivateDataAvailabilityGate.tsx",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 7397,
+          "preimage_sha256": "e29234f6af0b3be077a77aa18fd31a38a07943f50e192f4a79d2051c4889c457",
+          "preimage_blob": "b0032f7c6b8da56f440505aeffdae7df6d21f161"
+        },
+        {
+          "path": "apps/mobile/src/features/onboarding/ageGateStore.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 3943,
+          "preimage_sha256": "bd83d5dd65228d054778c9a919a0378313881cd467049f38bd91dcda49bad162",
+          "preimage_blob": "c193b5c7dbd3417bfa274771782a0b6ca90d5bdf"
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/privateKV.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 49630,
+          "preimage_sha256": "267de879f0a249c396fd6c43889a5117139d9d4e5dc44b6f548d104c4378e8c5",
+          "preimage_blob": "7c6218431c783fc95b657a2359a5c5524881ebcc"
+        },
+        {
+          "path": "apps/mobile/src/lib/storage/privateKVContentKey.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 3236,
+          "preimage_sha256": "076ef0751f98c1fb9cb970f14d5ee76755f9999a40fc46055ba20d4956167734",
+          "preimage_blob": "41881993ced7c2f7c2907bcbf0ffe67b3342d601"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 38311,
+          "preimage_sha256": "2445dbe674449c0fd8b0b28e2e280c553c7c38c475396abc1c74a76972d7a84c",
+          "preimage_blob": "7a9531049c1ea21fe9c52074da1a32d710b98b8a"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountGeneration.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 6157,
+          "preimage_sha256": "67e0112149e11a883795ad60d27cf9c8b9dfe079dfa6328bcf29c3997540eb1a",
+          "preimage_blob": "2e5d709eee7e20c9ae080aea7e44bfae64fc73bd"
+        },
+        {
+          "path": "apps/mobile/src/features/healthConsent/lifecycle.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 53459,
+          "preimage_sha256": "8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b",
+          "preimage_blob": "89712c85124d4e53a8eab82b300735488f48c786"
+        },
+        {
+          "path": "apps/mobile/src/features/photos/consent.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 1270,
+          "preimage_sha256": "a45ef22356ec2352568bd4ed847c88d96a4565357233054021d0a5d9c3422042",
+          "preimage_blob": "2a3dd00d9f3a8a6fc29285ae0d8640c510b6062c"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+          "preimage_head": "fa4275986b727b3e6d855b059d5688210a09e440",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 11224,
+          "preimage_sha256": "a3f61f6729f592dfd6f44b7716cd0dec0db9b715c3ab948e908e27d7a0f932eb",
+          "preimage_blob": "9d4c93db0c5df098b3c030d9c1d25b4ab344bdf0"
+        }
+      ],
+      "causal_need": "Capture actual first storage/native rejection before generic unavailable catches, with finite source-owned diagnostic transform, clean install, strict product binding and minimal native UI sequence. No native cause selected.",
+      "invariant": "Synchronous content-free bounded observer; exact source/delegate restoration; no extra await, retry, authority/key/marker/state mutation; original errors and closed privacy/owner/deletion behavior preserved. Four-job diagnosis tranche; sixteen total38-53; NO_GO.",
+      "validation": "Targeted observer code/cause/native/getter/redaction/noninterference tests, actual current consumer/source controls, then new exact diagnostic product/installed UI/error capture. Source-only reproduction remains distinct from native causality.",
+      "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
+      "external_preedit_receipt_sha256": "0dcba369d3a022afb8ef8d839564f937fa163058af2f13f87ac73034f637c92f",
+      "standalone_amendment_sha256": "628e456175e83c05595fd733a4f774ba1025dc5b654476186988f60c492c44a5",
+      "native_execution": false,
+      "native_budget": {
+        "attempts_first": 38,
+        "attempts_last": 53,
+        "total_started_max": 16,
+        "diagnosis_tranche_max_before_origin": 4,
+        "started": 0,
+        "remaining": 16,
+        "origin_record_required": "Actual failing app operation plus supplied native error code or exact first-party rejecting predicate; outer UNCLASSIFIED/screenshot insufficient",
+        "remainder_automatic_after_origin_and_justified_repair_reproducer": true
+      },
+      "release": "NO_GO",
+      "acceptance_granted": false
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",
