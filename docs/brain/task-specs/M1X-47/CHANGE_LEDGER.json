@@ -4121,6 +4121,61 @@
       },
       "release": "NO_GO",
       "acceptance_granted": false
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T05:20:28.014Z",
+      "head": "8b468d3c97540308dd656b1f0325829b907efe80",
+      "tree": "67324d6ea250615d83d4c2ea8f8d7d5ada71ba3c",
+      "preimages": [],
+      "read_only_preimages": [
+        {
+          "path": "apps/mobile/src/features/onboarding/AgePolicyGate.tsx",
+          "preimage_head": "8b468d3c97540308dd656b1f0325829b907efe80",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 8658,
+          "preimage_sha256": "fdcdac6ae1c15254a82d25b57a9eef628c39f20c16c65d88b20f9dd7850ab272",
+          "preimage_blob": "7095c27a14aeff754e213d02ed24b30f1fbee207"
+        }
+      ],
+      "causal_need": "Capture the second actual age-read unavailable UI conversion at readActiveReceipt before it loses an error; diagnostic-only exact-restored input.",
+      "invariant": "No new ordinary behavior/await/authority, original caught error and unavailable fallback unchanged.",
+      "validation": "Transformed actual age/store adapters retain classified original code and fail-closed unavailable state; ordinary rebuild must exclude instrumentation.",
+      "external_preedit_receipt_sha256": "cc434e412917f381ed697b855503f296d348baab48e7134ab68ede73144f696e",
+      "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
+      "native_execution": false,
+      "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-07T05:38:08.500Z",
+      "head": "8b468d3c97540308dd656b1f0325829b907efe80",
+      "tree": "67324d6ea250615d83d4c2ea8f8d7d5ada71ba3c",
+      "preimages": [
+        {
+          "path": ".github/workflows/quality.yml",
+          "preimage_head": "8b468d3c97540308dd656b1f0325829b907efe80",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 19057,
+          "preimage_sha256": "e00d968c73a86fae292d88e8b57de68e2df6485eeea583900613c28caffc455b",
+          "preimage_blob": "47c828fa0b055a3a5bc0a53321447ce76dce4c31"
+        },
+        {
+          "path": ".github/workflows/campaign46-technical.yml",
+          "preimage_head": "8b468d3c97540308dd656b1f0325829b907efe80",
+          "preimage_state": "PRESENT",
+          "preimage_bytes": 17797,
+          "preimage_sha256": "e023a73f3528e34d3fc11aef1f0ebcaf46ce00aa82986c26e6ffe6beb13bb81e",
+          "preimage_blob": "a4b14b535b27af6aed613f08388aac95c8c6af2e"
+        }
+      ],
+      "causal_need": "Existing same-branch CI invokes immutable old44-path SOURCE_FROZEN CLI; C05 adds exact3 diagnostic files and requires the separately pinned47-path successor plus direct observer controls at actual head.",
+      "invariant": "Keep oldscope/code tests/source30/runtime/security/SDK assertions. Replace only C47 branch frozen CLI with exact C05 successor, add cheap diagnostic direct checks, no skipped failing quality/security step or new privilege.",
+      "validation": "Actual unchanged oldscope10/currentdiagnostic10 controls, current47 SOURCE_PENDING/FROZEN, workflow parse/scope positive and oldprotected failures preserved.",
+      "external_preedit_receipt_sha256": "db1a2c9c1e97c871d11430b4a855fa766bdd8621dd2465025d4b4af68e354fd3",
+      "frozen_plan_sha256": "fb6527187151a5b86d8450e291c9be284188e2e6c5959d42a19ef4bfd49e36fd",
+      "native_execution": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-06T06:54:36.120196+00:00",

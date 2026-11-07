@@ -2411,12 +2411,32 @@ class FixedBuild35Recovery36Tests(unittest.TestCase):
     """Pure harness/authentication controls; these never execute or admit native UI."""
     def delta_fixture(self):
         repo=Path(__file__).resolve().parents[3]
-        current_root=Path(n.__file__).resolve().parents[3]
         names=['scripts/release/full-app-j01/native_runtime47.py','scripts/release/full-app-j01/native_runtime47.test.py',
                'docs/phase-9/ios-generated-input-succession47.v1.json']
         old={name:subprocess.check_output(['git','--no-replace-objects','show',n.RESUME36_ORIGIN['head']+':'+name],cwd=repo) for name in names}
-        current={name:(current_root/name).read_bytes() for name in names}
+        # C04 reuse is a frozen historical witness; C05 must not inherit its authority.
+        checkpoint='fa4275986b727b3e6d855b059d5688210a09e440'
+        current={name:subprocess.check_output(['git','--no-replace-objects','show',checkpoint+':'+name],cwd=repo) for name in names}
         return names,old,current
+
+    def test_storage05_current_diagnostic_inputs_refuse_fixed35_reuse(self):
+        names,old,historical=self.delta_fixture()
+        repo=Path(n.__file__).resolve().parents[3]
+        current={name:(repo/name).read_bytes() for name in names}
+        descriptor=json.loads(current[names[2]])
+        policy=descriptor['storageOrigin05']
+        self.assertEqual(policy['authority'],'BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05')
+        self.assertEqual(set(policy['sourcePaths']),{
+            'scripts/release/full-app-j01/storage_trace47.py',
+            'scripts/release/full-app-j01/storage_trace47.test.py',
+            'scripts/release/full-app-j01/storage_origin47.mjs'})
+        self.assertTrue(policy['diagnosticOnly']);self.assertFalse(policy['normalProductReuseAllowed'])
+        for name in names[:2]:
+            pin=next(row for row in descriptor['sourcePins'] if row['path']==name)
+            self.assertEqual(pin,{'path':name,'bytes':len(current[name]),'sha256':hashlib.sha256(current[name]).hexdigest()})
+        self.assertNotEqual(current[names[2]],historical[names[2]])
+        with self.assertRaisesRegex(ValueError,'RESUME36_GENERATED_INPUT_OR_AUTHORITY_DRIFT'):
+            n.verify_reuse36_delta(names,old,current)
 
     def test_fixed36_accepts_only_reviewed_harness_delta(self):
         args=self.delta_fixture();self.assertEqual(n.verify_reuse36_delta(*args),sorted(args[0]))

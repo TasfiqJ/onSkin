@@ -207,7 +207,8 @@ jobs:
           set -euo pipefail
           if [ "$CURRENT_SOURCE_BRANCH" = stage/m1-native-runtime47 ]; then
             python3 -I -B scripts/release/full-app-j01/source_completion47.test.py
-            python3 -I -B scripts/release/full-app-j01/source_completion47.py --phase SOURCE_FROZEN
+            python3 -I -B scripts/release/full-app-j01/storage_trace47.test.py
+            python3 -I -B scripts/release/full-app-j01/storage_trace47.py --source-phase SOURCE_FROZEN
             python3 -I -B scripts/release/full-app-j01/pods_compat47.test.py
             node --test scripts/release/full-app-j01/native_generated47.test.mjs
             node scripts/release/full-app-j01/native_generated47.mjs --phase SOURCE

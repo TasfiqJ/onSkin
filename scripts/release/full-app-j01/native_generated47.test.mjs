@@ -13,7 +13,7 @@ afterEach(t => { writeSync(2, JSON.stringify({ event: 'C47_SOURCE_CASE_END', nam
 import { DESCRIPTOR47, MAP47, strictJson47, validateDescriptor47, validateMapping47,
   validateAutolinking47, validateResolvedLock47, readSourceProof47,
   validateDevelopmentProjection47, validateOutput47, SOURCE_PATHS47, SWIFT_SUCCESSION47, validateSwiftSuccession47,
-  CONSENT_DOC04, validateConsentDoc04, currentPrivacyProjection47,
+  CONSENT_DOC04, validateConsentDoc04, currentPrivacyProjection47, STORAGE_ORIGIN05,
   CONSENT_APP04, validateConsentApp04, firstLegacySourcePin04,
   auditCurrentNative47 as auditIosPrivacySource, proveCurrentNativeSource47 as proveCurrentNativeSource46,
   verifyCurrentNative47 as verifyNativeCandidate46, validateIosExtensionConfig47 as validateIosExtensionConfig46 } from './native_generated47.mjs';
@@ -34,6 +34,9 @@ const predecessor = () => strictJson47(readFileSync(resolve(ROOT, 'scripts/phase
 
 test('current47 descriptor is finite generated-only successor with every admission false', () => {
   assert.equal(validateDescriptor47(descriptor()), true);
+  assert.equal(STORAGE_ORIGIN05.authority, 'BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05');
+  assert.deepEqual(SOURCE_PATHS47.filter(path => STORAGE_ORIGIN05.sourcePaths.includes(path)), STORAGE_ORIGIN05.sourcePaths);
+  assert.equal(STORAGE_ORIGIN05.sourcePaths.length, 3);
   const historical = spawnSync('git', ['--no-replace-objects', 'show',
     CONSENT_DOC04.checkpointHead + ':' + CONSENT_DOC04.path],
     { cwd: ROOT, windowsHide: true, timeout: 30000, maxBuffer: 1024 * 1024 });
@@ -113,6 +116,14 @@ test('current47 descriptor is finite generated-only successor with every admissi
 
 test('current47 rejects root default-subspec expansion, extra pod options, global scope and admission claims', () => {
   const changes = [
+    value => value.storageOrigin05.sourcePaths.push('scripts/release/full-app-j01/unreviewed.py'),
+    value => value.storageOrigin05.diagnosticOnly = false,
+    value => value.storageOrigin05.normalProductReuseAllowed = true,
+    value => value.storageOrigin05.privateStorageQueryChangesAllowed = true,
+    value => value.storageOrigin05.ordinaryAdmission = true,
+    value => value.storageOrigin05.internalAdmission = true,
+    value => value.storageOrigin05.checkpointHead = '0'.repeat(40),
+    value => value.sourcePins = value.sourcePins.filter(pin => pin.path !== STORAGE_ORIGIN05.sourcePaths[0]),
     value => value.generatedTransition.pods[0].name = 'GoogleUtilities',
     value => value.generatedTransition.pods[0].modular_headers = false,
     value => value.generatedTransition.pods[0].path = '../outside',

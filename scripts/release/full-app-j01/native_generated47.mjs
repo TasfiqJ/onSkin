@@ -16,6 +16,26 @@ import { checkedNativeRoot46, nativeSourceIdentity46, readNativeFile46, verifyNa
 
 export const DESCRIPTOR47 = 'docs/phase-9/ios-generated-input-succession47.v1.json';
 export const MAP47 = 'scripts/phase9/ios-native-obligations47.json';
+export const STORAGE_ORIGIN05 = {
+  "authority": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+  "checkpointHead": "fa4275986b727b3e6d855b059d5688210a09e440",
+  "checkpointTree": "ce88d3d7b8a674e3fae2e9aa2ff3c594efe2ecbd",
+  "sourcePaths": [
+    "scripts/release/full-app-j01/storage_origin47.mjs",
+    "scripts/release/full-app-j01/storage_trace47.py",
+    "scripts/release/full-app-j01/storage_trace47.test.py"
+  ],
+  "entryFile": "apps/mobile/.expo/C47StorageOrigin05.js",
+  "marker": "C47_STORAGE_ORIGIN_DIAGNOSTIC_05",
+  "nativeIdentityFile": "C47StorageOrigin05Identity.json",
+  "diagnosticOnly": true,
+  "exactRestoreRequired": true,
+  "ordinaryProductRebuildRequired": true,
+  "normalProductReuseAllowed": false,
+  "privateStorageQueryChangesAllowed": false,
+  "ordinaryAdmission": false,
+  "internalAdmission": false
+};
 export const SOURCE_PATHS47 = [
   'apps/mobile/src/app/(tabs)/you.tsx',
   'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
@@ -29,6 +49,9 @@ export const SOURCE_PATHS47 = [
   'docs/USER_FLOW_TREE.md',
   'apps/mobile/src/features/notifications/nativeMutation.ts',
   'apps/mobile/src/features/notifications/nativeMutation.test.ts',
+  'scripts/release/full-app-j01/storage_origin47.mjs',
+  'scripts/release/full-app-j01/storage_trace47.py',
+  'scripts/release/full-app-j01/storage_trace47.test.py',
   'scripts/release/full-app-j01/pods_compat47.py',
   'scripts/release/full-app-j01/pods_compat47.test.py',
   'scripts/release/full-app-j01/native_generated47.mjs',
@@ -260,7 +283,7 @@ export function strictJson47(raw) {
 export function validateDescriptor47(value) {
   same(Object.keys(value).sort(), ['schemaVersion', 'kind', 'authority', 'repository', 'acceptedParent',
     'predecessor46', 'sourceBinding', 'sourcePins', 'registry', 'installedConsumers', 'generatedTransition',
-    'obligations', 'claims', 'admissions', 'release', 'swiftSourceSuccession', 'simulatorSigning03'].sort());
+    'obligations', 'claims', 'admissions', 'release', 'swiftSourceSuccession', 'simulatorSigning03', 'storageOrigin05'].sort());
   same(value.schemaVersion, 1);
   same(value.kind, 'ios_generated_input_succession47_source_candidate');
   same(value.authority, 'BRAIN-M1X-NATIVE-RUNTIME47-AUTONOMOUS-01');
@@ -291,6 +314,7 @@ export function validateDescriptor47(value) {
   }
   validateSwiftSuccession47(value.swiftSourceSuccession);
   same(value.simulatorSigning03, SIMULATOR_SIGNING03);
+  same(value.storageOrigin05, STORAGE_ORIGIN05);
   const transition = value.generatedTransition;
   same(Object.keys(transition).sort(), ['property', 'beforeState', 'pods', 'representation',
     'propertiesPreimage', 'podfilePreimage', 'scope', 'primarySources', 'allowedProfiles',

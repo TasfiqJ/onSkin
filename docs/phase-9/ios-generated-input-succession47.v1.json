@@ -20,86 +20,6 @@
   },
   "sourcePins": [
     {
-      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
-      "bytes": 5325,
-      "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
-    },
-    {
-      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
-      "bytes": 75347,
-      "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
-    },
-    {
-      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
-      "bytes": 16969,
-      "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
-    },
-    {
-      "path": "scripts/phase9/ios-native-obligations47.json",
-      "bytes": 129559,
-      "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_generated47.mjs",
-      "bytes": 61248,
-      "sha256": "c6094edc65bb5356ff99a13eae0bd483f7e253778d5eed9e1603ff128b4c1f95"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
-      "bytes": 50394,
-      "sha256": "ceb2f50fe07a541add6d62a649245aac74c490480d38461908154bcb6600cdc9"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_runtime47.py",
-      "bytes": 250032,
-      "sha256": "2ba9683a1a4eefe7a6a846fcb3c93a67c8e142389edc9df697ea6040f949f5b4"
-    },
-    {
-      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
-      "bytes": 166608,
-      "sha256": "2be2a5d2356e44b09fb32728e1fc2b27396d3d9018bc779420f794fe35602537"
-    },
-    {
-      "path": "scripts/release/full-app-j01/pods_compat47.py",
-      "bytes": 11688,
-      "sha256": "d6f606d958b1b28bbd753687ba3c5bde1c6dcb71f02fcc60586c594069e72b98"
-    },
-    {
-      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
-      "bytes": 8054,
-      "sha256": "0d5390eb51e1634dbb6799583b99badf34c96bbd5fbda64ad1de3e1d128e10ff"
-    },
-    {
-      "path": "scripts/release/full-app-j01/simulator_signing47.py",
-      "bytes": 40310,
-      "sha256": "bccb8fd83076f31f5b15de79f072fcf408249056d554aace309afed362e5950b"
-    },
-    {
-      "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
-      "bytes": 16255,
-      "sha256": "6a4b56a83d6f4ebc358a938b38846b35275a4d5f789f6d7b6f7a7907ed88ce38"
-    },
-    {
-      "path": "scripts/release/full-app-j01/swift_behavior47.py",
-      "bytes": 23554,
-      "sha256": "b382ebe01a65ae40bf2c8f028152d800a9f9272c54da5cf4a33ee7e698eb2462"
-    },
-    {
-      "path": "apps/mobile/src/features/notifications/nativeMutation.ts",
-      "bytes": 13795,
-      "sha256": "bbd813b495619c8d884914ada4cf2dcfb713678cb99d0a0eb0f67a7e142814da"
-    },
-    {
-      "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
-      "bytes": 18134,
-      "sha256": "8384a6c4b668c8c4cddfdec3fde2b3ba8153164c7fe321ec801729612c5c5598"
-    },
-    {
-      "path": "docs/USER_FLOW_TREE.md",
-      "bytes": 543738,
-      "sha256": "e192ec9df7352b9ea9c778a1a5fbc984fb7e7b1b3b02c6fa46c73a64d18cae06"
-    },
-    {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "bytes": 37704,
       "sha256": "3cf0bd5d363ca18ca133f749d917a4afd4c8bfcda629e1ef81a98b96c20e53d4"
@@ -125,6 +45,16 @@
       "sha256": "8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b"
     },
     {
+      "path": "apps/mobile/src/features/notifications/nativeMutation.test.ts",
+      "bytes": 18134,
+      "sha256": "8384a6c4b668c8c4cddfdec3fde2b3ba8153164c7fe321ec801729612c5c5598"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/nativeMutation.ts",
+      "bytes": 13795,
+      "sha256": "bbd813b495619c8d884914ada4cf2dcfb713678cb99d0a0eb0f67a7e142814da"
+    },
+    {
       "path": "apps/mobile/src/features/onboarding/healthConsentStore.test.ts",
       "bytes": 13103,
       "sha256": "bda08282da2f98cbb5c75ead51207707b81c1aca0667efc65f1c53f2fb7451ca"
@@ -143,6 +73,91 @@
       "path": "apps/mobile/src/lib/auth/privateMutationRecovery46.test.ts",
       "bytes": 24461,
       "sha256": "d7732158e808f4d038f0ae998e9f25e00c1faab86db5e5df28f35080fbb2e012"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "bytes": 543738,
+      "sha256": "e192ec9df7352b9ea9c778a1a5fbc984fb7e7b1b3b02c6fa46c73a64d18cae06"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/AppIntent.swift",
+      "bytes": 5325,
+      "sha256": "1a4086ce1131d3618ca0ffe08dbd31e9a0f508d31918c73f57dc47bb9bec815e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-57.0.26/LayerwellWidgetLifecycleStore.swift",
+      "bytes": 75347,
+      "sha256": "9d3dccefb2d9967a6bb3fd577506a6579ee3060809fb050267625984c750787c"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "bytes": 16969,
+      "sha256": "d205c83d944e89a7f52d1e5c44be264281e2d3665674f0d32438bf6295b1bef7"
+    },
+    {
+      "path": "scripts/phase9/ios-native-obligations47.json",
+      "bytes": 129559,
+      "sha256": "cd356c4d533f60387b19f089e406da5829eb31dd7d063b3a9d9ce22618a5a2d6"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.mjs",
+      "bytes": 62308,
+      "sha256": "f3d6ea739558cd638238320bea4fd2bf4036decd6272c29aa629d1c725cf035b"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_generated47.test.mjs",
+      "bytes": 51285,
+      "sha256": "1f7e3cd1f5fc6a9fbd732646eaa2d400f909fe261fd00222f5c497ea650bfe37"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.py",
+      "bytes": 250032,
+      "sha256": "2ba9683a1a4eefe7a6a846fcb3c93a67c8e142389edc9df697ea6040f949f5b4"
+    },
+    {
+      "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+      "bytes": 167997,
+      "sha256": "76ab622479b256bb3df0e02ee69ba5c4f8743401ba388c32eb4c6b18129be7a0"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.py",
+      "bytes": 11688,
+      "sha256": "d6f606d958b1b28bbd753687ba3c5bde1c6dcb71f02fcc60586c594069e72b98"
+    },
+    {
+      "path": "scripts/release/full-app-j01/pods_compat47.test.py",
+      "bytes": 8054,
+      "sha256": "0d5390eb51e1634dbb6799583b99badf34c96bbd5fbda64ad1de3e1d128e10ff"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.py",
+      "bytes": 40310,
+      "sha256": "bccb8fd83076f31f5b15de79f072fcf408249056d554aace309afed362e5950b"
+    },
+    {
+      "path": "scripts/release/full-app-j01/simulator_signing47.test.py",
+      "bytes": 16255,
+      "sha256": "6a4b56a83d6f4ebc358a938b38846b35275a4d5f789f6d7b6f7a7907ed88ce38"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_origin47.mjs",
+      "bytes": 25006,
+      "sha256": "32199bbec50d80c566494fec20b496de0025c24be7d8356f20246a7aae07133e"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_trace47.py",
+      "bytes": 69455,
+      "sha256": "21883107adc312c310ab97472f78956598276026a3e7b24aa0a9951961b0c83a"
+    },
+    {
+      "path": "scripts/release/full-app-j01/storage_trace47.test.py",
+      "bytes": 44055,
+      "sha256": "b97169d82ae2d00d3cc317b01534ee22500c839d8b13eb84e5aad44bef5050c9"
+    },
+    {
+      "path": "scripts/release/full-app-j01/swift_behavior47.py",
+      "bytes": 23554,
+      "sha256": "b382ebe01a65ae40bf2c8f028152d800a9f9272c54da5cf4a33ee7e698eb2462"
     }
   ],
   "registry": [
@@ -364,5 +379,25 @@
     "appEntitlementsOnFrameworksOrTestHost": false,
     "appProcessSecureStoreRequired": true,
     "ordinaryWithoutDiagnosticRebuildRequired": true
+  },
+  "storageOrigin05": {
+    "authority": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+    "checkpointHead": "fa4275986b727b3e6d855b059d5688210a09e440",
+    "checkpointTree": "ce88d3d7b8a674e3fae2e9aa2ff3c594efe2ecbd",
+    "sourcePaths": [
+      "scripts/release/full-app-j01/storage_origin47.mjs",
+      "scripts/release/full-app-j01/storage_trace47.py",
+      "scripts/release/full-app-j01/storage_trace47.test.py"
+    ],
+    "entryFile": "apps/mobile/.expo/C47StorageOrigin05.js",
+    "marker": "C47_STORAGE_ORIGIN_DIAGNOSTIC_05",
+    "nativeIdentityFile": "C47StorageOrigin05Identity.json",
+    "diagnosticOnly": true,
+    "exactRestoreRequired": true,
+    "ordinaryProductRebuildRequired": true,
+    "normalProductReuseAllowed": false,
+    "privateStorageQueryChangesAllowed": false,
+    "ordinaryAdmission": false,
+    "internalAdmission": false
   }
 }
