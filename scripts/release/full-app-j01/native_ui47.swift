@@ -325,6 +325,15 @@ final class C47NativeUI: XCTestCase {
         requireFreshGoals(app)
         tapElement(buttonBeginning("Clear skin", app), "Synthetic clear-skin goal", app)
         tapElement(buttonBeginning("Barrier repair", app), "Synthetic barrier-repair goal", app)
+        // C05 ordinary goals-commit successor05: await committed native selections.
+        let clearSkinGoal = buttonBeginning("Clear skin", app)
+        let barrierRepairGoal = buttonBeginning("Barrier repair", app)
+        let goalsContinue = button("Continue", app)
+        let goalsCommitted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            clearSkinGoal.isSelected && barrierRepairGoal.isSelected && goalsContinue.isEnabled
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [goalsCommitted], timeout: deadline), .completed,
+            "Both actual selected goals and enabled Continue must be committed before advancing")
         tap("Continue", app)
         let answers = ["Shiny in places", "Rarely", "Often stings, burns, or reddens", "Frequently",
             "Yes, noticeably", "Weeks or longer", "Fine lines or firmness changes are visible",

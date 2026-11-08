@@ -6683,6 +6683,413 @@
       "internal_complete": false,
       "acceptance_granted": false,
       "release": "NO_GO"
+    },
+    {
+      "authorization": "BRAIN-C47-STORAGE-ROOT-CAUSE-RUNTIME-05",
+      "recorded_utc": "2026-11-08T04:09:17.703897+00:00",
+      "head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+      "tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+      "preedit_path": "continuation05/preedit19-goals111/PREEDIT.json",
+      "preedit_sha256": "1a72c9284bab55e5f3d5de07277c17345098bcfd2bce19000facc0d67324c8a2",
+      "preimages": [
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.swift",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 55331,
+          "preimage_sha256": "7ef97ffabfb9f121581a17ba51fad5e04291eb716d897e6aa7013824ed069060",
+          "preimage_git_blob": "ac52ea85b97773167895a4485f9cf8afda3eb416",
+          "snapshot": "000.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_ui47.rb",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 8553,
+          "preimage_sha256": "078f8dd81ccfe9aa28a40f8dce085e609d72e148228129b053daaf361af3a877",
+          "preimage_git_blob": "e38b68c57bfe8a7cf068affc5db9ad9f4465d9cc",
+          "snapshot": "001.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 199580,
+          "preimage_sha256": "718c852663c669e1f237a22d080de2192afca95b1f6749d87629e9e77a1f8515",
+          "preimage_git_blob": "77aa6a409b17624ebcaf03c2d0005cf801ae03ab",
+          "snapshot": "002.bin"
+        },
+        {
+          "path": "docs/phase-9/ios-generated-input-succession47.v1.json",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 23257,
+          "preimage_sha256": "cb73c7893e3c46ddc6d2660dedc81789949acd272696574731e7df8c4e2fd190",
+          "preimage_git_blob": "940e67c777343708f41ff03a2b0ea14679ba29eb",
+          "snapshot": "003.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 458626,
+          "preimage_sha256": "0ed7bb5e47dc3080dccf4b20a422d5e809f977070da45bb457009232228a5dac",
+          "preimage_git_blob": "5a45802ae255ae2136bc4f4cea1d5e43105c5202",
+          "snapshot": "004.bin"
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 121886,
+          "preimage_sha256": "71966dc3442d66d21244062d53ebede6f102e173ac452ab5b98f729defb1947b",
+          "preimage_git_blob": "0d7ba3a1a0a3699b1f56ccfb414d81d679bb3ed4",
+          "snapshot": "005.bin"
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 615404,
+          "preimage_sha256": "53382196865799102fafc122ca67c8d7950e3a12faa4ca46e7ffad9f323dda98",
+          "preimage_git_blob": "13ab15bfa12993015140aa247659836879cd92d2",
+          "snapshot": "006.bin"
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 1635,
+          "preimage_sha256": "20ad9b5755dea305619a93888d5447f12c95fd63a3177613144f286cd291f711",
+          "preimage_git_blob": "2efe784bda50bc67a074dfedff9bd6f01abe1e5f",
+          "snapshot": "007.bin"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 142269,
+          "preimage_sha256": "07089cca15c204aa7a685008315cfeb110de0c9c584aca983626a2a390e799b5",
+          "preimage_git_blob": "aa025ea7f6f2275e5f58306f193f0248cb774c69",
+          "snapshot": "008.bin"
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "PLANNED_RELATED_EDIT",
+          "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 84921,
+          "preimage_sha256": "7a1600e439a3ed802097f91577f5add80d2d954ef2007b4b8acc13318a07d969",
+          "preimage_git_blob": "7995218a3e239b38dd3d04f56fd5ceff1bf01c43",
+          "snapshot": "009.bin"
+        }
+      ],
+      "read_only_preimages": [
+        {
+          "path": ".github/workflows/campaign47-native-runtime.yml",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "READ_ONLY_PRODUCT_PRESERVATION",
+          "causal_need": "Preserve exact workflow, classifier, transformer, coordinator and generated-source gate while changing only the ordinary test and strict witnesses.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 11897,
+          "preimage_sha256": "8e16bc6d4fa0b99a6e462eabdeafc565b682946b2df516ddd67610700d3af0db",
+          "preimage_git_blob": "b251f8c4da642854dcd6293771bfa9e7c8f38890",
+          "snapshot": "010.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_trace47.py",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "READ_ONLY_PRODUCT_PRESERVATION",
+          "causal_need": "Preserve exact workflow, classifier, transformer, coordinator and generated-source gate while changing only the ordinary test and strict witnesses.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 132535,
+          "preimage_sha256": "628854bd62385cd8b2a95d14f1a9a36affb640249f2069a940db3aaf8642ea8f",
+          "preimage_git_blob": "010c23e034ac166889dea9c5f6ffd0b7438211b5",
+          "snapshot": "011.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/storage_origin47.mjs",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "READ_ONLY_PRODUCT_PRESERVATION",
+          "causal_need": "Preserve exact workflow, classifier, transformer, coordinator and generated-source gate while changing only the ordinary test and strict witnesses.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 36197,
+          "preimage_sha256": "215465b84e2d56d9e2c520fb08e79e152a8a11bca3685341e3405345b8dc1413",
+          "preimage_git_blob": "e605184745053c7647a3887a4303ba2ca0e41a5e",
+          "snapshot": "012.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.py",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "READ_ONLY_PRODUCT_PRESERVATION",
+          "causal_need": "Preserve exact workflow, classifier, transformer, coordinator and generated-source gate while changing only the ordinary test and strict witnesses.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 261567,
+          "preimage_sha256": "67980f9a3018f7e6bbac7524e576aee2731042e1d9d64c711339e3987d6fb8fd",
+          "preimage_git_blob": "42f7ff90cd8e20258098b6c0d4d15aea77f37b46",
+          "snapshot": "013.bin"
+        },
+        {
+          "path": "scripts/release/full-app-j01/native_generated47.mjs",
+          "preimage_head": "e2116379021b7aeae5f31ea7766959cfc4f09345",
+          "preimage_tree": "7bdf3ee0708f33fb0e79e7704ac9c15a31511747",
+          "role": "READ_ONLY_PRODUCT_PRESERVATION",
+          "causal_need": "Preserve exact workflow, classifier, transformer, coordinator and generated-source gate while changing only the ordinary test and strict witnesses.",
+          "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+          "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+          "preimage_state": "PRESENT_GIT_MATCHING_REGULAR_SINGLE_LINK",
+          "preimage_mode": "100644",
+          "preimage_bytes": 69764,
+          "preimage_sha256": "52e2036d2a6bbb4b1bd2f2464096ece0512d3c0e1e040dcad8805ae0d12b3e3a",
+          "preimage_git_blob": "81e75c81dab4b68f83125eb5d8f96e99ff0f9278",
+          "snapshot": "014.bin"
+        }
+      ],
+      "causal_need": "Actual Native53 Goals Continue instantaneous enabled assertion failed at125.61s; samePID26244 finalAX/screenshot at133.97-135.19s shows both selected and enabled. Add only a bounded native-state test wait; no persistent product defect or Keychain cause proved.",
+      "invariant": "One exact670-byte Swift test insertion inside the existing thirdV04 selector, no extra capture/tap/sleep/force; existing30s/600s limits and all old assertions/internal bytes remain. Ruby/Python require exactcurrent19483/11f58b prefix plus single-block removal restoring historical18813/3f3d witness. Scope70/pins51, productionapp/phase5/installer/signing/runtime/workflow unchanged.",
+      "validation": "Actual Root-run runtime138PASS27.847435s and workflow8PASS1.229276s, four exact inputs stable. This is source validation only; new Swift not compiled or run. Material110selected2/Pending, worklist-only111Frozen and final111CI are pending at this cutoff. Native53 failed/unqualified; no ordinary/internal admission; budget0.",
+      "finite_paths": 70,
+      "current_source_pins": 51,
+      "prior109_prefix_preserved": true,
+      "application_and_phase5_trees_unchanged": true,
+      "native_ui_test_swift_changed": true,
+      "production_application_swift_payload_installer_signing_unchanged": true,
+      "source_successor05_same_three_V04_selectors": true,
+      "current_ordinary_prefix": {
+        "bytes": 19483,
+        "sha256": "11f58b07368aacc1d09b5c6c26bf9f0764bcf06d05600cf5a1a9cf9bdd5516cf"
+      },
+      "historical_ordinary_prefix": {
+        "bytes": 18813,
+        "sha256": "3f3d5c65b093f08af85b29c9baa3e578f5615f8bd42762e94b8e1b314bc4e0db"
+      },
+      "pin_changes_already_applied": [
+        {
+          "path": "scripts/release/full-app-j01/native_runtime47.test.py",
+          "before": {
+            "bytes": 199580,
+            "sha256": "718c852663c669e1f237a22d080de2192afca95b1f6749d87629e9e77a1f8515"
+          },
+          "after": {
+            "bytes": 200682,
+            "sha256": "e016abc1b67e41ca13dfb1a1c8f54183b209c3f32178b82789f1d95b4bb649b3"
+          }
+        }
+      ],
+      "proposal": {
+        "path": "proposals/goals-commit-successor05/FROZEN_PROPOSAL05.json",
+        "bytes": 3528,
+        "sha256": "269456b17ac739e288c0d9550150b3e13dd1434b81155bd57bd372ab724fd479"
+      },
+      "applied_and_pin_refresh": {
+        "path": "local110-goals/APPLIED_AND_PIN_REFRESH.json",
+        "bytes": 1855,
+        "sha256": "e4d9c3b86b29d73b5060d8fecb4c86ff8db3fa0155e5add0a517e7b07898a94b"
+      },
+      "actual_controls": {
+        "path": "local110-goals/CONTROLS_SUMMARY.json",
+        "bytes": 3430,
+        "sha256": "ea610d65d9356a5d5d83c84c3dac18b9d5144f42133b9ad23311053247998872"
+      },
+      "actual_local_validation": [
+        {
+          "name": "runtime138",
+          "exitCode": 0,
+          "seconds": 27.847435
+        },
+        {
+          "name": "workflow8",
+          "exitCode": 0,
+          "seconds": 1.229276
+        }
+      ],
+      "all138_legacy_controls_retained": true,
+      "only_necessary_source_witness_method_succeeded": true,
+      "all_original_swift_assertions_and_internal_bytes_preserved": true,
+      "native53_historical": {
+        "head": "8f68281fd13d32bf9163a1e23f4a21114e7dc66b",
+        "tree": "c9b0ea31537547d55c62cb8ebf437309f23e9b27",
+        "run": 42437334849,
+        "attempt": 1,
+        "job": 128598900843,
+        "artifact": 13602089131,
+        "wire": {
+          "bytes": 160724822,
+          "sha256": "8d5e5e4704def237ec87383a6fa90372f83e2e654b860e6079aada17f3c9e862"
+        },
+        "verified_raw": {
+          "path": "native53/receiver-v4/VERIFIED_RAW.json",
+          "bytes": 15175,
+          "sha256": "12bbb0d5a348fd8039e9e27ab1e7eb7e946e6b9fdd770f7ce40390c848d5b65a"
+        },
+        "actual_boundary": {
+          "path": "native53/receiver-v4/ACTUAL_BOUNDARY.json",
+          "bytes": 338332,
+          "sha256": "ee8f690b41a7da96ded30ff84bd589daa04c19bae86f37c8a9ce910f876f0150"
+        },
+        "private_delivery": {
+          "path": "native53/PRIVATE_NATIVE53_DELIVERY.json",
+          "bytes": 4221,
+          "sha256": "ad036a829b50bfe73d6bb462afb913541bf25c597aaf6de8d7574ae6182361a0"
+        },
+        "private_fresh_verification": {
+          "path": "native53/PRIVATE_FRESH_MEMBER_VERIFICATION.json",
+          "bytes": 69927,
+          "sha256": "fdf593309c61ef63393c33a5bc03cf0d2959fa3b8aee54b63ef64235e8678dc2"
+        },
+        "app": {
+          "role": "app",
+          "drive_file_id": "1B7L4jZUMq1g4YU8MfmR8ldbnXb7xcEnK",
+          "drive_url": "https://drive.google.com/file/d/1B7L4jZUMq1g4YU8MfmR8ldbnXb7xcEnK/view?usp=drivesdk",
+          "bytes": 44069032,
+          "sha256": "0f296abaa60181a4b3aa876c0626400b5f6dfdb1a4898192f8e0d37daa888a03",
+          "shared": false,
+          "permissions": [
+            {
+              "type": "user",
+              "role": "owner"
+            }
+          ],
+          "owner_me_and_canDownload_not_exposed_not_inferred": true,
+          "actualFreshHTTP": 200
+        },
+        "zip_members": 1581,
+        "closed_payload_files": 1580,
+        "commands": 92,
+        "complete_streams": 184,
+        "case": "testV04ExplicitWithdrawalReviewCancelAndFreshReconsent",
+        "executed": 1,
+        "assertion_failures": 1,
+        "unexpected": 0,
+        "skipped": 0,
+        "seconds": 135.909,
+        "xctest_pid": 26244,
+        "first_fresh_goals_reached": true,
+        "failure_at_goals_continue_after_two_taps": true,
+        "final_actual_selected2_continue_enabled": true,
+        "qualified_origin_observed": false,
+        "earlier52_privacy_denial_reproduced": false,
+        "original52_exception_holder_unobserved": true,
+        "no_persistent_app_defect_or_Keychain_cause_inferred": true,
+        "ordinary_admitted": false,
+        "internal_admitted": false
+      },
+      "actual_ci109_historical": {
+        "index": {
+          "path": "ci109/FINAL_CI_INDEX_e2116379.json",
+          "bytes": 149914,
+          "sha256": "5bfaf14924fd55a8e6c147d70586ad25071fd1227c6392b19444676c04bf7317"
+        },
+        "all_five_terminal": true,
+        "workflow_counts": {
+          "failure": 4,
+          "success": 1
+        },
+        "job_counts": {
+          "success": 7,
+          "failure": 8,
+          "skipped": 1
+        },
+        "root7122_type3_lint3_DB_windows31_full30_pass": true,
+        "all_SDK_security_candidate29_G97_scanner_failures_unwaived": true
+      },
+      "native_jobs_started": 16,
+      "native_attempts_remaining": 0,
+      "future111_native_jobs_must_all_skip": true,
+      "planned_material_commit_count": 110,
+      "planned_final_commit_count": 111,
+      "final_seal_paths": [
+        "docs/phase-4/generated/source-worklist.json",
+        "docs/phase-4/generated/source-worklist.md"
+      ],
+      "source_checks110_and111_at_cutoff": {
+        "selected2": "PENDING_NOT_FULL30",
+        "SOURCE_PENDING": "PENDING",
+        "SOURCE_FROZEN111": "PENDING",
+        "final_source111_CI": "PENDING"
+      },
+      "new_swift_case_compiled": false,
+      "new_swift_case_run_natively": false,
+      "native_execution": false,
+      "ordinary_complete": false,
+      "internal_complete": false,
+      "acceptance_granted": false,
+      "release": "NO_GO"
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",

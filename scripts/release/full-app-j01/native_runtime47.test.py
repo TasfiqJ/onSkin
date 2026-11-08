@@ -406,6 +406,22 @@ class Runtime47Tests(unittest.TestCase):
         self.assertEqual(current.count(separator), 1)
         self.assertEqual(preserved.count(separator), 1)
         normal = current.split(separator)[0]
+        # C05: validate the exact current successor, then replay every old assertion.
+        goals_commit05 = b'''        // C05 ordinary goals-commit successor05: await committed native selections.
+        let clearSkinGoal = buttonBeginning("Clear skin", app)
+        let barrierRepairGoal = buttonBeginning("Barrier repair", app)
+        let goalsContinue = button("Continue", app)
+        let goalsCommitted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            clearSkinGoal.isSelected && barrierRepairGoal.isSelected && goalsContinue.isEnabled
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [goalsCommitted], timeout: deadline), .completed,
+            "Both actual selected goals and enabled Continue must be committed before advancing")
+'''
+        self.assertEqual(normal.count(goals_commit05), 1)
+        self.assertEqual(len(normal), 19483)
+        self.assertEqual(hashlib.sha256(normal).hexdigest(),
+                         '11f58b07368aacc1d09b5c6c26bf9f0764bcf06d05600cf5a1a9cf9bdd5516cf')
+        normal = normal.replace(goals_commit05, b'', 1)
         self.assertEqual(pre_disclosure.count(separator), 1)
         historical04 = pre_disclosure.split(separator)[0]
         self.assertEqual(len(historical04), 18684)
