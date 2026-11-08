@@ -52,8 +52,13 @@ SWIFT_HOOK = r'''
 '''
 
 
+
+# Finite105 diagnostic successor; no product repair and no legacy observer alteration.
+ONBOARDING53_SOURCE_PREIMAGES = {'apps/mobile/src/features/onboarding/OnboardingContext.tsx': '92dd830e2c37a5eda80ab376ec66a2c811e947a493a74be3d87800fbfab97074', 'apps/mobile/src/features/onboarding/healthConsentStore.ts': '1b0dd6ccfc33bbe955ee1cedfd43040b24a230f2bc3a0a0cbdf1d35e4884c080', 'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts': '4479481bf7050df877d699105b41b132181c6dc3d1f27eb15fdb666b376515d6', 'apps/mobile/src/lib/storage/privateKV.ts': 'f21bfd6bd3830c48530643d88c359da9ecfd97654cc3dd8f21866059c40127ee', 'apps/mobile/src/lib/storage/privateKVContentKey.ts': '076ef0751f98c1fb9cb970f14d5ee76755f9999a40fc46055ba20d4956167734', 'apps/mobile/src/lib/auth/localAccountIsolation.ts': 'd7f165e0a8e581264eb713b6b1d92486bfac1b16d81a7430f00b4bc660425139', 'apps/mobile/src/lib/auth/accountGeneration.ts': '67e0112149e11a883795ad60d27cf9c8b9dfe079dfa6328bcf29c3997540eb1a', 'apps/mobile/src/features/healthConsent/lifecycle.ts': '8ee8efd825a5be6fb8691cb74d96fbc4d7dd9c339a690194b52f67053abb549b'}
+ENTRY_TEMPLATE53 = '/* Diagnostic entry only. Replace the one source-head token before installation. */\ntry { (() => {\n  const FS = require(\'expo-file-system/legacy\');\n  const SOURCE_HEAD = \'__C47_SOURCE_HEAD05__\';\n  const IDENTITY_FILE = \'C47StorageOrigin05Identity.json\';\n  const SITES = new Set(["onboarding", "consent-store", "health-admission", \'availability\', \'age-store\', \'age-gate\', \'private-kv\', \'content-key\',\n    \'mutation\', \'account-generation\', \'lifecycle\', \'cloud-preference\', \'owner-proof\']);\n  const OPERATIONS = new Set(["revalidate", "privacyStatus", "setHealthDataCollectionConsentLocal", "hasCurrentHealthDataCollectionConsentStrict", "hasCurrentHealthDataCollectionConsentForLease", "captureHealthDataWriteLease", "assertHealthDataWriteLease", "assertOriginalHealthDataWriteLease", "completeHealthDataActivationRoute", "getPrivateItemWhenReady", "runPreparedPrivateRead46", "getPrivateItemOnOriginalLease39", "runOwnedPrivateGateRead39", "assertPrivateGateAccountLease39", "waitForWidgetCapabilityClears49", \'verifyPrivateStorage\', \'check\', \'getAgePolicyReceiptStatus\',\n    \'setAgeVerified\', \'classifyAgePolicyReceipt\', \'getPrivateItem\', \'readPrivateItems\',\n    \'assertPrivateKVReadable\', \'getExistingContentKey\', \'getOrCreateContentKey\',\n    \'classifyEnvelope\', \'decryptEnvelope\', \'validateEnvelopeAuthentication\',\n    \'assertPrivateReadAllowed\', \'privateMutationReadGuard46\', \'runAccountScopedPrivateOperation\',\n    \'assertAccountScopedPrivateOperationAllowed\', \'getStoredPrivateKVContentKey\',\n    \'setStoredPrivateKVContentKey\', \'clearStoredPrivateKVContentKey\',\n    \'assertPrivateMutationReadGeneration46\', \'assertPrivateMutationReadable46\',\n    \'waitForPrivateMutationReadWindow46\', \'decodePrivateMutationMarker46\',\n    \'decodeHistoryIntentMarker45\', \'invalidPrivateMutation46\', \'livePrivateMutationMarker46\',\n    \'armPrivateMutation46\', \'finishPrivateMutation46\', \'abandonPrivateMutation46\',\n    \'assertAccountGenerationLease\', \'assertAccountIdentityGeneration\',\n    \'captureOwnerWorkflowFence\', \'assertOwnerWorkflowFence\', \'readLocal\',\n    \'readLocalDataOwnerProof\', \'assertLocalDataOwnership\', \'removePrivateItem\',\n    \'setPrivateItem\', \'updatePrivateItemWithGuard\', \'getCloudBackupEnabled\',\n    \'setCloudBackupEnabled\', \'validatePrivateItemsWithoutRetainingPlaintext\',\n    \'commitPrivateMutation46\', \'clearPrivateMutationAfterRemoval46\',\n    \'assertPrivateMutationWritable46\', \'assertPlanHistoryReadable45\', \'storageUnavailable\',\n    \'readActiveReceipt\', \'runAccountGenerationOperation\', \'runOwnerBoundLocalOperation\',\n    \'reconcileHealthDataLifecycle\', \'reconcileUnconfigured\', \'readLocalDataOwnership\',\n    \'claimLocalDataOwnership\', \'localDataOwnerBinding\', \'clearUnavailableCloudBackupPreference\']);\n  const PHASES = new Set([\'begin\', \'failure\', \'caught\', \'pass\', \'state\']);\n  const STAGES = new Set([\'Crypto.digestStringAsync\', \'assertConsentMutationCurrent\', \'attempt\', \'closeProcessingEpochImmediately\', \'operation.assertCurrent\', \'runHealthDataWriteOperation\', \'updatePrivateItem\', "consent_false", "consent_predicate", "admitted", "provider_status", "route_status", "activation_complete", "captureHealthDataWriteLease", "assertOriginalHealthDataWriteLease", "getPrivateItemWhenReady", "hasCurrentHealthDataCollectionConsentForLease", "hasCurrentHealthDataCollectionConsentStrict", "waitForWidgetCapabilityClears49", "runPreparedPrivateRead46", "getPrivateItemOnOriginalLease39", "runOwnedPrivateGateRead39", "assertPrivateGateAccountLease39", "read", "assertPurpose", "assertOriginal", "join", ...OPERATIONS, \'entry\', \'native_read\', \'native_write\', \'native_remove\',\n    \'native_availability\', \'content_key\', \'envelope_classify\', \'envelope_authenticate\',\n    \'marker_read\', \'marker_decode\', \'mutation_generation\', \'mutation_admission\',\n    \'history_admission\', \'account_fence\', \'owner_fence\', \'health_lease\', \'revision_check\',\n    \'age_classify\', \'ui_conversion\', \'unknown\', \'AsyncStorage.getItem\', \'AsyncStorage.setItem\',\n    \'AsyncStorage.removeItem\', \'AsyncStorage.getAllKeys\', \'AsyncStorage.multiGet\',\n    \'AsyncStorage.multiSet\', \'AsyncStorage.multiRemove\', \'SecureStore.isAvailableAsync\',\n    \'SecureStore.getItemAsync\', \'SecureStore.setItemAsync\', \'SecureStore.deleteItemAsync\',\n    \'JSON.parse\', \'JSON.stringify\', \'assertPlanHistoryReadable45\',\n    \'captureHealthPurposePrivateDataWriteLease\', \'assertHealthDataWriteLease\',\n    \'assertHistoryKeysReadable45\', \'assertPrivateMutationWritable46\', \'Promise.all\',\n    \'accountLease.assertCurrent\', \'applyProcessingEpoch\', \'assertBeforeNativeWrite\',\n    \'assertCurrent\', \'assertHealthReadCurrent\', \'assertHistoryBatchShape45\',\n    \'assertMutationCurrent\', \'assertMutationReadCurrent46\', \'assertNoFailedReadRewrite\',\n    \'assertOriginalPreparation46\', \'assertPreparationCurrent\', \'assertPrivateDataKey\',\n    \'clearDependentWithdrawalRecoveryAfterTerminal\', \'clearHealthPurposeLocalDataForFence\',\n    \'hasOrphanedPrivateCiphertext\', \'lease.assertCurrent\', \'maybeRejectConflictChoiceWrite\',\n    \'mutate\', \'operation\', \'owner.localDataOwnerBinding\', \'owner.readLocalDataOwnerProof\',\n    \'pauseForVerification\', \'readHealthDataLifecycle\', \'recordLocalWithdrawalChoice\',\n    \'restoreExactRawAfterAmbiguousMutation\', \'restoreRequiredCleanupMarker\',\n    \'rethrowStaleWorkflow\', \'withOperationTiming\', \'writeLocal\']);\n  const PREDICATES = new Set([\'revision_changed\', \'live_claim_present\', \'failed_claim_present\',\n    \'orphan_marker\', \'marker_invalid\', \'history_marker_invalid\', \'account_changed\',\n    \'account_boundary_active\', \'owner_changed\', \'owner_invalid\', \'health_lease_closed\',\n    \'key_missing\', \'key_invalid\', \'ciphertext_invalid\', \'ciphertext_unsupported\',\n    \'authentication_failed\', \'native_rejected\', \'unclassified\', \'not_applicable\']);\n  const KEY_CATEGORIES = new Set([\'age_receipt\', \'content_key\', \'cleanup_marker\',\n    \'health_lifecycle\', \'health_consent\', \'cloud_preference\', \'history\', \'other_private\',\n    \'foreign\', \'reserved\', \'unclassified\']);\n  const ENVELOPE_KINDS = new Set([\'absent\', \'legacy\', \'current\', \'malformed\', \'unsupported\']);\n  const AGE_STATUSES = new Set([\'current\', \'reverification_required\', \'missing\', \'legacy\',\n    \'invalid\', \'unsupported\', \'policy_mismatch\', \'unavailable\']);\n  const DISPOSITIONS = new Set([\'throw\', \'propagate\', \'caught\', \'ui_conversion\', \'probe\']);\n  const ERROR_CLASSES = new Set([\'Error\', \'TypeError\', \'RangeError\', \'SyntaxError\',\n    \'ReferenceError\', \'URIError\', \'EvalError\', \'AggregateError\', \'AccountGenerationLeaseError\',\n    \'KeyChainException\', \'InvalidKeyException\', \'MissingPlistKeyException\', \'SecAccessControlError\']);\n  // Exact literals from the current first-party files and installed Expo sources.\n  // No prefix, substring, NSError-description or arbitrary-message admission.\n  const CODES = new Set(["CURRENT_HEALTH_CONSENT_REQUIRED", "HEALTH_CONSENT_INVALID", "HEALTH_CONSENT_UNSUPPORTED_VERSION", "HEALTH_CONSENT_MUTATION_SUPERSEDED", \'PRIVATE_KV_CONTENT_KEY_MISSING\', \'PRIVATE_KV_CONTENT_KEY_INVALID\',\n    \'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE\', \'PRIVATE_KV_DECRYPTION_FAILED\',\n    \'PRIVATE_KV_ENVELOPE_INVALID\', \'PRIVATE_KV_ENVELOPE_UNSUPPORTED\',\n    \'PRIVATE_KV_ENVELOPE_FOREIGN\', \'PRIVATE_KV_RESERVED_KEY\', \'PRIVATE_KV_WRITE_CONFLICT\',\n    \'PRIVATE_KV_RECOVERY_REQUIRED\', \'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE\',\n    \'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY\', \'PRIVATE_KV_WRITE_ROLLBACK_FAILED\',\n    \'PRIVATE_KV_SOURCE_UNAUTHENTICATED\', \'PRIVATE_KV_SOURCE_TRANSFORM_INVALID\',\n    \'LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED\', \'LOCAL_DATA_HISTORY_RECOVERY_REQUIRED\',\n    \'LOCAL_DATA_CLEANUP_MARKER_SCOPE_INVALID\', \'LOCAL_DATA_CLEANUP_MARKER_UNCONFIRMED\',\n    \'LOCAL_DATA_CLEANUP_MARKER_RESTORE_FAILED\', \'LOCAL_DATA_OWNER_PROOF_INVALID\',\n    \'LOCAL_DATA_CLEANUP_REQUIRED\', \'LOCAL_DATA_UNCLAIMED_QUARANTINED\',\n    \'LOCAL_DATA_OWNER_MISMATCH\', \'LOCAL_DATA_RETAINED_OWNER_INVALID\',\n    \'LOCAL_DATA_UNCLAIMED_QUARANTINE_INVALID\', \'ACCOUNT_GENERATION_CHANGED\',\n    \'HEALTH_DATA_WRITE_ADMISSION_CLOSED\', \'HEALTH_DATA_WRITE_OWNER_MISMATCH\',\n    \'HEALTH_DATA_LIFECYCLE_OWNER_INVALID\', \'HEALTH_DATA_LIFECYCLE_OWNER_MISMATCH\',\n    \'HEALTH_DATA_LIFECYCLE_LOCAL_OWNER_UNAVAILABLE\', \'ERR_KEY_CHAIN\', \'ERR_INVALID_KEY\',\n    \'ERR_MISSING_PLIST_KEY\', \'ERR_SEC_ACCESS_CONTROL\']);\n  const MISSING = Symbol(\'missing-data-descriptor\');\n  const errorIds = new WeakMap();\n  const events = [];\n  const failureWindow = [];\n  const onboardingWindow53 = [];\n  let onboardingEvicted53 = 0, denialWindow53 = [], denialEvicted53 = 0;\n  let latestDenial53 = null, latestGrantBegin53 = null, latestGrantPass53 = null, latestGrantPassBegin53 = null;\n  let latestActivationPass53 = null, latestRevalidateBegin53 = null, latestRevalidateOutcome53 = null;\n  let latestConsentResult53 = null, latestProviderStatus53 = null, latestRouteStatus53 = null;\n\n  let failureWindowEvicted = 0;\n  let nextErrorId = 0, nextAttempt = 0, sequence = 0, dropped = 0;\n  let firstFailure = null, firstUIFailure = null;\n  let dirty = false, scheduled = false, writing = false, flushFailures = 0;\n\n  function own(value, key) {\n    if ((typeof value !== \'object\' || value === null) && typeof value !== \'function\') return MISSING;\n    try {\n      const descriptor = Object.getOwnPropertyDescriptor(value, key);\n      return descriptor && Object.prototype.hasOwnProperty.call(descriptor, \'value\')\n        ? descriptor.value : MISSING;\n    } catch { return MISSING; }\n  }\n  function integer(value, maximum = 1000000) {\n    return typeof value === \'number\' && Number.isSafeInteger(value) && value >= 0 && value <= maximum;\n  }\n  function literal(value, allowed) {\n    return typeof value === \'string\' && value.length <= 96 && allowed.has(value) ? value : null;\n  }\n  function knownCode(value) {\n    const exact = literal(value, CODES);\n    if (exact) return { code: exact, count: null };\n    if (typeof value !== \'string\' || value.length > 96) return null;\n    const counted = /^PRIVATE_KV_CONTENT_KEY_CLEAR_FAILED:([12])$/.exec(value);\n    return counted ? { code: \'PRIVATE_KV_CONTENT_KEY_CLEAR_FAILED\', count: Number(counted[1]) } : null;\n  }\n  function errorId(value) {\n    if ((typeof value !== \'object\' || value === null) && typeof value !== \'function\') return 0;\n    let id = errorIds.get(value);\n    if (!id && nextErrorId < 1024) { id = ++nextErrorId; errorIds.set(value, id); }\n    return id || 0;\n  }\n  function errorClass(value) {\n    let cursor = value;\n    for (let depth = 0; depth < 4 && cursor !== null; depth += 1) {\n      const name = literal(own(cursor, \'name\'), ERROR_CLASSES);\n      if (name) return name;\n      if ((typeof cursor !== \'object\' || cursor === null) && typeof cursor !== \'function\') break;\n      try { cursor = Object.getPrototypeOf(cursor); } catch { break; }\n    }\n    return \'UNCLASSIFIED\';\n  }\n  function classify(error) {\n    const chain = [], seen = new Set();\n    let value = error, ending = \'not_supplied\';\n    for (let depth = 0; depth < 3; depth += 1) {\n      if (seen.has(value)) { ending = \'cycle\'; break; }\n      seen.add(value);\n      const kind = value === null ? \'null\' : typeof value;\n      const code = knownCode(own(value, \'code\'));\n      const messageCode = knownCode(own(value, \'message\'));\n      const primitiveCode = knownCode(value);\n      const recognized = code || messageCode || primitiveCode;\n      const numericFields = [];\n      for (const key of [\'code\', \'nativeCode\', \'nativeErrorCode\', \'osStatus\', \'errno\']) {\n        const number = own(value, key);\n        if (typeof number === \'number\' && Number.isInteger(number) && number >= -2147483648 && number <= 2147483647)\n          numericFields.push(Object.freeze({ field: key, value: number }));\n      }\n      chain.push(Object.freeze({ errorId: errorId(value), kind, errorClass: errorClass(value),\n        recognizedCode: recognized ? recognized.code : \'UNCLASSIFIED\',\n        recognizedCount: recognized ? recognized.count : null,\n        recognizedCodeField: code ? \'code\' : messageCode ? \'message\' : primitiveCode ? \'primitive\' : \'none\',\n        numericFields: Object.freeze(numericFields),\n        numericQualification: \'SUPPLIED_OWN_DATA_FIELD_ONLY_NOT_INFERRED_OSSTATUS\',\n        arbitraryMessageStackAndObjectOmitted: true }));\n      const cause = own(value, \'cause\');\n      if (cause === MISSING) break;\n      if (depth === 2) { ending = \'depth_limit\'; break; }\n      value = cause;\n    }\n    return Object.freeze({ chain: Object.freeze(chain), causeEnding: ending });\n  }\n  function metadata(value) {\n    const output = {};\n    for (const name of ["outerOperation", "mounted", "tokenCurrent", "draftCurrent", "consentCurrent", "consentPresent", "grantCurrent", "versionCurrent", "disclosureCurrent", "atCurrentDenial", "grantRequested", "activeState", "activationPending", "privacyReady", "privacyChecking", "privacyDenied", "healthOwnerCurrent", "healthGenerationEqual", "healthEpochEqual", "healthAccountGenerationEqual", "originalCapabilityCurrent", "providerReadyState", "hasDraft", "routeTokenCurrent", "routeReady", "hasRouteLease", "hasNavigation", \'revisionChanged\', \'accountBoundaryActive\', \'accountGenerationChanged\',\n      \'revisionEqual\', \'accountGenerationEqual\', \'boundaryBlocked\',\n      \'ownerCurrent\', \'leaseCurrent\', \'keyPresent\', \'rawPresent\', \'markerPresent\']) {\n      const item = own(value, name); if (typeof item === \'boolean\') output[name] = item;\n    }\n    for (const name of [\'liveClaimsCount\', \'failedClaimsCount\', \'liveClaims\', \'failedClaims\',\n      \'keyCount\', \'encryptedCount\']) {\n      const item = own(value, name); if (integer(item, 65535)) output[name] = item;\n    }\n    const parent = own(value, \'parentAttempt\');\n    if (integer(parent)) output.parentAttempt = parent;\n    for (const [name, allowed] of [[\'keyCategory\', KEY_CATEGORIES], [\'envelopeKind\', ENVELOPE_KINDS],\n      [\'ageStatus\', AGE_STATUSES],\n      [\'stage\', STAGES], [\'predicate\', PREDICATES], [\'disposition\', DISPOSITIONS]]) {\n      const item = literal(own(value, name), allowed); if (item) output[name] = item;\n    }\n    return Object.freeze(output);\n  }\n  async function flush() {\n    scheduled = false;\n    if (writing || !dirty) return;\n    writing = true; dirty = false;\n    try {\n      if (!/^[a-f0-9]{40}$/.test(SOURCE_HEAD) || typeof FS.documentDirectory !== \'string\') throw 0;\n      const identityPath = FS.documentDirectory + IDENTITY_FILE;\n      const info = await FS.getInfoAsync(identityPath);\n      if (!info.exists || info.isDirectory || !integer(info.size, 1024)) throw 0;\n      const identity = JSON.parse(await FS.readAsStringAsync(identityPath));\n      if (own(identity, \'schema\') !== 1 || own(identity, \'sourceHead\') !== SOURCE_HEAD ||\n          own(identity, \'bundle\') !== \'com.layerwell.app.staging\' ||\n          !integer(own(identity, \'pid\'), 2147483647) || own(identity, \'pid\') < 1) throw 0;\n      const payload = { schema: 1, role: \'STAGING_STORAGE_ORIGIN05_DIAGNOSTIC_ONLY\',\n        diagnosticMarker: \'C47_STORAGE_ORIGIN_DIAGNOSTIC_05\',\n        sourceHead: SOURCE_HEAD, pid: own(identity, \'pid\'),\n        bundle: \'com.layerwell.app.staging\', eventLimit: 512,\n        events: events.slice(), firstFailure, firstUIFailure,\n        traceFormatVersion: 2, failureWindowLimit: 64, failureWindow: failureWindow.slice(),\n        onboarding53: { profile: \'ONBOARDING_DENIAL_ORIGIN53_ONLY\', windowLimit: 64,\n          window: onboardingWindow53.slice(), evicted: onboardingEvicted53,\n          latestDenial: latestDenial53, denialWindow: denialWindow53.slice(), denialWindowEvicted: denialEvicted53,\n          latestGrantBegin: latestGrantBegin53, latestGrantPass: latestGrantPass53, latestGrantPassBegin: latestGrantPassBegin53,\n          latestActivationPass: latestActivationPass53, latestRevalidateBegin: latestRevalidateBegin53,\n          latestRevalidateOutcome: latestRevalidateOutcome53, latestConsentResult: latestConsentResult53,\n          latestProviderStatus: latestProviderStatus53, latestRouteStatus: latestRouteStatus53 },\n        failureWindowEvicted, failureWindowFrozenAtFirstUI: firstUIFailure !== null,\n        firstFailureQualification: \'FIRST_OBSERVED_FAILURE_NOT_CAUSAL_DIAGNOSIS; CORRELATE_PROPAGATED_ERROR_IDS_TO_UI_CONVERSION\',\n        droppedEvents: dropped, flushFailures, errorIdentityLimit: 1024,\n        ordinaryAdmitted: false, acceptanceGranted: false, release: \'NO_GO\' };\n      await FS.writeAsStringAsync(FS.documentDirectory + \'C47StorageOrigin05-\' + payload.pid + \'.json\', JSON.stringify(payload));\n    } catch { flushFailures = Math.min(flushFailures + 1, 65535); }\n    finally { writing = false; if (dirty) schedule(); }\n  }\n  function schedule() {\n    dirty = true;\n    if (!scheduled && !writing) { scheduled = true; setTimeout(flush, 0); }\n  }\n  globalThis.__C47_STORAGE_ORIGIN05__ = function observe(input) {\n    let attempt = 0;\n    try {\n      const supplied = own(input, \'attempt\'); if (integer(supplied)) attempt = supplied;\n      const site = literal(own(input, \'site\'), SITES);\n      const operation = literal(own(input, \'operation\'), OPERATIONS);\n      const phase = literal(own(input, \'phase\'), PHASES);\n      if (!site || !operation || !phase || sequence === Number.MAX_SAFE_INTEGER) {\n        dropped = Math.min(dropped + 1, 2147483647); return attempt;\n      }\n      if (phase === \'begin\' && attempt === 0 && nextAttempt < 1000000) attempt = ++nextAttempt;\n      const meta = metadata(own(input, \'meta\'));\n      const line = own(input, \'sourceLine\');\n      const stage = literal(own(input, \'stage\'), STAGES);\n      const disposition = literal(own(input, \'disposition\'), DISPOSITIONS);\n      const failure = phase === \'failure\' || phase === \'caught\';\n      const record = { sequence: ++sequence, site, operation, phase, attempt, meta };\n      if (integer(line) && line > 0) record.sourceLine = line;\n      if (stage) record.stage = stage;\n      if (disposition) record.disposition = disposition;\n      if (failure) record.error = classify(own(input, \'error\'));\n      Object.freeze(record);\n      // Independent finite current-denial channel: pre-grant denials never freeze later observations.\n      if (site === \'consent-store\' && operation === \'setHealthDataCollectionConsentLocal\' && meta.outerOperation === true && meta.grantRequested === true) {\n        if (phase === \'begin\') latestGrantBegin53 = record;\n        if (phase === \'pass\') { latestGrantPass53 = record; latestGrantPassBegin53 = latestGrantBegin53?.attempt === record.attempt ? latestGrantBegin53 : null; }\n      }\n      if (site === \'lifecycle\' && operation === \'completeHealthDataActivationRoute\' && phase === \'pass\' &&\n          stage === \'activation_complete\' && meta.activeState === true && meta.activationPending === false)\n        latestActivationPass53 = record;\n      if (site === \'onboarding\' && operation === \'revalidate\' && phase === \'begin\' && meta.outerOperation === true)\n        latestRevalidateBegin53 = record;\n      if (site === \'onboarding\' && operation === \'revalidate\' && phase === \'state\' && stage === \'admitted\')\n        latestRevalidateOutcome53 = record;\n      if (site === \'consent-store\' && phase === \'state\' && stage === \'consent_predicate\') latestConsentResult53 = record;\n      if (site === \'onboarding\' && operation === \'privacyStatus\' && phase === \'state\') {\n        if (stage === \'provider_status\') latestProviderStatus53 = record;\n        if (stage === \'route_status\') latestRouteStatus53 = record;\n      }\n      const actualFalse53 = phase === \'state\' && meta.consentCurrent === false &&\n        ((site === \'onboarding\' && operation === \'revalidate\' && stage === \'consent_false\') ||\n         (site === \'consent-store\' && stage === \'consent_predicate\'));\n      if (failure || actualFalse53) {\n        if (onboardingWindow53.length === 64) {\n          onboardingWindow53.shift(); onboardingEvicted53 = Math.min(onboardingEvicted53 + 1, 2147483647);\n        }\n        onboardingWindow53.push(record);\n      }\n      if (site === \'onboarding\' && operation === \'revalidate\' && phase === \'caught\' &&\n          disposition === \'ui_conversion\' && meta.atCurrentDenial === true) {\n        latestDenial53 = record; latestRevalidateOutcome53 = record;\n        denialWindow53 = onboardingWindow53.slice(); denialEvicted53 = onboardingEvicted53;\n      }\n\n      if (failure && firstFailure === null) firstFailure = record;\n      // Bounded error history freezes with the original first UI conversion.\n      // Routine event overflow must not erase a later propagated rejection.\n      if (failure && firstUIFailure === null) {\n        if (failureWindow.length === 64) {\n          failureWindow.shift();\n          failureWindowEvicted = Math.min(failureWindowEvicted + 1, 2147483647);\n        }\n        failureWindow.push(record);\n      }\n      if (failure && (disposition === \'ui_conversion\' || meta.disposition === \'ui_conversion\') && firstUIFailure === null)\n        firstUIFailure = record;\n      // Reserve the last slot until the first observed failure; never evict it.\n      const limit = firstFailure === null ? 511 : 512;\n      if (events.length < limit) events.push(record);\n      else dropped = Math.min(dropped + 1, 2147483647);\n      schedule();\n    } catch { /* Reflection/proxy/observer failure must not escape into authority. */ }\n    return attempt;\n  };\n})(); } catch { /* Diagnostic setup failure cannot prevent the original router mount. */ }\nrequire(\'expo-router/entry\');\n'
+
 @contextmanager
-def diagnostic_inputs(root, ios, evidence, head, run):
+def diagnostic_inputs(root, ios, evidence, head, run, *, targeted_onboarding53=False):
     """Generate separate afterimages, snapshot all inputs, then restore exactly.
 
     The compiler command is recorded by the existing Runner, not hidden in a
@@ -66,7 +71,8 @@ def diagnostic_inputs(root, ios, evidence, head, run):
     need(not evidence.exists(), 'NEW_DIAGNOSTIC_EVIDENCE')
     evidence.mkdir(parents=True)
     originals = {}
-    for relative, expected in SOURCE_PREIMAGES.items():
+    expected_preimages = ONBOARDING53_SOURCE_PREIMAGES if targeted_onboarding53 else SOURCE_PREIMAGES
+    for relative, expected in expected_preimages.items():
         path = root / relative
         need(path.is_file() and not path.is_symlink(), 'REGULAR_SOURCE')
         raw = path.read_bytes()
@@ -79,7 +85,8 @@ def diagnostic_inputs(root, ios, evidence, head, run):
          'EXACT_DELEGATE_ANCHOR')
     entry = root / 'apps/mobile/.expo/C47StorageOrigin05.js'
     need(not entry.exists() and not entry.is_symlink(), 'NO_EXISTING_DIAGNOSTIC_ENTRY')
-    entry_raw = ENTRY_TEMPLATE.replace('__C47_SOURCE_HEAD05__', head).encode('utf8')
+    entry_template = ENTRY_TEMPLATE53 if targeted_onboarding53 else ENTRY_TEMPLATE
+    entry_raw = entry_template.replace('__C47_SOURCE_HEAD05__', head).encode('utf8')
     need(entry_raw.count(head.encode()) == 1 and MARKER.encode() in entry_raw,
          'DIAGNOSTIC_ENTRY_SOURCE_BINDING')
     delegate_generated = delegate_original.replace(anchor,
@@ -87,8 +94,10 @@ def diagnostic_inputs(root, ios, evidence, head, run):
     request = evidence / 'REQUEST.json'
     manifest = evidence / 'TRANSFORMED_SOURCES.json'
     generated = evidence / 'generated'
-    document(request, {'root':str(root), 'output':str(generated),
-        'manifest':str(manifest), 'source_head':head, 'expected':SOURCE_PREIMAGES})
+    request_value = {'root':str(root), 'output':str(generated), 'manifest':str(manifest),
+        'source_head':head, 'expected':expected_preimages}
+    if targeted_onboarding53: request_value['profile'] = 'ONBOARDING53_CURRENT105'
+    document(request, request_value)
     run('storage05-transform', ['node', root / 'scripts/release/full-app-j01/storage_origin47.mjs', request], timeout=60)
     value = json.loads(manifest.read_bytes())
     rows = value.get('files')
@@ -120,7 +129,8 @@ def diagnostic_inputs(root, ios, evidence, head, run):
         'delegate_generated_sha256':digest(delegate_generated), 'entry_sha256':digest(entry_raw),
         'scope':'FINITE_DIAGNOSTIC_ONLY_SYNCHRONOUS_OBSERVER; ORIGINAL_ERROR_VALUES_RETHROWN',
         'ordinary_admitted':False, 'internal_admitted':False,
-        'no_new_authority_await_or_storage_operation':True})
+        'no_new_authority_await_or_storage_operation':True,
+        **({'targeted_onboarding53':True} if targeted_onboarding53 else {})})
     # These guards precede restoration ownership: rejected foreign changes are
     # never replaced by an original snapshot that this context did not write.
     for relative, raw in originals.items():
@@ -474,7 +484,7 @@ def source_scope05(phase, root):
         'qualification':'SOURCE_SCOPE_ONLY_APPLICATION_REPAIR_AND_PRESERVED_DIAGNOSTIC70_NO_NATIVE_ADMISSION'}}
 
 
-def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=None):
+def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=None,*,targeted_onboarding53=False):
     """Immutable first/post-UI copies while the same Simulator is alive."""
     import hashlib,json,re,uuid
     from pathlib import Path
@@ -510,21 +520,24 @@ def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=N
     (target/'native-identity.json').write_bytes(raw)
     paths=sorted((data/'Documents').glob('C47StorageOrigin05-*.json'))
     n.require(0<len(paths)<=8,'STORAGE05_BOUNDED_ACTUAL_TRACE_FILES')
-    rows=[];origins=[]
+    rows=[];origins=[];targeted_observations=[]
     for path in paths:
         match=re.fullmatch(r'C47StorageOrigin05-([1-9][0-9]*)\.json',path.name)
         n.require(match is not None,'STORAGE05_ACTUAL_TRACE_FILENAME')
         n.require(path.stat().st_size<=2*1024**2,'STORAGE05_TRACE_FILE_SIZE')
         raw=n.read_native_file(path);pid=int(match.group(1))
-        try:value=validate_trace05(raw,head,bundle,pid)
+        try:value=(validate_onboarding_trace53 if targeted_onboarding53 else validate_trace05)(raw,head,bundle,pid)
         except Exception as validation_error:
             n.write_json(target/'CONTENT_FREE_VALIDATION_FAILURE.json',{'stage':'TRACE_SCHEMA',
                 'error_type':type(validation_error).__name__,'raw_bytes':len(raw),
                 'raw_sha256':hashlib.sha256(raw).hexdigest()})
             raise ValueError('C47_STORAGE05_TRACE_VALIDATION_REFUSED') from None
         (target/path.name).write_bytes(raw)
-        origin=qualifying_origin05(value)
-        if origin is not None:origins.append({'pid':pid,'origin':origin,'file':path.name})
+        origin=(qualifying_onboarding_origin53 if targeted_onboarding53 else qualifying_origin05)(value)
+        if origin is not None:
+            observation={'pid':pid,'origin':origin,'file':path.name}
+            if targeted_onboarding53:targeted_observations.append(observation)
+            if not targeted_onboarding53 or origin.get('causal_origin_qualified') is True:origins.append(observation)
         rows.append({'file':path.name,'pid':pid,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
     n.require(identity['pid'] in [row['pid'] for row in rows],'STORAGE05_CURRENT_PID_TRACE_REQUIRED')
     result={'source_head':head,'bundle':bundle,'simulator':device,'native_identity':identity,
@@ -532,6 +545,7 @@ def collect_native_origin05(r,n,device,bundle,head,evidence,label,expected_pid=N
         'same_data_container_as_first_capture':True,'processes':rows,'qualifying_origins':origins,'screen_captured':(target/'screen.png').is_file(),
         'ordinary_admitted':False,'internal_admitted':False,
         'qualification':'ACTUAL_DIAGNOSTIC_FIRST_ERROR_CAPTURE_ONLY; NO_ORDINARY_OR_INTERNAL_PASS'}
+    if targeted_onboarding53:result['targeted_observations']=targeted_observations
     n.write_json(target/'CAPTURE.json',result)
     return result
 
@@ -615,21 +629,25 @@ def _native05_installed(r,n,installed,app,bundle,inventory,evidence):
 
 
 
-def _native05_launch(r,n,device,bundle,head,evidence):
+def _native05_launch(r,n,device,bundle,head,evidence,*,targeted_onboarding53=False):
     try:
         n.platform_bootstrap36(r,device)
         return n.launch_and_verify(r,device,bundle)
     except Exception:
-        try:collect_native_origin05(r,n,device,bundle,head,evidence,'launch-failure')
+        try:collect_native_origin05(r,n,device,bundle,head,evidence,'launch-failure',targeted_onboarding53=targeted_onboarding53)
         except Exception as secondary:
             r.receipt['storage05_launch_capture_secondary_type']=type(secondary).__name__
         raise
 
 
-def run_native_origin05(r,n):
+def run_native_origin05(r,n,*,onboarding_denial53=False):
     import importlib.util,re,shutil
     from pathlib import Path
-    head,tools,source47=n.prepare(r,source_controls=False)
+    head,tools,source47=n.prepare(r,source_controls=onboarding_denial53)
+    if onboarding_denial53:
+        proof=_native05_full_source_controls53(r,n)
+        r.receipt['storage53_source_controls']=proof
+        r.passed('storage53-own-full30-before-prebuild',proof)
     r.receipt.update(stage='build',lane='SEPARATE_RELEASE_STORAGE_ORIGIN_DIAGNOSTIC_05',
         ordinary_admitted=False,internal_supported_owner='NOT_RUN',diagnostic_only=True)
     r.persist()
@@ -665,7 +683,9 @@ def run_native_origin05(r,n):
         'iphonesimulator','-destination','generic/platform=iOS Simulator','-derivedDataPath',products/'derived',
         *n.APP_SIMULATOR_BUILD_FLAGS]
     evidence=r.output/'storage-origin05';result=None
-    with diagnostic_inputs(r.root,ios,evidence,head,r.run) as entry:
+    inputs=(diagnostic_inputs(r.root,ios,evidence,head,r.run,targeted_onboarding53=True) if onboarding_denial53
+        else diagnostic_inputs(r.root,ios,evidence,head,r.run))
+    with inputs as entry:
         r.run('storage-origin05-build',argv+['-resultBundlePath',products/'build.xcresult','build'],
             env={**r.env,'ENTRY_FILE':str(entry)},timeout=3000)
         app=products/'derived/Build/Products/Release-iphonesimulator/LayerwellStaging.app'
@@ -673,23 +693,23 @@ def run_native_origin05(r,n):
         device=n.prepare_simulator(r,'normal')
         installed=n.install_simulator_app(r,device,app,bundle)
         _native05_installed(r,n,installed,app,bundle,inventory,evidence)
-        first_pid=_native05_launch(r,n,device,bundle,head,evidence)
-        first=collect_native_origin05(r,n,device,bundle,head,evidence,'first-launch',first_pid)
+        first_pid=_native05_launch(r,n,device,bundle,head,evidence,targeted_onboarding53=onboarding_denial53)
+        first=collect_native_origin05(r,n,device,bundle,head,evidence,'first-launch',first_pid,targeted_onboarding53=onboarding_denial53)
         ui_result=None;post=None
         try:
-            if not first['qualifying_origins']:
+            if onboarding_denial53 or not first['qualifying_origins']:
                 ui=r.output/'ui';ui.mkdir()
                 env={**r.env,'C47_BUNDLE_ID':bundle,'C47_RUNTIME_LANE':'normal-staging',
                     'C47_UI_PHASE':'normal-staging','C47_SOURCE_HEAD':head}
                 r.run('generate-native-ui-runner',['ruby',r.root/'scripts/release/full-app-j01/native_ui47.rb',ios,ui],env=env,timeout=120)
                 baseline=n.normal_runner04(r)
-                method=n.NORMAL_UI_CASES04[0]
+                method=_native05_selected_method(n,onboarding_denial53)
                 ui_result=n.normal_case_execution04(r,Path(baseline['project']),products,method,device,env)
                 # Even a positive single current case is diagnostic-only; no aggregate/gate executes.
         finally:
             # No shutdown/retry/reset/reinstall precedes immutable first/post-UI capture.
-            if ui_result is not None or not first['qualifying_origins']:
-                try:post=collect_native_origin05(r,n,device,bundle,head,evidence,'after-one-ui')
+            if onboarding_denial53 or ui_result is not None or not first['qualifying_origins']:
+                try:post=collect_native_origin05(r,n,device,bundle,head,evidence,'after-one-ui',targeted_onboarding53=onboarding_denial53)
                 except Exception as capture_error:
                     r.receipt['storage05_post_ui_capture_error_type']=type(capture_error).__name__
             try:n.retain_result_bundles(r)
@@ -698,13 +718,18 @@ def run_native_origin05(r,n):
         observations=[first]+([post] if post else [])
         qualified=any(value['qualifying_origins'] for value in observations)
         result={'source':r.receipt['source'],'first_verified_native_pid':first_pid,
-            'observations':observations,'selected_current_case':n.NORMAL_UI_CASES04[0] if ui_result is not None else None,
+            'observations':observations,'selected_current_case':_native05_selected_method(n,onboarding_denial53) if ui_result is not None else None,
+            'targeted_onboarding53':onboarding_denial53,
             'single_case_result':ui_result,'qualified_origin_observed':qualified,'ordinary_admitted':False,
             'internal_admitted':False,'retry_attempted':False,
             'qualification':'ONE_DIAGNOSTIC_SEQUENCE_ONLY; FIRST_ERROR_RAW_CAPTURE_REQUIRES_INDEPENDENT_CAUSAL_REVIEW'}
         n.write_json(evidence/'ORIGIN_RECEIPT.json',result)
         r.receipt['storage_origin05']=result;r.persist()
-    r.source_proof('source-after-storage-origin05-exact-restoration',head,allow_generation=True)
+    restored=r.source_proof('source-after-storage-origin05-exact-restoration',head,allow_generation=True)
+    if onboarding_denial53:
+        r.receipt['storage53_completed_restoration_source']={'file':'source-after-storage-origin05-exact-restoration.json',
+            'sha256':n.sha(r.output/'source-after-storage-origin05-exact-restoration.json'),
+            'head':restored['head'],'tree':restored['tree']}
     r.receipt.update(status=('STORAGE_ORIGIN05_DIAGNOSTIC_OBSERVED_REVIEW_REQUIRED' if result['qualified_origin_observed']
         else 'STORAGE_ORIGIN05_CAPTURED_WITHOUT_QUALIFIED_ORIGIN'),ordinary_admitted=False,
         internal_supported_owner='NOT_RUN',stage_complete=bool(result['qualified_origin_observed']),finished_utc=n.utc())
@@ -712,13 +737,38 @@ def run_native_origin05(r,n):
     return result
 
 
+
+
+def _native05_final_source53(r,n,context,result):
+    """A normal return already completed the exact restoration source scan.
+
+    Receipt/evidence writes are the only intervening operations. Failed runs keep
+    the original finally scan; no proof is copied or relabeled as a fresh scan.
+    """
+    marker=r.receipt.get('storage53_completed_restoration_source')
+    if result is None or marker is None:
+        return r.source_proof('source-after-storage05-finally',context['head'],allow_generation=True)
+    path=r.output/'source-after-storage-origin05-exact-restoration.json'
+    raw=n.read_native_file(path);proof=n.stage_json(raw)
+    n.require(result is r.receipt.get('storage_origin05') and type(marker) is dict and
+        marker=={'file':path.name,'sha256':digest(raw),'head':context['head'],'tree':context['tree']} and
+        proof.get('head')==context['head'] and proof.get('tree')==context['tree'],
+        'STORAGE53_COMPLETED_CURRENT_RESTORATION_SOURCE_REQUIRED')
+    detail={**marker,'duplicate_finally_scan_performed':False,
+        'qualification':'ACTUAL_COMPLETED_RESTORATION_SCAN; NO_SOURCE_OPERATION_BEFORE_FINALLY; NO_FRESH_SCAN_CLAIM'}
+    r.receipt['storage53_final_source_boundary']=detail
+    return proof
+
+
 def main_origin05():
     import argparse,importlib.util,os,sys
     from pathlib import Path
     parser=argparse.ArgumentParser(description='C47 one-sequence storage-origin diagnostic; no ordinary/internal admission')
     parser.add_argument('--output',type=Path)
+    parser.add_argument('--onboarding-denial53',action='store_true',help='one-shot107/a1 current-source diagnostic case03; no ordinary/internal admission')
     parser.add_argument('--source-phase',choices=['SOURCE_PENDING','SOURCE_FROZEN'])
     args=parser.parse_args();root=Path(__file__).resolve().parents[3]
+    if args.source_phase and args.onboarding_denial53:parser.error('--onboarding-denial53 requires hosted diagnostic execution')
     if args.source_phase:
         import json
         print(json.dumps(source_scope05(args.source_phase,root),sort_keys=True));return 0
@@ -732,16 +782,20 @@ def main_origin05():
     n.require(not output.exists() or output.is_dir() and not any(output.iterdir()),'STORAGE05_EMPTY_OUTPUT')
     output.mkdir(parents=True,exist_ok=True);r=n.Runner(root,output,seconds=84*60)
     r.receipt.update(stage='build',lane='SEPARATE_RELEASE_STORAGE_ORIGIN_DIAGNOSTIC_05',ordinary_admitted=False,diagnostic_only=True);r.persist()
-    context=None;code=1
+    context=None;result=None;code=1
     try:
-        context=n.hosted_stage_context(r,'build');result=run_native_origin05(r,n)
+        context=n.hosted_stage_context(r,'build')
+        if args.onboarding_denial53:_native05_target53_context(r,n,context)
+        result=run_native_origin05(r,n,onboarding_denial53=args.onboarding_denial53)
         code=0 if result['qualified_origin_observed'] else 1
     except Exception as error:
         r.receipt.update(status='PARTIAL_BLOCKED',stage_complete=False,
             failure={'type':type(error).__name__,'detail':str(error)},finished_utc=n.utc());r.persist()
     finally:
         if context is not None and r.receipt.get('source'):
-            try:r.source_proof('source-after-storage05-finally',context['head'],allow_generation=True)
+            try:
+                if args.onboarding_denial53:_native05_final_source53(r,n,context,result)
+                else:r.source_proof('source-after-storage05-finally',context['head'],allow_generation=True)
             except Exception as source_error:
                 code=1;r.receipt['final_source_failure_type']=type(source_error).__name__
                 if not r.receipt.get('failure'):
@@ -763,6 +817,304 @@ def main_origin05():
 
 
 # Root appends: if __name__ == '__main__': raise SystemExit(main_origin05())
+
+
+
+ONBOARDING53_BOOLS = frozenset(['outerOperation', 'mounted', 'tokenCurrent', 'draftCurrent', 'consentCurrent', 'consentPresent', 'grantCurrent', 'versionCurrent', 'disclosureCurrent', 'atCurrentDenial', 'grantRequested', 'activeState', 'activationPending', 'privacyReady', 'privacyChecking', 'privacyDenied', 'healthOwnerCurrent', 'healthGenerationEqual', 'healthEpochEqual', 'healthAccountGenerationEqual', 'originalCapabilityCurrent', 'providerReadyState', 'hasDraft', 'routeTokenCurrent', 'routeReady', 'hasRouteLease', 'hasNavigation'])
+ENUMS53 = dict(ENUMS05)
+ENUMS53['SITES'] = ENUMS05['SITES'] | frozenset(['onboarding', 'consent-store', 'health-admission'])
+ENUMS53['OPERATIONS'] = ENUMS05['OPERATIONS'] | frozenset(['revalidate', 'privacyStatus', 'setHealthDataCollectionConsentLocal', 'hasCurrentHealthDataCollectionConsentStrict', 'hasCurrentHealthDataCollectionConsentForLease', 'captureHealthDataWriteLease', 'assertHealthDataWriteLease', 'assertOriginalHealthDataWriteLease', 'completeHealthDataActivationRoute', 'getPrivateItemWhenReady', 'runPreparedPrivateRead46', 'getPrivateItemOnOriginalLease39', 'runOwnedPrivateGateRead39', 'assertPrivateGateAccountLease39', 'waitForWidgetCapabilityClears49'])
+ENUMS53['STAGES'] = ENUMS05['STAGES'] | frozenset(['consent_false', 'consent_predicate', 'admitted', 'provider_status', 'route_status', 'activation_complete', 'captureHealthDataWriteLease', 'assertOriginalHealthDataWriteLease', 'getPrivateItemWhenReady', 'hasCurrentHealthDataCollectionConsentForLease', 'hasCurrentHealthDataCollectionConsentStrict', 'waitForWidgetCapabilityClears49', 'runPreparedPrivateRead46', 'getPrivateItemOnOriginalLease39', 'runOwnedPrivateGateRead39', 'assertPrivateGateAccountLease39', 'read', 'assertPurpose', 'assertOriginal', 'join', 'Crypto.digestStringAsync', 'assertConsentMutationCurrent', 'attempt', 'closeProcessingEpochImmediately', 'operation.assertCurrent', 'runHealthDataWriteOperation', 'updatePrivateItem'])
+ENUMS53['CODES'] = ENUMS05['CODES'] | frozenset(['CURRENT_HEALTH_CONSENT_REQUIRED', 'HEALTH_CONSENT_INVALID', 'HEALTH_CONSENT_UNSUPPORTED_VERSION', 'HEALTH_CONSENT_MUTATION_SUPERSEDED'])
+
+def validate_onboarding_trace53(raw, head, bundle, pid):
+    """Validate content-free diagnostic bytes only; no ordinary/runtime admission."""
+    error_snapshots = {}
+    def pairs(rows):
+        result = {}
+        for key, value in rows:
+            require05(key not in result, 'DUPLICATE_JSON_KEY')
+            result[key] = value
+        return result
+    def number(text):
+        require05(len(text) <= 17, 'NUMBER_BOUND')
+        return int(text)
+    def reject_number(_text):
+        raise ValueError('C47_STORAGE_ORIGIN05_NONINTEGER_JSON_NUMBER')
+    def closed(value, required, optional=()):
+        require05(type(value) is dict and set(required) <= set(value) <= set(required) | set(optional), 'CLOSED_SCHEMA')
+    def integer(value, low=0, high=1000000):
+        return type(value) is int and low <= value <= high
+    def member(value, name):
+        return type(value) is str and value in ENUMS53[name]
+    def error(value):
+        closed(value, ('chain', 'causeEnding'))
+        chain = value['chain']
+        require05(type(chain) is list and 1 <= len(chain) <= 3 and value['causeEnding'] in ('not_supplied', 'cycle', 'depth_limit'), 'CAUSE_BOUND')
+        require05(value['causeEnding'] != 'depth_limit' or len(chain) == 3, 'CAUSE_DEPTH')
+        ids = []
+        for node in chain:
+            closed(node, ('errorId', 'kind', 'errorClass', 'recognizedCode', 'recognizedCount', 'recognizedCodeField', 'numericFields', 'numericQualification', 'arbitraryMessageStackAndObjectOmitted'))
+            require05(integer(node['errorId'], 0, 1024) and node['kind'] in ('undefined', 'null', 'boolean', 'number', 'bigint', 'string', 'symbol', 'object', 'function'), 'ERROR_KIND_ID')
+            require05(member(node['errorClass'], 'ERROR_CLASSES') or node['errorClass'] == 'UNCLASSIFIED', 'ERROR_CLASS')
+            code = node['recognizedCode']
+            require05(member(code, 'CODES') or code in ('UNCLASSIFIED', 'PRIVATE_KV_CONTENT_KEY_CLEAR_FAILED'), 'ERROR_CODE')
+            require05(node['recognizedCodeField'] in ('none', 'primitive', 'code', 'message') and ((code == 'UNCLASSIFIED') == (node['recognizedCodeField'] == 'none')), 'ERROR_CODE_FIELD')
+            require05((integer(node['recognizedCount'], 1, 2) if code == 'PRIVATE_KV_CONTENT_KEY_CLEAR_FAILED' else node['recognizedCount'] is None), 'CODE_COUNT')
+            require05(node['arbitraryMessageStackAndObjectOmitted'] is True and node['numericQualification'] == 'SUPPLIED_OWN_DATA_FIELD_ONLY_NOT_INFERRED_OSSTATUS', 'ERROR_PRIVACY')
+            fields = node['numericFields']
+            require05(type(fields) is list and len(fields) <= 5, 'NUMERIC_BOUND')
+            names = set()
+            for field in fields:
+                closed(field, ('field', 'value'))
+                require05(field['field'] in ('code', 'nativeCode', 'nativeErrorCode', 'osStatus', 'errno') and field['field'] not in names and integer(field['value'], -2147483648, 2147483647), 'NUMERIC_FIELD')
+                names.add(field['field'])
+            if node['kind'] not in ('object', 'function'):
+                require05(node['errorId'] == 0 and not fields and node['errorClass'] == 'UNCLASSIFIED' and node['recognizedCodeField'] in ('none', 'primitive'), 'PRIMITIVE_ERROR')
+            if node['errorId']:
+                require05(node['errorId'] not in ids, 'CAUSE_ID_CYCLE')
+                require05(error_snapshots.setdefault(node['errorId'], node) == node, 'ERROR_ID_CLASSIFICATION_CHANGED')
+                ids.append(node['errorId'])
+    bools = set(ONBOARDING53_BOOLS) | {'revisionChanged', 'accountBoundaryActive', 'accountGenerationChanged', 'revisionEqual', 'accountGenerationEqual', 'boundaryBlocked', 'ownerCurrent', 'leaseCurrent', 'keyPresent', 'rawPresent', 'markerPresent'}
+    counts = {'liveClaimsCount', 'failedClaimsCount', 'liveClaims', 'failedClaims', 'keyCount', 'encryptedCount'}
+    meta_enums = {'keyCategory': 'KEY_CATEGORIES', 'envelopeKind': 'ENVELOPE_KINDS', 'ageStatus': 'AGE_STATUSES', 'stage': 'STAGES', 'predicate': 'PREDICATES', 'disposition': 'DISPOSITIONS'}
+    def record(value):
+        closed(value, ('sequence', 'site', 'operation', 'phase', 'attempt', 'meta'), ('sourceLine', 'stage', 'disposition', 'error'))
+        require05(integer(value['sequence'], 1, 9007199254740991) and integer(value['attempt']) and member(value['site'], 'SITES') and member(value['operation'], 'OPERATIONS') and member(value['phase'], 'PHASES'), 'RECORD_ENUM_ID')
+        require05(('error' in value) == (value['phase'] in ('failure', 'caught')), 'ERROR_PHASE')
+        for key, enum in [('stage', 'STAGES'), ('disposition', 'DISPOSITIONS')]:
+            if key in value: require05(member(value[key], enum), 'RECORD_OPTIONAL_ENUM')
+        if 'sourceLine' in value: require05(integer(value['sourceLine'], 1), 'SOURCE_LINE')
+        meta = value['meta']; closed(meta, (), bools | counts | set(meta_enums) | {'parentAttempt'})
+        for key, item in meta.items():
+            require05(type(item) is bool if key in bools else integer(item, 0, 65535) if key in counts else integer(item) if key == 'parentAttempt' else member(item, meta_enums[key]), 'META_TYPE_ENUM')
+        if 'error' in value: error(value['error'])
+    require05(type(raw) is bytes and 0 < len(raw) <= 2 * 1024 * 1024, 'RAW_BOUND')
+    require05(type(head) is str and re.fullmatch('[a-f0-9]{40}', head) and bundle == 'com.layerwell.app.staging' and integer(pid, 1, 2147483647), 'EXPECTED_IDENTITY')
+    try: result = json.loads(raw.decode('utf-8'), object_pairs_hook=pairs, parse_int=number, parse_float=reject_number, parse_constant=reject_number)
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError): raise ValueError('C47_STORAGE_ORIGIN05_JSON_FORMAT') from None
+    closed(result, ('schema', 'role', 'diagnosticMarker', 'sourceHead', 'pid', 'bundle', 'eventLimit', 'events', 'firstFailure', 'firstUIFailure', 'firstFailureQualification', 'droppedEvents', 'flushFailures', 'errorIdentityLimit', 'ordinaryAdmitted', 'acceptanceGranted', 'release', 'traceFormatVersion', 'failureWindowLimit', 'failureWindow', 'failureWindowEvicted', 'failureWindowFrozenAtFirstUI', 'onboarding53'))
+    require05(type(result['schema']) is int and result['schema'] == 1 and result['sourceHead'] == head and type(result['pid']) is int and result['pid'] == pid and result['bundle'] == bundle, 'IDENTITY')
+    require05(result['role'] == 'STAGING_STORAGE_ORIGIN05_DIAGNOSTIC_ONLY' and result['diagnosticMarker'] == 'C47_STORAGE_ORIGIN_DIAGNOSTIC_05' and type(result['eventLimit']) is int and result['eventLimit'] == 512 and type(result['errorIdentityLimit']) is int and result['errorIdentityLimit'] == 1024 and result['ordinaryAdmitted'] is False and result['acceptanceGranted'] is False and result['release'] == 'NO_GO', 'DIAGNOSTIC_ONLY')
+    require05(result['firstFailureQualification'] == 'FIRST_OBSERVED_FAILURE_NOT_CAUSAL_DIAGNOSIS; CORRELATE_PROPAGATED_ERROR_IDS_TO_UI_CONVERSION' and integer(result['droppedEvents'], 0, 2147483647) and integer(result['flushFailures'], 0, 65535), 'COUNTERS_QUALIFICATION')
+    events = result['events']; require05(type(events) is list and len(events) <= 512, 'EVENT_BOUND')
+    for event in events: record(event)
+    sequences = [event['sequence'] for event in events]
+    require05(sequences == sorted(set(sequences)), 'MONOTONIC_SEQUENCE')
+    if result['droppedEvents'] == 0: require05(sequences == list(range(1, len(events) + 1)), 'COMPLETE_SEQUENCE')
+    failures = [event for event in events if 'error' in event]
+    first = result['firstFailure']; ui = result['firstUIFailure']
+    ui_events = [event for event in failures if (event.get('disposition') or event['meta'].get('disposition')) == 'ui_conversion']
+    require05((first is None) == (not failures), 'FIRST_FAILURE_PRESENCE')
+    if first is not None: record(first); require05(first == failures[0], 'FIRST_FAILURE_IMMUTABLE')
+    if ui is not None:
+        record(ui); require05('error' in ui and (ui.get('disposition') or ui['meta'].get('disposition')) == 'ui_conversion' and first is not None and ui['sequence'] >= first['sequence'], 'FIRST_UI_FAILURE')
+        same = [event for event in events if event['sequence'] == ui['sequence']]
+        require05(same == [ui] if same else result['droppedEvents'] > 0, 'UI_IMMUTABLE_OR_DECLARED_DROP')
+        if ui_events: require05(ui == ui_events[0], 'FIRST_UI_IMMUTABLE')
+    else: require05(not ui_events, 'FIRST_UI_PRESENCE')
+    require05(type(result['traceFormatVersion']) is int and result['traceFormatVersion'] == 2 and type(result['failureWindowLimit']) is int and result['failureWindowLimit'] == 64, 'FAILURE_WINDOW_VERSION')
+    window = result['failureWindow']; evicted = result['failureWindowEvicted']
+    require05(type(window) is list and len(window) <= 64 and integer(evicted, 0, 2147483647) and type(result['failureWindowFrozenAtFirstUI']) is bool, 'FAILURE_WINDOW_BOUND')
+    for event in window:
+        record(event)
+        require05('error' in event, 'FAILURE_WINDOW_ERROR_ONLY')
+    window_sequences = [event['sequence'] for event in window]
+    require05(window_sequences == sorted(set(window_sequences)), 'FAILURE_WINDOW_SEQUENCE')
+    require05(max(sequences + window_sequences + [0]) <= len(events) + result['droppedEvents'], 'OBSERVED_SEQUENCE_COUNTER')
+    require05((first is None) == (not window) and (not evicted or len(window) == 64), 'FAILURE_WINDOW_PRESENCE')
+    require05(not window or len(window) + evicted <= window[-1]['sequence'], 'FAILURE_WINDOW_EVICTION_COUNTER')
+    by_sequence = {event['sequence']: event for event in events}
+    for event in window:
+        require05(by_sequence.get(event['sequence'], event) == event, 'FAILURE_WINDOW_SHARED_RECORD_CHANGED')
+    if first is not None:
+        require05(window[0]['sequence'] >= first['sequence'], 'FAILURE_WINDOW_AFTER_FIRST')
+        require05(window[0] == first if evicted == 0 else window[0]['sequence'] > first['sequence'], 'FAILURE_WINDOW_EVICTION')
+        for event in failures:
+            if window[0]['sequence'] <= event['sequence'] <= window[-1]['sequence']:
+                require05(event in window, 'FAILURE_WINDOW_MISSING_RETAINED_ERROR')
+    require05(result['failureWindowFrozenAtFirstUI'] == (ui is not None), 'FAILURE_WINDOW_FROZEN')
+    if ui is not None:
+        require05(window and window[-1] == ui, 'FAILURE_WINDOW_FIRST_UI_LAST')
+        require05([event for event in window if (event.get('disposition') or event['meta'].get('disposition')) == 'ui_conversion'] == [ui], 'FAILURE_WINDOW_FIRST_UI_ONLY')
+    else:
+        require05(not any((event.get('disposition') or event['meta'].get('disposition')) == 'ui_conversion' for event in window), 'FAILURE_WINDOW_NO_UNDECLARED_UI')
+
+    target = result['onboarding53']
+    closed(target, ('profile','windowLimit','window','evicted','latestDenial','denialWindow','denialWindowEvicted',
+        'latestGrantBegin','latestGrantPass','latestGrantPassBegin','latestActivationPass','latestRevalidateBegin','latestRevalidateOutcome',
+        'latestConsentResult','latestProviderStatus','latestRouteStatus'))
+    require05(target['profile'] == 'ONBOARDING_DENIAL_ORIGIN53_ONLY' and type(target['windowLimit']) is int and target['windowLimit'] == 64, 'TARGET53_PROFILE')
+    observed = {event['sequence']: event for event in events + window}
+    def target_record(event):
+        record(event)
+        require05(event['sequence'] <= len(events) + result['droppedEvents'], 'TARGET53_SEQUENCE_COUNTER')
+        require05(observed.setdefault(event['sequence'], event) == event, 'TARGET53_SHARED_RECORD_CHANGED')
+    def actual_false(event):
+        return event['phase'] == 'state' and event['meta'].get('consentCurrent') is False and (
+            event['site'] == 'onboarding' and event['operation'] == 'revalidate' and event.get('stage') == 'consent_false' or
+            event['site'] == 'consent-store' and event.get('stage') == 'consent_predicate')
+    for name, counter in [('window','evicted'),('denialWindow','denialWindowEvicted')]:
+        records = target[name]
+        require05(type(records) is list and len(records) <= 64 and integer(target[counter],0,2147483647), 'TARGET53_WINDOW_BOUND')
+        require05(not target[counter] or len(records) == 64, 'TARGET53_WINDOW_EVICTION')
+        for event in records:
+            target_record(event)
+            require05('error' in event or actual_false(event), 'TARGET53_ERROR_OR_ACTUAL_FALSE_ONLY')
+        numbers=[event['sequence'] for event in records]
+        require05(numbers == sorted(set(numbers)), 'TARGET53_WINDOW_SEQUENCE')
+    snapshots = ('latestDenial','latestGrantBegin','latestGrantPass','latestGrantPassBegin','latestActivationPass','latestRevalidateBegin',
+        'latestRevalidateOutcome','latestConsentResult','latestProviderStatus','latestRouteStatus')
+    for name in snapshots:
+        if target[name] is not None: target_record(target[name])
+    denial = target['latestDenial']
+    if denial is None:
+        require05(not target['denialWindow'] and target['denialWindowEvicted'] == 0, 'TARGET53_NO_FAKE_DENIAL_WINDOW')
+    else:
+        require05(denial['site']=='onboarding' and denial['operation']=='revalidate' and denial['phase']=='caught' and
+            denial.get('disposition')=='ui_conversion' and denial['meta'].get('atCurrentDenial') is True and
+            denial['meta'].get('mounted') is True and target['denialWindow'] and target['denialWindow'][-1]==denial, 'TARGET53_CURRENT_DENIAL')
+        if 'tokenCurrent' in denial['meta']: require05(denial['meta']['tokenCurrent'] is True,'TARGET53_NOT_SUPERSEDED')
+    for name,phase in [('latestGrantBegin','begin'),('latestGrantPass','pass'),('latestGrantPassBegin','begin')]:
+        event=target[name]
+        if event is not None: require05(event['site']=='consent-store' and event['operation']=='setHealthDataCollectionConsentLocal' and
+            event['phase']==phase and event['meta'].get('outerOperation') is True and event['meta'].get('grantRequested') is True,'TARGET53_REAL_GRANT_PHASE')
+    grant=target['latestGrantPass']; begin=target['latestGrantBegin']
+    paired=target['latestGrantPassBegin']
+    if paired is not None: require05(grant is not None and paired['attempt']==grant['attempt'] and paired['sequence']<grant['sequence'],'TARGET53_ACTUAL_PAIRED_GRANT')
+    if grant is not None and begin is not None and grant['attempt']==begin['attempt']: require05(begin['sequence']<grant['sequence'],'TARGET53_GRANT_CHRONOLOGY')
+    activation=target['latestActivationPass']
+    if activation is not None: require05(activation['site']=='lifecycle' and activation['operation']=='completeHealthDataActivationRoute' and
+        activation['phase']=='pass' and activation.get('stage')=='activation_complete' and activation['meta'].get('activeState') is True and
+        activation['meta'].get('activationPending') is False,'TARGET53_REAL_ACTIVATION')
+    check=target['latestRevalidateBegin']
+    if check is not None: require05(check['site']=='onboarding' and check['operation']=='revalidate' and check['phase']=='begin' and
+        check['meta'].get('outerOperation') is True,'TARGET53_REVALIDATE_BEGIN')
+    outcome=target['latestRevalidateOutcome']
+    if outcome is not None: require05(outcome==denial or outcome['site']=='onboarding' and outcome['operation']=='revalidate' and
+        outcome['phase']=='state' and outcome.get('stage')=='admitted' and outcome['meta'].get('privacyReady') is True,'TARGET53_REVALIDATE_OUTCOME')
+    consent=target['latestConsentResult']
+    if consent is not None: require05(consent['site']=='consent-store' and consent['operation'] in (
+        'hasCurrentHealthDataCollectionConsentStrict','hasCurrentHealthDataCollectionConsentForLease') and consent['phase']=='state' and
+        consent.get('stage')=='consent_predicate' and type(consent['meta'].get('consentCurrent')) is bool,'TARGET53_ACTUAL_CONSENT_RESULT')
+    for name,stage in [('latestProviderStatus','provider_status'),('latestRouteStatus','route_status')]:
+        event=target[name]
+        if event is not None:
+            require05(event['site']=='onboarding' and event['operation']=='privacyStatus' and event['phase']=='state' and
+                event.get('stage')==stage and sum(event['meta'].get(k) is True for k in ('privacyReady','privacyChecking','privacyDenied'))==1,
+                'TARGET53_ACTUAL_STATUS_RETURN')
+    return result
+
+
+def qualifying_onboarding_origin53(validated):
+    """Causal qualification requires observed post-grant predicates; other evidence stays separate."""
+    target=validated['onboarding53']
+    denial=target['latestDenial']; grant=target['latestGrantPass']; grant_begin=target['latestGrantPassBegin']
+    activation=target['latestActivationPass']; route=target['latestRouteStatus']; provider=target['latestProviderStatus']
+    latest_status=max((event for event in (route,provider) if event is not None), key=lambda event:event['sequence'], default=None)
+    chronology={name:target[name] for name in ('latestGrantBegin','latestGrantPass','latestGrantPassBegin','latestActivationPass',
+        'latestRevalidateBegin','latestRevalidateOutcome','latestConsentResult','latestProviderStatus','latestRouteStatus')}
+    base={'ordinary_admitted':False,'internal_admitted':False,'acceptance_granted':False,'release':'NO_GO',
+        'causal_origin_qualified':False,'native_holder':'UNOBSERVED','chronology':chronology,
+        'qualification':'ACTUAL_DIAGNOSTIC_OBSERVATION_ONLY; NO_ABSENT_PASS_OR_NATIVE_HOLDER_OR_ORDINARY_ADMISSION'}
+    after=max((event['sequence'] for event in (grant,activation) if event is not None),default=0)
+    denied_render=latest_status is not None and latest_status['meta'].get('privacyDenied') is True and latest_status['sequence']>after
+    if not grant or not grant_begin or grant_begin['attempt']!=grant['attempt'] or not denied_render:
+        return None
+    rows={event['sequence']:event for event in target['window']+target['denialWindow']}
+    check=target['latestRevalidateBegin']; outcome=target['latestRevalidateOutcome']
+    false_branches=[event for event in rows.values() if event['sequence']>grant['sequence'] and event['sequence']<latest_status['sequence'] and
+        event['site']=='onboarding' and event['operation']=='revalidate' and event['phase']=='state' and event.get('stage')=='consent_false' and
+        event['meta'].get('consentCurrent') is False and event['meta'].get('mounted') is True and event['meta'].get('tokenCurrent') is True and
+        event['attempt']>0 and (denial is None or denial['sequence']>event['sequence'] and denial['attempt']==event['attempt']) and
+        not (outcome is not None and outcome['sequence']>event['sequence'] and outcome.get('stage')=='admitted')]
+    for branch in sorted(false_branches,key=lambda event:event['sequence'],reverse=True):
+        returns=[event for event in rows.values() if grant['sequence']<event['sequence']<branch['sequence'] and event['site']=='consent-store' and
+            event['operation']=='hasCurrentHealthDataCollectionConsentForLease' and event['phase']=='state' and event.get('stage')=='consent_predicate' and
+            event['meta'].get('parentAttempt')==branch['attempt'] and event['meta'].get('consentCurrent') is False and
+            all(type(event['meta'].get(key)) is bool for key in ('consentPresent','grantCurrent','versionCurrent','disclosureCurrent'))]
+        if returns:
+            actual=max(returns,key=lambda event:event['sequence']);meta=actual['meta']
+            predicate=next((label for key,label in [('consentPresent','CONSENT_ABSENT'),('grantCurrent','CONSENT_NOT_GRANTED'),
+                ('versionCurrent','CONSENT_VERSION_NOT_CURRENT'),('disclosureCurrent','CONSENT_HASH_NOT_CURRENT')] if meta[key] is False),None)
+            if predicate is not None:
+                return dict(base,causal_origin_qualified=True,kind='ACTUAL_ONBOARDING_FALSE_CONSENT_BEFORE_EXISTING_ERROR',
+                    predicate=predicate,origin=actual,branch=branch,ui=latest_status,original_caught_error=denial)
+    async_admitted_check = denial is not None and denial['meta'].get('outerOperation') is False and denial['meta'].get('tokenCurrent') is True
+    if denial is not None and denial['sequence']>grant['sequence'] and (denial['sequence']>after or async_admitted_check):
+        ids={node['errorId'] for node in denial['error']['chain'] if node['errorId']}
+        earlier=[event for event in target['denialWindow'] if event['sequence']<denial['sequence'] and 'error' in event and
+            event['site']!='onboarding' and event.get('disposition')!='probe' and 'sourceLine' in event and
+            ids.intersection(node['errorId'] for node in event['error']['chain'] if node['errorId'])]
+        if earlier:
+            return dict(base,causal_origin_qualified=True,kind='ACTUAL_SAME_ERROR_PROPAGATED_TO_ONBOARDING_DENIAL',origin=earlier[0],ui=denial)
+        return dict(base,kind='ONBOARDING_CURRENT_DENIAL_ORIGINAL_ERROR_NO_LOWER_ORIGIN_OBSERVED',ui=denial,origin=None)
+    return dict(base,kind='POST_GRANT_DENIED_RENDER_CHRONOLOGY_ONLY_ORIGINAL_ERROR_UNOBSERVED',origin=None,ui=latest_status,
+        latest_denial_is_not_claimed_post_grant=denial)
+
+TARGETED53_PRIOR_HEAD = '50cdfb2e40412746a5e38776fafc475946a4db6a'
+
+
+TARGETED53_PROFILE = {'profile':'TARGETED_INITIAL_ONBOARDING_DENIAL53','append_only_commits':107,
+    'run_attempt':1,'selected_case':'testV04ExplicitWithdrawalReviewCancelAndFreshReconsent',
+    'own_full_thirty_source_controls':True,'ordinary_admitted':False,'internal_admitted':False,'release':'NO_GO'}
+
+
+def _native05_target53_context(r,n,context):
+    n.require(type(context.get('run_attempt')) is int and context['run_attempt']==1 and
+        r.env.get('GITHUB_EVENT_NAME')=='pull_request','STORAGE53_ONE_SHOT_EVENT_AND_ATTEMPT')
+    count=r.text('storage53-append-only-commit-count',['git','--no-replace-objects','rev-list','--count',
+        '02aa4ba879fb844f3ca0aa929591203ee45f4163..HEAD'],timeout=60)
+    parent=r.text('storage53-preserved105-parent',['git','--no-replace-objects','rev-parse','HEAD~2'],timeout=60)
+    n.require(count=='107' and parent==TARGETED53_PRIOR_HEAD,'STORAGE53_EXACT107_AND_TWO_APPEND_ONLY_SUCCESSORS')
+    proof={'source_head':context['head'],'source_tree':context['tree'],'run_attempt':1,
+        'actual_append_only_commits':107,'two_commits_before_actual_head':parent,
+        'profile':dict(TARGETED53_PROFILE),'ordinary_admitted':False,'internal_admitted':False}
+    r.receipt['storage53_profile']=dict(TARGETED53_PROFILE)
+    r.passed('storage53-one-shot-context',proof)
+    return proof
+
+
+def _native05_full_source_controls53(r,n):
+    directory=r.output;receipt=r.receipt
+    n.producer_source_matches(r,receipt,directory)
+    tools=n.stage_json(n.read_native_file(directory/'toolchain.json'))
+    n.require(tools.get('build_environment')==n.ENVIRONMENT and tools.get('architecture')=='x86_64' and
+        tools.get('node')=='v22.22.2' and tools.get('npm')=='11.20.0' and
+        tools.get('xcode','').startswith('Xcode 26.4') and
+        tools.get('simulator_build_flags')==n.SIMULATOR_BUILD_FLAGS and
+        tools.get('app_simulator_build_flags')==n.APP_SIMULATOR_BUILD_FLAGS,'STORAGE53_CURRENT_TOOLCHAIN')
+    n.require(n.stage_json(n.read_native_file(directory/'source-before.json'))==receipt['source']==
+        n.stage_json(n.read_native_file(directory/'source-after-install.json')),
+        'STORAGE53_UNPROJECTED_SOURCE_BEFORE_COMPILE')
+    n.require(all(row.get('state')=='PASS' and row.get('exit_code')==0 and
+        row.get('capture_complete') is True and not row.get('timed_out')
+        for row in receipt.get('commands',[]) if row.get('required')),'STORAGE53_COMPLETE_REQUIRED_CONTROL_CAPTURES')
+    for name in n.SOURCE_COMMANDS04:
+        row,_=n.executed_producer_command(receipt,directory,name)
+        n.require(row.get('required') is True,'STORAGE53_REQUIRED_SOURCE_COMMAND')
+    control,streams=n.executed_producer_command(receipt,directory,'generated47-controls',read_output=True)
+    raw=b'\n'.join(streams)
+    source=n.read_native_file(r.root/'scripts/release/full-app-j01/native_generated47.test.mjs').decode('utf8')
+    n.full_generated_control_proof(control['argv'],raw,source)
+    names=re.findall(r"^test\('([^'\n]+)'",source,re.M)
+    events=[n.stage_json(event.encode()) for event in re.findall(
+        r'^(?:#\s*)?(\{"event":"C47_SOURCE_CASE_(?:BEGIN|END)"[^\n]+\})$',raw.decode('utf8'),re.M)]
+    n.require(len(events)==60 and all([event.get('name') for event in events if
+        event.get('event')=='C47_SOURCE_CASE_'+phase]==names for phase in ('BEGIN','END')),
+        'STORAGE53_ALL_THIRTY_CASE_EVENTS')
+    return {'profile':dict(TARGETED53_PROFILE),'source_before_sha256':n.sha(directory/'source-before.json'),
+        'source_after_sha256':n.sha(directory/'source-after-install.json'),
+        'source_after_file':'source-after-install.json','source_after_boundary':'ACTUAL_PREPARE_RETURN_AFTER_ALL_SOURCE_COMMANDS_AND_DEPENDENCY_GRAPH',
+        'toolchain_sha256':n.sha(directory/'toolchain.json'),'current_source_sha256':n.sha(directory/'current-generated47-source.json'),
+        'full_thirty_stdout_sha256':control['stdout_sha256'],'full_thirty_stderr_sha256':control['stderr_sha256'],
+        'case_events':60,'controls_complete_before_generation_and_compile':True,'ordinary_admitted':False,'internal_admitted':False}
+
+
+def _native05_selected_method(n,onboarding_denial53):
+    method=n.NORMAL_UI_CASES04[2 if onboarding_denial53 else 0]
+    if onboarding_denial53:n.require(method==TARGETED53_PROFILE['selected_case'],'STORAGE53_EXACT_EXISTING_THIRD_CASE')
+    return method
 
 
 if __name__ == '__main__':

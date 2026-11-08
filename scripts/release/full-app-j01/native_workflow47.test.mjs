@@ -2,15 +2,43 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { parseDocument } from 'yaml';
 
-const source = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+const currentSource = readFileSync(new URL('../../../.github/workflows/campaign47-native-runtime.yml', import.meta.url), 'utf8');
+function source105() {
+  const value = execFileSync('git', ['show', '50cdfb2e40412746a5e38776fafc475946a4db6a:.github/workflows/campaign47-native-runtime.yml'], { encoding: 'utf8' });
+  assert.equal(createHash('sha256').update(value).digest('hex'), 'dcfa9701cefcd5cc693d1e56113acf40e06dea94936d02a25699b2b7232d66d4');
+  return value;
+}
+// All seven historical callback bodies remain exact and validate the real105 ordinary workflow.
+const source = currentSource.includes('--onboarding-denial53') ? source105() : currentSource;
 const scope = "github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'";
 const expression = value => '${{ ' + value + ' }}';
 const probeOnly = source.includes('--stage build --simulator-probe');
 const dependencies = { build: [], normal: ['build'], internal: ['build', 'normal'] };
 
+
+function validateTarget53(text) {
+  const parse = value => {
+    const doc = parseDocument(value, { strict: true, uniqueKeys: true, merge: false });
+    assert.deepEqual(doc.errors, []); assert.deepEqual(doc.warnings, []);
+    return doc.toJS({ maxAliasCount: 0 });
+  };
+  const historical = source105(); validate(historical);
+  const expected = parse(historical);
+  expected.jobs['native-build'].if = scope + ' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 107 && github.run_attempt == 1';
+  for (const role of ['normal', 'internal']) expected.jobs['native-' + role].if = scope + ' && false';
+  const steps = expected.jobs['native-build'].steps;
+  const ordinary = steps[2];
+  const targeted = { name: 'Execute targeted onboarding denial53', env: ordinary.env,
+    run: 'python3 -I -B scripts/release/full-app-j01/storage_trace47.py --output "$RUNNER_TEMP/c47-evidence" --onboarding-denial53' };
+  steps.splice(2, 1, targeted, { ...ordinary, if: false });
+  assert.deepEqual(parse(text), expected);
+}
+
 function validate(text) {
+  if (text.includes('--onboarding-denial53')) return validateTarget53(text);
   const origin05 = text.includes('scripts/release/full-app-j01/storage_trace47.py --output');
   const ordinary05 = text.includes('--stage build --ordinary-release05');
   const localSource05 = text.includes('--local-source05');
@@ -224,5 +252,29 @@ test('C05 current ordinary producer is a new uninstrumented Release and cannot u
   ]) {
     assert.ok(source.includes(before));
     assert.throws(() => ordinary(source.replace(before, after)));
+  }
+});
+
+
+test('C05 final53 is one-shot107/a1 diagnostic only; original three ordinary job bodies remain disabled', () => {
+  assert.equal(currentSource.includes('--onboarding-denial53'), true);
+  validate(currentSource);
+  const active = parseDocument(currentSource).toJS().jobs;
+  assert.equal(Object.keys(active).length, 3);
+  assert.equal(active['native-build'].steps[2].name, 'Execute targeted onboarding denial53');
+  assert.equal(active['native-build'].steps[3].if, false);
+  assert.equal(active['native-normal'].if, scope + ' && false');
+  assert.equal(active['native-internal'].if, scope + ' && false');
+  for (const [before, after] of [
+    [' --onboarding-denial53', ''], ['commits == 107', 'commits == 105'],
+    ['github.run_attempt == 1', 'github.run_attempt == 2'],
+    [' && github.event.pull_request.number == 48', ''], [' && false', ''],
+    ['        if: false', '        if: true'],
+    ['storage_trace47.py --output', 'native_runtime47.py --output'],
+    ['timeout-minutes: 90', 'timeout-minutes: 180'],
+    ['C47_UI_PHASE: normal-staging', 'C47_UI_PHASE: internal-supported-owner'],
+  ]) {
+    assert.ok(currentSource.includes(before));
+    assert.throws(() => validate(currentSource.replace(before, after)), before);
   }
 });

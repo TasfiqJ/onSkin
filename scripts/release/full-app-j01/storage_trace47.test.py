@@ -475,4 +475,319 @@ class SourceScope59Tests(unittest.TestCase):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'UNDECLARED_CHANGED_PATH'):
                 original.check_scope({path}, current | {path})
 
+
+TARGET53_NODE_TESTS = '\nfunction record53(h, patch) { return h.hook(event(patch)); }\nfunction grant53(h, attempt=20) {\n  for(const phase of [\'begin\',\'pass\']) record53(h,{site:\'consent-store\',operation:\'setHealthDataCollectionConsentLocal\',phase,attempt,stage:\'entry\',disposition:\'probe\',meta:{outerOperation:true,grantRequested:true}});\n  record53(h,{site:\'lifecycle\',operation:\'completeHealthDataActivationRoute\',phase:\'pass\',attempt:attempt+1,stage:\'activation_complete\',disposition:\'probe\',meta:{outerOperation:true,activeState:true,activationPending:false}});\n}\nfunction begin53(h, attempt=30) { record53(h,{site:\'onboarding\',operation:\'revalidate\',phase:\'begin\',attempt,stage:\'entry\',disposition:\'probe\',meta:{outerOperation:true,mounted:true}}); }\nfunction deny53(h, error, attempt=31) { record53(h,{site:\'onboarding\',operation:\'revalidate\',phase:\'caught\',attempt,stage:\'hasCurrentHealthDataCollectionConsentForLease\',disposition:\'ui_conversion\',error,meta:{outerOperation:false,mounted:true,tokenCurrent:true,draftCurrent:true,atCurrentDenial:true}}); }\nfunction status53(h, stage=\'route_status\', denied=true) { record53(h,{site:\'onboarding\',operation:\'privacyStatus\',phase:\'state\',attempt:0,stage,disposition:\'probe\',meta:{privacyDenied:denied,privacyReady:!denied,privacyChecking:false,tokenCurrent:false,providerReadyState:true}}); }\nfunction save53(name,out) { fs.writeFileSync(path.join(__dirname,name+\'.json\'),JSON.stringify(out)); }\n\ntest(\'53 latest post-grant original error replaces early denial without changing legacy first UI\',async()=>{\n const h=harness(),early=new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\');deny53(h,early,1);\n for(let n=0;n<700;n++)record53(h,{phase:\'pass\'});\n grant53(h);begin53(h);const actual={code:\'ERR_KEY_CHAIN\',osStatus:-25308,message:\'PRIVATE_OWNER_SECRET53\'};\n record53(h,{site:\'content-key\',operation:\'getStoredPrivateKVContentKey\',phase:\'caught\',attempt:31,stage:\'SecureStore.getItemAsync\',disposition:\'caught\',error:actual});deny53(h,actual);status53(h);\n await h.drain();const out=h.latest();assert.equal(out.firstUIFailure.error.chain[0].recognizedCode,\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\');assert.equal(out.failureWindowFrozenAtFirstUI,true);\n assert.equal(out.onboarding53.latestDenial.error.chain[0].recognizedCode,\'ERR_KEY_CHAIN\');assert.deepEqual(out.onboarding53.denialWindow.at(-1),out.onboarding53.latestDenial);\n assert.notEqual(out.onboarding53.latestDenial.error.chain[0].errorId,out.firstUIFailure.error.chain[0].errorId);assert.ok(!JSON.stringify(out).includes(\'PRIVATE_OWNER_SECRET53\'));save53(\'postgrant-error\',out);\n});\ntest(\'53 actual false branch is a state record and does not manufacture a diagnostic Error\',async()=>{\n const h=harness();grant53(h);begin53(h);\n record53(h,{site:\'consent-store\',operation:\'hasCurrentHealthDataCollectionConsentForLease\',phase:\'state\',attempt:40,stage:\'consent_predicate\',disposition:\'probe\',meta:{parentAttempt:31,consentCurrent:false,consentPresent:true,rawPresent:true,grantCurrent:true,versionCurrent:true,disclosureCurrent:false}});\n record53(h,{site:\'onboarding\',operation:\'revalidate\',phase:\'state\',attempt:31,stage:\'consent_false\',disposition:\'probe\',meta:{parentAttempt:30,mounted:true,tokenCurrent:true,draftCurrent:true,consentCurrent:false}});\n const original=new Error(\'CURRENT_HEALTH_CONSENT_REQUIRED\');deny53(h,original);status53(h);await h.drain();const out=h.latest();\n const falseRow=out.onboarding53.denialWindow.find(r=>r.site===\'onboarding\'&&r.phase===\'state\');assert.equal(Object.hasOwn(falseRow,\'error\'),false);assert.equal(out.onboarding53.latestDenial.error.chain[0].recognizedCode,\'CURRENT_HEALTH_CONSENT_REQUIRED\');assert.equal(out.onboarding53.latestConsentResult.meta.disclosureCurrent,false);save53(\'false-return\',out);\n const noError=harness();grant53(noError);begin53(noError);\n record53(noError,{site:\'consent-store\',operation:\'hasCurrentHealthDataCollectionConsentForLease\',phase:\'state\',attempt:40,stage:\'consent_predicate\',disposition:\'probe\',meta:{parentAttempt:31,consentCurrent:false,consentPresent:false,rawPresent:false,grantCurrent:false,versionCurrent:false,disclosureCurrent:false}});\n record53(noError,{site:\'onboarding\',operation:\'revalidate\',phase:\'state\',attempt:31,stage:\'consent_false\',disposition:\'probe\',meta:{parentAttempt:30,mounted:true,tokenCurrent:true,draftCurrent:true,consentCurrent:false}});\n status53(noError);await noError.drain();assert.equal(noError.latest().onboarding53.latestDenial,null);save53(\'false-no-error\',noError.latest());\n const pending=harness();grant53(pending);begin53(pending,30);begin53(pending,99);\n record53(pending,{site:\'consent-store\',operation:\'hasCurrentHealthDataCollectionConsentForLease\',phase:\'state\',attempt:40,stage:\'consent_predicate\',disposition:\'probe\',meta:{parentAttempt:31,consentCurrent:false,consentPresent:true,rawPresent:true,grantCurrent:false,versionCurrent:true,disclosureCurrent:true}});\n record53(pending,{site:\'onboarding\',operation:\'revalidate\',phase:\'state\',attempt:31,stage:\'consent_false\',disposition:\'probe\',meta:{parentAttempt:30,mounted:true,tokenCurrent:true,draftCurrent:true,consentCurrent:false}});\n deny53(pending,new Error(\'CURRENT_HEALTH_CONSENT_REQUIRED\'));status53(pending);await pending.drain();save53(\'false-after-pending-noop\',pending.latest());\n begin53(pending,90);deny53(pending,new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\'),91);status53(pending);await pending.drain();save53(\'false-before-different-denial\',pending.latest());\n});\ntest(\'53 stale pre-grant denial and post-grant getter remain chronology, not a fabricated new rejection\',async()=>{\n const h=harness();begin53(h,1);deny53(h,new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\'),2);grant53(h,20);status53(h);await h.drain();const out=h.latest();\n assert.ok(out.onboarding53.latestDenial.sequence<out.onboarding53.latestGrantPass.sequence);assert.ok(out.onboarding53.latestRouteStatus.sequence>out.onboarding53.latestActivationPass.sequence);save53(\'stale-denial\',out);\n const pre=harness();begin53(pre,1);deny53(pre,new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\'),2);status53(pre);await pre.drain();save53(\'pregrant-only\',pre.latest());\n});\ntest(\'53 a later failed grant begin does not erase prior genuine pass or make trace invalid\',async()=>{\n const h=harness();grant53(h,20);begin53(h);record53(h,{site:\'consent-store\',operation:\'setHealthDataCollectionConsentLocal\',phase:\'begin\',attempt:90,stage:\'entry\',disposition:\'probe\',meta:{outerOperation:true,grantRequested:true}});\n deny53(h,new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\'));status53(h);await h.drain();const out=h.latest();assert.ok(out.onboarding53.latestGrantBegin.sequence>out.onboarding53.latestGrantPass.sequence);save53(\'later-failed-grant\',out);\n});\ntest(\'53 rolling and denial windows remain64 and later actual denial replaces snapshot\',async()=>{\n const h=harness();grant53(h);begin53(h);for(let n=0;n<130;n++)record53(h,{error:new Error(\'LOCAL_DATA_PRIVATE_MUTATION_RECOVERY_REQUIRED\')});\n deny53(h,new Error(\'CURRENT_HEALTH_CONSENT_REQUIRED\'));const first=h.hook(event({phase:\'pass\'}));\n const latest=new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\');deny53(h,latest,99);status53(h);await h.drain();const out=h.latest();assert.equal(out.onboarding53.window.length,64);assert.equal(out.onboarding53.denialWindow.length,64);assert.ok(out.onboarding53.evicted>0);assert.equal(out.onboarding53.latestDenial.attempt,99);save53(\'overflow-current\',out);\n});\ntest(\'53 target metadata getters/unknown fields cannot export secrets or invoke accessors\',async()=>{\n const h=harness();let invoked=0;const meta={ownerId:\'OWNER_SECRET53\',rawKey:\'RAW_SECRET53\'};Object.defineProperty(meta,\'consentCurrent\',{get(){invoked++;return false;}});\n record53(h,{site:\'consent-store\',operation:\'hasCurrentHealthDataCollectionConsentForLease\',phase:\'state\',stage:\'consent_predicate\',meta});await h.drain();assert.equal(invoked,0);const text=JSON.stringify(h.latest());assert.ok(!text.includes(\'OWNER_SECRET53\'));assert.ok(!text.includes(\'RAW_SECRET53\'));\n});\ntest(\'53 latest provider status may be newer than route status and stays separately bound\',async()=>{\n const h=harness();grant53(h);status53(h,\'route_status\',false);status53(h,\'provider_status\',true);await h.drain();save53(\'newer-provider\',h.latest());\n});\ntest(\'53 real async denial may precede activation return, while capture refusal stays chronology only\',async()=>{\n for(const outer of [false,true]) {\n  const h=harness();for(const phase of [\'begin\',\'pass\'])record53(h,{site:\'consent-store\',operation:\'setHealthDataCollectionConsentLocal\',phase,attempt:20,stage:\'entry\',disposition:\'probe\',meta:{outerOperation:true,grantRequested:true}});\n  begin53(h);const failure=new Error(\'HEALTH_DATA_WRITE_ADMISSION_CLOSED\');record53(h,{site:\'health-admission\',operation:outer?\'captureHealthDataWriteLease\':\'assertHealthDataWriteLease\',phase:\'failure\',attempt:31,stage:\'health_lease\',disposition:\'throw\',error:failure,meta:{leaseCurrent:false}});\n  record53(h,{site:\'onboarding\',operation:\'revalidate\',phase:\'caught\',attempt:31,stage:\'health_lease\',disposition:\'ui_conversion\',error:failure,meta:outer?{outerOperation:true,mounted:true,atCurrentDenial:true}:{outerOperation:false,mounted:true,tokenCurrent:true,draftCurrent:true,atCurrentDenial:true}});\n  record53(h,{site:\'lifecycle\',operation:\'completeHealthDataActivationRoute\',phase:\'pass\',attempt:21,stage:\'activation_complete\',disposition:\'probe\',meta:{outerOperation:true,activeState:true,activationPending:false}});\n  status53(h);await h.drain();save53(outer?\'midactivation-capture\':\'midactivation-async\',h.latest());\n }\n});\ntest(\'53 transformed own-data grant metadata does not change original accessor readcount or result\',async()=>{\n const mod=await import(require(\'node:url\').pathToFileURL(process.env.C47_TRANSFORM53).href);const ts=require(process.env.C47_TYPESCRIPT53);\n const original=\'let written; async function setHealthDataCollectionConsentLocal(params){written=params.granted;return;}\';\n const transformed=mod.transformFile(\'apps/mobile/src/features/onboarding/healthConsentStore.ts\',original,false,mod.PLAN53);\n const js=ts.transpileModule(transformed.source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;\n for(const program of [original,js]){let reads=0;const params={};Object.defineProperty(params,\'granted\',{get(){reads++;return reads===1;}});const context=vm.createContext({__C47_STORAGE_ORIGIN05__:()=>{throw new Error(\'OBSERVER_ONLY\');}});vm.runInContext(program,context);await context.setHealthDataCollectionConsentLocal(params);assert.equal(reads,1);assert.equal(vm.runInContext(\'written\',context),true);}\n});\ntest(\'53 transformed original health error identity and lease accessor count are unchanged\',async()=>{\n const mod=await import(require(\'node:url\').pathToFileURL(process.env.C47_TRANSFORM53).href);const ts=require(process.env.C47_TYPESCRIPT53);\n const original=\'const active={ownerUserId:"current-owner"};function assertHealthDataWriteLease(lease){if(active.ownerUserId!==lease.ownerUserId)throw originalFailure;}\';\n const transformed=mod.transformFile(\'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\',original,false,mod.PLAN53);const js=ts.transpileModule(transformed.source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;\n for(const program of [original,js]){let reads=0;const lease={};Object.defineProperty(lease,\'ownerUserId\',{get(){reads++;return \'different-owner\';}});const originalFailure=new Error(\'HEALTH_DATA_WRITE_OWNER_MISMATCH\');const context=vm.createContext({originalFailure,__C47_STORAGE_ORIGIN05__:()=>{throw new Error(\'OBSERVER_ONLY\');}});vm.runInContext(program,context);assert.throws(()=>context.assertHealthDataWriteLease(lease),error=>error===originalFailure);assert.equal(reads,1);}\n const consentOriginal=\'const consent={granted:false,version:1,consentTextHash:"same"},raw="value",HEALTH_DATA_CONSENT={version:1},CURRENT_GRANT_HASH="same"; function hasCurrentHealthDataCollectionConsentForLease(lease){return consent?.granted===true && consent?.version===HEALTH_DATA_CONSENT.version && consent?.consentTextHash===CURRENT_GRANT_HASH;}\';\n const prepared=mod.transformFile(\'apps/mobile/src/features/onboarding/healthConsentStore.ts\',consentOriginal,false,mod.PLAN53);\n const compiled=ts.transpileModule(prepared.source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;\n for(const program of [consentOriginal,compiled]){const c=vm.createContext({__C47_STORAGE_ORIGIN05__:()=>{throw new Error(\'OBSERVER_ONLY\');}});vm.runInContext(program,c);assert.equal(c.hasCurrentHealthDataCollectionConsentForLease.length,1);assert.equal(c.hasCurrentHealthDataCollectionConsentForLease({}),false);}\n});\n'
+
+class TargetedOnboarding53Tests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import os
+        cls.temporary=tempfile.TemporaryDirectory(prefix='c47-target53-observer-')
+        cls.fixture=Path(cls.temporary.name)
+        (cls.fixture/'storage_origin05.entry.js').write_text(s.ENTRY_TEMPLATE53,encoding='utf8')
+        prefix=CLASSIFIER_TEST.split('\ntest(',1)[0]
+        script=cls.fixture/'target53.test.cjs';script.write_text(prefix+TARGET53_NODE_TESTS,encoding='utf8')
+        env=dict(os.environ);env['C47_TRANSFORM53']=str(PATH.with_name('storage_origin47.mjs'))
+        env['C47_TYPESCRIPT53']=str(ROOT/'node_modules/typescript')
+        cls.node_result=subprocess.run(['node','--test',str(script)],cwd=ROOT,env=env,capture_output=True,timeout=60)
+        if cls.node_result.returncode:
+            raise AssertionError(cls.node_result.stdout.decode(errors='replace')+cls.node_result.stderr.decode(errors='replace'))
+        cls.samples={name:s.validate_onboarding_trace53((cls.fixture/(name+'.json')).read_bytes(), 'a'*40,
+            'com.layerwell.app.staging',321) for name in ('postgrant-error','false-return','false-no-error','false-after-pending-noop','false-before-different-denial','pregrant-only','stale-denial','later-failed-grant','overflow-current','newer-provider','midactivation-async','midactivation-capture')}
+    @classmethod
+    def tearDownClass(cls):cls.temporary.cleanup()
+    def test_targeted_actual_error_false_privacy_bounds_and_accessor_noninterference_controls(self):
+        self.assertIn(b'# tests 10',self.node_result.stdout)
+        self.assertIn(b'# pass 10',self.node_result.stdout)
+        self.assertIn(b'# fail 0',self.node_result.stdout)
+        result=s.qualifying_onboarding_origin53(self.samples['postgrant-error'])
+        self.assertEqual(result['kind'],'ACTUAL_SAME_ERROR_PROPAGATED_TO_ONBOARDING_DENIAL')
+        self.assertIs(result['causal_origin_qualified'],True)
+        self.assertEqual(result['origin']['error']['chain'][0]['recognizedCode'],'ERR_KEY_CHAIN')
+        self.assertEqual(result['native_holder'],'UNOBSERVED')
+        self.assertFalse(result['ordinary_admitted']);self.assertFalse(result['internal_admitted'])
+        result=s.qualifying_onboarding_origin53(self.samples['false-return'])
+        self.assertEqual(result['kind'],'ACTUAL_ONBOARDING_FALSE_CONSENT_BEFORE_EXISTING_ERROR')
+        self.assertNotIn('error',result['origin']);self.assertIs(result['causal_origin_qualified'],True)
+        no_error=s.qualifying_onboarding_origin53(self.samples['false-no-error'])
+        self.assertIs(no_error['causal_origin_qualified'],True);self.assertEqual(no_error['predicate'],'CONSENT_ABSENT')
+        self.assertIsNone(no_error['original_caught_error']);self.assertNotIn('error',no_error['origin'])
+        self.assertIsNone(s.qualifying_onboarding_origin53(self.samples['pregrant-only']))
+        pending=s.qualifying_onboarding_origin53(self.samples['false-after-pending-noop'])
+        self.assertIs(pending['causal_origin_qualified'],True);self.assertEqual(pending['predicate'],'CONSENT_NOT_GRANTED')
+        self.assertNotEqual(pending['branch']['meta']['parentAttempt'],pending['chronology']['latestRevalidateBegin']['attempt'])
+        replaced=s.qualifying_onboarding_origin53(self.samples['false-before-different-denial'])
+        self.assertIs(replaced['causal_origin_qualified'],False)
+        self.assertEqual(replaced['kind'],'ONBOARDING_CURRENT_DENIAL_ORIGINAL_ERROR_NO_LOWER_ORIGIN_OBSERVED')
+        self.assertIs(s.qualifying_onboarding_origin53(self.samples['stale-denial'])['causal_origin_qualified'],False)
+        self.assertIs(s.qualifying_onboarding_origin53(self.samples['later-failed-grant'])['causal_origin_qualified'],False)
+        self.assertEqual(s.qualifying_onboarding_origin53(self.samples['stale-denial'])['kind'],
+            'POST_GRANT_DENIED_RENDER_CHRONOLOGY_ONLY_ORIGINAL_ERROR_UNOBSERVED')
+        self.assertIsNotNone(self.samples['later-failed-grant'])
+        self.assertIsNotNone(s.qualifying_onboarding_origin53(self.samples['newer-provider']))
+        self.assertEqual(s.qualifying_onboarding_origin53(self.samples['midactivation-async'])['kind'],'ACTUAL_SAME_ERROR_PROPAGATED_TO_ONBOARDING_DENIAL')
+        self.assertEqual(s.qualifying_onboarding_origin53(self.samples['midactivation-capture'])['kind'],'POST_GRANT_DENIED_RENDER_CHRONOLOGY_ONLY_ORIGINAL_ERROR_UNOBSERVED')
+        from types import SimpleNamespace
+        from unittest import mock
+        import uuid
+        with tempfile.TemporaryDirectory(prefix='c47-target53-collector-') as temporary:
+            home=Path(temporary);device=str(uuid.uuid4());data=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'/str(uuid.uuid4())
+            docs=data/'Documents';docs.mkdir(parents=True)
+            (docs/'C47StorageOrigin05Identity.json').write_text(json.dumps({'schema':1,'pid':321,'sourceHead':'a'*40,'bundle':'com.layerwell.app.staging'}))
+            def require(ok,name):
+                if not ok:raise ValueError(name)
+            def write_json(path,value):path.write_text(json.dumps(value))
+            def run(name,argv,**kw):
+                if name.endswith('-screenshot'):Path(argv[-1]).write_bytes(b'SYNTHETIC_SCREEN_PORT')
+                return 0
+            n=SimpleNamespace(require=require,stage_json=json.loads,read_native_file=lambda path:path.read_bytes(),write_json=write_json)
+            r=SimpleNamespace(run=run,text=lambda *a,**kw:str(data),receipt={})
+            for sample,expected in [('stale-denial',False),('postgrant-error',True),('false-no-error',True)]:
+                (docs/'C47StorageOrigin05-321.json').write_text(json.dumps(self.samples[sample]))
+                with mock.patch.object(Path,'home',return_value=home):
+                    actual=s.collect_native_origin05(r,n,device,'com.layerwell.app.staging','a'*40,home,sample,321,targeted_onboarding53=True)
+                self.assertEqual(len(actual['qualifying_origins']),int(expected))
+                self.assertEqual(len(actual['targeted_observations']),1)
+                self.assertIs(actual['targeted_observations'][0]['origin']['causal_origin_qualified'],expected)
+
+    def test_target53_closed_privacy_identity_and_no_legacy_reinterpretation(self):
+        import copy
+        original=self.samples['postgrant-error']
+        def encode(value):return json.dumps(value,separators=(',',':')).encode('utf8')
+        with self.assertRaises(ValueError):s.validate_trace05(encode(original),'a'*40,'com.layerwell.app.staging',321)
+        for mutate in (lambda x:x['onboarding53'].update(ownerId='SECRET53'),
+            lambda x:x['onboarding53']['latestDenial']['meta'].update(rawKey='SECRET53'),
+            lambda x:x['onboarding53'].update(windowLimit=65),
+            lambda x:x.update(pid=322),
+            lambda x:x['onboarding53']['latestDenial']['meta'].update(tokenCurrent=False)):
+            changed=copy.deepcopy(original);mutate(changed)
+            with self.assertRaises(ValueError):s.validate_onboarding_trace53(encode(changed),'a'*40,'com.layerwell.app.staging',321)
+        changed=copy.deepcopy(original);del changed['onboarding53']
+        with self.assertRaises(ValueError):s.validate_onboarding_trace53(encode(changed),'a'*40,'com.layerwell.app.staging',321)
+    def test_exact_current_eight_transform_recovers_source_without_new_await_or_unregistered_stages(self):
+        with tempfile.TemporaryDirectory(prefix='c47-target53-transform-') as temporary:
+            p=Path(temporary);request=p/'request.json';manifest=p/'manifest.json'
+            request.write_text(json.dumps({'root':str(ROOT),'output':str(p/'generated'),'manifest':str(manifest),
+                'expected':s.ONBOARDING53_SOURCE_PREIMAGES,'profile':'ONBOARDING53_CURRENT105','source_head':'a'*40}),encoding='utf8')
+            result=subprocess.run(['node',str(PATH.with_name('storage_origin47.mjs')),str(request)],cwd=ROOT,capture_output=True,timeout=60)
+            self.assertEqual(result.returncode,0,result.stdout.decode(errors='replace')+result.stderr.decode(errors='replace'))
+            proof=json.loads(manifest.read_bytes());self.assertEqual(len(proof['files']),8)
+            self.assertEqual({row['path'] for row in proof['files']},set(s.ONBOARDING53_SOURCE_PREIMAGES))
+            self.assertFalse(set(proof['all_stages'])-s.ENUMS53['STAGES'])
+            for row in proof['files']:
+                self.assertTrue(row['original_bytes_retained_exactly']);self.assertEqual(row['awaits_before'],row['awaits_after'])
+    def test_current_targeted_context_restores_exact_eight_inputs_and_refuses_wrong_preimage(self):
+        with tempfile.TemporaryDirectory(prefix='c47-target53-context-') as temporary:
+            p=Path(temporary);root=p/'source';root.mkdir();originals={}
+            for relative,sha in s.ONBOARDING53_SOURCE_PREIMAGES.items():
+                raw=(ROOT/relative).read_bytes();self.assertEqual(s.digest(raw),sha);originals[relative]=raw
+                target=root/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
+            script=root/'scripts/release/full-app-j01/storage_origin47.mjs';script.parent.mkdir(parents=True,exist_ok=True)
+            script.write_bytes(PATH.with_name('storage_origin47.mjs').read_bytes())
+            ios=root/'apps/mobile/ios';delegate=ios/'LayerwellStaging/AppDelegate.swift';delegate.parent.mkdir(parents=True)
+            original_delegate=b'import Expo\n    let delegate = ReactNativeDelegate()\n';delegate.write_bytes(original_delegate)
+            def run(label,argv,**kwargs):
+                result=subprocess.run(list(map(str,argv)),cwd=ROOT,capture_output=True,timeout=60)
+                self.assertEqual(result.returncode,0,result.stdout.decode(errors='replace')+result.stderr.decode(errors='replace'))
+            with self.assertRaisesRegex(RuntimeError,'ORIGINAL_TARGET53_BUILD_FAILURE'):
+                with s.diagnostic_inputs(root,ios,p/'evidence','a'*40,run,targeted_onboarding53=True) as entry:
+                    self.assertIn(b'ONBOARDING_DENIAL_ORIGIN53_ONLY',entry.read_bytes())
+                    for relative,raw in originals.items():self.assertNotEqual((root/relative).read_bytes(),raw)
+                    raise RuntimeError('ORIGINAL_TARGET53_BUILD_FAILURE')
+            self.assertEqual(delegate.read_bytes(),original_delegate)
+            for relative,raw in originals.items():self.assertEqual((root/relative).read_bytes(),raw)
+            restored=json.loads((p/'evidence/RESTORED.json').read_bytes());self.assertTrue(restored['exact_restore']);self.assertEqual(restored['restored_sources'],8)
+            path=root/next(iter(originals));path.write_bytes(path.read_bytes()+b'\n')
+            with self.assertRaisesRegex(ValueError,'EXACT_SOURCE_PREIMAGE'):
+                with s.diagnostic_inputs(root,ios,p/'refused','a'*40,run,targeted_onboarding53=True):self.fail('not reached')
+
+class TargetedOnboarding53CoordinatorTests(unittest.TestCase):
+    def runtime(self):
+        import sys
+        path=ROOT/'scripts/release/full-app-j01/native_runtime47.py'
+        spec=importlib.util.spec_from_file_location('c47_target53_runtime_controls',path)
+        value=importlib.util.module_from_spec(spec);sys.modules[spec.name]=value;spec.loader.exec_module(value)
+        return value
+
+    def source_fixture(self,directory):
+        import hashlib,re
+        from types import SimpleNamespace
+        n=self.runtime();source={'head':'a'*40,'tree':'b'*40}
+        # Synthetic source/TAP fixture port only: Windows creation-stamp races are not this control's subject.
+        # Production native observation guards and the current runtime source remain untouched.
+        n.read_native_file=lambda path:Path(path).read_bytes()
+        n.write_json(directory/'source-before.json',source)
+        n.write_json(directory/'source-after-install.json',source)
+        n.write_json(directory/'toolchain.json',{'build_environment':n.ENVIRONMENT,'architecture':'x86_64',
+            'node':'v22.22.2','npm':'11.20.0','xcode':'Xcode 26.4\nBuild version test',
+            'simulator_build_flags':n.SIMULATOR_BUILD_FLAGS,'app_simulator_build_flags':n.APP_SIMULATOR_BUILD_FLAGS})
+        n.write_json(directory/'current-generated47-source.json',{'phase':'SOURCE','sourceHead':source['head'],
+            'sourceTree':source['tree'],'profiles':['development','staging'],
+            'descriptorSHA256':n.sha(ROOT/'docs/phase-9/ios-generated-input-succession47.v1.json'),
+            'currentNative47':{'verifiedInputCount':202,'committedCriticalInputs':172}})
+        current=(ROOT/'scripts/release/full-app-j01/native_generated47.test.mjs').read_text(encoding='utf8')
+        names=re.findall(r"^test\('([^'\n]+)',",current,re.M);self.assertEqual(len(names),30)
+        # Explicitly synthetic TAP/events exercise the real strict parser, never native evidence.
+        lines=[]
+        for index,name in enumerate(names,1):
+            lines += [json.dumps({'event':'C47_SOURCE_CASE_BEGIN','name':name},separators=(',',':')),
+                json.dumps({'event':'C47_SOURCE_CASE_END','name':name},separators=(',',':')),'ok %d - %s'%(index,name)]
+        lines+=['1..30','# tests 30','# pass 30','# fail 0','# skipped 0','# cancelled 0','# todo 0']
+        commands=[];(directory/'logs').mkdir()
+        for index,name in enumerate(n.SOURCE_COMMANDS04,1):
+            row={'name':name,'state':'PASS','exit_code':0,'required':True,'capture_complete':True,'timed_out':False,
+                'argv':['node','--test','scripts/release/full-app-j01/native_generated47.test.mjs'] if name=='generated47-controls' else ['synthetic-control',name]}
+            for which in ('stdout','stderr'):
+                raw=('\n'.join(lines)+'\n').encode() if name=='generated47-controls' and which=='stdout' else b''
+                row[which]='logs/%03d-%s.%s'%(index,name,which);(directory/row[which]).write_bytes(raw)
+                row[which+'_bytes']=len(raw);row[which+'_sha256']=hashlib.sha256(raw).hexdigest()
+            commands.append(row)
+        return n,SimpleNamespace(root=ROOT,output=directory,receipt={'source':source,'commands':commands})
+
+    def test_target53_own_source_requires_full30_and_all60_events_before_compile(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory=Path(temporary);n,r=self.source_fixture(directory)
+            proof=s._native05_full_source_controls53(r,n)
+            self.assertEqual(proof['case_events'],60)
+            self.assertEqual(proof['source_after_file'],'source-after-install.json')
+            import inspect
+            prepare_source=inspect.getsource(n.prepare)
+            self.assertLess(prepare_source.index("'generated47-controls'"),prepare_source.index("'current-generated47-source'"))
+            self.assertLess(prepare_source.index("'current-generated47-source'"),prepare_source.index("'dependency-graph'"))
+            self.assertLess(prepare_source.index("'dependency-graph'"),prepare_source.index("'source-after-install'"))
+            self.assertTrue(proof['controls_complete_before_generation_and_compile'])
+            self.assertFalse(proof['ordinary_admitted']);self.assertFalse(proof['internal_admitted'])
+            self.assertNotIn('local_source05',r.receipt)
+            row=next(x for x in r.receipt['commands'] if x['name']=='generated47-controls')
+            original=(directory/row['stdout']).read_bytes()
+            for replacement in (original.replace(b'# tests 30',b'# tests 29'),
+                    b'\n'.join(original.splitlines()[1:])+b'\n'):
+                (directory/row['stdout']).write_bytes(replacement)
+                row['stdout_bytes']=len(replacement);row['stdout_sha256']=n.sha(directory/row['stdout'])
+                with self.assertRaises(ValueError):s._native05_full_source_controls53(r,n)
+            (directory/'source-after-install.json').unlink()
+            with self.assertRaises((OSError,ValueError)):s._native05_full_source_controls53(r,n)
+
+    def test_target53_source_refuses_incomplete_failed_or_changed_source(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory=Path(temporary);n,r=self.source_fixture(directory)
+            row=r.receipt['commands'][0]
+            for key,value in [('capture_complete',False),('state','FAIL'),('exit_code',1),('timed_out',True)]:
+                original=row[key];row[key]=value
+                with self.assertRaises(ValueError):s._native05_full_source_controls53(r,n)
+                row[key]=original
+            n.write_json(directory/'source-after-install.json',{'head':'c'*40,'tree':'b'*40})
+            with self.assertRaisesRegex(ValueError,'UNPROJECTED_SOURCE_BEFORE_COMPILE'):
+                s._native05_full_source_controls53(r,n)
+
+    def test_target53_control_refusal_stops_before_prebuild_and_default_prepare_stays_false(self):
+        from types import SimpleNamespace
+        from unittest import mock
+        calls=[]
+        def prepare(r,source_controls=True):calls.append(source_controls);return 'a'*40,{},Path('source.json')
+        r=SimpleNamespace(root=ROOT,output=Path('unused'),receipt={},persist=lambda:None,
+            source_proof=lambda *a,**kw:None,passed=lambda *a:None,run=lambda *a,**kw:self.fail('native command before proof'))
+        n=SimpleNamespace(prepare=prepare)
+        with mock.patch.object(s,'_native05_full_source_controls53',side_effect=ValueError('synthetic-full30-refusal')):
+            with self.assertRaisesRegex(ValueError,'synthetic-full30-refusal'):
+                s.run_native_origin05(r,n,onboarding_denial53=True)
+        self.assertEqual(calls,[True])
+        def stop(r,source_controls=True):calls.append(source_controls);raise ValueError('synthetic-stop-before-tooling')
+        n.prepare=stop
+        with self.assertRaisesRegex(ValueError,'synthetic-stop-before-tooling'):s.run_native_origin05(r,n)
+        self.assertEqual(calls,[True,False])
+
+        # Only the targeted normal-return path may reuse the already completed scan.
+        with tempfile.TemporaryDirectory() as temporary:
+            n=self.runtime();n.read_native_file=lambda path:Path(path).read_bytes()
+            directory=Path(temporary);calls=[];current={'head':'a'*40,'tree':'b'*40}
+            r=SimpleNamespace(output=directory,receipt={},
+                source_proof=lambda *a,**kw:calls.append((a,kw)) or current)
+            self.assertEqual(s._native05_final_source53(r,n,current,None),current)
+            self.assertEqual(calls[0][0],('source-after-storage05-finally','a'*40))
+            result={'source':current};path=directory/'source-after-storage-origin05-exact-restoration.json'
+            n.write_json(path,current)
+            marker={'file':path.name,'sha256':n.sha(path),'head':current['head'],'tree':current['tree']}
+            r.receipt.update(storage_origin05=result,storage53_completed_restoration_source=marker)
+            self.assertEqual(s._native05_final_source53(r,n,current,result),current)
+            self.assertEqual(len(calls),1)
+            self.assertFalse(r.receipt['storage53_final_source_boundary']['duplicate_finally_scan_performed'])
+            r.receipt['storage53_completed_restoration_source']={**marker,'sha256':'0'*64}
+            with self.assertRaisesRegex(ValueError,'COMPLETED_CURRENT_RESTORATION_SOURCE'):
+                s._native05_final_source53(r,n,current,result)
+            r.receipt.pop('storage53_completed_restoration_source')
+            s._native05_final_source53(r,n,current,result)
+            self.assertEqual(len(calls),2)
+
+
+    def test_target53_selects_exact_third_case_and_preserves_original_first_case_default(self):
+        n=self.runtime()
+        self.assertEqual(s._native05_selected_method(n,False),n.NORMAL_UI_CASES04[0])
+        self.assertEqual(s._native05_selected_method(n,True),'testV04ExplicitWithdrawalReviewCancelAndFreshReconsent')
+        from types import SimpleNamespace
+        with self.assertRaisesRegex(ValueError,'EXACT_EXISTING_THIRD_CASE'):
+            s._native05_selected_method(SimpleNamespace(NORMAL_UI_CASES04=('a','b','other'),require=n.require),True)
+
+    def test_target53_one_shot_actual_git_context_refuses_other_count_parent_event_or_attempt(self):
+        from types import SimpleNamespace
+        n=self.runtime();observed=[]
+        context={'head':'a'*40,'tree':'b'*40,'run_attempt':1}
+        answers={'storage53-append-only-commit-count':'107','storage53-preserved105-parent':s.TARGETED53_PRIOR_HEAD}
+        r=SimpleNamespace(env={'GITHUB_EVENT_NAME':'pull_request'},receipt={},
+            text=lambda name,*a,**kw:answers[name],passed=lambda name,value:observed.append((name,value)))
+        proof=s._native05_target53_context(r,n,context)
+        self.assertEqual(proof['actual_append_only_commits'],107)
+        self.assertFalse(proof['ordinary_admitted']);self.assertFalse(proof['internal_admitted'])
+        for key,value in [('storage53-append-only-commit-count','109'),('storage53-preserved105-parent','c'*40)]:
+            old=answers[key];answers[key]=value
+            with self.assertRaises(ValueError):s._native05_target53_context(r,n,context)
+            answers[key]=old
+        for attempt in (2,True):
+            with self.assertRaises(ValueError):s._native05_target53_context(r,n,{**context,'run_attempt':attempt})
+        r.env['GITHUB_EVENT_NAME']='push'
+        with self.assertRaises(ValueError):s._native05_target53_context(r,n,context)
+
+    def test_target53_runs_case03_even_when_first_launch_already_has_another_qualified_origin(self):
+        import os
+        from contextlib import contextmanager
+        from types import SimpleNamespace
+        from unittest import mock
+        n=self.runtime();selected=[];captures=[];context_flags=[]
+        with tempfile.TemporaryDirectory() as temporary:
+            p=Path(temporary);root=p/'source';out=p/'out';out.mkdir();ios=root/'apps/mobile/ios';ios.mkdir(parents=True)
+            (ios/'LayerwellStaging.xcworkspace').mkdir();(ios/'Podfile.lock').write_text('  - NativeLabelOcr (1.0.0)\n')
+            r=SimpleNamespace(root=root,output=out,env={},receipt={'source':{'head':'a'*40,'tree':'b'*40}},
+                persist=lambda:None,source_proof=lambda name,*a,**kw:(n.write_json(out/(name+'.json'),r.receipt['source']),r.receipt['source'])[1],
+                run=lambda *a,**kw:None,passed=lambda name,value:None)
+            @contextmanager
+            def inputs(*a,**kw):
+                context_flags.append(kw);Path(a[2]).mkdir(exist_ok=False);yield p/'diagnostic-entry.js'
+            def capture(*a,**kw):
+                captures.append((a[6],kw));return {'qualifying_origins':[{'synthetic':True}]}
+            def case(*a,**kw):selected.append(a[3]);return {'outcome':'ASSERTION_FAILED','synthetic':True}
+            signing=SimpleNamespace(configure_app=lambda *a:None,check_effective_app=lambda *a:None)
+            with mock.patch.dict(os.environ,{'RUNNER_TEMP':str(p)}), \
+                    mock.patch.object(n,'prepare',return_value=('a'*40,{},p/'source.json')), \
+                    mock.patch.object(s,'_native05_full_source_controls53',return_value={'synthetic':True}), \
+                    mock.patch.object(s,'diagnostic_inputs',inputs), \
+                    mock.patch.object(s,'_native05_product',return_value={}), \
+                    mock.patch.object(s,'_native05_installed'), \
+                    mock.patch.object(s,'_native05_launch',return_value=123), \
+                    mock.patch.object(s,'collect_native_origin05',side_effect=capture), \
+                    mock.patch.object(n,'retain_pod_inventory'),mock.patch.object(n,'retain_generated_native'), \
+                    mock.patch.object(n,'simulator_signing',return_value=signing), \
+                    mock.patch.object(n,'prepare_simulator',return_value='synthetic-uuid'), \
+                    mock.patch.object(n,'install_simulator_app',return_value=p/'installed'), \
+                    mock.patch.object(n,'normal_runner04',return_value={'project':'synthetic.xcodeproj'}), \
+                    mock.patch.object(n,'normal_case_execution04',side_effect=case), \
+                    mock.patch.object(n,'retain_result_bundles'), \
+                    mock.patch.object(n,'normal_xctest_gate',side_effect=AssertionError('ordinary aggregate forbidden')):
+                result=s.run_native_origin05(r,n,onboarding_denial53=True)
+            self.assertEqual(selected,['testV04ExplicitWithdrawalReviewCancelAndFreshReconsent'])
+            self.assertEqual([x[0] for x in captures],['first-launch','after-one-ui'])
+            self.assertTrue(all(x[1]['targeted_onboarding53'] for x in captures))
+            self.assertEqual(context_flags,[{'targeted_onboarding53':True}])
+            self.assertFalse(result['ordinary_admitted']);self.assertFalse(result['internal_admitted'])
+            self.assertTrue(result['targeted_onboarding53']);self.assertFalse(result['retry_attempted'])
+
 if __name__=='__main__':unittest.main()

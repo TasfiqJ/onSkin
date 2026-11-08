@@ -31,7 +31,7 @@ jobs:
   # Same-candidate authenticated stages; ordinary PASS gates internal execution.
   native-build:
     name: C47 build
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && github.event.pull_request.number == 48 && github.event.pull_request.commits == 107 && github.run_attempt == 1
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -52,7 +52,13 @@ jobs:
         with:
           node-version: 22.22.2
           package-manager-cache: false
+      - name: Execute targeted onboarding denial53
+        env:
+          C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          C47_UI_PHASE: normal-staging
+        run: python3 -I -B scripts/release/full-app-j01/storage_trace47.py --output "$RUNNER_TEMP/c47-evidence" --onboarding-denial53
       - name: Execute build stage
+        if: false
         env:
           C47_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
           C47_UI_PHASE: normal-staging
@@ -98,7 +104,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && false
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
@@ -170,7 +176,7 @@ jobs:
     permissions:
       contents: read
       actions: read
-    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47'
+    if: github.repository == 'TasfiqJ/onSkin' && github.event.repository.private == false && github.event.pull_request.head.repo.full_name == 'TasfiqJ/onSkin' && github.event.pull_request.head.ref == 'stage/m1-native-runtime47' && false
     runs-on: macos-26-intel
     timeout-minutes: 90
     outputs:
