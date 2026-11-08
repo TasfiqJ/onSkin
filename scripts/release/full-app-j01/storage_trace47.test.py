@@ -531,7 +531,7 @@ class TargetedOnboarding53Tests(unittest.TestCase):
         from unittest import mock
         import uuid
         with tempfile.TemporaryDirectory(prefix='c47-target53-collector-') as temporary:
-            home=Path(temporary);device=str(uuid.uuid4());data=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'/str(uuid.uuid4())
+            home=Path(temporary).resolve(strict=True);device=str(uuid.uuid4());data=home/'Library/Developer/CoreSimulator/Devices'/device/'data/Containers/Data/Application'/str(uuid.uuid4())
             docs=data/'Documents';docs.mkdir(parents=True)
             (docs/'C47StorageOrigin05Identity.json').write_text(json.dumps({'schema':1,'pid':321,'sourceHead':'a'*40,'bundle':'com.layerwell.app.staging'}))
             def require(ok,name):

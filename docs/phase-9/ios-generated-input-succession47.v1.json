@@ -266,8 +266,8 @@
     },
     {
       "path": "scripts/release/full-app-j01/storage_trace47.test.py",
-      "bytes": 101687,
-      "sha256": "421aee8ae4d89f623b0fd9866771c5fc55ffe046086822eaacee4ab294016546"
+      "bytes": 101708,
+      "sha256": "b0a0ad7b9863e6a93a96900d50717d4ee00dabffdec47e35e58e5bc9fd119a50"
     },
     {
       "path": "scripts/release/full-app-j01/swift_behavior47.py",
