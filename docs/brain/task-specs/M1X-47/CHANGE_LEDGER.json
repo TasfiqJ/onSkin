@@ -7897,6 +7897,112 @@
       ],
       "causal_need": "Native58run42602026216/job129108575332 actually authenticated the pinned115 build56 producer, then failed current-runtime06-controls before any Simulator install/XCTest. MacPython3.14.7 executed149 tests with10 failure events/10 error events (do not subtract these subtest events into an invented pass count). Exact first-party guards rejected linked fixture ancestors, including C46_SOURCE_DIRECTORY:/var, C47_NATIVE_OBSERVATION_LINKED_DIRECTORY, STAGE_DIRECTORY_LINK. Default Mac tempfile paths retain /var alias; some original fixtures already resolved their roots and others did not. Canonicalize only the test module default temp root, retaining every no-link/read/source/product/assertion guard. This repairs the evidenced test-harness obstruction, not the still-unknown55/57 native UI cause.",
       "validation_cutoff": "Canonical fixture repair;149runtime/15signing/13workflow/Pending/Frozen/native59/finalCI PENDING; no original native UI cure claimed."
+    },
+    {
+      "authorization": "BRAIN-C47-ORDINARY-INTERNAL-RUNTIME-06",
+      "recorded_utc": "2026-11-09T11:50:41.814765+00:00",
+      "head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+      "tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+      "preedit_path": "continuation06/preedit07-closure125/PREEDIT.json",
+      "preedit_sha256": "80dbf01d69d929f852a575746e66000305e119401288fd75b5f60d575b491386",
+      "preimages": [
+        {
+          "path": "docs/brain/task-specs/M1X-47/CHANGE_LEDGER.json",
+          "preimage_head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+          "preimage_tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+          "snapshot": "000.bin",
+          "preimage": {
+            "bytes": 578104,
+            "sha256": "c9c8adbe988ff91fee0ac4445215cb18672a30fefe7b18ce26ad5be49e6b4c85"
+          },
+          "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+          "invariant": "Docs/ledger/sealed worklists only; all code and product input gates unchanged. Actual attempted runtime remains123; no stale compilation/test pass relabeled125. All38whole/18owner gates unaccepted; original SDK/Security/candidate29/G97 unwaived; NO_GO."
+        },
+        {
+          "path": "PROGRESS.md",
+          "preimage_head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+          "preimage_tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+          "snapshot": "001.bin",
+          "preimage": {
+            "bytes": 631426,
+            "sha256": "b8feebb643e72a6503750c45725247c4fe195b904618dc593dae3f449482e810"
+          },
+          "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+          "invariant": "Docs/ledger/sealed worklists only; all code and product input gates unchanged. Actual attempted runtime remains123; no stale compilation/test pass relabeled125. All38whole/18owner gates unaccepted; original SDK/Security/candidate29/G97 unwaived; NO_GO."
+        },
+        {
+          "path": "docs/brain/task-specs/M1X-47/TASK.md",
+          "preimage_head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+          "preimage_tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+          "snapshot": "002.bin",
+          "preimage": {
+            "bytes": 137908,
+            "sha256": "6dd7e1e7d686db9c412acc8ab65926380a71094b7f6af44caca770502b84d92d"
+          },
+          "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+          "invariant": "Docs/ledger/sealed worklists only; all code and product input gates unchanged. Actual attempted runtime remains123; no stale compilation/test pass relabeled125. All38whole/18owner gates unaccepted; original SDK/Security/candidate29/G97 unwaived; NO_GO."
+        },
+        {
+          "path": "ONSKIN_BRAIN_HANDOFF.txt",
+          "preimage_head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+          "preimage_tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+          "snapshot": "003.bin",
+          "preimage": {
+            "bytes": 11988,
+            "sha256": "804e8ea62f7d7633fec570fb69af9646d103fc6ca776557b1ce30df3ad8748d8"
+          },
+          "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+          "invariant": "Docs/ledger/sealed worklists only; all code and product input gates unchanged. Actual attempted runtime remains123; no stale compilation/test pass relabeled125. All38whole/18owner gates unaccepted; original SDK/Security/candidate29/G97 unwaived; NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.json",
+          "preimage_head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+          "preimage_tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+          "snapshot": "004.bin",
+          "preimage": {
+            "bytes": 142269,
+            "sha256": "f982879b06906dede56e49f5f94e02d1725e02690107183bcbeeb7b4906ca8dd"
+          },
+          "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+          "invariant": "Docs/ledger/sealed worklists only; all code and product input gates unchanged. Actual attempted runtime remains123; no stale compilation/test pass relabeled125. All38whole/18owner gates unaccepted; original SDK/Security/candidate29/G97 unwaived; NO_GO."
+        },
+        {
+          "path": "docs/phase-4/generated/source-worklist.md",
+          "preimage_head": "1862d7c1fc0b9c0f82eb587dff48a03692ce8813",
+          "preimage_tree": "5f71471d53d2b385da6e55c482129e23329b1e07",
+          "snapshot": "005.bin",
+          "preimage": {
+            "bytes": 84921,
+            "sha256": "2dcc061782371086e33686e2693d15ea87ecdce62cf6461cea4966fb093c850d"
+          },
+          "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+          "invariant": "Docs/ledger/sealed worklists only; all code and product input gates unchanged. Actual attempted runtime remains123; no stale compilation/test pass relabeled125. All38whole/18owner gates unaccepted; original SDK/Security/candidate29/G97 unwaived; NO_GO."
+        }
+      ],
+      "causal_need": "All six authorized C06 Mac starts54-59 are consumed. Record actual native59 Mac149 and full30/60 PASS, then strict dependency-input refusal before install/XCTest; no thread observation or internal journey. Preserve original55/57 UI failures, exact59 metadata drift and every failed witness; no source code, predicate, input equality, signing, dependency or authority relaxation. Source-only closure125 preserves executable/native/Swift/Ruby/test/workflow/51pin bytes exactly equal123. Existing last-authorized native workflow guard requires123commits, so append-only125 cannot allocate another Mac. Any additional native start requires a new Brain authorization.",
+      "native_execution": {
+        "authorized": 6,
+        "started": 6,
+        "remaining": 0,
+        "attempts": [
+          54,
+          55,
+          56,
+          57,
+          58,
+          59
+        ]
+      },
+      "native59_observation": {
+        "current_Mac149": "PASS",
+        "current_full30_and60events": "PASS",
+        "current_XCTest": 0,
+        "ordinary3": "NOT_RUN",
+        "internal5": "NOT_RUN",
+        "strict_refusal": "C47_REUSE56_ACTUAL_DEPENDENCIES_AND_EXPO_CONFIG_EQUAL:dependency-graph",
+        "sole_graph_difference": "/dependencies/@onskin/decode-uri-component-compat/dependencies/decode-uri-component/overridden: producertrue/currentfalse; same0.5.1 andURL; all other graphfields equal; NOTWAIVED"
+      },
+      "validation_cutoff": "Actual native123 recorded; final docs-only124/125 focused/source/CI checks PENDING. No further native start authorized."
     }
   ],
   "frozen_utc": "2026-11-07T10:12:06.405Z",
